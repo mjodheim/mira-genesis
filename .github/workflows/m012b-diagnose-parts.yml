@@ -1,0 +1,35 @@
+name: Diagnose M012b payload parts
+
+on:
+  push:
+    branches: [research/m012b-sealed-morphogenesis]
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/m012b-sealed-morphogenesis
+
+      - name: Record part sizes and hashes
+        shell: bash
+        run: |
+          set -euo pipefail
+          : > tools/m012b-payload/parts-diagnostic.txt
+          for file in tools/m012b-payload/part-*; do
+            printf '%s bytes=%s sha256=%s\n' \
+              "$(basename "$file")" \
+              "$(wc -c < "$file")" \
+              "$(sha256sum "$file" | cut -d' ' -f1)" \
+              >> tools/m012b-payload/parts-diagnostic.txt
+          done
+          rm .github/workflows/m012b-diagnose-parts.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "diagnostic(m012b): record per-part integrity"
+          git push origin HEAD:research/m012b-sealed-morphogenesis
