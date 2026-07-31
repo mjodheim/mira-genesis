@@ -4,59 +4,36 @@
 
 Construire une intelligence capable d’apprendre dans un substrat A, de découvrir un substrat B inconnu, d’y construire un nouveau corps, puis d’y transférer ses compétences, sa mémoire et sa plasticité afin de continuer à apprendre sans intervention architecturale humaine.
 
-## État au 31 juillet 2026
+## État corrigé au 31 juillet 2026
 
 - Branche scientifique : **Metamorphosis**
-- Dernière expérience validée : **M013c — Découverte d’un substrat inconnu**
-- Expérience active : **M014 — Plasticité portable**
-- Tests M013c : **38 réussis**
-- Migrations principales M013c : **36/36 exactes**
-- Contrôles négatifs M013c : **12/12 abstentions, aucun faux succès**
-- Statut global : **prototype de recherche borné**
+- Dernière expérience considérée comme validée : **M011**, dans son domaine fini
+- M012 : **INCONCLUSIVE — CONTAMINATED**
+- M013 et M013b : **INCONCLUSIVE — CONTAMINATED**
+- M013c : **INCONCLUSIVE — NON REPRODUCTIBLE AU COMMIT ANNONCÉ**
+- M014 : **HALTED — protocole gelé, aucune évaluation autorisée**
+- Statut global : **prototype de recherche borné en audit scientifique**
 
-## Capacités validées dans le domaine fini
+## Motifs de révocation
 
-- Extraction comportementale d’un passeport cognitif sans accès aux poids.
-- Réincarnation exacte dans plusieurs substrats.
-- Deltas cognitifs portables après migration.
-- Découverte d’opérateurs de transformation à partir d’exemples avant/après.
-- Transformations structurelles : insertion, scission, fusion et micro-circuits.
-- Alignement structurel sans identifiants persistants.
-- Alignement polynomial jusqu’à 48 états dans le benchmark M008.
-- Réincarnation locale dans cinq physiques computationnelles.
-- Chirurgie native en place après métamorphose.
-- Découverte active d’états comportementaux depuis un contrat opaque.
-- Construction autonome de corps natifs par un synthétiseur commun piloté par catalogues déclaratifs.
-- Découverte expérimentale de tables de vérité derrière des identifiants d’opcodes opaques.
-- Détection des opérations instables et des bases fonctionnelles insuffisantes.
-- Migration exacte d’une compétence héritée vers trois machines inconnues sans oracle de tâche ni carte d’opcodes.
+### M012
 
-## Résultat M013c
+Les graines présentées comme réservées à l’évaluation apparaissent directement dans les tests et ont donc été exécutées pendant le développement. Les résultats restent utiles comme validation d’ingénierie, mais ne constituent pas une évaluation cachée recevable.
 
-Genesis a reçu douze compétences déjà acquises sous forme de passeports et trois machines dont les opérations n’avaient ni nom logique ni documentation. Elle a sondé les machines, identifié leurs opérations stables, construit un corps natif composé uniquement d’identifiants opaques et préservé exactement chaque compétence.
+### M013c
 
-Résultats : 36/36 migrations exactes, plafond oracle 36/36, médiane 84 sondes sur 120, baseline sans sondage 0/36, baseline à sémantiques aléatoires 0/36, 12/12 contrôles négatifs rejetés.
+Le commit d’évaluation annoncé `40ac0f64a1fb9465e1c4cadf6c32c0cfde3b84dd` précède l’ajout du protocole M013c. La commande de reproduction documentée demande de checkout ce commit puis de lire `experiments/M013c/protocol.yaml`, absent à ce commit. La traçabilité complète préenregistrée n’est donc pas satisfaite.
 
-M013 et M013b restent enregistrés comme `INCONCLUSIVE — CONTAMINATED`; aucun résultat n’en est revendiqué. M013c a utilisé un espace de graines séparé et intact.
+## Capacités encore soutenues par les expériences antérieures
 
-Limite : le substrat inconnu reste une machine booléenne finie. M013c ne valide ni une nouvelle physique continue ni le transfert d’une méthode d’apprentissage générale.
+Les fondations M001–M011 restent des résultats expérimentaux bornés : passeports finis, réincarnation multi-substrat, transformations structurelles, alignement, chirurgie native et plasticité locale. Elles ne démontrent pas une intelligence générale ni une métamorphose ouverte.
 
-## Non validé
+## Reprise obligatoire
 
-- Transport d’une méthode d’apprentissage et de ses règles de consolidation.
-- Mémoire autobiographique portable et réutilisable.
-- Compétences riches, continues et sensorimotrices trans-substrat.
-- Langage cognitif ouvert et auto-extensible hors méta-grammaire humaine.
-- Auto-métamorphose et auto-amélioration scientifique fermée.
+1. Créer M012b avec des graines d’évaluation générées et scellées hors des tests.
+2. Produire un commit d’évaluation auto-contenu incluant protocole, code et commandes de reproduction.
+3. Rejouer ensuite M013d sur de nouvelles graines, sans réutiliser les espaces 12xxx–14xxx.
+4. Ne reprendre M014 qu’après validation propre de M012b et M013d.
+5. Conserver toutes les révocations et erreurs dans le journal scientifique.
 
-## Prochaine opération M014
-
-Transmettre avec la compétence une stratégie d’apprentissage : représentation des hypothèses, politique de sélection des expériences, règle de mise à jour, incertitude et consolidation. Après migration vers une machine inconnue, l’organisme devra apprendre une modification comportementale nouvelle avec peu d’expériences, produire un nouveau corps natif exact et préserver son ancienne incarnation.
-
-## Discipline de reprise
-
-1. Lire ce fichier et `PROJECT_STATE.yaml`.
-2. Lire le protocole actif.
-3. Vérifier le dernier résultat validé et le journal des échecs.
-4. Ne modifier aucun critère après observation des résultats.
-5. Mettre à jour les fichiers d’état avant chaque fusion sur `main`.
+Le but initial demeure inchangé : apprendre dans un corps A, comprendre un substrat B inconnu, y construire un corps, puis y transférer compétence, mémoire et plasticité afin de continuer à apprendre.
