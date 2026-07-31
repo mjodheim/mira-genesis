@@ -13,9 +13,9 @@ env:
   PYTHONPATH: .:scripts
 
 jobs:
-  test:
+  test-and-benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,3 +25,11 @@ jobs:
         run: python -m pip install --upgrade pip pytest numpy
       - name: Run M014c development tests
         run: pytest -q tests/test_m014c.py
+      - name: Run generated-profile development benchmark
+        run: python scripts/run_m014c_development.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m014c-development-${{ github.run_id }}
+          path: results/M014c_development.json
+          if-no-files-found: error
+          retention-days: 30
