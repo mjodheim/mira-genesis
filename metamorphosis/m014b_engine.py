@@ -8,6 +8,7 @@ from typing import Iterable, Mapping, Protocol, Sequence
 from .m012b_dfa import DFA
 from .m013e_engine import MigrationCertificate, UnknownSubstrateMigrator
 from .m013e_runtime import OpaqueNativeBody
+from .m014b_confirmation import ConformanceConfirmation, confirm_candidate
 from .m014b_policy import (
     BehavioralOracle,
     EditHypothesis,
@@ -36,6 +37,8 @@ class PortablePlasticityCertificate:
     old_migration: MigrationCertificate
     new_migration: MigrationCertificate | None
     inference: UpdateInference | None
+    confirmation: ConformanceConfirmation | None
+    total_update_oracle_calls: int
     plasticity_passport_sha256: str
     plasticity_round_trip_exact: bool
     old_body_sha256_before: str | None
@@ -52,6 +55,7 @@ def _sha256_text(value: str) -> str:
 def _consolidation_digest(
     hypothesis: EditHypothesis,
     inference: UpdateInference,
+    confirmation: ConformanceConfirmation,
 ) -> str:
     payload = {
         "selected_hypothesis": hypothesis.to_dict(),
@@ -60,6 +64,9 @@ def _consolidation_digest(
         "initial_candidates": inference.initial_candidates,
         "remaining_candidates": inference.remaining_candidates,
         "query_trace": list(inference.query_trace),
+        "confirmation_reason": confirmation.reason,
+        "confirmation_raw_calls": confirmation.raw_oracle_calls,
+        "confirmation_words": [list(word) for word in confirmation.checked_words],
     }
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -115,6 +122,8 @@ class PortablePlasticityEngine:
                 old_migration,
                 None,
                 None,
+                None,
+                0,
                 plasticity_hash,
                 plasticity_round_trip,
                 None,
@@ -149,6 +158,47 @@ class PortablePlasticityEngine:
                 old_migration,
                 None,
                 inference,
+                None,
+                inference.raw_oracle_calls,
+                plasticity_hash,
+                plasticity_round_trip,
+                archived_old_hash,
+                old_after_hash,
+                old_bit_exact,
+                None,
+                base_trace,
+            )
+
+        asked = {
+            tuple(int(value) for value in row["word"])
+            for row in inference.query_trace
+            if isinstance(row.get("word"), list)
+        }
+        confirmation = confirm_candidate(
+            inference.updated_passport,
+            behavioral_oracle,
+            already_asked=asked,
+            raw_budget=max(0, self.query_budget - inference.raw_oracle_calls),
+            repetitions=plasticity.repeat_queries,
+            max_length=5,
+        )
+        total_update_calls = inference.raw_oracle_calls + confirmation.raw_oracle_calls
+        old_after_json = old_body.to_json()
+        old_after_hash = _sha256_text(old_after_json)
+        old_bit_exact = archived_old_json == old_after_json
+        if confirmation.status != "confirmed":
+            return PortablePlasticityCertificate(
+                "abstained",
+                confirmation.reason,
+                inherited_passport,
+                None,
+                old_body,
+                None,
+                old_migration,
+                None,
+                inference,
+                confirmation,
+                total_update_calls,
                 plasticity_hash,
                 plasticity_round_trip,
                 archived_old_hash,
@@ -179,6 +229,8 @@ class PortablePlasticityEngine:
                 old_migration,
                 new_migration,
                 inference,
+                confirmation,
+                total_update_calls,
                 plasticity_hash,
                 plasticity_round_trip,
                 archived_old_hash,
@@ -192,6 +244,7 @@ class PortablePlasticityEngine:
         consolidation_digest = _consolidation_digest(
             inference.selected_hypothesis,
             inference,
+            confirmation,
         )
         return PortablePlasticityCertificate(
             "success",
@@ -203,6 +256,8 @@ class PortablePlasticityEngine:
             old_migration,
             new_migration,
             inference,
+            confirmation,
+            total_update_calls,
             plasticity_hash,
             plasticity_round_trip,
             archived_old_hash,
