@@ -340,6 +340,27 @@ def _candidate_weights(
     return [weight / total for weight in weights]
 
 
+def _fixed_query_words(max_length: int = 8) -> tuple[tuple[int, ...], ...]:
+    return tuple(
+        word
+        for length in range(max_length + 1)
+        for word in itertools.product((0, 1), repeat=length)
+    )
+
+
+def _fixed_query_signature(dfa: DFA, max_length: int = 8) -> tuple[bool, ...]:
+    outputs = [bool(dfa.accepting[dfa.initial])]
+    frontier = [dfa.initial]
+    for _ in range(max_length):
+        next_frontier: list[int] = []
+        for state in frontier:
+            next_frontier.append(dfa.transitions[state][0])
+            next_frontier.append(dfa.transitions[state][1])
+        outputs.extend(bool(dfa.accepting[state]) for state in next_frontier)
+        frontier = next_frontier
+    return tuple(outputs)
+
+
 def _witness_pool(
     candidates: Sequence[CandidateUpdate],
     asked: set[tuple[int, ...]],
@@ -396,6 +417,18 @@ def identify_update(
     raw_calls = 0
     selected_policy = policy or passport.query_policy
     rng = random.Random(search_seed)
+    fixed_words = _fixed_query_words(8)
+    fixed_word_index = {word: index for index, word in enumerate(fixed_words)}
+    fixed_signatures = {
+        id(candidate): _fixed_query_signature(candidate.dfa, 8)
+        for candidate in candidates
+    }
+
+    def predicted(candidate: CandidateUpdate, word: tuple[int, ...]) -> bool:
+        index = fixed_word_index.get(word)
+        if index is not None:
+            return fixed_signatures[id(candidate)][index]
+        return dfa_accepts(candidate.dfa, word)
 
     while len(candidates) > 1:
         if raw_calls + passport.repeat_queries > query_budget:
@@ -404,7 +437,15 @@ def identify_update(
                 raw_calls, len(asked), initial_candidates, len(candidates),
                 initial_entropy, _entropy(weights), tuple(trace),
             )
-        words = _witness_pool(candidates, asked, rng, passport.max_pair_samples)
+        words = tuple(
+            word
+            for index, word in enumerate(fixed_words)
+            if word not in asked
+            and any(fixed_signatures[id(candidate)][index] for candidate in candidates)
+            and not all(fixed_signatures[id(candidate)][index] for candidate in candidates)
+        )
+        if not words:
+            words = _witness_pool(candidates, asked, rng, passport.max_pair_samples)
         if not words:
             reference = candidates[0]
             if all(exact_equivalence(reference.dfa, candidate.dfa)[0] for candidate in candidates[1:]):
@@ -431,12 +472,12 @@ def identify_update(
                 zero_pairs = [
                     (candidate, weight)
                     for candidate, weight in zip(candidates, weights)
-                    if not dfa_accepts(candidate.dfa, candidate_word)
+                    if not predicted(candidate, candidate_word)
                 ]
                 one_pairs = [
                     (candidate, weight)
                     for candidate, weight in zip(candidates, weights)
-                    if dfa_accepts(candidate.dfa, candidate_word)
+                    if predicted(candidate, candidate_word)
                 ]
                 zero_weights = [weight for _, weight in zero_pairs]
                 one_weights = [weight for _, weight in one_pairs]
@@ -477,7 +518,7 @@ def identify_update(
         filtered = [
             (candidate, weight)
             for candidate, weight in zip(candidates, weights)
-            if dfa_accepts(candidate.dfa, word) == answer
+            if predicted(candidate, word) == answer
         ]
         if not filtered:
             return UpdateInference(
@@ -539,42 +580,6 @@ def train_plasticity_passport(
     digest = _demonstration_digest(demonstrations)
 
     best_penalty = 0.0
-    best_score: tuple[int, float, float] | None = None
-    for penalty in (0.0, 0.005, 0.01, 0.02, 0.05):
-        trial = PlasticityPassport(
-            "m014b-plasticity-passport/1",
-            schemas,
-            prior,
-            "active_minimax_information_gain",
-            penalty,
-            2,
-            1024,
-            5000,
-            "normalized_version_space_entropy_bits",
-            "abstain_on_inconsistency_empty_or_unresolved_version_space",
-            "canonical_minimal_updated_behavioral_passport",
-            digest,
-        )
-        query_counts: list[int] = []
-        successes = 0
-        for index, (before, after) in enumerate(demonstrations):
-            inference = identify_update(
-                before,
-                _TrainingOracle(after),
-                trial,
-                query_budget=192,
-                search_seed=70_000 + index,
-            )
-            successes += int(
-                inference.status == "success"
-                and inference.updated_passport is not None
-                and exact_equivalence(inference.updated_passport, after)[0]
-            )
-            query_counts.append(inference.unique_queries)
-        score = (-successes, statistics.median(query_counts), penalty)
-        if best_score is None or score < best_score:
-            best_score = score
-            best_penalty = penalty
 
     return PlasticityPassport(
         "m014b-plasticity-passport/1",
