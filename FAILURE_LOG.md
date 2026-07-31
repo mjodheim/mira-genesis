@@ -61,6 +61,37 @@ Le développement avait appris un langage de transformations et un prior utiles 
 
 M014c devra apprendre à travers plusieurs distributions, détecter le décalage, adapter son prior sous budget et être comparé au passeport statique M014b en plus des baselines précédentes.
 
+## M014c — Arrêt avant évaluation
+
+- Statut : `HALTED — SUPERSEDED BY M017`. Aucune évaluation canonique n'a été ouverte
+  et aucun résultat n'est revendiqué.
+- Branche préservée : `research/m014c-distribution-general-plasticity`, tête `fc46005`.
+- L'implémentation fonctionnait, les tests passaient, la CI était verte. Le défaut
+  était dans ce qui était mesuré.
+- `MetaPlasticitySession.identify` énumère strictement `passport.programs` — douze
+  programmes structurels écrits à la main. L'adaptation en ligne se réduit à
+  repondérer des compteurs de groupe sur ce catalogue fermé.
+- Le banc affichait `active_to_scratch_ratio = 0,083`, lisible comme un gain de quinze
+  fois. C'est un effet de taille d'automate : L\* paye un coût qui croît avec l'automate,
+  Genesis un coût qui croît avec sa bibliothèque de douze entrées. Agrandir les
+  automates aurait gonflé le ratio sans rien changer à ce qui avait été appris.
+- La comparaison qui portait l'hypothèse était `active_to_static_ratio = 0,88` : douze
+  pour cent, sur une fenêtre large de quatre requêtes.
+- **C'est la géométrie exacte de l'échec de M014b.** Figer M014c contre L\* aurait
+  passé trivialement et répété l'erreur en sens inverse.
+
+### Leçon scientifique
+
+Un catalogue fermé rend indécidable toute expérience sur l'apprentissage : la fenêtre
+mesurable est bornée par la taille du catalogue, pas par la capacité de l'organisme.
+Voir D009 et D010.
+
+### Remplacement
+
+M017 — langage auto-extensible. Le vocabulaire de départ ne contient que des atomes ;
+tout ce qui dépasse l'atome doit être construit, et ce qui est construit peut être
+absorbé.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.
