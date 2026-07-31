@@ -1,9 +1,9 @@
 project: Mira Genesis
 updated_at: 2026-07-31
 branch: metamorphosis
-status: bounded_research_prototype
-last_validated_experiment: M013c
-current_experiment: M014
+status: scientific_audit
+last_validated_experiment: M011
+current_experiment: AUDIT
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -13,7 +13,7 @@ ultimate_goal:
   portable_plasticity: true
   autonomous_reembodiment: true
 
-validated:
+validated_bounded:
   behavioral_passport_extraction: true
   exact_finite_equivalence: true
   heterogeneous_reembodiment: true
@@ -22,52 +22,28 @@ validated:
   identity_free_alignment: true
   scalable_alignment_benchmark: true
   native_in_place_surgery: true
-  active_behavioral_state_discovery: true
-  autonomous_body_generation_from_opaque_contract: true
-  inspectable_construction_heritage: true
-  bounded_unknown_substrate_semantics_discovery: true
-  inherited_skill_migration_without_task_oracle: true
-  unstable_and_insufficient_substrate_abstention: true
 
-m012:
-  scientific_status: validated
-  evaluation_commit: 5ebf244327b1fded84d5e3e648c9a078bd89d96b
-  exact_principal_births: 36
-  principal_births_total: 36
-
-m013:
-  scientific_status: inconclusive_contaminated
-  replacement: M013b
-m013b:
-  scientific_status: inconclusive_contaminated
-  replacement: M013c
-m013c:
-  protocol_status: frozen
-  scientific_status: validated
-  evaluation_commit: 40ac0f64a1fb9465e1c4cadf6c32c0cfde3b84dd
-  exact_principal_migrations: 36
-  principal_migrations_total: 36
-  oracle_ceiling: 36
-  median_substrate_probes: 84
-  max_substrate_probes: 96
-  no_probe_baseline_exact: 0
-  random_semantics_baseline_exact: 0
-  correct_negative_abstentions: 12
-  false_successes: 0
-  interpretation_limit: finite_opaque_boolean_substrates
-
-not_validated:
-  general_learning_strategy_transfer: true
-  autobiographical_memory_transfer: true
-  rich_sensorimotor_transfer: true
-  open_ended_language_extension: true
-  autonomous_self_metamorphosis: true
+revoked_or_inconclusive:
+  M012:
+    status: inconclusive_contaminated
+    reason: evaluation_seeds_executed_in_tests
+    replacement: M012b
+  M013:
+    status: inconclusive_contaminated
+  M013b:
+    status: inconclusive_contaminated
+  M013c:
+    status: inconclusive_non_reproducible_commit
+    reason: announced_evaluation_commit_does_not_contain_frozen_protocol
+    replacement: M013d
+  M014:
+    status: halted_before_evaluation
+    protocol_frozen: true
 
 next_experiment:
-  id: M014
-  title: Portable Plasticity
-  status: protocol_drafting
+  id: M012b
+  title: Autonomous Morphogenesis — clean sealed evaluation
+  status: required
   success_condition: >-
-    Transfer a learning strategy with the inherited competence, reconstruct it
-    on an unknown substrate, learn a new behavioral change from few task queries,
-    produce an exact updated native body, and preserve the archived prior body.
+    Reproduce autonomous body generation using evaluation cases never executed
+    by tests or development code, from a single self-contained immutable commit.
