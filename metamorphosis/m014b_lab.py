@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import random
-from typing import Iterable, Sequence
+from typing import Iterable
 
 from .m012b_dfa import DFA, exact_equivalence, random_minimal_dfa
 from .m014b_policy import (
@@ -51,7 +51,12 @@ def _select_candidate(base: DFA, schema: str, seed: int) -> CandidateUpdate:
     candidates = generate_candidates(base, (schema,), 5000)
     if not candidates:
         raise RuntimeError(f"no distinct candidate for schema {schema}")
-    return random.Random(seed).choice(candidates)
+    selected = random.Random(seed).choice(candidates)
+    # Preserve the local edit in the inherited state's coordinate system.
+    # Candidate enumeration is behaviorally canonicalized for deduplication, but
+    # a training demonstration must not be relabeled before its schema is read.
+    raw_target = apply_hypothesis(base, selected.hypothesis)
+    return CandidateUpdate(raw_target, selected.hypothesis)
 
 
 def make_development_demonstrations() -> tuple[tuple[DFA, DFA], ...]:
