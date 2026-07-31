@@ -1,9 +1,9 @@
 project: Mira Genesis
 updated_at: 2026-07-31
-branch: research/m013e-sealed-unknown-substrate
-status: sealed_evaluation_ready
-last_validated_experiment: M012b
-current_experiment: M013e
+branch: metamorphosis
+status: bounded_research_prototype
+last_validated_experiment: M013e
+current_experiment: M014b
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -23,6 +23,8 @@ validated_bounded:
   scalable_alignment_benchmark: true
   native_in_place_surgery: true
   sealed_autonomous_finite_body_morphogenesis: true
+  sealed_finite_opaque_substrate_discovery: true
+  inherited_skill_migration_without_task_oracle: true
 
 revoked_or_inconclusive:
   M012:
@@ -38,13 +40,10 @@ revoked_or_inconclusive:
   M013d:
     status: failed_development_baseline_criterion
     canonical_evaluation_opened: false
-    main_exact_principal_migrations: 36
-    no_probe_baseline_exact: 12
-    failed_criterion: no_probe_baseline_at_most_8_of_36
     replacement: M013e
   M014:
-    status: halted_before_evaluation
-    protocol_frozen: true
+    status: halted_prerequisites_revoked_never_evaluated
+    replacement: M014b
 
 m012b:
   scientific_status: validated_bounded_finite_domain
@@ -57,36 +56,42 @@ m012b:
 
 m013e:
   protocol_status: frozen
-  scientific_status: ready_for_sealed_evaluation
-  evaluation_cases_generated: false
-  canonical_trigger: first_pull_request_opened_run
-  canonical_run_attempt: 1
-  evaluation_case_source: runtime_cryptographic_nonce
-  evaluation_seeds_present_in_repository: false
-  development_tests_passed: 6
-  isolation_audit_passed: true
-  noncanonical_full_protocol_check:
-    exact_principal_migrations: 36
-    exact_executions: 108
-    per_machine_exact: [12, 12, 12]
-    oracle_ceiling_exact: 36
-    median_probe_calls: 84
-    max_probe_calls: 96
-    no_probe_baseline_exact: 0
-    random_semantics_baseline_exact: 0
-    correct_negative_abstentions: 12
-    all_pre_registered_criteria_passed: true
-    scientific_evidence: false
+  scientific_status: validated_bounded_finite_opaque_substrate
+  evaluated_commit: e309169b4edf8a508ec60990e68ba079fd032f2c
+  protocol_sha256: e29f024e3cc04ebd18ebd9484d499bdfbf1d98a3fbe0beb9c0ec318c8c394c5f
+  github_run_id: 30637689966
+  github_run_attempt: 1
+  event_action: opened
+  artifact_sha256: 47888734b6c88ef5811e086bac71bbcfd8e6c14f676824eb5d6597475c7742c6
+  master_nonce_sha256: fedfc69a7be6acfe7184be9840911147ea94d57ae6c8011ac8440a2a13149ab6
+  exact_principal_migrations: 36
+  principal_migrations_total: 36
+  exact_executions: 108
+  executions_total: 108
+  per_machine_exact: [12, 12, 12]
+  oracle_ceiling_exact: 36
+  median_probe_calls: 84
+  max_probe_calls: 96
+  no_probe_baseline_exact: 0
+  random_semantics_baseline_exact: 1
+  advantage_over_best_no_information_baseline: 35
+  correct_negative_abstentions: 12
+  false_negative_successes: 0
+  all_pre_registered_criteria_passed: true
+  independent_reproduction:
+    deterministic_scientific_content_equal: true
+    excluded_nondeterministic_fields:
+      - elapsed_seconds
+      - environment
+  interpretation_limit: finite_runtime_sealed_opaque_boolean_substrates
 
 next_experiment:
-  id: M013e
-  title: Unknown Substrate Discovery — sealed relative-baseline evaluation
-  status: ready
+  id: M014b
+  title: Portable Plasticity — clean sealed evaluation
+  status: protocol_drafting
   success_condition: >-
-    Infer stable semantics of runtime-sealed opaque opcodes within 120 probes,
-    exceed the best zero-information baseline by at least 12 principal
-    migrations, abstain on all impossible machines, and construct exact native
-    bodies without a task oracle, opcode map, or machine-specific compiler.
-
-blocked_after_m013e:
-  - M014
+    Transfer a serialized learning policy with an inherited competence, rebuild
+    both on a runtime-sealed opaque substrate, identify a previously unknown
+    behavioral modification from few task queries, synthesize an exact updated
+    native body, preserve the archived prior body, and outperform learning from
+    scratch, random querying, and an organism without its plasticity passport.

@@ -7,39 +7,42 @@
 | M012b | Morphogenèse autonome propre | VALIDATED dans le domaine fini | Évaluation scellée 36/36 et reproduction scientifique |
 | M013 / M013b | Substrat inconnu | INCONCLUSIVE — CONTAMINATED | Aucun résultat revendiqué |
 | M013c | Substrat inconnu | INCONCLUSIVE — NON REPRODUCIBLE | Commit annoncé incomplet |
-| M013d | Substrat inconnu scellé, seuil absolu | FAILED IN DEVELOPMENT | Baseline sans sondage 12/36 contre plafond 8/36 ; aucun run canonique |
-| M013e | Substrat inconnu scellé, avantage relatif | READY FOR SEALED EVALUATION | Comprendre les opcodes et dépasser de 12 la meilleure baseline sans information |
-| M014 | Plasticité portable | HALTED | Reprendre seulement après M013e |
+| M013d | Substrat inconnu, seuil absolu | FAILED IN DEVELOPMENT | Baseline sans sondage 12/36 contre plafond 8/36 |
+| M013e | Substrat inconnu, avantage relatif | VALIDATED dans le domaine fini | 36/36, découverte d’opcodes scellés et reproduction scientifique |
+| M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
+| M014b | Plasticité portable scellée | ACTIVE — PROTOCOL DRAFTING | Transférer une politique d’apprentissage et apprendre après migration |
 | M015 | Mémoire et stratégie | PLANNED | Migrer souvenirs, incertitudes et stratégie d’exploration |
 | M016 | Compétence sensorimotrice | PLANNED | Transporter un modèle du monde entre architectures différentes |
 | M017 | Langage auto-extensible | PLANNED | Inventer un dialecte requis par une capacité hors langage |
 | M018 | Auto-métamorphose | PLANNED | Détecter, construire et adopter seul un corps mieux adapté |
 
-## M012b — dernière validation
+## M013e — dernière validation
 
-- SHA évalué : `c60ddc28e3bea8c7c71d615dace4263f5cf3d187` ;
-- 36/36 naissances principales ;
+- SHA évalué : `e309169b4edf8a508ec60990e68ba079fd032f2c` ;
+- 36/36 migrations principales ;
 - 108/108 exécutions exactes ;
+- trois machines à 12/12 ;
+- 84 sondes médianes et 96 maximum sur 120 ;
+- plafond oracle 36/36 ;
+- baselines sans information : 0/36 et 1/36 ;
+- avantage de 35 migrations ;
 - 12/12 contrôles négatifs ;
 - dix critères passés et reproduction indépendante.
 
-## M013d — échec de développement conservé
+Limite : machines booléennes finies scellées à l’exécution.
 
-Le contrôle non canonique atteignait 36/36, mais la baseline fixe sans sondage obtenait 12/36. Le critère absolu de 8/36 a donc échoué. Aucun cas scellé n’a été généré et le seuil n’est pas changé rétroactivement.
+## M014b — étape active
 
-## M013e — étape active
+M014b teste le passage crucial de la portabilité d’une compétence à la portabilité de la capacité d’apprendre.
 
-1. Les douze passeports, trois machines, douze contrôles et suites cachées sont dérivés seulement lors du premier run PR.
-2. Genesis reçoit la compétence héritée, sans oracle de tâche.
-3. La machine expose seulement identifiants opaques, arités, coûts, sondes et exécution.
-4. Genesis infère les tables stables, exclut les opérations instables et synthétise un corps sans tables sémantiques sérialisées.
-5. L’évaluateur prouve l’équivalence uniquement par exécution du corps sur la machine.
-6. Genesis doit dépasser d’au moins 12 migrations la meilleure baseline sans sémantique vraie.
-7. Le premier run et la première tentative sont contraignants ; une correction matérielle crée M013f.
-
-## Suite conditionnelle — M014
-
-Après M013e, M014 reprendra le transfert d’une politique d’apprentissage : hypothèses, choix actif d’expériences, incertitude et consolidation.
+1. Un passeport de plasticité est appris uniquement sur des transformations de développement.
+2. Il sérialise un espace d’hypothèses, une politique active de requêtes, une estimation d’incertitude et une règle de consolidation.
+3. La compétence et le passeport sont migrés vers une machine opaque de type M013e.
+4. Une cible comportementale modifiée, jamais vue, est accessible uniquement par un petit budget de requêtes.
+5. Genesis doit identifier la modification, produire un nouveau corps natif exact et conserver l’ancien corps inchangé.
+6. Les baselines sont : apprentissage depuis zéro, requêtes aléatoires et même organisme privé du passeport de plasticité.
+7. Des transformations hors langage doivent provoquer une abstention, jamais un faux certificat.
+8. Les cas sont générés seulement au premier run scellé ; la première tentative est contraignante.
 
 ## Test ultime de la première phase
 
