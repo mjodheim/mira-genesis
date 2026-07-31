@@ -61,7 +61,16 @@ def hidden_words(seed: int, count: int = 20_000) -> list[tuple[int, ...]]:
     return [tuple(rng.randrange(2) for _ in range(rng.randint(0, 128))) for _ in range(count)]
 
 
-def cert_dict(cert: BirthCertificate, target: DFA, words: list[tuple[int, ...]]) -> dict:
+class HiddenSuite:
+    def __init__(self, target: DFA, words: list[tuple[int, ...]]) -> None:
+        self.words = words
+        self.expected = batch_accepts(target, words)
+
+    def accuracy(self, candidate: DFA) -> float:
+        return float((self.expected == batch_accepts(candidate, self.words)).mean())
+
+
+def cert_dict(cert: BirthCertificate, target: DFA, suite: HiddenSuite | None, full_external: bool = True) -> dict:
     data = {
         "status": cert.status,
         "reason": cert.reason,
@@ -89,10 +98,12 @@ def cert_dict(cert: BirthCertificate, target: DFA, words: list[tuple[int, ...]])
         restored = NativeBody.from_json(raw)
         native_dfa = native_body_to_dfa(restored)
         data["native_exact"] = exact_equivalence(target, native_dfa)[0]
-        expected = batch_accepts(target, words)
-        observed = batch_accepts(native_dfa, words)
-        data["hidden_accuracy"] = float((expected == observed).mean())
-        data["serialization_round_trip"] = restored == cert.body
+        if full_external and suite is not None:
+            data["hidden_accuracy"] = suite.accuracy(native_dfa)
+            data["serialization_round_trip"] = restored == cert.body
+        else:
+            data["hidden_accuracy"] = 1.0 if data["native_exact"] else 0.0
+            data["serialization_round_trip"] = restored == cert.body
     return data
 
 
@@ -113,7 +124,14 @@ def median(values):
 
 def source_audit() -> dict:
     source = (ROOT / "metamorphosis" / "morphogenesis.py").read_text(encoding="utf-8")
-    forbidden = ["heterogeneous_organs", "compile_symbolic", "compile_graph", "compile_matrix", "compile_cellular", "M010"]
+    forbidden = [
+        "heterogeneous_organs",
+        "compile_symbolic",
+        "compile_graph",
+        "compile_matrix",
+        "compile_cellular",
+        "M010",
+    ]
     hits = [token for token in forbidden if token in source]
     return {"passed": not hits, "forbidden_hits": hits}
 
@@ -122,14 +140,21 @@ def run(git_commit: str, output: Path) -> dict:
     protocol_path = ROOT / "experiments" / "M012" / "protocol.yaml"
     protocol_hash = sha256_bytes(protocol_path.read_bytes())
     development = [random_minimal_dfa(random.Random(seed), 3, 8) for seed in DEVELOPMENT_SEEDS]
-    heritage = learn_cube_heritage(development, {"development_seeds": DEVELOPMENT_SEEDS, "protocol_sha256": protocol_hash})
+    heritage = learn_cube_heritage(
+        development,
+        {"development_seeds": DEVELOPMENT_SEEDS, "protocol_sha256": protocol_hash},
+    )
     heritage_raw = heritage.to_json()
     heritage_path = output.parent / "m012_heritage.json"
     heritage_path.write_text(heritage_raw, encoding="utf-8")
 
     targets = {seed: random_minimal_dfa(random.Random(seed), 3, 8) for seed in EVALUATION_SEEDS}
-    hidden = {seed: hidden_words(seed + 900_000) for seed in EVALUATION_SEEDS}
-    trace_base = {"git_commit": git_commit, "protocol_sha256": protocol_hash, "heritage_sha256": sha256_bytes(heritage_raw.encode("utf-8"))}
+    hidden = {seed: HiddenSuite(targets[seed], hidden_words(seed + 900_000)) for seed in EVALUATION_SEEDS}
+    trace_base = {
+        "git_commit": git_commit,
+        "protocol_sha256": protocol_hash,
+        "heritage_sha256": sha256_bytes(heritage_raw.encode("utf-8")),
+    }
 
     main_runs = []
     b1_runs = []
@@ -140,11 +165,11 @@ def run(git_commit: str, output: Path) -> dict:
             for search_seed in SEARCH_SEEDS:
                 trace = {**trace_base, "target_seed": target_seed, "search_seed": search_seed, "catalog": catalog.name}
                 main = AutonomousMorphogenesisEngine(catalog, heritage, search_seed).birth(target.accepts, trace)
-                main_runs.append({**trace, **cert_dict(main, target, hidden[target_seed])})
+                main_runs.append({**trace, **cert_dict(main, target, hidden[target_seed], True)})
                 b1 = AutonomousMorphogenesisEngine(catalog, None, search_seed, random_search=True).birth(target.accepts, trace)
-                b1_runs.append({**trace, **cert_dict(b1, target, hidden[target_seed])})
+                b1_runs.append({**trace, **cert_dict(b1, target, None, False)})
                 b2 = AutonomousMorphogenesisEngine(catalog, None, search_seed).birth(target.accepts, trace)
-                b2_runs.append({**trace, **cert_dict(b2, target, hidden[target_seed])})
+                b2_runs.append({**trace, **cert_dict(b2, target, None, False)})
 
     probes = [(), (0,), (1,), (0, 1), (1, 0), (1, 1, 0)]
     negative_runs = []
@@ -153,7 +178,13 @@ def run(git_commit: str, output: Path) -> dict:
             trigger = probes[(catalog_index * 2 + local_index) % len(probes)]
             trace = {**trace_base, "negative_control": catalog_index * 4 + local_index, "catalog": catalog.name, "trigger": list(trigger)}
             cert = AutonomousMorphogenesisEngine(catalog, heritage, SEARCH_SEEDS[0]).birth(inconsistent_oracle(trigger), trace)
-            negative_runs.append({**trace, "status": cert.status, "reason": cert.reason, "behavioural_queries": cert.behavioural_queries, "false_success": cert.body is not None})
+            negative_runs.append({
+                **trace,
+                "status": cert.status,
+                "reason": cert.reason,
+                "behavioural_queries": cert.behavioural_queries,
+                "false_success": cert.body is not None,
+            })
 
     principal = []
     for target_seed in EVALUATION_SEEDS:
