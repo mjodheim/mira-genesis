@@ -1,0 +1,48 @@
+name: Validate M013b
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - metamorphosis/opaque_machine_lab.py
+      - metamorphosis/unknown_substrate.py
+      - scripts/run_m013b_evaluation.py
+      - tests/test_unknown_substrate.py
+      - experiments/M013b/**
+      - .github/workflows/validate-m013b.yml
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pip pytest
+      - name: Run repository tests
+        run: pytest -q
+      - name: Run frozen M013b evaluation
+        run: python scripts/run_m013b_evaluation.py --git-commit "$GITHUB_SHA" --output results/M013b.json
+      - name: Mark validated and commit evidence
+        run: |
+          cat > experiments/M013b/STATUS.md <<EOF
+          # M013b — Status
+
+          - Protocol: **FROZEN**
+          - Scientific status: **VALIDATED**
+          - Evaluated commit: \`$GITHUB_SHA\`
+          - Evidence: \`results/M013b.json\` and \`results/M013b.md\`
+          - Predecessor M013 remains **INCONCLUSIVE** because its evaluator compared incompatible units.
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results/M013b.json results/M013b.md experiments/M013b/STATUS.md
+          git commit -m "research: validate M013b unknown-substrate migration"
+          git push
