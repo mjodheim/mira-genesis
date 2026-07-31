@@ -10,8 +10,37 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - M012b : **VALIDATED — BOUNDED FINITE DOMAIN**
 - M013e : **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
 - M014b : **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
-- Expérience active : **M014c — distribution-general portable plasticity**
-- Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable mais avantage d’apprentissage non encore validé**
+- M014c : **HALTED — SUPERSEDED BY M017**, jamais évaluée
+- Expérience active : **M017 — langage auto-extensible**
+- Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable, avantage d’apprentissage non validé, et croissance du langage en cours de développement**
+
+## Correction de direction — 31 juillet 2026
+
+Toute la chaîne M012b → M014c reposait sur une limite qu’aucun critère ne mesurait :
+**l’organisme ne peut exprimer que ce qui lui a été écrit à la main.** L’identification
+de M014c énumère strictement douze programmes structurels ; son apprentissage n’est
+qu’une repondération de compteurs sur ce catalogue fermé.
+
+M014c est donc arrêtée avant évaluation et remplacée par M017 — langage
+auto-extensible — dont le vocabulaire de départ ne contient que des atomes, et où tout
+ce qui dépasse l’atome doit être construit puis peut être absorbé. La feuille de route
+change d’ordre, pas de noms : M015 et M016 sont reportées derrière M017 et M018.
+
+Voir D009, D010, `ROADMAP.md` et `experiments/M017/`.
+
+## Développement M017
+
+42 épisodes, trois environnements. Le catalogue fermé — la capacité de M014c —
+n’en résout **aucun**. La recherche ouverte sans absorption en résout 34, à coût
+constant. L’organisme auto-extensible en résout 37, et son coût de recherche médian
+passe de 4 222 nœuds sur la première moitié des épisodes à **43** sur la seconde,
+tandis que celui de la recherche ouverte reste plat.
+
+Réincarnation 9/9 exacte sur trois familles de machines opaques, archive intacte,
+4/4 abstentions sur les contrôles négatifs, zéro faux succès.
+
+Aucune évaluation canonique n’est autorisée. La première porte de gel est de désigner
+la comparaison décisive avant toute nouvelle observation.
 
 ## Résultat canonique M014b
 

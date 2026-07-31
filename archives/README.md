@@ -8,6 +8,21 @@
   le run canonique a été consommé, conservées pour la recette exacte, retirées de
   `.github/workflows/` pour ne plus être exécutables.
 
+## Tags d'archive
+
+Le code d'une expérience arrêtée ou remplacée n'est pas conservé sur une branche. Une
+branche vivante invite la reprise et se supprime par mégarde ; un tag annoté est une
+référence immuable, ce qu'exige un enregistrement scientifique.
+
+| Tag | Commit | Expérience |
+|---|---|---|
+| `archive/m014c-halted` | `fc46005` | M014c — `HALTED — SUPERSEDED BY M017` |
+
+```bash
+git show archive/m014c-halted:metamorphosis/m014c_meta.py
+git switch --detach archive/m014c-halted
+```
+
 ## Ce qui ne s'y trouve pas : M001 à M011
 
 **Aucune archive M001–M011 n'existe dans ce dépôt.** L'historique Git commence le

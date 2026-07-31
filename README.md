@@ -10,7 +10,8 @@ Objectif à long terme : un organisme qui apprend dans un corps A, découvre seu
 |---|---|
 | Dernière expérience validée | **M013e** — migration scellée vers un substrat opaque, domaine fini |
 | Dernier échec canonique | **M014b** — plasticité transportable sans avantage d'apprentissage généralisable |
-| Expérience active | **M014c** — plasticité portable hors distribution, branche `research/m014c-distribution-general-plasticity` |
+| Expérience arrêtée | **M014c** — jamais évaluée ; elle mesurait un catalogue fermé |
+| Expérience active | **M017** — langage auto-extensible, branche `research/m017-self-extending-language` |
 | Domaine validé | automates finis déterministes sur alphabet binaire, 4 à 10 états |
 | Substrats validés | machines booléennes opaques : opcodes sans sémantique déclarée, tables de vérité découvertes par sondage |
 
