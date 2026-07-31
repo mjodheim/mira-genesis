@@ -23,3 +23,25 @@ Les validations M001–M011 sont limitées aux domaines formels décrits dans le
 ## D006 — M012 doit supprimer les compilateurs spécialisés
 
 Le prochain progrès accepté doit concerner la naissance autonome d’un corps, pas un nouvel ajout manuel de backend.
+
+## D007 — L’arbre de travail ne contient que du code vivant
+
+Le code d’une expérience révoquée sort de l’arbre de travail ; son enregistrement
+scientifique, lui, reste. L’historique Git est l’archive, et `archives/RETIRED_CODE.md`
+en est l’index : chaque retrait cite le commit où le fichier reste consultable.
+
+Motif : la pile héritée M012 / M013b, environ 2 400 lignes, formait un sous-graphe
+d’imports entièrement déconnecté et faisait échouer `pytest -q` en important `torch`.
+Aucun signal ne le révélait, parce que les workflows scellés n’exécutaient que des
+fichiers de test ciblés.
+
+## D008 — Une CI permanente, distincte des évaluations scellées
+
+`.github/workflows/ci.yml` protège l’arbre de travail sur chaque PR et ne produit jamais
+de résultat scientifique. Les workflows d’évaluation scellée restent créés par
+expérience, exécutés une fois, puis retirés vers `archives/workflows/` : un workflow
+canonique consommé ne doit plus être exécutable, sans quoi la règle du run unique ne
+tient que par convention.
+
+`scripts/check_repository_integrity.py` rend structurels les trois défauts qui avaient
+échappé à la CI : module non importable, module orphelin, dépendance déclarée fantôme.
