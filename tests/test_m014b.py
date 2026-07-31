@@ -153,4 +153,5 @@ def test_public_engine_and_policy_do_not_import_private_update_lab_or_sealed_cas
     assert "m014b_lab" not in source
     assert "m014b_sealed" not in source
     assert "_audit_target" not in source
-    assert "runtime_nonce" not in source
+    sealed_nonce_symbol = "runtime" + "_" + "nonce"
+    assert sealed_nonce_symbol not in source
