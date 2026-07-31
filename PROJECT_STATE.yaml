@@ -1,9 +1,9 @@
 project: Mira Genesis
 updated_at: 2026-07-31
-branch: research/m012b-sealed-morphogenesis
-status: sealed_evaluation_ready
-last_validated_experiment: M011
-current_experiment: M012b
+branch: metamorphosis
+status: bounded_research_prototype
+last_validated_experiment: M012b
+current_experiment: M013d
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -22,6 +22,7 @@ validated_bounded:
   identity_free_alignment: true
   scalable_alignment_benchmark: true
   native_in_place_surgery: true
+  sealed_autonomous_finite_body_morphogenesis: true
 
 revoked_or_inconclusive:
   M012:
@@ -42,30 +43,42 @@ revoked_or_inconclusive:
 
 m012b:
   protocol_status: frozen
-  scientific_status: ready_for_sealed_evaluation
-  evaluation_cases_generated: false
-  canonical_trigger: first_pull_request_opened_run
-  canonical_run_attempt: 1
-  evaluation_case_source: runtime_cryptographic_nonce
-  evaluation_seeds_present_in_repository: false
-  development_tests_isolated: true
-  workflow_artifact_retention_days: 90
-  local_noncanonical_check:
-    tests_passed: 6
-    exact_principal_births: 36
-    principal_births_total: 36
-    all_pre_registered_criteria_passed: true
-    scientific_evidence: false
+  scientific_status: validated_bounded_finite_domain
+  evaluated_commit: c60ddc28e3bea8c7c71d615dace4263f5cf3d187
+  protocol_sha256: b949b9d4fc61cd118af075985d1d4218c37ce7f970f28bd3598d1f38dadbd651
+  github_run_id: 30635291887
+  github_run_attempt: 1
+  event_action: opened
+  artifact_sha256: b8c4bc1b6302f03b088ca03b557a8ec3b17359d777aad9b9c4e7eb1190042adb
+  master_nonce_sha256: 6b7d28657434b128194c127257eba1dfeafafc0d1ef2ed05ddf2cd8d2b2f7cbc
+  exact_principal_births: 36
+  principal_births_total: 36
+  exact_executions: 108
+  executions_total: 108
+  per_catalogue_exact:
+    register_logic: 12
+    nand_fabric: 12
+    nor_fabric: 12
+  oracle_ceiling_exact: 36
+  correct_negative_abstentions: 12
+  false_negative_successes: 0
+  all_pre_registered_criteria_passed: true
+  independent_reproduction:
+    deterministic_scientific_content_equal: true
+    excluded_nondeterministic_fields:
+      - elapsed_seconds
+      - environment
+  interpretation_limit: finite_deterministic_regular_languages_with_human_declared_boolean_catalogues
 
 next_experiment:
-  id: M012b
-  title: Autonomous Morphogenesis — clean sealed evaluation
-  status: ready
+  id: M013d
+  title: Unknown Substrate Discovery — clean sealed evaluation
+  status: protocol_drafting
   success_condition: >-
-    Generate evaluation cases only after the immutable pull-request head exists,
-    construct exact native bodies from opaque behavior and declarative primitive
-    catalogues, pass all pre-registered criteria, and publish complete evidence.
+    Receive an inherited finite competence and a runtime-sealed opaque machine,
+    infer stable native opcode semantics within a probe budget, abstain on
+    unstable or insufficient substrates, and construct an exact native body
+    without a task oracle, opcode map, or machine-specific compiler.
 
-blocked_after_m012b:
-  - M013d
+blocked_after_m013d:
   - M014
