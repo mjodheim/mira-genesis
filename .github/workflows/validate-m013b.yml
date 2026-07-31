@@ -10,8 +10,8 @@ jobs:
   superseded:
     runs-on: ubuntu-latest
     steps:
-      - name: Refuse contaminated evaluation
+      - name: Record superseded experiment
         run: |
           echo "M013b is scientifically contaminated and has been replaced by M013c."
           echo "This workflow is retained only as an audit marker."
-          exit 1
+          echo "No validation is performed and this marker exits successfully."
