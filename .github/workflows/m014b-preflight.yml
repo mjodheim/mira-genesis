@@ -3,6 +3,8 @@ name: M014b development preflight
 on:
   push:
     branches: [research/m014b-sealed-portable-plasticity]
+  pull_request:
+    branches: [main]
 
 permissions:
   contents: read
