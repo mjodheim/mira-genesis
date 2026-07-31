@@ -158,6 +158,36 @@ def test_library_survives_a_serialization_round_trip():
     assert len(restored.macros) == 1
 
 
+def test_an_unrelated_inherited_library_is_a_liability():
+    """Absorber n'est pas gratuit : un macro qui ne s'applique jamais coûte quand même.
+
+    Mesuré sur quatre paires d'environnements : une bibliothèque héritée d'un
+    environnement aux motifs disjoints donne 0,65× à 0,75× — strictement pire que pas
+    de bibliothèque du tout. C'est la leçon de M014b un cran plus haut : transporter
+    un mécanisme ne transporte pas son avantage.
+
+    Ce test verrouille le mécanisme, pas la valeur : une bibliothèque encombrée de
+    symboles inutiles élargit le facteur de branchement, donc explore strictement plus
+    de nœuds à solution égale.
+    """
+    episode = _episodes(70_000, 2)[0]
+    oracle_a = BehavioralOracle(episode.target)
+    oracle_b = BehavioralOracle(episode.target)
+
+    bare = SelfExtendingOrganism()
+    cluttered_library = Library.primitive()
+    for start in range(0, 12, 2):
+        atoms = all_atoms()
+        cluttered_library.add((atoms[start], atoms[start + 1]), episode=0)
+    cluttered = SelfExtendingOrganism(library=cluttered_library)
+
+    plain = bare.solve(episode.base, oracle_a)
+    loaded = cluttered.solve(episode.base, oracle_b)
+
+    assert plain.status == "success" and loaded.status == "success"
+    assert loaded.search_nodes > plain.search_nodes
+
+
 def test_out_of_language_target_is_refused():
     """Une cible qui ajoute un état n'est atteignable à aucune profondeur."""
     episode = _episodes(70_000, 2)[0]

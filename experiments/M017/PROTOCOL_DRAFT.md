@@ -122,6 +122,57 @@ Le coût de recherche s'effondre d'un facteur cent pour l'organisme qui étend s
 langage, et reste plat pour celui qui ne l'étend pas. C'est la comparaison qui porte
 l'hypothèse, et elle est mesurée sur une plage de quatre ordres de grandeur.
 
+## Portes n°4 et n°5 — le transport, et ce qu'il oblige à retirer
+
+La prédiction avait été écrite avant la mesure, dans l'en-tête de
+`scripts/run_m017_transport.py`. Elle est confirmée, y compris dans sa partie
+défavorable.
+
+| Bibliothèque héritée | Gain médian sur les épisodes précoces | Paires |
+|---|---|---|
+| motifs **partagés** avec la cible | **118,7×** (0,90× à 261×) | 3 / 4 aident |
+| motifs **disjoints** de la cible | **0,69×** (0,65× à 0,75×) | **4 / 4 nuisent** |
+
+Une bibliothèque héritée d'un environnement aux motifs différents est **strictement
+pire que pas de bibliothèque du tout**, et la mesure est serrée : 0,65 à 0,75 sur les
+quatre paires. Ce n'est pas du bruit, c'est un mécanisme. Ses macros ne s'appliquent
+jamais et gonflent pourtant le facteur de branchement à chaque épisode.
+
+### Ce que M017 ne pourra donc pas revendiquer
+
+**Le langage étendu ne se transporte pas.** Il croît *à l'intérieur* d'une
+distribution de transformations, et son avantage ne suit que dans la mesure où
+l'environnement d'arrivée partage cette structure. Sans structure partagée,
+l'absorption est un passif net.
+
+C'est exactement la leçon de M014b — transporter un mécanisme ne transporte pas son
+avantage — retrouvée un niveau au-dessus. Elle est portée ici dans le protocole avant
+tout gel, et non découverte après une évaluation canonique.
+
+Le transport est donc **rapporté**, jamais décisif. La comparaison qui décide reste
+intra-environnement, ce qui était déjà sa désignation.
+
+### Décalage brutal de distribution — porte n°5
+
+Un organisme ayant vécu dans un environnement reçoit ensuite les motifs d'un autre :
+
+- coût médian avant décalage : 744 à 11 492 nœuds ;
+- coût médian après décalage : 3 630 à 20 572 nœuds ;
+- abstentions : **3 sur 24** ;
+- faux succès : **0**.
+
+L'organisme se dégrade sans jamais mentir : il revient au coût d'une recherche sans
+macro utile, s'abstient quand le budget ne suffit plus, et n'annonce aucune solution
+inexacte.
+
+### Ce que cela ouvre pour M018
+
+Le passif du transport a une cause nommable : l'organisme ne peut ni oublier ses
+macros, ni juger qu'ils ne s'appliquent plus. Un organisme capable de diagnostiquer
+que son propre langage est inadapté et de s'en défaire annulerait ce passif — c'est
+précisément H6, l'auto-métamorphose, et M017 vient de produire la première mesure qui
+la rend nécessaire plutôt que souhaitable.
+
 ## Portes de gel
 
 Le protocole ne pourra être figé qu'après :
