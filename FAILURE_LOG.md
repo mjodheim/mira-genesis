@@ -6,6 +6,14 @@
 - Certaines restructurations composées étaient fonctionnellement équivalentes à une mutation simple.
 - Correction : séparation stricte organisme/évaluateur et protocole M005.
 
+## M013 — Contamination des graines avant évaluation
+
+- Les tests d’implémentation ont exécuté trois passeports préenregistrés et les trois machines prévues pour l’évaluation.
+- Même sans agrégation formelle, ces cas n’étaient plus cachés et auraient pu influencer le code.
+- Statut : `INCONCLUSIVE — CONTAMINATED`.
+- Aucun résultat M013 n’est revendiqué.
+- Correction : M013b reprend exactement la question, les budgets, les baselines et les critères avec des graines entièrement nouvelles figées avant leur première exécution.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante. Cette dérive a motivé le recentrage sur Metamorphosis et les protocoles figés.
