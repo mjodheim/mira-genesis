@@ -35,7 +35,7 @@ not_validated:
 next_experiment:
   id: M012
   title: Autonomous Morphogenesis
-  status: protocol_drafting
+  status: protocol_frozen
   success_condition: >-
     Build and select an exact target body from a behavioral contract,
     native primitives and a resource budget, without a hand-written
