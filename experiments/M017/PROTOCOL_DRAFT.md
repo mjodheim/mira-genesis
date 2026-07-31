@@ -52,6 +52,50 @@ puisse être défaite sans refaire la mesure.
    gonfler ses compteurs. C'était supprimer le signal : la récurrence d'un motif à
    travers les épisodes **est** ce que la règle doit détecter. Aucun macro ne naissait.
 
+## Budget et profondeur — porte de gel n°3
+
+Ces deux paramètres décident silencieusement du résultat. Ils sont donc justifiés ici
+par l'hypothèse, et fixés avant toute mesure de marge.
+
+### Le budget porte sur les pas de composition, pas sur les atomes
+
+`max_symbols = 3` borne le nombre de **symboles composés**, non le nombre d'atomes
+produits. Pour la recherche ouverte, trois symboles font trois atomes. Pour
+l'organisme auto-extensible, trois symboles peuvent en faire neuf.
+
+Cette asymétrie **est** l'hypothèse, pas un avantage concédé. Ce qu'un raisonneur
+borné dépense, c'est le pas de décision : absorber un motif signifie qu'un seul pas
+porte désormais plus loin. C'est l'argument classique du *chunking*. Borner les atomes
+plutôt que les pas réduirait l'absorption à un simple réordonnancement de la
+recherche, et l'expérience ne testerait plus la croissance du langage.
+
+Conséquence à énoncer sans détour : sur une cible de quatre atomes, la recherche
+ouverte échoue — par profondeur si on la borne à trois pas, par budget si on lui en
+accorde quatre, car 36⁴ = 1 679 616 dépasse tout budget tenable. L'organisme
+auto-extensible réussit parce qu'un macro comprime trois atomes en un pas. C'est
+exactement l'effet mesuré, et il ne doit pas être présenté comme autre chose.
+
+### Profondeur 3, parce que les motifs font trois atomes
+
+La profondeur maximale est fixée à la taille des motifs de l'environnement, qui est
+une propriété du banc et non un bouton de réglage.
+
+- En deçà, la recherche ouverte serait structurellement incapable **même sur un motif
+  pur** : elle deviendrait un second contrôle, et la comparaison décisive n'aurait
+  plus de terme de comparaison.
+- Au-delà, l'espace de profondeur 4 dépasse tout budget praticable en Python.
+
+### Budget 200 000, choisi pour favoriser la baseline
+
+L'espace complet de profondeur 3 sur 36 atomes compte 46 656 trajectoires. Le budget
+est fixé à plus de quatre fois ce nombre, afin que la recherche ouverte ne soit
+**jamais** limitée par le budget sur un motif pur : elle peut toujours achever son
+balayage.
+
+Le budget est donc réglé contre l'hypothèse testée, non pour elle. Toute abstention de
+la baseline sur un motif pur signalerait une erreur d'implémentation, pas un manque de
+ressources.
+
 ## Baselines
 
 - catalogue fermé — la capacité de M014c, reproduite telle quelle ;

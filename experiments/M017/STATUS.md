@@ -14,14 +14,36 @@
 | # | Porte | État |
 |---|---|---|
 | 1 | Désigner la comparaison décisive avant toute nouvelle observation | **franchie** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
-| 2 | Établir que la marge dépasse la dispersion entre environnements | en cours — `scripts/run_m017_dispersion.py` |
-| 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | à faire |
-| 4 | Transporter la bibliothèque vers un environnement scellé aux motifs inédits | à faire |
-| 5 | Contrôles négatifs adverses et changement brutal de distribution | à faire |
-| 6 | Audit d'isolation des sources et trace entièrement entière | à faire |
+| 2 | Établir que la marge dépasse la dispersion entre environnements | **franchie** — appariée : 95× à 620×, seuil proposé 10× |
+| 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | **franchie** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
+| 4 | Transporter la bibliothèque vers un environnement aux motifs inédits | mesure en cours — `scripts/run_m017_transport.py` |
+| 5 | Décalage brutal de distribution après absorption | mesure en cours, même script |
+| 6 | Audit d'isolation des sources et trace entièrement entière | **franchie** — `scripts/audit_m017_isolation.py` |
 
 Aucune pull request canonique ne peut être ouverte avant que ces portes soient
 franchies. Voir [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).
+
+## Ce que la porte n°2 a déjà appris
+
+La première statistique décisive — deux médianes agrégées séparément — a été
+**rejetée par la mesure**. Sur huit environnements l'avantage allait de 2,4× à 605×,
+et le facteur de confusion a été identifié : le coût de l'organisme auto-extensible
+est bimodal, environ 42 nœuds sur un motif pur, environ 1 800 lorsqu'un atome de bruit
+impose la profondeur 2. La médiane basculait selon le tirage.
+
+Appariée épisode par épisode, la même mesure donne 95× à 620× : **la dispersion est
+divisée par trente-huit sans que la médiane bouge**. Le seuil proposé, 10×, est dérivé
+de l'arithmétique des espaces de recherche — environ 500× attendus — et non de
+l'échantillon.
+
+La porte n°6 a de même trouvé un défaut réel : `m017_engine` importait le laboratoire.
+
+## Coût de l'absorption, à ne pas dissimuler
+
+Sur le pire épisode isolé, l'organisme auto-extensible est **35 % plus lent** : ses
+macros gonflent le facteur de branchement sans jamais s'appliquer. Cela concerne 8
+épisodes tardifs sur 49. Une garde par test de signe est préenregistrée pour qu'une
+règle d'absorption dégénérée ne puisse pas passer.
 
 ## Risque à ne pas perdre de vue
 
