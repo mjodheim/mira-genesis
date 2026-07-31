@@ -2,4 +2,8 @@
 
 This branch exists solely to run the frozen M013b tests and evaluation on GitHub Actions for an auditable commit. No protocol parameter is changed here.
 
-Rerun reason: the previous job stopped during test collection because NumPy was absent from the runner. The workflow now installs the declared runtime dependency; no scientific code or threshold changed.
+Rerun history:
+
+1. NumPy was missing during test collection.
+2. Torch was then found missing because the historical core imports it globally.
+3. The workflow now installs the repository runtime dependencies. No scientific code, seed, threshold or budget changed.
