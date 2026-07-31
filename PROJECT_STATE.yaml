@@ -2,8 +2,8 @@ project: Mira Genesis
 updated_at: 2026-07-31
 branch: metamorphosis
 status: bounded_research_prototype
-last_validated_experiment: M012
-current_experiment: M013
+last_validated_experiment: M013c
+current_experiment: M014
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -25,20 +25,38 @@ validated:
   active_behavioral_state_discovery: true
   autonomous_body_generation_from_opaque_contract: true
   inspectable_construction_heritage: true
+  bounded_unknown_substrate_semantics_discovery: true
+  inherited_skill_migration_without_task_oracle: true
+  unstable_and_insufficient_substrate_abstention: true
 
 m012:
-  protocol_status: frozen
   scientific_status: validated
   evaluation_commit: 5ebf244327b1fded84d5e3e648c9a078bd89d96b
-  tests_passed: 31
   exact_principal_births: 36
   principal_births_total: 36
+
+m013:
+  scientific_status: inconclusive_contaminated
+  replacement: M013b
+m013b:
+  scientific_status: inconclusive_contaminated
+  replacement: M013c
+m013c:
+  protocol_status: frozen
+  scientific_status: validated
+  evaluation_commit: 40ac0f64a1fb9465e1c4cadf6c32c0cfde3b84dd
+  exact_principal_migrations: 36
+  principal_migrations_total: 36
+  oracle_ceiling: 36
+  median_substrate_probes: 84
+  max_substrate_probes: 96
+  no_probe_baseline_exact: 0
+  random_semantics_baseline_exact: 0
   correct_negative_abstentions: 12
   false_successes: 0
-  interpretation_limit: deterministic_regular_languages_with_human_declared_boolean_primitives
+  interpretation_limit: finite_opaque_boolean_substrates
 
 not_validated:
-  unknown_substrate_learning: true
   general_learning_strategy_transfer: true
   autobiographical_memory_transfer: true
   rich_sensorimotor_transfer: true
@@ -46,10 +64,10 @@ not_validated:
   autonomous_self_metamorphosis: true
 
 next_experiment:
-  id: M013
-  title: Unknown Substrate Discovery
+  id: M014
+  title: Portable Plasticity
   status: protocol_drafting
   success_condition: >-
-    Infer the semantics of opaque native operations through bounded experiments,
-    determine whether the substrate is sufficient, and construct an exact body
-    without receiving an opcode map or using a machine-specific compiler.
+    Transfer a learning strategy with the inherited competence, reconstruct it
+    on an unknown substrate, learn a new behavioral change from few task queries,
+    produce an exact updated native body, and preserve the archived prior body.
