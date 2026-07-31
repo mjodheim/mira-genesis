@@ -420,50 +420,50 @@ def identify_update(
             )
 
         if selected_policy == "random":
-    word = rng.choice(words)
-    score = None
-else:
-    parent_entropy = _entropy(weights)
-    best_ranking = None
-    best_word = None
-    best_score = None
-    for candidate_word in words:
-        zero_pairs = [
-            (candidate, weight)
-            for candidate, weight in zip(candidates, weights)
-            if not dfa_accepts(candidate.dfa, candidate_word)
-        ]
-        one_pairs = [
-            (candidate, weight)
-            for candidate, weight in zip(candidates, weights)
-            if dfa_accepts(candidate.dfa, candidate_word)
-        ]
-        zero_weights = [weight for _, weight in zero_pairs]
-        one_weights = [weight for _, weight in one_pairs]
-        probability_zero = sum(zero_weights)
-        probability_one = sum(one_weights)
-        posterior_entropy = (
-            probability_zero * _entropy(zero_weights)
-            + probability_one * _entropy(one_weights)
-        )
-        information_gain = parent_entropy - posterior_entropy
-        candidate_score = information_gain - passport.length_penalty * len(candidate_word)
-        ranking = (
-            -max(len(zero_pairs), len(one_pairs)),
-            -max(probability_zero, probability_one),
-            candidate_score,
-            -len(candidate_word),
-            tuple(-value for value in candidate_word),
-        )
-        if best_ranking is None or ranking > best_ranking:
-            best_ranking = ranking
-            best_word = candidate_word
-            best_score = candidate_score
-    assert best_word is not None
-    word = best_word
-    score = best_score
+            word = rng.choice(words)
+            score = None
+        else:
+            parent_entropy = _entropy(weights)
+            best_ranking = None
+            best_word = None
+            best_score = None
+            for candidate_word in words:
+                zero_pairs = [
+                    (candidate, weight)
+                    for candidate, weight in zip(candidates, weights)
+                    if not dfa_accepts(candidate.dfa, candidate_word)
+                ]
+                one_pairs = [
+                    (candidate, weight)
+                    for candidate, weight in zip(candidates, weights)
+                    if dfa_accepts(candidate.dfa, candidate_word)
+                ]
+                zero_weights = [weight for _, weight in zero_pairs]
+                one_weights = [weight for _, weight in one_pairs]
+                probability_zero = sum(zero_weights)
+                probability_one = sum(one_weights)
+                posterior_entropy = (
+                    probability_zero * _entropy(zero_weights)
+                    + probability_one * _entropy(one_weights)
+                )
+                information_gain = parent_entropy - posterior_entropy
+                candidate_score = information_gain - passport.length_penalty * len(candidate_word)
+                ranking = (
+                    -max(len(zero_pairs), len(one_pairs)),
+                    -max(probability_zero, probability_one),
+                    candidate_score,
+                    -len(candidate_word),
+                    tuple(-value for value in candidate_word),
+                )
+                if best_ranking is None or ranking > best_ranking:
+                    best_ranking = ranking
+                    best_word = candidate_word
+                    best_score = candidate_score
+            assert best_word is not None
+            word = best_word
+            score = best_score
 
-answers = [bool(oracle.query(word)) for _ in range(passport.repeat_queries)]
+        answers = [bool(oracle.query(word)) for _ in range(passport.repeat_queries)]
         raw_calls += passport.repeat_queries
         asked.add(word)
         if len(set(answers)) != 1:
