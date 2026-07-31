@@ -8,36 +8,33 @@
 
 ## M012 — Évaluation contaminée
 
-- Plusieurs graines déclarées réservées à l’évaluation apparaissent directement dans `tests/test_morphogenesis.py`.
-- Elles ont donc été exécutées pendant le développement et n’étaient plus cachées.
-- Le résultat 36/36 reste une preuve d’ingénierie, pas une validation scientifique préenregistrée.
-- Statut corrigé : `INCONCLUSIVE — CONTAMINATED`.
-- Correction requise : M012b avec cas scellés absents des tests et du code de développement.
-
-## M013 — Contamination des graines avant évaluation
-
-- Les tests d’implémentation ont exécuté plusieurs passeports et les trois machines prévues pour l’évaluation.
-- Ces cas n’étaient donc plus cachés et ne pouvaient soutenir une validation scientifique.
+- Plusieurs graines déclarées réservées à l’évaluation apparaissaient dans les tests.
 - Statut : `INCONCLUSIVE — CONTAMINATED`.
+- Correction : M012b avec cas générés seulement après création du SHA immuable.
 
-## M013b — Deuxième contamination
+## M013 / M013b — Contaminations successives
 
-- Une validation automatisée a utilisé des graines déjà exercées pendant l’implémentation, puis des contrôles réservés ont également été touchés.
-- Le workflow vert démontrait la reproductibilité logicielle, pas la validité d’un test caché.
+- Des passeports, machines ou contrôles réservés avaient été exécutés pendant le développement.
 - Statut : `INCONCLUSIVE — CONTAMINATED`.
 
 ## M013c — Commit de reproduction incomplet
 
-- Le commit d’évaluation annoncé `40ac0f64a1fb9465e1c4cadf6c32c0cfde3b84dd` ne contient pas le protocole M013c figé.
-- La commande documentée checkout ce commit puis tente de lire `experiments/M013c/protocol.yaml`, absent à ce point de l’historique.
-- Le critère de traçabilité complète ne peut donc pas être considéré comme passé.
-- Statut corrigé : `INCONCLUSIVE — NON REPRODUCIBLE AT ANNOUNCED COMMIT`.
-- Correction requise : M013d sur un commit unique et auto-contenu, avant toute exécution des nouvelles graines.
+- Le commit annoncé ne contenait pas son protocole figé.
+- Statut : `INCONCLUSIVE — NON REPRODUCIBLE AT ANNOUNCED COMMIT`.
+
+## M013d — Échec du critère de baseline en développement
+
+- Aucun run canonique scellé n’a été ouvert.
+- Le contrôle non canonique donnait 36/36 migrations exactes à Genesis.
+- La baseline fixe sans sondage obtenait 12/36, au-dessus du maximum préenregistré de 8/36.
+- Le critère `no_probe_baseline_at_most_8_of_36` a donc échoué.
+- Statut : `FAILED — DEVELOPMENT BASELINE CRITERION`.
+- Le plafond n’est pas modifié après observation.
+- Correction : M013e utilise un nouveau protocole et préenregistre un avantage relatif d’au moins 12 migrations sur la meilleure baseline sans information sémantique vraie.
 
 ## M014 — Arrêt préventif
 
-- Le protocole a été gelé, mais aucune évaluation ne doit être lancée tant que M012b et M013d ne sont pas proprement validées.
-- Aucun fichier d’implémentation partiel n’a été laissé sur la branche M014.
+- Le protocole reste gelé mais aucune évaluation n’est autorisée avant validation propre du substrat inconnu.
 
 ## Premiers prototypes sensorimoteurs
 
