@@ -15,7 +15,7 @@ env:
 jobs:
   test-and-benchmark:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -25,12 +25,25 @@ jobs:
         run: python -m pip install --upgrade pip pytest numpy
       - name: Run M014b development tests
         run: pytest -q tests/test_m014b.py
+      - name: Audit final source isolation
+        run: python scripts/audit_m014b_isolation.py
       - name: Run full non-canonical development benchmark
         run: python scripts/run_m014b_development.py
-      - name: Upload development-only benchmark
+      - name: Exercise final sealed runner with a development nonce
+        run: >-
+          python scripts/run_m014b_evaluation.py
+          --git-commit "${{ github.sha }}"
+          --master-nonce 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff
+          --github-run-id "development-${{ github.run_id }}"
+          --github-run-attempt 1
+          --event-action development
+          --output-dir results/M014b_preflight
+      - name: Upload development-only evidence
         uses: actions/upload-artifact@v4
         with:
           name: m014b-development-${{ github.run_id }}
-          path: results/M014b_development.json
+          path: |
+            results/M014b_development.json
+            results/M014b_preflight/
           if-no-files-found: error
           retention-days: 30
