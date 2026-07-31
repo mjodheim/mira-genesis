@@ -16,7 +16,7 @@ Les résultats actuels constituent un laboratoire de recherche borné. Ils ne d�
 ```bash
 python -m venv .venv
 source .venv/bin/activate       # Linux/macOS
-# .venv\Scripts\activate      # Windows
+# .venv\\Scripts\\activate      # Windows
 pip install -e ".[dev]"
 pytest -q
 ```
@@ -29,6 +29,7 @@ pytest -q
 - `results/` : résultats agrégés canoniques
 - `reports/` : rapports scientifiques consolidés
 - `experiments/M012/` : prochaine branche de recherche
+- `archives/` : archive historique complète, incluant les résultats intermédiaires
 
 ## Règle scientifique
 
