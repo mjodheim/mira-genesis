@@ -64,3 +64,33 @@ jobs:
           path: results/M017_development.json
           if-no-files-found: error
           retention-days: 30
+
+  dispersion:
+    # Porte de gel n°2 : mesurer de combien la comparaison décisive varie d'un
+    # environnement à l'autre. Coûteuse, donc sur demande seulement — mais elle doit
+    # avoir tourné avant que le moindre seuil soit figé. M014b a préenregistré une
+    # marge sans jamais faire cette mesure.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Measure the across-environment dispersion
+        run: python scripts/run_m017_dispersion.py
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m017-dispersion-${{ github.run_id }}
+          path: results/M017_dispersion_development.json
+          if-no-files-found: error
+          retention-days: 90

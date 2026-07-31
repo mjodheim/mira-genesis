@@ -9,14 +9,19 @@
 - Tests de développement : **10 passants**, dans une suite de 29
 - Statut scientifique : `DEVELOPMENT — LANGUAGE GROWTH BENCHMARKING`
 
-## Prochaine porte
+## Portes de gel
 
-Désigner la comparaison décisive avant toute nouvelle observation, puis établir que sa
-marge dépasse la dispersion entre environnements. Voir les portes de gel dans
-[`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).
+| # | Porte | État |
+|---|---|---|
+| 1 | Désigner la comparaison décisive avant toute nouvelle observation | **franchie** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
+| 2 | Établir que la marge dépasse la dispersion entre environnements | en cours — `scripts/run_m017_dispersion.py` |
+| 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | à faire |
+| 4 | Transporter la bibliothèque vers un environnement scellé aux motifs inédits | à faire |
+| 5 | Contrôles négatifs adverses et changement brutal de distribution | à faire |
+| 6 | Audit d'isolation des sources et trace entièrement entière | à faire |
 
 Aucune pull request canonique ne peut être ouverte avant que ces portes soient
-franchies.
+franchies. Voir [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).
 
 ## Risque à ne pas perdre de vue
 
