@@ -34,7 +34,7 @@ def sealed_spec(master_nonce: str) -> SealedSpec:
         machine_seeds=tuple(derive_seed(master_nonce, "machine", index) for index in range(3)),
         machine_families=(0, 1, 2),
         update_seeds=tuple(derive_seed(master_nonce, "update", index) for index in range(12)),
-        search_seeds=tuple(derive_seed(master_nonce, "search", index) for index in range(12)),
+        search_seeds=tuple(derive_seed(master_nonce, "search", index) for index in range(36)),
         hidden_old_seeds=tuple(derive_seed(master_nonce, "hidden-old", index) for index in range(12)),
         hidden_new_seeds=tuple(derive_seed(master_nonce, "hidden-new", index) for index in range(12)),
         negative_base_seeds=tuple(derive_seed(master_nonce, "negative-base", index) for index in range(12)),
