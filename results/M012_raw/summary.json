@@ -1,6 +1,13 @@
 {
   "experiment": "M012",
-  "status": "VALIDATED",
+  "status": "INCONCLUSIVE_CONTAMINATED",
+  "recorded_run_status": "VALIDATED",
+  "scientific_claim_revoked": true,
+  "revocation": {
+    "reason": "evaluation_seeds_executed_in_tests_during_development",
+    "replacement_experiment": "M012b",
+    "canonical_status_file": "experiments/M012/STATUS.md"
+  },
   "git_commit": "5ebf244327b1fded84d5e3e648c9a078bd89d96b",
   "protocol_sha256": "fde43b3c26cc9460b487aea6adbecd0cdc2f738a617ef6d213bd503a8e6ceb1f",
   "heritage_sha256": "caf7fda6a1acda956954aeb11250787bf0f5731c9836d8ccfa9bfb369de9d08c",
@@ -37,7 +44,7 @@
     "false_successes": 0,
     "source_audit": {"passed":true,"forbidden_hits":[]}
   },
-  "acceptance_criteria": {
+  "recorded_acceptance_criteria": {
     "exact_births_at_least_32_of_36": true,
     "at_least_10_of_12_per_substrate": true,
     "perfect_hidden_accuracy_for_claimed_successes": true,
@@ -49,6 +56,7 @@
     "serialization_round_trip_for_all_successes": true,
     "complete_seed_commit_and_protocol_hash_traceability": true
   },
-  "all_criteria_passed": true,
-  "interpretation_limit": "Finite deterministic regular-language morphogenesis with human-declared Boolean primitives; not arbitrary substrate adaptation or AGI."
+  "recorded_all_criteria_passed": true,
+  "all_criteria_passed": false,
+  "interpretation_limit": "Engineering run on finite deterministic regular languages; scientific held-out validation revoked because evaluation seeds were exercised during development."
 }
