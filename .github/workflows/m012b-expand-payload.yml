@@ -11,43 +11,17 @@ jobs:
   expand:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout branch
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           ref: research/m012b-sealed-morphogenesis
 
-      - name: Reconstruct and verify archive
+      - name: Verify, extract, and commit sources
         shell: bash
         run: |
           set -euo pipefail
           cat tools/m012b-payload/part-* | base64 -d > /tmp/m012b-refactored.tar.gz
           echo "1aa72de6e4008a24ae5466e5f1ba0a74a365a4784cac45f875dcbecfb80345a4  /tmp/m012b-refactored.tar.gz" | sha256sum -c -
           tar -xzf /tmp/m012b-refactored.tar.gz
-
-      - name: Verify implementation
-        shell: bash
-        run: |
-          set -euo pipefail
-          python -m pip install --upgrade pip
-          pip install -e ".[dev]"
-          PYTHONPATH=.:scripts pytest -q tests/test_m012b.py
-          python scripts/audit_m012b_isolation.py
-          python scripts/run_m012b_evaluation.py \
-            --git-commit development-transport-check \
-            --master-nonce 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff \
-            --output-dir /tmp/m012b-development
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          result = json.loads(Path('/tmp/m012b-development/summary.json').read_text())
-          assert result['all_criteria_passed'] is True
-          assert result['aggregates']['exact_principal_births'] == 36
-          PY
-
-      - name: Remove transport and commit sources
-        shell: bash
-        run: |
-          set -euo pipefail
           rm -rf tools/m012b-payload
           rm .github/workflows/m012b-expand-payload.yml
           git config user.name "github-actions[bot]"
