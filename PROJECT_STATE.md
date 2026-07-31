@@ -6,38 +6,57 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 
 ## État au 31 juillet 2026
 
-- Branche scientifique active : **`research/m012b-sealed-morphogenesis`**
-- Dernière expérience considérée comme validée : **M011**, dans son domaine fini
+- Dernière expérience validée : **M012b — morphogenèse autonome scellée**, dans son domaine fini
 - M012 : **INCONCLUSIVE — CONTAMINATED**
 - M013 et M013b : **INCONCLUSIVE — CONTAMINATED**
 - M013c : **INCONCLUSIVE — NON REPRODUCTIBLE AU COMMIT ANNONCÉ**
-- M012b : **READY FOR SEALED EVALUATION**
-- M013d : **BLOCKED BY M012b**
-- M014 : **HALTED — reprendre après M012b et M013d**
-- Statut global : **prototype de recherche borné, protocole scientifique renforcé**
+- Expérience suivante : **M013d — découverte scellée d’un substrat inconnu**
+- M014 : **HALTED — reprendre après M013d**
+- Statut global : **prototype de recherche borné avec chaîne d’évaluation scellée**
 
-## Expérience active — M012b
+## Résultat M012b
 
-M012b reprend la question de la morphogenèse autonome avec une séparation stricte entre développement et évaluation :
+M012b a évalué un SHA immuable qui contenait déjà le protocole, le moteur, le laboratoire, les critères et le workflow. Les cas n’existaient pas avant l’ouverture de la pull request : ils ont été dérivés d’une nonce cryptographique lors du premier et unique run canonique.
 
-- aucune graine d’évaluation n’est stockée dans le dépôt ou importée par les tests ;
-- les douze cibles, les graines de recherche et les suites cachées sont dérivées d’une nonce cryptographique créée uniquement lors du premier run GitHub Actions à l’ouverture de la pull request ;
-- le protocole, le moteur, le laboratoire, les critères et la commande d’évaluation sont présents avant la génération des cas ;
-- le premier run et sa première tentative sont contraignants ; un rerun ou une correction matérielle entraîne une nouvelle expérience numérotée ;
-- les preuves complètes sont publiées comme artefact GitHub Actions immuable pendant 90 jours.
+Résultats :
 
-Les tests de développement utilisent uniquement leur propre namespace. La répétition locale non canonique passe les dix critères, mais ne constitue pas un résultat scientifique M012b.
+- 36/36 naissances principales exactes ;
+- 108/108 exécutions exactes ;
+- 12/12 pour chacun des trois catalogues `register_logic`, `nand_fabric` et `nor_fabric` ;
+- plafond oracle 36/36 ;
+- 100 % sur les suites cachées pour chaque succès ;
+- 12/12 contrôles négatifs correctement rejetés ;
+- zéro faux succès ;
+- dix critères préenregistrés passés.
 
-## Capacités encore soutenues
+Identité de la preuve :
 
-Les fondations M001–M011 restent des résultats expérimentaux bornés : passeports finis, réincarnation multi-substrat, transformations structurelles, alignement, chirurgie native et plasticité locale. Elles ne démontrent pas une intelligence générale ni une métamorphose ouverte.
+- SHA évalué : `c60ddc28e3bea8c7c71d615dace4263f5cf3d187` ;
+- protocole SHA-256 : `b949b9d4fc61cd118af075985d1d4218c37ce7f970f28bd3598d1f38dadbd651` ;
+- run GitHub Actions : `30635291887`, tentative 1 ;
+- artefact SHA-256 : `b8c4bc1b6302f03b088ca03b557a8ec3b17359d777aad9b9c4e7eb1190042adb`.
 
-## Séquence obligatoire
+Une reproduction indépendante avec la nonce publiée produit exactement le même contenu scientifique après exclusion du temps d’exécution et des métadonnées d’environnement. Le résultat reste limité aux langages réguliers déterministes et à des catalogues booléens déclaratifs fournis par l’humain.
 
-1. Ouvrir la PR M012b et accepter son premier run scellé comme résultat définitif.
-2. Auditer l’artefact, les hashes, les graines publiées et les dix critères.
-3. Fusionner M012b uniquement si le résultat est recevable et reproductible depuis le SHA évalué.
-4. Créer ensuite M013d avec de nouvelles machines opaques et le même niveau d’isolement.
-5. Reprendre M014 seulement après M012b et M013d.
+## Capacités désormais soutenues dans le domaine fini
+
+- extraction d’un passeport comportemental ;
+- réincarnation multi-substrat exacte ;
+- transformations structurelles et chirurgie native ;
+- alignement sans identifiants persistants ;
+- construction autonome d’un corps natif depuis un contrat comportemental opaque et un catalogue déclaratif, avec évaluation réellement tenue à l’écart du développement.
+
+## Non validé
+
+- découverte propre de la sémantique d’un substrat inconnu ;
+- adaptation à une physique continue ou analogique ;
+- transfert d’une méthode d’apprentissage générale ;
+- mémoire autobiographique portable ;
+- langage cognitif auto-extensible ;
+- auto-métamorphose ouverte.
+
+## Prochaine opération — M013d
+
+M013d devra recevoir une compétence M012b déjà acquise et une machine dont les opcodes sont anonymes. Les passeports, machines positives, contrôles négatifs et graines de recherche seront générés seulement lors du premier run scellé. Genesis devra comprendre les opérations par sondage, détecter l’instabilité ou l’insuffisance, puis construire un corps natif exact sans oracle de tâche ni carte d’opcodes.
 
 Le but initial demeure inchangé : apprendre dans un corps A, comprendre un substrat B inconnu, y construire un corps, puis y transférer compétence, mémoire et plasticité afin de continuer à apprendre.
