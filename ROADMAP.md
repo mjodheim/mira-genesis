@@ -1,10 +1,10 @@
 # Feuille de route
 
-| Étape | Objectif | Statut corrigé | Critère de sortie |
+| Étape | Objectif | Statut | Critère de sortie |
 |---|---|---|---|
 | M001–M011 | Fondations de métamorphose | VALIDATED dans leurs domaines finis | Passeport, migration, plasticité locale et chirurgie native exactes |
 | M012 | Morphogenèse autonome | INCONCLUSIVE — CONTAMINATED | Graines d’évaluation exécutées dans les tests |
-| M012b | Morphogenèse autonome propre | NEXT | Cas scellés, absents des tests, commit auto-contenu |
+| M012b | Morphogenèse autonome propre | READY FOR SEALED EVALUATION | Premier run PR scellé, dix critères passés, artefact et SHA reproductibles |
 | M013 / M013b | Substrat inconnu | INCONCLUSIVE — CONTAMINATED | Aucun résultat revendiqué |
 | M013c | Substrat inconnu | INCONCLUSIVE — NON REPRODUCIBLE | Le commit annoncé ne contient pas le protocole figé |
 | M013d | Substrat inconnu propre | BLOCKED BY M012b | Protocole, code et reproduction présents avant toute exécution |
@@ -14,23 +14,26 @@
 | M017 | Langage auto-extensible | PLANNED | Inventer un dialecte requis par une capacité hors langage |
 | M018 | Auto-métamorphose | PLANNED | Détecter, construire et adopter seul un corps mieux adapté |
 
-## Reprise immédiate
+## Étape active — M012b
 
-### M012b
+Le moteur, le laboratoire, le protocole et le workflow sont figés sur la branche `research/m012b-sealed-morphogenesis`.
 
-1. Créer un nouveau namespace de cas réservé, non référencé dans les tests.
-2. Geler le protocole et le générateur de laboratoire dans un commit unique.
-3. Interdire aux tests unitaires l’import des fabriques d’évaluation.
-4. Exécuter l’évaluation uniquement après vérification automatique de l’isolement.
-5. Conserver les résultats bruts complets et une commande de reproduction fonctionnant au commit annoncé.
+1. Les tests utilisent exclusivement des graines de développement explicites.
+2. Aucune graine d’évaluation n’existe avant l’ouverture de la PR.
+3. Le premier run GitHub Actions dérive les cas depuis une nonce cryptographique créée à l’exécution.
+4. La première tentative est définitive ; un rerun invalide M012b et impose M012c.
+5. Les résultats complets, hashes, nonce et graines dérivées sont conservés comme artefact.
+6. La fusion n’est autorisée qu’après audit de l’artefact et reproduction depuis le SHA évalué.
+
+## Suite conditionnelle
 
 ### M013d
 
-Après M012b, utiliser de nouvelles machines opaques et de nouveaux passeports. Le commit d’évaluation doit déjà contenir le protocole, les scripts, le laboratoire et les contrôles avant la première exécution.
+Après une validation recevable de M012b, utiliser de nouvelles machines opaques et de nouveaux passeports. Le commit d’évaluation devra déjà contenir le protocole, les scripts, le laboratoire et les contrôles avant la première exécution.
 
 ### M014
 
-Le protocole existant reste gelé mais suspendu. Les graines 17xxx ne doivent pas être exécutées avant que la chaîne M012b → M013d soit proprement établie.
+Le protocole existant reste gelé mais suspendu. Les graines `17xxx` ne doivent pas être exécutées avant que la chaîne M012b → M013d soit proprement établie.
 
 ## Test ultime de la première phase
 
