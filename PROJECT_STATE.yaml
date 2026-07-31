@@ -1,9 +1,9 @@
 project: Mira Genesis
 updated_at: 2026-07-31
-branch: metamorphosis
-status: scientific_audit
+branch: research/m012b-sealed-morphogenesis
+status: sealed_evaluation_ready
 last_validated_experiment: M011
-current_experiment: AUDIT
+current_experiment: M012b
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -40,10 +40,32 @@ revoked_or_inconclusive:
     status: halted_before_evaluation
     protocol_frozen: true
 
+m012b:
+  protocol_status: frozen
+  scientific_status: ready_for_sealed_evaluation
+  evaluation_cases_generated: false
+  canonical_trigger: first_pull_request_opened_run
+  canonical_run_attempt: 1
+  evaluation_case_source: runtime_cryptographic_nonce
+  evaluation_seeds_present_in_repository: false
+  development_tests_isolated: true
+  workflow_artifact_retention_days: 90
+  local_noncanonical_check:
+    tests_passed: 6
+    exact_principal_births: 36
+    principal_births_total: 36
+    all_pre_registered_criteria_passed: true
+    scientific_evidence: false
+
 next_experiment:
   id: M012b
   title: Autonomous Morphogenesis — clean sealed evaluation
-  status: required
+  status: ready
   success_condition: >-
-    Reproduce autonomous body generation using evaluation cases never executed
-    by tests or development code, from a single self-contained immutable commit.
+    Generate evaluation cases only after the immutable pull-request head exists,
+    construct exact native bodies from opaque behavior and declarative primitive
+    catalogues, pass all pre-registered criteria, and publish complete evidence.
+
+blocked_after_m012b:
+  - M013d
+  - M014
