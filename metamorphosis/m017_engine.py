@@ -21,13 +21,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import random
-from typing import Iterator, Sequence
+from typing import Iterator, Protocol, Sequence
 
 from .m012b_dfa import DFA, exact_equivalence
 from .m013e_engine import UnknownSubstrateMigrator
 from .m013e_lab import OpaqueBooleanMachine
 from .m013e_runtime import opaque_body_to_dfa
-from .m017_lab import BehavioralOracle
 from .m017_language import AbstractionRule, Library, Symbol, description_length
 from .structural import (
     Atom,
@@ -66,6 +65,19 @@ def _confirmation_words() -> tuple[Word, ...]:
 
 
 CONFIRMATION_WORDS: tuple[Word, ...] = _confirmation_words()
+
+
+class BehavioralOracle(Protocol):
+    """Tout ce que l'organisme voit du monde : poser un mot, recevoir un booléen.
+
+    Déclaré ici comme protocole, et non importé de `m017_lab`. Un organisme qui
+    importe son laboratoire n'est pas isolé de lui : la dépendance rendait techniquement
+    atteignables, depuis le code de l'organisme, le générateur d'épisodes, les motifs
+    de l'environnement et la méthode `_audit_target`. `scripts/audit_m017_isolation.py`
+    vérifie désormais que cette frontière tient.
+    """
+
+    def query(self, word: Word) -> bool: ...
 
 
 @dataclass(frozen=True)

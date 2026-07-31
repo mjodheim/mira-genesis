@@ -82,11 +82,14 @@ l'hypothèse, et elle est mesurée sur une plage de quatre ordres de grandeur.
 
 Le protocole ne pourra être figé qu'après :
 
-1. la désignation, **avant toute observation**, de la comparaison unique qui décide de
-   l'expérience — l'auto-extensible contre la recherche ouverte, sur la décroissance
-   du coût de recherche — et la justification du statut simplement rapporté des autres ;
+1. ~~la désignation de la comparaison unique qui décide de l'expérience~~ —
+   **franchie**, voir [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) :
+   coût de recherche médian sur la seconde moitié des épisodes, auto-extensible
+   contre recherche ouverte, par environnement. Le statut simplement rapporté des
+   autres grandeurs y est justifié, et la condition d'échec y est écrite d'avance ;
 2. l'établissement que la marge retenue dépasse la dispersion entre environnements,
-   au lieu de le supposer. **M014b a échoué exactement là** ;
+   au lieu de le supposer. **M014b a échoué exactement là.** Mesure en cours via
+   `scripts/run_m017_dispersion.py` ;
 3. la vérification que le budget de recherche et la profondeur maximale découlent de
    l'hypothèse, et non de la marge qu'ils produisent ;
 4. le transport de la bibliothèque étendue vers un environnement scellé aux motifs
