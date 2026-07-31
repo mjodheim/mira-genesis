@@ -23,6 +23,14 @@ validated:
   scalable_alignment_benchmark: true
   native_in_place_surgery: true
 
+m012:
+  protocol_status: frozen
+  implementation_status: increment_1_complete
+  tests_passed: 26
+  evaluation_results: none
+  evaluation_seeds_used: false
+  next_increment: active_behavioral_state_discovery
+
 not_validated:
   autonomous_body_generation: true
   unknown_substrate_learning: true
@@ -35,7 +43,7 @@ not_validated:
 next_experiment:
   id: M012
   title: Autonomous Morphogenesis
-  status: protocol_frozen
+  status: implementing
   success_condition: >-
     Build and select an exact target body from a behavioral contract,
     native primitives and a resource budget, without a hand-written
