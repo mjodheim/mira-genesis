@@ -124,7 +124,22 @@ observation.
 4. Un seul run. L'artefact et son SHA-256 sont publiés dans `results/M017.md`.
 5. Le workflow part ensuite dans `archives/workflows/`, conformément à D008.
 
-## 9. Ce qui reste à faire avant de figer
+## 9. Reproduction des preuves de gel
+
+Run GitHub Actions `30669588931`, `workflow_dispatch` sur
+`research/m017-freeze-gates`, job `freeze-evidence`.
+
+**Chaque nombre est identique** entre l'exécution locale (Windows, Python 3.14) et
+la CI (Ubuntu, Python 3.11) : les huit environnements de dispersion et les quatre
+paires de transport, ligne à ligne, y compris les valeurs par environnement.
+
+C'est la vérification directe que la correction imposée par M014b tient. Le
+`consolidation_record_sha256` de M014b différait d'un environnement à l'autre parce
+qu'il incorporait des scores flottants : le résultat scientifique se reproduisait, sa
+preuve non. M017 ne décide que sur des entiers, et cela se constate plutôt que se
+postule.
+
+## 10. Ce qui reste à faire avant de figer
 
 - [ ] Relecture et signature humaine des seuils du §2.
 - [ ] Écriture du générateur scellé et de son dérivateur de nonce.
