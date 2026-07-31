@@ -45,3 +45,35 @@ tient que par convention.
 
 `scripts/check_repository_integrity.py` rend structurels les trois défauts qui avaient
 échappé à la CI : module non importable, module orphelin, dépendance déclarée fantôme.
+
+## D009 — Le prochain progrès accepté doit étendre le langage, pas le catalogue
+
+D006 exigeait de M012 qu'elle supprime les compilateurs spécialisés. La même exigence
+s'applique un cran plus haut : **un progrès qui consiste à mieux choisir dans un
+catalogue écrit à la main n'est pas un progrès.**
+
+M012b, M013e, M014b et M014c partagent une limite qu'aucun de leurs critères ne
+mesurait. `MetaPlasticitySession.identify` énumère strictement douze programmes
+structurels ; tout l'apprentissage repondère des compteurs sur ce catalogue fermé.
+L'organisme ne peut rien exprimer qu'on ne lui ait donné, et M014c aurait mesuré la
+qualité de cette repondération, pas la croissance d'une capacité.
+
+M014c est donc arrêtée avant évaluation, comme M014 l'avait été, et remplacée par
+M017 — langage auto-extensible. La feuille de route change d'ordre, pas de noms :
+M015 et M016 sont reportées parce qu'elles étendraient latéralement un paradigme dont
+le cœur n'est pas établi.
+
+## D010 — Une grandeur mesurée doit avoir une plage dynamique
+
+M014b comparait 14 requêtes à 14 requêtes, sur une fenêtre large de quatre requêtes,
+avec une marge préenregistrée de 25 %. Aucun résultat n'y était décidable : le critère
+mesurait du bruit d'échantillonnage.
+
+Toute expérience ultérieure doit donc établir, **avant de figer son protocole**, que
+la grandeur choisie varie sur plusieurs ordres de grandeur entre les organismes
+comparés, et que la marge retenue dépasse la dispersion entre environnements.
+
+Corollaire : une baseline structurellement incapable est un contrôle, pas un critère.
+Le catalogue fermé échoue 0/42 en développement M017 ; figer un seuil contre lui
+passerait trivialement. Le critère doit opposer deux organismes de capacité identique
+au premier épisode, que seul le mécanisme testé sépare ensuite.

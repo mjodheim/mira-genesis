@@ -10,3 +10,6 @@ dist/
 build/
 *.egg-info/
 results/local/
+# Sorties de bancs de développement : reproductibles par `scripts/run_*_development.py`
+# et publiées comme artefacts CI. Seuls les résultats canoniques sont versionnés.
+results/*_development.json
