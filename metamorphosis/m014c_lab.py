@@ -19,16 +19,8 @@ PROGRAM_LIBRARY: tuple[StructuralProgram, ...] = (
     StructuralProgram("redir_hub_reject_0_deep_accept", (("redirect", "max_indegree_rejecting", 0, "deepest_accepting"),), "cross"),
     StructuralProgram("redir_initial_0_deep_accept", (("redirect", "initial", 0, "deepest_accepting"),), "expand"),
     StructuralProgram("redir_initial_1_deep_reject", (("redirect", "initial", 1, "deepest_rejecting"),), "expand"),
-    StructuralProgram(
-        "combo_accept_return",
-        (("flip", "deepest_accepting"), ("redirect", "max_indegree_rejecting", 1, "initial")),
-        "combo",
-    ),
-    StructuralProgram(
-        "combo_reject_expand",
-        (("flip", "deepest_rejecting"), ("redirect", "initial", 0, "max_indegree_accepting")),
-        "combo",
-    ),
+    StructuralProgram("combo_accept_return", (("flip", "deepest_accepting"), ("redirect", "max_indegree_rejecting", 1, "initial")), "combo"),
+    StructuralProgram("combo_reject_expand", (("flip", "deepest_rejecting"), ("redirect", "initial", 0, "max_indegree_accepting")), "combo"),
 )
 
 DEVELOPMENT_PROFILES: Mapping[str, Mapping[str, int]] = {
@@ -79,72 +71,73 @@ def _weighted_program(rng: random.Random, profile: Mapping[str, int]) -> Structu
 
 def _equivalent_program_ids(base: DFA, target: DFA) -> list[str]:
     target_key = dfa_key(target)
-    identifiers: list[str] = []
-    for program in PROGRAM_LIBRARY:
-        candidate = apply_program(base, program)
-        if candidate is not None and dfa_key(candidate) == target_key:
-            identifiers.append(program.program_id)
-    return identifiers
+    return [
+        program.program_id
+        for program in PROGRAM_LIBRARY
+        if (candidate := apply_program(base, program)) is not None and dfa_key(candidate) == target_key
+    ]
 
 
 def generate_episode(
-    profile: Mapping[str, int],
-    seed: int,
-    *,
-    min_states: int = 5,
-    max_states: int = 8,
-    min_candidates: int = 7,
+    profile: Mapping[str, int], seed: int, *, min_states: int = 5,
+    max_states: int = 8, min_candidates: int = 7,
 ) -> tuple[DFA, DFA, StructuralProgram]:
     rng = random.Random(seed)
     for attempt in range(2048):
-        base_seed = seed ^ (0xC014_0000 + attempt * 7919)
-        base = normalize_dfa(
-            random_minimal_dfa(base_seed, min_states=min_states, max_states=max_states)
-        )
-        candidates = generate_candidates(base, PROGRAM_LIBRARY)
-        if len(candidates) < min_candidates:
+        base = normalize_dfa(random_minimal_dfa(
+            seed ^ (0xC014_0000 + attempt * 7919),
+            min_states=min_states, max_states=max_states,
+        ))
+        if len(generate_candidates(base, PROGRAM_LIBRARY)) < min_candidates:
             continue
         program = _weighted_program(rng, profile)
         target = apply_program(base, program)
-        if target is None:
-            continue
-        if _equivalent_program_ids(base, target) == [program.program_id]:
+        if target is not None and _equivalent_program_ids(base, target) == [program.program_id]:
             return base, target, program
     raise RuntimeError("unable to generate an ambiguous uniquely labelled structural episode")
 
 
 def generate_environment_sequence(
-    profile: Mapping[str, int],
-    seed: int,
-    episodes: int = 10,
-    *,
-    min_states: int = 5,
-    max_states: int = 8,
-    min_candidates: int = 7,
+    profile: Mapping[str, int], seed: int, episodes: int = 10, *,
+    min_states: int = 5, max_states: int = 8, min_candidates: int = 7,
 ) -> tuple[tuple[DFA, DFA, StructuralProgram], ...]:
-    return tuple(
-        generate_episode(
-            profile,
-            seed ^ (0xE015_0000 + index * 104729),
-            min_states=min_states,
-            max_states=max_states,
-            min_candidates=min_candidates,
-        )
-        for index in range(episodes)
-    )
+    return tuple(generate_episode(
+        profile, seed ^ (0xE015_0000 + index * 104729),
+        min_states=min_states, max_states=max_states, min_candidates=min_candidates,
+    ) for index in range(episodes))
 
 
 def development_demonstrations() -> tuple[tuple[DFA, DFA, str, str], ...]:
     rows: list[tuple[DFA, DFA, str, str]] = []
     for env_index, (environment_id, profile) in enumerate(DEVELOPMENT_PROFILES.items()):
         sequence = generate_environment_sequence(
-            profile,
-            51_000 + env_index,
-            episodes=18,
-            min_states=4,
-            max_states=7,
-            min_candidates=6,
+            profile, 51_000 + env_index, episodes=18,
+            min_states=4, max_states=7, min_candidates=6,
         )
-        for before, after, program in sequence:
-            rows.append((before, after, program.program_id, environment_id))
+        rows.extend((before, after, program.program_id, environment_id)
+                    for before, after, program in sequence)
     return tuple(rows)
+
+
+def generated_profile(seed: int, dominant_weight: int = 16, secondary_weight: int = 4) -> dict[str, int]:
+    groups = sorted({program.group for program in PROGRAM_LIBRARY})
+    rng = random.Random(seed)
+    rng.shuffle(groups)
+    profile = {group: 1 for group in groups}
+    profile[groups[0]] = dominant_weight
+    profile[groups[1]] = secondary_weight
+    return profile
+
+
+def make_out_of_library_target(base: DFA, seed: int) -> DFA:
+    programs = [
+        StructuralProgram("outside_triple_a", (("flip", "deepest_accepting"), ("redirect", "initial", 0, "deepest_rejecting"), ("redirect", "max_indegree_rejecting", 1, "initial")), "outside"),
+        StructuralProgram("outside_triple_b", (("flip", "deepest_rejecting"), ("redirect", "initial", 1, "deepest_accepting"), ("redirect", "max_indegree_accepting", 0, "initial")), "outside"),
+    ]
+    random.Random(seed).shuffle(programs)
+    library_keys = {dfa_key(candidate.dfa) for candidate in generate_candidates(base, PROGRAM_LIBRARY)}
+    for program in programs:
+        target = apply_program(base, program)
+        if target is not None and dfa_key(target) not in library_keys:
+            return target
+    raise RuntimeError("unable to build an out-of-library structural target")
