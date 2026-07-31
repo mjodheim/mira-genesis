@@ -10,6 +10,14 @@ on:
       - tests/test_unknown_substrate.py
       - experiments/M013b/**
       - .github/workflows/validate-m013b.yml
+  pull_request:
+    paths:
+      - metamorphosis/opaque_machine_lab.py
+      - metamorphosis/unknown_substrate.py
+      - scripts/run_m013b_evaluation.py
+      - tests/test_unknown_substrate.py
+      - experiments/M013b/**
+      - .github/workflows/validate-m013b.yml
 
 permissions:
   contents: write
@@ -30,7 +38,15 @@ jobs:
         run: pytest -q
       - name: Run frozen M013b evaluation
         run: python scripts/run_m013b_evaluation.py --git-commit "$GITHUB_SHA" --output results/M013b.json
+      - name: Upload evaluation evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: m013b-evidence-${{ github.sha }}
+          path: |
+            results/M013b.json
+            results/M013b.md
       - name: Mark validated and commit evidence
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           cat > experiments/M013b/STATUS.md <<EOF
           # M013b — Status
