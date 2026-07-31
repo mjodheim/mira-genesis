@@ -33,7 +33,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install test dependencies
-        run: python -m pip install --upgrade pip pytest
+        run: python -m pip install --upgrade pip pytest numpy
       - name: Run repository tests
         run: pytest -q
       - name: Run frozen M013b evaluation
