@@ -84,6 +84,55 @@ ruiner elle-même.
 C'est la faute de M014b, prise à l'envers : un seuil calé sur une baseline qui ne
 mesure pas ce que l'expérience prétend établir.
 
+## Porte de gel n°2 — franchie
+
+Re-mesure sur les huit mêmes environnements, avec la statistique appariée :
+
+| | Statistique rejetée | Statistique retenue |
+|---|---|---|
+| minimum | 2,43× | **95,32×** |
+| médiane | 372,47× | 377,20× |
+| maximum | 605,38× | 620,14× |
+| **amplitude** | **facteur 250** | **facteur 6,5** |
+| environnements favorables | 8 / 8 | 8 / 8 |
+
+L'appariement a divisé la dispersion par trente-huit sans déplacer la médiane. Ce
+n'est pas un ajustement cosmétique : la statistique rejetée laissait la composition
+des épisodes décider du résultat, celle-ci ne le peut plus.
+
+C'est la vérification que M014b n'a jamais faite, et elle change tout : là où M014b
+préenregistrait 25 % sur une fenêtre de quatre requêtes, M017 dispose d'un effet dont
+le **minimum observé dépasse le seuil envisagé d'un ordre de grandeur**.
+
+### Coût de l'absorption, mesuré
+
+- pire épisode isolé : **0,74×** — l'organisme auto-extensible est 35 % plus lent ;
+- épisodes tardifs où il est plus lent : **8 sur 49**, soit 16 % ;
+- épisodes tardifs que lui seul résout : **7**.
+
+Le problème d'utilité est donc réel mais minoritaire, et il est plus que compensé.
+
+## Seuils proposés, et d'où ils viennent
+
+Ils ne sont **pas** tirés de l'échantillon. Ils sont dérivés de l'arithmétique des
+espaces de recherche, puis confrontés à la dispersion observée.
+
+**Dérivation.** Un macro comprime un motif de trois atomes en un symbole. La
+recherche le rencontre en profondeur 1, parmi environ 45 symboles. Sans macro, il faut
+balayer la profondeur 3 sur 36 atomes, soit 46 656 trajectoires, dont environ la
+moitié en médiane. Le rapport attendu est donc de l'ordre de 23 000 / 45 ≈ **500×**.
+
+**Seuil décisif : 10×**, soit un ordre de grandeur sous la prédiction théorique, et un
+ordre de grandeur sous le minimum observé de 95×. Exigé dans **chaque** environnement
+scellé, jamais en moyenne.
+
+**Garde anti-dégénérescence : test de signe.** Dans chaque environnement, l'organisme
+auto-extensible doit être plus rapide sur **strictement plus de la moitié** des
+épisodes tardifs appariés. Sans cette garde, une règle qui avalerait tout pourrait
+satisfaire la médiane en dégradant la majorité des épisodes. Le seuil est à la moitié
+parce que c'est le point neutre d'un test de signe, non parce que l'échantillon y
+tient — il y est d'ailleurs large, son pire environnement étant à 33 %.
+
 ## Ce que le seuil devra respecter
 
 Le seuil n'est **pas encore fixé**. Il ne pourra l'être qu'après l'étude de
