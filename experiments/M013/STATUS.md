@@ -2,8 +2,11 @@
 
 - Protocol: **FROZEN**
 - Frozen date: **2026-07-31**
-- Implementation: **not started**
-- Evaluation results: **none**
-- Scientific status: `PLANNED`
+- Scientific status: `INCONCLUSIVE — CONTAMINATED`
+- Replacement experiment: **M013b**
 
-The inherited competence is supplied as a finite passport. M013 may learn only the substrate semantics and body construction. Any material protocol correction creates a versioned replacement experiment.
+## Cause
+
+During implementation tests, passport seeds `12011`, `12023`, `12037` and all three planned machine seeds `13011`, `13023`, `13037` were executed before the formal evaluation. These cases were therefore no longer hidden.
+
+No aggregate M013 evaluation was run and no M013 result is claimed. The scientific question, budgets and acceptance criteria are preserved in M013b with entirely new seeds frozen before execution.
