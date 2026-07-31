@@ -47,6 +47,24 @@ Conformément à D007, le code de M014c ne reste pas dans l'arbre de travail. La
 `research/m014c-distribution-general-plasticity` le conserve intact, et le présent
 enregistrement n'est jamais supprimé.
 
+## Note sur le dernier run CI de la branche
+
+Le run `30656737493` de `M014c development benchmark` est en échec, à l'installation :
+
+```
+error: Multiple top-level packages discovered in a flat-layout:
+       ['results', 'archives', 'experiments', 'metamorphosis']
+```
+
+La branche a été rebasée sur l'arbre consolidé un commit **avant** le correctif de
+packaging `a4c1c96`, qui déclare le backend de build et la liste explicite des paquets.
+Son `pyproject.toml` ne permet donc pas `pip install -e ".[dev]"`.
+
+L'échec n'est pas corrigé, et c'est délibéré : `fc46005` est la tête citée par le
+présent enregistrement, et une expérience arrêtée ne se réécrit pas pour faire
+disparaître un voyant rouge. Le workflow ne se déclenchant que sur poussée vers cette
+branche, il ne se rejouera pas.
+
 ## Remplacement
 
 **M017 — Langage auto-extensible.** Voir `experiments/M017/`.
