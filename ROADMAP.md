@@ -3,7 +3,7 @@
 | Étape | Objectif | Statut | Critère de sortie |
 |---|---|---|---|
 | M001–M011 | Fondations de métamorphose | VALIDATED dans le domaine fini | Passeport, migration, plasticité et chirurgie native exactes |
-| M012 | Morphogenèse autonome | ACTIVE | Générer et sélectionner un corps sans compilateur spécialisé |
+| M012 | Morphogenèse autonome | PROTOCOL FROZEN — implementation next | Générer et sélectionner un corps sans compilateur spécialisé |
 | M013 | Substrat inconnu | PLANNED | Découvrir expérimentalement la sémantique d’un backend inédit |
 | M014 | Plasticité portable | PLANNED | Transmettre une méthode d’apprentissage, pas seulement un delta fini |
 | M015 | Mémoire et stratégie | PLANNED | Migrer souvenirs, incertitudes et stratégie d’exploration |
