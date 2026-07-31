@@ -1,10 +1,12 @@
 # M014b — Status
 
-- Protocol: **DRAFT — NOT FROZEN**
-- Results allowed: **NO**
-- Canonical evaluation cases: **none**
-- Implementation: **not yet committed**
-- Development namespace: **to be assigned**
-- Scientific status: `DEVELOPMENT`
+- Protocol: **FROZEN**
+- Frozen date: **2026-07-31**
+- Results allowed: **YES — canonical workflow only**
+- Canonical evaluation cases: **not yet generated**
+- Implementation: **complete**
+- Development tests: **7 passed**
+- Development benchmark: **36/36 principal chains, 12/12 negative abstentions**
+- Scientific status: `READY FOR SEALED EVALUATION`
 
-M014b will not receive a canonical workflow until the implementation, baselines, budgets and acceptance thresholds have passed a full non-canonical development protocol. The frozen protocol must be committed before any runtime-sealed evaluation case is generated.
+No canonical seed or target exists in the repository. The first `pull_request: opened` workflow attempt on the immutable M014b head will generate the nonce, execute the frozen protocol and upload the evidence. Any material change after that opening creates M014c.
