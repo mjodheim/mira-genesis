@@ -1,0 +1,30 @@
+name: Expand verified M013e sources
+
+on:
+  push:
+    branches: [research/m013e-sealed-unknown-substrate]
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/m013e-sealed-unknown-substrate
+      - name: Verify, extract and remove transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat tools/m013e-payload/part-* | base64 -d > /tmp/m013e-sources.tar.gz
+          echo "8c006a316530a6ed4b9fe07306b1e2bb1fd94205927a9659164578f3317b377f  /tmp/m013e-sources.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/m013e-sources.tar.gz
+          rm -rf tools/m013e-payload
+          rm .github/workflows/m013e-expand-sources.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat(m013e): add sealed unknown-substrate evaluation sources"
+          git push origin HEAD:research/m013e-sealed-unknown-substrate
