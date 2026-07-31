@@ -3,13 +3,18 @@ name: M017 development benchmark
 # Banc de développement de M017, volontairement séparé de `ci.yml`.
 #
 # Ce workflow ne produit aucun résultat canonique : `experiments/M017/STATUS.md`
-# interdit toute évaluation scellée tant que les portes de gel ne sont pas franchies.
-# Il ne se déclenche que sur la branche de recherche et à la demande — jamais sur les
-# pull requests vers `main`, dont la validation relève de `ci.yml`.
+# interdit toute évaluation scellée tant que la signature humaine n'est pas donnée.
+# Il ne se déclenche que sur les branches de recherche M017 et à la demande — jamais
+# sur les pull requests vers `main`, dont la validation relève de `ci.yml`.
+#
+# Le motif est volontairement large. Une première version nommait une branche unique,
+# `research/m017-self-extending-language` ; celle-ci fusionnée et supprimée, le banc
+# ne se déclenchait plus sur `research/m017-freeze-gates` sans que rien ne l'indique.
+# Un déclencheur muet est pire qu'un déclencheur absent.
 
 on:
   push:
-    branches: [research/m017-self-extending-language]
+    branches: ['research/m017-*']
   workflow_dispatch:
 
 permissions:
@@ -65,14 +70,14 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  dispersion:
-    # Porte de gel n°2 : mesurer de combien la comparaison décisive varie d'un
-    # environnement à l'autre. Coûteuse, donc sur demande seulement — mais elle doit
-    # avoir tourné avant que le moindre seuil soit figé. M014b a préenregistré une
-    # marge sans jamais faire cette mesure.
+  freeze-evidence:
+    # Portes de gel n°2, 4, 5 et 6 : dispersion entre environnements, transport,
+    # décalage de distribution, isolation. Coûteuses, donc sur demande seulement —
+    # mais elles doivent avoir tourné avant que le moindre seuil soit figé. M014b a
+    # préenregistré une marge sans jamais faire la première.
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
 
@@ -85,12 +90,20 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
 
+      - name: Audit isolation and integer-only decisions
+        run: python scripts/audit_m017_isolation.py
+
       - name: Measure the across-environment dispersion
         run: python scripts/run_m017_dispersion.py
 
+      - name: Measure transport and distribution shift
+        run: python scripts/run_m017_transport.py
+
       - uses: actions/upload-artifact@v4
         with:
-          name: m017-dispersion-${{ github.run_id }}
-          path: results/M017_dispersion_development.json
+          name: m017-freeze-evidence-${{ github.run_id }}
+          path: |
+            results/M017_dispersion_development.json
+            results/M017_transport_development.json
           if-no-files-found: error
           retention-days: 90
