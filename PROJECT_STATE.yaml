@@ -2,8 +2,8 @@ project: Mira Genesis
 updated_at: 2026-07-31
 branch: metamorphosis
 status: bounded_research_prototype
-last_validated_experiment: M011
-current_experiment: M012
+last_validated_experiment: M012
+current_experiment: M013
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -22,9 +22,22 @@ validated:
   identity_free_alignment: true
   scalable_alignment_benchmark: true
   native_in_place_surgery: true
+  active_behavioral_state_discovery: true
+  autonomous_body_generation_from_opaque_contract: true
+  inspectable_construction_heritage: true
+
+m012:
+  protocol_status: frozen
+  scientific_status: validated
+  evaluation_commit: 5ebf244327b1fded84d5e3e648c9a078bd89d96b
+  tests_passed: 31
+  exact_principal_births: 36
+  principal_births_total: 36
+  correct_negative_abstentions: 12
+  false_successes: 0
+  interpretation_limit: deterministic_regular_languages_with_human_declared_boolean_primitives
 
 not_validated:
-  autonomous_body_generation: true
   unknown_substrate_learning: true
   general_learning_strategy_transfer: true
   autobiographical_memory_transfer: true
@@ -33,10 +46,10 @@ not_validated:
   autonomous_self_metamorphosis: true
 
 next_experiment:
-  id: M012
-  title: Autonomous Morphogenesis
+  id: M013
+  title: Unknown Substrate Discovery
   status: protocol_drafting
   success_condition: >-
-    Build and select an exact target body from a behavioral contract,
-    native primitives and a resource budget, without a hand-written
-    architecture-specific compiler.
+    Infer the semantics of opaque native operations through bounded experiments,
+    determine whether the substrate is sufficient, and construct an exact body
+    without receiving an opcode map or using a machine-specific compiler.
