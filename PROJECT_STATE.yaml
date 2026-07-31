@@ -3,9 +3,13 @@ updated_at: 2026-07-31
 branch: metamorphosis
 status: bounded_research_prototype
 last_validated_experiment: M013e
-current_experiment: M014b
+current_experiment: M014c
 
 ultimate_goal:
+  statement: >-
+    Learn in substrate A, discover an unknown substrate B, construct a native
+    body there, transfer competence, memory and plasticity, and continue
+    learning without human architectural intervention.
   trans_substrate_migration: true
   autonomous_morphogenesis: true
   unknown_substrate_adaptation: true
@@ -26,7 +30,7 @@ validated_bounded:
   sealed_finite_opaque_substrate_discovery: true
   inherited_skill_migration_without_task_oracle: true
 
-revoked_or_inconclusive:
+revoked_inconclusive_or_failed:
   M012:
     status: inconclusive_contaminated
     replacement: M012b
@@ -44,6 +48,14 @@ revoked_or_inconclusive:
   M014:
     status: halted_prerequisites_revoked_never_evaluated
     replacement: M014b
+  M014b:
+    status: failed_portability_without_generalizable_learning_advantage
+    canonical_evaluation_opened: true
+    exact_transport_and_update_chains: 36
+    failed_criteria:
+      - identification_at_least_25_percent_better_than_scratch_lstar
+      - identification_at_least_20_percent_better_than_random_and_no_passport
+    replacement: M014c
 
 m012b:
   scientific_status: validated_bounded_finite_domain
@@ -55,43 +67,53 @@ m012b:
   all_pre_registered_criteria_passed: true
 
 m013e:
-  protocol_status: frozen
   scientific_status: validated_bounded_finite_opaque_substrate
   evaluated_commit: e309169b4edf8a508ec60990e68ba079fd032f2c
   protocol_sha256: e29f024e3cc04ebd18ebd9484d499bdfbf1d98a3fbe0beb9c0ec318c8c394c5f
   github_run_id: 30637689966
-  github_run_attempt: 1
-  event_action: opened
   artifact_sha256: 47888734b6c88ef5811e086bac71bbcfd8e6c14f676824eb5d6597475c7742c6
-  master_nonce_sha256: fedfc69a7be6acfe7184be9840911147ea94d57ae6c8011ac8440a2a13149ab6
   exact_principal_migrations: 36
-  principal_migrations_total: 36
-  exact_executions: 108
-  executions_total: 108
-  per_machine_exact: [12, 12, 12]
-  oracle_ceiling_exact: 36
-  median_probe_calls: 84
-  max_probe_calls: 96
-  no_probe_baseline_exact: 0
-  random_semantics_baseline_exact: 1
-  advantage_over_best_no_information_baseline: 35
-  correct_negative_abstentions: 12
-  false_negative_successes: 0
   all_pre_registered_criteria_passed: true
-  independent_reproduction:
-    deterministic_scientific_content_equal: true
-    excluded_nondeterministic_fields:
-      - elapsed_seconds
-      - environment
   interpretation_limit: finite_runtime_sealed_opaque_boolean_substrates
 
+m014b:
+  scientific_status: failed_portability_without_generalizable_learning_advantage
+  evaluated_commit: 5a0947afb96d7d59438c222028f2cabb34bc0cd5
+  protocol_sha256: 215e442435e4f915e647ad1392f1172685f977f758053027adaa687b1126c881
+  github_run_id: 30650363802
+  github_run_attempt: 1
+  event_action: opened
+  artifact_sha256: 0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a
+  master_nonce_sha256: c29076d659c4d42de331843675910777a2dd8357a3bd62018cd431afc7c07c56
+  exact_principal_chains: 36
+  per_machine_exact: [12, 12, 12]
+  oracle_ceiling_exact: 36
+  median_active_identification_calls: 14
+  median_random_identification_calls: 17
+  median_no_passport_identification_calls: 17
+  median_scratch_lstar_membership_queries: 14
+  median_total_update_calls: 44
+  max_total_update_calls: 50
+  correct_negative_abstentions: 12
+  false_successes: 0
+  archive_mutations: 0
+  criteria_passed: 8
+  criteria_total: 10
+  independent_reproduction:
+    scientific_outputs_equal: true
+    trace_digest_portable: false
+
 next_experiment:
-  id: M014b
-  title: Portable Plasticity — clean sealed evaluation
+  id: M014c
+  title: Distribution-General Portable Plasticity
   status: protocol_drafting
+  scientific_problem: >-
+    M014b transported a plasticity mechanism exactly but its development-learned
+    prior and policy did not retain a query-efficiency advantage on the sealed
+    distribution.
   success_condition: >-
-    Transfer a serialized learning policy with an inherited competence, rebuild
-    both on a runtime-sealed opaque substrate, identify a previously unknown
-    behavioral modification from few task queries, synthesize an exact updated
-    native body, preserve the archived prior body, and outperform learning from
-    scratch, random querying, and an organism without its plasticity passport.
+    Learn a substrate-independent representation of task changes from multiple
+    development environments, adapt its own prior online under a strict
+    meta-query budget, transfer it with the inherited competence, and demonstrate
+    a pre-registered advantage over scratch, random, no-passport and static-prior
+    baselines on runtime-sealed out-of-distribution modifications.
