@@ -7,74 +7,64 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 ## État au 31 juillet 2026
 
 - Dernière expérience validée : **M013e — migration scellée vers un substrat opaque**, dans son domaine fini
-- M012 : **INCONCLUSIVE — CONTAMINATED**
 - M012b : **VALIDATED — BOUNDED FINITE DOMAIN**
-- M013 / M013b : **INCONCLUSIVE — CONTAMINATED**
-- M013c : **INCONCLUSIVE — NON REPRODUCTIBLE AU COMMIT ANNONCÉ**
-- M013d : **FAILED — DEVELOPMENT BASELINE CRITERION**, aucun run canonique
 - M013e : **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
-- Ancien M014 : **HALTED — prerequisites revoked, never evaluated**
-- Expérience suivante : **M014b — plasticité portable scellée**
-- Statut global : **prototype de recherche borné avec chaîne d’évaluation scellée et reproductible**
+- M014b : **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
+- Expérience active : **M014c — distribution-general portable plasticity**
+- Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable mais avantage d’apprentissage non encore validé**
 
-## Résultat M013e
+## Résultat canonique M014b
 
-M013e a reçu douze compétences héritées et trois machines dont les opérations étaient désignées uniquement par des identifiants opaques. Les compétences, machines, contrôles et suites cachées ont été générés après création du SHA immuable, lors du premier run `pull_request/opened`.
+M014b a transporté un passeport de plasticité sérialisé avec douze compétences héritées vers trois machines opaques scellées. Pour chaque modification comportementale, Genesis ne recevait qu’un oracle de requêtes.
 
-Genesis a :
+Ce qui a réussi :
 
-- sondé les opérations dans un budget de 120 appels ;
-- identifié exactement les sémantiques stables utilisées ;
-- exclu les opérations instables ;
-- vérifié la suffisance fonctionnelle ;
-- construit des corps contenant uniquement les identifiants opaques et leur structure ;
-- préservé exactement la compétence sans oracle de tâche ni carte d’opcodes.
-
-Résultats :
-
-- 36/36 migrations principales exactes ;
-- 108/108 exécutions exactes ;
-- trois machines à 12/12 ;
-- plafond oracle 36/36 ;
-- 84 sondes médianes, 96 maximum sur 120 ;
-- baseline fixe sans sondage 0/36 ;
-- baseline aléatoire 1/36 ;
-- avantage de 35 migrations sur la meilleure baseline sans information ;
+- 36/36 chaînes complètes exactes ;
+- 12/12 sur chaque machine ;
+- ancien et nouveau corps exacts et sérialisables ;
+- sémantique des opcodes utilisés correctement découverte ;
+- ancien corps préservé octet pour octet ;
 - 12/12 contrôles négatifs rejetés ;
-- zéro faux succès ;
-- dix critères préenregistrés passés.
+- zéro faux succès et zéro mutation d’archive ;
+- médiane totale de 44 requêtes, maximum 50.
+
+Ce qui a échoué :
+
+- médiane d’identification Genesis : 14 ;
+- apprentissage L* depuis zéro : 14 ;
+- requêtes aléatoires : 17 ;
+- organisme sans passeport appris : 17.
+
+Genesis n’a donc pas atteint les avantages préenregistrés de 25 % sur L* et 20 % sur les deux baselines locales. Huit critères sur dix passent, mais le statut reste **FAILED**. Aucun seuil n’est modifié et aucun rerun ne remplace la première tentative.
 
 Identité de la preuve :
 
-- SHA évalué : `e309169b4edf8a508ec60990e68ba079fd032f2c` ;
-- protocole SHA-256 : `e29f024e3cc04ebd18ebd9484d499bdfbf1d98a3fbe0beb9c0ec318c8c394c5f` ;
-- run GitHub Actions : `30637689966`, tentative 1 ;
-- artefact SHA-256 : `47888734b6c88ef5811e086bac71bbcfd8e6c14f676824eb5d6597475c7742c6`.
+- SHA évalué : `5a0947afb96d7d59438c222028f2cabb34bc0cd5` ;
+- protocole SHA-256 : `215e442435e4f915e647ad1392f1172685f977f758053027adaa687b1126c881` ;
+- run GitHub Actions : `30650363802`, tentative 1 ;
+- artefact SHA-256 : `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
 
-Une reproduction indépendante avec la nonce publiée a produit exactement le même contenu scientifique après exclusion du temps d’exécution et des métadonnées d’environnement.
+Une reproduction indépendante a retrouvé toutes les métriques, tous les corps, les critères et la décision. Le hash de consolidation était seul non portable, car il incorporait des scores flottants ; M014c devra utiliser une trace quantifiée ou rationnelle.
 
-## Capacités désormais soutenues dans le domaine fini
+## Capacités soutenues dans le domaine fini
 
 - extraction d’un passeport comportemental ;
-- construction autonome d’un corps depuis un contrat opaque ;
-- migration exacte vers plusieurs substrats finis ;
-- découverte expérimentale bornée des opérations d’un substrat opaque ;
-- détection de bases insuffisantes ou instables ;
-- migration d’une compétence héritée sans oracle de tâche ni compilateur spécifique.
+- morphogenèse autonome depuis un contrat opaque ;
+- découverte expérimentale d’un substrat fini inconnu ;
+- migration exacte d’une compétence sans oracle de tâche ;
+- transport, exécution et consolidation exacte d’un mécanisme de plasticité borné ;
+- abstention face aux modifications hors langage ou aux oracles instables.
 
 ## Non validé
 
-- transport d’une méthode d’apprentissage générale ;
-- poursuite d’un apprentissage nouveau après migration ;
+- avantage d’apprentissage transférable hors distribution de développement ;
 - mémoire autobiographique portable ;
 - adaptation à une physique continue ou analogique ;
 - langage cognitif auto-extensible ;
 - auto-métamorphose ouverte.
 
-## Prochaine opération — M014b
+## Prochaine opération — M014c
 
-L’ancien protocole M014 a été stoppé avant évaluation lorsque ses prérequis ont été révoqués. M014b repartira proprement avec de nouveaux cas scellés.
+M014c ne cherchera pas simplement une meilleure heuristique sur les mêmes cas. Elle devra apprendre une représentation de transformations à travers plusieurs environnements de développement, détecter le décalage de distribution, adapter son prior en ligne sous un budget strict et battre quatre baselines : L* depuis zéro, requêtes aléatoires, absence de passeport et passeport statique M014b.
 
-M014b devra transporter avec la compétence un passeport de plasticité sérialisable : espace d’hypothèses, politique active de requêtes, représentation de l’incertitude et règle de consolidation. Après migration vers une machine opaque M013e, Genesis devra apprendre une modification comportementale inconnue avec peu de requêtes, produire un nouveau corps natif exact et préserver l’ancien corps archivé.
-
-Le but initial demeure inchangé : apprendre dans un corps A, comprendre un substrat B inconnu, y construire un corps, puis y transférer compétence, mémoire et plasticité afin de continuer à apprendre.
+Le but initial demeure inchangé : apprendre dans un corps A, comprendre un substrat B inconnu, y construire un corps, puis y transférer compétence, mémoire et plasticité afin de continuer à apprendre réellement mieux qu’un organisme vierge.
