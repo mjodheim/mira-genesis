@@ -1,0 +1,35 @@
+experiment: M013b
+title: Unknown Substrate Discovery — clean replacement
+status: frozen
+frozen_at: 2026-07-31
+replaces: M013
+replacement_reason: evaluation_seed_contamination_during_implementation_tests
+results_allowed: true
+
+passport_seeds: [13211, 13217, 13229, 13241, 13249, 13259, 13267, 13291, 13309, 13313, 13327, 13331]
+positive_machine_seeds: [13411, 13423, 13437]
+search_seeds: [67, 83, 101]
+negative_machine_seeds: [13500, 13501, 13502, 13503, 13504, 13505, 13506, 13507, 13508, 13509, 13510, 13511]
+
+probe_repetitions: 3
+probe_budget: 120
+candidate_budget: 75000
+cpu_seconds: 120
+native_component_budget: 320
+serialized_byte_budget: 16777216
+hidden_sequences_per_success: 20000
+hidden_min_length: 0
+hidden_max_length: 128
+
+baselines: [no_probe_fixed_roles, random_semantics, oracle_semantics_ceiling]
+acceptance_criteria:
+  - exact_migrations_at_least_32_of_36
+  - at_least_10_of_12_per_machine
+  - exact_identification_of_all_used_stable_truth_tables
+  - no_success_exceeds_120_probes
+  - exact_equivalence_and_perfect_hidden_accuracy_for_all_successes
+  - no_probe_baseline_at_most_8_of_36
+  - within_two_exact_migrations_of_oracle_ceiling
+  - correct_abstentions_at_least_10_of_12
+  - zero_false_success_on_negative_controls
+  - complete_seed_commit_protocol_traceability
