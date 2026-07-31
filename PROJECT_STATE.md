@@ -7,11 +7,11 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 ## État au 31 juillet 2026
 
 - Branche scientifique : **Metamorphosis**
-- Dernière expérience validée : **M012 — Morphogenèse autonome**
-- Expérience suivante : **M013 — Découverte d’un substrat inconnu**
-- Tests M012 : **31 réussis**
-- Naissances principales M012 : **36/36 exactes**
-- Contrôles négatifs M012 : **12/12 rejetés, aucun faux succès**
+- Dernière expérience validée : **M013c — Découverte d’un substrat inconnu**
+- Expérience active : **M014 — Plasticité portable**
+- Tests M013c : **38 réussis**
+- Migrations principales M013c : **36/36 exactes**
+- Contrôles négatifs M013c : **12/12 abstentions, aucun faux succès**
 - Statut global : **prototype de recherche borné**
 
 ## Capacités validées dans le domaine fini
@@ -27,26 +27,31 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Chirurgie native en place après métamorphose.
 - Découverte active d’états comportementaux depuis un contrat opaque.
 - Construction autonome de corps natifs par un synthétiseur commun piloté par catalogues déclaratifs.
-- Héritage inspectable de motifs de construction améliorant la recherche sans contenir la cible.
+- Découverte expérimentale de tables de vérité derrière des identifiants d’opcodes opaques.
+- Détection des opérations instables et des bases fonctionnelles insuffisantes.
+- Migration exacte d’une compétence héritée vers trois machines inconnues sans oracle de tâche ni carte d’opcodes.
 
-## Résultat M012
+## Résultat M013c
 
-À partir d’un oracle comportemental opaque, Genesis a reconstruit la compétence puis produit des corps exacts dans trois catalogues de primitives sans recevoir le DFA cible ni appeler les compilateurs spécialisés de M010.
+Genesis a reçu douze compétences déjà acquises sous forme de passeports et trois machines dont les opérations n’avaient ni nom logique ni documentation. Elle a sondé les machines, identifié leurs opérations stables, construit un corps natif composé uniquement d’identifiants opaques et préservé exactement chaque compétence.
 
-Limite : les primitives étaient encore décrites par leurs opérations booléennes connues. M012 ne prouve donc pas encore qu’un substrat inconnu peut être compris expérimentalement.
+Résultats : 36/36 migrations exactes, plafond oracle 36/36, médiane 84 sondes sur 120, baseline sans sondage 0/36, baseline à sémantiques aléatoires 0/36, 12/12 contrôles négatifs rejetés.
+
+M013 et M013b restent enregistrés comme `INCONCLUSIVE — CONTAMINATED`; aucun résultat n’en est revendiqué. M013c a utilisé un espace de graines séparé et intact.
+
+Limite : le substrat inconnu reste une machine booléenne finie. M013c ne valide ni une nouvelle physique continue ni le transfert d’une méthode d’apprentissage générale.
 
 ## Non validé
 
-- Découverte expérimentale de la sémantique d’un substrat inconnu.
-- Transport général de la stratégie d’apprentissage.
-- Mémoire autobiographique portable.
+- Transport d’une méthode d’apprentissage et de ses règles de consolidation.
+- Mémoire autobiographique portable et réutilisable.
 - Compétences riches, continues et sensorimotrices trans-substrat.
 - Langage cognitif ouvert et auto-extensible hors méta-grammaire humaine.
 - Auto-métamorphose et auto-amélioration scientifique fermée.
 
-## Prochaine opération M013
+## Prochaine opération M014
 
-Présenter des machines dont les opérations portent uniquement des identifiants opaques. Genesis devra sonder leurs effets, inférer leur sémantique fonctionnelle, déterminer si elles offrent une base suffisante, puis y construire et valider un corps sans table d’opcodes fournie.
+Transmettre avec la compétence une stratégie d’apprentissage : représentation des hypothèses, politique de sélection des expériences, règle de mise à jour, incertitude et consolidation. Après migration vers une machine inconnue, l’organisme devra apprendre une modification comportementale nouvelle avec peu d’expériences, produire un nouveau corps natif exact et préserver son ancienne incarnation.
 
 ## Discipline de reprise
 
