@@ -10,40 +10,48 @@
 | M013d | Substrat inconnu, seuil absolu | FAILED IN DEVELOPMENT | Baseline sans sondage 12/36 contre plafond 8/36 |
 | M013e | Substrat inconnu, avantage relatif | VALIDATED dans le domaine fini | 36/36, découverte d’opcodes scellés et reproduction scientifique |
 | M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
-| M014b | Plasticité portable scellée | ACTIVE — PROTOCOL DRAFTING | Transférer une politique d’apprentissage et apprendre après migration |
-| M015 | Mémoire et stratégie | PLANNED | Migrer souvenirs, incertitudes et stratégie d’exploration |
+| M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d’efficacité échouent |
+| M014c | Plasticité portable hors distribution | ACTIVE — PROTOCOL DRAFTING | Avantage scellé sur scratch, aléatoire, sans passeport et prior statique |
+| M015 | Mémoire et stratégie | BLOCKED BY M014c | Migrer souvenirs, incertitudes et stratégie d’exploration |
 | M016 | Compétence sensorimotrice | PLANNED | Transporter un modèle du monde entre architectures différentes |
 | M017 | Langage auto-extensible | PLANNED | Inventer un dialecte requis par une capacité hors langage |
 | M018 | Auto-métamorphose | PLANNED | Détecter, construire et adopter seul un corps mieux adapté |
 
-## M013e — dernière validation
+## Dernière validation — M013e
 
-- SHA évalué : `e309169b4edf8a508ec60990e68ba079fd032f2c` ;
-- 36/36 migrations principales ;
-- 108/108 exécutions exactes ;
+M013e reste la dernière validation scientifique : découverte expérimentale d’opcodes opaques et migration exacte d’une compétence héritée sans oracle de tâche, dans un domaine booléen fini.
+
+## M014b — échec canonique informatif
+
+M014b a démontré la portabilité exacte de la chaîne de plasticité :
+
+- 36/36 adaptations exactes ;
 - trois machines à 12/12 ;
-- 84 sondes médianes et 96 maximum sur 120 ;
-- plafond oracle 36/36 ;
-- baselines sans information : 0/36 et 1/36 ;
-- avantage de 35 migrations ;
-- 12/12 contrôles négatifs ;
-- dix critères passés et reproduction indépendante.
+- anciens et nouveaux corps exacts ;
+- archive intacte ;
+- 12/12 abstentions négatives.
 
-Limite : machines booléennes finies scellées à l’exécution.
+Mais les coûts scellés étaient :
 
-## M014b — étape active
+- Genesis : médiane 14 ;
+- L* depuis zéro : 14 ;
+- aléatoire : 17 ;
+- sans passeport appris : 17.
 
-M014b teste le passage crucial de la portabilité d’une compétence à la portabilité de la capacité d’apprendre.
+Les critères d’avantage relatif ont échoué. La leçon est structurante : transporter une politique et un prior n’implique pas que leur avantage survive à un décalage de distribution.
 
-1. Un passeport de plasticité est appris uniquement sur des transformations de développement.
-2. Il sérialise un espace d’hypothèses, une politique active de requêtes, une estimation d’incertitude et une règle de consolidation.
-3. La compétence et le passeport sont migrés vers une machine opaque de type M013e.
-4. Une cible comportementale modifiée, jamais vue, est accessible uniquement par un petit budget de requêtes.
-5. Genesis doit identifier la modification, produire un nouveau corps natif exact et conserver l’ancien corps inchangé.
-6. Les baselines sont : apprentissage depuis zéro, requêtes aléatoires et même organisme privé du passeport de plasticité.
-7. Des transformations hors langage doivent provoquer une abstention, jamais un faux certificat.
-8. Les cas sont générés seulement au premier run scellé ; la première tentative est contraignante.
+## M014c — étape active
+
+M014c doit résoudre ce problème sans ajuster les seuils de M014b :
+
+1. apprendre sur plusieurs distributions de transformations et plusieurs familles de compétences ;
+2. sérialiser non seulement un prior, mais un mécanisme de détection de décalage et de mise à jour du prior ;
+3. séparer un petit budget de calibration en ligne du budget d’identification de la cible ;
+4. utiliser une trace de décision quantifiée ou rationnelle, portable bit à bit ;
+5. évaluer sur des modifications scellées hors distribution de chaque environnement de développement ;
+6. comparer à L*, aux requêtes aléatoires, à l’absence de passeport et au passeport statique M014b ;
+7. préserver l’ancien corps et reconstruire exactement le nouveau sur un substrat opaque.
 
 ## Test ultime de la première phase
 
-Genesis apprend dans un corps A, reçoit un substrat B inconnu, en découvre les règles, construit son nouveau corps, transfère mémoire, compétence et plasticité, puis apprend une nouvelle tâche plus vite qu’un organisme vierge.
+Genesis apprend dans un corps A, reçoit un substrat B inconnu, en découvre les règles, construit son nouveau corps, transfère mémoire, compétence et plasticité, puis apprend une nouvelle tâche plus vite qu’un organisme vierge — sans qu’un humain redessine son architecture.
