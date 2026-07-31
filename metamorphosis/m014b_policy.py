@@ -420,35 +420,50 @@ def identify_update(
             )
 
         if selected_policy == "random":
-            word = rng.choice(words)
-            score = None
-        else:
-            parent_entropy = _entropy(weights)
-            best: tuple[float, int, tuple[int, ...]] | None = None
-            for candidate_word in words:
-                zero_weights = [
-                    weight for candidate, weight in zip(candidates, weights)
-                    if not dfa_accepts(candidate.dfa, candidate_word)
-                ]
-                one_weights = [
-                    weight for candidate, weight in zip(candidates, weights)
-                    if dfa_accepts(candidate.dfa, candidate_word)
-                ]
-                probability_zero = sum(zero_weights)
-                probability_one = sum(one_weights)
-                posterior_entropy = (
-                    probability_zero * _entropy(zero_weights)
-                    + probability_one * _entropy(one_weights)
-                )
-                information_gain = parent_entropy - posterior_entropy
-                candidate_score = information_gain - passport.length_penalty * len(candidate_word)
-                ranking = (candidate_score, -len(candidate_word), tuple(-value for value in candidate_word))
-                if best is None or ranking > (best[0], best[1], tuple(-value for value in best[2])):
-                    best = (candidate_score, -len(candidate_word), candidate_word)
-            assert best is not None
-            score, _, word = best
+    word = rng.choice(words)
+    score = None
+else:
+    parent_entropy = _entropy(weights)
+    best_ranking = None
+    best_word = None
+    best_score = None
+    for candidate_word in words:
+        zero_pairs = [
+            (candidate, weight)
+            for candidate, weight in zip(candidates, weights)
+            if not dfa_accepts(candidate.dfa, candidate_word)
+        ]
+        one_pairs = [
+            (candidate, weight)
+            for candidate, weight in zip(candidates, weights)
+            if dfa_accepts(candidate.dfa, candidate_word)
+        ]
+        zero_weights = [weight for _, weight in zero_pairs]
+        one_weights = [weight for _, weight in one_pairs]
+        probability_zero = sum(zero_weights)
+        probability_one = sum(one_weights)
+        posterior_entropy = (
+            probability_zero * _entropy(zero_weights)
+            + probability_one * _entropy(one_weights)
+        )
+        information_gain = parent_entropy - posterior_entropy
+        candidate_score = information_gain - passport.length_penalty * len(candidate_word)
+        ranking = (
+            -max(len(zero_pairs), len(one_pairs)),
+            -max(probability_zero, probability_one),
+            candidate_score,
+            -len(candidate_word),
+            tuple(-value for value in candidate_word),
+        )
+        if best_ranking is None or ranking > best_ranking:
+            best_ranking = ranking
+            best_word = candidate_word
+            best_score = candidate_score
+    assert best_word is not None
+    word = best_word
+    score = best_score
 
-        answers = [bool(oracle.query(word)) for _ in range(passport.repeat_queries)]
+answers = [bool(oracle.query(word)) for _ in range(passport.repeat_queries)]
         raw_calls += passport.repeat_queries
         asked.add(word)
         if len(set(answers)) != 1:
@@ -530,7 +545,7 @@ def train_plasticity_passport(
             "m014b-plasticity-passport/1",
             schemas,
             prior,
-            "active_information_gain",
+            "active_minimax_information_gain",
             penalty,
             2,
             1024,
@@ -565,7 +580,7 @@ def train_plasticity_passport(
         "m014b-plasticity-passport/1",
         schemas,
         prior,
-        "active_information_gain",
+        "active_minimax_information_gain",
         best_penalty,
         2,
         1024,
@@ -583,7 +598,7 @@ def generic_no_passport_baseline() -> PlasticityPassport:
         "m014b-plasticity-passport/1",
         GENERIC_SCHEMAS,
         tuple((schema, uniform) for schema in GENERIC_SCHEMAS),
-        "active_information_gain",
+        "active_minimax_information_gain",
         0.0,
         2,
         1024,
