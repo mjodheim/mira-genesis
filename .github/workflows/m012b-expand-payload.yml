@@ -1,4 +1,4 @@
-name: Expand verified M012b sources
+name: Diagnose M012b payload
 
 on:
   push:
@@ -8,24 +8,32 @@ permissions:
   contents: write
 
 jobs:
-  expand:
+  diagnose:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           ref: research/m012b-sealed-morphogenesis
 
-      - name: Verify, extract, and commit sources
+      - name: Record received payload hashes
         shell: bash
         run: |
-          set -euo pipefail
-          cat tools/m012b-payload/part-* | base64 -d > /tmp/m012b-refactored.tar.gz
-          echo "1aa72de6e4008a24ae5466e5f1ba0a74a365a4784cac45f875dcbecfb80345a4  /tmp/m012b-refactored.tar.gz" | sha256sum -c -
-          tar -xzf /tmp/m012b-refactored.tar.gz
-          rm -rf tools/m012b-payload
+          set -u
+          cat tools/m012b-payload/part-* > /tmp/m012b.b64
+          {
+            echo "base64_bytes=$(wc -c < /tmp/m012b.b64)"
+            echo "base64_sha256=$(sha256sum /tmp/m012b.b64 | cut -d' ' -f1)"
+            if base64 -d /tmp/m012b.b64 > /tmp/m012b.tar.gz; then
+              echo "decode=success"
+              echo "archive_bytes=$(wc -c < /tmp/m012b.tar.gz)"
+              echo "archive_sha256=$(sha256sum /tmp/m012b.tar.gz | cut -d' ' -f1)"
+            else
+              echo "decode=failed"
+            fi
+          } > tools/m012b-payload/diagnostic.txt
           rm .github/workflows/m012b-expand-payload.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "feat(m012b): add sealed autonomous morphogenesis evaluation"
+          git commit -m "diagnostic(m012b): record payload integrity"
           git push origin HEAD:research/m012b-sealed-morphogenesis
