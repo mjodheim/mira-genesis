@@ -1,4 +1,4 @@
-name: Expand bit-exact M012b archive
+name: Expand bit-exact M012b sources
 
 on:
   push:
@@ -15,7 +15,7 @@ jobs:
         with:
           ref: research/m012b-sealed-morphogenesis
 
-      - name: Verify, extract, and remove transport
+      - name: Verify, extract, and commit non-workflow sources
         shell: bash
         run: |
           set -euo pipefail
@@ -30,10 +30,11 @@ jobs:
             | base64 -d > /tmp/m012b-refactored.tar.gz
           echo "1aa72de6e4008a24ae5466e5f1ba0a74a365a4784cac45f875dcbecfb80345a4  /tmp/m012b-refactored.tar.gz" | sha256sum -c -
           tar -xzf /tmp/m012b-refactored.tar.gz
+          rm -f .github/workflows/m012b-sealed-evaluation.yml
           rm -rf tools/m012b-payload
           rm .github/workflows/m012b-expand-verified.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "feat(m012b): add sealed autonomous morphogenesis evaluation"
+          git commit -m "feat(m012b): add sealed autonomous morphogenesis sources"
           git push origin HEAD:research/m012b-sealed-morphogenesis
