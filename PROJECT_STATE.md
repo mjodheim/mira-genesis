@@ -9,6 +9,8 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Branche scientifique : **Metamorphosis**
 - Dernière expérience validée : **M011**
 - Expérience active : **M012 — Morphogenèse autonome**
+- Protocole M012 : **figé le 31 juillet 2026**
+- Implémentation M012 : **non commencée**
 - Statut global : **prototype de recherche borné**
 
 ## Capacités validées dans le domaine fini
