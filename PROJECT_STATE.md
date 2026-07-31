@@ -39,8 +39,24 @@ tandis que celui de la recherche ouverte reste plat.
 Réincarnation 9/9 exacte sur trois familles de machines opaques, archive intacte,
 4/4 abstentions sur les contrôles négatifs, zéro faux succès.
 
-Aucune évaluation canonique n’est autorisée. La première porte de gel est de désigner
-la comparaison décisive avant toute nouvelle observation.
+**Les six portes de gel sont franchies.** Le protocole complet, seuils compris, attend
+une signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. Aucune
+évaluation canonique n’est autorisée avant elle : le gel engage des seuils qui ne
+bougeront plus, et l’évaluation ne s’exécute qu’une fois.
+
+Deux mesures ont modifié le protocole en cours de route :
+
+- **la statistique décisive initiale a été rejetée par la mesure.** Non appariée :
+  2,4× à 605× selon l’environnement. Appariée épisode par épisode : 95× à 620×. La
+  dispersion est divisée par trente-huit sans que la médiane bouge ;
+- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d’un
+  environnement aux motifs disjoints donne 0,69×, strictement pire que pas de
+  bibliothèque du tout, quatre fois sur quatre. Ses macros ne s’appliquent jamais et
+  gonflent pourtant le facteur de branchement.
+
+La portée revendiquée est donc restreinte d’avance : le langage croît **à l’intérieur**
+d’une distribution de transformations, et son avantage ne suit que si l’environnement
+d’arrivée partage cette structure.
 
 ## Résultat canonique M014b
 

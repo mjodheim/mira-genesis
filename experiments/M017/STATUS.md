@@ -6,7 +6,7 @@
 - Langage structurel séquentiel : **implémenté**
 - Bibliothèque auto-extensible et règle d'abstraction : **implémentées**
 - Réincarnation sur substrat opaque : **implémentée**, 9/9 exactes
-- Tests de développement : **10 passants**, dans une suite de 29
+- Tests de développement : **11 passants**, dans une suite de 30
 - Statut scientifique : `DEVELOPMENT — LANGUAGE GROWTH BENCHMARKING`
 
 ## Portes de gel
@@ -16,12 +16,16 @@
 | 1 | Désigner la comparaison décisive avant toute nouvelle observation | **franchie** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
 | 2 | Établir que la marge dépasse la dispersion entre environnements | **franchie** — appariée : 95× à 620×, seuil proposé 10× |
 | 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | **franchie** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
-| 4 | Transporter la bibliothèque vers un environnement aux motifs inédits | mesure en cours — `scripts/run_m017_transport.py` |
-| 5 | Décalage brutal de distribution après absorption | mesure en cours, même script |
+| 4 | Transporter la bibliothèque vers un environnement aux motifs inédits | **franchie** — et elle oblige à restreindre la portée |
+| 5 | Décalage brutal de distribution après absorption | **franchie** — dégradation sans faux succès |
 | 6 | Audit d'isolation des sources et trace entièrement entière | **franchie** — `scripts/audit_m017_isolation.py` |
 
-Aucune pull request canonique ne peut être ouverte avant que ces portes soient
-franchies. Voir [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).
+**Les six portes sont franchies.** Le protocole complet, seuils compris, est dans
+[`FROZEN_PROTOCOL_017_CANDIDATE.md`](FROZEN_PROTOCOL_017_CANDIDATE.md).
+
+Il n'est **pas figé**. Le gel engage des seuils qui ne bougeront plus et ouvre une
+évaluation canonique qui ne s'exécute qu'une fois, sans rejeu. Cette signature est
+humaine et n'a pas été donnée.
 
 ## Ce que la porte n°2 a déjà appris
 

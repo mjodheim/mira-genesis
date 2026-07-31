@@ -12,8 +12,8 @@
 | M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
 | M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d'efficacité échouent |
 | M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
-| **M017** | **Langage auto-extensible** | **ACTIVE — DEVELOPMENT** | Absorber les motifs récurrents et battre la recherche ouverte sur la décroissance du coût |
-| M018 | Auto-métamorphose | BLOCKED BY M017 | Détecter, construire et adopter seul un corps mieux adapté |
+| **M017** | **Langage auto-extensible** | **ACTIVE — READY TO FREEZE** | Six portes franchies ; protocole candidat en attente de signature |
+| M018 | Auto-métamorphose | BLOCKED BY M017 | Détecter, construire et adopter seul un corps mieux adapté — **et savoir oublier un langage inadapté** |
 | M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |
 | M016 | Compétence sensorimotrice | DEFERRED | Transporter un modèle du monde entre architectures différentes |
 
@@ -62,9 +62,22 @@ Le coût de recherche s'effondre d'un facteur cent pour le seul organisme qui é
 langage, et reste plat pour celui qui ne l'étend pas. Réincarnation 9/9 exacte sur
 trois familles de machines opaques, 4/4 abstentions négatives, zéro faux succès.
 
-Aucune évaluation canonique n'est autorisée. Les portes de gel sont dans
-`experiments/M017/PROTOCOL_DRAFT.md`, et la première est de désigner la comparaison
-décisive **avant** d'observer quoi que ce soit de nouveau.
+Les six portes de gel sont franchies. Le protocole complet, seuils compris, attend une
+signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`.
+
+Deux mesures ont changé le protocole en cours de route, et méritent d'être retenues :
+
+- **la première statistique décisive a été rejetée par la mesure.** Non appariée, elle
+  donnait un avantage de 2,4× à 605× selon l'environnement ; appariée épisode par
+  épisode, de 95× à 620×. La dispersion est divisée par trente-huit sans que la médiane
+  bouge. C'est la vérification que M014b n'a jamais faite ;
+- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d'un
+  environnement aux motifs disjoints donne 0,69× — strictement pire que pas de
+  bibliothèque du tout, quatre fois sur quatre. La leçon de M014b, retrouvée un cran
+  plus haut, et portée dans le protocole **avant** le gel plutôt que découverte après.
+
+Ce passif a une cause nommable : l'organisme ne sait ni oublier ses macros, ni juger
+qu'ils ne s'appliquent plus. C'est ce qui rend M018 nécessaire plutôt que souhaitable.
 
 ## Test ultime de la première phase
 
