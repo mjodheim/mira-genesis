@@ -1,0 +1,42 @@
+project: Mira Genesis
+updated_at: 2026-07-31
+branch: metamorphosis
+status: bounded_research_prototype
+last_validated_experiment: M011
+current_experiment: M012
+
+ultimate_goal:
+  trans_substrate_migration: true
+  autonomous_morphogenesis: true
+  unknown_substrate_adaptation: true
+  portable_memory: true
+  portable_plasticity: true
+  autonomous_reembodiment: true
+
+validated:
+  behavioral_passport_extraction: true
+  exact_finite_equivalence: true
+  heterogeneous_reembodiment: true
+  portable_deltas: true
+  structural_mutation: true
+  identity_free_alignment: true
+  scalable_alignment_benchmark: true
+  native_in_place_surgery: true
+
+not_validated:
+  autonomous_body_generation: true
+  unknown_substrate_learning: true
+  general_learning_strategy_transfer: true
+  autobiographical_memory_transfer: true
+  rich_sensorimotor_transfer: true
+  open_ended_language_extension: true
+  autonomous_self_metamorphosis: true
+
+next_experiment:
+  id: M012
+  title: Autonomous Morphogenesis
+  status: protocol_drafting
+  success_condition: >-
+    Build and select an exact target body from a behavioral contract,
+    native primitives and a resource budget, without a hand-written
+    architecture-specific compiler.
