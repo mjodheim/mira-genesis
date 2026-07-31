@@ -5,6 +5,7 @@ import random
 from typing import Iterable
 
 from .m012b_dfa import DFA, exact_equivalence, random_minimal_dfa
+from .m014b_confirmation import bounded_confirmation_words
 from .m014b_policy import (
     CandidateUpdate,
     EditHypothesis,
@@ -13,6 +14,21 @@ from .m014b_policy import (
     dfa_accepts,
     generate_candidates,
     normalize_dfa,
+)
+
+SCHEMA_DISTRIBUTION = (
+    "acceptance_flip",
+    "acceptance_flip",
+    "acceptance_flip",
+    "acceptance_flip",
+    "acceptance_flip",
+    "acceptance_flip",
+    "transition_redirect",
+    "transition_redirect",
+    "transition_redirect",
+    "transition_redirect",
+    "two_independent_local_edits",
+    "two_independent_local_edits",
 )
 
 
@@ -52,25 +68,22 @@ def _select_candidate(base: DFA, schema: str, seed: int) -> CandidateUpdate:
     if not candidates:
         raise RuntimeError(f"no distinct candidate for schema {schema}")
     selected = random.Random(seed).choice(candidates)
-    # Preserve the local edit in the inherited state's coordinate system.
-    # Candidate enumeration is behaviorally canonicalized for deduplication, but
-    # a training demonstration must not be relabeled before its schema is read.
     raw_target = apply_hypothesis(base, selected.hypothesis)
     return CandidateUpdate(raw_target, selected.hypothesis)
 
 
 def make_development_demonstrations() -> tuple[tuple[DFA, DFA], ...]:
     demonstrations: list[tuple[DFA, DFA]] = []
-    for index in range(12):
+    for index, schema in enumerate(SCHEMA_DISTRIBUTION):
         base = normalize_dfa(random_minimal_dfa(31_000 + index))
-        schema = LEARNABLE_SCHEMAS[index % len(LEARNABLE_SCHEMAS)]
         selected = _select_candidate(base, schema, 31_500 + index)
         demonstrations.append((base, selected.dfa))
     return tuple(demonstrations)
 
 
 def make_positive_update(base: DFA, update_seed: int) -> CandidateUpdate:
-    schema = LEARNABLE_SCHEMAS[update_seed % len(LEARNABLE_SCHEMAS)]
+    rng = random.Random(update_seed)
+    schema = SCHEMA_DISTRIBUTION[rng.randrange(len(SCHEMA_DISTRIBUTION))]
     return _select_candidate(normalize_dfa(base), schema, update_seed ^ 0x14B5_EED)
 
 
@@ -80,17 +93,23 @@ def make_development_positive_case(index: int) -> tuple[DFA, CandidateUpdate]:
 
 
 def _outside_learned_language(base: DFA, target: DFA) -> bool:
-    return all(
-        not exact_equivalence(candidate.dfa, target)[0]
-        for candidate in generate_candidates(base, LEARNABLE_SCHEMAS, 5000)
-    )
+    confirmation = bounded_confirmation_words(3)
+    for candidate in generate_candidates(base, LEARNABLE_SCHEMAS, 5000):
+        if exact_equivalence(candidate.dfa, target)[0]:
+            return False
+        if all(
+            dfa_accepts(candidate.dfa, word) == dfa_accepts(target, word)
+            for word in confirmation
+        ):
+            return False
+    return True
 
 
 def make_three_edit_target(base: DFA, seed: int) -> DFA:
     normalized = normalize_dfa(base)
     rng = random.Random(seed)
     state_count = len(normalized.transitions)
-    for _ in range(512):
+    for _ in range(2048):
         acceptance_state = rng.randrange(state_count)
         first_state = rng.randrange(state_count)
         first_symbol = rng.randrange(2)
@@ -111,23 +130,25 @@ def make_three_edit_target(base: DFA, seed: int) -> DFA:
                 (acceptance_state, first_state, first_symbol, first_target),
             ),
         )
-        target = apply_hypothesis(
-            first,
-            EditHypothesis(
-                "transition_redirect",
-                (second_state, second_symbol, second_target),
-            ),
+        target = normalize_dfa(
+            apply_hypothesis(
+                first,
+                EditHypothesis(
+                    "transition_redirect",
+                    (second_state, second_symbol, second_target),
+                ),
+            )
         )
         if not exact_equivalence(normalized, target)[0] and _outside_learned_language(normalized, target):
-            return normalize_dfa(target)
-    raise RuntimeError("unable to construct a distinct three-edit negative target")
+            return target
+    raise RuntimeError("unable to construct a bounded-detectable three-edit negative target")
 
 
 def make_state_adding_target(base: DFA, seed: int) -> DFA:
     normalized = normalize_dfa(base)
     rng = random.Random(seed)
     state_count = len(normalized.transitions)
-    for _ in range(512):
+    for _ in range(2048):
         transitions = [list(row) for row in normalized.transitions]
         accepting = list(normalized.accepting)
         new_state = state_count
@@ -136,16 +157,17 @@ def make_state_adding_target(base: DFA, seed: int) -> DFA:
         source = rng.randrange(state_count)
         symbol = rng.randrange(2)
         transitions[source][symbol] = new_state
-        target = DFA(
-            tuple(normalized.alphabet),
-            tuple(tuple(int(value) for value in row) for row in transitions),
-            tuple(bool(value) for value in accepting),
-            normalized.initial,
+        target = normalize_dfa(
+            DFA(
+                tuple(normalized.alphabet),
+                tuple(tuple(int(value) for value in row) for row in transitions),
+                tuple(bool(value) for value in accepting),
+                normalized.initial,
+            )
         )
-        target = normalize_dfa(target)
         if len(target.transitions) > len(normalized.transitions) and _outside_learned_language(normalized, target):
             return target
-    raise RuntimeError("unable to construct a distinct state-adding negative target")
+    raise RuntimeError("unable to construct a bounded-detectable state-adding negative target")
 
 
 def make_nondeterministic_oracle(base: DFA, seed: int, kind: int) -> BehavioralUpdateOracle:
