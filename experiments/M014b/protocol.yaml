@@ -1,0 +1,66 @@
+experiment: M014b
+title: Portable Plasticity — clean sealed evaluation
+status: development_draft
+protocol_frozen: false
+results_allowed: false
+updated_at: 2026-07-31
+
+question: >-
+  Can a serialized learning policy migrate with an inherited finite competence
+  to a runtime-opaque substrate, learn a previously unseen behavioral change
+  from few queries, synthesize an exact updated native body, and preserve the
+  archived prior body?
+
+validated_prerequisites:
+  - M012b_sealed_autonomous_morphogenesis
+  - M013e_sealed_unknown_substrate_migration
+
+hypothesis_language_draft:
+  - acceptance_flip
+  - transition_redirect
+  - two_independent_local_edits
+
+portable_plasticity_passport:
+  required_fields:
+    - hypothesis_language
+    - learned_prior
+    - active_query_policy
+    - uncertainty_representation
+    - abstention_rule
+    - consolidation_rule
+    - development_provenance
+  forbidden_fields:
+    - evaluation_target
+    - evaluation_seed
+    - expected_answers
+    - opcode_map
+    - machine_specific_compiler
+
+baselines:
+  - learn_from_scratch
+  - random_query_selection
+  - inherited_skill_without_plasticity_passport
+  - oracle_transformation_ceiling
+
+negative_control_families:
+  - three_edit_targets
+  - state_adding_or_splitting_targets
+  - nondeterministic_or_changing_oracles
+
+sealed_evaluation:
+  enabled: false
+  case_source: future_runtime_cryptographic_nonce
+  canonical_trigger: future_first_pull_request_opened_run
+  canonical_attempt: 1
+
+thresholds:
+  status: to_be_fixed_after_development_only
+
+next_development_tasks:
+  - implement_serializable_plasticity_passport
+  - implement_candidate_modification_language
+  - implement_active_information_gain_queries
+  - implement_uncertainty_and_abstention
+  - implement_native_updated_body_construction
+  - verify_archived_body_byte_identity
+  - benchmark_all_baselines_on_development_namespace
