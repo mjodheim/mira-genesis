@@ -1,9 +1,9 @@
 project: Mira Genesis
 updated_at: 2026-07-31
-branch: metamorphosis
-status: bounded_research_prototype
+branch: research/m013e-sealed-unknown-substrate
+status: sealed_evaluation_ready
 last_validated_experiment: M012b
-current_experiment: M013d
+current_experiment: M013e
 
 ultimate_goal:
   trans_substrate_migration: true
@@ -27,7 +27,6 @@ validated_bounded:
 revoked_or_inconclusive:
   M012:
     status: inconclusive_contaminated
-    reason: evaluation_seeds_executed_in_tests
     replacement: M012b
   M013:
     status: inconclusive_contaminated
@@ -35,50 +34,59 @@ revoked_or_inconclusive:
     status: inconclusive_contaminated
   M013c:
     status: inconclusive_non_reproducible_commit
-    reason: announced_evaluation_commit_does_not_contain_frozen_protocol
     replacement: M013d
+  M013d:
+    status: failed_development_baseline_criterion
+    canonical_evaluation_opened: false
+    main_exact_principal_migrations: 36
+    no_probe_baseline_exact: 12
+    failed_criterion: no_probe_baseline_at_most_8_of_36
+    replacement: M013e
   M014:
     status: halted_before_evaluation
     protocol_frozen: true
 
 m012b:
-  protocol_status: frozen
   scientific_status: validated_bounded_finite_domain
   evaluated_commit: c60ddc28e3bea8c7c71d615dace4263f5cf3d187
   protocol_sha256: b949b9d4fc61cd118af075985d1d4218c37ce7f970f28bd3598d1f38dadbd651
   github_run_id: 30635291887
-  github_run_attempt: 1
-  event_action: opened
-  artifact_sha256: b8c4bc1b6302f03b088ca03b557a8ec3b17359d777aad9b9c4e7eb1190042adb
-  master_nonce_sha256: 6b7d28657434b128194c127257eba1dfeafafc0d1ef2ed05ddf2cd8d2b2f7cbc
   exact_principal_births: 36
-  principal_births_total: 36
   exact_executions: 108
-  executions_total: 108
-  per_catalogue_exact:
-    register_logic: 12
-    nand_fabric: 12
-    nor_fabric: 12
-  oracle_ceiling_exact: 36
-  correct_negative_abstentions: 12
-  false_negative_successes: 0
   all_pre_registered_criteria_passed: true
-  independent_reproduction:
-    deterministic_scientific_content_equal: true
-    excluded_nondeterministic_fields:
-      - elapsed_seconds
-      - environment
-  interpretation_limit: finite_deterministic_regular_languages_with_human_declared_boolean_catalogues
+
+m013e:
+  protocol_status: frozen
+  scientific_status: ready_for_sealed_evaluation
+  evaluation_cases_generated: false
+  canonical_trigger: first_pull_request_opened_run
+  canonical_run_attempt: 1
+  evaluation_case_source: runtime_cryptographic_nonce
+  evaluation_seeds_present_in_repository: false
+  development_tests_passed: 6
+  isolation_audit_passed: true
+  noncanonical_full_protocol_check:
+    exact_principal_migrations: 36
+    exact_executions: 108
+    per_machine_exact: [12, 12, 12]
+    oracle_ceiling_exact: 36
+    median_probe_calls: 84
+    max_probe_calls: 96
+    no_probe_baseline_exact: 0
+    random_semantics_baseline_exact: 0
+    correct_negative_abstentions: 12
+    all_pre_registered_criteria_passed: true
+    scientific_evidence: false
 
 next_experiment:
-  id: M013d
-  title: Unknown Substrate Discovery — clean sealed evaluation
-  status: protocol_drafting
+  id: M013e
+  title: Unknown Substrate Discovery — sealed relative-baseline evaluation
+  status: ready
   success_condition: >-
-    Receive an inherited finite competence and a runtime-sealed opaque machine,
-    infer stable native opcode semantics within a probe budget, abstain on
-    unstable or insufficient substrates, and construct an exact native body
-    without a task oracle, opcode map, or machine-specific compiler.
+    Infer stable semantics of runtime-sealed opaque opcodes within 120 probes,
+    exceed the best zero-information baseline by at least 12 principal
+    migrations, abstain on all impossible machines, and construct exact native
+    bodies without a task oracle, opcode map, or machine-specific compiler.
 
-blocked_after_m013d:
+blocked_after_m013e:
   - M014
