@@ -1,38 +1,36 @@
 # Feuille de route
 
-| Étape | Objectif | Statut | Critère de sortie |
+| Étape | Objectif | Statut corrigé | Critère de sortie |
 |---|---|---|---|
-| M001–M011 | Fondations de métamorphose | VALIDATED dans le domaine fini | Passeport, migration, plasticité et chirurgie native exactes |
-| M012 | Morphogenèse autonome | VALIDATED dans le domaine fini | Générer et sélectionner un corps exact sans compilateur spécialisé |
-| M013 / M013b | Substrat inconnu — protocoles contaminés | INCONCLUSIVE | Conservés dans le journal, aucun résultat revendiqué |
-| M013c | Substrat inconnu — évaluation isolée | VALIDATED dans le domaine fini | Découvrir les opcodes opaques et y migrer la compétence héritée |
-| M014 | Plasticité portable | ACTIVE | Transmettre une méthode d’apprentissage et continuer à apprendre après migration |
+| M001–M011 | Fondations de métamorphose | VALIDATED dans leurs domaines finis | Passeport, migration, plasticité locale et chirurgie native exactes |
+| M012 | Morphogenèse autonome | INCONCLUSIVE — CONTAMINATED | Graines d’évaluation exécutées dans les tests |
+| M012b | Morphogenèse autonome propre | NEXT | Cas scellés, absents des tests, commit auto-contenu |
+| M013 / M013b | Substrat inconnu | INCONCLUSIVE — CONTAMINATED | Aucun résultat revendiqué |
+| M013c | Substrat inconnu | INCONCLUSIVE — NON REPRODUCIBLE | Le commit annoncé ne contient pas le protocole figé |
+| M013d | Substrat inconnu propre | BLOCKED BY M012b | Protocole, code et reproduction présents avant toute exécution |
+| M014 | Plasticité portable | HALTED | Reprendre seulement après M012b et M013d |
 | M015 | Mémoire et stratégie | PLANNED | Migrer souvenirs, incertitudes et stratégie d’exploration |
-| M016 | Compétence sensorimotrice | PLANNED | Transporter un modèle du monde entre trois architectures |
+| M016 | Compétence sensorimotrice | PLANNED | Transporter un modèle du monde entre architectures différentes |
 | M017 | Langage auto-extensible | PLANNED | Inventer un dialecte requis par une capacité hors langage |
 | M018 | Auto-métamorphose | PLANNED | Détecter, construire et adopter seul un corps mieux adapté |
 
-## Résultat M013c
+## Reprise immédiate
 
-- 36/36 migrations principales exactes ;
-- plafond avec carte oracle : 36/36 ;
-- trois machines à opcodes anonymes ;
-- 84 sondes médianes et 96 au maximum sur un budget de 120 ;
-- baseline sans sondage : 0/36 ;
-- baseline à sémantiques aléatoires : 0/36 ;
-- 12/12 substrats impossibles ou instables rejetés ;
-- limite : opérations booléennes finies, sans mémoire ni dynamique d’apprentissage transférée.
+### M012b
 
-## Sous-étapes M014
+1. Créer un nouveau namespace de cas réservé, non référencé dans les tests.
+2. Geler le protocole et le générateur de laboratoire dans un commit unique.
+3. Interdire aux tests unitaires l’import des fabriques d’évaluation.
+4. Exécuter l’évaluation uniquement après vérification automatique de l’isolement.
+5. Conserver les résultats bruts complets et une commande de reproduction fonctionnant au commit annoncé.
 
-1. Définir un passeport de plasticité indépendant du corps : espace d’hypothèses, incertitude, politique de requêtes et consolidation.
-2. Apprendre ce passeport uniquement sur des transformations de développement.
-3. Migrer compétence et passeport de plasticité vers les machines opaques de M013c.
-4. Présenter une compétence cible modifiée sans révéler la transformation.
-5. Identifier la modification avec peu de requêtes comportementales.
-6. Produire un nouveau corps natif exact et conserver l’ancien corps inchangé.
-7. Comparer à l’apprentissage L* depuis zéro, à la sélection aléatoire de requêtes et au même organisme privé de son passeport de plasticité.
-8. Rejeter les modifications hors langage plutôt que produire un faux succès.
+### M013d
+
+Après M012b, utiliser de nouvelles machines opaques et de nouveaux passeports. Le commit d’évaluation doit déjà contenir le protocole, les scripts, le laboratoire et les contrôles avant la première exécution.
+
+### M014
+
+Le protocole existant reste gelé mais suspendu. Les graines 17xxx ne doivent pas être exécutées avant que la chaîne M012b → M013d soit proprement établie.
 
 ## Test ultime de la première phase
 
