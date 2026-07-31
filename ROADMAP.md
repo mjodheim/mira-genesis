@@ -11,7 +11,7 @@
 | M013e | Substrat inconnu, avantage relatif | VALIDATED dans le domaine fini | 36/36, découverte d'opcodes scellés et reproduction |
 | M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
 | M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d'efficacité échouent |
-| M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé |
+| M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
 | **M017** | **Langage auto-extensible** | **ACTIVE — DEVELOPMENT** | Absorber les motifs récurrents et battre la recherche ouverte sur la décroissance du coût |
 | M018 | Auto-métamorphose | BLOCKED BY M017 | Détecter, construire et adopter seul un corps mieux adapté |
 | M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |

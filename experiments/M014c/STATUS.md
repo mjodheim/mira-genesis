@@ -3,7 +3,7 @@
 - Statut scientifique : `HALTED — SUPERSEDED BY M017`
 - Évaluation canonique : **jamais ouverte**
 - Résultat revendiqué : **aucun**
-- Branche préservée : `research/m014c-distribution-general-plasticity`, tête `fc46005`
+- Code préservé : tag **`archive/m014c-halted`**, commit `fc46005`
 
 ## Ce qui a été construit
 
@@ -43,9 +43,18 @@ application, formes canoniques — a été extraite dans `metamorphosis/structur
 sert de socle à M017. Le passeport, la session et la politique de requêtes propres à
 M014c n'ont pas été repris : ils encodent le catalogue fermé qui motive l'arrêt.
 
-Conformément à D007, le code de M014c ne reste pas dans l'arbre de travail. La branche
-`research/m014c-distribution-general-plasticity` le conserve intact, et le présent
-enregistrement n'est jamais supprimé.
+Conformément à D007, le code de M014c ne reste pas dans l'arbre de travail. Le tag
+`archive/m014c-halted` le conserve intact, et le présent enregistrement n'est jamais
+supprimé.
+
+Un tag plutôt qu'une branche : une branche vivante invite la reprise et se supprime
+par mégarde, alors qu'un tag annoté est une référence immuable, ce qu'exige un
+enregistrement scientifique. Récupération :
+
+```bash
+git show archive/m014c-halted:metamorphosis/m014c_meta.py
+git switch --detach archive/m014c-halted
+```
 
 ## Note sur le dernier run CI de la branche
 
@@ -60,10 +69,10 @@ La branche a été rebasée sur l'arbre consolidé un commit **avant** le correc
 packaging `a4c1c96`, qui déclare le backend de build et la liste explicite des paquets.
 Son `pyproject.toml` ne permet donc pas `pip install -e ".[dev]"`.
 
-L'échec n'est pas corrigé, et c'est délibéré : `fc46005` est la tête citée par le
+L'échec n'est pas corrigé, et c'est délibéré : `fc46005` est le commit cité par le
 présent enregistrement, et une expérience arrêtée ne se réécrit pas pour faire
-disparaître un voyant rouge. Le workflow ne se déclenchant que sur poussée vers cette
-branche, il ne se rejouera pas.
+disparaître un voyant rouge. La branche ayant été remplacée par le tag
+`archive/m014c-halted`, le workflow n'a plus aucun déclencheur et ne se rejouera pas.
 
 ## Remplacement
 
