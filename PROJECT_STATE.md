@@ -10,7 +10,9 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Dernière expérience validée : **M011**
 - Expérience active : **M012 — Morphogenèse autonome**
 - Protocole M012 : **figé le 31 juillet 2026**
-- Implémentation M012 : **non commencée**
+- Implémentation M012 : **incrément 1 terminé**
+- Tests actuels : **26 réussis**
+- Résultats d’évaluation M012 : **aucun**
 - Statut global : **prototype de recherche borné**
 
 ## Capacités validées dans le domaine fini
@@ -25,9 +27,18 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Réincarnation locale dans cinq physiques computationnelles.
 - Chirurgie native en place après métamorphose.
 
+## Infrastructure M012 disponible
+
+- catalogues déclaratifs de primitives ;
+- synthétiseur générique commun aux catalogues ;
+- sérialisation d’un corps natif ;
+- abstention exacte lorsqu’un contrat n’est pas exprimable ;
+- micro-contrats de développement uniquement.
+
 ## Non validé
 
-- Génération autonome d’un corps sans compilateur spécialisé.
+- Découverte des états comportementaux depuis le contrat opaque.
+- Génération autonome d’un corps sans contraintes latentes fournies.
 - Apprentissage des règles d’un substrat inconnu.
 - Transport général de la stratégie d’apprentissage.
 - Mémoire autobiographique portable.
@@ -35,9 +46,9 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Langage cognitif ouvert et auto-extensible hors méta-grammaire humaine.
 - Auto-métamorphose et auto-amélioration scientifique fermée.
 
-## Critère de réussite M012
+## Prochaine opération M012
 
-À partir d’un contrat comportemental, d’un budget et de primitives natives, Genesis doit générer plusieurs corps candidats, les évaluer et sélectionner un corps exact sans compilateur spécialisé écrit pour l’architecture cible.
+Ajouter une découverte active des états comportementaux et la connecter au synthétiseur générique sans exposer le DFA cible ni appeler les compilateurs M010.
 
 ## Discipline de reprise
 
