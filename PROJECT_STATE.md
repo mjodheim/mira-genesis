@@ -7,8 +7,11 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 ## État au 31 juillet 2026
 
 - Branche scientifique : **Metamorphosis**
-- Dernière expérience validée : **M011**
-- Expérience active : **M012 — Morphogenèse autonome**
+- Dernière expérience validée : **M012 — Morphogenèse autonome**
+- Expérience suivante : **M013 — Découverte d’un substrat inconnu**
+- Tests M012 : **31 réussis**
+- Naissances principales M012 : **36/36 exactes**
+- Contrôles négatifs M012 : **12/12 rejetés, aucun faux succès**
 - Statut global : **prototype de recherche borné**
 
 ## Capacités validées dans le domaine fini
@@ -22,20 +25,28 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - Alignement polynomial jusqu’à 48 états dans le benchmark M008.
 - Réincarnation locale dans cinq physiques computationnelles.
 - Chirurgie native en place après métamorphose.
+- Découverte active d’états comportementaux depuis un contrat opaque.
+- Construction autonome de corps natifs par un synthétiseur commun piloté par catalogues déclaratifs.
+- Héritage inspectable de motifs de construction améliorant la recherche sans contenir la cible.
+
+## Résultat M012
+
+À partir d’un oracle comportemental opaque, Genesis a reconstruit la compétence puis produit des corps exacts dans trois catalogues de primitives sans recevoir le DFA cible ni appeler les compilateurs spécialisés de M010.
+
+Limite : les primitives étaient encore décrites par leurs opérations booléennes connues. M012 ne prouve donc pas encore qu’un substrat inconnu peut être compris expérimentalement.
 
 ## Non validé
 
-- Génération autonome d’un corps sans compilateur spécialisé.
-- Apprentissage des règles d’un substrat inconnu.
+- Découverte expérimentale de la sémantique d’un substrat inconnu.
 - Transport général de la stratégie d’apprentissage.
 - Mémoire autobiographique portable.
 - Compétences riches, continues et sensorimotrices trans-substrat.
 - Langage cognitif ouvert et auto-extensible hors méta-grammaire humaine.
 - Auto-métamorphose et auto-amélioration scientifique fermée.
 
-## Critère de réussite M012
+## Prochaine opération M013
 
-À partir d’un contrat comportemental, d’un budget et de primitives natives, Genesis doit générer plusieurs corps candidats, les évaluer et sélectionner un corps exact sans compilateur spécialisé écrit pour l’architecture cible.
+Présenter des machines dont les opérations portent uniquement des identifiants opaques. Genesis devra sonder leurs effets, inférer leur sémantique fonctionnelle, déterminer si elles offrent une base suffisante, puis y construire et valider un corps sans table d’opcodes fournie.
 
 ## Discipline de reprise
 
