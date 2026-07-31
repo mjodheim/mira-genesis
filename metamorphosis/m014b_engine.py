@@ -87,6 +87,37 @@ class PortablePlasticityEngine:
             native_component_budget=360,
         )
 
+    def _migrate_with_retries(
+        self,
+        passport: DFA,
+        machine: OpaqueMachine,
+        seed: int,
+        trace: Mapping[str, object],
+        *,
+        supplied_substrate=None,
+    ) -> MigrationCertificate:
+        attempts = (
+            seed,
+            seed ^ 0x9E37_79B9,
+            seed ^ 0xC2B2_AE35,
+        )
+        last: MigrationCertificate | None = None
+        for index, attempt_seed in enumerate(attempts):
+            attempt_trace = dict(trace)
+            attempt_trace["morphogenesis_attempt"] = index
+            certificate = self.migrator.migrate(
+                passport,
+                machine,
+                attempt_seed,
+                attempt_trace,
+                supplied_substrate=supplied_substrate,
+            )
+            last = certificate
+            if certificate.status == "success" and certificate.body is not None:
+                return certificate
+        assert last is not None
+        return last
+
     def adapt(
         self,
         inherited_passport: DFA,
@@ -104,7 +135,7 @@ class PortablePlasticityEngine:
         plasticity_hash = _sha256_text(plasticity_passport_json)
         plasticity_round_trip = restored_json == plasticity_passport_json
 
-        old_migration = self.migrator.migrate(
+        old_migration = self._migrate_with_retries(
             inherited_passport,
             machine,
             search_seed,
@@ -169,18 +200,19 @@ class PortablePlasticityEngine:
                 base_trace,
             )
 
-        asked = {
-            tuple(int(value) for value in row["word"])
+        prior_answers = {
+            tuple(int(value) for value in row["word"]): bool(row["answer"])
             for row in inference.query_trace
-            if isinstance(row.get("word"), list)
+            if isinstance(row.get("word"), list) and "answer" in row
         }
         confirmation = confirm_candidate(
             inference.updated_passport,
             behavioral_oracle,
-            already_asked=asked,
+            prior_answers=prior_answers,
             raw_budget=max(0, self.query_budget - inference.raw_oracle_calls),
             repetitions=plasticity.repeat_queries,
-            max_length=5,
+            max_length=3,
+            replay_count=3,
         )
         total_update_calls = inference.raw_oracle_calls + confirmation.raw_oracle_calls
         old_after_json = old_body.to_json()
@@ -208,7 +240,7 @@ class PortablePlasticityEngine:
                 base_trace,
             )
 
-        new_migration = self.migrator.migrate(
+        new_migration = self._migrate_with_retries(
             inference.updated_passport,
             machine,
             search_seed ^ 0x5EED_14B0,
