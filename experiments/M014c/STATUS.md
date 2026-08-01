@@ -1,79 +1,78 @@
-# M014c — Statut
+# M014c — Status
 
-- Statut scientifique : `HALTED — SUPERSEDED BY M017`
-- Évaluation canonique : **jamais ouverte**
-- Résultat revendiqué : **aucun**
-- Code préservé : tag **`archive/m014c-halted`**, commit `fc46005`
+- Scientific status: `HALTED — SUPERSEDED BY M017`
+- Canonical evaluation: **never opened**
+- Result claimed: **none**
+- Code preserved: tag **`archive/m014c-halted`**
 
-## Ce qui a été construit
+## What was built
 
-Un passeport de méta-plasticité structurelle, une session d'adaptation en ligne à
-compteurs entiers, un moteur d'adaptation persistant sur substrat opaque, et un banc
-de développement à profils générés. Les tests passaient, la CI était verte.
+A structural meta-plasticity passport, an online adaptation session with integer
+counters, a persistent adaptation engine on an opaque substrate, and a development
+benchmark over generated profiles. The tests passed and CI was green.
 
-## Pourquoi l'expérience est arrêtée
+## Why the experiment is halted
 
-Elle n'a pas échoué : elle mesurait la mauvaise chose.
+It did not fail. It measured the wrong thing.
 
-`MetaPlasticitySession.identify` énumère strictement `passport.programs` — douze
-programmes structurels écrits à la main. Tout l'apprentissage consiste à repondérer
-des compteurs de groupe sur ce catalogue fermé. L'organisme ne peut rien exprimer
-qu'on ne lui ait donné.
+`MetaPlasticitySession.identify` enumerates exactly `passport.programs` — twelve
+hand-written structural programs. All learning consists of reweighting group counters
+over that closed catalogue. The organism cannot express anything it was not given.
 
-Le banc de développement affichait `active_to_scratch_ratio = 0,083`, ce qui se lit
-comme un gain de quinze fois. C'en est un effet de taille d'automate : les DFA
-hors distribution portent 7 à 10 états, donc L\* depuis zéro paye un coût qui croît
-avec l'automate, tandis que Genesis paye un coût qui croît avec sa bibliothèque de
-douze programmes. Agrandir les automates aurait gonflé le même ratio sans rien changer
-à ce que le passeport avait appris.
+The development benchmark reported `active_to_scratch_ratio = 0.083`, which reads as a
+fifteen-fold gain. It is an automaton-size effect: out-of-distribution DFAs carry 7 to
+10 states, so L\* from scratch pays a cost that grows with the automaton while Genesis
+pays one that grows with its twelve-entry library. Enlarging the automata would have
+inflated the same ratio without changing anything the passport had learned.
 
-La comparaison qui portait réellement l'hypothèse était l'adaptatif contre son propre
-jumeau non adaptatif : `active_to_static_ratio = 0,88`. Douze pour cent, sur une tâche
-dont l'optimum théorique est proche de quatre requêtes et la sélection aléatoire à
-huit — une fenêtre large de quatre requêtes.
+The comparison that actually carried the hypothesis was the adaptive session against its
+own non-adaptive twin: `active_to_static_ratio = 0.88`. Twelve percent, on a task whose
+theoretical optimum sits near four queries and whose random selection sits at eight — a
+window four queries wide.
 
-**M014b a échoué sur exactement cette géométrie** : une marge préenregistrée de 25 %,
-mesurée sur une échelle trop grossière pour séparer le signal du bruit. Figer M014c
-contre L\* aurait passé trivialement et répété l'erreur en sens inverse.
+**M014b failed on exactly that geometry**: a pre-registered 25% margin, measured on a
+scale too coarse to separate signal from sampling noise. Freezing M014c against L\*
+would have passed trivially and repeated the error in the opposite direction.
 
-## Ce qui est repris
+## What was carried forward
 
-La partie du langage structurel qui n'appartient à aucune expérience — rôles, atomes,
-application, formes canoniques — a été extraite dans `metamorphosis/structural.py` et
-sert de socle à M017. Le passeport, la session et la politique de requêtes propres à
-M014c n'ont pas été repris : ils encodent le catalogue fermé qui motive l'arrêt.
+The part of the structural language belonging to no experiment — roles, atoms,
+application, canonical forms — was extracted into `metamorphosis/structural.py` and
+became the foundation of M017. The passport, session and query policy specific to M014c
+were not carried forward: they encode the closed catalogue that motivates the halt.
 
-Conformément à D007, le code de M014c ne reste pas dans l'arbre de travail. Le tag
-`archive/m014c-halted` le conserve intact, et le présent enregistrement n'est jamais
-supprimé.
+Per D007, M014c's code does not stay in the working tree. The tag
+`archive/m014c-halted` holds it intact, and this record is never deleted.
 
-Un tag plutôt qu'une branche : une branche vivante invite la reprise et se supprime
-par mégarde, alors qu'un tag annoté est une référence immuable, ce qu'exige un
-enregistrement scientifique. Récupération :
+A tag rather than a branch: a live branch invites resumption and gets deleted by
+accident, whereas an annotated tag is an immutable reference, which is what a scientific
+record requires. Recovery:
 
 ```bash
 git show archive/m014c-halted:metamorphosis/m014c_meta.py
+```
+
+```bash
 git switch --detach archive/m014c-halted
 ```
 
-## Note sur le dernier run CI de la branche
+## Note on the branch's last CI run
 
-Le run `30656737493` de `M014c development benchmark` est en échec, à l'installation :
+Run `30656737493` of `M014c development benchmark` fails at installation:
 
 ```
 error: Multiple top-level packages discovered in a flat-layout:
        ['results', 'archives', 'experiments', 'metamorphosis']
 ```
 
-La branche a été rebasée sur l'arbre consolidé un commit **avant** le correctif de
-packaging `a4c1c96`, qui déclare le backend de build et la liste explicite des paquets.
-Son `pyproject.toml` ne permet donc pas `pip install -e ".[dev]"`.
+The branch was rebased onto the consolidated tree one commit **before** the packaging
+fix that declares the build backend and the explicit package list. Its `pyproject.toml`
+therefore does not allow `pip install -e ".[dev]"`.
 
-L'échec n'est pas corrigé, et c'est délibéré : `fc46005` est le commit cité par le
-présent enregistrement, et une expérience arrêtée ne se réécrit pas pour faire
-disparaître un voyant rouge. La branche ayant été remplacée par le tag
-`archive/m014c-halted`, le workflow n'a plus aucun déclencheur et ne se rejouera pas.
+The failure is deliberately left uncorrected: the tagged commit is what this record
+cites, and a halted experiment is not rewritten to clear a red check. The branch having
+been replaced by the tag, the workflow has no trigger left and will not replay.
 
-## Remplacement
+## Replacement
 
-**M017 — Langage auto-extensible.** Voir `experiments/M017/`.
+**M017 — Self-extending language.** See `experiments/M017/`.
