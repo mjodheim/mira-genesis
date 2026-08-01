@@ -1,130 +1,133 @@
-# Mira Genesis — État du projet
+# Mira Genesis — Project state
 
-## Question centrale
+## Central question
 
-**Quand une mesure-proxy cesse-t-elle de suivre ce qu’elle prétend suivre, et sous
-quelle pression d’optimisation ?** Posée dans un domaine où la vérité terrain est
-décidable, donc où la réponse se prouve au lieu de s’estimer.
+**When does a proxy measure stop tracking what it claims to track, and under what
+optimisation pressure?** Asked in a domain where ground truth is decidable, so the
+answer is proved rather than estimated.
 
-Voir **D011**, **H9** et [`MEASURES.md`](MEASURES.md).
+See **D011**, **H9** and [`MEASURES.md`](MEASURES.md).
 
-## Objectif d’origine, devenu le support
+## The original goal, now the testbed
 
-Construire une intelligence capable d’apprendre dans un substrat A, de découvrir un substrat B inconnu, d’y construire un nouveau corps, puis d’y transférer ses compétences, sa mémoire et sa plasticité afin de continuer à apprendre sans intervention architecturale humaine.
+Build an intelligence able to learn in a substrate A, discover an unknown substrate B,
+construct a new body there, then transfer its competences, memory and plasticity so it
+keeps learning without human architectural intervention.
 
-Cette ligne a produit deux validations scellées, un domaine décidable, et quatre échecs
-dont **aucun n’était dans l’organisme**. Elle reste le banc d’essai ; elle n’est plus la
-question.
+That line produced two sealed validations, a decidable domain, and four failures **none
+of which was in the organism**. It remains the testbed; it is no longer the question.
 
-## État au 1er août 2026
+## State on 1 August 2026
 
-- Dernière expérience validée : **M013e — migration scellée vers un substrat opaque**, dans son domaine fini
-- M012b : **VALIDATED — BOUNDED FINITE DOMAIN**
-- M013e : **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
-- M014b : **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
-- M014c : **HALTED — SUPERSEDED BY M017**, jamais évaluée
-- M017 : **READY TO FREEZE**, critère devenu directionnel après balayage à 50 environnements
-- M018 : **HYPOTHESIS NOT SUPPORTED** — détruire ne restaure pas l’amélioration
-- M019 : **RIG NOT VALID** — sélection trop impatiente pour valoriser l’apprentissage
-- Expérience suivante : **M021 — décrochage d’une mesure sous vérité terrain**
-- Statut global : **laboratoire de recherche borné et décidable, deux validations scellées, six cas catalogués de mesures ayant divergé de ce qu’elles prétendaient mesurer**
+- Last validated experiment: **M013e — sealed migration to an opaque substrate**, within its finite domain
+- M012b: **VALIDATED — BOUNDED FINITE DOMAIN**
+- M013e: **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
+- M014b: **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
+- M014c: **HALTED — SUPERSEDED BY M017**, never evaluated
+- M017: **READY TO FREEZE**, criterion turned directional after a 50-environment sweep
+- M018: **HYPOTHESIS NOT SUPPORTED** — destroying does not restore improvement
+- M019: **RIG NOT VALID** — selection too impatient to value learning
+- Active: **M021 — do these selection measures move true quality?**
+- Overall: **a bounded, decidable research laboratory, two sealed validations, six catalogued cases of measures that came loose from what they claimed to measure**
 
-## Correction de direction — 31 juillet 2026
+## Direction correction — 31 July 2026
 
-Toute la chaîne M012b → M014c reposait sur une limite qu’aucun critère ne mesurait :
-**l’organisme ne peut exprimer que ce qui lui a été écrit à la main.** L’identification
-de M014c énumère strictement douze programmes structurels ; son apprentissage n’est
-qu’une repondération de compteurs sur ce catalogue fermé.
+The whole M012b → M014c chain rested on a limit no criterion measured: **the organism
+can only express what was hand-written for it.** M014c's identification enumerates
+exactly twelve structural programs; its learning is only a reweighting of counters over
+that closed catalogue.
 
-M014c est donc arrêtée avant évaluation et remplacée par M017 — langage
-auto-extensible — dont le vocabulaire de départ ne contient que des atomes, et où tout
-ce qui dépasse l’atome doit être construit puis peut être absorbé. La feuille de route
-change d’ordre, pas de noms : M015 et M016 sont reportées derrière M017 et M018.
+M014c is therefore halted before evaluation and replaced by M017 — self-extending
+language — whose starting vocabulary holds only atoms, where anything beyond an atom
+must be built and can then be absorbed. The roadmap changes order, not names: M015 and
+M016 move behind M017 and M018.
 
-Voir D009, D010, `ROADMAP.md` et `experiments/M017/`.
+See D009, D010, `ROADMAP.md` and `experiments/M017/`.
 
-## Développement M017
+## M017 development
 
-42 épisodes, trois environnements. Le catalogue fermé — la capacité de M014c —
-n’en résout **aucun**. La recherche ouverte sans absorption en résout 34, à coût
-constant. L’organisme auto-extensible en résout 37, et son coût de recherche médian
-passe de 4 222 nœuds sur la première moitié des épisodes à **43** sur la seconde,
-tandis que celui de la recherche ouverte reste plat.
+42 episodes, three environments. The closed catalogue — M014c's capability — solves
+**none**. Open search without absorption solves 34, at constant cost. The
+self-extending organism solves 37, and its median search cost falls from 4,222 nodes
+over the first half of the episodes to **43** over the second, while open search stays
+flat.
 
-Réincarnation 9/9 exacte sur trois familles de machines opaques, archive intacte,
-4/4 abstentions sur les contrôles négatifs, zéro faux succès.
+9/9 exact reincarnations across three opaque machine families, archive intact, 4/4
+abstentions on the negative controls, zero false successes.
 
-**Les six portes de gel sont franchies.** Le protocole complet, seuils compris, attend
-une signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. Aucune
-évaluation canonique n’est autorisée avant elle : le gel engage des seuils qui ne
-bougeront plus, et l’évaluation ne s’exécute qu’une fois.
+**All six freeze gates are passed.** The complete protocol, thresholds included, awaits
+a human signature in `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. No canonical
+evaluation is permitted before it: freezing commits thresholds that will not move, and
+the evaluation runs only once.
 
-Deux mesures ont modifié le protocole en cours de route :
+Three measurements changed the protocol along the way:
 
-- **la statistique décisive initiale a été rejetée par la mesure.** Non appariée :
-  2,4× à 605× selon l’environnement. Appariée épisode par épisode : 95× à 620×. La
-  dispersion est divisée par trente-huit sans que la médiane bouge ;
-- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d’un
-  environnement aux motifs disjoints donne 0,69×, strictement pire que pas de
-  bibliothèque du tout, quatre fois sur quatre. Ses macros ne s’appliquent jamais et
-  gonflent pourtant le facteur de branchement.
+- **the initial decisive statistic was rejected by measurement.** Unpaired: 2.4× to
+  605× depending on the environment. Paired episode by episode: 95× to 620×. Dispersion
+  divided by thirty-eight without the median moving;
+- **the threshold did not survive a wider sweep.** Over 50 environments the minimum
+  falls to **9.0×**, below the proposed 10×. The criterion became directional — 50/50
+  environments favourable, dispersion zero;
+- **an extended language does not transport.** A library inherited from an environment
+  with disjoint motifs gives 0.69×, strictly worse than no library at all, four times
+  out of four. Its macros never apply and still inflate the branching factor.
 
-La portée revendiquée est donc restreinte d’avance : le langage croît **à l’intérieur**
-d’une distribution de transformations, et son avantage ne suit que si l’environnement
-d’arrivée partage cette structure.
+The claimed scope is therefore restricted in advance: the language grows **inside** a
+distribution of transformations, and its advantage follows only if the destination
+shares that structure.
 
-## Résultat canonique M014b
+## M014b canonical result
 
-M014b a transporté un passeport de plasticité sérialisé avec douze compétences héritées vers trois machines opaques scellées. Pour chaque modification comportementale, Genesis ne recevait qu’un oracle de requêtes.
+M014b transported a serialised plasticity passport with twelve inherited competences to
+three sealed opaque machines. For each behavioural modification, Genesis received only a
+query oracle.
 
-Ce qui a réussi :
+What succeeded:
 
-- 36/36 chaînes complètes exactes ;
-- 12/12 sur chaque machine ;
-- ancien et nouveau corps exacts et sérialisables ;
-- sémantique des opcodes utilisés correctement découverte ;
-- ancien corps préservé octet pour octet ;
-- 12/12 contrôles négatifs rejetés ;
-- zéro faux succès et zéro mutation d’archive ;
-- médiane totale de 44 requêtes, maximum 50.
+- 36/36 complete chains exact;
+- 12/12 on each machine;
+- old and new bodies exact and serialisable;
+- semantics of the used opcodes correctly discovered;
+- old body preserved byte for byte;
+- 12/12 negative controls rejected;
+- zero false successes and zero archive mutation;
+- total median of 44 queries, maximum 50.
 
-Ce qui a échoué :
+What failed:
 
-- médiane d’identification Genesis : 14 ;
-- apprentissage L* depuis zéro : 14 ;
-- requêtes aléatoires : 17 ;
-- organisme sans passeport appris : 17.
+- Genesis identification median: 14;
+- L\* learning from scratch: 14;
+- random queries: 17;
+- organism without a learned passport: 17.
 
-Genesis n’a donc pas atteint les avantages préenregistrés de 25 % sur L* et 20 % sur les deux baselines locales. Huit critères sur dix passent, mais le statut reste **FAILED**. Aucun seuil n’est modifié et aucun rerun ne remplace la première tentative.
+Genesis therefore did not reach the pre-registered advantages of 25% over L\* and 20%
+over both local baselines. Eight criteria out of ten pass, but the status remains
+**FAILED**. No threshold is modified and no rerun replaces the first attempt.
 
-Identité de la preuve :
+Proof identity:
 
-- SHA évalué : `5a0947afb96d7d59438c222028f2cabb34bc0cd5` ;
-- protocole SHA-256 : `215e442435e4f915e647ad1392f1172685f977f758053027adaa687b1126c881` ;
-- run GitHub Actions : `30650363802`, tentative 1 ;
-- artefact SHA-256 : `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
+- evaluated SHA: `5a0947afb96d7d59438c222028f2cabb34bc0cd5`;
+- protocol SHA-256: `215e442435e4f915e647ad1392f1172685f977f758053027adaa687b1126c881`;
+- GitHub Actions run: `30650363802`, attempt 1;
+- artifact SHA-256: `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
 
-Une reproduction indépendante a retrouvé toutes les métriques, tous les corps, les critères et la décision. Le hash de consolidation était seul non portable, car il incorporait des scores flottants ; M014c devra utiliser une trace quantifiée ou rationnelle.
+An independent replay recovered every metric, every body, the criteria and the
+decision. Only the consolidation hash was non-portable, because it embedded
+floating-point scores; later experiments must use a quantised or rational trace.
 
-## Capacités soutenues dans le domaine fini
+## Capabilities supported within the finite domain
 
-- extraction d’un passeport comportemental ;
-- morphogenèse autonome depuis un contrat opaque ;
-- découverte expérimentale d’un substrat fini inconnu ;
-- migration exacte d’une compétence sans oracle de tâche ;
-- transport, exécution et consolidation exacte d’un mécanisme de plasticité borné ;
-- abstention face aux modifications hors langage ou aux oracles instables.
+- extraction of a behavioural passport;
+- autonomous morphogenesis from an opaque contract;
+- experimental discovery of an unknown finite substrate;
+- exact migration of a competence without a task oracle;
+- transport, execution and exact consolidation of a bounded plasticity mechanism;
+- abstention on out-of-language modifications and unstable oracles.
 
-## Non validé
+## Not validated
 
-- avantage d’apprentissage transférable hors distribution de développement ;
-- mémoire autobiographique portable ;
-- adaptation à une physique continue ou analogique ;
-- langage cognitif auto-extensible ;
-- auto-métamorphose ouverte.
-
-## Prochaine opération — M014c
-
-M014c ne cherchera pas simplement une meilleure heuristique sur les mêmes cas. Elle devra apprendre une représentation de transformations à travers plusieurs environnements de développement, détecter le décalage de distribution, adapter son prior en ligne sous un budget strict et battre quatre baselines : L* depuis zéro, requêtes aléatoires, absence de passeport et passeport statique M014b.
-
-Le but initial demeure inchangé : apprendre dans un corps A, comprendre un substrat B inconnu, y construire un corps, puis y transférer compétence, mémoire et plasticité afin de continuer à apprendre réellement mieux qu’un organisme vierge.
+- learning advantage transferable outside the development distribution;
+- portable autobiographical memory;
+- adaptation to continuous or analogue physics;
+- self-extending cognitive language, in the strong sense of inventing primitives;
+- open-ended self-metamorphosis.
