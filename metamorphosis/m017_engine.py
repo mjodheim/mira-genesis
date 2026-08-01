@@ -159,7 +159,11 @@ class _Organism:
 
     # -- épisode --------------------------------------------------------------
 
-    def _absorb(self, atoms: Sequence[Atom]) -> tuple[str, ...]:
+    def _absorb(
+        self, atoms: Sequence[Atom], symbols: Sequence[Symbol]
+    ) -> tuple[str, ...]:
+        """Crochet d'après-épisode. `symbols` est ce que l'organisme a réellement
+        employé : M018 en a besoin pour créditer ses symboles et jeter les inutiles."""
         return ()
 
     def solve(self, base: DFA, oracle: BehavioralOracle) -> EpisodeResult:
@@ -202,7 +206,7 @@ class _Organism:
                 continue
 
             symbols_needed = description_length(atoms, self.library)
-            born = self._absorb(atoms)
+            born = self._absorb(atoms, symbols)
             return EpisodeResult(
                 "success", "program_identified", episode, atoms,
                 tuple(symbol.name for symbol in symbols), nodes, calls, false_matches,
@@ -244,8 +248,13 @@ class SelfExtendingOrganism(_Organism):
         )
         self.rule = AbstractionRule(threshold=threshold)
 
-    def _absorb(self, atoms: Sequence[Atom]) -> tuple[str, ...]:
-        return tuple(symbol.name for symbol in self.rule.observe(atoms, self.library, self.episode))
+    def _absorb(
+        self, atoms: Sequence[Atom], symbols: Sequence[Symbol]
+    ) -> tuple[str, ...]:
+        return tuple(
+            symbol.name
+            for symbol in self.rule.observe(atoms, self.library, self.episode)
+        )
 
     def export_library(self) -> str:
         return self.library.to_json()
