@@ -1,44 +1,59 @@
-# Reproductibilité
+# Reproducibility
 
-## Reproduire l'arbre de travail
+## Reproducing the working tree
 
-1. Python 3.11 ou plus récent.
+1. Python 3.11 or later.
 2. `pip install -e ".[dev]"`.
-3. `pytest -q` — la suite complète doit passer.
-4. `python scripts/check_repository_integrity.py` — importabilité, absence de module
-   orphelin et cohérence des dépendances déclarées.
+3. `pytest -q` — the whole suite must pass.
+4. `python scripts/check_repository_integrity.py` — importability, absence of orphan
+   modules, and consistency of the declared dependencies.
 
-Ces quatre étapes sont exactement celles exécutées par `.github/workflows/ci.yml` sur
-chaque pull request, en Python 3.11 et 3.13.
+These four steps are exactly what `.github/workflows/ci.yml` runs on every pull request,
+on Python 3.11 and 3.13.
 
-## Reproduire un résultat canonique
+## Reproducing a canonical result
 
-Chaque résultat canonique est identifié dans `results/<ID>.md` par :
+Every canonical result is identified in `results/<ID>.md` by:
 
-- le SHA du commit évalué, immuable ;
-- le SHA-256 du protocole figé ;
-- l'identifiant et le numéro de tentative du run GitHub Actions ;
-- le SHA-256 de l'artefact de preuve.
+- the evaluated commit SHA, immutable;
+- the SHA-256 of the frozen protocol;
+- the GitHub Actions run id and attempt number;
+- the SHA-256 of the evidence artifact.
 
-La reproduction se fait à partir du nonce publié, en repartant du commit évalué :
+Reproduction starts from the published nonce, at the evaluated commit:
 
 ```bash
-git checkout <SHA évalué>
+git checkout <evaluated SHA>
+```
+
+```bash
 python scripts/run_<ID>_evaluation.py --help
 ```
 
-La recette CI exacte de chaque évaluation scellée déjà consommée est conservée dans
-`archives/workflows/`. Ces workflows sont volontairement rendus non exécutables : la
-règle « un seul run canonique, jamais rejoué » interdit de les relancer.
+The exact CI recipe of every consumed sealed evaluation is kept in
+`archives/workflows/`. Those workflows are deliberately made non-executable: the rule
+"one canonical run, never replayed" forbids re-running them.
 
-## Contenu attendu d'un futur résultat
+## Reproducing the measure failures
 
-Tout nouveau résultat doit contenir la graine, le commit Git, le hash du protocole et
-une trace de décision portable bit à bit. M014b a montré qu'un hash de consolidation
-incorporant des scores flottants n'est pas reproductible d'un environnement à l'autre :
-les décisions et les hashes doivent reposer sur des entiers ou des rationnels canoniques.
+The catalogue in `MEASURES.md` replays on demand, each case with its ground truth:
 
-## Périmètre
+```bash
+python scripts/reproduce_measure_failures.py
+```
 
-Les scripts présents dans `scripts/` correspondent aux expériences **M012b et
-suivantes**. Aucun code M001–M011 n'existe dans ce dépôt ; voir `archives/README.md`.
+## What a future result must contain
+
+Every new result must carry the seed, the Git commit, the protocol hash, and a decision
+trace portable bit for bit. M014b showed that a consolidation hash embedding
+floating-point scores is not reproducible across environments: decisions and hashes must
+rest on integers or canonical rationals.
+
+Development benchmarks deliberately exclude elapsed time from their result files. It
+depends on the machine and the core count, and would make the artifact non-comparable
+byte for byte; the reproduction audit of M014b already excluded it.
+
+## Scope
+
+The scripts in `scripts/` correspond to experiments **M012b and later**. No M001–M011
+code exists in this repository; see `archives/README.md`.

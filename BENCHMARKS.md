@@ -1,29 +1,49 @@
-# Benchmarks canoniques
+# Canonical benchmarks
 
-## Domaine actuellement validé
+## Currently validated domain
 
-Automates déterministes finis et organes locaux dérivés, avec alphabet discret et équivalence exacte calculable.
+Deterministic finite automata and the local organs derived from them, over a discrete
+alphabet, with exact equivalence computable.
 
-## Métriques obligatoires
+## Mandatory metrics
 
-- Équivalence fonctionnelle exacte lorsque décidable.
-- Nombre de requêtes accessibles à l’organisme.
-- Taille du passeport et des deltas.
-- Conservation des versions antérieures.
-- Exactitude par substrat.
-- Coût temporel et mémoire.
-- Abstention sur cas hors langage.
-- Comparaison à un apprentissage depuis zéro.
+- Exact functional equivalence whenever decidable.
+- Number of queries available to the organism.
+- Size of the passport and of the deltas.
+- Preservation of earlier versions.
+- Per-substrate exactness.
+- Time and memory cost.
+- Abstention on out-of-language cases.
+- Comparison against learning from scratch.
 
-## Contrôles obligatoires
+## Mandatory controls
 
-- Corps vierge.
-- Distillation ou réapprentissage classique lorsqu’applicable.
-- Transformations corrompues.
-- Cas hors méta-grammaire.
-- Graines indépendantes.
-- Tests cachés séparés du budget d’apprentissage.
+- Blank body.
+- Distillation or classical relearning where applicable.
+- Corrupted transformations.
+- Cases outside the meta-grammar.
+- Independent seeds.
+- Hidden tests, separate from the learning budget.
 
-## Validité externe
+## Measure design
 
-Aucune généralisation vers les LLM, la conscience, l’AGI ou les environnements réels ne doit être affirmée sans expérience dédiée.
+A metric is not a criterion. Before a quantity may decide an experiment, four things
+established by [`MEASURES.md`](MEASURES.md) must hold:
+
+1. its **dynamic range** is established before any margin is fixed;
+2. the criterion opposes two systems of **equal capability** at the start — a
+   structurally incapable baseline is a control, never a criterion;
+3. an admission condition is worth the **completeness of its verification procedure**,
+   not the fact that a benchmark reports it satisfied;
+4. the **evaluation horizon** exceeds the payback period of whatever is being rewarded.
+
+Each of these comes from a measured failure, not from principle. Every case replays:
+
+```bash
+python scripts/reproduce_measure_failures.py
+```
+
+## External validity
+
+No generalisation towards LLMs, consciousness, AGI or real-world environments may be
+asserted without a dedicated experiment.

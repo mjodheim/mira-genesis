@@ -1,105 +1,109 @@
-# Hypothèses scientifiques
+# Scientific hypotheses
 
-Chaque état indique aussi sa **provenance** : `vérifiable` si le protocole figé, le code
-et le run scellé existent dans ce dépôt, `héritée` si l'affirmation repose sur M001–M011,
-dont aucune archive n'est versionnée (voir [`archives/README.md`](archives/README.md)).
+Each status also states its **provenance**: `verifiable` if the frozen protocol, the
+code and the sealed run all exist in this repository, `inherited` if the claim rests on
+M001–M011, none of whose archives are versioned (see
+[`archives/README.md`](archives/README.md)).
 
-## H1 — Séparation fonctionnelle
+## H1 — Functional separation
 
-Une compétence peut être représentée indépendamment des poids et de l'architecture qui l'ont acquise.
+A competence can be represented independently of the weights and architecture that
+acquired it.
 
-**État :** validée uniquement pour les compétences séquentielles finies de M001–M011.
-**Provenance :** héritée, non vérifiable ici. Partiellement ré-établie par M013e, qui
-migre exactement une compétence héritée sans oracle de tâche.
+**Status:** validated only for the finite sequential competences of M001–M011.
+**Provenance:** inherited, not verifiable here. Partly re-established by M013e, which
+migrates an inherited competence exactly, without a task oracle.
 
-## H2 — Réincarnation hétérogène
+## H2 — Heterogeneous re-embodiment
 
-Un même passeport peut être exécuté par plusieurs physiques computationnelles sans perdre son comportement.
+One passport can be executed by several computational physics without losing its
+behaviour.
 
-**État :** validée dans le contrat fini de M010.
-**Provenance :** héritée. Ré-établie de façon vérifiable par M013e sur trois familles de
-machines booléennes opaques.
+**Status:** validated within the finite contract of M010.
+**Provenance:** inherited. Re-established verifiably by M013e across three families of
+opaque Boolean machines.
 
-## H3 — Plasticité portable
+## H3 — Portable plasticity
 
-Une compétence réincarnée peut recevoir un delta portable et évoluer nativement dans chaque substrat.
+A re-embodied competence can receive a portable delta and evolve natively in each
+substrate.
 
-**État :** validée **structurellement**, non tenue **quant à l'efficacité**.
-**Provenance :** vérifiable. M014b a transporté et exécuté exactement le mécanisme de
-plasticité, 36/36, mais l'avantage en nombre de requêtes n'a pas survécu au décalage de
-distribution. Transporter une politique n'implique pas transporter son efficacité.
+**Status:** validated **structurally**, not held **as to efficiency**.
+**Provenance:** verifiable. M014b transported and executed the plasticity mechanism
+exactly, 36/36, but the query-count advantage did not survive the distribution shift.
+Transporting a policy does not imply transporting its efficiency.
 
-## H4 — Morphogenèse autonome
+## H4 — Autonomous morphogenesis
 
-Un organisme peut construire son propre corps à partir d'un contrat, de primitives et d'un budget, sans compilateur spécialisé.
+An organism can build its own body from a contract, primitives and a budget, without a
+specialised compiler.
 
-**État :** validée dans le domaine fini.
-**Provenance :** vérifiable. M012b, évaluation scellée 36/36 et reproduction indépendante.
+**Status:** validated within the finite domain.
+**Provenance:** verifiable. M012b, sealed evaluation 36/36 and independent reproduction.
 
-## H5 — Continuité cognitive riche
+## H5 — Rich cognitive continuity
 
-La mémoire, la stratégie d'apprentissage, les incertitudes et les compétences peuvent survivre ensemble à un changement de substrat.
+Memory, learning strategy, uncertainties and competences can survive a substrate change
+together.
 
-**État :** non validée. Objet de M015, **reportée** derrière M017 et M018.
-**Motif du report :** transporter la mémoire d'un organisme à catalogue fermé
-étendrait latéralement un paradigme dont le cœur n'est pas établi.
+**Status:** not validated. Subject of M015, **deferred** behind M017 and M018.
+**Reason for deferral:** transporting the memory of a closed-catalogue organism would
+laterally extend a paradigm whose core is not established.
 
-## H7 — Langage auto-extensible
+## H6 — Self-metamorphosis
 
-Un organisme dont le vocabulaire de départ ne contient que des atomes peut absorber
-les compositions récurrentes de son environnement, et en tirer un pouvoir expressif
-qu'il n'avait pas.
+An organism can diagnose a limit of its own body, propose descendants, evaluate them on
+hidden tests and migrate to a better embodiment.
 
-**État :** non validée, objet de M017, en développement.
-**Provenance :** vérifiable. Le banc de développement montre 0/42 pour le catalogue
-fermé, 34/42 pour la recherche ouverte à coût constant, 37/42 pour l'organisme
-auto-extensible dont le coût médian tombe de 4 222 à 43 nœuds. Aucun résultat
-canonique n'est revendiqué : le protocole n'est pas figé.
+**Status:** not validated. **Blocked by H7**: an organism that cannot extend its
+language cannot describe itself a body its primitives are unable to write.
 
-H7 n'est pas une hypothèse nouvelle du projet — c'est la reconnaissance que M017
-figurait déjà dans la feuille de route, et qu'elle y était mal placée.
+## H7 — Self-extending language
 
-## H8 — La rareté est le mécanisme manquant
+An organism whose starting vocabulary holds only atoms can absorb the recurring
+compositions of its environment, and gain expressive power it did not have.
 
-Sans conséquence à l'inefficacité, aucun mécanisme d'efficacité ne rapporte. Sous
-rareté réelle, une population sélectionnée découvre des stratégies d'usage du langage
-qu'une conception à la main n'atteint pas.
+**Status:** not validated, subject of M017, in development.
+**Provenance:** verifiable. The development benchmark shows 0/42 for the closed
+catalogue, 34/42 for open search at constant cost, and 37/42 for the self-extending
+organism whose median cost falls from 4,222 to 43 nodes. No canonical result is claimed:
+the protocol is not frozen.
 
-**État :** **non testée.** M019 a produit trois montages dégénérés et aucun ne permet
-de trancher. L'hypothèse n'est ni soutenue ni réfutée.
-**Provenance :** vérifiable. M018 a mesuré que trois mécanismes d'oubli écrits à la
-main ne payaient pas ; le budget de recherche y était de 200 000 nœuds et l'échec sans
-conséquence. H8 pose que c'est l'explication, et non une propriété des mécanismes.
+H7 is not a new hypothesis for the project — it is the recognition that M017 was already
+on the roadmap, and was badly placed on it.
 
-Ce que M019 a établi à la place, et qui n'était pas dans H8 : **une sélection à horizon
-court sélectionne la stagnation.** L'apprentissage coûte immédiatement et rapporte plus
-tard ; une fitness qui n'observe qu'une génération élimine l'apprenti avant qu'il
-rembourse. L'horizon d'évaluation compte davantage que l'intensité de la pression.
+## H8 — Scarcity is the missing mechanism
 
-## H9 — Les modes de décrochage d'une mesure sont énumérables
+With no consequence to inefficiency, no efficiency mechanism pays off. Under real
+scarcity, a selected population discovers ways of using the language that hand design
+does not reach.
 
-Les façons dont une mesure-proxy cesse de suivre la grandeur qu'elle prétend suivre
-forment un ensemble restreint et identifiable d'avance, et non un accident propre à
-chaque expérience.
+**Status:** **not tested.** M019 produced three degenerate rigs and none allows a
+verdict. The hypothesis is neither supported nor refuted.
+**Provenance:** verifiable. M018 measured that three hand-written forgetting mechanisms
+did not pay off; the search budget there was 200,000 nodes and failure cost nothing. H8
+holds that this is the explanation, rather than a property of the mechanisms.
 
-**État :** non validée. Six cas catalogués dans [`MEASURES.md`](MEASURES.md), dont
-quatre régularités déjà répétées : plage dynamique non établie, baseline incapable
-prise pour critère, procédure de vérification incomplète, horizon plus court que le
-délai de rendement.
+What M019 established instead, and which was not in H8: **a short-horizon selection
+selects for stagnation.** Learning costs immediately and pays later; a fitness observing
+only one generation removes the learner before it repays. The evaluation horizon matters
+more than the intensity of the pressure.
 
-**Provenance :** vérifiable, et c'est ce qui distingue ce dépôt. Ailleurs, un
-décrochage se constate parce qu'un humain trouve le résultat suspect ; ici
-l'équivalence comportementale se prouve, donc le point de décrochage se localise.
+## H9 — The ways a measure comes loose are enumerable
 
-**Ce que H9 ne prétend pas :** ni la nouveauté du problème — Goodhart, *reward
-hacking*, qualité-diversité le travaillent depuis longtemps — ni qu'une énumération
-close soit atteignable. Seulement que ces modes se répètent assez pour être anticipés,
-et qu'un domaine décidable permet de le montrer.
+The ways a proxy measure stops tracking the quantity it claims to track form a small,
+identifiable-in-advance set, rather than an accident particular to each experiment.
 
-## H6 — Auto-métamorphose
+**Status:** not validated. Six cases catalogued in [`MEASURES.md`](MEASURES.md), of
+which four regularities already repeat: dynamic range not established, an incapable
+baseline taken for a criterion, an incomplete verification procedure, a horizon shorter
+than the payback period.
 
-Un organisme peut diagnostiquer une limite de son propre corps, proposer des descendants, les évaluer sur des tests cachés et migrer vers une meilleure incarnation.
+**Provenance:** verifiable, and this is what distinguishes this repository. Elsewhere, a
+measure coming loose is noticed because a human finds the result suspicious; here
+behavioural equivalence is provable, so the point where it comes loose can be located.
 
-**État :** non validée. Objet de M018, **bloquée par H7** : un organisme qui ne peut
-pas étendre son langage ne peut pas se décrire un corps que ses primitives ne savent
-pas écrire.
+**What H9 does not claim:** neither the novelty of the problem — Goodhart, reward
+hacking and quality-diversity have worked it for a long time — nor that a closed
+enumeration is reachable. Only that these modes repeat often enough to be anticipated,
+and that a decidable domain makes it possible to show so.
