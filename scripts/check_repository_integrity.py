@@ -1,18 +1,18 @@
-"""Garde-fous structurels du dépôt.
+"""Structural repository guardrails.
 
-Trois défauts réels ont motivé ce script, tous invisibles pour les workflows
-d'évaluation scellée parce que ceux-ci n'exécutaient que des fichiers de test ciblés :
+Three real defects motivated this script. All were invisible to sealed evaluation
+workflows because those workflows executed only selected test files:
 
-1. `metamorphosis/core.py` importait `torch`, ce qui faisait échouer la collecte de
-   `pytest -q` — la commande documentée — sur toute machine sans PyTorch ;
-2. environ 2 400 lignes formaient un sous-graphe d'imports entièrement déconnecté,
-   sans qu'aucun signal ne le révèle ;
-3. `pyproject.toml` déclarait `torch` et `scipy`, jamais importés.
+1. `metamorphosis/core.py` imported `torch`, which made the documented `pytest -q`
+   command fail on every machine without PyTorch;
+2. roughly 2,400 lines formed a completely disconnected import subgraph without any
+   signal exposing it;
+3. `pyproject.toml` declared `torch` and `scipy`, although neither was imported.
 
-Chaque vérification est indépendante et peut être lancée seule.
+Each check is independent and may be run on its own.
 
-    python scripts/check_repository_integrity.py            # tout
-    python scripts/check_repository_integrity.py --orphans  # une seule
+    python scripts/check_repository_integrity.py            # all checks
+    python scripts/check_repository_integrity.py --orphans  # one check
 """
 
 from __future__ import annotations
@@ -27,15 +27,15 @@ import tomllib
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGE = "metamorphosis"
 
-# Modules de `scripts/` qui sont des points d'entrée légitimes : ils n'ont pas à
-# être importés par quoi que ce soit pour être vivants.
+# Modules under `scripts/` that are legitimate entry points. They do not need to be
+# imported by another module to be considered live.
 ENTRY_POINT_PREFIXES = ("run_", "audit_", "train_", "check_")
 
-# Outils invoqués en ligne de commande, jamais importés depuis le code source.
-# Les déclarer sans les importer est légitime.
+# Tools invoked from the command line and never imported by source code. Declaring them
+# without importing them is legitimate.
 COMMAND_LINE_TOOLS = {"pytest"}
 
-# Un import de module tiers ne porte pas toujours le nom de sa distribution.
+# A third-party import name does not always match its distribution name.
 DISTRIBUTION_ALIASES = {
     "yaml": "pyyaml",
     "sklearn": "scikit-learn",
@@ -66,7 +66,7 @@ def parse(path: Path) -> ast.Module:
 
 
 def imported_names(path: Path) -> set[str]:
-    """Noms de modules importés par un fichier, résolus pour les imports relatifs."""
+    """Return imported module names, resolving relative imports."""
     found: set[str] = set()
     package = module_name(path).rsplit(".", 1)[0] if path.parts[-2] == PACKAGE else ""
     for node in ast.walk(parse(path)):
@@ -81,7 +81,7 @@ def imported_names(path: Path) -> set[str]:
 
 
 def check_imports() -> list[str]:
-    """Chaque module doit s'importer sans erreur, dépendances déclarées installées."""
+    """Every module must import cleanly with declared dependencies installed."""
     import importlib
 
     sys.path.insert(0, str(ROOT))
@@ -89,17 +89,17 @@ def check_imports() -> list[str]:
     failures: list[str] = []
     for path in source_files():
         if path.parts[-2] == "tests":
-            continue  # pytest s'en charge et fournit ses propres fixtures
+            continue  # pytest owns collection and fixture setup for tests
         name = module_name(path)
         try:
             importlib.import_module(name)
-        except Exception as error:  # noqa: BLE001 - on veut le diagnostic complet
-            failures.append(f"{path.relative_to(ROOT)} : {type(error).__name__} : {error}")
+        except Exception as error:  # noqa: BLE001 - preserve the complete diagnostic
+            failures.append(f"{path.relative_to(ROOT)}: {type(error).__name__}: {error}")
     return failures
 
 
 def check_orphans() -> list[str]:
-    """Aucun module du paquet ne doit être injoignable depuis un point d'entrée."""
+    """No package module may be unreachable from a legitimate entry point."""
     files = {module_name(path): path for path in source_files()}
     roots = [
         name
@@ -115,20 +115,20 @@ def check_orphans() -> list[str]:
             continue
         reachable.add(name)
         for target in imported_names(files[name]):
-            # `metamorphosis.m012b_dfa` ou `m014b_eval_support`, mais aussi
-            # `metamorphosis.m012b_dfa.DFA` pour `from x.y import z`.
+            # Handles `metamorphosis.m012b_dfa` and `m014b_eval_support`, as well as
+            # `metamorphosis.m012b_dfa.DFA` produced by `from x.y import z`.
             for candidate in (target, target.rsplit(".", 1)[0]):
                 if candidate in files:
                     queue.append(candidate)
 
     return [
-        f"{files[name].relative_to(ROOT)} n'est importé par aucun point d'entrée"
+        f"{files[name].relative_to(ROOT)} is not imported by any entry point"
         for name in sorted(set(files) - reachable)
     ]
 
 
 def check_dependencies() -> list[str]:
-    """Les dépendances déclarées et les imports tiers réels doivent coïncider."""
+    """Declared dependencies and real third-party imports must match."""
     manifest = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
     project = manifest.get("project", {})
 
@@ -156,20 +156,20 @@ def check_dependencies() -> list[str]:
             used.add(DISTRIBUTION_ALIASES.get(top, top).lower())
 
     problems = [
-        f"`{name}` est importé mais absent de pyproject.toml"
+        f"`{name}` is imported but absent from pyproject.toml"
         for name in sorted(used - declared)
     ]
     problems += [
-        f"`{name}` est déclaré dans pyproject.toml mais jamais importé"
+        f"`{name}` is declared in pyproject.toml but never imported"
         for name in sorted(declared - used - COMMAND_LINE_TOOLS)
     ]
     return problems
 
 
 CHECKS = {
-    "imports": ("Importabilité de chaque module", check_imports),
-    "orphans": ("Absence de module orphelin", check_orphans),
-    "dependencies": ("Cohérence des dépendances déclarées", check_dependencies),
+    "imports": ("Every module imports cleanly", check_imports),
+    "orphans": ("No orphan module", check_orphans),
+    "dependencies": ("Declared dependencies match imports", check_dependencies),
 }
 
 
@@ -187,11 +187,11 @@ def main() -> int:
         problems = check()
         if problems:
             failed = True
-            print(f"ECHEC — {label}")
+            print(f"FAIL — {label}")
             for problem in problems:
                 print(f"  - {problem}")
         else:
-            print(f"OK    — {label}")
+            print(f"OK   — {label}")
     return 1 if failed else 0
 
 
