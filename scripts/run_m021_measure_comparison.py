@@ -43,10 +43,15 @@ from metamorphosis.m021_measures import MEASURES
 
 ROOT = Path(__file__).resolve().parents[1]
 
-POPULATION = 6
-GENERATIONS = 6
-EPISODES = 4
-SELECT_EVERY = 2
+# Sizing restored after a first run at 6 / 6 / 4 left most populations unable to
+# bootstrap: absorbing a macro requires solving expensively first, and there were no
+# longer enough episodes for that to happen before selection. The cut had been made
+# for runtime rather than for the hypothesis, which is the failure D010's corollary
+# warns about. A smoke run at this sizing reached 479 per mille with 7 macros.
+POPULATION = 8
+GENERATIONS = 9
+EPISODES = 5
+SELECT_EVERY = 3
 GENERATIONS_PER_ENVIRONMENT = 3
 
 ENERGY = 200_000

@@ -1,49 +1,48 @@
-# M017 — Langage auto-extensible
+# M017 — Self-extending language
 
-## Pourquoi cette expérience passe devant les autres
+## Why this experiment jumped the queue
 
-La feuille de route plaçait M017 en sixième position, après la mémoire (M015) et la
-compétence sensorimotrice (M016). **L'ordre était faux, pas les noms.**
+The roadmap placed M017 sixth, behind memory (M015) and sensorimotor competence (M016).
+**The order was wrong, not the names.**
 
-M012b, M013e, M014b et M014c partagent une limite qu'aucun de leurs critères ne
-mesurait : l'organisme ne peut exprimer que ce qui lui a été écrit à la main. Dans
-`m014c_meta.py`, `MetaPlasticitySession.identify` énumère strictement
-`passport.programs` — douze programmes. Tout l'« apprentissage » consiste à
-repondérer des compteurs de groupe sur ce catalogue fermé. Face à une cible qui n'y
-figure pas, l'organisme ne peut que s'abstenir : jamais inventer.
+M012b, M013e, M014b and M014c share a limit none of their criteria measured: the
+organism can only express what was hand-written for it. In `m014c_meta.py`,
+`MetaPlasticitySession.identify` enumerates exactly `passport.programs` — twelve
+programs. All "learning" consists of reweighting group counters over that closed
+catalogue. Facing a target that is not in it, the organism can only abstain: never
+invent.
 
-Ajouter la mémoire ou la sensorimotricité à cet organisme aurait étendu latéralement
-un paradigme dont le cœur n'est pas établi. M017 attaque ce cœur.
+Adding memory or sensorimotor competence to that organism would have laterally extended
+a paradigm whose core is not established. M017 attacks that core.
 
-## La question
+## The question
 
-Un organisme dont le vocabulaire de départ ne contient que des atomes peut-il
-**absorber** les compositions récurrentes de son environnement, et en tirer un
-pouvoir expressif et un coût de recherche que ses jumeaux n'ont pas ?
+Can an organism whose starting vocabulary holds only atoms **absorb** the recurring
+compositions of its environment, and gain from it an expressive power and a search cost
+its twins do not have?
 
-## Les trois organismes
+## The three organisms
 
-| | Catalogue | Compose | Absorbe |
+| | Catalogue | Composes | Absorbs |
 |---|---|---|---|
-| `ClosedLibraryOrganism` | 12 programmes figés | non | non |
-| `OpenSearchOrganism` | 36 atomes | jusqu'à 3 | non |
-| `SelfExtendingOrganism` | 36 atomes, puis davantage | jusqu'à 3 | **oui** |
+| `ClosedLibraryOrganism` | 12 frozen programs | no | no |
+| `OpenSearchOrganism` | 36 atoms | up to 3 | no |
+| `SelfExtendingOrganism` | 36 atoms, then more | up to 3 | **yes** |
 
-Le premier reproduit exactement la capacité de M014c. Son incapacité est
-**structurelle**, pas une lenteur : c'est ce qui donne à M017 une taille d'effet que
-M014b n'a jamais pu obtenir.
+The first reproduces M014c's capability exactly. Its incapacity is **structural**, not
+slowness — and that is what gives M017 an effect size M014b could never obtain.
 
-## Ce que M017 corrige dans la méthode
+## What M017 corrects in the method
 
-M014b comparait 14 requêtes à 14 requêtes, sur une fenêtre large de quatre requêtes.
-Aucun critère ne pouvait y séparer le signal du bruit d'échantillonnage.
+M014b compared 14 queries to 14 queries, over a window four queries wide. No criterion
+there could separate signal from sampling noise.
 
-M017 mesure le **nombre de programmes évalués avant de trouver**, qui va de l'unité à
-la centaine de milliers. Le coût d'oracle, lui, est rendu délibérément constant entre
-les trois organismes : même sondage, même confirmation. Il ne peut donc pas confondre
-la comparaison.
+M017 measures the **number of programs evaluated before finding one**, which ranges from
+one to hundreds of thousands. The oracle cost is deliberately held constant across the
+three organisms — same probing, same confirmation — so it cannot confound the
+comparison.
 
-## Statut
+## Status
 
-Développement. Aucune évaluation canonique n'est autorisée : voir
-[`STATUS.md`](STATUS.md) et [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).
+Development. No canonical evaluation is permitted: see [`STATUS.md`](STATUS.md) and
+[`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).

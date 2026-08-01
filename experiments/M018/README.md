@@ -1,66 +1,64 @@
 # M018 — Dissolution
 
-## Pourquoi
+## Why
 
-M017 a mesuré que l'accumulation seule finit par coûter. Une bibliothèque héritée d'un
-environnement aux motifs disjoints donne **0,69×** — strictement pire que pas de
-bibliothèque du tout, quatre paires sur quatre. Ses macros ne s'appliquent jamais et
-gonflent pourtant le facteur de branchement à chaque épisode.
+M017 measured that accumulation alone eventually costs. A library inherited from an
+environment with disjoint motifs gives **0.69×** — strictly worse than no library at
+all, on four pairs out of four. Its macros never apply and still inflate the branching
+factor on every episode.
 
-Le projet n'a jamais donné à un organisme le droit de **détruire** ce qu'il a appris.
-Depuis M012b, tout va dans un sens : absorber, transporter, accumuler. M018 ouvre
-l'autre sens.
+The project had never given an organism the right to **destroy** what it had learned.
+Since M012b everything ran one way: absorb, transport, accumulate. M018 opens the other
+direction.
 
-## Ce que ce n'est pas
+## What this is not
 
-Ce n'est pas une découverte du projet. Le **problème d'utilité** est établi depuis les
-années 80–90 sur les systèmes qui apprennent des macro-opérateurs : à force
-d'accumuler, le système devient plus lent que s'il n'avait rien appris, et Markovitch
-et Scott ont montré que l'oubli sélectif en était une nécessité, non un raffinement.
-La perte de plasticité en apprentissage continu raconte la même chose, et son remède
-connu est de réinitialiser périodiquement les unités les moins utiles.
+It is not a discovery of this project. The **utility problem** has been established
+since the 1980s–90s on systems that learn macro-operators: as they accumulate, they
+become slower than if they had learned nothing, and Markovitch and Scott showed that
+selective forgetting was a necessity rather than a refinement. Loss of plasticity in
+continual learning tells the same story, and its known remedy is to periodically
+reinitialise the least useful units.
 
-Ce que M018 apporte n'est pas l'idée, c'est le **domaine décidable**. On peut prouver
-l'équivalence exacte, compter les nœuds explorés, isoler l'effet. Sur la question
-« faut-il détruire pour continuer à s'améliorer », on peut produire un résultat exact
-là où la littérature produit des courbes.
+What M018 adds is not the idea but the **decidable domain**. Exact equivalence is
+provable, explored nodes are countable, the effect is isolable. On the question "must one
+destroy in order to keep improving", an exact result is possible where the literature
+produces curves.
 
-## Les trois mécanismes
+## The three mechanisms
 
-| | Ce qu'il fait | Ce qu'il coûte |
+| | What it does | What it costs |
 |---|---|---|
-| `UtilityForgetting` | jette les symboles jamais employés, passé un délai de grâce | réactif : il faut avoir déjà payé pour savoir |
-| `BudgetForgetting` | plafond dur ; admettre oblige à expulser | la contrepartie est payée à chaque instant |
-| `DissolutionForgetting` | jette **tous** les macros, affaiblit de moitié les compteurs | le plus radical, et le seul dont on attend qu'il coûte |
+| `UtilityForgetting` | discards symbols that never served, past a grace period | reactive: you must already have paid to know |
+| `BudgetForgetting` | hard cap; admitting one forces evicting one | the trade is paid continuously |
+| `DissolutionForgetting` | discards **every** macro, halves the pattern counts | the most radical, and the only one expected to cost |
 
-Le contrôle est `NoForgetting` — l'organisme de M017, qui accumule et ne jette jamais.
+The control is `NoForgetting` — M017's organism, which accumulates and never discards.
 
-## La contrainte qui rend le problème difficile
+## The constraint that makes the problem hard
 
-L'organisme **ne lit jamais ce que fait un macro**. Il ne connaît que son nombre
-d'usages et son âge. C'est délibéré, et c'est la contrainte exacte d'un organisme qui
-manipule du code que personne ne comprend : juger sur l'usage, jamais sur la
-sémantique.
+The organism **never reads what a macro does**. It knows only its use count and its age.
+That is deliberate, and it is the exact constraint of an organism manipulating code
+nobody understands: judge on use, never on semantics.
 
-Le coût d'un symbole est **uniforme** — il multiplie le facteur de branchement quelle
-que soit son utilité. C'est ce qui rend la comptabilité honnête et entière : un
-symbole jamais employé est du coût pur, sans qu'aucune pondération soit nécessaire.
+A symbol's cost is **uniform** — it multiplies the branching factor whatever its utility.
+That is what makes the accounting honest and integral: a never-used symbol is pure cost,
+with no weighting required.
 
-## La chenille
+## The caterpillar
 
-Dans la chrysalide, l'essentiel du corps de la chenille est dissous. Ce qui survit
-tient dans quelques disques imaginaux — et, expérimentalement, une partie de la
-mémoire apprise.
+Inside the chrysalis, most of the caterpillar's body is dissolved. What survives fits in
+a few imaginal discs — and, experimentally, part of the learned memory.
 
-`DissolutionForgetting` copie cette structure : les macros — le corps — partent tous ;
-les compteurs de motifs — le plan — survivent, divisés par deux. Ce qui récurre encore
-repassera le seuil et renaîtra ; ce qui ne récurre plus ne reviendra pas.
+`DissolutionForgetting` copies that structure: the macros — the body — all go; the
+pattern counters — the plan — survive, halved. What still recurs will clear the threshold
+again and be reborn; what no longer recurs will not return.
 
-**Là où la métaphore s'arrête :** le plan du papillon est dans le génome, spécifié
-d'avance. Le projet a déjà fait ça — c'est M012b, construire un corps depuis un
-contrat donné. Ce que M018 vise est plus dur qu'une métamorphose biologique : que
-l'organisme choisisse la forme que personne n'a écrite.
+**Where the metaphor stops:** the butterfly's plan is in the genome, specified in
+advance. The project has already done that — it is M012b, building a body from a given
+contract. What M018 aims at is harder than biological metamorphosis: that the organism
+choose the form nobody wrote.
 
-## Statut
+## Status
 
-Développement. Voir [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) et [`STATUS.md`](STATUS.md).
+Development. See [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) and [`STATUS.md`](STATUS.md).

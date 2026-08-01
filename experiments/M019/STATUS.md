@@ -1,69 +1,74 @@
-# M019 — Statut
+# M019 — Status
 
-- Protocole : **BROUILLON DE DÉVELOPPEMENT**
-- Résultats canoniques autorisés : **NON**
-- Statut scientifique : `DEVELOPMENT — RIG NOT VALID, STRUCTURAL CAUSE IDENTIFIED`
-- Tests de développement : **9 passants**, dans une suite de 48
+- Protocol: **DEVELOPMENT DRAFT**
+- Canonical results permitted: **NO**
+- Scientific status: `DEVELOPMENT — RIG NOT VALID, STRUCTURAL CAUSE IDENTIFIED`
+- Development tests: **9 passing**, within a suite of 52
 
-## Le montage ne teste pas ce qu'il prétend tester
+## The rig does not test what it claims to test
 
-Trois calibrages, trois dégénérescences. La porte de gel n°1 — « la rareté doit
-mordre » — n'est franchie dans aucun. Aucune conclusion n'est tirée sur l'hypothèse H8.
+Three calibrations, three degeneracies. Freeze gate 1 — "scarcity must bite" — is passed
+by none of them. No conclusion is drawn on hypothesis H8.
 
-| Calibrage | Résultat | Morts |
+| Calibration | Result | Deaths |
 |---|---|---|
-| prime 25 000 | énergie doublée, `none` 8/8 | 0 |
-| prime 6 000 | profondeur → 2, macros → 0 | 0 |
-| prime 6 000 + report d'énergie | profondeur → 2, macros → 0 | 0 |
+| reward 25,000 | energy doubled, `none` 8/8 | 0 |
+| reward 6,000 | depth → 2, macros → 0 | 0 |
+| reward 6,000 + energy carry-over | depth → 2, macros → 0 | 0 |
 
-Population : 11 épisodes résolus. Organisme de contrôle, seul, sans sélection : **103**,
-avec 18 macros.
+Population: 11 episodes solved. Control organism, alone, unselected: **103**, with 18
+macros.
 
-## La cause est structurelle, pas numérique
+## The cause is structural, not numerical
 
-L'invariant des trois essais : **une sélection à horizon court ne peut pas valoriser un
-investissement dont le rendement est différé.**
+The invariant across all three: **a short-horizon selection cannot value an investment
+whose payoff is deferred.**
 
-Apprendre coûte ~23 000 nœuds pour une prime de 6 000, soit −17 000 immédiats. Ne pas
-essayer coûte 1 296. À la première sélection, l'apprenti est classé sous le prudent et
-éliminé — avant d'avoir résolu les trois motifs de son environnement, seul moment où
-sa bibliothèque commencerait à rembourser.
+Learning costs about 23,000 nodes against a 6,000 reward, so −17,000 immediately. Not
+trying costs 1,296. At the first cull the learner ranks below the cautious one and is
+removed — before solving the three motifs of its environment, the only point at which its
+library would start repaying.
 
-Le report d'énergie ne corrige rien, parce qu'il suppose que l'investisseur survive
-jusqu'à la génération suivante. Il est éliminé avant.
+Energy carry-over fixes nothing, because it assumes the investor survives to the next
+generation. It is eliminated before that.
 
-**La sélection a découvert que ne pas essayer coûte moins cher qu'essayer**, et elle
-avait raison sur l'horizon qu'on lui a donné.
+**Selection discovered that not trying is cheaper than trying**, and it was right about
+the horizon it was given.
 
-## Un garde-fou mal choisi
+## A badly chosen guard
 
-« Mortalité non nulle » était une mauvaise porte. Zéro mort n'y signalait pas une
-rareté trop faible mais l'inverse : **elle mordait assez pour que la stratégie
-gagnante soit de ne rien dépenser.** Un organisme qui cherche en profondeur 2 dépense
-1 296 nœuds et ne meurt jamais.
+"Non-zero mortality" was a poor gate. Zero deaths did not signal weak scarcity but the
+reverse: **it bit hard enough that the winning strategy was to spend nothing.** An
+organism searching at depth 2 spends 1,296 nodes and never dies.
 
-Un garde-fou correct aurait été : *la population apprend-elle quelque chose ?*, mesuré
-par le nombre de macros. Il valait zéro dans les trois essais.
+A correct guard would have been: *is the population learning anything?*, measured by
+macro count. It was zero in all three runs.
 
-## Pourquoi je m'arrête ici
+## Why the work stops here
 
-Un quatrième calibrage serait de l'ajustement jusqu'à obtenir la réponse voulue —
-exactement ce contre quoi la discipline du dépôt existe. Trois essais, un invariant
-identifié et une cause nommée suffisent pour conclure que **le montage est faux**, et
-non que l'hypothèse est réfutée.
+A fourth calibration would be tuning until the wanted answer appears — exactly what this
+repository's discipline exists to prevent. Three runs, one identified invariant and a
+named cause are enough to conclude that **the rig is wrong**, not that the hypothesis is
+refuted.
 
-## Ce que M019b devra changer
+## What M019b must change
 
-L'horizon d'évaluation doit dépasser la période de remboursement de l'apprentissage :
+The evaluation horizon must exceed the payback period of learning:
 
-1. sélection toutes les **N générations**, pas à chaque génération ;
-2. ou fitness intégrée sur la vie entière de la lignée plutôt que sur une génération ;
-3. ou coût d'apprentissage amorti — la première résolution d'un motif inaugure une
-   série, et une fitness qui n'en voit que le premier terme se trompe de grandeur.
+1. select every **N generations**, not every generation;
+2. or integrate fitness over the lineage's whole life rather than one generation;
+3. or amortise the learning cost — the first solve of a motif opens a series, and a
+   fitness seeing only its first term is measuring the wrong quantity.
 
-La leçon dépasse ce projet : **une pression de sélection mal formée sélectionne la
-stagnation.** Trop faible, elle ne trie rien ; trop impatiente, elle élimine
-l'exploration avant qu'elle ne rapporte. L'horizon compte davantage que l'intensité.
+The lesson generalises past this project: **a badly formed selection pressure selects for
+stagnation.** Too weak, it sorts nothing; too impatient, it eliminates exploration before
+it pays. The horizon matters more than the intensity.
 
-C'est le même piège que M014b sous une autre forme — un critère qui mesure la mauvaise
-chose ne devient pas juste en changeant ses seuils.
+That is M014b's trap in another form — a criterion that measures the wrong thing does not
+become right by changing its thresholds.
+
+## What came of it
+
+M021 carries the correction: selection every `SELECT_EVERY` generations. Its first smoke
+run showed mortality and learning coexisting for the first time, which none of M019's
+three calibrations achieved.
