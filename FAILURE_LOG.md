@@ -202,6 +202,42 @@ résultat juste obtenu par une méthode qui ne peut pas le garantir reste un ré
 établi ; c'est la distinction que M014b avait déjà payée, et elle se répète ici sur la
 vérification plutôt que sur la mesure.
 
+## M018 — Détruire ne restaure pas l'amélioration
+
+- Statut : `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`. Aucune évaluation canonique.
+- La prédiction était écrite avant la mesure. Sa seconde moitié tient, la première —
+  celle qui portait l'hypothèse — est fausse.
+
+Trois mécanismes de destruction, référence = l'organisme de M017 qui n'oublie jamais :
+
+| | stable | décalage | transport |
+|---|---|---|---|
+| `budget` | identique | +3 % | +6 % |
+| `utility` | jusqu'à 177× pire | +2 % | +4 % |
+| `dissolution` | **350× pire** | −18 % | 0 % |
+
+Aucun n'annule le passif de 0,69× mesuré par M017.
+
+### Pourquoi
+
+1. **L'oubli est réactif.** Un symbole inutile est payé d'avance, à chaque épisode, sur
+   chaque nœud. Quand l'organisme sait qu'un macro ne sert pas, il l'a déjà financé ;
+   jeter ensuite ne rembourse rien.
+2. **La destruction est indiscriminée.** La dissolution ne distingue pas ce qui a cessé
+   de servir de ce qui va resservir, et paye 350× cette ignorance.
+3. **Le coût d'un macro inutile est réel mais modeste** — le branchement passe de 36 à
+   48 symboles et les recherches s'arrêtent souvent tôt.
+
+### Deux lectures, et la seconde ouvre M019
+
+Le résultat ne dit pas que détruire est inutile. Il dit que **détruire est intenable
+pour un individu isolé** : la chenille se dissout une fois, et si cela échoue, cette
+chenille meurt — pas l'espèce.
+
+Et il désigne une cause plus profonde : le budget de recherche valait 200 000 nœuds et
+l'échec ne coûtait rien. **Il n'y avait rien pour quoi être efficace.** C'est ce que
+M019 met à l'épreuve.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.

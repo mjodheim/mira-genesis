@@ -1,0 +1,68 @@
+name: M019 development benchmark
+
+# Banc de développement de M019, volontairement séparé de `ci.yml`.
+#
+# Ce workflow ne produit aucun résultat canonique : `experiments/M019/STATUS.md`
+# interdit toute évaluation scellée tant que les portes de gel ne sont pas franchies.
+
+on:
+  push:
+    branches: ['research/m019-*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m019-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Report the runner width
+        run: nproc
+
+      - name: Run the M019 development tests
+        run: pytest -q tests/test_m019.py
+
+      - name: Audit isolation and integer-only decisions
+        run: python scripts/audit_m017_isolation.py
+
+      - name: Run the selection benchmark
+        run: python scripts/run_m019_selection.py --lineages 3
+
+      - name: Refuse any canonical claim from this workflow
+        run: |
+          python - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
+
+          summary = json.loads(
+              pathlib.Path("results/M019_selection_development.json").read_text(encoding="utf-8")
+          )["summary"]
+          if not summary.get("development_only"):
+              sys.exit("the benchmark dropped its development-only marker")
+          print(json.dumps(summary, indent=2, ensure_ascii=False))
+          PYTHON
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m019-development-${{ github.run_id }}
+          path: results/M019_selection_development.json
+          if-no-files-found: error
+          retention-days: 30

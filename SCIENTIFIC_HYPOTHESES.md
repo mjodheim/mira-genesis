@@ -59,6 +59,17 @@ canonique n'est revendiqué : le protocole n'est pas figé.
 H7 n'est pas une hypothèse nouvelle du projet — c'est la reconnaissance que M017
 figurait déjà dans la feuille de route, et qu'elle y était mal placée.
 
+## H8 — La rareté est le mécanisme manquant
+
+Sans conséquence à l'inefficacité, aucun mécanisme d'efficacité ne rapporte. Sous
+rareté réelle, une population sélectionnée découvre des stratégies d'usage du langage
+qu'une conception à la main n'atteint pas.
+
+**État :** non validée, objet de M019, en développement.
+**Provenance :** vérifiable. M018 a mesuré que trois mécanismes d'oubli écrits à la
+main ne payaient pas ; le budget de recherche y était de 200 000 nœuds et l'échec sans
+conséquence. H8 pose que c'est l'explication, et non une propriété des mécanismes.
+
 ## H6 — Auto-métamorphose
 
 Un organisme peut diagnostiquer une limite de son propre corps, proposer des descendants, les évaluer sur des tests cachés et migrer vers une meilleure incarnation.

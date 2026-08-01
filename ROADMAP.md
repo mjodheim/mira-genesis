@@ -12,8 +12,10 @@
 | M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
 | M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d'efficacité échouent |
 | M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
-| **M017** | **Langage auto-extensible** | **ACTIVE — READY TO FREEZE** | Six portes franchies ; protocole candidat en attente de signature |
-| M018 | Auto-métamorphose | BLOCKED BY M017 | Détecter, construire et adopter seul un corps mieux adapté — **et savoir oublier un langage inadapté** |
+| M017 | Langage auto-extensible | **READY TO FREEZE** | Six portes franchies ; critère devenu directionnel après le balayage à 50 environnements |
+| M018 | Dissolution — savoir détruire | **HYPOTHESIS NOT SUPPORTED** | Aucun des trois mécanismes n'annule le passif ; l'oubli est réactif, la destruction aveugle |
+| **M019** | **Pression de sélection** | **ACTIVE — DEVELOPMENT** | Une population sous rareté découvre-t-elle ce qu'aucune conception n'a atteint ? |
+| M020 | Auto-métamorphose | BLOCKED BY M019 | Détecter, construire et adopter seul un corps mieux adapté |
 | M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |
 | M016 | Compétence sensorimotrice | DEFERRED | Transporter un modèle du monde entre architectures différentes |
 
@@ -77,7 +79,35 @@ Deux mesures ont changé le protocole en cours de route, et méritent d'être re
   plus haut, et portée dans le protocole **avant** le gel plutôt que découverte après.
 
 Ce passif a une cause nommable : l'organisme ne sait ni oublier ses macros, ni juger
-qu'ils ne s'appliquent plus. C'est ce qui rend M018 nécessaire plutôt que souhaitable.
+qu'ils ne s'appliquent plus. C'est ce qui a rendu M018 nécessaire plutôt que souhaitable.
+
+## M018 — l'hypothèse n'est pas soutenue
+
+Trois mécanismes de destruction, aucun n'annule le passif de 0,69×. Le budget fixe est
+gratuit mais ne rapporte que 6 % ; la dissolution est **350× pire** en régime stable.
+
+Le diagnostic déplace la cause : **l'oubli est réactif.** Un symbole inutile est payé
+d'avance, à chaque nœud de recherche ; quand l'organisme sait enfin qu'un macro ne sert
+pas, il l'a déjà financé. Et la destruction indiscriminée jette le bon avec le mauvais.
+
+Deux lectures en découlent, et la seconde ouvre M019 :
+
+1. le remède n'est pas la suppression mais la **sélection au moment de l'emploi** ;
+2. **détruire est intenable pour un individu isolé.** La chenille se dissout une fois,
+   et si cela échoue, cette chenille meurt — pas l'espèce.
+
+## M019 — étape active
+
+Ce que le projet n'avait jamais eu : la **rareté**. Jusqu'ici l'échec ne coûtait rien,
+donc l'efficacité ne servait à rien — ce qui explique le résultat de M018 mieux que
+n'importe quelle propriété des mécanismes testés.
+
+L'énergie devient le budget de recherche, une population remplace l'individu, et la
+duplication-divergence complète l'absorption. Personne ne choisit de mécanisme
+d'oubli : les quatre sont dans la population de départ et la sélection tranche.
+
+La question, posée pour la première fois : **une population sous sélection
+découvre-t-elle ce que je n'ai pas su concevoir ?**
 
 ## Test ultime de la première phase
 
