@@ -11,7 +11,10 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - M013e : **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
 - M014b : **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
 - M014c : **HALTED — SUPERSEDED BY M017**, jamais évaluée
-- Expérience active : **M017 — langage auto-extensible**
+- M017 : **READY TO FREEZE**, critère devenu directionnel après balayage à 50 environnements
+- M018 : **HYPOTHESIS NOT SUPPORTED** — détruire ne restaure pas l’amélioration
+- M019 : **RIG NOT VALID** — sélection trop impatiente pour valoriser l’apprentissage
+- Expérience suivante : **M019b — sélection à horizon long**
 - Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable, avantage d’apprentissage non validé, et croissance du langage en cours de développement**
 
 ## Correction de direction — 31 juillet 2026

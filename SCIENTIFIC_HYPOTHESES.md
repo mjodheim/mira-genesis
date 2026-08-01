@@ -65,10 +65,16 @@ Sans conséquence à l'inefficacité, aucun mécanisme d'efficacité ne rapporte
 rareté réelle, une population sélectionnée découvre des stratégies d'usage du langage
 qu'une conception à la main n'atteint pas.
 
-**État :** non validée, objet de M019, en développement.
+**État :** **non testée.** M019 a produit trois montages dégénérés et aucun ne permet
+de trancher. L'hypothèse n'est ni soutenue ni réfutée.
 **Provenance :** vérifiable. M018 a mesuré que trois mécanismes d'oubli écrits à la
 main ne payaient pas ; le budget de recherche y était de 200 000 nœuds et l'échec sans
 conséquence. H8 pose que c'est l'explication, et non une propriété des mécanismes.
+
+Ce que M019 a établi à la place, et qui n'était pas dans H8 : **une sélection à horizon
+court sélectionne la stagnation.** L'apprentissage coûte immédiatement et rapporte plus
+tard ; une fitness qui n'observe qu'une génération élimine l'apprenti avant qu'il
+rembourse. L'horizon d'évaluation compte davantage que l'intensité de la pression.
 
 ## H6 — Auto-métamorphose
 

@@ -2,69 +2,68 @@
 
 - Protocole : **BROUILLON DE DÉVELOPPEMENT**
 - Résultats canoniques autorisés : **NON**
-- Statut scientifique : `DEVELOPMENT — RIG CALIBRATION`
-- Tests de développement : **9 passants**
+- Statut scientifique : `DEVELOPMENT — RIG NOT VALID, STRUCTURAL CAUSE IDENTIFIED`
+- Tests de développement : **9 passants**, dans une suite de 48
 
-## Deux dégénérescences opposées, et ce qu'elles apprennent
+## Le montage ne teste pas ce qu'il prétend tester
 
-Concevoir une pression de sélection s'est révélé plus difficile que concevoir
-l'organisme. Deux montages ont échoué, dans des directions contraires, et chacun a été
-diagnostiqué par une condition écrite avant la mesure.
+Trois calibrages, trois dégénérescences. La porte de gel n°1 — « la rareté doit
+mordre » — n'est franchie dans aucun. Aucune conclusion n'est tirée sur l'hypothèse H8.
 
-### Prime trop forte — rien ne mord
+| Calibrage | Résultat | Morts |
+|---|---|---|
+| prime 25 000 | énergie doublée, `none` 8/8 | 0 |
+| prime 6 000 | profondeur → 2, macros → 0 | 0 |
+| prime 6 000 + report d'énergie | profondeur → 2, macros → 0 | 0 |
 
-Prime 25 000, dotation 150 000. **Zéro mort, énergie doublée, `none` vainqueur 8/8.**
+Population : 11 épisodes résolus. Organisme de contrôle, seul, sans sélection : **103**,
+avec 18 macros.
 
-Une prime très supérieure au coût d'une résolution bon marché rend toute bibliothèque,
-même encombrée, sans conséquence. La condition d'invalidation était préenregistrée :
-« si `none` domine, c'est que la rareté n'est pas assez mordante ». Le diagnostic est
-objectif — une population qui ne perd personne et double son énergie n'est pas sous
-contrainte.
+## La cause est structurelle, pas numérique
 
-### Prime trop faible — la sélection élimine l'apprentissage
+L'invariant des trois essais : **une sélection à horizon court ne peut pas valoriser un
+investissement dont le rendement est différé.**
 
-Prime 6 000. La population converge vers une profondeur de recherche de **2** et
-**zéro macro**, résolvant 6 épisodes ; l'organisme de contrôle, lui, en résout **103**
-et construit 18 macros.
+Apprendre coûte ~23 000 nœuds pour une prime de 6 000, soit −17 000 immédiats. Ne pas
+essayer coûte 1 296. À la première sélection, l'apprenti est classé sous le prudent et
+éliminé — avant d'avoir résolu les trois motifs de son environnement, seul moment où
+sa bibliothèque commencerait à rembourser.
 
-**La sélection a découvert que ne pas essayer coûte moins cher qu'essayer.** Une
-résolution en profondeur 3 coûte ~23 000 nœuds pour une prime de 6 000 : apprendre fait
-perdre 17 000. S'abstenir en profondeur 2 n'en coûte que 1 296. Elle a sélectionné la
-prudence stérile.
+Le report d'énergie ne corrige rien, parce qu'il suppose que l'investisseur survive
+jusqu'à la génération suivante. Il est éliminé avant.
 
-### La cause n'était pas le nombre
+**La sélection a découvert que ne pas essayer coûte moins cher qu'essayer**, et elle
+avait raison sur l'horizon qu'on lui a donné.
 
-C'était une décision de conception, prise pour une bonne raison apparente :
-réinitialiser l'énergie des survivants à chaque génération, « pour sélectionner une
-stratégie et non une avance accumulée ».
+## Un garde-fou mal choisi
 
-Cela rendait **tout investissement invisible**. Apprendre coûte immédiatement et ne
-rapporte qu'aux épisodes suivants ; l'apprenti était donc classé sous le prudent et
-éliminé avant d'avoir transmis sa bibliothèque. Une fonction de fitness qui n'évalue
-qu'une génération ne peut pas valoriser un investissement, quel que soit le montant de
-la prime.
+« Mortalité non nulle » était une mauvaise porte. Zéro mort n'y signalait pas une
+rareté trop faible mais l'inverse : **elle mordait assez pour que la stratégie
+gagnante soit de ne rien dépenser.** Un organisme qui cherche en profondeur 2 dépense
+1 296 nœuds et ne meurt jamais.
 
-L'énergie est désormais **reportée d'une génération à l'autre**, plafonnée au double de
-la dotation pour que la richesse ne compose pas indéfiniment.
+Un garde-fou correct aurait été : *la population apprend-elle quelque chose ?*, mesuré
+par le nombre de macros. Il valait zéro dans les trois essais.
 
-## Ce que ces échecs valent
+## Pourquoi je m'arrête ici
 
-Ils ne sont pas du bruit de mise au point. Ils cernent une difficulté réelle, et qui
-dépasse ce projet : **une pression de sélection mal formée sélectionne la stagnation.**
+Un quatrième calibrage serait de l'ajustement jusqu'à obtenir la réponse voulue —
+exactement ce contre quoi la discipline du dépôt existe. Trois essais, un invariant
+identifié et une cause nommée suffisent pour conclure que **le montage est faux**, et
+non que l'hypothèse est réfutée.
 
-- trop faible, elle ne trie rien ;
-- trop forte sur l'horizon court, elle élimine l'exploration avant qu'elle ne rapporte ;
-- et l'horizon d'évaluation compte davantage que l'intensité de la pression.
+## Ce que M019b devra changer
 
-C'est exactement le piège que M014b avait rencontré sous une autre forme — un critère
-qui mesure la mauvaise chose ne devient pas juste en changeant ses seuils.
+L'horizon d'évaluation doit dépasser la période de remboursement de l'apprentissage :
 
-## Prochaine porte
+1. sélection toutes les **N générations**, pas à chaque génération ;
+2. ou fitness intégrée sur la vie entière de la lignée plutôt que sur une génération ;
+3. ou coût d'apprentissage amorti — la première résolution d'un motif inaugure une
+   série, et une fitness qui n'en voit que le premier terme se trompe de grandeur.
 
-Vérifier que la troisième version fait mordre la rareté **sans** éliminer
-l'apprentissage : mortalité non nulle, macros non nuls, et une composition finale de
-population qui diffère de sa composition initiale de façon reproductible sur plusieurs
-lignées.
+La leçon dépasse ce projet : **une pression de sélection mal formée sélectionne la
+stagnation.** Trop faible, elle ne trie rien ; trop impatiente, elle élimine
+l'exploration avant qu'elle ne rapporte. L'horizon compte davantage que l'intensité.
 
-Tant que ces trois conditions ne tiennent pas ensemble, M019 ne mesure pas ce qu'elle
-prétend mesurer et aucune conclusion n'en sera tirée.
+C'est le même piège que M014b sous une autre forme — un critère qui mesure la mauvaise
+chose ne devient pas juste en changeant ses seuils.
