@@ -1,0 +1,79 @@
+name: M021 development comparison
+
+# Development rig only. This workflow may invalidate the rig; it can never produce a
+# canonical scientific result.
+
+on:
+  push:
+    branches: ['research/m021-*']
+  workflow_dispatch:
+    inputs:
+      seeds:
+        description: Paired seeds per measure (24 required for comparison)
+        required: true
+        default: '24'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m021-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run M019 regression and M021 rig tests
+        run: pytest -q tests/test_m019.py tests/test_m021.py
+
+      - name: Audit isolation and integer-only decisions
+        run: python scripts/audit_m017_isolation.py
+
+      - name: Run the paired comparison
+        env:
+          REQUESTED_SEEDS: ${{ github.event.inputs.seeds || '3' }}
+        run: python scripts/run_m021_measure_comparison.py --seeds "$REQUESTED_SEEDS"
+
+      - name: Verify the development guardrails
+        run: |
+          python - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
+
+          summary = json.loads(
+              pathlib.Path("results/M021_measure_comparison_development.json")
+              .read_text(encoding="utf-8")
+          )["summary"]
+
+          required = {
+              "development_only": True,
+              "common_random_numbers": True,
+              "audit_mutates_selected_population": False,
+          }
+          for key, expected in required.items():
+              if summary.get(key) != expected:
+                  sys.exit(f"{key}={summary.get(key)!r}, expected {expected!r}")
+
+          print(json.dumps(summary, indent=2, ensure_ascii=False))
+          PYTHON
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m021-development-${{ github.run_id }}
+          path: results/M021_measure_comparison_development.json
+          if-no-files-found: error
+          retention-days: 30
