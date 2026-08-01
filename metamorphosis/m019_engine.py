@@ -151,6 +151,18 @@ class Population:
         Le classement est par énergie restante, c'est-à-dire par ce qu'il reste après
         avoir payé ses recherches — donc par efficacité réelle, pas par nombre de
         succès. Résoudre cher ne vaut pas mieux que ne pas résoudre.
+
+        **L'énergie n'est pas remise à niveau entre générations**, et cette décision a
+        été renversée après mesure. Une première version la réinitialisait, au motif
+        raisonnable qu'on sélectionne une stratégie et non une avance accumulée. C'était
+        rendre tout investissement invisible : apprendre coûte cher immédiatement et ne
+        rapporte qu'aux épisodes suivants, si bien que l'apprenti était classé sous le
+        prudent et éliminé avant d'avoir pu transmettre sa bibliothèque. La population
+        convergeait vers une profondeur de recherche de 2 et zéro macro — la sélection
+        avait découvert que **ne pas essayer coûte moins cher qu'essayer**.
+
+        L'énergie est donc reportée, mais plafonnée : sans plafond, la richesse
+        composerait et le classement ne mesurerait plus qu'une chance initiale.
         """
         survivors = sorted(self.alive, key=lambda i: (-i.ledger.energy, i.lineage))
         self.deaths += len(self.individuals) - len(survivors)
@@ -166,10 +178,11 @@ class Population:
             )
             for index in range(len(self.individuals) - len(keep))
         ]
-        # Les survivants repartent avec la même dotation que leurs descendants : on
-        # sélectionne une stratégie, pas une avance accumulée.
+        # Les survivants gardent leur énergie, plafonnée au double de la dotation :
+        # un investissement reste visible d'une génération à l'autre, sans que la
+        # richesse compose indéfiniment.
         for individual in keep:
-            individual.ledger.energy = starting_energy
+            individual.ledger.energy = min(individual.ledger.energy, 2 * starting_energy)
         self.individuals = keep + children
 
     def snapshot(self) -> dict[str, object]:

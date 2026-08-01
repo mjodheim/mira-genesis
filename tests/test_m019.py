@@ -107,8 +107,15 @@ def test_selection_ranks_on_energy_left_not_on_successes():
     assert poor.lineage not in lineages
 
 
-def test_the_dead_are_replaced_and_survivors_restart_level():
-    """On sélectionne une stratégie, pas une avance accumulée."""
+def test_the_dead_are_replaced_and_investment_survives_the_generation():
+    """L'énergie est reportée : sans cela, aucun investissement n'est visible.
+
+    Réinitialiser les survivants semblait sain — sélectionner une stratégie, pas une
+    avance. C'était rendre l'apprentissage invisible : il coûte tout de suite et ne
+    rapporte qu'ensuite, si bien que la population convergeait vers une recherche
+    superficielle et zéro macro. La sélection avait découvert que ne pas essayer coûte
+    moins cher qu'essayer.
+    """
     population = Population.seed(4, seed=9, energy=100_000, reward=20_000, ceiling=60_000)
     population.individuals[0].ledger.energy = 80_000
     population.individuals[1].ledger.energy = 70_000
@@ -119,8 +126,21 @@ def test_the_dead_are_replaced_and_survivors_restart_level():
 
     assert len(population.individuals) == 4
     assert population.deaths == 2
-    assert {i.ledger.energy for i in population.individuals} == {100_000}
     assert population.generation == 1
+    survivors = sorted(i.ledger.energy for i in population.individuals)
+    assert survivors[:2] == [70_000, 80_000], "les survivants gardent ce qu'ils ont gagné"
+    assert survivors[2:] == [100_000, 100_000], "les descendants reçoivent la dotation"
+
+
+def test_wealth_is_capped_so_it_cannot_compound():
+    """Sans plafond, le classement ne mesurerait plus qu'une chance initiale."""
+    population = Population.seed(2, seed=4, energy=100_000, reward=20_000, ceiling=60_000)
+    population.individuals[0].ledger.energy = 900_000
+    population.individuals[1].ledger.energy = 10_000
+
+    population.select(random.Random(2), starting_energy=100_000)
+
+    assert max(i.ledger.energy for i in population.individuals) == 200_000
 
 
 def test_a_population_never_reports_a_false_success():
