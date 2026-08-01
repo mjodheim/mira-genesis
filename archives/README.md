@@ -1,40 +1,47 @@
 # Archives
 
-## Ce qui se trouve ici
+## What lives here
 
-- [`RETIRED_CODE.md`](RETIRED_CODE.md) — index des retraits de code, avec pour chacun
-  le commit où le fichier reste consultable ;
-- [`workflows/`](workflows/) — copies lisibles des workflows d'évaluation scellée dont
-  le run canonique a été consommé, conservées pour la recette exacte, retirées de
-  `.github/workflows/` pour ne plus être exécutables.
+- [`RETIRED_CODE.md`](RETIRED_CODE.md) — index of code removals, each citing the commit
+  where the file remains readable;
+- [`workflows/`](workflows/) — readable copies of sealed evaluation workflows whose
+  canonical run has been consumed, kept for the exact recipe, removed from
+  `.github/workflows/` so they are no longer executable.
 
-## Tags d'archive
+## Archive tags
 
-Le code d'une expérience arrêtée ou remplacée n'est pas conservé sur une branche. Une
-branche vivante invite la reprise et se supprime par mégarde ; un tag annoté est une
-référence immuable, ce qu'exige un enregistrement scientifique.
+The code of a halted or superseded experiment is not kept on a branch. A live branch
+invites resumption and gets deleted by accident; an annotated tag is an immutable
+reference, which is what a scientific record requires.
 
-| Tag | Commit | Expérience |
-|---|---|---|
-| `archive/m014c-halted` | `fc46005` | M014c — `HALTED — SUPERSEDED BY M017` |
+| Tag | Experiment |
+|---|---|
+| `archive/m014c-halted` | M014c — `HALTED — SUPERSEDED BY M017` |
+
+Records cite the **tag name**, not the commit hash it currently resolves to. A tag
+survives history rewriting; a raw hash does not, and a citation that breaks silently is
+worse than no citation.
 
 ```bash
 git show archive/m014c-halted:metamorphosis/m014c_meta.py
+```
+
+```bash
 git switch --detach archive/m014c-halted
 ```
 
-## Ce qui ne s'y trouve pas : M001 à M011
+## What does not live here: M001 to M011
 
-**Aucune archive M001–M011 n'existe dans ce dépôt.** L'historique Git commence le
-31 juillet 2026 avec la création du dépôt canonique.
+**No M001–M011 archive exists in this repository.** Git history starts on 31 July 2026
+with the creation of the canonical repository.
 
-Les hypothèses H1, H2 et H3 de [`SCIENTIFIC_HYPOTHESES.md`](../SCIENTIFIC_HYPOTHESES.md)
-sont marquées « validées dans leur domaine fini » sur la foi de M001–M011. Ces
-validations sont donc **assertées mais non vérifiables ici** : ni protocole figé, ni
-code, ni résultat brut, ni run scellé.
+Hypotheses H1, H2 and H3 in [`SCIENTIFIC_HYPOTHESES.md`](../SCIENTIFIC_HYPOTHESES.md)
+are marked "validated within their finite domain" on the strength of M001–M011. Those
+validations are therefore **asserted but not verifiable here**: no frozen protocol, no
+code, no raw result, no sealed run.
 
-D001 pose que le dépôt est la mémoire officielle du projet. Tant que ces archives ne
-sont pas versionnées, toute affirmation reposant sur M001–M011 doit être lue comme une
-hypothèse de travail héritée, non comme un acquis reproductible.
+D001 states that the repository is the project's official memory. Until those archives
+are versioned, any claim resting on M001–M011 must be read as an inherited working
+hypothesis, not as a reproducible result.
 
-La première expérience intégralement vérifiable dans ce dépôt est **M012b**.
+The first fully verifiable experiment in this repository is **M012b**.
