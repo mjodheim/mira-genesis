@@ -118,18 +118,27 @@ le mot `(1,0,1,0,1,0,1)` sépare — un mot absent des deux jeux.
 transport — avaient été produits sous cette confirmation. Ils ne sont pas
 nécessairement faux, mais ils n'étaient plus établis, et ont dû être remesurés.
 
-### La correction
+### La correction, en deux temps
 
 `metamorphosis/conformance.py` : test de conformité par **méthode W**. Pour une
-hypothèse à k états et une cible d'au plus k+s états, la suite `P · (ε ∪ Σ ∪ … ∪ Σˢ) · W`
-est complète — l'accord sur la suite implique l'équivalence.
+hypothèse minimale à k états et une cible d'au plus k+s états, la suite
+`P · (ε ∪ Σ ∪ … ∪ Σˢ) · W` est complète — l'accord sur la suite implique l'équivalence.
 
-Résultat inattendu sur le coût : pour un automate à 9 états et s = 2, la suite compte
-**99 mots contre 160** au jeu probabiliste. L'ancienne confirmation était donc à la
-fois plus chère et moins sûre.
+**La première correction a échoué, et de la même façon que le défaut d'origine.** Elle
+construisait la suite depuis le candidat brut de la recherche, non minimisé, avec une
+marge fixée arbitrairement à deux états. Or la méthode W exige une hypothèse minimale :
+`characterizing_set` cherchait à séparer des paires d'états équivalents, échouait
+silencieusement, et l'ensemble ne caractérisait plus rien. Un second faux succès a
+survécu, à l'environnement 6 de l'étude de dispersion.
 
-Hypothèse résiduelle, énoncée plutôt que dissimulée : la complétude ne vaut que si la
-cible ne dépasse pas l'hypothèse de plus de deux états après minimisation.
+La version retenue minimise l'hypothèse au lieu de la supposer minimale, et **calcule**
+la marge au lieu de la choisir : le langage structurel ne crée aucun état, donc la
+cible ne peut pas en compter plus que la source, borne que l'organisme connaît
+puisqu'il détient la source.
+
+Le coût ne diverge pas : la suite croît en `|Σ|ˢ · k²`, or `s` décroît quand `k` croît.
+Sur un automate à 9 états la suite compte **99 mots contre 160** au jeu probabiliste.
+L'ancienne confirmation était donc à la fois plus chère et moins sûre.
 
 ### Après remesure
 

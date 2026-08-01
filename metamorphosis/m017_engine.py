@@ -44,8 +44,6 @@ FILTER_WORDS: tuple[Word, ...] = enumerate_words(5)
 SHORT_WORDS: tuple[Word, ...] = enumerate_words(2)
 
 
-# Marge d'états accordée à la cible au-delà de l'hypothèse. Voir `conformance`.
-CONFORMANCE_EXTRA_STATES = 2
 
 
 class BehavioralOracle(Protocol):
@@ -108,19 +106,26 @@ class _Organism:
             observed.append(answers[0])
         return tuple(observed), calls, ""
 
-    def _confirm(self, candidate: DFA, oracle: BehavioralOracle) -> tuple[str, int]:
+    def _confirm(
+        self, candidate: DFA, oracle: BehavioralOracle, max_target_states: int
+    ) -> tuple[str, int]:
         """Confirmation par test de conformité complet, méthode W.
 
-        La version précédente tirait 96 mots longs au hasard en affirmant qu'ils
-        couvraient la borne de distinction. Ils ne la couvraient pas, et deux automates
-        à 9 états confirmés identiques se sont révélés séparés par `(1,0,1,0,1,0,1)`.
+        Deux versions ont échoué avant celle-ci, et les deux ont produit un faux succès.
 
-        La suite W est complète tant que la cible ne dépasse pas l'hypothèse de plus de
-        `CONFORMANCE_EXTRA_STATES` états — et elle est plus courte que le jeu
-        probabiliste qu'elle remplace.
+        La première tirait 96 mots longs au hasard en affirmant couvrir la borne de
+        distinction. Deux automates à 9 états confirmés identiques se sont révélés
+        séparés par `(1,0,1,0,1,0,1)`.
+
+        La seconde appliquait la méthode W à l'hypothèse **non minimisée**, ce que la
+        méthode n'autorise pas : l'ensemble caractérisant ne caractérisait rien.
+
+        Le langage structurel ne crée pas d'état, donc la cible ne peut pas en compter
+        plus que la source. C'est cette borne — connue de l'organisme, qui détient la
+        source — qui rend la suite complète sans rien supposer.
         """
         calls = 0
-        for word in w_method_suite(candidate, CONFORMANCE_EXTRA_STATES):
+        for word in w_method_suite(candidate, max_target_states):
             answers = [bool(oracle.query(word)) for _ in range(self.repeat_queries)]
             calls += self.repeat_queries
             if len(set(answers)) != 1:
@@ -186,7 +191,7 @@ class _Organism:
             if fingerprint(candidate, FILTER_WORDS) != observed:
                 continue
 
-            verdict, confirm_calls = self._confirm(candidate, oracle)
+            verdict, confirm_calls = self._confirm(candidate, oracle, source.n_states)
             calls += confirm_calls
             if verdict == "oracle_changed_during_confirmation":
                 return abstain(verdict, nodes, calls, false_matches)
