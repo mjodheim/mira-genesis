@@ -32,7 +32,7 @@ from __future__ import annotations
 from collections import deque
 from typing import Sequence
 
-from .m012b_dfa import DFA
+from .m012b_dfa import DFA, canonicalize, minimize_dfa
 
 Word = tuple[int, ...]
 
@@ -103,18 +103,36 @@ def _run_accepts(dfa: DFA, state: int, word: Sequence[int]) -> bool:
     return bool(dfa.accepting[state])
 
 
-def w_method_suite(dfa: DFA, extra_states: int = 2) -> tuple[Word, ...]:
-    """Suite de test complète pour une cible d'au plus `dfa.n_states + extra_states`.
+def w_method_suite(dfa: DFA, max_target_states: int) -> tuple[Word, ...]:
+    """Suite de test complète pour une cible d'au plus `max_target_states` états.
 
-    Rend les mots triés par longueur puis lexicographiquement : les courts d'abord,
-    ce qui fait échouer un mauvais candidat au plus tôt.
+    **L'hypothèse doit être minimale**, et elle est minimisée ici plutôt que supposée
+    telle. Une première version construisait la suite depuis le candidat brut de la
+    recherche : `characterizing_set` y cherchait à séparer des paires d'états
+    équivalents, échouait silencieusement, et l'ensemble ne caractérisait plus rien. Un
+    faux succès a survécu à cette version.
+
+    La marge `s = max_target_states − k` est calculée, non choisie. Le coût ne diverge
+    pas : la suite croît en `|Σ|ˢ · k²`, or `s` diminue quand `k` augmente. Le produit
+    reste de quelques centaines de mots sur tout le domaine.
+
+    Rend les mots triés par longueur puis lexicographiquement : les courts d'abord, ce
+    qui fait échouer un mauvais candidat au plus tôt.
     """
+    dfa = canonicalize(minimize_dfa(dfa))
+    extra_states = max(0, max_target_states - dfa.n_states)
     cover = state_cover(dfa)
     characterizing = characterizing_set(dfa)
 
+    # `extra_states + 1`, et non `extra_states` : la méthode W part d'une couverture
+    # de **transitions**, `S·(Σ∪{ε})`, non d'une couverture d'états. Avec la seule
+    # couverture d'états, les transitions sortantes ne sont jamais exercées — et les
+    # atomes de ce langage sont majoritairement des redirections. Cette erreur d'un
+    # cran a produit dix faux succès sur soixante-treize, dont des témoins de longueur
+    # six que la confirmation probabiliste, elle, attrapait.
     middles: list[Word] = [()]
     frontier: list[Word] = [()]
-    for _ in range(max(0, extra_states)):
+    for _ in range(extra_states + 1):
         frontier = [
             word + (int(symbol),) for word in frontier for symbol in dfa.alphabet
         ]

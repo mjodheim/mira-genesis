@@ -158,36 +158,64 @@ def test_library_survives_a_serialization_round_trip():
     assert len(restored.macros) == 1
 
 
-def test_confirmation_catches_the_false_success_that_slipped_through():
-    """Deux automates confirmés identiques que `(1,0,1,0,1,0,1)` sépare.
+def test_the_conformance_suite_separates_every_real_difference():
+    """La confirmation probabiliste laissait passer de vraies différences.
 
-    La confirmation tirait 96 mots longs au hasard en affirmant couvrir la borne de
-    distinction. Elle ne la couvrait pas : le « zéro faux succès » de M017 tenait à la
-    chance du tirage. La suite W est complète tant que la cible ne dépasse pas
-    l'hypothèse de plus de deux états — et elle est plus courte.
+    Elle tirait 96 mots longs au hasard en affirmant couvrir la borne de distinction.
+    Le « zéro faux succès » de M017 tenait à la chance du tirage : deux automates à
+    9 états confirmés identiques sont séparés par `(1,0,1,0,1,0,1)`.
     """
     from metamorphosis.conformance import w_method_suite
-    from metamorphosis.m012b_dfa import random_minimal_dfa
+    from metamorphosis.m012b_dfa import DFA, random_minimal_dfa
 
-    witness = (1, 0, 1, 0, 1, 0, 1)
-    for seed in range(40):
-        left = normalize_dfa(random_minimal_dfa(seed, 8, 9))
-        suite = set(w_method_suite(left, 2))
-        # La suite doit séparer l'automate de lui-même modifié en un point.
-        flipped = left.__class__(
-            left.alphabet,
-            left.transitions,
-            tuple(
-                not value if index == left.run_state(witness) else value
-                for index, value in enumerate(left.accepting)
-            ),
-            left.initial,
-        )
-        if exact_equivalence(left, flipped)[0]:
-            continue
-        assert any(
-            left.accepts(word) != flipped.accepts(word) for word in suite
-        ), f"la suite W laisse passer une différence, graine {seed}"
+    # Les différences sont produites par le langage réel de l'organisme, atomes de
+    # redirection compris. Une version antérieure de ce test n'inversait que des bits
+    # d'acceptation : elle passait alors que la suite, bâtie sur une couverture d'états
+    # au lieu d'une couverture de transitions, laissait passer toutes les redirections.
+    atoms = all_atoms()
+    checked = 0
+    for seed in range(30):
+        left = normalize_dfa(random_minimal_dfa(seed, 7, 9))
+        for offset in range(0, len(atoms), 7):
+            edited = apply_atoms(left, (atoms[offset],))
+            if edited is None:
+                continue
+            right = normalize_dfa(edited)
+            if exact_equivalence(left, right)[0]:
+                continue
+            checked += 1
+            suite = w_method_suite(left, max_target_states=left.n_states)
+            assert any(
+                left.accepts(word) != right.accepts(word) for word in suite
+            ), f"la suite laisse passer {atoms[offset]}, graine {seed}"
+    assert checked > 20, "le test n'a pas exercé assez de différences réelles"
+
+
+def test_the_conformance_suite_needs_a_minimal_hypothesis():
+    """La méthode W exige une hypothèse minimale, et la minimise plutôt que la supposer.
+
+    La première correction construisait la suite depuis le candidat brut de la
+    recherche. `characterizing_set` y cherchait à séparer des paires d'états
+    équivalents, échouait en silence, et un second faux succès a survécu.
+    """
+    from metamorphosis.conformance import w_method_suite
+    from metamorphosis.m012b_dfa import DFA, random_minimal_dfa
+
+    minimal = normalize_dfa(random_minimal_dfa(11, 5, 6))
+    # Même langage, états dupliqués : l'automate n'est plus minimal.
+    width = minimal.n_states
+    padded = DFA(
+        minimal.alphabet,
+        tuple(tuple(row) for row in minimal.transitions)
+        + tuple(tuple(row) for row in minimal.transitions),
+        minimal.accepting + minimal.accepting,
+        minimal.initial,
+    )
+    assert padded.n_states == 2 * width
+
+    from_minimal = w_method_suite(minimal, max_target_states=width)
+    from_padded = w_method_suite(padded, max_target_states=width)
+    assert from_padded == from_minimal
 
 
 def test_an_unrelated_inherited_library_is_a_liability():
