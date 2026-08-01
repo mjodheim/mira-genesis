@@ -52,6 +52,50 @@ puisse être défaite sans refaire la mesure.
    gonfler ses compteurs. C'était supprimer le signal : la récurrence d'un motif à
    travers les épisodes **est** ce que la règle doit détecter. Aucun macro ne naissait.
 
+## Budget et profondeur — porte de gel n°3
+
+Ces deux paramètres décident silencieusement du résultat. Ils sont donc justifiés ici
+par l'hypothèse, et fixés avant toute mesure de marge.
+
+### Le budget porte sur les pas de composition, pas sur les atomes
+
+`max_symbols = 3` borne le nombre de **symboles composés**, non le nombre d'atomes
+produits. Pour la recherche ouverte, trois symboles font trois atomes. Pour
+l'organisme auto-extensible, trois symboles peuvent en faire neuf.
+
+Cette asymétrie **est** l'hypothèse, pas un avantage concédé. Ce qu'un raisonneur
+borné dépense, c'est le pas de décision : absorber un motif signifie qu'un seul pas
+porte désormais plus loin. C'est l'argument classique du *chunking*. Borner les atomes
+plutôt que les pas réduirait l'absorption à un simple réordonnancement de la
+recherche, et l'expérience ne testerait plus la croissance du langage.
+
+Conséquence à énoncer sans détour : sur une cible de quatre atomes, la recherche
+ouverte échoue — par profondeur si on la borne à trois pas, par budget si on lui en
+accorde quatre, car 36⁴ = 1 679 616 dépasse tout budget tenable. L'organisme
+auto-extensible réussit parce qu'un macro comprime trois atomes en un pas. C'est
+exactement l'effet mesuré, et il ne doit pas être présenté comme autre chose.
+
+### Profondeur 3, parce que les motifs font trois atomes
+
+La profondeur maximale est fixée à la taille des motifs de l'environnement, qui est
+une propriété du banc et non un bouton de réglage.
+
+- En deçà, la recherche ouverte serait structurellement incapable **même sur un motif
+  pur** : elle deviendrait un second contrôle, et la comparaison décisive n'aurait
+  plus de terme de comparaison.
+- Au-delà, l'espace de profondeur 4 dépasse tout budget praticable en Python.
+
+### Budget 200 000, choisi pour favoriser la baseline
+
+L'espace complet de profondeur 3 sur 36 atomes compte 46 656 trajectoires. Le budget
+est fixé à plus de quatre fois ce nombre, afin que la recherche ouverte ne soit
+**jamais** limitée par le budget sur un motif pur : elle peut toujours achever son
+balayage.
+
+Le budget est donc réglé contre l'hypothèse testée, non pour elle. Toute abstention de
+la baseline sur un motif pur signalerait une erreur d'implémentation, pas un manque de
+ressources.
+
 ## Baselines
 
 - catalogue fermé — la capacité de M014c, reproduite telle quelle ;
@@ -78,15 +122,69 @@ Le coût de recherche s'effondre d'un facteur cent pour l'organisme qui étend s
 langage, et reste plat pour celui qui ne l'étend pas. C'est la comparaison qui porte
 l'hypothèse, et elle est mesurée sur une plage de quatre ordres de grandeur.
 
+## Portes n°4 et n°5 — le transport, et ce qu'il oblige à retirer
+
+La prédiction avait été écrite avant la mesure, dans l'en-tête de
+`scripts/run_m017_transport.py`. Elle est confirmée, y compris dans sa partie
+défavorable.
+
+| Bibliothèque héritée | Gain médian sur les épisodes précoces | Paires |
+|---|---|---|
+| motifs **partagés** avec la cible | **118,7×** (0,90× à 261×) | 3 / 4 aident |
+| motifs **disjoints** de la cible | **0,69×** (0,65× à 0,75×) | **4 / 4 nuisent** |
+
+Une bibliothèque héritée d'un environnement aux motifs différents est **strictement
+pire que pas de bibliothèque du tout**, et la mesure est serrée : 0,65 à 0,75 sur les
+quatre paires. Ce n'est pas du bruit, c'est un mécanisme. Ses macros ne s'appliquent
+jamais et gonflent pourtant le facteur de branchement à chaque épisode.
+
+### Ce que M017 ne pourra donc pas revendiquer
+
+**Le langage étendu ne se transporte pas.** Il croît *à l'intérieur* d'une
+distribution de transformations, et son avantage ne suit que dans la mesure où
+l'environnement d'arrivée partage cette structure. Sans structure partagée,
+l'absorption est un passif net.
+
+C'est exactement la leçon de M014b — transporter un mécanisme ne transporte pas son
+avantage — retrouvée un niveau au-dessus. Elle est portée ici dans le protocole avant
+tout gel, et non découverte après une évaluation canonique.
+
+Le transport est donc **rapporté**, jamais décisif. La comparaison qui décide reste
+intra-environnement, ce qui était déjà sa désignation.
+
+### Décalage brutal de distribution — porte n°5
+
+Un organisme ayant vécu dans un environnement reçoit ensuite les motifs d'un autre :
+
+- coût médian avant décalage : 744 à 11 492 nœuds ;
+- coût médian après décalage : 3 630 à 20 572 nœuds ;
+- abstentions : **3 sur 24** ;
+- faux succès : **0**.
+
+L'organisme se dégrade sans jamais mentir : il revient au coût d'une recherche sans
+macro utile, s'abstient quand le budget ne suffit plus, et n'annonce aucune solution
+inexacte.
+
+### Ce que cela ouvre pour M018
+
+Le passif du transport a une cause nommable : l'organisme ne peut ni oublier ses
+macros, ni juger qu'ils ne s'appliquent plus. Un organisme capable de diagnostiquer
+que son propre langage est inadapté et de s'en défaire annulerait ce passif — c'est
+précisément H6, l'auto-métamorphose, et M017 vient de produire la première mesure qui
+la rend nécessaire plutôt que souhaitable.
+
 ## Portes de gel
 
 Le protocole ne pourra être figé qu'après :
 
-1. la désignation, **avant toute observation**, de la comparaison unique qui décide de
-   l'expérience — l'auto-extensible contre la recherche ouverte, sur la décroissance
-   du coût de recherche — et la justification du statut simplement rapporté des autres ;
+1. ~~la désignation de la comparaison unique qui décide de l'expérience~~ —
+   **franchie**, voir [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) :
+   coût de recherche médian sur la seconde moitié des épisodes, auto-extensible
+   contre recherche ouverte, par environnement. Le statut simplement rapporté des
+   autres grandeurs y est justifié, et la condition d'échec y est écrite d'avance ;
 2. l'établissement que la marge retenue dépasse la dispersion entre environnements,
-   au lieu de le supposer. **M014b a échoué exactement là** ;
+   au lieu de le supposer. **M014b a échoué exactement là.** Mesure en cours via
+   `scripts/run_m017_dispersion.py` ;
 3. la vérification que le budget de recherche et la profondeur maximale découlent de
    l'hypothèse, et non de la marge qu'ils produisent ;
 4. le transport de la bibliothèque étendue vers un environnement scellé aux motifs

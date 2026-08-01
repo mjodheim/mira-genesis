@@ -158,6 +158,96 @@ def test_library_survives_a_serialization_round_trip():
     assert len(restored.macros) == 1
 
 
+def test_the_conformance_suite_separates_every_real_difference():
+    """La confirmation probabiliste laissait passer de vraies différences.
+
+    Elle tirait 96 mots longs au hasard en affirmant couvrir la borne de distinction.
+    Le « zéro faux succès » de M017 tenait à la chance du tirage : deux automates à
+    9 états confirmés identiques sont séparés par `(1,0,1,0,1,0,1)`.
+    """
+    from metamorphosis.conformance import w_method_suite
+    from metamorphosis.m012b_dfa import DFA, random_minimal_dfa
+
+    # Les différences sont produites par le langage réel de l'organisme, atomes de
+    # redirection compris. Une version antérieure de ce test n'inversait que des bits
+    # d'acceptation : elle passait alors que la suite, bâtie sur une couverture d'états
+    # au lieu d'une couverture de transitions, laissait passer toutes les redirections.
+    atoms = all_atoms()
+    checked = 0
+    for seed in range(30):
+        left = normalize_dfa(random_minimal_dfa(seed, 7, 9))
+        for offset in range(0, len(atoms), 7):
+            edited = apply_atoms(left, (atoms[offset],))
+            if edited is None:
+                continue
+            right = normalize_dfa(edited)
+            if exact_equivalence(left, right)[0]:
+                continue
+            checked += 1
+            suite = w_method_suite(left, max_target_states=left.n_states)
+            assert any(
+                left.accepts(word) != right.accepts(word) for word in suite
+            ), f"la suite laisse passer {atoms[offset]}, graine {seed}"
+    assert checked > 20, "le test n'a pas exercé assez de différences réelles"
+
+
+def test_the_conformance_suite_needs_a_minimal_hypothesis():
+    """La méthode W exige une hypothèse minimale, et la minimise plutôt que la supposer.
+
+    La première correction construisait la suite depuis le candidat brut de la
+    recherche. `characterizing_set` y cherchait à séparer des paires d'états
+    équivalents, échouait en silence, et un second faux succès a survécu.
+    """
+    from metamorphosis.conformance import w_method_suite
+    from metamorphosis.m012b_dfa import DFA, random_minimal_dfa
+
+    minimal = normalize_dfa(random_minimal_dfa(11, 5, 6))
+    # Même langage, états dupliqués : l'automate n'est plus minimal.
+    width = minimal.n_states
+    padded = DFA(
+        minimal.alphabet,
+        tuple(tuple(row) for row in minimal.transitions)
+        + tuple(tuple(row) for row in minimal.transitions),
+        minimal.accepting + minimal.accepting,
+        minimal.initial,
+    )
+    assert padded.n_states == 2 * width
+
+    from_minimal = w_method_suite(minimal, max_target_states=width)
+    from_padded = w_method_suite(padded, max_target_states=width)
+    assert from_padded == from_minimal
+
+
+def test_an_unrelated_inherited_library_is_a_liability():
+    """Absorber n'est pas gratuit : un macro qui ne s'applique jamais coûte quand même.
+
+    Mesuré sur quatre paires d'environnements : une bibliothèque héritée d'un
+    environnement aux motifs disjoints donne 0,65× à 0,75× — strictement pire que pas
+    de bibliothèque du tout. C'est la leçon de M014b un cran plus haut : transporter
+    un mécanisme ne transporte pas son avantage.
+
+    Ce test verrouille le mécanisme, pas la valeur : une bibliothèque encombrée de
+    symboles inutiles élargit le facteur de branchement, donc explore strictement plus
+    de nœuds à solution égale.
+    """
+    episode = _episodes(70_000, 2)[0]
+    oracle_a = BehavioralOracle(episode.target)
+    oracle_b = BehavioralOracle(episode.target)
+
+    bare = SelfExtendingOrganism()
+    cluttered_library = Library.primitive()
+    for start in range(0, 12, 2):
+        atoms = all_atoms()
+        cluttered_library.add((atoms[start], atoms[start + 1]), episode=0)
+    cluttered = SelfExtendingOrganism(library=cluttered_library)
+
+    plain = bare.solve(episode.base, oracle_a)
+    loaded = cluttered.solve(episode.base, oracle_b)
+
+    assert plain.status == "success" and loaded.status == "success"
+    assert loaded.search_nodes > plain.search_nodes
+
+
 def test_out_of_language_target_is_refused():
     """Une cible qui ajoute un état n'est atteignable à aucune profondeur."""
     episode = _episodes(70_000, 2)[0]

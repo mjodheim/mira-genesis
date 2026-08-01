@@ -12,8 +12,12 @@
 | M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
 | M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d'efficacité échouent |
 | M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
-| **M017** | **Langage auto-extensible** | **ACTIVE — DEVELOPMENT** | Absorber les motifs récurrents et battre la recherche ouverte sur la décroissance du coût |
-| M018 | Auto-métamorphose | BLOCKED BY M017 | Détecter, construire et adopter seul un corps mieux adapté |
+| M017 | Langage auto-extensible | **READY TO FREEZE** | Six portes franchies ; critère devenu directionnel après le balayage à 50 environnements |
+| M018 | Dissolution — savoir détruire | **HYPOTHESIS NOT SUPPORTED** | Aucun des trois mécanismes n'annule le passif ; l'oubli est réactif, la destruction aveugle |
+| M019 | Pression de sélection | **RIG NOT VALID** | Sélection trop impatiente pour valoriser l'apprentissage ; cause identifiée |
+| **M021** | **Décrochage d'une mesure, sous vérité terrain** | **NEXT** | Montrer où une mesure-proxy cesse de suivre, et à partir de quelle pression |
+| M019b | Sélection à horizon long | PLANNED | Horizon d'évaluation supérieur à la période de remboursement |
+| M020 | Auto-métamorphose | DEFERRED | Détecter, construire et adopter seul un corps mieux adapté |
 | M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |
 | M016 | Compétence sensorimotrice | DEFERRED | Transporter un modèle du monde entre architectures différentes |
 
@@ -62,9 +66,89 @@ Le coût de recherche s'effondre d'un facteur cent pour le seul organisme qui é
 langage, et reste plat pour celui qui ne l'étend pas. Réincarnation 9/9 exacte sur
 trois familles de machines opaques, 4/4 abstentions négatives, zéro faux succès.
 
-Aucune évaluation canonique n'est autorisée. Les portes de gel sont dans
-`experiments/M017/PROTOCOL_DRAFT.md`, et la première est de désigner la comparaison
-décisive **avant** d'observer quoi que ce soit de nouveau.
+Les six portes de gel sont franchies. Le protocole complet, seuils compris, attend une
+signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`.
+
+Deux mesures ont changé le protocole en cours de route, et méritent d'être retenues :
+
+- **la première statistique décisive a été rejetée par la mesure.** Non appariée, elle
+  donnait un avantage de 2,4× à 605× selon l'environnement ; appariée épisode par
+  épisode, de 95× à 620×. La dispersion est divisée par trente-huit sans que la médiane
+  bouge. C'est la vérification que M014b n'a jamais faite ;
+- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d'un
+  environnement aux motifs disjoints donne 0,69× — strictement pire que pas de
+  bibliothèque du tout, quatre fois sur quatre. La leçon de M014b, retrouvée un cran
+  plus haut, et portée dans le protocole **avant** le gel plutôt que découverte après.
+
+Ce passif a une cause nommable : l'organisme ne sait ni oublier ses macros, ni juger
+qu'ils ne s'appliquent plus. C'est ce qui a rendu M018 nécessaire plutôt que souhaitable.
+
+## M018 — l'hypothèse n'est pas soutenue
+
+Trois mécanismes de destruction, aucun n'annule le passif de 0,69×. Le budget fixe est
+gratuit mais ne rapporte que 6 % ; la dissolution est **350× pire** en régime stable.
+
+Le diagnostic déplace la cause : **l'oubli est réactif.** Un symbole inutile est payé
+d'avance, à chaque nœud de recherche ; quand l'organisme sait enfin qu'un macro ne sert
+pas, il l'a déjà financé. Et la destruction indiscriminée jette le bon avec le mauvais.
+
+Deux lectures en découlent, et la seconde ouvre M019 :
+
+1. le remède n'est pas la suppression mais la **sélection au moment de l'emploi** ;
+2. **détruire est intenable pour un individu isolé.** La chenille se dissout une fois,
+   et si cela échoue, cette chenille meurt — pas l'espèce.
+
+## M019 — étape active
+
+Ce que le projet n'avait jamais eu : la **rareté**. Jusqu'ici l'échec ne coûtait rien,
+donc l'efficacité ne servait à rien — ce qui explique le résultat de M018 mieux que
+n'importe quelle propriété des mécanismes testés.
+
+L'énergie devient le budget de recherche, une population remplace l'individu, et la
+duplication-divergence complète l'absorption. Personne ne choisit de mécanisme
+d'oubli : les quatre sont dans la population de départ et la sélection tranche.
+
+La question, posée pour la première fois : **une population sous sélection
+découvre-t-elle ce que je n'ai pas su concevoir ?**
+
+Elle reste sans réponse. Trois calibrages ont produit trois dégénérescences, et
+l'invariant est structurel : **une sélection à horizon court ne peut pas valoriser un
+investissement dont le rendement est différé.** Apprendre coûte 23 000 nœuds pour une
+prime de 6 000 ; ne pas essayer en coûte 1 296. L'apprenti est éliminé à la première
+coupe, avant d'avoir pu rembourser.
+
+La sélection a découvert que ne pas essayer coûte moins cher qu'essayer — et elle avait
+raison sur l'horizon qu'on lui avait donné. Le montage est faux, l'hypothèse n'est pas
+réfutée, et un quatrième calibrage aurait été de l'ajustement jusqu'à obtenir la
+réponse voulue.
+
+## Réorientation — la mesure devient la question
+
+Quatre échecs, et **aucun dans l'organisme**. À chaque fois ce qu'on construisait
+tenait ; c'est la façon de juger si c'était mieux qui a cédé. Le projet suit donc ce
+que ses propres échecs ont désigné : **quand une mesure-proxy cesse-t-elle de suivre ce
+qu'elle prétend suivre, et sous quelle pression d'optimisation ?**
+
+Le problème n'est ni neuf ni vierge — Goodhart, *reward hacking*, *specification
+gaming*, qualité-diversité le travaillent depuis longtemps. L'angle propre à ce dépôt
+est ailleurs : ces travaux opèrent là où l'objectif vrai n'est pas vérifiable
+exactement, alors qu'ici l'équivalence comportementale se **prouve**. On peut montrer
+*où* une mesure décroche au lieu de constater qu'un résultat semble faux.
+
+Six cas sont catalogués dans [`MEASURES.md`](MEASURES.md), avec quatre régularités déjà
+répétées. Voir **D011** et **H9**.
+
+La ligne métamorphose n'est pas abandonnée : elle a produit le domaine décidable, deux
+validations scellées et les six cas. Elle devient le **support** de la question plutôt
+que la question.
+
+## M019b — reportée, mais sa leçon est acquise
+
+L'horizon d'évaluation doit dépasser la période de remboursement de l'apprentissage :
+sélection toutes les N générations, ou fitness intégrée sur la vie d'une lignée.
+
+**L'horizon compte davantage que l'intensité de la pression.** C'est la leçon la plus
+transportable produite par le projet à ce jour, et elle vaut au-delà de lui.
 
 ## Test ultime de la première phase
 
