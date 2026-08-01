@@ -112,7 +112,68 @@ le **minimum observé dépasse le seuil envisagé d'un ordre de grandeur**.
 
 Le problème d'utilité est donc réel mais minoritaire, et il est plus que compensé.
 
-## Seuils proposés, et d'où ils viennent
+## Balayage à cinquante environnements — le seuil proposé est invalidé
+
+Les huit environnements initiaux donnaient un ordre de grandeur, pas une distribution.
+Cinquante le disent autrement :
+
+| | 8 environnements | 50 environnements |
+|---|---|---|
+| minimum | 95,3× | **9,0×** |
+| p10 | — | 38,9× |
+| médiane | 377,2× | 123,8× |
+| maximum | 620,1× | 620,1× |
+| environnements favorables | 8 / 8 | **50 / 50** |
+| environnements défavorables | 0 | **0** |
+
+**Le seuil de 10× proposé ci-dessous échoue sur un environnement sur cinquante.**
+L'échantillon à huit était optimiste d'un facteur dix sur son minimum.
+
+### La règle préenregistrée tranche, et elle ne va pas dans mon sens
+
+La condition d'échec avait été écrite avant la mesure :
+
+> Si la dispersion entre environnements est du même ordre que l'avantage — ou qu'un
+> environnement au moins favorise la recherche ouverte — alors aucun seuil n'est
+> défendable.
+
+La dispersion de la magnitude est un facteur **69** (9× à 620×). Aucune marge
+défendable ne la dépasse. **Le critère de magnitude tombe donc par application de ma
+propre règle**, pas par une décision prise après coup.
+
+Abaisser le seuil à 5× — qui passerait 50/50 — serait exactement l'ajustement que le
+§ « Ce que le seuil devra respecter » interdit : un seuil calé sur l'échantillon
+observé.
+
+### Pourquoi la dérivation était fausse
+
+Elle prédisait ~500× en supposant qu'un macro absorbé est toujours atteint en
+profondeur 1. C'est le cas **typique**. Lorsqu'un épisode tardif porte un atome de
+bruit, l'organisme doit composer macro + atome, donc chercher en profondeur 2, et le
+rapport s'effondre d'un facteur cinquante.
+
+J'ai pris une dérivation du cas typique pour une borne du cas le pire. C'est la même
+erreur de nature que celle de M014b : confondre ce qu'on attend avec ce qu'on garantit.
+
+### Le critère décisif change de forme
+
+La direction, elle, ne disperse pas : **50 environnements sur 50** favorisent
+l'organisme auto-extensible, aucun ne favorise la recherche ouverte. Sa dispersion est
+nulle, donc c'est le seul critère que D010 autorise.
+
+> **Nouveau critère décisif :** dans **chaque** environnement scellé, le rapport
+> apparié médian favorise l'organisme auto-extensible, et celui-ci est plus rapide sur
+> strictement plus de la moitié des épisodes tardifs appariés.
+
+La magnitude reste **rapportée** — médiane 123,8×, intervalle 9,0× à 620,1× — mais elle
+ne décide plus. C'est une revendication plus faible que « cent fois plus rapide », et
+c'est la seule que la mesure autorise.
+
+Ce changement est légitime parce que le protocole **n'est pas figé** et que ces données
+sont de développement. C'est précisément à cela que sert la porte de gel n°2 : la
+franchir sérieusement a coûté le seuil que je m'apprêtais à faire signer.
+
+## Seuils initialement proposés, et pourquoi ils ne tiennent pas
 
 Ils ne sont **pas** tirés de l'échantillon. Ils sont dérivés de l'arithmétique des
 espaces de recherche, puis confrontés à la dispersion observée.

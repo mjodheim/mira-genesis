@@ -14,7 +14,7 @@
 | # | Porte | État |
 |---|---|---|
 | 1 | Désigner la comparaison décisive avant toute nouvelle observation | **franchie** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
-| 2 | Établir que la marge dépasse la dispersion entre environnements | **franchie** — appariée : 95× à 620×, seuil proposé 10× |
+| 2 | Établir que la marge dépasse la dispersion entre environnements | **franchie, et elle a coûté le seuil** — voir ci-dessous |
 | 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | **franchie** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
 | 4 | Transporter la bibliothèque vers un environnement aux motifs inédits | **franchie** — et elle oblige à restreindre la portée |
 | 5 | Décalage brutal de distribution après absorption | **franchie** — dégradation sans faux succès |
@@ -56,6 +56,29 @@ de l'arithmétique des espaces de recherche — environ 500× attendus — et no
 l'échantillon.
 
 La porte n°6 a de même trouvé un défaut réel : `m017_engine` importait le laboratoire.
+
+## Ce que le balayage à cinquante environnements a coûté
+
+Huit environnements donnaient un ordre de grandeur, pas une distribution.
+
+| | 8 env. | 50 env. |
+|---|---|---|
+| minimum | 95,3× | **9,0×** |
+| médiane | 377,2× | 123,8× |
+| favorables | 8/8 | **50/50** |
+
+**Le seuil de 10× que j'allais faire signer échoue sur un environnement sur cinquante.**
+La dérivation qui le justifiait supposait qu'un macro est toujours atteint en
+profondeur 1 ; quand un épisode tardif porte un atome de bruit, il faut la profondeur 2
+et le rapport s'effondre. J'avais pris un cas typique pour une borne du cas le pire.
+
+D010 exige qu'une marge dépasse la dispersion. Celle de la magnitude est un facteur 69
+— aucune marge ne la dépasse. Celle de la direction est nulle : 50/50, zéro
+défavorable. **Le critère décisif devient donc directionnel**, et la magnitude passe
+en simple rapport.
+
+C'est une revendication plus faible que « cent fois plus rapide », et c'est la seule
+que la mesure autorise. Franchir sérieusement la porte n°2 a coûté le seuil.
 
 ## Coût de l'absorption, à ne pas dissimuler
 

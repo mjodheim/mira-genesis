@@ -10,6 +10,7 @@ incorporant des flottants n'est pas reproductible d'un environnement à l'autre.
 
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
 import json
 from pathlib import Path
 import statistics
@@ -41,60 +42,72 @@ def median(values: list[int]) -> int:
     return int(statistics.median(values)) if values else 0
 
 
-def main() -> None:
+def measure_environment(index: int) -> tuple[list[dict[str, object]], dict[str, object]]:
+    """Un environnement complet. Tout y dérive de `index` par graines fixes.
+
+    Fonction de premier niveau pour être exécutable dans un processus séparé : les
+    environnements sont indépendants et entièrement déterminés par leurs graines, donc
+    le parallélisme ne change aucun chiffre.
+    """
+    environment = make_environment(70_000 + index * 101)
+    episodes = generate_episodes(environment, 71_000 + index * 101, count=EPISODES)
+    systems = {
+        "closed": ClosedLibraryOrganism(CLOSED_LIBRARY_PROGRAMS),
+        "open": OpenSearchOrganism(),
+        "genesis": SelfExtendingOrganism(),
+    }
+    rows: dict[str, list[dict[str, object]]] = {name: [] for name in systems}
     per_episode: list[dict[str, object]] = []
-    environments: list[dict[str, object]] = []
-    macro_totals: list[int] = []
 
-    for index in range(ENVIRONMENTS):
-        environment = make_environment(70_000 + index * 101)
-        episodes = generate_episodes(environment, 71_000 + index * 101, count=EPISODES)
-        systems = {
-            "closed": ClosedLibraryOrganism(CLOSED_LIBRARY_PROGRAMS),
-            "open": OpenSearchOrganism(),
-            "genesis": SelfExtendingOrganism(),
-        }
-        rows: dict[str, list[dict[str, object]]] = {name: [] for name in systems}
+    for episode in episodes:
+        for name, organism in systems.items():
+            result = organism.solve(episode.base, BehavioralOracle(episode.target))
+            exact = (
+                result.solution is not None
+                and exact_equivalence(result.solution, episode.target)[0]
+            )
+            # Une solution annoncée mais inexacte serait un faux succès. Aucun
+            # n'est toléré : le critère est l'équivalence, pas la ressemblance.
+            assert result.status != "success" or exact, "faux succès"
+            record = {
+                "environment": index,
+                "episode": episode.index,
+                "system": name,
+                "motif_index": episode.motif_index,
+                "target_atoms": len(episode.program),
+                "status": result.status,
+                "reason": result.reason,
+                "search_nodes": result.search_nodes,
+                "oracle_calls": result.oracle_calls,
+                "false_matches": result.false_matches,
+                "program_symbols": result.program_symbols,
+                "macro_count": result.macro_count,
+                "exact": bool(exact),
+            }
+            rows[name].append(record)
+            per_episode.append(record)
 
-        for episode in episodes:
-            for name, organism in systems.items():
-                result = organism.solve(episode.base, BehavioralOracle(episode.target))
-                exact = (
-                    result.solution is not None
-                    and exact_equivalence(result.solution, episode.target)[0]
-                )
-                # Une solution annoncée mais inexacte serait un faux succès. Aucun
-                # n'est toléré : le critère est l'équivalence, pas la ressemblance.
-                assert result.status != "success" or exact, "faux succès"
-                record = {
-                    "environment": index,
-                    "episode": episode.index,
-                    "system": name,
-                    "motif_index": episode.motif_index,
-                    "target_atoms": len(episode.program),
-                    "status": result.status,
-                    "reason": result.reason,
-                    "search_nodes": result.search_nodes,
-                    "oracle_calls": result.oracle_calls,
-                    "false_matches": result.false_matches,
-                    "program_symbols": result.program_symbols,
-                    "macro_count": result.macro_count,
-                    "exact": bool(exact),
-                }
-                rows[name].append(record)
-                per_episode.append(record)
+    summary = {
+        "environment": index,
+        "profile": environment_profile(environment),
+        "genesis_macros": len(systems["genesis"].library.macros),
+        "genesis_library_sha256": systems["genesis"].library.sha256(),
+        **{
+            f"{name}_solved": sum(1 for row in rows[name] if row["status"] == "success")
+            for name in systems
+        },
+    }
+    return per_episode, summary
 
-        macro_totals.append(len(systems["genesis"].library.macros))
-        environments.append({
-            "environment": index,
-            "profile": environment_profile(environment),
-            "genesis_macros": len(systems["genesis"].library.macros),
-            "genesis_library_sha256": systems["genesis"].library.sha256(),
-            **{
-                f"{name}_solved": sum(1 for row in rows[name] if row["status"] == "success")
-                for name in systems
-            },
-        })
+
+def main() -> None:
+    # `map` conserve l'ordre des indices, donc le fichier de résultats est identique
+    # au bit près qu'on tourne sur un cœur ou sur seize.
+    with ProcessPoolExecutor() as pool:
+        measured = list(pool.map(measure_environment, range(ENVIRONMENTS)))
+    per_episode = [record for records, _ in measured for record in records]
+    environments = [summary for _, summary in measured]
+    macro_totals = [int(summary["genesis_macros"]) for summary in environments]
 
     def solved(system: str) -> list[dict[str, object]]:
         return [
