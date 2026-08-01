@@ -1,10 +1,10 @@
 name: CI
 
-# Intégration continue permanente du dépôt.
-# Ce workflow ne produit jamais de résultat scientifique canonique : il garantit
-# seulement que l'arbre de travail reste installable, importable et testable.
-# Les évaluations scellées font l'objet de workflows dédiés, créés par expérience
-# et retirés vers `archives/workflows/` une fois leur run canonique consommé.
+# Permanent continuous integration for the repository.
+# This workflow never produces a canonical scientific result. It only guarantees that
+# the working tree remains installable, importable and testable.
+# Sealed evaluations use experiment-specific workflows that are moved to
+# `archives/workflows/` after their one canonical run has been consumed.
 
 on:
   push:
@@ -44,7 +44,7 @@ jobs:
         run: pytest -q
 
   integrity:
-    name: Intégrité du dépôt
+    name: Repository integrity
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
