@@ -4,8 +4,7 @@ name: M021 development comparison
 # canonical scientific result.
 
 on:
-  push:
-    branches: ['research/m021-*']
+  pull_request:
   workflow_dispatch:
     inputs:
       seeds:
