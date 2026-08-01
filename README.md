@@ -1,64 +1,66 @@
 # Mira Genesis
 
-**Quand une mesure-proxy cesse-t-elle de suivre ce qu'elle prétend suivre, et sous
-quelle pression d'optimisation ?** Mira Genesis pose cette question dans un domaine où
-la vérité terrain est **décidable**, donc où la réponse se prouve au lieu de s'estimer.
+**When does a proxy measure stop tracking what it claims to track, and under what
+optimisation pressure?** Mira Genesis asks that question in a domain where ground truth
+is **decidable**, so the answer is proved rather than estimated.
 
-## Comment le projet en est arrivé là
+## How the project got here
 
-Le dépôt a d'abord été consacré à la **métamorphose cognitive trans-substrat** :
-séparer une compétence de son corps computationnel, la transporter, la réincarner dans
-un substrat dont la sémantique est inconnue, et y préserver sa plasticité. Cette ligne
-a produit deux validations scellées — M012b et M013e — puis quatre échecs.
+The repository was first devoted to **trans-substrate cognitive metamorphosis**:
+separating a competence from the computational body that acquired it, transporting it,
+re-embodying it in a substrate whose semantics are unknown, and preserving its
+plasticity there. That line produced two sealed validations — M012b and M013e — and
+then four failures.
 
-Aucun de ces quatre échecs n'était dans l'organisme.
+None of the four failed in the organism.
 
-| | Ce qui a cassé |
+| | What gave way |
 |---|---|
-| M014b | seuil de 25 % sur une fenêtre large de 4 requêtes |
-| M017 | seuil de 10× dérivé d'un cas typique pris pour une borne |
-| M018 | aucune conséquence à l'inefficacité, donc rien à optimiser |
-| M019 | horizon de fitness plus court que la période de remboursement |
+| M014b | a 25% threshold on a window four queries wide |
+| M017 | a 10× threshold derived from a typical case taken for a bound |
+| M018 | no consequence to inefficiency, so nothing to optimise for |
+| M019 | a fitness horizon shorter than the payback period of learning |
 
-Quatre fois, ce qu'on construisait tenait ; c'est la façon de juger si c'était mieux
-qui a cédé. Le projet suit désormais ce que ses propres échecs ont désigné.
+Four times, what was being built held; what gave way was the way of judging whether it
+was better. The project now follows what its own failures identified.
 
-## Ce que ce dépôt apporte, et ce qu'il n'invente pas
+## What this repository adds, and what it does not invent
 
-Le problème n'est ni neuf ni vierge : la loi de Goodhart, le *reward hacking*, le
-*specification gaming*, la recherche de nouveauté et les algorithmes qualité-diversité
-le travaillent depuis longtemps, avec des réponses partielles.
+The problem is neither new nor unexplored. Goodhart's law, reward hacking,
+specification gaming, novelty search and quality-diversity have worked on it for a long
+time, with partial answers.
 
-Mais ces travaux opèrent presque tous là où **l'objectif vrai n'est pas vérifiable
-exactement**. Un *reward hacking* se diagnostique parce qu'un humain trouve que le
-résultat a l'air faux ; la nouveauté s'évalue à ce qui paraît intéressant ; les
-descripteurs comportementaux sont choisis à la main.
+But those bodies of work operate almost entirely where **the true objective cannot be
+verified exactly**. Reward hacking is diagnosed because a human finds the result
+suspicious; novelty is judged by what looks interesting; behavioural descriptors are
+picked by hand.
 
-Ici, l'équivalence comportementale de deux automates finis se **prouve**. On peut donc
-montrer *où exactement* une mesure décroche, au lieu de constater qu'un résultat semble
-faux. C'est un banc d'essai pour la conception de mesures — pas une tentative de
-résoudre ce que d'autres n'ont pas résolu.
+Here, the behavioural equivalence of two finite automata is **provable**. So this
+repository can show *where exactly* a measure comes loose, instead of noting that a
+result looks wrong. It is a testbed for measure design — not an attempt to solve what
+others have not.
 
-Le catalogue est dans [`MEASURES.md`](MEASURES.md), et chaque cas se rejoue :
+The catalogue is in [`MEASURES.md`](MEASURES.md), and every case replays:
 
 ```bash
 python scripts/reproduce_measure_failures.py
 ```
 
-## État actuel
+## Current state
 
 | | |
 |---|---|
-| Validations scellées | **M012b** morphogenèse autonome, **M013e** migration vers substrat opaque |
-| Prêt à figer | **M017** — langage auto-extensible, critère devenu directionnel |
-| Non soutenu | **M018** — détruire ne restaure pas l'amélioration |
-| Montage invalide | **M019** — sélection trop impatiente pour valoriser l'apprentissage |
-| Domaine | automates finis déterministes, alphabet binaire, 4 à 10 états |
-| Substrats | machines booléennes opaques : opcodes sans sémantique déclarée, découverts par sondage |
+| Sealed validations | **M012b** autonomous morphogenesis, **M013e** migration to an opaque substrate |
+| Ready to freeze | **M017** — self-extending language, criterion now directional |
+| Not supported | **M018** — destroying does not restore improvement |
+| Rig not valid | **M019** — selection too impatient to value learning |
+| Active | **M021** — do these selection measures move true quality? |
+| Domain | deterministic finite automata, binary alphabet, 4 to 10 states |
+| Substrates | opaque Boolean machines: opcodes with no declared semantics, discovered by probing |
 
-Laboratoire de recherche borné. Ne démontre ni AGI, ni conscience, ni auto-amélioration
-ouverte. Les affirmations reposant sur M001–M011 ne sont **pas vérifiables dans ce
-dépôt** : voir [`archives/README.md`](archives/README.md).
+A bounded research laboratory. It demonstrates neither AGI, nor consciousness, nor
+open-ended self-improvement. Claims resting on M001–M011 are **not verifiable in this
+repository**: see [`archives/README.md`](archives/README.md).
 
 ## Installation
 
@@ -70,7 +72,7 @@ pip install -e ".[dev]"
 pytest -q
 ```
 
-Vérifications structurelles :
+Structural checks:
 
 ```bash
 python scripts/check_repository_integrity.py
@@ -80,28 +82,28 @@ python scripts/check_repository_integrity.py
 python scripts/audit_m017_isolation.py
 ```
 
-## Organisation
+## Layout
 
-- `MEASURES.md` — catalogue des mesures qui ont divergé, avec vérité terrain
-- `FAILURE_LOG.md` — échecs et contaminations, jamais supprimés
-- `metamorphosis/` — noyau expérimental, un préfixe de module par expérience
-- `scripts/` — bancs de développement, évaluations canoniques, audits, garde-fous
-- `experiments/<ID>/` — protocole figé, protocole lisible et statut de chaque expérience
-- `results/<ID>.md` et `results/<ID>_raw/` — résultats canoniques et preuves brutes
-- `tests/` — tests de développement, exécutés par la CI sur chaque PR
-- `archives/` — index des retraits de code, workflows scellés consommés, tags d'archive
-- `.github/workflows/ci.yml` — la seule CI permanente
+- `MEASURES.md` — catalogue of measures that came loose, with ground truth
+- `FAILURE_LOG.md` — failures and contaminations, never deleted
+- `metamorphosis/` — experimental core, one module prefix per experiment
+- `scripts/` — development benchmarks, canonical evaluations, audits, guardrails
+- `experiments/<ID>/` — frozen protocol, readable protocol and status of each experiment
+- `results/<ID>.md` and `results/<ID>_raw/` — canonical results and raw evidence
+- `tests/` — development tests, run by CI on every pull request
+- `archives/` — index of retired code, consumed sealed workflows, archive tags
+- `.github/workflows/ci.yml` — the only permanent CI
 
-## Règle scientifique
+## Scientific rule
 
-Une expérience reçoit exactement l'un de ces statuts : `VALIDATED`, `FAILED` ou
+An experiment receives exactly one of these statuses: `VALIDATED`, `FAILED` or
 `INCONCLUSIVE`.
 
-1. Le protocole est figé et haché avant toute observation de résultat.
-2. L'évaluation canonique s'exécute une fois, en CI, sur un commit immuable.
-3. Aucun rerun ne remplace une première tentative, aucun seuil n'est assoupli après coup.
-4. Les échecs et contaminations sont conservés, jamais supprimés.
+1. The protocol is frozen and hashed before any result is observed.
+2. The canonical evaluation runs once, in CI, on an immutable commit.
+3. No rerun replaces a first attempt, and no threshold is relaxed afterwards.
+4. Failures and contaminations are kept, never deleted.
 
-Voir [`PROJECT_STATE.md`](PROJECT_STATE.md), [`ROADMAP.md`](ROADMAP.md),
-[`MEASURES.md`](MEASURES.md), [`FAILURE_LOG.md`](FAILURE_LOG.md) et
+See [`PROJECT_STATE.md`](PROJECT_STATE.md), [`ROADMAP.md`](ROADMAP.md),
+[`MEASURES.md`](MEASURES.md), [`FAILURE_LOG.md`](FAILURE_LOG.md) and
 [`DECISIONS.md`](DECISIONS.md).

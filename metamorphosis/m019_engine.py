@@ -145,7 +145,12 @@ class Population:
             for individual in self.individuals:
                 individual.live(case)
 
-    def select(self, rng: random.Random, starting_energy: int) -> None:
+    def select(
+        self,
+        rng: random.Random,
+        starting_energy: int,
+        ranker: Callable[[Sequence["Individual"]], list["Individual"]] | None = None,
+    ) -> None:
         """Les riches se reproduisent, les pauvres sont remplacés.
 
         Le classement est par énergie restante, c'est-à-dire par ce qu'il reste après
@@ -164,7 +169,14 @@ class Population:
         L'énergie est donc reportée, mais plafonnée : sans plafond, la richesse
         composerait et le classement ne mesurerait plus qu'une chance initiale.
         """
-        survivors = sorted(self.alive, key=lambda i: (-i.ledger.energy, i.lineage))
+        living = self.alive
+        # `ranker` makes the selection measure itself a parameter, which is what M021
+        # compares. Its default reproduces M019 exactly: rank on energy left.
+        survivors = (
+            ranker(living)
+            if ranker is not None
+            else sorted(living, key=lambda i: (-i.ledger.energy, i.lineage))
+        )
         self.deaths += len(self.individuals) - len(survivors)
         if not survivors:
             self.individuals = []
