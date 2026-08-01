@@ -20,12 +20,19 @@
 | 5 | Décalage brutal de distribution après absorption | **franchie** — dégradation sans faux succès |
 | 6 | Audit d'isolation des sources et trace entièrement entière | **franchie** — `scripts/audit_m017_isolation.py` |
 
-**Les six portes sont franchies.** Le protocole complet, seuils compris, est dans
-[`FROZEN_PROTOCOL_017_CANDIDATE.md`](FROZEN_PROTOCOL_017_CANDIDATE.md).
+Les six portes avaient été franchies. **Elles sont rouvertes** : la confirmation qui a
+produit tous ces chiffres s'est révélée non fiable.
 
-Il n'est **pas figé**. Le gel engage des seuils qui ne bougeront plus et ouvre une
-évaluation canonique qui ne s'exécute qu'une fois, sans rejeu. Cette signature est
-humaine et n'a pas été donnée.
+Elle tirait 96 mots longs au hasard en affirmant couvrir la borne de distinction de
+deux automates. Elle ne la couvrait pas. Le « zéro faux succès sur 42 épisodes » était
+un tirage favorable, pas une garantie : deux automates à 9 états confirmés identiques
+sont séparés par `(1,0,1,0,1,0,1)`.
+
+La correction est faite — `metamorphosis/conformance.py`, méthode W, complète sous une
+hypothèse énoncée, et **plus courte** que le jeu qu'elle remplace : 99 mots contre 160.
+Les trois mesures sont en cours de remesure sous cette confirmation.
+
+Le protocole candidat est **retiré de la signature** jusque-là. Voir `FAILURE_LOG.md`.
 
 ## Ce que la porte n°2 a déjà appris
 

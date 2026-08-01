@@ -92,6 +92,52 @@ M017 — langage auto-extensible. Le vocabulaire de départ ne contient que des 
 tout ce qui dépasse l'atome doit être construit, et ce qui est construit peut être
 absorbé.
 
+## M017 — Confirmation non fiable, découverte en développement
+
+- Statut : `DEVELOPMENT DEFECT — CORRECTED BEFORE ANY FREEZE`.
+- Aucune évaluation canonique n'avait été ouverte. Le défaut est corrigé avant le gel,
+  et non découvert après un run irremplaçable.
+
+### Le défaut
+
+La confirmation d'un candidat portait sur tous les mots jusqu'à la longueur 6, plus
+**96 mots tirés au hasard** entre 7 et 20. La docstring affirmait que ces mots longs
+couvraient la borne de distinction de deux automates.
+
+C'était faux. Quatre-vingt-seize tirages ne couvrent pas 2⁷+…+2²⁰. La garantie était
+probabiliste et faible.
+
+### Ce que ça invalide
+
+Le banc de développement M017 rapportait **zéro faux succès sur 42 épisodes**. Ce
+n'était pas une garantie mais un tirage favorable. Un balayage plus large, mené pendant
+le développement de M018, a produit deux automates à 9 états confirmés identiques que
+le mot `(1,0,1,0,1,0,1)` sépare — un mot absent des deux jeux.
+
+**Conséquence :** tous les chiffres de développement M017 — banc principal, dispersion,
+transport — avaient été produits sous cette confirmation. Ils ne sont pas
+nécessairement faux, mais ils n'étaient plus établis, et ont dû être remesurés.
+
+### La correction
+
+`metamorphosis/conformance.py` : test de conformité par **méthode W**. Pour une
+hypothèse à k états et une cible d'au plus k+s états, la suite `P · (ε ∪ Σ ∪ … ∪ Σˢ) · W`
+est complète — l'accord sur la suite implique l'équivalence.
+
+Résultat inattendu sur le coût : pour un automate à 9 états et s = 2, la suite compte
+**99 mots contre 160** au jeu probabiliste. L'ancienne confirmation était donc à la
+fois plus chère et moins sûre.
+
+Hypothèse résiduelle, énoncée plutôt que dissimulée : la complétude ne vaut que si la
+cible ne dépasse pas l'hypothèse de plus de deux états après minimisation.
+
+### Leçon
+
+Une condition d'admission n'est pas établie parce qu'un banc la rapporte satisfaite.
+Elle l'est quand la procédure qui la vérifie est **complète**. M017 rapportait
+« 0 faux succès » avec une procédure incapable de le garantir — ce qui est
+exactement le genre d'affirmation que la discipline du dépôt existe pour empêcher.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.
