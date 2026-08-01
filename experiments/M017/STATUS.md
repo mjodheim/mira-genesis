@@ -20,19 +20,27 @@
 | 5 | Décalage brutal de distribution après absorption | **franchie** — dégradation sans faux succès |
 | 6 | Audit d'isolation des sources et trace entièrement entière | **franchie** — `scripts/audit_m017_isolation.py` |
 
-Les six portes avaient été franchies. **Elles sont rouvertes** : la confirmation qui a
-produit tous ces chiffres s'est révélée non fiable.
+**Les six portes sont franchies**, et elles l'ont été deux fois : une première sur une
+confirmation non fiable, une seconde après correction.
 
-Elle tirait 96 mots longs au hasard en affirmant couvrir la borne de distinction de
-deux automates. Elle ne la couvrait pas. Le « zéro faux succès sur 42 épisodes » était
-un tirage favorable, pas une garantie : deux automates à 9 états confirmés identiques
-sont séparés par `(1,0,1,0,1,0,1)`.
+La confirmation tirait 96 mots longs au hasard en affirmant couvrir la borne de
+distinction de deux automates. Elle ne la couvrait pas. Le « zéro faux succès sur
+42 épisodes » était un tirage favorable, pas une garantie : deux automates à 9 états
+confirmés identiques sont séparés par `(1,0,1,0,1,0,1)`.
 
-La correction est faite — `metamorphosis/conformance.py`, méthode W, complète sous une
-hypothèse énoncée, et **plus courte** que le jeu qu'elle remplace : 99 mots contre 160.
-Les trois mesures sont en cours de remesure sous cette confirmation.
+`metamorphosis/conformance.py` la remplace par un test de conformité complet — méthode
+W sur hypothèse minimisée, couverture de transitions, marge calculée depuis le nombre
+d'états de la source. Il a fallu trois versions, dont deux annoncées correctes à tort ;
+voir `FAILURE_LOG.md`.
 
-Le protocole candidat est **retiré de la signature** jusque-là. Voir `FAILURE_LOG.md`.
+**Les quatre mesures refaites sous cette confirmation rendent des chiffres strictement
+identiques.** Le coût de recherche ne dépend pas de la confirmation ; ce qui en
+dépendait, c'est la condition d'admission, désormais réellement établie.
+
+Le protocole complet, seuils compris, est dans
+[`FROZEN_PROTOCOL_017_CANDIDATE.md`](FROZEN_PROTOCOL_017_CANDIDATE.md). Il n'est **pas
+figé** : le gel engage des seuils qui ne bougeront plus et ouvre une évaluation
+canonique qui ne s'exécute qu'une fois. Cette signature est humaine.
 
 ## Ce que la porte n°2 a déjà appris
 

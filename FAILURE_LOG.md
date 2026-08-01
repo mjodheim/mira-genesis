@@ -176,11 +176,19 @@ Ce qui l'était, c'est la condition d'admission « zéro faux succès », qui d�
 l'expérience compte pour quelque chose. Une expérience qui mesure bien un coût tout en
 acceptant des solutions fausses ne mesure rien.
 
-Le banc réexécuté sous la version 3 rend des chiffres identiques : 0/34/37 résolus,
-4 222 → 43 nœuds médians, 24 macros, 9/9 réincarnations exactes, 4/4 abstentions,
-0 faux succès. Sur ces 42 épisodes le premier candidat passant le filtre était toujours
-le bon, ce qui explique que le coût soit inchangé. Le résultat tient — et il tient
-désormais parce que la procédure est complète.
+**Les quatre mesures réexécutées sous la version 3 rendent des chiffres strictement
+identiques** :
+
+- banc : 0/34/37 résolus, 4 222 → 43 nœuds médians, 24 macros, 9/9 réincarnations
+  exactes, 4/4 abstentions, 0 faux succès ;
+- dispersion : rapport apparié 95,32× à 620,14×, médiane 377,20×, 8/8 environnements
+  favorables ;
+- transport : 0,69× hors distribution, 4/4 paires pénalisées, 118,7× à motifs partagés ;
+- M018 : mesuré directement sous la version 3.
+
+Sur ces épisodes, le premier candidat passant le filtre était toujours le bon, ce qui
+explique que le coût soit inchangé. Le résultat tient — et il tient désormais parce que
+la procédure est complète.
 
 ### Leçon
 
