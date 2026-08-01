@@ -12,7 +12,7 @@ from metamorphosis.m021_measures import (
     rank_by_objective,
     rank_by_quality_diversity,
 )
-from scripts.run_m021_measure_comparison import audit_organism, selection_rng
+from run_m021_measure_comparison import audit_organism, selection_rng
 
 
 def _individual(
