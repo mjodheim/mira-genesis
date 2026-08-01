@@ -55,7 +55,7 @@ jobs:
           python scripts/run_m021_measure_comparison.py
           --seeds 1
           --seed-start ${{ matrix.seed }}
-          --workers 1
+          --workers 4
           --output results/M021_shard_${{ matrix.seed }}.json
       - uses: actions/upload-artifact@v4
         with:
