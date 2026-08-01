@@ -1,18 +1,33 @@
 # Mira Genesis — État du projet
 
-## Objectif ultime
+## Question centrale
+
+**Quand une mesure-proxy cesse-t-elle de suivre ce qu’elle prétend suivre, et sous
+quelle pression d’optimisation ?** Posée dans un domaine où la vérité terrain est
+décidable, donc où la réponse se prouve au lieu de s’estimer.
+
+Voir **D011**, **H9** et [`MEASURES.md`](MEASURES.md).
+
+## Objectif d’origine, devenu le support
 
 Construire une intelligence capable d’apprendre dans un substrat A, de découvrir un substrat B inconnu, d’y construire un nouveau corps, puis d’y transférer ses compétences, sa mémoire et sa plasticité afin de continuer à apprendre sans intervention architecturale humaine.
 
-## État au 31 juillet 2026
+Cette ligne a produit deux validations scellées, un domaine décidable, et quatre échecs
+dont **aucun n’était dans l’organisme**. Elle reste le banc d’essai ; elle n’est plus la
+question.
+
+## État au 1er août 2026
 
 - Dernière expérience validée : **M013e — migration scellée vers un substrat opaque**, dans son domaine fini
 - M012b : **VALIDATED — BOUNDED FINITE DOMAIN**
 - M013e : **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
 - M014b : **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
 - M014c : **HALTED — SUPERSEDED BY M017**, jamais évaluée
-- Expérience active : **M017 — langage auto-extensible**
-- Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable, avantage d’apprentissage non validé, et croissance du langage en cours de développement**
+- M017 : **READY TO FREEZE**, critère devenu directionnel après balayage à 50 environnements
+- M018 : **HYPOTHESIS NOT SUPPORTED** — détruire ne restaure pas l’amélioration
+- M019 : **RIG NOT VALID** — sélection trop impatiente pour valoriser l’apprentissage
+- Expérience suivante : **M021 — décrochage d’une mesure sous vérité terrain**
+- Statut global : **laboratoire de recherche borné et décidable, deux validations scellées, six cas catalogués de mesures ayant divergé de ce qu’elles prétendaient mesurer**
 
 ## Correction de direction — 31 juillet 2026
 
@@ -39,8 +54,24 @@ tandis que celui de la recherche ouverte reste plat.
 Réincarnation 9/9 exacte sur trois familles de machines opaques, archive intacte,
 4/4 abstentions sur les contrôles négatifs, zéro faux succès.
 
-Aucune évaluation canonique n’est autorisée. La première porte de gel est de désigner
-la comparaison décisive avant toute nouvelle observation.
+**Les six portes de gel sont franchies.** Le protocole complet, seuils compris, attend
+une signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. Aucune
+évaluation canonique n’est autorisée avant elle : le gel engage des seuils qui ne
+bougeront plus, et l’évaluation ne s’exécute qu’une fois.
+
+Deux mesures ont modifié le protocole en cours de route :
+
+- **la statistique décisive initiale a été rejetée par la mesure.** Non appariée :
+  2,4× à 605× selon l’environnement. Appariée épisode par épisode : 95× à 620×. La
+  dispersion est divisée par trente-huit sans que la médiane bouge ;
+- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d’un
+  environnement aux motifs disjoints donne 0,69×, strictement pire que pas de
+  bibliothèque du tout, quatre fois sur quatre. Ses macros ne s’appliquent jamais et
+  gonflent pourtant le facteur de branchement.
+
+La portée revendiquée est donc restreinte d’avance : le langage croît **à l’intérieur**
+d’une distribution de transformations, et son avantage ne suit que si l’environnement
+d’arrivée partage cette structure.
 
 ## Résultat canonique M014b
 

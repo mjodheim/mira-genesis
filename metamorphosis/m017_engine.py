@@ -20,14 +20,13 @@ jeu de sondage, même confirmation. Il ne peut donc pas confondre la comparaison
 from __future__ import annotations
 
 from dataclasses import dataclass
-import random
-from typing import Iterator, Sequence
+from typing import Iterator, Protocol, Sequence
 
+from .conformance import w_method_suite
 from .m012b_dfa import DFA, exact_equivalence
 from .m013e_engine import UnknownSubstrateMigrator
 from .m013e_lab import OpaqueBooleanMachine
 from .m013e_runtime import opaque_body_to_dfa
-from .m017_lab import BehavioralOracle
 from .m017_language import AbstractionRule, Library, Symbol, description_length
 from .structural import (
     Atom,
@@ -45,27 +44,19 @@ FILTER_WORDS: tuple[Word, ...] = enumerate_words(5)
 SHORT_WORDS: tuple[Word, ...] = enumerate_words(2)
 
 
-def _confirmation_words() -> tuple[Word, ...]:
-    """Jeu de confirmation strict, fixe et déterministe.
 
-    Une première version ne confirmait que sur des mots de longueur 6. Sur des
-    automates de six à neuf états, cela laissait passer des trajectoires de deux
-    atomes qui approchent la cible sans l'égaler : la recherche s'arrêtait sur une
-    approximation bon marché, et aucun motif ne se répétait jamais — l'abstraction
-    n'avait alors rien à absorber.
 
-    Deux automates de n et m états qui diffèrent le font sur un mot de longueur au
-    plus n+m−1. Les mots longs tirés ici couvrent cette borne pour le domaine visé.
+class BehavioralOracle(Protocol):
+    """Tout ce que l'organisme voit du monde : poser un mot, recevoir un booléen.
+
+    Déclaré ici comme protocole, et non importé de `m017_lab`. Un organisme qui
+    importe son laboratoire n'est pas isolé de lui : la dépendance rendait techniquement
+    atteignables, depuis le code de l'organisme, le générateur d'épisodes, les motifs
+    de l'environnement et la méthode `_audit_target`. `scripts/audit_m017_isolation.py`
+    vérifie désormais que cette frontière tient.
     """
-    words = [word for word in enumerate_words(6) if len(word) == 6]
-    rng = random.Random(0x17C0_FFEE)
-    words.extend(
-        tuple(rng.randrange(2) for _ in range(rng.randint(7, 20))) for _ in range(96)
-    )
-    return tuple(words)
 
-
-CONFIRMATION_WORDS: tuple[Word, ...] = _confirmation_words()
+    def query(self, word: Word) -> bool: ...
 
 
 @dataclass(frozen=True)
@@ -115,9 +106,26 @@ class _Organism:
             observed.append(answers[0])
         return tuple(observed), calls, ""
 
-    def _confirm(self, candidate: DFA, oracle: BehavioralOracle) -> tuple[str, int]:
+    def _confirm(
+        self, candidate: DFA, oracle: BehavioralOracle, max_target_states: int
+    ) -> tuple[str, int]:
+        """Confirmation par test de conformité complet, méthode W.
+
+        Deux versions ont échoué avant celle-ci, et les deux ont produit un faux succès.
+
+        La première tirait 96 mots longs au hasard en affirmant couvrir la borne de
+        distinction. Deux automates à 9 états confirmés identiques se sont révélés
+        séparés par `(1,0,1,0,1,0,1)`.
+
+        La seconde appliquait la méthode W à l'hypothèse **non minimisée**, ce que la
+        méthode n'autorise pas : l'ensemble caractérisant ne caractérisait rien.
+
+        Le langage structurel ne crée pas d'état, donc la cible ne peut pas en compter
+        plus que la source. C'est cette borne — connue de l'organisme, qui détient la
+        source — qui rend la suite complète sans rien supposer.
+        """
         calls = 0
-        for word in CONFIRMATION_WORDS:
+        for word in w_method_suite(candidate, max_target_states):
             answers = [bool(oracle.query(word)) for _ in range(self.repeat_queries)]
             calls += self.repeat_queries
             if len(set(answers)) != 1:
@@ -147,7 +155,11 @@ class _Organism:
 
     # -- épisode --------------------------------------------------------------
 
-    def _absorb(self, atoms: Sequence[Atom]) -> tuple[str, ...]:
+    def _absorb(
+        self, atoms: Sequence[Atom], symbols: Sequence[Symbol]
+    ) -> tuple[str, ...]:
+        """Crochet d'après-épisode. `symbols` est ce que l'organisme a réellement
+        employé : M018 en a besoin pour créditer ses symboles et jeter les inutiles."""
         return ()
 
     def solve(self, base: DFA, oracle: BehavioralOracle) -> EpisodeResult:
@@ -179,7 +191,7 @@ class _Organism:
             if fingerprint(candidate, FILTER_WORDS) != observed:
                 continue
 
-            verdict, confirm_calls = self._confirm(candidate, oracle)
+            verdict, confirm_calls = self._confirm(candidate, oracle, source.n_states)
             calls += confirm_calls
             if verdict == "oracle_changed_during_confirmation":
                 return abstain(verdict, nodes, calls, false_matches)
@@ -190,7 +202,7 @@ class _Organism:
                 continue
 
             symbols_needed = description_length(atoms, self.library)
-            born = self._absorb(atoms)
+            born = self._absorb(atoms, symbols)
             return EpisodeResult(
                 "success", "program_identified", episode, atoms,
                 tuple(symbol.name for symbol in symbols), nodes, calls, false_matches,
@@ -232,8 +244,13 @@ class SelfExtendingOrganism(_Organism):
         )
         self.rule = AbstractionRule(threshold=threshold)
 
-    def _absorb(self, atoms: Sequence[Atom]) -> tuple[str, ...]:
-        return tuple(symbol.name for symbol in self.rule.observe(atoms, self.library, self.episode))
+    def _absorb(
+        self, atoms: Sequence[Atom], symbols: Sequence[Symbol]
+    ) -> tuple[str, ...]:
+        return tuple(
+            symbol.name
+            for symbol in self.rule.observe(atoms, self.library, self.episode)
+        )
 
     def export_library(self) -> str:
         return self.library.to_json()

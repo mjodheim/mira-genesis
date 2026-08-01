@@ -92,6 +92,199 @@ M017 — langage auto-extensible. Le vocabulaire de départ ne contient que des 
 tout ce qui dépasse l'atome doit être construit, et ce qui est construit peut être
 absorbé.
 
+## M017 — Confirmation non fiable, découverte en développement
+
+- Statut : `DEVELOPMENT DEFECT — CORRECTED BEFORE ANY FREEZE`.
+- Aucune évaluation canonique n'avait été ouverte. Le défaut est corrigé avant le gel,
+  et non découvert après un run irremplaçable.
+
+### Le défaut
+
+La confirmation d'un candidat portait sur tous les mots jusqu'à la longueur 6, plus
+**96 mots tirés au hasard** entre 7 et 20. La docstring affirmait que ces mots longs
+couvraient la borne de distinction de deux automates.
+
+C'était faux. Quatre-vingt-seize tirages ne couvrent pas 2⁷+…+2²⁰. La garantie était
+probabiliste et faible.
+
+### Ce que ça invalide
+
+Le banc de développement M017 rapportait **zéro faux succès sur 42 épisodes**. Ce
+n'était pas une garantie mais un tirage favorable. Un balayage plus large, mené pendant
+le développement de M018, a produit deux automates à 9 états confirmés identiques que
+le mot `(1,0,1,0,1,0,1)` sépare — un mot absent des deux jeux.
+
+**Conséquence :** tous les chiffres de développement M017 — banc principal, dispersion,
+transport — avaient été produits sous cette confirmation. Ils ne sont pas
+nécessairement faux, mais ils n'étaient plus établis, et ont dû être remesurés.
+
+### La correction, en deux temps
+
+`metamorphosis/conformance.py` : test de conformité par **méthode W**. Pour une
+hypothèse minimale à k états et une cible d'au plus k+s états, la suite
+`P · (ε ∪ Σ ∪ … ∪ Σˢ) · W` est complète — l'accord sur la suite implique l'équivalence.
+
+**La première correction a échoué, et de la même façon que le défaut d'origine.** Elle
+construisait la suite depuis le candidat brut de la recherche, non minimisé, avec une
+marge fixée arbitrairement à deux états. Or la méthode W exige une hypothèse minimale :
+`characterizing_set` cherchait à séparer des paires d'états équivalents, échouait
+silencieusement, et l'ensemble ne caractérisait plus rien. Un second faux succès a
+survécu, à l'environnement 6 de l'étude de dispersion.
+
+La version retenue minimise l'hypothèse au lieu de la supposer minimale, et **calcule**
+la marge au lieu de la choisir : le langage structurel ne crée aucun état, donc la
+cible ne peut pas en compter plus que la source, borne que l'organisme connaît
+puisqu'il détient la source.
+
+Le coût ne diverge pas : la suite croît en `|Σ|ˢ · k²`, or `s` décroît quand `k` croît.
+Sur un automate à 9 états la suite compte **99 mots contre 160** au jeu probabiliste.
+L'ancienne confirmation était donc à la fois plus chère et moins sûre.
+
+### Trois corrections, dont deux fausses
+
+Il a fallu trois versions pour obtenir une confirmation complète, et les deux premières
+ont été annoncées comme correctes avant de l'être.
+
+1. **Marge fixe sur hypothèse non minimisée.** Un second faux succès a survécu, à
+   l'environnement 6 de l'étude de dispersion.
+2. **Couverture d'états au lieu de couverture de transitions.** Pire que le défaut
+   d'origine : **10 faux succès sur 73**, avec des témoins de longueur 6 que le jeu
+   probabiliste attrapait. La méthode W part d'une couverture de transitions
+   `S·(Σ∪{ε})` ; sans elle les transitions sortantes ne sont jamais exercées, et les
+   atomes de ce langage sont majoritairement des redirections.
+3. **Version retenue** : hypothèse minimisée, couverture de transitions, marge calculée
+   depuis le nombre d'états de la source.
+
+Le test censé garder cette propriété n'inversait que des bits d'acceptation et
+n'exerçait **aucune redirection** — c'est précisément pourquoi il passait sur une suite
+cassée. Réécrit pour engendrer ses différences avec le jeu d'atomes réel, il échoue sur
+la version 2 en manquant 14 différences sur 151.
+
+**Conséquence de calendrier :** chaque mesure lancée entre ces versions a tourné sous
+une confirmation défectueuse, y compris une remesure du banc M017 annoncée « identique »
+qui ne comptait donc pas. Toutes les mesures de M017 et de M018 ont été refaites sous
+la version 3.
+
+### Ce que le défaut menaçait, et ce qu'il ne menaçait pas
+
+Distinction à ne pas perdre : **le coût de recherche ne dépend pas de la confirmation**.
+Le nombre de programmes évalués est arrêté par le filtre d'empreinte ; seule la facture
+d'oracle change quand la confirmation change. Le résultat de tête de M017 —
+l'effondrement du coût de 4 222 à 43 nœuds — n'était donc jamais en jeu.
+
+Ce qui l'était, c'est la condition d'admission « zéro faux succès », qui décide si
+l'expérience compte pour quelque chose. Une expérience qui mesure bien un coût tout en
+acceptant des solutions fausses ne mesure rien.
+
+**Les quatre mesures réexécutées sous la version 3 rendent des chiffres strictement
+identiques** :
+
+- banc : 0/34/37 résolus, 4 222 → 43 nœuds médians, 24 macros, 9/9 réincarnations
+  exactes, 4/4 abstentions, 0 faux succès ;
+- dispersion : rapport apparié 95,32× à 620,14×, médiane 377,20×, 8/8 environnements
+  favorables ;
+- transport : 0,69× hors distribution, 4/4 paires pénalisées, 118,7× à motifs partagés ;
+- M018 : mesuré directement sous la version 3.
+
+Sur ces épisodes, le premier candidat passant le filtre était toujours le bon, ce qui
+explique que le coût soit inchangé. Le résultat tient — et il tient désormais parce que
+la procédure est complète.
+
+### Leçon
+
+Une condition d'admission n'est pas établie parce qu'un banc la rapporte satisfaite.
+Elle l'est quand la procédure qui la vérifie est **complète**. M017 rapportait
+« 0 faux succès » avec une procédure incapable de le garantir — ce qui est
+exactement le genre d'affirmation que la discipline du dépôt existe pour empêcher.
+
+Que la remesure redonne les mêmes chiffres ne réhabilite pas l'ancienne procédure. Un
+résultat juste obtenu par une méthode qui ne peut pas le garantir reste un résultat non
+établi ; c'est la distinction que M014b avait déjà payée, et elle se répète ici sur la
+vérification plutôt que sur la mesure.
+
+## M018 — Détruire ne restaure pas l'amélioration
+
+- Statut : `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`. Aucune évaluation canonique.
+- La prédiction était écrite avant la mesure. Sa seconde moitié tient, la première —
+  celle qui portait l'hypothèse — est fausse.
+
+Trois mécanismes de destruction, référence = l'organisme de M017 qui n'oublie jamais :
+
+| | stable | décalage | transport |
+|---|---|---|---|
+| `budget` | identique | +3 % | +6 % |
+| `utility` | jusqu'à 177× pire | +2 % | +4 % |
+| `dissolution` | **350× pire** | −18 % | 0 % |
+
+Aucun n'annule le passif de 0,69× mesuré par M017.
+
+### Pourquoi
+
+1. **L'oubli est réactif.** Un symbole inutile est payé d'avance, à chaque épisode, sur
+   chaque nœud. Quand l'organisme sait qu'un macro ne sert pas, il l'a déjà financé ;
+   jeter ensuite ne rembourse rien.
+2. **La destruction est indiscriminée.** La dissolution ne distingue pas ce qui a cessé
+   de servir de ce qui va resservir, et paye 350× cette ignorance.
+3. **Le coût d'un macro inutile est réel mais modeste** — le branchement passe de 36 à
+   48 symboles et les recherches s'arrêtent souvent tôt.
+
+### Deux lectures, et la seconde ouvre M019
+
+Le résultat ne dit pas que détruire est inutile. Il dit que **détruire est intenable
+pour un individu isolé** : la chenille se dissout une fois, et si cela échoue, cette
+chenille meurt — pas l'espèce.
+
+Et il désigne une cause plus profonde : le budget de recherche valait 200 000 nœuds et
+l'échec ne coûtait rien. **Il n'y avait rien pour quoi être efficace.** C'est ce que
+M019 met à l'épreuve.
+
+## M019 — Montage invalide, cause structurelle identifiée
+
+- Statut : `DEVELOPMENT — RIG NOT VALID`. Aucune évaluation canonique, aucune
+  conclusion tirée sur l'hypothèse H8.
+
+Trois calibrages, trois dégénérescences, aucune porte de gel franchie :
+
+| Calibrage | Résultat | Morts |
+|---|---|---|
+| prime 25 000 | énergie doublée, `none` 8/8 | 0 |
+| prime 6 000 | profondeur de recherche → 2, macros → 0 | 0 |
+| prime 6 000 + report d'énergie | profondeur → 2, macros → 0 | 0 |
+
+Population : 11 épisodes résolus. Contrôle sans sélection : **103**, 18 macros.
+
+### La cause
+
+**Une sélection à horizon court ne peut pas valoriser un investissement dont le
+rendement est différé.** Apprendre coûte ~23 000 nœuds pour une prime de 6 000 ; ne pas
+essayer coûte 1 296. À la première sélection, l'apprenti est éliminé avant d'avoir pu
+rembourser. Le report d'énergie n'y change rien puisqu'il suppose que l'investisseur
+survive à cette première coupe.
+
+La sélection a découvert que ne pas essayer coûte moins cher qu'essayer — et elle avait
+raison sur l'horizon qu'on lui avait donné.
+
+### Un garde-fou mal choisi
+
+« Mortalité non nulle » signalait mal. Zéro mort n'indiquait pas une rareté trop faible
+mais l'inverse : elle mordait assez pour que la stratégie gagnante soit de ne rien
+dépenser. Le bon garde-fou était le nombre de macros — nul dans les trois essais.
+
+### Pourquoi l'arrêt
+
+Un quatrième calibrage aurait été de l'ajustement jusqu'à obtenir la réponse voulue.
+Trois essais et un invariant nommé suffisent à conclure que **le montage est faux**, non
+que l'hypothèse est réfutée.
+
+### Leçon
+
+Une pression de sélection mal formée sélectionne la stagnation. Trop faible, elle ne
+trie rien ; trop impatiente, elle élimine l'exploration avant qu'elle ne rapporte.
+**L'horizon d'évaluation compte davantage que l'intensité de la pression.**
+
+C'est le piège de M014b sous une autre forme : un critère qui mesure la mauvaise chose
+ne devient pas juste en changeant ses seuils.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.

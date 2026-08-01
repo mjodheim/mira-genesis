@@ -59,6 +59,43 @@ canonique n'est revendiqué : le protocole n'est pas figé.
 H7 n'est pas une hypothèse nouvelle du projet — c'est la reconnaissance que M017
 figurait déjà dans la feuille de route, et qu'elle y était mal placée.
 
+## H8 — La rareté est le mécanisme manquant
+
+Sans conséquence à l'inefficacité, aucun mécanisme d'efficacité ne rapporte. Sous
+rareté réelle, une population sélectionnée découvre des stratégies d'usage du langage
+qu'une conception à la main n'atteint pas.
+
+**État :** **non testée.** M019 a produit trois montages dégénérés et aucun ne permet
+de trancher. L'hypothèse n'est ni soutenue ni réfutée.
+**Provenance :** vérifiable. M018 a mesuré que trois mécanismes d'oubli écrits à la
+main ne payaient pas ; le budget de recherche y était de 200 000 nœuds et l'échec sans
+conséquence. H8 pose que c'est l'explication, et non une propriété des mécanismes.
+
+Ce que M019 a établi à la place, et qui n'était pas dans H8 : **une sélection à horizon
+court sélectionne la stagnation.** L'apprentissage coûte immédiatement et rapporte plus
+tard ; une fitness qui n'observe qu'une génération élimine l'apprenti avant qu'il
+rembourse. L'horizon d'évaluation compte davantage que l'intensité de la pression.
+
+## H9 — Les modes de décrochage d'une mesure sont énumérables
+
+Les façons dont une mesure-proxy cesse de suivre la grandeur qu'elle prétend suivre
+forment un ensemble restreint et identifiable d'avance, et non un accident propre à
+chaque expérience.
+
+**État :** non validée. Six cas catalogués dans [`MEASURES.md`](MEASURES.md), dont
+quatre régularités déjà répétées : plage dynamique non établie, baseline incapable
+prise pour critère, procédure de vérification incomplète, horizon plus court que le
+délai de rendement.
+
+**Provenance :** vérifiable, et c'est ce qui distingue ce dépôt. Ailleurs, un
+décrochage se constate parce qu'un humain trouve le résultat suspect ; ici
+l'équivalence comportementale se prouve, donc le point de décrochage se localise.
+
+**Ce que H9 ne prétend pas :** ni la nouveauté du problème — Goodhart, *reward
+hacking*, qualité-diversité le travaillent depuis longtemps — ni qu'une énumération
+close soit atteignable. Seulement que ces modes se répètent assez pour être anticipés,
+et qu'un domaine décidable permet de le montrer.
+
 ## H6 — Auto-métamorphose
 
 Un organisme peut diagnostiquer une limite de son propre corps, proposer des descendants, les évaluer sur des tests cachés et migrer vers une meilleure incarnation.
