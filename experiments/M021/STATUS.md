@@ -29,6 +29,6 @@ than merely improving their own scores.
 
 ## Current scientific status
 
-**No conclusion.** A three-seed run is only a smoke test. M021 remains a rig under
-construction until the paired comparison and its per-seed diagnostics have been
-examined.
+**No conclusion.** A one-seed pull-request run is only a structural smoke test. M021
+remains a rig under construction until the paired comparison and its per-seed
+diagnostics have been examined.
