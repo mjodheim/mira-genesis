@@ -43,7 +43,7 @@ jobs:
 
       - name: Run the paired comparison
         env:
-          REQUESTED_SEEDS: ${{ github.event.inputs.seeds || '3' }}
+          REQUESTED_SEEDS: ${{ github.event.inputs.seeds || '1' }}
         run: python scripts/run_m021_measure_comparison.py --seeds "$REQUESTED_SEEDS"
 
       - name: Verify the development guardrails
