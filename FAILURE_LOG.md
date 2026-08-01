@@ -140,15 +140,30 @@ Le coût ne diverge pas : la suite croît en `|Σ|ˢ · k²`, or `s` décroît q
 Sur un automate à 9 états la suite compte **99 mots contre 160** au jeu probabiliste.
 L'ancienne confirmation était donc à la fois plus chère et moins sûre.
 
-### Après remesure
+### Trois corrections, dont deux fausses
 
-Le banc de développement M017, réexécuté sous la confirmation exacte, rend des chiffres
-**strictement identiques** : 0/34/37 résolus, 4 222 → 43 nœuds médians, 24 macros,
-9/9 réincarnations exactes, 4/4 abstentions négatives, 0 faux succès.
+Il a fallu trois versions pour obtenir une confirmation complète, et les deux premières
+ont été annoncées comme correctes avant de l'être.
 
-Sur ces 42 épisodes, le tirage n'avait donc jamais échoué. Le résultat de M017 tient —
-mais il tient désormais parce que la procédure est complète, et non parce que
-l'échantillon a été clément.
+1. **Marge fixe sur hypothèse non minimisée.** Un second faux succès a survécu, à
+   l'environnement 6 de l'étude de dispersion.
+2. **Couverture d'états au lieu de couverture de transitions.** Pire que le défaut
+   d'origine : **10 faux succès sur 73**, avec des témoins de longueur 6 que le jeu
+   probabiliste attrapait. La méthode W part d'une couverture de transitions
+   `S·(Σ∪{ε})` ; sans elle les transitions sortantes ne sont jamais exercées, et les
+   atomes de ce langage sont majoritairement des redirections.
+3. **Version retenue** : hypothèse minimisée, couverture de transitions, marge calculée
+   depuis le nombre d'états de la source.
+
+Le test censé garder cette propriété n'inversait que des bits d'acceptation et
+n'exerçait **aucune redirection** — c'est précisément pourquoi il passait sur une suite
+cassée. Réécrit pour engendrer ses différences avec le jeu d'atomes réel, il échoue sur
+la version 2 en manquant 14 différences sur 151.
+
+**Conséquence de calendrier :** chaque mesure lancée entre ces versions a tourné sous
+une confirmation défectueuse, y compris une remesure du banc M017 annoncée « identique »
+qui ne comptait donc pas. Toutes les mesures de M017 et de M018 doivent être refaites
+sous la version 3, et aucune affirmation ne sera reportée ici avant.
 
 ### Leçon
 
