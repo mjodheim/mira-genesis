@@ -137,7 +137,7 @@ jobs:
           merge-multiple: true
       - name: Aggregate the 24 paired seeds
         run: >-
-          python scripts/aggregate_m021_measure_comparison.py
+          python scripts/run_m021_aggregate_measure_comparison.py
           --input-glob 'results/shards/M021_shard_*.json'
           --expected-seeds 24
           --output results/M021_measure_comparison_development.json
