@@ -63,11 +63,7 @@ def median(values: list[int]) -> int:
 
 
 def selection_rng(seed: int) -> random.Random:
-    """Common random numbers for every measure at a given seed.
-
-    The selection rule is the intended difference. Giving each measure a different
-    mutation stream would add an uncontrolled cause to the comparison.
-    """
+    """Common random numbers for every measure at a given seed."""
     return random.Random(seed * 977 + 21)
 
 
@@ -90,7 +86,6 @@ def build_cases(seed: int, generation: int) -> list[Case]:
 
 
 def build_held_out_cases(seed: int) -> list[Case]:
-    """A deterministic environment no compared population lived in."""
     environment = make_environment(302_000 + seed * 11)
     episodes = generate_episodes(
         environment, 303_000 + seed * 11, count=HELD_OUT_EPISODES
@@ -114,15 +109,7 @@ def audit_organism(
     adaptive: bool,
     ceiling: int = CEILING,
 ) -> tuple[int, list[int]]:
-    """Evaluate a deep copy, never the selected organism itself.
-
-    `adaptive=True` gives one copied organism the whole held-out sequence. It measures
-    adaptation in a new environment and is M021's primary ground truth.
-
-    `adaptive=False` starts from the same copied pre-audit state on every episode. It
-    reports frozen transfer separately, so learning during the audit cannot be mistaken
-    for zero-shot generalisation.
-    """
+    """Evaluate a deep copy, never the selected organism itself."""
     solved = 0
     costs: list[int] = []
     template = copy.deepcopy(organism)
@@ -144,9 +131,7 @@ def audit_organism(
 
 
 def true_quality(population: Population, seed: int) -> dict[str, int]:
-    """Ground truth, hidden from selection and computed without mutating the population."""
     cases = build_held_out_cases(seed)
-
     adaptive_solved = 0
     adaptive_costs: list[int] = []
     frozen_solved = 0
@@ -207,7 +192,7 @@ def run_measure(task: tuple[str, int]) -> dict[str, object]:
         "selection_rng_seed": seed * 977 + 21,
         "alive": len(population.alive),
         "deaths": population.deaths,
-        "own_score_median_energy": median(
+        "median_energy_after_selection": median(
             [i.ledger.energy for i in population.alive]
         ),
         "episodes_solved_during_life": sum(
@@ -217,36 +202,27 @@ def run_measure(task: tuple[str, int]) -> dict[str, object]:
     }
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
-        "--seeds",
-        type=int,
-        default=1,
-        help=(
-            "paired seeds per measure; 1 is a structural smoke test, "
-            f"{DEVELOPMENT_MIN_SEEDS} are required before comparison"
-        ),
-    )
-    parser.add_argument("--workers", type=int, default=None)
-    arguments = parser.parse_args()
-    if arguments.seeds < 1:
-        parser.error("--seeds must be at least 1")
+def summarize_rows(rows: list[dict[str, object]]) -> dict[str, object]:
+    """Summarise complete paired rows, whether produced together or by shards."""
+    seed_sets = {
+        name: {int(row["seed"]) for row in rows if row["measure"] == name}
+        for name in MEASURES
+    }
+    if any(not seeds for seeds in seed_sets.values()):
+        raise ValueError("every measure must have at least one row")
+    reference = seed_sets[sorted(MEASURES)[0]]
+    if any(seeds != reference for seeds in seed_sets.values()):
+        raise ValueError(f"measure seed sets are not paired: {seed_sets}")
 
-    tasks = [
-        (name, seed)
-        for name in sorted(MEASURES)
-        for seed in range(arguments.seeds)
-    ]
-    with ProcessPoolExecutor(max_workers=arguments.workers) as pool:
-        rows = list(pool.map(run_measure, tasks))
-
-    for row in rows:
-        print(json.dumps(row, ensure_ascii=False))
+    expected_pairs = {(name, seed) for name in MEASURES for seed in reference}
+    observed_pairs = {(str(row["measure"]), int(row["seed"])) for row in rows}
+    if observed_pairs != expected_pairs or len(rows) != len(expected_pairs):
+        raise ValueError("rows contain a missing or duplicate measure/seed pair")
 
     summary: dict[str, object] = {
         "development_only": True,
-        "seeds": arguments.seeds,
+        "seeds": len(reference),
+        "paired_seed_values": sorted(reference),
         "development_min_seeds": DEVELOPMENT_MIN_SEEDS,
         "population": POPULATION,
         "generations": GENERATIONS,
@@ -265,6 +241,7 @@ def main() -> None:
         "trace_number_format": "integers_only",
         "separation_floor_per_mille": SEPARATION_FLOOR_PER_MILLE,
     }
+
     for name in sorted(MEASURES):
         rows_for = [row for row in rows if row["measure"] == name]
         for metric in (
@@ -273,10 +250,9 @@ def main() -> None:
             "frozen_held_out_solved_per_mille",
             "frozen_held_out_median_nodes",
             "macros_median",
-            "own_score_median_energy",
+            "median_energy_after_selection",
         ):
-            output_name = "own_score" if metric == "own_score_median_energy" else metric
-            summary[f"{name}_{output_name}"] = median(
+            summary[f"{name}_{metric}"] = median(
                 [int(row[metric]) for row in rows_for]
             )
 
@@ -292,7 +268,7 @@ def main() -> None:
     ) - int(summary[f"{ranked[-1]}_adaptive_held_out_solved_per_mille"])
     summary["true_quality_spread_per_mille"] = spread
 
-    enough_seeds = arguments.seeds >= DEVELOPMENT_MIN_SEEDS
+    enough_seeds = len(reference) >= DEVELOPMENT_MIN_SEEDS
     separated = spread >= SEPARATION_FLOOR_PER_MILLE
     summary["enough_seeds_for_comparison"] = enough_seeds
     summary["rig_separates_measures"] = enough_seeds and separated
@@ -302,10 +278,33 @@ def main() -> None:
         summary["rig_invalidation_reason"] = "spread_below_pre_registered_floor"
     else:
         summary["rig_invalidation_reason"] = None
+    return summary
 
-    path = ROOT / "results" / "M021_measure_comparison_development.json"
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--seeds", type=int, default=1)
+    parser.add_argument("--seed-start", type=int, default=0)
+    parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=ROOT / "results" / "M021_measure_comparison_development.json",
+    )
+    arguments = parser.parse_args()
+    if arguments.seeds < 1:
+        parser.error("--seeds must be at least 1")
+    if arguments.seed_start < 0:
+        parser.error("--seed-start must be non-negative")
+
+    seed_values = range(arguments.seed_start, arguments.seed_start + arguments.seeds)
+    tasks = [(name, seed) for name in sorted(MEASURES) for seed in seed_values]
+    with ProcessPoolExecutor(max_workers=arguments.workers) as pool:
+        rows = list(pool.map(run_measure, tasks))
+
+    summary = summarize_rows(rows)
+    arguments.output.parent.mkdir(parents=True, exist_ok=True)
+    arguments.output.write_text(
         json.dumps({"summary": summary, "runs": rows}, indent=2),
         encoding="utf-8",
     )
