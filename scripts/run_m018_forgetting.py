@@ -19,6 +19,7 @@ Prédiction écrite avant la mesure, dans ces termes :
 
 from __future__ import annotations
 
+from concurrent.futures import ProcessPoolExecutor
 import json
 from pathlib import Path
 import statistics
@@ -81,49 +82,60 @@ def train_foreign_library(seed: int) -> str:
     return organism.export_library()
 
 
-def main() -> None:
+def measure_pair(pair: int) -> list[dict[str, object]]:
+    """Une paire d'environnements, les quatre politiques. Tout dérive de `pair`.
+
+    Fonction de premier niveau pour être exécutable dans un processus séparé : les
+    paires sont indépendantes et entièrement déterminées par leurs graines, donc le
+    parallélisme ne change aucun chiffre.
+    """
+    home = make_environment(120_000 + pair * 173)
+    away = make_environment(121_000 + pair * 173)
+    home_episodes = generate_episodes(home, 122_000 + pair * 173, count=STABLE_EPISODES)
+    away_episodes = generate_episodes(away, 123_000 + pair * 173, count=SHIFTED_EPISODES)
+    transport_episodes = generate_episodes(
+        home, 124_000 + pair * 173, count=TRANSPORT_EPISODES
+    )
+    foreign = train_foreign_library(125_000 + pair * 173)
+
     rows: list[dict[str, object]] = []
+    for name, policy in policies().items():
+        # Régimes 1 et 2 : même organisme, la distribution bascule au milieu.
+        resident = ForgettingOrganism(policy=policy)
+        stable_costs, stable_abstentions = run(resident, home_episodes)
+        shifted_costs, shifted_abstentions = run(resident, away_episodes)
 
-    for pair in range(PAIRS):
-        home = make_environment(120_000 + pair * 173)
-        away = make_environment(121_000 + pair * 173)
-        home_episodes = generate_episodes(home, 122_000 + pair * 173, count=STABLE_EPISODES)
-        away_episodes = generate_episodes(away, 123_000 + pair * 173, count=SHIFTED_EPISODES)
-        transport_episodes = generate_episodes(
-            home, 124_000 + pair * 173, count=TRANSPORT_EPISODES
-        )
-        foreign = train_foreign_library(125_000 + pair * 173)
+        # Régime 3 : organisme neuf, bibliothèque étrangère au départ.
+        migrant = ForgettingOrganism(policy=policy, library=Library.from_json(foreign))
+        transport_costs, transport_abstentions = run(migrant, transport_episodes)
 
-        for name, policy in policies().items():
-            # Régimes 1 et 2 : même organisme, la distribution bascule au milieu.
-            resident = ForgettingOrganism(policy=policy)
-            stable_costs, stable_abstentions = run(resident, home_episodes)
-            shifted_costs, shifted_abstentions = run(resident, away_episodes)
+        rows.append({
+            "pair": pair,
+            "policy": name,
+            "stable_median": median(stable_costs),
+            "stable_solved": len(stable_costs),
+            "stable_abstentions": stable_abstentions,
+            "shifted_median": median(shifted_costs),
+            "shifted_solved": len(shifted_costs),
+            "shifted_abstentions": shifted_abstentions,
+            "transport_median": median(transport_costs),
+            "transport_solved": len(transport_costs),
+            "transport_abstentions": transport_abstentions,
+            "macros_at_end": resident.macro_count,
+            "discarded": len(resident.discarded),
+            "migrant_macros_at_end": migrant.macro_count,
+            "migrant_discarded": len(migrant.discarded),
+        })
+    return rows
 
-            # Régime 3 : organisme neuf, bibliothèque étrangère au départ.
-            migrant = ForgettingOrganism(
-                policy=policy, library=Library.from_json(foreign)
-            )
-            transport_costs, transport_abstentions = run(migrant, transport_episodes)
 
-            rows.append({
-                "pair": pair,
-                "policy": name,
-                "stable_median": median(stable_costs),
-                "stable_solved": len(stable_costs),
-                "stable_abstentions": stable_abstentions,
-                "shifted_median": median(shifted_costs),
-                "shifted_solved": len(shifted_costs),
-                "shifted_abstentions": shifted_abstentions,
-                "transport_median": median(transport_costs),
-                "transport_solved": len(transport_costs),
-                "transport_abstentions": transport_abstentions,
-                "macros_at_end": resident.macro_count,
-                "discarded": len(resident.discarded),
-                "migrant_macros_at_end": migrant.macro_count,
-                "migrant_discarded": len(migrant.discarded),
-            })
-            print(json.dumps(rows[-1], ensure_ascii=False))
+def main() -> None:
+    # `map` conserve l'ordre des paires, donc le fichier de résultats est identique
+    # au bit près qu'on tourne sur un cœur ou sur seize.
+    with ProcessPoolExecutor() as pool:
+        rows = [row for group in pool.map(measure_pair, range(PAIRS)) for row in group]
+    for row in rows:
+        print(json.dumps(row, ensure_ascii=False))
 
     def gather(policy: str, field: str) -> list[int]:
         return [int(row[field]) for row in rows if row["policy"] == policy]

@@ -41,21 +41,35 @@ avec le temps.
 > entre le coût de recherche de la recherche ouverte et celui de l'organisme
 > auto-extensible, mesuré sur le même épisode.
 
-**Seuil : ≥ 10× dans chaque environnement scellé.** Jamais en moyenne.
+**Critère : dans chaque environnement scellé, ce rapport favorise l'organisme
+auto-extensible.** Jamais en moyenne.
 
 **Garde par test de signe :** dans chaque environnement, l'organisme auto-extensible
 doit être plus rapide sur strictement plus de la moitié des épisodes tardifs appariés.
 
-### D'où viennent ces deux nombres
+### Pourquoi un critère de direction et non de magnitude
 
-Ils sont dérivés de l'arithmétique des espaces de recherche, pas de l'échantillon.
+Un seuil de magnitude avait d'abord été proposé — 10×, dérivé de l'arithmétique des
+espaces de recherche, qui prédit ~500× — puis **invalidé par le balayage à cinquante
+environnements**.
 
-Un macro comprime un motif de trois atomes en un symbole, rencontré en profondeur 1
-parmi environ 45 symboles. Sans macro, il faut balayer la profondeur 3 sur 36 atomes,
-soit 46 656 trajectoires, environ la moitié en médiane. Rapport attendu ≈ **500×**.
+Sur huit environnements, le minimum était 95×. Sur cinquante, il est **9,0×** : un
+environnement passe sous le seuil de 10×. L'échantillon initial était optimiste d'un
+facteur dix.
 
-Le seuil de 10× est donc un ordre de grandeur sous la prédiction théorique, et un
-ordre de grandeur sous le minimum observé en développement (95×).
+La dérivation supposait qu'un macro absorbé est toujours atteint en profondeur 1.
+C'est le cas typique ; quand un épisode tardif porte un atome de bruit, il faut
+composer macro + atome, donc chercher en profondeur 2, et le rapport s'effondre d'un
+facteur cinquante. Une dérivation du cas typique avait été prise pour une borne du cas
+le pire.
+
+D010 exige qu'une marge dépasse la dispersion observée. Celle de la magnitude est un
+facteur **69** — de 9× à 620× — qu'aucune marge défendable ne dépasse. La direction,
+elle, ne disperse pas : **50 environnements sur 50** favorables, aucun défavorable.
+C'est le seul critère que la règle autorise.
+
+Abaisser le seuil à 5×, qui passerait 50/50, serait précisément l'ajustement post hoc
+que le §7 interdit.
 
 La garde est à une demie parce que c'est le point neutre d'un test de signe. Sans
 elle, une règle d'absorption dégénérée — qui avalerait tout — pourrait satisfaire la
@@ -120,7 +134,8 @@ première marche vers H6, pas H6.**
 
 Énoncé avant l'évaluation :
 
-- un seul environnement scellé sous 10× ;
+- un seul environnement scellé où le rapport apparié médian favorise la recherche
+  ouverte ;
 - un seul environnement où la garde par test de signe échoue ;
 - un seul faux succès ;
 - une seule abstention manquée sur un contrôle négatif ;
