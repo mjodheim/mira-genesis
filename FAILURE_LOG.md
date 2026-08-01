@@ -162,8 +162,25 @@ la version 2 en manquant 14 différences sur 151.
 
 **Conséquence de calendrier :** chaque mesure lancée entre ces versions a tourné sous
 une confirmation défectueuse, y compris une remesure du banc M017 annoncée « identique »
-qui ne comptait donc pas. Toutes les mesures de M017 et de M018 doivent être refaites
-sous la version 3, et aucune affirmation ne sera reportée ici avant.
+qui ne comptait donc pas. Toutes les mesures de M017 et de M018 ont été refaites sous
+la version 3.
+
+### Ce que le défaut menaçait, et ce qu'il ne menaçait pas
+
+Distinction à ne pas perdre : **le coût de recherche ne dépend pas de la confirmation**.
+Le nombre de programmes évalués est arrêté par le filtre d'empreinte ; seule la facture
+d'oracle change quand la confirmation change. Le résultat de tête de M017 —
+l'effondrement du coût de 4 222 à 43 nœuds — n'était donc jamais en jeu.
+
+Ce qui l'était, c'est la condition d'admission « zéro faux succès », qui décide si
+l'expérience compte pour quelque chose. Une expérience qui mesure bien un coût tout en
+acceptant des solutions fausses ne mesure rien.
+
+Le banc réexécuté sous la version 3 rend des chiffres identiques : 0/34/37 résolus,
+4 222 → 43 nœuds médians, 24 macros, 9/9 réincarnations exactes, 4/4 abstentions,
+0 faux succès. Sur ces 42 épisodes le premier candidat passant le filtre était toujours
+le bon, ce qui explique que le coût soit inchangé. Le résultat tient — et il tient
+désormais parce que la procédure est complète.
 
 ### Leçon
 
