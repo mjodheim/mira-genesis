@@ -131,12 +131,27 @@ fois plus chère et moins sûre.
 Hypothèse résiduelle, énoncée plutôt que dissimulée : la complétude ne vaut que si la
 cible ne dépasse pas l'hypothèse de plus de deux états après minimisation.
 
+### Après remesure
+
+Le banc de développement M017, réexécuté sous la confirmation exacte, rend des chiffres
+**strictement identiques** : 0/34/37 résolus, 4 222 → 43 nœuds médians, 24 macros,
+9/9 réincarnations exactes, 4/4 abstentions négatives, 0 faux succès.
+
+Sur ces 42 épisodes, le tirage n'avait donc jamais échoué. Le résultat de M017 tient —
+mais il tient désormais parce que la procédure est complète, et non parce que
+l'échantillon a été clément.
+
 ### Leçon
 
 Une condition d'admission n'est pas établie parce qu'un banc la rapporte satisfaite.
 Elle l'est quand la procédure qui la vérifie est **complète**. M017 rapportait
 « 0 faux succès » avec une procédure incapable de le garantir — ce qui est
 exactement le genre d'affirmation que la discipline du dépôt existe pour empêcher.
+
+Que la remesure redonne les mêmes chiffres ne réhabilite pas l'ancienne procédure. Un
+résultat juste obtenu par une méthode qui ne peut pas le garantir reste un résultat non
+établi ; c'est la distinction que M014b avait déjà payée, et elle se répète ici sur la
+vérification plutôt que sur la mesure.
 
 ## Premiers prototypes sensorimoteurs
 
