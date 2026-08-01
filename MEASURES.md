@@ -38,6 +38,30 @@ poser, de façon décidable :
 C'est un banc d'essai pour la conception de mesures, pas une tentative de résoudre ce
 que d'autres n'ont pas résolu.
 
+## Reproduire les décrochages
+
+Chaque cas se rejoue à la demande, avec sa vérité terrain :
+
+```bash
+python scripts/reproduce_measure_failures.py
+```
+
+```bash
+python scripts/reproduce_measure_failures.py --case R004
+```
+
+Les quatre cas rapides tournent en une minute. `--full` ajoute R003, qui demande un
+balayage d'environnements. `tests/test_measure_failures.py` verrouille les mécanismes —
+un catalogue qui cesse de se reproduire n'est plus un catalogue.
+
+Sortie du cas R004, à titre d'exemple :
+
+| | |
+|---|---|
+| différences réelles engendrées | 418 |
+| ratées par le jeu probabiliste | **7** |
+| ratées par la suite de conformité | **0** |
+
 ---
 
 ## R001 — Une fenêtre trop étroite pour son seuil

@@ -39,7 +39,11 @@ montrer *où exactement* une mesure décroche, au lieu de constater qu'un résul
 faux. C'est un banc d'essai pour la conception de mesures — pas une tentative de
 résoudre ce que d'autres n'ont pas résolu.
 
-Le catalogue est dans [`MEASURES.md`](MEASURES.md).
+Le catalogue est dans [`MEASURES.md`](MEASURES.md), et chaque cas se rejoue :
+
+```bash
+python scripts/reproduce_measure_failures.py
+```
 
 ## État actuel
 
