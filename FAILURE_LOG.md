@@ -238,6 +238,53 @@ Et il désigne une cause plus profonde : le budget de recherche valait 200 000 n
 l'échec ne coûtait rien. **Il n'y avait rien pour quoi être efficace.** C'est ce que
 M019 met à l'épreuve.
 
+## M019 — Montage invalide, cause structurelle identifiée
+
+- Statut : `DEVELOPMENT — RIG NOT VALID`. Aucune évaluation canonique, aucune
+  conclusion tirée sur l'hypothèse H8.
+
+Trois calibrages, trois dégénérescences, aucune porte de gel franchie :
+
+| Calibrage | Résultat | Morts |
+|---|---|---|
+| prime 25 000 | énergie doublée, `none` 8/8 | 0 |
+| prime 6 000 | profondeur de recherche → 2, macros → 0 | 0 |
+| prime 6 000 + report d'énergie | profondeur → 2, macros → 0 | 0 |
+
+Population : 11 épisodes résolus. Contrôle sans sélection : **103**, 18 macros.
+
+### La cause
+
+**Une sélection à horizon court ne peut pas valoriser un investissement dont le
+rendement est différé.** Apprendre coûte ~23 000 nœuds pour une prime de 6 000 ; ne pas
+essayer coûte 1 296. À la première sélection, l'apprenti est éliminé avant d'avoir pu
+rembourser. Le report d'énergie n'y change rien puisqu'il suppose que l'investisseur
+survive à cette première coupe.
+
+La sélection a découvert que ne pas essayer coûte moins cher qu'essayer — et elle avait
+raison sur l'horizon qu'on lui avait donné.
+
+### Un garde-fou mal choisi
+
+« Mortalité non nulle » signalait mal. Zéro mort n'indiquait pas une rareté trop faible
+mais l'inverse : elle mordait assez pour que la stratégie gagnante soit de ne rien
+dépenser. Le bon garde-fou était le nombre de macros — nul dans les trois essais.
+
+### Pourquoi l'arrêt
+
+Un quatrième calibrage aurait été de l'ajustement jusqu'à obtenir la réponse voulue.
+Trois essais et un invariant nommé suffisent à conclure que **le montage est faux**, non
+que l'hypothèse est réfutée.
+
+### Leçon
+
+Une pression de sélection mal formée sélectionne la stagnation. Trop faible, elle ne
+trie rien ; trop impatiente, elle élimine l'exploration avant qu'elle ne rapporte.
+**L'horizon d'évaluation compte davantage que l'intensité de la pression.**
+
+C'est le piège de M014b sous une autre forme : un critère qui mesure la mauvaise chose
+ne devient pas juste en changeant ses seuils.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.

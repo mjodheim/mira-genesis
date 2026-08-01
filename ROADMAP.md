@@ -14,8 +14,9 @@
 | M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
 | M017 | Langage auto-extensible | **READY TO FREEZE** | Six portes franchies ; critère devenu directionnel après le balayage à 50 environnements |
 | M018 | Dissolution — savoir détruire | **HYPOTHESIS NOT SUPPORTED** | Aucun des trois mécanismes n'annule le passif ; l'oubli est réactif, la destruction aveugle |
-| **M019** | **Pression de sélection** | **ACTIVE — DEVELOPMENT** | Une population sous rareté découvre-t-elle ce qu'aucune conception n'a atteint ? |
-| M020 | Auto-métamorphose | BLOCKED BY M019 | Détecter, construire et adopter seul un corps mieux adapté |
+| M019 | Pression de sélection | **RIG NOT VALID** | Sélection trop impatiente pour valoriser l'apprentissage ; cause identifiée |
+| **M019b** | **Sélection à horizon long** | **NEXT** | Horizon d'évaluation supérieur à la période de remboursement de l'apprentissage |
+| M020 | Auto-métamorphose | BLOCKED BY M019b | Détecter, construire et adopter seul un corps mieux adapté |
 | M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |
 | M016 | Compétence sensorimotrice | DEFERRED | Transporter un modèle du monde entre architectures différentes |
 
@@ -108,6 +109,26 @@ d'oubli : les quatre sont dans la population de départ et la sélection tranche
 
 La question, posée pour la première fois : **une population sous sélection
 découvre-t-elle ce que je n'ai pas su concevoir ?**
+
+Elle reste sans réponse. Trois calibrages ont produit trois dégénérescences, et
+l'invariant est structurel : **une sélection à horizon court ne peut pas valoriser un
+investissement dont le rendement est différé.** Apprendre coûte 23 000 nœuds pour une
+prime de 6 000 ; ne pas essayer en coûte 1 296. L'apprenti est éliminé à la première
+coupe, avant d'avoir pu rembourser.
+
+La sélection a découvert que ne pas essayer coûte moins cher qu'essayer — et elle avait
+raison sur l'horizon qu'on lui avait donné. Le montage est faux, l'hypothèse n'est pas
+réfutée, et un quatrième calibrage aurait été de l'ajustement jusqu'à obtenir la
+réponse voulue.
+
+## M019b — étape suivante
+
+L'horizon d'évaluation doit dépasser la période de remboursement de l'apprentissage :
+sélection toutes les N générations plutôt qu'à chaque génération, ou fitness intégrée
+sur la vie entière d'une lignée.
+
+**L'horizon compte davantage que l'intensité de la pression.** C'est la leçon la plus
+transportable produite par le projet à ce jour, et elle vaut au-delà de lui.
 
 ## Test ultime de la première phase
 
