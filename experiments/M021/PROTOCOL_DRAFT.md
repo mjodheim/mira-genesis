@@ -59,7 +59,7 @@ transfer.
 
 ## 5. Development scale and separation gate
 
-A three-seed execution is a smoke test only.
+A one-seed pull-request execution is a structural smoke test only.
 
 The first comparison requires at least **24 paired seeds per measure**. Below that
 number the output must state `insufficient_paired_seeds`, whatever ordering appears.
