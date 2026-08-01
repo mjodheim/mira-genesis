@@ -1,46 +1,44 @@
-# Registre des mesures
+# Measure register
 
-Ce registre est le second actif du dépôt, à côté de [`FAILURE_LOG.md`](FAILURE_LOG.md).
-Il catalogue les **mesures qui ont divergé de ce qu'elles prétendaient mesurer**, dans
-un domaine où la vérité terrain est décidable.
+This register is the repository's second asset, beside [`FAILURE_LOG.md`](FAILURE_LOG.md).
+It catalogues **measures that came loose from what they claimed to measure**, in a
+domain where ground truth is decidable.
 
-## Pourquoi ce registre existe
+## Why this register exists
 
-Quatre expériences ont échoué. Aucune n'a échoué dans l'organisme.
+Four experiments failed. None failed in the organism.
 
-| | Ce qui a cassé |
+| | What gave way |
 |---|---|
-| M014b | seuil de 25 % sur une fenêtre large de 4 requêtes |
-| M017 | seuil de 10× dérivé d'un cas typique pris pour une borne |
-| M018 | aucune conséquence à l'inefficacité, donc rien à optimiser |
-| M019 | horizon de fitness plus court que la période de remboursement |
+| M014b | a 25% threshold on a window four queries wide |
+| M017 | a 10× threshold derived from a typical case taken for a bound |
+| M018 | no consequence to inefficiency, so nothing to optimise for |
+| M019 | a fitness horizon shorter than the payback period of learning |
 
-À chaque fois, ce qu'on construisait tenait. C'est la façon de juger si c'était mieux
-qui a cédé.
+Each time, what was being built held. What gave way was the way of judging whether it
+was better.
 
-## Ce que ce dépôt a et que la littérature a rarement
+## What this repository has and the literature rarely does
 
-La loi de Goodhart, le *reward hacking*, le *specification gaming*, la recherche de
-nouveauté et les algorithmes qualité-diversité travaillent ce problème depuis
-longtemps. Il n'est ni neuf ni vierge.
+Goodhart's law, reward hacking, specification gaming, novelty search and
+quality-diversity algorithms have worked this problem for a long time. It is neither
+new nor unexplored.
 
-Mais ces travaux opèrent presque tous dans des domaines où **l'objectif vrai n'est pas
-vérifiable exactement**. Un *reward hacking* se diagnostique parce qu'un humain trouve
-que le résultat a l'air faux. La nouveauté s'évalue à ce qui paraît intéressant. Les
-descripteurs comportementaux sont choisis à la main.
+But those bodies of work almost all operate where **the true objective is not exactly
+verifiable**. Reward hacking is diagnosed because a human finds the result suspicious.
+Novelty is judged by what looks interesting. Behavioural descriptors are picked by hand.
 
-Ici, l'équivalence comportementale de deux automates finis se **prouve**. On peut donc
-poser, de façon décidable :
+Here, the behavioural equivalence of two finite automata is **provable**. So one can
+ask, decidably:
 
-> Cette mesure-proxy suit-elle réellement la grandeur qu'elle prétend suivre, et sous
-> quelle pression d'optimisation cesse-t-elle de la suivre ?
+> Does this proxy measure actually track the quantity it claims to track, and under
+> what optimisation pressure does it stop?
 
-C'est un banc d'essai pour la conception de mesures, pas une tentative de résoudre ce
-que d'autres n'ont pas résolu.
+This is a testbed for measure design, not an attempt to solve what others have not.
 
-## Reproduire les décrochages
+## Reproducing the failures
 
-Chaque cas se rejoue à la demande, avec sa vérité terrain :
+Every case replays on demand, with its ground truth:
 
 ```bash
 python scripts/reproduce_measure_failures.py
@@ -50,107 +48,103 @@ python scripts/reproduce_measure_failures.py
 python scripts/reproduce_measure_failures.py --case R004
 ```
 
-Les quatre cas rapides tournent en une minute. `--full` ajoute R003, qui demande un
-balayage d'environnements. `tests/test_measure_failures.py` verrouille les mécanismes —
-un catalogue qui cesse de se reproduire n'est plus un catalogue.
+The four fast cases run in about a minute. `--full` adds R003, which needs an
+environment sweep. `tests/test_measure_failures.py` locks the mechanisms — a catalogue
+that stops reproducing is no longer a catalogue.
 
-Sortie du cas R004, à titre d'exemple :
+Output of case R004, as an example:
 
 | | |
 |---|---|
-| différences réelles engendrées | 418 |
-| ratées par le jeu probabiliste | **7** |
-| ratées par la suite de conformité | **0** |
+| real differences generated | 418 |
+| missed by the probabilistic set | **7** |
+| missed by the conformance suite | **0** |
 
 ---
 
-## R001 — Une fenêtre trop étroite pour son seuil
+## R001 — a window too narrow for its threshold
 
-- **Origine :** M014b, échec canonique.
-- **Mesure :** nombre de requêtes d'identification, seuil d'avantage de 25 %.
-- **Ce qu'elle prétendait suivre :** l'efficacité d'apprentissage transportée.
-- **Divergence :** Genesis 14 requêtes, L\* depuis zéro 14. La grandeur variait sur une
-  fenêtre large de quatre requêtes ; un seuil de 25 % y mesurait du bruit
-  d'échantillonnage.
-- **Détectable d'avance ?** Oui. Il suffisait d'établir la plage dynamique de la
-  grandeur avant de fixer la marge. C'est devenu **D010**.
+- **Origin:** M014b, canonical failure.
+- **Measure:** number of identification queries, 25% advantage threshold.
+- **What it claimed to track:** transported learning efficiency.
+- **Divergence:** Genesis 14 queries, L\* from scratch 14. The quantity varied over a
+  window four queries wide; a 25% threshold on it measured sampling noise.
+- **Detectable in advance?** Yes. It sufficed to establish the quantity's dynamic range
+  before fixing the margin. That became **D010**.
 
-## R002 — Une baseline structurellement incapable prise pour critère
+## R002 — a structurally incapable baseline taken for a criterion
 
-- **Origine :** M014c, arrêtée ; puis évitée dans M017.
-- **Mesure :** rapport au coût d'un catalogue fermé.
-- **Divergence :** le catalogue fermé résout 0 sur 700 épisodes. Tout seuil calé sur lui
-  passe trivialement et ne mesure que son incapacité, déjà connue.
-- **Règle :** une baseline incapable est un **contrôle**, jamais un critère. Le critère
-  doit opposer deux systèmes de capacité identique au départ, que seul le mécanisme
-  testé sépare ensuite.
+- **Origin:** M014c, halted; then avoided in M017.
+- **Measure:** ratio to the cost of a closed catalogue.
+- **Divergence:** the closed catalogue solves 0 of 700 episodes. Any threshold set
+  against it passes trivially and measures only its incapacity, which was already known.
+- **Rule:** an incapable baseline is a **control**, never a criterion. A criterion must
+  oppose two systems of identical capability at the start, which only the mechanism
+  under test separates afterwards.
 
-## R003 — Un cas typique pris pour une borne du cas le pire
+## R003 — a typical case taken for a worst-case bound
 
-- **Origine :** M017, seuil invalidé avant gel.
-- **Mesure :** rapport apparié des coûts de recherche, seuil dérivé à 10×.
-- **Ce qu'elle prétendait suivre :** le gain apporté par l'extension du langage.
-- **Divergence :** la dérivation prédisait ~500× en supposant qu'un macro est toujours
-  atteint en profondeur 1. Sur 8 environnements, minimum 95×. Sur **50**, minimum
-  **9,0×** — sous le seuil. Un épisode portant un atome de bruit impose la profondeur 2
-  et effondre le rapport d'un facteur cinquante.
-- **Correction :** la dispersion de la magnitude étant un facteur 69, aucune marge ne la
-  dépasse ; le critère est devenu **directionnel**, dispersion nulle, 50/50.
-- **Leçon :** un échantillon de 8 donnait un minimum optimiste d'un facteur dix.
+- **Origin:** M017, threshold invalidated before freezing.
+- **Measure:** paired ratio of search costs, threshold derived at 10×.
+- **What it claimed to track:** the gain from extending the language.
+- **Divergence:** the derivation predicted ~500× assuming an absorbed macro is always
+  reached at depth 1. Over 8 environments, minimum 95×. Over **50**, minimum **9.0×** —
+  below the threshold. An episode carrying a noise atom forces depth 2 and collapses the
+  ratio by a factor of fifty.
+- **Correction:** the magnitude disperses by a factor of 69, which no defensible margin
+  exceeds; the criterion became **directional**, dispersion zero, 50/50.
+- **Lesson:** a sample of 8 gave a minimum optimistic by a factor of ten.
 
-## R004 — Une vérification incapable de garantir ce qu'elle affirmait
+## R004 — a verification unable to guarantee what it asserted
 
-- **Origine :** M017, défaut de confirmation.
-- **Mesure :** « zéro faux succès », vérifié sur tous les mots jusqu'à 6 plus 96 mots
-  tirés au hasard.
-- **Divergence :** 96 tirages ne couvrent pas 2⁷+…+2²⁰. Deux automates à 9 états
-  confirmés identiques sont séparés par `(1,0,1,0,1,0,1)`. Le résultat rapporté était
-  juste ; la procédure ne pouvait pas le garantir.
-- **Aggravation :** deux corrections successives ont été annoncées correctes à tort, la
-  seconde produisant **10 faux succès sur 73** — pire que le défaut d'origine.
-- **Leçon :** une condition d'admission n'est pas établie parce qu'un banc la rapporte
-  satisfaite, mais quand la procédure qui la vérifie est **complète**. Et le test censé
-  garder la propriété n'exerçait aucune redirection : c'est pourquoi il passait sur une
-  suite cassée.
+- **Origin:** M017, confirmation defect.
+- **Measure:** "zero false successes", checked on every word up to length 6 plus 96
+  words drawn at random.
+- **Divergence:** 96 draws do not cover 2⁷+…+2²⁰. Two 9-state automata confirmed
+  identical are separated by `(1,0,1,0,1,0,1)`. The reported result was correct; the
+  procedure could not guarantee it.
+- **Aggravation:** two successive corrections were announced as correct and were not,
+  the second producing **10 false successes out of 73** — worse than the original defect.
+- **Lesson:** an admission condition is not established because a benchmark reports it
+  satisfied, but when the procedure verifying it is **complete**. And the test meant to
+  guard the property exercised no redirect at all — which is exactly why it passed on a
+  broken suite.
 
-## R005 — Une grandeur sans conséquence
+## R005 — a quantity with no consequence
 
-- **Origine :** M018, hypothèse non soutenue.
-- **Mesure :** coût de recherche, sous un budget de 200 000 nœuds et un échec gratuit.
-- **Divergence :** aucun mécanisme d'oubli ne rapporte, non par défaut de mécanisme mais
-  parce qu'**il n'y avait rien pour quoi être efficace**. Une grandeur qu'on optimise
-  sans qu'elle coûte n'exerce aucune pression.
+- **Origin:** M018, hypothesis not supported.
+- **Measure:** search cost, under a 200,000-node budget and a free failure.
+- **Divergence:** no forgetting mechanism pays off, not for want of a mechanism but
+  because **there was nothing to be efficient for**. A quantity optimised without
+  costing anything exerts no pressure.
 
-## R006 — Un horizon plus court que le délai de rendement
+## R006 — a horizon shorter than the payback period
 
-- **Origine :** M019, montage invalide.
-- **Mesure :** énergie restante en fin de génération.
-- **Ce qu'elle prétendait suivre :** l'efficacité d'une stratégie.
-- **Divergence :** apprendre coûte ~23 000 nœuds pour une prime de 6 000 ; ne pas
-  essayer en coûte 1 296. La sélection élimine l'apprenti à la première coupe, avant
-  tout remboursement. Sur trois calibrages, la population converge vers une recherche
-  superficielle et **zéro macro**, résolvant 11 épisodes contre 103 pour un contrôle
-  non sélectionné.
-- **Leçon :** **l'horizon d'évaluation compte davantage que l'intensité de la
-  pression.** Trop faible, elle ne trie rien ; trop impatiente, elle élimine
-  l'exploration avant qu'elle ne rapporte.
-- **Garde-fou lui-même erroné :** « mortalité non nulle » signalait l'inverse de ce
-  qu'on croyait. Zéro mort n'indiquait pas une rareté trop faible mais une rareté assez
-  mordante pour que la stratégie gagnante soit de ne rien dépenser.
+- **Origin:** M019, invalid rig.
+- **Measure:** energy left at the end of a generation.
+- **What it claimed to track:** the efficiency of a strategy.
+- **Divergence:** learning costs ~23,000 nodes against a 6,000 reward; not trying costs
+  1,296. Selection removes the learner at the first cull, before any repayment. Across
+  three calibrations the population converges on shallow search and **zero macros**,
+  solving 11 episodes against 103 for an unselected control.
+- **Lesson:** **the evaluation horizon matters more than the intensity of the pressure.**
+  Too weak, it sorts nothing; too impatient, it eliminates exploration before it pays.
+- **The guard was itself wrong:** "non-zero mortality" signalled the opposite of what
+  was assumed. Zero deaths did not indicate weak scarcity but the reverse — scarcity bit
+  hard enough that the winning strategy was to spend nothing.
 
 ---
 
-## Ce que le registre suggère déjà
+## What the register already suggests
 
-Quatre régularités, tirées de six cas et non postulées :
+Four regularities, drawn from six cases rather than postulated:
 
-1. **Établir la plage dynamique avant de fixer une marge** (R001, R003).
-2. **Un critère oppose deux capacités égales au départ ; une incapacité est un
-   contrôle** (R002).
-3. **Une condition d'admission vaut ce que vaut la complétude de sa procédure de
-   vérification** (R004).
-4. **L'horizon d'évaluation prime sur l'intensité de la pression** (R005, R006).
+1. **Establish the dynamic range before fixing a margin** (R001, R003).
+2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
+3. **An admission condition is worth the completeness of its verification procedure**
+   (R004).
+4. **The evaluation horizon outranks the intensity of the pressure** (R005, R006).
 
-Aucune n'est nouvelle prise isolément. Ce qui est inhabituel, c'est de les avoir
-mesurées là où la vérité terrain est décidable, donc de pouvoir montrer *où exactement*
-la mesure décroche plutôt que de constater que le résultat a l'air faux.
+None is new taken alone. What is unusual is having measured them where ground truth is
+decidable, and therefore being able to show *where exactly* a measure comes loose rather
+than noting that a result looks wrong.

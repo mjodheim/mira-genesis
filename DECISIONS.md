@@ -1,113 +1,124 @@
-# Registre des décisions
+# Decision register
 
-## D001 — Le dépôt est la mémoire officielle
+## D001 — The repository is the official memory
 
-La continuité du projet repose sur les fichiers versionnés, pas uniquement sur le contexte conversationnel.
+Project continuity rests on versioned files, not solely on conversational context.
 
-## D002 — Recentrage sur Metamorphosis
+## D002 — Refocus on Metamorphosis
 
-Les prototypes V4–V6 restent des bancs sensorimoteurs, mais la recherche principale vise la portabilité et la continuité trans-substrat.
+The V4–V6 prototypes remain sensorimotor benches, but the main line of research targets
+trans-substrate portability and continuity.
 
-## D003 — Protocoles figés
+## D003 — Frozen protocols
 
-Toute modification importante après observation d’un résultat crée une nouvelle expérience numérotée.
+Any significant change made after observing a result creates a new numbered experiment.
 
-## D004 — Évaluateur extérieur
+## D004 — External evaluator
 
-Les preuves exhaustives et tests secrets ne sont pas comptabilisés comme expériences accessibles à l’organisme.
+Exhaustive proofs and hidden tests do not count as experiments available to the
+organism.
 
-## D005 — Pas de revendication d’AGI
+## D005 — No AGI claim
 
-Les validations M001–M011 sont limitées aux domaines formels décrits dans leurs protocoles.
+The M001–M011 validations are limited to the formal domains described in their
+protocols.
 
-## D006 — M012 doit supprimer les compilateurs spécialisés
+## D006 — M012 must remove specialised compilers
 
-Le prochain progrès accepté doit concerner la naissance autonome d’un corps, pas un nouvel ajout manuel de backend.
+The next accepted advance must concern the autonomous birth of a body, not another
+hand-written backend.
 
-## D007 — L’arbre de travail ne contient que du code vivant
+## D007 — The working tree holds only living code
 
-Le code d’une expérience révoquée sort de l’arbre de travail ; son enregistrement
-scientifique, lui, reste. L’historique Git est l’archive, et `archives/RETIRED_CODE.md`
-en est l’index : chaque retrait cite le commit où le fichier reste consultable.
+The code of a revoked experiment leaves the working tree; its scientific record stays.
+Git history is the archive, and `archives/RETIRED_CODE.md` is its index: every removal
+cites the commit where the file remains readable.
 
-Motif : la pile héritée M012 / M013b, environ 2 400 lignes, formait un sous-graphe
-d’imports entièrement déconnecté et faisait échouer `pytest -q` en important `torch`.
-Aucun signal ne le révélait, parce que les workflows scellés n’exécutaient que des
-fichiers de test ciblés.
+Reason: the inherited M012 / M013b stack, about 2,400 lines, formed an entirely
+disconnected import subgraph and broke `pytest -q` by importing `torch`. Nothing
+signalled it, because the sealed workflows only ran targeted test files.
 
-## D008 — Une CI permanente, distincte des évaluations scellées
+## D008 — A permanent CI, distinct from sealed evaluations
 
-`.github/workflows/ci.yml` protège l’arbre de travail sur chaque PR et ne produit jamais
-de résultat scientifique. Les workflows d’évaluation scellée restent créés par
-expérience, exécutés une fois, puis retirés vers `archives/workflows/` : un workflow
-canonique consommé ne doit plus être exécutable, sans quoi la règle du run unique ne
-tient que par convention.
+`.github/workflows/ci.yml` protects the working tree on every pull request and never
+produces a scientific result. Sealed evaluation workflows are still created per
+experiment, run once, then retired to `archives/workflows/`: a consumed canonical
+workflow must no longer be executable, otherwise the single-run rule holds only by
+convention.
 
-`scripts/check_repository_integrity.py` rend structurels les trois défauts qui avaient
-échappé à la CI : module non importable, module orphelin, dépendance déclarée fantôme.
+`scripts/check_repository_integrity.py` makes structural the three defects that had
+escaped CI: an unimportable module, an orphan module, a phantom declared dependency.
 
-## D009 — Le prochain progrès accepté doit étendre le langage, pas le catalogue
+## D009 — The next accepted advance must extend the language, not the catalogue
 
-D006 exigeait de M012 qu'elle supprime les compilateurs spécialisés. La même exigence
-s'applique un cran plus haut : **un progrès qui consiste à mieux choisir dans un
-catalogue écrit à la main n'est pas un progrès.**
+D006 required M012 to remove specialised compilers. The same requirement applies one
+level up: **an advance that consists of choosing better within a hand-written catalogue
+is not an advance.**
 
-M012b, M013e, M014b et M014c partagent une limite qu'aucun de leurs critères ne
-mesurait. `MetaPlasticitySession.identify` énumère strictement douze programmes
-structurels ; tout l'apprentissage repondère des compteurs sur ce catalogue fermé.
-L'organisme ne peut rien exprimer qu'on ne lui ait donné, et M014c aurait mesuré la
-qualité de cette repondération, pas la croissance d'une capacité.
+M012b, M013e, M014b and M014c share a limit none of their criteria measured.
+`MetaPlasticitySession.identify` enumerates exactly twelve structural programs; all
+learning reweights counters over that closed catalogue. The organism cannot express
+anything it was not given, and M014c would have measured the quality of that
+reweighting, not the growth of a capability.
 
-M014c est donc arrêtée avant évaluation, comme M014 l'avait été, et remplacée par
-M017 — langage auto-extensible. La feuille de route change d'ordre, pas de noms :
-M015 et M016 sont reportées parce qu'elles étendraient latéralement un paradigme dont
-le cœur n'est pas établi.
+M014c is therefore halted before evaluation, as M014 was, and replaced by M017 —
+self-extending language. The roadmap changes order, not names: M015 and M016 are
+deferred because they would laterally extend a paradigm whose core is not established.
 
-## D010 — Une grandeur mesurée doit avoir une plage dynamique
+## D010 — A measured quantity must have a dynamic range
 
-M014b comparait 14 requêtes à 14 requêtes, sur une fenêtre large de quatre requêtes,
-avec une marge préenregistrée de 25 %. Aucun résultat n'y était décidable : le critère
-mesurait du bruit d'échantillonnage.
+M014b compared 14 queries to 14 queries, over a window four queries wide, with a
+pre-registered margin of 25%. No result there was decidable: the criterion measured
+sampling noise.
 
-Toute expérience ultérieure doit donc établir, **avant de figer son protocole**, que
-la grandeur choisie varie sur plusieurs ordres de grandeur entre les organismes
-comparés, et que la marge retenue dépasse la dispersion entre environnements.
+Every later experiment must therefore establish, **before freezing its protocol**, that
+the chosen quantity varies over several orders of magnitude between the systems
+compared, and that the retained margin exceeds the dispersion between environments.
 
-Corollaire : une baseline structurellement incapable est un contrôle, pas un critère.
-Le catalogue fermé échoue 0/42 en développement M017 ; figer un seuil contre lui
-passerait trivialement. Le critère doit opposer deux organismes de capacité identique
-au premier épisode, que seul le mécanisme testé sépare ensuite.
+Corollary: a structurally incapable baseline is a control, not a criterion. The closed
+catalogue fails 0/42 in M017 development; freezing a threshold against it would pass
+trivially. A criterion must oppose two organisms of identical capability at the first
+episode, which only the mechanism under test separates afterwards.
 
-## D011 — Le projet suit ce que ses échecs ont désigné
+## D011 — The project follows what its own failures identified
 
-Quatre expériences ont échoué — M014b, M017 sur son seuil, M018, M019 — et **aucune
-n'a échoué dans l'organisme**. À chaque fois, ce qu'on construisait tenait ; c'est la
-façon de juger si c'était mieux qui a cédé.
+Four experiments failed — M014b, M017 on its threshold, M018, M019 — and **none failed
+in the organism**. Each time, what was being built held; what gave way was the way of
+judging whether it was better.
 
-La question centrale du dépôt devient donc : **quand une mesure-proxy cesse-t-elle de
-suivre ce qu'elle prétend suivre, et sous quelle pression d'optimisation ?**
+The repository's central question therefore becomes: **when does a proxy measure stop
+tracking what it claims to track, and under what optimisation pressure?**
 
-### Ce que cette décision ne prétend pas
+### What this decision does not claim
 
-Le problème n'est ni neuf ni vierge. La loi de Goodhart, le *reward hacking*, le
-*specification gaming*, la recherche de nouveauté et les algorithmes qualité-diversité
-le travaillent depuis longtemps. Toute formulation suggérant que le projet explore un
-terrain inoccupé serait fausse, et cette précision fait partie de la décision.
+The problem is neither new nor unexplored. Goodhart's law, reward hacking,
+specification gaming, novelty search and quality-diversity algorithms have worked on it
+for a long time. Any wording suggesting the project enters vacant ground would be false,
+and stating so is part of the decision.
 
-### L'angle réel
+### The real angle
 
-Ces travaux opèrent presque tous là où **l'objectif vrai n'est pas vérifiable
-exactement** : un *reward hacking* se diagnostique parce qu'un humain trouve le
-résultat suspect. Ici, l'équivalence comportementale de deux automates finis se prouve.
+Those bodies of work operate almost entirely where **the true objective is not exactly
+verifiable**: reward hacking is diagnosed because a human finds the result suspicious.
+Here, the behavioural equivalence of two finite automata is provable.
 
-Le dépôt peut donc montrer **où exactement** une mesure décroche, plutôt que constater
-qu'un résultat semble faux. C'est un banc d'essai décidable pour la conception de
-mesures, et c'est une contribution modeste et défendable.
+The repository can therefore show **where exactly** a measure comes loose, rather than
+note that a result looks wrong. It is a decidable testbed for measure design, and that
+is a modest, defensible contribution.
 
-### Conséquences
+### Consequences
 
-- `MEASURES.md` devient un registre de premier rang, à côté de `FAILURE_LOG.md` ;
-- la ligne métamorphose n'est pas abandonnée : elle a produit le domaine décidable, les
-  deux validations scellées et les six cas de divergence. Elle devient le **support**
-  de la question plutôt que la question ;
-- M017 reste à figer, ses résultats étant acquis et son critère assaini.
+- `MEASURES.md` becomes a first-class register, beside `FAILURE_LOG.md`;
+- the metamorphosis line is not abandoned: it produced the decidable domain, the two
+  sealed validations and the six divergence cases. It becomes the **testbed** for the
+  question rather than the question;
+- M017 still stands ready to freeze, its results acquired and its criterion cleaned up.
+
+## D012 — The repository is written in English
+
+The repository is public. Registers, protocols, comments and docstrings are written in
+English so the work is readable by the people most likely to find it useful.
+
+French text predating this decision is translated rather than left in place: a
+half-translated repository is worse than either language, since a reader cannot tell
+which parts they are missing.
