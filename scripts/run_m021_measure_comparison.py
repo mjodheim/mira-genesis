@@ -21,8 +21,8 @@ Prediction, written before the measurement:
     If all four land within the pre-registered separation floor, the held-out set does
     not separate them and the rig must be rebuilt before concluding anything.
 
-The first three-seed run is a smoke test only. A comparison is never considered
-development-ready below `DEVELOPMENT_MIN_SEEDS`.
+The default one-seed run is a structural smoke test only. A comparison is never
+considered development-ready below `DEVELOPMENT_MIN_SEEDS`.
 """
 
 from __future__ import annotations
@@ -222,9 +222,9 @@ def main() -> None:
     parser.add_argument(
         "--seeds",
         type=int,
-        default=3,
+        default=1,
         help=(
-            "paired seeds per measure; 3 is a smoke test, "
+            "paired seeds per measure; 1 is a structural smoke test, "
             f"{DEVELOPMENT_MIN_SEEDS} are required before comparison"
         ),
     )
