@@ -158,6 +158,38 @@ def test_library_survives_a_serialization_round_trip():
     assert len(restored.macros) == 1
 
 
+def test_confirmation_catches_the_false_success_that_slipped_through():
+    """Deux automates confirmés identiques que `(1,0,1,0,1,0,1)` sépare.
+
+    La confirmation tirait 96 mots longs au hasard en affirmant couvrir la borne de
+    distinction. Elle ne la couvrait pas : le « zéro faux succès » de M017 tenait à la
+    chance du tirage. La suite W est complète tant que la cible ne dépasse pas
+    l'hypothèse de plus de deux états — et elle est plus courte.
+    """
+    from metamorphosis.conformance import w_method_suite
+    from metamorphosis.m012b_dfa import random_minimal_dfa
+
+    witness = (1, 0, 1, 0, 1, 0, 1)
+    for seed in range(40):
+        left = normalize_dfa(random_minimal_dfa(seed, 8, 9))
+        suite = set(w_method_suite(left, 2))
+        # La suite doit séparer l'automate de lui-même modifié en un point.
+        flipped = left.__class__(
+            left.alphabet,
+            left.transitions,
+            tuple(
+                not value if index == left.run_state(witness) else value
+                for index, value in enumerate(left.accepting)
+            ),
+            left.initial,
+        )
+        if exact_equivalence(left, flipped)[0]:
+            continue
+        assert any(
+            left.accepts(word) != flipped.accepts(word) for word in suite
+        ), f"la suite W laisse passer une différence, graine {seed}"
+
+
 def test_an_unrelated_inherited_library_is_a_liability():
     """Absorber n'est pas gratuit : un macro qui ne s'applique jamais coûte quand même.
 

@@ -20,9 +20,9 @@ jeu de sondage, même confirmation. Il ne peut donc pas confondre la comparaison
 from __future__ import annotations
 
 from dataclasses import dataclass
-import random
 from typing import Iterator, Protocol, Sequence
 
+from .conformance import w_method_suite
 from .m012b_dfa import DFA, exact_equivalence
 from .m013e_engine import UnknownSubstrateMigrator
 from .m013e_lab import OpaqueBooleanMachine
@@ -44,27 +44,8 @@ FILTER_WORDS: tuple[Word, ...] = enumerate_words(5)
 SHORT_WORDS: tuple[Word, ...] = enumerate_words(2)
 
 
-def _confirmation_words() -> tuple[Word, ...]:
-    """Jeu de confirmation strict, fixe et déterministe.
-
-    Une première version ne confirmait que sur des mots de longueur 6. Sur des
-    automates de six à neuf états, cela laissait passer des trajectoires de deux
-    atomes qui approchent la cible sans l'égaler : la recherche s'arrêtait sur une
-    approximation bon marché, et aucun motif ne se répétait jamais — l'abstraction
-    n'avait alors rien à absorber.
-
-    Deux automates de n et m états qui diffèrent le font sur un mot de longueur au
-    plus n+m−1. Les mots longs tirés ici couvrent cette borne pour le domaine visé.
-    """
-    words = [word for word in enumerate_words(6) if len(word) == 6]
-    rng = random.Random(0x17C0_FFEE)
-    words.extend(
-        tuple(rng.randrange(2) for _ in range(rng.randint(7, 20))) for _ in range(96)
-    )
-    return tuple(words)
-
-
-CONFIRMATION_WORDS: tuple[Word, ...] = _confirmation_words()
+# Marge d'états accordée à la cible au-delà de l'hypothèse. Voir `conformance`.
+CONFORMANCE_EXTRA_STATES = 2
 
 
 class BehavioralOracle(Protocol):
@@ -128,8 +109,18 @@ class _Organism:
         return tuple(observed), calls, ""
 
     def _confirm(self, candidate: DFA, oracle: BehavioralOracle) -> tuple[str, int]:
+        """Confirmation par test de conformité complet, méthode W.
+
+        La version précédente tirait 96 mots longs au hasard en affirmant qu'ils
+        couvraient la borne de distinction. Ils ne la couvraient pas, et deux automates
+        à 9 états confirmés identiques se sont révélés séparés par `(1,0,1,0,1,0,1)`.
+
+        La suite W est complète tant que la cible ne dépasse pas l'hypothèse de plus de
+        `CONFORMANCE_EXTRA_STATES` états — et elle est plus courte que le jeu
+        probabiliste qu'elle remplace.
+        """
         calls = 0
-        for word in CONFIRMATION_WORDS:
+        for word in w_method_suite(candidate, CONFORMANCE_EXTRA_STATES):
             answers = [bool(oracle.query(word)) for _ in range(self.repeat_queries)]
             calls += self.repeat_queries
             if len(set(answers)) != 1:

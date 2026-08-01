@@ -1,9 +1,24 @@
 # M017 — Protocole candidat au gel
 
-**Statut : CANDIDAT. Non figé, non haché, aucune évaluation canonique autorisée.**
+**Statut : CANDIDAT — RETIRÉ DE LA SIGNATURE. Chiffres en cours de remesure.**
 
-Les six portes de développement sont franchies. Ce document est le protocole complet,
-seuils compris, prêt à être figé. **Il attend une signature humaine.**
+> **Défaut trouvé après rédaction de ce document.** La confirmation d'un candidat
+> tirait 96 mots longs au hasard en affirmant couvrir la borne de distinction de deux
+> automates. Elle ne la couvrait pas. Le « zéro faux succès sur 42 épisodes » du §3
+> était un tirage favorable, pas une garantie : deux automates à 9 états confirmés
+> identiques se sont révélés séparés par `(1,0,1,0,1,0,1)`.
+>
+> Tous les chiffres de ce document ont été produits sous cette confirmation. Ils ne
+> sont pas nécessairement faux, mais ils ne sont plus établis.
+>
+> Correction : `metamorphosis/conformance.py`, test de conformité par méthode W,
+> complet tant que la cible ne dépasse pas l'hypothèse de plus de deux états — et plus
+> court que le jeu qu'il remplace, 99 mots contre 160. Voir `FAILURE_LOG.md`.
+>
+> **Ce document ne doit pas être signé avant que les trois mesures aient été refaites.**
+
+Les six portes de développement avaient été franchies. Ce document est le protocole
+complet, seuils compris. **Il attend une remesure, puis une signature humaine.**
 
 Le gel est irréversible dans son esprit : une fois haché, aucun seuil ne bouge, et
 l'évaluation canonique ne s'exécute qu'une fois, sans rejeu. C'est pourquoi il n'a pas
