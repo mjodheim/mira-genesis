@@ -77,3 +77,37 @@ Corollaire : une baseline structurellement incapable est un contrôle, pas un cr
 Le catalogue fermé échoue 0/42 en développement M017 ; figer un seuil contre lui
 passerait trivialement. Le critère doit opposer deux organismes de capacité identique
 au premier épisode, que seul le mécanisme testé sépare ensuite.
+
+## D011 — Le projet suit ce que ses échecs ont désigné
+
+Quatre expériences ont échoué — M014b, M017 sur son seuil, M018, M019 — et **aucune
+n'a échoué dans l'organisme**. À chaque fois, ce qu'on construisait tenait ; c'est la
+façon de juger si c'était mieux qui a cédé.
+
+La question centrale du dépôt devient donc : **quand une mesure-proxy cesse-t-elle de
+suivre ce qu'elle prétend suivre, et sous quelle pression d'optimisation ?**
+
+### Ce que cette décision ne prétend pas
+
+Le problème n'est ni neuf ni vierge. La loi de Goodhart, le *reward hacking*, le
+*specification gaming*, la recherche de nouveauté et les algorithmes qualité-diversité
+le travaillent depuis longtemps. Toute formulation suggérant que le projet explore un
+terrain inoccupé serait fausse, et cette précision fait partie de la décision.
+
+### L'angle réel
+
+Ces travaux opèrent presque tous là où **l'objectif vrai n'est pas vérifiable
+exactement** : un *reward hacking* se diagnostique parce qu'un humain trouve le
+résultat suspect. Ici, l'équivalence comportementale de deux automates finis se prouve.
+
+Le dépôt peut donc montrer **où exactement** une mesure décroche, plutôt que constater
+qu'un résultat semble faux. C'est un banc d'essai décidable pour la conception de
+mesures, et c'est une contribution modeste et défendable.
+
+### Conséquences
+
+- `MEASURES.md` devient un registre de premier rang, à côté de `FAILURE_LOG.md` ;
+- la ligne métamorphose n'est pas abandonnée : elle a produit le domaine décidable, les
+  deux validations scellées et les six cas de divergence. Elle devient le **support**
+  de la question plutôt que la question ;
+- M017 reste à figer, ses résultats étant acquis et son critère assaini.

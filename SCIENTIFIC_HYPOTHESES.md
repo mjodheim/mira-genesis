@@ -76,6 +76,26 @@ court sélectionne la stagnation.** L'apprentissage coûte immédiatement et rap
 tard ; une fitness qui n'observe qu'une génération élimine l'apprenti avant qu'il
 rembourse. L'horizon d'évaluation compte davantage que l'intensité de la pression.
 
+## H9 — Les modes de décrochage d'une mesure sont énumérables
+
+Les façons dont une mesure-proxy cesse de suivre la grandeur qu'elle prétend suivre
+forment un ensemble restreint et identifiable d'avance, et non un accident propre à
+chaque expérience.
+
+**État :** non validée. Six cas catalogués dans [`MEASURES.md`](MEASURES.md), dont
+quatre régularités déjà répétées : plage dynamique non établie, baseline incapable
+prise pour critère, procédure de vérification incomplète, horizon plus court que le
+délai de rendement.
+
+**Provenance :** vérifiable, et c'est ce qui distingue ce dépôt. Ailleurs, un
+décrochage se constate parce qu'un humain trouve le résultat suspect ; ici
+l'équivalence comportementale se prouve, donc le point de décrochage se localise.
+
+**Ce que H9 ne prétend pas :** ni la nouveauté du problème — Goodhart, *reward
+hacking*, qualité-diversité le travaillent depuis longtemps — ni qu'une énumération
+close soit atteignable. Seulement que ces modes se répètent assez pour être anticipés,
+et qu'un domaine décidable permet de le montrer.
+
 ## H6 — Auto-métamorphose
 
 Un organisme peut diagnostiquer une limite de son propre corps, proposer des descendants, les évaluer sur des tests cachés et migrer vers une meilleure incarnation.

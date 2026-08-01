@@ -1,10 +1,22 @@
 # Mira Genesis — État du projet
 
-## Objectif ultime
+## Question centrale
+
+**Quand une mesure-proxy cesse-t-elle de suivre ce qu’elle prétend suivre, et sous
+quelle pression d’optimisation ?** Posée dans un domaine où la vérité terrain est
+décidable, donc où la réponse se prouve au lieu de s’estimer.
+
+Voir **D011**, **H9** et [`MEASURES.md`](MEASURES.md).
+
+## Objectif d’origine, devenu le support
 
 Construire une intelligence capable d’apprendre dans un substrat A, de découvrir un substrat B inconnu, d’y construire un nouveau corps, puis d’y transférer ses compétences, sa mémoire et sa plasticité afin de continuer à apprendre sans intervention architecturale humaine.
 
-## État au 31 juillet 2026
+Cette ligne a produit deux validations scellées, un domaine décidable, et quatre échecs
+dont **aucun n’était dans l’organisme**. Elle reste le banc d’essai ; elle n’est plus la
+question.
+
+## État au 1er août 2026
 
 - Dernière expérience validée : **M013e — migration scellée vers un substrat opaque**, dans son domaine fini
 - M012b : **VALIDATED — BOUNDED FINITE DOMAIN**
@@ -14,8 +26,8 @@ Construire une intelligence capable d’apprendre dans un substrat A, de découv
 - M017 : **READY TO FREEZE**, critère devenu directionnel après balayage à 50 environnements
 - M018 : **HYPOTHESIS NOT SUPPORTED** — détruire ne restaure pas l’amélioration
 - M019 : **RIG NOT VALID** — sélection trop impatiente pour valoriser l’apprentissage
-- Expérience suivante : **M019b — sélection à horizon long**
-- Statut global : **prototype de recherche borné avec morphogenèse et migration opaque validées, plasticité exacte transportable, avantage d’apprentissage non validé, et croissance du langage en cours de développement**
+- Expérience suivante : **M021 — décrochage d’une mesure sous vérité terrain**
+- Statut global : **laboratoire de recherche borné et décidable, deux validations scellées, six cas catalogués de mesures ayant divergé de ce qu’elles prétendaient mesurer**
 
 ## Correction de direction — 31 juillet 2026
 
