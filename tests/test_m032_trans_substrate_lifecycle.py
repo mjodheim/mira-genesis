@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 from itertools import product
+import json
+
+import pytest
 
 from metamorphosis.m013e_engine import UnknownSubstrateMigrator
 from metamorphosis.m013e_lab import make_development_positive_machine
+from metamorphosis.m013e_runtime import OpaqueNativeBody
 from metamorphosis.m020_self_rewrite import Case, ToolRegistry, VersionedCodeBody
 from metamorphosis.m024_rewrite_passport import import_passport
 from metamorphosis.m032_trans_substrate_lifecycle import (
@@ -18,9 +22,9 @@ def policy(state, symbol):
     return (state + symbol) % 1
 """
 
-# The complete declared state-symbol domain is development evidence.  With only the
+# The complete declared state-symbol domain is development evidence. With only the
 # two positive rows, modulo 2, 3 and 4 all tie and the independent regression gate
-# correctly rejects the lexicographically selected overfit.  Exhaustive finite-domain
+# correctly rejects the lexicographically selected overfit. Exhaustive finite-domain
 # development makes modulo 2 the unique perfect rewrite without exposing any later
 # post-migration task.
 PARITY_DEVELOPMENT = (
@@ -159,3 +163,31 @@ def test_trans_substrate_packet_is_deterministic_from_identical_inputs():
     assert first.committed and second.committed
     assert first.packet_json == second.packet_json
     assert first.packet_sha256 == second.packet_sha256
+
+
+def test_trans_substrate_packet_rejects_tampered_bodies_and_opcode_registry():
+    _, _, outcome = _successful_lifecycle()
+    assert outcome.committed and outcome.packet_json is not None
+    original = json.loads(outcome.packet_json)
+
+    bad_dfa = json.loads(outcome.packet_json)
+    bad_dfa["source_dfa"]["transitions"][0][0] = 99
+    with pytest.raises(ValueError, match="invalid embedded source DFA"):
+        TransSubstratePacket.from_json(json.dumps(bad_dfa))
+
+    bad_body = json.loads(outcome.packet_json)
+    opaque_payload = json.loads(bad_body["opaque_body_json"])
+    opaque_payload["version"] = "tampered"
+    bad_body["opaque_body_json"] = json.dumps(opaque_payload)
+    with pytest.raises(ValueError, match="invalid embedded opaque body"):
+        TransSubstratePacket.from_json(json.dumps(bad_body))
+
+    opaque_body = OpaqueNativeBody.from_json(original["opaque_body_json"])
+    used = opaque_body.used_opcodes()
+    assert used
+    missing_opcode = json.loads(outcome.packet_json)
+    missing_opcode["discovered_opcodes"] = [
+        opcode for opcode in missing_opcode["discovered_opcodes"] if opcode not in used
+    ]
+    with pytest.raises(ValueError, match="undiscovered opcode"):
+        TransSubstratePacket.from_json(json.dumps(missing_opcode))
