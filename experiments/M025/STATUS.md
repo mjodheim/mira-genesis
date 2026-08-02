@@ -1,6 +1,8 @@
 # M025 — Status
 
-**IMPLEMENTED, LOCAL VERIFICATION PENDING**
+**DEVELOPMENT BASE VERIFIED LOCALLY**
+
+Evaluated implementation commit: `b211826b3d21e4e2b473b4754a6341d352f7cd03`.
 
 ## Implemented
 
@@ -14,7 +16,13 @@
   exception;
 - deterministic passport and evidence replay.
 
+## Verification
+
+- focused M025 suite: **5 passed**;
+- complete repository suite: **105 passed**;
+- repository integrity: imports clean, no orphan modules, dependencies match imports.
+
 ## Scientific status
 
-**NO RESULT YET.** The focused and complete repository suites must pass before M025 can
-be called a verified development integration base. No canonical workflow exists.
+M025 is a verified development integration base. It has no frozen protocol, seed
+commitment or one-shot canonical workflow, so it is not a canonical scientific result.

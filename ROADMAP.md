@@ -27,7 +27,7 @@ target.
 | M022 | Post-selection adaptation stress | SEED-0 CONTROLS PASSED | Persistent language growth separated from open search under pre-written gates. |
 | M023 | Disposable candidate workspaces | DEVELOPMENT BASE VERIFIED | Independent subprocess and regression gates fail closed. |
 | M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
-| **M025** | **Portable proof-gated rewrite lifecycle** | **NEXT** | Join M020, M023 and M024; replay a learned tool and force rollback after migration. |
+| M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -104,9 +104,9 @@ M024 serialises the active source, archive, adopted digest history, primitive to
 learned traces into canonical JSON and rejects inconsistent state before rehydration.
 SHA-256 supplies corruption evidence, not authenticated authorship.
 
-### M025 — next integration gate
+### M025 — integrated portable rewrite lifecycle
 
-M025 must demonstrate one continuous bounded lifecycle:
+M025 demonstrates one continuous bounded lifecycle:
 
 1. propose a multi-edit rewrite through M020;
 2. independently validate and adopt it through M023;
@@ -115,9 +115,17 @@ M025 must demonstrate one continuous bounded lifecycle:
 5. reuse the learned transformation after migration;
 6. force rollback and restore the exact parent body.
 
-Passing M025 would integrate existing bounded capabilities. It would not yet satisfy
-unknown-substrate compilation, portable memory, post-migration advantage or repeated
-improvement cycles.
+All five focused M025 checks and the complete 105-test repository suite pass. Rejection
+or a workspace exception restores both the versioned body and learned-tool registry to
+their exact pre-run state. The result is a development integration base, not a frozen
+canonical experiment.
+
+### Next construction gate
+
+The next gate must compile an adopted M025 body after discovering an opaque substrate,
+carry its rewrite registry plus relevant memory and exploration state, and reveal the
+next task only after migration. M025 does not yet establish any of those claims,
+post-migration advantage or repeated improvement cycles.
 
 ## First-phase finish line
 

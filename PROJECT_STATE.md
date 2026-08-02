@@ -40,9 +40,10 @@ without human architectural intervention. All ten required gates are defined in
 | M022 | SEED-0 CONTROLS PASSED | Repeated motifs exposed adaptation during the audit; cross-seed stability is open. |
 | M023 | DEVELOPMENT BASE VERIFIED | Disposable subprocess validation and fail-closed adoption gate. |
 | M024 | DEVELOPMENT BASE VERIFIED | Portable integrity-checked rewrite body, archive and tool registry. |
+| M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M024 are development evidence and must not be promoted to canonical
+M017 and M020–M025 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -81,11 +82,14 @@ The current bounded self-rewrite stack is:
 3. **M023 — independent validation:** candidate and parent run in disposable
    subprocess workspaces before adoption;
 4. **M024 — portability:** active source, rollback lineage, primitive tools and learned
-   traces cross a canonical integrity-checked serialisation boundary.
+   traces cross a canonical integrity-checked serialisation boundary;
+5. **M025 — lifecycle integration:** proposal, independent validation, adoption,
+   migration, learned-tool replay and forced rollback execute as one transaction.
 
-Next construction gate: exercise those layers as one end-to-end lifecycle, including
-post-migration learned-tool replay and forced rollback. This is still far short of
-unknown-substrate compilation and the ten-gate completion test.
+Next construction gate: move that complete rewrite state through an opaque-substrate
+discovery and native-compilation boundary, add portable memory and exploration state,
+and expose a genuinely new task only after migration. This is still far short of the
+ten-gate completion test.
 
 ## Canonical proof identities
 

@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.15.0 — 2026-08-02
+
+- Ran M021 across 24 paired seeds and preserved the development result: implemented
+  selection measures produced different exact hidden transferred quality.
+- Added M022's pre-written seed-0 positive and negative adaptation controls with full
+  row-level evidence; cross-seed stability remains open.
+- Hardened M023 so independent adoption fails closed when the parent workspace fails.
+- Added M024's integrity-checked rewrite passport for the active body, rollback lineage
+  and complete learned-tool registry.
+- Added M025's transactional portable rewrite lifecycle. Rejection or exceptions now
+  restore both the body and registry exactly; accepted state migrates, replays its
+  learned transformation and survives forced rollback.
+- Reconciled the public project narrative, state and roadmap in English and recovered
+  the useful evidence that had existed only on stale local branches.
+
 ## 0.14.0 — 2026-08-01
 
 - Reoriented the project onto what its own failures identified: **when does a proxy

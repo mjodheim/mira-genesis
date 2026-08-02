@@ -56,6 +56,7 @@ Current development evidence:
 | M022 | The seed-0 repeated-motif controls exposed adaptation during the audit: 224.84× late-search advantage for the self-extending organism and exactly 1.00× for open search. Cross-seed stability remains untested. |
 | M023 | Disposable subprocess evaluation and a fail-closed independent adoption gate passed CI. |
 | M024 | A canonical, integrity-checked passport for active source, rollback history and learned rewrite tools passed CI. |
+| M025 | One transactional lifecycle now searches, independently validates, adopts, migrates, replays and rolls back a bounded rewrite; rejection and exceptions restore both body and tool registry exactly. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -65,10 +66,10 @@ code execution or open-ended recursive self-improvement.
 The next measurement step is to repeat M022's controls across seeds, pre-write an
 adaptation decision rule, and only then audit populations selected by the M021 rankers.
 
-The next construction step is to join M020, M023 and M024 into one end-to-end lifecycle:
-search a rewrite, validate it independently, adopt it, migrate the complete rewrite
-state, replay its learned tool and survive a forced rollback. The full finish line is
-defined in [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md).
+The next construction step is to carry M025's verified lifecycle across an initially
+unknown substrate together with memory and exploration state, then measure learning on
+a new post-migration task family. The full finish line is defined in
+[`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md).
 
 ## Reproduce the repository
 
