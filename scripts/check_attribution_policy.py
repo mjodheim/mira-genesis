@@ -13,7 +13,12 @@ from typing import Iterable, Mapping
 BLOCKED_IDENTITY_FRAGMENTS = (
     "[bot]",
 )
+REGISTERED_HUMAN_IDENTITIES = {
+    ("Anthony Mets", "110968830+mjodheim@users.noreply.github.com"),
+}
+REGISTERED_PULL_REQUEST_AUTHORS = {"mjodheim"}
 COAUTHOR_PATTERN = re.compile(r"^co-authored-by:\s*(.+)$", re.IGNORECASE | re.MULTILINE)
+IDENTITY_PATTERN = re.compile(r"^(.+?)\s*<([^<>]+)>$")
 TOOL_CREDIT_PATTERN = re.compile(
     r"\b(?:"
     r"(?:generated|assisted|written|created)\s+(?:by|with)"
@@ -41,11 +46,21 @@ def audit_commit_records(records: Iterable[Mapping[str, str]]) -> list[str]:
             marker = _blocked(value)
             if marker:
                 problems.append(f"{commit}: {field} contains blocked attribution {marker!r}")
+        for role in ("author", "committer"):
+            identity = (record[f"{role}_name"], record[f"{role}_email"])
+            if identity not in REGISTERED_HUMAN_IDENTITIES:
+                problems.append(f"{commit}: {role} is not a registered human identity")
         for trailer in COAUTHOR_PATTERN.findall(record.get("body", "")):
             marker = _blocked(trailer)
             if marker:
                 problems.append(
                     f"{commit}: co-author trailer contains blocked attribution {marker!r}"
+                )
+            match = IDENTITY_PATTERN.fullmatch(trailer.strip())
+            identity = match.groups() if match else None
+            if identity not in REGISTERED_HUMAN_IDENTITIES:
+                problems.append(
+                    f"{commit}: co-author is not a registered human identity"
                 )
         body = record.get("body", "")
         if TOOL_CREDIT_PATTERN.search(body):
@@ -72,6 +87,8 @@ def audit_pull_request_payload(payload: Mapping[str, object]) -> list[str]:
         ),
     }
     problems = []
+    if fields["author"] not in REGISTERED_PULL_REQUEST_AUTHORS:
+        problems.append("pull request author is not a registered human identity")
     for field, value in fields.items():
         marker = _blocked(value)
         if marker:
