@@ -49,6 +49,11 @@
 - Localised the next measurement failure: performance-adaptive weighting can sharpen a
   misaligned proxy while allocating less evidence to high-potential lineages.
 
+## 0.17.1 — 2026-08-02
+
+- Hardened human-only attribution with exact registered identities and a trusted-base
+  pull-request check that never executes proposed code.
+
 ## 0.17.0 — 2026-08-02
 
 - Added M027's hidden-blind exhaustive coverage through the first reward-bearing depth.
