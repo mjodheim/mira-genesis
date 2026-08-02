@@ -1,7 +1,8 @@
 name: Attribution policy
 
 on:
-  pull_request:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
 
 permissions:
   contents: read
@@ -18,11 +19,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Check commit and pull-request attribution
+      - name: Fetch the proposed commit without checking it out
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: >-
+          git fetch --no-tags origin
+          "+refs/pull/${PR_NUMBER}/head:refs/remotes/origin/pull/${PR_NUMBER}/head"
+      - name: Check commit and pull-request attribution from trusted code
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
