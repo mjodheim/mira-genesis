@@ -1,19 +1,22 @@
 # M033 status
 
-**Status: CONTROL SCAFFOLD OPEN — PRIMARY TASKS UNOBSERVED**
+**Status: PACKET-DERIVED CONTROLS PASSED — PRIMARY TASKS UNOBSERVED**
 
 The protocol reserves primary seeds `0–63`. No implementation on this branch creates
 or evaluates their post-migration tasks.
 
-Implemented so far:
+Focused workflow run `30770408812` passed:
 
-- independent rehydration of the complete, output-only, learning-state-ablated and
+- the complete M032 bridge and packet-integrity controls;
+- independent rehydration of complete, output-only, learning-state-ablated and
   learned-tool-ablated variants from one validated M032 packet;
 - canonical snapshots for every evaluator-visible packet-derived surface;
 - explicit capability flags for learning-state updates and self-rewrite;
 - isolation tests proving that mutations to one lineage cannot change another;
 - exact tests that only the declared ablation surfaces differ;
-- deterministic byte-identical rehydration of the same variant.
+- deterministic byte-identical rehydration of the same variant;
+- output-only immobility;
+- repository integrity and the primary-seed guard.
 
 Still missing before a threshold-freeze amendment:
 
