@@ -84,6 +84,11 @@ development_state:
   M024:
     status: development_base_verified
     capability: integrity_checked_portable_rewrite_state
+  M025:
+    status: development_base_verified
+    evaluated_commit: b211826b3d21e4e2b473b4754a6341d352f7cd03
+    repository_tests_passed: 105
+    capability: transactional_portable_proof_gated_rewrite_lifecycle
 
 active_next_steps:
   measurement:
@@ -91,9 +96,9 @@ active_next_steps:
     - prewrite_selection_population_adaptation_rule
     - audit_M021_selected_populations_only_after_controls_pass
   construction:
-    - integrate_M020_M023_M024_as_one_replayable_lifecycle
-    - replay_a_learned_tool_after_migration
-    - force_and_verify_post_migration_rollback
+    - compile_M025_rewrite_state_after_unknown_substrate_discovery
+    - migrate_memory_uncertainty_and_exploration_state
+    - test_plasticity_on_a_post_migration_task_family
 
 completion_gates_passed_bounded:
   autonomous_morphogenesis: true
@@ -103,6 +108,7 @@ completion_gates_passed_bounded:
   independent_candidate_validation: true
   exact_archive_and_rollback: true
   portable_bounded_rewrite_tools: true
+  transactional_portable_rewrite_lifecycle: true
 
 not_validated:
   - autonomous_fault_diagnosis
