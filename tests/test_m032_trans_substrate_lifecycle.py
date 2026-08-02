@@ -18,9 +18,16 @@ def policy(state, symbol):
     return (state + symbol) % 1
 """
 
+# The complete declared state-symbol domain is development evidence.  With only the
+# two positive rows, modulo 2, 3 and 4 all tie and the independent regression gate
+# correctly rejects the lexicographically selected overfit.  Exhaustive finite-domain
+# development makes modulo 2 the unique perfect rewrite without exposing any later
+# post-migration task.
 PARITY_DEVELOPMENT = (
+    Case((0, 0), 0),
     Case((0, 1), 1),
     Case((1, 0), 1),
+    Case((1, 1), 0),
 )
 
 PARITY_REGRESSION = (
@@ -59,6 +66,7 @@ def test_rewritten_body_crosses_opaque_substrate_with_learning_state():
     assert outcome.reason == "rewrite_compiled_and_migrated_to_opaque_substrate"
     assert outcome.rewrite.adopted
     assert outcome.source_dfa is not None
+    assert outcome.source_dfa.transitions == ((0, 1), (1, 0))
     assert outcome.migration is not None
     assert outcome.migration.status == "success"
     assert outcome.migration.body is not None
