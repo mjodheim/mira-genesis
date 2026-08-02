@@ -45,9 +45,10 @@ without human architectural intervention. All ten required gates are defined in
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
 | M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
 | M029 | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP, but adaptive concentration missed the allocation and final-quality gates. |
+| M030 | DEVELOPMENT CONFIRMATION SUPPORTED | Component-uniform guidance reproduced on untouched seeds 64–127 with 48 wins, 16 ties and no losses. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M029 are development evidence and must not be promoted to canonical
+M017 and M020–M030 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -113,6 +114,22 @@ It cannot be promoted to a confirmed claim on the already observed seeds. See
 The next clean measurement is a frozen component-uniform comparison on untouched seeds
 64–127. A distinct alternative is a depth-aware viability signal that penalises useful
 components embedded in lineages with too little remaining rewrite budget.
+
+M030 confirmed that untouched-seed comparison without adding a new policy. On exactly
+seeds 64–127, component-uniform guidance reached 662 per mille clade/exact-CMP
+concordance, 1,186 above development adaptive. Median paired final hidden advantage was
+1,000 per mille, with 48 wins, 16 ties and no losses. Every registered control passed
+and the artifact replayed byte-identically. See
+[`results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md`](results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md).
+
+Together, the M029 diagnostic and M030 untouched block give 98 wins, 30 ties and no
+losses across 128 development seeds for component-uniform versus development-adaptive
+guidance. This is reproducible finite-rig development evidence, not a canonical or
+domain-independent claim.
+
+The next measurement should transport the component signal to a structurally different
+task generator. A resource-aware adaptive policy is a distinct optimisation successor,
+not required to establish the now-confirmed finite information effect.
 
 ## Construction track
 

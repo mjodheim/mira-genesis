@@ -32,6 +32,7 @@ target.
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
 | M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
 | M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates and underperformed the uniform diagnostic. |
+| M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -153,6 +154,18 @@ contrast was diagnostic rather than a decision gate, the same observed seeds can
 confirm a new hypothesis. The next clean option is a frozen rerun on untouched seeds
 64–127. A depth-aware viability correction remains a separate successor rather than a
 post-hoc repair to M029.
+
+### M030 — confirm the uniform component signal on untouched seeds
+
+M030 took that clean option without adding a mechanism. On exactly seeds 64–127,
+component-uniform guidance reached 662 per mille clade/exact-CMP concordance, improved
+paired final hidden quality by a median 1,000 per mille and produced 48 wins, 16 ties
+and no losses. Every registered gate passed and the artifact replayed byte-identically.
+
+The seed-block replication is close: M029's diagnostic was 50/14/0 and M030 was
+48/16/0. The next justified step changes structure rather than drawing more seeds from
+the same generator: transport the component signal to a distinct compositional task
+family. Resource-aware adaptive allocation remains a separate policy question.
 
 ## Construction track
 

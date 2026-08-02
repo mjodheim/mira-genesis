@@ -157,3 +157,28 @@ paired final advantage remained zero, with 31 wins, 32 ties and 1 loss. The regi
 conjunction therefore failed. The component-uniform diagnostic produced 50 wins,
 14 ties and no losses, motivating an untouched-seed confirmation rather than a
 retroactive change to H11.
+
+## H12 — Uniform component guidance reproduces on untouched seeds
+
+M029's component-uniform diagnostic reflects a stable consequence of the
+hidden-disjoint component signal rather than a favourable result on seeds 0–63.
+
+**Status:** supported by the M030 untouched-seed development confirmation; not
+canonical.
+
+**Pre-written implication:** on exactly seeds 64–127, component-uniform guidance must
+achieve non-negative clade/exact-CMP concordance, exceed development-adaptive
+concordance and median paired final hidden quality by at least 167 per mille, win at
+least 40 of 64 mismatch pairs, and preserve every probe, coverage, uniqueness,
+isolation and aligned control. See
+[`experiments/M030/PROTOCOL_DRAFT.md`](experiments/M030/PROTOCOL_DRAFT.md).
+
+**Scope:** M030 is an internal untouched-seed development confirmation. It is not a
+canonical sealed evaluation or a claim that the component probe generalises beyond the
+finite rig.
+
+**Result:** all gates passed on exactly seeds 64–127. Component-uniform concordance was
+662 per mille, 1,186 above development adaptive. Median paired final hidden advantage
+was 1,000 per mille, with 48 wins, 16 ties and no losses. Together with M029's
+pre-declared diagnostic, the two independent seed blocks produced 98 wins, 30 ties and
+no losses.

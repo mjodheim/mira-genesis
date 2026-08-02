@@ -376,3 +376,15 @@ lineages that have already consumed too much depth on shortcuts.
 The next correction must remain separate: confirm uniform component guidance on
 untouched seeds, or pre-write a resource-viability signal. Reclassifying the observed
 diagnostic as M029's primary result would violate the repository's decision discipline.
+
+### M030 resolution of the diagnostic boundary
+
+M030 chose the first correction without changing either policy implementation. On the
+untouched seed block 64–127, component-uniform guidance reproduced with 48 wins,
+16 ties and no losses, +1,000 per mille median paired final hidden quality and 662 per
+mille clade/exact-CMP concordance. Every pre-written gate passed and the replay was
+byte-identical.
+
+This confirms that M029's component information effect was not a favourable draw on
+seeds 0–63. It does not reverse M029's failed adaptive-policy verdict: uniform
+observation and adaptive concentration remain empirically different interventions.
