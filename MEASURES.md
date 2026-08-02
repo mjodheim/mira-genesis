@@ -170,11 +170,32 @@ The exact mismatch and exhaustive aligned control make the failure localisable. 
 result does not test full HGM, whose adaptive evaluation and scheduling mechanisms were
 held out of M026.
 
+## R009 — an unweighted clade mean aimed at a clade maximum
+
+- **Origin:** M027, negative development result.
+- **Measure:** equal-weight mean task success over every observed clade node after
+  exhaustive public breadth coverage.
+- **What it claimed to track:** exact maximum hidden utility reachable in the rooted
+  clade.
+- **Divergence:** coverage exposed a hidden-quality signal in every seed, yet the
+  HGM-guided clade estimate remained -907 per mille concordant with exact CMP. It beat
+  immediate-performance concordance by only 93 per mille and produced 64/64 policy
+  ties at zero final hidden quality.
+- **Cause:** shortcut descendants are numerous and visibly successful but have poor
+  hidden potential. Their equal-weight contributions dominate the mean, while exact
+  CMP depends on the rare generic descendant that reaches the maximum.
+- **Lesson:** exploration can reveal the relevant evidence without making an average
+  estimate a maximum. Observation allocation is part of the measure, not merely an
+  efficiency layer around it.
+
+M027 held adaptive evaluation weighting out of scope. The result motivates isolating
+that mechanism and does not test full HGM.
+
 ---
 
 ## What the register already suggests
 
-Five regularities, drawn from eight cases rather than postulated:
+Six regularities, drawn from nine cases rather than postulated:
 
 1. **Establish the dynamic range before fixing a margin** (R001, R003, R007).
 2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
@@ -183,6 +204,7 @@ Five regularities, drawn from eight cases rather than postulated:
 4. **The evaluation horizon outranks the intensity of the pressure** (R005, R006).
 5. **A long-horizon estimate needs a process that reveals long-horizon evidence**
    (R008).
+6. **Sampling weights determine what an aggregate actually estimates** (R009).
 
 R007 is the internal warning: recording a lesson does not guarantee that the next
 instrument applies it correctly.

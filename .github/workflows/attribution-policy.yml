@@ -1,0 +1,34 @@
+name: Attribution policy
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: attribution-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  attribution:
+    name: Human-only attribution
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Check commit and pull-request attribution
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          EVENT_PATH: ${{ github.event_path }}
+        run: >-
+          python scripts/check_attribution_policy.py
+          --base "$BASE_SHA"
+          --head "$HEAD_SHA"
+          --event "$EVENT_PATH"

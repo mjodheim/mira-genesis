@@ -103,10 +103,30 @@ development_state:
     aligned_control_exact: true
     hgm_policy_advantage_supported: false
     repository_tests_passed: 123
+  M027:
+    status: hypothesis_not_supported_in_development
+    evaluated_commit: 83e2aed02b49e1439ede08d42d15a378dbd46642
+    protocol_sha256: f83e057586508a70c6095b9e9bf7472f67d1d11b0827b3ba6ede1f5f0805ce4a
+    artifact_sha256: 57530237d7dcb1a4efbf04ed16e129802a9ab01350941ff941df32fad84f9d44
+    paired_seeds: 64
+    trajectories: 512
+    expansions: 61440
+    coverage_exact: true
+    mismatch_coverage_exposes_hidden_signal: true
+    clade_exact_cmp_concordance_per_mille: -907
+    clade_minus_immediate_alignment_per_mille: 93
+    hgm_minus_dgm_median_per_mille: 0
+    hgm_wins: 0
+    hgm_ties: 64
+    hgm_losses: 0
+    estimator_alignment_supported: false
+    hgm_policy_advantage_supported: false
+    aligned_control_exact: true
+    repository_tests_passed: 144
 
 active_next_steps:
   measurement:
-    - decide_exploration_controlled_M026_successor_or_resume_M022
+    - decide_evaluation_weighting_M027_successor_or_resume_M022
     - freeze_any_successor_rule_before_observation
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery

@@ -42,9 +42,10 @@ without human architectural intervention. All ten required gates are defined in
 | M024 | DEVELOPMENT BASE VERIFIED | Portable integrity-checked rewrite body, archive and tool registry. |
 | M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
+| M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M026 are development evidence and must not be promoted to canonical
+M017 and M020–M027 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -78,9 +79,15 @@ Nevertheless, the HGM-inspired policy had median advantage 0 per mille, with 4 w
 supported. See
 [`results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md`](results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md).
 
-Next measurement decision: either pre-register an exploration-controlled successor
-that can seed weak-but-promising clades without hidden access, or resume M022's
-cross-seed controls. No successor result is implied by M026.
+M027 applied that exploration intervention: every reachable state through depth three
+was present before policy selection. The hidden signal was exposed in every seed, but
+HGM-inspired and DGM-inspired guidance tied at zero final hidden quality in all 64
+paired mismatch seeds. Clade/exact-CMP concordance remained -907 per mille. See
+[`results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md`](results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md).
+
+Next measurement decision: pre-write an adaptive evaluation-weighting intervention
+that tests the soft-maximum mechanism omitted from M026 and M027, or resume M022's
+cross-seed controls. Additional breadth alone is no longer justified by the evidence.
 
 ## Construction track
 
