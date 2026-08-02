@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from check_attribution_policy import (
     audit_commit_records,
     audit_pull_request_payload,
@@ -25,7 +27,17 @@ def test_human_commit_identity_passes():
 
 def test_service_author_is_rejected():
     problems = audit_commit_records([_record(author_name="release[bot]")])
-    assert problems == ["abc123: author_name contains blocked attribution '[bot]'"]
+    assert problems == [
+        "abc123: author_name contains blocked attribution '[bot]'",
+        "abc123: author is not a registered human identity",
+    ]
+
+
+def test_unregistered_plain_identity_is_rejected():
+    problems = audit_commit_records(
+        [_record(author_name="Build Service", author_email="build@example.invalid")]
+    )
+    assert problems == ["abc123: author is not a registered human identity"]
 
 
 def test_generated_coauthor_trailer_is_rejected():
@@ -33,8 +45,23 @@ def test_generated_coauthor_trailer_is_rejected():
         [_record(body="Change\n\nCo-authored-by: tool[bot] <tool@example.invalid>")]
     )
     assert problems == [
-        "abc123: co-author trailer contains blocked attribution '[bot]'"
+        "abc123: co-author trailer contains blocked attribution '[bot]'",
+        "abc123: co-author is not a registered human identity",
     ]
+
+
+def test_registered_coauthor_trailer_passes():
+    problems = audit_commit_records(
+        [
+            _record(
+                body=(
+                    "Change\n\nCo-authored-by: Anthony Mets "
+                    "<110968830+mjodheim@users.noreply.github.com>"
+                )
+            )
+        ]
+    )
+    assert problems == []
 
 
 def test_neutral_pull_request_metadata_passes():
@@ -47,6 +74,20 @@ def test_neutral_pull_request_metadata_passes():
         }
     }
     assert audit_pull_request_payload(payload) == []
+
+
+def test_unregistered_pull_request_author_is_rejected():
+    payload = {
+        "pull_request": {
+            "title": "Add bounded evaluation",
+            "body": "Tests a pre-written intervention.",
+            "head": {"ref": "research/change"},
+            "user": {"login": "external-service"},
+        }
+    }
+    assert audit_pull_request_payload(payload) == [
+        "pull request author is not a registered human identity"
+    ]
 
 
 def test_tool_credit_in_pull_request_metadata_is_rejected():
@@ -67,3 +108,13 @@ def test_tool_credit_in_pull_request_metadata_is_rejected():
 def test_generic_tool_credit_in_commit_message_is_rejected():
     problems = audit_commit_records([_record(body="Generated with a development tool")])
     assert problems == ["abc123: commit message contains tool-credit language"]
+
+
+def test_workflow_runs_the_policy_from_the_trusted_base_revision():
+    workflow = (
+        Path(__file__).parents[1] / ".github" / "workflows" / "attribution-policy.yml"
+    ).read_text(encoding="utf-8")
+    assert "pull_request_target:" in workflow
+    assert "ref: ${{ github.event.pull_request.base.sha }}" in workflow
+    assert "Fetch the proposed commit without checking it out" in workflow
+    assert "Check commit and pull-request attribution from trusted code" in workflow
