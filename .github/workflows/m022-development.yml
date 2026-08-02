@@ -1,0 +1,43 @@
+name: M022 adaptation-stress controls
+
+# Development controls only. This workflow cannot produce a canonical result.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m022-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run M022 evaluator tests
+        run: pytest -q tests/test_m022_adaptation_stress.py
+
+      - name: Run the real positive and negative controls
+        run: python scripts/run_m022_adaptation_smoke.py --seed 0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m022-adaptation-smoke-${{ github.run_id }}
+          path: results/M022_adaptation_smoke.json
+          if-no-files-found: error
+          retention-days: 30

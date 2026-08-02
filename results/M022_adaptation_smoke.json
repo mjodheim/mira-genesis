@@ -1,0 +1,266 @@
+{
+  "development_only": true,
+  "seed": 0,
+  "sequence_length": 12,
+  "motif_count": 3,
+  "repetitions": 4,
+  "late_round_start": 2,
+  "distinct_source_bodies": 12,
+  "positive_min_late_cost_ratio_per_mille": 1500,
+  "positive_control": {
+    "adaptive_solved": 12,
+    "frozen_solved": 12,
+    "adaptive_late_solved": 6,
+    "frozen_late_solved": 6,
+    "common_late_pairs": 6,
+    "adaptive_late_nodes": 264,
+    "frozen_late_nodes": 59358,
+    "late_cost_ratio_per_mille": 224840,
+    "median_late_pair_ratio_per_mille": 260351,
+    "adaptive_late_not_worse": true,
+    "macros_after_sequence": 9
+  },
+  "positive_rows": [
+    {
+      "motif_index": 0,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1681,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 1,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 11463,
+      "frozen_nodes": 11463,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 2,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 15646,
+      "frozen_nodes": 15646,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 0,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1681,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 3
+    },
+    {
+      "motif_index": 1,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 13245,
+      "frozen_nodes": 11359,
+      "adaptive_macros_after": 6
+    },
+    {
+      "motif_index": 2,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 22375,
+      "frozen_nodes": 16591,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 0,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 43,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 1,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 44,
+      "frozen_nodes": 11463,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 2,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 45,
+      "frozen_nodes": 16546,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 0,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 43,
+      "frozen_nodes": 1629,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 1,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 44,
+      "frozen_nodes": 11448,
+      "adaptive_macros_after": 9
+    },
+    {
+      "motif_index": 2,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 45,
+      "frozen_nodes": 16591,
+      "adaptive_macros_after": 9
+    }
+  ],
+  "negative_control": {
+    "adaptive_solved": 12,
+    "frozen_solved": 12,
+    "adaptive_late_solved": 6,
+    "frozen_late_solved": 6,
+    "common_late_pairs": 6,
+    "adaptive_late_nodes": 59358,
+    "frozen_late_nodes": 59358,
+    "late_cost_ratio_per_mille": 1000,
+    "median_late_pair_ratio_per_mille": 1000,
+    "adaptive_late_not_worse": true,
+    "macros_after_sequence": 0
+  },
+  "negative_rows": [
+    {
+      "motif_index": 0,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1681,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 1,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 11463,
+      "frozen_nodes": 11463,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 2,
+      "round_index": 0,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 15646,
+      "frozen_nodes": 15646,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 0,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1681,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 1,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 11359,
+      "frozen_nodes": 11359,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 2,
+      "round_index": 1,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 16591,
+      "frozen_nodes": 16591,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 0,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1681,
+      "frozen_nodes": 1681,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 1,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 11463,
+      "frozen_nodes": 11463,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 2,
+      "round_index": 2,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 16546,
+      "frozen_nodes": 16546,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 0,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 1629,
+      "frozen_nodes": 1629,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 1,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 11448,
+      "frozen_nodes": 11448,
+      "adaptive_macros_after": 0
+    },
+    {
+      "motif_index": 2,
+      "round_index": 3,
+      "adaptive_status": "success",
+      "frozen_status": "success",
+      "adaptive_nodes": 16591,
+      "frozen_nodes": 16591,
+      "adaptive_macros_after": 0
+    }
+  ],
+  "gates": {
+    "positive_common_late_pairs": true,
+    "positive_adaptive_late_not_worse": true,
+    "positive_cost_separation": true,
+    "positive_language_growth": true,
+    "negative_solve_counts_equal": true,
+    "negative_cost_ratio_exact": true,
+    "negative_no_language_growth": true
+  },
+  "all_gates_pass": true
+}
