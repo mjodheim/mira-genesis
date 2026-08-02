@@ -1,16 +1,11 @@
 name: M021 development comparison
 
-# Development rig only. This workflow may invalidate the rig; it can never produce a
-# canonical scientific result.
+# Development only. Pull requests run one structural smoke seed. A manual dispatch runs
+# the full 24-seed paired comparison. Neither path can produce a canonical result.
 
 on:
   pull_request:
   workflow_dispatch:
-    inputs:
-      seeds:
-        description: Paired seeds per measure (24 required for comparison)
-        required: true
-        default: '24'
 
 permissions:
   contents: read
@@ -20,33 +15,133 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  comparison:
+  guardrails:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-
       - name: Install the package and its development dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
-
       - name: Run M019 regression and M021 rig tests
         run: pytest -q tests/test_m019.py tests/test_m021.py
-
       - name: Audit isolation and integer-only decisions
         run: python scripts/audit_m017_isolation.py
 
-      - name: Run the paired comparison
-        env:
-          REQUESTED_SEEDS: ${{ github.event.inputs.seeds || '1' }}
-        run: python scripts/run_m021_measure_comparison.py --seeds "$REQUESTED_SEEDS"
+  smoke:
+    if: github.event_name == 'pull_request'
+    needs: guardrails
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run one structural paired seed
+        run: >-
+          python scripts/run_m021_measure_comparison.py
+          --seeds 1
+          --seed-start 0
+          --workers 4
+          --output results/M021_measure_comparison_smoke.json
+      - name: Verify smoke-only status and guardrails
+        run: |
+          python - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
 
-      - name: Verify the development guardrails
+          summary = json.loads(
+              pathlib.Path("results/M021_measure_comparison_smoke.json")
+              .read_text(encoding="utf-8")
+          )["summary"]
+          required = {
+              "development_only": True,
+              "common_random_numbers": True,
+              "audit_mutates_selected_population": False,
+              "enough_seeds_for_comparison": False,
+              "rig_invalidation_reason": "insufficient_paired_seeds",
+              "seeds": 1,
+          }
+          for key, expected in required.items():
+              if summary.get(key) != expected:
+                  sys.exit(f"{key}={summary.get(key)!r}, expected {expected!r}")
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m021-smoke-${{ github.run_id }}
+          path: results/M021_measure_comparison_smoke.json
+          if-no-files-found: error
+          retention-days: 30
+
+  shard:
+    if: github.event_name == 'workflow_dispatch'
+    needs: guardrails
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 24
+      matrix:
+        seed: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run one exact paired seed
+        run: >-
+          python scripts/run_m021_measure_comparison.py
+          --seeds 1
+          --seed-start ${{ matrix.seed }}
+          --workers 4
+          --output results/M021_shard_${{ matrix.seed }}.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m021-shard-${{ matrix.seed }}
+          path: results/M021_shard_${{ matrix.seed }}.json
+          if-no-files-found: error
+          retention-days: 30
+
+  aggregate:
+    if: github.event_name == 'workflow_dispatch'
+    needs: shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: m021-shard-*
+          path: results/shards
+          merge-multiple: true
+      - name: Aggregate the 24 paired seeds
+        run: >-
+          python scripts/run_m021_aggregate_measure_comparison.py
+          --input-glob 'results/shards/M021_shard_*.json'
+          --expected-seeds 24
+          --output results/M021_measure_comparison_development.json
+      - name: Verify the development comparison guardrails
         run: |
           python - <<'PYTHON'
           import json
@@ -57,19 +152,18 @@ jobs:
               pathlib.Path("results/M021_measure_comparison_development.json")
               .read_text(encoding="utf-8")
           )["summary"]
-
           required = {
               "development_only": True,
               "common_random_numbers": True,
               "audit_mutates_selected_population": False,
+              "enough_seeds_for_comparison": True,
+              "seeds": 24,
           }
           for key, expected in required.items():
               if summary.get(key) != expected:
                   sys.exit(f"{key}={summary.get(key)!r}, expected {expected!r}")
-
           print(json.dumps(summary, indent=2, ensure_ascii=False))
           PYTHON
-
       - uses: actions/upload-artifact@v4
         with:
           name: m021-development-${{ github.run_id }}
