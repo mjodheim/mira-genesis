@@ -28,6 +28,7 @@ target.
 | M023 | Disposable candidate workspaces | DEVELOPMENT BASE VERIFIED | Independent subprocess and regression gates fail closed. |
 | M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
 | M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
+| M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -70,12 +71,30 @@ control passed:
 - open-search ratio: exactly 1,000 per mille;
 - positive macros after the sequence: 9; negative macros: 0.
 
-Next gates, in order:
+The deferred M022 gates remain:
 
 1. repeat the controls across paired seeds;
 2. pre-write a selection-population adaptation rule;
 3. evaluate M021-selected populations only if the controls remain valid;
 4. freeze and hash a protocol before any canonical workflow exists.
+
+### M026 — exact clade potential versus observed guidance
+
+M026 maps one DGM parent rule and one HGM parent rule into M017's finite rewrite
+language. The evaluator can compute exact hidden rooted-clade quality, while selectors
+receive development outcomes only. A platform edit has lower immediate performance
+than a shortcut but higher exact descendant potential; a separate aligned rig proves
+visible and hidden quality equal at every reachable state.
+
+Across 64 paired seeds, HGM-inspired clade guidance had median final hidden advantage
+0 per mille over DGM-inspired immediate guidance, with 4 wins, 59 ties and 1 loss. The
+pre-written 167-per-mille and 40-win gate failed. The oracle-guided control reached
+median 1000 per mille, so the useful conclusion is narrower: observed clade evidence
+cannot guide a lineage that expansion rarely reveals.
+
+The next measurement decision is explicit rather than automatic: pre-register a
+successor with a hidden-blind minimum exploration guarantee, or resume the deferred
+M022 cross-seed sequence. Threshold tuning is not an admissible successor.
 
 ## Construction track
 

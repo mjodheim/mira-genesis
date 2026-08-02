@@ -1,0 +1,67 @@
+name: M026 decidable metaproductivity
+
+# Development only. Pull requests exercise eight paired structural seeds. The
+# versioned 64-seed result remains a separately recorded development run.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m026-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run M026 focused tests
+        run: pytest -q tests/test_m026_metaproductivity.py
+      - name: Run eight paired structural seeds
+        run: >-
+          python scripts/run_m026_metaproductivity_comparison.py
+          --seeds 8
+          --workers 4
+          --output results/M026_metaproductivity_smoke.json
+      - name: Verify smoke-only and isolation guardrails
+        run: |
+          python - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
+
+          payload = json.loads(
+              pathlib.Path("results/M026_metaproductivity_smoke.json")
+              .read_text(encoding="utf-8")
+          )
+          summary = payload["summary"]
+          required = {
+              "comparison_status": "insufficient_paired_seeds",
+              "hidden_fields_visible_to_selectors": False,
+              "integer_only_selection_traces": True,
+              "aligned_control_exact": True,
+          }
+          for key, expected in required.items():
+              if summary.get(key) != expected:
+                  sys.exit(f"{key}={summary.get(key)!r}, expected {expected!r}")
+          if not all(payload["structural_controls"].values()):
+              sys.exit(f"structural controls failed: {payload['structural_controls']}")
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m026-smoke-${{ github.run_id }}
+          path: results/M026_metaproductivity_smoke.json
+          if-no-files-found: error
+          retention-days: 30

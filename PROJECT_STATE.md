@@ -41,9 +41,10 @@ without human architectural intervention. All ten required gates are defined in
 | M023 | DEVELOPMENT BASE VERIFIED | Disposable subprocess validation and fail-closed adoption gate. |
 | M024 | DEVELOPMENT BASE VERIFIED | Portable integrity-checked rewrite body, archive and tool registry. |
 | M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
+| M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M025 are development evidence and must not be promoted to canonical
+M017 and M020–M026 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -69,8 +70,17 @@ search from 59,358 to 264 nodes while its open-search negative control stayed ex
 unchanged. See
 [`results/M022_ADAPTATION_SMOKE_RESULT.md`](results/M022_ADAPTATION_SMOKE_RESULT.md).
 
-Next measurement gate: repeat the M022 controls across paired seeds, pre-write the
-selection-population decision rule, and only then compare M021-selected populations.
+M026 then compared adaptations of DGM immediate-performance guidance and HGM
+clade-performance guidance against exact hidden rooted-clade quality. The positive
+control contains a proven ordering reversal, and the aligned control is exhaustive.
+Nevertheless, the HGM-inspired policy had median advantage 0 per mille, with 4 wins,
+59 ties and 1 loss across 64 paired seeds. The pre-written prediction was not
+supported. See
+[`results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md`](results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md).
+
+Next measurement decision: either pre-register an exploration-controlled successor
+that can seed weak-but-promising clades without hidden access, or resume M022's
+cross-seed controls. No successor result is implied by M026.
 
 ## Construction track
 

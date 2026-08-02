@@ -285,6 +285,23 @@ trie rien ; trop impatiente, elle élimine l'exploration avant qu'elle ne rappor
 C'est le piège de M014b sous une autre forme : un critère qui mesure la mauvaise chose
 ne devient pas juste en changeant ses seuils.
 
+## M026 — Observed clade guidance did not reveal latent clade value
+
+- Status: `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`. No canonical evaluation.
+- The prediction and 64-seed decision rule were committed before the full run.
+
+The finite positive control contains an exact reversal: the platform scores 0 now but
+can reach 6/6 hidden cases; a shortcut scores 1 now but can reach at most 3/6. Despite
+that known mismatch, the HGM-inspired clade policy did not beat the DGM-inspired
+immediate policy: median paired difference 0 per mille, 4 wins, 59 ties and 1 loss.
+
+The aligned control passed for every reachable state, all selector boundaries excluded
+hidden fields, and a full replay was byte-identical. The failure is therefore retained
+as a result, not tuned away. Observed clade aggregation cannot value descendants that
+the expansion process has not yet exposed. This does not test full HGM because M026
+holds its adaptive evaluation scheduler, asynchronous execution and final-selection
+rule out of scope.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.
