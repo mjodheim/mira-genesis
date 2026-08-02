@@ -123,11 +123,22 @@ development_state:
     hgm_policy_advantage_supported: false
     aligned_control_exact: true
     repository_tests_passed: 144
+  M028:
+    status: frozen_for_development_run
+    claim_under_test: adaptive_evaluation_weighting_improves_cmp_guidance
+    paired_seeds_planned: 64
+    trajectories_planned: 256
+    coverage_max_depth: 3
+    unique_development_cases_per_node: 6
+    compared_policies:
+      - uniform_evaluation
+      - adaptive_evaluation
+    result_observed: false
 
 active_next_steps:
   measurement:
-    - decide_evaluation_weighting_M027_successor_or_resume_M022
-    - freeze_any_successor_rule_before_observation
+    - commit_frozen_M028_protocol_before_full_result
+    - run_and_replay_M028_64_seed_development_comparison
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery
     - migrate_memory_uncertainty_and_exploration_state

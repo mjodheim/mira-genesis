@@ -30,6 +30,7 @@ target.
 | M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
 | M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
+| M028 | Adaptive evaluation weighting | FROZEN FOR DEVELOPMENT RUN | Compare uniform and Thompson allocation of unique evaluations under one common clade parent policy. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -114,6 +115,18 @@ unweighted mean, while exact CMP is a maximum. Shortcut-heavy clades dominate th
 despite having poor hidden potential. The next admissible successor must isolate
 adaptive evaluation weighting; more breadth or threshold tuning would repeat a rejected
 intervention.
+
+### M028 — weight finite evidence before expansion
+
+M028 implements that successor without changing the M026 task generators or M027
+coverage intervention. Every covered node first receives one deterministic unique
+development case. Uniform or individual-performance Thompson sampling then allocates
+the remaining finite cases under a common schedule. Both variants use the same
+weighted-clade parent selector for 40 expansions and the same visible final selector.
+
+The comparison is frozen at 64 paired seeds. Support requires both estimator alignment
+and a pre-written final hidden-quality advantage; an underpowered smoke run cannot
+support the hypothesis.
 
 ## Construction track
 

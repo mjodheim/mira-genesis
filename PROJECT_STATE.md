@@ -43,9 +43,10 @@ without human architectural intervention. All ten required gates are defined in
 | M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
+| M028 | FROZEN FOR DEVELOPMENT RUN | Adaptive versus uniform allocation of unique finite evaluations over the M027 archive. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M027 are development evidence and must not be promoted to canonical
+M017 and M020–M028 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -85,9 +86,11 @@ HGM-inspired and DGM-inspired guidance tied at zero final hidden quality in all 
 paired mismatch seeds. Clade/exact-CMP concordance remained -907 per mille. See
 [`results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md`](results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md).
 
-Next measurement decision: pre-write an adaptive evaluation-weighting intervention
-that tests the soft-maximum mechanism omitted from M026 and M027, or resume M022's
-cross-seed controls. Additional breadth alone is no longer justified by the evidence.
+M028 now pre-writes that adaptive evaluation-weighting intervention. It compares
+uniform allocation with individual-performance Thompson sampling while holding the
+coverage archive, unique task orders, weighted-clade parent policy, expansion budget
+and final selector fixed. The complete 64-seed development run has not yet been
+observed. Additional breadth alone is no longer justified by the evidence.
 
 ## Construction track
 
