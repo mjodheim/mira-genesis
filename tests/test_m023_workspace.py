@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from dataclasses import replace
+
 import pytest
 
 from metamorphosis.m020_self_rewrite import (
@@ -124,6 +126,40 @@ def test_regression_gate_blocks_an_improving_but_incompatible_candidate():
     assert body.archive == []
 
 
+def test_failed_baseline_workspace_blocks_adoption(monkeypatch):
+    body = VersionedCodeBody("policy", ABSOLUTE_PLUS_ZERO)
+    rewrite = SelfRewriteEngine(max_edits=2, beam_width=32).improve(
+        body.active_source,
+        body.function_name,
+        DEVELOPMENT,
+    )
+    workspace = CandidateWorkspace()
+    real_evaluate = workspace.evaluate
+    calls = 0
+
+    def fail_first_evaluation(source, function_name, cases):
+        nonlocal calls
+        calls += 1
+        result = real_evaluate(source, function_name, cases)
+        if calls == 1:
+            return replace(result, status="subprocess_failed", return_code=1)
+        return result
+
+    monkeypatch.setattr(workspace, "evaluate", fail_first_evaluation)
+
+    decision = WorkspaceAdoptionGate(workspace).evaluate_and_adopt(
+        body,
+        rewrite,
+        DEVELOPMENT,
+        REGRESSION,
+    )
+
+    assert not decision.adopted
+    assert decision.reason == "baseline_workspace_failed"
+    assert body.active_source == ABSOLUTE_PLUS_ZERO
+    assert body.archive == []
+
+
 def test_stale_rewrite_cannot_overwrite_a_newer_body():
     body = VersionedCodeBody("policy", ABSOLUTE_PLUS_ZERO)
     rewrite = SelfRewriteEngine(max_edits=2, beam_width=32).improve(
@@ -149,8 +185,11 @@ def test_stale_rewrite_cannot_overwrite_a_newer_body():
         {"memory_bytes": 0},
         {"wall_seconds": 0},
         {"output_bytes": 0},
+        {"cpu_seconds": True},
+        {"memory_bytes": 1.5},
+        {"wall_seconds": "5"},
     ],
 )
 def test_resource_limits_must_be_positive(kwargs):
-    with pytest.raises(ValueError, match="must be positive"):
+    with pytest.raises(ValueError, match="positive integer"):
         SandboxLimits(**kwargs)

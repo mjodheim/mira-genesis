@@ -1,6 +1,6 @@
 # M023 — Status
 
-**DISPOSABLE WORKSPACE IMPLEMENTED, VERIFICATION PENDING**
+**LOCAL DEVELOPMENT GATES PASSED, CI REVERIFICATION PENDING**
 
 ## Implemented
 
@@ -10,11 +10,18 @@
 - deterministic source and workspace evidence digests;
 - structured reporting of wrong values, runtime faults and subprocess failures;
 - independent re-evaluation of baseline and candidate development performance;
+- fail-closed rejection when the independent baseline workspace does not complete;
 - a separate regression gate before adoption;
 - stale rewrite protection through the M020 baseline digest;
 - adoption through M020's exact archive and rollback mechanism;
 - tests for successful execution, runtime faults, deterministic evidence, verified
-  adoption, regression rejection, stale rewrites and invalid limits.
+  adoption, baseline failure, regression rejection, stale rewrites and invalid limits.
+
+## Verification
+
+The original implementation passed the complete GitHub Actions matrix on pull request
+#30. The fail-closed baseline hardening passes locally and requires CI reverification
+before merge.
 
 ## Not implemented
 
@@ -29,5 +36,5 @@
 
 ## Scientific status
 
-**NO RESULT YET.** The implementation must pass repository CI before it becomes the
-independent execution base for later self-rewrite experiments.
+**NO CANONICAL RESULT.** Once the hardening commit passes repository CI, M023 becomes
+the verified independent execution base for later self-rewrite experiments.

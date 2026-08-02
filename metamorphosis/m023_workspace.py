@@ -86,8 +86,8 @@ class SandboxLimits:
 
     def __post_init__(self) -> None:
         for name, value in self.__dict__.items():
-            if value < 1:
-                raise ValueError(f"{name} must be positive")
+            if type(value) is not int or value < 1:
+                raise ValueError(f"{name} must be a positive integer")
 
 
 @dataclass(frozen=True)
@@ -331,6 +331,14 @@ class WorkspaceAdoptionGate:
             regression_cases,
         )
 
+        if baseline.status != "completed":
+            return AdoptionDecision(
+                False,
+                "baseline_workspace_failed",
+                baseline,
+                candidate,
+                regression,
+            )
         if candidate.status != "completed" or regression.status != "completed":
             return AdoptionDecision(
                 False,

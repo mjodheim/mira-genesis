@@ -48,7 +48,7 @@ evaluates:
 Adoption requires all of the following:
 
 - the rewrite descends from the current body digest;
-- both candidate subprocess evaluations complete normally;
+- baseline and both candidate subprocess evaluations complete normally;
 - candidate development score is strictly above the independently measured baseline;
 - every regression case passes;
 - M020's versioned body accepts and archives the exact parent.
@@ -61,6 +61,7 @@ A selected candidate that fails any independent gate is not adopted.
 - runtime faults are reported without terminating the host evaluator;
 - workspace identities are deterministic and change with evidence;
 - a verified two-edit M020 rewrite passes independent development and regression gates;
+- a failed independent baseline evaluation blocks adoption;
 - an improving candidate that breaks a regression is rejected;
 - a stale rewrite cannot overwrite a newer body;
 - resource-limit configurations reject non-positive values.
