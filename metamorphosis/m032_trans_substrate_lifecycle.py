@@ -25,6 +25,7 @@ from .m020_self_rewrite import (
     compile_policy,
 )
 from .m023_workspace import CandidateWorkspace
+from .m024_rewrite_passport import import_passport
 from .m025_rewrite_lifecycle import (
     PortableRewriteLifecycle,
     execute_portable_rewrite,
@@ -94,8 +95,11 @@ class TransSubstratePacket:
             raise ValueError("unsupported M032 packet version")
         passport_json = str(data["rewrite_passport_json"])
         passport_sha256 = str(data["rewrite_passport_sha256"])
-        actual = hashlib.sha256(passport_json.encode("utf-8")).hexdigest()
-        if actual != passport_sha256:
+        try:
+            _, _, passport = import_passport(passport_json)
+        except ValueError as error:
+            raise ValueError("invalid embedded rewrite passport") from error
+        if passport.sha256() != passport_sha256:
             raise ValueError("rewrite passport digest mismatch")
         return TransSubstratePacket(
             rewrite_passport_json=passport_json,
