@@ -1,0 +1,49 @@
+name: M033 post-migration controls
+
+# Development controls only. Primary post-migration seeds remain unopened.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m033-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run M032 and M033 focused controls
+        run: |
+          pytest -q \
+            tests/test_m032_trans_substrate_lifecycle.py \
+            tests/test_m033_post_migration_plasticity.py
+      - name: Audit repository integrity
+        run: python scripts/check_repository_integrity.py
+      - name: Confirm primary tasks remain unopened
+        run: |
+          python - <<'PYTHON'
+          from pathlib import Path
+
+          protocol = Path("experiments/M033/PROTOCOL_DRAFT.md").read_text(
+              encoding="utf-8"
+          )
+          status = Path("experiments/M033/STATUS.md").read_text(encoding="utf-8")
+          assert "Seeds `0–63` are reserved" in protocol
+          assert "does **not** set a numerical advantage threshold" in protocol
+          assert "PRIMARY TASKS UNOBSERVED" in status
+          assert "No result about post-migration plasticity is claimed" in status
+          PYTHON
