@@ -1,10 +1,10 @@
 """M032 — carry a verified rewritten body across an opaque substrate boundary.
 
 This development layer joins M025's transactional self-rewrite with M013e's bounded
-unknown-substrate discovery and native-body synthesis.  The complete transaction is
+unknown-substrate discovery and native-body synthesis. The complete transaction is
 committed only when the adopted source can be compiled into a finite DFA, migrated to
 an opaque machine, and packaged together with the organism's portable memory and
-exploration state.  Any bridge or migration failure restores both the source body and
+exploration state. Any bridge or migration failure restores both the source body and
 the learned-tool registry exactly.
 """
 
@@ -18,6 +18,7 @@ from typing import Mapping, Sequence
 from .m012b_dfa import DFA
 from .m013e_engine import MigrationCertificate, UnknownSubstrateMigrator
 from .m013e_lab import OpaqueBooleanMachine
+from .m013e_runtime import OpaqueNativeBody
 from .m020_self_rewrite import (
     Case,
     ToolRegistry,
@@ -49,14 +50,17 @@ class PortableLearningState:
 
     @staticmethod
     def from_dict(data: Mapping[str, object]) -> "PortableLearningState":
-        return PortableLearningState(
-            memory=tuple(tuple(int(value) for value in row) for row in data["memory"]),
-            uncertainty=tuple(int(value) for value in data["uncertainty"]),
-            exploration_frontier=tuple(
-                tuple(int(value) for value in row)
-                for row in data["exploration_frontier"]
-            ),
-        )
+        try:
+            return PortableLearningState(
+                memory=tuple(tuple(int(value) for value in row) for row in data["memory"]),
+                uncertainty=tuple(int(value) for value in data["uncertainty"]),
+                exploration_frontier=tuple(
+                    tuple(int(value) for value in row)
+                    for row in data["exploration_frontier"]
+                ),
+            )
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("invalid portable learning state") from error
 
 
 @dataclass(frozen=True)
@@ -90,24 +94,54 @@ class TransSubstratePacket:
 
     @staticmethod
     def from_json(raw: str) -> "TransSubstratePacket":
-        data = json.loads(raw)
-        if data.get("version") != "m032-trans-substrate-packet/1":
+        try:
+            data = json.loads(raw)
+        except (TypeError, json.JSONDecodeError) as error:
+            raise ValueError("invalid M032 packet JSON") from error
+        if not isinstance(data, dict) or data.get("version") != "m032-trans-substrate-packet/1":
             raise ValueError("unsupported M032 packet version")
-        passport_json = str(data["rewrite_passport_json"])
-        passport_sha256 = str(data["rewrite_passport_sha256"])
+
+        try:
+            passport_json = str(data["rewrite_passport_json"])
+            passport_sha256 = str(data["rewrite_passport_sha256"])
+            source_dfa = dict(data["source_dfa"])
+            opaque_body_json = str(data["opaque_body_json"])
+            discovered_opcodes = tuple(str(value) for value in data["discovered_opcodes"])
+            learning_state_data = data["learning_state"]
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("incomplete M032 packet") from error
+
         try:
             _, _, passport = import_passport(passport_json)
         except ValueError as error:
             raise ValueError("invalid embedded rewrite passport") from error
         if passport.sha256() != passport_sha256:
             raise ValueError("rewrite passport digest mismatch")
+
+        try:
+            DFA.from_dict(source_dfa)
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("invalid embedded source DFA") from error
+
+        try:
+            opaque_body = OpaqueNativeBody.from_json(opaque_body_json)
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
+            raise ValueError("invalid embedded opaque body") from error
+
+        if len(set(discovered_opcodes)) != len(discovered_opcodes):
+            raise ValueError("duplicate discovered opcode identifiers")
+        if not opaque_body.used_opcodes().issubset(set(discovered_opcodes)):
+            raise ValueError("opaque body uses an undiscovered opcode")
+        if not isinstance(learning_state_data, Mapping):
+            raise ValueError("invalid portable learning state")
+
         return TransSubstratePacket(
             rewrite_passport_json=passport_json,
             rewrite_passport_sha256=passport_sha256,
-            source_dfa=dict(data["source_dfa"]),
-            opaque_body_json=str(data["opaque_body_json"]),
-            discovered_opcodes=tuple(str(value) for value in data["discovered_opcodes"]),
-            learning_state=PortableLearningState.from_dict(data["learning_state"]),
+            source_dfa=source_dfa,
+            opaque_body_json=opaque_body_json,
+            discovered_opcodes=discovered_opcodes,
+            learning_state=PortableLearningState.from_dict(learning_state_data),
         )
 
 
