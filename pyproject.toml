@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mira-genesis"
-version = "0.19.0"
+version = "0.20.0"
 description = "Experimental trans-substrate cognitive metamorphosis research"
 requires-python = ">=3.11"
 # `numpy` is the only runtime dependency. It supports batched behavioural-equivalence

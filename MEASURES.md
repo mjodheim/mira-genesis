@@ -233,6 +233,12 @@ The pre-declared component-uniform diagnostic produced 50 wins, 14 ties and no l
 but this was not a registered decision gate. It motivates an untouched-seed
 confirmation rather than changing M029 after observation.
 
+M030 supplied that confirmation on untouched seeds 64–127. Component-uniform guidance
+reached 662 per mille clade/exact-CMP concordance and +1,000 per mille median paired
+final hidden quality, with 48 wins, 16 ties and no losses. The distinction is now
+supported in development: reusable-component evidence is informative in this finite
+rig, while adaptive concentration and resource viability remain separate mechanisms.
+
 ---
 
 ## What the register already suggests

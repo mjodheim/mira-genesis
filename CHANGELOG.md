@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.20.0 — 2026-08-02
+
+- Added M030's pre-written confirmation of M029's component-uniform diagnostic on the
+  untouched seed block 64–127.
+- Confirmed every gate: component-uniform guidance reached 662 per mille
+  clade/exact-CMP concordance, +1,186 over development adaptive, and +1,000 per mille
+  median paired final hidden quality with 48 wins, 16 ties and no losses.
+- Preserved the untouched boundary by using only seeds 128+ for unit and smoke
+  validation before the frozen confirmation commit.
+- Recorded 256 trajectories, 30,720 expansions, 92,928 unique evaluations and a
+  byte-identical replay.
+
 ## 0.19.0 — 2026-08-02
 
 - Added M029's hidden-disjoint compositional transfer probes and a frozen rerun of the

@@ -61,7 +61,7 @@ Current development evidence:
 | M027 | Exhaustive hidden-blind coverage exposed productive descendants before selection, but clade guidance still tied immediate guidance in all 64 paired seeds. |
 | M028 | Adaptive evaluation improved clade/exact-CMP concordance by only 40 per mille and tied uniform evaluation on median final hidden quality, with 2 wins, 60 ties and 2 losses. |
 | M029 | Hidden-disjoint component probes aligned the clade estimator at 699 per mille, but adaptive allocation missed the policy gates; the uniform diagnostic performed better. |
-| M030 | A pre-written untouched-seed confirmation now promotes component-uniform guidance to the primary comparison on seeds 64–127. |
+| M030 | Component-uniform guidance confirmed on untouched seeds 64–127: +1,000 per mille paired median hidden quality, 48 wins, 16 ties and no losses. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -97,9 +97,15 @@ allocation to a primary hypothesis. A distinct alternative is a pre-written
 depth-aware viability correction that distinguishes reusable components from lineages
 with insufficient remaining rewrite budget.
 
-M030 implements that confirmation without adding a mechanism. It calls the two frozen
-M029 policy paths on exactly seeds 64–127. Tests and smoke validation use only seeds
-128 and above, preserving the confirmation block until the pre-result commit exists.
+M030 confirmed that result without adding a mechanism. On untouched seeds 64–127,
+component-uniform guidance reached 662 per mille clade/exact-CMP concordance and
+improved paired final hidden quality by a median 1,000 per mille, with 48 wins, 16 ties
+and no losses. The pre-written controls all passed and the raw artifact replayed
+byte-identically.
+
+The next question is transport rather than another same-rig seed sweep: does the
+hidden-disjoint component signal survive a structurally different task generator? A
+separate resource-aware policy remains the alternative optimisation question.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on

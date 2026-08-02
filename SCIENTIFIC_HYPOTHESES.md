@@ -163,7 +163,8 @@ retroactive change to H11.
 M029's component-uniform diagnostic reflects a stable consequence of the
 hidden-disjoint component signal rather than a favourable result on seeds 0–63.
 
-**Status:** frozen for M030 development confirmation; not validated.
+**Status:** supported by the M030 untouched-seed development confirmation; not
+canonical.
 
 **Pre-written implication:** on exactly seeds 64–127, component-uniform guidance must
 achieve non-negative clade/exact-CMP concordance, exceed development-adaptive
@@ -175,3 +176,9 @@ isolation and aligned control. See
 **Scope:** M030 is an internal untouched-seed development confirmation. It is not a
 canonical sealed evaluation or a claim that the component probe generalises beyond the
 finite rig.
+
+**Result:** all gates passed on exactly seeds 64–127. Component-uniform concordance was
+662 per mille, 1,186 above development adaptive. Median paired final hidden advantage
+was 1,000 per mille, with 48 wins, 16 ties and no losses. Together with M029's
+pre-declared diagnostic, the two independent seed blocks produced 98 wins, 30 ties and
+no losses.

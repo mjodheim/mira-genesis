@@ -5,6 +5,8 @@ on untouched seeds 64–127. It introduces no new policy implementation.
 
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) fixes the confirmation block and gates.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md`](../../results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md)
+  records the complete positive untouched-seed development confirmation.
 
 All unit and smoke validation uses seeds 128 and above so the confirmation block
 remains unobserved until the pre-result commit is frozen.
