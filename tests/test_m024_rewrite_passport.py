@@ -138,12 +138,39 @@ def test_semantically_forged_active_source_is_rejected_even_with_new_envelope_ha
         import_passport(_repack(envelope))
 
 
+def test_semantically_forged_archive_is_rejected_even_with_new_envelope_hash():
+    body, registry, _ = _learned_state()
+    envelope = json.loads(export_passport(body, registry))
+    envelope["payload"]["archive"][0] = "def policy(x):\n    return x\n"
+
+    with pytest.raises(InvalidPassport, match="archive source"):
+        import_passport(_repack(envelope))
+
+
+def test_non_hex_digest_history_is_rejected():
+    body, registry, _ = _learned_state()
+    envelope = json.loads(export_passport(body, registry))
+    envelope["payload"]["adopted_digests"][0] = "g" * 64
+
+    with pytest.raises(InvalidPassport, match="invalid digest"):
+        import_passport(_repack(envelope))
+
+
 def test_forged_learned_tool_name_is_rejected():
     body, registry, _ = _learned_state()
     envelope = json.loads(export_passport(body, registry))
     envelope["payload"]["learned_tools"][0]["name"] = "learned_patch_forged"
 
     with pytest.raises(InvalidPassport, match="name does not match"):
+        import_passport(_repack(envelope))
+
+
+def test_coerced_patch_operation_types_are_rejected():
+    body, registry, _ = _learned_state()
+    envelope = json.loads(export_passport(body, registry))
+    envelope["payload"]["learned_tools"][0]["operations"][0]["index"] = "0"
+
+    with pytest.raises(InvalidPassport, match="invalid types"):
         import_passport(_repack(envelope))
 
 

@@ -33,6 +33,7 @@ from .m020_self_rewrite import (
 
 PASSPORT_VERSION = "m024-rewrite-passport/1"
 ENVELOPE_VERSION = "m024-rewrite-envelope/1"
+_LOWERCASE_HEX = frozenset("0123456789abcdef")
 
 
 class InvalidPassport(ValueError):
@@ -81,11 +82,13 @@ def _operation_to_dict(operation: PatchOperation) -> dict[str, object]:
 
 def _operation_from_dict(data: Mapping[str, object]) -> PatchOperation:
     try:
-        kind = str(data["kind"])
-        index = int(data["index"])
+        kind = data["kind"]
+        index = data["index"]
         value = data["value"]
-    except (KeyError, TypeError, ValueError) as error:
+    except KeyError as error:
         raise InvalidPassport("invalid patch operation") from error
+    if not isinstance(kind, str) or type(index) is not int:
+        raise InvalidPassport("patch operation kind and index have invalid types")
     if index < 0:
         raise InvalidPassport("patch operation index must be non-negative")
     if type(value) not in (int, str):
@@ -110,8 +113,10 @@ def _primitive_to_dict(tool: object) -> dict[str, object]:
 
 
 def _primitive_from_dict(data: Mapping[str, object]):
-    kind = str(data.get("kind", ""))
-    name = str(data.get("name", ""))
+    kind = data.get("kind")
+    name = data.get("name")
+    if not isinstance(kind, str) or not isinstance(name, str):
+        raise InvalidPassport("primitive tool kind and name must be strings")
     if kind == "constant":
         raw_values = data.get("values")
         if not isinstance(raw_values, list) or not raw_values:
@@ -148,10 +153,25 @@ def _validate_sources(
         validate_source(source, function_name)
     if not adopted_digests:
         raise InvalidPassport("adopted digest history must not be empty")
-    if any(len(digest) != 64 for digest in adopted_digests):
+    if any(
+        len(digest) != 64 or any(character not in _LOWERCASE_HEX for character in digest)
+        for digest in adopted_digests
+    ):
         raise InvalidPassport("adopted digest history contains an invalid digest")
     if adopted_digests[-1] != source_digest(active_source):
         raise InvalidPassport("active source does not match the latest adopted digest")
+
+    # Rollbacks append to the digest ledger while removing entries from the archive,
+    # so the current archive is an ordered subsequence rather than necessarily a
+    # prefix. Every rollback source must nevertheless have existed in the ledger
+    # before the current active body.
+    prior_digests = iter(adopted_digests[:-1])
+    for source in archive:
+        expected = source_digest(source)
+        if not any(digest == expected for digest in prior_digests):
+            raise InvalidPassport(
+                "archive source does not match the adopted digest history"
+            )
 
 
 def create_passport(
@@ -196,8 +216,8 @@ def _passport_from_payload(payload: Mapping[str, object]) -> RewritePassport:
     if payload.get("version") != PASSPORT_VERSION:
         raise InvalidPassport("unsupported rewrite-passport version")
     try:
-        function_name = str(payload["function_name"])
-        active_source = str(payload["active_source"])
+        function_name = payload["function_name"]
+        active_source = payload["active_source"]
         archive_raw = payload["archive"]
         digests_raw = payload["adopted_digests"]
         primitive_raw = payload["primitive_tools"]
@@ -205,6 +225,8 @@ def _passport_from_payload(payload: Mapping[str, object]) -> RewritePassport:
     except KeyError as error:
         raise InvalidPassport(f"missing passport field: {error.args[0]}") from error
 
+    if not isinstance(function_name, str) or not isinstance(active_source, str):
+        raise InvalidPassport("function_name and active_source must be strings")
     if not isinstance(archive_raw, list) or not all(
         isinstance(source, str) for source in archive_raw
     ):
