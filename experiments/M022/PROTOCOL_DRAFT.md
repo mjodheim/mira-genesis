@@ -16,6 +16,9 @@ noise-free episodes for each motif on different source automata. Episodes are
 interleaved by round, producing twelve cases. Rounds 0 and 1 allow the abstraction
 threshold to be reached; rounds 2 and 3 measure later reuse.
 
+The builder rejects duplicate source automata across the complete sequence. The
+development artifact records every paired episode, not only aggregate scores.
+
 ## Paired copies
 
 Both copies start from the same deep-copied pre-audit state and receive identical cases,

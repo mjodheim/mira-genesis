@@ -9,6 +9,7 @@ absorbs what it finds?
 from __future__ import annotations
 
 import argparse
+from dataclasses import asdict
 import json
 from pathlib import Path
 
@@ -88,11 +89,14 @@ def main() -> None:
         "motif_count": 3,
         "repetitions": 4,
         "late_round_start": 2,
+        "distinct_source_bodies": len({staged.case.base for staged in staged}),
         "positive_min_late_cost_ratio_per_mille": (
             POSITIVE_MIN_LATE_COST_RATIO_PER_MILLE
         ),
         "positive_control": positive_summary,
+        "positive_rows": [asdict(row) for row in positive.rows],
         "negative_control": negative_summary,
+        "negative_rows": [asdict(row) for row in negative.rows],
         "gates": gates,
         "all_gates_pass": all(gates.values()),
     }

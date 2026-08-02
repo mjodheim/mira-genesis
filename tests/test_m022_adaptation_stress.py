@@ -5,7 +5,10 @@ from types import SimpleNamespace
 
 import pytest
 
+from metamorphosis.m012b_dfa import DFA
+from metamorphosis.m017_lab import Episode
 from metamorphosis.m019_engine import Case
+import metamorphosis.m022_adaptation_stress as m022
 from metamorphosis.m022_adaptation_stress import (
     StagedCase,
     audit_summary,
@@ -101,3 +104,28 @@ def test_false_success_is_fatal():
 def test_sequence_builder_rejects_invalid_shapes(kwargs, message):
     with pytest.raises(ValueError, match=message):
         build_repeated_motif_sequence(0, **kwargs)
+
+
+def test_sequence_builder_deduplicates_source_bodies(monkeypatch):
+    first = DFA((0, 1), ((0, 1), (1, 0)), (False, True))
+    second = DFA((0, 1), ((1, 0), (1, 1)), (False, True))
+    third = DFA((0, 1), ((0, 0), (0, 1)), (True, False))
+    episodes = (
+        Episode(0, first, first, (), 0, False),
+        Episode(1, first, first, (), 0, False),
+        Episode(2, second, second, (), 0, False),
+        Episode(3, third, third, (), 0, False),
+    )
+
+    monkeypatch.setattr(m022, "make_environment", lambda *args, **kwargs: object())
+    monkeypatch.setattr(m022, "generate_episodes", lambda *args, **kwargs: episodes)
+
+    staged = build_repeated_motif_sequence(
+        0,
+        motif_count=1,
+        repetitions=3,
+        candidate_episodes=3,
+    )
+
+    assert len(staged) == 3
+    assert len({row.case.base for row in staged}) == 3

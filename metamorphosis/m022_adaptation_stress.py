@@ -115,9 +115,11 @@ def build_repeated_motif_sequence(
         by_motif: dict[int, list[Episode]] = {
             index: [] for index in range(motif_count)
         }
+        seen_bases: set[object] = set()
         for episode in episodes:
-            if not episode.has_noise:
+            if not episode.has_noise and episode.base not in seen_bases:
                 by_motif[episode.motif_index].append(episode)
+                seen_bases.add(episode.base)
         if not all(len(group) >= repetitions for group in by_motif.values()):
             continue
 
