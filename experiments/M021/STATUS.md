@@ -18,6 +18,17 @@ truth rather than merely improving their own scores.
 - a pre-written 100-per-mille development separation floor;
 - targeted unit tests, exact shard aggregation and a guarded development workflow.
 
+## Discarded pilot
+
+An earlier three-seed run was underpowered and made no ranking claim. Its original
+separation guard passed even though the widest within-measure spread was 584 per mille
+against a 750-per-mille between-measure spread. Five of twelve populations never solved
+an episode during life and eight learned no macro.
+
+That failure is retained as **R007** in [`../../MEASURES.md`](../../MEASURES.md). It led
+to the 24-paired-seed minimum and the explicit restriction of the separation floor to a
+development gate rather than a statistical or canonical decision rule.
+
 ## First 24-seed result
 
 The complete paired run evaluated 96 trajectories at commit
@@ -53,8 +64,9 @@ M021 must not be described as evidence for adaptive improvement.
 ## What remains before freeze consideration
 
 - decide whether M021's eventual claim is frozen transferred quality only;
-- preferably build a separately named adaptation-stress successor with a longer or
-  staged held-out sequence and a pre-written adaptive-versus-frozen gate;
+- repeat M022's now-passing seed-0 adaptation controls across paired seeds;
+- pre-write an M022 selection-population decision rule before applying it to M021
+  survivors;
 - choose and freeze a paired uncertainty and decision rule before any sealed run;
 - retain the exact four implementations or rename claims that refer to broader method
   families;

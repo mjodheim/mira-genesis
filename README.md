@@ -1,68 +1,78 @@
 # Mira Genesis
 
-**When does a proxy measure stop tracking what it claims to track, and under what
-optimisation pressure?** Mira Genesis asks that question in a domain where ground truth
-is **decidable**, so the answer is proved rather than estimated.
+Mira Genesis is a bounded, auditable research program about the gap between what an
+adaptive system optimises and what actually makes it better.
 
-## How the project got here
+Its active question is:
 
-The repository was first devoted to **trans-substrate cognitive metamorphosis**:
-separating a competence from the computational body that acquired it, transporting it,
-re-embodying it in a substrate whose semantics are unknown, and preserving its
-plasticity there. That line produced two sealed validations — M012b and M013e — and
-then four failures.
+> **When does a proxy measure stop tracking exact hidden quality, and under what
+> optimisation pressure?**
 
-None of the four failed in the organism.
+The question is studied in deterministic finite-automaton worlds, where behavioural
+equivalence is decidable. Ground truth can therefore be proved rather than judged by
+appearance.
 
-| | What gave way |
+## The construction goal behind the testbed
+
+The project began with a concrete long-term test: an organism learns in substrate A,
+diagnoses a limitation in its own cognitive body, rewrites that body, discovers the
+undeclared semantics of substrate B, migrates its competence and tools, and continues
+learning there without a human redesigning its architecture.
+
+That construction program remains the first-phase completion target. It also created
+the decidable laboratory in which the measurement question became visible. Four times,
+the mechanism under study held while the rule used to judge it failed:
+
+| Experiment | What failed |
 |---|---|
-| M014b | a 25% threshold on a window four queries wide |
-| M017 | a 10× threshold derived from a typical case taken for a bound |
-| M018 | no consequence to inefficiency, so nothing to optimise for |
-| M019 | a fitness horizon shorter than the payback period of learning |
+| M014b | A relative advantage threshold was larger than the measurement's useful dynamic range. |
+| M017 | A typical 10× advantage was mistaken for a lower bound. |
+| M018 | Search cost had no consequence, so there was no pressure to become efficient. |
+| M019 | Selection acted before learning could repay its initial cost. |
 
-Four times, what was being built held; what gave way was the way of judging whether it
-was better. The project now follows what its own failures identified.
+The project now advances on two connected tracks:
 
-## What this repository adds, and what it does not invent
+1. **measurement:** identify where proxy objectives diverge from exact hidden quality;
+2. **construction:** assemble proof-gated self-rewrite, isolated validation, portable
+   tools and unknown-substrate migration into one replayable lineage.
 
-The problem is neither new nor unexplored. Goodhart's law, reward hacking,
-specification gaming, novelty search and quality-diversity have worked on it for a long
-time, with partial answers.
+## What is established
 
-But those bodies of work operate almost entirely where **the true objective cannot be
-verified exactly**. Reward hacking is diagnosed because a human finds the result
-suspicious; novelty is judged by what looks interesting; behavioural descriptors are
-picked by hand.
+Canonical claims are deliberately narrow:
 
-Here, the behavioural equivalence of two finite automata is **provable**. So this
-repository can show *where exactly* a measure comes loose, instead of noting that a
-result looks wrong. It is a testbed for measure design — not an attempt to solve what
-others have not.
+| Experiment | Status | Supported claim |
+|---|---|---|
+| M012b | **VALIDATED** | Autonomous morphogenesis in a bounded finite domain. |
+| M013e | **VALIDATED** | Exact competence migration after experimental discovery of an opaque finite substrate. |
+| M014b | **FAILED** | Transport was exact, but its pre-registered learning advantage did not generalise. |
 
-The catalogue is in [`MEASURES.md`](MEASURES.md), and every case replays:
+Current development evidence:
 
-```bash
-python scripts/reproduce_measure_failures.py
-```
-
-## Current state
-
-| | |
+| Experiment | Development status |
 |---|---|
-| Sealed validations | **M012b** autonomous morphogenesis, **M013e** migration to an opaque substrate |
-| Ready to freeze | **M017** — self-extending language, criterion now directional |
-| Not supported | **M018** — destroying does not restore improvement |
-| Rig not valid | **M019** — selection too impatient to value learning |
-| Active | **M021** — do these selection measures move true quality? |
-| Domain | deterministic finite automata, binary alphabet, 4 to 10 states |
-| Substrates | opaque Boolean machines: opcodes with no declared semantics, discovered by probing |
+| M017 | All six freeze gates passed for a self-extending language; a human signature is still required before a one-shot canonical run. |
+| M020 | Bounded executable self-rewrite, strict-improvement adoption, exact archive, rollback and learned rewrite tools passed CI. |
+| M021 | A 24-seed paired comparison showed that selection measure strongly changes exact hidden quality; minimal criterion ranked first. It did **not** show post-selection adaptation. |
+| M022 | The seed-0 repeated-motif controls exposed adaptation during the audit: 224.84× late-search advantage for the self-extending organism and exactly 1.00× for open search. Cross-seed stability remains untested. |
+| M023 | Disposable subprocess evaluation and a fail-closed independent adoption gate passed CI. |
+| M024 | A canonical, integrity-checked passport for active source, rollback history and learned rewrite tools passed CI. |
 
-A bounded research laboratory. It demonstrates neither AGI, nor consciousness, nor
-open-ended self-improvement. Claims resting on M001–M011 are **not verifiable in this
-repository**: see [`archives/README.md`](archives/README.md).
+These are bounded development results, not claims of AGI, consciousness, unrestricted
+code execution or open-ended recursive self-improvement.
 
-## Installation
+## Current work
+
+The next measurement step is to repeat M022's controls across seeds, pre-write an
+adaptation decision rule, and only then audit populations selected by the M021 rankers.
+
+The next construction step is to join M020, M023 and M024 into one end-to-end lifecycle:
+search a rewrite, validate it independently, adopt it, migrate the complete rewrite
+state, replay its learned tool and survive a forced rollback. The full finish line is
+defined in [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md).
+
+## Reproduce the repository
+
+Mira Genesis requires Python 3.11 or newer.
 
 ```bash
 python -m venv .venv
@@ -70,40 +80,43 @@ source .venv/bin/activate       # Linux/macOS
 # .venv\Scripts\activate        # Windows
 pip install -e ".[dev]"
 pytest -q
-```
-
-Structural checks:
-
-```bash
 python scripts/check_repository_integrity.py
 ```
 
+Replay the catalogue of measurement failures:
+
 ```bash
-python scripts/audit_m017_isolation.py
+python scripts/reproduce_measure_failures.py
 ```
 
-## Layout
+Run the non-canonical M022 development controls:
 
-- `MEASURES.md` — catalogue of measures that came loose, with ground truth
-- `FAILURE_LOG.md` — failures and contaminations, never deleted
-- `metamorphosis/` — experimental core, one module prefix per experiment
-- `scripts/` — development benchmarks, canonical evaluations, audits, guardrails
-- `experiments/<ID>/` — frozen protocol, readable protocol and status of each experiment
-- `results/<ID>.md` and `results/<ID>_raw/` — canonical results and raw evidence
-- `tests/` — development tests, run by CI on every pull request
-- `archives/` — index of retired code, consumed sealed workflows, archive tags
-- `.github/workflows/ci.yml` — the only permanent CI
+```bash
+python scripts/run_m022_adaptation_smoke.py --seed 0
+```
 
-## Scientific rule
+## Repository map
 
-An experiment receives exactly one of these statuses: `VALIDATED`, `FAILED` or
-`INCONCLUSIVE`.
+- [`PROJECT_STATE.md`](PROJECT_STATE.md) — authoritative human-readable snapshot;
+- [`PROJECT_STATE.yaml`](PROJECT_STATE.yaml) — machine-readable project state;
+- [`ROADMAP.md`](ROADMAP.md) — completed, active and next experimental layers;
+- [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) — frozen definition
+  of the first complete form;
+- [`MEASURES.md`](MEASURES.md) — catalogue of proxy/ground-truth divergences;
+- [`FAILURE_LOG.md`](FAILURE_LOG.md) — failures and contaminations, never deleted;
+- `metamorphosis/` — experimental implementation, one module prefix per experiment;
+- `experiments/<ID>/` — protocols, status and scope;
+- `results/` — versioned scientific and development evidence;
+- `scripts/` — runners, audits and repository guardrails;
+- `tests/` — permanent development regression suite;
+- `archives/` — historical code indexes, consumed workflows and archive tags.
 
-1. The protocol is frozen and hashed before any result is observed.
-2. The canonical evaluation runs once, in CI, on an immutable commit.
-3. No rerun replaces a first attempt, and no threshold is relaxed afterwards.
-4. Failures and contaminations are kept, never deleted.
+## Scientific discipline
 
-See [`PROJECT_STATE.md`](PROJECT_STATE.md), [`ROADMAP.md`](ROADMAP.md),
-[`MEASURES.md`](MEASURES.md), [`FAILURE_LOG.md`](FAILURE_LOG.md) and
-[`DECISIONS.md`](DECISIONS.md).
+A canonical protocol is frozen and hashed before its result is observed. Its workflow
+runs once on an immutable commit. No rerun replaces the first attempt, no threshold is
+relaxed afterward, and failures remain part of the record.
+
+Development runs may improve a rig but may not be described as canonical evidence.
+English is the only language permitted on the active repository surface; historical
+immutable evidence is governed by [`LANGUAGE_POLICY.md`](LANGUAGE_POLICY.md).
