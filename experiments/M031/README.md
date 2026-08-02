@@ -6,6 +6,8 @@ to a split-scaffold generator of eight cyclic and permuted triads.
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) freezes the generator, seed boundary and
   decision gates.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M031_STRUCTURAL_TRANSPORT_RESULT.md`](../../results/M031_STRUCTURAL_TRANSPORT_RESULT.md)
+  records the complete positive development transport result.
 
-All unit and smoke validation uses seeds 64 and above so primary seeds 0–63 remain
-unobserved until the pre-result commit is frozen.
+All pre-result unit and smoke validation used seeds 64 and above, so primary seeds
+0–63 remained unobserved until the implementation and decision rule were frozen.

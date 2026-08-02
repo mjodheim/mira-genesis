@@ -127,9 +127,18 @@ losses across 128 development seeds for component-uniform versus development-ada
 guidance. This is reproducible finite-rig development evidence, not a canonical or
 domain-independent claim.
 
-The next measurement should transport the component signal to a structurally different
-task generator. A resource-aware adaptive policy is a distinct optimisation successor,
-not required to establish the now-confirmed finite information effect.
+M031 completed that structural transport. It replaced length-two pair reversals and a
+single platform with length-three cyclic/permuted triads and two independent
+scaffolds. Component-uniform concordance reached 737 per mille, 1,070 above development
+adaptive. Median paired final hidden advantage was 500 per mille, with 43 wins,
+18 ties and 3 losses. Every pre-written gate passed and the 48,018,205-byte artifact
+replayed byte-identically. See
+[`results/M031_STRUCTURAL_TRANSPORT_RESULT.md`](results/M031_STRUCTURAL_TRANSPORT_RESULT.md).
+
+The component information effect is therefore supported across two finite task
+generators, while remaining non-canonical and grammar-specific. The next separable
+measurement is a resource-aware adaptive allocation policy tested against the frozen
+uniform baseline. It is an optimisation question, not a repair to M031.
 
 ## Construction track
 

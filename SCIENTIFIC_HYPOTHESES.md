@@ -182,3 +182,26 @@ finite rig.
 was 1,000 per mille, with 48 wins, 16 ties and no losses. Together with M029's
 pre-declared diagnostic, the two independent seed blocks produced 98 wins, 30 ties and
 no losses.
+
+## H13 — Uniform component guidance transports across task structure
+
+The component information effect confirmed by M030 survives a generator that changes
+component size, task arity, composition order and rewrite dependency topology.
+
+**Status:** supported by the M031 development transport; not canonical.
+
+**Pre-written implication:** on exactly seeds 0–63 of the split-scaffold triad
+generator, component-uniform guidance must achieve non-negative clade/exact-CMP
+concordance, exceed development-adaptive concordance and median paired final hidden
+quality by at least 167 per mille, win at least 40 of 64 mismatch pairs, and preserve
+every structural, probe, coverage, uniqueness, isolation and aligned control. See
+[`experiments/M031/PROTOCOL_DRAFT.md`](experiments/M031/PROTOCOL_DRAFT.md).
+
+**Scope:** M031 changes one finite compositional generator inside the same M017 macro
+language. It does not establish a domain-independent signal or optimality of uniform
+evaluation.
+
+**Result:** every gate passed. Component-uniform concordance reached 737 per mille,
+1,070 above development adaptive. Median paired final hidden advantage was 500 per
+mille, with 43 wins, 18 ties and 3 losses. The complete artifact replayed
+byte-identically.

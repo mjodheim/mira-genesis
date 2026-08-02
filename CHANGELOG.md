@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.21.0 — 2026-08-02
+
+- Added M031's split-scaffold generator with length-three generic motifs and eight
+  cyclic/permuted triad tasks.
+- Transported the frozen component-uniform information rule: 737 per mille
+  clade/exact-CMP concordance, +1,070 over development adaptive, and +500 per mille
+  median paired final hidden quality with 43 wins, 18 ties and 3 losses.
+- Passed every structural, probe, coverage, uniqueness, selector-isolation and aligned
+  control on exactly 64 paired primary seeds.
+- Recorded 256 trajectories, 65,792 expansions, 198,144 unique evaluations and a
+  byte-identical 48,018,205-byte replay.
+
 ## 0.20.0 — 2026-08-02
 
 - Added M030's pre-written confirmation of M029's component-uniform diagnostic on the

@@ -62,6 +62,7 @@ Current development evidence:
 | M028 | Adaptive evaluation improved clade/exact-CMP concordance by only 40 per mille and tied uniform evaluation on median final hidden quality, with 2 wins, 60 ties and 2 losses. |
 | M029 | Hidden-disjoint component probes aligned the clade estimator at 699 per mille, but adaptive allocation missed the policy gates; the uniform diagnostic performed better. |
 | M030 | Component-uniform guidance confirmed on untouched seeds 64–127: +1,000 per mille paired median hidden quality, 48 wins, 16 ties and no losses. |
+| M031 | Component-uniform guidance transported to a split-scaffold triad generator: +500 per mille paired median hidden quality, 43 wins, 18 ties and 3 losses. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -103,9 +104,15 @@ improved paired final hidden quality by a median 1,000 per mille, with 48 wins, 
 and no losses. The pre-written controls all passed and the raw artifact replayed
 byte-identically.
 
-The next question is transport rather than another same-rig seed sweep: does the
-hidden-disjoint component signal survive a structurally different task generator? A
-separate resource-aware policy remains the alternative optimisation question.
+M031 answered the transport question on a generator with length-three components,
+eight cyclic/permuted triads and two independent scaffolds. Component-uniform
+concordance was 737 per mille, 1,070 above development adaptive. Median paired final
+hidden advantage was 500 per mille, with 43 wins, 18 ties and 3 losses. All frozen
+gates passed and the raw artifact replayed byte-identically.
+
+The finite component signal has now survived a second task structure. A resource-aware
+adaptive allocation policy is the next distinct optimisation question; it must remain
+separate from the established information effect and its frozen uniform baseline.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on
@@ -165,6 +172,12 @@ Run the non-canonical M030 untouched-seed confirmation:
 
 ```bash
 python scripts/run_m030_unseen_component_confirmation.py --workers 4
+```
+
+Run the non-canonical M031 structural transport comparison:
+
+```bash
+python scripts/run_m031_structural_transport.py --workers 4
 ```
 
 ## Repository map

@@ -203,11 +203,37 @@ development_state:
     aligned_control_exact: true
     byte_identical_replay: true
     repository_tests_passed: 191
+  M031:
+    status: development_structural_transport_supported
+    evaluated_commit: 4eb61e20418c8088487bbd5bbe806780d375d819
+    protocol_sha256: 15607402465f1a364d25672baf0d1dfc87c9b25dda0b8e90dee37d8636a22948
+    artifact_sha256: 934d0a76eb7d6dbe60c1524b62f6a5e3ad4798e08d03eceaba106e1d3a1f61d0
+    development_seed_start: 0
+    development_seed_count: 64
+    trajectories: 256
+    expansions: 65792
+    unique_evaluations: 198144
+    task_generator: split_scaffold_cyclic_triads_v1
+    structurally_distinct_generator: true
+    exact_development_seed_range: true
+    component_uniform_clade_exact_cmp_concordance_per_mille: 737
+    development_adaptive_clade_exact_cmp_concordance_per_mille: -333
+    component_minus_development_alignment_per_mille: 1070
+    component_minus_development_median_per_mille: 500
+    component_wins: 43
+    component_ties: 18
+    component_losses: 3
+    component_estimator_transport_supported: true
+    component_policy_transport_supported: true
+    uniform_component_signal_transported: true
+    aligned_control_exact: true
+    byte_identical_replay: true
+    repository_tests_passed: 202
 
 active_next_steps:
   measurement:
-    - design_structurally_distinct_component_signal_transport_rig
-    - keep_resource_aware_adaptive_policy_as_distinct_optimization_successor
+    - design_resource_aware_component_evaluation_policy
+    - compare_against_frozen_component_uniform_baseline
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery
     - migrate_memory_uncertainty_and_exploration_state
