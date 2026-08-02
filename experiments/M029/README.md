@@ -6,6 +6,8 @@ motifs while remaining exactly disjoint from both development and hidden task su
 
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) fixes the candidate comparison and gates.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md`](../../results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md)
+  records the complete 64-seed mixed development result.
 
 The frozen M028 adaptive policy is the primary baseline. A component-uniform control
 separates the probe signal from adaptive observation concentration.

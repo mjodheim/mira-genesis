@@ -44,7 +44,7 @@ without human architectural intervention. All ten required gates are defined in
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
 | M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
-| M029 | FROZEN FOR DEVELOPMENT RUN | Hidden-disjoint component probes replace current performance as the evaluation signal. |
+| M029 | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP, but adaptive concentration missed the allocation and final-quality gates. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
 M017 and M020–M029 are development evidence and must not be promoted to canonical
@@ -100,11 +100,19 @@ this mismatch. The next separable mechanism must change the information used to 
 evaluations—uncertainty, behavioural diversity or a separately justified transfer
 proxy—or the measurement track should resume M022's deferred cross-seed controls.
 
-M029 now fixes the transfer-proxy option before its complete run. For every generic
-motif, a public component suite tests the motif alone and repeated; all probe sequences
-are exactly disjoint from development and hidden suites, and shortcut macros pass none.
-The primary comparison reruns frozen M028 performance-adaptive guidance against
-component-adaptive guidance, with component-uniform allocation as a diagnostic control.
+M029 tested that transfer proxy. Component-adaptive clade/exact-CMP concordance reached
+699 per mille, 1,177 above the frozen development-adaptive baseline. The registered
+prediction still failed: the allocation shift was 92 rather than 167 per mille and
+paired final advantage was zero, with 31 wins, 32 ties and 1 loss.
+
+The pre-declared component-uniform diagnostic was stronger: 50 wins, 14 ties and no
+losses against development adaptive, with median final hidden quality 1,000 per mille.
+It cannot be promoted to a confirmed claim on the already observed seeds. See
+[`results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md`](results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md).
+
+The next clean measurement is a frozen component-uniform comparison on untouched seeds
+64–127. A distinct alternative is a depth-aware viability signal that penalises useful
+components embedded in lineages with too little remaining rewrite budget.
 
 ## Construction track
 

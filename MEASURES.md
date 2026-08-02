@@ -211,11 +211,33 @@ that mechanism and does not test full HGM.
 M028 still does not test full HGM. It isolates one finite evaluation-target adaptation
 while holding asynchronous scheduling, software tasks and the rest of HGM out of scope.
 
+## R011 — reusable components without remaining-budget viability
+
+- **Origin:** M029, mixed development result.
+- **Measure:** success on generic motifs alone and under exact repetition, aggregated
+  over observed clades.
+- **What it claimed to track:** reusable structure that preserves maximum hidden
+  descendant quality.
+- **What worked:** the probe was exactly disjoint from development and hidden suites,
+  and median clade/exact-CMP concordance moved from -478 to 699 per mille.
+- **Divergence:** component-adaptive guidance still had median paired final advantage
+  zero and missed the 40-win gate with 31 wins, 32 ties and 1 loss.
+- **Cause:** a generic component remains probe-successful inside a mixed lineage that
+  has already spent scarce depth on shortcut edits. Reusability does not imply enough
+  remaining budget to assemble the complete generic solution.
+- **Lesson:** a potential proxy needs both **capability evidence** and **resource
+  viability**. Measuring useful parts without the budget needed to compose them can
+  still overvalue a doomed lineage.
+
+The pre-declared component-uniform diagnostic produced 50 wins, 14 ties and no losses,
+but this was not a registered decision gate. It motivates an untouched-seed
+confirmation rather than changing M029 after observation.
+
 ---
 
 ## What the register already suggests
 
-Seven regularities, drawn from ten cases rather than postulated:
+Eight regularities, drawn from eleven cases rather than postulated:
 
 1. **Establish the dynamic range before fixing a margin** (R001, R003, R007).
 2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
@@ -227,6 +249,8 @@ Seven regularities, drawn from ten cases rather than postulated:
 6. **Sampling weights determine what an aggregate actually estimates** (R009).
 7. **Adaptive weighting cannot recover information absent from its routing signal**
    (R010).
+8. **Reusable capability and remaining resource viability are separate quantities**
+   (R011).
 
 R007 is the internal warning: recording a lesson does not guarantee that the next
 instrument applies it correctly.

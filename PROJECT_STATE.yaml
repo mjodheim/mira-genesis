@@ -150,23 +150,39 @@ development_state:
     byte_identical_replay: true
     repository_tests_passed: 156
   M029:
-    status: frozen_for_development_run
-    claim_under_test: hidden_disjoint_component_signal_improves_cmp_guidance
-    paired_seeds_planned: 64
-    trajectories_planned: 384
+    status: estimator_aligned_without_policy_advantage
+    evaluated_commit: 7c3eaa210936afeb1640b9cfbf67924d67e6c679
+    protocol_sha256: 989b909ebe2566aa5042f769e344511d2b3d93d4aa8423f6adb3e13ea1d46a07
+    artifact_sha256: 8ef0d39adc8f26610468499f72a1227886d7d30691158d4078da216b91ea2e20
+    paired_seeds: 64
+    trajectories: 384
+    expansions: 46080
+    unique_evaluations: 139392
     coverage_max_depth: 3
-    compared_policies:
-      - development_adaptive
-      - component_uniform
-      - component_adaptive
     component_probe_hidden_disjoint: true
     component_probe_controls_pass: true
-    result_observed: false
+    component_adaptive_clade_exact_cmp_concordance_per_mille: 699
+    development_adaptive_clade_exact_cmp_concordance_per_mille: -478
+    component_minus_development_alignment_per_mille: 1177
+    component_minus_development_high_potential_allocation_per_mille: 92
+    component_adaptive_minus_development_median_per_mille: 0
+    component_adaptive_wins: 31
+    component_adaptive_ties: 32
+    component_adaptive_losses: 1
+    component_uniform_wins_diagnostic: 50
+    component_uniform_ties_diagnostic: 14
+    component_uniform_losses_diagnostic: 0
+    component_allocation_shift_supported: false
+    component_estimator_alignment_supported: true
+    component_policy_advantage_supported: false
+    aligned_control_exact: true
+    byte_identical_replay: true
+    repository_tests_passed: 179
 
 active_next_steps:
   measurement:
-    - commit_frozen_M029_protocol_before_full_result
-    - run_and_replay_M029_64_seed_development_comparison
+    - freeze_component_uniform_confirmation_on_unseen_seeds_64_127
+    - keep_depth_aware_viability_as_a_distinct_successor
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery
     - migrate_memory_uncertainty_and_exploration_state

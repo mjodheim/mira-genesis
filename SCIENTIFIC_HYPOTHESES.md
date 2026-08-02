@@ -137,7 +137,8 @@ When immediate performance rewards memorised shortcuts, a separate public suite 
 tests generic motifs alone and under repetition routes evaluation toward reusable
 lineages and improves observed clade guidance without exposing hidden cases.
 
-**Status:** frozen for an M029 development test; not validated.
+**Status:** estimator implication supported, full M029 policy implication not
+supported.
 
 **Pre-written implication:** component-adaptive evaluation must shift at least 167 per
 mille more observations toward high-potential observed nodes, achieve non-negative
@@ -149,3 +150,10 @@ aligned equality and selector isolation must all pass. The full rule is fixed in
 
 **Scope:** the component suite uses the finite rig's known public task grammar. H11 is
 not a claim that the probe is a domain-independent measure of potential.
+
+**Result:** component-adaptive concordance reached 699 per mille and exceeded the
+development baseline by 1,177, but the allocation shift was only 92 per mille and the
+paired final advantage remained zero, with 31 wins, 32 ties and 1 loss. The registered
+conjunction therefore failed. The component-uniform diagnostic produced 50 wins,
+14 ties and no losses, motivating an untouched-seed confirmation rather than a
+retroactive change to H11.
