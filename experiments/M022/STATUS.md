@@ -1,6 +1,6 @@
 # M022 — Status
 
-**ADAPTATION-STRESS CONTROLS IMPLEMENTED, NOT YET EXECUTED**
+**SEED-0 DEVELOPMENT CONTROLS PASSED**
 
 ## Implemented
 
@@ -14,9 +14,22 @@
 - an open-search negative control required to remain exactly at 1000 per mille;
 - unit tests for the paired evaluator, non-learning control, isolation and false success.
 
+## First control result
+
+At seed 0, every pre-written gate passed:
+
+- the self-extending control solved all 12 episodes and all six late episodes;
+- its adaptive late search used 264 nodes versus 59,358 for the frozen copy, a
+  224,840-per-mille cost ratio;
+- the adaptive copy ended with nine learned macros;
+- open search solved the same episodes in both conditions, stayed exactly at a
+  1,000-per-mille cost ratio and learned no macros.
+
+See [`../../results/M022_ADAPTATION_SMOKE_RESULT.md`](../../results/M022_ADAPTATION_SMOKE_RESULT.md)
+and [`../../results/M022_adaptation_smoke.json`](../../results/M022_adaptation_smoke.json).
+
 ## Not done
 
-- no real positive/negative smoke result has been recorded;
 - controls have not been repeated across seeds;
 - selected M021 populations have not been evaluated;
 - no adaptation decision rule for selection measures is frozen;
@@ -24,5 +37,6 @@
 
 ## Scientific status
 
-**NO RESULT.** M022 may not compare selection measures until both development controls
-pass without changing their pre-written gates.
+**DEVELOPMENT RIG SUPPORTED AT SEED 0.** The repeated-motif audit separates persistent
+language growth from non-learning open search under its pre-written controls. This is
+not yet evidence about M021-selected populations or stability across seeds.
