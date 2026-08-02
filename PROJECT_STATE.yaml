@@ -1,5 +1,5 @@
 project: Mira Genesis
-updated_at: 2026-08-02
+updated_at: 2026-08-03
 status: bounded_decidable_research_program
 
 active_research_question: >-
@@ -229,15 +229,34 @@ development_state:
     aligned_control_exact: true
     byte_identical_replay: true
     repository_tests_passed: 202
+  M032:
+    status: development_base_verified
+    evaluated_commit: 4080ccc4b9381b1a2b0f8714e904c57335330877
+    focused_workflow_run: 30769852599
+    complete_ci_run: 30769852609
+    focused_controls_passed: 5
+    repository_tests_passed: 211
+    python_versions_verified:
+      - "3.11"
+      - "3.13"
+    capability: rewritten_body_compilation_and_validated_state_packet_across_opaque_substrate
+    finite_policy_compilation: true
+    unknown_substrate_discovery_reused_from_M013e: true
+    learned_rewrite_tools_transport_verified: true
+    declared_learning_state_transport_verified: true
+    exact_rollback_on_bridge_failure: true
+    deterministic_packet_identity: true
+    packet_tamper_rejection: true
+    post_migration_learning_advantage_supported: false
 
 active_next_steps:
   measurement:
     - design_resource_aware_component_evaluation_policy
     - compare_against_frozen_component_uniform_baseline
   construction:
-    - compile_M025_rewrite_state_after_unknown_substrate_discovery
-    - migrate_memory_uncertainty_and_exploration_state
-    - test_plasticity_on_a_post_migration_task_family
+    - reveal_new_task_family_only_after_migration
+    - compare_complete_lineage_against_fresh_parent_output_only_and_ablated_controls
+    - test_functional_use_of_transported_memory_uncertainty_exploration_and_tools
 
 completion_gates_passed_bounded:
   autonomous_morphogenesis: true
@@ -248,6 +267,8 @@ completion_gates_passed_bounded:
   exact_archive_and_rollback: true
   portable_bounded_rewrite_tools: true
   transactional_portable_rewrite_lifecycle: true
+  rewritten_body_compiled_after_unknown_substrate_discovery: true
+  validated_portable_learning_state_packet: true
 
 not_validated:
   - autonomous_fault_diagnosis
@@ -255,8 +276,7 @@ not_validated:
   - arbitrary_multi_file_self_rewrite
   - kernel_network_and_syscall_isolation
   - authenticated_passport_provenance
-  - unknown_substrate_compilation_of_rewritten_body
-  - portable_autobiographical_memory_and_exploration_state
+  - functional_post_migration_use_of_transported_memory_uncertainty_and_exploration
   - post_migration_learning_advantage
   - three_repeated_improvement_cycles
   - open_ended_self_metamorphosis
