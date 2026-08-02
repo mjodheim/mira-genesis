@@ -31,6 +31,7 @@ target.
 | M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
 | M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
+| M029 | Hidden-disjoint component probes | FROZEN FOR DEVELOPMENT RUN | Test reusable-component evidence against the frozen M028 performance signal. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -134,6 +135,18 @@ rig. A successor must change the allocation signal itself—uncertainty, behavio
 diversity or a separately justified transfer proxy—or return to M022's deferred
 cross-seed controls. Increasing breadth or tuning the failed thresholds remains
 inadmissible.
+
+### M029 — evaluate reusable components without hidden overlap
+
+M029 takes the transfer-proxy option. Each generic motif is tested alone under a
+one-symbol limit and repeated under a two-symbol limit. Shortcut macros pass none of
+these tasks, while platform-plus-generic states expose reusable structure. Every probe
+sequence is exactly disjoint from both development and hidden suites.
+
+The primary baseline is the frozen M028 performance-adaptive policy. Component-uniform
+and component-adaptive policies use the same evaluation schedule, clade parent selector,
+40-expansion budget and visible final selector. The 64-seed decision and all isolation
+gates are written before the complete result.
 
 ## Construction track
 

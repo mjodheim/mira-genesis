@@ -44,9 +44,10 @@ without human architectural intervention. All ten required gates are defined in
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
 | M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
+| M029 | FROZEN FOR DEVELOPMENT RUN | Hidden-disjoint component probes replace current performance as the evaluation signal. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M028 are development evidence and must not be promoted to canonical
+M017 and M020–M029 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -98,6 +99,12 @@ Additional breadth and performance-adaptive weighting are both rejected as repai
 this mismatch. The next separable mechanism must change the information used to route
 evaluations—uncertainty, behavioural diversity or a separately justified transfer
 proxy—or the measurement track should resume M022's deferred cross-seed controls.
+
+M029 now fixes the transfer-proxy option before its complete run. For every generic
+motif, a public component suite tests the motif alone and repeated; all probe sequences
+are exactly disjoint from development and hidden suites, and shortcut macros pass none.
+The primary comparison reruns frozen M028 performance-adaptive guidance against
+component-adaptive guidance, with component-uniform allocation as a diagnostic control.
 
 ## Construction track
 

@@ -149,11 +149,24 @@ development_state:
     aligned_control_exact: true
     byte_identical_replay: true
     repository_tests_passed: 156
+  M029:
+    status: frozen_for_development_run
+    claim_under_test: hidden_disjoint_component_signal_improves_cmp_guidance
+    paired_seeds_planned: 64
+    trajectories_planned: 384
+    coverage_max_depth: 3
+    compared_policies:
+      - development_adaptive
+      - component_uniform
+      - component_adaptive
+    component_probe_hidden_disjoint: true
+    component_probe_controls_pass: true
+    result_observed: false
 
 active_next_steps:
   measurement:
-    - choose_potential_sensitive_evaluation_signal_or_resume_M022
-    - freeze_any_new_successor_rule_before_full_observation
+    - commit_frozen_M029_protocol_before_full_result
+    - run_and_replay_M029_64_seed_development_comparison
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery
     - migrate_memory_uncertainty_and_exploration_state

@@ -60,6 +60,7 @@ Current development evidence:
 | M026 | A decidable DGM/HGM-inspired benchmark exposed an exact performance/potential mismatch, but observed clade guidance alone did not beat immediate guidance across 64 paired seeds. |
 | M027 | Exhaustive hidden-blind coverage exposed productive descendants before selection, but clade guidance still tied immediate guidance in all 64 paired seeds. |
 | M028 | Adaptive evaluation improved clade/exact-CMP concordance by only 40 per mille and tied uniform evaluation on median final hidden quality, with 2 wins, 60 ties and 2 losses. |
+| M029 | A pre-written comparison now tests a compositional transfer probe that is exactly disjoint from development and hidden suites. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -82,6 +83,11 @@ The next separable measurement must therefore change the information used to all
 evaluations, not merely its concentration. Candidate signals are uncertainty,
 behavioural diversity or a separately justified transfer proxy. Returning to M022's
 deferred cross-seed adaptation controls remains the independent alternative.
+
+M029 implements the transfer-proxy option. It evaluates reusable generic motifs alone
+and under exact repetition, while shortcuts cannot pass and no probe sequence appears
+in either sealed suite. The frozen M028 adaptive policy remains the primary baseline;
+component-uniform allocation is a diagnostic control.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on
@@ -129,6 +135,12 @@ Run the non-canonical M028 adaptive evaluation comparison:
 
 ```bash
 python scripts/run_m028_adaptive_evaluation_comparison.py --seeds 64 --workers 4
+```
+
+Run the non-canonical M029 component-probe comparison:
+
+```bash
+python scripts/run_m029_component_probe_comparison.py --seeds 64 --workers 4
 ```
 
 ## Repository map
