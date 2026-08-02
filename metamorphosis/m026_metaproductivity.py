@@ -7,8 +7,8 @@ selection fixed:
 * ``dgm_immediate`` uses immediate development performance with a direct-child bonus;
 * ``hgm_clade`` uses development evidence aggregated over the observed clade;
 * ``uniform`` is an archive-search baseline;
-* ``oracle_descendant`` is an evaluator-only ceiling with access to exact hidden
-  descendant quality.
+* ``oracle_descendant`` is an oracle-guided control with access to exact hidden
+  rooted-clade quality for parent selection.
 
 Each node is a serialisable extension of M017's rewrite language. Development and
 hidden tasks are finite transformation sequences, and the minimum number of symbols

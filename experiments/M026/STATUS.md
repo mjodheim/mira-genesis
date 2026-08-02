@@ -1,11 +1,18 @@
 # M026 — Status
 
-**PROTOCOL AND IMPLEMENTATION READY TO FREEZE — NO FULL RESULT**
+**DEVELOPMENT — PRE-WRITTEN HGM-INSPIRED ADVANTAGE NOT SUPPORTED**
 
 The literature mapping, exhaustive structural controls, policy adaptations and
-64-seed decision rule were written before the full development comparison. An
-eight-seed smoke run exercised the runner without satisfying the pre-written minimum
-sample size; its local artifact is not versioned.
+64-seed decision rule were written before the full development comparison. The
+implementation was committed before the complete result was observed.
 
-No M026 result may be reported until focused tests, an underpowered smoke run, the full
-paired run and repository-wide verification pass.
+Across 64 paired mismatch seeds, the HGM-inspired policy's median final hidden
+advantage over the DGM-inspired policy was 0 per mille, with 4 wins, 59 ties and 1
+loss. The pre-written gate required at least 167 per mille and 40 wins. The aligned
+control and isolation guards passed.
+
+Verification completed with 18 focused M026 tests, 123 repository tests, the
+repository integrity audit and a byte-identical full experiment replay.
+
+The complete result and its interpretation are recorded in
+[`../../results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md`](../../results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md).

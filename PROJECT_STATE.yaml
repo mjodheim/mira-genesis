@@ -89,12 +89,25 @@ development_state:
     evaluated_commit: b211826b3d21e4e2b473b4754a6341d352f7cd03
     repository_tests_passed: 105
     capability: transactional_portable_proof_gated_rewrite_lifecycle
+  M026:
+    status: hypothesis_not_supported_in_development
+    evaluated_commit: 3fa79d264c125be3e73f2751298cbd430109eb8a
+    protocol_sha256: 5df38412a6abe762e9ab5c43bfbca511cb5e9d49760b4267375dd19b9ab5c671
+    artifact_sha256: 9b288557571aafb450fbe891c7a0d4a74c95513e86fdf516915774652cf32289
+    paired_seeds: 64
+    trajectories: 512
+    hgm_minus_dgm_median_per_mille: 0
+    hgm_wins: 4
+    hgm_ties: 59
+    hgm_losses: 1
+    aligned_control_exact: true
+    hgm_policy_advantage_supported: false
+    repository_tests_passed: 123
 
 active_next_steps:
   measurement:
-    - repeat_M022_controls_across_paired_seeds
-    - prewrite_selection_population_adaptation_rule
-    - audit_M021_selected_populations_only_after_controls_pass
+    - decide_exploration_controlled_M026_successor_or_resume_M022
+    - freeze_any_successor_rule_before_observation
   construction:
     - compile_M025_rewrite_state_after_unknown_substrate_discovery
     - migrate_memory_uncertainty_and_exploration_state

@@ -7,6 +7,8 @@ descendant quality is computable but unavailable to every public selector.
 - [`LITERATURE_MAP.md`](LITERATURE_MAP.md) defines the relationship to published work.
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) fixes the development comparison and gates.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md`](../../results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md)
+  records the complete 64-seed negative development result.
 
 M026 is an adaptation of published parent-selection ideas to Mira's finite language,
 not a reimplementation or reproduction of DGM, HGM or SGM.

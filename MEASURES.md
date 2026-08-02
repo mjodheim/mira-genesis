@@ -149,17 +149,40 @@ Output of case R004, as an example:
   seeds, and its 100-per-mille floor remained explicitly a development separation gate
   rather than a significance or canonical decision rule.
 
+## R008 — a long-term estimator without evidence about the long term
+
+- **Origin:** M026, negative development result.
+- **Measure:** observed mean task success aggregated over a node's current clade.
+- **What it claimed to track:** exact best hidden quality reachable in that rooted
+  clade.
+- **Divergence:** the positive control proves that the zero-score platform can reach
+  6/6 hidden cases while a one-score shortcut can reach only 3/6. Yet the HGM-inspired
+  policy's median final hidden quality was 0 per mille, identical to the DGM-inspired
+  policy, with only 4 paired wins among 64 seeds.
+- **Cause:** before the platform lineage produces a successful descendant, its
+  observed clade contains no evidence of its latent value. Aggregation cannot recover
+  information that expansion has not exposed.
+- **Lesson:** a long-horizon statistic does not create long-horizon evidence. Its
+  exploration and evaluation process must reveal the lineage before the estimator can
+  value it.
+
+The exact mismatch and exhaustive aligned control make the failure localisable. The
+result does not test full HGM, whose adaptive evaluation and scheduling mechanisms were
+held out of M026.
+
 ---
 
 ## What the register already suggests
 
-Four regularities, drawn from seven cases rather than postulated:
+Five regularities, drawn from eight cases rather than postulated:
 
 1. **Establish the dynamic range before fixing a margin** (R001, R003, R007).
 2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
 3. **An admission condition is worth the completeness of its verification procedure**
    (R004).
 4. **The evaluation horizon outranks the intensity of the pressure** (R005, R006).
+5. **A long-horizon estimate needs a process that reveals long-horizon evidence**
+   (R008).
 
 R007 is the internal warning: recording a lesson does not guarantee that the next
 instrument applies it correctly.

@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.16.0 — 2026-08-02
+
+- Added M026, the first direct literature-facing benchmark, with explicit mappings to
+  DGM, HGM and SGM and equally explicit non-reproduction boundaries.
+- Added an exact finite performance/potential reversal, an exhaustive aligned control,
+  selector isolation, fixed-point stochastic policies and four-worker replay.
+- Preserved the 64-seed negative development result: HGM-inspired clade aggregation
+  did not beat DGM-inspired immediate guidance under the fixed expansion process.
+- Recorded the frozen implementation and protocol identities, the reproducible
+  512-run artifact hash and a byte-identical full replay.
+
 ## 0.15.0 — 2026-08-02
 
 - Ran M021 across 24 paired seeds and preserved the development result: implemented
