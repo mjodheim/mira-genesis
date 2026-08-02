@@ -1,0 +1,71 @@
+name: M031 structural transport
+
+# Development only. Smoke execution uses seeds 64-67 so the frozen primary block
+# 0-63 remains untouched until the recorded pre-result commit.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m031-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run M031 focused tests
+        run: pytest -q tests/test_m031_structural_transport.py
+      - name: Run four non-primary smoke seeds
+        run: >-
+          python scripts/run_m031_structural_transport.py
+          --seed-start 64
+          --seeds 4
+          --workers 4
+          --output results/M031_structural_transport_smoke.json
+      - name: Verify smoke-only and isolation guardrails
+        run: |
+          python - <<'PYTHON'
+          import json
+          import pathlib
+          import sys
+
+          payload = json.loads(
+              pathlib.Path("results/M031_structural_transport_smoke.json")
+              .read_text(encoding="utf-8")
+          )
+          summary = payload["summary"]
+          required = {
+              "comparison_status": "insufficient_paired_seeds",
+              "exact_development_seed_range": False,
+              "coverage_exact": True,
+              "aligned_control_exact": True,
+              "transport_controls_pass": True,
+              "component_probe_hidden_disjoint": True,
+              "unique_task_evaluations": True,
+              "hidden_fields_visible_to_selectors": False,
+              "integer_only_selection_traces": True,
+          }
+          for key, expected in required.items():
+              if summary.get(key) != expected:
+                  sys.exit(f"{key}={summary.get(key)!r}, expected {expected!r}")
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m031-smoke-${{ github.run_id }}
+          path: results/M031_structural_transport_smoke.json
+          if-no-files-found: error
+          retention-days: 30

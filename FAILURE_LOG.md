@@ -388,3 +388,15 @@ byte-identical.
 This confirms that M029's component information effect was not a favourable draw on
 seeds 0–63. It does not reverse M029's failed adaptive-policy verdict: uniform
 observation and adaptive concentration remain empirically different interventions.
+
+### M031 resolution of the structural-transport boundary
+
+M031 changed the task generator rather than drawing another same-structure seed block.
+Length-three cyclic/permuted triads and two independent scaffolds replaced length-two
+pair reversals and one platform. The frozen component-uniform contrast passed every
+gate with 737 per mille concordance, +500 per mille median paired hidden quality and a
+43/18/3 split. The replay was byte-identical.
+
+This resolves the finite structural-transport question without erasing M029's failure.
+The remaining optimisation problem is still resource viability under non-uniform
+allocation, not whether the component information exists in these two generators.

@@ -239,6 +239,13 @@ final hidden quality, with 48 wins, 16 ties and no losses. The distinction is no
 supported in development: reusable-component evidence is informative in this finite
 rig, while adaptive concentration and resource viability remain separate mechanisms.
 
+M031 then transported the same uniform information rule to length-three cyclic and
+permuted triads behind two scaffolds. Concordance remained positive at 737 per mille
+and exceeded development adaptive by 1,070; paired final hidden quality improved by a
+median 500 per mille with 43 wins, 18 ties and 3 losses. This strengthens the finite
+information claim across task structure, but does not remove the separate need for a
+resource-aware non-uniform policy.
+
 ---
 
 ## What the register already suggests

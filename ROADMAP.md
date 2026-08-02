@@ -33,6 +33,7 @@ target.
 | M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
 | M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates and underperformed the uniform diagnostic. |
 | M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
+| M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to split-scaffold cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -166,6 +167,26 @@ The seed-block replication is close: M029's diagnostic was 50/14/0 and M030 was
 48/16/0. The next justified step changes structure rather than drawing more seeds from
 the same generator: transport the component signal to a distinct compositional task
 family. Resource-aware adaptive allocation remains a separate policy question.
+
+### M031 — transport the signal across task structure
+
+M031 changed four structural properties before observing its primary seeds: generic
+motifs grew from two to three atoms, pair reversals became eight cyclic/permuted
+triads, one platform became two independent scaffolds, and eight shortcuts competed
+with a depth-five reusable route. The M030 policy contrast and decision thresholds
+remained fixed.
+
+Across exactly 64 paired primary seeds, component-uniform guidance reached 737 per
+mille clade/exact-CMP concordance versus -333 for development adaptive. Median paired
+final hidden advantage was 500 per mille, with 43 wins, 18 ties and 3 losses. Every
+registered structural, isolation and aligned-control gate passed, and the complete
+artifact replayed byte-identically.
+
+The narrow transport claim is therefore supported across two finite generators. The
+next admissible measurement question is optimisation: can a resource-aware adaptive
+policy improve on the frozen uniform component baseline without reviving M029's
+shortcut-contaminated allocation failure? It must be pre-registered as a distinct
+successor rather than folded into M031.
 
 ## Construction track
 
