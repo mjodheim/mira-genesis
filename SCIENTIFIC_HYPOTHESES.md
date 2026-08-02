@@ -130,3 +130,30 @@ mille above uniform. Median final hidden advantage was zero, with 2 wins, 60 tie
 2 losses. The adaptive policy allocated 34 per mille of its non-initial evaluations to
 high-potential observed nodes versus 51 per mille under uniform allocation. Unequal
 weighting by a misaligned proxy did not approximate the hidden clade maximum.
+
+## H11 — Hidden-disjoint component probes expose reusable potential
+
+When immediate performance rewards memorised shortcuts, a separate public suite that
+tests generic motifs alone and under repetition routes evaluation toward reusable
+lineages and improves observed clade guidance without exposing hidden cases.
+
+**Status:** estimator implication supported, full M029 policy implication not
+supported.
+
+**Pre-written implication:** component-adaptive evaluation must shift at least 167 per
+mille more observations toward high-potential observed nodes, achieve non-negative
+clade/exact-CMP concordance with at least 167 per mille advantage, improve median final
+hidden quality by at least 167 per mille and win at least 40 of 64 paired mismatch
+seeds against the frozen M028 baseline. Probe disjointness, structural separation,
+aligned equality and selector isolation must all pass. The full rule is fixed in
+[`experiments/M029/PROTOCOL_DRAFT.md`](experiments/M029/PROTOCOL_DRAFT.md).
+
+**Scope:** the component suite uses the finite rig's known public task grammar. H11 is
+not a claim that the probe is a domain-independent measure of potential.
+
+**Result:** component-adaptive concordance reached 699 per mille and exceeded the
+development baseline by 1,177, but the allocation shift was only 92 per mille and the
+paired final advantage remained zero, with 31 wins, 32 ties and 1 loss. The registered
+conjunction therefore failed. The component-uniform diagnostic produced 50 wins,
+14 ties and no losses, motivating an untouched-seed confirmation rather than a
+retroactive change to H11.

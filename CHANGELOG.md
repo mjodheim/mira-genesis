@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.19.0 — 2026-08-02
+
+- Added M029's hidden-disjoint compositional transfer probes and a frozen rerun of the
+  M028 performance-adaptive baseline.
+- Preserved the 64-seed mixed development result: component-adaptive clade/exact-CMP
+  concordance reached 699 per mille, but its paired final advantage remained zero with
+  31 wins, 32 ties and 1 loss, below the pre-written policy gates.
+- Recorded the pre-declared component-uniform diagnostic: 50 wins, 14 ties and no
+  losses against development-adaptive guidance, without promoting it to a registered
+  claim on already observed seeds.
+- Recorded 384 trajectories, 46,080 expansions, 139,392 unique evaluations and a
+  byte-identical replay.
+
 ## 0.18.0 — 2026-08-02
 
 - Added M028's finite adaptive evaluation-weighting comparison over the common M027

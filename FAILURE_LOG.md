@@ -350,3 +350,29 @@ This is not a failure of adaptive allocation in general or a test of full HGM. I
 that changing weights without changing the information that produces them cannot
 repair this measured proxy reversal. Any successor must justify a distinct routing
 signal before observing its full result.
+
+## M029 — Component evidence aligned; adaptive policy gates still failed
+
+- Status: `DEVELOPMENT — ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE`.
+- The probe definition and complete decision rule were committed before the 64-seed
+  run at `7c3eaa2`.
+
+The component suite was exactly disjoint from development and hidden suites and turned
+median clade/exact-CMP concordance from -478 to 699 per mille. The full registered
+prediction still failed. High-potential allocation shifted by 92 rather than 167 per
+mille; paired median final hidden advantage was zero; component adaptive produced
+31 wins, 32 ties and 1 loss rather than the required 40 wins.
+
+The pre-declared component-uniform diagnostic was stronger: 50 wins, 14 ties and no
+losses against development adaptive. It cannot be promoted to a confirmed result on
+the same observed seeds.
+
+Post-hoc diagnostics localise the remaining mismatch. Component-adaptive search made a
+median 31 expansions from shortcut-containing parents versus 28 under component
+uniform, and only 8 from pure generic parents versus 12. It reached a median maximum
+generic count of 3 rather than 4. Component probes detect reusable motifs even in
+lineages that have already consumed too much depth on shortcuts.
+
+The next correction must remain separate: confirm uniform component guidance on
+untouched seeds, or pre-write a resource-viability signal. Reclassifying the observed
+diagnostic as M029's primary result would violate the repository's decision discipline.
