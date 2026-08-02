@@ -1,70 +1,69 @@
-# M019 — Pression de sélection
+# M019 — Selection pressure
 
-## Ce qui manquait
+## What was missing
 
-L'évolution n'est pas un moteur de variation. C'est un moteur de **filtrage sous
-contrainte**. Sans la contrainte, la variation est de la dérive.
+Evolution is not a variation engine. It is a **filtering-under-constraint** engine.
+Without the constraint, variation is drift.
 
-Jusqu'à M018, Genesis n'avait aucun enjeu. On lui posait un épisode, elle le résolvait
-ou s'abstenait, et rien ne s'ensuivait. Le budget de recherche valait 200 000 nœuds,
-délibérément généreux, et le dépasser coûtait une abstention sans conséquence.
+Until M018, Genesis had no stake. An episode was posed, it solved or abstained, and
+nothing followed. The search budget was 200,000 nodes, deliberately generous, and
+exceeding it cost an abstention with no consequence.
 
-C'est l'explication du résultat négatif de M018 : les trois mécanismes d'oubli n'ont
-rien rapporté parce qu'**il n'y avait rien pour quoi être efficace**. Un organisme qui
-ne peut pas mourir de son inefficacité n'a aucune raison de devenir efficace.
+That explains M018's negative result: the three forgetting mechanisms returned nothing
+because **there was nothing to be efficient for**. An organism that cannot starve from
+its own inefficiency has no reason to become efficient.
 
-## Trois absences, trois ajouts
+## Three absences, three additions
 
-| | Ce que l'évolution a | Ce que Genesis avait |
+| | What evolution has | What Genesis had |
 |---|---|---|
-| **Rareté** | mourir de faim | budget généreux, échec sans conséquence |
-| **Population** | la lignée survit à l'individu | un organisme seul |
-| **Variation sur l'encodage** | duplication de gène puis divergence | absorption de motifs récurrents seulement |
+| **Scarcity** | starving to death | a generous budget, failure without consequence |
+| **Population** | the lineage outlives the individual | a single organism |
+| **Variation on the encoding** | gene duplication then divergence | absorption of recurring motifs only |
 
-### La rareté
+### Scarcity
 
-L'énergie **est** le budget de recherche. Un organisme appauvri cherche moins loin,
-donc résout moins, donc s'appauvrit davantage. La spirale de famine est voulue : c'est
-elle qui fait de l'efficacité un enjeu de survie plutôt qu'une élégance.
+Energy **is** the search budget. An impoverished organism searches less far, so solves
+less, so grows poorer. The starvation spiral is deliberate: it is what makes efficiency a
+matter of survival rather than of elegance.
 
-Le classement porte sur l'**énergie restante**, c'est-à-dire ce qui reste après avoir
-payé ses recherches. Résoudre cher n'y vaut pas mieux que ne pas résoudre.
+Ranking is on **energy left**, that is on what remains after paying for one's searches.
+Solving expensively is worth no more there than not solving.
 
-### La population
+### Population
 
-La chenille se dissout une fois, et si cela échoue, cette chenille meurt — pas
-l'espèce. L'organisme de M018 était seul, donc une stratégie ruineuse dans neuf cas sur
-dix et géniale dans le dixième lui était interdite.
+The caterpillar dissolves once, and if that fails, that caterpillar dies — not the
+species. M018's organism was alone, so a strategy ruinous nine times in ten and brilliant
+the tenth was forbidden to it.
 
-Relu ainsi, le résultat négatif de M018 ne dit pas que détruire est inutile : il dit
-que **détruire est intenable pour un individu isolé**. Ce n'est pas la même chose, et
-la seconde lecture ouvre une porte que la première fermait.
+Read that way, M018's negative result does not say destroying is useless: it says
+**destroying is untenable for an isolated individual**. That is not the same thing, and
+the second reading opens a door the first closed.
 
-### La duplication
+### Duplication
 
-L'évolution copie un gène et laisse la copie dériver, ce qui produit une structure
-nouvelle sans détruire l'ancienne. Genesis absorbait des motifs récurrents mais ne
-dupliquait jamais un symbole pour en faire varier une version. `duplicate_and_diverge`
-comble ce manque.
+Evolution copies a gene and lets the copy drift, producing a new structure without
+destroying the old one. Genesis absorbed recurring motifs but never duplicated a symbol
+in order to vary a version of it. `duplicate_and_diverge` fills that gap.
 
-## La question que cela permet enfin de poser
+## The question this finally allows
 
-> Une population sous sélection découvre-t-elle ce que je n'ai pas su concevoir ?
+> Does a population under selection discover what I failed to design?
 
-M018 a montré que trois mécanismes d'oubli écrits à la main ne payaient pas. Ici,
-personne ne choisit : les quatre sont présents dans la population de départ et la
-sélection tranche. Si elle converge vers un réglage qu'aucune de mes heuristiques
-n'atteignait, le projet tient pour la première fois **une amélioration que personne n'a
-écrite**.
+M018 showed that three hand-written forgetting mechanisms did not pay off. Here nobody
+chooses: all four sit in the starting population and selection settles it. If it
+converges on a setting none of my heuristics reached, the project holds for the first
+time **an improvement nobody wrote**.
 
-## Notre avantage sur l'évolution
+## Our advantage over evolution
 
-L'évolution est lente pour deux raisons : sa variation est **aveugle**, et sa fitness
-se mesure en générations. Ici la variation peut être dirigée, et la fitness se calcule
-exactement et instantanément puisque le domaine est décidable.
+Evolution is slow for two reasons: its variation is **blind**, and its fitness is
+measured in generations. Here variation can be directed, and fitness is computed exactly
+and instantly since the domain is decidable.
 
-C'est le seul endroit où la petitesse du domaine devient un atout plutôt qu'un plafond.
+It is the one place where the smallness of the domain is an asset rather than a ceiling.
 
-## Statut
+## Status
 
-Développement. Voir [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) et [`STATUS.md`](STATUS.md).
+Development, and the rig is **not valid** — see [`STATUS.md`](STATUS.md). No conclusion
+is drawn on the hypothesis. See also [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md).

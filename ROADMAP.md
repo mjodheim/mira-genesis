@@ -1,165 +1,129 @@
-# Roadmap
+# Mira Genesis — Roadmap
 
-| Step | Goal | Status | Exit condition |
+The roadmap has two connected tracks. The measurement track studies proxy divergence
+against decidable ground truth. The construction track builds the bounded metamorphosis
+lineage that supplies that testbed and remains the project's first-phase completion
+target.
+
+## Experiment map
+
+| Step | Goal | Status | Exit condition or result |
 |---|---|---|---|
-| M001–M011 | Metamorphosis foundations | VALIDATED in their finite domains, **not verifiable here** | No versioned archive; see `archives/README.md` |
-| M012 | Autonomous morphogenesis | INCONCLUSIVE — CONTAMINATED | Evaluation seeds were executed in tests |
-| M012b | Clean autonomous morphogenesis | VALIDATED in the bounded domain | Sealed 36/36 evaluation and scientific reproduction |
-| M013 / M013b | Unknown substrate | INCONCLUSIVE — CONTAMINATED | No result claimed |
-| M013c | Unknown substrate | INCONCLUSIVE — NON-REPRODUCIBLE | The announced commit was incomplete |
-| M013d | Unknown substrate, absolute threshold | FAILED IN DEVELOPMENT | No-probe baseline scored 12/36 against a ceiling of 8/36 |
-| M013e | Unknown substrate, relative advantage | VALIDATED in the bounded domain | 36/36, sealed opcode discovery and independent reproduction |
-| M014 | Initial portable plasticity | HALTED — NEVER EVALUATED | Prerequisites revoked; replaced by M014b |
-| M014b | Sealed portable plasticity | FAILED — NO GENERALISABLE ADVANTAGE | 36/36 exact, but two efficiency criteria failed |
-| M014c | Out-of-distribution portable plasticity | **HALTED — SUPERSEDED BY M017** | Never evaluated; measured a closed catalogue. Code is tagged `archive/m014c-halted` |
-| M017 | Self-extending language | **READY TO FREEZE** | Six gates passed; the criterion became directional after a 50-environment sweep |
-| M018 | Dissolution — knowing what to destroy | **HYPOTHESIS NOT SUPPORTED** | None of the three mechanisms removes the liability; forgetting is reactive and destruction is blind |
-| M019 | Selection pressure | **RIG NOT VALID** | Selection is too impatient to value learning; the structural cause is identified |
-| **M021** | **Proxy-measure divergence under decidable ground truth** | **ACTIVE** | Show whether the implemented measures move exact hidden quality and where they separate |
-| M019b | Long-horizon selection | PLANNED | Evaluation horizon exceeds the learning payback period |
-| M020 | Self-metamorphosis | DEFERRED | Detect, construct and adopt a better-adapted body without human architecture changes |
-| M015 | Memory and strategy | DEFERRED | Migrate memories, uncertainty and exploration strategy |
-| M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures |
+| M001–M011 | Metamorphosis foundations | HISTORICAL, NOT VERIFIABLE HERE | No versioned archive; see `archives/README.md`. |
+| M012 | Autonomous morphogenesis | INCONCLUSIVE — CONTAMINATED | Evaluation seeds appeared in tests. |
+| M012b | Clean autonomous morphogenesis | **VALIDATED** | Sealed 36/36 evaluation and independent reproduction. |
+| M013 / M013b | Unknown substrate | INCONCLUSIVE — CONTAMINATED | No result claimed. |
+| M013c | Unknown substrate | INCONCLUSIVE — NON-REPRODUCIBLE | Announced commit was incomplete. |
+| M013d | Unknown substrate, absolute threshold | FAILED IN DEVELOPMENT | Baseline invalidated the absolute criterion. |
+| M013e | Unknown substrate, relative advantage | **VALIDATED** | Sealed 36/36 migration after experimental opcode discovery. |
+| M014 | Initial portable plasticity | HALTED | Prerequisites revoked; replaced by M014b. |
+| M014b | Sealed portable plasticity | **FAILED** | Exact transport passed; two generalisable-advantage criteria failed. |
+| M014c | Distribution-general plasticity | HALTED — SUPERSEDED | Closed catalogue could not express new structure. |
+| M017 | Self-extending language | READY TO FREEZE | Six gates passed; candidate protocol awaits human signature. |
+| M018 | Selective dissolution | HYPOTHESIS NOT SUPPORTED | Destruction did not remove the 0.69× transport liability. |
+| M019 | Selection pressure | RIG NOT VALID | Selection acted before learning could repay its cost. |
+| M020 | Proof-gated self-rewrite | DEVELOPMENT BASE VERIFIED | Strict improvement, adoption, archive, rollback and learned tools passed CI. |
+| M021 | Proxy measures versus exact quality | DEVELOPMENT RESULT SUPPORTED | 24 paired seeds separated the four implemented rankers. |
+| M022 | Post-selection adaptation stress | SEED-0 CONTROLS PASSED | Persistent language growth separated from open search under pre-written gates. |
+| M023 | Disposable candidate workspaces | DEVELOPMENT BASE VERIFIED | Independent subprocess and regression gates fail closed. |
+| M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
+| **M025** | **Portable proof-gated rewrite lifecycle** | **NEXT** | Join M020, M023 and M024; replay a learned tool and force rollback after migration. |
+| M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
+| M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
-## Direction correction — 31 July 2026
+## Why the project changed direction
 
-The roadmap order was wrong. The experiment names were not.
+The M012b–M014c line exposed a capability ceiling that no early criterion measured: the
+organism could express only structures already handwritten into its catalogue. M017
+therefore moved before memory and sensorimotor work and replaced the closed catalogue
+with a language that can absorb successful compositions.
 
-The complete M012b → M014c line shared a limitation that none of its criteria measured:
-**the organism could express only what had been handwritten for it.** In
-`m014c_meta.py`, identification enumerated exactly twelve programs; learning only
-reweighted counters over that closed catalogue.
+Development then produced a second correction. M014b, M017, M018 and M019 each showed a
+different way for a proxy to lose contact with what it claimed to measure. The
+metamorphosis system held; the judgement rule failed. That evidence made proxy-measure
+divergence the active research question without abandoning the construction goal.
 
-Adding memory through M015 or sensorimotor competence through M016 would therefore have
-expanded a paradigm laterally before its core was established. Those steps are delayed,
-not abandoned. They resume when there is an organism whose language can grow and can
-therefore carry them.
+## Measurement track
 
-M017 attacks that core. M020, self-metamorphosis, depends on it directly: an organism
-that cannot extend its language cannot describe a body that its current primitives do
-not already know how to write.
+### M021 — exact hidden transferred quality
 
-## M014b — informative canonical failure
+M021 compared four rankers across 24 paired seeds and 96 trajectories. Median adaptive
+held-out quality was 750 per mille for minimal criterion, 416 for novelty, 312 for the
+niche-first quality-diversity approximation and 0 for direct objective.
 
-M014b proved exact portability of the plasticity chain: 36/36 exact adaptations, three
-machines at 12/12, intact archive, 12/12 negative abstentions and zero false successes.
-But Genesis used a median of 14 queries, and L* from scratch also used 14. The relative
-advantage criteria failed.
+The pre-run prediction was wrong: quality-diversity was predicted first. The result is
+development evidence about these four implementations, not a canonical claim about
+method families.
 
-The lesson reaches beyond M014b: **transporting a policy does not imply that its
-advantage survives**, and a criterion measured over a four-query range cannot reliably
-separate signal from sampling noise.
+Adaptive and frozen audits were nearly identical. M021 therefore shows what selection
+preserved before the audit, not stronger adaptation after it began.
 
-## M017 — ready to freeze
+### M022 — expose learning during the audit
 
-Development results across 42 episodes and three environments:
+M022 repeats three irreducible motifs over four rounds and compares a persistent copy
+with an episode-reset copy from the same initial state. At seed 0, every pre-written
+control passed:
 
-| Organism | Solved | Median nodes, first half | Median nodes, second half |
-|---|---:|---:|---:|
-| Closed catalogue, M014c capability | **0 / 42** | — | — |
-| Open search without absorption | 34 / 42 | 7,154 | 8,545 |
-| Self-extending | **37 / 42** | 4,222 | **43** |
+- self-extending adaptive late search: 264 nodes;
+- self-extending frozen late search: 59,358 nodes;
+- positive cost ratio: 224,840 per mille;
+- open-search ratio: exactly 1,000 per mille;
+- positive macros after the sequence: 9; negative macros: 0.
 
-Search cost collapses by roughly two orders of magnitude only for the organism that
-extends its language; it remains flat for the organism that searches but never absorbs.
-Re-embodiment is exact in 9/9 cases across three opaque-machine families, with 4/4
-negative abstentions and zero false successes.
+Next gates, in order:
 
-All six freeze gates have passed. The complete protocol and thresholds await a human
-signature in `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. No canonical run is
-permitted before that signature because freezing commits the thresholds permanently and
-the evaluation runs only once.
+1. repeat the controls across paired seeds;
+2. pre-write a selection-population adaptation rule;
+3. evaluate M021-selected populations only if the controls remain valid;
+4. freeze and hash a protocol before any canonical workflow exists.
 
-Three measurements changed the development protocol before freezing:
+## Construction track
 
-- the first decisive statistic was rejected by measurement. Unpaired advantage ranged
-  from 2.4× to 605× depending on environment; episode-paired advantage ranged from 95×
-  to 620×. Pairing reduced dispersion by a factor of thirty-eight without changing the
-  median;
-- the proposed 10× threshold did not survive a wider 50-environment sweep. The minimum
-  fell to 9.0×, so the criterion became directional: all 50 environments favourable,
-  with zero sign dispersion;
-- an extended language does not automatically transport. A library inherited from an
-  environment with disjoint motifs scored 0.69×, strictly worse than no library, in all
-  four trials. Unused macros inflated the branching factor even though they never
-  applied.
+### M017 — language growth
 
-The claim is therefore restricted in advance: the language grows within a distribution
-of transformations, and its advantage transfers only when the destination shares that
-structure.
+The self-extending organism solved 37/42 development episodes and reduced median search
+from 4,222 nodes in the first half to 43 in the second. The advantage is explicitly
+limited to destinations that share transformation structure. The candidate frozen
+protocol still requires a human signature.
 
-## M018 — hypothesis not supported
+### M020 — executable self-rewrite
 
-Three destruction mechanisms were tested, and none removed the 0.69× liability. A fixed
-budget is cheap but recovers only 6%; dissolution is **350× worse** in the stable regime.
+M020 can search bounded policy source, select a strict development improvement without
+held-out answers, adopt it, archive the parent exactly, roll back and absorb the
+successful transformation as a learned tool.
 
-The diagnosis moved the cause: **forgetting is reactive.** An irrelevant symbol is paid
-for at every search node before the organism can know that it is useless. Blind
-destruction also removes useful structure together with harmful structure.
+### M023 — independent execution boundary
 
-Two consequences follow:
+M023 evaluates parent, candidate and regression cases in disposable subprocess
+workspaces. Adoption now fails closed if the baseline workspace itself fails. POSIX
+resource limits are defence in depth; this is not arbitrary-code sandboxing.
 
-1. the remedy is not deletion alone but **selection at the moment of use**;
-2. destruction is not viable for an isolated individual. A caterpillar dissolves once;
-   if the metamorphosis fails, that individual dies, while the lineage may continue.
+### M024 — portable rewrite state
 
-## M019 — invalid rig, retained lesson
+M024 serialises the active source, archive, adopted digest history, primitive tools and
+learned traces into canonical JSON and rejects inconsistent state before rehydration.
+SHA-256 supplies corruption evidence, not authenticated authorship.
 
-M019 introduced scarcity. Energy became the search budget, a population replaced the
-single organism, and duplication-divergence complemented absorption. The initial
-population contained all four forgetting policies, allowing selection rather than the
-researcher to choose among them.
+### M025 — next integration gate
 
-The question was: **can a population under selection discover what the researcher did
-not know how to design?**
+M025 must demonstrate one continuous bounded lifecycle:
 
-The rig could not answer it. Three calibrations produced three degeneracies, and the
-invariant was structural: **short-horizon selection cannot value an investment whose
-return is delayed.** Learning cost about 23,000 search nodes for a reward of 6,000,
-while declining to try cost only 1,296. The learner was removed at the first cut before
-its library could repay the investment.
+1. propose a multi-edit rewrite through M020;
+2. independently validate and adopt it through M023;
+3. export and import the complete state through M024;
+4. preserve held-out behaviour and exact provenance;
+5. reuse the learned transformation after migration;
+6. force rollback and restore the exact parent body.
 
-Selection discovered that not trying was cheaper than trying, and it was correct under
-the horizon it had been given. The rig was wrong; the hypothesis was not refuted. A
-fourth calibration would have been tuning until the desired answer appeared.
+Passing M025 would integrate existing bounded capabilities. It would not yet satisfy
+unknown-substrate compilation, portable memory, post-migration advantage or repeated
+improvement cycles.
 
-## Reorientation — the measure becomes the question
+## First-phase finish line
 
-Four failures occurred, and none was in the organism. Each time, the constructed
-mechanism held while the judgement of whether it was better failed. The project now
-follows the evidence produced by its own failures:
-
-**When does a proxy measure stop tracking what it claims to measure, and under what
-optimisation pressure?**
-
-This problem is neither new nor untouched. Goodhart's law, reward hacking,
-specification gaming, novelty search and quality-diversity all address parts of it. The
-repository's distinctive angle is that finite-automaton behavioural equivalence is
-**decidable**. It can show exactly where a proxy separates from ground truth rather than
-merely judging a result as suspicious.
-
-Six cases are catalogued in [`MEASURES.md`](MEASURES.md), with four repeated
-regularities. See D011 and H9.
-
-The metamorphosis line is not abandoned. It produced the decidable domain, two sealed
-validations and the failure cases. It is now the experimental support for the measure
-question rather than the sole question itself.
-
-## M019b — delayed, lesson retained
-
-The evaluation horizon must exceed the payback period of learning, either through
-selection every N generations or fitness integrated across a lineage's life.
-
-**Horizon matters more than pressure intensity.** This is the most transferable lesson
-produced by the project so far.
-
-## Ultimate test of the first complete phase
-
-Genesis learns in body A, receives an unknown substrate B, discovers its operational
-rules, constructs a new body, transfers memory, competence, tools and plasticity, then
-learns a genuinely new task faster than a fresh organism — without a human redesigning
-its architecture.
-
-That test requires Genesis to express competences and transformations that nobody wrote
-for it in advance. M017 establishes the first language-growth prerequisite; M020 must
-establish proof-gated self-rewrite before complete self-metamorphosis can be attempted.
+The project is not complete when it can generate code or pass one repair benchmark. One
+lineage must satisfy every gate in
+[`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md), including autonomous
+diagnosis, internal tool ownership, isolated validation, held-out improvement, complete
+trans-substrate migration, post-migration plasticity, repeated improvement cycles and a
+frozen one-shot decision rule.

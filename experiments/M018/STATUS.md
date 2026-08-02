@@ -1,67 +1,74 @@
-# M018 — Statut
+# M018 — Status
 
-- Protocole : **BROUILLON DE DÉVELOPPEMENT**
-- Résultats canoniques autorisés : **NON**
-- Statut scientifique : `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`
-- Tests de développement : **7 passants**
+- Protocol: **DEVELOPMENT DRAFT**
+- Canonical results permitted: **NO**
+- Scientific status: `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`
+- Development tests: **7 passing**
 
-## La prédiction était fausse
+## The prediction was wrong
 
-Elle avait été écrite avant la mesure, dans `PROTOCOL_DRAFT.md` :
+It had been written before the measurement, in `PROTOCOL_DRAFT.md`:
 
-> `(1)` et `(2)` réduiront le passif sans l'annuler, `(3)` l'annulera mais coûtera cher
-> sur les environnements stables.
+> `(1)` and `(2)` will reduce the liability without cancelling it, `(3)` will cancel it
+> but will cost dearly on stable environments.
 
-La seconde moitié tient. **La première est fausse, et c'est celle qui portait
-l'hypothèse.** Aucun des trois mécanismes n'annule le passif de transport.
+The second half holds. **The first is false, and it is the half that carried the
+hypothesis.** None of the three mechanisms cancels the transport liability.
 
-## Ce que la mesure dit
+## What the measurement says
 
-Trois paires d'environnements, quatre politiques. La référence est `NoForgetting`,
-c'est-à-dire l'organisme de M017 qui accumule sans jamais jeter.
+Three environment pairs, four policies. The reference is `NoForgetting`, that is M017's
+organism, which accumulates and never discards.
 
-| | stable | décalage | transport |
+| | stable | shift | transport |
 |---|---|---|---|
-| `budget` | **identique** | +3 % | +6 % |
-| `utility` | jusqu'à 177× pire | +2 % | +4 % |
-| `dissolution` | **350× pire** | −18 % | 0 % |
+| `budget` | **identical** | +3% | +6% |
+| `utility` | up to 177× worse | +2% | +4% |
+| `dissolution` | **350× worse** | −18% | 0% |
 
-- **La dissolution est un désastre.** 14 898 nœuds contre 42 en environnement stable.
-  Elle jette le bon avec le mauvais et ne gagne nulle part.
-- **Le budget fixe est le seul sans revers** : coût strictement identique en stable, et
-  quelques pour cent ailleurs. Son bénéfice reste marginal.
-- **Aucun ne restaure l'amélioration.** Le passif de 0,69× mesuré par M017 survit.
+- **Dissolution is a disaster.** 14,898 nodes against 42 in a stable environment. It
+  throws the good out with the bad and wins nowhere.
+- **A hard budget is the only mechanism with no downside**: strictly identical cost when
+  stable, and a few percent elsewhere. Its benefit stays marginal.
+- **None restores improvement.** The 0.69× liability measured by M017 survives.
 
-## Pourquoi, et c'est le résultat utile
+## Why, and this is the useful part
 
-Trois raisons, dans l'ordre d'importance :
+Three reasons, in order of importance:
 
-1. **L'oubli est réactif.** Le coût d'un symbole inutile est payé d'avance, à chaque
-   épisode, sur chaque nœud de recherche. Quand l'organisme sait enfin qu'un macro ne
-   sert pas, il l'a déjà financé. Jeter ensuite ne rembourse rien.
-2. **La destruction est indiscriminée.** La dissolution ne distingue pas ce qui a cessé
-   de servir de ce qui va resservir, et paye 350× pour cette ignorance.
-3. **Le coût d'un macro inutile est réel mais modeste.** Le facteur de branchement
-   passe de 36 à environ 48 symboles ; les recherches s'arrêtent souvent tôt. Il n'y a
-   pas 45 % à récupérer par simple suppression.
+1. **Forgetting is reactive.** A useless symbol is paid for up front, on every episode,
+   at every search node. By the time the organism knows a macro does not serve, it has
+   already financed it. Discarding afterwards refunds nothing.
+2. **Destruction is indiscriminate.** Dissolution cannot tell what has stopped serving
+   from what is about to serve again, and pays 350× for that ignorance.
+3. **A useless macro's cost is real but modest.** The branching factor goes from 36 to
+   about 48 symbols, and searches often end early. There is no 45% sitting there to be
+   recovered by deletion alone.
 
-## Ce que ça réoriente
+## What it redirects
 
-Le problème n'est pas que l'organisme ne sait pas détruire. C'est que **chaque symbole
-est disponible sans condition, à chaque pas**.
+The problem is not that the organism cannot destroy. It is that **every symbol is
+unconditionally available, at every step**.
 
-Le remède indiqué par la mesure n'est pas la suppression mais la **sélection au moment
-de l'emploi** : prédire à bas coût si un macro peut s'appliquer à cette source-ci avant
-de l'étendre. Ce n'est pas de l'oubli, c'est de l'activation conditionnelle — et cela
-ne détruit rien, donc cela ne coûte rien en régime stable.
+The remedy the measurement points at is not deletion but **selection at the moment of
+use**: cheaply predicting whether a macro can apply to *this* source before expanding it.
+That is not forgetting, it is conditional activation — and it destroys nothing, so it
+costs nothing in a stable regime.
 
-C'est aussi là que la métaphore de la chenille montre sa limite. Elle se dissout parce
-qu'elle construit un autre corps **une fois**. Un organisme qui affronte des
-distributions changeantes à répétition ne peut pas se dissoudre à chaque fois : il doit
-contextualiser, pas détruire.
+This is also where the caterpillar metaphor shows its limit. It dissolves because it
+builds another body **once**. An organism facing repeatedly shifting distributions cannot
+dissolve every time: it has to contextualise, not destroy.
 
-## Prochaine porte
+## Second reading, which opened M019
 
-Implémenter le mécanisme de garde et le mesurer sur les trois mêmes régimes, contre les
-quatre politiques déjà en place. Le banc existe, il suffit d'y ajouter une cinquième
-colonne.
+The result does not say that destroying is useless. It says that **destroying is
+untenable for an isolated individual**: the caterpillar dissolves once, and if that
+fails, that caterpillar dies — not the species.
+
+It also points at a deeper cause: the search budget was 200,000 nodes and failure cost
+nothing. **There was nothing to be efficient for.** That is what M019 put to the test.
+
+## Next gate
+
+Implement the gating mechanism and measure it on the same three regimes, against the four
+policies already in place. The rig exists; it needs a fifth column.

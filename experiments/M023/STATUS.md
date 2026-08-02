@@ -1,6 +1,6 @@
 # M023 — Status
 
-**LOCAL DEVELOPMENT GATES PASSED, CI REVERIFICATION PENDING**
+**DEVELOPMENT BASE VERIFIED**
 
 ## Implemented
 
@@ -19,9 +19,10 @@
 
 ## Verification
 
-The original implementation passed the complete GitHub Actions matrix on pull request
-#30. The fail-closed baseline hardening passes locally and requires CI reverification
-before merge.
+The fail-closed implementation passed the complete GitHub Actions matrix on pull
+request #30 at commit `5bb8b14b0c4839ba0d87fe2948d56f94d8f11730`, including Python
+3.11, Python 3.13 and all repository-integrity checks. Local verification passed 14/14
+focused tests and 82/82 tests in the integrated branch suite.
 
 ## Not implemented
 
@@ -36,5 +37,5 @@ before merge.
 
 ## Scientific status
 
-**NO CANONICAL RESULT.** Once the hardening commit passes repository CI, M023 becomes
-the verified independent execution base for later self-rewrite experiments.
+**NO CANONICAL RESULT.** M023 is the verified independent execution base for later
+self-rewrite experiments.

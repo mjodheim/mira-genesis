@@ -133,17 +133,36 @@ Output of case R004, as an example:
   was assumed. Zero deaths did not indicate weak scarcity but the reverse — scarcity bit
   hard enough that the winning strategy was to spend nothing.
 
+## R007 — a separation test blind to within-group variance
+
+- **Origin:** the discarded three-seed M021 pilot.
+- **Measure:** `rig_separates_measures`, initially defined as a between-measure spread
+  of at least 100 per mille.
+- **What it claimed to track:** whether the rig could distinguish four selection
+  measures.
+- **Divergence:** it answered **yes** while the between-measure spread was 750 per mille
+  and the widest seed-to-seed spread inside one measure was 584. Five of twelve
+  populations solved nothing during life and eight held no macro.
+- **Why it matters:** D010 already required margins to be interpreted against observed
+  dispersion. The guard written after that lesson repeated the same error.
+- **Correction:** the pilot was discarded, the full comparison required 24 paired
+  seeds, and its 100-per-mille floor remained explicitly a development separation gate
+  rather than a significance or canonical decision rule.
+
 ---
 
 ## What the register already suggests
 
-Four regularities, drawn from six cases rather than postulated:
+Four regularities, drawn from seven cases rather than postulated:
 
-1. **Establish the dynamic range before fixing a margin** (R001, R003).
+1. **Establish the dynamic range before fixing a margin** (R001, R003, R007).
 2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
 3. **An admission condition is worth the completeness of its verification procedure**
    (R004).
 4. **The evaluation horizon outranks the intensity of the pressure** (R005, R006).
+
+R007 is the internal warning: recording a lesson does not guarantee that the next
+instrument applies it correctly.
 
 None is new taken alone. What is unusual is having measured them where ground truth is
 decidable, and therefore being able to show *where exactly* a measure comes loose rather

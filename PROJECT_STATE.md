@@ -1,133 +1,123 @@
 # Mira Genesis — Project state
 
-## Central question
+**Updated: 2 August 2026**
 
-**When does a proxy measure stop tracking what it claims to track, and under what
-optimisation pressure?** Asked in a domain where ground truth is decidable, so the
-answer is proved rather than estimated.
+## Research question and completion target
 
-See **D011**, **H9** and [`MEASURES.md`](MEASURES.md).
+The active research question is:
 
-## The original goal, now the testbed
+> **When does a proxy measure stop tracking exact hidden quality, and under what
+> optimisation pressure?**
 
-Build an intelligence able to learn in a substrate A, discover an unknown substrate B,
-construct a new body there, then transfer its competences, memory and plasticity so it
-keeps learning without human architectural intervention.
+Mira Genesis asks this in finite-automaton worlds where behavioural equivalence is
+decidable. The metamorphosis program is both the source of the measurement failures and
+the construction track that the project still intends to complete.
 
-That line produced two sealed validations, a decidable domain, and four failures **none
-of which was in the organism**. It remains the testbed; it is no longer the question.
+The first complete form is a replayable lineage that diagnoses a limitation, constructs
+or extends its own rewrite tools, adopts a verified improvement, migrates the improved
+body and its learning state to an unknown substrate, and continues improving there
+without human architectural intervention. All ten required gates are defined in
+[`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md).
 
-## State on 1 August 2026
+## Authoritative status
 
-- Last validated experiment: **M013e — sealed migration to an opaque substrate**, within its finite domain
-- M012b: **VALIDATED — BOUNDED FINITE DOMAIN**
-- M013e: **VALIDATED — BOUNDED FINITE OPAQUE SUBSTRATE**
-- M014b: **FAILED — PORTABILITY WITHOUT GENERALIZABLE LEARNING ADVANTAGE**
-- M014c: **HALTED — SUPERSEDED BY M017**, never evaluated
-- M017: **READY TO FREEZE**, criterion turned directional after a 50-environment sweep
-- M018: **HYPOTHESIS NOT SUPPORTED** — destroying does not restore improvement
-- M019: **RIG NOT VALID** — selection too impatient to value learning
-- Active: **M021 — do these selection measures move true quality?**
-- Overall: **a bounded, decidable research laboratory, two sealed validations, six catalogued cases of measures that came loose from what they claimed to measure**
+| Experiment | Status | Scope |
+|---|---|---|
+| M001–M011 | Historical, not verifiable here | No versioned archive; no current claim may rely on them alone. |
+| M012 | INCONCLUSIVE — CONTAMINATED | Replaced by M012b. |
+| M012b | **VALIDATED** | Bounded finite autonomous morphogenesis, 36/36 sealed cases. |
+| M013–M013c | INCONCLUSIVE | Contaminated or non-reproducible predecessors. |
+| M013d | FAILED IN DEVELOPMENT | Absolute threshold invalidated by its baseline. |
+| M013e | **VALIDATED** | Bounded migration to opaque finite substrates, 36/36 sealed cases. |
+| M014 | HALTED | Prerequisites revoked; replaced by M014b. |
+| M014b | **FAILED** | Exact portable plasticity, but no pre-registered generalisable learning advantage. |
+| M014c | HALTED — SUPERSEDED | Closed catalogue could not express genuinely new structure. |
+| M017 | READY TO FREEZE | Six self-extending-language gates passed; human signature still required. |
+| M018 | HYPOTHESIS NOT SUPPORTED | Destruction did not remove the transport liability. |
+| M019 | RIG NOT VALID | Selection horizon was shorter than learning's payback period. |
+| M020 | DEVELOPMENT BASE VERIFIED | Bounded proof-gated executable self-rewrite and learned tools. |
+| M021 | DEVELOPMENT RESULT SUPPORTED | Selection measure changed exact hidden transferred quality across 24 paired seeds. |
+| M022 | SEED-0 CONTROLS PASSED | Repeated motifs exposed adaptation during the audit; cross-seed stability is open. |
+| M023 | DEVELOPMENT BASE VERIFIED | Disposable subprocess validation and fail-closed adoption gate. |
+| M024 | DEVELOPMENT BASE VERIFIED | Portable integrity-checked rewrite body, archive and tool registry. |
 
-## Direction correction — 31 July 2026
+Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
+M017 and M020–M024 are development evidence and must not be promoted to canonical
+claims without a frozen one-shot protocol.
 
-The whole M012b → M014c chain rested on a limit no criterion measured: **the organism
-can only express what was hand-written for it.** M014c's identification enumerates
-exactly twelve structural programs; its learning is only a reweighting of counters over
-that closed catalogue.
+## Measurement track
 
-M014c is therefore halted before evaluation and replaced by M017 — self-extending
-language — whose starting vocabulary holds only atoms, where anything beyond an atom
-must be built and can then be absorbed. The roadmap changes order, not names: M015 and
-M016 move behind M017 and M018.
+M021 compared direct objective, novelty, a niche-first quality-diversity approximation
+and minimal criterion using common random numbers and exact held-out equivalence across
+24 paired seeds.
 
-See D009, D010, `ROADMAP.md` and `experiments/M017/`.
+Median adaptive held-out quality was:
 
-## M017 development
+1. minimal criterion — **750 per mille**;
+2. novelty — **416 per mille**;
+3. niche-first quality-diversity approximation — **312 per mille**;
+4. direct objective — **0 per mille**.
 
-42 episodes, three environments. The closed catalogue — M014c's capability — solves
-**none**. Open search without absorption solves 34, at constant cost. The
-self-extending organism solves 37, and its median search cost falls from 4,222 nodes
-over the first half of the episodes to **43** over the second, while open search stays
-flat.
+The original prediction placed quality-diversity first and was wrong. The result is
+preserved in [`results/M021_DEVELOPMENT_RESULT.md`](results/M021_DEVELOPMENT_RESULT.md).
 
-9/9 exact reincarnations across three opaque machine families, archive intact, 4/4
-abstentions on the negative controls, zero false successes.
+Adaptive and frozen scores were almost identical, so M021 did not establish
+post-selection adaptation. M022 was created as a separate successor rather than
+changing M021 after observation. At seed 0, M022's positive control reduced common late
+search from 59,358 to 264 nodes while its open-search negative control stayed exactly
+unchanged. See
+[`results/M022_ADAPTATION_SMOKE_RESULT.md`](results/M022_ADAPTATION_SMOKE_RESULT.md).
 
-**All six freeze gates are passed.** The complete protocol, thresholds included, awaits
-a human signature in `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. No canonical
-evaluation is permitted before it: freezing commits thresholds that will not move, and
-the evaluation runs only once.
+Next measurement gate: repeat the M022 controls across paired seeds, pre-write the
+selection-population decision rule, and only then compare M021-selected populations.
 
-Three measurements changed the protocol along the way:
+## Construction track
 
-- **the initial decisive statistic was rejected by measurement.** Unpaired: 2.4× to
-  605× depending on the environment. Paired episode by episode: 95× to 620×. Dispersion
-  divided by thirty-eight without the median moving;
-- **the threshold did not survive a wider sweep.** Over 50 environments the minimum
-  falls to **9.0×**, below the proposed 10×. The criterion became directional — 50/50
-  environments favourable, dispersion zero;
-- **an extended language does not transport.** A library inherited from an environment
-  with disjoint motifs gives 0.69×, strictly worse than no library at all, four times
-  out of four. Its macros never apply and still inflate the branching factor.
+The current bounded self-rewrite stack is:
 
-The claimed scope is therefore restricted in advance: the language grows **inside** a
-distribution of transformations, and its advantage follows only if the destination
-shares that structure.
+1. **M017 — language growth:** successful transformation traces become reusable macros;
+2. **M020 — self-rewrite:** executable policy source is searched, strictly improved,
+   adopted, archived and rolled back;
+3. **M023 — independent validation:** candidate and parent run in disposable
+   subprocess workspaces before adoption;
+4. **M024 — portability:** active source, rollback lineage, primitive tools and learned
+   traces cross a canonical integrity-checked serialisation boundary.
 
-## M014b canonical result
+Next construction gate: exercise those layers as one end-to-end lifecycle, including
+post-migration learned-tool replay and forced rollback. This is still far short of
+unknown-substrate compilation and the ten-gate completion test.
 
-M014b transported a serialised plasticity passport with twelve inherited competences to
-three sealed opaque machines. For each behavioural modification, Genesis received only a
-query oracle.
+## Canonical proof identities
 
-What succeeded:
+### M012b
 
-- 36/36 complete chains exact;
-- 12/12 on each machine;
-- old and new bodies exact and serialisable;
-- semantics of the used opcodes correctly discovered;
-- old body preserved byte for byte;
-- 12/12 negative controls rejected;
-- zero false successes and zero archive mutation;
-- total median of 44 queries, maximum 50.
+- evaluated commit: `c60ddc28e3bea8c7c71d615dace4263f5cf3d187`;
+- protocol SHA-256: `b949b9d4fc61cd118af075985d1d4218c37ce7f970f28bd3598d1f38dadbd651`;
+- GitHub Actions run: `30635291887`.
 
-What failed:
+### M013e
 
-- Genesis identification median: 14;
-- L\* learning from scratch: 14;
-- random queries: 17;
-- organism without a learned passport: 17.
+- evaluated commit: `e309169b4edf8a508ec60990e68ba079fd032f2c`;
+- protocol SHA-256: `e29f024e3cc04ebd18ebd9484d499bdfbf1d98a3fbe0beb9c0ec318c8c394c5f`;
+- GitHub Actions run: `30637689966`;
+- artifact SHA-256: `47888734b6c88ef5811e086bac71bbcfd8e6c14f676824eb5d6597475c7742c6`.
 
-Genesis therefore did not reach the pre-registered advantages of 25% over L\* and 20%
-over both local baselines. Eight criteria out of ten pass, but the status remains
-**FAILED**. No threshold is modified and no rerun replaces the first attempt.
+### M014b
 
-Proof identity:
-
-- evaluated SHA: `5a0947afb96d7d59438c222028f2cabb34bc0cd5`;
+- evaluated commit: `5a0947afb96d7d59438c222028f2cabb34bc0cd5`;
 - protocol SHA-256: `215e442435e4f915e647ad1392f1172685f977f758053027adaa687b1126c881`;
 - GitHub Actions run: `30650363802`, attempt 1;
 - artifact SHA-256: `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
 
-An independent replay recovered every metric, every body, the criteria and the
-decision. Only the consolidation hash was non-portable, because it embedded
-floating-point scores; later experiments must use a quantised or rational trace.
-
-## Capabilities supported within the finite domain
-
-- extraction of a behavioural passport;
-- autonomous morphogenesis from an opaque contract;
-- experimental discovery of an unknown finite substrate;
-- exact migration of a competence without a task oracle;
-- transport, execution and exact consolidation of a bounded plasticity mechanism;
-- abstention on out-of-language modifications and unstable oracles.
-
 ## Not validated
 
-- learning advantage transferable outside the development distribution;
-- portable autobiographical memory;
-- adaptation to continuous or analogue physics;
-- self-extending cognitive language, in the strong sense of inventing primitives;
+- autonomous diagnosis of a limitation;
+- invention of new rewrite operation types;
+- arbitrary multi-file self-rewrite;
+- kernel-enforced network and syscall isolation;
+- authenticated passport provenance;
+- compilation of a rewritten body into an unknown substrate;
+- portable autobiographical memory, uncertainty and exploration state;
+- post-migration learning advantage over fresh and ablated controls;
+- three repeated improvement cycles in one lineage;
 - open-ended self-metamorphosis.

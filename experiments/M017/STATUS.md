@@ -1,103 +1,98 @@
-# M017 — Statut
+# M017 — Status
 
-- Protocole : **BROUILLON DE DÉVELOPPEMENT**
-- Résultats canoniques autorisés : **NON**
-- Graines d'évaluation scellée : **aucune**
-- Langage structurel séquentiel : **implémenté**
-- Bibliothèque auto-extensible et règle d'abstraction : **implémentées**
-- Réincarnation sur substrat opaque : **implémentée**, 9/9 exactes
-- Tests de développement : **11 passants**, dans une suite de 30
-- Statut scientifique : `DEVELOPMENT — LANGUAGE GROWTH BENCHMARKING`
+- Protocol: **DEVELOPMENT DRAFT**
+- Canonical results permitted: **NO**
+- Sealed evaluation seeds: **none**
+- Sequential structural language: **implemented**
+- Self-extending library and abstraction rule: **implemented**
+- Re-embodiment on an opaque substrate: **implemented**, 9/9 exact
+- Development tests: **11 passing**, within a suite of 52
+- Scientific status: `DEVELOPMENT — LANGUAGE GROWTH BENCHMARKING`
 
-## Portes de gel
+## Freeze gates
 
-| # | Porte | État |
+| # | Gate | State |
 |---|---|---|
-| 1 | Désigner la comparaison décisive avant toute nouvelle observation | **franchie** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
-| 2 | Établir que la marge dépasse la dispersion entre environnements | **franchie, et elle a coûté le seuil** — voir ci-dessous |
-| 3 | Justifier budget et profondeur par l'hypothèse, non par la marge produite | **franchie** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
-| 4 | Transporter la bibliothèque vers un environnement aux motifs inédits | **franchie** — et elle oblige à restreindre la portée |
-| 5 | Décalage brutal de distribution après absorption | **franchie** — dégradation sans faux succès |
-| 6 | Audit d'isolation des sources et trace entièrement entière | **franchie** — `scripts/audit_m017_isolation.py` |
+| 1 | Designate the decisive comparison before any new observation | **passed** — [`PRE_REGISTRATION_DRAFT.md`](PRE_REGISTRATION_DRAFT.md) |
+| 2 | Establish that the margin exceeds the dispersion between environments | **passed, and it cost the threshold** — see below |
+| 3 | Justify budget and depth from the hypothesis, not from the margin produced | **passed** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
+| 4 | Transport the library to an environment with unseen motifs | **passed** — and it forces the scope to narrow |
+| 5 | Abrupt distribution shift after absorption | **passed** — degrades without false successes |
+| 6 | Source isolation audit and integer-only trace | **passed** — `scripts/audit_m017_isolation.py` |
 
-**Les six portes sont franchies**, et elles l'ont été deux fois : une première sur une
-confirmation non fiable, une seconde après correction.
+**All six gates are passed**, and they were passed twice: first under an unreliable
+confirmation, then again after it was corrected.
 
-La confirmation tirait 96 mots longs au hasard en affirmant couvrir la borne de
-distinction de deux automates. Elle ne la couvrait pas. Le « zéro faux succès sur
-42 épisodes » était un tirage favorable, pas une garantie : deux automates à 9 états
-confirmés identiques sont séparés par `(1,0,1,0,1,0,1)`.
+The confirmation drew 96 long words at random while claiming to cover the distinguishing
+bound of two automata. It did not. The "zero false successes over 42 episodes" was a
+favourable draw, not a guarantee: two 9-state automata confirmed identical are separated
+by `(1,0,1,0,1,0,1)`.
 
-`metamorphosis/conformance.py` la remplace par un test de conformité complet — méthode
-W sur hypothèse minimisée, couverture de transitions, marge calculée depuis le nombre
-d'états de la source. Il a fallu trois versions, dont deux annoncées correctes à tort ;
-voir `FAILURE_LOG.md`.
+`metamorphosis/conformance.py` replaces it with a complete conformance test — W-method
+on a minimised hypothesis, transition cover, margin computed from the source's state
+count. Three versions were needed, two of which were announced as correct and were not;
+see `FAILURE_LOG.md`.
 
-**Les quatre mesures refaites sous cette confirmation rendent des chiffres strictement
-identiques.** Le coût de recherche ne dépend pas de la confirmation ; ce qui en
-dépendait, c'est la condition d'admission, désormais réellement établie.
+**The four measurements redone under that confirmation return identical figures.**
+Search cost does not depend on confirmation; what did depend on it is the admission
+condition, now genuinely established.
 
-Le protocole complet, seuils compris, est dans
-[`FROZEN_PROTOCOL_017_CANDIDATE.md`](FROZEN_PROTOCOL_017_CANDIDATE.md). Il n'est **pas
-figé** : le gel engage des seuils qui ne bougeront plus et ouvre une évaluation
-canonique qui ne s'exécute qu'une fois. Cette signature est humaine.
+The complete protocol, thresholds included, is in
+[`FROZEN_PROTOCOL_017_CANDIDATE.md`](FROZEN_PROTOCOL_017_CANDIDATE.md). It is **not
+frozen**: freezing commits thresholds that will not move and opens an evaluation that
+runs once. That signature is human.
 
-## Ce que la porte n°2 a déjà appris
+## What gate 2 taught first
 
-La première statistique décisive — deux médianes agrégées séparément — a été
-**rejetée par la mesure**. Sur huit environnements l'avantage allait de 2,4× à 605×,
-et le facteur de confusion a été identifié : le coût de l'organisme auto-extensible
-est bimodal, environ 42 nœuds sur un motif pur, environ 1 800 lorsqu'un atome de bruit
-impose la profondeur 2. La médiane basculait selon le tirage.
+The initial decisive statistic — two medians aggregated separately — was **rejected by
+measurement**. Across eight environments the advantage ranged from 2.4× to 605×, and the
+confound was identified: the self-extending organism's cost is bimodal, about 42 nodes on
+a pure motif and about 1,800 when a noise atom forces depth 2. The median flipped with
+the draw.
 
-Appariée épisode par épisode, la même mesure donne 95× à 620× : **la dispersion est
-divisée par trente-huit sans que la médiane bouge**. Le seuil proposé, 10×, est dérivé
-de l'arithmétique des espaces de recherche — environ 500× attendus — et non de
-l'échantillon.
+Paired episode by episode, the same measurement gives 95× to 620×: **the dispersion is
+divided by thirty-eight without the median moving**.
 
-La porte n°6 a de même trouvé un défaut réel : `m017_engine` importait le laboratoire.
+Gate 6 likewise found a real defect: `m017_engine` was importing the laboratory.
 
-## Ce que le balayage à cinquante environnements a coûté
+## What the fifty-environment sweep cost
 
-Huit environnements donnaient un ordre de grandeur, pas une distribution.
+Eight environments gave an order of magnitude, not a distribution.
 
 | | 8 env. | 50 env. |
 |---|---|---|
-| minimum | 95,3× | **9,0×** |
-| médiane | 377,2× | 123,8× |
-| favorables | 8/8 | **50/50** |
+| minimum | 95.3× | **9.0×** |
+| median | 377.2× | 123.8× |
+| favourable | 8/8 | **50/50** |
 
-**Le seuil de 10× que j'allais faire signer échoue sur un environnement sur cinquante.**
-La dérivation qui le justifiait supposait qu'un macro est toujours atteint en
-profondeur 1 ; quand un épisode tardif porte un atome de bruit, il faut la profondeur 2
-et le rapport s'effondre. J'avais pris un cas typique pour une borne du cas le pire.
+**The 10× threshold about to be signed fails on one environment in fifty.** The
+derivation justifying it assumed a macro is always reached at depth 1; when a late
+episode carries a noise atom, depth 2 is needed and the ratio collapses. A typical case
+had been taken for a worst-case bound.
 
-D010 exige qu'une marge dépasse la dispersion. Celle de la magnitude est un facteur 69
-— aucune marge ne la dépasse. Celle de la direction est nulle : 50/50, zéro
-défavorable. **Le critère décisif devient donc directionnel**, et la magnitude passe
-en simple rapport.
+D010 requires a margin to exceed the dispersion. The magnitude's is a factor of 69 — no
+margin exceeds it. The direction's is zero: 50/50, none adverse. **The decisive criterion
+therefore becomes directional**, and the magnitude is reported rather than decisive.
 
-C'est une revendication plus faible que « cent fois plus rapide », et c'est la seule
-que la mesure autorise. Franchir sérieusement la porte n°2 a coûté le seuil.
+That is a weaker claim than "a hundred times faster", and it is the only one the
+measurement allows. Passing gate 2 seriously cost the threshold.
 
-## Coût de l'absorption, à ne pas dissimuler
+## The cost of absorption, not to be hidden
 
-Sur le pire épisode isolé, l'organisme auto-extensible est **35 % plus lent** : ses
-macros gonflent le facteur de branchement sans jamais s'appliquer. Cela concerne 8
-épisodes tardifs sur 49. Une garde par test de signe est préenregistrée pour qu'une
-règle d'absorption dégénérée ne puisse pas passer.
+On the worst single episode the self-extending organism is **35% slower**: its macros
+inflate the branching factor without ever applying. That covers 8 late episodes out of
+49. A sign-test guard is pre-registered so a degenerate absorption rule cannot pass.
 
-## Risque à ne pas perdre de vue
+## Risk to keep in view
 
-Le banc de développement montre un effondrement du coût de recherche d'un facteur
-cent. La tentation sera de figer un seuil contre le **catalogue fermé**, qui échoue
-0/42 : ce critère passerait trivialement et ne mesurerait rien d'autre que le fait,
-déjà connu, qu'un catalogue de douze programmes n'exprime pas une trajectoire de trois
-atomes.
+The development benchmark shows a hundredfold collapse in search cost. The temptation
+will be to freeze a threshold against the **closed catalogue**, which fails 0/42: that
+criterion would pass trivially and would measure nothing beyond the already known fact
+that a twelve-program catalogue cannot express a three-atom trajectory.
 
-La comparaison qui porte l'hypothèse est l'auto-extensible **contre la recherche
-ouverte**, sur la décroissance du coût au fil des épisodes — deux organismes de
-capacité identique au premier épisode, que seule l'absorption sépare ensuite.
+The comparison carrying the hypothesis is the self-extending organism **against open
+search**, on the decline of cost across episodes — two organisms of identical capability
+at the first episode, which only absorption separates afterwards.
 
-C'est la faute exacte de M014b, en sens inverse : un seuil calé sur une baseline qui
-ne mesure pas ce que l'expérience prétend établir.
+That is M014b's exact fault in reverse: a threshold set against a baseline that does not
+measure what the experiment claims to establish.

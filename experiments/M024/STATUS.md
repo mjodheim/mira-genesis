@@ -1,6 +1,6 @@
 # M024 — Status
 
-**LOCAL DEVELOPMENT GATES PASSED, CI VERIFICATION PENDING**
+**DEVELOPMENT BASE VERIFIED**
 
 ## Implemented
 
@@ -24,8 +24,9 @@ Local verification on 2 August 2026 passed:
 - 79/79 tests in the complete repository suite;
 - clean importability, orphan-module and dependency audits.
 
-Repository CI must still pass on its Python 3.11 and 3.13 matrix before M024 can be
-called a verified development base.
+The same implementation passed the complete GitHub Actions matrix on pull request #31
+at commit `6928cf2abf714864c69f0571879af424ed09c741`, including Python 3.11,
+Python 3.13 and all repository-integrity checks.
 
 ## Not implemented
 
