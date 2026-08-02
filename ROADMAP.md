@@ -1,161 +1,165 @@
-# Feuille de route
+# Roadmap
 
-| Étape | Objectif | Statut | Critère de sortie |
+| Step | Goal | Status | Exit condition |
 |---|---|---|---|
-| M001–M011 | Fondations de métamorphose | VALIDATED dans leurs domaines finis, **non vérifiable ici** | Aucune archive versionnée ; voir `archives/README.md` |
-| M012 | Morphogenèse autonome | INCONCLUSIVE — CONTAMINATED | Graines d'évaluation exécutées dans les tests |
-| M012b | Morphogenèse autonome propre | VALIDATED dans le domaine fini | Évaluation scellée 36/36 et reproduction scientifique |
-| M013 / M013b | Substrat inconnu | INCONCLUSIVE — CONTAMINATED | Aucun résultat revendiqué |
-| M013c | Substrat inconnu | INCONCLUSIVE — NON REPRODUCIBLE | Commit annoncé incomplet |
-| M013d | Substrat inconnu, seuil absolu | FAILED IN DEVELOPMENT | Baseline sans sondage 12/36 contre plafond 8/36 |
-| M013e | Substrat inconnu, avantage relatif | VALIDATED dans le domaine fini | 36/36, découverte d'opcodes scellés et reproduction |
-| M014 | Plasticité portable initiale | HALTED — NEVER EVALUATED | Prérequis révoqués ; remplacée par M014b |
-| M014b | Plasticité portable scellée | FAILED — NO GENERALIZABLE ADVANTAGE | 36/36 exact mais 2 critères d'efficacité échouent |
-| M014c | Plasticité portable hors distribution | **HALTED — SUPERSEDED BY M017** | Jamais évaluée ; mesurait un catalogue fermé. Code au tag `archive/m014c-halted` |
-| M017 | Langage auto-extensible | **READY TO FREEZE** | Six portes franchies ; critère devenu directionnel après le balayage à 50 environnements |
-| M018 | Dissolution — savoir détruire | **HYPOTHESIS NOT SUPPORTED** | Aucun des trois mécanismes n'annule le passif ; l'oubli est réactif, la destruction aveugle |
-| M019 | Pression de sélection | **RIG NOT VALID** | Sélection trop impatiente pour valoriser l'apprentissage ; cause identifiée |
-| **M021** | **Décrochage d'une mesure, sous vérité terrain** | **NEXT** | Montrer où une mesure-proxy cesse de suivre, et à partir de quelle pression |
-| M019b | Sélection à horizon long | PLANNED | Horizon d'évaluation supérieur à la période de remboursement |
-| M020 | Auto-métamorphose | DEFERRED | Détecter, construire et adopter seul un corps mieux adapté |
-| M015 | Mémoire et stratégie | DEFERRED | Migrer souvenirs, incertitudes et stratégie d'exploration |
-| M016 | Compétence sensorimotrice | DEFERRED | Transporter un modèle du monde entre architectures différentes |
+| M001–M011 | Metamorphosis foundations | VALIDATED in their finite domains, **not verifiable here** | No versioned archive; see `archives/README.md` |
+| M012 | Autonomous morphogenesis | INCONCLUSIVE — CONTAMINATED | Evaluation seeds were executed in tests |
+| M012b | Clean autonomous morphogenesis | VALIDATED in the bounded domain | Sealed 36/36 evaluation and scientific reproduction |
+| M013 / M013b | Unknown substrate | INCONCLUSIVE — CONTAMINATED | No result claimed |
+| M013c | Unknown substrate | INCONCLUSIVE — NON-REPRODUCIBLE | The announced commit was incomplete |
+| M013d | Unknown substrate, absolute threshold | FAILED IN DEVELOPMENT | No-probe baseline scored 12/36 against a ceiling of 8/36 |
+| M013e | Unknown substrate, relative advantage | VALIDATED in the bounded domain | 36/36, sealed opcode discovery and independent reproduction |
+| M014 | Initial portable plasticity | HALTED — NEVER EVALUATED | Prerequisites revoked; replaced by M014b |
+| M014b | Sealed portable plasticity | FAILED — NO GENERALISABLE ADVANTAGE | 36/36 exact, but two efficiency criteria failed |
+| M014c | Out-of-distribution portable plasticity | **HALTED — SUPERSEDED BY M017** | Never evaluated; measured a closed catalogue. Code is tagged `archive/m014c-halted` |
+| M017 | Self-extending language | **READY TO FREEZE** | Six gates passed; the criterion became directional after a 50-environment sweep |
+| M018 | Dissolution — knowing what to destroy | **HYPOTHESIS NOT SUPPORTED** | None of the three mechanisms removes the liability; forgetting is reactive and destruction is blind |
+| M019 | Selection pressure | **RIG NOT VALID** | Selection is too impatient to value learning; the structural cause is identified |
+| **M021** | **Proxy-measure divergence under decidable ground truth** | **ACTIVE** | Show whether the implemented measures move exact hidden quality and where they separate |
+| M019b | Long-horizon selection | PLANNED | Evaluation horizon exceeds the learning payback period |
+| M020 | Self-metamorphosis | DEFERRED | Detect, construct and adopt a better-adapted body without human architecture changes |
+| M015 | Memory and strategy | DEFERRED | Migrate memories, uncertainty and exploration strategy |
+| M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures |
 
-## Correction de direction — 31 juillet 2026
+## Direction correction — 31 July 2026
 
-L'ordre de la feuille de route était faux. Les noms ne l'étaient pas.
+The roadmap order was wrong. The experiment names were not.
 
-M017 y figurait en sixième position, après la mémoire et la sensorimotricité. Or
-M012b, M013e, M014b et M014c partagent tous une limite qu'aucun de leurs critères ne
-mesurait : **l'organisme ne peut exprimer que ce qui lui a été écrit à la main.**
-Dans `m014c_meta.py`, l'identification énumère strictement douze programmes ; tout
-l'apprentissage consiste à repondérer des compteurs sur ce catalogue fermé.
+The complete M012b → M014c line shared a limitation that none of its criteria measured:
+**the organism could express only what had been handwritten for it.** In
+`m014c_meta.py`, identification enumerated exactly twelve programs; learning only
+reweighted counters over that closed catalogue.
 
-Ajouter la mémoire (M015) ou la sensorimotricité (M016) à cet organisme aurait étendu
-latéralement un paradigme dont le cœur n'est pas établi. Ces deux étapes sont donc
-reportées, non abandonnées : elles reprendront leur place lorsqu'il y aura un
-organisme dont le langage grandit à qui les confier.
+Adding memory through M015 or sensorimotor competence through M016 would therefore have
+expanded a paradigm laterally before its core was established. Those steps are delayed,
+not abandoned. They resume when there is an organism whose language can grow and can
+therefore carry them.
 
-M017 attaque ce cœur, et M018 — l'auto-métamorphose, H6 — en dépend directement : un
-organisme qui ne peut pas étendre son langage ne peut pas se décrire un corps que ses
-primitives ne savent pas écrire.
+M017 attacks that core. M020, self-metamorphosis, depends on it directly: an organism
+that cannot extend its language cannot describe a body that its current primitives do
+not already know how to write.
 
-## M014b — échec canonique informatif
+## M014b — informative canonical failure
 
-M014b a démontré la portabilité exacte de la chaîne de plasticité : 36/36 adaptations
-exactes, trois machines à 12/12, archive intacte, 12/12 abstentions négatives. Mais
-Genesis utilisait 14 requêtes médianes et L\* depuis zéro également 14. Les critères
-d'avantage relatif ont échoué.
+M014b proved exact portability of the plasticity chain: 36/36 exact adaptations, three
+machines at 12/12, intact archive, 12/12 negative abstentions and zero false successes.
+But Genesis used a median of 14 queries, and L* from scratch also used 14. The relative
+advantage criteria failed.
 
-La leçon est structurante et vaut au-delà de M014b : **transporter une politique
-n'implique pas que son avantage survive**, et un critère mesuré sur une fenêtre large
-de quatre requêtes ne peut pas séparer le signal du bruit d'échantillonnage.
+The lesson reaches beyond M014b: **transporting a policy does not imply that its
+advantage survives**, and a criterion measured over a four-query range cannot reliably
+separate signal from sampling noise.
 
-## M017 — étape active
+## M017 — ready to freeze
 
-Développement sur `research/m017-self-extending-language`. Résultat observé sur 42
-épisodes, trois environnements :
+Development results across 42 episodes and three environments:
 
-| | résolus | nœuds médians, 1re moitié | 2de moitié |
-|---|---|---|---|
-| catalogue fermé, capacité de M014c | **0 / 42** | — | — |
-| recherche ouverte, sans absorption | 34 / 42 | 7 154 | 8 545 |
-| auto-extensible | **37 / 42** | 4 222 | **43** |
+| Organism | Solved | Median nodes, first half | Median nodes, second half |
+|---|---:|---:|---:|
+| Closed catalogue, M014c capability | **0 / 42** | — | — |
+| Open search without absorption | 34 / 42 | 7,154 | 8,545 |
+| Self-extending | **37 / 42** | 4,222 | **43** |
 
-Le coût de recherche s'effondre d'un facteur cent pour le seul organisme qui étend son
-langage, et reste plat pour celui qui ne l'étend pas. Réincarnation 9/9 exacte sur
-trois familles de machines opaques, 4/4 abstentions négatives, zéro faux succès.
+Search cost collapses by roughly two orders of magnitude only for the organism that
+extends its language; it remains flat for the organism that searches but never absorbs.
+Re-embodiment is exact in 9/9 cases across three opaque-machine families, with 4/4
+negative abstentions and zero false successes.
 
-Les six portes de gel sont franchies. Le protocole complet, seuils compris, attend une
-signature humaine dans `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`.
+All six freeze gates have passed. The complete protocol and thresholds await a human
+signature in `experiments/M017/FROZEN_PROTOCOL_017_CANDIDATE.md`. No canonical run is
+permitted before that signature because freezing commits the thresholds permanently and
+the evaluation runs only once.
 
-Deux mesures ont changé le protocole en cours de route, et méritent d'être retenues :
+Three measurements changed the development protocol before freezing:
 
-- **la première statistique décisive a été rejetée par la mesure.** Non appariée, elle
-  donnait un avantage de 2,4× à 605× selon l'environnement ; appariée épisode par
-  épisode, de 95× à 620×. La dispersion est divisée par trente-huit sans que la médiane
-  bouge. C'est la vérification que M014b n'a jamais faite ;
-- **le langage étendu ne se transporte pas.** Une bibliothèque héritée d'un
-  environnement aux motifs disjoints donne 0,69× — strictement pire que pas de
-  bibliothèque du tout, quatre fois sur quatre. La leçon de M014b, retrouvée un cran
-  plus haut, et portée dans le protocole **avant** le gel plutôt que découverte après.
+- the first decisive statistic was rejected by measurement. Unpaired advantage ranged
+  from 2.4× to 605× depending on environment; episode-paired advantage ranged from 95×
+  to 620×. Pairing reduced dispersion by a factor of thirty-eight without changing the
+  median;
+- the proposed 10× threshold did not survive a wider 50-environment sweep. The minimum
+  fell to 9.0×, so the criterion became directional: all 50 environments favourable,
+  with zero sign dispersion;
+- an extended language does not automatically transport. A library inherited from an
+  environment with disjoint motifs scored 0.69×, strictly worse than no library, in all
+  four trials. Unused macros inflated the branching factor even though they never
+  applied.
 
-Ce passif a une cause nommable : l'organisme ne sait ni oublier ses macros, ni juger
-qu'ils ne s'appliquent plus. C'est ce qui a rendu M018 nécessaire plutôt que souhaitable.
+The claim is therefore restricted in advance: the language grows within a distribution
+of transformations, and its advantage transfers only when the destination shares that
+structure.
 
-## M018 — l'hypothèse n'est pas soutenue
+## M018 — hypothesis not supported
 
-Trois mécanismes de destruction, aucun n'annule le passif de 0,69×. Le budget fixe est
-gratuit mais ne rapporte que 6 % ; la dissolution est **350× pire** en régime stable.
+Three destruction mechanisms were tested, and none removed the 0.69× liability. A fixed
+budget is cheap but recovers only 6%; dissolution is **350× worse** in the stable regime.
 
-Le diagnostic déplace la cause : **l'oubli est réactif.** Un symbole inutile est payé
-d'avance, à chaque nœud de recherche ; quand l'organisme sait enfin qu'un macro ne sert
-pas, il l'a déjà financé. Et la destruction indiscriminée jette le bon avec le mauvais.
+The diagnosis moved the cause: **forgetting is reactive.** An irrelevant symbol is paid
+for at every search node before the organism can know that it is useless. Blind
+destruction also removes useful structure together with harmful structure.
 
-Deux lectures en découlent, et la seconde ouvre M019 :
+Two consequences follow:
 
-1. le remède n'est pas la suppression mais la **sélection au moment de l'emploi** ;
-2. **détruire est intenable pour un individu isolé.** La chenille se dissout une fois,
-   et si cela échoue, cette chenille meurt — pas l'espèce.
+1. the remedy is not deletion alone but **selection at the moment of use**;
+2. destruction is not viable for an isolated individual. A caterpillar dissolves once;
+   if the metamorphosis fails, that individual dies, while the lineage may continue.
 
-## M019 — étape active
+## M019 — invalid rig, retained lesson
 
-Ce que le projet n'avait jamais eu : la **rareté**. Jusqu'ici l'échec ne coûtait rien,
-donc l'efficacité ne servait à rien — ce qui explique le résultat de M018 mieux que
-n'importe quelle propriété des mécanismes testés.
+M019 introduced scarcity. Energy became the search budget, a population replaced the
+single organism, and duplication-divergence complemented absorption. The initial
+population contained all four forgetting policies, allowing selection rather than the
+researcher to choose among them.
 
-L'énergie devient le budget de recherche, une population remplace l'individu, et la
-duplication-divergence complète l'absorption. Personne ne choisit de mécanisme
-d'oubli : les quatre sont dans la population de départ et la sélection tranche.
+The question was: **can a population under selection discover what the researcher did
+not know how to design?**
 
-La question, posée pour la première fois : **une population sous sélection
-découvre-t-elle ce que je n'ai pas su concevoir ?**
+The rig could not answer it. Three calibrations produced three degeneracies, and the
+invariant was structural: **short-horizon selection cannot value an investment whose
+return is delayed.** Learning cost about 23,000 search nodes for a reward of 6,000,
+while declining to try cost only 1,296. The learner was removed at the first cut before
+its library could repay the investment.
 
-Elle reste sans réponse. Trois calibrages ont produit trois dégénérescences, et
-l'invariant est structurel : **une sélection à horizon court ne peut pas valoriser un
-investissement dont le rendement est différé.** Apprendre coûte 23 000 nœuds pour une
-prime de 6 000 ; ne pas essayer en coûte 1 296. L'apprenti est éliminé à la première
-coupe, avant d'avoir pu rembourser.
+Selection discovered that not trying was cheaper than trying, and it was correct under
+the horizon it had been given. The rig was wrong; the hypothesis was not refuted. A
+fourth calibration would have been tuning until the desired answer appeared.
 
-La sélection a découvert que ne pas essayer coûte moins cher qu'essayer — et elle avait
-raison sur l'horizon qu'on lui avait donné. Le montage est faux, l'hypothèse n'est pas
-réfutée, et un quatrième calibrage aurait été de l'ajustement jusqu'à obtenir la
-réponse voulue.
+## Reorientation — the measure becomes the question
 
-## Réorientation — la mesure devient la question
+Four failures occurred, and none was in the organism. Each time, the constructed
+mechanism held while the judgement of whether it was better failed. The project now
+follows the evidence produced by its own failures:
 
-Quatre échecs, et **aucun dans l'organisme**. À chaque fois ce qu'on construisait
-tenait ; c'est la façon de juger si c'était mieux qui a cédé. Le projet suit donc ce
-que ses propres échecs ont désigné : **quand une mesure-proxy cesse-t-elle de suivre ce
-qu'elle prétend suivre, et sous quelle pression d'optimisation ?**
+**When does a proxy measure stop tracking what it claims to measure, and under what
+optimisation pressure?**
 
-Le problème n'est ni neuf ni vierge — Goodhart, *reward hacking*, *specification
-gaming*, qualité-diversité le travaillent depuis longtemps. L'angle propre à ce dépôt
-est ailleurs : ces travaux opèrent là où l'objectif vrai n'est pas vérifiable
-exactement, alors qu'ici l'équivalence comportementale se **prouve**. On peut montrer
-*où* une mesure décroche au lieu de constater qu'un résultat semble faux.
+This problem is neither new nor untouched. Goodhart's law, reward hacking,
+specification gaming, novelty search and quality-diversity all address parts of it. The
+repository's distinctive angle is that finite-automaton behavioural equivalence is
+**decidable**. It can show exactly where a proxy separates from ground truth rather than
+merely judging a result as suspicious.
 
-Six cas sont catalogués dans [`MEASURES.md`](MEASURES.md), avec quatre régularités déjà
-répétées. Voir **D011** et **H9**.
+Six cases are catalogued in [`MEASURES.md`](MEASURES.md), with four repeated
+regularities. See D011 and H9.
 
-La ligne métamorphose n'est pas abandonnée : elle a produit le domaine décidable, deux
-validations scellées et les six cas. Elle devient le **support** de la question plutôt
-que la question.
+The metamorphosis line is not abandoned. It produced the decidable domain, two sealed
+validations and the failure cases. It is now the experimental support for the measure
+question rather than the sole question itself.
 
-## M019b — reportée, mais sa leçon est acquise
+## M019b — delayed, lesson retained
 
-L'horizon d'évaluation doit dépasser la période de remboursement de l'apprentissage :
-sélection toutes les N générations, ou fitness intégrée sur la vie d'une lignée.
+The evaluation horizon must exceed the payback period of learning, either through
+selection every N generations or fitness integrated across a lineage's life.
 
-**L'horizon compte davantage que l'intensité de la pression.** C'est la leçon la plus
-transportable produite par le projet à ce jour, et elle vaut au-delà de lui.
+**Horizon matters more than pressure intensity.** This is the most transferable lesson
+produced by the project so far.
 
-## Test ultime de la première phase
+## Ultimate test of the first complete phase
 
-Genesis apprend dans un corps A, reçoit un substrat B inconnu, en découvre les règles,
-construit son nouveau corps, transfère mémoire, compétence et plasticité, puis apprend
-une tâche nouvelle plus vite qu'un organisme vierge — sans qu'un humain redessine son
-architecture.
+Genesis learns in body A, receives an unknown substrate B, discovers its operational
+rules, constructs a new body, transfers memory, competence, tools and plasticity, then
+learns a genuinely new task faster than a fresh organism — without a human redesigning
+its architecture.
 
-Ce test suppose que Genesis puisse exprimer des compétences que personne ne lui a
-écrites. C'est la raison d'être de M017.
+That test requires Genesis to express competences and transformations that nobody wrote
+for it in advance. M017 establishes the first language-growth prerequisite; M020 must
+establish proof-gated self-rewrite before complete self-metamorphosis can be attempted.
