@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.18.0 — 2026-08-02
+
+- Added M028's finite adaptive evaluation-weighting comparison over the common M027
+  breadth-seeded archive.
+- Preserved the 64-seed negative development result: adaptive allocation improved
+  clade/exact-CMP concordance by only 40 per mille, produced no median hidden-quality
+  advantage and returned 2 wins, 60 ties and 2 losses against uniform allocation.
+- Recorded 256 trajectories, 30,720 expansions, 92,928 unique evaluations and a
+  byte-identical replay without exposing hidden fields to either selector.
+- Localised the next measurement failure: performance-adaptive weighting can sharpen a
+  misaligned proxy while allocating less evidence to high-potential lineages.
+
 ## 0.17.1 — 2026-08-02
 
 - Hardened human-only attribution with exact registered identities and a trusted-base

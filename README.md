@@ -59,6 +59,7 @@ Current development evidence:
 | M025 | One transactional lifecycle now searches, independently validates, adopts, migrates, replays and rolls back a bounded rewrite; rejection and exceptions restore both body and tool registry exactly. |
 | M026 | A decidable DGM/HGM-inspired benchmark exposed an exact performance/potential mismatch, but observed clade guidance alone did not beat immediate guidance across 64 paired seeds. |
 | M027 | Exhaustive hidden-blind coverage exposed productive descendants before selection, but clade guidance still tied immediate guidance in all 64 paired seeds. |
+| M028 | Adaptive evaluation improved clade/exact-CMP concordance by only 40 per mille and tied uniform evaluation on median final hidden quality, with 2 wins, 60 ties and 2 losses. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -71,10 +72,16 @@ reward-bearing depth before policy selection. The clade estimate still remained
 anti-aligned with exact maximum hidden utility, and HGM-inspired guidance tied
 DGM-inspired guidance in all 64 seeds.
 
-The next separable measurement is evaluation weighting: test whether a pre-written
-hidden-blind allocation that concentrates observations on stronger descendants can
-turn clade averaging into the intended soft maximum. Merely increasing coverage depth
-or relaxing M027's thresholds is not an admissible successor.
+M028 kept M027's coverage and changed only which node received each remaining
+development case: uniform allocation versus individual-performance Thompson sampling.
+The adaptive estimator remained anti-aligned with exact CMP at -478 per mille and did
+not improve median final hidden quality. It allocated less evidence than uniform
+sampling to observed nodes that the evaluator knew retained maximum hidden potential.
+
+The next separable measurement must therefore change the information used to allocate
+evaluations, not merely its concentration. Candidate signals are uncertainty,
+behavioural diversity or a separately justified transfer proxy. Returning to M022's
+deferred cross-seed adaptation controls remains the independent alternative.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on
@@ -116,6 +123,12 @@ Run the non-canonical M027 seeded-clade comparison:
 
 ```bash
 python scripts/run_m027_seeded_clade_comparison.py --seeds 64 --workers 4
+```
+
+Run the non-canonical M028 adaptive evaluation comparison:
+
+```bash
+python scripts/run_m028_adaptive_evaluation_comparison.py --seeds 64 --workers 4
 ```
 
 ## Repository map

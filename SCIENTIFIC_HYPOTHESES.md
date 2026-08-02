@@ -107,3 +107,26 @@ behavioural equivalence is provable, so the point where it comes loose can be lo
 hacking and quality-diversity have worked it for a long time — nor that a closed
 enumeration is reachable. Only that these modes repeat often enough to be anticipated,
 and that a decidable domain makes it possible to show so.
+
+## H10 — Adaptive evaluation weighting can approximate maximum clade value
+
+When productive descendants are already present, allocating finite evaluation evidence
+according to individual observed performance makes clade aggregation behave more like
+a soft maximum than uniform allocation does.
+
+**Status:** not supported by the M028 development test.
+
+**Pre-written implication:** on M026's mismatch rig after M027 coverage, adaptive
+evaluation must improve median weighted-clade/exact-CMP concordance and final hidden
+quality over uniform evaluation by at least 167 per mille, win at least 40 of 64 paired
+seeds, and preserve the exact aligned control. The full conjunction and exclusions are
+fixed in [`experiments/M028/PROTOCOL_DRAFT.md`](experiments/M028/PROTOCOL_DRAFT.md).
+
+**Scope:** this is a mechanism hypothesis about a finite HGM-inspired adaptation, not a
+claim about the complete HGM implementation or general metaproductivity.
+
+**Result:** adaptive concordance remained negative at -478 per mille, only 40 per
+mille above uniform. Median final hidden advantage was zero, with 2 wins, 60 ties and
+2 losses. The adaptive policy allocated 34 per mille of its non-initial evaluations to
+high-potential observed nodes versus 51 per mille under uniform allocation. Unequal
+weighting by a misaligned proxy did not approximate the hidden clade maximum.
