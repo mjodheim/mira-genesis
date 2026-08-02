@@ -27,14 +27,16 @@ target.
 | M022 | Post-selection adaptation stress | SEED-0 CONTROLS PASSED | Persistent language growth separated from open search under pre-written gates. |
 | M023 | Disposable candidate workspaces | DEVELOPMENT BASE VERIFIED | Independent subprocess and regression gates fail closed. |
 | M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
-| M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
-| M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
+| M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 execute as one fail-closed transaction. |
+| M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; clade aggregation did not beat immediate guidance. |
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
-| M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
-| M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates and underperformed the uniform diagnostic. |
+| M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned and tied uniform final hidden quality. |
+| M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates. |
 | M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
-| M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to split-scaffold cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
-| M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
+| M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
+| M032 | Trans-substrate rewrite lifecycle | DEVELOPMENT BASE VERIFIED | Adopted rewrite compiles and migrates with a validated passport and declared learning state; exact rollback and tamper rejection pass. |
+| M033 | Post-migration plasticity | NEXT CONSTRUCTION EXPERIMENT | Reveal a new task only after migration and compare complete, fresh, parent, output-only and ablated lineages. |
+| M015 | Memory and strategy | PARTLY ABSORBED BY M032, FUNCTIONAL TEST OPEN | State now transports exactly; its causal learning value remains untested. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
 ## Why the project changed direction
@@ -47,201 +49,122 @@ with a language that can absorb successful compositions.
 Development then produced a second correction. M014b, M017, M018 and M019 each showed a
 different way for a proxy to lose contact with what it claimed to measure. The
 metamorphosis system held; the judgement rule failed. That evidence made proxy-measure
-divergence the active research question without abandoning the construction goal.
+divergence the active measurement question without abandoning the construction goal.
 
 ## Measurement track
 
-### M021 — exact hidden transferred quality
+### M021–M022 — separate selection from adaptation
 
-M021 compared four rankers across 24 paired seeds and 96 trajectories. Median adaptive
-held-out quality was 750 per mille for minimal criterion, 416 for novelty, 312 for the
-niche-first quality-diversity approximation and 0 for direct objective.
+M021 showed that four implemented selection measures preserve different exact hidden
+quality. Its adaptive and frozen audits were nearly identical, so it did not establish
+learning after selection. M022's seed-0 controls then created an audit in which
+persistent language growth reduced late search by 224.84× while open search remained
+exactly unchanged. Cross-seed confirmation remains open.
 
-The pre-run prediction was wrong: quality-diversity was predicted first. The result is
-development evidence about these four implementations, not a canonical claim about
-method families.
+### M026–M028 — locate the metaproductivity measurement failure
 
-Adaptive and frozen audits were nearly identical. M021 therefore shows what selection
-preserved before the audit, not stronger adaptation after it began.
+M026 established an exact immediate-performance/potential reversal, but observed clade
+averaging did not guide the higher-potential lineage. M027 added exhaustive
+hidden-blind coverage; the signal was exposed, yet an unweighted mean remained
+anti-aligned with the exact maximum. M028 used individual-performance Thompson sampling
+to allocate finite evaluations. It improved alignment by only 40 per mille, tied
+uniform final quality and allocated less evidence to high-potential nodes.
 
-### M022 — expose learning during the audit
+Breadth and individual-performance weighting are therefore rejected as repairs in this
+finite rig.
 
-M022 repeats three irreducible motifs over four rounds and compares a persistent copy
-with an episode-reset copy from the same initial state. At seed 0, every pre-written
-control passed:
+### M029–M031 — reusable components as observable potential evidence
 
-- self-extending adaptive late search: 264 nodes;
-- self-extending frozen late search: 59,358 nodes;
-- positive cost ratio: 224,840 per mille;
-- open-search ratio: exactly 1,000 per mille;
-- positive macros after the sequence: 9; negative macros: 0.
+M029 introduced hidden-disjoint tasks that test whether generic internal components
+transfer beyond their development and hidden suites. Component-adaptive estimation
+aligned with exact potential, but its registered policy gates failed. A pre-declared
+uniform component diagnostic produced 50 wins, 14 ties and no losses.
 
-The deferred M022 gates remain:
+M030 froze that uniform contrast on untouched seeds 64–127 and confirmed it with 48
+wins, 16 ties and no losses. M031 changed four structural properties before observing
+its primary seeds: two-atom motifs became length-three motifs, pair reversals became
+cyclic/permuted triads, one scaffold became two and the reusable route grew to depth
+five. The signal transported with 43 wins, 18 ties and 3 losses.
 
-1. repeat the controls across paired seeds;
-2. pre-write a selection-population adaptation rule;
-3. evaluate M021-selected populations only if the controls remain valid;
-4. freeze and hash a protocol before any canonical workflow exists.
-
-### M026 — exact clade potential versus observed guidance
-
-M026 maps one DGM parent rule and one HGM parent rule into M017's finite rewrite
-language. The evaluator can compute exact hidden rooted-clade quality, while selectors
-receive development outcomes only. A platform edit has lower immediate performance
-than a shortcut but higher exact descendant potential; a separate aligned rig proves
-visible and hidden quality equal at every reachable state.
-
-Across 64 paired seeds, HGM-inspired clade guidance had median final hidden advantage
-0 per mille over DGM-inspired immediate guidance, with 4 wins, 59 ties and 1 loss. The
-pre-written 167-per-mille and 40-win gate failed. The oracle-guided control reached
-median 1000 per mille, so the useful conclusion is narrower: observed clade evidence
-cannot guide a lineage that expansion rarely reveals.
-
-The next measurement decision is explicit rather than automatic: pre-register a
-successor with a hidden-blind minimum exploration guarantee, or resume the deferred
-M022 cross-seed sequence. Threshold tuning is not an admissible successor.
-
-### M027 — expose the lineage before guidance
-
-M027 chose the first option. Before any policy decision, it exhaustively enumerated all
-reachable states through depth three: 97 expansions in the mismatch rig and 63 in the
-aligned rig. This exposed non-zero hidden quality in every mismatch seed without using
-hidden information.
-
-The intervention did not rescue the estimator or policy. On HGM-guided archives,
-clade/exact-CMP concordance was -907 per mille, only 93 better than immediate
-performance and below the pre-written 167 separation floor. HGM-inspired and
-DGM-inspired policies returned zero hidden quality in every one of 64 paired seeds.
-
-The exact cause is now narrower. Fixed full evaluation makes the clade estimator an
-unweighted mean, while exact CMP is a maximum. Shortcut-heavy clades dominate the mean
-despite having poor hidden potential. The next admissible successor must isolate
-adaptive evaluation weighting; more breadth or threshold tuning would repeat a rejected
-intervention.
-
-### M028 — weight finite evidence before expansion
-
-M028 implements that successor without changing the M026 task generators or M027
-coverage intervention. Every covered node first receives one deterministic unique
-development case. Uniform or individual-performance Thompson sampling then allocates
-the remaining finite cases under a common schedule. Both variants use the same
-weighted-clade parent selector for 40 expansions and the same visible final selector.
-
-Across 64 paired seeds, adaptive concordance remained negative at -478 per mille and
-improved on uniform by only 40 per mille. Median final hidden advantage was zero, with
-2 wins, 60 ties and 2 losses. The adaptive policy allocated less evidence to
-evaluator-identified high-potential observed nodes than uniform allocation did.
-
-This rejects individual-performance weighting as the missing repair in this finite
-rig. A successor must change the allocation signal itself—uncertainty, behavioural
-diversity or a separately justified transfer proxy—or return to M022's deferred
-cross-seed controls. Increasing breadth or tuning the failed thresholds remains
-inadmissible.
-
-### M029 — evaluate reusable components without hidden overlap
-
-M029 takes the transfer-proxy option. Each generic motif is tested alone under a
-one-symbol limit and repeated under a two-symbol limit. Shortcut macros pass none of
-these tasks, while platform-plus-generic states expose reusable structure. Every probe
-sequence is exactly disjoint from both development and hidden suites.
-
-The component signal worked at the estimator level: component-adaptive concordance was
-699 per mille, 1,177 above development adaptive. The registered policy prediction did
-not: paired median final advantage was zero, with 31 wins, 32 ties and 1 loss.
-
-The uniform component diagnostic reached median final hidden quality 1,000 per mille
-and produced 50 wins, 14 ties and no losses against development adaptive. Because that
-contrast was diagnostic rather than a decision gate, the same observed seeds cannot
-confirm a new hypothesis. The next clean option is a frozen rerun on untouched seeds
-64–127. A depth-aware viability correction remains a separate successor rather than a
-post-hoc repair to M029.
-
-### M030 — confirm the uniform component signal on untouched seeds
-
-M030 took that clean option without adding a mechanism. On exactly seeds 64–127,
-component-uniform guidance reached 662 per mille clade/exact-CMP concordance, improved
-paired final hidden quality by a median 1,000 per mille and produced 48 wins, 16 ties
-and no losses. Every registered gate passed and the artifact replayed byte-identically.
-
-The seed-block replication is close: M029's diagnostic was 50/14/0 and M030 was
-48/16/0. The next justified step changes structure rather than drawing more seeds from
-the same generator: transport the component signal to a distinct compositional task
-family. Resource-aware adaptive allocation remains a separate policy question.
-
-### M031 — transport the signal across task structure
-
-M031 changed four structural properties before observing its primary seeds: generic
-motifs grew from two to three atoms, pair reversals became eight cyclic/permuted
-triads, one platform became two independent scaffolds, and eight shortcuts competed
-with a depth-five reusable route. The M030 policy contrast and decision thresholds
-remained fixed.
-
-Across exactly 64 paired primary seeds, component-uniform guidance reached 737 per
-mille clade/exact-CMP concordance versus -333 for development adaptive. Median paired
-final hidden advantage was 500 per mille, with 43 wins, 18 ties and 3 losses. Every
-registered structural, isolation and aligned-control gate passed, and the complete
-artifact replayed byte-identically.
-
-The narrow transport claim is therefore supported across two finite generators. The
-next admissible measurement question is optimisation: can a resource-aware adaptive
-policy improve on the frozen uniform component baseline without reviving M029's
-shortcut-contaminated allocation failure? It must be pre-registered as a distinct
-successor rather than folded into M031.
+The narrow information claim is supported across two finite generators. The next
+measurement experiment must be a distinct optimisation test: resource-aware adaptive
+allocation versus the frozen component-uniform baseline. It may not retroactively
+change M031's estimator or thresholds.
 
 ## Construction track
 
 ### M017 — language growth
 
-The self-extending organism solved 37/42 development episodes and reduced median search
-from 4,222 nodes in the first half to 43 in the second. The advantage is explicitly
-limited to destinations that share transformation structure. The candidate frozen
-protocol still requires a human signature.
+Successful transformation traces become reusable macros. The candidate frozen protocol
+passes its six development gates but still requires a human signature before a
+canonical run.
 
 ### M020 — executable self-rewrite
 
-M020 can search bounded policy source, select a strict development improvement without
-held-out answers, adopt it, archive the parent exactly, roll back and absorb the
+M020 searches bounded policy source, selects a strict development improvement without
+held-out answers, adopts it, archives the parent exactly, rolls back and absorbs the
 successful transformation as a learned tool.
 
 ### M023 — independent execution boundary
 
-M023 evaluates parent, candidate and regression cases in disposable subprocess
-workspaces. Adoption now fails closed if the baseline workspace itself fails. POSIX
-resource limits are defence in depth; this is not arbitrary-code sandboxing.
+Parent, candidate and regression cases run in disposable subprocess workspaces.
+Adoption fails closed if the baseline workspace or any required check fails. POSIX
+resource limits are defence in depth, not arbitrary-code sandboxing.
 
 ### M024 — portable rewrite state
 
-M024 serialises the active source, archive, adopted digest history, primitive tools and
-learned traces into canonical JSON and rejects inconsistent state before rehydration.
+The active source, archive, adopted digest history, primitive tools and learned traces
+cross a canonical JSON boundary. Inconsistent state is rejected before rehydration.
 SHA-256 supplies corruption evidence, not authenticated authorship.
 
 ### M025 — integrated portable rewrite lifecycle
 
-M025 demonstrates one continuous bounded lifecycle:
+Proposal, independent validation, adoption, serialisation, learned-tool replay and
+forced rollback execute as one transaction. Rejection or workspace exceptions restore
+both the versioned body and tool registry exactly.
 
-1. propose a multi-edit rewrite through M020;
-2. independently validate and adopt it through M023;
-3. export and import the complete state through M024;
-4. preserve held-out behaviour and exact provenance;
-5. reuse the learned transformation after migration;
-6. force rollback and restore the exact parent body.
+### M032 — integrated opaque-substrate bridge
 
-All five focused M025 checks and the complete 105-test repository suite pass. Rejection
-or a workspace exception restores both the versioned body and learned-tool registry to
-their exact pre-run state. The result is a development integration base, not a frozen
-canonical experiment.
+M032 carries that transaction through M013e's unknown-substrate boundary:
 
-### Next construction gate
+1. M025 independently adopts a strict bounded rewrite;
+2. every declared state-symbol pair is evaluated to compile the adopted policy into a
+   complete DFA;
+3. M013e discovers the opaque machine's Boolean operations by probing;
+4. an equivalent native body is synthesised for the discovered substrate;
+5. the M025 passport, source DFA, opaque body, opcode identifiers, memory, uncertainty
+   and exploration frontier cross one canonical packet;
+6. packet import validates all embedded structures and rejects tampering;
+7. compilation or migration failure restores source, archive, digest ledger and learned
+   tools exactly.
 
-The next gate must compile an adopted M025 body after discovering an opaque substrate,
-carry its rewrite registry plus relevant memory and exploration state, and reveal the
-next task only after migration. M025 does not yet establish any of those claims,
-post-migration advantage or repeated improvement cycles.
+The evaluated implementation commit is
+`4080ccc4b9381b1a2b0f8714e904c57335330877`. Five focused controls, 211 repository tests
+on Python 3.11 and Python 3.13 and the integrity audit passed. This is a development
+integration base, not a canonical evaluation.
+
+### M033 — next construction gate: post-migration plasticity
+
+Transport is not enough. M033 must reveal a genuinely new task family only after M032
+has completed migration. The pre-result comparison must include:
+
+1. the complete migrated M032 lineage;
+2. a fresh organism on substrate B;
+3. the unchanged parent lineage migrated to B;
+4. an output-only migrated body without retained plasticity;
+5. the improved lineage with memory, uncertainty and exploration state ablated;
+6. the improved lineage with learned rewrite tools ablated.
+
+The primary measure must include total diagnosis, search, failed-candidate, validation
+and migration cost. A positive result requires better exact held-out quality or faster
+improvement under a frozen paired-seed decision rule. A negative result remains a valid
+outcome and may not be repaired by changing the task family or thresholds after
+observation.
 
 ## First-phase finish line
 
-The project is not complete when it can generate code or pass one repair benchmark. One
-lineage must satisfy every gate in
+The project is not complete when it can generate code, transport a program or pass one
+repair benchmark. One lineage must satisfy every gate in
 [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md), including autonomous
 diagnosis, internal tool ownership, isolated validation, held-out improvement, complete
 trans-substrate migration, post-migration plasticity, repeated improvement cycles and a

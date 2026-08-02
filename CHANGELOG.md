@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.22.0 — 2026-08-03
+
+- Added M032's fail-closed bridge from M025's adopted executable rewrite to M013e's
+  experimentally discovered opaque substrate and native DFA body.
+- Added a canonical trans-substrate packet carrying the M025 passport, source DFA,
+  opaque body, discovered opcode identifiers, memory, uncertainty and exploration
+  frontier.
+- Added exact rollback after finite-compilation or substrate-migration failure and
+  integrity rejection for tampered passports, DFAs, opaque bodies and opcode registries.
+- Verified five focused M032 controls, repository integrity and 211 repository tests on
+  both Python 3.11 and Python 3.13.
+- Preserved the boundary between this bounded integration result and the still-open
+  post-migration learning, autonomous diagnosis and repeated-cycle claims.
+
 ## 0.21.0 — 2026-08-02
 
 - Added M031's split-scaffold generator with length-three generic motifs and eight

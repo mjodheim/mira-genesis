@@ -1,0 +1,52 @@
+name: M032 trans-substrate lifecycle
+
+# Development only. This workflow validates the bounded bridge and its rollback
+# controls; it does not produce a canonical scientific result.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m032-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install the package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run the focused M032 bridge controls
+        run: pytest -q tests/test_m032_trans_substrate_lifecycle.py
+      - name: Audit repository integrity
+        run: python scripts/check_repository_integrity.py
+      - name: Confirm bounded development status
+        run: |
+          python - <<'PYTHON'
+          from pathlib import Path
+
+          status = Path("experiments/M032/STATUS.md").read_text(encoding="utf-8")
+          protocol = Path("experiments/M032/PROTOCOL_DRAFT.md").read_text(
+              encoding="utf-8"
+          )
+          result = Path("results/M032_DEVELOPMENT_BASE.md").read_text(
+              encoding="utf-8"
+          )
+          assert "DEVELOPMENT BASE VERIFIED" in status
+          assert "not a canonical" in status
+          assert "does not establish" in protocol
+          assert "future canonical protocol" in protocol
+          assert "211 passed" in result
+          assert "What remains open" in result
+          PYTHON
