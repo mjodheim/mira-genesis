@@ -327,3 +327,26 @@ Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du déve
 ## Principe permanent
 
 Un échec ou une révocation n’est jamais supprimé. Il est classé `FAILED` ou `INCONCLUSIVE`, expliqué, puis suivi d’un nouveau protocole lorsqu’une correction scientifique est justifiée.
+
+## M028 — Adaptive evaluation weighted the wrong evidence
+
+- Status: `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`. No canonical evaluation.
+- The unique-task schedule and all six decision gates were committed before the
+  64-seed run at `334eec2`.
+
+Adaptive evaluation changed the search but did not support the prediction. Its median
+weighted-clade/exact-CMP concordance was -478 per mille, only 40 above uniform and below
+the 167-per-mille gate. Median final hidden advantage was zero: 2 wins, 60 ties and 2
+losses. Coverage, unique-task, selector-isolation and aligned controls all passed, and
+the complete replay was byte-identical.
+
+The diagnostic identifies the mechanism. Individual-performance Thompson sampling
+used the same visible development proxy that rewards shortcut lineages. It allocated
+34 per mille of non-initial evaluations to high-potential observed nodes, compared with
+51 per mille under uniform allocation. Unequal evidence did not soften a mean toward
+the hidden maximum; it concentrated confidence on the proxy's preferred descendants.
+
+This is not a failure of adaptive allocation in general or a test of full HGM. It shows
+that changing weights without changing the information that produces them cannot
+repair this measured proxy reversal. Any successor must justify a distinct routing
+signal before observing its full result.

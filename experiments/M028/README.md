@@ -6,6 +6,8 @@ evaluation omitted from the previous clade estimator.
 
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) fixes the comparison and decision rule.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md`](../../results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md)
+  records the complete 64-seed negative development result.
 
 M028 keeps the M026 task generators and M027 breadth coverage. The primary comparison
 changes only which publicly observable node receives the next unevaluated development

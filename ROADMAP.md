@@ -30,7 +30,7 @@ target.
 | M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
 | M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
-| M028 | Adaptive evaluation weighting | FROZEN FOR DEVELOPMENT RUN | Compare uniform and Thompson allocation of unique evaluations under one common clade parent policy. |
+| M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -124,9 +124,16 @@ development case. Uniform or individual-performance Thompson sampling then alloc
 the remaining finite cases under a common schedule. Both variants use the same
 weighted-clade parent selector for 40 expansions and the same visible final selector.
 
-The comparison is frozen at 64 paired seeds. Support requires both estimator alignment
-and a pre-written final hidden-quality advantage; an underpowered smoke run cannot
-support the hypothesis.
+Across 64 paired seeds, adaptive concordance remained negative at -478 per mille and
+improved on uniform by only 40 per mille. Median final hidden advantage was zero, with
+2 wins, 60 ties and 2 losses. The adaptive policy allocated less evidence to
+evaluator-identified high-potential observed nodes than uniform allocation did.
+
+This rejects individual-performance weighting as the missing repair in this finite
+rig. A successor must change the allocation signal itself—uncertainty, behavioural
+diversity or a separately justified transfer proxy—or return to M022's deferred
+cross-seed controls. Increasing breadth or tuning the failed thresholds remains
+inadmissible.
 
 ## Construction track
 

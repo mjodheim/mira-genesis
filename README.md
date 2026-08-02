@@ -59,7 +59,7 @@ Current development evidence:
 | M025 | One transactional lifecycle now searches, independently validates, adopts, migrates, replays and rolls back a bounded rewrite; rejection and exceptions restore both body and tool registry exactly. |
 | M026 | A decidable DGM/HGM-inspired benchmark exposed an exact performance/potential mismatch, but observed clade guidance alone did not beat immediate guidance across 64 paired seeds. |
 | M027 | Exhaustive hidden-blind coverage exposed productive descendants before selection, but clade guidance still tied immediate guidance in all 64 paired seeds. |
-| M028 | A pre-written development comparison now isolates adaptive versus uniform allocation of finite evaluation evidence over the same breadth-seeded archive. |
+| M028 | Adaptive evaluation improved clade/exact-CMP concordance by only 40 per mille and tied uniform evaluation on median final hidden quality, with 2 wins, 60 ties and 2 losses. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
@@ -72,11 +72,16 @@ reward-bearing depth before policy selection. The clade estimate still remained
 anti-aligned with exact maximum hidden utility, and HGM-inspired guidance tied
 DGM-inspired guidance in all 64 seeds.
 
-M028 implements the next separable measurement. It keeps M027's coverage and changes
-only which node receives each remaining development case: uniform allocation versus
-individual-performance Thompson sampling. Its 64-seed rule is written before the full
-development run. Merely increasing coverage depth or relaxing M027's thresholds is
-not an admissible alternative.
+M028 kept M027's coverage and changed only which node received each remaining
+development case: uniform allocation versus individual-performance Thompson sampling.
+The adaptive estimator remained anti-aligned with exact CMP at -478 per mille and did
+not improve median final hidden quality. It allocated less evidence than uniform
+sampling to observed nodes that the evaluator knew retained maximum hidden potential.
+
+The next separable measurement must therefore change the information used to allocate
+evaluations, not merely its concentration. Candidate signals are uncertainty,
+behavioural diversity or a separately justified transfer proxy. Returning to M022's
+deferred cross-seed adaptation controls remains the independent alternative.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on

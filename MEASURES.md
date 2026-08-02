@@ -191,11 +191,31 @@ held out of M026.
 M027 held adaptive evaluation weighting out of scope. The result motivates isolating
 that mechanism and does not test full HGM.
 
+## R010 — adaptive weighting sharpened the same misaligned proxy
+
+- **Origin:** M028, negative development result.
+- **Measure:** individual development performance used to allocate finite evaluation
+  observations, followed by their weighted aggregation over each observed clade.
+- **What it claimed to track:** a soft approximation to exact maximum hidden quality
+  reachable in the rooted clade.
+- **Divergence:** adaptive weighted-clade/exact-CMP concordance remained -478 per
+  mille, only 40 per mille above uniform and far below the pre-written 167 separation
+  gate. Median final hidden advantage was zero, with 2 wins, 60 ties and 2 losses.
+- **Cause:** the allocation policy observes the same development proxy whose ordering
+  the mismatch rig reverses. It allocated only 34 per mille of non-initial evaluations
+  to high-potential observed nodes, versus 51 per mille under uniform allocation.
+- **Lesson:** adaptive concentration cannot repair an information mismatch by itself.
+  It can make an aggregate more certain about the wrong quantity. The routing signal
+  must contain information that is independently justified as relevant to the target.
+
+M028 still does not test full HGM. It isolates one finite evaluation-target adaptation
+while holding asynchronous scheduling, software tasks and the rest of HGM out of scope.
+
 ---
 
 ## What the register already suggests
 
-Six regularities, drawn from nine cases rather than postulated:
+Seven regularities, drawn from ten cases rather than postulated:
 
 1. **Establish the dynamic range before fixing a margin** (R001, R003, R007).
 2. **A criterion opposes two equal capabilities; an incapacity is a control** (R002).
@@ -205,6 +225,8 @@ Six regularities, drawn from nine cases rather than postulated:
 5. **A long-horizon estimate needs a process that reveals long-horizon evidence**
    (R008).
 6. **Sampling weights determine what an aggregate actually estimates** (R009).
+7. **Adaptive weighting cannot recover information absent from its routing signal**
+   (R010).
 
 R007 is the internal warning: recording a lesson does not guarantee that the next
 instrument applies it correctly.

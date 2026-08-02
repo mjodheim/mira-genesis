@@ -43,7 +43,7 @@ without human architectural intervention. All ten required gates are defined in
 | M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
-| M028 | FROZEN FOR DEVELOPMENT RUN | Adaptive versus uniform allocation of unique finite evaluations over the M027 archive. |
+| M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
 M017 and M020–M028 are development evidence and must not be promoted to canonical
@@ -86,11 +86,18 @@ HGM-inspired and DGM-inspired guidance tied at zero final hidden quality in all 
 paired mismatch seeds. Clade/exact-CMP concordance remained -907 per mille. See
 [`results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md`](results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md).
 
-M028 now pre-writes that adaptive evaluation-weighting intervention. It compares
-uniform allocation with individual-performance Thompson sampling while holding the
-coverage archive, unique task orders, weighted-clade parent policy, expansion budget
-and final selector fixed. The complete 64-seed development run has not yet been
-observed. Additional breadth alone is no longer justified by the evidence.
+M028 tested that intervention while holding the coverage archive, unique task orders,
+weighted-clade parent policy, expansion budget and final selector fixed. Adaptive
+weighted-clade/exact-CMP concordance was -478 per mille, only 40 above uniform. Median
+final hidden advantage was zero, with 2 wins, 60 ties and 2 losses. Adaptive allocation
+also sent less evidence to evaluator-identified high-potential observed nodes: 34 versus
+51 per mille. See
+[`results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md`](results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md).
+
+Additional breadth and performance-adaptive weighting are both rejected as repairs for
+this mismatch. The next separable mechanism must change the information used to route
+evaluations—uncertainty, behavioural diversity or a separately justified transfer
+proxy—or the measurement track should resume M022's deferred cross-seed controls.
 
 ## Construction track
 

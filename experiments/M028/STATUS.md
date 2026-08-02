@@ -1,10 +1,14 @@
 # M028 — Status
 
-**DEVELOPMENT — FROZEN IMPLEMENTATION READY FOR THE FULL RUN**
+**DEVELOPMENT — PRE-WRITTEN ADAPTIVE-WEIGHTING PREDICTION NOT SUPPORTED**
 
-The adaptive evaluation-weighting intervention and its decision gates have been
-written before the 64-seed comparison. Twelve focused M028 tests, 45 M026–M028 tests,
-the complete 156-test repository suite, the repository integrity audit and a four-seed
-smoke run pass. The smoke run is underpowered by construction and supports no
-prediction. The full result must be run only from the frozen pre-result commit; its
-identity will be recorded with the result.
+The adaptive evaluation-weighting intervention and its decision gates were written
+before the 64-seed comparison and committed at `334eec2`.
+
+Coverage, uniqueness, selector-isolation and aligned controls passed. The prediction
+failed: adaptive weighted-clade/exact-CMP concordance remained negative at -478 per
+mille, only 40 per mille above uniform; median paired final hidden advantage was zero,
+with 2 wins, 60 ties and 2 losses.
+
+The raw result replayed byte-identically. The complete result is recorded in
+[`../../results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md`](../../results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md).

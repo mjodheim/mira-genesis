@@ -114,7 +114,7 @@ When productive descendants are already present, allocating finite evaluation ev
 according to individual observed performance makes clade aggregation behave more like
 a soft maximum than uniform allocation does.
 
-**Status:** frozen for an M028 development test; not validated.
+**Status:** not supported by the M028 development test.
 
 **Pre-written implication:** on M026's mismatch rig after M027 coverage, adaptive
 evaluation must improve median weighted-clade/exact-CMP concordance and final hidden
@@ -124,3 +124,9 @@ fixed in [`experiments/M028/PROTOCOL_DRAFT.md`](experiments/M028/PROTOCOL_DRAFT.
 
 **Scope:** this is a mechanism hypothesis about a finite HGM-inspired adaptation, not a
 claim about the complete HGM implementation or general metaproductivity.
+
+**Result:** adaptive concordance remained negative at -478 per mille, only 40 per
+mille above uniform. Median final hidden advantage was zero, with 2 wins, 60 ties and
+2 losses. The adaptive policy allocated 34 per mille of its non-initial evaluations to
+high-potential observed nodes versus 51 per mille under uniform allocation. Unequal
+weighting by a misaligned proxy did not approximate the hidden clade maximum.
