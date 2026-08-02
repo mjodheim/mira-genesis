@@ -1,10 +1,10 @@
 # Mira Genesis — Project state
 
-**Updated: 2 August 2026**
+**Updated: 3 August 2026**
 
 ## Research question and completion target
 
-The active research question is:
+The active measurement question is:
 
 > **When does a proxy measure stop tracking exact hidden quality, and under what
 > optimisation pressure?**
@@ -43,106 +43,61 @@ without human architectural intervention. All ten required gates are defined in
 | M025 | DEVELOPMENT BASE VERIFIED | Transactional search, independent adoption, portable learned-tool replay and exact rollback. |
 | M026 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch established; clade aggregation alone did not beat immediate guidance. |
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
-| M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
-| M029 | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP, but adaptive concentration missed the allocation and final-quality gates. |
+| M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned and did not beat uniform allocation. |
+| M029 | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP, but adaptive concentration missed the registered policy gates. |
 | M030 | DEVELOPMENT CONFIRMATION SUPPORTED | Component-uniform guidance reproduced on untouched seeds 64–127 with 48 wins, 16 ties and no losses. |
+| M031 | DEVELOPMENT STRUCTURAL TRANSPORT SUPPORTED | The signal transported to a split-scaffold triad generator with 43 wins, 18 ties and 3 losses. |
+| M032 | DEVELOPMENT BASE VERIFIED | An adopted rewrite compiles and migrates to an opaque substrate with a validated passport, learned tools and declared learning state; rollback and tamper controls pass. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M030 are development evidence and must not be promoted to canonical
+M017 and M020–M032 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
 
 M021 compared direct objective, novelty, a niche-first quality-diversity approximation
 and minimal criterion using common random numbers and exact held-out equivalence across
-24 paired seeds.
+24 paired seeds. Median adaptive held-out quality was 750 per mille for minimal
+criterion, 416 for novelty, 312 for the quality-diversity approximation and 0 for direct
+objective. The original prediction placed quality-diversity first and was wrong.
 
-Median adaptive held-out quality was:
+M022 then exposed adaptation during the audit at seed 0: persistent self-extension
+reduced common late search from 59,358 to 264 nodes, while open search remained exactly
+unchanged. Cross-seed stability is still open.
 
-1. minimal criterion — **750 per mille**;
-2. novelty — **416 per mille**;
-3. niche-first quality-diversity approximation — **312 per mille**;
-4. direct objective — **0 per mille**.
+M026 established a proven immediate-performance/exact-potential reversal, but observed
+clade guidance did not beat immediate guidance across 64 paired seeds. M027 exhaustively
+seeded every lineage through depth three; the hidden signal became visible, yet the
+unweighted clade estimate remained anti-aligned and both guidance policies returned
+zero final hidden quality in all 64 mismatch seeds.
 
-The original prediction placed quality-diversity first and was wrong. The result is
-preserved in [`results/M021_DEVELOPMENT_RESULT.md`](results/M021_DEVELOPMENT_RESULT.md).
+M028 changed only evaluation allocation. Individual-performance adaptive weighting
+remained anti-aligned at -478 per mille, improved concordance over uniform by only 40
+per mille and produced 2 wins, 60 ties and 2 losses. It also allocated less evidence to
+high-potential observed nodes than uniform allocation did.
 
-Adaptive and frozen scores were almost identical, so M021 did not establish
-post-selection adaptation. M022 was created as a separate successor rather than
-changing M021 after observation. At seed 0, M022's positive control reduced common late
-search from 59,358 to 264 nodes while its open-search negative control stayed exactly
-unchanged. See
-[`results/M022_ADAPTATION_SMOKE_RESULT.md`](results/M022_ADAPTATION_SMOKE_RESULT.md).
+M029 replaced individual performance with hidden-disjoint component-transfer evidence.
+The component-adaptive estimator reached 699 per mille concordance, 1,177 above the
+frozen baseline, but the registered policy prediction failed with 31 wins, 32 ties and
+1 loss. Its pre-declared component-uniform diagnostic was stronger: 50 wins, 14 ties
+and no losses.
 
-M026 then compared adaptations of DGM immediate-performance guidance and HGM
-clade-performance guidance against exact hidden rooted-clade quality. The positive
-control contains a proven ordering reversal, and the aligned control is exhaustive.
-Nevertheless, the HGM-inspired policy had median advantage 0 per mille, with 4 wins,
-59 ties and 1 loss across 64 paired seeds. The pre-written prediction was not
-supported. See
-[`results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md`](results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md).
+M030 promoted that diagnostic to a primary comparison on untouched seeds 64–127. Every
+registered gate passed: 662 per mille concordance, median paired final advantage 1,000
+per mille, 48 wins, 16 ties and no losses. M031 then changed the task structure to
+length-three cyclic/permuted triads and two independent scaffolds. The frozen component
+signal transported with 737 per mille concordance, median advantage 500 per mille and
+43 wins, 18 ties and 3 losses. Both complete artifacts replayed byte-identically.
 
-M027 applied that exploration intervention: every reachable state through depth three
-was present before policy selection. The hidden signal was exposed in every seed, but
-HGM-inspired and DGM-inspired guidance tied at zero final hidden quality in all 64
-paired mismatch seeds. Clade/exact-CMP concordance remained -907 per mille. See
-[`results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md`](results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md).
-
-M028 tested that intervention while holding the coverage archive, unique task orders,
-weighted-clade parent policy, expansion budget and final selector fixed. Adaptive
-weighted-clade/exact-CMP concordance was -478 per mille, only 40 above uniform. Median
-final hidden advantage was zero, with 2 wins, 60 ties and 2 losses. Adaptive allocation
-also sent less evidence to evaluator-identified high-potential observed nodes: 34 versus
-51 per mille. See
-[`results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md`](results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md).
-
-Additional breadth and performance-adaptive weighting are both rejected as repairs for
-this mismatch. The next separable mechanism must change the information used to route
-evaluations—uncertainty, behavioural diversity or a separately justified transfer
-proxy—or the measurement track should resume M022's deferred cross-seed controls.
-
-M029 tested that transfer proxy. Component-adaptive clade/exact-CMP concordance reached
-699 per mille, 1,177 above the frozen development-adaptive baseline. The registered
-prediction still failed: the allocation shift was 92 rather than 167 per mille and
-paired final advantage was zero, with 31 wins, 32 ties and 1 loss.
-
-The pre-declared component-uniform diagnostic was stronger: 50 wins, 14 ties and no
-losses against development adaptive, with median final hidden quality 1,000 per mille.
-It cannot be promoted to a confirmed claim on the already observed seeds. See
-[`results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md`](results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md).
-
-The next clean measurement is a frozen component-uniform comparison on untouched seeds
-64–127. A distinct alternative is a depth-aware viability signal that penalises useful
-components embedded in lineages with too little remaining rewrite budget.
-
-M030 confirmed that untouched-seed comparison without adding a new policy. On exactly
-seeds 64–127, component-uniform guidance reached 662 per mille clade/exact-CMP
-concordance, 1,186 above development adaptive. Median paired final hidden advantage was
-1,000 per mille, with 48 wins, 16 ties and no losses. Every registered control passed
-and the artifact replayed byte-identically. See
-[`results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md`](results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md).
-
-Together, the M029 diagnostic and M030 untouched block give 98 wins, 30 ties and no
-losses across 128 development seeds for component-uniform versus development-adaptive
-guidance. This is reproducible finite-rig development evidence, not a canonical or
-domain-independent claim.
-
-M031 completed that structural transport. It replaced length-two pair reversals and a
-single platform with length-three cyclic/permuted triads and two independent
-scaffolds. Component-uniform concordance reached 737 per mille, 1,070 above development
-adaptive. Median paired final hidden advantage was 500 per mille, with 43 wins,
-18 ties and 3 losses. Every pre-written gate passed and the 48,018,205-byte artifact
-replayed byte-identically. See
-[`results/M031_STRUCTURAL_TRANSPORT_RESULT.md`](results/M031_STRUCTURAL_TRANSPORT_RESULT.md).
-
-The component information effect is therefore supported across two finite task
-generators, while remaining non-canonical and grammar-specific. The next separable
-measurement is a resource-aware adaptive allocation policy tested against the frozen
-uniform baseline. It is an optimisation question, not a repair to M031.
+The supported claim remains finite and grammar-specific: reusable component evidence
+tracks exact hidden potential better than the frozen development-adaptive baseline in
+two task generators. The next distinct measurement question is whether a pre-written,
+resource-aware adaptive policy can improve on the frozen component-uniform baseline
+without recreating M029's allocation failure.
 
 ## Construction track
 
-The current bounded self-rewrite stack is:
+The bounded construction stack is now:
 
 1. **M017 — language growth:** successful transformation traces become reusable macros;
 2. **M020 — self-rewrite:** executable policy source is searched, strictly improved,
@@ -152,12 +107,37 @@ The current bounded self-rewrite stack is:
 4. **M024 — portability:** active source, rollback lineage, primitive tools and learned
    traces cross a canonical integrity-checked serialisation boundary;
 5. **M025 — lifecycle integration:** proposal, independent validation, adoption,
-   migration, learned-tool replay and forced rollback execute as one transaction.
+   serialisation, learned-tool replay and forced rollback execute as one transaction;
+6. **M032 — opaque-substrate bridge:** the adopted policy is exhaustively compiled into
+   a finite DFA, migrated through M013e's experimentally discovered substrate boundary
+   and packaged with its rewrite passport and declared learning state.
 
-Next construction gate: move that complete rewrite state through an opaque-substrate
-discovery and native-compilation boundary, add portable memory and exploration state,
-and expose a genuinely new task only after migration. This is still far short of the
-ten-gate completion test.
+M032's evaluated implementation commit is
+`4080ccc4b9381b1a2b0f8714e904c57335330877`. Its focused workflow run
+`30769852599` passed five bridge, rollback, determinism and tamper controls. Complete CI
+run `30769852609` passed **211 tests** on both Python 3.11 and Python 3.13, together with
+the repository integrity audit. The versioned report is
+[`results/M032_DEVELOPMENT_BASE.md`](results/M032_DEVELOPMENT_BASE.md).
+
+M032 establishes exact transport and validation of the declared state surface, not its
+functional value. A packet may preserve memory, uncertainty, exploration state and
+learned tools without those objects improving future adaptation.
+
+### Next construction gate
+
+The next experiment must reveal a genuinely new task family only after migration and
+compare:
+
+- the complete migrated M032 lineage;
+- a fresh organism constructed on substrate B;
+- the unchanged parent lineage migrated to B;
+- an output-only migrated body without retained plasticity;
+- the improved lineage with memory and exploration state ablated;
+- the improved lineage with learned rewrite tools ablated.
+
+It must measure exact post-migration quality and total cost, including diagnosis,
+search, failed candidates, validation and migration. Only a pre-written advantage over
+those controls would support transported plasticity rather than transported output.
 
 ## Canonical proof identities
 
@@ -188,8 +168,7 @@ ten-gate completion test.
 - arbitrary multi-file self-rewrite;
 - kernel-enforced network and syscall isolation;
 - authenticated passport provenance;
-- compilation of a rewritten body into an unknown substrate;
-- portable autobiographical memory, uncertainty and exploration state;
-- post-migration learning advantage over fresh and ablated controls;
+- functional post-migration use of transported memory, uncertainty and exploration;
+- post-migration learning advantage over fresh, parent, output-only and ablated controls;
 - three repeated improvement cycles in one lineage;
 - open-ended self-metamorphosis.
