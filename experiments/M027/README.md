@@ -7,6 +7,8 @@ effective than immediate-performance guidance.
 
 - [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) fixes the comparison and decision rule.
 - [`STATUS.md`](STATUS.md) records implementation and result status.
+- [`../../results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md`](../../results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md)
+  records the complete 64-seed negative development result.
 
 M027 keeps M026's finite tasks, sealed hidden suite, exact evaluator, public selectors
 and deterministic action orders. It changes only the common pre-policy exploration

@@ -302,6 +302,24 @@ the expansion process has not yet exposed. This does not test full HGM because M
 holds its adaptive evaluation scheduler, asynchronous execution and final-selection
 rule out of scope.
 
+## M027 — Breadth coverage did not turn a clade mean into a clade maximum
+
+- Status: `DEVELOPMENT — HYPOTHESIS NOT SUPPORTED`. No canonical evaluation.
+- The coverage intervention and estimator/policy gates were committed before the full
+  run.
+
+Every reachable state through the first reward-bearing depth was present before parent
+selection. The hidden signal was therefore observable in all 64 mismatch seeds. Even
+so, the clade estimator remained -907 per mille concordant with exact CMP, improved on
+immediate performance by only 93 per mille, and produced 64/64 final-quality ties at
+zero between HGM-inspired and DGM-inspired guidance.
+
+The failure is not insufficient breadth. Equal evaluation of every clade node estimates
+an average dominated by proxy-successful shortcuts, whereas exact CMP is determined by
+the rare maximum-quality generic lineage. Full HGM's adaptive evaluation weighting was
+deliberately excluded, so the result identifies that mechanism as the next separable
+question rather than making a claim about full HGM.
+
 ## Premiers prototypes sensorimoteurs
 
 Plusieurs protocoles ont été ajustés après pilotes. Ils constituent du développement exploratoire, pas une validation indépendante.

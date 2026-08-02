@@ -58,17 +58,23 @@ Current development evidence:
 | M024 | A canonical, integrity-checked passport for active source, rollback history and learned rewrite tools passed CI. |
 | M025 | One transactional lifecycle now searches, independently validates, adopts, migrates, replays and rolls back a bounded rewrite; rejection and exceptions restore both body and tool registry exactly. |
 | M026 | A decidable DGM/HGM-inspired benchmark exposed an exact performance/potential mismatch, but observed clade guidance alone did not beat immediate guidance across 64 paired seeds. |
+| M027 | Exhaustive hidden-blind coverage exposed productive descendants before selection, but clade guidance still tied immediate guidance in all 64 paired seeds. |
 
 These are bounded development results, not claims of AGI, consciousness, unrestricted
 code execution or open-ended recursive self-improvement.
 
 ## Current work
 
-M026 completed the first literature-facing measurement step. It showed that a known
-performance/potential reversal is not enough for observed clade aggregation to guide
-search when productive descendants are rarely exposed. The next measurement decision
-is whether to pre-register an exploration-controlled M026 successor or return to
-M022's cross-seed adaptation controls; neither has been started.
+M026 showed that a known performance/potential reversal is not enough when productive
+descendants are rarely exposed. M027 then enumerated every lineage through the first
+reward-bearing depth before policy selection. The clade estimate still remained
+anti-aligned with exact maximum hidden utility, and HGM-inspired guidance tied
+DGM-inspired guidance in all 64 seeds.
+
+The next separable measurement is evaluation weighting: test whether a pre-written
+hidden-blind allocation that concentrates observations on stronger descendants can
+turn clade averaging into the intended soft maximum. Merely increasing coverage depth
+or relaxing M027's thresholds is not an admissible successor.
 
 The next construction step is to carry M025's verified lifecycle across an initially
 unknown substrate together with memory and exploration state, then measure learning on
@@ -104,6 +110,12 @@ Run the non-canonical M026 comparison on four workers:
 
 ```bash
 python scripts/run_m026_metaproductivity_comparison.py --seeds 64 --workers 4
+```
+
+Run the non-canonical M027 seeded-clade comparison:
+
+```bash
+python scripts/run_m027_seeded_clade_comparison.py --seeds 64 --workers 4
 ```
 
 ## Repository map

@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.17.0 — 2026-08-02
+
+- Added M027's hidden-blind exhaustive coverage through the first reward-bearing depth.
+- Preserved the 64-seed negative development result: exposing productive descendants
+  did not align the unweighted clade estimator or improve final hidden quality.
+- Added permanent human-attribution rules and pull-request checks for commit authors,
+  committers, co-authors, branch names, titles and descriptions.
+- Removed historical automated inline-review comments and neutralized the submitted
+  review summaries that GitHub does not permit the repository owner to delete.
+
 ## 0.16.0 — 2026-08-02
 
 - Added M026, the first direct literature-facing benchmark, with explicit mappings to

@@ -29,6 +29,7 @@ target.
 | M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
 | M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 now execute as one fail-closed transaction. |
 | M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; HGM-inspired clade aggregation did not beat DGM-inspired immediate guidance. |
+| M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -95,6 +96,24 @@ cannot guide a lineage that expansion rarely reveals.
 The next measurement decision is explicit rather than automatic: pre-register a
 successor with a hidden-blind minimum exploration guarantee, or resume the deferred
 M022 cross-seed sequence. Threshold tuning is not an admissible successor.
+
+### M027 — expose the lineage before guidance
+
+M027 chose the first option. Before any policy decision, it exhaustively enumerated all
+reachable states through depth three: 97 expansions in the mismatch rig and 63 in the
+aligned rig. This exposed non-zero hidden quality in every mismatch seed without using
+hidden information.
+
+The intervention did not rescue the estimator or policy. On HGM-guided archives,
+clade/exact-CMP concordance was -907 per mille, only 93 better than immediate
+performance and below the pre-written 167 separation floor. HGM-inspired and
+DGM-inspired policies returned zero hidden quality in every one of 64 paired seeds.
+
+The exact cause is now narrower. Fixed full evaluation makes the clade estimator an
+unweighted mean, while exact CMP is a maximum. Shortcut-heavy clades dominate the mean
+despite having poor hidden potential. The next admissible successor must isolate
+adaptive evaluation weighting; more breadth or threshold tuning would repeat a rejected
+intervention.
 
 ## Construction track
 
