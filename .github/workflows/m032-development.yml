@@ -31,7 +31,7 @@ jobs:
         run: pytest -q tests/test_m032_trans_substrate_lifecycle.py
       - name: Audit repository integrity
         run: python scripts/check_repository_integrity.py
-      - name: Confirm development-only status
+      - name: Confirm bounded development status
         run: |
           python - <<'PYTHON'
           from pathlib import Path
@@ -40,7 +40,13 @@ jobs:
           protocol = Path("experiments/M032/PROTOCOL_DRAFT.md").read_text(
               encoding="utf-8"
           )
-          assert "DEVELOPMENT EVIDENCE PENDING" in status
+          result = Path("results/M032_DEVELOPMENT_BASE.md").read_text(
+              encoding="utf-8"
+          )
+          assert "DEVELOPMENT BASE VERIFIED" in status
+          assert "not a canonical" in status
           assert "does not establish" in protocol
           assert "future canonical protocol" in protocol
+          assert "211 passed" in result
+          assert "What remains open" in result
           PYTHON
