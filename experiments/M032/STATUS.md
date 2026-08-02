@@ -1,22 +1,43 @@
 # M032 status
 
-**Status: IMPLEMENTATION OPEN — DEVELOPMENT EVIDENCE PENDING**
+**Status: DEVELOPMENT BASE VERIFIED**
 
-The first bridge implementation now exists on the M032 research branch:
+Evaluated implementation commit: `4080ccc4b9381b1a2b0f8714e904c57335330877`.
+
+M032 now joins M025's transactional rewrite lifecycle to M013e's opaque-substrate
+migration under one fail-closed boundary:
 
 - M025 remains the sole rewrite, independent-adoption and passport mechanism;
-- an exhaustive finite compiler converts an adopted two-argument policy into a DFA;
+- an exhaustive finite compiler converts the adopted two-argument policy into a DFA;
 - M013e remains the sole opaque-substrate discovery and native synthesis mechanism;
 - a canonical packet carries the M025 passport, source DFA, opaque body, discovered
   opcode identifiers, memory, uncertainty and exploration frontier;
-- bridge or migration failure restores the original body and learned-tool registry.
+- packet rehydration validates the passport, DFA, native body and opcode registry;
+- bridge or migration failure restores source, archive, adopted digests and learned
+  tools exactly.
 
-Three focused tests are present but their GitHub Actions result has not yet been observed:
+The focused workflow passed five controls:
 
-1. successful rewritten-body migration with exact learning-state transport;
+1. successful rewritten-body migration with exact learning-state and learned-tool
+   transport;
 2. forced substrate-probe failure with exact rollback;
-3. an adopted source that leaves the declared finite state space with exact rollback.
+3. rejection and rollback when an adopted policy leaves its declared finite state
+   space;
+4. byte-identical packet construction from identical inputs;
+5. rejection of a tampered source DFA, opaque body or discovered-opcode registry.
 
-No scientific or development claim is supported until the branch CI and repository
-integrity checks pass. Post-migration learning controls and the new task family remain
-unimplemented.
+Validation identity:
+
+- focused workflow run: `30769852599`;
+- complete CI run: `30769852609`;
+- repository tests: **211 passed** on Python 3.11 and Python 3.13;
+- repository integrity audit: passed.
+
+This is a bounded development integration result, not a canonical evaluation. It does
+not establish autonomous fault diagnosis, functional use of transported memory,
+post-migration learning advantage, three repeated improvement cycles, open-ended
+self-metamorphosis, consciousness or AGI.
+
+The next construction experiment must reveal a genuinely new task family only after
+migration and compare the complete M032 lineage against fresh, unchanged-parent,
+output-only, memory-ablated and learned-tool-ablated controls.
