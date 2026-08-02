@@ -45,9 +45,10 @@ without human architectural intervention. All ten required gates are defined in
 | M027 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exhaustive public coverage exposed the lineage, but unweighted clade evidence remained anti-aligned with exact CMP. |
 | M028 | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Performance-adaptive evaluation remained anti-aligned with exact CMP and did not beat uniform allocation. |
 | M029 | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP, but adaptive concentration missed the allocation and final-quality gates. |
+| M030 | FROZEN FOR DEVELOPMENT CONFIRMATION | Frozen component-uniform versus development-adaptive policies on untouched seeds 64–127. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M029 are development evidence and must not be promoted to canonical
+M017 and M020–M030 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -113,6 +114,11 @@ It cannot be promoted to a confirmed claim on the already observed seeds. See
 The next clean measurement is a frozen component-uniform comparison on untouched seeds
 64–127. A distinct alternative is a depth-aware viability signal that penalises useful
 components embedded in lineages with too little remaining rewrite budget.
+
+M030 now fixes that untouched-seed comparison. It adds no new policy: the M029
+development-adaptive and component-uniform paths are called unchanged. Exactly 64 seeds
+from 64 through 127 form the confirmation set; all tests and smoke execution use seeds
+128 and above. No confirmation-seed result has yet been observed.
 
 ## Construction track
 

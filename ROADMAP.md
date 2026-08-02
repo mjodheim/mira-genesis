@@ -32,6 +32,7 @@ target.
 | M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
 | M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned with exact CMP and tied uniform final hidden quality. |
 | M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates and underperformed the uniform diagnostic. |
+| M030 | Untouched-seed component confirmation | FROZEN FOR DEVELOPMENT CONFIRMATION | Promote the M029 uniform diagnostic on untouched seeds 64–127 without changing policy code. |
 | M015 | Memory and strategy | DEFERRED | Migrate memory, uncertainty and exploration policy. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -153,6 +154,16 @@ contrast was diagnostic rather than a decision gate, the same observed seeds can
 confirm a new hypothesis. The next clean option is a frozen rerun on untouched seeds
 64–127. A depth-aware viability correction remains a separate successor rather than a
 post-hoc repair to M029.
+
+### M030 — confirm the uniform component signal on untouched seeds
+
+M030 takes that clean option. It adds no new mechanism and calls the frozen M029
+development-adaptive and component-uniform paths. The primary block is exactly seeds
+64–127; unit and smoke validation use seeds 128 and above.
+
+The decision rule requires estimator alignment, at least 167 per mille concordance and
+paired final-quality advantages, at least 40 wins, and every prior isolation and aligned
+control. A different seed block cannot support the confirmation.
 
 ## Construction track
 
