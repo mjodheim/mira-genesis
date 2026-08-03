@@ -191,12 +191,21 @@ complete lineage beats fresh-B **32/0/0** and its own unchanged parent **32/0/0*
 median of 26 candidates against 1,427.5 and 264.5. That is the first M033 evidence that
 transported *competence* does real work after migration.
 
-Gate 8 is still not met, now for a legible reason. The learned-tool ablation ties on all
-32 seeds at an identical median of 26, because the single learned tool encodes the same
-transformation the adopted rewrite already baked into the body — once the body is
-transported, replaying the tool is redundant. The learning-state ablation splits 16/0/16,
-decided on two scaffolds by the single-candidate memory probe. Evidence in
-[`results/M033_EMBODIED_CALIBRATION.md`](results/M033_EMBODIED_CALIBRATION.md).
+Gate 8 is still not met, and auditing the remaining tie found a second structural limit
+rather than a tunable one. The learned-tool ablation ties on all 32 seeds at an identical
+median because `PatchOperation` binds each edit to a positional AST index and a learned
+tool replays its operations verbatim. The tool a single-cycle lineage carries is exactly
+the trace that produced its body, so reapplying it there is a no-op: the complete lineage
+and its tool ablation differ by something that cannot act. No choice of task target repairs
+this, and an earlier requirement claiming otherwise has been withdrawn. The control is
+**structurally uninformative**, not failed, and Gate 8's tool comparison must be evaluated
+on a multi-cycle or rolled-back lineage — which makes Gates 8 and 9 dependent. Recorded as
+D013 and pinned in `tests/test_m020_learned_tool_replay_limit.py`.
+
+The learning-state ablation genuinely splits 16/0/16, decided on two scaffolds by the
+single-candidate memory probe. Memory is unaffected by the tool limit: it is decoded and
+re-applied against current evidence, so it can act on a body it did not produce. Evidence
+in [`results/M033_EMBODIED_CALIBRATION.md`](results/M033_EMBODIED_CALIBRATION.md).
 
 The reserved primary block `0–63` has never been instantiated or observed, and no
 post-migration plasticity advantage is claimed. Before it may open, M033 still requires a

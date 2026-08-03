@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.26.0 — 2026-08-03
+
+- Established that a learned rewrite tool is a literal replay, not a generalising
+  transformation: `PatchOperation` binds each edit to a positional AST index and
+  `LearnedRewriteTool` returns its operations verbatim, so a tool cannot fire at an
+  equivalent site with a different index.
+- Established the consequence for Gate 8: the tool a single-cycle lineage carries is the
+  trace that produced its body, so applying it there is a no-op and the learned-tool
+  ablation compares two lineages whose only difference cannot act.
+- Reclassified that control from failed to **structurally uninformative**, since a tie
+  there is evidence about the rewrite language rather than about transported plasticity.
+- Withdrew the requirement, added in 0.25.0, that the primary generator demand a component
+  the migrated body does not encode. It was unsatisfiable: the precondition is a relation
+  between registry and body, not between lineage and task.
+- Recorded that Gate 8's tool control must be evaluated on a multi-cycle or rolled-back
+  lineage, so Gates 8 and 9 are not independent.
+- Added `tests/test_m020_learned_tool_replay_limit.py`, five tests pinning the index
+  binding, the no-op property and the absence of site transfer.
+- Recorded the finding as D013 and connected it to D009: the tool language is closed in
+  the same way the retired catalogue was.
+- Noted that the memory mechanism is unaffected, because it is decoded and re-applied
+  against current evidence and can therefore act on a body it did not produce.
+
 ## 0.25.0 — 2026-08-03
 
 - Found and repaired a control-design defect that removed one of Gate 8's four required

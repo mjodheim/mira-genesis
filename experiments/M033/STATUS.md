@@ -134,13 +134,17 @@ byte-identical replay. See `results/M033_EMBODIED_CALIBRATION.md`.
 |---|---|
 | beats a fresh organism on B | passes, 32/0/0 |
 | beats the unchanged parent migrated to B | passes, 32/0/0 |
-| beats the learned-tool ablation | fails, 0/32/0 |
+| beats the learned-tool ablation | structurally uninformative, 0/32/0 |
 | beats the learning-state ablation | fails, 16/0/16 |
 
-The tool-ablation tie is structural: the single learned tool encodes the same
-transformation the adopted rewrite already baked into the body, so replaying it after
-transport is redundant. This must be corrected in the generator, not absorbed by a
-threshold.
+The tool-ablation tie cannot be repaired by any choice of task. A learned tool replays
+fixed operations at fixed AST indices, and the tool a single-cycle lineage carries is the
+trace that produced its body, so applying it there is a no-op. The two lineages differ by
+something that cannot act. Gate 8's tool control must therefore be evaluated on a
+multi-cycle or rolled-back lineage, which makes it dependent on Gate 9. See D013.
+
+An earlier version of this file required the primary generator to demand a component the
+body does not encode. That requirement was unsatisfiable and is withdrawn.
 
 ## Why thresholds are not frozen yet
 
@@ -152,9 +156,9 @@ pooled median.
 
 ## Still missing before primary seeds may open
 
-- a frozen primary generator for seeds `0–63`, committed without instantiating them,
-  which requires a tool transformation the migrated body does not already encode and does
-  not inherit scaffold 2's two-candidate dynamic range;
+- a frozen primary generator for seeds `0–63`, committed without instantiating them, which
+  does not inherit scaffold 2's two-candidate dynamic range;
+- a multi-cycle or rolled-back lineage, so that the learned-tool control can act at all;
 - the threshold-freeze amendment defining the primary statistic, directional rule,
   regression limits, abstention limit and artifact identity;
 - an explicit decision on whether beating the unchanged parent is a required gate or a
