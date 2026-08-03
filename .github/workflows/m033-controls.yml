@@ -32,7 +32,10 @@ jobs:
             tests/test_m032_trans_substrate_lifecycle.py \
             tests/test_m033_post_migration_plasticity.py \
             tests/test_m033_memory_controls.py \
-            tests/test_m033_transactions.py
+            tests/test_m033_transactions.py \
+            tests/test_m033_evaluation.py
+      - name: Audit post-migration task isolation
+        run: python scripts/audit_m033_isolation.py
       - name: Run eight-seed control calibration
         run: >-
           python scripts/run_m033_control_calibration.py
