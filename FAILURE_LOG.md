@@ -477,3 +477,56 @@ generations. The generation-1 artifacts are kept and scoped rather than re-run, 
 `tests/test_m020_negative_constant_defect.py`, which pinned the defective behaviour so a
 fix could not land unnoticed, has been retired and replaced by
 `tests/test_m020_negative_constant_round_trip.py`, which guards the repair.
+
+## M017 — The confirmation is complete only inside the language it confirms
+
+Found while writing the sealed generator that §10 of the frozen protocol requires before
+hashing. Not found by the test suite, the isolation audit or the six development gates.
+
+### The observation
+
+On an out-of-language negative control derived from a head the development bench had never
+used, the self-extending organism announced `program_identified`. The target has 7 states,
+the source 6, the announced solution 6. The solution is not equivalent: the two are
+separated by `(0, 0, 1, 0, 0, 0)`.
+
+That is two §7 falsifiers at once — a false success, and a missed abstention on a negative
+control — and it leaves §3.2 unmet.
+
+### The cause
+
+`_confirm` states its own completeness bound: the structural language does not create
+states, so a target cannot have more states than the source. The W-method suite is built
+against that bound and is complete for every target *inside* the language.
+
+`make_out_of_language_target` is defined by adding a state. The control therefore sits
+outside the bound by construction, and §3.2 asks the organism to reject targets its own
+confirmation cannot see.
+
+| Confirmation bound | Suite | Detects the mismatch |
+|---|---:|---|
+| source states (current) | 34 words | no |
+| source states + 1 | 69 words | yes |
+
+### Why development passed
+
+Gate 5 was declared passed on **two** out-of-language controls, both of which abstain. An
+independent sweep of 24 controls yields **2 false successes**, an escape rate near 8 per
+cent. Two clean controls occur about 85 per cent of the time. The bench was not unlucky; it
+was too small to see the escape.
+
+This is the third time the same shape appears in M017. The first was a probabilistic
+confirmation drawing 96 long words while claiming to cover the distinguishing bound. The
+second was the W-method applied to an unminimised hypothesis. Both were announced correct
+and both produced a false success. D010 exists because of this failure mode, and it
+recurred inside the experiment that was about to be frozen against it.
+
+### Consequence
+
+The freeze is blocked. Gate 5 is re-opened. Raising the bound to `source + 1` restores
+detection at roughly double the suite, but it also changes query cost, which §2 measures —
+so the bound is a protocol parameter that must be signed with the thresholds rather than
+adjusted after an observation.
+
+Pinned by `tests/test_m017_confirmation_bound.py`, which reproduces the case from a fixed
+head and records that the development controls do not expose it.

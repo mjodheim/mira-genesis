@@ -32,7 +32,7 @@ without human architectural intervention. All ten required gates are defined in
 | M014 | HALTED | Prerequisites revoked; replaced by M014b. |
 | M014b | **FAILED** | Exact portable plasticity, but no pre-registered generalisable learning advantage. |
 | M014c | HALTED — SUPERSEDED | Closed catalogue could not express genuinely new structure. |
-| M017 | READY TO FREEZE | Six self-extending-language gates passed; human signature still required. |
+| M017 | SIGNED, FREEZE BLOCKED | Thresholds signed; the confirmation is complete only inside the language, so §3.2 is unverifiable as written. |
 | M018 | HYPOTHESIS NOT SUPPORTED | Destruction did not remove the transport liability. |
 | M019 | RIG NOT VALID | Selection horizon was shorter than learning's payback period. |
 | M020 | DEVELOPMENT BASE VERIFIED | Bounded proof-gated executable self-rewrite and learned tools. |

@@ -1,6 +1,6 @@
 # M017 — Status
 
-- Protocol: **DEVELOPMENT DRAFT**
+- Protocol: **SIGNED, FREEZE BLOCKED** — §2 thresholds signed 3 August 2026; gate 5 re-opened, see `FROZEN_PROTOCOL_017.md` §11
 - Canonical results permitted: **NO**
 - Sealed evaluation seeds: **none**
 - Sequential structural language: **implemented**
@@ -17,7 +17,7 @@
 | 2 | Establish that the margin exceeds the dispersion between environments | **passed, and it cost the threshold** — see below |
 | 3 | Justify budget and depth from the hypothesis, not from the margin produced | **passed** — [`PROTOCOL_DRAFT.md`](PROTOCOL_DRAFT.md) |
 | 4 | Transport the library to an environment with unseen motifs | **passed** — and it forces the scope to narrow |
-| 5 | Abrupt distribution shift after absorption | **passed** — degrades without false successes |
+| 5 | Abrupt distribution shift after absorption | **RE-OPENED** — passed on two negative controls, but an independent sweep of 24 shows a ~8% false-success escape rate |
 | 6 | Source isolation audit and integer-only trace | **passed** — `scripts/audit_m017_isolation.py` |
 
 **All six gates are passed**, and they were passed twice: first under an unreliable
