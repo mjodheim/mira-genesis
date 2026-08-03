@@ -22,6 +22,8 @@ from metamorphosis.m035_evolution import (
     duplicate_state,
     growth_is_necessary,
     minimal_criterion_survivors,
+    offspring,
+    replay,
     required_states_lower_bound,
 )
 from metamorphosis.structural import apply_atoms, enumerate_words, normalize_dfa
@@ -152,3 +154,74 @@ def test_growth_is_diagnosed_for_a_target_that_needs_more_states():
         evidence = {tuple(w): target.accepts(tuple(w)) for w in words}
         diagnosed += growth_is_necessary(Organism(body=base), evidence)
     assert diagnosed > 0
+
+
+def test_a_lineage_replays_exactly_from_its_founder():
+    """Gate 9: replayable from the founder and immutable inputs, nothing else.
+
+    No seed, no population, no search — only the founder body and the recorded chain of
+    mutations. A `parent_digest` names the previous body; it cannot rebuild it.
+    """
+
+    import random
+
+    from metamorphosis.m035_evolution import replay
+
+    for seed in range(6):
+        rng = random.Random(seed)
+        founder_body = _bases(1)[0] if seed == 0 else normalize_dfa(
+            random_minimal_dfa(50_000 + seed * 7919, 4, 6)
+        )
+        founder = Organism(body=founder_body)
+
+        current = founder
+        for _ in range(30):
+            child = offspring(current, rng, allow_duplication=True, max_size=10)
+            if child is not None:
+                current = child
+
+        assert len(current.ancestry) == current.generation
+        rebuilt = replay(founder_body, current.ancestry)
+        assert rebuilt is not None
+        assert rebuilt.transitions == current.body.transitions
+        assert rebuilt.accepting == current.body.accepting
+        assert rebuilt.initial == current.body.initial
+
+
+def test_the_ancestry_distinguishes_growth_from_edits():
+    import random
+
+    rng = random.Random(0)
+    founder = Organism(body=_bases(1)[0])
+    current = founder
+    for _ in range(40):
+        child = offspring(current, rng, allow_duplication=True, max_size=10)
+        if child is not None:
+            current = child
+
+    kinds = {step.kind for step in current.ancestry}
+    assert kinds <= {"atom", "duplication"}
+    growth = sum(1 for step in current.ancestry if step.kind == "duplication")
+    assert growth == current.duplications
+    assert len(current.ancestry) - growth == current.edits
+
+
+def test_a_truncated_lineage_does_not_rebuild_the_organism():
+    """The chain is load-bearing: dropping a step must change the outcome."""
+
+    import random
+
+    from metamorphosis.m035_evolution import replay
+
+    rng = random.Random(3)
+    founder_body = _bases(1)[0]
+    current = Organism(body=founder_body)
+    for _ in range(20):
+        child = offspring(current, rng, allow_duplication=True, max_size=10)
+        if child is not None:
+            current = child
+
+    full = replay(founder_body, current.ancestry)
+    short = replay(founder_body, current.ancestry[:-1])
+    assert full is not None and short is not None
+    assert (full.transitions, full.accepting) != (short.transitions, short.accepting)

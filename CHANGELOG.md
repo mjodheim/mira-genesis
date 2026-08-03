@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.33.0 — 2026-08-03
+
+- Made the lineage replayable, as Gate 9 requires. Every organism now carries its full
+  chain of mutations — the operation itself, not a pointer to its outcome — and
+  `replay(founder, ancestry)` rebuilds any descendant from the founder body and the chain
+  alone, with no seed, no population and no search. Verified 20/20 in development and
+  **12/12 on untouched cases**, on chains up to 36 mutations deep. A truncated chain
+  provably fails to rebuild the organism, so the record is load-bearing.
+- Fixed the survival rule, which sorted by score and cut at capacity: elitist truncation
+  wearing a minimal criterion's name, and the rule M021 measured as the most destructive
+  of four at 0 per mille against 750. The symptom was unmistakable once swept — raising
+  generations from 60 to 150 changed nothing on every configuration, because the
+  population reached a fixed point and stopped exploring. Deduplicating by body before the
+  cut restores exploration.
+- Recorded an instructive intermediate error: ordering the distinct bodies by structural
+  cost scored **0/12 everywhere**, because cost rises with size and a size-ordered cut
+  discards exactly the organisms that have grown. Both errors share a shape — a minimal
+  criterion admits or rejects, it does not rank, and each order slipped into it restored a
+  pressure the mechanism cannot survive.
+- **Rejected a tuning illusion.** A sweep found 9/12 on cases 0–11 against 6/12 for the
+  delivered defaults. Confirmed on untouched cases 12–23 it scores 3/12, while the
+  defaults score 5/12 — the swept configuration is not merely no better but worse, and the
+  sweep had found the parameters that flattered the twelve cases being watched rather than
+  improving the mechanism.
+- Confirmed the delivered result generalises: 5/12 on cases never used to choose anything,
+  against a control that stays at 0/12 by proved impossibility rather than by budget.
+
 ## 0.32.0 — 2026-08-03
 
 - Added the `grow` atom to the structural language: duplicate the state holding a role,

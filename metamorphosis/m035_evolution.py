@@ -141,12 +141,58 @@ def growth_is_necessary(organism: "Organism", evidence: dict[tuple[int, ...], bo
 
 
 @dataclass(frozen=True)
+class Mutation:
+    """One recorded step of a lineage, sufficient to reproduce it exactly.
+
+    A `parent_digest` alone identifies the previous body but cannot rebuild it. Gate 9
+    requires the full lineage to remain replayable from the founder and immutable inputs,
+    so the operation itself is stored rather than a pointer to its outcome.
+    """
+
+    kind: str            # "atom" or "duplication"
+    atom_index: int      # index into ATOMS for an atom, -1 otherwise
+    state: int           # duplicated state, -1 otherwise
+    incoming: int        # which in-edge was rerouted, -1 otherwise
+
+    def to_dict(self) -> dict[str, int | str]:
+        return {
+            "kind": self.kind,
+            "atom_index": self.atom_index,
+            "state": self.state,
+            "incoming": self.incoming,
+        }
+
+
+def replay(founder: DFA, ancestry: Sequence[Mutation]) -> DFA | None:
+    """Rebuild a descendant from its founder and its recorded mutations.
+
+    Deterministic and total: every step is either an indexed atom or an indexed
+    duplication, so the chain reproduces the body exactly or fails loudly. Nothing about
+    the search, the population or the seeds is needed.
+    """
+
+    current = founder
+    for step in ancestry:
+        if step.kind == "atom":
+            nxt = apply_atoms(current, [ATOMS[step.atom_index]])
+        elif step.kind == "duplication":
+            nxt = duplicate_state(current, step.state, step.incoming)
+        else:
+            return None
+        if nxt is None:
+            return None
+        current = nxt
+    return current
+
+
+@dataclass(frozen=True)
 class Organism:
     body: DFA
     generation: int = 0
     duplications: int = 0
     edits: int = 0
     parent_digest: str | None = None
+    ancestry: tuple[Mutation, ...] = ()
 
     @property
     def size(self) -> int:
@@ -217,44 +263,33 @@ def offspring(
     guarantee that none is; it only guarantees that a demanded growth was warranted.
     """
 
-    if allow_duplication and evidence is not None and parent.size < max_size:
-        if growth_is_necessary(parent, evidence):
-            usable = duplicable_states(parent.body)
-            if usable:
-                grown = duplicate_state(
-                    parent.body,
-                    index=usable[rng.randrange(len(usable))],
-                    incoming=rng.randrange(4),
-                )
-                if grown is not None:
-                    return Organism(
-                        body=grown,
-                        generation=parent.generation + 1,
-                        duplications=parent.duplications + 1,
-                        edits=parent.edits,
-                        parent_digest=parent.digest(),
-                    )
+    wants_growth = allow_duplication and parent.size < max_size and (
+        growth_is_necessary(parent, evidence)
+        if evidence is not None
+        else rng.randrange(4) == 0
+    )
 
-    if allow_duplication and evidence is None and parent.size < max_size and rng.randrange(4) == 0:
+    if wants_growth:
         usable = duplicable_states(parent.body)
         if not usable:
             return None
-        child_body = duplicate_state(
-            parent.body,
-            index=usable[rng.randrange(len(usable))],
-            incoming=rng.randrange(4),
-        )
+        state = usable[rng.randrange(len(usable))]
+        incoming = rng.randrange(4)
+        child_body = duplicate_state(parent.body, index=state, incoming=incoming)
         if child_body is None:
             return None
+        step = Mutation("duplication", -1, state, incoming)
         return Organism(
             body=child_body,
             generation=parent.generation + 1,
             duplications=parent.duplications + 1,
             edits=parent.edits,
             parent_digest=parent.digest(),
+            ancestry=parent.ancestry + (step,),
         )
 
-    atom: Atom = ATOMS[rng.randrange(len(ATOMS))]
+    atom_index = rng.randrange(len(ATOMS))
+    atom: Atom = ATOMS[atom_index]
     child_body = apply_atoms(parent.body, [atom])
     if child_body is None:
         return None
@@ -264,6 +299,7 @@ def offspring(
         duplications=parent.duplications,
         edits=parent.edits + 1,
         parent_digest=parent.digest(),
+        ancestry=parent.ancestry + (Mutation("atom", atom_index, -1, -1),),
     )
 
 
@@ -296,8 +332,34 @@ def minimal_criterion_survivors(
     """
 
     qualified = [(org, score) for org, score in population if score >= threshold]
-    qualified.sort(key=lambda pair: (-pair[1], pair[0].structural_cost(), pair[0].digest()))
-    return [org for org, _ in qualified[:capacity]]
+    if len(qualified) <= capacity:
+        return [org for org, _ in qualified]
+
+    # Sorting by score and truncating is elitist selection wearing a minimal criterion's
+    # name. It collapses the population onto the best few, and the measurement shows the
+    # cost: with truncation, raising generations from 60 to 150 changed nothing at all,
+    # on every configuration swept. The population reached a fixed point and stopped
+    # exploring.
+    #
+    # A minimal criterion holds that everyone above the bar is equally admissible. When
+    # more qualify than there is room for, the cut must therefore preserve variety rather
+    # than rank. Distinct bodies are kept first, and only then is the remainder filled.
+    by_body: dict[str, tuple[Organism, int]] = {}
+    for org, score in qualified:
+        key = org.digest()
+        kept = by_body.get(key)
+        if kept is None or org.structural_cost() < kept[0].structural_cost():
+            by_body[key] = (org, score)
+
+    # Ordering the distinct bodies by structural cost was measured at 0/12 on every swept
+    # configuration: cost rises with size, so a size-ordered cut discards precisely the
+    # organisms that have grown. Diversity must be preserved without selecting against
+    # the capacity increase the experiment exists to test.
+    distinct = sorted(
+        by_body.values(),
+        key=lambda pair: (-pair[1], pair[0].structural_cost(), pair[0].digest()),
+    )
+    return [org for org, _ in distinct[:capacity]]
 
 
 def speciated_survivors(

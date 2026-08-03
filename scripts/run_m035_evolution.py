@@ -37,6 +37,7 @@ from metamorphosis.m035_evolution import (
     agreement,
     minimal_criterion_survivors,
     offspring,
+    replay,
     speciated_survivors,
 )
 from metamorphosis.structural import enumerate_words, normalize_dfa
@@ -115,9 +116,24 @@ def run_arm(
                 break
 
     exact, witness = exact_equivalence(best_organism.body, target)
+
+    # Gate 9 requires the lineage to be replayable from the founder and immutable inputs.
+    # Verify it here rather than assert it: rebuild the winner from its recorded mutation
+    # chain alone — no seed, no population, no search — and compare byte for byte.
+    rebuilt = replay(founder.body, best_organism.ancestry)
+    replayable = (
+        rebuilt is not None
+        and rebuilt.transitions == best_organism.body.transitions
+        and rebuilt.accepting == best_organism.body.accepting
+        and rebuilt.initial == best_organism.body.initial
+    )
+
     return {
         "allow_duplication": allow_duplication,
         "exact": bool(exact),
+        "lineage_steps": len(best_organism.ancestry),
+        "lineage_replayable": bool(replayable),
+        "lineage": [step.to_dict() for step in best_organism.ancestry],
         "solved_at_generation": solved_at,
         "best_agreement": best_score,
         "words": total_words,
@@ -217,6 +233,12 @@ def run(cases: int, generations: int) -> dict[str, object]:
                 int(r["diagnosed"]["budget"]["bodies_evaluated"]) for r in rows
             ),
             "duplication_used_growth": dup_grew,
+            "all_winning_lineages_replayable": all(
+                bool(r["duplication"]["lineage_replayable"]) for r in rows
+            ),
+            "deepest_lineage_steps": max(
+                int(r["duplication"]["lineage_steps"]) for r in rows
+            ),
             "median_generation_to_solve": (
                 int(statistics.median(solved_gens)) if solved_gens else None
             ),
