@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.31.0 — 2026-08-03
+
+- Measured the structural ceiling of the existing organism: across 53,280 atom
+  applications, 18,540 changed the state count and **none increased it**. Every change was
+  a decrease. Capacity is fixed at birth and can only be lost, so no descendant can be
+  structurally novel and "self-improvement" is search inside a budget the organism did not
+  choose and cannot change.
+- Added `metamorphosis/m035_evolution.py` with a capacity-increasing operator:
+  duplication of a state into a behaviourally identical twin. Neutral at birth — 12/12
+  preserve behaviour exactly, so selection cannot see it — and 12/12 increase the state
+  count. This is NEAT's *add node* mutation, itself transposed from gene duplication; the
+  contribution here is not the mechanism but a domain where "unreachable" is proved.
+- Ran the decisive comparison against `make_out_of_language_target`, which M017 uses as a
+  *negative* control precisely because it adds a state. Twelve cases, all requiring growth:
+  the atoms-only arm solved **0/12**, by structural impossibility rather than bad luck, and
+  the duplication arm solved **6/12**, using growth in 12/12.
+- Added `required_states_lower_bound`, a Myhill–Nerode diagnosis by which an organism
+  proves it needs more states **without seeing the target**, from oracle answers alone.
+  Sound in 0/24 violations, never demanding growth against its own behaviour, firing on
+  8/12 targets that require it. This is Gate 1, autonomous diagnosis of a limitation, in a
+  decidable form.
+- Recorded two failed refinements rather than tuning them away. Size-based speciation
+  scored 1/12 and diagnosed growth 2/12, both against 6/12 for a random trigger, and both
+  solved faster when they solved — more directed, less exploratory. Their mechanisms are
+  identified in the result, and neither correction is applied: re-measuring a corrected
+  rule on the same seeds is the post-hoc adjustment §7 of the M017 protocol and D010 forbid.
+- Selected survivors by minimal criterion, chosen from this repository's own measurement:
+  M021 scored it 750 per mille against 416 for novelty, 312 for quality-diversity and 0 for
+  the direct objective. At equal agreement the smaller organism survives, so growth is
+  never free.
+
 ## 0.30.0 — 2026-08-03
 
 - Recorded the human signature on the §2 thresholds of M017 and translated the candidate
