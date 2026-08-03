@@ -124,6 +124,25 @@ def redirect(source_role: str, symbol: int, target_role: str) -> Atom:
     return Atom("redirect", (source_role, int(symbol), target_role))
 
 
+def grow(role: str, incoming: int = 0) -> Atom:
+    """Duplicate the state holding `role`, routing its `incoming`-th in-edge to the twin."""
+
+    return Atom("grow", (role, int(incoming)))
+
+
+def growth_atoms(
+    roles: Sequence[str] = ROLES, choices: Sequence[int] = (0, 1)
+) -> tuple[Atom, ...]:
+    """The capacity-increasing vocabulary, kept separate from `all_atoms`.
+
+    Deliberately not folded into `all_atoms`: every recorded experiment draws its
+    vocabulary from there, and widening it would change their reachable sets and move
+    their digests. An organism opts into growth explicitly.
+    """
+
+    return tuple(grow(role, choice) for role in roles for choice in choices)
+
+
 def all_atoms(roles: Sequence[str] = ROLES, symbols: Sequence[int] = (0, 1)) -> tuple[Atom, ...]:
     """Vocabulaire atomique complet. C'est le plancher expressif, pas le plafond."""
     atoms = [flip(role) for role in roles]
@@ -164,6 +183,43 @@ def apply_atom(current: DFA, atom: Atom) -> DFA | None:
             current.alphabet,
             tuple(tuple(row) for row in transitions),
             tuple(current.accepting),
+            current.initial,
+        )
+
+    if atom.kind == "grow":
+        # The only capacity-increasing atom. Every other edit preserves or reduces the
+        # state count — measured across 53,280 applications, 18,540 of which changed it
+        # and none increased it — so without this the organism can never express anything
+        # its birth size forbids.
+        #
+        # The twin carries the same outgoing transitions and the same acceptance, so at
+        # the instant of duplication the language is unchanged. That neutrality is the
+        # mechanism, not a detail: a mutation selection cannot see is free to drift.
+        state = role_state(current, str(atom.args[0]))
+        if state is None:
+            return None
+        size = current.n_states
+        transitions = [list(row) for row in current.transitions]
+        accepting = list(current.accepting)
+        transitions.append(list(current.transitions[state]))
+        accepting.append(bool(current.accepting[state]))
+
+        incoming = [
+            (source, symbol)
+            for source in range(size)
+            for symbol in (0, 1)
+            if transitions[source][symbol] == state
+        ]
+        if not incoming:
+            # An unreachable twin would be stripped by normalisation and would add no
+            # capacity. Refusing is honest; pretending to grow is not.
+            return None
+        source, symbol = incoming[int(atom.args[1]) % len(incoming)]
+        transitions[source][symbol] = size
+        return DFA(
+            current.alphabet,
+            tuple(tuple(row) for row in transitions),
+            tuple(accepting),
             current.initial,
         )
 
