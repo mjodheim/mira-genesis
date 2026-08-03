@@ -16,7 +16,7 @@ concurrency:
 jobs:
   controls:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -36,12 +36,18 @@ jobs:
             tests/test_m033_evaluation.py
       - name: Audit post-migration task isolation
         run: python scripts/audit_m033_isolation.py
-      - name: Run eight-seed control calibration
-        run: >-
-          python scripts/run_m033_control_calibration.py
-          --seed-start 1024
-          --seeds 8
-          --output results/M033_control_calibration.json
+      - name: Run eight-seed control calibration twice
+        run: |
+          python scripts/run_m033_control_calibration.py \
+            --seed-start 1024 \
+            --seeds 8 \
+            --output results/M033_control_calibration.json
+          python scripts/run_m033_control_calibration.py \
+            --seed-start 1024 \
+            --seeds 8 \
+            --output results/M033_control_calibration_replay.json
+          cmp results/M033_control_calibration.json \
+              results/M033_control_calibration_replay.json
       - name: Verify calibration gates without freezing primary thresholds
         run: |
           python - <<'PYTHON'
@@ -54,7 +60,8 @@ jobs:
               )
           )
           summary = payload["summary"]
-          assert payload["version"] == "m033-control-calibration/2"
+          assert payload["version"] == "m033-control-calibration/3"
+          assert payload["cost_units_are_separate"] is True
           assert payload["seed_start"] == 1024
           assert payload["seed_count"] == 8
           assert summary["primary_seed_block_observed"] is False
@@ -91,6 +98,8 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: m033-control-calibration-${{ github.run_id }}
-          path: results/M033_control_calibration.json
+          path: |
+            results/M033_control_calibration.json
+            results/M033_control_calibration_replay.json
           if-no-files-found: error
           retention-days: 30
