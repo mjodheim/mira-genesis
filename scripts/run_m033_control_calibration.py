@@ -12,6 +12,7 @@ from metamorphosis.m032_trans_substrate_lifecycle import (
     PortableLearningState,
     execute_trans_substrate_lifecycle,
 )
+from metamorphosis.m033_memory_controls import execute_memory_guided_task
 from metamorphosis.m033_post_migration_plasticity import (
     ControlTaskFamily,
     LineageVariant,
@@ -39,6 +40,12 @@ LEARNING_STATE = PortableLearningState(
     memory=((0, 1, 1), (1, 0, 1)),
     uncertainty=(3, 1),
     exploration_frontier=((1, 1), (0, 0)),
+)
+
+PERMUTED_LEARNING_STATE = PortableLearningState(
+    memory=tuple(reversed(LEARNING_STATE.memory)),
+    uncertainty=LEARNING_STATE.uncertainty,
+    exploration_frontier=LEARNING_STATE.exploration_frontier,
 )
 
 LEARNING_VARIANTS = (
@@ -106,6 +113,19 @@ def _lineages(packet_json: str, seed: int, family: ControlTaskFamily):
     }
 
 
+def _memory_lineages(packet_json: str):
+    relevant = build_packet_derived_lineage(packet_json, LineageVariant.COMPLETE)
+    permuted = build_packet_derived_lineage(packet_json, LineageVariant.COMPLETE)
+    empty = build_packet_derived_lineage(packet_json, LineageVariant.COMPLETE)
+    permuted.learning_state = PERMUTED_LEARNING_STATE
+    empty.learning_state = PortableLearningState()
+    return {
+        "relevant": relevant,
+        "permuted": permuted,
+        "empty": empty,
+    }
+
+
 def _result_dict(result) -> dict[str, object]:
     return json.loads(result.canonical_json())
 
@@ -125,12 +145,19 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
                 variant.value: _result_dict(execute_control_task(lineage, task))
                 for variant, lineage in lineages.items()
             }
+            memory_results = None
+            if family is ControlTaskFamily.POSITIVE_TOOL:
+                memory_results = {
+                    label: _result_dict(execute_memory_guided_task(lineage, task))
+                    for label, lineage in _memory_lineages(packet_json).items()
+                }
             rows.append(
                 {
                     "seed": seed,
                     "family": family.value,
                     "task_sha256": task.sha256(),
                     "results": results,
+                    "memory_results": memory_results,
                 }
             )
 
@@ -142,6 +169,12 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
 
     def exact(row, variant: LineageVariant) -> bool:
         return bool(row["results"][variant.value]["exact"])
+
+    def memory_candidates(row, label: str) -> int:
+        return int(row["memory_results"][label]["total_candidate_evaluations"])
+
+    def memory_exact(row, label: str) -> bool:
+        return bool(row["memory_results"][label]["exact"])
 
     summary: dict[str, object] = {
         "primary_seed_block_observed": False,
@@ -192,6 +225,34 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
         "negative_fresh_candidate_median": median(
             candidates(row, LineageVariant.FRESH_B) for row in negative
         ),
+        "all_memory_relevant_exact": all(
+            memory_exact(row, "relevant") for row in positive
+        ),
+        "all_memory_permuted_exact": all(
+            memory_exact(row, "permuted") for row in positive
+        ),
+        "all_memory_empty_exact": all(
+            memory_exact(row, "empty") for row in positive
+        ),
+        "memory_relevant_better_than_permuted": sum(
+            memory_candidates(row, "relevant")
+            < memory_candidates(row, "permuted")
+            for row in positive
+        ),
+        "memory_relevant_better_than_empty": sum(
+            memory_candidates(row, "relevant")
+            < memory_candidates(row, "empty")
+            for row in positive
+        ),
+        "memory_relevant_candidate_median": median(
+            memory_candidates(row, "relevant") for row in positive
+        ),
+        "memory_permuted_candidate_median": median(
+            memory_candidates(row, "permuted") for row in positive
+        ),
+        "memory_empty_candidate_median": median(
+            memory_candidates(row, "empty") for row in positive
+        ),
         "output_only_attempts": sum(
             bool(row["results"][LineageVariant.OUTPUT_ONLY.value]["attempted"])
             for row in rows
@@ -199,11 +260,12 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
     }
 
     return {
-        "version": "m033-control-calibration/1",
+        "version": "m033-control-calibration/2",
         "seed_start": seed_start,
         "seed_count": seed_count,
         "families": [family.value for family in ControlTaskFamily],
         "learning_variants": [variant.value for variant in LEARNING_VARIANTS],
+        "memory_variants": ["relevant", "permuted", "empty"],
         "rows": rows,
         "summary": summary,
     }
