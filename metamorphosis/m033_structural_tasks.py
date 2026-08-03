@@ -90,7 +90,7 @@ def policy(state, symbol):
     value = ((state * symbol) % 2) + 0
     return value % 2
 """
-        return baseline, target, 2
+        return baseline, target, 3
 
     raise ValueError(f"unknown M033 structural template: {template_id}")
 
