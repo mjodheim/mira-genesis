@@ -16,7 +16,7 @@ concurrency:
 jobs:
   controls:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -37,7 +37,7 @@ jobs:
             tests/test_m033_structural_tasks.py
       - name: Audit post-migration task isolation
         run: python scripts/audit_m033_isolation.py
-      - name: Run eight-seed control calibration twice
+      - name: Run fixed-structure control calibration twice
         run: |
           python scripts/run_m033_control_calibration.py \
             --seed-start 1024 \
@@ -49,7 +49,7 @@ jobs:
             --output results/M033_control_calibration_replay.json
           cmp results/M033_control_calibration.json \
               results/M033_control_calibration_replay.json
-      - name: Verify calibration gates without freezing primary thresholds
+      - name: Verify fixed-structure control gates
         run: |
           python - <<'PYTHON'
           import json
@@ -79,6 +79,45 @@ jobs:
           assert summary["memory_relevant_better_than_empty"] == 8
           assert summary["output_only_attempts"] == 0
           PYTHON
+      - name: Run structural calibration twice
+        run: |
+          python scripts/run_m033_structural_calibration.py \
+            --seed-start 2048 \
+            --seeds 16 \
+            --output results/M033_structural_calibration.json
+          python scripts/run_m033_structural_calibration.py \
+            --seed-start 2048 \
+            --seeds 16 \
+            --output results/M033_structural_calibration_replay.json
+          cmp results/M033_structural_calibration.json \
+              results/M033_structural_calibration_replay.json
+      - name: Verify structural calibration remains mixed
+        run: |
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(
+              Path("results/M033_structural_calibration.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          summary = payload["summary"]
+          assert payload["version"] == "m033-structural-calibration/1"
+          assert payload["seed_start"] == 2048
+          assert payload["seed_count"] == 16
+          assert summary["primary_seed_block_observed"] is False
+          assert summary["templates_covered"] == [0, 1, 2, 3]
+          assert summary["all_complete_exact"] is True
+          assert summary["all_fresh_exact"] is True
+          assert summary["all_complete_held_out_exact"] is True
+          assert 0 < summary["complete_better_than_fresh"] < 16
+          assert summary["output_only_attempts"] == 0
+          for template in summary["by_template"].values():
+              assert template["seeds"] == 4
+              assert template["complete_exact"] == 4
+              assert template["fresh_exact"] == 4
+          PYTHON
       - name: Audit repository integrity
         run: python scripts/check_repository_integrity.py
       - name: Confirm primary tasks remain unopened
@@ -98,9 +137,11 @@ jobs:
           PYTHON
       - uses: actions/upload-artifact@v4
         with:
-          name: m033-control-calibration-${{ github.run_id }}
+          name: m033-pre-threshold-calibration-${{ github.run_id }}
           path: |
             results/M033_control_calibration.json
             results/M033_control_calibration_replay.json
+            results/M033_structural_calibration.json
+            results/M033_structural_calibration_replay.json
           if-no-files-found: error
           retention-days: 30
