@@ -30,7 +30,8 @@ jobs:
         run: |
           pytest -q \
             tests/test_m032_trans_substrate_lifecycle.py \
-            tests/test_m033_post_migration_plasticity.py
+            tests/test_m033_post_migration_plasticity.py \
+            tests/test_m033_memory_controls.py
       - name: Run eight-seed control calibration
         run: >-
           python scripts/run_m033_control_calibration.py
@@ -73,9 +74,9 @@ jobs:
           status = Path("experiments/M033/STATUS.md").read_text(encoding="utf-8")
           assert "Seeds `0–63` are reserved" in protocol
           assert "does **not** set a numerical advantage threshold" in protocol
-          assert "PACKET-DERIVED CONTROLS PASSED" in status
+          assert "TOOL CONTROL CALIBRATED" in status
           assert "PRIMARY TASKS UNOBSERVED" in status
-          assert "No result about post-migration plasticity is claimed" in status
+          assert "No result about primary post-migration plasticity is claimed" in status
           PYTHON
       - uses: actions/upload-artifact@v4
         with:
