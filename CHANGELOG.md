@@ -8,8 +8,7 @@
   learned-tool ablation presented byte-identical surfaces.
 - Added `TaskAnchor`, leaving `TASK_BASELINE` as the default so the fixed, structural and
   combined blocks stay byte-reproducible and are not retroactively re-scored; verified by
-  re-running the combined calibration after the change and reproducing its recorded digest
-  `0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372` exactly.
+  re-running all three after the change and reproducing every recorded digest exactly.
 - Added the body-anchored control block on the disjoint seed range 4096–4127, where the
   two collapsed controls separate on 32 of 32 seeds.
 - Established that transported competence does real work: the complete lineage beats

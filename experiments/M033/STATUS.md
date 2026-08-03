@@ -1,6 +1,6 @@
 # M033 status
 
-**Status: BODY-ANCHORED CONTROLS PASSED, GATE 8 NOT MET — PRIMARY TASKS UNOBSERVED**
+**Status: BODY-ANCHORED PRE-THRESHOLD CONTROLS PASSED, GATE 8 NOT MET — PRIMARY TASKS UNOBSERVED**
 
 The protocol reserves primary seeds `0–63`. No implementation on this branch creates
 or evaluates their post-migration tasks.

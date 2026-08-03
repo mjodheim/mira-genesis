@@ -30,9 +30,14 @@ every post-migration task. The thing M032 exists to transport could not contribu
 `TaskAnchor.TASK_BASELINE` remains the default, so every previously recorded block stays
 byte-reproducible and is not retroactively altered.
 
-That non-interference was verified rather than assumed: the combined calibration was
-re-run on seeds `3072–3103` after the anchor change and reproduced its recorded digest
-`0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372` exactly.
+That non-interference was verified rather than assumed. All three previously recorded
+blocks were re-run after the anchor change and reproduced their recorded digests exactly:
+
+| Block | Seeds | Recorded digest | Reproduced |
+|---|---|---|---|
+| fixed-structure | `1024–1031` | `e189142ccbe1465caf76a30d22b8f294974c2c2dcce1e224f3e61748c7f8b5bb` | yes |
+| structural | `2048–2063` | `117de3c31b03afcdb4a7f20eb6b2a5877513045e7f1540a6e03a026d63bb0723` | yes |
+| combined | `3072–3103` | `0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372` | yes |
 
 Under the new anchor the two controls separate on **32 of 32** seeds.
 
