@@ -159,11 +159,15 @@ def test_growth_is_diagnosed_for_a_target_that_needs_more_states():
     assert diagnosed > 0
 
 
-def test_a_lineage_replays_exactly_from_its_founder():
-    """Gate 9: replayable from the founder and immutable inputs, nothing else.
+def test_the_adopted_mutation_chain_replays_from_a_supplied_founder():
+    """A Gate 9 *prerequisite*, not Gate 9.
 
-    No seed, no population, no search — only the founder body and the recorded chain of
-    mutations. A `parent_digest` names the previous body; it cannot rebuild it.
+    The founder is handed over as a DFA, not rebuilt from a seed, and nothing about the
+    task reveal, the observations, the rejected candidates, the costs or the selection
+    decisions is reproduced. What is established is narrower and worth stating exactly:
+    the chain of *adopted* mutations rebuilds the body it produced, from a supplied
+    founder and nothing else. A `parent_digest` names the previous body; it cannot rebuild
+    it.
     """
 
     import random

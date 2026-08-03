@@ -126,11 +126,13 @@ def run_arm(
 
     exact, witness = exact_equivalence(best_organism.body, target)
 
-    # Gate 9 requires the lineage to be replayable from the founder and immutable inputs.
-    # Verify it here rather than assert it: rebuild the winner from its recorded mutation
-    # chain alone — no seed, no population, no search — and compare byte for byte.
+    # Adopted-mutation replay: rebuild the winner from its recorded chain and a **supplied**
+    # founder body. This is a Gate 9 *prerequisite*, not Gate 9. The founder is handed over
+    # as a DFA rather than rebuilt from a seed, and the task reveal, the observations, the
+    # rejected candidates, the costs and the selection decisions are not reproduced — a
+    # different selection rule would yield a different lineage that this check cannot see.
     rebuilt = replay(founder.body, best_organism.ancestry)
-    replayable = (
+    adopted_mutation_replayable = (
         rebuilt is not None
         and rebuilt.transitions == best_organism.body.transitions
         and rebuilt.accepting == best_organism.body.accepting
@@ -140,9 +142,9 @@ def run_arm(
     return {
         "allow_duplication": allow_duplication,
         "exact": bool(exact),
-        "lineage_steps": len(best_organism.ancestry),
-        "lineage_replayable": bool(replayable),
-        "lineage": [step.to_dict() for step in best_organism.ancestry],
+        "adopted_mutation_steps": len(best_organism.ancestry),
+        "adopted_mutation_replayable": bool(adopted_mutation_replayable),
+        "adopted_mutations": [step.to_dict() for step in best_organism.ancestry],
         "solved_at_generation": solved_at,
         "best_agreement": best_score,
         "words": total_words,
@@ -242,11 +244,11 @@ def run(cases: int, generations: int) -> dict[str, object]:
                 int(r["diagnosed"]["budget"]["bodies_evaluated"]) for r in rows
             ),
             "duplication_used_growth": dup_grew,
-            "all_winning_lineages_replayable": all(
-                bool(r["duplication"]["lineage_replayable"]) for r in rows
+            "all_winning_adopted_mutation_chains_replayable": all(
+                bool(r["duplication"]["adopted_mutation_replayable"]) for r in rows
             ),
-            "deepest_lineage_steps": max(
-                int(r["duplication"]["lineage_steps"]) for r in rows
+            "deepest_adopted_mutation_chain": max(
+                int(r["duplication"]["adopted_mutation_steps"]) for r in rows
             ),
             "median_generation_to_solve": (
                 int(statistics.median(solved_gens)) if solved_gens else None

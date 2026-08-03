@@ -397,7 +397,7 @@ def ancestry_digest(organism: Organism) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
-def population_floor_admission_with_body_diversity(
+def positive_population_floor_admission_with_body_diversity(
     population: Sequence[tuple[Organism, int]],
     threshold: int,
     capacity: int,
@@ -406,15 +406,24 @@ def population_floor_admission_with_body_diversity(
     reduction_seed: int,
     generation: int,
 ) -> list[Organism]:
-    """Admit above a population floor; reduce uniformly over **distinct bodies**.
+    """Admit above a positive population floor; reduce uniformly over **distinct bodies**.
 
-    Named for what it does. The threshold supplied by the runner is the current
-    population's minimum score, so admission is close to vacuous: it excludes total
-    failures and nothing else. That is deliberate rather than a weakness. A neutral
-    duplication carries *exactly its parent's score*, so any bar that rises would
-    eventually exclude organisms which have not yet improved — which is precisely the
-    neutral duplicates, before they have had the chance to drift. The admission step must
-    not do more than reject outright failure.
+    Named for the whole rule, including the part that is easy to overlook. The runner
+    supplies `max(1, min(score))`, so admission carries a **viability condition** on top
+    of the population floor: an organism agreeing with nothing is rejected outright.
+
+    That condition is chosen, not inherited. A minimal criterion is defined by a viability
+    bar rather than by no bar at all; removing it entirely would leave a pure diversity
+    sampler with no selection pressure, which is a different object. Here a zero score
+    means disagreeing on every observed word, which is a defensible reading of non-viable.
+
+    **Its cost is stated rather than hidden.** The justification for keeping admission
+    otherwise near-vacuous is that a neutral duplication carries *exactly its parent's
+    score*, so a rising bar would exclude duplicates before they could drift. That
+    protection applies only once a lineage is viable. A neutral duplicate of a parent that
+    has never scored receives no protection at all: both sit below 1 and both are rejected.
+    If the entire population scores zero, nothing is admitted and the caller must decide
+    what to do with an empty result.
 
     The work is therefore done by the reduction, and its unit is the **distinct body**.
     That is a declared diversity policy, not neutrality between organisms: ten clones
@@ -473,9 +482,15 @@ def population_floor_admission_with_body_diversity(
     return [org for _, org in ordered[:capacity]]
 
 
-# The name used while the rule was still described as a minimal criterion. Kept as an
-# alias so the correction is visible rather than a silent rename.
-minimal_admission_with_body_diversity = population_floor_admission_with_body_diversity
+# Names used while the rule was still described as a minimal criterion, and before the
+# viability condition in `max(1, ...)` was acknowledged. Kept as aliases so the two
+# corrections stay visible rather than becoming silent renames.
+population_floor_admission_with_body_diversity = (
+    positive_population_floor_admission_with_body_diversity
+)
+minimal_admission_with_body_diversity = (
+    positive_population_floor_admission_with_body_diversity
+)
 
 
 # Historical alias. `minimal_criterion_survivors` named a selector that was not a minimal

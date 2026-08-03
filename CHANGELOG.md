@@ -14,8 +14,14 @@
 - Named three selectors apart, so none borrows another's evidence:
   `thresholded_elitist_truncation` keeps M035's historical 6/12,
   `viability_then_novelty` keeps M021's 750 per mille, and the new
-  `population_floor_admission_with_body_diversity` inherits neither and is unmeasured on
-  any sealed block.
+  `positive_population_floor_admission_with_body_diversity` inherits neither and has
+  produced no experimental result at all. Every rate in M037 belongs to the historical
+  selector, which the runner still uses unchanged.
+- Named the admission bar for the whole of what it does. `max(1, min(score))` is a
+  population floor **plus** a viability condition, and its cost is stated: the protection
+  claimed for neutral duplicates applies only to viable lineages, since a neutral
+  duplicate of a never-scoring parent sits below the bar with its parent and is rejected
+  with it. Pinned by test, including the degenerate all-zero population.
 - Separated admission from capacity reduction. Admission consults the score once, at the
   threshold. Reduction orders by `SHA-256(domain || commitment || seed || generation ||
   digest)`, which sees no score, no size, no structural cost and no input position, and
@@ -42,7 +48,18 @@
 - Marked cases 0–11 and 12–23 as consumed. Neither may choose a policy, tune a threshold
   or confirm a later claim; a fresh guarded block is required before the next experimental
   decision.
-- Added 16 metamorphic selection tests and recorded the misclassification in
+- Renamed the machine-readable replay fields to say what they demonstrate:
+  `adopted_mutation_replayable`, `adopted_mutation_steps`, `adopted_mutations` and
+  `all_winning_adopted_mutation_chains_replayable`. The code, the tests, the emitted JSON
+  and the report now make the same claim, and none of them says Gate 9.
+- Added a test exercising the runner's own threshold rule rather than a hand-supplied
+  one. The earlier tests passed a threshold in directly and never exercised
+  `max(1, min(score))` against a population containing a zero, which is exactly where the
+  positive floor differs from the current minimum.
+- Pinned the rejected alternative too: under an exact `min(score)` floor the null lineage
+  would survive. Variant 1 is not adopted, and the trade-off stays visible in a test
+  rather than only in prose.
+- Added 19 metamorphic selection tests and recorded the misclassification in
   `FAILURE_LOG.md`.
 
 ## 0.33.0 — 2026-08-03

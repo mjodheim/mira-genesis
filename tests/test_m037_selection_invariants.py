@@ -5,8 +5,8 @@ Both halves were wrong: it ranked the admitted by score and size, and M021's
 `rank_by_minimal_criterion` is viability plus **novelty** plus truncation, whose 750 per
 mille belongs to that composite alone.
 
-`minimal_admission_with_body_diversity` separates admission from capacity reduction. These
-tests pin the separation, so a ranking pressure cannot return unnoticed.
+`positive_population_floor_admission_with_body_diversity` separates admission from capacity
+reduction. These tests pin the separation, so a ranking pressure cannot return unnoticed.
 
 The unit is the distinct body. That is a declared diversity policy, not neutrality between
 organisms, and the tests below state which of the two is being asserted.
@@ -19,7 +19,7 @@ from metamorphosis.m035_evolution import (
     Organism,
     duplicable_states,
     duplicate_state,
-    minimal_admission_with_body_diversity,
+    positive_population_floor_admission_with_body_diversity,
     thresholded_elitist_truncation,
 )
 from metamorphosis.structural import normalize_dfa
@@ -35,7 +35,7 @@ def _bodies(count: int):
 
 
 def _reduce(population, threshold=1, capacity=3, generation=0, seed=SEED):
-    return minimal_admission_with_body_diversity(
+    return positive_population_floor_admission_with_body_diversity(
         population,
         threshold,
         capacity,
@@ -226,7 +226,127 @@ def test_the_commitment_is_an_explicit_input():
 
     organisms = [(Organism(body=b), 7) for b in _bodies(10)]
     a = _reduce(organisms, capacity=4)
-    b = minimal_admission_with_body_diversity(
+    b = positive_population_floor_admission_with_body_diversity(
         organisms, 1, 4, commitment="other", reduction_seed=SEED, generation=0
     )
     assert [o.digest() for o in a] != [o.digest() for o in b]
+
+
+# -- the viability condition, and what it costs ----------------------------------------
+
+
+def test_a_null_lineage_and_its_neutral_duplicate_are_both_rejected():
+    """The declared cost of the viability bar, made incontestable.
+
+    A neutral duplication carries exactly its parent's score. When that score is zero,
+    both sit below the runner's `max(1, ...)` floor and neither is admitted, so the
+    protection the rule claims for neutral duplicates does not extend to lineages that
+    have never scored.
+    """
+
+    base = _bodies(1)[0]
+    twin = duplicate_state(base, index=duplicable_states(base)[0])
+    assert twin is not None
+
+    null_parent = Organism(body=base)
+    null_twin = Organism(body=twin, duplications=1)
+    scoring = [(Organism(body=b), 6) for b in _bodies(5)[1:]]
+
+    # The runner's floor: max(1, minimum observed).
+    threshold = max(1, min([0, 0] + [6] * len(scoring)))
+    assert threshold == 1
+
+    survivors = _reduce(
+        [(null_parent, 0), (null_twin, 0)] + scoring,
+        threshold=threshold,
+        capacity=2,
+    )
+    kept = {o.digest() for o in survivors}
+    assert null_parent.digest() not in kept
+    assert null_twin.digest() not in kept
+    assert len(survivors) == 2
+
+
+def test_a_viable_lineage_and_its_neutral_duplicate_are_both_admitted():
+    """Above the bar, the protection does hold: equal scores, both admissible."""
+
+    base = _bodies(1)[0]
+    twin = duplicate_state(base, index=duplicable_states(base)[0])
+    assert twin is not None
+
+    parent = Organism(body=base)
+    duplicate = Organism(body=twin, duplications=1)
+
+    survivors = _reduce([(parent, 3), (duplicate, 3)], threshold=3, capacity=10)
+    kept = {o.digest() for o in survivors}
+    assert parent.digest() in kept
+    assert duplicate.digest() in kept
+
+
+def test_an_all_zero_population_admits_nobody():
+    """The degenerate case the caller must handle, pinned rather than assumed away."""
+
+    population = [(Organism(body=b), 0) for b in _bodies(5)]
+    threshold = max(1, min(score for _, score in population))
+    assert _reduce(population, threshold=threshold, capacity=3) == []
+
+
+def _runner_threshold(scored) -> int:
+    """The rule the runner actually applies, reproduced exactly.
+
+    Written out here rather than imported so the test fails if the runner's rule and the
+    selector's documented expectation drift apart again.
+    """
+
+    return max(1, min(score for _, score in scored))
+
+
+def test_the_runner_threshold_is_a_positive_floor_not_the_current_minimum():
+    """The distinction that the earlier tests supplied by hand and never exercised.
+
+    The selector's contract says the runner hands it a population floor. The runner hands
+    it `max(1, minimum)`, which differs from the minimum exactly when some organism scores
+    zero — and that is the case where a neutral duplicate would most need protection.
+    """
+
+    with_zero = [(Organism(body=b), score) for b, score in zip(_bodies(3), (0, 4, 9))]
+    assert min(score for _, score in with_zero) == 0
+    assert _runner_threshold(with_zero) == 1
+
+    without_zero = [(Organism(body=b), score) for b, score in zip(_bodies(3), (2, 4, 9))]
+    assert _runner_threshold(without_zero) == min(
+        score for _, score in without_zero
+    ) == 2
+
+
+def test_the_runner_rule_excludes_a_null_lineage_from_a_mixed_population():
+    """End to end: the runner's own threshold, applied by the selector."""
+
+    bodies = _bodies(4)
+    null_organism = Organism(body=bodies[0])
+    scored = [(null_organism, 0)] + [
+        (Organism(body=b), 5) for b in bodies[1:]
+    ]
+
+    survivors = _reduce(scored, threshold=_runner_threshold(scored), capacity=10)
+    kept = {o.digest() for o in survivors}
+    assert null_organism.digest() not in kept
+    assert len(survivors) == 3
+
+
+def test_under_an_exact_minimum_floor_the_null_lineage_would_survive():
+    """The rejected alternative, measured rather than argued.
+
+    Variant 1 — `min(score)` with no positive floor — would admit the null lineage. It is
+    not adopted: a minimal criterion is defined by a viability bar, and removing it leaves
+    a diversity sampler with no selection pressure. Pinned so the trade-off stays visible.
+    """
+
+    bodies = _bodies(4)
+    null_organism = Organism(body=bodies[0])
+    scored = [(null_organism, 0)] + [(Organism(body=b), 5) for b in bodies[1:]]
+
+    exact_minimum = min(score for _, score in scored)
+    survivors = _reduce(scored, threshold=exact_minimum, capacity=10)
+    assert null_organism.digest() in {o.digest() for o in survivors}
+    assert len(survivors) == 4

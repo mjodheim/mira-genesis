@@ -21,8 +21,6 @@ reduction decision, or any migration, rollback or learned tool. Selection decisi
 **not recomputed** — only the winner's own transformations are stored, so a different
 selection rule would yield a different lineage that this replay could not detect.
 
-## What was missing
-
 ## What was added
 
 Every organism now carries its complete chain of `Mutation` steps — the operation itself,
@@ -31,8 +29,8 @@ founder body and the chain alone: no seed, no population, no search.
 
 | Check | Result |
 |---|---:|
-| Lineages replayed byte-for-byte, development | 20 of 20 |
-| Lineages replayed byte-for-byte, **untouched cases 12–23** | **12 of 12** |
+| Adopted-mutation chains replayed byte-for-byte, development | 20 of 20 |
+| Adopted-mutation chains replayed byte-for-byte, **untouched cases 12–23** | **12 of 12** |
 | Deepest chain measured | 36 mutations |
 | Winning lineage, deepest case | 47 generations, 21 mutations, 3 growths, 4→7 states |
 
@@ -63,9 +61,30 @@ about the general family. M035 implemented none of that.
 |---|---|---|
 | `thresholded_elitist_truncation` | threshold, rank by agreement, prefer small, truncate | M035's 6/12 |
 | `viability_then_novelty` (M021) | viability bar, novelty rank, truncate | M021's 750 per mille |
-| `minimal_admission_with_body_diversity` (M037) | threshold only, then uniform reduction over distinct bodies | its own, yet to be measured on a sealed block |
+| `positive_population_floor_admission_with_body_diversity` (M037) | viability bar and population floor, then uniform reduction over distinct bodies | **none — unmeasured** |
 
-The third is a **new** development selector. It inherits nothing from M021.
+The third is a **new** development selector. It inherits nothing from M021, **and it has
+produced no experimental result at all.** Every rate quoted in this document — 6/12, 5/12,
+9/12, 3/12 — belongs to `thresholded_elitist_truncation`, which the runner still uses
+unchanged. No improvement in any rate is attributable to the new rule, and the descriptive
+figures on consumed cases cannot validate it. It awaits an experiment on a sealed block.
+
+### The admission bar carries a viability condition, and it has a cost
+
+The runner supplies `max(1, min(score))`. That is a population floor **plus** a viability
+condition: an organism agreeing with nothing is rejected outright.
+
+The condition is chosen rather than inherited. A minimal criterion is defined by a
+viability bar, not by no bar; removing it would leave a pure diversity sampler with no
+selection pressure, which is a different object. A zero score here means disagreeing on
+every observed word.
+
+Its cost is stated rather than hidden. The argument for keeping admission otherwise
+near-vacuous is that a neutral duplication carries *exactly its parent's score*, so a
+rising bar would exclude duplicates before they could drift. **That protection applies only
+to viable lineages.** A neutral duplicate of a parent that has never scored receives none:
+both sit below 1 and both are rejected. If the whole population scores zero, nothing is
+admitted. All three cases are pinned by test.
 
 ### The unit of reduction is declared, not discovered
 
@@ -149,7 +168,7 @@ from opening it.
 ## Limits
 
 The 5/12 figure belongs to `thresholded_elitist_truncation`, the historical selector, on a
-block that is now consumed. `minimal_admission_with_body_diversity` has **not** been
+block that is now consumed. `positive_population_floor_admission_with_body_diversity` has **not** been
 measured on a sealed block, and any rate obtained for it on consumed cases is descriptive
 only — it can document the consequence of the correction, and cannot validate it.
 
