@@ -13,6 +13,7 @@ from metamorphosis.m032_trans_substrate_lifecycle import (
     compile_policy_to_dfa,
     execute_trans_substrate_lifecycle,
 )
+from metamorphosis.m033_combined_evaluation import paired_outcome
 from metamorphosis.m033_evaluation import held_out_quality_per_mille
 from metamorphosis.m033_memory_controls import execute_memory_guided_task
 from metamorphosis.m033_post_migration_plasticity import (
@@ -141,20 +142,10 @@ def _paired_outcome(
     control: LineageVariant,
 ) -> int:
     results = row["results"]
-    complete = results[LineageVariant.COMPLETE.value]
-    other = results[control.value]
-
-    complete_key = (
-        int(bool(complete["exact"])),
-        int(complete["held_out_quality_per_mille"]),
-        -int(complete["total_candidate_evaluations"]),
+    return paired_outcome(
+        results[LineageVariant.COMPLETE.value],
+        results[control.value],
     )
-    other_key = (
-        int(bool(other["exact"])),
-        int(other["held_out_quality_per_mille"]),
-        -int(other["total_candidate_evaluations"]),
-    )
-    return (complete_key > other_key) - (complete_key < other_key)
 
 
 def run(seed_start: int, seed_count: int) -> dict[str, object]:
