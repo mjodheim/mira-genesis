@@ -24,15 +24,47 @@ def _imports_m033(path: Path) -> list[str]:
     return found
 
 
+def _module_int_constant_equals(path: Path, name: str, expected: int) -> bool:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    for node in tree.body:
+        if isinstance(node, ast.Assign):
+            if (
+                any(isinstance(target, ast.Name) and target.id == name for target in node.targets)
+                and isinstance(node.value, ast.Constant)
+                and node.value.value == expected
+            ):
+                return True
+        elif isinstance(node, ast.AnnAssign):
+            if (
+                isinstance(node.target, ast.Name)
+                and node.target.id == name
+                and isinstance(node.value, ast.Constant)
+                and node.value.value == expected
+            ):
+                return True
+    return False
+
+
 def _runner_defaults_are_control_only(
     path: Path,
     *,
     expected_default: int,
     expected_guard: int,
+    expected_guard_name: str | None = None,
+    expected_guard_module: str | None = None,
 ) -> bool:
     tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     seed_default_found = False
     lower_bound_guard_found = False
+    named_guard_imported = expected_guard_name is None
+
+    if expected_guard_name is not None and expected_guard_module is not None:
+        for node in tree.body:
+            if isinstance(node, ast.ImportFrom) and node.module == expected_guard_module:
+                if any(alias.name == expected_guard_name for alias in node.names):
+                    named_guard_imported = True
+                    break
+
     for node in ast.walk(tree):
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
             if node.func.attr == "add_argument" and node.args:
@@ -52,10 +84,20 @@ def _runner_defaults_are_control_only(
                 and len(node.ops) == 1
                 and isinstance(node.ops[0], ast.Lt)
                 and len(node.comparators) == 1
-                and isinstance(node.comparators[0], ast.Constant)
-                and node.comparators[0].value == expected_guard
             ):
-                lower_bound_guard_found = True
+                comparator = node.comparators[0]
+                literal_guard = (
+                    isinstance(comparator, ast.Constant)
+                    and comparator.value == expected_guard
+                )
+                named_guard = (
+                    named_guard_imported
+                    and expected_guard_name is not None
+                    and isinstance(comparator, ast.Name)
+                    and comparator.id == expected_guard_name
+                )
+                if literal_guard or named_guard:
+                    lower_bound_guard_found = True
     return seed_default_found and lower_bound_guard_found
 
 
@@ -92,6 +134,12 @@ def main() -> None:
 
     structural_generator = METAMORPHOSIS / "m033_structural_tasks.py"
     structural_raw = structural_generator.read_text(encoding="utf-8")
+    if not _module_int_constant_equals(
+        structural_generator,
+        "STRUCTURAL_CONTROL_SEED_START",
+        2048,
+    ):
+        failures.append("structural control seed boundary is not fixed at 2048")
     if "if seed < STRUCTURAL_CONTROL_SEED_START" not in structural_raw:
         failures.append("structural generator lacks the seed >=2048 fail-closed guard")
     if "M033 structural controls require a seed of at least 2048" not in structural_raw:
@@ -107,6 +155,8 @@ def main() -> None:
         STRUCTURAL_CALIBRATION,
         expected_default=2048,
         expected_guard=2048,
+        expected_guard_name="STRUCTURAL_CONTROL_SEED_START",
+        expected_guard_module="metamorphosis.m033_structural_tasks",
     ):
         failures.append("structural calibration does not default and fail closed at 2048")
 
