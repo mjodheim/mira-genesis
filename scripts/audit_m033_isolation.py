@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
-import sys
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -87,7 +86,7 @@ def main() -> None:
     if not _calibration_defaults_are_control_only():
         failures.append("calibration runner does not default and fail closed at seed 1024")
 
-    protocol = PROTOCOL.read_text(encoding="utf-8")
+    protocol = " ".join(PROTOCOL.read_text(encoding="utf-8").split())
     required_protocol_fragments = (
         "Seeds `0–63` are reserved",
         "Seeds `1024+` are reserved",
