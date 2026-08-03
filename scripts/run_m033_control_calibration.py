@@ -57,7 +57,7 @@ LEARNING_VARIANTS = (
 )
 
 
-def _packet(seed: int) -> str:
+def _packet(seed: int) -> tuple[str, dict[str, int]]:
     outcome = execute_trans_substrate_lifecycle(
         VersionedCodeBody("policy", PRE_REWRITE_SOURCE),
         ToolRegistry(),
@@ -71,9 +71,25 @@ def _packet(seed: int) -> str:
         max_edits=2,
         beam_width=64,
     )
-    if not outcome.committed or outcome.packet_json is None:
+    if not outcome.committed or outcome.packet_json is None or outcome.migration is None:
         raise RuntimeError(f"M032 control packet failed for seed {seed}: {outcome.reason}")
-    return outcome.packet_json
+
+    rewrite_candidates = outcome.rewrite.rewrite.candidates_evaluated
+    migration = outcome.migration
+    return outcome.packet_json, {
+        "pre_rewrite_candidates": rewrite_candidates,
+        "pre_rewrite_development_case_evaluations": (
+            rewrite_candidates * len(PRE_REWRITE_DEVELOPMENT)
+        ),
+        "independent_validation_case_evaluations": (
+            3 * len(PRE_REWRITE_DEVELOPMENT)
+        ),
+        "substrate_probes": migration.probe_calls,
+        "native_candidate_evaluations": migration.candidate_evaluations,
+        "native_components": migration.native_components,
+        "serialized_bytes": migration.serialized_bytes,
+        "packet_validations": 1,
+    }
 
 
 def _lineages(packet_json: str, seed: int, family: ControlTaskFamily):
@@ -138,26 +154,38 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
 
     rows: list[dict[str, object]] = []
     for seed in range(seed_start, seed_start + seed_count):
-        packet_json = _packet(seed)
+        packet_json, pre_migration_cost = _packet(seed)
         for family in ControlTaskFamily:
             task, lineages = _lineages(packet_json, seed, family)
-            results = {
-                variant.value: _result_dict(execute_control_task(lineage, task))
-                for variant, lineage in lineages.items()
-            }
+            results: dict[str, dict[str, object]] = {}
+            lineage_costs: dict[str, dict[str, int]] = {}
+            for variant, lineage in lineages.items():
+                results[variant.value] = _result_dict(
+                    execute_control_task(lineage, task)
+                )
+                lineage_costs[variant.value] = lineage.construction_cost.to_dict()
+
             memory_results = None
+            memory_costs = None
             if family is ControlTaskFamily.POSITIVE_TOOL:
-                memory_results = {
-                    label: _result_dict(execute_memory_guided_task(lineage, task))
-                    for label, lineage in _memory_lineages(packet_json).items()
-                }
+                memory_results = {}
+                memory_costs = {}
+                for label, lineage in _memory_lineages(packet_json).items():
+                    memory_results[label] = _result_dict(
+                        execute_memory_guided_task(lineage, task)
+                    )
+                    memory_costs[label] = lineage.construction_cost.to_dict()
+
             rows.append(
                 {
                     "seed": seed,
                     "family": family.value,
                     "task_sha256": task.sha256(),
+                    "pre_migration_cost": pre_migration_cost,
                     "results": results,
+                    "lineage_costs_after_task": lineage_costs,
                     "memory_results": memory_results,
+                    "memory_costs_after_task": memory_costs,
                 }
             )
 
@@ -253,6 +281,18 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
         "memory_empty_candidate_median": median(
             memory_candidates(row, "empty") for row in positive
         ),
+        "pre_rewrite_candidate_median": median(
+            int(row["pre_migration_cost"]["pre_rewrite_candidates"])
+            for row in positive
+        ),
+        "substrate_probe_median": median(
+            int(row["pre_migration_cost"]["substrate_probes"])
+            for row in positive
+        ),
+        "native_candidate_evaluation_median": median(
+            int(row["pre_migration_cost"]["native_candidate_evaluations"])
+            for row in positive
+        ),
         "output_only_attempts": sum(
             bool(row["results"][LineageVariant.OUTPUT_ONLY.value]["attempted"])
             for row in rows
@@ -260,12 +300,13 @@ def run(seed_start: int, seed_count: int) -> dict[str, object]:
     }
 
     return {
-        "version": "m033-control-calibration/2",
+        "version": "m033-control-calibration/3",
         "seed_start": seed_start,
         "seed_count": seed_count,
         "families": [family.value for family in ControlTaskFamily],
         "learning_variants": [variant.value for variant in LEARNING_VARIANTS],
         "memory_variants": ["relevant", "permuted", "empty"],
+        "cost_units_are_separate": True,
         "rows": rows,
         "summary": summary,
     }
