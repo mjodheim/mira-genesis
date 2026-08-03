@@ -1,38 +1,56 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+from metamorphosis.m033_combined_evaluation import paired_outcome
 from metamorphosis.m033_post_migration_plasticity import LineageVariant
 from metamorphosis.m033_structural_tasks import COMBINED_CONTROL_SEED_START
-from scripts.run_m033_combined_calibration import _paired_outcome, run
 
 
-def _row(complete: tuple[bool, int, int], control: tuple[bool, int, int]):
-    def payload(values: tuple[bool, int, int]) -> dict[str, object]:
-        exact, quality, candidates = values
-        return {
-            "exact": exact,
-            "held_out_quality_per_mille": quality,
-            "total_candidate_evaluations": candidates,
-        }
+ROOT = Path(__file__).resolve().parents[1]
+RUNNER = ROOT / "scripts" / "run_m033_combined_calibration.py"
 
+
+def _payload(exact: bool, quality: int, candidates: int) -> dict[str, object]:
     return {
-        "results": {
-            LineageVariant.COMPLETE.value: payload(complete),
-            LineageVariant.FRESH_B.value: payload(control),
-        }
+        "exact": exact,
+        "held_out_quality_per_mille": quality,
+        "total_candidate_evaluations": candidates,
     }
 
 
 def test_paired_outcome_prioritises_exactness_then_quality_then_cost():
-    control = LineageVariant.FRESH_B
-    assert _paired_outcome(_row((True, 1000, 999), (False, 1000, 1)), control) == 1
-    assert _paired_outcome(_row((False, 900, 999), (False, 800, 1)), control) == 1
-    assert _paired_outcome(_row((True, 1000, 10), (True, 1000, 20)), control) == 1
-    assert _paired_outcome(_row((True, 1000, 20), (True, 1000, 10)), control) == -1
-    assert _paired_outcome(_row((True, 1000, 10), (True, 1000, 10)), control) == 0
+    assert paired_outcome(_payload(True, 1000, 999), _payload(False, 1000, 1)) == 1
+    assert paired_outcome(_payload(False, 900, 999), _payload(False, 800, 1)) == 1
+    assert paired_outcome(_payload(True, 1000, 10), _payload(True, 1000, 20)) == 1
+    assert paired_outcome(_payload(True, 1000, 20), _payload(True, 1000, 10)) == -1
+    assert paired_outcome(_payload(True, 1000, 10), _payload(True, 1000, 10)) == 0
 
 
-def test_combined_calibration_covers_all_lineages_without_primary_observation():
-    payload = run(COMBINED_CONTROL_SEED_START, 4)
+def test_combined_calibration_cli_covers_all_lineages_without_primary_observation(
+    tmp_path: Path,
+):
+    output = tmp_path / "combined.json"
+    subprocess.run(
+        [
+            sys.executable,
+            str(RUNNER),
+            "--seed-start",
+            str(COMBINED_CONTROL_SEED_START),
+            "--seeds",
+            "4",
+            "--output",
+            str(output),
+        ],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    payload = json.loads(output.read_text(encoding="utf-8"))
     summary = payload["summary"]
 
     assert payload["version"] == "m033-combined-calibration/1"
