@@ -91,7 +91,7 @@ jobs:
           status = Path("experiments/M033/STATUS.md").read_text(encoding="utf-8")
           assert "Seeds `0–63` are reserved" in protocol
           assert "does **not** set a numerical advantage threshold" in protocol
-          assert "TOOL CONTROL CALIBRATED" in status
+          assert "PRE-THRESHOLD CONTROLS PASSED" in status
           assert "PRIMARY TASKS UNOBSERVED" in status
           assert "No result about primary post-migration plasticity is claimed" in status
           PYTHON
