@@ -48,9 +48,10 @@ without human architectural intervention. All ten required gates are defined in
 | M030 | DEVELOPMENT CONFIRMATION SUPPORTED | Component-uniform guidance reproduced on untouched seeds 64–127 with 48 wins, 16 ties and no losses. |
 | M031 | DEVELOPMENT STRUCTURAL TRANSPORT SUPPORTED | The signal transported to a split-scaffold triad generator with 43 wins, 18 ties and 3 losses. |
 | M032 | DEVELOPMENT BASE VERIFIED | An adopted rewrite compiles and migrates to an opaque substrate with a validated passport, learned tools and declared learning state; rollback and tamper controls pass. |
+| M033 | COMBINED PRE-THRESHOLD CONTROLS PASSED | Both transported mechanisms are causally isolated but act on disjoint scaffolds; the complete lineage shows no advantage over its unchanged parent. Primary seeds `0–63` remain unopened and no plasticity advantage is claimed. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
-M017 and M020–M032 are development evidence and must not be promoted to canonical
+M017 and M020–M033 are development evidence and must not be promoted to canonical
 claims without a frozen one-shot protocol.
 
 ## Measurement track
@@ -123,21 +124,65 @@ M032 establishes exact transport and validation of the declared state surface, n
 functional value. A packet may preserve memory, uncertainty, exploration state and
 learned tools without those objects improving future adaptation.
 
-### Next construction gate
+### M033 — post-migration plasticity, pre-threshold
 
-The next experiment must reveal a genuinely new task family only after migration and
-compare:
+M033 is the open construction gate. It reveals a genuinely new task family only after
+migration and compares six lineages under paired seeds and exact DFA ground truth:
 
 - the complete migrated M032 lineage;
 - a fresh organism constructed on substrate B;
 - the unchanged parent lineage migrated to B;
 - an output-only migrated body without retained plasticity;
-- the improved lineage with memory and exploration state ablated;
+- the improved lineage with memory, uncertainty and exploration state ablated;
 - the improved lineage with learned rewrite tools ablated.
 
-It must measure exact post-migration quality and total cost, including diagnosis,
-search, failed candidates, validation and migration. Only a pre-written advantage over
-those controls would support transported plasticity rather than transported output.
+The primary measure records exact post-migration quality and total cost — diagnosis,
+search, failed candidates, validation and migration — as separate vectors rather than one
+synthetic score. Only a pre-written advantage over those controls would support
+transported plasticity rather than transported output.
+
+Its development controls have passed. The evaluated control implementation commit is
+`1c4e7b59c9a846d1b16d09ae47ef1c5478450832`, focused workflow run `30792247244`, with 27
+focused tests, the repository integrity audit, the static task-isolation audit and
+byte-identical replays of both calibration families. Two disjoint control blocks were
+used: fixed-structure seeds `1024–1031` and structural seeds `2048–2063`.
+
+Those controls isolate two mechanisms causally. Removing learned tools erased the whole
+measured search reduction on the positive family (median 959 candidates for the complete
+lineage against 976 for fresh-B, the unchanged parent and the learned-tool ablation,
+cheaper on 8/8 seeds). A relevant transported memory trace changed the first exploration
+decision and reduced median candidates to 264 against 959 for empty memory and 960 for a
+permuted trace, cheaper on 8/8 seeds, while all variants stayed exactly equivalent.
+
+The benefit is explicitly **not** uniform. Across four structural scaffolds the complete
+lineage won 12/16 tasks, with per-scaffold directions of 4/4, 4/4, 0/4 and 4/4. Scaffold 2
+is a declared counterexample where transported state stays exact but pays a small median
+branching cost. That mixed range is what a primary rule must be designed against.
+
+A third control block on seeds `3072–3103` then ran those same four scaffolds through the
+memory-guided path, measuring both transported mechanisms together for the first time.
+All five learning-capable variants were exactly equivalent on all 32 tasks, so only
+deterministic cost separates them. The complete lineage beat fresh-B 24/0/8, but it went
+8/16/8 against its own unchanged parent, 8/16/8 against the learned-tool ablation and
+16/0/16 against the learning-state ablation.
+
+The mechanisms act on disjoint scaffolds. Memory carries scaffolds 0 and 1, where the
+learned-tool ablation and the unchanged parent reach an identical median of 264
+candidates. Learned tools carry scaffold 3, cutting rewrite search from 1,879 to 568. On
+scaffold 2 both are inert and the complete lineage loses every comparison. Because the
+unchanged parent carries the same learning state without having adopted the rewrite, the
+adopted rewrite buys nothing on three of the four scaffolds in this block. A primary rule
+requiring the complete lineage to beat its own parent would currently fail. The evidence
+is in
+[`results/M033_COMBINED_CALIBRATION.md`](results/M033_COMBINED_CALIBRATION.md).
+
+The reserved primary block `0–63` has never been instantiated or observed, and no
+post-migration plasticity advantage is claimed. Before it may open, M033 still requires a
+frozen primary generator committed without instantiating those seeds, a threshold-freeze
+amendment fixing the primary statistic, directional rule, critical regressions, abstention
+limit and artifact identity, and complete Python 3.11 and 3.13 CI on that frozen
+pre-result implementation. The full evidence and its limits are in
+[`results/M033_CONTROL_CALIBRATION.md`](results/M033_CONTROL_CALIBRATION.md).
 
 ## Canonical proof identities
 

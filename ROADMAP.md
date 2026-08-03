@@ -35,7 +35,7 @@ target.
 | M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
 | M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
 | M032 | Trans-substrate rewrite lifecycle | DEVELOPMENT BASE VERIFIED | Adopted rewrite compiles and migrates with a validated passport and declared learning state; exact rollback and tamper rejection pass. |
-| M033 | Post-migration plasticity | NEXT CONSTRUCTION EXPERIMENT | Reveal a new task only after migration and compare complete, fresh, parent, output-only and ablated lineages. |
+| M033 | Post-migration plasticity | COMBINED PRE-THRESHOLD CONTROLS PASSED | Both mechanisms isolated causally but acting on disjoint scaffolds; 24/0/8 against fresh-B yet 8/16/8 against the unchanged parent; primary seeds 0–63 unopened. |
 | M015 | Memory and strategy | PARTLY ABSORBED BY M032, FUNCTIONAL TEST OPEN | State now transports exactly; its causal learning value remains untested. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -143,7 +143,7 @@ The evaluated implementation commit is
 on Python 3.11 and Python 3.13 and the integrity audit passed. This is a development
 integration base, not a canonical evaluation.
 
-### M033 — next construction gate: post-migration plasticity
+### M033 — open construction gate: post-migration plasticity
 
 Transport is not enough. M033 must reveal a genuinely new task family only after M032
 has completed migration. The pre-result comparison must include:
@@ -160,6 +160,41 @@ and migration cost. A positive result requires better exact held-out quality or 
 improvement under a frozen paired-seed decision rule. A negative result remains a valid
 outcome and may not be repaired by changing the task family or thresholds after
 observation.
+
+Its pre-threshold controls have passed on two disjoint development blocks. The
+fixed-structure block on seeds 1024–1031 isolated both mechanisms causally: removing
+learned tools erased the entire measured search reduction, and a relevant transported
+memory trace cut median post-reveal candidates from 959 to 264 while permuted and empty
+traces did not. The structural block on seeds 2048–2063 then varied the source scaffold
+four ways and returned 12/16 complete-lineage wins with directions of 4/4, 4/4, 0/4 and
+4/4.
+
+That non-uniformity is the point. Scaffold 2 is retained as a declared counterexample in
+which transported state stays exact but pays a small median branching cost, so no
+threshold may be frozen around universal directional wins, and the strong scaffold-3
+effect may not be pooled into a single median presented as a worst-case bound.
+
+A third block on seeds 3072–3103 then measured both mechanisms together across the same
+four scaffolds. It is the most informative and the least encouraging of the three. Every
+learning-capable variant was exactly equivalent on all 32 tasks, so cost alone separates
+them. The complete lineage beat fresh-B 24/0/8 but went 8/16/8 against its own unchanged
+parent and 8/16/8 against the learned-tool ablation.
+
+The reason is that the two mechanisms never help at the same time. Memory carries
+scaffolds 0 and 1, where the unchanged parent and the tool ablation reach an identical
+median of 264 candidates. Learned tools carry scaffold 3, cutting search from 1,879 to
+568. On scaffold 2 neither helps and the complete lineage loses every comparison. Because
+the unchanged parent retains the same learning state without having adopted the rewrite,
+the adopted rewrite itself buys nothing on three of the four scaffolds.
+
+Three gates remain before seeds 0–63 may open: a frozen primary generator committed
+without instantiating them, a threshold-freeze amendment fixing the primary statistic,
+directional rule, critical regressions, abstention limit and artifact identity, and
+complete Python 3.11 and 3.13 CI on that frozen pre-result implementation. The combined
+block adds two questions that amendment must now answer explicitly: whether beating the
+unchanged parent is a required gate or a secondary diagnostic, and whether a margin of one
+deterministic evaluation counts as a win or falls inside an abstention band. No primary
+result exists and no plasticity advantage is claimed.
 
 ## First-phase finish line
 

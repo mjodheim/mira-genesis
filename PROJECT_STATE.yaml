@@ -248,15 +248,107 @@ development_state:
     deterministic_packet_identity: true
     packet_tamper_rejection: true
     post_migration_learning_advantage_supported: false
+  M033:
+    status: combined_pre_threshold_controls_passed
+    evaluated_control_commit: 1c4e7b59c9a846d1b16d09ae47ef1c5478450832
+    focused_workflow_run: 30792247244
+    retained_artifact_id: 8847545755
+    workflow_artifact_sha256: a63c07e1005b86908d9527b3be2ebbab6409eae0e4a4219d0bf0e9bbf69cd25f
+    fixed_structure_raw_sha256: e189142ccbe1465caf76a30d22b8f294974c2c2dcce1e224f3e61748c7f8b5bb
+    structural_raw_sha256: 117de3c31b03afcdb4a7f20eb6b2a5877513045e7f1540a6e03a026d63bb0723
+    focused_tests_passed: 27
+    byte_identical_replay: true
+    repository_integrity_audit_passed: true
+    static_task_isolation_audit_passed: true
+    primary_seed_block: "0-63"
+    primary_seed_block_observed: false
+    fixed_structure_control_seeds: "1024-1031"
+    structural_control_seeds: "2048-2063"
+    lineage_variants_implemented: 6
+    fixed_structure:
+      complete_candidate_median: 959
+      fresh_b_candidate_median: 976
+      unchanged_parent_candidate_median: 976
+      learned_tools_ablated_candidate_median: 976
+      complete_cheaper_than_fresh_b_seeds: 8
+      complete_cheaper_than_parent_seeds: 8
+      seeds: 8
+      negative_family_complete_better_seeds: 0
+      relevant_memory_candidate_median: 264
+      empty_memory_candidate_median: 959
+      permuted_memory_candidate_median: 960
+      relevant_memory_cheaper_seeds: 8
+      all_memory_variants_exact: true
+    structural:
+      tasks: 16
+      scaffolds: 4
+      complete_exact_tasks: 16
+      complete_held_out_exact_tasks: 16
+      complete_wins: 12
+      wins_by_scaffold: [4, 4, 0, 4]
+      complete_candidate_median_by_scaffold: [959, 1910, 568, 568]
+      fresh_b_candidate_median_by_scaffold: [976, 1920, 543, 1879]
+      declared_negative_scaffold: 2
+      benefit_uniform_across_scaffolds: false
+    combined:
+      control_seeds: "3072-3103"
+      seeds: 32
+      scaffolds: 4
+      unique_task_digests: 32
+      raw_sha256: 0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372
+      repository_tests_passed: 236
+      byte_identical_replay: true
+      all_learning_variants_exact: true
+      all_learning_variants_held_out_exact: true
+      quality_separates_lineages: false
+      candidate_median:
+        complete: 556.0
+        fresh_b: 1427.5
+        unchanged_parent: 543.5
+        learning_state_ablated: 763.5
+        learned_tools_ablated: 543.5
+      memory_accepted_of_32:
+        complete: 16
+        fresh_b: 0
+        unchanged_parent: 16
+        learning_state_ablated: 0
+        learned_tools_ablated: 16
+      complete_vs_fresh_b: {wins: 24, ties: 0, losses: 8}
+      complete_vs_unchanged_parent: {wins: 8, ties: 16, losses: 8}
+      complete_vs_learning_state_ablated: {wins: 16, ties: 0, losses: 16}
+      complete_vs_learned_tools_ablated: {wins: 8, ties: 16, losses: 8}
+      complete_candidate_median_by_scaffold: [264, 543, 569, 569]
+      fresh_b_candidate_median_by_scaffold: [976, 1920, 543, 1879]
+      unchanged_parent_candidate_median_by_scaffold: [264, 543, 544, 1880]
+      memory_dominant_scaffolds: [0, 1]
+      learned_tool_dominant_scaffolds: [3]
+      both_mechanisms_inert_scaffolds: [2]
+      mechanisms_act_on_disjoint_scaffolds: true
+      rejected_memory_probe_cost_candidates: 1
+      learned_tool_branching_cost_on_scaffold_2_candidates: 25
+      advantage_over_unchanged_parent: false
+      advantage_attributable_to_adopted_rewrite: false
+    output_only_rewrite_attempts: 0
+    exact_rollback_on_failed_post_migration_regression: true
+    cost_units_reported_separately: true
+    thresholds_frozen: false
+    post_migration_plasticity_advantage_claimed: false
+    open_before_primary_seeds_may_be_opened:
+      - frozen_primary_generator_committed_without_instantiating_reserved_seeds
+      - threshold_freeze_amendment_defining_statistic_rule_regressions_and_abstention
+      - declare_whether_unchanged_parent_comparison_is_a_required_gate_or_a_diagnostic
+      - declare_whether_a_one_candidate_margin_is_a_win_or_falls_in_an_abstention_band
+      - complete_python_3_11_and_3_13_ci_on_frozen_pre_result_implementation
 
 active_next_steps:
   measurement:
     - design_resource_aware_component_evaluation_policy
     - compare_against_frozen_component_uniform_baseline
   construction:
-    - reveal_new_task_family_only_after_migration
-    - compare_complete_lineage_against_fresh_parent_output_only_and_ablated_controls
-    - test_functional_use_of_transported_memory_uncertainty_exploration_and_tools
+    - freeze_m033_primary_generator_without_instantiating_reserved_seeds
+    - commit_m033_threshold_freeze_amendment_against_the_mixed_structural_range
+    - run_complete_ci_on_the_frozen_pre_result_implementation
+    - open_m033_primary_seeds_0_63_only_after_the_freeze
 
 completion_gates_passed_bounded:
   autonomous_morphogenesis: true

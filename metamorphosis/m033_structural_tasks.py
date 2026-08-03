@@ -1,8 +1,8 @@
 """Structurally varied post-migration task controls for M033.
 
-This module exposes development-only tasks on seeds 2048+.  It does not expose the
-reserved primary block.  Four source scaffolds preserve the pre-migration learned core
-rewrite while requiring one additional scaffold-specific post-migration operation.
+This module exposes two disjoint development-only blocks.  Seeds 2048–3071 retain the
+original learned-tool structural calibration, while seeds 3072+ exercise the combined
+memory-and-tool execution path.  Neither block exposes the reserved primary seeds.
 """
 
 from __future__ import annotations
@@ -18,6 +18,7 @@ from .m033_post_migration_plasticity import ControlTask, ControlTaskFamily
 
 
 STRUCTURAL_CONTROL_SEED_START = 2048
+COMBINED_CONTROL_SEED_START = 3072
 STRUCTURAL_TEMPLATE_COUNT = 4
 
 
@@ -30,6 +31,26 @@ class StructuralTaskRecord:
         return json.dumps(
             {
                 "version": "m033-structural-task/1",
+                "template_id": self.template_id,
+                "task": json.loads(self.task.canonical_json()),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+    def sha256(self) -> str:
+        return hashlib.sha256(self.canonical_json().encode("utf-8")).hexdigest()
+
+
+@dataclass(frozen=True)
+class CombinedControlTaskRecord:
+    template_id: int
+    task: ControlTask
+
+    def canonical_json(self) -> str:
+        return json.dumps(
+            {
+                "version": "m033-combined-control-task/1",
                 "template_id": self.template_id,
                 "task": json.loads(self.task.canonical_json()),
             },
@@ -95,12 +116,7 @@ def policy(state, symbol):
     raise ValueError(f"unknown M033 structural template: {template_id}")
 
 
-def generate_structural_control_task(seed: int) -> StructuralTaskRecord:
-    """Generate one structurally varied control task, rejecting all primary seeds."""
-
-    if seed < STRUCTURAL_CONTROL_SEED_START:
-        raise ValueError("M033 structural controls require a seed of at least 2048")
-
+def _generate_structural_task(seed: int) -> tuple[int, ControlTask]:
     template_id = seed % STRUCTURAL_TEMPLATE_COUNT
     baseline_source, target_source, state_count = _sources(template_id)
     accepting_index = (seed // STRUCTURAL_TEMPLATE_COUNT) % state_count
@@ -139,4 +155,24 @@ def generate_structural_control_task(seed: int) -> StructuralTaskRecord:
         target_dfa=target_dfa,
         max_edits=3,
     )
+    return template_id, task
+
+
+def generate_structural_control_task(seed: int) -> StructuralTaskRecord:
+    """Generate an original structural control task on the closed 2048–3071 block."""
+
+    if seed < STRUCTURAL_CONTROL_SEED_START or seed >= COMBINED_CONTROL_SEED_START:
+        raise ValueError("M033 structural controls require a seed from 2048 through 3071")
+
+    template_id, task = _generate_structural_task(seed)
     return StructuralTaskRecord(template_id=template_id, task=task)
+
+
+def generate_combined_control_task(seed: int) -> CombinedControlTaskRecord:
+    """Generate a combined memory-and-tool control task, rejecting all earlier blocks."""
+
+    if seed < COMBINED_CONTROL_SEED_START:
+        raise ValueError("M033 combined controls require a seed of at least 3072")
+
+    template_id, task = _generate_structural_task(seed)
+    return CombinedControlTaskRecord(template_id=template_id, task=task)
