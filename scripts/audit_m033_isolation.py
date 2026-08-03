@@ -6,7 +6,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 METAMORPHOSIS = ROOT / "metamorphosis"
-CALIBRATION = ROOT / "scripts" / "run_m033_control_calibration.py"
+CONTROL_CALIBRATION = ROOT / "scripts" / "run_m033_control_calibration.py"
+STRUCTURAL_CALIBRATION = ROOT / "scripts" / "run_m033_structural_calibration.py"
 PROTOCOL = ROOT / "experiments" / "M033" / "PROTOCOL_DRAFT.md"
 
 
@@ -23,8 +24,13 @@ def _imports_m033(path: Path) -> list[str]:
     return found
 
 
-def _calibration_defaults_are_control_only() -> bool:
-    tree = ast.parse(CALIBRATION.read_text(encoding="utf-8"), filename=str(CALIBRATION))
+def _runner_defaults_are_control_only(
+    path: Path,
+    *,
+    expected_default: int,
+    expected_guard: int,
+) -> bool:
+    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
     seed_default_found = False
     lower_bound_guard_found = False
     for node in ast.walk(tree):
@@ -36,7 +42,7 @@ def _calibration_defaults_are_control_only() -> bool:
                         if (
                             keyword.arg == "default"
                             and isinstance(keyword.value, ast.Constant)
-                            and keyword.value.value == 1024
+                            and keyword.value.value == expected_default
                         ):
                             seed_default_found = True
         if isinstance(node, ast.Compare):
@@ -47,7 +53,7 @@ def _calibration_defaults_are_control_only() -> bool:
                 and isinstance(node.ops[0], ast.Lt)
                 and len(node.comparators) == 1
                 and isinstance(node.comparators[0], ast.Constant)
-                and node.comparators[0].value == 1024
+                and node.comparators[0].value == expected_guard
             ):
                 lower_bound_guard_found = True
     return seed_default_found and lower_bound_guard_found
@@ -67,6 +73,7 @@ def main() -> None:
         raw = path.read_text(encoding="utf-8")
         for forbidden in (
             "generate_control_task",
+            "generate_structural_control_task",
             "ControlTaskFamily",
             "held_out_words",
         ):
@@ -83,8 +90,25 @@ def main() -> None:
     if "M033 control tasks require a seed of at least 1024" not in generator_raw:
         failures.append("control generator lacks an explicit primary-seed rejection")
 
-    if not _calibration_defaults_are_control_only():
-        failures.append("calibration runner does not default and fail closed at seed 1024")
+    structural_generator = METAMORPHOSIS / "m033_structural_tasks.py"
+    structural_raw = structural_generator.read_text(encoding="utf-8")
+    if "if seed < STRUCTURAL_CONTROL_SEED_START" not in structural_raw:
+        failures.append("structural generator lacks the seed >=2048 fail-closed guard")
+    if "M033 structural controls require a seed of at least 2048" not in structural_raw:
+        failures.append("structural generator lacks an explicit primary-seed rejection")
+
+    if not _runner_defaults_are_control_only(
+        CONTROL_CALIBRATION,
+        expected_default=1024,
+        expected_guard=1024,
+    ):
+        failures.append("control calibration does not default and fail closed at 1024")
+    if not _runner_defaults_are_control_only(
+        STRUCTURAL_CALIBRATION,
+        expected_default=2048,
+        expected_guard=2048,
+    ):
+        failures.append("structural calibration does not default and fail closed at 2048")
 
     protocol = " ".join(PROTOCOL.read_text(encoding="utf-8").split())
     required_protocol_fragments = (
@@ -103,7 +127,7 @@ def main() -> None:
         raise SystemExit(1)
 
     print("OK   — No pre-M033 module imports or reaches the M033 task surface")
-    print("OK   — Control generator and calibration reject primary seeds")
+    print("OK   — Both control generators and runners reject primary seeds")
     print("OK   — Protocol preserves post-migration reveal and threshold boundaries")
 
 
