@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.23.0 — 2026-08-03
+
+- Added M033's post-migration plasticity rig: six lineage constructors covering the
+  complete migrated M032 lineage, fresh-B, unchanged parent, output-only and the
+  learning-state and learned-tool ablations.
+- Added two disjoint development control blocks — fixed-structure seeds 1024–1031 and
+  four-scaffold structural seeds 2048–2063 — with a static audit proving no pre-M033
+  module reaches the M033 task, target or held-out surfaces.
+- Isolated the learned-tool mechanism causally: median post-reveal candidates were 959
+  for the complete lineage against 976 for fresh-B, the unchanged parent and the
+  learned-tool ablation, cheaper on 8/8 seeds, with 0/8 on the disjoint negative family.
+- Isolated the memory mechanism causally: a relevant transported trace reached a median
+  of 264 candidates against 959 for empty memory and 960 for a permuted trace, cheaper on
+  8/8 seeds, while all three stayed exactly equivalent.
+- Recorded a deliberately mixed structural result — 12/16 complete-lineage wins with
+  per-scaffold directions of 4/4, 4/4, 0/4 and 4/4 — and kept scaffold 2 as a declared
+  counterexample to any rule demanding universal directional improvement.
+- Reported every lifecycle cost as a separate vector rather than one synthetic score, and
+  verified output-only immobility, fail-closed post-migration regression and exact
+  rollback.
+- Passed 27 focused tests, the repository integrity and task-isolation audits and
+  byte-identical replays of both calibration families in run `30792247244`.
+- Kept the reserved primary block 0–63 uninstantiated and unobserved; no post-migration
+  plasticity advantage is claimed and no threshold is frozen.
+
 ## 0.22.0 — 2026-08-03
 
 - Added M032's fail-closed bridge from M025's adopted executable rewrite to M013e's
