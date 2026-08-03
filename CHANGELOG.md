@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.32.0 — 2026-08-03
+
+- Added the `grow` atom to the structural language: duplicate the state holding a role,
+  routing one incoming edge to the twin. It is the only capacity-increasing edit; every
+  other preserves or reduces the state count. Additive by design — `all_atoms()` is
+  unchanged, so every recorded experiment keeps its vocabulary, its reachable set and its
+  digests.
+- Added M036, a single organism that meets a task, proves its body too small, grows and
+  retries. **Recorded as a negative**: it solves 2/8 where the M035 population solves 6/12
+  on the same generator, and a control without growth solves 0 by impossibility.
+- Established that the explicit Myhill–Nerode diagnosis is unnecessary and too weak to
+  gate on. Once growth is in the search vocabulary the search finds when to grow by
+  itself, and the greedy bound missed 3 of 6 cases that genuinely required growth, so
+  gating suppressed exactly the episodes needing it. Failure is the better trigger.
+- Established that growth must be composable rather than preparatory: inside the
+  vocabulary 2/8, as a phase before the search 0/8. A depth-3 trajectory can be
+  edit-grow-edit only if growth is a symbol.
+- Established by exhaustive enumeration that growing is not sufficient: of six cases, the
+  diagnosis missed three, two grew to a reachable target, and one grew to a target still
+  unreachable at depth 3. A size bound says *that* a body must grow, never *where* the
+  missing distinction lives.
+- Corrected a measurement error of this session's own making. M036 was first reported at
+  0/8 as a structural failure; the smoke test used a 60,000-node budget while depth-3
+  enumeration over 44 symbols needs up to 85,184. At the protocol's 200,000 the same code
+  solves 2/8. The conclusion stands, the first number did not.
+
 ## 0.31.0 — 2026-08-03
 
 - Measured the structural ceiling of the existing organism: across 53,280 atom
