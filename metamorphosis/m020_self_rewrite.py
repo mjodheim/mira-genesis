@@ -113,6 +113,9 @@ class RewriteCandidate:
     source: str
     trace: tuple[PatchOperation, ...]
     development: Evaluation
+    # Names of the tools that proposed each step, in order. Provenance only: it is not
+    # part of the ranking key, so recording it cannot change which candidate is selected.
+    proposing_tools: tuple[str, ...] = ()
 
     @property
     def digest(self) -> str:
@@ -127,6 +130,10 @@ class RewriteResult:
     selected: RewriteCandidate
     candidates_evaluated: int
     learned_tool: str | None
+    # Learned tools that already existed when the search started and that proposed a step
+    # of the adopted trace. Gate 9 requires a later cycle to reuse an earlier tool, and
+    # this is the evidence for it.
+    reused_learned_tools: tuple[str, ...] = ()
 
 
 class RewriteTool(Protocol):
@@ -406,6 +413,10 @@ class SelfRewriteEngine:
         function_name: str,
         development_cases: Sequence[Case],
     ) -> RewriteResult:
+        # Captured before the search so that a tool absorbed by *this* cycle is never
+        # counted as reuse of an earlier one.
+        pre_existing_learned = tuple(tool.name for tool in self.registry.learned)
+
         baseline = RewriteCandidate(
             source,
             (),
@@ -453,6 +464,7 @@ class SelfRewriteEngine:
                                 function_name,
                                 development_cases,
                             ),
+                            parent.proposing_tools + (tool.name,),
                         )
                         evaluated += 1
                         next_generation.append(candidate)
@@ -474,6 +486,11 @@ class SelfRewriteEngine:
                 None,
             )
 
+        reused = tuple(
+            dict.fromkeys(
+                name for name in best.proposing_tools if name in pre_existing_learned
+            )
+        )
         learned = self.registry.absorb(best.trace)
         return RewriteResult(
             True,
@@ -482,6 +499,7 @@ class SelfRewriteEngine:
             best,
             evaluated,
             learned.name,
+            reused,
         )
 
 

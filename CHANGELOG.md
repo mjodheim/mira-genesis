@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.28.0 — 2026-08-03
+
+- Added rewrite provenance: `RewriteCandidate.proposing_tools` and
+  `RewriteResult.reused_learned_tools` record which tool proposed each adopted step, so
+  Gate 9's reuse clause can be proved rather than guessed. Provenance is excluded from the
+  ranking key, and all four recorded M033 digests reproduce exactly.
+- Established that a learned tool costs the same edit budget as its constituent
+  primitives: it saves search depth, not budget, since its operations count individually
+  against `max_edits`.
+- **Found a latent correctness defect in the M020 rewrite kernel.** `apply_patch` does not
+  round-trip negative integer constants: `ast.unparse` writes `-2`, re-parsing yields
+  `UnaryOp(USub, Constant(2))`, and each further patch at that index stacks another
+  negation. Constant patches are non-idempotent for negative values, the AST grows without
+  bound, and the search can reach bodies whose outputs leave the declared state range.
+- Audited the blast radius: nothing recorded is contaminated. 776 of 776 adopted sources
+  across the four M033 calibration blocks contain no negative constant.
+- Recorded the defect as D014 and in `FAILURE_LOG.md`, and pinned it with
+  `tests/test_m020_negative_constant_defect.py`. It is deliberately **not** repaired here,
+  because correcting it changes the reachable candidate set and may move recorded digests.
+- **Withdrew the Gate 9 demonstration.** An exhaustive finite check found 4 candidate
+  reuse lineages out of 195 cycle-1/cycle-2 pairs; all four depended on the defect. Gate 9
+  remains undemonstrated and must be re-measured on a corrected kernel.
+
 ## 0.27.0 — 2026-08-03
 
 - Measured D013's predicted repair path instead of leaving it as an argument: a

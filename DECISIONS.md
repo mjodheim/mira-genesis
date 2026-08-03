@@ -176,3 +176,46 @@ wrote. Pinned in `tests/test_m020_multicycle_tool_reactivation.py`.
 Gate 8's learned-tool ablation is therefore measurable on a multi-cycle lineage and not on
 a single-cycle one. That is a sequencing constraint on the roadmap, not a threshold
 choice: Gate 9 must be built before Gate 8's tool comparison can be run at all.
+
+## D014 — A defect in the rewrite kernel is fixed by its owner, not in passing
+
+M020's `apply_patch` does not round-trip negative integer constants: `ast.unparse` writes
+`-2`, re-parsing yields `UnaryOp(USub, Constant(2))`, and each further patch at that index
+stacks another negation. Constant patches are therefore non-idempotent for negative
+values, the AST grows without bound, and the search can reach bodies whose outputs leave
+the declared state range.
+
+The defect sits in the kernel every construction experiment is built on — M023, M024,
+M025, M032, M033 — and `ConstantRewriteTool.values` puts it inside the search space of all
+of them.
+
+### The decision
+
+The defect is **recorded and pinned, not silently repaired.**
+
+Correcting `apply_patch` changes which candidate sources are reachable. That can move the
+recorded calibration digests which D003 treats as evidence, and the repository's rule is
+that no rerun replaces a first attempt. A kernel change with that reach is a protocol-owner
+decision.
+
+`tests/test_m020_negative_constant_defect.py` asserts the current behaviour, so a fix must
+consciously update those tests rather than pass unnoticed.
+
+### What is and is not affected
+
+Nothing recorded is contaminated: 776 of 776 adopted sources across the four M033
+calibration blocks contain no negative constant, and all four digests reproduce exactly.
+The defect is latent in the evidence, not expressed in it.
+
+It was expressed in the Gate 9 exploration that found it. Both candidate reuse lineages
+relied on stacked negations, so that demonstration is withdrawn. Gate 9 remains
+undemonstrated, and whether its reuse clause survives on a corrected kernel must be
+re-measured rather than assumed.
+
+### Corollary
+
+The defect was found by attempting a construction gate, not by the test suite, the
+integrity audit or any experiment's own controls. All of those passed over it for the
+whole life of the stack. That is consistent with what D011 records: on this project the
+judgement apparatus fails before the mechanism does, and only a new demand on the system
+exposes it.

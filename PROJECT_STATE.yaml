@@ -412,6 +412,32 @@ completion_gates_passed_bounded:
   rewritten_body_compiled_after_unknown_substrate_discovery: true
   validated_portable_learning_state_packet: true
 
+known_defects:
+  m020_negative_constant_round_trip:
+    decision: D014
+    mechanism: ast_unparse_writes_minus_two_and_reparse_yields_unaryop_usub_constant_two
+    constant_patch_idempotent_for_positive_values: true
+    constant_patch_idempotent_for_negative_values: false
+    ast_grows_without_bound_under_repeated_negative_patches: true
+    can_leave_declared_state_range: true
+    inside_search_space_of: [M020, M023, M024, M025, M032, M033]
+    recorded_results_contaminated: false
+    adopted_sources_audited: 776
+    adopted_sources_with_negative_constant: 0
+    all_recorded_digests_reproduce: true
+    pinned_by: tests/test_m020_negative_constant_defect.py
+    repaired: false
+    repair_is_protocol_owner_decision: true
+    reason_not_repaired: changes_reachable_candidate_set_and_may_move_recorded_digests
+
+gate_9_status:
+  demonstrated: false
+  exhaustive_pairs_checked: 195
+  candidate_reuse_lineages_found: 4
+  all_candidates_depended_on_the_defect: true
+  demonstration_withdrawn: true
+  must_be_remeasured_on_a_corrected_kernel: true
+
 not_validated:
   - autonomous_fault_diagnosis
   - invention_of_new_rewrite_operation_types
