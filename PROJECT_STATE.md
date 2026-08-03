@@ -245,6 +245,26 @@ pre-result implementation. The full evidence and its limits are in
 - GitHub Actions run: `30650363802`, attempt 1;
 - artifact SHA-256: `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
 
+## Known defect in the rewrite kernel
+
+`apply_patch` does not round-trip negative integer constants. `ast.unparse` writes `-2`,
+re-parsing yields `UnaryOp(USub, Constant(2))`, and each further patch at that index stacks
+another negation. Constant patches are therefore non-idempotent for negative values, the
+AST grows without bound, and the search can reach bodies whose outputs leave the declared
+state range.
+
+The defect sits in M020, so M023, M024, M025, M032 and M033 all inherit it, and
+`ConstantRewriteTool.values` places it inside their search space.
+
+**Nothing recorded is contaminated.** Across the fixed, structural, combined and
+body-anchored M033 calibration blocks, 776 of 776 adopted sources contain no negative
+constant, and all four digests reproduce exactly. The defect is latent in the evidence
+rather than expressed in it.
+
+It is pinned by `tests/test_m020_negative_constant_defect.py` and recorded as D014. It is
+deliberately **not** repaired here: correcting it changes the reachable candidate set and
+may move recorded digests, which is a protocol-owner decision under D003.
+
 ## Not validated
 
 - autonomous diagnosis of a limitation;

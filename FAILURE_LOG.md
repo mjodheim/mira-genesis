@@ -400,3 +400,56 @@ gate with 737 per mille concordance, +500 per mille median paired hidden quality
 This resolves the finite structural-transport question without erasing M029's failure.
 The remaining optimisation problem is still resource viability under non-uniform
 allocation, not whether the component information exists in these two generators.
+
+## M020 — A negative constant does not survive the patch round trip
+
+Found while attempting to demonstrate Gate 9 (repeated improvement cycles), not by a
+failing test. The rewrite kernel has carried this since M020 and every experiment built
+on it inherits the defect: M023, M024, M025, M032 and M033.
+
+### Mechanism
+
+`_IndexedNodeTransformer.visit_Constant` writes `ast.Constant(-2)`. `ast.unparse` renders
+that as `-2`, and re-parsing `-2` yields `UnaryOp(USub, Constant(2))`, because Python has
+no negative integer literal. Every later patch at that index then sees a *positive*
+constant nested inside a negation and wraps another one around it.
+
+### Consequences
+
+- a constant patch is **not idempotent** for negative values: applying `constant[0] = -2`
+  twice yields `--2`, which evaluates to `+2`;
+- the AST grows without bound under repeated negative patches — five applications produce
+  `-----2`;
+- the effective behaviour alternates between two different functions on successive
+  applications;
+- the search can reach bodies whose outputs leave the declared state range, such as a
+  next-state of `-1` in a two-state machine.
+
+`ConstantRewriteTool.values` includes `-2` and `-1`, so the defective path is inside the
+search space of every experiment in the construction stack.
+
+### Blast radius
+
+No recorded result is contaminated. Across the fixed, structural, combined and
+body-anchored M033 calibration artifacts, **776 of 776 adopted sources contain no negative
+constant**, and all four recorded digests reproduce exactly. The defect is latent in those
+runs, not expressed.
+
+It was expressed in the Gate 9 exploration that found it. Both candidate reuse lineages
+depended on stacked negations, so that demonstration is **withdrawn** rather than reported
+as a Gate 9 result.
+
+### Why this is not fixed in the same change
+
+Correcting `apply_patch` changes which candidate sources are reachable, and therefore may
+move recorded calibration digests. Under D003 and the repository's replay discipline, that
+is a protocol-owner decision, not a repair to slip into an unrelated commit. The defect is
+pinned by `tests/test_m020_negative_constant_defect.py`, which asserts the current
+behaviour so that a fix cannot land silently.
+
+### Consequence for Gate 9
+
+Gate 9 remains undemonstrated. The exhaustive finite check found 4 candidate reuse
+lineages out of 195 cycle-1/cycle-2 pairs, all of which relied on the defect. Whether
+Gate 9's reuse clause is satisfiable on a corrected kernel is now an open question, and it
+must be re-run after the fix rather than assumed.
