@@ -8,11 +8,17 @@ ROOT = Path(__file__).resolve().parents[1]
 METAMORPHOSIS = ROOT / "metamorphosis"
 CONTROL_CALIBRATION = ROOT / "scripts" / "run_m033_control_calibration.py"
 STRUCTURAL_CALIBRATION = ROOT / "scripts" / "run_m033_structural_calibration.py"
+COMBINED_CALIBRATION = ROOT / "scripts" / "run_m033_combined_calibration.py"
 PROTOCOL = ROOT / "experiments" / "M033" / "PROTOCOL_DRAFT.md"
+STRUCTURAL_MODULE = "metamorphosis.m033_structural_tasks"
+
+
+def _parse(path: Path) -> ast.Module:
+    return ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
 
 
 def _imports_m033(path: Path) -> list[str]:
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    tree = _parse(path)
     found: list[str] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
@@ -25,7 +31,7 @@ def _imports_m033(path: Path) -> list[str]:
 
 
 def _module_int_constant_equals(path: Path, name: str, expected: int) -> bool:
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    tree = _parse(path)
     for node in tree.body:
         if isinstance(node, ast.Assign):
             if (
@@ -45,25 +51,49 @@ def _module_int_constant_equals(path: Path, name: str, expected: int) -> bool:
     return False
 
 
+def _imports_name(path: Path, module: str, name: str) -> bool:
+    for node in _parse(path).body:
+        if isinstance(node, ast.ImportFrom) and node.module == module:
+            if any(alias.name == name for alias in node.names):
+                return True
+    return False
+
+
+def _matches_value(
+    node: ast.expr,
+    *,
+    expected_literal: int,
+    expected_name: str | None,
+    named_value_imported: bool,
+) -> bool:
+    if isinstance(node, ast.Constant) and node.value == expected_literal:
+        return True
+    return (
+        named_value_imported
+        and expected_name is not None
+        and isinstance(node, ast.Name)
+        and node.id == expected_name
+    )
+
+
 def _runner_defaults_are_control_only(
     path: Path,
     *,
     expected_default: int,
     expected_guard: int,
-    expected_guard_name: str | None = None,
-    expected_guard_module: str | None = None,
+    expected_name: str | None = None,
+    expected_module: str | None = None,
 ) -> bool:
-    tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    tree = _parse(path)
+    named_value_imported = (
+        expected_name is None
+        or (
+            expected_module is not None
+            and _imports_name(path, expected_module, expected_name)
+        )
+    )
     seed_default_found = False
     lower_bound_guard_found = False
-    named_guard_imported = expected_guard_name is None
-
-    if expected_guard_name is not None and expected_guard_module is not None:
-        for node in tree.body:
-            if isinstance(node, ast.ImportFrom) and node.module == expected_guard_module:
-                if any(alias.name == expected_guard_name for alias in node.names):
-                    named_guard_imported = True
-                    break
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
@@ -71,10 +101,11 @@ def _runner_defaults_are_control_only(
                 first = node.args[0]
                 if isinstance(first, ast.Constant) and first.value == "--seed-start":
                     for keyword in node.keywords:
-                        if (
-                            keyword.arg == "default"
-                            and isinstance(keyword.value, ast.Constant)
-                            and keyword.value.value == expected_default
+                        if keyword.arg == "default" and _matches_value(
+                            keyword.value,
+                            expected_literal=expected_default,
+                            expected_name=expected_name,
+                            named_value_imported=named_value_imported,
                         ):
                             seed_default_found = True
         if isinstance(node, ast.Compare):
@@ -84,20 +115,15 @@ def _runner_defaults_are_control_only(
                 and len(node.ops) == 1
                 and isinstance(node.ops[0], ast.Lt)
                 and len(node.comparators) == 1
+                and _matches_value(
+                    node.comparators[0],
+                    expected_literal=expected_guard,
+                    expected_name=expected_name,
+                    named_value_imported=named_value_imported,
+                )
             ):
-                comparator = node.comparators[0]
-                literal_guard = (
-                    isinstance(comparator, ast.Constant)
-                    and comparator.value == expected_guard
-                )
-                named_guard = (
-                    named_guard_imported
-                    and expected_guard_name is not None
-                    and isinstance(comparator, ast.Name)
-                    and comparator.id == expected_guard_name
-                )
-                if literal_guard or named_guard:
-                    lower_bound_guard_found = True
+                lower_bound_guard_found = True
+
     return seed_default_found and lower_bound_guard_found
 
 
@@ -116,6 +142,7 @@ def main() -> None:
         for forbidden in (
             "generate_control_task",
             "generate_structural_control_task",
+            "generate_combined_control_task",
             "ControlTaskFamily",
             "held_out_words",
         ):
@@ -134,16 +161,25 @@ def main() -> None:
 
     structural_generator = METAMORPHOSIS / "m033_structural_tasks.py"
     structural_raw = structural_generator.read_text(encoding="utf-8")
-    if not _module_int_constant_equals(
-        structural_generator,
-        "STRUCTURAL_CONTROL_SEED_START",
-        2048,
+    for name, expected in (
+        ("STRUCTURAL_CONTROL_SEED_START", 2048),
+        ("COMBINED_CONTROL_SEED_START", 3072),
     ):
-        failures.append("structural control seed boundary is not fixed at 2048")
-    if "if seed < STRUCTURAL_CONTROL_SEED_START" not in structural_raw:
-        failures.append("structural generator lacks the seed >=2048 fail-closed guard")
-    if "M033 structural controls require a seed of at least 2048" not in structural_raw:
-        failures.append("structural generator lacks an explicit primary-seed rejection")
+        if not _module_int_constant_equals(structural_generator, name, expected):
+            failures.append(f"{name} is not fixed at {expected}")
+
+    structural_guard = (
+        "if seed < STRUCTURAL_CONTROL_SEED_START or "
+        "seed >= COMBINED_CONTROL_SEED_START"
+    )
+    if structural_guard not in structural_raw:
+        failures.append("structural generator does not fail closed outside 2048–3071")
+    if "M033 structural controls require a seed from 2048 through 3071" not in structural_raw:
+        failures.append("structural generator lacks an explicit closed-block rejection")
+    if "if seed < COMBINED_CONTROL_SEED_START" not in structural_raw:
+        failures.append("combined generator lacks the seed >=3072 fail-closed guard")
+    if "M033 combined controls require a seed of at least 3072" not in structural_raw:
+        failures.append("combined generator lacks an explicit earlier-block rejection")
 
     if not _runner_defaults_are_control_only(
         CONTROL_CALIBRATION,
@@ -155,10 +191,18 @@ def main() -> None:
         STRUCTURAL_CALIBRATION,
         expected_default=2048,
         expected_guard=2048,
-        expected_guard_name="STRUCTURAL_CONTROL_SEED_START",
-        expected_guard_module="metamorphosis.m033_structural_tasks",
+        expected_name="STRUCTURAL_CONTROL_SEED_START",
+        expected_module=STRUCTURAL_MODULE,
     ):
         failures.append("structural calibration does not default and fail closed at 2048")
+    if not _runner_defaults_are_control_only(
+        COMBINED_CALIBRATION,
+        expected_default=3072,
+        expected_guard=3072,
+        expected_name="COMBINED_CONTROL_SEED_START",
+        expected_module=STRUCTURAL_MODULE,
+    ):
+        failures.append("combined calibration does not default and fail closed at 3072")
 
     protocol = " ".join(PROTOCOL.read_text(encoding="utf-8").split())
     required_protocol_fragments = (
@@ -177,7 +221,8 @@ def main() -> None:
         raise SystemExit(1)
 
     print("OK   — No pre-M033 module imports or reaches the M033 task surface")
-    print("OK   — Both control generators and runners reject primary seeds")
+    print("OK   — Fixed, structural and combined control blocks are disjoint")
+    print("OK   — All control generators and runners reject primary seeds")
     print("OK   — Protocol preserves post-migration reveal and threshold boundaries")
 
 
