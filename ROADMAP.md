@@ -19,7 +19,7 @@ target.
 | M014 | Initial portable plasticity | HALTED | Prerequisites revoked; replaced by M014b. |
 | M014b | Sealed portable plasticity | **FAILED** | Exact transport passed; two generalisable-advantage criteria failed. |
 | M014c | Distribution-general plasticity | HALTED — SUPERSEDED | Closed catalogue could not express new structure. |
-| M017 | Self-extending language | READY TO FREEZE | Six gates passed; candidate protocol awaits human signature. |
+| M017 | Self-extending language | SIGNED, FREEZE BLOCKED | §2 thresholds signed; gate 5 re-opened after a false success on an out-of-language control. |
 | M018 | Selective dissolution | HYPOTHESIS NOT SUPPORTED | Destruction did not remove the 0.69× transport liability. |
 | M019 | Selection pressure | RIG NOT VALID | Selection acted before learning could repay its cost. |
 | M020 | Proof-gated self-rewrite | DEVELOPMENT BASE VERIFIED | Strict improvement, adoption, archive, rollback and learned tools passed CI. |

@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.30.0 — 2026-08-03
+
+- Recorded the human signature on the §2 thresholds of M017 and translated the candidate
+  protocol to English before hashing, because D012 governs the active surface and a
+  document frozen forever must be frozen in the repository's language. The French
+  candidate is retained unchanged as the pre-signature record.
+- Added `metamorphosis/m017_sealed.py`, the sealed specification required by §10. Its
+  nonce is derived from the immutable head SHA rather than drawn at random, per §8.3,
+  which is stricter than M012b, M013e and M014b: the environments cannot be computed
+  before the commit they judge, and they reproduce from that commit alone.
+- **Blocked the freeze.** Writing that generator put the admission conditions under a seed
+  set the development bench had never used, and the out-of-language negative control
+  produced a false success: a 7-state target, a 6-state source, a 6-state announced
+  solution that is not equivalent, separated by `(0, 0, 1, 0, 0, 0)`.
+- Established the cause as a scope assumption rather than a coding error. `_confirm`
+  states its own bound — the structural language does not create states, so a target
+  cannot have more than the source — and the negative control is defined by adding one.
+  §3.2 therefore asks the organism to reject targets its own confirmation cannot see.
+- Measured the repair: raising the bound to `source + 1` grows the suite from 34 to 69
+  words and restores detection. Because it also changes query cost, which §2 measures, the
+  bound is a protocol parameter to be signed rather than adjusted after observation.
+- Established that the development pass was a favourable draw. Gate 5 was declared passed
+  on two negative controls; an independent sweep of 24 yields 2 false successes, an escape
+  rate near 8 per cent, so two clean controls occur about 85 per cent of the time.
+- Re-opened gate 5 and recorded the finding in `FAILURE_LOG.md` and §11 of the protocol.
+  This is the third instance in M017 of a small favourable sample taken for a guarantee,
+  after the 96-word probabilistic confirmation and the unminimised W-method hypothesis.
+
 ## 0.29.0 — 2026-08-03
 
 - Repaired the D014 negative-constant defect in the rewrite kernel. The fix is in the
