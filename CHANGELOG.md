@@ -1,5 +1,50 @@
 # Changelog
 
+## 0.34.0 — 2026-08-03
+
+- **Corrected a selector that was named for a mechanism it did not implement.**
+  `minimal_criterion_survivors` admitted on a threshold and then ranked the admitted by
+  agreement, preferred the smaller body on a tie, and truncated. M037's own report
+  asserted that "a minimal criterion admits or rejects; it does not rank" while the code
+  ranked. Found by external review, not by the test suite or any audit.
+- **Withdrew a false attribution.** The rule was justified by M021's 750 per mille.
+  `rank_by_minimal_criterion` filters on viability, ranks the viable by **novelty**, ranks
+  the rejected by energy and lets `Population.select` truncate; M035 implemented none of
+  that. The figure was attributed to a mechanism that was never run.
+- Named three selectors apart, so none borrows another's evidence:
+  `thresholded_elitist_truncation` keeps M035's historical 6/12,
+  `viability_then_novelty` keeps M021's 750 per mille, and the new
+  `population_floor_admission_with_body_diversity` inherits neither and is unmeasured on
+  any sealed block.
+- Separated admission from capacity reduction. Admission consults the score once, at the
+  threshold. Reduction orders by `SHA-256(domain || commitment || seed || generation ||
+  digest)`, which sees no score, no size, no structural cost and no input position, and
+  draws from its own hash rather than the mutation generator — sharing that stream would
+  couple selection to variation.
+- **Fixed a second hidden dependency.** Deduplication kept whichever organism the loop met
+  first per body digest, so permuting the population changed the surviving *lineage* while
+  the surviving *bodies* stayed identical. A separate `representative_key`, under its own
+  domain separator, now decides which lineage represents a body. The invariant test
+  written alongside had compared digests only and passed while the defect was present.
+- Declared the unit of reduction as the **distinct body**, chosen on mechanism before any
+  measurement and named as a diversity policy rather than neutrality: ten clones present
+  one candidacy. Per-individual reduction would let a heavily replicated clone crowd out
+  rare structures by multiplicity alone.
+- Named the admission rule for what it is. The threshold is the current population's
+  minimum score, recomputed each generation and able to fall. A comment claiming it "rises
+  only when the whole population clears it" was false. The near-vacuous bar is deliberate:
+  a neutral duplication carries exactly its parent's score, so any rising bar would
+  eventually exclude the duplicates before they could drift.
+- Requalified M037's replay as **level 2, adopted-mutation replay from a supplied
+  founder** — a Gate 9 prerequisite, not Gate 9. The founder is given as a DFA rather than
+  rebuilt from a seed, and task reveals, observations, rejected candidates, costs and
+  selection decisions are not reproduced.
+- Marked cases 0–11 and 12–23 as consumed. Neither may choose a policy, tune a threshold
+  or confirm a later claim; a fresh guarded block is required before the next experimental
+  decision.
+- Added 16 metamorphic selection tests and recorded the misclassification in
+  `FAILURE_LOG.md`.
+
 ## 0.33.0 — 2026-08-03
 
 - Made the lineage replayable, as Gate 9 requires. Every organism now carries its full

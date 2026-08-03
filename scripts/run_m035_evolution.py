@@ -35,7 +35,7 @@ from metamorphosis.m035_evolution import (
     Organism,
     VariationBudget,
     agreement,
-    minimal_criterion_survivors,
+    thresholded_elitist_truncation,
     offspring,
     replay,
     speciated_survivors,
@@ -102,10 +102,19 @@ def run_arm(
             ):
                 best_score, best_organism = score, org
 
-        # Minimal criterion: a bar, not a ranking. The bar rises only when the whole
-        # population clears it, so the rule never chases the single best lineage.
+        # The threshold is the current population's minimum score, so it admits everyone
+        # except outright failures. It is recomputed each generation and can fall as well
+        # as rise: there is no stored bar. An earlier comment here claimed it "rises only
+        # when the whole population clears it", which was false — no previous threshold
+        # was ever kept.
+        #
+        # `thresholded_elitist_truncation` is M035's historical selector, named for what
+        # it does. It ranks the admitted by agreement, prefers the smaller body on a tie
+        # and truncates. The recorded 6/12 belongs to it, so it is used here unchanged.
+        # `population_floor_admission_with_body_diversity` is the corrected M037 rule and
+        # awaits a sealed block; it is deliberately not measured on consumed cases.
         threshold = max(1, min(score for _, score in scored))
-        select = speciated_survivors if speciate else minimal_criterion_survivors
+        select = speciated_survivors if speciate else thresholded_elitist_truncation
         population = select(scored, threshold, POPULATION)
         if not population:
             population = [founder]

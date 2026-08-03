@@ -97,17 +97,20 @@ def test_structural_cost_grows_with_size():
     assert child.structural_cost() > parent.structural_cost()
 
 
-def test_minimal_criterion_keeps_everyone_above_the_bar():
-    """Not a ranking. Collapsing onto the best destroys the redundancy drift needs."""
-
+def test_the_historical_selector_admits_everyone_above_the_bar():
     bases = _bases(4)
     population = [(Organism(body=b), score) for b, score in zip(bases, (5, 9, 3, 9))]
     survivors = minimal_criterion_survivors(population, threshold=5, capacity=10)
     assert len(survivors) == 3
 
 
-def test_at_equal_agreement_the_smaller_organism_survives():
-    """What stops growth from being free."""
+def test_the_historical_selector_prefers_the_smaller_body():
+    """Historical behaviour of `thresholded_elitist_truncation`, kept for the record.
+
+    It contradicts the M037 definition, under which size plays no part after admission.
+    Retained rather than deleted because M035's recorded result belongs to this selector,
+    and renamed so the contradiction is visible instead of silent.
+    """
 
     base = _bases(1)[0]
     twin = duplicate_state(base, index=duplicable_states(base)[0])

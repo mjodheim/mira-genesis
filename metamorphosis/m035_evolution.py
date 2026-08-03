@@ -314,52 +314,174 @@ def agreement(candidate: DFA, target: DFA, words: Sequence[tuple[int, ...]]) -> 
     return sum(1 for word in words if candidate.accepts(word) == target.accepts(word))
 
 
-def minimal_criterion_survivors(
+# Two independent decisions, two domain separators. Sharing one would make the choice of
+# which bodies survive and the choice of which lineage represents each body correlated
+# through the same hash.
+BODY_SELECTION_DOMAIN = "m037-body-selection-v1"
+REPRESENTATIVE_DOMAIN = "m037-body-representative-v1"
+
+
+def thresholded_elitist_truncation(
     population: Sequence[tuple[Organism, int]],
     threshold: int,
     capacity: int,
 ) -> list[Organism]:
-    """Keep everyone who clears a bar, not the best few.
+    """The selector M035 actually used. Preserved unchanged, under its true name.
 
-    M021 measured four selection rules against exact hidden quality and minimal criterion
-    preserved the most: 750 per mille against 416 for novelty, 312 for a
-    quality-diversity approximation and 0 for the direct objective. Selecting the best
-    collapses the population onto one lineage and destroys the redundancy duplication
-    needs in order to drift.
+    It admits on a threshold, then ranks the admitted by descending agreement, favours
+    the smaller body on a tie, and truncates. That is elitist truncation, not a minimal
+    criterion, and M035's historical 6/12 belongs to *this* implementation.
 
-    Ties are broken by structural cost, so a smaller organism survives a larger one at
-    equal agreement. That is what stops growth from being free.
+    It was previously documented as "chosen from M021's measurement". That attribution
+    was wrong. `rank_by_minimal_criterion` in `m021_measures.py` filters on viability
+    (`ledger.solved > 0`), ranks the viable by **novelty**, ranks the rejected by energy,
+    and lets `Population.select` truncate. M021's 750 per mille belongs to that composite
+    — viability, then novelty, then truncation — and to its own domain. Nothing here
+    inherits it.
     """
 
     qualified = [(org, score) for org, score in population if score >= threshold]
-    if len(qualified) <= capacity:
-        return [org for org, _ in qualified]
+    qualified.sort(key=lambda pair: (-pair[1], pair[0].structural_cost(), pair[0].digest()))
+    return [org for org, _ in qualified[:capacity]]
 
-    # Sorting by score and truncating is elitist selection wearing a minimal criterion's
-    # name. It collapses the population onto the best few, and the measurement shows the
-    # cost: with truncation, raising generations from 60 to 150 changed nothing at all,
-    # on every configuration swept. The population reached a fixed point and stopped
-    # exploring.
-    #
-    # A minimal criterion holds that everyone above the bar is equally admissible. When
-    # more qualify than there is room for, the cut must therefore preserve variety rather
-    # than rank. Distinct bodies are kept first, and only then is the remainder filled.
-    by_body: dict[str, tuple[Organism, int]] = {}
-    for org, score in qualified:
-        key = org.digest()
-        kept = by_body.get(key)
-        if kept is None or org.structural_cost() < kept[0].structural_cost():
-            by_body[key] = (org, score)
 
-    # Ordering the distinct bodies by structural cost was measured at 0/12 on every swept
-    # configuration: cost rises with size, so a size-ordered cut discards precisely the
-    # organisms that have grown. Diversity must be preserved without selecting against
-    # the capacity increase the experiment exists to test.
-    distinct = sorted(
-        by_body.values(),
-        key=lambda pair: (-pair[1], pair[0].structural_cost(), pair[0].digest()),
+def _key(domain: str, *parts: object) -> str:
+    payload = "|".join([domain, *(str(part) for part in parts)])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def body_selection_key(
+    body_digest: str, *, commitment: str, reduction_seed: int, generation: int
+) -> str:
+    """Which bodies survive. Sees no score, no size, no input position."""
+
+    return _key(BODY_SELECTION_DOMAIN, commitment, reduction_seed, generation, body_digest)
+
+
+def representative_key(
+    body_digest: str,
+    ancestry_digest: str,
+    *,
+    commitment: str,
+    reduction_seed: int,
+    generation: int,
+) -> str:
+    """Which lineage represents a body when several converged on it.
+
+    Two organisms can share a body and differ in ancestry, generation, edit and
+    duplication counts. Keeping whichever the loop met first makes the surviving *lineage*
+    depend on input order even when the surviving *bodies* do not — and that leaks into
+    replayability, genealogical depth and every count reported for the winner.
+
+    Separate domain from `body_selection_key`, so the two decisions cannot correlate.
+    """
+
+    return _key(
+        REPRESENTATIVE_DOMAIN,
+        commitment,
+        reduction_seed,
+        generation,
+        body_digest,
+        ancestry_digest,
     )
-    return [org for org, _ in distinct[:capacity]]
+
+
+def ancestry_digest(organism: Organism) -> str:
+    """Identity of a lineage, independent of the body it arrived at."""
+
+    payload = json.dumps(
+        [step.to_dict() for step in organism.ancestry],
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def population_floor_admission_with_body_diversity(
+    population: Sequence[tuple[Organism, int]],
+    threshold: int,
+    capacity: int,
+    *,
+    commitment: str,
+    reduction_seed: int,
+    generation: int,
+) -> list[Organism]:
+    """Admit above a population floor; reduce uniformly over **distinct bodies**.
+
+    Named for what it does. The threshold supplied by the runner is the current
+    population's minimum score, so admission is close to vacuous: it excludes total
+    failures and nothing else. That is deliberate rather than a weakness. A neutral
+    duplication carries *exactly its parent's score*, so any bar that rises would
+    eventually exclude organisms which have not yet improved — which is precisely the
+    neutral duplicates, before they have had the chance to drift. The admission step must
+    not do more than reject outright failure.
+
+    The work is therefore done by the reduction, and its unit is the **distinct body**.
+    That is a declared diversity policy, not neutrality between organisms: ten clones
+    present one candidacy. Chosen on mechanism before any measurement — the property under
+    test is *structural* drift, and per-individual reduction would let a heavily
+    replicated clone crowd out rare structures by multiplicity alone.
+
+    Three decisions, kept apart:
+
+    1. **admission** — score reaches the threshold; its exact value then has no influence;
+    2. **which bodies survive** — `body_selection_key`;
+    3. **which lineage represents each body** — `representative_key`, a separate domain.
+
+    Neither key sees score, size, structural cost or input position, and both derive from
+    an explicit `commitment` rather than the mutation generator: drawing from that stream
+    would make the count of admitted organisms shift every later variation, coupling
+    selection to variation through the random state.
+
+    Growth's cost stays in `VariationBudget` and in the reported result. It is deliberately
+    not reintroduced here as a survival pressure.
+    """
+
+    qualified = [org for org, score in population if score >= threshold]
+    if not qualified:
+        return []
+
+    groups: dict[str, list[Organism]] = {}
+    for org in qualified:
+        groups.setdefault(org.digest(), []).append(org)
+
+    chosen: dict[str, Organism] = {}
+    for digest, members in groups.items():
+        chosen[digest] = min(
+            members,
+            key=lambda org: representative_key(
+                digest,
+                ancestry_digest(org),
+                commitment=commitment,
+                reduction_seed=reduction_seed,
+                generation=generation,
+            ),
+        )
+
+    if len(chosen) <= capacity:
+        return [chosen[digest] for digest in sorted(chosen)]
+
+    ordered = sorted(
+        chosen.items(),
+        key=lambda item: body_selection_key(
+            item[0],
+            commitment=commitment,
+            reduction_seed=reduction_seed,
+            generation=generation,
+        ),
+    )
+    return [org for _, org in ordered[:capacity]]
+
+
+# The name used while the rule was still described as a minimal criterion. Kept as an
+# alias so the correction is visible rather than a silent rename.
+minimal_admission_with_body_diversity = population_floor_admission_with_body_diversity
+
+
+# Historical alias. `minimal_criterion_survivors` named a selector that was not a minimal
+# criterion; the name is kept pointing at the implementation that produced M035's result
+# so that record stays reproducible.
+minimal_criterion_survivors = thresholded_elitist_truncation
 
 
 def speciated_survivors(
