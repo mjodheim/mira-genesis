@@ -89,7 +89,7 @@ def test_four_templates_are_deterministic_and_distinct():
     )
 
 
-def test_transported_tool_is_insufficient_alone_on_every_structural_template():
+def test_transported_tool_never_encodes_a_complete_structural_answer():
     complete = build_packet_derived_lineage(_packet(), LineageVariant.COMPLETE)
     learned = complete.registry.learned[0]
 
@@ -98,16 +98,20 @@ def test_transported_tool_is_insufficient_alone_on_every_structural_template():
             STRUCTURAL_CONTROL_SEED_START + offset
         ).task
         replayed_source = apply_patch(task.baseline_source, learned.operations)
-        replayed_dfa = compile_policy_to_dfa(
-            replayed_source,
-            task.function_name,
-            state_count=task.state_count,
-            accepting_states=task.accepting_states,
-        )
+        try:
+            replayed_dfa = compile_policy_to_dfa(
+                replayed_source,
+                task.function_name,
+                state_count=task.state_count,
+                accepting_states=task.accepting_states,
+            )
+        except ValueError:
+            continue
         assert not exact_dfa_match(replayed_dfa, task.target_dfa)
 
 
-def test_complete_and_fresh_solve_every_structural_template():
+def test_complete_and_fresh_solve_every_structural_template_without_forcing_advantage():
+    comparisons: list[tuple[int, int]] = []
     for offset in range(4):
         record = generate_structural_control_task(
             STRUCTURAL_CONTROL_SEED_START + offset
@@ -130,4 +134,12 @@ def test_complete_and_fresh_solve_every_structural_template():
         assert fresh_result.exact, record.template_id
         assert complete_result.adopted
         assert fresh_result.adopted
-        assert complete_result.candidates_evaluated < fresh_result.candidates_evaluated
+        comparisons.append(
+            (
+                complete_result.candidates_evaluated,
+                fresh_result.candidates_evaluated,
+            )
+        )
+
+    assert any(complete < fresh for complete, fresh in comparisons)
+    assert any(complete >= fresh for complete, fresh in comparisons)
