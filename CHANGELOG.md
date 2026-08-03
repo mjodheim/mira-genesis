@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.29.0 — 2026-08-03
+
+- Repaired the D014 negative-constant defect in the rewrite kernel. The fix is in the
+  reader rather than the writer: `_negative_int_literal` makes both `_TargetCollector` and
+  `_IndexedNodeTransformer` treat a `-<int>` expression as one constant target, so a patch
+  replaces the whole negation instead of the literal nested inside it.
+- Constant patches are now idempotent for every sign, the AST no longer grows under
+  repeated negative patches, and the effective behaviour no longer alternates.
+- Measured the consequence honestly: the repair moves all four recorded M033 digests,
+  because `ConstantRewriteTool.propose` filters on `value != current` and previously read a
+  negative constant as positive. Every search in the construction stack was carrying
+  phantom candidates; removing them lowers candidate medians by 3 to 7 per cent.
+- **No finding changed.** Every paired outcome reproduces identically across the two kernel
+  generations, along with exactness, held-out exactness, output-only immobility and the
+  parent/ablation separation.
+- Recorded D015: artifacts are scoped by the kernel generation that produced them rather
+  than re-run, as M012 is scoped against M012b. A cost figure may only be compared against
+  another from the same generation.
+- Retired `tests/test_m020_negative_constant_defect.py`, which pinned the defective
+  behaviour so a fix could not land unnoticed, and replaced it with
+  `tests/test_m020_negative_constant_round_trip.py`, which guards the repair.
+- Added `MacroCost`, an opt-in edit-budget rule. `PER_OPERATION` is the default and charges
+  a learned tool what its constituent primitives cost; `UNIT` charges it as a single edit.
+  `_rank_key` now ranks on budget rather than trace length, which is identical under the
+  default and lets a one-step macro outrank the longer primitive path it replaces.
+- Added `metamorphosis/m034_reachability.py`, an exact capability measure. Deterministic
+  cost conflates how close a lineage started with how much it can do; the reachable
+  behaviour set separates them, and is enumerable here rather than estimated.
+- Established two results, both pinned: under `PER_OPERATION` a learned tool adds **nothing**
+  to the reachable set at any budget, being a composition of primitives charged what they
+  cost; under `UNIT` it enlarges the set — 2/16 to 4/16 at budget 1, 7/16 to 10/16 at
+  budget 3 — with the old set a proper subset of the new.
+- Gave M017 a decidable success criterion it lacked: does a self-extending language
+  increase reachability at constant budget?
+
 ## 0.28.0 — 2026-08-03
 
 - Added rewrite provenance: `RewriteCandidate.proposing_tools` and
