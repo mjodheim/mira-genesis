@@ -1,0 +1,147 @@
+name: M033 post-migration controls
+
+# Development controls only. Primary post-migration seeds remain unopened.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m033-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run M032 and M033 focused controls
+        run: |
+          pytest -q \
+            tests/test_m032_trans_substrate_lifecycle.py \
+            tests/test_m033_post_migration_plasticity.py \
+            tests/test_m033_memory_controls.py \
+            tests/test_m033_transactions.py \
+            tests/test_m033_evaluation.py \
+            tests/test_m033_structural_tasks.py
+      - name: Audit post-migration task isolation
+        run: python scripts/audit_m033_isolation.py
+      - name: Run fixed-structure control calibration twice
+        run: |
+          python scripts/run_m033_control_calibration.py \
+            --seed-start 1024 \
+            --seeds 8 \
+            --output results/M033_control_calibration.json
+          python scripts/run_m033_control_calibration.py \
+            --seed-start 1024 \
+            --seeds 8 \
+            --output results/M033_control_calibration_replay.json
+          cmp results/M033_control_calibration.json \
+              results/M033_control_calibration_replay.json
+      - name: Verify fixed-structure control gates
+        run: |
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(
+              Path("results/M033_control_calibration.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          summary = payload["summary"]
+          assert payload["version"] == "m033-control-calibration/3"
+          assert payload["cost_units_are_separate"] is True
+          assert payload["seed_start"] == 1024
+          assert payload["seed_count"] == 8
+          assert summary["primary_seed_block_observed"] is False
+          assert summary["all_positive_complete_exact"] is True
+          assert summary["all_positive_fresh_exact"] is True
+          assert summary["all_positive_parent_exact"] is True
+          assert summary["positive_complete_better_than_fresh"] == 8
+          assert summary["positive_complete_better_than_parent"] == 8
+          assert summary["negative_complete_better_than_fresh"] == 0
+          assert summary["all_memory_relevant_exact"] is True
+          assert summary["all_memory_permuted_exact"] is True
+          assert summary["all_memory_empty_exact"] is True
+          assert summary["memory_relevant_better_than_permuted"] == 8
+          assert summary["memory_relevant_better_than_empty"] == 8
+          assert summary["output_only_attempts"] == 0
+          PYTHON
+      - name: Run structural calibration twice
+        run: |
+          python scripts/run_m033_structural_calibration.py \
+            --seed-start 2048 \
+            --seeds 16 \
+            --output results/M033_structural_calibration.json
+          python scripts/run_m033_structural_calibration.py \
+            --seed-start 2048 \
+            --seeds 16 \
+            --output results/M033_structural_calibration_replay.json
+          cmp results/M033_structural_calibration.json \
+              results/M033_structural_calibration_replay.json
+      - name: Verify structural calibration remains mixed
+        run: |
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(
+              Path("results/M033_structural_calibration.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          summary = payload["summary"]
+          assert payload["version"] == "m033-structural-calibration/1"
+          assert payload["seed_start"] == 2048
+          assert payload["seed_count"] == 16
+          assert summary["primary_seed_block_observed"] is False
+          assert summary["templates_covered"] == [0, 1, 2, 3]
+          assert summary["all_complete_exact"] is True
+          assert summary["all_fresh_exact"] is True
+          assert summary["all_complete_held_out_exact"] is True
+          assert 0 < summary["complete_better_than_fresh"] < 16
+          assert summary["output_only_attempts"] == 0
+          for template in summary["by_template"].values():
+              assert template["seeds"] == 4
+              assert template["complete_exact"] == 4
+              assert template["fresh_exact"] == 4
+          PYTHON
+      - name: Audit repository integrity
+        run: python scripts/check_repository_integrity.py
+      - name: Confirm primary tasks remain unopened
+        run: |
+          python - <<'PYTHON'
+          from pathlib import Path
+
+          protocol = Path("experiments/M033/PROTOCOL_DRAFT.md").read_text(
+              encoding="utf-8"
+          )
+          status = Path("experiments/M033/STATUS.md").read_text(encoding="utf-8")
+          assert "Seeds `0–63` are reserved" in protocol
+          assert "does **not** set a numerical advantage threshold" in protocol
+          assert "PRE-THRESHOLD CONTROLS PASSED" in status
+          assert "PRIMARY TASKS UNOBSERVED" in status
+          assert "No result about primary post-migration plasticity is claimed" in status
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m033-pre-threshold-calibration-${{ github.run_id }}
+          path: |
+            results/M033_control_calibration.json
+            results/M033_control_calibration_replay.json
+            results/M033_structural_calibration.json
+            results/M033_structural_calibration_replay.json
+          if-no-files-found: error
+          retention-days: 30
