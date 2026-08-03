@@ -83,6 +83,10 @@ The first development rig must satisfy all of the following before any primary r
 4. no held-out word is reused from those earlier surfaces;
 5. at least one target requires a reusable transformation component available in the
    complete lineage's transported registry or memory;
+5b. that component must be one the migrated body does **not** already encode. The
+   body-anchored control block showed that when the single learned tool applies the same
+   transformation the adopted rewrite baked into the body, the learned-tool ablation ties
+   the complete lineage on every seed and the control measures nothing;
 6. at least one additional operation or composition must still be discovered after
    migration, so replaying a stored answer cannot solve the task;
 7. a fresh lineage can solve a non-zero fraction under the common budget;
@@ -135,6 +139,21 @@ Output-only is a mechanism control, not a cost competitor.
 Seeds `1024+` are reserved for implementation tests, positive controls, negative
 controls and calibration of the task generator. They may never enter the primary
 comparison.
+
+The control blocks are closed and disjoint: `1024–2047` fixed-structure, `2048–3071`
+structural, `3072–4095` combined memory-and-tool, `4096+` body-anchored.
+
+### Task anchor
+
+Each lineage starts a post-migration task from the body it actually migrated. The primary
+comparison must use `TaskAnchor.LINEAGE_BODY`.
+
+The first three control blocks used `TaskAnchor.TASK_BASELINE`, which starts every lineage
+from the task's own baseline source. Under that anchor the migrated body is never read, so
+the unchanged-parent control and the learned-tool ablation present byte-identical surfaces
+and Gate 8 silently loses one of its four required controls. `TASK_BASELINE` remains the
+implementation default only so that those recorded blocks stay byte-reproducible; it may
+not be used for the primary comparison.
 
 ### Confirmation block
 

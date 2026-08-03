@@ -9,6 +9,7 @@ METAMORPHOSIS = ROOT / "metamorphosis"
 CONTROL_CALIBRATION = ROOT / "scripts" / "run_m033_control_calibration.py"
 STRUCTURAL_CALIBRATION = ROOT / "scripts" / "run_m033_structural_calibration.py"
 COMBINED_CALIBRATION = ROOT / "scripts" / "run_m033_combined_calibration.py"
+EMBODIED_CALIBRATION = ROOT / "scripts" / "run_m033_embodied_calibration.py"
 PROTOCOL = ROOT / "experiments" / "M033" / "PROTOCOL_DRAFT.md"
 STRUCTURAL_MODULE = "metamorphosis.m033_structural_tasks"
 
@@ -143,6 +144,7 @@ def main() -> None:
             "generate_control_task",
             "generate_structural_control_task",
             "generate_combined_control_task",
+            "generate_embodied_control_task",
             "ControlTaskFamily",
             "held_out_words",
         ):
@@ -164,6 +166,7 @@ def main() -> None:
     for name, expected in (
         ("STRUCTURAL_CONTROL_SEED_START", 2048),
         ("COMBINED_CONTROL_SEED_START", 3072),
+        ("EMBODIED_CONTROL_SEED_START", 4096),
     ):
         if not _module_int_constant_equals(structural_generator, name, expected):
             failures.append(f"{name} is not fixed at {expected}")
@@ -176,10 +179,18 @@ def main() -> None:
         failures.append("structural generator does not fail closed outside 2048–3071")
     if "M033 structural controls require a seed from 2048 through 3071" not in structural_raw:
         failures.append("structural generator lacks an explicit closed-block rejection")
-    if "if seed < COMBINED_CONTROL_SEED_START" not in structural_raw:
-        failures.append("combined generator lacks the seed >=3072 fail-closed guard")
-    if "M033 combined controls require a seed of at least 3072" not in structural_raw:
-        failures.append("combined generator lacks an explicit earlier-block rejection")
+    combined_guard = (
+        "if seed < COMBINED_CONTROL_SEED_START or "
+        "seed >= EMBODIED_CONTROL_SEED_START"
+    )
+    if combined_guard not in structural_raw:
+        failures.append("combined generator does not fail closed outside 3072–4095")
+    if "M033 combined controls require a seed from 3072 through 4095" not in structural_raw:
+        failures.append("combined generator lacks an explicit closed-block rejection")
+    if "if seed < EMBODIED_CONTROL_SEED_START" not in structural_raw:
+        failures.append("embodied generator lacks the seed >=4096 fail-closed guard")
+    if "M033 embodied controls require a seed of at least 4096" not in structural_raw:
+        failures.append("embodied generator lacks an explicit earlier-block rejection")
 
     if not _runner_defaults_are_control_only(
         CONTROL_CALIBRATION,
@@ -203,6 +214,14 @@ def main() -> None:
         expected_module=STRUCTURAL_MODULE,
     ):
         failures.append("combined calibration does not default and fail closed at 3072")
+    if not _runner_defaults_are_control_only(
+        EMBODIED_CALIBRATION,
+        expected_default=4096,
+        expected_guard=4096,
+        expected_name="EMBODIED_CONTROL_SEED_START",
+        expected_module=STRUCTURAL_MODULE,
+    ):
+        failures.append("embodied calibration does not default and fail closed at 4096")
 
     protocol = " ".join(PROTOCOL.read_text(encoding="utf-8").split())
     required_protocol_fragments = (
@@ -221,7 +240,7 @@ def main() -> None:
         raise SystemExit(1)
 
     print("OK   — No pre-M033 module imports or reaches the M033 task surface")
-    print("OK   — Fixed, structural and combined control blocks are disjoint")
+    print("OK   — Fixed, structural, combined and embodied blocks are disjoint")
     print("OK   — All control generators and runners reject primary seeds")
     print("OK   — Protocol preserves post-migration reveal and threshold boundaries")
 

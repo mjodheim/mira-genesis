@@ -43,6 +43,37 @@ class LineageVariant(StrEnum):
     LEARNED_TOOLS_ABLATED = "learned_tools_ablated"
 
 
+class TaskAnchor(StrEnum):
+    """Where a lineage starts a post-migration task from.
+
+    `TASK_BASELINE` gives every lineage the same starting source, so only the tool
+    registry and learning state can differ.  Under that anchor the migrated body is
+    never read, which makes the unchanged-parent control indistinguishable from the
+    learned-tool ablation whenever the passport holds a single learned tool.
+
+    `LINEAGE_BODY` starts each lineage from the body it actually migrated, so an
+    improved body is a measurable advantage and the two controls separate.
+
+    `TASK_BASELINE` remains the default so that every previously recorded control
+    block stays byte-reproducible.
+    """
+
+    TASK_BASELINE = "task_baseline"
+    LINEAGE_BODY = "lineage_body"
+
+
+def lineage_start_source(
+    lineage: "PostMigrationLineage",
+    task: "ControlTask",
+    anchor: TaskAnchor,
+) -> str:
+    """Return the source this lineage actually starts the given task from."""
+
+    if anchor is TaskAnchor.TASK_BASELINE:
+        return task.baseline_source
+    return lineage.body.active_source
+
+
 PACKET_DERIVED_VARIANTS = (
     LineageVariant.COMPLETE,
     LineageVariant.OUTPUT_ONLY,
@@ -508,13 +539,15 @@ def execute_control_task(
     task: ControlTask,
     *,
     beam_width: int = 64,
+    anchor: TaskAnchor = TaskAnchor.TASK_BASELINE,
 ) -> ControlTaskResult:
     """Run one bounded control task without accessing any primary task generator."""
 
-    task_body = VersionedCodeBody(task.function_name, task.baseline_source)
+    start_source = lineage_start_source(lineage, task, anchor)
+    task_body = VersionedCodeBody(task.function_name, start_source)
     if not lineage.can_rewrite:
         baseline_dfa = compile_policy_to_dfa(
-            task.baseline_source,
+            start_source,
             task.function_name,
             state_count=task.state_count,
             accepting_states=task.accepting_states,
@@ -534,7 +567,7 @@ def execute_control_task(
             quality_per_mille=(1000 * passed) // len(task.development_cases),
             candidates_evaluated=0,
             learned_tool_name=None,
-            final_source=task.baseline_source,
+            final_source=start_source,
             lineage_snapshot_sha256=lineage.snapshot_sha256(),
         )
 
@@ -543,7 +576,7 @@ def execute_control_task(
         max_edits=task.max_edits,
         beam_width=beam_width,
     ).improve(
-        task.baseline_source,
+        start_source,
         task.function_name,
         task.development_cases,
     )

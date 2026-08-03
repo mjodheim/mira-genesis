@@ -1,6 +1,6 @@
 # M033 status
 
-**Status: COMBINED PRE-THRESHOLD CONTROLS PASSED — PRIMARY TASKS UNOBSERVED**
+**Status: BODY-ANCHORED CONTROLS PASSED, GATE 8 NOT MET — PRIMARY TASKS UNOBSERVED**
 
 The protocol reserves primary seeds `0–63`. No implementation on this branch creates
 or evaluates their post-migration tasks.
@@ -101,6 +101,47 @@ rewrite, the adopted rewrite buys nothing on three of the four scaffolds in this
 Raw digest `0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372`, 236
 repository tests, byte-identical replay. See `results/M033_COMBINED_CALIBRATION.md`.
 
+## Body-anchored control effect and the defect it repaired
+
+The fixed, structural and combined blocks all start every lineage from the task's own
+`baseline_source`, so the migrated body is never read. Under that anchor the unchanged
+parent and the learned-tool ablation carry an identical registry and learning state and
+present byte-identical surfaces. They are one Gate 8 control counted twice, which is why
+the combined block returned exactly `8/16/8` for both. The task baseline is also the
+pre-rewrite parent source, so the complete lineage discarded its improved body at the
+start of every task.
+
+`TaskAnchor.LINEAGE_BODY` starts each lineage from the body it migrated.
+`TASK_BASELINE` stays the default, so no recorded block is altered. On seeds `4096–4127`
+the two controls separate on 32 of 32 seeds.
+
+All five learning-capable variants reached exact equivalence and exact held-out quality on
+all 32 tasks. Median candidate counts were 26 for the complete lineage and the
+learned-tool ablation, 144 for the learning-state ablation, 264.5 for the unchanged parent
+and 1,427.5 for fresh-B.
+
+- versus fresh-B: 32 wins, 0 ties, 0 losses;
+- versus the unchanged parent: 32 wins, 0 ties, 0 losses;
+- versus the learning-state ablation: 16 wins, 0 ties, 16 losses;
+- versus the learned-tool ablation: 0 wins, 32 ties, 0 losses.
+
+Raw digest `394f9904b675ac2a8c9d143b8265022b32285efb0d56a01799f45e43b17571a8`,
+byte-identical replay. See `results/M033_EMBODIED_CALIBRATION.md`.
+
+## Gate 8 verdict on control evidence
+
+| Gate 8 control | Status |
+|---|---|
+| beats a fresh organism on B | passes, 32/0/0 |
+| beats the unchanged parent migrated to B | passes, 32/0/0 |
+| beats the learned-tool ablation | fails, 0/32/0 |
+| beats the learning-state ablation | fails, 16/0/16 |
+
+The tool-ablation tie is structural: the single learned tool encodes the same
+transformation the adopted rewrite already baked into the body, so replaying it after
+transport is redundant. This must be corrected in the generator, not absorbed by a
+threshold.
+
 ## Why thresholds are not frozen yet
 
 The fixed-structure controls establish the causal learned-tool and memory mechanisms.
@@ -111,7 +152,9 @@ pooled median.
 
 ## Still missing before primary seeds may open
 
-- a frozen primary generator for seeds `0–63`, committed without instantiating them;
+- a frozen primary generator for seeds `0–63`, committed without instantiating them,
+  which requires a tool transformation the migrated body does not already encode and does
+  not inherit scaffold 2's two-candidate dynamic range;
 - the threshold-freeze amendment defining the primary statistic, directional rule,
   regression limits, abstention limit and artifact identity;
 - an explicit decision on whether beating the unchanged parent is a required gate or a

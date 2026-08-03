@@ -249,7 +249,7 @@ development_state:
     packet_tamper_rejection: true
     post_migration_learning_advantage_supported: false
   M033:
-    status: combined_pre_threshold_controls_passed
+    status: body_anchored_controls_passed_gate_8_not_met
     evaluated_control_commit: 1c4e7b59c9a846d1b16d09ae47ef1c5478450832
     focused_workflow_run: 30792247244
     retained_artifact_id: 8847545755
@@ -328,6 +328,38 @@ development_state:
       learned_tool_branching_cost_on_scaffold_2_candidates: 25
       advantage_over_unchanged_parent: false
       advantage_attributable_to_adopted_rewrite: false
+    embodied:
+      control_seeds: "4096-4127"
+      anchor: lineage_body
+      seeds: 32
+      scaffolds: 4
+      unique_task_digests: 32
+      raw_sha256: 394f9904b675ac2a8c9d143b8265022b32285efb0d56a01799f45e43b17571a8
+      byte_identical_replay: true
+      all_learning_variants_exact: true
+      all_learning_variants_held_out_exact: true
+      candidate_median:
+        complete: 26.0
+        fresh_b: 1427.5
+        unchanged_parent: 264.5
+        learning_state_ablated: 144.0
+        learned_tools_ablated: 26.0
+      complete_vs_fresh_b: {wins: 32, ties: 0, losses: 0}
+      complete_vs_unchanged_parent: {wins: 32, ties: 0, losses: 0}
+      complete_vs_learning_state_ablated: {wins: 16, ties: 0, losses: 16}
+      complete_vs_learned_tools_ablated: {wins: 0, ties: 32, losses: 0}
+      parent_start_distinct_from_tool_ablation: 32
+      defect_repaired: task_baseline_anchor_collapsed_parent_onto_tool_ablation
+      default_anchor_unchanged_so_earlier_blocks_reproduce: true
+      migrated_body_carries_the_advantage: true
+      learned_tool_independent_contribution: false
+      learned_tool_redundant_with_migrated_body: true
+    gate_8_controls:
+      beats_fresh_b: true
+      beats_unchanged_parent: true
+      beats_learned_tool_ablation: false
+      beats_learning_state_ablation: false
+      gate_8_met: false
     output_only_rewrite_attempts: 0
     exact_rollback_on_failed_post_migration_regression: true
     cost_units_reported_separately: true
@@ -335,8 +367,9 @@ development_state:
     post_migration_plasticity_advantage_claimed: false
     open_before_primary_seeds_may_be_opened:
       - frozen_primary_generator_committed_without_instantiating_reserved_seeds
+      - primary_generator_must_require_a_tool_transformation_the_body_does_not_encode
+      - primary_generator_must_not_inherit_scaffold_2_two_candidate_dynamic_range
       - threshold_freeze_amendment_defining_statistic_rule_regressions_and_abstention
-      - declare_whether_unchanged_parent_comparison_is_a_required_gate_or_a_diagnostic
       - declare_whether_a_one_candidate_margin_is_a_win_or_falls_in_an_abstention_band
       - complete_python_3_11_and_3_13_ci_on_frozen_pre_result_implementation
 

@@ -48,7 +48,7 @@ without human architectural intervention. All ten required gates are defined in
 | M030 | DEVELOPMENT CONFIRMATION SUPPORTED | Component-uniform guidance reproduced on untouched seeds 64–127 with 48 wins, 16 ties and no losses. |
 | M031 | DEVELOPMENT STRUCTURAL TRANSPORT SUPPORTED | The signal transported to a split-scaffold triad generator with 43 wins, 18 ties and 3 losses. |
 | M032 | DEVELOPMENT BASE VERIFIED | An adopted rewrite compiles and migrates to an opaque substrate with a validated passport, learned tools and declared learning state; rollback and tamper controls pass. |
-| M033 | COMBINED PRE-THRESHOLD CONTROLS PASSED | Both transported mechanisms are causally isolated but act on disjoint scaffolds; the complete lineage shows no advantage over its unchanged parent. Primary seeds `0–63` remain unopened and no plasticity advantage is claimed. |
+| M033 | BODY-ANCHORED CONTROLS PASSED, GATE 8 NOT MET | A control-design defect collapsed two of Gate 8's four controls; repaired, the migrated body beats fresh-B and the unchanged parent 32/0/0, but the learned tool is redundant with it. Primary seeds `0–63` remain unopened and no plasticity advantage is claimed. |
 
 Only M012b and M013e are positive canonical validations. M014b is a canonical failure.
 M017 and M020–M033 are development evidence and must not be promoted to canonical
@@ -175,6 +175,28 @@ adopted rewrite buys nothing on three of the four scaffolds in this block. A pri
 requiring the complete lineage to beat its own parent would currently fail. The evidence
 is in
 [`results/M033_COMBINED_CALIBRATION.md`](results/M033_COMBINED_CALIBRATION.md).
+
+Auditing that outcome exposed a control-design defect rather than a weak effect. All
+three blocks started every lineage from the task's own baseline source, so the migrated
+body was never read. The unchanged parent and the learned-tool ablation therefore carried
+identical registries and learning states and presented byte-identical surfaces — they
+were one control counted twice, which is why both returned exactly 8/16/8. Worse, the
+task baseline *is* the pre-rewrite parent source, so the complete lineage discarded its
+improved body at the start of every task.
+
+A fourth block on seeds `4096–4127` repeats the comparison with each lineage anchored on
+the body it actually migrated. The default anchor is unchanged, so no recorded block is
+altered. The two controls now separate on 32 of 32 seeds, and the picture changes: the
+complete lineage beats fresh-B **32/0/0** and its own unchanged parent **32/0/0**, at a
+median of 26 candidates against 1,427.5 and 264.5. That is the first M033 evidence that
+transported *competence* does real work after migration.
+
+Gate 8 is still not met, now for a legible reason. The learned-tool ablation ties on all
+32 seeds at an identical median of 26, because the single learned tool encodes the same
+transformation the adopted rewrite already baked into the body — once the body is
+transported, replaying the tool is redundant. The learning-state ablation splits 16/0/16,
+decided on two scaffolds by the single-candidate memory probe. Evidence in
+[`results/M033_EMBODIED_CALIBRATION.md`](results/M033_EMBODIED_CALIBRATION.md).
 
 The reserved primary block `0–63` has never been instantiated or observed, and no
 post-migration plasticity advantage is claimed. Before it may open, M033 still requires a
