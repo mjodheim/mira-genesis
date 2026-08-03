@@ -370,6 +370,12 @@ development_state:
       requires_multi_cycle_or_rolled_back_lineage: true
       gate_8_and_gate_9_not_independent: true
       memory_mechanism_unaffected: true
+      repair_path_measured: true
+      three_cycle_lineage_tools_accumulated: 3
+      three_cycle_lineage_tools_able_to_act_on_final_body: 1
+      newest_tool_always_inert: true
+      earlier_tool_reactivates_once_body_moves_away: true
+      gate_9_is_a_precondition_for_gate_8_tool_control: true
       withdrawn_requirement: primary_generator_must_require_a_tool_transformation_the_body_does_not_encode
     output_only_rewrite_attempts: 0
     exact_rollback_on_failed_post_migration_regression: true
