@@ -1,8 +1,14 @@
 """Structurally varied post-migration task controls for M033.
 
-This module exposes two disjoint development-only blocks.  Seeds 2048–3071 retain the
-original learned-tool structural calibration, while seeds 3072+ exercise the combined
-memory-and-tool execution path.  Neither block exposes the reserved primary seeds.
+This module exposes three disjoint development-only blocks.  Seeds 2048–3071 retain the
+original learned-tool structural calibration, seeds 3072–4095 exercise the combined
+memory-and-tool execution path, and seeds 4096+ repeat that comparison with each lineage
+anchored on the body it actually migrated.  No block exposes the reserved primary seeds.
+
+The embodied block exists because the first two anchor every lineage on the task's own
+baseline source.  Under that anchor the migrated body is never read, so the
+unchanged-parent control and the learned-tool ablation present identical surfaces and
+Gate 8 loses one of its four required controls.
 """
 
 from __future__ import annotations
@@ -19,6 +25,7 @@ from .m033_post_migration_plasticity import ControlTask, ControlTaskFamily
 
 STRUCTURAL_CONTROL_SEED_START = 2048
 COMBINED_CONTROL_SEED_START = 3072
+EMBODIED_CONTROL_SEED_START = 4096
 STRUCTURAL_TEMPLATE_COUNT = 4
 
 
@@ -51,6 +58,26 @@ class CombinedControlTaskRecord:
         return json.dumps(
             {
                 "version": "m033-combined-control-task/1",
+                "template_id": self.template_id,
+                "task": json.loads(self.task.canonical_json()),
+            },
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+
+    def sha256(self) -> str:
+        return hashlib.sha256(self.canonical_json().encode("utf-8")).hexdigest()
+
+
+@dataclass(frozen=True)
+class EmbodiedControlTaskRecord:
+    template_id: int
+    task: ControlTask
+
+    def canonical_json(self) -> str:
+        return json.dumps(
+            {
+                "version": "m033-embodied-control-task/1",
                 "template_id": self.template_id,
                 "task": json.loads(self.task.canonical_json()),
             },
@@ -169,10 +196,20 @@ def generate_structural_control_task(seed: int) -> StructuralTaskRecord:
 
 
 def generate_combined_control_task(seed: int) -> CombinedControlTaskRecord:
-    """Generate a combined memory-and-tool control task, rejecting all earlier blocks."""
+    """Generate a combined control task on the closed 3072–4095 block."""
 
-    if seed < COMBINED_CONTROL_SEED_START:
-        raise ValueError("M033 combined controls require a seed of at least 3072")
+    if seed < COMBINED_CONTROL_SEED_START or seed >= EMBODIED_CONTROL_SEED_START:
+        raise ValueError("M033 combined controls require a seed from 3072 through 4095")
 
     template_id, task = _generate_structural_task(seed)
     return CombinedControlTaskRecord(template_id=template_id, task=task)
+
+
+def generate_embodied_control_task(seed: int) -> EmbodiedControlTaskRecord:
+    """Generate a body-anchored control task, rejecting all earlier blocks."""
+
+    if seed < EMBODIED_CONTROL_SEED_START:
+        raise ValueError("M033 embodied controls require a seed of at least 4096")
+
+    template_id, task = _generate_structural_task(seed)
+    return EmbodiedControlTaskRecord(template_id=template_id, task=task)

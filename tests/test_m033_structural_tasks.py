@@ -25,6 +25,7 @@ from metamorphosis.m033_post_migration_plasticity import (
 )
 from metamorphosis.m033_structural_tasks import (
     COMBINED_CONTROL_SEED_START,
+    EMBODIED_CONTROL_SEED_START,
     STRUCTURAL_CONTROL_SEED_START,
     generate_combined_control_task,
     generate_structural_control_task,
@@ -94,8 +95,10 @@ def test_four_templates_are_deterministic_and_distinct():
 
 
 def test_combined_block_is_disjoint_deterministic_and_structurally_complete():
-    with pytest.raises(ValueError, match="at least 3072"):
+    with pytest.raises(ValueError, match="3072 through 4095"):
         generate_combined_control_task(COMBINED_CONTROL_SEED_START - 1)
+    with pytest.raises(ValueError, match="3072 through 4095"):
+        generate_combined_control_task(EMBODIED_CONTROL_SEED_START)
 
     records = [
         generate_combined_control_task(COMBINED_CONTROL_SEED_START + offset)

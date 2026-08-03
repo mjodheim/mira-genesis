@@ -25,6 +25,8 @@ from .m033_post_migration_plasticity import (
     ControlTask,
     DeterministicCost,
     PostMigrationLineage,
+    TaskAnchor,
+    lineage_start_source,
 )
 
 
@@ -111,11 +113,13 @@ def _decode_memory_row(row: tuple[int, ...]) -> PatchOperation | None:
 def choose_memory_exploration(
     lineage: PostMigrationLineage,
     task: ControlTask,
+    anchor: TaskAnchor = TaskAnchor.TASK_BASELINE,
 ) -> MemoryExplorationDecision:
     """Attempt the first decodable memory operation using development evidence only."""
 
+    start_source = lineage_start_source(lineage, task, anchor)
     baseline = evaluate_source(
-        task.baseline_source,
+        start_source,
         task.function_name,
         task.development_cases,
     )
@@ -135,11 +139,11 @@ def choose_memory_exploration(
             baseline_passed=baseline.passed,
             hinted_passed=baseline.passed,
             candidate_evaluations=0,
-            selected_source=task.baseline_source,
+            selected_source=start_source,
         )
 
     try:
-        hinted_source = apply_patch(task.baseline_source, (operation,))
+        hinted_source = apply_patch(start_source, (operation,))
         hinted = evaluate_source(
             hinted_source,
             task.function_name,
@@ -153,7 +157,7 @@ def choose_memory_exploration(
             baseline_passed=baseline.passed,
             hinted_passed=baseline.passed,
             candidate_evaluations=1,
-            selected_source=task.baseline_source,
+            selected_source=start_source,
         )
 
     accepted = hinted.passed > baseline.passed
@@ -164,7 +168,7 @@ def choose_memory_exploration(
         baseline_passed=baseline.passed,
         hinted_passed=hinted.passed,
         candidate_evaluations=1,
-        selected_source=hinted_source if accepted else task.baseline_source,
+        selected_source=hinted_source if accepted else start_source,
     )
 
 
@@ -173,13 +177,14 @@ def execute_memory_guided_task(
     task: ControlTask,
     *,
     beam_width: int = 64,
+    anchor: TaskAnchor = TaskAnchor.TASK_BASELINE,
 ) -> MemoryControlResult:
     """Run the bounded control task after one memory-directed exploration decision."""
 
     if not lineage.can_rewrite or not lineage.can_update_learning_state:
         raise ValueError("memory control requires a learning-capable lineage")
 
-    decision = choose_memory_exploration(lineage, task)
+    decision = choose_memory_exploration(lineage, task, anchor)
     remaining_edits = task.max_edits - int(decision.accepted)
     if remaining_edits < 1:
         remaining_edits = 1

@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.25.0 — 2026-08-03
+
+- Found and repaired a control-design defect that removed one of Gate 8's four required
+  controls: every earlier M033 block anchored all lineages on the task's own baseline
+  source, so the migrated body was never read and the unchanged parent and the
+  learned-tool ablation presented byte-identical surfaces.
+- Added `TaskAnchor`, leaving `TASK_BASELINE` as the default so the fixed, structural and
+  combined blocks stay byte-reproducible and are not retroactively re-scored; verified by
+  re-running all three after the change and reproducing every recorded digest exactly.
+- Added the body-anchored control block on the disjoint seed range 4096–4127, where the
+  two collapsed controls separate on 32 of 32 seeds.
+- Established that transported competence does real work: the complete lineage beats
+  fresh-B 32/0/0 and its own unchanged parent 32/0/0, at a median of 26 candidates
+  against 1,427.5 and 264.5.
+- Established that the learned tool contributes nothing independent in this rig, tying the
+  complete lineage 0/32/0 at an identical median of 26, because it encodes the same
+  transformation the adopted rewrite already baked into the body.
+- Recorded Gate 8 as unmet with a per-control verdict, and recorded that the remedy is a
+  generator change rather than a threshold change.
+- Verified the isolation and integrity audits and a byte-identical replay with raw digest
+  `394f9904b675ac2a8c9d143b8265022b32285efb0d56a01799f45e43b17571a8`.
+- Left the reserved primary block 0–63 uninstantiated and unobserved.
+
 ## 0.24.0 — 2026-08-03
 
 - Added M033's combined memory-and-tool control block on the disjoint seed range

@@ -35,7 +35,7 @@ target.
 | M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
 | M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
 | M032 | Trans-substrate rewrite lifecycle | DEVELOPMENT BASE VERIFIED | Adopted rewrite compiles and migrates with a validated passport and declared learning state; exact rollback and tamper rejection pass. |
-| M033 | Post-migration plasticity | COMBINED PRE-THRESHOLD CONTROLS PASSED | Both mechanisms isolated causally but acting on disjoint scaffolds; 24/0/8 against fresh-B yet 8/16/8 against the unchanged parent; primary seeds 0–63 unopened. |
+| M033 | Post-migration plasticity | BODY-ANCHORED CONTROLS PASSED, GATE 8 NOT MET | A collapsed control was repaired; the migrated body now beats fresh-B and the parent 32/0/0, but the learned tool ties it 0/32/0; primary seeds 0–63 unopened. |
 | M015 | Memory and strategy | PARTLY ABSORBED BY M032, FUNCTIONAL TEST OPEN | State now transports exactly; its causal learning value remains untested. |
 | M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
 
@@ -186,6 +186,20 @@ median of 264 candidates. Learned tools carry scaffold 3, cutting search from 1,
 568. On scaffold 2 neither helps and the complete lineage loses every comparison. Because
 the unchanged parent retains the same learning state without having adopted the rewrite,
 the adopted rewrite itself buys nothing on three of the four scaffolds.
+
+Auditing that outcome found a defect rather than a weak effect. All three blocks anchored
+every lineage on the task's own baseline source, so the migrated body was never read and
+the unchanged parent and the learned-tool ablation became the same experiment — hence the
+identical 8/16/8. A fourth block on seeds 4096–4127 anchors each lineage on the body it
+migrated, leaving the default and every recorded block untouched.
+
+The repaired picture is sharper. The complete lineage beats fresh-B 32/0/0 and its own
+unchanged parent 32/0/0, at a median of 26 candidates against 1,427.5 and 264.5 — the
+first M033 evidence that transported competence works after migration. But the
+learned-tool ablation ties on all 32 seeds, because the one learned tool encodes the same
+transformation already baked into the transported body. Gate 8 is therefore still unmet,
+and the fix is a generator change, not a threshold change: the primary family must require
+a tool transformation the migrated body does not already encode.
 
 Three gates remain before seeds 0–63 may open: a frozen primary generator committed
 without instantiating them, a threshold-freeze amendment fixing the primary statistic,

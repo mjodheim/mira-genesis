@@ -1,0 +1,108 @@
+name: M033 embodied controls
+
+# Body-anchored calibration only. Primary seeds 0–63 remain unopened.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m033-embodied-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  embodied-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run embodied-control focused tests
+        run: |
+          pytest -q \
+            tests/test_m033_structural_tasks.py \
+            tests/test_m033_combined_calibration.py \
+            tests/test_m033_embodied_calibration.py
+      - name: Audit post-migration task isolation
+        run: python scripts/audit_m033_isolation.py
+      - name: Run embodied calibration twice
+        run: |
+          python scripts/run_m033_embodied_calibration.py \
+            --seed-start 4096 \
+            --seeds 32 \
+            --output results/M033_embodied_calibration.json
+          python scripts/run_m033_embodied_calibration.py \
+            --seed-start 4096 \
+            --seeds 32 \
+            --output results/M033_embodied_calibration_replay.json
+          cmp results/M033_embodied_calibration.json \
+              results/M033_embodied_calibration_replay.json
+      - name: Verify embodied calibration safety and coverage
+        run: |
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(
+              Path("results/M033_embodied_calibration.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          summary = payload["summary"]
+          assert payload["version"] == "m033-embodied-calibration/1"
+          assert payload["cost_units_are_separate"] is True
+          assert payload["anchor"] == "lineage_body"
+          assert payload["seed_start"] == 4096
+          assert payload["seed_count"] == 32
+          assert summary["primary_seed_block_observed"] is False
+          assert summary["templates_covered"] == [0, 1, 2, 3]
+          assert summary["unique_task_digests"] == 32
+          assert summary["output_only_attempts"] == 0
+
+          # The repair this block exists to demonstrate: the unchanged parent and the
+          # learned-tool ablation must start every task from different sources.
+          assert summary["parent_start_distinct_from_tool_ablation"] == 32
+
+          learning_variants = (
+              "complete",
+              "fresh_b",
+              "unchanged_parent",
+              "learning_state_ablated",
+              "learned_tools_ablated",
+          )
+          for variant in learning_variants:
+              assert summary[f"all_{variant}_exact"] is True
+              assert summary[f"all_{variant}_held_out_exact"] is True
+
+          controls = (
+              "fresh_b",
+              "unchanged_parent",
+              "learning_state_ablated",
+              "learned_tools_ablated",
+          )
+          for control in controls:
+              counts = summary[f"complete_vs_{control}"]
+              assert counts["wins"] + counts["ties"] + counts["losses"] == 32
+
+          for template in summary["by_template"].values():
+              assert template["seeds"] == 8
+          PYTHON
+      - name: Audit repository integrity
+        run: python scripts/check_repository_integrity.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m033-embodied-calibration-${{ github.run_id }}
+          path: |
+            results/M033_embodied_calibration.json
+            results/M033_embodied_calibration_replay.json
+          if-no-files-found: error
+          retention-days: 30
