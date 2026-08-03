@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.24.0 — 2026-08-03
+
+- Added M033's combined memory-and-tool control block on the disjoint seed range
+  3072–3103, running the four structural scaffolds through the memory-guided execution
+  path so both transported mechanisms are measured together for the first time.
+- Recorded a mixed and largely negative result: all five learning-capable variants were
+  exactly equivalent on all 32 tasks, and the complete lineage beat fresh-B 24/0/8 but
+  went 8/16/8 against its unchanged parent, 8/16/8 against the learned-tool ablation and
+  16/0/16 against the learning-state ablation.
+- Established that the two mechanisms act on disjoint scaffolds: memory carries scaffolds
+  0 and 1 at a median of 264 candidates, learned tools carry scaffold 3 by cutting search
+  from 1,879 to 568, and neither helps on scaffold 2.
+- Established that the advantage is not attributable to the adopted rewrite, because the
+  unchanged parent retains the same learning state and matches or beats the complete
+  lineage on three of four scaffolds.
+- Charged the memory probe honestly: one candidate evaluation whether accepted or
+  rejected, which alone decides the scaffold-3 loss against the learning-state ablation
+  at 569 against 568.
+- Verified 236 repository tests, the isolation and integrity audits and a byte-identical
+  replay with raw digest
+  `0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372`.
+- Left the reserved primary block 0–63 uninstantiated and added two questions the
+  threshold-freeze amendment must now answer: the status of the unchanged-parent
+  comparison, and whether a one-candidate margin is a win or an abstention.
+
 ## 0.23.0 — 2026-08-03
 
 - Added M033's post-migration plasticity rig: six lineage constructors covering the

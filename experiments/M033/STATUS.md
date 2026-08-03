@@ -1,6 +1,6 @@
 # M033 status
 
-**Status: STRUCTURAL PRE-THRESHOLD CONTROLS PASSED — PRIMARY TASKS UNOBSERVED**
+**Status: COMBINED PRE-THRESHOLD CONTROLS PASSED — PRIMARY TASKS UNOBSERVED**
 
 The protocol reserves primary seeds `0–63`. No implementation on this branch creates
 or evaluates their post-migration tasks.
@@ -68,6 +68,39 @@ Median complete-versus-fresh candidate counts by scaffold were:
 This mixed result supplies the dynamic range needed for threshold design without
 opening or observing any primary task.
 
+## Combined memory-and-tool control effect
+
+A third block on seeds `3072–3103` ran the same four scaffolds through the memory-guided
+path, measuring both transported mechanisms together. All five learning-capable variants
+reached exact equivalence and exact held-out quality on all 32 tasks, so only
+deterministic cost separates them.
+
+The complete lineage beat fresh-B with 24 wins, no ties and 8 losses. Against every
+control that retains transported state it did not win: 8/16/8 against the unchanged
+parent, 8/16/8 against the learned-tool ablation and 16/0/16 against the learning-state
+ablation.
+
+Median candidate counts were 556.0 for the complete lineage, 1,427.5 for fresh-B, 763.5
+for the learning-state ablation and 543.5 for both the unchanged parent and the
+learned-tool ablation.
+
+The mechanisms act on disjoint scaffolds:
+
+- scaffolds 0 and 1: memory is accepted and carries the effect, 264 and 543 candidates
+  against 959 and 1,910 for the learning-state ablation, while the learned-tool ablation
+  and the unchanged parent reach identical values;
+- scaffold 3: memory is rejected and learned tools carry the effect, 569 against 1,879
+  for fresh-B, but the rejected probe costs one candidate and loses 569 to 568 against the
+  learning-state ablation;
+- scaffold 2: both are inert, the memory row is actively misleading and correctly
+  rejected, and the complete lineage loses all four comparisons at 569 against 543.
+
+Because the unchanged parent carries the same learning state without having adopted the
+rewrite, the adopted rewrite buys nothing on three of the four scaffolds in this block.
+
+Raw digest `0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372`, 236
+repository tests, byte-identical replay. See `results/M033_COMBINED_CALIBRATION.md`.
+
 ## Why thresholds are not frozen yet
 
 The fixed-structure controls establish the causal learned-tool and memory mechanisms.
@@ -81,6 +114,11 @@ pooled median.
 - a frozen primary generator for seeds `0–63`, committed without instantiating them;
 - the threshold-freeze amendment defining the primary statistic, directional rule,
   regression limits, abstention limit and artifact identity;
+- an explicit decision on whether beating the unchanged parent is a required gate or a
+  secondary diagnostic, given that the combined block shows no such advantage;
+- an explicit decision on whether a margin of one deterministic evaluation counts as a
+  win or falls inside an abstention band, given that the rejected memory probe alone
+  decides the scaffold-3 comparison;
 - final complete Python 3.11 and 3.13 CI on that frozen pre-result implementation.
 
 See `results/M033_CONTROL_CALIBRATION.md` for the complete evidence and limitations.
