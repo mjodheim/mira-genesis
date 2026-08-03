@@ -50,6 +50,7 @@ jobs:
               )
           )
           summary = payload["summary"]
+          assert payload["version"] == "m033-control-calibration/2"
           assert payload["seed_start"] == 1024
           assert payload["seed_count"] == 8
           assert summary["primary_seed_block_observed"] is False
@@ -59,6 +60,11 @@ jobs:
           assert summary["positive_complete_better_than_fresh"] == 8
           assert summary["positive_complete_better_than_parent"] == 8
           assert summary["negative_complete_better_than_fresh"] == 0
+          assert summary["all_memory_relevant_exact"] is True
+          assert summary["all_memory_permuted_exact"] is True
+          assert summary["all_memory_empty_exact"] is True
+          assert summary["memory_relevant_better_than_permuted"] == 8
+          assert summary["memory_relevant_better_than_empty"] == 8
           assert summary["output_only_attempts"] == 0
           PYTHON
       - name: Audit repository integrity
