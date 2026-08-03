@@ -202,6 +202,14 @@ this, and an earlier requirement claiming otherwise has been withdrawn. The cont
 on a multi-cycle or rolled-back lineage — which makes Gates 8 and 9 dependent. Recorded as
 D013 and pinned in `tests/test_m020_learned_tool_replay_limit.py`.
 
+That repair path is measured, not merely argued. A three-cycle lineage over three distinct
+finite targets accumulates three learned tools, one of which can still act on the final
+body. The mechanism is narrow: the newest tool is always inert, since it is the trace that
+produced the current body, and an earlier tool becomes able to act again only once a later
+cycle moves the body away from what it wrote. Gate 9 is therefore a **precondition** for
+Gate 8's tool comparison — a sequencing constraint on the roadmap rather than a threshold
+choice.
+
 The learning-state ablation genuinely splits 16/0/16, decided on two scaffolds by the
 single-candidate memory probe. Memory is unaffected by the tool limit: it is decoded and
 re-applied against current evidence, so it can act on a body it did not produce. Evidence

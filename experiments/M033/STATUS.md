@@ -146,6 +146,12 @@ multi-cycle or rolled-back lineage, which makes it dependent on Gate 9. See D013
 An earlier version of this file required the primary generator to demand a component the
 body does not encode. That requirement was unsatisfiable and is withdrawn.
 
+The repair path is measured. A three-cycle lineage accumulates three learned tools, one of
+which can still act on its final body. The newest tool is always inert, being the trace
+that produced that body; an earlier tool reactivates once a later cycle moves the body
+away from what it wrote. Gate 9 is therefore a precondition for this control, and M033's
+thresholds may not be frozen before it exists.
+
 ## Why thresholds are not frozen yet
 
 The fixed-structure controls establish the causal learned-tool and memory mechanisms.

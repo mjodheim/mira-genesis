@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.27.0 — 2026-08-03
+
+- Measured D013's predicted repair path instead of leaving it as an argument: a
+  three-cycle lineage over three distinct finite targets accumulates three learned tools,
+  one of which can still act on the final body.
+- Established the exact mechanism: the newest tool is always inert, because it is by
+  construction the trace that produced the current body, and an earlier tool becomes able
+  to act again only once a later cycle moves the body away from what it wrote.
+- Recorded that Gate 9 is a **precondition** for Gate 8's learned-tool comparison, which
+  is a sequencing constraint on the roadmap rather than a threshold choice, and that
+  M033's thresholds may not be frozen before repeated cycles exist.
+- Added `tests/test_m020_multicycle_tool_reactivation.py`, five tests pinning the tool
+  accumulation, the inert newest tool, the reactivation of an earlier tool, and the
+  single-cycle contrast.
+
 ## 0.26.0 — 2026-08-03
 
 - Established that a learned rewrite tool is a literal replay, not a generalising

@@ -161,3 +161,18 @@ to the post-migration task family can repair it.
 
 The memory mechanism is unaffected: it is decoded and re-applied against current evidence,
 so it can act on a body it did not produce, and it does.
+
+### Confirmed repair path
+
+The prediction that repeated cycles restore the condition was then measured rather than
+left as an argument. A three-cycle lineage over three distinct finite targets accumulates
+three learned tools, of which one can still act on the final body.
+
+The mechanism is narrower than "more cycles help". The newest tool is *always* inert,
+because it is by construction the trace that produced the current body. An earlier tool
+becomes able to act again only once a later cycle moves the body away from what that tool
+wrote. Pinned in `tests/test_m020_multicycle_tool_reactivation.py`.
+
+Gate 8's learned-tool ablation is therefore measurable on a multi-cycle lineage and not on
+a single-cycle one. That is a sequencing constraint on the roadmap, not a threshold
+choice: Gate 9 must be built before Gate 8's tool comparison can be run at all.

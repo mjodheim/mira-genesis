@@ -208,6 +208,14 @@ independent. This is D009 recurring at the level of tools: the tool language is 
 the same way the old catalogue was, because a learned tool cannot abstract over the site it
 was learned at. Recorded as D013.
 
+The repair path was then measured. A three-cycle lineage accumulates three learned tools,
+one of which can still act on the final body; the newest is always inert because it is the
+trace that produced that body, and an earlier tool reactivates only once a later cycle
+moves the body away from it. **Gate 9 is therefore a precondition for Gate 8's tool
+comparison.** The roadmap order changes accordingly: repeated improvement cycles come
+before freezing M033's thresholds, because freezing now would fix a rule one of whose four
+controls cannot act.
+
 Three gates remain before seeds 0–63 may open: a frozen primary generator committed
 without instantiating them, a threshold-freeze amendment fixing the primary statistic,
 directional rule, critical regressions, abstention limit and artifact identity, and
