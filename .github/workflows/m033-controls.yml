@@ -16,7 +16,7 @@ concurrency:
 jobs:
   controls:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -31,6 +31,35 @@ jobs:
           pytest -q \
             tests/test_m032_trans_substrate_lifecycle.py \
             tests/test_m033_post_migration_plasticity.py
+      - name: Run eight-seed control calibration
+        run: >-
+          python scripts/run_m033_control_calibration.py
+          --seed-start 1024
+          --seeds 8
+          --output results/M033_control_calibration.json
+      - name: Verify calibration gates without freezing primary thresholds
+        run: |
+          python - <<'PYTHON'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(
+              Path("results/M033_control_calibration.json").read_text(
+                  encoding="utf-8"
+              )
+          )
+          summary = payload["summary"]
+          assert payload["seed_start"] == 1024
+          assert payload["seed_count"] == 8
+          assert summary["primary_seed_block_observed"] is False
+          assert summary["all_positive_complete_exact"] is True
+          assert summary["all_positive_fresh_exact"] is True
+          assert summary["all_positive_parent_exact"] is True
+          assert summary["positive_complete_better_than_fresh"] == 8
+          assert summary["positive_complete_better_than_parent"] == 8
+          assert summary["negative_complete_better_than_fresh"] == 0
+          assert summary["output_only_attempts"] == 0
+          PYTHON
       - name: Audit repository integrity
         run: python scripts/check_repository_integrity.py
       - name: Confirm primary tasks remain unopened
@@ -48,3 +77,9 @@ jobs:
           assert "PRIMARY TASKS UNOBSERVED" in status
           assert "No result about post-migration plasticity is claimed" in status
           PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m033-control-calibration-${{ github.run_id }}
+          path: results/M033_control_calibration.json
+          if-no-files-found: error
+          retention-days: 30
