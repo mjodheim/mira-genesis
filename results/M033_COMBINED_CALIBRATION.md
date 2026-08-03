@@ -24,8 +24,9 @@ has no advantage over its own unchanged parent on this block.**
 
 The digest above is the canonical raw-JSON SHA-256 reported by the runner, which is
 newline-normalised and therefore platform-independent. It was produced locally on
-Python 3.11.15; the workflow re-derives it on Python 3.11 and 3.13 and fails closed if
-the two runs differ.
+Python 3.11.15. The `m033-combined-controls` workflow independently re-derives the
+calibration on Python 3.11, runs it twice and fails closed if the two runs differ. The
+repository test suite, not the calibration, is what runs on both Python 3.11 and 3.13.
 
 The reserved primary block `0–63` was not instantiated or observed.
 
