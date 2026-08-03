@@ -122,3 +122,42 @@ English so the work is readable by the people most likely to find it useful.
 French text predating this decision is translated rather than left in place: a
 half-translated repository is worse than either language, since a reader cannot tell
 which parts they are missing.
+
+## D013 — A replay-only tool cannot evidence transported plasticity
+
+M033's body-anchored control block returned a perfect tie, 0 wins, 32 ties and 0 losses,
+between the complete lineage and its learned-tool ablation. The tie is not a weak effect
+and not a threshold problem. It is structural.
+
+`PatchOperation` binds every edit to a positional AST index, and `LearnedRewriteTool`
+returns its stored operations verbatim. A learned tool is therefore a literal replay of
+past edits at past sites. It cannot fire at an equivalent site with a different index, and
+it encodes a destination value rather than a relative transformation.
+
+Two consequences follow, both measured in `tests/test_m020_learned_tool_replay_limit.py`:
+
+- the tool that produced a body is a no-op on that body;
+- a lineage that has completed one improvement cycle carries exactly that tool.
+
+So under the correct body anchor, a single-cycle lineage's learned-tool ablation compares
+two lineages whose only difference cannot act. The control measures nothing, and no change
+to the post-migration task family can repair it.
+
+### Consequences
+
+- Gate 8's learned-tool control is **structurally uninformative** for single-cycle
+  lineages. A tie there may not be reported as evidence for or against transported
+  plasticity;
+- the requirement this replaces — that the task must demand a component the body does not
+  encode — was unsatisfiable and is withdrawn. The real precondition is a property of the
+  lineage: its registry must hold a tool it is not already expressing;
+- that condition arises naturally from rollback, or from the repeated improvement cycles
+  Gate 9 already requires. Gate 8 and Gate 9 are therefore not independent, and Gate 8's
+  tool control should be evaluated on a multi-cycle lineage;
+- this is D009 recurring one level up. D009 rejected choosing better inside a closed
+  catalogue; here the language of *tools* is closed in the same way, since a learned tool
+  cannot abstract over the site it was learned at. Whether M017's self-extending language
+  lifts this limit is now a concrete, testable question rather than a general aspiration.
+
+The memory mechanism is unaffected: it is decoded and re-applied against current evidence,
+so it can act on a body it did not produce, and it does.

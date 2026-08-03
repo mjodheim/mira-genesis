@@ -83,10 +83,6 @@ The first development rig must satisfy all of the following before any primary r
 4. no held-out word is reused from those earlier surfaces;
 5. at least one target requires a reusable transformation component available in the
    complete lineage's transported registry or memory;
-5b. that component must be one the migrated body does **not** already encode. The
-   body-anchored control block showed that when the single learned tool applies the same
-   transformation the adopted rewrite baked into the body, the learned-tool ablation ties
-   the complete lineage on every seed and the control measures nothing;
 6. at least one additional operation or composition must still be discovered after
    migration, so replaying a stored answer cannot solve the task;
 7. a fresh lineage can solve a non-zero fraction under the common budget;
@@ -97,6 +93,23 @@ The first development rig must satisfy all of the following before any primary r
 The task generator may share abstract transformation structure with pre-migration
 experience, but it may not share a complete answer. That distinction is the mechanism
 under test.
+
+### Precondition on the lineage, not the task
+
+The learned-tool ablation is informative only if the transported registry holds at least
+one tool that is **not** a no-op on the transported body. No choice of target can create
+that property, because it is a relation between the registry and the body rather than
+between the lineage and the task.
+
+A single-cycle lineage cannot satisfy it. The tool it carries is precisely the trace that
+produced its body, and `LearnedRewriteTool` replays fixed operations at fixed AST indices,
+so reapplying it to that body is a no-op. This is measured, not assumed: see
+`tests/test_m020_learned_tool_replay_limit.py` and D013.
+
+Until a lineage carries a tool it is not already expressing — through rollback, or through
+the repeated cycles Gate 9 requires — the learned-tool ablation must be reported as
+**structurally uninformative** rather than as a passed or failed control. Reporting a tie
+there as evidence about transported plasticity would be a category error.
 
 ## Cost accounting
 

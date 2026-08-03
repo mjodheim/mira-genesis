@@ -352,14 +352,25 @@ development_state:
       defect_repaired: task_baseline_anchor_collapsed_parent_onto_tool_ablation
       default_anchor_unchanged_so_earlier_blocks_reproduce: true
       migrated_body_carries_the_advantage: true
-      learned_tool_independent_contribution: false
-      learned_tool_redundant_with_migrated_body: true
+      learned_tool_control_structurally_uninformative: true
+      learned_tool_is_a_noop_on_the_body_it_produced: true
     gate_8_controls:
       beats_fresh_b: true
       beats_unchanged_parent: true
-      beats_learned_tool_ablation: false
+      beats_learned_tool_ablation: structurally_uninformative
       beats_learning_state_ablation: false
       gate_8_met: false
+    learned_tool_replay_limit:
+      decision: D013
+      patch_operations_bound_to_positional_ast_index: true
+      learned_tool_replays_operations_verbatim: true
+      single_cycle_lineage_carries_only_the_trace_that_produced_its_body: true
+      repairable_by_changing_task_targets: false
+      precondition_is_a_property_of_the_lineage_not_the_task: true
+      requires_multi_cycle_or_rolled_back_lineage: true
+      gate_8_and_gate_9_not_independent: true
+      memory_mechanism_unaffected: true
+      withdrawn_requirement: primary_generator_must_require_a_tool_transformation_the_body_does_not_encode
     output_only_rewrite_attempts: 0
     exact_rollback_on_failed_post_migration_regression: true
     cost_units_reported_separately: true
@@ -367,7 +378,7 @@ development_state:
     post_migration_plasticity_advantage_claimed: false
     open_before_primary_seeds_may_be_opened:
       - frozen_primary_generator_committed_without_instantiating_reserved_seeds
-      - primary_generator_must_require_a_tool_transformation_the_body_does_not_encode
+      - evaluate_the_learned_tool_control_on_a_multi_cycle_or_rolled_back_lineage
       - primary_generator_must_not_inherit_scaffold_2_two_candidate_dynamic_range
       - threshold_freeze_amendment_defining_statistic_rule_regressions_and_abstention
       - declare_whether_a_one_candidate_margin_is_a_win_or_falls_in_an_abstention_band

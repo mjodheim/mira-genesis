@@ -92,11 +92,11 @@ now wins 32/32 (26 against 264.5). Both comparisons were previously unmeasurable
 the first M033 evidence that transported competence — rather than transported tool
 registry or memory — does real work after migration.
 
-**The learned tool contributes nothing independent.** The tool ablation ties the complete
-lineage on all 32 seeds, at an identical median of 26. The reason is structural, not
-statistical: the single learned tool encodes the same transformation the adopted rewrite
-already baked into the body. Once the body is transported, replaying the tool is
-redundant.
+**The learned-tool control cannot act.** The tool ablation ties the complete lineage on all
+32 seeds at an identical median of 26. The single learned tool is the trace that produced
+the body, and replaying it there is a no-op, so the two lineages differ by nothing that can
+fire. This is a statement about the rewrite language, not about transported plasticity;
+see the correction under *Consequences for Gate 8* and D013.
 
 **Memory helps only when relevant, and is charged when it is not.** It is accepted on
 scaffolds 0 and 1, cutting 263 candidates to 26. It is rejected on scaffolds 2 and 3,
@@ -112,14 +112,25 @@ than a measurement artifact:
 |---|---|
 | beats a fresh organism on B | **passes**, 32/0/0 |
 | beats the unchanged parent migrated to B | **passes**, 32/0/0 |
-| beats the learned-tool ablation | **fails**, 0/32/0 — tool is redundant with the body |
+| beats the learned-tool ablation | **structurally uninformative**, 0/32/0 |
 | beats the learning-state ablation | **fails**, 16/0/16 — scaffold-dependent |
 
-The tool-ablation tie is a rig design consequence that must be fixed before the primary
-comparison, not a threshold to be relaxed. To measure an independent learned-tool
-contribution, the post-migration family must require a transformation the tool supplies
-and the migrated body does **not** already encode. In the present generator those two
-things are the same operation.
+**Correction.** This document first recorded the tool-ablation tie as a generator defect
+repairable by requiring a component the body does not encode. That was wrong, and the
+requirement has been withdrawn. The tie cannot be repaired by any choice of target.
+
+`PatchOperation` binds each edit to a positional AST index and `LearnedRewriteTool`
+replays its operations verbatim, so a learned tool is a literal replay at fixed sites. The
+tool a lineage carries after one improvement cycle is exactly the trace that produced its
+body, and reapplying it to that body is a no-op — measured on 8/8 packets and pinned in
+`tests/test_m020_learned_tool_replay_limit.py`. Under the correct body anchor the complete
+lineage and its tool ablation therefore differ by something that cannot act.
+
+The precondition is a property of the lineage, not the task: the registry must hold a tool
+it is not already expressing. That arises from rollback, or from the repeated cycles Gate 9
+requires. Gate 8's tool control should be evaluated on a multi-cycle lineage; until then a
+tie there is not evidence about transported plasticity in either direction. Recorded as
+D013.
 
 The learning-state split is a genuine scaffold-dependence and belongs in the
 threshold-freeze amendment as an abstention question: the deciding margin on scaffolds 2

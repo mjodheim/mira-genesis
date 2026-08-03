@@ -195,11 +195,18 @@ migrated, leaving the default and every recorded block untouched.
 
 The repaired picture is sharper. The complete lineage beats fresh-B 32/0/0 and its own
 unchanged parent 32/0/0, at a median of 26 candidates against 1,427.5 and 264.5 — the
-first M033 evidence that transported competence works after migration. But the
-learned-tool ablation ties on all 32 seeds, because the one learned tool encodes the same
-transformation already baked into the transported body. Gate 8 is therefore still unmet,
-and the fix is a generator change, not a threshold change: the primary family must require
-a tool transformation the migrated body does not already encode.
+first M033 evidence that transported competence works after migration.
+
+The remaining tie against the learned-tool ablation then turned out to be a second
+structural limit rather than a tunable one. A learned tool replays fixed operations at
+fixed AST indices, and the tool a single-cycle lineage carries is precisely the trace that
+produced its body, so applying it there is a no-op. The complete lineage and its tool
+ablation differ by something that cannot act, and no choice of task target changes that.
+The control is structurally uninformative rather than failed, Gate 8's tool comparison must
+be run on a multi-cycle or rolled-back lineage, and Gates 8 and 9 are therefore not
+independent. This is D009 recurring at the level of tools: the tool language is closed in
+the same way the old catalogue was, because a learned tool cannot abstract over the site it
+was learned at. Recorded as D013.
 
 Three gates remain before seeds 0–63 may open: a frozen primary generator committed
 without instantiating them, a threshold-freeze amendment fixing the primary statistic,
