@@ -24,7 +24,9 @@ from metamorphosis.m033_post_migration_plasticity import (
     execute_control_task,
 )
 from metamorphosis.m033_structural_tasks import (
+    COMBINED_CONTROL_SEED_START,
     STRUCTURAL_CONTROL_SEED_START,
+    generate_combined_control_task,
     generate_structural_control_task,
 )
 
@@ -67,9 +69,11 @@ def _packet() -> str:
     return outcome.packet_json
 
 
-def test_structural_generator_rejects_primary_and_old_control_blocks():
-    with pytest.raises(ValueError, match="at least 2048"):
+def test_structural_generator_rejects_all_other_seed_blocks():
+    with pytest.raises(ValueError, match="2048 through 3071"):
         generate_structural_control_task(STRUCTURAL_CONTROL_SEED_START - 1)
+    with pytest.raises(ValueError, match="2048 through 3071"):
+        generate_structural_control_task(COMBINED_CONTROL_SEED_START)
 
 
 def test_four_templates_are_deterministic_and_distinct():
@@ -84,6 +88,29 @@ def test_four_templates_are_deterministic_and_distinct():
         record.canonical_json()
         == generate_structural_control_task(
             STRUCTURAL_CONTROL_SEED_START + offset
+        ).canonical_json()
+        for offset, record in enumerate(records)
+    )
+
+
+def test_combined_block_is_disjoint_deterministic_and_structurally_complete():
+    with pytest.raises(ValueError, match="at least 3072"):
+        generate_combined_control_task(COMBINED_CONTROL_SEED_START - 1)
+
+    records = [
+        generate_combined_control_task(COMBINED_CONTROL_SEED_START + offset)
+        for offset in range(4)
+    ]
+    assert {record.template_id for record in records} == {0, 1, 2, 3}
+    assert len({record.sha256() for record in records}) == 4
+    assert all(
+        '"version":"m033-combined-control-task/1"' in record.canonical_json()
+        for record in records
+    )
+    assert all(
+        record.canonical_json()
+        == generate_combined_control_task(
+            COMBINED_CONTROL_SEED_START + offset
         ).canonical_json()
         for offset, record in enumerate(records)
     )
