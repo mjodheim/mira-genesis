@@ -453,3 +453,27 @@ Gate 9 remains undemonstrated. The exhaustive finite check found 4 candidate reu
 lineages out of 195 cycle-1/cycle-2 pairs, all of which relied on the defect. Whether
 Gate 9's reuse clause is satisfiable on a corrected kernel is now an open question, and it
 must be re-run after the fix rather than assumed.
+
+### Resolution of the M020 negative-constant defect
+
+Repaired by making the reader, not the writer, treat a `-<int>` expression as one constant
+target. `_negative_int_literal` is now consulted by both `_TargetCollector` and
+`_IndexedNodeTransformer`, so a patch replaces the whole negation instead of the literal
+nested inside it.
+
+Constant patches are idempotent for every sign, the AST no longer grows under repeated
+negative patches, the effective behaviour no longer alternates, and a body whose outputs
+leave the declared state range is now rejected by the reachability evaluator rather than
+silently accepted.
+
+The repair moves all four recorded M033 digests, because `ConstantRewriteTool.propose`
+filters on `value != current` and previously read a negative constant as positive. Every
+search in the construction stack was therefore carrying phantom candidates that could only
+stack negations. Removing them lowers candidate medians by 3 to 7 per cent.
+
+**No finding changed.** All paired outcomes reproduce identically across the two kernel
+generations. The generation-1 artifacts are kept and scoped rather than re-run, per D015.
+
+`tests/test_m020_negative_constant_defect.py`, which pinned the defective behaviour so a
+fix could not land unnoticed, has been retired and replaced by
+`tests/test_m020_negative_constant_round_trip.py`, which guards the repair.

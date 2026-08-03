@@ -219,3 +219,47 @@ integrity audit or any experiment's own controls. All of those passed over it fo
 whole life of the stack. That is consistent with what D011 records: on this project the
 judgement apparatus fails before the mechanism does, and only a new demand on the system
 exposes it.
+
+## D015 — Recorded artifacts are valid for the kernel generation that produced them
+
+D014 recorded the negative-constant round-trip defect and deliberately left it unrepaired,
+because correcting it changes the reachable candidate set. The repair has now been made,
+and it does move every recorded M033 digest:
+
+| Block | Kernel generation 1 | Kernel generation 2 |
+|---|---|---|
+| fixed `1024–1031` | `e189142c…` | `d5ecb380…` |
+| structural `2048–2063` | `117de3c3…` | `1c639111…` |
+| combined `3072–3103` | `0ef00f0f…` | `c8213448…` |
+| body-anchored `4096–4127` | `394f9904…` | `1a7ac8c3…` |
+
+### The decision
+
+The generation-1 artifacts are **kept, not re-run and not withdrawn.**
+
+They remain exact evidence of what the rig did under the kernel that produced them. That
+is the same treatment the repository already gives M012 against M012b and M013d against
+M013e: a superseded run is not deleted, it is scoped.
+
+Every recorded digest is therefore read as a statement about a kernel generation, and any
+future artifact must name the generation it belongs to.
+
+### Why re-running was rejected
+
+Not because it would be inconvenient, but because **no finding changes.** The paired
+outcomes are identical across the two generations — `complete_vs_fresh_b`,
+`complete_vs_unchanged_parent`, `complete_vs_learning_state_ablated`,
+`complete_vs_learned_tools_ablated`, exactness, held-out exactness, output-only immobility
+and the parent/ablation separation all reproduce. Only the candidate medians fall, by 3 to
+7 per cent, which is the removal of phantom candidates the defect injected into every
+search in the stack.
+
+Re-running would replace intact evidence with cosmetically different numbers and would
+contradict the rule that no rerun replaces a first attempt. Scoping costs nothing and
+preserves both.
+
+### Consequence
+
+A cost figure may only be compared against another cost figure from the same kernel
+generation. This is a narrower version of the discipline D010 already imposes: a measured
+quantity needs a dynamic range, and it also needs a fixed instrument.

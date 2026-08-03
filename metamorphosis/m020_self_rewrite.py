@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import ast
 from dataclasses import dataclass, field
+from enum import StrEnum
 import hashlib
 from typing import Iterable, Protocol, Sequence
 
@@ -116,6 +117,9 @@ class RewriteCandidate:
     # Names of the tools that proposed each step, in order. Provenance only: it is not
     # part of the ranking key, so recording it cannot change which candidate is selected.
     proposing_tools: tuple[str, ...] = ()
+    # Edit budget consumed. Equal to len(trace) under MacroCost.PER_OPERATION, and smaller
+    # when a learned tool is charged as a single edit.
+    budget_used: int = 0
 
     @property
     def digest(self) -> str:
@@ -142,6 +146,19 @@ class RewriteTool(Protocol):
     def propose(self, source: str) -> Iterable[tuple[PatchOperation, ...]]: ...
 
 
+def _negative_int_literal(node: ast.AST) -> int | None:
+    """Return the value of a `-<int>` expression, or None if the node is not one."""
+
+    if (
+        isinstance(node, ast.UnaryOp)
+        and isinstance(node.op, ast.USub)
+        and isinstance(node.operand, ast.Constant)
+        and type(node.operand.value) is int
+    ):
+        return -node.operand.value
+    return None
+
+
 class _TargetCollector(ast.NodeVisitor):
     """Collect patch targets in the exact preorder used by the transformer."""
 
@@ -149,6 +166,16 @@ class _TargetCollector(ast.NodeVisitor):
         self.constants: list[int] = []
         self.binary_operators: list[ast.operator] = []
         self.comparison_operators: list[ast.cmpop] = []
+
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> None:
+        # Python has no negative integer literal: `-2` parses as USub over Constant(2).
+        # Treat that pair as one constant target of value -2, and do not descend, so the
+        # inner Constant is not counted a second time. Without this, a patch writing a
+        # negative value stacks another negation on every reapplication (D014).
+        if _negative_int_literal(node) is not None:
+            self.constants.append(_negative_int_literal(node))
+            return
+        self.generic_visit(node)
 
     def visit_Constant(self, node: ast.Constant) -> None:
         if type(node.value) is int:
@@ -178,6 +205,17 @@ class _IndexedNodeTransformer(ast.NodeTransformer):
         self.operation = operation
         self.position = -1
         self.applied = False
+
+    def visit_UnaryOp(self, node: ast.UnaryOp) -> ast.AST:
+        # Mirror `_TargetCollector`: a `-<int>` expression is one constant target, and
+        # replacing it must replace the whole negation rather than the literal inside it.
+        if self.operation.kind != "constant" or _negative_int_literal(node) is None:
+            return self.generic_visit(node)
+        self.position += 1
+        if self.position == self.operation.index:
+            self.applied = True
+            return ast.copy_location(ast.Constant(int(self.operation.value)), node)
+        return node
 
     def visit_Constant(self, node: ast.Constant) -> ast.AST:
         if self.operation.kind != "constant" or type(node.value) is not int:
@@ -385,6 +423,24 @@ class ToolRegistry:
         return tool
 
 
+class MacroCost(StrEnum):
+    """How a learned tool is charged against the edit budget.
+
+    `PER_OPERATION` charges each operation of a learned tool separately, so the tool costs
+    exactly what its constituent primitives cost. Under that rule a learned tool is
+    provably unable to enlarge the reachable set: anything it reaches is a composition of
+    primitives already reachable within the same budget. It can only reorder search.
+
+    `UNIT` charges a learned tool as one edit. Retained experience then becomes reachable
+    capability rather than a shortcut, which is what D009 means by extending the language.
+
+    `PER_OPERATION` is the default so every recorded block stays byte-reproducible.
+    """
+
+    PER_OPERATION = "per_operation"
+    UNIT = "unit"
+
+
 class SelfRewriteEngine:
     """Search candidate bodies and adopt only deterministic strict improvements."""
 
@@ -394,6 +450,7 @@ class SelfRewriteEngine:
         *,
         max_edits: int = 2,
         beam_width: int = 32,
+        macro_cost: MacroCost = MacroCost.PER_OPERATION,
     ) -> None:
         if max_edits < 1:
             raise ValueError("max_edits must be positive")
@@ -402,10 +459,14 @@ class SelfRewriteEngine:
         self.registry = registry or ToolRegistry()
         self.max_edits = max_edits
         self.beam_width = beam_width
+        self.macro_cost = macro_cost
 
     @staticmethod
     def _rank_key(candidate: RewriteCandidate) -> tuple[int, int, str]:
-        return (-candidate.development.passed, len(candidate.trace), candidate.digest)
+        # `budget_used` equals `len(trace)` under MacroCost.PER_OPERATION, so this key is
+        # unchanged for every recorded block. Under MacroCost.UNIT it lets a one-step
+        # macro outrank the longer primitive path it replaces.
+        return (-candidate.development.passed, candidate.budget_used, candidate.digest)
 
     def improve(
         self,
@@ -441,9 +502,15 @@ class SelfRewriteEngine:
             next_generation: list[RewriteCandidate] = []
             for parent in frontier:
                 for tool in self.registry.tools():
+                    charge_as_one = (
+                        self.macro_cost is MacroCost.UNIT
+                        and isinstance(tool, LearnedRewriteTool)
+                    )
                     for proposed in tool.propose(parent.source):
                         trace = parent.trace + tuple(proposed)
-                        if len(trace) > self.max_edits:
+                        step_cost = 1 if charge_as_one else len(proposed)
+                        budget_used = parent.budget_used + step_cost
+                        if budget_used > self.max_edits:
                             continue
                         try:
                             candidate_source = apply_patch(parent.source, proposed)
@@ -465,6 +532,7 @@ class SelfRewriteEngine:
                                 development_cases,
                             ),
                             parent.proposing_tools + (tool.name,),
+                            budget_used,
                         )
                         evaluated += 1
                         next_generation.append(candidate)

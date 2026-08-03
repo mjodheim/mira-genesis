@@ -245,25 +245,59 @@ pre-result implementation. The full evidence and its limits are in
 - GitHub Actions run: `30650363802`, attempt 1;
 - artifact SHA-256: `0b5cf2df20dc4fc05dba3f1540c6d07c557ebd4c4d963d6e6286d90358a2f28a`.
 
-## Known defect in the rewrite kernel
+## Kernel generations
 
-`apply_patch` does not round-trip negative integer constants. `ast.unparse` writes `-2`,
-re-parsing yields `UnaryOp(USub, Constant(2))`, and each further patch at that index stacks
-another negation. Constant patches are therefore non-idempotent for negative values, the
-AST grows without bound, and the search can reach bodies whose outputs leave the declared
-state range.
+The rewrite kernel had a defect that made `apply_patch` fail to round-trip negative
+integer constants: `ast.unparse` wrote `-2`, re-parsing yielded `UnaryOp(USub,
+Constant(2))`, and each further patch at that index stacked another negation. Constant
+patches were non-idempotent for negative values, the AST grew without bound, and the
+search could reach bodies whose outputs left the declared state range. Recorded as D014.
 
-The defect sits in M020, so M023, M024, M025, M032 and M033 all inherit it, and
-`ConstantRewriteTool.values` places it inside their search space.
+It is now repaired, in the reader rather than the writer: `_negative_int_literal` makes the
+collector and the transformer treat a `-<int>` expression as one constant target.
 
-**Nothing recorded is contaminated.** Across the fixed, structural, combined and
-body-anchored M033 calibration blocks, 776 of 776 adopted sources contain no negative
-constant, and all four digests reproduce exactly. The defect is latent in the evidence
-rather than expressed in it.
+The repair moves every recorded M033 digest, because `ConstantRewriteTool.propose` filters
+on `value != current` and previously read a negative constant as positive. Every search in
+the stack was carrying phantom candidates. Removing them lowers candidate medians by 3 to
+7 per cent.
 
-It is pinned by `tests/test_m020_negative_constant_defect.py` and recorded as D014. It is
-deliberately **not** repaired here: correcting it changes the reachable candidate set and
-may move recorded digests, which is a protocol-owner decision under D003.
+**No finding changed.** All paired outcomes reproduce identically across both generations,
+along with exactness, held-out exactness, output-only immobility and the parent/ablation
+separation.
+
+Artifacts are therefore scoped by kernel generation rather than re-run, per D015:
+
+| Block | Generation 1 | Generation 2 |
+|---|---|---|
+| fixed `1024–1031` | `e189142c…` | `d5ecb380…` |
+| structural `2048–2063` | `117de3c3…` | `1c639111…` |
+| combined `3072–3103` | `0ef00f0f…` | `c8213448…` |
+| body-anchored `4096–4127` | `394f9904…` | `1a7ac8c3…` |
+
+A cost figure may only be compared against another from the same generation.
+
+## Reachability — an exact capability measure
+
+Deterministic search cost is a proxy, and the body-anchored block exposed what it
+conflates: the complete lineage beat its parent 32/0/0 largely because it *started* from a
+better body, which is transported output rather than transported capability.
+
+`m034_reachability.py` measures instead the set of behaviours obtainable from a body
+within a budget. It is finite and enumerable here, so it is ground truth. A better body
+moves where that set sits; a genuine transported capability makes it larger at a common
+body.
+
+Two results are established and pinned:
+
+1. under the current cost rule a learned tool adds **nothing** to the reachable set, at
+   every budget. It is a composition of primitives charged exactly what those primitives
+   cost, so anything it reaches was already reachable. It can only reorder search;
+2. charging a learned tool as a **single** edit does enlarge the set — 2/16 to 4/16 at
+   budget 1, 7/16 to 10/16 at budget 3 — with the old set a proper subset of the new.
+
+That is D009 at the level of tools, in its minimal measurable form, and it gives M017 a
+decidable success criterion it did not have: does a self-extending language increase
+reachability at constant budget?
 
 ## Not validated
 

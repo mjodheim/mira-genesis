@@ -412,23 +412,48 @@ completion_gates_passed_bounded:
   rewritten_body_compiled_after_unknown_substrate_discovery: true
   validated_portable_learning_state_packet: true
 
-known_defects:
+resolved_defects:
   m020_negative_constant_round_trip:
-    decision: D014
+    decisions: [D014, D015]
     mechanism: ast_unparse_writes_minus_two_and_reparse_yields_unaryop_usub_constant_two
-    constant_patch_idempotent_for_positive_values: true
-    constant_patch_idempotent_for_negative_values: false
-    ast_grows_without_bound_under_repeated_negative_patches: true
-    can_leave_declared_state_range: true
-    inside_search_space_of: [M020, M023, M024, M025, M032, M033]
-    recorded_results_contaminated: false
-    adopted_sources_audited: 776
-    adopted_sources_with_negative_constant: 0
-    all_recorded_digests_reproduce: true
-    pinned_by: tests/test_m020_negative_constant_defect.py
-    repaired: false
-    repair_is_protocol_owner_decision: true
-    reason_not_repaired: changes_reachable_candidate_set_and_may_move_recorded_digests
+    repaired: true
+    repair: reader_treats_unaryop_usub_over_int_constant_as_one_constant_target
+    repaired_in: metamorphosis/m020_self_rewrite.py
+    guarded_by: tests/test_m020_negative_constant_round_trip.py
+    retired_pin: tests/test_m020_negative_constant_defect.py
+    constant_patch_idempotent_for_every_sign: true
+    ast_stable_under_repeated_negative_patches: true
+    out_of_range_bodies_now_rejected_by_reachability_evaluator: true
+    phantom_candidates_removed_from_every_search_in_the_stack: true
+    candidate_median_reduction_per_cent: [3, 7]
+
+kernel_generations:
+  policy: artifacts_are_scoped_by_generation_not_re_run
+  decision: D015
+  findings_changed_by_the_repair: 0
+  paired_outcomes_identical_across_generations: true
+  cost_comparable_only_within_a_generation: true
+  generation_1_digests:
+    fixed_1024_1031: e189142ccbe1465caf76a30d22b8f294974c2c2dcce1e224f3e61748c7f8b5bb
+    structural_2048_2063: 117de3c31b03afcdb4a7f20eb6b2a5877513045e7f1540a6e03a026d63bb0723
+    combined_3072_3103: 0ef00f0f4168a95235f33050751b7871366ad1e2d2c08ed07bfb90b908423372
+    body_anchored_4096_4127: 394f9904b675ac2a8c9d143b8265022b32285efb0d56a01799f45e43b17571a8
+  generation_2_digests:
+    fixed_1024_1031: d5ecb38038887ab3a52b9b8ad2c6ec0df539d47ca305c040303394f4b675096f
+    structural_2048_2063: 1c639111efed51727861c840cb8828976df73674a25260d749d7a63c5d134e35
+    combined_3072_3103: c82134489c768000aea04b5406d93e6b4d7936378b52e5474474791ac10e04cb
+    body_anchored_4096_4127: 1a7ac8c3d5f9509dc8ec6ac8ab193549b3912d64be40172af92e3cd81ee7010b
+
+reachability_measure:
+  module: metamorphosis/m034_reachability.py
+  rationale: cost_conflates_starting_position_with_capability
+  exact_not_proxied: true
+  learned_tool_adds_reachability_under_per_operation_cost: false
+  learned_tool_adds_reachability_under_unit_cost: true
+  reachable_of_16_budget_1: {no_tools: 2, per_operation: 2, unit: 4}
+  reachable_of_16_budget_3: {no_tools: 7, per_operation: 7, unit: 10}
+  old_set_is_proper_subset_of_new: true
+  gives_m017_a_decidable_success_criterion: true
 
 gate_9_status:
   demonstrated: false
