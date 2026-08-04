@@ -4,7 +4,6 @@ name: M026 decidable metaproductivity
 # versioned 64-seed result remains a separately recorded development run.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

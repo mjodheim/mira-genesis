@@ -4,7 +4,6 @@ name: M031 structural transport
 # 0-63 remains untouched until the recorded pre-result commit.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

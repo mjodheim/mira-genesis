@@ -4,7 +4,6 @@ name: M021 development comparison
 # the full 24-seed paired comparison. Neither path can produce a canonical result.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

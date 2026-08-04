@@ -4,7 +4,6 @@ name: M027 seeded clade guidance
 # remains a separately recorded local development run.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

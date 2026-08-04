@@ -3,7 +3,6 @@ name: M033 post-migration controls
 # Development controls only. Primary post-migration seeds remain unopened.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:
