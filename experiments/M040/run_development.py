@@ -3,12 +3,23 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+from typing import Mapping, Sequence
 
 from metamorphosis.m040_engine import (
     DEVELOPMENT_COMMITMENT,
     DEVELOPMENT_SEED,
     run_m040_development,
 )
+
+
+def _json_value(value: object) -> object:
+    if isinstance(value, bytes):
+        return {"encoding": "hex", "value": value.hex()}
+    if isinstance(value, Mapping):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        return [_json_value(item) for item in value]
+    return value
 
 
 def main() -> int:
@@ -23,7 +34,7 @@ def main() -> int:
         protocol_commitment=args.protocol_commitment,
         require_replay=True,
     )
-    payload = result.mapping(include_records=True)
+    payload = _json_value(result.mapping(include_records=True))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(
         json.dumps(payload, sort_keys=True, indent=2) + "\n",
