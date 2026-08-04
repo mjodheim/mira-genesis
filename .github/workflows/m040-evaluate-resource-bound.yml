@@ -1,0 +1,97 @@
+name: Evaluate M040 resource bound
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-evaluate-resource-bound.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Apply the committed seed and equal node budget
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          engine = engine.replace('DEVELOPMENT_SEED = 400_044', 'DEVELOPMENT_SEED = 400_045', 1)
+          engine = engine.replace(
+              'POST_MIGRATION_NODE_BUDGET = 20_000',
+              'POST_MIGRATION_NODE_BUDGET = 4_096',
+              1,
+          )
+          engine_path.write_text(engine)
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          pattern = re.compile(
+              r'def test_post_migration_controls_have_the_committed_direction\(result\) -> None:\n.*?\n\ndef test_packet_requires_',
+              re.S,
+          )
+          replacement = '''def test_post_migration_controls_have_the_committed_direction(result) -> None:
+              arms = result.arms
+              assert arms["complete_migrated_lineage"].exact is True
+              for name in (
+                  "fresh_on_b",
+                  "unchanged_parent_migrated",
+                  "output_only",
+                  "learned_tool_ablated",
+              ):
+                  assert arms[name].exact is False
+              assert (
+                  arms["complete_migrated_lineage"].counters["symbolic_search_nodes"]
+                  < arms["learning_state_ablated"].counters["symbolic_search_nodes"]
+              )
+              assert result.trans_substrate_continuity_supported is True
+              assert result.post_migration_plasticity_supported is True
+
+
+          def test_packet_requires_'''
+          tests, count = pattern.subn(replacement, tests)
+          if count != 1:
+              raise SystemExit(f'control-test replacement matched {count} blocks')
+          tests_path.write_text(tests)
+          PY
+      - name: Compile and evaluate seed 400045
+        run: |
+          python -m py_compile metamorphosis/m040_engine.py tests/test_m040_post_migration.py
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Produce consumed result 005
+        run: |
+          python experiments/M040/run_development.py \
+            --seed 400045 \
+            --output results/artifacts/M040_DEVELOPMENT_005.json
+          sha256sum results/artifacts/M040_DEVELOPMENT_005.json
+          wc -c results/artifacts/M040_DEVELOPMENT_005.json
+      - name: Archive workflow and commit the measured result
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          cp .github/workflows/m040-evaluate-resource-bound.yml archives/workflows/m040-evaluate-resource-bound.yml
+          git rm .github/workflows/m040-evaluate-resource-bound.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            results/artifacts/M040_DEVELOPMENT_005.json \
+            archives/workflows/m040-evaluate-resource-bound.yml
+          git commit -m 'feat(m040): evaluate calibrated equal resource bound on seed 400045'
+          git push origin "HEAD:${BRANCH}"
