@@ -1,15 +1,20 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 from pathlib import Path
 
 import pytest
 
-from scripts.check_m041_canonical_guard import (
-    ARM_MESSAGE,
-    GuardError,
-    inspect_arm,
-)
+_SCRIPT = Path(__file__).resolve().parents[1] / "scripts" / "check_m041_canonical_guard.py"
+_SPEC = importlib.util.spec_from_file_location("m041_canonical_guard_script", _SCRIPT)
+assert _SPEC is not None and _SPEC.loader is not None
+_GUARD = importlib.util.module_from_spec(_SPEC)
+_SPEC.loader.exec_module(_GUARD)
+
+ARM_MESSAGE = _GUARD.ARM_MESSAGE
+GuardError = _GUARD.GuardError
+inspect_arm = _GUARD.inspect_arm
 
 HEAD = "1" * 40
 PARENT = "2" * 40
