@@ -1,0 +1,98 @@
+name: Preserve M040 development result 006
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-preserve-result-006.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preserve:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Reconstruct the exact mechanism executed on seed 400046
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          import textwrap
+
+          workflow = Path('.github/workflows/m040-evaluate-lineage-anchor-v3.yml').read_text()
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          script = textwrap.dedent(workflow[start:end])
+          exec(compile(script, 'm040-lineage-anchor-v3', 'exec'))
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          pattern = re.compile(
+              r'def test_lineage_anchor_task_is_derived_after_packet_validation\(result\) -> None:\n.*?\Z',
+              re.S,
+          )
+          replacement = '''def test_consumed_seed_400046_used_the_actual_prefix_family(result) -> None:
+              packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+              accepted = tuple(result.arms["complete_migrated_lineage"].accepted_tool_ids)
+              assert result.task.task_family == "prefix_plus_primitive"
+              assert accepted == result.task.generating_tool_ids
+              assert accepted[:-1] in packet.learning_state.continuation_programs
+              assert accepted not in packet.learning_state.continuation_programs
+              assert result.task.digest() not in result.packet_json
+          '''
+          tests, count = pattern.subn(replacement, tests)
+          if count != 1:
+              raise SystemExit(f'actual-family test replacement matched {count} blocks')
+          tests_path.write_text(tests)
+          PY
+      - name: Verify the reproduced mechanism
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_anchor.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Produce exact reproduction artefact
+        run: |
+          python experiments/M040/run_development.py \
+            --seed 400046 \
+            --output results/artifacts/M040_DEVELOPMENT_006.json
+          sha256sum results/artifacts/M040_DEVELOPMENT_006.json
+          wc -c results/artifacts/M040_DEVELOPMENT_006.json
+      - name: Archive temporary workflows and commit the reproduced mechanism
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          for workflow in \
+            m040-evaluate-resource-bound.yml \
+            m040-evaluate-lineage-anchor.yml \
+            m040-evaluate-lineage-anchor-v2.yml \
+            m040-evaluate-lineage-anchor-v3.yml \
+            m040-preserve-result-006.yml
+          do
+            cp ".github/workflows/${workflow}" "archives/workflows/${workflow}"
+            git rm ".github/workflows/${workflow}"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            results/artifacts/M040_DEVELOPMENT_006.json \
+            archives/workflows
+          git commit -m 'feat(m040): preserve actual positive seed-400046 prefix result'
+          git push origin "HEAD:${BRANCH}"
