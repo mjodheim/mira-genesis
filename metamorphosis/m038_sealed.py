@@ -17,14 +17,14 @@ SPEC_VERSION = "m038-sealed-spec/1"
 
 
 def _full_sha(value: str, *, name: str) -> str:
-    candidate = value.strip().lower()
+    candidate = value.strip()
     if not _HEAD_SHA.match(candidate):
         raise ValueError(f"{name} must be a full 40-character lowercase commit SHA")
     return candidate
 
 
 def _protocol_digest(value: str) -> str:
-    candidate = value.strip().lower()
+    candidate = value.strip()
     if not _PROTOCOL_SHA256.match(candidate):
         raise ValueError("protocol SHA-256 must be 64 lowercase hexadecimal characters")
     return candidate
