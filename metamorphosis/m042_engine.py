@@ -11,20 +11,25 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Mapping, Sequence
+from typing import Mapping
 
 from .m012b_dfa import DFA, exact_equivalence
-from .m013e_lab import make_positive_machine
+from .m013e_lab import OpaqueBooleanMachine, make_positive_machine
 from .m039_engine import dfa_digest
-from .m039_lineage import ORIGIN_LINEAGE_CONSTRUCTED, ORIGIN_PROTOCOL_SUPPLIED
+from .m039_lineage import (
+    LineageTool,
+    ORIGIN_LINEAGE_CONSTRUCTED,
+    ORIGIN_PROTOCOL_SUPPLIED,
+)
 from .m040_anchor import (
+    LineageAnchorTask,
     M040AnchorError,
     derive_adapted_programs,
     generate_lineage_anchor_task,
 )
 from .m040_engine import (
     M040DevelopmentResult,
-    M040EngineError,
+    NativeSynthesis,
     OBSERVATIONS,
     POST_MIGRATION_DEPTH,
     POST_MIGRATION_NODE_BUDGET,
@@ -36,10 +41,11 @@ from .m040_engine import (
     _synthesise_native,
     run_m040_development,
 )
+from .m040_packet import M040TransportPacket
 from .m040_packet_verify import rehydrate_packet
 from .m041_engine import _PreAdoptionCapture
 from .m041_isolated_validation import IsolatedDFAWorkspace, dfa_candidate_digest
-from .structural import flip, normalize_dfa, apply_atom
+from .structural import apply_atom, flip, normalize_dfa
 
 BASE_MASTER_SEED = 18_441_616_668_168_956_400
 BASE_PROTOCOL_COMMITMENT = (
@@ -55,6 +61,18 @@ _RESULT_DOMAIN = b"m042-constructive-continuation-result-v1"
 
 class M042EngineError(RuntimeError):
     pass
+
+
+@dataclass(frozen=True)
+class _BankContext:
+    packet: M040TransportPacket
+    parent: DFA
+    unchanged_parent: DFA
+    registry: tuple[LineageTool, ...]
+    primitive_registry: tuple[LineageTool, ...]
+    lineage_ids: frozenset[str]
+    machine: OpaqueBooleanMachine
+    parent_native: NativeSynthesis
 
 
 @dataclass(frozen=True)
@@ -167,90 +185,121 @@ def _base_lineage() -> tuple[M040DevelopmentResult, tuple[Mapping[str, object], 
     return base, validations
 
 
-def _entry_for_seed(
-    *,
-    base: M040DevelopmentResult,
-    task_seed: int,
-) -> M042BankEntry | None:
+def _bank_context(base: M040DevelopmentResult) -> _BankContext:
     packet = rehydrate_packet(base.packet_json, expected_sha256=base.packet_sha256)
     full_base = base.arms["complete_migrated_lineage"]
     parent = full_base.accepted_body
     if parent is None or not full_base.exact:
         raise M042EngineError("M040 base lacks its exact accepted body")
-    unchanged_parent = packet.source_dfa()
     registry = tuple(packet.tool_registry)
     primitive_registry = tuple(
         tool for tool in registry if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
     )
-    lineage_ids = {
+    lineage_ids = frozenset(
         tool.tool_id for tool in registry if tool.provenance.origin == ORIGIN_LINEAGE_CONSTRUCTED
-    }
+    )
+    machine_seed = _derive_seed(BASE_MASTER_SEED, "opaque-machine", BASE_PROTOCOL_COMMITMENT)
+    machine = make_positive_machine(machine_seed, machine_seed % 3)
+    parent_native = _synthesise_native(
+        parent,
+        machine,
+        packet,
+        _derive_seed(BASE_MASTER_SEED, "post-native-synthesis", BASE_PROTOCOL_COMMITMENT),
+    )
+    expected_native = str(base.accepted_native["native_body_sha256"])
+    actual_native = hashlib.sha256(parent_native.body.to_json().encode("utf-8")).hexdigest()
+    if actual_native != expected_native:
+        raise M042EngineError("M040 accepted native body did not reproduce exactly")
+    return _BankContext(
+        packet=packet,
+        parent=parent,
+        unchanged_parent=packet.source_dfa(),
+        registry=registry,
+        primitive_registry=primitive_registry,
+        lineage_ids=lineage_ids,
+        machine=machine,
+        parent_native=parent_native,
+    )
+
+
+def _candidate_task(
+    context: _BankContext,
+    task_seed: int,
+) -> tuple[LineageAnchorTask, tuple[tuple[str, ...], ...]] | None:
     try:
-        anchor = generate_lineage_anchor_task(
-            packet=packet,
-            founder=parent,
+        task = generate_lineage_anchor_task(
+            packet=context.packet,
+            founder=context.parent,
             task_seed=task_seed,
             maximum_depth=POST_MIGRATION_DEPTH,
             node_budget=POST_MIGRATION_NODE_BUDGET,
             observations=OBSERVATIONS,
         )
-        preferred_programs = derive_adapted_programs(
-            packet,
+        programs = derive_adapted_programs(
+            context.packet,
             task_seed=task_seed,
             maximum_depth=POST_MIGRATION_DEPTH,
         )
     except M040AnchorError:
         return None
+    return task, programs
 
-    target = anchor.target
+
+def _entry_for_task(
+    *,
+    context: _BankContext,
+    task: LineageAnchorTask,
+    preferred_programs: tuple[tuple[str, ...], ...],
+) -> M042BankEntry | None:
+    target = task.target
     observations = _observations(target)
-    certificate = _certificate(parent, observations)
+    certificate = _certificate(context.parent, observations)
     full = _search_arm(
         arm="complete_continued_lineage",
-        founder=parent,
+        founder=context.parent,
         target=target,
         observations=observations,
-        registry=registry,
-        preferred_tool_ids=packet.learning_state.preferred_tool_ids,
+        registry=context.registry,
+        preferred_tool_ids=context.packet.learning_state.preferred_tool_ids,
         preferred_programs=preferred_programs,
         adapt_prefixes=True,
     )
     memory_ablated = _search_arm(
         arm="learning_state_ablated",
-        founder=parent,
+        founder=context.parent,
         target=target,
         observations=observations,
-        registry=registry,
+        registry=context.registry,
         preferred_tool_ids=(),
     )
     fresh = _search_arm(
         arm="fresh_on_b",
-        founder=parent,
+        founder=context.parent,
         target=target,
         observations=observations,
-        registry=primitive_registry,
+        registry=context.primitive_registry,
         preferred_tool_ids=(),
     )
     tool_ablated = _search_arm(
         arm="learned_tool_ablated",
-        founder=parent,
+        founder=context.parent,
         target=target,
         observations=observations,
-        registry=primitive_registry,
+        registry=context.primitive_registry,
         preferred_tool_ids=(),
     )
     unchanged = _search_arm(
         arm="unchanged_parent_migrated",
-        founder=unchanged_parent,
+        founder=context.unchanged_parent,
         target=target,
         observations=observations,
-        registry=primitive_registry,
+        registry=context.primitive_registry,
         preferred_tool_ids=(),
     )
     output_only = _search_arm(
         arm="output_only",
         founder=None,
-        output_quality_body=parent,
+        output_quality_body=context.parent,
         target=target,
         observations=observations,
         registry=(),
@@ -262,7 +311,7 @@ def _entry_for_seed(
     }
     if not full.exact or full.accepted_body is None:
         return None
-    if not any(tool_id in lineage_ids for tool_id in full.accepted_tool_ids):
+    if not any(tool_id in context.lineage_ids for tool_id in full.accepted_tool_ids):
         return None
     if any(
         arms[name].exact
@@ -280,7 +329,7 @@ def _entry_for_seed(
         return None
 
     validation = IsolatedDFAWorkspace().evaluate(
-        parent=parent,
+        parent=context.parent,
         candidate=full.accepted_body,
         target=target,
         observations=observations,
@@ -289,21 +338,13 @@ def _entry_for_seed(
     if not validation.perfect:
         return None
 
-    machine_seed = _derive_seed(BASE_MASTER_SEED, "opaque-machine", BASE_PROTOCOL_COMMITMENT)
-    machine = make_positive_machine(machine_seed, machine_seed % 3)
     native = _synthesise_native(
         full.accepted_body,
-        machine,
-        packet,
-        _derive_seed(task_seed, "m042-native", DEVELOPMENT_COMMITMENT),
+        context.machine,
+        context.packet,
+        _derive_seed(task.task_seed, "m042-native", DEVELOPMENT_COMMITMENT),
     )
-    parent_native = _synthesise_native(
-        parent,
-        machine,
-        packet,
-        _derive_seed(BASE_MASTER_SEED, "post-native-synthesis", BASE_PROTOCOL_COMMITMENT),
-    )
-    versioned = VersionedNativePair(parent, parent_native.body.to_json())
+    versioned = VersionedNativePair(context.parent, context.parent_native.body.to_json())
     versioned.adopt(full.accepted_body, native.body.to_json())
     accepted_source = dfa_digest(versioned.source)
     accepted_native_json = versioned.native_json
@@ -313,9 +354,9 @@ def _entry_for_seed(
     bad_body = normalize_dfa(bad_raw)
     bad_native = _synthesise_native(
         bad_body,
-        machine,
-        packet,
-        _derive_seed(task_seed, "m042-bad-native", DEVELOPMENT_COMMITMENT),
+        context.machine,
+        context.packet,
+        _derive_seed(task.task_seed, "m042-bad-native", DEVELOPMENT_COMMITMENT),
     )
     versioned.adopt(bad_body, bad_native.body.to_json())
     bad_exact, _ = exact_equivalence(versioned.source, target)
@@ -330,12 +371,12 @@ def _entry_for_seed(
         return None
 
     task_mapping = {
-        **anchor.mapping(),
-        "task_digest": anchor.digest(),
+        **task.mapping(),
+        "task_digest": task.digest(),
         "observation_count": len(observations),
     }
     return M042BankEntry(
-        task_seed=task_seed,
+        task_seed=task.task_seed,
         task_mapping=task_mapping,
         certificate=certificate.to_mapping(),
         arms={name: result.mapping() for name, result in arms.items()},
@@ -347,17 +388,25 @@ def _entry_for_seed(
     )
 
 
-def _build_bank(base: M040DevelopmentResult) -> tuple[M042BankEntry, ...]:
+def _build_bank(context: _BankContext) -> tuple[M042BankEntry, ...]:
     entries: list[M042BankEntry] = []
     seen_targets: set[str] = set()
     for offset in range(BANK_SEED_ATTEMPTS):
-        entry = _entry_for_seed(base=base, task_seed=BANK_SEED_START + offset)
-        if entry is None:
+        candidate = _candidate_task(context, BANK_SEED_START + offset)
+        if candidate is None:
             continue
-        target_digest = str(entry.task_mapping["target_digest"])
+        task, preferred_programs = candidate
+        target_digest = dfa_digest(task.target)
         if target_digest in seen_targets:
             continue
         seen_targets.add(target_digest)
+        entry = _entry_for_task(
+            context=context,
+            task=task,
+            preferred_programs=preferred_programs,
+        )
+        if entry is None:
+            continue
         entries.append(entry)
         if len(entries) >= MINIMUM_BANK_SIZE:
             break
@@ -373,8 +422,9 @@ def run_m042_development(
     selected_index: int = DEVELOPMENT_SELECTION_INDEX,
 ) -> M042DevelopmentResult:
     base, base_validations = _base_lineage()
-    first_bank = _build_bank(base)
-    replay_bank = _build_bank(base)
+    context = _bank_context(base)
+    first_bank = _build_bank(context)
+    replay_bank = _build_bank(context)
     first_mapping = [entry.mapping() for entry in first_bank]
     replay_mapping = [entry.mapping() for entry in replay_bank]
     bank_replay = first_mapping == replay_mapping
