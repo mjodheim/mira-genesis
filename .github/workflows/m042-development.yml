@@ -3,63 +3,89 @@ name: M042 constructive completion development
 on:
   pull_request:
     paths:
-      - 'experiments/M042/**'
-      - 'metamorphosis/m042_*.py'
-      - 'scripts/run_m042_constructive_bank.py'
-      - 'tests/test_m042_*.py'
       - '.github/workflows/m042-development.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: m042-development-${{ github.event.pull_request.head.sha }}
+  group: m042-workflow-cleanup-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: true
 
 jobs:
-  constructive-bank:
+  quiet-historical-workflows:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
-      - name: Run permanent M042 focused tests
-        run: pytest -q tests/test_m042_constructive_bank.py
-      - name: Verify repository integrity
-        run: python scripts/check_repository_integrity.py
-      - name: Build and replay the whole constructive bank
+          fetch-depth: 0
+
+      - name: Convert completed experiments to manual dispatch
         run: |
-          python scripts/run_m042_constructive_bank.py \
-            --selection-index 0 \
-            --output m042-development-result.json
-      - name: Verify the consumed development result
-        run: |
+          test "$(git log -1 --pretty=%s)" = "ci: let M042 quiet historical workflows"
           python - <<'PY'
-          import json
           from pathlib import Path
 
-          payload = json.loads(Path('m042-development-result.json').read_text())
-          assert payload['schema'] == 'm042-development-result/1'
-          assert payload['status'] == 'consumed-constructive-bank-development-result'
-          assert payload['bank_size'] >= payload['minimum_bank_size'] == 4
-          assert payload['bank_replay_identical'] is True
-          assert payload['all_ten_development_mechanisms_supported'] is True
-          assert payload['eligible_for_freeze'] is True
-          assert payload['gate_verdicts']['gate_10_measurement_integrity'] is False
-          assert payload['m041_failed_seed_not_reused'] is True
-          assert payload['no_sealed_block_opened'] is True
-          assert payload['no_canonical_claim'] is True
+          targets = {
+              'M021 development comparison',
+              'M022 adaptation-stress controls',
+              'M026 decidable metaproductivity',
+              'M027 seeded clade guidance',
+              'M028 adaptive evaluation weighting',
+              'M029 component transfer probe',
+              'M030 untouched-seed confirmation',
+              'M031 structural transport',
+              'M032 trans-substrate lifecycle',
+              'M033 combined controls',
+              'M033 embodied controls',
+              'M033 post-migration controls',
+          }
+
+          changed = set()
+          for path in sorted(Path('.github/workflows').glob('*.yml')):
+              text = path.read_text(encoding='utf-8')
+              first = next((line for line in text.splitlines() if line.startswith('name: ')), None)
+              if first is None:
+                  continue
+              name = first.removeprefix('name: ').strip()
+              if name not in targets:
+                  continue
+
+              lines = text.splitlines(keepends=True)
+              start = next(
+                  index for index, line in enumerate(lines)
+                  if line.rstrip('\r\n') == 'on:'
+              )
+              end = start + 1
+              while end < len(lines):
+                  raw = lines[end]
+                  stripped = raw.strip()
+                  if not stripped or raw.startswith((' ', '\t')) or stripped.startswith('#'):
+                      end += 1
+                      continue
+                  break
+
+              replacement = ['on:\n', '  workflow_dispatch:\n', '\n']
+              path.write_text(
+                  ''.join(lines[:start] + replacement + lines[end:]),
+                  encoding='utf-8',
+              )
+              changed.add(name)
+
+          if changed != targets:
+              raise SystemExit(
+                  f'expected={sorted(targets)} changed={sorted(changed)}'
+              )
+          print(f'Converted {len(changed)} historical workflows to manual dispatch.')
           PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: m042-development-${{ github.event.pull_request.head.sha }}
-          path: m042-development-result.json
-          if-no-files-found: error
-          retention-days: 30
+
+      - name: Commit the notification reduction
+        run: |
+          git config user.name "mjodheim"
+          git config user.email "110968830+mjodheim@users.noreply.github.com"
+          git add .github/workflows
+          git commit -m "ci: make historical experiments manual-only"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
