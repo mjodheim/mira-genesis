@@ -1,6 +1,6 @@
 # ADR 0002 — The escalation boundary between fast and slow paths
 
-**Status: accepted for M038. No mechanism implemented yet.**
+**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
 
 ## Context
 
@@ -56,17 +56,32 @@ certificate *search*, and it is repairable.
 suffixes can fall below the true requirement, when no observed suffix separates the relevant
 pair. This is epistemic, a property of what has been seen, and no algorithm removes it.
 
-Measured on the committed sizes, over twelve cases:
+Measured over twelve rows at two **development observation sizes** — no prior versioned
+commitment fixed 63 and 127 before the measurement, so they are not called committed. Full
+record in `results/M038_TRIGGER_CALIBRATION.md`.
 
-| Observation words | Prefixes | Worst exact solve | Gap A (algorithmic) | Gap B (evidence) |
-|---|---:|---:|---:|---:|
-| 63 | 63 | 0.03 s | 4 | **0** |
-| 127 | 127 | **0.77 s** | 4 | **0** |
+```
+gap_a(row) = exact_bound − greedy_bound          recoverable by a better search
+gap_b(row) = true_minimal_states − exact_bound   limit of the observed evidence
+```
 
-Exact maximum-clique search over the distinguishability graph is **entirely tractable** at
-these sizes, and the exact bound equalled the true minimal state count in all twelve cases.
-**Every false negative was cause A.** The greedy missed 3 of 6 cases that genuinely required
-growth; the exact search missed none of them.
+| Quantity | Value |
+|---|---:|
+| Rows | 12 |
+| **Gap A, summed over all rows** | **8** |
+| **Gap B, summed over all rows** | **0** |
+| Rows where greedy understated | 6 of 12 |
+| Exact bound equal to true minimal size | 12 of 12 |
+| **Maximum search nodes used** | **515,432** against a 2,000,000 ceiling |
+| Maximum pair tests | 8,001 |
+
+Tractability is argued from **counted operations**, not seconds: wall clock is diagnostic in
+this repository. An earlier draft reported "0.77 s" and "Gap A = 4" — the first is not a
+decision-grade figure here, and the second was a per-observation-set subtotal presented
+without saying so.
+
+**Every observed false negative was cause A.** The greedy understated on half the rows; the
+exact search matched the true minimal state count on all of them.
 
 M038 therefore uses an **exact** maximum pairwise-distinguishable set: deterministic, always
 sound, strictly more complete than greedy, and producing a verifiable certificate.
@@ -93,11 +108,38 @@ StructuralIncapacityCertificate
 - evidence_digest
 - algorithm_id
 - algorithm_version
+- search_nodes_used
+- certificate_status
 ```
 
 An independent verifier must confirm that each recorded pair is genuinely separated by its
 recorded suffix. The slow path **verifies the certificate from the recorded body and
 evidence**; it never trusts an `escalation_reason` field.
+
+**Canonical, because a graph can hold several maximum cliques of equal size and a pair
+several separating suffixes.** Without a tie-breaking rule, two correct runs could emit
+different certificates for the same bound:
+
+- prefixes in canonical order;
+- among equal-size maxima, the lexicographically smallest clique;
+- for each pair, the **shortest** separating suffix, and among equal lengths the
+  lexicographically smallest;
+- canonical pair ordering.
+
+**Deterministic budget.** The solver declares `maximum_search_nodes`, `maximum_prefix_count`,
+`algorithm_id` and `algorithm_version`. On exhaustion:
+
+```
+certificate_status = unavailable_within_committed_budget
+```
+
+and the router **does not escalate on this trigger**. It never falls back silently to the
+greedy result, which would reintroduce the incompleteness the exact search exists to remove.
+
+**Soundness comes from the theorem, not from the tests.** The rule is sound by construction
+from Myhill–Nerode distinguishability: prefixes separated by an observed suffix cannot share
+a state. The 24 development checks found no implementation violation; they are evidence about
+the implementation, not a proof of the rule.
 
 ### Specified but not activated
 
@@ -170,9 +212,13 @@ Any heuristic estimate stays diagnostic and may not drive escalation.
 
 ## Alternatives rejected
 
-**Always-on diagnosis loop.** Already measured. M036 built it with a decidable diagnosis and
-scored 2/8 against 6/12 for a population without it. Once growth is in the search
-vocabulary, the search finds when to grow by itself.
+**Always-on diagnosis loop.** Rejected for M038 on **scope and attributability**, not as an
+experimental consequence of the exact certificate.
+
+M036 measured the *greedy* certificate in that role and scored 2/8 against 6/12. But that
+trigger was algorithmically incomplete and its single-organism search explored far less
+volume than the M035 population, so the exact certificate **inherits no negative verdict**.
+It has never been tested as an always-on trigger, and this ADR does not claim it has.
 
 **Escalate on any failure.** Rejected: a single failure is not evidence of a structural
 limit, and this reduces to immediate-performance routing.

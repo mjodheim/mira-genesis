@@ -21,8 +21,11 @@ single runtime dependency, `numpy`. The only files mentioning language models ar
 `check_attribution_policy.py` and `check_repository_integrity.py` — guards *against* such a
 dependency.
 
-Five of the six works below place a large language model at the point where the
-transformation is invented. That is precisely the point Gate 2 reserves for the organism:
+**Four** of the six works below place a large language model at the point where the
+transformation is invented — DGM, Voyager, AlphaEvolve and Gödel Agent. POET and
+AutoML-Zero are evolutionary and use none. An earlier draft said five, which was wrong.
+
+That point is precisely what Gate 2 reserves for the organism:
 
 > Every operation used to inspect, transform, build or test a candidate body is present in
 > the organism's serialised tool registry. External infrastructure may execute a tool, but
@@ -53,8 +56,12 @@ published improvement — 20.0% to 50.0% on SWE-bench — belongs to that system
 nothing about any Mira gate.
 
 **Difference from the original.** DGM's archive stores agents whose behaviour is only
-sampled. Mira's archive would store bodies whose equivalence is *decidable*, so a rejected
-branch can be proved unreachable rather than observed to fail.
+sampled. Mira's would store bodies whose equivalence is *decidable*, so two bodies can be
+compared exactly and a separating word produced. That is weaker than it may sound: it does
+**not** make every rejected branch "proved unreachable". Unreachability is provable only
+within a bounded space, against a fixed vocabulary and budget, as M035's control arm was —
+0/12 by proved impossibility. A branch rejected during search is merely a branch that did
+not work, and the archive must not imply otherwise.
 
 **Gates concerned.** 6 (adoption and rollback), 9 (repeated cycles).
 
@@ -92,8 +99,9 @@ substrate requirements, retrieved by exact match rather than embedding similarit
 
 **Methodological risk — the largest in this document.** A tool written by a development
 assistant and committed to the repository must never be counted as a tool *learned by the
-lineage*. The registry must therefore distinguish `primitive_tool`, `composed_tool`,
-`learned_tool` and `external_development_tool`, and the construction event must name which.
+lineage*. Provenance is recorded on **three independent axes** rather than one exclusive
+label, because origin, construction kind and introduction phase are different questions —
+see ADR 0003.
 
 **Planned ablation.** Remove the registry and re-run. M034 predicts no change in reachable
 capability under the current per-operation cost rule, which would make a Voyager-style
@@ -152,10 +160,22 @@ verdict with a witness. A separating word is a proof; a score is not.
 **Methodological risk.** An aggregate score can hide a critical failure. No stage may be
 summarised away: M017 §3 already makes admission conditions absolute rather than weighted.
 
-**Planned scope.** Four evaluators where a real decision exists today — syntax, determinism,
-regression, cost. `MigrationEvaluator`, `PlasticityEvaluator` and `RollbackEvaluator` have
-no object in M035, which neither migrates nor rolls back, and specifying them now would
-create empty shells a later reader could mistake for capability.
+**Planned scope, aligned on what M038 actually does.** M038 uses M017's kernel, requires an
+adoption, and forces a rollback attempt, so a rollback verifier now has a concrete object —
+an earlier draft said it had none, which was true of M035 and not of M038.
+
+```
+CertificateVerifier
+CandidateIsolationEvaluator
+ExactBehaviourEvaluator
+RegressionEvaluator
+CostRecorder
+AdoptionGate
+RollbackVerifier
+```
+
+`MigrationEvaluator` and `PlasticityEvaluator` are still **not** created: M038 neither
+migrates nor runs a second cycle, and empty shells would later be mistaken for capability.
 
 **Status.** Specified, reduced.
 
@@ -191,28 +211,44 @@ its first body type.
 
 **Reference.** Yin, Wang, Pan, Wan, Wang. *Gödel Agent: A Self-Referential Agent Framework
 for Recursive Self-Improvement.* [arXiv:2410.04444](https://arxiv.org/abs/2410.04444).
-**Licence.** [Arvid-pku/Godel_Agent](https://github.com/Arvid-pku/Godel_Agent).
+**Licence.** [Arvid-pku/Godel_Agent](https://github.com/Arvid-pku/Godel_Agent) — **not verified from a primary source**. No code is reused here; verify before any reuse.
 
 **Mechanism of interest.** Analyse failure traces, form a hypothesis about a limitation,
 propose a revision, validate it, persist the new strategy.
 
-**Already tested here, and the result was negative.** M036 built exactly this loop with a
-*decidable* diagnosis — a Myhill–Nerode bound proving the body too small, sound in 0/24
-violations. It scored **2/8** against **6/12** for a population without any explicit
-diagnosis. The measured finding: once the growth operation is in the search vocabulary, the
-search finds *when* to grow by itself, and the bound is too weak to gate on, missing 3 of 6
-cases that genuinely required growth.
+**Tested here in a related but not identical form.** M036 tested the same broad
+diagnosis-then-growth shape with a **greedy** lower-bound search. The development result was
+negative — 2/8 against 6/12 for a population with no explicit diagnosis — but the trigger
+was algorithmically incomplete, missing 3 of 6 cases that genuinely required growth, and the
+single-organism search also explored far less volume than the M035 population.
+
+**M038 does not inherit a negative verdict for its exact certificate.** It tests a repaired
+trigger inside a different, journalled two-speed architecture. The exact search matched the
+true minimal state count on 12 of 12 calibration rows where the greedy understated on 6 —
+see `results/M038_TRIGGER_CALIBRATION.md`.
+
+An earlier draft of this document said "the certificate is stronger, and it still did not
+help as a trigger". That was wrong: the *greedy* certificate did not help. The exact one has
+never been measured as a trigger.
+
+**What M036 does still establish**, and these are unaffected:
+
+- the population explored far more trajectories than a single organism;
+- growth must be composable within the search, not applied as a preparatory phase;
+- a size bound says *that* a body must grow, never *where* the missing distinction lives;
+- the greedy bound was too incomplete to gate on.
 
 **Difference from the original.** Gödel Agent's diagnosis and revision are both produced by
-a model guided by high-level objectives. Mira's diagnosis is a certificate. The certificate
-is stronger, and it still did not help as a trigger.
+a model guided by high-level objectives. Mira's diagnosis is a verifiable certificate.
 
-**What survives for M038.** The *shape* — persistent failure, diagnosis, proposal, isolated
-validation, adoption or rollback — as the slow path, with the diagnosis restricted to
-`proved_structural_incapacity`. Not as an always-on loop, and not with the proposal and the
-judgement in the same component.
+**What survives for M038.** The *shape* — persistent limitation, diagnosis, proposal,
+isolated validation, adoption or rollback — as the slow path, with the diagnosis restricted
+to `proved_structural_incapacity`. Not as an always-on loop: that is excluded on scope and
+attributability grounds for M038, **not** as an experimental consequence of the exact
+certificate, which remains untested in that role.
 
-**Status.** Partially tested, negative result recorded in `results/M036_GROWING_ORGANISM.md`.
+**Status.** Related form tested, negative result recorded in
+`results/M036_GROWING_ORGANISM.md`. The exact certificate is untested as a trigger.
 
 ---
 

@@ -1,6 +1,6 @@
 # ADR 0001 — A single causal journal, with three levels of trace
 
-**Status: accepted for M038. No mechanism implemented yet.**
+**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
 
 ## Context
 
@@ -116,19 +116,41 @@ A hash built by joining strings with a separator is ambiguous: two logically dif
 structures can produce the same byte sequence when a field contains the separator. That
 would silently break every integrity claim built on it.
 
+Length prefixing removes separator ambiguity. It does **not** remove *type* ambiguity: with
+lengths alone, the integer `1` and the string `"1"` can share bytes. The encoding is
+therefore **typed and length-prefixed**:
+
+```
+value := type_tag ‖ length ‖ payload
+```
+
+| Tag | Type |
+|---|---|
+| `N` | absent |
+| `B` | boolean |
+| `I` | integer |
+| `S` | UTF-8 string |
+| `Y` | raw bytes |
+| `T` | tuple |
+| `L` | list |
+| `M` | mapping |
+
 | Aspect | Decision |
 |---|---|
-| Format | length-prefixed encoding: every field emitted as `len(bytes) ‖ bytes`, never separator-joined |
-| Field order | canonical, declared per schema, sorted by field name |
+| Field order | canonical, sorted by field name, declared per schema |
 | Integers | decimal ASCII, no padding, explicit minus sign |
-| Tuples and sequences | element count first, then each element length-prefixed |
-| Absent values | an explicit absent marker, distinct from an empty value |
-| Schema version | mandatory in every record; an unknown version is a replay failure, never a skip |
-| Domain separators | one per decision, never reused across decisions |
+| Sequences | element count first, then each element typed and length-prefixed |
+| Mappings | field count, then each field name encoded, canonical order, typed values |
+| Absent | tag `N`, distinct from an empty string or empty list |
+| Schema version | mandatory; an unknown version is a replay failure, never a skip |
+| Domain separators | one per decision, never reused |
 | Hash | SHA-256 |
 
-A test must demonstrate that two logically different structures cannot produce the same
-serialised sequence through separator ambiguity.
+**Test obligation, stated realistically.** Proving that no two logically different structures
+can ever collide is not achievable by testing. What is required instead: a documented
+argument that the encoding is typed and length-prefixed, plus property tests over the known
+confusable pairs — string against integer, empty against absent, tuple against list, a field
+whose content contains a separator byte, and nested structures.
 
 ## Rollback does not rewrite the journal
 
@@ -165,10 +187,42 @@ result_state_digest
 event_hash
 ```
 
-Seven event types to begin with, not twenty-one: `FounderCreated`, `TaskFamilyRevealed`,
-`CandidateProposed`, `CandidateEvaluated`, `CandidateRejected`, `MutationAdopted`,
-`PopulationReduced`. Types are added when a mechanism exists to emit them, never in
-advance.
+`event_hash` must exclude itself, or the definition is circular:
+
+```
+event_hash = SHA-256( domain ‖ canonical_serialisation(all fields except event_hash) )
+```
+
+The chain's first record uses `previous_event_hash = GENESIS_HASH`, a fixed constant under
+its own domain separator.
+
+`previous_state_digest` and `result_state_digest` cover the **`functional_state` only**. They
+do not include the journal being produced; the audit state is bound by
+`previous_event_hash` instead. Without that split, a state digest would have to contain the
+hash of the event containing it.
+
+### Event types
+
+An earlier draft listed seven, including `PopulationReduced` — which has no object in M038,
+a single-organism lineage — and omitted rollback entirely, while the same ADR requires
+rollback events. Aligned on the mechanism M038 actually needs:
+
+```
+EscalationCheckpointCreated
+StructuralIncapacityCertified
+CandidateProposed
+CandidateEvaluated
+CandidateRejected
+MutationProvisionallyAdopted
+MutationAdopted
+RollbackRequested
+RollbackCompleted
+ToolConstructed
+CycleCompleted
+```
+
+Only those actually emitted are implemented. None is added for a mechanism that does not
+exist.
 
 Replay must recompute transitions and fail when an event is missing, altered, reordered, or
 carries an unknown schema version.

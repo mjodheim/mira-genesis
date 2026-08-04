@@ -1,7 +1,16 @@
 # M038 — two-speed lineage: escalation boundary and causal journal
 
-**Status: PRE-RESULT PROTOCOL DRAFT. No measurement taken. No sealed block created or
-opened. Not frozen.**
+**Status: PRE-RESULT PROTOCOL DRAFT. Not frozen.**
+
+- No M038 outcome measurement taken.
+- No sealed M038 block created or opened.
+- **Development calibration has been performed**, only to select and validate the trigger
+  algorithm — recorded in [`results/M038_TRIGGER_CALIBRATION.md`](../../results/M038_TRIGGER_CALIBRATION.md).
+  Its twelve rows are **consumed for that decision** and may not later confirm the trigger's
+  success or efficiency.
+
+An earlier draft of this header said "no measurement taken" while the document used a
+twelve-case measurement to choose the exact algorithm. That was false.
 
 ## What M038 is for
 
@@ -147,6 +156,48 @@ Reported as a **vector**, never as a synthetic score:
 Weights collapsing these dimensions into a single cost would themselves be a policy, and
 would have to be committed separately. M038 does not define them.
 
+### What "B costs less than C" means, fixed before measurement
+
+Falsifier 9 says arm B must reduce the cost of proof. A vector has no default ordering, so
+the rule is pre-registered here.
+
+**Dimensions that must be exactly equal** between B and C — a difference in any of them
+invalidates decision equivalence, and with it the whole comparison:
+
+`search_nodes` · `candidates_constructed` · `candidates_evaluated` · `tool_calls` ·
+`rng_draws` · `escalations` · functional deterministic operations · final functional state
+digest
+
+**Proof-cost dimensions**, on which B is compared to C:
+
+`hash_operations` · `body_serializations` · `compact_event_serializations` ·
+`full_event_serializations` · `full_checkpoint_serializations` · `journal_bytes` ·
+`archive_projection_operations` · audit deterministic operations ·
+`peak_persistent_audit_artifacts`
+
+**Rule.** B must be **no worse than C on every** proof-cost dimension, and **strictly better
+on the primary dimensions**, designated now and not after measurement:
+
+```
+body_serializations
+journal_bytes
+audit deterministic operations
+```
+
+Wall clock plays no part in this rule.
+
+### Construction cost is not a count of candidates
+
+An earlier draft recorded construction cost "in `candidates_constructed`". That is a
+quantity, not a cost: one candidate may take a single operation or several thousand. The
+counter is kept and joined by:
+
+`candidate_construction_operations` · `candidate_construction_nodes` ·
+`candidate_construction_tool_calls` · `candidate_construction_bytes`
+
+M017's symbolic budget measures the *reach* of the language. It must not stand in for the
+real cost of searching and constructing.
+
 **Wall-clock time is diagnostic and never decisive.** This is M017 §9's rule, and it exists
 because M014b's proof failed to reproduce while its result did.
 
@@ -174,11 +225,50 @@ under the same seed.
   escalation.
 - **Slow path**: full causal journal, hash-chained.
 
-## Adoption, rejection, rollback
+## Adoption, rejection, rollback — the exact functional sequence
 
-Proposal and judgement are separate components. A candidate is evaluated in isolation. A
-rejected candidate stays archived. Adoption is versioned. Rollback restores body, tools and
-memory exactly, and is exercised at least once rather than assumed.
+An earlier draft said a rejection completes a cycle, that the organism must keep an
+improvement, and that rollback must be exercised. Those three are inconsistent: a bare
+rejection changes nothing, and a rollback that undoes the successful adoption discards the
+improvement. The sequence below removes the ambiguity.
+
+```
+F0 — pre-escalation functional state
+
+1.  prove structural incapacity;
+2.  enter the slow path;
+3.  construct and evaluate candidates;
+4.  reject at least one ineligible candidate, if one is generated;
+5.  validate and adopt one strictly improving candidate;
+6.  obtain functional state F1;
+7.  initiate a forced failing provisional adoption from F1;
+8.  roll that attempt back exactly to F1;
+9.  return to the fast path with F1 active;
+10. demonstrate a competence available at F1 and not at F0.
+```
+
+Rollback therefore restores **F1**, the state before the bad attempt — not the founder F0.
+The validated improvement is kept, and the rollback is exercised on a separate, deliberately
+failing attempt.
+
+Proposal and judgement remain separate components. A rejected candidate stays archived.
+Adoption is versioned. "Exact rollback" is a claim about `functional_state` only; the journal
+and audit counters continue across it.
+
+## Three verdicts, reported separately
+
+| Verdict | Requires |
+|---|---|
+| `infrastructure_cycle_valid` | the journal, checkpoint, evaluation and archive behaved correctly — **a cycle ending in rejection can satisfy this** |
+| `functional_metamorphosis_supported` | the full F0 → F1 sequence above |
+| `efficiency_claim_supported` | the component-wise rule below |
+
+A cycle ending in rejection **cannot** satisfy `functional_metamorphosis_supported`.
+
+The main functional success requires all of: a valid certificate; the boundary crossed; a
+candidate adopted; an exact pre-defined improvement; return to the fast path; a forced
+rollback succeeding on a separate attempt; final state equal to F1; and final competence
+strictly above F0 by the committed rule.
 
 ## The escalation checkpoint
 
@@ -213,15 +303,24 @@ Stated before measurement. Any one of these fails M038:
 2. the certificate cannot be recomputed from the checkpoint;
 3. arm A solves a task the experiment declares structurally unreachable;
 4. arms B and C diverge in their decision transcript;
-5. arm B neither adopts an improvement nor produces the expected rejection or rollback;
+5. arm B does not complete the F0 → F1 sequence: no candidate adopted, or no strictly
+   improving candidate, or the forced rollback not exercised, or the final functional state
+   not equal to F1, or final competence not strictly above F0 by the committed rule. A cycle
+   ending in bare rejection fails this falsifier, whatever the infrastructure did;
 6. a rollback does not restore the functional state exactly;
 7. a deleted, altered or reordered event is not detected;
 8. the reconstructed archive diverges from the journal without an error;
 9. arm B does not reduce the cost of proof relative to arm C.
 
-Falsifier 9 refutes the **efficiency** claim and not necessarily functional feasibility. The
-two verdicts stay separate: M038 may report a functional success with a failed efficiency
-claim, and that is an honest outcome rather than a partial success.
+Falsifier 9 refutes the **efficiency** claim and not functional feasibility. The wording is
+fixed so the two cannot be traded against each other:
+
+> M038 reports two independent verdicts. A functional success with an efficiency failure is
+> a **supported functional result and a rejected efficiency hypothesis**. The combined
+> expected claim is **not supported**.
+
+An earlier draft said both that an efficiency failure fails M038 and that it is an honest
+non-partial outcome. The formulation above replaces both.
 
 Also failing: any tool counted toward Gate 2 without a construction event, and any external
 model invoked in the lineage.

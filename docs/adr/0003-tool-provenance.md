@@ -1,6 +1,6 @@
 # ADR 0003 — Tool provenance, and what the lineage may claim to own
 
-**Status: accepted for M038. No mechanism implemented yet.**
+**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
 
 ## Context
 
@@ -23,19 +23,50 @@ its presence alone, a tool learned by the lineage.**
 
 ## Decision
 
-Every registry entry declares its provenance as exactly one of:
+An earlier draft used one exclusive enum — `primitive_tool`, `composed_tool`, `learned_tool`,
+`external_development_tool`. Those are not points on a single axis. A primitive is almost
+always designed externally yet is legitimately committed as the initial language; an external
+tool added *after* the freeze is forbidden. One label cannot express both facts.
 
-| Category | Meaning | Counts toward Gate 2? |
-|---|---|---|
-| `primitive_tool` | given at birth, part of the declared body language | no — it is the floor |
-| `composed_tool` | built by the organism from primitives during the lineage | **yes** |
-| `learned_tool` | absorbed from an accepted transformation trace | **yes** |
-| `external_development_tool` | written by a human or an assistant outside the lineage | **never** |
+Provenance is therefore recorded on **three independent axes**:
 
-The category is not a label attached afterwards. It is determined by the **construction
-event** in the causal journal, which names the lineage, the generation and the primitives
-consumed. A tool with no construction event in the journal cannot be
-`composed_tool` or `learned_tool`, whatever its contents.
+```
+ToolProvenance
+- origin:              protocol_supplied | lineage_constructed | external_development
+- construction_kind:   primitive | composition | accepted_transformation_trace
+- introduction_phase:  birth | cycle | post_run
+- introduced_by_event
+- protocol_commitment
+- eligible_for_gate2
+```
+
+`eligible_for_gate2` is **computed, never assigned**:
+
+```
+origin == lineage_constructed
+  and introduced_by_event is a valid construction event in the journal
+  and every construction input belongs to the committed registry
+  and the tool was causally required
+```
+
+The construction event names the lineage, the generation and the primitives consumed. A tool
+with no such event cannot be `lineage_constructed`, whatever its contents.
+
+## Absorbing a trace is not the same as building a tool
+
+A trace absorbed after adoption becomes a tool available *afterwards*. It was not
+necessarily a tool that helped build the thing it came from.
+
+Gate 2 requires that at least one tool be constructed or composed by the organism **during**
+the evaluation lineage and used to inspect, transform, build or test a candidate. Under a
+single cycle, that is approachable only if a tool is:
+
+1. composed during the slow path;
+2. causally used to inspect, construct or test the candidate;
+3. shown necessary by ablation.
+
+Creating a `learned_tool` from the adopted trace satisfies none of these. M038 must
+therefore not describe Gate 2 as "addressable" without this causal criterion attached.
 
 ## Artifact
 
