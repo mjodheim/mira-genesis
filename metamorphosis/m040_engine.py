@@ -38,10 +38,10 @@ from .structural import Atom, apply_atom, flip, normalize_dfa
 
 Word = tuple[int, ...]
 
-DEVELOPMENT_SEED = 400_042
+DEVELOPMENT_SEED = 400_044
 DEVELOPMENT_COMMITMENT = "m040-development-v1"
 OBSERVATION_DEPTH = 6
-POST_MIGRATION_DEPTH = 2
+POST_MIGRATION_DEPTH = 3
 POST_MIGRATION_NODE_BUDGET = 20_000
 TASK_GENERATION_ATTEMPTS = 256
 MIGRATION_CANDIDATE_BUDGET = 75_000
@@ -188,6 +188,7 @@ class M040PostTask:
     target: DFA
     generating_tool_ids: tuple[str, ...]
     generating_program: tuple[Atom, ...]
+    task_family: str
     observation_depth: int = OBSERVATION_DEPTH
 
     def mapping(self) -> dict[str, object]:
@@ -198,6 +199,7 @@ class M040PostTask:
             "target_states": self.target.n_states,
             "generating_tool_ids": list(self.generating_tool_ids),
             "generating_program": [atom.to_list() for atom in self.generating_program],
+            "task_family": self.task_family,
             "observation_depth": self.observation_depth,
             "observation_count": len(OBSERVATIONS),
         }
@@ -444,6 +446,7 @@ def _search_arm(
     preferred_tool_ids: Sequence[str],
     output_quality_body: DFA | None = None,
     preferred_programs: Sequence[Sequence[str]] = (),
+    adapt_prefixes: bool = False,
     maximum_depth: int = POST_MIGRATION_DEPTH,
     node_budget: int = POST_MIGRATION_NODE_BUDGET,
 ) -> SearchResult:
@@ -467,41 +470,15 @@ def _search_arm(
     best_quality = _quality(founder, observations)
     registry_by_id = {tool.tool_id: tool for tool in registry}
 
-    def evaluate_preferred_program(tool_ids: Sequence[str]) -> SearchResult | None:
+
+    def evaluate_completed_preferred(
+        selected: Sequence[LineageTool],
+        expanded: Sequence[Atom],
+        current: DFA,
+        *,
+        reason: str,
+    ) -> SearchResult | None:
         nonlocal best_quality
-        selected: list[LineageTool] = []
-        current: DFA | None = founder
-        expanded: list[Atom] = []
-        for tool_id in tool_ids:
-            tool = registry_by_id.get(tool_id)
-            if tool is None:
-                return None
-            counters.symbolic_search_nodes += 1
-            if counters.symbolic_search_nodes > node_budget:
-                return SearchResult(
-                    arm=arm,
-                    exact=False,
-                    reason="symbolic_node_budget_exhausted",
-                    quality_numerator=best_quality,
-                    quality_denominator=len(observations),
-                    accepted_candidate_id=None,
-                    accepted_tool_ids=(),
-                    accepted_program=(),
-                    accepted_body=None,
-                    counters=counters.mapping(),
-                )
-            atoms = _tool_atoms(tool)
-            for atom in atoms:
-                counters.primitive_expansion_operations += 1
-                current = apply_atom(current, atom)  # type: ignore[arg-type]
-                if current is None:
-                    return None
-                expanded.append(atom)
-            if tool.provenance.origin == ORIGIN_LINEAGE_CONSTRUCTED:
-                counters.tool_symbols_used += 1
-            selected.append(tool)
-        if current is None:
-            return None
         counters.candidates_constructed += 1
         normalized = normalize_dfa(current)
         quality = 0
@@ -519,7 +496,7 @@ def _search_arm(
         return SearchResult(
             arm=arm,
             exact=True,
-            reason="transported_continuation_adopted",
+            reason=reason,
             quality_numerator=len(observations),
             quality_denominator=len(observations),
             accepted_candidate_id=_candidate_id(
@@ -534,11 +511,82 @@ def _search_arm(
             counters=counters.mapping(),
         )
 
-    for preferred_program in preferred_programs:
-        preferred_result = evaluate_preferred_program(preferred_program)
-        if preferred_result is not None:
-            return preferred_result
+    def apply_prefix(tool_ids: Sequence[str]) -> tuple[DFA, list[LineageTool], list[Atom]] | None:
+        current: DFA | None = founder
+        selected: list[LineageTool] = []
+        expanded: list[Atom] = []
+        for tool_id in tool_ids:
+            tool = registry_by_id.get(str(tool_id))
+            if tool is None:
+                return None
+            counters.symbolic_search_nodes += 1
+            if counters.symbolic_search_nodes > node_budget:
+                return None
+            atoms = _tool_atoms(tool)
+            for atom in atoms:
+                counters.primitive_expansion_operations += 1
+                current = apply_atom(current, atom)  # type: ignore[arg-type]
+                if current is None:
+                    return None
+                expanded.append(atom)
+            if tool.provenance.origin == ORIGIN_LINEAGE_CONSTRUCTED:
+                counters.tool_symbols_used += 1
+            selected.append(tool)
+        if current is None:
+            return None
+        return current, selected, expanded
 
+    primitive_suffixes = tuple(
+        tool for tool in ordered_registry
+        if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+    )
+    for preferred_program in preferred_programs:
+        prefix = apply_prefix(preferred_program)
+        if prefix is None:
+            continue
+        prefix_body, prefix_tools, prefix_atoms = prefix
+        if adapt_prefixes:
+            for suffix in primitive_suffixes:
+                counters.symbolic_search_nodes += 1
+                if counters.symbolic_search_nodes > node_budget:
+                    return SearchResult(
+                        arm=arm,
+                        exact=False,
+                        reason="symbolic_node_budget_exhausted",
+                        quality_numerator=best_quality,
+                        quality_denominator=len(observations),
+                        accepted_candidate_id=None,
+                        accepted_tool_ids=(),
+                        accepted_program=(),
+                        accepted_body=None,
+                        counters=counters.mapping(),
+                    )
+                current: DFA | None = prefix_body
+                suffix_atoms = _tool_atoms(suffix)
+                for atom in suffix_atoms:
+                    counters.primitive_expansion_operations += 1
+                    current = apply_atom(current, atom)  # type: ignore[arg-type]
+                    if current is None:
+                        break
+                if current is None:
+                    continue
+                found = evaluate_completed_preferred(
+                    prefix_tools + [suffix],
+                    prefix_atoms + list(suffix_atoms),
+                    current,
+                    reason="transported_prefix_adapted",
+                )
+                if found is not None:
+                    return found
+        else:
+            found = evaluate_completed_preferred(
+                prefix_tools,
+                prefix_atoms,
+                prefix_body,
+                reason="transported_continuation_adopted",
+            )
+            if found is not None:
+                return found
     def descend(
         current: DFA,
         selected: tuple[LineageTool, ...],
@@ -677,7 +725,7 @@ def _learning_state(pre_result, node_budget: int) -> M040LearningState:
     )
 
 
-def _post_task(
+def _post_task_exact_frontier(
     *,
     packet: M040TransportPacket,
     founder: DFA,
@@ -685,24 +733,14 @@ def _post_task(
 ) -> M040PostTask:
     registry = {tool.tool_id: tool for tool in packet.tool_registry}
     primitive_tools = tuple(
-        tool
-        for tool in packet.tool_registry
+        tool for tool in packet.tool_registry
         if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
     )
-    if not primitive_tools:
-        raise M040EngineError("transported packet contains no birth primitives")
     programs = list(packet.learning_state.continuation_programs)
     random.Random(task_seed).shuffle(programs)
     primitive_reachable = _reachable(founder, primitive_tools, POST_MIGRATION_DEPTH)
-    attempts = 0
-    for program_ids in programs:
-        attempts += 1
-        if attempts > TASK_GENERATION_ATTEMPTS:
-            break
-        try:
-            tools = tuple(registry[tool_id] for tool_id in program_ids)
-        except KeyError as error:
-            raise M040EngineError("continuation frontier refers to an absent tool") from error
+    for program_ids in programs[:TASK_GENERATION_ATTEMPTS]:
+        tools = tuple(registry[tool_id] for tool_id in program_ids)
         raw, program = _apply_tools(founder, tools)
         if raw is None:
             continue
@@ -718,17 +756,72 @@ def _post_task(
             maximum_search_nodes=MAXIMUM_SEARCH_NODES,
             maximum_prefix_count=MAXIMUM_PREFIX_COUNT,
         )
-        if not certificate.proves_incapacity():
-            continue
-        return M040PostTask(
-            task_seed=task_seed,
-            parent_digest=dfa_digest(founder),
-            target=target,
-            generating_tool_ids=program_ids,
-            generating_program=program,
-        )
+        if certificate.proves_incapacity():
+            return M040PostTask(
+                task_seed=task_seed,
+                parent_digest=dfa_digest(founder),
+                target=target,
+                generating_tool_ids=tuple(program_ids),
+                generating_program=program,
+                task_family="exact_frontier",
+            )
     raise M040EngineError("no transported continuation frontier produced an admissible task")
 
+
+def _post_task_prefix_adaptation(
+    *,
+    packet: M040TransportPacket,
+    founder: DFA,
+    task_seed: int,
+) -> M040PostTask:
+    registry = {tool.tool_id: tool for tool in packet.tool_registry}
+    primitive_tools = [
+        tool for tool in packet.tool_registry
+        if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+    ]
+    if not primitive_tools:
+        raise M040EngineError("transported packet contains no birth primitives")
+    programs = list(packet.learning_state.continuation_programs)
+    rng = random.Random(task_seed)
+    rng.shuffle(programs)
+    rng.shuffle(primitive_tools)
+    primitive_reachable = _reachable(founder, primitive_tools, POST_MIGRATION_DEPTH)
+    attempts = 0
+    for prefix_ids in programs:
+        prefix_tools = tuple(registry[tool_id] for tool_id in prefix_ids)
+        for suffix in primitive_tools:
+            attempts += 1
+            if attempts > TASK_GENERATION_ATTEMPTS:
+                break
+            tool_ids = tuple(prefix_ids) + (suffix.tool_id,)
+            if len(tool_ids) > POST_MIGRATION_DEPTH:
+                continue
+            raw, program = _apply_tools(founder, prefix_tools + (suffix,))
+            if raw is None:
+                continue
+            target = normalize_dfa(raw)
+            if target.n_states <= founder.n_states:
+                continue
+            if dfa_digest(target) in primitive_reachable:
+                continue
+            observations = _observations(target)
+            certificate = proved_structural_incapacity(
+                founder,
+                observations,
+                maximum_search_nodes=MAXIMUM_SEARCH_NODES,
+                maximum_prefix_count=MAXIMUM_PREFIX_COUNT,
+            )
+            if not certificate.proves_incapacity():
+                continue
+            return M040PostTask(
+                task_seed=task_seed,
+                parent_digest=dfa_digest(founder),
+                target=target,
+                generating_tool_ids=tool_ids,
+                generating_program=program,
+                task_family="prefix_plus_primitive",
+            )
+    raise M040EngineError("no transported prefix plus primitive produced an admissible task")
 
 def _certificate(
     founder: DFA,
@@ -826,7 +919,12 @@ class M040DevelopmentResult:
         return _digest(RESULT_DOMAIN, stable)
 
 
-def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResult:
+def _execute(
+    master_seed: int,
+    protocol_commitment: str,
+    *,
+    task_family: str = "prefix_adaptation",
+) -> M040DevelopmentResult:
     journal = M040Journal()
     pre_seed = _derive_seed(master_seed, "pre-migration-lineage", protocol_commitment)
     pre_commitment = f"{protocol_commitment}/m039-pre-migration"
@@ -959,7 +1057,16 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
     )
 
     task_seed = _derive_seed(master_seed, "post-migration-task", protocol_commitment)
-    task = _post_task(packet=rehydrated, founder=rehydrated_source, task_seed=task_seed)
+    if task_family == "exact_frontier":
+        task = _post_task_exact_frontier(
+            packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+        )
+    elif task_family == "prefix_adaptation":
+        task = _post_task_prefix_adaptation(
+            packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+        )
+    else:
+        raise M040EngineError(f"unknown M040 task family {task_family!r}")
     journal.append(
         "PostMigrationTaskRevealed",
         {
@@ -997,6 +1104,7 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
         registry=full_registry,
         preferred_tool_ids=rehydrated.learning_state.preferred_tool_ids,
         preferred_programs=rehydrated.learning_state.continuation_programs,
+        adapt_prefixes=(task_family == "prefix_adaptation"),
     )
     fresh = _search_arm(
         arm="fresh_on_b",
@@ -1080,16 +1188,20 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
             full_registry,
             rehydrated.learning_state.preferred_tool_ids,
             rehydrated.learning_state.continuation_programs,
+            task_family == "prefix_adaptation",
         ),
-        "fresh_on_b": (rehydrated_source, None, primitive_registry, (), ()),
-        "unchanged_parent_migrated": (original_founder, None, primitive_registry, (), ()),
-        "output_only": (None, rehydrated_source, (), (), ()),
-        "learning_state_ablated": (rehydrated_source, None, full_registry, (), ()),
-        "learned_tool_ablated": (rehydrated_source, None, tool_ablated_registry, (), ()),
+        "fresh_on_b": (rehydrated_source, None, primitive_registry, (), (), False),
+        "unchanged_parent_migrated": (original_founder, None, primitive_registry, (), (), False),
+        "output_only": (None, rehydrated_source, (), (), (), False),
+        "learning_state_ablated": (rehydrated_source, None, full_registry, (), (), False),
+        "learned_tool_ablated": (rehydrated_source, None, tool_ablated_registry, (), (), False),
     }
     post_audits = {}
     for name, audit_input in audit_inputs.items():
-        audit_founder, output_body, audit_registry, preferred_ids, preferred_programs = audit_input
+        (
+            audit_founder, output_body, audit_registry, preferred_ids,
+            preferred_programs, audit_adapt_prefixes,
+        ) = audit_input
         audit = audit_post_search(
             arm=name,
             founder=audit_founder,
@@ -1099,6 +1211,7 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
             registry=audit_registry,
             preferred_tool_ids=preferred_ids,
             preferred_programs=preferred_programs,
+            adapt_prefixes=audit_adapt_prefixes,
             maximum_depth=POST_MIGRATION_DEPTH,
             node_budget=POST_MIGRATION_NODE_BUDGET,
             expected_result=arms[name],
@@ -1268,11 +1381,12 @@ def run_m040_development(
     *,
     protocol_commitment: str = DEVELOPMENT_COMMITMENT,
     require_replay: bool = True,
+    task_family: str = "prefix_adaptation",
 ) -> M040DevelopmentResult:
-    first = _execute(master_seed, protocol_commitment)
+    first = _execute(master_seed, protocol_commitment, task_family=task_family)
     if not require_replay:
         return first
-    replayed = _execute(master_seed, protocol_commitment)
+    replayed = _execute(master_seed, protocol_commitment, task_family=task_family)
     if first.digest() != replayed.digest():
         raise M040EngineError("seed-only replay changed the M040 result digest")
     if first.packet_json != replayed.packet_json:

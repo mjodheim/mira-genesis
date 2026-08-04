@@ -8,7 +8,11 @@ from typing import Mapping, Sequence
 
 from .m012b_dfa import DFA, exact_equivalence
 from .m038_journal import encode
-from .m039_lineage import LineageTool, ORIGIN_LINEAGE_CONSTRUCTED
+from .m039_lineage import (
+    LineageTool,
+    ORIGIN_LINEAGE_CONSTRUCTED,
+    ORIGIN_PROTOCOL_SUPPLIED,
+)
 from .structural import Atom, apply_atom, normalize_dfa
 
 AUDIT_SCHEMA = "m040-post-search-audit/1"
@@ -29,6 +33,7 @@ class M040SearchAudit:
     arm: str
     registry_tool_ids: tuple[str, ...]
     preferred_programs: tuple[tuple[str, ...], ...]
+    adapt_prefixes: bool
     maximum_depth: int
     node_budget: int
     exact: bool
@@ -53,6 +58,7 @@ class M040SearchAudit:
             "arm": self.arm,
             "registry_tool_ids": list(self.registry_tool_ids),
             "preferred_programs": [list(program) for program in self.preferred_programs],
+            "adapt_prefixes": self.adapt_prefixes,
             "maximum_depth": self.maximum_depth,
             "node_budget": self.node_budget,
             "exact": self.exact,
@@ -82,6 +88,7 @@ def audit_post_search(
     registry: Sequence[LineageTool],
     preferred_tool_ids: Sequence[str],
     preferred_programs: Sequence[Sequence[str]],
+    adapt_prefixes: bool,
     maximum_depth: int,
     node_budget: int,
     expected_result: object,
@@ -203,12 +210,21 @@ def audit_post_search(
             accepted_tool_ids = ids
             exact = True
             reason = (
-                "transported_continuation_adopted"
-                if source == "transported_continuation"
-                else "exact_candidate_adopted"
+                "transported_prefix_adapted"
+                if source == "transported_prefix_adaptation"
+                else (
+                    "transported_continuation_adopted"
+                    if source == "transported_continuation"
+                    else "exact_candidate_adopted"
+                )
             )
             return True
 
+
+        primitive_suffixes = tuple(
+            tool for tool in ordered_registry
+            if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+        )
         for program_index, program_ids in enumerate(preferred_programs):
             selected: list[LineageTool] = []
             expanded: list[Atom] = []
@@ -217,15 +233,13 @@ def audit_post_search(
             for position, tool_id in enumerate(program_ids):
                 tool = registry_by_id.get(str(tool_id))
                 if tool is None:
-                    transcript.append(
-                        {
-                            "kind": "preferred_program_missing_tool",
-                            "arm": arm,
-                            "program_index": program_index,
-                            "position": position,
-                            "tool_id": str(tool_id),
-                        }
-                    )
+                    transcript.append({
+                        "kind": "preferred_program_missing_tool",
+                        "arm": arm,
+                        "program_index": program_index,
+                        "position": position,
+                        "tool_id": str(tool_id),
+                    })
                     program_valid = False
                     break
                 symbolic_nodes += 1
@@ -242,20 +256,16 @@ def audit_post_search(
                     if current is None:
                         break
                     expanded.append(atom)
-                transcript.append(
-                    {
-                        "kind": "preferred_symbolic_expansion",
-                        "arm": arm,
-                        "program_index": program_index,
-                        "position": position,
-                        "tool_id": tool.tool_id,
-                        "primitive_operations_applied": applied,
-                        "success": current is not None,
-                        "raw_result_digest": (
-                            None if current is None else _raw_body_digest(current)
-                        ),
-                    }
-                )
+                transcript.append({
+                    "kind": "preferred_prefix_expansion",
+                    "arm": arm,
+                    "program_index": program_index,
+                    "position": position,
+                    "tool_id": tool.tool_id,
+                    "primitive_operations_applied": applied,
+                    "success": current is not None,
+                    "raw_result_digest": None if current is None else _raw_body_digest(current),
+                })
                 if current is None:
                     program_valid = False
                     break
@@ -264,7 +274,46 @@ def audit_post_search(
                 selected.append(tool)
             if stop:
                 break
-            if program_valid and current is not None and evaluate_completed(
+            if not program_valid or current is None:
+                continue
+            if adapt_prefixes:
+                for suffix_index, suffix in enumerate(primitive_suffixes):
+                    symbolic_nodes += 1
+                    if symbolic_nodes > node_budget:
+                        reason = "symbolic_node_budget_exhausted"
+                        stop = True
+                        break
+                    suffix_body: DFA | None = current
+                    suffix_atoms = _tool_atoms(suffix)
+                    applied = 0
+                    for atom in suffix_atoms:
+                        primitive_operations += 1
+                        applied += 1
+                        suffix_body = apply_atom(suffix_body, atom)  # type: ignore[arg-type]
+                        if suffix_body is None:
+                            break
+                    transcript.append({
+                        "kind": "preferred_suffix_expansion",
+                        "arm": arm,
+                        "program_index": program_index,
+                        "suffix_index": suffix_index,
+                        "suffix_tool_id": suffix.tool_id,
+                        "primitive_operations_applied": applied,
+                        "success": suffix_body is not None,
+                        "raw_result_digest": (
+                            None if suffix_body is None else _raw_body_digest(suffix_body)
+                        ),
+                    })
+                    if suffix_body is not None and evaluate_completed(
+                        selected=selected + [suffix],
+                        expanded=expanded + list(suffix_atoms),
+                        body=suffix_body,
+                        source="transported_prefix_adaptation",
+                        requested_depth=len(program_ids) + 1,
+                    ):
+                        stop = True
+                        break
+            elif evaluate_completed(
                 selected=selected,
                 expanded=expanded,
                 body=current,
@@ -272,8 +321,8 @@ def audit_post_search(
                 requested_depth=len(program_ids),
             ):
                 stop = True
+            if stop:
                 break
-
         def descend(
             current: DFA,
             selected: tuple[LineageTool, ...],
@@ -370,6 +419,7 @@ def audit_post_search(
         arm=arm,
         registry_tool_ids=tuple(tool.tool_id for tool in registry),
         preferred_programs=tuple(tuple(str(value) for value in program) for program in preferred_programs),
+        adapt_prefixes=adapt_prefixes,
         maximum_depth=maximum_depth,
         node_budget=node_budget,
         exact=exact,
