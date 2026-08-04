@@ -21,10 +21,9 @@ def test_bank_range_and_minimum_are_fixed_before_selection():
 
 
 def test_every_bank_entry_runs_full_controls_validation_native_and_rollback():
-    source = inspect.getsource(m042_engine._entry_for_seed)
+    source = inspect.getsource(m042_engine._entry_for_task)
 
     for required in (
-        "generate_lineage_anchor_task",
         "_certificate",
         'arm="complete_continued_lineage"',
         'arm="learning_state_ablated"',
@@ -39,15 +38,27 @@ def test_every_bank_entry_runs_full_controls_validation_native_and_rollback():
     ):
         assert required in source
 
+    task_source = inspect.getsource(m042_engine._candidate_task)
+    assert "generate_lineage_anchor_task" in task_source
+
 
 def test_selection_occurs_only_after_the_whole_bank_is_built_and_replayed():
     source = inspect.getsource(m042_engine.run_m042_development)
 
-    first_bank = source.index("first_bank = _build_bank(base)")
-    replay_bank = source.index("replay_bank = _build_bank(base)")
+    first_bank = source.index("first_bank = _build_bank(context)")
+    replay_bank = source.index("replay_bank = _build_bank(context)")
     selection = source.index("selected = first_bank[selected_index]")
 
     assert first_bank < replay_bank < selection
+
+
+def test_parent_native_is_reproduced_once_before_bank_enumeration():
+    context_source = inspect.getsource(m042_engine._bank_context)
+    entry_source = inspect.getsource(m042_engine._entry_for_task)
+
+    assert "parent_native = _synthesise_native" in context_source
+    assert "context.parent_native.body.to_json()" in entry_source
+    assert "post-native-synthesis" not in entry_source
 
 
 def test_gate_ten_stays_false_in_development():
