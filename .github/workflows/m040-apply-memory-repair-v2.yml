@@ -1,0 +1,100 @@
+name: Apply M040 continuation-frontier repair v2
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-apply-memory-repair-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Reapply the committed frontier patch and normalise dependencies
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/m040-apply-memory-repair.yml').read_text()
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          embedded = textwrap.dedent(workflow[start:end])
+          exec(compile(embedded, 'm040-frontier-patch', 'exec'))
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text().replace(
+              'DEVELOPMENT_SEED = 400_041',
+              'DEVELOPMENT_SEED = 400_042',
+          )
+          engine_path.write_text(engine)
+
+          m039_path = Path('metamorphosis/m039_engine.py')
+          m039 = m039_path.read_text()
+          old = '''    input_tools = tuple(registry[index] for index in candidate.tool_indices)
+              event_id = _construction_event_id(
+                  lineage_id=lineage_id,
+                  cycle=cycle,
+                  input_tool_ids=tuple(tool.tool_id for tool in input_tools),
+                  program=candidate.expanded_program,
+              )
+              source = {
+                  "lineage_id": lineage_id,
+                  "protocol_commitment": protocol_commitment,
+                  "introduced_cycle": cycle,
+                  "construction_event_id": event_id,
+                  "input_tool_ids": [tool.tool_id for tool in input_tools],
+                  "program": [atom.to_list() for atom in candidate.expanded_program],
+              }'''
+          new = '''    input_tools = tuple(registry[index] for index in candidate.tool_indices)
+              dependency_ids = tuple(dict.fromkeys(tool.tool_id for tool in input_tools))
+              event_id = _construction_event_id(
+                  lineage_id=lineage_id,
+                  cycle=cycle,
+                  input_tool_ids=dependency_ids,
+                  program=candidate.expanded_program,
+              )
+              source = {
+                  "lineage_id": lineage_id,
+                  "protocol_commitment": protocol_commitment,
+                  "introduced_cycle": cycle,
+                  "construction_event_id": event_id,
+                  "input_tool_ids": list(dependency_ids),
+                  "program": [atom.to_list() for atom in candidate.expanded_program],
+              }'''
+          if old not in m039:
+              raise SystemExit('M039 dependency block not found')
+          m039 = m039.replace(old, new)
+          m039 = m039.replace(
+              '        input_tool_ids=tuple(tool.tool_id for tool in input_tools),',
+              '        input_tool_ids=dependency_ids,',
+              1,
+          )
+          m039_path.write_text(m039)
+
+          Path('tests/test_m040_duplicate_dependencies.py').write_text('''from metamorphosis.m012b_dfa import DFA\nfrom metamorphosis.m039_engine import (\n    Candidate, _compose_adopted_tool, _tool_atoms, primitive_registry,\n)\nfrom metamorphosis.m039_lineage import derive_lineage_id\n\n\ndef test_repeated_invocation_keeps_program_but_deduplicates_dependencies():\n    commitment = "m040-duplicate-dependency-regression"\n    lineage_id = derive_lineage_id(400041, commitment)\n    registry = primitive_registry(lineage_id, commitment)\n    tool = registry[0]\n    atom = _tool_atoms(tool)[0]\n    body = DFA((0, 1), ((0, 0),), (False,), 0)\n    candidate = Candidate(\n        "0" * 64,\n        (0, 0),\n        (tool.tool_id, tool.tool_id),\n        (atom, atom),\n        body,\n    )\n    composed = _compose_adopted_tool(\n        lineage_id=lineage_id,\n        protocol_commitment=commitment,\n        cycle=1,\n        candidate=candidate,\n        registry=registry,\n    )\n    assert composed.input_tool_ids == (tool.tool_id,)\n    assert len(composed.program) == 2\n''')
+          PY
+      - name: Verify focused M039 and M040 regressions
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q tests/test_m040_duplicate_dependencies.py tests/test_m040_post_migration.py
+      - name: Commit and remove temporary patch workflows
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git rm .github/workflows/m040-apply-memory-repair.yml
+          git rm .github/workflows/m040-apply-memory-repair-v2.yml
+          git add metamorphosis/m039_engine.py metamorphosis/m040_packet.py metamorphosis/m040_engine.py tests/test_m040_post_migration.py tests/test_m040_duplicate_dependencies.py
+          git commit -m 'fix(m040): transport accepted continuation programs across migration'
+          git push origin "HEAD:${BRANCH}"
