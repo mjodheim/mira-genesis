@@ -1,0 +1,135 @@
+name: Evaluate M040 lineage anchor 400047
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-evaluate-lineage-anchor-400047.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Bind both defaults and untouched seed
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          engine = engine.replace('DEVELOPMENT_SEED = 400_046', 'DEVELOPMENT_SEED = 400_047', 1)
+          old = '''def run_m040_development(
+              master_seed: int = DEVELOPMENT_SEED,
+              *,
+              protocol_commitment: str = DEVELOPMENT_COMMITMENT,
+              require_replay: bool = True,
+              task_family: str = "prefix_adaptation",
+          ) -> M040DevelopmentResult:'''
+          new = '''def run_m040_development(
+              master_seed: int = DEVELOPMENT_SEED,
+              *,
+              protocol_commitment: str = DEVELOPMENT_COMMITMENT,
+              require_replay: bool = True,
+              task_family: str = "lineage_anchor",
+          ) -> M040DevelopmentResult:'''
+          if old not in engine:
+              raise SystemExit('public task-family default block not found')
+          engine = engine.replace(old, new, 1)
+          engine_path.write_text(engine)
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          pattern = re.compile(
+              r'def test_consumed_seed_400046_used_the_actual_prefix_family\(result\) -> None:\n.*?\Z',
+              re.S,
+          )
+          replacement = '''def test_lineage_anchor_defaults_are_bound_before_execution() -> None:
+              import inspect
+              from metamorphosis.m040_engine import _execute, run_m040_development
+
+              assert inspect.signature(_execute).parameters["task_family"].default == "lineage_anchor"
+              assert (
+                  inspect.signature(run_m040_development).parameters["task_family"].default
+                  == "lineage_anchor"
+              )
+
+
+          def test_lineage_anchor_task_is_derived_after_packet_validation(result) -> None:
+              from metamorphosis.m039_lineage import ORIGIN_PROTOCOL_SUPPLIED
+              from metamorphosis.m040_anchor import derive_lineage_anchors
+
+              packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+              accepted = tuple(result.arms["complete_migrated_lineage"].accepted_tool_ids)
+              anchors = derive_lineage_anchors(packet)
+              matching = [anchor for anchor in anchors if accepted[: len(anchor)] == anchor]
+              assert result.task.task_family == "lineage_anchor"
+              assert accepted == result.task.generating_tool_ids
+              assert matching
+              anchor = max(matching, key=len)
+              suffix_ids = accepted[len(anchor) :]
+              assert len(suffix_ids) in (1, 2)
+              registry = {tool.tool_id: tool for tool in packet.tool_registry}
+              assert all(
+                  registry[tool_id].provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+                  for tool_id in suffix_ids
+              )
+              assert accepted not in packet.learning_state.continuation_programs
+              assert result.task.digest() not in result.packet_json
+          '''
+          tests, count = pattern.subn(replacement, tests)
+          if count != 1:
+              raise SystemExit(f'lineage-anchor test replacement matched {count} blocks')
+          tests_path.write_text(tests)
+          PY
+      - name: Compile and inspect defaults before measurement
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_anchor.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py
+          python - <<'PY'
+          import inspect
+          from metamorphosis.m040_engine import _execute, run_m040_development
+          assert inspect.signature(_execute).parameters['task_family'].default == 'lineage_anchor'
+          assert inspect.signature(run_m040_development).parameters['task_family'].default == 'lineage_anchor'
+          PY
+      - name: Evaluate untouched lineage-anchor seed 400047
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Produce consumed result 007
+        run: |
+          python experiments/M040/run_development.py \
+            --seed 400047 \
+            --output results/artifacts/M040_DEVELOPMENT_007.json
+          sha256sum results/artifacts/M040_DEVELOPMENT_007.json
+          wc -c results/artifacts/M040_DEVELOPMENT_007.json
+      - name: Archive workflow and commit measured mechanism
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          cp .github/workflows/m040-evaluate-lineage-anchor-400047.yml archives/workflows/m040-evaluate-lineage-anchor-400047.yml
+          git rm .github/workflows/m040-evaluate-lineage-anchor-400047.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            results/artifacts/M040_DEVELOPMENT_007.json \
+            archives/workflows/m040-evaluate-lineage-anchor-400047.yml
+          git commit -m 'feat(m040): evaluate true lineage-anchor transfer on seed 400047'
+          git push origin "HEAD:${BRANCH}"
