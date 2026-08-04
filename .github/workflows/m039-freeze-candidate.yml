@@ -1,0 +1,64 @@
+name: M039 freeze candidate
+
+# Computes identities only. It never imports the sealed specification or derives a task seed.
+on:
+  pull_request:
+    paths:
+      - 'experiments/M039/PROTOCOL.md'
+      - '.github/workflows/m039-freeze-candidate.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m039-freeze-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: true
+
+jobs:
+  protocol-identity:
+    name: M039 frozen protocol identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Confirm no canonical marker exists
+        run: test ! -e experiments/M039/CANONICAL_ARMED.json
+
+      - name: Record candidate identities without seed derivation
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          protocol = Path('experiments/M039/PROTOCOL.md').read_bytes()
+          payload = {
+              'schema': 'm039-freeze-candidate/1',
+              'head_sha': os.environ['HEAD_SHA'],
+              'protocol_path': 'experiments/M039/PROTOCOL.md',
+              'protocol_sha256': hashlib.sha256(protocol).hexdigest(),
+              'protocol_bytes': len(protocol),
+              'canonical_marker_absent': True,
+              'sealed_seed_not_derived': True,
+          }
+          Path('m039-freeze-candidate.json').write_text(
+              json.dumps(payload, sort_keys=True, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(payload, sort_keys=True))
+          PY
+
+      - name: Upload the freeze identity
+        uses: actions/upload-artifact@v4
+        with:
+          name: m039-freeze-candidate-${{ github.event.pull_request.head.sha }}
+          path: m039-freeze-candidate.json
+          if-no-files-found: error
+          retention-days: 30
