@@ -1,0 +1,43 @@
+name: Preserve M040 development result 002
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-preserve-development-002.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  preserve:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - uses: actions/download-artifact@v4
+        with:
+          name: m040-development-35884c3d957f5faa12dde14a94a8e7db196e3717
+          path: .m040-development-002
+          repository: ${{ github.repository }}
+          run-id: 30917494410
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify exact bytes
+        run: |
+          test -f .m040-development-002/M040_DEVELOPMENT_RESULT.json
+          echo '7e44a4f1d63347c8cd2add65b7456b131b781c495ba495be8b25b461069a07d2  .m040-development-002/M040_DEVELOPMENT_RESULT.json' | sha256sum --check --strict
+          test "$(wc -c < .m040-development-002/M040_DEVELOPMENT_RESULT.json)" = '50946'
+          mkdir -p results/artifacts
+          cp .m040-development-002/M040_DEVELOPMENT_RESULT.json results/artifacts/M040_DEVELOPMENT_002.json
+      - name: Commit the byte-exact development artefact
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/artifacts/M040_DEVELOPMENT_002.json
+          git commit -m 'chore(m040): preserve positive development result 002 byte for byte'
+          git push origin "HEAD:${BRANCH}"
