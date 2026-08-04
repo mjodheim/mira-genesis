@@ -146,7 +146,7 @@ evidence_B ⊂ evidence_C
 ```
 
 If C were allowed to *replace* B's compact trace with a different one, it could emit zero
-`compact_event_serializations`, and B would score worse on that dimension for having produced
+`compact_events_recorded`, and B would score worse on that dimension for having produced
 the very evidence C omitted. The comparison would then measure a difference in instrumentation
 design rather than the cost of proof. Under the superset rule, every proof-cost dimension can
 only be non-decreasing from B to C, and the difference is exactly the additional cost of
@@ -240,27 +240,56 @@ Reported as a **vector**, never as a synthetic score:
 
 `functional_deterministic_operations` · `audit_deterministic_operations` · `search_nodes` ·
 `candidates_constructed` · `candidates_evaluated` · `hash_operations` ·
-`body_serializations` · `compact_event_serializations` · `full_event_serializations` ·
-`full_checkpoint_serializations` · `journal_bytes` · `archive_projection_operations` ·
-`tool_calls` · `rng_draws` · `peak_persistent_artifacts` ·
-`peak_persistent_audit_artifacts` · `escalations` · `false_escalations` ·
-`missed_escalations` · `wall_clock_diagnostic`
+`body_serializations` · `compact_events_recorded` · `compact_batches_serialized` ·
+`compact_trace_bytes` · `hashed_event_payload_serializations` ·
+`persisted_event_serializations` · `full_checkpoint_serializations` ·
+`journal_bytes_persisted` · `archive_projection_operations` · `tool_calls` · `rng_draws` ·
+`peak_persistent_artifacts` · `peak_persistent_audit_artifacts` · `escalations` ·
+`false_escalations` · `missed_escalations` · `wall_clock_diagnostic`
 
-An earlier draft carried a single `deterministic_operations` and introduced
-`full_event_serializations`, audit operations and audit artifacts only inside the comparison
-rule. A dimension that exists solely in the rule cannot be reported, so the four names below
-are part of the **primary vector** and are used under exactly these spellings throughout this
-protocol:
-
-```
-functional_deterministic_operations
-audit_deterministic_operations
-full_event_serializations
-peak_persistent_audit_artifacts
-```
+An earlier draft carried a single `deterministic_operations` and introduced several
+dimensions only inside the comparison rule. A dimension that exists solely in the rule cannot
+be reported, so all of them are part of the **primary vector** and are used under exactly
+these spellings throughout this protocol.
 
 The functional/audit split is the same one ADR 0001 makes between `functional_state` and
 `audit_state`: only the functional half must be identical between arms.
+
+### Each counter names an operation actually performed
+
+Three names in the previous draft did not describe what the implementation executes, and a
+counter that misdescribes the code cannot support an efficiency hypothesis. They are split at
+the boundary where the work differs:
+
+| Previous name | Problem | Replaced by |
+|---|---|---|
+| `full_event_serializations` | incremented where only the hashed payload was serialised, without the event's own hash | `hashed_event_payload_serializations` and `persisted_event_serializations` |
+| `journal_bytes` | summed the hashed payload rather than the bytes actually persisted | `journal_bytes_persisted`, measured on the full canonical event |
+| `compact_event_serializations` | incremented per recorded event although the encoding happens once per flushed batch | `compact_events_recorded` and `compact_batches_serialized` |
+
+The full event is serialised **after** its hash is computed, over every field including
+`event_hash`, and those bytes are what is persisted, counted and later replayed. They are
+also the stored authority: each read decodes a fresh copy, so the journal that is replayed is
+byte-for-byte the one that was hashed and counted, and a caller mutating what it reads cannot
+reach the record.
+
+### The counting rule for `audit_deterministic_operations`
+
+A primary dimension of the efficiency rule cannot be a value incremented by 1 or 2 according
+to which function ran. It is **derived**, never stored, as the sum of the counted operations:
+
+```
+hash_operations
+hashed_event_payload_serializations
+persisted_event_serializations
+compact_events_recorded
+compact_batches_serialized
+archive_projection_operations
+body_serializations
+full_checkpoint_serializations
+```
+
+Byte totals and peaks are excluded: they are magnitudes, not operations.
 
 Weights collapsing these dimensions into a single cost would themselves be a policy, and
 would have to be committed separately. M038 does not define them.
@@ -280,18 +309,24 @@ digest
 **Proof-cost dimensions**, on which B is compared to C:
 
 `audit_deterministic_operations` · `hash_operations` · `body_serializations` ·
-`compact_event_serializations` · `full_event_serializations` ·
-`full_checkpoint_serializations` · `journal_bytes` · `archive_projection_operations` ·
-`peak_persistent_audit_artifacts`
+`compact_events_recorded` · `compact_batches_serialized` · `compact_trace_bytes` ·
+`hashed_event_payload_serializations` · `persisted_event_serializations` ·
+`full_checkpoint_serializations` · `journal_bytes_persisted` ·
+`archive_projection_operations` · `peak_persistent_audit_artifacts`
 
 **Rule.** B must be **no worse than C on every** proof-cost dimension, and **strictly better
 on the primary dimensions**, designated now and not after measurement:
 
 ```
-body_serializations
-journal_bytes
+persisted_event_serializations
+journal_bytes_persisted
 audit_deterministic_operations
 ```
+
+`body_serializations` was a primary dimension in the previous draft. It is demoted to the
+non-strict half, because under the superset rule the compact trace is identical in both arms
+and C's extra cost falls on the persisted events — designating a dimension that may legally
+tie would make the strict half unsatisfiable for a reason unrelated to the hypothesis.
 
 The superset rule above is what makes "no worse on every dimension" a meaningful test rather
 than an artifact of which arm was instrumented differently.

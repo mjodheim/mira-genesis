@@ -186,6 +186,58 @@ argument that the encoding is typed and length-prefixed, plus property tests ove
 confusable pairs — string against integer, empty against absent, tuple against list, a field
 whose content contains a separator byte, and nested structures.
 
+## External anchoring
+
+Discovered during implementation and added before any claim rests on the chain. An ADR
+`accepted for development implementation` is not immutable: the protocol is not frozen and no
+M038 result exists, so a limit found while building the mechanism is integrated rather than
+left as a footnote.
+
+```
+An internally consistent hash chain proves integrity only relative to an
+expected head committed outside that chain.
+
+A party that rewrites every event and recomputes every hash obtains another
+internally valid chain with a different head.
+
+Therefore:
+
+- internal verification is necessary but not sufficient;
+- the initial functional-state digest must be anchored to the escalation checkpoint;
+- the checkpoint digest must be bound to the first causal event;
+- the completed journal head must be compared with an externally committed expected head;
+- a canonical result may not claim tamper detection without naming where that expected
+  head was committed.
+```
+
+For a future canonical run, the expected head is recorded in an immutable artifact tied to
+the commit and the canonical workflow. For development, the API already accepts it.
+
+The two levels are therefore two methods, not one method with a lenient default:
+
+| Method | Establishes |
+|---|---|
+| `verify_internal_consistency()` | the chain holds itself together — a wholly rebuilt chain also passes |
+| `verify_against(expected_initial_state_digest, expected_head, expected_checkpoint_digest)` | the chain is the history committed elsewhere |
+
+`verify_against` takes every expected value as a **required** argument. None of them defaults
+to the journal's own state: an anchor read back from the thing it anchors proves nothing.
+
+### The first event binds the checkpoint
+
+`GENESIS_HASH` stays the fixed root, but the first event must be
+`EscalationCheckpointCreated` and must carry the checkpoint digest in
+`immutable_input_digests`. Verification refuses:
+
+- a non-empty journal whose first event is of another type;
+- a first event that does not reference the expected checkpoint;
+- an initial state digest differing from the functional state held in that checkpoint.
+
+The journal therefore keeps `initial_state_digest` and `state_digest` separately. The first
+never moves; the second follows the functional continuation. Conflating them leaves the first
+event's `previous_state_digest` compared against nothing, which is exactly the gap a rebuilt
+chain exploits.
+
 ## Rollback does not rewrite the journal
 
 An append-only journal and an "exact rollback" are only compatible if two kinds of state are
@@ -293,4 +345,14 @@ checkpoints and slow-path events.
 - the known confusable pairs encode differently — `1` against `"1"`, `""` against absent,
   `false` against absent, a tuple against a list of the same elements, a field whose content
   contains a domain constant's bytes, and nested structures;
-- no domain constant is a prefix of another, and none is caller-supplied.
+- no domain constant is a prefix of another, and none is caller-supplied;
+- a wholly rebuilt chain passes internal verification and fails against an externally
+  committed head;
+- a first event carrying a forged `previous_state_digest`, with every downstream hash
+  recomputed, is rejected by the initial-state anchor;
+- `verify_against` exposes no default for any expected value;
+- a journal opening with another event type, or whose opening event does not reference the
+  expected checkpoint, or whose initial state is not the checkpoint's functional state, is
+  rejected;
+- an event read from the journal cannot be mutated into the record, because the authority is
+  the stored canonical bytes and each read decodes a fresh copy.

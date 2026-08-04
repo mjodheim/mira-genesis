@@ -50,13 +50,25 @@ commitment fixed them before this measurement, so they are not described as comm
 "`bdf5ba3` plus the calibration script" was not a Git identity — it named a commit that did
 not contain the script. The identity is:
 
+Blob and content digests are content-addressed and survive any rebase. Commit identities do
+not, and this branch was rebased onto `main` after PR #52 merged, so the identities recorded
+before that rebase are unreachable and both sets are kept.
+
 | | |
 |---|---|
-| Base implementation commit | `bdf5ba300b2e034238d41b600b127fea31d97293` |
-| Calibration script blob SHA | `6e9903cd5c39fb951d752339a1990ff4ab6102a6` |
-| First commit containing both script and report | `da104b66ebce661e23d0ae34ee97c07837c7b156` |
+| Calibration script blob SHA | `40bc7bc4c8aa747a17e5d69b6d99afd2e3453fbf` |
 | Versioned output | [`results/artifacts/M038_TRIGGER_CALIBRATION.json`](artifacts/M038_TRIGGER_CALIBRATION.json) |
 | SHA-256 of that output | `1a38a5d31c8e7cd1851215db5aa8b915f656d1aa3b9bff52f7f6dbfacc7ddffb` |
+| Output blob SHA | `16dc2108b0cb7267cd35613dcdfef3a3ecfbae45` |
+| Commit introducing the current script | `63d8b18d72451ffe93f905e1c733a89ddbc70fb4` |
+| Base documentary commit | `b8d8088e726fb508ea142853518d098b35e132da` |
+| First commit holding script and report | `664c385d6b4f14286cbae02b3ae93b2b1420b8dd` |
+
+Pre-rebase identities, kept because they were published and must stay in the history rather
+than be quietly replaced: base `bdf5ba300b2e034238d41b600b127fea31d97293`, first commit
+holding both `da104b66ebce661e23d0ae34ee97c07837c7b156`, and script blob
+`6e9903cd5c39fb951d752339a1990ff4ab6102a6` — the last being the script before the
+`development_safety_ceiling` rename, which changed two field names in the JSON output.
 
 The JSON artifact holds only machine-independent content — algorithm identity, ceiling,
 per-row figures, totals — so its digest reproduces on any platform. The interpreter version

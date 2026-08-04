@@ -1,34 +1,35 @@
-"""The M038 causal journal: typed serialisation, a hash chain, and a projected archive.
+"""The M038 causal journal: typed serialisation, an anchored hash chain, a projected archive.
 
 Implements the mechanisms accepted in `docs/adr/0001-causal-journal.md`. Nothing here
 measures anything, reads a sealed block, or supports an M038 claim. It is the substrate the
 experiment will later run on.
 
-Three ideas carry the whole design, and each exists because the obvious alternative fails.
+Four ideas carry the design, and each exists because the obvious alternative fails.
 
 **Typed, length-prefixed encoding.** Joining fields with a separator is ambiguous whenever a
 field contains the separator. Length prefixing removes that, but not type ambiguity: with
 lengths alone the integer `1` and the string `"1"` share bytes. So every value carries a tag,
-and — the part an earlier draft left open — the length itself has a fixed encoding, an
-unsigned 64-bit big-endian integer, or a decoder cannot know where the length ends and the
-payload begins.
+and the length itself has a fixed encoding, an unsigned 64-bit big-endian integer, or a
+decoder cannot know where the length ends and the payload begins.
+
+**External anchoring.** An internally consistent chain proves integrity only relative to an
+expected head committed outside it: rewriting every event and recomputing every hash yields
+another valid chain with a different head. So internal verification and anchored verification
+are two different methods here, `verify_internal_consistency` and `verify_against`, and the
+second takes its expected values as required arguments. It never reads them back from the
+journal it is checking, which would make the anchor circular.
 
 **Two kinds of state.** An append-only journal and an exact rollback are compatible only if
-`functional_state` (restored exactly) is separated from `audit_state` (which continues
-across the rollback). Rollback is therefore three appends and no erasure, and a state digest
-covers the functional half only — otherwise a digest would have to contain the hash of the
-event containing it.
+`functional_state` (restored exactly) is separated from `audit_state` (which continues across
+the rollback). Rollback is therefore three appends and no erasure, and a state digest covers
+the functional half only — otherwise a digest would have to contain the hash of the event
+containing it.
 
-**One source of authority.** The lineage archive is a projection of the journal, never a
-second persisted state. Two persisted truths diverge, and the divergence is invisible until
-it matters.
-
-A limit worth stating here, because it is easy to overclaim: a hash chain detects tampering
-only *relative to a head committed elsewhere*. Someone who rewrites every event and
-recomputes every hash obtains a chain that verifies — with a different head. ADR 0001 records
-this for the rolling commitment; it holds identically for the causal journal, and
-`test_a_wholly_rebuilt_chain_verifies_and_this_is_the_limit_of_the_mechanism` asserts it
-rather than leaving it implicit.
+**One source of authority.** Events are stored as their canonical bytes, and every read
+decodes a fresh copy. The journal that is replayed is exactly the journal whose bytes were
+hashed and counted, and a caller mutating what it reads cannot reach the record. The lineage
+archive is likewise a projection, never a second persisted state: two persisted truths
+diverge, and the divergence stays invisible until it matters.
 """
 
 from __future__ import annotations
@@ -66,8 +67,10 @@ GENESIS_HASH = hashlib.sha256(b"m038-causal-journal-genesis-v1").digest()
 # Exactly the events the M038 mechanism needs. `PopulationReduced` is absent because M038 is
 # a single-organism lineage and has no population to reduce; the rollback pair is present
 # because M038 forces a rollback.
+OPENING_EVENT = "EscalationCheckpointCreated"
+
 EVENT_TYPES = (
-    "EscalationCheckpointCreated",
+    OPENING_EVENT,
     "StructuralIncapacityCertified",
     "CandidateProposed",
     "CandidateEvaluated",
@@ -98,7 +101,7 @@ class SerializationError(ValueError):
 
 
 class JournalIntegrityError(ValueError):
-    """The chain, the state continuity, or a projection does not verify."""
+    """The chain, its anchoring, the state continuity, or a projection does not verify."""
 
 
 # --------------------------------------------------------------------------------------
@@ -251,24 +254,69 @@ class AuditCounters:
 
     Separated from the functional counters because only the functional half must be
     identical between arms B and C.
+
+    Every field names an operation that is actually performed, at the place it is performed.
+    An earlier version incremented `full_event_serializations` where only the hashed payload
+    was serialised, charged `journal_bytes` for that payload rather than for the persisted
+    event, and counted a compact serialisation per recorded event although the encoding
+    happens once per flushed batch. Three counters that misdescribe the code cannot support
+    an efficiency hypothesis, so each is now split at the boundary where the work differs.
     """
 
     hash_operations: int = 0
-    full_event_serializations: int = 0
-    compact_event_serializations: int = 0
-    journal_bytes: int = 0
+    hashed_event_payload_serializations: int = 0
+    persisted_event_serializations: int = 0
+    journal_bytes_persisted: int = 0
+    compact_events_recorded: int = 0
+    compact_batches_serialized: int = 0
+    compact_trace_bytes: int = 0
     archive_projection_operations: int = 0
-    audit_deterministic_operations: int = 0
+    body_serializations: int = 0
+    full_checkpoint_serializations: int = 0
+    peak_persistent_audit_artifacts: int = 0
+
+    # `audit_deterministic_operations` is a primary dimension of the efficiency rule, so it
+    # needs a stated counting rule rather than an increment of 1 or 2 chosen per function.
+    # It is the sum of the counted operations below — byte totals and peaks are excluded
+    # because they are magnitudes, not operations — and it is derived rather than stored, so
+    # it cannot drift away from its parts.
+    COUNTED_OPERATIONS = (
+        "hash_operations",
+        "hashed_event_payload_serializations",
+        "persisted_event_serializations",
+        "compact_events_recorded",
+        "compact_batches_serialized",
+        "archive_projection_operations",
+        "body_serializations",
+        "full_checkpoint_serializations",
+    )
+
+    @property
+    def audit_deterministic_operations(self) -> int:
+        return sum(getattr(self, name) for name in self.COUNTED_OPERATIONS)
+
+    def observe_persistent_artifacts(self, count: int) -> None:
+        self.peak_persistent_audit_artifacts = max(self.peak_persistent_audit_artifacts, count)
 
     def as_mapping(self) -> dict[str, int]:
-        return {
-            "hash_operations": self.hash_operations,
-            "full_event_serializations": self.full_event_serializations,
-            "compact_event_serializations": self.compact_event_serializations,
-            "journal_bytes": self.journal_bytes,
-            "archive_projection_operations": self.archive_projection_operations,
-            "audit_deterministic_operations": self.audit_deterministic_operations,
+        fields = {
+            name: getattr(self, name)
+            for name in (
+                "hash_operations",
+                "hashed_event_payload_serializations",
+                "persisted_event_serializations",
+                "journal_bytes_persisted",
+                "compact_events_recorded",
+                "compact_batches_serialized",
+                "compact_trace_bytes",
+                "archive_projection_operations",
+                "body_serializations",
+                "full_checkpoint_serializations",
+                "peak_persistent_audit_artifacts",
+            )
         }
+        fields["audit_deterministic_operations"] = self.audit_deterministic_operations
+        return fields
 
 
 # --------------------------------------------------------------------------------------
@@ -280,8 +328,8 @@ class RollingCommitment:
     """A rolling hash over compact fast-path events, never over the body.
 
     It proves that the recorded compact trace has not been altered or reordered after the
-    fact. It does not prove that every real event was recorded, nor that the fast path can
-    be replayed — see ADR 0001.
+    fact — and, like the causal chain, only relative to a head committed elsewhere. It does
+    not prove that every real event was recorded, nor that the fast path can be replayed.
 
     `batch_size` folds N events at a time. It must be fixed before any measurement.
     """
@@ -314,8 +362,7 @@ class RollingCommitment:
     def record(self, compact_event: Mapping[str, Any]) -> None:
         self._pending.append(dict(compact_event))
         self._count += 1
-        self.counters.compact_event_serializations += 1
-        self.counters.audit_deterministic_operations += 1
+        self.counters.compact_events_recorded += 1
         if len(self._pending) >= self._batch_size:
             self.flush()
 
@@ -325,14 +372,78 @@ class RollingCommitment:
             return self._head
         payload = encode(self._pending)
         self._head = hashlib.sha256(DOMAIN_COMPACT_TRACE + self._head + payload).digest()
+        self.counters.compact_batches_serialized += 1
+        self.counters.compact_trace_bytes += len(payload)
         self.counters.hash_operations += 1
-        self.counters.audit_deterministic_operations += 1
         self._pending.clear()
         return self._head
 
 
 # --------------------------------------------------------------------------------------
-# Events and the chain
+# The escalation checkpoint
+# --------------------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class EscalationCheckpoint:
+    """The immutable input of the full causal journal, serialised once at the boundary."""
+
+    schema_version: str
+    protocol_commitment: str
+    fast_trace_head: bytes
+    fast_event_count: int
+    body: Any
+    body_digest: bytes
+    portable_learning_state: Mapping[str, Any]
+    tool_registry: Sequence[Any]
+    deterministic_counters: Mapping[str, int]
+    rng_algorithm_and_state: Any
+    admitted_observations: Sequence[Any]
+    evidence_digest: bytes
+    incapacity_certificate: Mapping[str, Any]
+    escalation_reason: str
+
+    def functional_fields(self) -> dict[str, Any]:
+        """The functional half of the checkpoint — what a rollback would have to restore."""
+        return {
+            "body": self.body,
+            "portable_learning_state": dict(self.portable_learning_state),
+            "tool_registry": list(self.tool_registry),
+            "rng_algorithm_and_state": self.rng_algorithm_and_state,
+        }
+
+    def functional_state_digest(self) -> bytes:
+        """The functional state the journal must start from, derived from the checkpoint."""
+        return functional_digest(self.functional_fields())
+
+    def hashed_fields(self) -> dict[str, Any]:
+        return {
+            "schema_version": self.schema_version,
+            "protocol_commitment": self.protocol_commitment,
+            "fast_trace_head": self.fast_trace_head,
+            "fast_event_count": self.fast_event_count,
+            "body": self.body,
+            "body_digest": self.body_digest,
+            "portable_learning_state": dict(self.portable_learning_state),
+            "tool_registry": list(self.tool_registry),
+            "deterministic_counters": dict(self.deterministic_counters),
+            "rng_algorithm_and_state": self.rng_algorithm_and_state,
+            "admitted_observations": list(self.admitted_observations),
+            "evidence_digest": self.evidence_digest,
+            "incapacity_certificate": dict(self.incapacity_certificate),
+            "escalation_reason": self.escalation_reason,
+        }
+
+    def checkpoint_digest(self, *, counters: AuditCounters | None = None) -> bytes:
+        if counters is not None:
+            counters.full_checkpoint_serializations += 1
+            counters.hash_operations += 1
+            counters.body_serializations += 1
+        return digest(DOMAIN_CHECKPOINT, self.hashed_fields())
+
+
+# --------------------------------------------------------------------------------------
+# Events
 # --------------------------------------------------------------------------------------
 
 
@@ -365,12 +476,44 @@ class JournalEvent:
             "result_state_digest": self.result_state_digest,
         }
 
+    def persisted_fields(self) -> dict[str, Any]:
+        """Every field, `event_hash` included. This is what is stored and counted."""
+        return {**self.hashed_fields(), "event_hash": self.event_hash}
+
+    @classmethod
+    def from_fields(cls, fields: Mapping[str, Any]) -> "JournalEvent":
+        missing = {name for name in cls.__dataclass_fields__} - set(fields)
+        if missing:
+            raise SerializationError(f"event record is missing {sorted(missing)}")
+        return cls(
+            sequence=fields["sequence"],
+            event_type=fields["event_type"],
+            schema_version=fields["schema_version"],
+            protocol_commitment=fields["protocol_commitment"],
+            previous_event_hash=fields["previous_event_hash"],
+            previous_state_digest=fields["previous_state_digest"],
+            immutable_input_digests=tuple(fields["immutable_input_digests"]),
+            operation_parameters=dict(fields["operation_parameters"]),
+            costs=dict(fields["costs"]),
+            result_state_digest=fields["result_state_digest"],
+            event_hash=fields["event_hash"],
+        )
+
     def computed_hash(self) -> bytes:
         return digest(DOMAIN_CAUSAL_EVENT, self.hashed_fields())
 
 
+# --------------------------------------------------------------------------------------
+# The journal
+# --------------------------------------------------------------------------------------
+
+
 class CausalJournal:
     """An append-only, hash-chained journal. The single source of authority.
+
+    The authority is the canonical bytes of each event; `events` decodes fresh copies, so a
+    caller that mutates what it reads cannot reach the record, and the replayed journal is
+    byte-for-byte the one that was hashed and counted.
 
     Nothing is ever erased or overwritten, including across a rollback: the functional state
     is restored while the audit state continues.
@@ -381,19 +524,49 @@ class CausalJournal:
         *,
         protocol_commitment: str,
         initial_state_digest: bytes,
+        checkpoint_digest: bytes,
         schema_version: str = SCHEMA_VERSION,
         counters: AuditCounters | None = None,
     ) -> None:
         self._protocol_commitment = protocol_commitment
         self._schema_version = schema_version
-        self._events: list[JournalEvent] = []
-        self._head = GENESIS_HASH
+        # The initial digest anchors the chain's start and never moves. The current digest
+        # follows the functional continuation. Conflating them would leave the first event's
+        # `previous_state_digest` unchecked against anything.
+        self._initial_state_digest = initial_state_digest
         self._state_digest = initial_state_digest
+        self._checkpoint_digest = checkpoint_digest
+        self._records: list[bytes] = []
+        self._head = GENESIS_HASH
         self.counters = counters if counters is not None else AuditCounters()
+
+    @classmethod
+    def open_from_checkpoint(
+        cls,
+        checkpoint: EscalationCheckpoint,
+        *,
+        counters: AuditCounters | None = None,
+    ) -> "CausalJournal":
+        """Build a journal whose start is bound to a checkpoint by construction."""
+        shared = counters if counters is not None else AuditCounters()
+        journal = cls(
+            protocol_commitment=checkpoint.protocol_commitment,
+            initial_state_digest=checkpoint.functional_state_digest(),
+            checkpoint_digest=checkpoint.checkpoint_digest(counters=shared),
+            schema_version=checkpoint.schema_version,
+            counters=shared,
+        )
+        journal.open_cycle()
+        return journal
 
     @property
     def events(self) -> tuple[JournalEvent, ...]:
-        return tuple(self._events)
+        return tuple(JournalEvent.from_fields(decode(record)) for record in self._records)
+
+    @property
+    def records(self) -> tuple[bytes, ...]:
+        """The canonical bytes that are the authority."""
+        return tuple(self._records)
 
     @property
     def head(self) -> bytes:
@@ -404,8 +577,37 @@ class CausalJournal:
         return self._state_digest
 
     @property
+    def initial_state_digest(self) -> bytes:
+        return self._initial_state_digest
+
+    @property
+    def checkpoint_digest(self) -> bytes:
+        return self._checkpoint_digest
+
+    @property
     def protocol_commitment(self) -> str:
         return self._protocol_commitment
+
+    @property
+    def schema_version(self) -> str:
+        return self._schema_version
+
+    def open_cycle(
+        self,
+        *,
+        operation_parameters: Mapping[str, Any] | None = None,
+        costs: Mapping[str, Any] | None = None,
+    ) -> JournalEvent:
+        """Append the opening event, binding the fixed root to this precise checkpoint."""
+        if self._records:
+            raise JournalIntegrityError("the cycle is already open")
+        return self._append(
+            OPENING_EVENT,
+            result_state_digest=self._initial_state_digest,
+            operation_parameters=operation_parameters,
+            costs=costs,
+            immutable_input_digests=(self._checkpoint_digest,),
+        )
 
     def append(
         self,
@@ -416,11 +618,34 @@ class CausalJournal:
         costs: Mapping[str, Any] | None = None,
         immutable_input_digests: Sequence[bytes] = (),
     ) -> JournalEvent:
+        if not self._records:
+            raise JournalIntegrityError(
+                f"the first event must be {OPENING_EVENT}; call open_cycle()"
+            )
+        if event_type == OPENING_EVENT:
+            raise JournalIntegrityError(f"{OPENING_EVENT} may appear only once, at the start")
+        return self._append(
+            event_type,
+            result_state_digest=result_state_digest,
+            operation_parameters=operation_parameters,
+            costs=costs,
+            immutable_input_digests=immutable_input_digests,
+        )
+
+    def _append(
+        self,
+        event_type: str,
+        *,
+        result_state_digest: bytes,
+        operation_parameters: Mapping[str, Any] | None,
+        costs: Mapping[str, Any] | None,
+        immutable_input_digests: Sequence[bytes],
+    ) -> JournalEvent:
         if event_type not in EVENT_TYPES:
             raise JournalIntegrityError(f"unknown event type {event_type!r}")
 
-        event = JournalEvent(
-            sequence=len(self._events),
+        draft = JournalEvent(
+            sequence=len(self._records),
             event_type=event_type,
             schema_version=self._schema_version,
             protocol_commitment=self._protocol_commitment,
@@ -432,17 +657,23 @@ class CausalJournal:
             result_state_digest=result_state_digest,
             event_hash=b"",
         )
-        payload = encode(event.hashed_fields())
-        event_hash = hashlib.sha256(DOMAIN_CAUSAL_EVENT + payload).digest()
-        stored = replace(event, event_hash=event_hash)
 
-        self._events.append(stored)
+        hashed_payload = encode(draft.hashed_fields())
+        self.counters.hashed_event_payload_serializations += 1
+        event_hash = hashlib.sha256(DOMAIN_CAUSAL_EVENT + hashed_payload).digest()
+        self.counters.hash_operations += 1
+
+        stored = replace(draft, event_hash=event_hash)
+        # The full event is serialised after its hash exists, and it is those bytes that are
+        # persisted, counted and later replayed.
+        record = encode(stored.persisted_fields())
+        self.counters.persisted_event_serializations += 1
+        self.counters.journal_bytes_persisted += len(record)
+
+        self._records.append(record)
+        self.counters.observe_persistent_artifacts(len(self._records))
         self._head = event_hash
         self._state_digest = result_state_digest
-        self.counters.full_event_serializations += 1
-        self.counters.hash_operations += 1
-        self.counters.journal_bytes += len(payload)
-        self.counters.audit_deterministic_operations += 2
         return stored
 
     def rollback(
@@ -470,16 +701,45 @@ class CausalJournal:
         )
         return requested, completed
 
-    def verify(self, *, expected_schema_version: str | None = None) -> None:
-        """Recompute the chain and the state continuity. Raises on any discrepancy."""
+    def verify_internal_consistency(self) -> None:
+        """Establish only that the chain holds itself together.
+
+        Necessary and not sufficient: a wholly rebuilt chain passes this. Use
+        `verify_against` to compare it with the history committed elsewhere.
+        """
         verify_chain(
-            self._events,
+            self.events,
             protocol_commitment=self._protocol_commitment,
-            expected_schema_version=expected_schema_version or self._schema_version,
+            expected_schema_version=self._schema_version,
+            expected_initial_state_digest=self._initial_state_digest,
+            expected_checkpoint_digest=self._checkpoint_digest,
             counters=self.counters,
         )
-        if self._events and self._events[-1].event_hash != self._head:
+        if self._records and self.events[-1].event_hash != self._head:
             raise JournalIntegrityError("head does not match the last event")
+
+    def verify_against(
+        self,
+        *,
+        expected_initial_state_digest: bytes,
+        expected_head: bytes,
+        expected_checkpoint_digest: bytes,
+        expected_schema_version: str | None = None,
+    ) -> None:
+        """Establish that the chain matches a history committed outside it.
+
+        Every expected value is a required argument. None of them defaults to the journal's
+        own state: an anchor read back from the thing it anchors proves nothing.
+        """
+        verify_chain(
+            self.events,
+            protocol_commitment=self._protocol_commitment,
+            expected_schema_version=expected_schema_version or self._schema_version,
+            expected_initial_state_digest=expected_initial_state_digest,
+            expected_checkpoint_digest=expected_checkpoint_digest,
+            expected_head=expected_head,
+            counters=self.counters,
+        )
 
 
 def verify_chain(
@@ -487,13 +747,44 @@ def verify_chain(
     *,
     protocol_commitment: str,
     expected_schema_version: str,
+    expected_initial_state_digest: bytes,
+    expected_checkpoint_digest: bytes | None = None,
+    expected_checkpoint: EscalationCheckpoint | None = None,
+    expected_head: bytes | None = None,
     counters: AuditCounters | None = None,
 ) -> None:
-    """Fail on a missing, altered or reordered event, or an unknown schema version.
+    """Fail on a missing, altered or reordered event, a broken anchor, or an unknown schema.
 
     A deletion breaks both the sequence numbering and the hash chain; either alone is
     sufficient, and requiring both makes a silent renumbering detectable too.
+
+    `expected_head` is the external anchor. Without it this establishes internal consistency
+    only, which a wholly rebuilt chain also satisfies.
     """
+    if expected_checkpoint is not None:
+        derived = expected_checkpoint.checkpoint_digest()
+        if expected_checkpoint_digest is not None and expected_checkpoint_digest != derived:
+            raise JournalIntegrityError("the expected checkpoint digest is not this checkpoint")
+        expected_checkpoint_digest = derived
+        if expected_checkpoint.functional_state_digest() != expected_initial_state_digest:
+            raise JournalIntegrityError(
+                "the initial state is not the functional state held in the checkpoint"
+            )
+
+    if not events:
+        if expected_head is not None and expected_head != GENESIS_HASH:
+            raise JournalIntegrityError("an empty journal cannot match a non-genesis head")
+        return
+
+    if events[0].event_type != OPENING_EVENT:
+        raise JournalIntegrityError(f"a journal must open with {OPENING_EVENT}")
+    if events[0].previous_state_digest != expected_initial_state_digest:
+        raise JournalIntegrityError("the first event does not start from the expected state")
+    if expected_checkpoint_digest is not None and (
+        expected_checkpoint_digest not in events[0].immutable_input_digests
+    ):
+        raise JournalIntegrityError("the opening event does not reference the expected checkpoint")
+
     previous_hash = GENESIS_HASH
     previous_state: bytes | None = None
 
@@ -511,6 +802,8 @@ def verify_chain(
             )
         if event.event_type not in EVENT_TYPES:
             raise JournalIntegrityError(f"event {position} has type {event.event_type!r}")
+        if position > 0 and event.event_type == OPENING_EVENT:
+            raise JournalIntegrityError(f"{OPENING_EVENT} reappears at position {position}")
         if event.previous_event_hash != previous_hash:
             raise JournalIntegrityError(f"event {position} does not chain to its predecessor")
         if previous_state is not None and event.previous_state_digest != previous_state:
@@ -520,56 +813,13 @@ def verify_chain(
 
         if counters is not None:
             counters.hash_operations += 1
-            counters.audit_deterministic_operations += 1
+            counters.hashed_event_payload_serializations += 1
 
         previous_hash = event.event_hash
         previous_state = event.result_state_digest
 
-
-# --------------------------------------------------------------------------------------
-# The escalation checkpoint
-# --------------------------------------------------------------------------------------
-
-
-@dataclass(frozen=True)
-class EscalationCheckpoint:
-    """The immutable input of the full causal journal, serialised once at the boundary."""
-
-    schema_version: str
-    protocol_commitment: str
-    fast_trace_head: bytes
-    fast_event_count: int
-    body: Any
-    body_digest: bytes
-    portable_learning_state: Mapping[str, Any]
-    tool_registry: Sequence[Any]
-    deterministic_counters: Mapping[str, int]
-    rng_algorithm_and_state: Any
-    admitted_observations: Sequence[Any]
-    evidence_digest: bytes
-    incapacity_certificate: Mapping[str, Any]
-    escalation_reason: str
-
-    def hashed_fields(self) -> dict[str, Any]:
-        return {
-            "schema_version": self.schema_version,
-            "protocol_commitment": self.protocol_commitment,
-            "fast_trace_head": self.fast_trace_head,
-            "fast_event_count": self.fast_event_count,
-            "body": self.body,
-            "body_digest": self.body_digest,
-            "portable_learning_state": dict(self.portable_learning_state),
-            "tool_registry": list(self.tool_registry),
-            "deterministic_counters": dict(self.deterministic_counters),
-            "rng_algorithm_and_state": self.rng_algorithm_and_state,
-            "admitted_observations": list(self.admitted_observations),
-            "evidence_digest": self.evidence_digest,
-            "incapacity_certificate": dict(self.incapacity_certificate),
-            "escalation_reason": self.escalation_reason,
-        }
-
-    def checkpoint_digest(self) -> bytes:
-        return digest(DOMAIN_CHECKPOINT, self.hashed_fields())
+    if expected_head is not None and events[-1].event_hash != expected_head:
+        raise JournalIntegrityError("the journal head does not match the externally committed head")
 
 
 # --------------------------------------------------------------------------------------
@@ -621,7 +871,6 @@ def project_archive(
     for event in events:
         if counters is not None:
             counters.archive_projection_operations += 1
-            counters.audit_deterministic_operations += 1
         final_state = event.result_state_digest
         bucket = _PROJECTED.get(event.event_type)
         if bucket is None:
