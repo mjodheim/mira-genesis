@@ -1,0 +1,329 @@
+name: Apply M040 continuation-frontier repair
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-apply-memory-repair.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Apply exact development repair
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          packet_path = Path('metamorphosis/m040_packet.py')
+          packet = packet_path.read_text()
+          packet = packet.replace(
+              'LEARNING_STATE_SCHEMA = "m040-learning-state/1"',
+              'LEARNING_STATE_SCHEMA = "m040-learning-state/2"',
+          )
+          packet = packet.replace(
+              '    preferred_tool_ids: tuple[str, ...]\n    exploration_depth: int',
+              '    preferred_tool_ids: tuple[str, ...]\n'
+              '    continuation_programs: tuple[tuple[str, ...], ...]\n'
+              '    exploration_depth: int',
+          )
+          packet = packet.replace(
+              '        if not set(self.preferred_tool_ids).issubset(self.lineage_tool_ids):\n'
+              '            raise M040PacketError("preferred tools must belong to the transported lineage tools")\n'
+              '        if self.exploration_depth < 1:',
+              '        if not set(self.preferred_tool_ids).issubset(self.lineage_tool_ids):\n'
+              '            raise M040PacketError("preferred tools must belong to the transported lineage tools")\n'
+              '        if not self.continuation_programs:\n'
+              '            raise M040PacketError("the continuation frontier must contain an adopted program")\n'
+              '        for program in self.continuation_programs:\n'
+              '            if not program or len(program) > 3:\n'
+              '                raise M040PacketError("continuation programs must contain one to three tools")\n'
+              '            for tool_id in program:\n'
+              '                _require_sha(tool_id, "continuation-program tool identifier")\n'
+              '            if not set(program).intersection(self.lineage_tool_ids):\n'
+              '                raise M040PacketError("each continuation program must use a lineage-owned tool")\n'
+              '        if self.exploration_depth < 1:',
+          )
+          packet = packet.replace(
+              '            "preferred_tool_ids": list(self.preferred_tool_ids),\n'
+              '            "exploration_depth": self.exploration_depth,',
+              '            "preferred_tool_ids": list(self.preferred_tool_ids),\n'
+              '            "continuation_programs": [list(program) for program in self.continuation_programs],\n'
+              '            "exploration_depth": self.exploration_depth,',
+          )
+          packet = packet.replace(
+              '            preferred_tool_ids=tuple(str(value) for value in data["preferred_tool_ids"]),\n'
+              '            exploration_depth=int(data["exploration_depth"]),',
+              '            preferred_tool_ids=tuple(str(value) for value in data["preferred_tool_ids"]),\n'
+              '            continuation_programs=tuple(\n'
+              '                tuple(str(tool_id) for tool_id in program)\n'
+              '                for program in data["continuation_programs"]\n'
+              '            ),\n'
+              '            exploration_depth=int(data["exploration_depth"]),',
+          )
+          packet = packet.replace(
+              '        if not set(self.learning_state.lineage_tool_ids).issubset(tool_ids):\n'
+              '            raise M040PacketError("learning state refers to an absent lineage tool")',
+              '        if not set(self.learning_state.lineage_tool_ids).issubset(tool_ids):\n'
+              '            raise M040PacketError("learning state refers to an absent lineage tool")\n'
+              '        for program in self.learning_state.continuation_programs:\n'
+              '            if not set(program).issubset(tool_ids):\n'
+              '                raise M040PacketError("continuation frontier refers to an absent tool")',
+          )
+          packet_path.write_text(packet)
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          engine = engine.replace('DEVELOPMENT_SEED = 400_040', 'DEVELOPMENT_SEED = 400_041')
+          engine = engine.replace(
+              'from .m040_packet import M040LearningState, M040TransportPacket\n',
+              'from .m040_packet import M040LearningState, M040TransportPacket\n'
+              'from .m040_packet_verify import rehydrate_packet\n',
+          )
+
+          learning_pattern = re.compile(
+              r'def _learning_state\(pre_result, node_budget: int\) -> M040LearningState:\n.*?\n\ndef _post_task',
+              re.S,
+          )
+          learning_replacement = '''def _learning_state(pre_result, node_budget: int) -> M040LearningState:
+              accepted = tuple(cycle.accepted_candidate_id for cycle in pre_result.manifest.cycles)
+              lineage_tools = tuple(pre_result.gate2_tool_ids)
+              uses: list[str] = []
+              counts = {tool_id: 0 for tool_id in lineage_tools}
+              for use in pre_result.manifest.tool_uses:
+                  use_id = _digest(
+                      USE_DOMAIN,
+                      {
+                          "tool_id": use.tool_id,
+                          "cycle": use.cycle,
+                          "candidate_id": use.candidate_id,
+                          "adopted": use.adopted,
+                          "block": use.proposing_block_index,
+                      },
+                  )
+                  uses.append(use_id)
+                  if use.tool_id in counts and use.adopted:
+                      counts[use.tool_id] += 1
+              preferred = tuple(sorted(lineage_tools, key=lambda tool_id: (-counts[tool_id], tool_id)))
+              continuations: list[tuple[str, ...]] = []
+              for raw in pre_result.lineage_journal_records:
+                  value = decode(raw)
+                  if not isinstance(value, Mapping):
+                      raise M040EngineError("pre-migration journal record is not a mapping")
+                  if str(value["event_type"]) != "MutationAdopted" or int(value["cycle"]) < 2:
+                      continue
+                  parameters = dict(value["operation_parameters"])
+                  program = tuple(str(tool_id) for tool_id in parameters["tool_ids"])
+                  if any(tool_id in lineage_tools for tool_id in program) and program not in continuations:
+                      continuations.append(program)
+              if not continuations:
+                  raise M040EngineError("pre-migration lineage produced no continuation frontier")
+              return M040LearningState(
+                  accepted_candidate_ids=accepted,
+                  lineage_tool_ids=lineage_tools,
+                  causal_tool_use_ids=tuple(uses),
+                  preferred_tool_ids=preferred,
+                  continuation_programs=tuple(continuations),
+                  exploration_depth=POST_MIGRATION_DEPTH,
+                  remaining_search_nodes=node_budget,
+              )
+
+
+          def _post_task'''
+          engine, count = learning_pattern.subn(learning_replacement, engine)
+          if count != 1:
+              raise SystemExit(f'learning-state patch matched {count} blocks')
+
+          post_pattern = re.compile(
+              r'def _post_task\(\n.*?\n\ndef _certificate',
+              re.S,
+          )
+          post_replacement = '''def _post_task(
+              *,
+              packet: M040TransportPacket,
+              founder: DFA,
+              task_seed: int,
+          ) -> M040PostTask:
+              registry = {tool.tool_id: tool for tool in packet.tool_registry}
+              primitive_tools = tuple(
+                  tool
+                  for tool in packet.tool_registry
+                  if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+              )
+              if not primitive_tools:
+                  raise M040EngineError("transported packet contains no birth primitives")
+              programs = list(packet.learning_state.continuation_programs)
+              random.Random(task_seed).shuffle(programs)
+              primitive_reachable = _reachable(founder, primitive_tools, POST_MIGRATION_DEPTH)
+              attempts = 0
+              for program_ids in programs:
+                  attempts += 1
+                  if attempts > TASK_GENERATION_ATTEMPTS:
+                      break
+                  try:
+                      tools = tuple(registry[tool_id] for tool_id in program_ids)
+                  except KeyError as error:
+                      raise M040EngineError("continuation frontier refers to an absent tool") from error
+                  raw, program = _apply_tools(founder, tools)
+                  if raw is None:
+                      continue
+                  target = normalize_dfa(raw)
+                  if target.n_states <= founder.n_states:
+                      continue
+                  if dfa_digest(target) in primitive_reachable:
+                      continue
+                  observations = _observations(target)
+                  certificate = proved_structural_incapacity(
+                      founder,
+                      observations,
+                      maximum_search_nodes=MAXIMUM_SEARCH_NODES,
+                      maximum_prefix_count=MAXIMUM_PREFIX_COUNT,
+                  )
+                  if not certificate.proves_incapacity():
+                      continue
+                  return M040PostTask(
+                      task_seed=task_seed,
+                      parent_digest=dfa_digest(founder),
+                      target=target,
+                      generating_tool_ids=program_ids,
+                      generating_program=program,
+                  )
+              raise M040EngineError("no transported continuation frontier produced an admissible task")
+
+
+          def _certificate'''
+          engine, count = post_pattern.subn(post_replacement, engine)
+          if count != 1:
+              raise SystemExit(f'post-task patch matched {count} blocks')
+
+          engine = engine.replace(
+              '    preferred_tool_ids: Sequence[str],\n'
+              '    maximum_depth: int = POST_MIGRATION_DEPTH,',
+              '    preferred_tool_ids: Sequence[str],\n'
+              '    preferred_programs: Sequence[Sequence[str]] = (),\n'
+              '    maximum_depth: int = POST_MIGRATION_DEPTH,',
+          )
+          search_anchor = '    counters = SearchCounters()\n    best_quality = _quality(founder, observations)\n\n    def descend('
+          search_insert = '''    counters = SearchCounters()
+              best_quality = _quality(founder, observations)
+              registry_by_id = {tool.tool_id: tool for tool in registry}
+
+              def evaluate_preferred_program(tool_ids: Sequence[str]) -> SearchResult | None:
+                  nonlocal best_quality
+                  selected: list[LineageTool] = []
+                  current: DFA | None = founder
+                  expanded: list[Atom] = []
+                  for tool_id in tool_ids:
+                      tool = registry_by_id.get(tool_id)
+                      if tool is None:
+                          return None
+                      counters.symbolic_search_nodes += 1
+                      if counters.symbolic_search_nodes > node_budget:
+                          return SearchResult(
+                              arm=arm,
+                              exact=False,
+                              reason="symbolic_node_budget_exhausted",
+                              quality_numerator=best_quality,
+                              quality_denominator=len(observations),
+                              accepted_candidate_id=None,
+                              accepted_tool_ids=(),
+                              accepted_program=(),
+                              accepted_body=None,
+                              counters=counters.mapping(),
+                          )
+                      atoms = _tool_atoms(tool)
+                      for atom in atoms:
+                          counters.primitive_expansion_operations += 1
+                          current = apply_atom(current, atom)  # type: ignore[arg-type]
+                          if current is None:
+                              return None
+                          expanded.append(atom)
+                      if tool.provenance.origin == ORIGIN_LINEAGE_CONSTRUCTED:
+                          counters.tool_symbols_used += 1
+                      selected.append(tool)
+                  if current is None:
+                      return None
+                  counters.candidates_constructed += 1
+                  normalized = normalize_dfa(current)
+                  quality = 0
+                  for word, expected in sorted(observations.items()):
+                      counters.evidence_checks += 1
+                      quality += int(normalized.accepts(word) == expected)
+                  best_quality = max(best_quality, quality)
+                  if quality != len(observations):
+                      return None
+                  counters.candidates_evaluated += 1
+                  exact, _ = exact_equivalence(normalized, target)
+                  if not exact:
+                      return None
+                  ids = tuple(tool.tool_id for tool in selected)
+                  return SearchResult(
+                      arm=arm,
+                      exact=True,
+                      reason="transported_continuation_adopted",
+                      quality_numerator=len(observations),
+                      quality_denominator=len(observations),
+                      accepted_candidate_id=_candidate_id(
+                          arm=arm,
+                          tool_ids=ids,
+                          program=tuple(expanded),
+                          body=normalized,
+                      ),
+                      accepted_tool_ids=ids,
+                      accepted_program=tuple(expanded),
+                      accepted_body=normalized,
+                      counters=counters.mapping(),
+                  )
+
+              for preferred_program in preferred_programs:
+                  preferred_result = evaluate_preferred_program(preferred_program)
+                  if preferred_result is not None:
+                      return preferred_result
+
+              def descend('''
+          if search_anchor not in engine:
+              raise SystemExit('search anchor not found')
+          engine = engine.replace(search_anchor, search_insert)
+          engine = engine.replace(
+              '    rehydrated = M040TransportPacket.from_json(raw_packet)',
+              '    rehydrated = rehydrate_packet(raw_packet, expected_sha256=packet.sha256())',
+          )
+          engine = engine.replace(
+              '        preferred_tool_ids=rehydrated.learning_state.preferred_tool_ids,\n    )\n    fresh =',
+              '        preferred_tool_ids=rehydrated.learning_state.preferred_tool_ids,\n'
+              '        preferred_programs=rehydrated.learning_state.continuation_programs,\n'
+              '    )\n    fresh =',
+          )
+          engine_path.write_text(engine)
+
+          test_path = Path('tests/test_m040_post_migration.py')
+          tests = test_path.read_text()
+          tests = tests.replace(
+              '    assert result.post_migration_plasticity_supported is True\n',
+              '    assert result.post_migration_plasticity_supported is True\n'
+              '    packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)\n'
+              '    assert tuple(arms["complete_migrated_lineage"].accepted_tool_ids) in packet.learning_state.continuation_programs\n',
+          )
+          test_path.write_text(tests)
+          PY
+      - name: Verify the repaired focused suite
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q tests/test_m040_post_migration.py
+      - name: Commit and push the repaired mechanism
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add metamorphosis/m040_packet.py metamorphosis/m040_engine.py tests/test_m040_post_migration.py
+          git commit -m 'fix(m040): replace decorative ordering with a causal continuation frontier'
+          git push origin "HEAD:${BRANCH}"
