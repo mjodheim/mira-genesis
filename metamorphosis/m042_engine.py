@@ -11,7 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Mapping
+from typing import Mapping, Sequence
 
 from .m012b_dfa import DFA, exact_equivalence
 from .m013e_lab import OpaqueBooleanMachine, make_positive_machine
@@ -63,6 +63,16 @@ class M042EngineError(RuntimeError):
     pass
 
 
+def _json_value(value: object) -> object:
+    if isinstance(value, bytes):
+        return {"encoding": "hex", "value": value.hex()}
+    if isinstance(value, Mapping):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        return [_json_value(item) for item in value]
+    return value
+
+
 @dataclass(frozen=True)
 class _BankContext:
     packet: M040TransportPacket
@@ -106,7 +116,7 @@ class M042BankEntry:
     def digest(self) -> str:
         return hashlib.sha256(
             b"m042-bank-entry-v1"
-            + json.dumps(self.mapping(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+            + json.dumps(_json_value(self.mapping()), sort_keys=True, separators=(",", ":")).encode("utf-8")
         ).hexdigest()
 
 
@@ -160,7 +170,7 @@ class M042DevelopmentResult:
     def digest(self) -> str:
         return hashlib.sha256(
             _RESULT_DOMAIN
-            + json.dumps(self.mapping(), sort_keys=True, separators=(",", ":")).encode("utf-8")
+            + json.dumps(_json_value(self.mapping()), sort_keys=True, separators=(",", ":")).encode("utf-8")
         ).hexdigest()
 
 
