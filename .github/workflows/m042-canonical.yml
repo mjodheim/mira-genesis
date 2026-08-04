@@ -1,0 +1,133 @@
+name: M042 frozen canonical execution
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m042-canonical.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m042-canonical-first-result
+  cancel-in-progress: false
+
+jobs:
+  canonical:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.head.sha == github.sha
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install frozen package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Verify repository integrity and focused tests
+        run: |
+          python scripts/check_repository_integrity.py
+          pytest -q tests/test_m042_constructive_bank.py
+      - name: Verify immutable frozen boundary
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          from pathlib import Path
+
+          frozen_path = Path('experiments/M042/FROZEN_PROTOCOL.json')
+          frozen = json.loads(frozen_path.read_text(encoding='utf-8'))
+          required = {
+              'schema': 'm042-frozen-protocol/1',
+              'status': 'frozen-before-canonical-execution',
+              'development_head_sha': 'cefff2f302eb1019117a8b6450a10d9daab52386',
+              'development_workflow_run_id': 30945798437,
+              'development_artifact_id': 8907423888,
+              'development_artifact_digest': 'sha256:ebff088049cf3e0995e357597f963705de117f665956f8203255ea8576dd0749',
+              'development_result_sha256': '6ce6f6810c0b373dc9f8e6c2378cf2c367a00c41fc65b2921aa43474b3bd94b1',
+              'canonical_selected_index': 2,
+              'canonical_selected_entry_digest': '732c5c86b67b13826cfb46dc1d839577ff32af8d3afc882f8abf0b0fe95a8442',
+              'search_depth': 4,
+              'symbolic_node_budget': 4096,
+              'task_observation_count': 127,
+              'first_result_preservation': True,
+              'retuning_after_freeze_forbidden': True,
+              'm038_to_m041_artefacts_immutable': True,
+          }
+          for key, expected in required.items():
+              actual = frozen.get(key)
+              if actual != expected:
+                  raise SystemExit(f'frozen mismatch: {key}={actual!r}, expected {expected!r}')
+          if frozen['bank_entry_digests'][2] != frozen['canonical_selected_entry_digest']:
+              raise SystemExit('canonical selector no longer identifies frozen bank entry 2')
+          print(hashlib.sha256(frozen_path.read_bytes()).hexdigest())
+          PY
+      - name: Execute first frozen canonical result
+        run: |
+          test ! -e experiments/M042/CANONICAL_RESULT.json
+          python scripts/run_m042_constructive_bank.py \
+            --selection-index 2 \
+            --output m042-canonical-result.json
+      - name: Validate and seal first result metadata
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          frozen = json.loads(Path('experiments/M042/FROZEN_PROTOCOL.json').read_text())
+          result_path = Path('m042-canonical-result.json')
+          result = json.loads(result_path.read_text())
+          if result.get('schema') != 'm042-development-result/1':
+              raise SystemExit(f"unexpected result schema: {result.get('schema')!r}")
+          if result.get('selected_index') != frozen['canonical_selected_index']:
+              raise SystemExit('selected index differs from frozen selector')
+          if result.get('selected_entry_digest') != frozen['canonical_selected_entry_digest']:
+              raise SystemExit('selected entry differs from frozen selector')
+          if result.get('bank_entry_digests') != frozen['bank_entry_digests']:
+              raise SystemExit('ordered constructive bank differs from frozen bank')
+          if result.get('bank_size') != frozen['bank_size']:
+              raise SystemExit('bank size differs from frozen bank')
+          if result.get('base_master_seed') != frozen['base_master_seed']:
+              raise SystemExit('base master seed differs from frozen protocol')
+          if result.get('base_protocol_commitment') != frozen['base_protocol_commitment']:
+              raise SystemExit('base protocol commitment differs from frozen protocol')
+          verdict = bool(result.get('all_ten_development_mechanisms_supported'))
+          seal = {
+              'schema': 'm042-canonical-first-result-seal/1',
+              'status': 'first-result-preserved',
+              'scientific_verdict': 'positive' if verdict else 'negative',
+              'head_sha': os.environ['HEAD_SHA'],
+              'workflow_run_id': int(os.environ['RUN_ID']),
+              'workflow_run_attempt': int(os.environ['RUN_ATTEMPT']),
+              'frozen_protocol_sha256': hashlib.sha256(Path('experiments/M042/FROZEN_PROTOCOL.json').read_bytes()).hexdigest(),
+              'canonical_result_sha256': hashlib.sha256(result_path.read_bytes()).hexdigest(),
+              'canonical_selected_index': result['selected_index'],
+              'canonical_selected_entry_digest': result['selected_entry_digest'],
+              'gate_verdicts': result.get('gate_verdicts'),
+              'no_retuning_performed': True,
+              'first_result_preserved_without_reexecution': True,
+          }
+          Path('m042-canonical-first-result-seal.json').write_text(
+              json.dumps(seal, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(seal, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m042-canonical-first-result-${{ github.event.pull_request.head.sha }}
+          path: |
+            m042-canonical-result.json
+            m042-canonical-first-result-seal.json
+            experiments/M042/FROZEN_PROTOCOL.json
+          if-no-files-found: error
+          retention-days: 90
