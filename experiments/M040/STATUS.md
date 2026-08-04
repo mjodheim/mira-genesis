@@ -2,47 +2,89 @@
 
 ## Current phase
 
-Repaired development mechanism, awaiting its first complete consumed run.
+Positive lineage-anchor development result verified independently; full pre-freeze CI
+requested.
 
 No sealed block, canonical seed or canonical M040 result exists.
 
 ## Consumed development history
 
-- seed `400040`: continuity positive, memory ordering negative (`875` versus `873`
-  symbolic nodes); retained in `results/M040_DEVELOPMENT_000.md`;
-- seed `400041`: stopped during pre-migration tool construction because repeated program
-  invocation and unique dependency identity were conflated; retained in
-  `results/M040_DEVELOPMENT_001.md`.
+M040 retained every material development outcome rather than replacing failures:
 
-Neither seed may confirm the repaired mechanism.
+- `400040`: continuity positive, simple ordering memory negative;
+- `400041`: repeated invocation/dependency representation failure;
+- `400042`: positive exact-continuation development result before hardening;
+- `400043`: exact continuation produced no admissible post-migration task;
+- `400044`: large transfer advantage, but fresh-on-B also solved under 20,000 nodes;
+- `400045`: no admissible full-prefix task under the calibrated resource mechanism;
+- `400046`: positive resource-bounded prefix result, but not the intended lineage-anchor
+  family because the public default remained `prefix_adaptation`;
+- `400047`: first valid positive lineage-anchor result under the equal 4,096-node budget.
 
-## Repaired mechanism
+The detailed reports and exact retained artefacts are under `results/` and
+`results/artifacts/`.
 
-Development seed: `400042`.
+## Current measured mechanism
 
-The executable transformation program may repeat a tool invocation. Provenance
-`input_tool_ids` records the unique dependency set in first-use order.
+The M040 lineage:
 
-Learning-state schema `m040-learning-state/2` transports continuation programs extracted
-from authoritative pre-migration `MutationAdopted` journal events. It carries no
-post-migration target, target digest or candidate.
+1. regenerates a fresh three-cycle cumulative lineage before migration;
+2. discovers an initially opaque Boolean substrate by probing;
+3. migrates the exact final competence and transports the source representation, native
+   body, registry and causal continuation state in an externally anchored packet;
+4. derives the hidden post-migration task only after packet validation;
+5. reuses a transported lineage-owned transformation anchor and adds bounded new primitive
+   adaptation;
+6. diagnoses structural incapacity, adopts an exact nine-state rewrite and synthesises its
+   exact native body on the new substrate;
+7. rejects a fixed bad provisional rewrite and restores the accepted source/native pair;
+8. independently replays all pre- and post-migration search paths, controls, packet bytes,
+   journal bytes and decisions from the seed.
 
-After packet validation, the task generator applies those continuation programs to the new
-migrated parent. The complete arm evaluates the transported frontier first; the memory
-ablation rediscovers through generic enumeration under the same depth and node budget.
+Every arm receives symbolic depth 4, 127 observations and the equal 4,096-node budget.
 
-The packet is rehydrated only against an externally committed SHA-256 digest.
+## Development result 007
 
-## Required development verdict
+Seed `400047` produced:
 
-A development result is positive only if:
+- trans-substrate continuity: supported;
+- post-migration plasticity: supported;
+- seed-only replay: supported;
+- complete migrated lineage: exact in 248 symbolic nodes;
+- fresh, memory-ablated, learned-tool-ablated and unchanged-parent controls: non-exact at the
+  deterministic 4,097th over-budget expansion;
+- output-only control: real migrated quality retained, no rewrite state;
+- native post-migration synthesis and rollback: exact.
 
-- the three-cycle pre-migration lineage succeeds;
-- migration and packet rehydration are exact;
-- the post-migration task is revealed after validation;
-- the complete arm adopts an exact rewrite using a pre-migration lineage tool;
-- fresh, unchanged-parent, output-only and learned-tool-ablated controls fail under equal
-  budgets;
-- the complete arm uses fewer symbolic nodes than the learning-state ablation;
-- native re-synthesis and rollback are exact;
-- seed-only replay reproduces the packet and journal bytes.
+Exact artefact:
+
+- path: `results/artifacts/M040_DEVELOPMENT_007.json`;
+- SHA-256: `8ecd4e6e08a6c2c9939fa81fc03366d7f92277159fceb9d21fe7cc48f4585197`;
+- size: `2,094,120` bytes;
+- result digest: `0b1b82a742e341fdc304fe2ea4dbeb53000ff129bce32d0571ec4bf6e9373e2d`.
+
+## Independent persisted-result verification
+
+`m040_result_verify.py` accepts the intact artefact only after recalculating:
+
+- the complete 20-record M040 hash chain and external head;
+- the exact causal event order and cross-references;
+- all six arm summaries against their independent audits;
+- all three pre-migration search audits;
+- equal budgets and deterministic budget exhaustion;
+- packet, task, migration, native-control and rollback identities.
+
+The permanent probe accepts the intact artefact and rejects all **29** independently mutated
+variants. The two temporary verification workflows are archived and inactive.
+
+## Pre-freeze gate
+
+The mechanism may proceed to a frozen protocol only after this exact functional state passes:
+
+- repository integrity;
+- the complete test suite on Python 3.11;
+- the complete test suite on Python 3.13;
+- historical guardrails and controls required by the repository.
+
+No M040 canonical task may be derived before that validation and the subsequent frozen
+protocol identity are committed.
