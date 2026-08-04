@@ -1,0 +1,103 @@
+name: Summarize M040 development result 007
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-summarize-development-007.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  summarize:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Derive a compact summary from the committed immutable JSON
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib
+          import json
+
+          source = Path('results/artifacts/M040_DEVELOPMENT_007.json')
+          raw = source.read_bytes()
+          payload = json.loads(raw)
+          arms = payload['arms']
+          post_audits = payload['post_migration_search_audits']
+          migration = payload['migration']
+          native = payload['accepted_native']
+          task = payload['task']
+          summary = {
+              'schema': 'm040-development-007-summary/1',
+              'source_sha256': hashlib.sha256(raw).hexdigest(),
+              'source_bytes': len(raw),
+              'master_seed': payload['master_seed'],
+              'protocol_commitment': payload['protocol_commitment'],
+              'verdicts': {
+                  'trans_substrate_continuity_supported': payload['trans_substrate_continuity_supported'],
+                  'post_migration_plasticity_supported': payload['post_migration_plasticity_supported'],
+                  'replay_supported': payload['replay_supported'],
+                  'rollback_restored_exactly': payload['rollback_restored_exactly'],
+                  'accepted_tool_was_pre_migration_owned': payload['accepted_tool_was_pre_migration_owned'],
+              },
+              'identities': {
+                  'packet_sha256': payload['packet_sha256'],
+                  'journal_head': payload['journal_head'],
+                  'journal_records_sha256': payload['journal_records_sha256'],
+                  'pre_migration_manifest_digest': payload['pre_migration_manifest_digest'],
+                  'pre_migration_journal_head': payload['pre_migration_journal_head'],
+                  'pre_migration_journal_records_digest': payload['pre_migration_journal_records_digest'],
+                  'task_digest': payload['task_digest'],
+              },
+              'task': task,
+              'migration': migration,
+              'accepted_native': native,
+              'control_native_baselines': payload['control_native_baselines'],
+              'arms': {
+                  name: {
+                      'exact': value['exact'],
+                      'reason': value['reason'],
+                      'quality': [value['quality_numerator'], value['quality_denominator']],
+                      'accepted_candidate_id': value['accepted_candidate_id'],
+                      'accepted_tool_ids': value['accepted_tool_ids'],
+                      'accepted_body_digest': value['accepted_body_digest'],
+                      'counters': value['counters'],
+                      'audit_transcript_digest': post_audits[name]['transcript_digest'],
+                      'audit_transcript_entries': post_audits[name]['transcript_entries'],
+                  }
+                  for name, value in sorted(arms.items())
+              },
+              'pre_migration_search_audits': [
+                  {
+                      'cycle': index + 1,
+                      'transcript_digest': audit['transcript_digest'],
+                      'transcript_entries': audit['transcript_entries'],
+                      'symbolic_nodes': audit['symbolic_nodes'],
+                      'completed_bodies': audit['completed_bodies'],
+                      'evidence_rejected': audit['evidence_rejected'],
+                  }
+                  for index, audit in enumerate(payload['pre_migration_search_audits'])
+              ],
+              'journal_record_count': payload['journal_record_count'],
+          }
+          out = Path('results/artifacts/M040_DEVELOPMENT_007_SUMMARY.json')
+          out.write_text(json.dumps(summary, sort_keys=True, indent=2) + '\n')
+          print(json.dumps(summary, sort_keys=True, indent=2))
+          PY
+      - name: Commit summary and archive this one-shot workflow
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          cp .github/workflows/m040-summarize-development-007.yml archives/workflows/m040-summarize-development-007.yml
+          git rm .github/workflows/m040-summarize-development-007.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/artifacts/M040_DEVELOPMENT_007_SUMMARY.json archives/workflows/m040-summarize-development-007.yml
+          git commit -m 'docs(m040): summarize positive lineage-anchor development result'
+          git push origin "HEAD:${BRANCH}"
