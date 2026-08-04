@@ -1,0 +1,218 @@
+name: Evaluate M040 lineage anchor
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-evaluate-lineage-anchor.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Integrate the committed lineage-anchor family
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          engine = engine.replace(
+              'from .m040_packet_verify import rehydrate_packet\n',
+              'from .m040_packet_verify import rehydrate_packet\n'
+              'from .m040_anchor import (\n'
+              '    derive_adapted_programs,\n'
+              '    generate_lineage_anchor_task,\n'
+              ')\n',
+              1,
+          )
+          engine = engine.replace('DEVELOPMENT_SEED = 400_044', 'DEVELOPMENT_SEED = 400_046', 1)
+          engine = engine.replace('POST_MIGRATION_DEPTH = 3', 'POST_MIGRATION_DEPTH = 4', 1)
+          engine = engine.replace(
+              'POST_MIGRATION_NODE_BUDGET = 20_000',
+              'POST_MIGRATION_NODE_BUDGET = 4_096',
+              1,
+          )
+          engine = engine.replace(
+              'TASK_GENERATION_ATTEMPTS = 256',
+              'TASK_GENERATION_ATTEMPTS = 2_048',
+              1,
+          )
+          dispatch = '''    if task_family == "exact_frontier":
+              task = _post_task_exact_frontier(
+                  packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+              )
+          elif task_family == "prefix_adaptation":
+              task = _post_task_prefix_adaptation(
+                  packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+              )
+          else:
+              raise M040EngineError(f"unknown M040 task family {task_family!r}")'''
+          replacement = '''    if task_family == "exact_frontier":
+              task = _post_task_exact_frontier(
+                  packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+              )
+              preferred_post_programs = rehydrated.learning_state.continuation_programs
+          elif task_family == "prefix_adaptation":
+              task = _post_task_prefix_adaptation(
+                  packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+              )
+              preferred_post_programs = rehydrated.learning_state.continuation_programs
+          elif task_family == "lineage_anchor":
+              anchor_task = generate_lineage_anchor_task(
+                  packet=rehydrated,
+                  founder=rehydrated_source,
+                  task_seed=task_seed,
+                  maximum_depth=POST_MIGRATION_DEPTH,
+                  node_budget=POST_MIGRATION_NODE_BUDGET,
+                  observations=OBSERVATIONS,
+              )
+              task = M040PostTask(
+                  task_seed=anchor_task.task_seed,
+                  parent_digest=anchor_task.parent_digest,
+                  target=anchor_task.target,
+                  generating_tool_ids=anchor_task.generating_tool_ids,
+                  generating_program=anchor_task.generating_program,
+                  task_family="lineage_anchor",
+              )
+              preferred_post_programs = derive_adapted_programs(
+                  rehydrated,
+                  task_seed=task_seed,
+                  maximum_depth=POST_MIGRATION_DEPTH,
+              )
+          else:
+              raise M040EngineError(f"unknown M040 task family {task_family!r}")'''
+          if dispatch not in engine:
+              raise SystemExit('task-family dispatch block not found')
+          engine = engine.replace(dispatch, replacement, 1)
+          engine = engine.replace(
+              '        preferred_programs=rehydrated.learning_state.continuation_programs,\n'
+              '        adapt_prefixes=(task_family == "prefix_adaptation"),',
+              '        preferred_programs=preferred_post_programs,\n'
+              '        adapt_prefixes=(task_family == "prefix_adaptation"),',
+              1,
+          )
+          engine = engine.replace(
+              '            rehydrated.learning_state.continuation_programs,\n'
+              '            task_family == "prefix_adaptation",',
+              '            preferred_post_programs,\n'
+              '            task_family == "prefix_adaptation",',
+              1,
+          )
+          engine = engine.replace(
+              '    task_family: str = "prefix_adaptation",',
+              '    task_family: str = "lineage_anchor",',
+              1,
+          )
+          engine_path.write_text(engine)
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          pattern = re.compile(
+              r'def test_post_migration_controls_have_the_committed_direction\(result\) -> None:\n.*?\n\ndef test_packet_requires_',
+              re.S,
+          )
+          replacement_test = '''def test_post_migration_controls_have_the_committed_direction(result) -> None:
+              arms = result.arms
+              assert arms["complete_migrated_lineage"].exact is True
+              for name in (
+                  "fresh_on_b",
+                  "unchanged_parent_migrated",
+                  "output_only",
+                  "learned_tool_ablated",
+              ):
+                  assert arms[name].exact is False
+              assert (
+                  arms["complete_migrated_lineage"].counters["symbolic_search_nodes"]
+                  < arms["learning_state_ablated"].counters["symbolic_search_nodes"]
+              )
+              assert result.trans_substrate_continuity_supported is True
+              assert result.post_migration_plasticity_supported is True
+
+
+          def test_packet_requires_'''
+          tests, count = pattern.subn(replacement_test, tests)
+          if count != 1:
+              raise SystemExit(f'control-test replacement matched {count} blocks')
+          prefix_pattern = re.compile(
+              r'def test_prefix_adaptation_task_is_not_fully_stored_in_packet\(result\) -> None:\n.*?\Z',
+              re.S,
+          )
+          prefix_replacement = '''def test_lineage_anchor_task_is_derived_after_packet_validation(result) -> None:
+              from metamorphosis.m039_lineage import ORIGIN_PROTOCOL_SUPPLIED
+              from metamorphosis.m040_anchor import derive_lineage_anchors
+
+              packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+              accepted = tuple(result.arms["complete_migrated_lineage"].accepted_tool_ids)
+              anchors = derive_lineage_anchors(packet)
+              matching = [anchor for anchor in anchors if accepted[: len(anchor)] == anchor]
+              assert result.task.task_family == "lineage_anchor"
+              assert accepted == result.task.generating_tool_ids
+              assert matching
+              anchor = max(matching, key=len)
+              suffix_ids = accepted[len(anchor) :]
+              assert len(suffix_ids) in (1, 2)
+              registry = {tool.tool_id: tool for tool in packet.tool_registry}
+              assert all(
+                  registry[tool_id].provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+                  for tool_id in suffix_ids
+              )
+              assert accepted not in packet.learning_state.continuation_programs
+              assert result.task.digest() not in result.packet_json
+          '''
+          tests, count = prefix_pattern.subn(prefix_replacement, tests)
+          if count != 1:
+              raise SystemExit(f'lineage-anchor test replacement matched {count} blocks')
+          tests_path.write_text(tests)
+          PY
+      - name: Compile before measurement
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_anchor.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py
+      - name: Evaluate untouched seed 400046
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Produce consumed result 006
+        run: |
+          python experiments/M040/run_development.py \
+            --seed 400046 \
+            --output results/artifacts/M040_DEVELOPMENT_006.json
+          sha256sum results/artifacts/M040_DEVELOPMENT_006.json
+          wc -c results/artifacts/M040_DEVELOPMENT_006.json
+      - name: Archive temporary workflows and commit measured mechanism
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          for workflow in \
+            m040-evaluate-resource-bound.yml \
+            m040-evaluate-lineage-anchor.yml
+          do
+            cp ".github/workflows/${workflow}" "archives/workflows/${workflow}"
+            git rm ".github/workflows/${workflow}"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            results/artifacts/M040_DEVELOPMENT_006.json \
+            archives/workflows
+          git commit -m 'feat(m040): evaluate lineage-anchor transfer on seed 400046'
+          git push origin "HEAD:${BRANCH}"
