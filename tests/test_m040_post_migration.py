@@ -38,6 +38,8 @@ def test_post_migration_controls_have_the_committed_direction(result) -> None:
         < arms["learning_state_ablated"].counters["symbolic_search_nodes"]
     )
     assert result.post_migration_plasticity_supported is True
+    packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+    assert tuple(arms["complete_migrated_lineage"].accepted_tool_ids) in packet.learning_state.continuation_programs
 
 
 def test_packet_requires_the_externally_committed_digest(result) -> None:

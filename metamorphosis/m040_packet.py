@@ -13,7 +13,7 @@ from .m013e_runtime import DiscoveredOpcode, DiscoveredSubstrate, OpaqueNativeBo
 from .m039_lineage import LineageTool, ToolProvenance
 
 PACKET_SCHEMA = "m040-trans-substrate-lineage-packet/1"
-LEARNING_STATE_SCHEMA = "m040-learning-state/1"
+LEARNING_STATE_SCHEMA = "m040-learning-state/2"
 _SHA256 = re.compile(r"\A[0-9a-f]{64}\Z")
 
 
@@ -67,6 +67,7 @@ class M040LearningState:
     lineage_tool_ids: tuple[str, ...]
     causal_tool_use_ids: tuple[str, ...]
     preferred_tool_ids: tuple[str, ...]
+    continuation_programs: tuple[tuple[str, ...], ...]
     exploration_depth: int
     remaining_search_nodes: int
     schema: str = LEARNING_STATE_SCHEMA
@@ -86,6 +87,15 @@ class M040LearningState:
                 _require_sha(value, f"{name} identifier")
         if not set(self.preferred_tool_ids).issubset(self.lineage_tool_ids):
             raise M040PacketError("preferred tools must belong to the transported lineage tools")
+        if not self.continuation_programs:
+            raise M040PacketError("the continuation frontier must contain an adopted program")
+        for program in self.continuation_programs:
+            if not program or len(program) > 3:
+                raise M040PacketError("continuation programs must contain one to three tools")
+            for tool_id in program:
+                _require_sha(tool_id, "continuation-program tool identifier")
+            if not set(program).intersection(self.lineage_tool_ids):
+                raise M040PacketError("each continuation program must use a lineage-owned tool")
         if self.exploration_depth < 1:
             raise M040PacketError("exploration depth must be positive")
         if self.remaining_search_nodes < 1:
@@ -98,6 +108,7 @@ class M040LearningState:
             "lineage_tool_ids": list(self.lineage_tool_ids),
             "causal_tool_use_ids": list(self.causal_tool_use_ids),
             "preferred_tool_ids": list(self.preferred_tool_ids),
+            "continuation_programs": [list(program) for program in self.continuation_programs],
             "exploration_depth": self.exploration_depth,
             "remaining_search_nodes": self.remaining_search_nodes,
         }
@@ -109,6 +120,10 @@ class M040LearningState:
             lineage_tool_ids=tuple(str(value) for value in data["lineage_tool_ids"]),
             causal_tool_use_ids=tuple(str(value) for value in data["causal_tool_use_ids"]),
             preferred_tool_ids=tuple(str(value) for value in data["preferred_tool_ids"]),
+            continuation_programs=tuple(
+                tuple(str(tool_id) for tool_id in program)
+                for program in data["continuation_programs"]
+            ),
             exploration_depth=int(data["exploration_depth"]),
             remaining_search_nodes=int(data["remaining_search_nodes"]),
             schema=str(data["schema"]),
@@ -247,6 +262,9 @@ class M040TransportPacket:
                 raise M040PacketError("tool protocol commitment differs from the packet")
         if not set(self.learning_state.lineage_tool_ids).issubset(tool_ids):
             raise M040PacketError("learning state refers to an absent lineage tool")
+        for program in self.learning_state.continuation_programs:
+            if not set(program).issubset(tool_ids):
+                raise M040PacketError("continuation frontier refers to an absent tool")
 
     @staticmethod
     def build(

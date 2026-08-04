@@ -26,11 +26,12 @@ from .m038_journal import decode, encode
 from .m039_engine import _execute as execute_m039_lineage, dfa_digest
 from .m039_lineage import LineageTool, ORIGIN_LINEAGE_CONSTRUCTED, ORIGIN_PROTOCOL_SUPPLIED
 from .m040_packet import M040LearningState, M040TransportPacket
+from .m040_packet_verify import rehydrate_packet
 from .structural import Atom, apply_atom, flip, normalize_dfa
 
 Word = tuple[int, ...]
 
-DEVELOPMENT_SEED = 400_040
+DEVELOPMENT_SEED = 400_042
 DEVELOPMENT_COMMITMENT = "m040-development-v1"
 OBSERVATION_DEPTH = 6
 POST_MIGRATION_DEPTH = 2
@@ -432,6 +433,7 @@ def _search_arm(
     observations: Mapping[Word, bool],
     registry: Sequence[LineageTool],
     preferred_tool_ids: Sequence[str],
+    preferred_programs: Sequence[Sequence[str]] = (),
     maximum_depth: int = POST_MIGRATION_DEPTH,
     node_budget: int = POST_MIGRATION_NODE_BUDGET,
 ) -> SearchResult:
@@ -451,6 +453,79 @@ def _search_arm(
     ordered_registry = _registry_by_memory(registry, preferred_tool_ids)
     counters = SearchCounters()
     best_quality = _quality(founder, observations)
+    registry_by_id = {tool.tool_id: tool for tool in registry}
+
+    def evaluate_preferred_program(tool_ids: Sequence[str]) -> SearchResult | None:
+        nonlocal best_quality
+        selected: list[LineageTool] = []
+        current: DFA | None = founder
+        expanded: list[Atom] = []
+        for tool_id in tool_ids:
+            tool = registry_by_id.get(tool_id)
+            if tool is None:
+                return None
+            counters.symbolic_search_nodes += 1
+            if counters.symbolic_search_nodes > node_budget:
+                return SearchResult(
+                    arm=arm,
+                    exact=False,
+                    reason="symbolic_node_budget_exhausted",
+                    quality_numerator=best_quality,
+                    quality_denominator=len(observations),
+                    accepted_candidate_id=None,
+                    accepted_tool_ids=(),
+                    accepted_program=(),
+                    accepted_body=None,
+                    counters=counters.mapping(),
+                )
+            atoms = _tool_atoms(tool)
+            for atom in atoms:
+                counters.primitive_expansion_operations += 1
+                current = apply_atom(current, atom)  # type: ignore[arg-type]
+                if current is None:
+                    return None
+                expanded.append(atom)
+            if tool.provenance.origin == ORIGIN_LINEAGE_CONSTRUCTED:
+                counters.tool_symbols_used += 1
+            selected.append(tool)
+        if current is None:
+            return None
+        counters.candidates_constructed += 1
+        normalized = normalize_dfa(current)
+        quality = 0
+        for word, expected in sorted(observations.items()):
+            counters.evidence_checks += 1
+            quality += int(normalized.accepts(word) == expected)
+        best_quality = max(best_quality, quality)
+        if quality != len(observations):
+            return None
+        counters.candidates_evaluated += 1
+        exact, _ = exact_equivalence(normalized, target)
+        if not exact:
+            return None
+        ids = tuple(tool.tool_id for tool in selected)
+        return SearchResult(
+            arm=arm,
+            exact=True,
+            reason="transported_continuation_adopted",
+            quality_numerator=len(observations),
+            quality_denominator=len(observations),
+            accepted_candidate_id=_candidate_id(
+                arm=arm,
+                tool_ids=ids,
+                program=tuple(expanded),
+                body=normalized,
+            ),
+            accepted_tool_ids=ids,
+            accepted_program=tuple(expanded),
+            accepted_body=normalized,
+            counters=counters.mapping(),
+        )
+
+    for preferred_program in preferred_programs:
+        preferred_result = evaluate_preferred_program(preferred_program)
+        if preferred_result is not None:
+            return preferred_result
 
     def descend(
         current: DFA,
@@ -566,11 +641,25 @@ def _learning_state(pre_result, node_budget: int) -> M040LearningState:
         if use.tool_id in counts and use.adopted:
             counts[use.tool_id] += 1
     preferred = tuple(sorted(lineage_tools, key=lambda tool_id: (-counts[tool_id], tool_id)))
+    continuations: list[tuple[str, ...]] = []
+    for raw in pre_result.lineage_journal_records:
+        value = decode(raw)
+        if not isinstance(value, Mapping):
+            raise M040EngineError("pre-migration journal record is not a mapping")
+        if str(value["event_type"]) != "MutationAdopted" or int(value["cycle"]) < 2:
+            continue
+        parameters = dict(value["operation_parameters"])
+        program = tuple(str(tool_id) for tool_id in parameters["tool_ids"])
+        if any(tool_id in lineage_tools for tool_id in program) and program not in continuations:
+            continuations.append(program)
+    if not continuations:
+        raise M040EngineError("pre-migration lineage produced no continuation frontier")
     return M040LearningState(
         accepted_candidate_ids=accepted,
         lineage_tool_ids=lineage_tools,
         causal_tool_use_ids=tuple(uses),
         preferred_tool_ids=preferred,
+        continuation_programs=tuple(continuations),
         exploration_depth=POST_MIGRATION_DEPTH,
         remaining_search_nodes=node_budget,
     )
@@ -582,57 +671,51 @@ def _post_task(
     founder: DFA,
     task_seed: int,
 ) -> M040PostTask:
-    lineage_tools = [
-        tool
-        for tool in packet.tool_registry
-        if tool.tool_id in packet.learning_state.lineage_tool_ids
-    ]
-    if not lineage_tools:
-        raise M040EngineError("transported packet contains no lineage-owned transfer tool")
-    preferred = _registry_by_memory(lineage_tools, packet.learning_state.preferred_tool_ids)
-    lineage_tool = preferred[0]
-    primitive_tools = [
+    registry = {tool.tool_id: tool for tool in packet.tool_registry}
+    primitive_tools = tuple(
         tool
         for tool in packet.tool_registry
         if tool.provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
-    ]
+    )
     if not primitive_tools:
         raise M040EngineError("transported packet contains no birth primitives")
-    rng = random.Random(task_seed)
-    ordered_primitives = list(primitive_tools)
-    rng.shuffle(ordered_primitives)
+    programs = list(packet.learning_state.continuation_programs)
+    random.Random(task_seed).shuffle(programs)
     primitive_reachable = _reachable(founder, primitive_tools, POST_MIGRATION_DEPTH)
     attempts = 0
-    for primitive in ordered_primitives:
-        for tools in ((lineage_tool, primitive), (primitive, lineage_tool)):
-            attempts += 1
-            if attempts > TASK_GENERATION_ATTEMPTS:
-                break
-            raw, program = _apply_tools(founder, tools)
-            if raw is None:
-                continue
-            target = normalize_dfa(raw)
-            if target.n_states <= founder.n_states:
-                continue
-            if dfa_digest(target) in primitive_reachable:
-                continue
-            observations = _observations(target)
-            certificate = proved_structural_incapacity(
-                founder,
-                observations,
-                maximum_search_nodes=MAXIMUM_SEARCH_NODES,
-                maximum_prefix_count=MAXIMUM_PREFIX_COUNT,
-            )
-            if not certificate.proves_incapacity():
-                continue
-            return M040PostTask(
-                task_seed=task_seed,
-                parent_digest=dfa_digest(founder),
-                target=target,
-                generating_tool_ids=tuple(tool.tool_id for tool in tools),
-                generating_program=program,
-            )
-    raise M040EngineError("post-migration task generation found no admissible transfer task")
+    for program_ids in programs:
+        attempts += 1
+        if attempts > TASK_GENERATION_ATTEMPTS:
+            break
+        try:
+            tools = tuple(registry[tool_id] for tool_id in program_ids)
+        except KeyError as error:
+            raise M040EngineError("continuation frontier refers to an absent tool") from error
+        raw, program = _apply_tools(founder, tools)
+        if raw is None:
+            continue
+        target = normalize_dfa(raw)
+        if target.n_states <= founder.n_states:
+            continue
+        if dfa_digest(target) in primitive_reachable:
+            continue
+        observations = _observations(target)
+        certificate = proved_structural_incapacity(
+            founder,
+            observations,
+            maximum_search_nodes=MAXIMUM_SEARCH_NODES,
+            maximum_prefix_count=MAXIMUM_PREFIX_COUNT,
+        )
+        if not certificate.proves_incapacity():
+            continue
+        return M040PostTask(
+            task_seed=task_seed,
+            parent_digest=dfa_digest(founder),
+            target=target,
+            generating_tool_ids=program_ids,
+            generating_program=program,
+        )
+    raise M040EngineError("no transported continuation frontier produced an admissible task")
 
 
 def _certificate(
@@ -818,7 +901,7 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
             "packet_bytes": len(raw_packet.encode("utf-8")),
         },
     )
-    rehydrated = M040TransportPacket.from_json(raw_packet)
+    rehydrated = rehydrate_packet(raw_packet, expected_sha256=packet.sha256())
     if rehydrated.to_json() != raw_packet:
         raise M040EngineError("packet did not rehydrate canonically")
     rehydrated_source = rehydrated.source_dfa()
@@ -880,6 +963,7 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
         observations=observations,
         registry=full_registry,
         preferred_tool_ids=rehydrated.learning_state.preferred_tool_ids,
+        preferred_programs=rehydrated.learning_state.continuation_programs,
     )
     fresh = _search_arm(
         arm="fresh_on_b",
