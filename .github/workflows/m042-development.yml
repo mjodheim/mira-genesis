@@ -6,15 +6,14 @@ on:
       - '.github/workflows/m042-development.yml'
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: m042-workflow-cleanup-${{ github.event.pull_request.head.sha }}
   cancel-in-progress: true
 
 jobs:
-  quiet-historical-workflows:
-    if: github.event.pull_request.head.repo.full_name == github.repository
+  export-historical-workflow-cleanup:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -25,7 +24,6 @@ jobs:
 
       - name: Convert completed experiments to manual dispatch
         run: |
-          test "$(git log -1 --pretty=%s)" = "ci: let M042 quiet historical workflows"
           python - <<'PY'
           from pathlib import Path
 
@@ -82,10 +80,17 @@ jobs:
           print(f'Converted {len(changed)} historical workflows to manual dispatch.')
           PY
 
-      - name: Commit the notification reduction
+      - name: Package the exact workflow replacements
         run: |
-          git config user.name "mjodheim"
-          git config user.email "110968830+mjodheim@users.noreply.github.com"
-          git add .github/workflows
-          git commit -m "ci: make historical experiments manual-only"
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+          git diff --check
+          mapfile -t changed < <(git diff --name-only -- .github/workflows)
+          test "${#changed[@]}" -eq 12
+          printf '%s\n' "${changed[@]}" > workflow-cleanup-files.txt
+          tar -czf workflow-cleanup.tar.gz "${changed[@]}" workflow-cleanup-files.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: historical-workflow-cleanup-${{ github.event.pull_request.head.sha }}
+          path: workflow-cleanup.tar.gz
+          if-no-files-found: error
+          retention-days: 7
