@@ -29,9 +29,6 @@ jobs:
           payload = json.loads(raw)
           arms = payload['arms']
           post_audits = payload['post_migration_search_audits']
-          migration = payload['migration']
-          native = payload['accepted_native']
-          task = payload['task']
           summary = {
               'schema': 'm040-development-007-summary/1',
               'source_sha256': hashlib.sha256(raw).hexdigest(),
@@ -54,9 +51,9 @@ jobs:
                   'pre_migration_journal_records_digest': payload['pre_migration_journal_records_digest'],
                   'task_digest': payload['task_digest'],
               },
-              'task': task,
-              'migration': migration,
-              'accepted_native': native,
+              'task': payload['task'],
+              'migration': payload['migration'],
+              'accepted_native': payload['accepted_native'],
               'control_native_baselines': payload['control_native_baselines'],
               'arms': {
                   name: {
@@ -74,14 +71,16 @@ jobs:
               },
               'pre_migration_search_audits': [
                   {
-                      'cycle': index + 1,
+                      'cycle': audit['cycle'],
                       'transcript_digest': audit['transcript_digest'],
                       'transcript_entries': audit['transcript_entries'],
-                      'symbolic_nodes': audit['symbolic_nodes'],
-                      'completed_bodies': audit['completed_bodies'],
-                      'evidence_rejected': audit['evidence_rejected'],
+                      'symbolic_search_nodes': audit['symbolic_search_nodes'],
+                      'completed_candidates': audit['completed_candidates'],
+                      'evidence_rejections': audit['evidence_rejections'],
+                      'evidence_admitted_candidates': audit['evidence_admitted_candidates'],
+                      'exact_evaluations': audit['exact_evaluations'],
                   }
-                  for index, audit in enumerate(payload['pre_migration_search_audits'])
+                  for audit in payload['pre_migration_search_audits']
               ],
               'journal_record_count': payload['journal_record_count'],
           }
