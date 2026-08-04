@@ -22,7 +22,7 @@ concurrency:
 jobs:
   frozen-identity:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,6 +44,17 @@ jobs:
           tests/test_m041_canonical_guard.py
       - name: Verify repository integrity
         run: python scripts/check_repository_integrity.py
+      - name: Reproduce the canonical result path on the consumed development seed
+        run: |
+          python - <<'PY'
+          from experiments.M041.run_canonical import _execute_positive
+          from metamorphosis.m041_result_verify import verify_m041_result
+
+          result = _execute_positive(400_047, 'm040-development-v1')
+          verify_m041_result(result)
+          assert result['all_ten_gates_supported'] is True
+          assert result['canonical_completion_claim_supported'] is True
+          PY
       - name: Record frozen candidate identity without deriving a seed
         env:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
