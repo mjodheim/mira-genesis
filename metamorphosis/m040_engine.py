@@ -42,7 +42,7 @@ from .structural import Atom, apply_atom, flip, normalize_dfa
 
 Word = tuple[int, ...]
 
-DEVELOPMENT_SEED = 400_046
+DEVELOPMENT_SEED = 400_047
 DEVELOPMENT_COMMITMENT = "m040-development-v1"
 OBSERVATION_DEPTH = 6
 POST_MIGRATION_DEPTH = 4
@@ -1409,7 +1409,7 @@ def run_m040_development(
     *,
     protocol_commitment: str = DEVELOPMENT_COMMITMENT,
     require_replay: bool = True,
-    task_family: str = "prefix_adaptation",
+    task_family: str = "lineage_anchor",
 ) -> M040DevelopmentResult:
     first = _execute(master_seed, protocol_commitment, task_family=task_family)
     if not require_replay:

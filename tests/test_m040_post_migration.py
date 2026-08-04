@@ -125,11 +125,35 @@ def test_independent_search_audits_bind_every_arm(result) -> None:
         assert audit["accepted_candidate_id"] == result.arms[name].accepted_candidate_id
 
 
-def test_consumed_seed_400046_used_the_actual_prefix_family(result) -> None:
+def test_lineage_anchor_defaults_are_bound_before_execution() -> None:
+    import inspect
+    from metamorphosis.m040_engine import _execute, run_m040_development
+
+    assert inspect.signature(_execute).parameters["task_family"].default == "lineage_anchor"
+    assert (
+        inspect.signature(run_m040_development).parameters["task_family"].default
+        == "lineage_anchor"
+    )
+
+
+def test_lineage_anchor_task_is_derived_after_packet_validation(result) -> None:
+    from metamorphosis.m039_lineage import ORIGIN_PROTOCOL_SUPPLIED
+    from metamorphosis.m040_anchor import derive_lineage_anchors
+
     packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
     accepted = tuple(result.arms["complete_migrated_lineage"].accepted_tool_ids)
-    assert result.task.task_family == "prefix_plus_primitive"
+    anchors = derive_lineage_anchors(packet)
+    matching = [anchor for anchor in anchors if accepted[: len(anchor)] == anchor]
+    assert result.task.task_family == "lineage_anchor"
     assert accepted == result.task.generating_tool_ids
-    assert accepted[:-1] in packet.learning_state.continuation_programs
+    assert matching
+    anchor = max(matching, key=len)
+    suffix_ids = accepted[len(anchor) :]
+    assert len(suffix_ids) in (1, 2)
+    registry = {tool.tool_id: tool for tool in packet.tool_registry}
+    assert all(
+        registry[tool_id].provenance.origin == ORIGIN_PROTOCOL_SUPPLIED
+        for tool_id in suffix_ids
+    )
     assert accepted not in packet.learning_state.continuation_programs
     assert result.task.digest() not in result.packet_json
