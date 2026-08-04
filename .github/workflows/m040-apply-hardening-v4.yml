@@ -1,0 +1,387 @@
+name: Apply M040 pre-freeze hardening v4
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-apply-hardening-v4.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Apply robust packet, control and audit hardening
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          def replace_once(text: str, old: str, new: str, name: str) -> str:
+              count = text.count(old)
+              if count != 1:
+                  raise SystemExit(f'{name}: expected one match, found {count}')
+              return text.replace(old, new, 1)
+
+          packet_path = Path('metamorphosis/m040_packet.py')
+          packet = packet_path.read_text()
+          packet = replace_once(
+              packet,
+              'PACKET_SCHEMA = "m040-trans-substrate-lineage-packet/1"',
+              'PACKET_SCHEMA = "m040-trans-substrate-lineage-packet/2"',
+              'packet schema',
+          )
+          packet = replace_once(
+              packet,
+              'class M040TransportPacket:\n    protocol_commitment: str\n    lineage_id: str',
+              'class M040TransportPacket:\n    protocol_commitment: str\n'
+              '    source_lineage_commitment: str\n    lineage_id: str',
+              'packet dataclass commitment',
+          )
+          packet = replace_once(
+              packet,
+              '        if not self.protocol_commitment:\n'
+              '            raise M040PacketError("protocol commitment must be non-empty")\n'
+              '        if not self.machine_id:',
+              '        if not self.protocol_commitment:\n'
+              '            raise M040PacketError("protocol commitment must be non-empty")\n'
+              '        if not self.source_lineage_commitment:\n'
+              '            raise M040PacketError("source-lineage commitment must be non-empty")\n'
+              '        if self.source_lineage_commitment == self.protocol_commitment:\n'
+              '            raise M040PacketError("packet and source-lineage commitments must be distinct")\n'
+              '        if not self.machine_id:',
+              'packet commitment validation',
+          )
+          packet = replace_once(
+              packet,
+              '            if tool.provenance.protocol_commitment != self.protocol_commitment:\n'
+              '                raise M040PacketError("tool protocol commitment differs from the packet")',
+              '            if tool.provenance.protocol_commitment != self.source_lineage_commitment:\n'
+              '                raise M040PacketError("tool protocol commitment differs from the source lineage")',
+              'tool source commitment validation',
+          )
+          packet = replace_once(
+              packet,
+              '        protocol_commitment: str,\n        lineage_id: str,',
+              '        protocol_commitment: str,\n        source_lineage_commitment: str,\n        lineage_id: str,',
+              'packet build signature',
+          )
+          packet = replace_once(
+              packet,
+              '            protocol_commitment=protocol_commitment,\n            lineage_id=lineage_id,',
+              '            protocol_commitment=protocol_commitment,\n'
+              '            source_lineage_commitment=source_lineage_commitment,\n'
+              '            lineage_id=lineage_id,',
+              'packet build constructor',
+          )
+          packet = replace_once(
+              packet,
+              '            "protocol_commitment": self.protocol_commitment,\n'
+              '            "lineage_id": self.lineage_id,',
+              '            "protocol_commitment": self.protocol_commitment,\n'
+              '            "source_lineage_commitment": self.source_lineage_commitment,\n'
+              '            "lineage_id": self.lineage_id,',
+              'packet mapping',
+          )
+          packet = replace_once(
+              packet,
+              '            protocol_commitment=str(data["protocol_commitment"]),\n'
+              '            lineage_id=str(data["lineage_id"]),',
+              '            protocol_commitment=str(data["protocol_commitment"]),\n'
+              '            source_lineage_commitment=str(data["source_lineage_commitment"]),\n'
+              '            lineage_id=str(data["lineage_id"]),',
+              'packet parser',
+          )
+          packet_path.write_text(packet)
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          engine = replace_once(
+              engine,
+              'DEVELOPMENT_SEED = 400_042',
+              'DEVELOPMENT_SEED = 400_043',
+              'development seed',
+          )
+          engine = replace_once(
+              engine,
+              'from .m039_engine import _execute as execute_m039_lineage, dfa_digest\n',
+              'from .m039_engine import (\n'
+              '    CYCLE_ONE_SEARCH_DEPTH as M039_CYCLE_ONE_SEARCH_DEPTH,\n'
+              '    LATER_CYCLE_SEARCH_DEPTH as M039_LATER_CYCLE_SEARCH_DEPTH,\n'
+              '    OBSERVATION_WORDS as M039_OBSERVATION_WORDS,\n'
+              '    _execute as execute_m039_lineage,\n'
+              '    dfa_digest,\n'
+              ')\n'
+              'from .m039_search_audit import audit_result_searches\n',
+              'M039 audit imports',
+          )
+          engine = replace_once(
+              engine,
+              '    "ControlEvaluated",\n    "LineageCompleted",',
+              '    "ControlEvaluated",\n'
+              '    "ControlNativeSynthesised",\n'
+              '    "SearchAuditCommitted",\n'
+              '    "LineageCompleted",',
+              'M040 event vocabulary',
+          )
+          engine = replace_once(
+              engine,
+              '    preferred_tool_ids: Sequence[str],\n'
+              '    preferred_programs: Sequence[Sequence[str]] = (),',
+              '    preferred_tool_ids: Sequence[str],\n'
+              '    output_quality_body: DFA | None = None,\n'
+              '    preferred_programs: Sequence[Sequence[str]] = (),',
+              'output quality argument',
+          )
+          engine = replace_once(
+              engine,
+              '            quality_numerator=0,\n            quality_denominator=len(observations),',
+              '            quality_numerator=(\n'
+              '                0 if output_quality_body is None else _quality(output_quality_body, observations)\n'
+              '            ),\n'
+              '            quality_denominator=len(observations),',
+              'output-only quality',
+          )
+          engine = replace_once(
+              engine,
+              '        protocol_commitment=pre_commitment,\n'
+              '        lineage_id=pre.manifest.lineage_id,',
+              '        protocol_commitment=protocol_commitment,\n'
+              '        source_lineage_commitment=pre_commitment,\n'
+              '        lineage_id=pre.manifest.lineage_id,',
+              'packet build commitments',
+          )
+          pre_marker = (
+              '    original_founder = normalize_dfa(pre.cycle_tasks[0].founder)\n'
+              '    pre_records_digest = hashlib.sha256(b"".join(pre.lineage_journal_records)).hexdigest()'
+          )
+          pre_replacement = (
+              '    original_founder = normalize_dfa(pre.cycle_tasks[0].founder)\n'
+              '    pre_audits = audit_result_searches(\n'
+              '        tasks=pre.cycle_tasks,\n'
+              '        cycles=pre.manifest.cycles,\n'
+              '        final_registry=pre.manifest.tool_registry,\n'
+              '        cycle_one_depth=M039_CYCLE_ONE_SEARCH_DEPTH,\n'
+              '        later_depth=M039_LATER_CYCLE_SEARCH_DEPTH,\n'
+              '        observation_words=M039_OBSERVATION_WORDS,\n'
+              '    )\n'
+              '    pre_records_digest = hashlib.sha256(b"".join(pre.lineage_journal_records)).hexdigest()'
+          )
+          engine = replace_once(engine, pre_marker, pre_replacement, 'pre-migration audits')
+          engine = replace_once(
+              engine,
+              '        arm="output_only",\n        founder=None,\n        target=task.target,',
+              '        arm="output_only",\n'
+              '        founder=None,\n'
+              '        output_quality_body=rehydrated_source,\n'
+              '        target=task.target,',
+              'output-only call',
+          )
+
+          controls_start = engine.index('    arms = {\n', engine.index('    full = _search_arm('))
+          controls_end = engine.index('\n\n    if not full.exact', controls_start)
+          controls_insert = '''    arms = {
+              result.arm: result
+              for result in (full, fresh, unchanged, output_only, memory_ablated, tool_ablated)
+          }
+          unchanged_native = _synthesise_native(
+              original_founder,
+              machine,
+              rehydrated,
+              _derive_seed(master_seed, "unchanged-parent-native", protocol_commitment),
+          )
+          control_native_baselines = {
+              "complete_parent_migrated": {
+                  "source_digest": dfa_digest(rehydrated_source),
+                  "native_body_sha256": hashlib.sha256(
+                      rehydrated_native.to_json().encode("utf-8")
+                  ).hexdigest(),
+                  "exact": True,
+              },
+              "unchanged_parent_migrated": {**unchanged_native.mapping(), "exact": True},
+              "output_only": {
+                  "source_digest": dfa_digest(rehydrated_source),
+                  "native_body_sha256": hashlib.sha256(
+                      rehydrated_native.to_json().encode("utf-8")
+                  ).hexdigest(),
+                  "exact": True,
+                  "portable_rewrite_state": False,
+              },
+          }
+          journal.append("ControlNativeSynthesised", control_native_baselines)
+          for result in arms.values():
+              journal.append("ControlEvaluated", result.mapping())
+
+          from .m040_search_audit import audit_post_search
+          audit_inputs = {
+              "complete_migrated_lineage": (
+                  rehydrated_source,
+                  None,
+                  full_registry,
+                  rehydrated.learning_state.preferred_tool_ids,
+                  rehydrated.learning_state.continuation_programs,
+              ),
+              "fresh_on_b": (rehydrated_source, None, primitive_registry, (), ()),
+              "unchanged_parent_migrated": (original_founder, None, primitive_registry, (), ()),
+              "output_only": (None, rehydrated_source, (), (), ()),
+              "learning_state_ablated": (rehydrated_source, None, full_registry, (), ()),
+              "learned_tool_ablated": (rehydrated_source, None, tool_ablated_registry, (), ()),
+          }
+          post_audits = {}
+          for name, (audit_founder, output_body, audit_registry, preferred_ids, preferred_programs) in audit_inputs.items():
+              audit = audit_post_search(
+                  arm=name,
+                  founder=audit_founder,
+                  output_quality_body=output_body,
+                  target=task.target,
+                  observations=observations,
+                  registry=audit_registry,
+                  preferred_tool_ids=preferred_ids,
+                  preferred_programs=preferred_programs,
+                  maximum_depth=POST_MIGRATION_DEPTH,
+                  node_budget=POST_MIGRATION_NODE_BUDGET,
+                  expected_result=arms[name],
+              )
+              post_audits[name] = audit.mapping()
+          journal.append(
+              "SearchAuditCommitted",
+              {
+                  "pre_migration": [audit.mapping() for audit in pre_audits],
+                  "post_migration": post_audits,
+              },
+          )'''
+          engine = engine[:controls_start] + controls_insert + engine[controls_end:]
+
+          engine = replace_once(
+              engine,
+              '    accepted_native: Mapping[str, object]\n'
+              '    rollback_restored_exactly: bool',
+              '    accepted_native: Mapping[str, object]\n'
+              '    control_native_baselines: Mapping[str, Mapping[str, object]]\n'
+              '    pre_migration_search_audits: tuple[Mapping[str, object], ...]\n'
+              '    post_migration_search_audits: Mapping[str, Mapping[str, object]]\n'
+              '    rollback_restored_exactly: bool',
+              'result audit fields',
+          )
+          engine = replace_once(
+              engine,
+              '    schema: str = "m040-development-result/1"',
+              '    schema: str = "m040-development-result/2"',
+              'result schema',
+          )
+          engine = replace_once(
+              engine,
+              '            "accepted_native": dict(self.accepted_native),\n'
+              '            "rollback_restored_exactly": self.rollback_restored_exactly,',
+              '            "accepted_native": dict(self.accepted_native),\n'
+              '            "control_native_baselines": {\n'
+              '                name: dict(value) for name, value in sorted(self.control_native_baselines.items())\n'
+              '            },\n'
+              '            "pre_migration_search_audits": [\n'
+              '                dict(value) for value in self.pre_migration_search_audits\n'
+              '            ],\n'
+              '            "post_migration_search_audits": {\n'
+              '                name: dict(value) for name, value in sorted(self.post_migration_search_audits.items())\n'
+              '            },\n'
+              '            "rollback_restored_exactly": self.rollback_restored_exactly,',
+              'result mapping audits',
+          )
+          engine = replace_once(
+              engine,
+              '        accepted_native=accepted_native.mapping(),\n'
+              '        rollback_restored_exactly=rollback_exact,',
+              '        accepted_native=accepted_native.mapping(),\n'
+              '        control_native_baselines=control_native_baselines,\n'
+              '        pre_migration_search_audits=tuple(audit.mapping() for audit in pre_audits),\n'
+              '        post_migration_search_audits=post_audits,\n'
+              '        rollback_restored_exactly=rollback_exact,',
+              'primary result constructor',
+          )
+          engine = replace_once(
+              engine,
+              '        accepted_native=first.accepted_native,\n'
+              '        rollback_restored_exactly=first.rollback_restored_exactly,',
+              '        accepted_native=first.accepted_native,\n'
+              '        control_native_baselines=first.control_native_baselines,\n'
+              '        pre_migration_search_audits=first.pre_migration_search_audits,\n'
+              '        post_migration_search_audits=first.post_migration_search_audits,\n'
+              '        rollback_restored_exactly=first.rollback_restored_exactly,',
+              'replay result constructor',
+          )
+          engine_path.write_text(engine)
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          tests += '''
+
+          def test_packet_separates_m040_and_source_lineage_commitments(result) -> None:
+              packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+              assert packet.protocol_commitment == result.protocol_commitment
+              assert packet.source_lineage_commitment != packet.protocol_commitment
+              assert all(
+                  tool.provenance.protocol_commitment == packet.source_lineage_commitment
+                  for tool in packet.tool_registry
+              )
+
+
+          def test_output_only_reports_real_migrated_parent_quality(result) -> None:
+              from metamorphosis.m040_engine import OBSERVATIONS
+              packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+              expected = sum(
+                  int(packet.source_dfa().accepts(word) == result.task.target.accepts(word))
+                  for word in OBSERVATIONS
+              )
+              assert result.arms["output_only"].quality_numerator == expected
+              assert expected > 0
+
+
+          def test_control_parent_has_an_exact_native_body_on_b(result) -> None:
+              control = result.control_native_baselines["unchanged_parent_migrated"]
+              assert control["exact"] is True
+              assert control["native_components"] > 0
+              assert control["serialized_bytes"] > 0
+
+
+          def test_independent_search_audits_bind_every_arm(result) -> None:
+              assert len(result.pre_migration_search_audits) == 3
+              assert set(result.post_migration_search_audits) == set(result.arms)
+              for name, audit in result.post_migration_search_audits.items():
+                  assert audit["transcript_digest"]
+                  assert audit["transcript_entries"] > 0
+                  assert audit["symbolic_search_nodes"] == result.arms[name].counters["symbolic_search_nodes"]
+                  assert audit["accepted_candidate_id"] == result.arms[name].accepted_candidate_id
+          '''
+          import textwrap
+          tests_path.write_text(tests + textwrap.dedent(''))
+          # The string above is already indented by YAML; normalise appended Python only.
+          raw = tests_path.read_text()
+          marker = '\n\n          def test_packet_separates_m040_and_source_lineage_commitments'
+          if marker in raw:
+              prefix, suffix = raw.split(marker, 1)
+              suffix = 'def test_packet_separates_m040_and_source_lineage_commitments' + suffix.split('def test_packet_separates_m040_and_source_lineage_commitments', 1)[1]
+              tests_path.write_text(prefix + '\n\n' + textwrap.dedent(suffix))
+          PY
+      - name: Verify focused hardening and full M040 replay
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q tests/test_m040_duplicate_dependencies.py tests/test_m040_post_migration.py
+      - name: Archive temporary workflows and commit hardening
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          cp .github/workflows/m040-preserve-development-002.yml archives/workflows/m040-preserve-development-002.yml
+          git rm .github/workflows/m040-preserve-development-002.yml
+          git rm .github/workflows/m040-apply-hardening-v3.yml
+          git rm .github/workflows/m040-apply-hardening-v4.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add metamorphosis/m040_packet.py metamorphosis/m040_engine.py tests/test_m040_post_migration.py archives/workflows/m040-preserve-development-002.yml
+          git commit -m 'feat(m040): harden packet commitments, controls and exhaustive replay'
+          git push origin "HEAD:${BRANCH}"
