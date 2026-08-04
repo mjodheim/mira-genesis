@@ -6,6 +6,7 @@ on:
       - 'experiments/M041/**'
       - 'metamorphosis/m040_engine.py'
       - 'metamorphosis/m041_*.py'
+      - 'scripts/run_m041_completion_audit.py'
       - 'tests/test_m041_*.py'
       - '.github/workflows/m041-development.yml'
 
@@ -57,7 +58,7 @@ jobs:
             --output m040-compatibility-result.json
       - name: Run the consumed M041 integration lineage
         run: |
-          python experiments/M041/run_development.py \
+          python scripts/run_m041_completion_audit.py \
             --output m041-development-result.json
       - name: Verify the development gate surface
         run: |
