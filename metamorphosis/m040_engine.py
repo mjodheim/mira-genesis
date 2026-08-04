@@ -7,7 +7,7 @@ from itertools import product
 import hashlib
 import json
 import random
-from typing import Mapping, Sequence
+from typing import Callable, Mapping, Sequence
 
 from .m012b_body import synthesize_native_body
 from .m012b_dfa import DFA, canonicalize, exact_equivalence, minimize_dfa
@@ -41,6 +41,7 @@ from .m040_anchor import (
 from .structural import Atom, apply_atom, flip, normalize_dfa
 
 Word = tuple[int, ...]
+PreAdoptionValidator = Callable[[DFA, DFA, DFA, Mapping[Word, bool]], None]
 
 DEVELOPMENT_SEED = 400_047
 DEVELOPMENT_COMMITMENT = "m040-development-v1"
@@ -928,6 +929,7 @@ def _execute(
     protocol_commitment: str,
     *,
     task_family: str = "lineage_anchor",
+    pre_adoption_validator: PreAdoptionValidator | None = None,
 ) -> M040DevelopmentResult:
     journal = M040Journal()
     pre_seed = _derive_seed(master_seed, "pre-migration-lineage", protocol_commitment)
@@ -1260,6 +1262,13 @@ def _execute(
     )
     if not accepted_pre_owned:
         raise M040EngineError("accepted post-migration candidate used no pre-migration tool")
+    if pre_adoption_validator is not None:
+        pre_adoption_validator(
+            rehydrated_source,
+            full.accepted_body,
+            task.target,
+            observations,
+        )
     journal.append(
         "CandidateAdopted",
         {
@@ -1410,11 +1419,22 @@ def run_m040_development(
     protocol_commitment: str = DEVELOPMENT_COMMITMENT,
     require_replay: bool = True,
     task_family: str = "lineage_anchor",
+    pre_adoption_validator: PreAdoptionValidator | None = None,
 ) -> M040DevelopmentResult:
-    first = _execute(master_seed, protocol_commitment, task_family=task_family)
+    first = _execute(
+        master_seed,
+        protocol_commitment,
+        task_family=task_family,
+        pre_adoption_validator=pre_adoption_validator,
+    )
     if not require_replay:
         return first
-    replayed = _execute(master_seed, protocol_commitment, task_family=task_family)
+    replayed = _execute(
+        master_seed,
+        protocol_commitment,
+        task_family=task_family,
+        pre_adoption_validator=pre_adoption_validator,
+    )
     if first.digest() != replayed.digest():
         raise M040EngineError("seed-only replay changed the M040 result digest")
     if first.packet_json != replayed.packet_json:
