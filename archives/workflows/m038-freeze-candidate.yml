@@ -1,0 +1,68 @@
+# Archived after protocol identity was recorded without opening the sealed block.
+# Workflow run: 30900171596 at head 12a2140ed9e37cba01fa0cb991527668c956b8e9.
+# Protocol SHA-256: f717740c24d5028dd660c066477e8690c9a7559f43e03cb57c4b875c1f3ee326.
+
+name: M038 freeze candidate
+
+# Computes identities only. It never imports the sealed specification or derives a task seed.
+on:
+  pull_request:
+    paths:
+      - 'experiments/M038/PROTOCOL.md'
+      - '.github/workflows/m038-freeze-candidate.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m038-freeze-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: true
+
+jobs:
+  protocol-identity:
+    name: Frozen protocol identity
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Confirm no canonical marker exists
+        run: test ! -e experiments/M038/CANONICAL_ARMED.json
+
+      - name: Record the candidate identities
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+
+          protocol = Path('experiments/M038/PROTOCOL.md').read_bytes()
+          payload = {
+              'schema': 'm038-freeze-candidate/1',
+              'head_sha': os.environ['HEAD_SHA'],
+              'protocol_path': 'experiments/M038/PROTOCOL.md',
+              'protocol_sha256': hashlib.sha256(protocol).hexdigest(),
+              'protocol_bytes': len(protocol),
+              'canonical_marker_absent': True,
+              'sealed_seed_not_derived': True,
+          }
+          Path('m038-freeze-candidate.json').write_text(
+              json.dumps(payload, sort_keys=True, indent=2) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(payload, sort_keys=True))
+          PY
+
+      - name: Upload the freeze candidate identity
+        uses: actions/upload-artifact@v4
+        with:
+          name: m038-freeze-candidate-${{ github.event.pull_request.head.sha }}
+          path: m038-freeze-candidate.json
+          if-no-files-found: error
+          retention-days: 30

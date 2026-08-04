@@ -1,0 +1,107 @@
+# Archived after the immutable first canonical artifact was produced.
+# Workflow run: 30901610194
+# Arming head: 8fd829269b2b18e207917ef7dcf71a963f28ef8e
+# Artifact id: 8889292924
+# Artifact archive digest: sha256:da3dfc56c10651718cd05192d5b58b9e63d74041975dddf4966671fe32ab5928
+# Canonical JSON SHA-256: 8d3c7d48bb501307f707eaf7882a8488f277d4e82f6ac9a297124a7bbd92de9b
+# Retained for reproduction only; intentionally outside .github/workflows.
+
+name: M038 first canonical run
+
+# This workflow remains inert until one marker-only commit with the exact arming message.
+# A negative scientific result is still a successful execution and is preserved.
+on:
+  pull_request:
+    paths:
+      - 'experiments/M038/CANONICAL_ARMED.json'
+      - 'experiments/M038/PROTOCOL.md'
+      - 'experiments/M038/run_canonical.py'
+      - 'metamorphosis/m038_*.py'
+      - 'scripts/check_m038_canonical_guard.py'
+      - '.github/workflows/m038-canonical.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m038-canonical-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  guarded-canonical-run:
+    name: Guarded first canonical run
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the immutable pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+
+      - name: Inspect the head without opening the block
+        id: guard
+        shell: bash
+        run: |
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r HEAD^ HEAD)
+          args=()
+          for path in "${changed[@]}"; do
+            args+=(--changed-file "$path")
+          done
+          python scripts/check_m038_canonical_guard.py \
+            --head-sha "$(git rev-parse HEAD)" \
+            --parent-sha "$(git rev-parse HEAD^)" \
+            --commit-message "$(git log -1 --pretty=%B)" \
+            --github-output "$GITHUB_OUTPUT" \
+            "${args[@]}"
+
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.armed == 'true'
+        with:
+          python-version: '3.11'
+
+      - name: Install the frozen package
+        if: steps.guard.outputs.armed == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Execute and preserve the first canonical result
+        if: steps.guard.outputs.armed == 'true'
+        env:
+          M038_CANONICAL_RUN: '1'
+        run: |
+          python experiments/M038/run_canonical.py \
+            --head-sha "$(git rev-parse HEAD)" \
+            --parent-sha "$(git rev-parse HEAD^)" \
+            --marker experiments/M038/CANONICAL_ARMED.json \
+            --protocol experiments/M038/PROTOCOL.md \
+            --output m038-canonical-result.json
+
+      - name: Verify first-run metadata
+        if: steps.guard.outputs.armed == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('m038-canonical-result.json').read_text())
+          assert payload['schema'] == 'm038-canonical-result/1'
+          assert payload['status'] == 'first-canonical-result'
+          assert payload['first_run_only'] is True
+          assert payload['reruns_are_reproductions_only'] is True
+          assert payload['arming_head_sha'] == '${{ github.event.pull_request.head.sha }}'
+          PY
+
+      - name: Upload the immutable canonical artefact
+        if: steps.guard.outputs.armed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m038-first-canonical-${{ github.event.pull_request.head.sha }}
+          path: m038-canonical-result.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Confirm the block stayed closed
+        if: steps.guard.outputs.armed != 'true'
+        run: echo "M038 canonical block remains closed on this commit."
