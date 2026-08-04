@@ -62,7 +62,7 @@ After packet validation, the generator:
 5. accepts the first program that:
    - produces a strictly larger minimal DFA than the migrated parent;
    - is not reached by birth-registry enumeration within depth four and 4,096 nodes;
-   - yields a sound exact structural-incacity certificate from the committed observations.
+   - yields a sound exact structural-incapacity certificate from the committed observations.
 
 If no admissible task exists within the bound, the canonical scientific outcome is negative.
 The generator may not increase its bound, deepen search, add another suffix or use target-aware
