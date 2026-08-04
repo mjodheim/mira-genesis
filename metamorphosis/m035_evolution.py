@@ -141,12 +141,58 @@ def growth_is_necessary(organism: "Organism", evidence: dict[tuple[int, ...], bo
 
 
 @dataclass(frozen=True)
+class Mutation:
+    """One recorded step of a lineage, sufficient to reproduce it exactly.
+
+    A `parent_digest` alone identifies the previous body but cannot rebuild it. Gate 9
+    requires the full lineage to remain replayable from the founder and immutable inputs,
+    so the operation itself is stored rather than a pointer to its outcome.
+    """
+
+    kind: str            # "atom" or "duplication"
+    atom_index: int      # index into ATOMS for an atom, -1 otherwise
+    state: int           # duplicated state, -1 otherwise
+    incoming: int        # which in-edge was rerouted, -1 otherwise
+
+    def to_dict(self) -> dict[str, int | str]:
+        return {
+            "kind": self.kind,
+            "atom_index": self.atom_index,
+            "state": self.state,
+            "incoming": self.incoming,
+        }
+
+
+def replay(founder: DFA, ancestry: Sequence[Mutation]) -> DFA | None:
+    """Rebuild a descendant from its founder and its recorded mutations.
+
+    Deterministic and total: every step is either an indexed atom or an indexed
+    duplication, so the chain reproduces the body exactly or fails loudly. Nothing about
+    the search, the population or the seeds is needed.
+    """
+
+    current = founder
+    for step in ancestry:
+        if step.kind == "atom":
+            nxt = apply_atoms(current, [ATOMS[step.atom_index]])
+        elif step.kind == "duplication":
+            nxt = duplicate_state(current, step.state, step.incoming)
+        else:
+            return None
+        if nxt is None:
+            return None
+        current = nxt
+    return current
+
+
+@dataclass(frozen=True)
 class Organism:
     body: DFA
     generation: int = 0
     duplications: int = 0
     edits: int = 0
     parent_digest: str | None = None
+    ancestry: tuple[Mutation, ...] = ()
 
     @property
     def size(self) -> int:
@@ -217,44 +263,33 @@ def offspring(
     guarantee that none is; it only guarantees that a demanded growth was warranted.
     """
 
-    if allow_duplication and evidence is not None and parent.size < max_size:
-        if growth_is_necessary(parent, evidence):
-            usable = duplicable_states(parent.body)
-            if usable:
-                grown = duplicate_state(
-                    parent.body,
-                    index=usable[rng.randrange(len(usable))],
-                    incoming=rng.randrange(4),
-                )
-                if grown is not None:
-                    return Organism(
-                        body=grown,
-                        generation=parent.generation + 1,
-                        duplications=parent.duplications + 1,
-                        edits=parent.edits,
-                        parent_digest=parent.digest(),
-                    )
+    wants_growth = allow_duplication and parent.size < max_size and (
+        growth_is_necessary(parent, evidence)
+        if evidence is not None
+        else rng.randrange(4) == 0
+    )
 
-    if allow_duplication and evidence is None and parent.size < max_size and rng.randrange(4) == 0:
+    if wants_growth:
         usable = duplicable_states(parent.body)
         if not usable:
             return None
-        child_body = duplicate_state(
-            parent.body,
-            index=usable[rng.randrange(len(usable))],
-            incoming=rng.randrange(4),
-        )
+        state = usable[rng.randrange(len(usable))]
+        incoming = rng.randrange(4)
+        child_body = duplicate_state(parent.body, index=state, incoming=incoming)
         if child_body is None:
             return None
+        step = Mutation("duplication", -1, state, incoming)
         return Organism(
             body=child_body,
             generation=parent.generation + 1,
             duplications=parent.duplications + 1,
             edits=parent.edits,
             parent_digest=parent.digest(),
+            ancestry=parent.ancestry + (step,),
         )
 
-    atom: Atom = ATOMS[rng.randrange(len(ATOMS))]
+    atom_index = rng.randrange(len(ATOMS))
+    atom: Atom = ATOMS[atom_index]
     child_body = apply_atoms(parent.body, [atom])
     if child_body is None:
         return None
@@ -264,6 +299,7 @@ def offspring(
         duplications=parent.duplications,
         edits=parent.edits + 1,
         parent_digest=parent.digest(),
+        ancestry=parent.ancestry + (Mutation("atom", atom_index, -1, -1),),
     )
 
 
@@ -278,26 +314,189 @@ def agreement(candidate: DFA, target: DFA, words: Sequence[tuple[int, ...]]) -> 
     return sum(1 for word in words if candidate.accepts(word) == target.accepts(word))
 
 
-def minimal_criterion_survivors(
+# Two independent decisions, two domain separators. Sharing one would make the choice of
+# which bodies survive and the choice of which lineage represents each body correlated
+# through the same hash.
+BODY_SELECTION_DOMAIN = "m037-body-selection-v1"
+REPRESENTATIVE_DOMAIN = "m037-body-representative-v1"
+
+
+def thresholded_elitist_truncation(
     population: Sequence[tuple[Organism, int]],
     threshold: int,
     capacity: int,
 ) -> list[Organism]:
-    """Keep everyone who clears a bar, not the best few.
+    """The selector M035 actually used. Preserved unchanged, under its true name.
 
-    M021 measured four selection rules against exact hidden quality and minimal criterion
-    preserved the most: 750 per mille against 416 for novelty, 312 for a
-    quality-diversity approximation and 0 for the direct objective. Selecting the best
-    collapses the population onto one lineage and destroys the redundancy duplication
-    needs in order to drift.
+    It admits on a threshold, then ranks the admitted by descending agreement, favours
+    the smaller body on a tie, and truncates. That is elitist truncation, not a minimal
+    criterion, and M035's historical 6/12 belongs to *this* implementation.
 
-    Ties are broken by structural cost, so a smaller organism survives a larger one at
-    equal agreement. That is what stops growth from being free.
+    It was previously documented as "chosen from M021's measurement". That attribution
+    was wrong. `rank_by_minimal_criterion` in `m021_measures.py` filters on viability
+    (`ledger.solved > 0`), ranks the viable by **novelty**, ranks the rejected by energy,
+    and lets `Population.select` truncate. M021's 750 per mille belongs to that composite
+    — viability, then novelty, then truncation — and to its own domain. Nothing here
+    inherits it.
     """
 
     qualified = [(org, score) for org, score in population if score >= threshold]
     qualified.sort(key=lambda pair: (-pair[1], pair[0].structural_cost(), pair[0].digest()))
     return [org for org, _ in qualified[:capacity]]
+
+
+def _key(domain: str, *parts: object) -> str:
+    payload = "|".join([domain, *(str(part) for part in parts)])
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def body_selection_key(
+    body_digest: str, *, commitment: str, reduction_seed: int, generation: int
+) -> str:
+    """Which bodies survive. Sees no score, no size, no input position."""
+
+    return _key(BODY_SELECTION_DOMAIN, commitment, reduction_seed, generation, body_digest)
+
+
+def representative_key(
+    body_digest: str,
+    ancestry_digest: str,
+    *,
+    commitment: str,
+    reduction_seed: int,
+    generation: int,
+) -> str:
+    """Which lineage represents a body when several converged on it.
+
+    Two organisms can share a body and differ in ancestry, generation, edit and
+    duplication counts. Keeping whichever the loop met first makes the surviving *lineage*
+    depend on input order even when the surviving *bodies* do not — and that leaks into
+    replayability, genealogical depth and every count reported for the winner.
+
+    Separate domain from `body_selection_key`, so the two decisions cannot correlate.
+    """
+
+    return _key(
+        REPRESENTATIVE_DOMAIN,
+        commitment,
+        reduction_seed,
+        generation,
+        body_digest,
+        ancestry_digest,
+    )
+
+
+def ancestry_digest(organism: Organism) -> str:
+    """Identity of a lineage, independent of the body it arrived at."""
+
+    payload = json.dumps(
+        [step.to_dict() for step in organism.ancestry],
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
+
+
+def positive_population_floor_admission_with_body_diversity(
+    population: Sequence[tuple[Organism, int]],
+    threshold: int,
+    capacity: int,
+    *,
+    commitment: str,
+    reduction_seed: int,
+    generation: int,
+) -> list[Organism]:
+    """Admit above a positive population floor; reduce uniformly over **distinct bodies**.
+
+    Named for the whole rule, including the part that is easy to overlook. The runner
+    supplies `max(1, min(score))`, so admission carries a **viability condition** on top
+    of the population floor: an organism agreeing with nothing is rejected outright.
+
+    That condition is chosen, not inherited. A minimal criterion is defined by a viability
+    bar rather than by no bar at all; removing it entirely would leave a pure diversity
+    sampler with no selection pressure, which is a different object. Here a zero score
+    means disagreeing on every observed word, which is a defensible reading of non-viable.
+
+    **Its cost is stated rather than hidden.** The justification for keeping admission
+    otherwise near-vacuous is that a neutral duplication carries *exactly its parent's
+    score*, so a rising bar would exclude duplicates before they could drift. That
+    protection applies only once a lineage is viable. A neutral duplicate of a parent that
+    has never scored receives no protection at all: both sit below 1 and both are rejected.
+    If the entire population scores zero, nothing is admitted and the caller must decide
+    what to do with an empty result.
+
+    The work is therefore done by the reduction, and its unit is the **distinct body**.
+    That is a declared diversity policy, not neutrality between organisms: ten clones
+    present one candidacy. Chosen on mechanism before any measurement — the property under
+    test is *structural* drift, and per-individual reduction would let a heavily
+    replicated clone crowd out rare structures by multiplicity alone.
+
+    Three decisions, kept apart:
+
+    1. **admission** — score reaches the threshold; its exact value then has no influence;
+    2. **which bodies survive** — `body_selection_key`;
+    3. **which lineage represents each body** — `representative_key`, a separate domain.
+
+    Neither key sees score, size, structural cost or input position, and both derive from
+    an explicit `commitment` rather than the mutation generator: drawing from that stream
+    would make the count of admitted organisms shift every later variation, coupling
+    selection to variation through the random state.
+
+    Growth's cost stays in `VariationBudget` and in the reported result. It is deliberately
+    not reintroduced here as a survival pressure.
+    """
+
+    qualified = [org for org, score in population if score >= threshold]
+    if not qualified:
+        return []
+
+    groups: dict[str, list[Organism]] = {}
+    for org in qualified:
+        groups.setdefault(org.digest(), []).append(org)
+
+    chosen: dict[str, Organism] = {}
+    for digest, members in groups.items():
+        chosen[digest] = min(
+            members,
+            key=lambda org: representative_key(
+                digest,
+                ancestry_digest(org),
+                commitment=commitment,
+                reduction_seed=reduction_seed,
+                generation=generation,
+            ),
+        )
+
+    if len(chosen) <= capacity:
+        return [chosen[digest] for digest in sorted(chosen)]
+
+    ordered = sorted(
+        chosen.items(),
+        key=lambda item: body_selection_key(
+            item[0],
+            commitment=commitment,
+            reduction_seed=reduction_seed,
+            generation=generation,
+        ),
+    )
+    return [org for _, org in ordered[:capacity]]
+
+
+# Names used while the rule was still described as a minimal criterion, and before the
+# viability condition in `max(1, ...)` was acknowledged. Kept as aliases so the two
+# corrections stay visible rather than becoming silent renames.
+population_floor_admission_with_body_diversity = (
+    positive_population_floor_admission_with_body_diversity
+)
+minimal_admission_with_body_diversity = (
+    positive_population_floor_admission_with_body_diversity
+)
+
+
+# Historical alias. `minimal_criterion_survivors` named a selector that was not a minimal
+# criterion; the name is kept pointing at the implementation that produced M035's result
+# so that record stays reproducible.
+minimal_criterion_survivors = thresholded_elitist_truncation
 
 
 def speciated_survivors(

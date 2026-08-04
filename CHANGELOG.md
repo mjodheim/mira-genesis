@@ -1,5 +1,94 @@
 # Changelog
 
+## 0.34.0 — 2026-08-03
+
+- **Corrected a selector that was named for a mechanism it did not implement.**
+  `minimal_criterion_survivors` admitted on a threshold and then ranked the admitted by
+  agreement, preferred the smaller body on a tie, and truncated. M037's own report
+  asserted that "a minimal criterion admits or rejects; it does not rank" while the code
+  ranked. Found by external review, not by the test suite or any audit.
+- **Withdrew a false attribution.** The rule was justified by M021's 750 per mille.
+  `rank_by_minimal_criterion` filters on viability, ranks the viable by **novelty**, ranks
+  the rejected by energy and lets `Population.select` truncate; M035 implemented none of
+  that. The figure was attributed to a mechanism that was never run.
+- Named three selectors apart, so none borrows another's evidence:
+  `thresholded_elitist_truncation` keeps M035's historical 6/12,
+  `viability_then_novelty` keeps M021's 750 per mille, and the new
+  `positive_population_floor_admission_with_body_diversity` inherits neither and has
+  produced no experimental result at all. Every rate in M037 belongs to the historical
+  selector, which the runner still uses unchanged.
+- Named the admission bar for the whole of what it does. `max(1, min(score))` is a
+  population floor **plus** a viability condition, and its cost is stated: the protection
+  claimed for neutral duplicates applies only to viable lineages, since a neutral
+  duplicate of a never-scoring parent sits below the bar with its parent and is rejected
+  with it. Pinned by test, including the degenerate all-zero population.
+- Separated admission from capacity reduction. Admission consults the score once, at the
+  threshold. Reduction orders by `SHA-256(domain || commitment || seed || generation ||
+  digest)`, which sees no score, no size, no structural cost and no input position, and
+  draws from its own hash rather than the mutation generator — sharing that stream would
+  couple selection to variation.
+- **Fixed a second hidden dependency.** Deduplication kept whichever organism the loop met
+  first per body digest, so permuting the population changed the surviving *lineage* while
+  the surviving *bodies* stayed identical. A separate `representative_key`, under its own
+  domain separator, now decides which lineage represents a body. The invariant test
+  written alongside had compared digests only and passed while the defect was present.
+- Declared the unit of reduction as the **distinct body**, chosen on mechanism before any
+  measurement and named as a diversity policy rather than neutrality: ten clones present
+  one candidacy. Per-individual reduction would let a heavily replicated clone crowd out
+  rare structures by multiplicity alone.
+- Named the admission rule for what it is. The threshold is the current population's
+  minimum score, recomputed each generation and able to fall. A comment claiming it "rises
+  only when the whole population clears it" was false. The near-vacuous bar is deliberate:
+  a neutral duplication carries exactly its parent's score, so any rising bar would
+  eventually exclude the duplicates before they could drift.
+- Requalified M037's replay as **level 2, adopted-mutation replay from a supplied
+  founder** — a Gate 9 prerequisite, not Gate 9. The founder is given as a DFA rather than
+  rebuilt from a seed, and task reveals, observations, rejected candidates, costs and
+  selection decisions are not reproduced.
+- Marked cases 0–11 and 12–23 as consumed. Neither may choose a policy, tune a threshold
+  or confirm a later claim; a fresh guarded block is required before the next experimental
+  decision.
+- Renamed the machine-readable replay fields to say what they demonstrate:
+  `adopted_mutation_replayable`, `adopted_mutation_steps`, `adopted_mutations` and
+  `all_winning_adopted_mutation_chains_replayable`. The code, the tests, the emitted JSON
+  and the report now make the same claim, and none of them says Gate 9.
+- Added a test exercising the runner's own threshold rule rather than a hand-supplied
+  one. The earlier tests passed a threshold in directly and never exercised
+  `max(1, min(score))` against a population containing a zero, which is exactly where the
+  positive floor differs from the current minimum.
+- Pinned the rejected alternative too: under an exact `min(score)` floor the null lineage
+  would survive. Variant 1 is not adopted, and the trade-off stays visible in a test
+  rather than only in prose.
+- Added 19 metamorphic selection tests and recorded the misclassification in
+  `FAILURE_LOG.md`.
+
+## 0.33.0 — 2026-08-03
+
+- Made the lineage replayable, as Gate 9 requires. Every organism now carries its full
+  chain of mutations — the operation itself, not a pointer to its outcome — and
+  `replay(founder, ancestry)` rebuilds any descendant from the founder body and the chain
+  alone, with no seed, no population and no search. Verified 20/20 in development and
+  **12/12 on untouched cases**, on chains up to 36 mutations deep. A truncated chain
+  provably fails to rebuild the organism, so the record is load-bearing.
+- Fixed the survival rule, which sorted by score and cut at capacity: elitist truncation
+  wearing a minimal criterion's name, and the rule M021 measured as the most destructive
+  of four at 0 per mille against 750. The symptom was unmistakable once swept — raising
+  generations from 60 to 150 changed nothing on every configuration, because the
+  population reached a fixed point and stopped exploring. Deduplicating by body before the
+  cut restores exploration.
+- Recorded an instructive intermediate error: ordering the distinct bodies by structural
+  cost scored **0/12 everywhere**, because cost rises with size and a size-ordered cut
+  discards exactly the organisms that have grown. Both errors share a shape — a minimal
+  criterion admits or rejects, it does not rank, and each order slipped into it restored a
+  pressure the mechanism cannot survive.
+- **Rejected a tuning illusion.** A sweep found 9/12 on cases 0–11 against 6/12 for the
+  delivered defaults. Confirmed on untouched cases 12–23 it scores 3/12, while the
+  defaults score 5/12 — the swept configuration is not merely no better but worse, and the
+  sweep had found the parameters that flattered the twelve cases being watched rather than
+  improving the mechanism.
+- Confirmed the delivered result generalises: 5/12 on cases never used to choose anything,
+  against a control that stays at 0/12 by proved impossibility rather than by budget.
+
 ## 0.32.0 — 2026-08-03
 
 - Added the `grow` atom to the structural language: duplicate the state holding a role,

@@ -115,16 +115,26 @@ A diagnosis that raises the *probability* of growth rather than forcing it would
 behave differently. That is a hypothesis, not a correction: applying it to these same seeds
 would be the adjustment §7 forbids.
 
-## Selection
+## Selection — and a correction to how it was described
 
-The survival rule is the **minimal criterion** — keep everyone above a bar rather than the
-best few — chosen from this repository's own measurement rather than by preference. M021
-compared four rules against exact hidden quality: minimal criterion preserved 750 per
-mille, novelty 416, a quality-diversity approximation 312, and the direct objective 0.
+**The selector used here is `thresholded_elitist_truncation`.** It admits on a threshold,
+ranks the admitted by descending agreement, favours the smaller body on a tie, and
+truncates at capacity. The 6/12 recorded above belongs to that implementation.
 
-Selecting the best collapses the population onto one lineage and destroys the redundancy
-duplication needs in order to drift. At equal agreement the smaller organism survives, so
-growth is never free.
+It was originally documented as "the minimal criterion, chosen from this repository's own
+measurement". **Both halves of that were wrong**, and the correction is recorded rather
+than quietly applied:
+
+- it is not a minimal criterion. It ranks the admitted, which is what a minimal criterion
+  refuses to do;
+- it is not M021's selector. `rank_by_minimal_criterion` filters on viability
+  (`ledger.solved > 0`), ranks the viable by **novelty**, ranks the rejected by energy, and
+  lets `Population.select` truncate. M021's 750 per mille belongs to that composite —
+  viability, then novelty, then truncation — within its own domain, and its report says so.
+
+Nothing in this experiment inherits M021's figure. M037 introduces a different selector
+with its own name and its own record; the two are not interchangeable, and neither are the
+rates or costs measured under them.
 
 ## Limits
 

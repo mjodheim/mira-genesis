@@ -530,3 +530,64 @@ adjusted after an observation.
 
 Pinned by `tests/test_m017_confirmation_bound.py`, which reproduces the case from a fixed
 head and records that the development controls do not expose it.
+
+## M035 — a selector was named for a mechanism it did not implement
+
+Found by external review of the M037 pull request, not by the test suite, the integrity
+audit or any experiment control. All of them passed over it.
+
+### What was claimed
+
+`minimal_criterion_survivors` was documented as a minimal criterion — "keep everyone above
+a bar, not the best few" — and justified by M021's measurement, which scored the minimal
+criterion at 750 per mille against 416 for novelty, 312 for quality-diversity and 0 for the
+direct objective.
+
+M037's own report then asserted that "a minimal criterion admits or rejects; it does not
+rank".
+
+### What the code did
+
+```
+qualified.sort(key=lambda pair: (-score, structural_cost, digest))
+return [org for org, _ in qualified[:capacity]]
+```
+
+It admitted on a threshold, then ranked the admitted by descending agreement, preferred
+the smaller body on a tie, and truncated. **The documentation asserted the opposite of the
+implementation**, in the same file that criticised elitist truncation.
+
+Adding deduplication in M037 did not remove this: the distinct bodies were still ordered
+by `(-score, structural_cost, digest)`.
+
+### What M021 actually measured
+
+`rank_by_minimal_criterion` in `m021_measures.py` filters on viability
+(`ledger.solved > 0`), ranks the viable by **novelty**, ranks the rejected by energy, and
+lets `Population.select` truncate. Its 750 per mille belongs to *viability, then novelty,
+then truncation*, and its report already warns it is not a claim about the general family.
+
+M035 implemented none of that. The citation was not merely imprecise: it attributed a
+figure to a mechanism that was never run.
+
+### A second dependency the review also caught
+
+Deduplication kept whichever organism the loop met first for each body digest. Two
+organisms can share a body and differ in ancestry, generation and mutation counts, so
+permuting the population changed the surviving *lineage* while leaving the surviving
+*bodies* identical. The invariant test written alongside compared digests only, and passed
+while the defect was present.
+
+### Consequence
+
+Three selectors are now named apart. `thresholded_elitist_truncation` keeps M035's
+historical 6/12. `viability_then_novelty` keeps M021's 750 per mille. The corrected rule,
+`population_floor_admission_with_body_diversity`, inherits neither and has not been
+measured on a sealed block.
+
+The threshold is also named for what it is: the current population's minimum, recomputed
+each generation, able to fall. A comment claiming it "rises only when the whole population
+clears it" was false; no previous threshold was ever stored.
+
+This is the same methodological shape as M014b, M017's confirmation bound and M033's
+degenerate controls: the mechanism held, and the description of it did not.

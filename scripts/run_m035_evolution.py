@@ -35,8 +35,9 @@ from metamorphosis.m035_evolution import (
     Organism,
     VariationBudget,
     agreement,
-    minimal_criterion_survivors,
+    thresholded_elitist_truncation,
     offspring,
+    replay,
     speciated_survivors,
 )
 from metamorphosis.structural import enumerate_words, normalize_dfa
@@ -101,10 +102,19 @@ def run_arm(
             ):
                 best_score, best_organism = score, org
 
-        # Minimal criterion: a bar, not a ranking. The bar rises only when the whole
-        # population clears it, so the rule never chases the single best lineage.
+        # The threshold is the current population's minimum score, so it admits everyone
+        # except outright failures. It is recomputed each generation and can fall as well
+        # as rise: there is no stored bar. An earlier comment here claimed it "rises only
+        # when the whole population clears it", which was false — no previous threshold
+        # was ever kept.
+        #
+        # `thresholded_elitist_truncation` is M035's historical selector, named for what
+        # it does. It ranks the admitted by agreement, prefers the smaller body on a tie
+        # and truncates. The recorded 6/12 belongs to it, so it is used here unchanged.
+        # `population_floor_admission_with_body_diversity` is the corrected M037 rule and
+        # awaits a sealed block; it is deliberately not measured on consumed cases.
         threshold = max(1, min(score for _, score in scored))
-        select = speciated_survivors if speciate else minimal_criterion_survivors
+        select = speciated_survivors if speciate else thresholded_elitist_truncation
         population = select(scored, threshold, POPULATION)
         if not population:
             population = [founder]
@@ -115,9 +125,26 @@ def run_arm(
                 break
 
     exact, witness = exact_equivalence(best_organism.body, target)
+
+    # Adopted-mutation replay: rebuild the winner from its recorded chain and a **supplied**
+    # founder body. This is a Gate 9 *prerequisite*, not Gate 9. The founder is handed over
+    # as a DFA rather than rebuilt from a seed, and the task reveal, the observations, the
+    # rejected candidates, the costs and the selection decisions are not reproduced — a
+    # different selection rule would yield a different lineage that this check cannot see.
+    rebuilt = replay(founder.body, best_organism.ancestry)
+    adopted_mutation_replayable = (
+        rebuilt is not None
+        and rebuilt.transitions == best_organism.body.transitions
+        and rebuilt.accepting == best_organism.body.accepting
+        and rebuilt.initial == best_organism.body.initial
+    )
+
     return {
         "allow_duplication": allow_duplication,
         "exact": bool(exact),
+        "adopted_mutation_steps": len(best_organism.ancestry),
+        "adopted_mutation_replayable": bool(adopted_mutation_replayable),
+        "adopted_mutations": [step.to_dict() for step in best_organism.ancestry],
         "solved_at_generation": solved_at,
         "best_agreement": best_score,
         "words": total_words,
@@ -217,6 +244,12 @@ def run(cases: int, generations: int) -> dict[str, object]:
                 int(r["diagnosed"]["budget"]["bodies_evaluated"]) for r in rows
             ),
             "duplication_used_growth": dup_grew,
+            "all_winning_adopted_mutation_chains_replayable": all(
+                bool(r["duplication"]["adopted_mutation_replayable"]) for r in rows
+            ),
+            "deepest_adopted_mutation_chain": max(
+                int(r["duplication"]["adopted_mutation_steps"]) for r in rows
+            ),
             "median_generation_to_solve": (
                 int(statistics.median(solved_gens)) if solved_gens else None
             ),
