@@ -1,0 +1,115 @@
+name: Apply M041 pre-adoption hook
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m041-apply-pre-adoption-hook.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Add the default-disabled validator hook
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('metamorphosis/m040_engine.py')
+          text = path.read_text(encoding='utf-8')
+          replacements = [
+              (
+                  'from typing import Mapping, Sequence\n',
+                  'from typing import Callable, Mapping, Sequence\n',
+              ),
+              (
+                  'Word = tuple[int, ...]\n\nDEVELOPMENT_SEED',
+                  'Word = tuple[int, ...]\n'
+                  'PreAdoptionValidator = Callable[[DFA, DFA, DFA, Mapping[Word, bool]], None]\n\n'
+                  'DEVELOPMENT_SEED',
+              ),
+              (
+                  'def _execute(\n'
+                  '    master_seed: int,\n'
+                  '    protocol_commitment: str,\n'
+                  '    *,\n'
+                  '    task_family: str = "lineage_anchor",\n'
+                  ') -> M040DevelopmentResult:',
+                  'def _execute(\n'
+                  '    master_seed: int,\n'
+                  '    protocol_commitment: str,\n'
+                  '    *,\n'
+                  '    task_family: str = "lineage_anchor",\n'
+                  '    pre_adoption_validator: PreAdoptionValidator | None = None,\n'
+                  ') -> M040DevelopmentResult:',
+              ),
+              (
+                  '    journal.append(\n'
+                  '        "CandidateAdopted",',
+                  '    if pre_adoption_validator is not None:\n'
+                  '        pre_adoption_validator(\n'
+                  '            rehydrated_source,\n'
+                  '            full.accepted_body,\n'
+                  '            task.target,\n'
+                  '            observations,\n'
+                  '        )\n'
+                  '    journal.append(\n'
+                  '        "CandidateAdopted",',
+              ),
+              (
+                  'def run_m040_development(\n'
+                  '    master_seed: int = DEVELOPMENT_SEED,\n'
+                  '    *,\n'
+                  '    protocol_commitment: str = DEVELOPMENT_COMMITMENT,\n'
+                  '    require_replay: bool = True,\n'
+                  '    task_family: str = "lineage_anchor",\n'
+                  ') -> M040DevelopmentResult:',
+                  'def run_m040_development(\n'
+                  '    master_seed: int = DEVELOPMENT_SEED,\n'
+                  '    *,\n'
+                  '    protocol_commitment: str = DEVELOPMENT_COMMITMENT,\n'
+                  '    require_replay: bool = True,\n'
+                  '    task_family: str = "lineage_anchor",\n'
+                  '    pre_adoption_validator: PreAdoptionValidator | None = None,\n'
+                  ') -> M040DevelopmentResult:',
+              ),
+              (
+                  '    first = _execute(master_seed, protocol_commitment, task_family=task_family)\n',
+                  '    first = _execute(\n'
+                  '        master_seed,\n'
+                  '        protocol_commitment,\n'
+                  '        task_family=task_family,\n'
+                  '        pre_adoption_validator=pre_adoption_validator,\n'
+                  '    )\n',
+              ),
+              (
+                  '    replayed = _execute(master_seed, protocol_commitment, task_family=task_family)\n',
+                  '    replayed = _execute(\n'
+                  '        master_seed,\n'
+                  '        protocol_commitment,\n'
+                  '        task_family=task_family,\n'
+                  '        pre_adoption_validator=pre_adoption_validator,\n'
+                  '    )\n',
+              ),
+          ]
+          for old, new in replacements:
+              if old not in text:
+                  raise SystemExit(f'expected hook anchor not found: {old[:80]!r}')
+              text = text.replace(old, new, 1)
+          path.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit the mechanism-generation hook
+        run: |
+          git config user.name "mjodheim"
+          git config user.email "110968830+mjodheim@users.noreply.github.com"
+          git add metamorphosis/m040_engine.py
+          git commit -m "feat(m041): add default-disabled pre-adoption validator hook"
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
