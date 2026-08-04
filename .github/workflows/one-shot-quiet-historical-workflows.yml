@@ -1,0 +1,88 @@
+name: One-shot quiet historical workflows
+
+on:
+  push:
+    branches:
+      - research/m042-constructive-completion
+
+permissions:
+  contents: write
+
+jobs:
+  quiet:
+    if: github.event.head_commit.message == 'ci: install one-shot workflow quieter'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/m042-constructive-completion
+          fetch-depth: 0
+
+      - name: Make completed experiments manual-only
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          targets = {
+              'M021 development comparison',
+              'M022 adaptation-stress controls',
+              'M026 decidable metaproductivity',
+              'M027 seeded clade guidance',
+              'M028 adaptive evaluation weighting',
+              'M029 component transfer probe',
+              'M030 untouched-seed confirmation',
+              'M031 structural transport',
+              'M032 trans-substrate lifecycle',
+              'M033 combined controls',
+              'M033 embodied controls',
+              'M033 post-migration controls',
+          }
+
+          changed = set()
+          for path in sorted(Path('.github/workflows').glob('*.yml')):
+              text = path.read_text(encoding='utf-8')
+              first = next((line for line in text.splitlines() if line.startswith('name: ')), None)
+              if first is None:
+                  continue
+              name = first.removeprefix('name: ').strip()
+              if name not in targets:
+                  continue
+
+              lines = text.splitlines(keepends=True)
+              try:
+                  start = next(index for index, line in enumerate(lines) if line.rstrip('\r\n') == 'on:')
+              except StopIteration as exc:
+                  raise SystemExit(f'{path}: missing top-level on block') from exc
+
+              end = start + 1
+              while end < len(lines):
+                  raw = lines[end]
+                  stripped = raw.strip()
+                  if not stripped or raw.startswith((' ', '\t')) or stripped.startswith('#'):
+                      end += 1
+                      continue
+                  break
+
+              replacement = [
+                  'on:\n',
+                  '  workflow_dispatch:\n',
+                  '\n',
+              ]
+              path.write_text(''.join(lines[:start] + replacement + lines[end:]), encoding='utf-8')
+              changed.add(name)
+
+          missing = targets - changed
+          unexpected = changed - targets
+          if missing or unexpected:
+              raise SystemExit(f'missing={sorted(missing)} unexpected={sorted(unexpected)}')
+          print(f'Converted {len(changed)} historical workflows to manual dispatch.')
+          PY
+
+      - name: Commit the notification reduction
+        run: |
+          git config user.name "mjodheim"
+          git config user.email "110968830+mjodheim@users.noreply.github.com"
+          git add .github/workflows
+          git commit -m "ci: make historical experiments manual-only"
+          git push origin HEAD:research/m042-constructive-completion
