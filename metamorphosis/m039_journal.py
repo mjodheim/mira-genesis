@@ -420,7 +420,10 @@ def verify_lineage_records(
         elif event.event_type == "LineageStarted":
             raise M039JournalError("LineageStarted may occur only once")
 
-        if event.event_type == "CycleEscalationCheckpointCreated":
+        if event.event_type == "LineageStarted":
+            # The root sentinel belongs to the lineage as a whole, not to cycle zero.
+            pass
+        elif event.event_type == "CycleEscalationCheckpointCreated":
             if open_cycle is not None:
                 raise M039JournalError("a new cycle opened before the previous completed")
             expected_cycle = completed_cycles + 1
@@ -439,8 +442,7 @@ def verify_lineage_records(
                 raise M039JournalError("LineageCompleted must be the final event")
             completed = True
         else:
-            # Every event that is not one of the two lineage-level sentinels or a
-            # checkpoint/completion belongs to exactly one currently open cycle.  In
+            # Every remaining event belongs to exactly one currently open cycle.  In
             # particular, cycle zero is not a harmless label: accepting it would allow a
             # causally load-bearing event to escape the cycle whose claim it supports.
             if open_cycle is None or event.cycle != open_cycle:
