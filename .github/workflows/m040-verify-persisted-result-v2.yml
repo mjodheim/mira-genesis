@@ -1,0 +1,59 @@
+name: Verify M040 persisted result v2
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-verify-persisted-result-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Apply verifier ordering and digest cleanup
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('metamorphosis/m040_result_verify.py')
+          text = path.read_text()
+          shortcut = '    _require(task["target_digest"] == payload["task_digest"] or _sha(payload["task_digest"], "task digest"), "")\n'
+          if shortcut in text:
+              text = text.replace(shortcut, '    _sha(payload["task_digest"], "task digest")\n', 1)
+          old = '''    _verify_scientific_fields(payload)
+              _verify_audits(payload)
+              events = _decode_and_verify_journal(payload)'''
+          new = '''    _verify_audits(payload)
+              _verify_scientific_fields(payload)
+              events = _decode_and_verify_journal(payload)'''
+          if old not in text:
+              raise SystemExit('verifier call-order block not found')
+          path.write_text(text.replace(old, new, 1))
+          PY
+      - name: Run intact artefact and all 29 mutations
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q tests/test_m040_result_verifier.py
+      - name: Archive both verifier workflows and commit
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          for workflow in \
+            m040-verify-persisted-result.yml \
+            m040-verify-persisted-result-v2.yml
+          do
+            cp ".github/workflows/${workflow}" "archives/workflows/${workflow}"
+            git rm ".github/workflows/${workflow}"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add metamorphosis/m040_result_verify.py archives/workflows
+          git commit -m 'test(m040): reject all 29 persisted-result mutations'
+          git push origin "HEAD:${BRANCH}"
