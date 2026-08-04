@@ -438,7 +438,11 @@ def verify_lineage_records(
             if position != len(records) - 1:
                 raise M039JournalError("LineageCompleted must be the final event")
             completed = True
-        elif event.cycle != 0:
+        else:
+            # Every event that is not one of the two lineage-level sentinels or a
+            # checkpoint/completion belongs to exactly one currently open cycle.  In
+            # particular, cycle zero is not a harmless label: accepting it would allow a
+            # causally load-bearing event to escape the cycle whose claim it supports.
             if open_cycle is None or event.cycle != open_cycle:
                 raise M039JournalError("cycle event is outside its active cycle")
 
