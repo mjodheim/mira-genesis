@@ -1,0 +1,65 @@
+name: M040 commit canonical artefact
+
+# Temporary one-shot preservation workflow. It copies the independently verified artefact
+# from run 30930586262 byte for byte into the repository, then must be archived and disabled.
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-commit-canonical-artifact.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  preserve:
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'research/m040-canonical-freeze'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out the exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Download the verified preservation artefact
+        uses: actions/download-artifact@v4
+        with:
+          name: m040-first-canonical-preserved-5a5c2370231806b3295e0bce3f8aa449b2a465b3
+          path: preserved
+          run-id: 30930586262
+          repository: ${{ github.repository }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify and copy exact bytes without parsing
+        run: |
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          source = Path('preserved/m040-canonical-result.json')
+          raw = source.read_bytes()
+          assert len(raw) == 2_107_888
+          assert hashlib.sha256(raw).hexdigest() == 'd7415c61e5dda1017d0e5484d5a54dd7550c87dcafdfae0e26f6eb2efa3daf3e'
+
+          destination = Path('results/artifacts/M040_CANONICAL_RESULT.json')
+          if destination.exists():
+              raise SystemExit('canonical destination already exists')
+          destination.parent.mkdir(parents=True, exist_ok=True)
+          destination.write_bytes(raw)
+          assert destination.read_bytes() == raw
+          PY
+
+      - name: Commit the exact canonical bytes
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add results/artifacts/M040_CANONICAL_RESULT.json
+          git commit -m 'chore(m040): preserve canonical artifact byte for byte'
+          git push origin "HEAD:${BRANCH}"
