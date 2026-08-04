@@ -86,3 +86,40 @@ def test_development_result_is_deterministic(result) -> None:
     assert result.digest()
     assert len(result.journal_head) == 64
     assert result.mapping()["journal_records_sha256"]
+
+def test_packet_separates_m040_and_source_lineage_commitments(result) -> None:
+    packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+    assert packet.protocol_commitment == result.protocol_commitment
+    assert packet.source_lineage_commitment != packet.protocol_commitment
+    assert all(
+        tool.provenance.protocol_commitment == packet.source_lineage_commitment
+        for tool in packet.tool_registry
+    )
+
+
+def test_output_only_reports_real_migrated_parent_quality(result) -> None:
+    from metamorphosis.m040_engine import OBSERVATIONS
+    packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
+    expected = sum(
+        int(packet.source_dfa().accepts(word) == result.task.target.accepts(word))
+        for word in OBSERVATIONS
+    )
+    assert result.arms["output_only"].quality_numerator == expected
+    assert expected > 0
+
+
+def test_control_parent_has_an_exact_native_body_on_b(result) -> None:
+    control = result.control_native_baselines["unchanged_parent_migrated"]
+    assert control["exact"] is True
+    assert control["native_components"] > 0
+    assert control["serialized_bytes"] > 0
+
+
+def test_independent_search_audits_bind_every_arm(result) -> None:
+    assert len(result.pre_migration_search_audits) == 3
+    assert set(result.post_migration_search_audits) == set(result.arms)
+    for name, audit in result.post_migration_search_audits.items():
+        assert audit["transcript_digest"]
+        assert audit["transcript_entries"] > 0
+        assert audit["symbolic_search_nodes"] == result.arms[name].counters["symbolic_search_nodes"]
+        assert audit["accepted_candidate_id"] == result.arms[name].accepted_candidate_id

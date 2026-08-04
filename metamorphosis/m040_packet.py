@@ -12,7 +12,7 @@ from .m012b_dfa import DFA, canonicalize
 from .m013e_runtime import DiscoveredOpcode, DiscoveredSubstrate, OpaqueNativeBody
 from .m039_lineage import LineageTool, ToolProvenance
 
-PACKET_SCHEMA = "m040-trans-substrate-lineage-packet/1"
+PACKET_SCHEMA = "m040-trans-substrate-lineage-packet/2"
 LEARNING_STATE_SCHEMA = "m040-learning-state/2"
 _SHA256 = re.compile(r"\A[0-9a-f]{64}\Z")
 
@@ -213,6 +213,7 @@ def discovered_substrate_from_mapping(
 @dataclass(frozen=True)
 class M040TransportPacket:
     protocol_commitment: str
+    source_lineage_commitment: str
     lineage_id: str
     pre_migration_manifest_digest: str
     source_body: Mapping[str, object]
@@ -230,6 +231,10 @@ class M040TransportPacket:
             raise M040PacketError("unsupported M040 packet schema")
         if not self.protocol_commitment:
             raise M040PacketError("protocol commitment must be non-empty")
+        if not self.source_lineage_commitment:
+            raise M040PacketError("source-lineage commitment must be non-empty")
+        if self.source_lineage_commitment == self.protocol_commitment:
+            raise M040PacketError("packet and source-lineage commitments must be distinct")
         if not self.machine_id:
             raise M040PacketError("machine identifier must be non-empty")
         _require_sha(self.lineage_id, "lineage_id")
@@ -258,8 +263,8 @@ class M040TransportPacket:
         for tool in self.tool_registry:
             if tool.lineage_id != self.lineage_id:
                 raise M040PacketError("tool belongs to a different lineage")
-            if tool.provenance.protocol_commitment != self.protocol_commitment:
-                raise M040PacketError("tool protocol commitment differs from the packet")
+            if tool.provenance.protocol_commitment != self.source_lineage_commitment:
+                raise M040PacketError("tool protocol commitment differs from the source lineage")
         if not set(self.learning_state.lineage_tool_ids).issubset(tool_ids):
             raise M040PacketError("learning state refers to an absent lineage tool")
         for program in self.learning_state.continuation_programs:
@@ -270,6 +275,7 @@ class M040TransportPacket:
     def build(
         *,
         protocol_commitment: str,
+        source_lineage_commitment: str,
         lineage_id: str,
         pre_migration_manifest_digest: str,
         source_dfa: DFA,
@@ -286,6 +292,7 @@ class M040TransportPacket:
         opaque_json = opaque_body.to_json()
         return M040TransportPacket(
             protocol_commitment=protocol_commitment,
+            source_lineage_commitment=source_lineage_commitment,
             lineage_id=lineage_id,
             pre_migration_manifest_digest=pre_migration_manifest_digest,
             source_body=source_mapping,
@@ -302,6 +309,7 @@ class M040TransportPacket:
         return {
             "schema": self.schema,
             "protocol_commitment": self.protocol_commitment,
+            "source_lineage_commitment": self.source_lineage_commitment,
             "lineage_id": self.lineage_id,
             "pre_migration_manifest_digest": self.pre_migration_manifest_digest,
             "source_body": dict(self.source_body),
@@ -350,6 +358,7 @@ class M040TransportPacket:
         packet = M040TransportPacket(
             schema=str(data["schema"]),
             protocol_commitment=str(data["protocol_commitment"]),
+            source_lineage_commitment=str(data["source_lineage_commitment"]),
             lineage_id=str(data["lineage_id"]),
             pre_migration_manifest_digest=str(data["pre_migration_manifest_digest"]),
             source_body=dict(data["source_body"]),

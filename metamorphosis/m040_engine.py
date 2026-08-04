@@ -23,7 +23,14 @@ from .m038_certificate import (
     verify_structural_incapacity_certificate,
 )
 from .m038_journal import decode, encode
-from .m039_engine import _execute as execute_m039_lineage, dfa_digest
+from .m039_engine import (
+    CYCLE_ONE_SEARCH_DEPTH as M039_CYCLE_ONE_SEARCH_DEPTH,
+    LATER_CYCLE_SEARCH_DEPTH as M039_LATER_CYCLE_SEARCH_DEPTH,
+    OBSERVATION_WORDS as M039_OBSERVATION_WORDS,
+    _execute as execute_m039_lineage,
+    dfa_digest,
+)
+from .m039_search_audit import audit_result_searches
 from .m039_lineage import LineageTool, ORIGIN_LINEAGE_CONSTRUCTED, ORIGIN_PROTOCOL_SUPPLIED
 from .m040_packet import M040LearningState, M040TransportPacket
 from .m040_packet_verify import rehydrate_packet
@@ -62,6 +69,8 @@ EVENT_TYPES = (
     "RollbackRequested",
     "RollbackCompleted",
     "ControlEvaluated",
+    "ControlNativeSynthesised",
+    "SearchAuditCommitted",
     "LineageCompleted",
 )
 
@@ -433,6 +442,7 @@ def _search_arm(
     observations: Mapping[Word, bool],
     registry: Sequence[LineageTool],
     preferred_tool_ids: Sequence[str],
+    output_quality_body: DFA | None = None,
     preferred_programs: Sequence[Sequence[str]] = (),
     maximum_depth: int = POST_MIGRATION_DEPTH,
     node_budget: int = POST_MIGRATION_NODE_BUDGET,
@@ -442,7 +452,9 @@ def _search_arm(
             arm=arm,
             exact=False,
             reason="output_only_has_no_portable_rewrite_state",
-            quality_numerator=0,
+            quality_numerator=(
+                0 if output_quality_body is None else _quality(output_quality_body, observations)
+            ),
             quality_denominator=len(observations),
             accepted_candidate_id=None,
             accepted_tool_ids=(),
@@ -754,6 +766,9 @@ class M040DevelopmentResult:
     certificate: Mapping[str, object]
     arms: Mapping[str, SearchResult]
     accepted_native: Mapping[str, object]
+    control_native_baselines: Mapping[str, Mapping[str, object]]
+    pre_migration_search_audits: tuple[Mapping[str, object], ...]
+    post_migration_search_audits: Mapping[str, Mapping[str, object]]
     rollback_restored_exactly: bool
     accepted_tool_was_pre_migration_owned: bool
     journal_head: str
@@ -761,7 +776,7 @@ class M040DevelopmentResult:
     trans_substrate_continuity_supported: bool
     post_migration_plasticity_supported: bool
     replay_supported: bool
-    schema: str = "m040-development-result/1"
+    schema: str = "m040-development-result/2"
 
     def mapping(self, *, include_records: bool = False) -> dict[str, object]:
         result = {
@@ -781,6 +796,15 @@ class M040DevelopmentResult:
             "certificate": dict(self.certificate),
             "arms": {name: arm.mapping() for name, arm in sorted(self.arms.items())},
             "accepted_native": dict(self.accepted_native),
+            "control_native_baselines": {
+                name: dict(value) for name, value in sorted(self.control_native_baselines.items())
+            },
+            "pre_migration_search_audits": [
+                dict(value) for value in self.pre_migration_search_audits
+            ],
+            "post_migration_search_audits": {
+                name: dict(value) for name, value in sorted(self.post_migration_search_audits.items())
+            },
             "rollback_restored_exactly": self.rollback_restored_exactly,
             "accepted_tool_was_pre_migration_owned": self.accepted_tool_was_pre_migration_owned,
             "journal_head": self.journal_head,
@@ -816,6 +840,14 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
         raise M040EngineError("pre-migration lineage did not satisfy the committed base")
     final_source = normalize_dfa(pre.cycle_tasks[-1].target)
     original_founder = normalize_dfa(pre.cycle_tasks[0].founder)
+    pre_audits = audit_result_searches(
+        tasks=pre.cycle_tasks,
+        cycles=pre.manifest.cycles,
+        final_registry=pre.manifest.tool_registry,
+        cycle_one_depth=M039_CYCLE_ONE_SEARCH_DEPTH,
+        later_depth=M039_LATER_CYCLE_SEARCH_DEPTH,
+        observation_words=M039_OBSERVATION_WORDS,
+    )
     pre_records_digest = hashlib.sha256(b"".join(pre.lineage_journal_records)).hexdigest()
     journal.append(
         "PreMigrationLineageCompleted",
@@ -883,7 +915,8 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
 
     learning_state = _learning_state(pre, POST_MIGRATION_NODE_BUDGET)
     packet = M040TransportPacket.build(
-        protocol_commitment=pre_commitment,
+        protocol_commitment=protocol_commitment,
+        source_lineage_commitment=pre_commitment,
         lineage_id=pre.manifest.lineage_id,
         pre_migration_manifest_digest=pre.manifest.digest(),
         source_dfa=final_source,
@@ -984,6 +1017,7 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
     output_only = _search_arm(
         arm="output_only",
         founder=None,
+        output_quality_body=rehydrated_source,
         target=task.target,
         observations=observations,
         registry=(),
@@ -1009,8 +1043,74 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
         result.arm: result
         for result in (full, fresh, unchanged, output_only, memory_ablated, tool_ablated)
     }
+    unchanged_native = _synthesise_native(
+        original_founder,
+        machine,
+        rehydrated,
+        _derive_seed(master_seed, "unchanged-parent-native", protocol_commitment),
+    )
+    control_native_baselines = {
+        "complete_parent_migrated": {
+            "source_digest": dfa_digest(rehydrated_source),
+            "native_body_sha256": hashlib.sha256(
+                rehydrated_native.to_json().encode("utf-8")
+            ).hexdigest(),
+            "exact": True,
+        },
+        "unchanged_parent_migrated": {**unchanged_native.mapping(), "exact": True},
+        "output_only": {
+            "source_digest": dfa_digest(rehydrated_source),
+            "native_body_sha256": hashlib.sha256(
+                rehydrated_native.to_json().encode("utf-8")
+            ).hexdigest(),
+            "exact": True,
+            "portable_rewrite_state": False,
+        },
+    }
+    journal.append("ControlNativeSynthesised", control_native_baselines)
     for result in arms.values():
         journal.append("ControlEvaluated", result.mapping())
+
+    from .m040_search_audit import audit_post_search
+
+    audit_inputs = {
+        "complete_migrated_lineage": (
+            rehydrated_source,
+            None,
+            full_registry,
+            rehydrated.learning_state.preferred_tool_ids,
+            rehydrated.learning_state.continuation_programs,
+        ),
+        "fresh_on_b": (rehydrated_source, None, primitive_registry, (), ()),
+        "unchanged_parent_migrated": (original_founder, None, primitive_registry, (), ()),
+        "output_only": (None, rehydrated_source, (), (), ()),
+        "learning_state_ablated": (rehydrated_source, None, full_registry, (), ()),
+        "learned_tool_ablated": (rehydrated_source, None, tool_ablated_registry, (), ()),
+    }
+    post_audits = {}
+    for name, audit_input in audit_inputs.items():
+        audit_founder, output_body, audit_registry, preferred_ids, preferred_programs = audit_input
+        audit = audit_post_search(
+            arm=name,
+            founder=audit_founder,
+            output_quality_body=output_body,
+            target=task.target,
+            observations=observations,
+            registry=audit_registry,
+            preferred_tool_ids=preferred_ids,
+            preferred_programs=preferred_programs,
+            maximum_depth=POST_MIGRATION_DEPTH,
+            node_budget=POST_MIGRATION_NODE_BUDGET,
+            expected_result=arms[name],
+        )
+        post_audits[name] = audit.mapping()
+    journal.append(
+        "SearchAuditCommitted",
+        {
+            "pre_migration": [audit.mapping() for audit in pre_audits],
+            "post_migration": post_audits,
+        },
+    )
 
     if not full.exact or full.accepted_body is None:
         raise M040EngineError("complete migrated lineage did not solve the post-migration task")
@@ -1150,6 +1250,9 @@ def _execute(master_seed: int, protocol_commitment: str) -> M040DevelopmentResul
         certificate=certificate_mapping,
         arms=arms,
         accepted_native=accepted_native.mapping(),
+        control_native_baselines=control_native_baselines,
+        pre_migration_search_audits=tuple(audit.mapping() for audit in pre_audits),
+        post_migration_search_audits=post_audits,
         rollback_restored_exactly=rollback_exact,
         accepted_tool_was_pre_migration_owned=accepted_pre_owned,
         journal_head=journal.head.hex(),
@@ -1190,6 +1293,9 @@ def run_m040_development(
         certificate=first.certificate,
         arms=first.arms,
         accepted_native=first.accepted_native,
+        control_native_baselines=first.control_native_baselines,
+        pre_migration_search_audits=first.pre_migration_search_audits,
+        post_migration_search_audits=first.post_migration_search_audits,
         rollback_restored_exactly=first.rollback_restored_exactly,
         accepted_tool_was_pre_migration_owned=first.accepted_tool_was_pre_migration_owned,
         journal_head=first.journal_head,
