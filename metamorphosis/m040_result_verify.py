@@ -196,7 +196,7 @@ def _verify_scientific_fields(payload: Mapping[str, object]) -> None:
     _require(int(task["target_states"]) > 0, "task target has no states")
     _sha(task["parent_digest"], "task parent")
     _sha(task["target_digest"], "task target")
-    _require(task["target_digest"] == payload["task_digest"] or _sha(payload["task_digest"], "task digest"), "")
+    _sha(payload["task_digest"], "task digest")
 
     certificate = _mapping(payload["certificate"], "structural certificate")
     body_states = int(certificate["body_state_count"])
@@ -302,7 +302,7 @@ def verify_m040_result(
         _require(raw_bytes is not None, "raw bytes are required for external artefact verification")
         _require(hashlib.sha256(raw_bytes).hexdigest() == expected_sha256, "external artefact digest mismatch")
     _require(str(payload["schema"]) in {"m040-development-result/2", "m040-canonical-result/1"}, "unsupported M040 result schema")
-    _verify_scientific_fields(payload)
     _verify_audits(payload)
+    _verify_scientific_fields(payload)
     events = _decode_and_verify_journal(payload)
     _verify_event_cross_references(payload, events)
