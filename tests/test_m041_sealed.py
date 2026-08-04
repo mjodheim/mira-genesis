@@ -4,15 +4,15 @@ import pytest
 
 from metamorphosis.m041_sealed import derive_seed, head_nonce, sealed_spec
 
-HEAD = "1" * 40
-PARENT = "2" * 40
-PROTOCOL = "3" * 64
+HEAD = "a" * 40
+PARENT = "b" * 40
+PROTOCOL = "c" * 64
 
 
 def test_sealed_spec_is_deterministic_and_head_bound():
     first = sealed_spec(HEAD, frozen_parent_sha=PARENT, protocol_sha256=PROTOCOL)
     second = sealed_spec(HEAD, frozen_parent_sha=PARENT, protocol_sha256=PROTOCOL)
-    changed = sealed_spec("4" * 40, frozen_parent_sha=PARENT, protocol_sha256=PROTOCOL)
+    changed = sealed_spec("d" * 40, frozen_parent_sha=PARENT, protocol_sha256=PROTOCOL)
 
     assert first == second
     assert first.digest() == second.digest()
@@ -23,7 +23,7 @@ def test_sealed_spec_is_deterministic_and_head_bound():
 
 def test_protocol_identity_changes_the_completion_seed():
     first = sealed_spec(HEAD, frozen_parent_sha=PARENT, protocol_sha256=PROTOCOL)
-    changed = sealed_spec(HEAD, frozen_parent_sha=PARENT, protocol_sha256="5" * 64)
+    changed = sealed_spec(HEAD, frozen_parent_sha=PARENT, protocol_sha256="e" * 64)
 
     assert first.master_nonce != changed.master_nonce
     assert first.completion_seed != changed.completion_seed
@@ -32,10 +32,10 @@ def test_protocol_identity_changes_the_completion_seed():
 @pytest.mark.parametrize(
     "head,parent,protocol",
     [
-        ("1" * 39, PARENT, PROTOCOL),
+        ("a" * 39, PARENT, PROTOCOL),
         (HEAD.upper(), PARENT, PROTOCOL),
-        (HEAD, "2" * 39, PROTOCOL),
-        (HEAD, PARENT, "3" * 63),
+        (HEAD, "b" * 39, PROTOCOL),
+        (HEAD, PARENT, "c" * 63),
         (HEAD, PARENT, PROTOCOL.upper()),
         (HEAD, HEAD, PROTOCOL),
     ],
