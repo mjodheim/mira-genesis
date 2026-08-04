@@ -3,6 +3,11 @@
 Marker, parent and protocol binding failures abort the workflow. Expected scientific
 negatives are rendered into the first immutable artefact and exit normally; they never
 authorize a replacement run.
+
+The first execution at workflow run 30930249547 completed the mechanism and independent
+verification, then failed while serialising raw journal ``bytes``. The JSON normaliser below
+is the same representation already used by the development runner. A later preservation run
+may reproduce only that exact arming-head seed and must identify itself as a reproduction.
 """
 
 from __future__ import annotations
@@ -13,6 +18,7 @@ import json
 import os
 from pathlib import Path
 import re
+from typing import Mapping, Sequence
 
 from metamorphosis.m039_engine import M039EngineError
 from metamorphosis.m039_lineage import M039IntegrityError
@@ -31,10 +37,26 @@ RESULT_SCHEMA = "m040-canonical-result/1"
 _ARM_SCHEMA = "m040-canonical-arm/1"
 _SHA = re.compile(r"\A[0-9a-f]{40}\Z")
 _DIGEST = re.compile(r"\A[0-9a-f]{64}\Z")
+_EXECUTION_KINDS = {
+    "first-execution",
+    "reproduction-after-serialization-failure",
+}
 
 
 class CanonicalRunError(RuntimeError):
     pass
+
+
+def _json_value(value: object) -> object:
+    """Encode byte records exactly as the already-verified development artefacts do."""
+
+    if isinstance(value, bytes):
+        return {"encoding": "hex", "value": value.hex()}
+    if isinstance(value, Mapping):
+        return {str(key): _json_value(item) for key, item in value.items()}
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        return [_json_value(item) for item in value]
+    return value
 
 
 def _load_marker(path: Path) -> dict[str, object]:
@@ -87,11 +109,19 @@ def render_canonical_result(
     parent_sha: str,
     marker_path: Path,
     protocol_path: Path,
+    execution_kind: str = "first-execution",
+    original_run_id: str | None = None,
 ) -> bytes:
     if os.environ.get("M040_CANONICAL_RUN") != "1":
         raise CanonicalRunError(
-            "M040 canonical execution is available only to the guarded workflow"
+            "M040 canonical execution is available only to a guarded preservation workflow"
         )
+    if execution_kind not in _EXECUTION_KINDS:
+        raise CanonicalRunError("unknown canonical execution kind")
+    if execution_kind == "first-execution" and original_run_id is not None:
+        raise CanonicalRunError("a first execution may not name an earlier workflow run")
+    if execution_kind != "first-execution" and not original_run_id:
+        raise CanonicalRunError("a reproduction must name the original workflow run")
     if not _SHA.match(head_sha) or not _SHA.match(parent_sha):
         raise CanonicalRunError(
             "canonical head and parent must be full lowercase 40-hex SHAs"
@@ -148,6 +178,8 @@ def render_canonical_result(
         "status": "first-canonical-result",
         "first_run_only": True,
         "reruns_are_reproductions_only": True,
+        "execution_kind": execution_kind,
+        "original_workflow_run": original_run_id,
         "arming_head_sha": head_sha,
         "frozen_parent_sha": parent_sha,
         "protocol_path": str(protocol_path).replace("\\", "/"),
@@ -159,7 +191,8 @@ def render_canonical_result(
         ),
         "result": result,
     }
-    return (json.dumps(payload, sort_keys=True, indent=2) + "\n").encode("utf-8")
+    serialisable = _json_value(payload)
+    return (json.dumps(serialisable, sort_keys=True, indent=2) + "\n").encode("utf-8")
 
 
 def main() -> int:
@@ -169,6 +202,12 @@ def main() -> int:
     parser.add_argument("--marker", type=Path, required=True)
     parser.add_argument("--protocol", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--execution-kind",
+        choices=sorted(_EXECUTION_KINDS),
+        default="first-execution",
+    )
+    parser.add_argument("--original-run-id")
     args = parser.parse_args()
 
     rendered = render_canonical_result(
@@ -176,12 +215,15 @@ def main() -> int:
         parent_sha=args.parent_sha,
         marker_path=args.marker,
         protocol_path=args.protocol,
+        execution_kind=args.execution_kind,
+        original_run_id=args.original_run_id,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(rendered)
     parsed = json.loads(rendered)
     print(f"sha256={hashlib.sha256(rendered).hexdigest()}")
     print(f"sealed_spec_digest={parsed['sealed_spec']['spec_digest']}")
+    print(f"scientific_outcome={parsed['scientific_outcome']}")
     print(
         "combined_expected_claim_supported="
         f"{str(bool(parsed['combined_expected_claim_supported'])).lower()}"
