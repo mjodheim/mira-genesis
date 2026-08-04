@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 
@@ -147,5 +146,13 @@ def test_the_marker_schema_is_closed(tmp_path, monkeypatch):
         )
 
 
-def test_no_real_marker_exists_before_the_explicit_arming_commit():
-    assert not ARM_PATH.exists()
+def test_the_consumed_canonical_marker_pins_the_first_run_identities():
+    data = json.loads(ARM_PATH.read_text(encoding="utf-8"))
+
+    assert data == {
+        "schema": "m038-canonical-arm/1",
+        "frozen_parent_sha": "aaf86bb63d6e2d27e9965f5dcc5871c0cd79fd69",
+        "protocol_sha256": "f717740c24d5028dd660c066477e8690c9a7559f43e03cb57c4b875c1f3ee326",
+        "first_run_only": True,
+        "reruns_are_reproductions_only": True,
+    }
