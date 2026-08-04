@@ -14,6 +14,7 @@ from metamorphosis.m039_engine import (
     DEVELOPMENT_SEED,
     run_m039_development,
 )
+from metamorphosis.m039_provenance import journal_verified_gate2_tool_ids
 
 
 def main() -> int:
@@ -27,8 +28,15 @@ def main() -> int:
         protocol_commitment=DEVELOPMENT_COMMITMENT,
         require_replay=True,
     )
-    payload = result.mapping()
     records = list(result.lineage_journal_records)
+    journal_verified_tools = journal_verified_gate2_tool_ids(result.manifest, records)
+
+    payload = result.mapping()
+    payload["engine_candidate_gate2_tool_ids"] = list(result.gate2_tool_ids)
+    # The public field is authoritative only after independent verification from the
+    # persisted journal records.  The engine's self-reported candidates remain diagnostic.
+    payload["gate2_tool_ids"] = list(journal_verified_tools)
+    payload["gate2_eligibility_verified_from_journal"] = True
     payload["lineage_journal_records"] = [record.hex() for record in records]
     payload["lineage_journal_records_sha256"] = hashlib.sha256(
         encode(records)
@@ -47,7 +55,7 @@ def main() -> int:
             "later_tool_reuse_supported": result.later_tool_reuse_supported,
             "tool_ablation_supported": result.tool_ablation_supported,
             "seed_to_head_replay_supported": result.seed_to_head_replay_supported,
-            "at_least_one_gate2_eligible_tool": bool(result.gate2_tool_ids),
+            "journal_verified_gate2_tool": bool(journal_verified_tools),
         }
         failed = [name for name, passed in required.items() if not passed]
         if failed:
@@ -60,7 +68,7 @@ def main() -> int:
         "later_tool_reuse_supported": result.later_tool_reuse_supported,
         "tool_ablation_supported": result.tool_ablation_supported,
         "seed_to_head_replay_supported": result.seed_to_head_replay_supported,
-        "gate2_tool_ids": list(result.gate2_tool_ids),
+        "gate2_tool_ids": list(journal_verified_tools),
     }, sort_keys=True))
     return 0
 
