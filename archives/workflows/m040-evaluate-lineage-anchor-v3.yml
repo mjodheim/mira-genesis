@@ -1,0 +1,121 @@
+name: Evaluate M040 lineage anchor v3
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-evaluate-lineage-anchor-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  evaluate:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Reapply v2 and replace dispatch with explicit indentation
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/m040-evaluate-lineage-anchor-v2.yml').read_text()
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          script = textwrap.dedent(workflow[start:end])
+          exec(compile(script, 'm040-lineage-anchor-v2', 'exec'))
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          dispatch_start = engine.index('    if task_family == "exact_frontier":', engine.index('    task_seed = '))
+          dispatch_end = engine.index('\n    journal.append(', dispatch_start)
+          lines = [
+              '    if task_family == "exact_frontier":',
+              '        task = _post_task_exact_frontier(',
+              '            packet=rehydrated, founder=rehydrated_source, task_seed=task_seed',
+              '        )',
+              '        preferred_post_programs = rehydrated.learning_state.continuation_programs',
+              '    elif task_family == "prefix_adaptation":',
+              '        task = _post_task_prefix_adaptation(',
+              '            packet=rehydrated, founder=rehydrated_source, task_seed=task_seed',
+              '        )',
+              '        preferred_post_programs = rehydrated.learning_state.continuation_programs',
+              '    elif task_family == "lineage_anchor":',
+              '        anchor_task = generate_lineage_anchor_task(',
+              '            packet=rehydrated,',
+              '            founder=rehydrated_source,',
+              '            task_seed=task_seed,',
+              '            maximum_depth=POST_MIGRATION_DEPTH,',
+              '            node_budget=POST_MIGRATION_NODE_BUDGET,',
+              '            observations=OBSERVATIONS,',
+              '        )',
+              '        task = M040PostTask(',
+              '            task_seed=anchor_task.task_seed,',
+              '            parent_digest=anchor_task.parent_digest,',
+              '            target=anchor_task.target,',
+              '            generating_tool_ids=anchor_task.generating_tool_ids,',
+              '            generating_program=anchor_task.generating_program,',
+              '            task_family="lineage_anchor",',
+              '        )',
+              '        preferred_post_programs = derive_adapted_programs(',
+              '            rehydrated,',
+              '            task_seed=task_seed,',
+              '            maximum_depth=POST_MIGRATION_DEPTH,',
+              '        )',
+              '    else:',
+              '        raise M040EngineError(f"unknown M040 task family {task_family!r}")',
+          ]
+          engine = engine[:dispatch_start] + '\n'.join(lines) + engine[dispatch_end:]
+          engine_path.write_text(engine)
+          PY
+      - name: Compile before measurement
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_anchor.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py
+      - name: Evaluate untouched seed 400046
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Produce consumed result 006
+        run: |
+          python experiments/M040/run_development.py \
+            --seed 400046 \
+            --output results/artifacts/M040_DEVELOPMENT_006.json
+          sha256sum results/artifacts/M040_DEVELOPMENT_006.json
+          wc -c results/artifacts/M040_DEVELOPMENT_006.json
+      - name: Archive temporary workflows and commit measured mechanism
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          for workflow in \
+            m040-evaluate-resource-bound.yml \
+            m040-evaluate-lineage-anchor.yml \
+            m040-evaluate-lineage-anchor-v2.yml \
+            m040-evaluate-lineage-anchor-v3.yml
+          do
+            cp ".github/workflows/${workflow}" "archives/workflows/${workflow}"
+            git rm ".github/workflows/${workflow}"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            results/artifacts/M040_DEVELOPMENT_006.json \
+            archives/workflows
+          git commit -m 'feat(m040): evaluate lineage-anchor transfer on seed 400046'
+          git push origin "HEAD:${BRANCH}"

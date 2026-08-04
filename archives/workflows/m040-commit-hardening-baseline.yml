@@ -1,0 +1,84 @@
+name: Commit M040 hardened baseline
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-commit-hardening-baseline.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  commit:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Reconstruct the syntax-checked v6 mechanism
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/m040-apply-hardening-v6.yml').read_text()
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          script = textwrap.dedent(workflow[start:end])
+          exec(compile(script, 'm040-hardening-v6', 'exec'))
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text().replace(
+              'DEVELOPMENT_SEED = 400_043',
+              'DEVELOPMENT_SEED = 400_042',
+          )
+          engine_path.write_text(engine)
+
+          Path('tests/test_m040_consumed_failures.py').write_text('''import pytest\n\nfrom metamorphosis.m040_engine import M040EngineError, run_m040_development\n\n\ndef test_consumed_seed_400043_has_no_admissible_exact_continuation_task():\n    with pytest.raises(\n        M040EngineError,\n        match="no transported continuation frontier produced an admissible task",\n    ):\n        run_m040_development(master_seed=400043, require_replay=False)\n''')
+          PY
+      - name: Compile before execution
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_packet.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Verify positive consumed baseline and negative consumed seed
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q \
+            tests/test_m040_duplicate_dependencies.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py
+      - name: Archive and remove temporary workflows
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          for workflow in \
+            m040-preserve-development-002.yml \
+            m040-apply-hardening-v3.yml \
+            m040-apply-hardening-v4.yml \
+            m040-apply-hardening-v5.yml \
+            m040-apply-hardening-v6.yml \
+            m040-commit-hardening-baseline.yml
+          do
+            cp ".github/workflows/${workflow}" "archives/workflows/${workflow}"
+            git rm ".github/workflows/${workflow}"
+          done
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            metamorphosis/m040_packet.py \
+            metamorphosis/m040_engine.py \
+            tests/test_m040_post_migration.py \
+            tests/test_m040_consumed_failures.py \
+            archives/workflows
+          git commit -m 'feat(m040): preserve hardened exact-frontier baseline and failures'
+          git push origin "HEAD:${BRANCH}"

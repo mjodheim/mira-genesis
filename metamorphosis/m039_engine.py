@@ -498,10 +498,11 @@ def _compose_adopted_tool(
     registry: Sequence[LineageTool],
 ) -> LineageTool:
     input_tools = tuple(registry[index] for index in candidate.tool_indices)
+    dependency_ids = tuple(dict.fromkeys(tool.tool_id for tool in input_tools))
     event_id = _construction_event_id(
         lineage_id=lineage_id,
         cycle=cycle,
-        input_tool_ids=tuple(tool.tool_id for tool in input_tools),
+        input_tool_ids=dependency_ids,
         program=candidate.expanded_program,
     )
     source = {
@@ -509,7 +510,7 @@ def _compose_adopted_tool(
         "protocol_commitment": protocol_commitment,
         "introduced_cycle": cycle,
         "construction_event_id": event_id,
-        "input_tool_ids": [tool.tool_id for tool in input_tools],
+        "input_tool_ids": list(dependency_ids),
         "program": [atom.to_list() for atom in candidate.expanded_program],
     }
     replay_digest = _digest(TOOL_DOMAIN, {"replay": source})
@@ -520,7 +521,7 @@ def _compose_adopted_tool(
         lineage_id=lineage_id,
         introduced_cycle=cycle,
         program=tuple(_atom_mapping(atom) for atom in candidate.expanded_program),
-        input_tool_ids=tuple(tool.tool_id for tool in input_tools),
+        input_tool_ids=dependency_ids,
         replay_digest=replay_digest,
         provenance=ToolProvenance(
             origin=ORIGIN_LINEAGE_CONSTRUCTED,

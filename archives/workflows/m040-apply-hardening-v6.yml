@@ -1,0 +1,154 @@
+name: Apply M040 pre-freeze hardening v6
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-apply-hardening-v6.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Reapply v4 and replace generated block explicitly
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import textwrap
+
+          workflow = Path('.github/workflows/m040-apply-hardening-v4.yml').read_text()
+          start_marker = "          python - <<'PY'\n"
+          end_marker = "\n          PY\n"
+          start = workflow.index(start_marker) + len(start_marker)
+          end = workflow.index(end_marker, start)
+          script = textwrap.dedent(workflow[start:end])
+          exec(compile(script, 'm040-hardening-v4', 'exec'))
+
+          engine_path = Path('metamorphosis/m040_engine.py')
+          engine = engine_path.read_text()
+          search_start = engine.index('    full = _search_arm(')
+          arms_token = engine.index('arms = {', search_start)
+          region_start = engine.rfind('\n', 0, arms_token) + 1
+          region_end = engine.index('\n\n    if not full.exact', region_start)
+          raw_controls = textwrap.dedent('''\
+          arms = {
+              result.arm: result
+              for result in (full, fresh, unchanged, output_only, memory_ablated, tool_ablated)
+          }
+          unchanged_native = _synthesise_native(
+              original_founder,
+              machine,
+              rehydrated,
+              _derive_seed(master_seed, "unchanged-parent-native", protocol_commitment),
+          )
+          control_native_baselines = {
+              "complete_parent_migrated": {
+                  "source_digest": dfa_digest(rehydrated_source),
+                  "native_body_sha256": hashlib.sha256(
+                      rehydrated_native.to_json().encode("utf-8")
+                  ).hexdigest(),
+                  "exact": True,
+              },
+              "unchanged_parent_migrated": {**unchanged_native.mapping(), "exact": True},
+              "output_only": {
+                  "source_digest": dfa_digest(rehydrated_source),
+                  "native_body_sha256": hashlib.sha256(
+                      rehydrated_native.to_json().encode("utf-8")
+                  ).hexdigest(),
+                  "exact": True,
+                  "portable_rewrite_state": False,
+              },
+          }
+          journal.append("ControlNativeSynthesised", control_native_baselines)
+          for result in arms.values():
+              journal.append("ControlEvaluated", result.mapping())
+
+          from .m040_search_audit import audit_post_search
+
+          audit_inputs = {
+              "complete_migrated_lineage": (
+                  rehydrated_source,
+                  None,
+                  full_registry,
+                  rehydrated.learning_state.preferred_tool_ids,
+                  rehydrated.learning_state.continuation_programs,
+              ),
+              "fresh_on_b": (rehydrated_source, None, primitive_registry, (), ()),
+              "unchanged_parent_migrated": (original_founder, None, primitive_registry, (), ()),
+              "output_only": (None, rehydrated_source, (), (), ()),
+              "learning_state_ablated": (rehydrated_source, None, full_registry, (), ()),
+              "learned_tool_ablated": (rehydrated_source, None, tool_ablated_registry, (), ()),
+          }
+          post_audits = {}
+          for name, audit_input in audit_inputs.items():
+              audit_founder, output_body, audit_registry, preferred_ids, preferred_programs = audit_input
+              audit = audit_post_search(
+                  arm=name,
+                  founder=audit_founder,
+                  output_quality_body=output_body,
+                  target=task.target,
+                  observations=observations,
+                  registry=audit_registry,
+                  preferred_tool_ids=preferred_ids,
+                  preferred_programs=preferred_programs,
+                  maximum_depth=POST_MIGRATION_DEPTH,
+                  node_budget=POST_MIGRATION_NODE_BUDGET,
+                  expected_result=arms[name],
+              )
+              post_audits[name] = audit.mapping()
+          journal.append(
+              "SearchAuditCommitted",
+              {
+                  "pre_migration": [audit.mapping() for audit in pre_audits],
+                  "post_migration": post_audits,
+              },
+          )
+          ''').strip()
+          controls = textwrap.indent(raw_controls, '    ')
+          engine = engine[:region_start] + controls + engine[region_end:]
+          engine_path.write_text(engine)
+
+          tests_path = Path('tests/test_m040_post_migration.py')
+          tests = tests_path.read_text()
+          marker = 'def test_packet_separates_m040_and_source_lineage_commitments'
+          marker_index = tests.index(marker)
+          block_start = tests.rfind('\n', 0, marker_index) + 1
+          prefix = tests[:block_start].rstrip() + '\n\n'
+          block = textwrap.dedent(tests[block_start:]).lstrip()
+          tests_path.write_text(prefix + block)
+          PY
+      - name: Compile generated files before measurement
+        run: |
+          python -m py_compile \
+            metamorphosis/m040_packet.py \
+            metamorphosis/m040_engine.py \
+            metamorphosis/m040_search_audit.py \
+            tests/test_m040_post_migration.py
+      - name: Verify focused hardening and full M040 replay
+        run: |
+          python -m pip install -e ".[dev]"
+          pytest -q tests/test_m040_duplicate_dependencies.py tests/test_m040_post_migration.py
+      - name: Archive temporary workflows and commit hardening
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          mkdir -p archives/workflows
+          cp .github/workflows/m040-preserve-development-002.yml archives/workflows/m040-preserve-development-002.yml
+          git rm .github/workflows/m040-preserve-development-002.yml
+          git rm .github/workflows/m040-apply-hardening-v3.yml
+          git rm .github/workflows/m040-apply-hardening-v4.yml
+          git rm .github/workflows/m040-apply-hardening-v5.yml
+          git rm .github/workflows/m040-apply-hardening-v6.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add metamorphosis/m040_packet.py metamorphosis/m040_engine.py tests/test_m040_post_migration.py archives/workflows/m040-preserve-development-002.yml
+          git commit -m 'feat(m040): harden packet commitments, controls and exhaustive replay'
+          git push origin "HEAD:${BRANCH}"

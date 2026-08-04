@@ -1,0 +1,108 @@
+# ARCHIVED after M040 canonical arming head 5a5c2370231806b3295e0bce3f8aa449b2a465b3.
+# First workflow run: 30930249547. Retained for documentary reproduction only.
+# This file is intentionally outside .github/workflows.
+
+name: M040 first canonical run
+
+on:
+  pull_request:
+    paths:
+      - 'experiments/M040/CANONICAL_ARMED.json'
+      - 'experiments/M040/PROTOCOL.md'
+      - 'experiments/M040/run_canonical.py'
+      - 'metamorphosis/m040_*.py'
+      - 'scripts/check_m040_canonical_guard.py'
+      - '.github/workflows/m040-canonical.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m040-canonical-${{ github.event.pull_request.head.sha }}
+  cancel-in-progress: false
+
+jobs:
+  guarded-canonical-run:
+    name: Guarded first M040 canonical run
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out the immutable pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+
+      - name: Inspect the head without opening the block
+        id: guard
+        shell: bash
+        run: |
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r HEAD^ HEAD)
+          args=()
+          for path in "${changed[@]}"; do
+            args+=(--changed-file "$path")
+          done
+          python scripts/check_m040_canonical_guard.py \
+            --head-sha "$(git rev-parse HEAD)" \
+            --parent-sha "$(git rev-parse HEAD^)" \
+            --commit-message "$(git log -1 --pretty=%B)" \
+            --github-output "$GITHUB_OUTPUT" \
+            "${args[@]}"
+
+      - uses: actions/setup-python@v5
+        if: steps.guard.outputs.armed == 'true'
+        with:
+          python-version: '3.11'
+
+      - name: Install the frozen package
+        if: steps.guard.outputs.armed == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Execute and preserve the first canonical result
+        if: steps.guard.outputs.armed == 'true'
+        env:
+          M040_CANONICAL_RUN: '1'
+        run: |
+          python experiments/M040/run_canonical.py \
+            --head-sha "$(git rev-parse HEAD)" \
+            --parent-sha "$(git rev-parse HEAD^)" \
+            --marker experiments/M040/CANONICAL_ARMED.json \
+            --protocol experiments/M040/PROTOCOL.md \
+            --output m040-canonical-result.json
+
+      - name: Verify immutable first-run metadata and positive evidence when present
+        if: steps.guard.outputs.armed == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from metamorphosis.m040_result_verify import verify_m040_result
+
+          payload = json.loads(Path('m040-canonical-result.json').read_text())
+          assert payload['schema'] == 'm040-canonical-envelope/1'
+          assert payload['status'] == 'first-canonical-result'
+          assert payload['first_run_only'] is True
+          assert payload['reruns_are_reproductions_only'] is True
+          assert payload['arming_head_sha'] == '${{ github.event.pull_request.head.sha }}'
+          assert payload['scientific_outcome'] in {'positive', 'negative'}
+          if payload['scientific_outcome'] == 'positive':
+              assert payload['combined_expected_claim_supported'] is True
+              verify_m040_result(payload['result'])
+          else:
+              assert payload['combined_expected_claim_supported'] is False
+          PY
+
+      - name: Upload the immutable canonical artefact
+        if: steps.guard.outputs.armed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m040-first-canonical-${{ github.event.pull_request.head.sha }}
+          path: m040-canonical-result.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Confirm the block stayed closed
+        if: steps.guard.outputs.armed != 'true'
+        run: echo "M040 canonical block remains closed on this commit."
