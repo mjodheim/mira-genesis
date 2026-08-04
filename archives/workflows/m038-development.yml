@@ -1,0 +1,72 @@
+# Archived after the first consumed M038 development run.
+# Original workflow run: 30899489107 at head 699c162bc9b871bbb897a6c29a83d75f190b3129.
+# This file is retained for reproducibility and is intentionally outside .github/workflows.
+
+name: M038 development cycle
+
+# Development-only integration. This workflow never opens a sealed block and never
+# produces a canonical scientific result. Seed 380038 is committed and consumed.
+on:
+  pull_request:
+    paths:
+      - 'metamorphosis/m038_*.py'
+      - 'experiments/M038/**'
+      - 'tests/test_m038_*.py'
+      - '.github/workflows/m038-development.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m038-development-${{ github.event.pull_request.head.sha || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  integrated-development-cycle:
+    name: Integrated development cycle
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Run the committed integrated cycle
+        run: |
+          python experiments/M038/run_development_cycle.py \
+            --output m038-development-cycle.json \
+            --require-combined
+
+      - name: Verify the artefact status
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          payload = json.loads(Path('m038-development-cycle.json').read_text())
+          assert payload['schema'] == 'm038-development-cycle/1'
+          assert payload['status'] == 'consumed-development-result'
+          assert payload['seed'] == 380038
+          assert payload['no_sealed_block_opened'] is True
+          assert payload['no_m038_outcome_claim'] is True
+          assert payload['result']['combined_expected_claim_supported'] is True
+          PY
+
+      - name: Upload the consumed development artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: m038-development-cycle-${{ github.event.pull_request.head.sha || github.sha }}
+          path: m038-development-cycle.json
+          if-no-files-found: error
+          retention-days: 30
