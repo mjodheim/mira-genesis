@@ -9,7 +9,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 from pathlib import Path
 import re
 
@@ -73,7 +72,7 @@ def inspect_arm(
     if data["schema"] != ARM_SCHEMA:
         raise GuardError("unknown canonical marker schema")
     if data["frozen_parent_sha"] != parent_sha:
-        raise GuardError("the marker is not attached directly to its frozen parent")
+        raise GuardError("the marker frozen_parent_sha does not name the actual parent commit")
     if not _DIGEST.match(str(data["protocol_sha256"])):
         raise GuardError("protocol SHA-256 is not canonical lowercase hexadecimal")
     if data["first_run_only"] is not True:
