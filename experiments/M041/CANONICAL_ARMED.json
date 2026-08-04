@@ -1,0 +1,7 @@
+{
+  "schema": "m041-canonical-arm/1",
+  "frozen_parent_sha": "9bb971ef9c997c55326cb8a338bb6496fc26e8e6",
+  "protocol_sha256": "473daec4a372d5fa2e7d23870040c97e03d4e934c191afa2e8bf0a07d0bc6291",
+  "first_run_only": true,
+  "reruns_are_reproductions_only": true
+}

@@ -1,0 +1,41 @@
+{
+  "arming_head_sha": "6c404f7fce00087048dcb7d6e346bd5c84308cf8",
+  "canonical_completion_claim_supported": false,
+  "first_run_only": true,
+  "frozen_parent_sha": "9bb971ef9c997c55326cb8a338bb6496fc26e8e6",
+  "protocol_path": "experiments/M041/PROTOCOL.md",
+  "protocol_sha256": "473daec4a372d5fa2e7d23870040c97e03d4e934c191afa2e8bf0a07d0bc6291",
+  "reruns_are_reproductions_only": true,
+  "result": {
+    "all_ten_gates_supported": false,
+    "canonical_completion_claim_supported": false,
+    "gate_verdicts": {
+      "gate_10_measurement_integrity": false,
+      "gate_1_autonomous_diagnosis": false,
+      "gate_2_internal_tool_ownership": false,
+      "gate_3_self_rewrite": false,
+      "gate_4_isolated_validation": false,
+      "gate_5_held_out_improvement": false,
+      "gate_6_adoption_and_rollback": false,
+      "gate_7_trans_substrate_metamorphosis": false,
+      "gate_8_post_migration_plasticity": false,
+      "gate_9_repeated_improvement_cycles": false
+    },
+    "negative_reason": "cycle 3 task generation found no tool-dependent target",
+    "negative_reason_type": "M039EngineError",
+    "schema": "m041-canonical-scientific-result/1",
+    "status": "first-canonical-scientific-result"
+  },
+  "schema": "m041-canonical-envelope/1",
+  "scientific_outcome": "negative",
+  "sealed_spec": {
+    "arming_head_sha": "6c404f7fce00087048dcb7d6e346bd5c84308cf8",
+    "completion_seed": 4616374729204286922,
+    "frozen_parent_sha": "9bb971ef9c997c55326cb8a338bb6496fc26e8e6",
+    "master_nonce": "b2b87d1e804e397953a12f3bea739323128bbe5d8bbb910bea0bd87c2ee4c848",
+    "protocol_sha256": "473daec4a372d5fa2e7d23870040c97e03d4e934c191afa2e8bf0a07d0bc6291",
+    "spec_digest": "bdc6656c65f663ac80d09f0a656d5ac1d646717eaa60881ad53782a825d8ee19",
+    "spec_version": "m041-sealed-spec/1"
+  },
+  "status": "first-canonical-result"
+}
