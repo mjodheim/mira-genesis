@@ -1,6 +1,11 @@
 # ADR 0003 — Tool provenance, and what the lineage may claim to own
 
-**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
+**Status: accepted for development implementation.**
+
+This authorises the canonical serialisation, the append-only journal, its integrity tests,
+the projected archive and the checkpoint structures. It does **not** authorise opening a
+sealed block, any M038 claim, freezing the protocol, or changing a rule after observing a
+future block.
 
 ## Context
 
@@ -65,8 +70,10 @@ single cycle, that is approachable only if a tool is:
 2. causally used to inspect, construct or test the candidate;
 3. shown necessary by ablation.
 
-Creating a `learned_tool` from the adopted trace satisfies none of these. M038 must
-therefore not describe Gate 2 as "addressable" without this causal criterion attached.
+Registering a tool with `construction_kind = accepted_transformation_trace` after adoption
+satisfies none of these: `introduction_phase` records that it arrived too late to have built
+what it came from. M038 must therefore not describe Gate 2 as "addressable" without this
+causal criterion attached.
 
 ## Artifact
 
@@ -86,8 +93,19 @@ replay_digest
 cost_model
 known_failure_modes
 supersedes
-provenance_category
+provenance
+- origin
+- construction_kind
+- introduction_phase
+- introduced_by_event
+- protocol_commitment
+- eligible_for_gate2
 ```
+
+The artifact carried a single `provenance_category` field until this revision — the very
+exclusive label the decision above replaces. A one-axis field cannot express that a
+primitive is externally designed *and* legitimately part of the initial language, while an
+externally written tool added after the freeze is not.
 
 The registry must be able to prove: who built the tool, from which primitives, when it was
 adopted, when it was reused, what happens under ablation, and how it transports to another
@@ -139,10 +157,20 @@ reported as causally responsible.
 
 ## Test obligations
 
-- a tool without a construction event cannot be categorised `composed_tool` or
-  `learned_tool`;
-- an `external_development_tool` never counts toward a Gate 2 claim;
-- reuse is reported only when the tool proposed a step of the adopted trace;
-- a tool absorbed by the current cycle is not counted as reuse of an earlier one;
-- ablating a tool produces a measurable, reported difference — or its absence is reported;
+Restated on the three axes. The earlier list still named `composed_tool`, `learned_tool` and
+`external_development_tool` — the exclusive categories this ADR abandoned.
+
+- a tool cannot be `origin = lineage_constructed` without a valid construction event in the
+  journal naming the lineage, the generation and the primitives consumed;
+- `origin = external_development` is never `eligible_for_gate2`, whatever its
+  `construction_kind` or contents;
+- `origin = protocol_supplied` may belong to the initial language and never counts as
+  autonomous construction;
+- `eligible_for_gate2` is recomputed from the other axes and the journal; a supplied value is
+  ignored, and a supplied value disagreeing with the computed one is an error;
+- a trace absorbed after adoption is not counted as a tool that enabled that same adoption;
+- reuse is reported only when the tool proposed a step of the adopted trace, and a tool
+  absorbed by the current cycle is not reuse of an earlier one;
+- ablating a tool removes the causal role claimed for it, and the difference — or its absence
+  — is measured and reported;
 - the registry states which cost rule is in force when any reachability claim is made.

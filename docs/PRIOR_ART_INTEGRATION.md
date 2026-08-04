@@ -211,7 +211,12 @@ its first body type.
 
 **Reference.** Yin, Wang, Pan, Wan, Wang. *Gödel Agent: A Self-Referential Agent Framework
 for Recursive Self-Improvement.* [arXiv:2410.04444](https://arxiv.org/abs/2410.04444).
-**Licence.** [Arvid-pku/Godel_Agent](https://github.com/Arvid-pku/Godel_Agent) — **not verified from a primary source**. No code is reused here; verify before any reuse.
+**Licence.** MIT — [Arvid-pku/Godel_Agent](https://github.com/Arvid-pku/Godel_Agent), verified
+from the repository's own
+[`LICENSE`](https://raw.githubusercontent.com/Arvid-pku/Godel_Agent/main/LICENSE) file, which
+carries the MIT text under "Copyright (c) 2024 ArvidYin". A previous revision recorded this as
+unverified because search results alone were not a primary source; the file itself now is. No
+code is reused here regardless.
 
 **Mechanism of interest.** Analyse failure traces, form a hypothesis about a limitation,
 propose a revision, validate it, persist the new strategy.

@@ -1,6 +1,11 @@
 # ADR 0002 — The escalation boundary between fast and slow paths
 
-**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
+**Status: accepted for development implementation.**
+
+This authorises the canonical serialisation, the append-only journal, its integrity tests,
+the projected archive and the checkpoint structures. It does **not** authorise opening a
+sealed block, any M038 claim, freezing the protocol, or changing a rule after observing a
+future block.
 
 ## Context
 
@@ -72,8 +77,13 @@ gap_b(row) = true_minimal_states − exact_bound   limit of the observed evidenc
 | **Gap B, summed over all rows** | **0** |
 | Rows where greedy understated | 6 of 12 |
 | Exact bound equal to true minimal size | 12 of 12 |
-| **Maximum search nodes used** | **515,432** against a 2,000,000 ceiling |
+| **Maximum search nodes used** | **515,432** against a 2,000,000 development safety ceiling |
 | Maximum pair tests | 8,001 |
+| Development safety ceiling exceeded | no |
+
+The 2,000,000 figure bounded the calibration; no versioned commitment fixed it beforehand,
+so it is a **development safety ceiling** and not a budget. `Gap B = 0` likewise holds on
+these twelve consumed rows only.
 
 Tractability is argued from **counted operations**, not seconds: wall clock is diagnostic in
 this repository. An earlier draft reported "0.77 s" and "Gap A = 4" — the first is not a
@@ -127,7 +137,16 @@ different certificates for the same bound:
 - canonical pair ordering.
 
 **Deterministic budget.** The solver declares `maximum_search_nodes`, `maximum_prefix_count`,
-`algorithm_id` and `algorithm_version`. On exhaustion:
+`algorithm_id` and `algorithm_version`. The M038 values are committed in the protocol before
+any M038 measurement, and are a decision taken **in knowledge of** the consumed calibration
+above — not a figure inherited from it:
+
+```
+maximum_search_nodes = 2000000
+maximum_prefix_count = 512
+```
+
+On exhaustion of either:
 
 ```
 certificate_status = unavailable_within_committed_budget

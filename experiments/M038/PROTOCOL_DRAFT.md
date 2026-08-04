@@ -35,8 +35,16 @@ those words.
 the operation that produced it. Reconstructible from the founder and the chain.
 
 **Cycle.** One traversal: fast path → escalation → diagnosis → proposal → isolated
-evaluation → adoption or rejection → return to fast path. A rejection completes a cycle. A
-cycle is not "a search that succeeded".
+evaluation → adoption or rejection → return to fast path. A cycle is not "a search that
+succeeded".
+
+Two kinds of cycle, kept apart from the first definition rather than only in the verdict
+table below:
+
+```
+An infrastructure cycle may end in rejection.
+A functional metamorphosis cycle requires the complete F0 → F1 sequence.
+```
 
 **Escalation.** Crossing the boundary, on the single active trigger below.
 
@@ -51,20 +59,59 @@ answers exceeds the body's state count.
 
 Computable, sound, independent of the hidden target. **M038 uses an exact maximum
 pairwise-distinguishable set, not the greedy one**, and the reason is measured rather than
-assumed. Over twelve cases at both committed observation sizes, exact maximum-clique search
-took at worst 0.77 seconds, and the exact bound equalled the true minimal state count every
-time. The greedy missed 3 of 6 cases that genuinely required growth; the exact search missed
-none.
+assumed.
 
 Two causes of a false negative must stay distinguished, because only one is repairable:
 
 - **algorithmic incompleteness** — a larger set exists and the search order missed it.
-  Measured gap: 4. Removed by the exact search;
-- **evidence incompleteness** — no observed suffix separates the relevant pair. Measured
-  gap: **0** on these cases, but epistemic and not removable by any algorithm.
+  Removed by the exact search;
+- **evidence incompleteness** — no observed suffix separates the relevant pair. Epistemic,
+  and not removable by any algorithm.
+
+Development calibration used 12 rows at two **development observation sizes**. No prior
+versioned commitment fixed those sizes. Full record in
+[`results/M038_TRIGGER_CALIBRATION.md`](../../results/M038_TRIGGER_CALIBRATION.md).
+
+```
+gap_a(row) = exact_bound - greedy_bound
+gap_b(row) = true_minimal_states - exact_bound
+```
+
+| Quantity | Value |
+|---|---:|
+| Gap A, summed over 12 rows | **8** |
+| Gap B, summed over 12 rows | **0** |
+| Rows where greedy understated | **6 of 12** |
+| Maximum exact-search nodes | **515,432** |
+| Maximum pair tests | **8,001** |
+| Development safety ceiling exceeded | **no** |
+
+Tractability is argued from **counted operations**. Wall clock is diagnostic here and is not
+used to justify it — an earlier draft of this section cited "0.77 seconds", "committed
+observation sizes", "measured gap: 4" and "greedy missed 3 of 6", each of which contradicted
+ADR 0002, the calibration record and the reproducible script.
+
+**`Gap B = 0` holds on these twelve consumed rows only.** It is not a general property:
+evidence incompleteness survives any algorithm and was simply not exercised here.
 
 The claim is scoped accordingly: *when the certificate exists, structural incapacity is
 proved*. Never *M038 detects every situation requiring growth*.
+
+### The M038 certificate budget, committed here before any M038 measurement
+
+The 2,000,000 figure above is a **development safety ceiling**: it bounded the calibration,
+and no versioned commitment fixed it beforehand. The M038 budget is a separate decision, and
+it is taken in knowledge of those consumed cases:
+
+```
+maximum_search_nodes = 2000000
+maximum_prefix_count = 512
+```
+
+On exhaustion of either, the solver emits `certificate_status =
+unavailable_within_committed_budget`. The router **does not escalate** on this trigger, and
+**never falls back to the greedy bound** — that fallback would reintroduce exactly the
+incompleteness the exact search exists to remove.
 
 The historical greedy in `m035_evolution.py` is not modified, so M035 stays reproducible.
 
@@ -80,7 +127,33 @@ Rejected for M038: persistent uncertainty, saturation. No exact definition exist
 |---|---|
 | **A — fast path only** | same kernel, no slow path, no body change. Establishes what stays impossible without escalation. |
 | **B — two-speed lineage** | same fast path; escalation only on proved structural incapacity; full causal journal after the boundary; adoption or rollback. **The mechanism under study.** |
-| **C — full critical-path journalling** | identical decisions and identical operations to B, with full journalling across the entire fast path. Measures the cost of putting the proof machinery in the critical path. |
+| **C — full critical-path journalling** | identical decisions and identical operations to B; **C's instrumentation is a superset of B's**, not a substitute for it. Measures the cost of putting the proof machinery in the critical path. |
+
+### Arm C is an instrumental superset of arm B
+
+Fixed here, because the efficiency rule is otherwise uninterpretable:
+
+```
+Arm C produces every trace, commitment and checkpoint produced by arm B,
+plus a full causal event and the required state digests for every fast-path
+operation.
+```
+
+Hence:
+
+```
+evidence_B ⊂ evidence_C
+```
+
+If C were allowed to *replace* B's compact trace with a different one, it could emit zero
+`compact_event_serializations`, and B would score worse on that dimension for having produced
+the very evidence C omitted. The comparison would then measure a difference in instrumentation
+design rather than the cost of proof. Under the superset rule, every proof-cost dimension can
+only be non-decreasing from B to C, and the difference is exactly the additional cost of
+journalling the fast path.
+
+A run where C fails to reproduce B's compact trace **invalidates the efficiency comparison**,
+on the same footing as a decision-transcript divergence.
 
 **B and C must produce the same decision transcript**, not merely the same final result:
 
@@ -102,8 +175,14 @@ repository has already paid for.
 ## Two questions, kept apart
 
 **Functional.** Can the lineage detect a structural incapacity, enter the slow path,
-construct a candidate, evaluate it in isolation, adopt or reject it, return to the fast path,
-and — on rollback — restore body, tools and memory exactly?
+construct and evaluate candidates in isolation, **adopt one strictly improving candidate**
+to reach F1, **roll a separate failing attempt back exactly to F1** — restoring body, tools
+and memory — and **return to the fast path with F1 active**?
+
+An earlier draft asked whether the lineage could "adopt or reject". That is the
+infrastructure question, and asking it here reintroduced the ambiguity the F0 → F1 sequence
+below exists to remove. A rejection answers the infrastructure question and never the
+functional one.
 
 **Efficiency.** At identical decisions, does journalling restricted to the slow path cost
 less than journalling the whole fast path?
@@ -139,19 +218,49 @@ validated, and carried in the final state.
 
 Its **causal reuse on a later cycle cannot be demonstrated**, because there is no later
 cycle. That property belongs to a multi-cycle experiment, and M038 must not be read as
-evidence for it. Gate 2's requirement that a tool be constructed by the organism is
-addressable here; Gate 9's requirement that a later cycle reuse it is not.
+evidence for it. Gate 9's requirement that a later cycle reuse a tool is not addressable
+here at all.
+
+Gate 2 is addressable only under the condition below, and an earlier draft stated it flatly
+as "addressable here", which registry membership alone would have satisfied:
+
+```
+Gate 2 is addressable only if a lineage-constructed tool is used causally
+during candidate inspection, construction or validation and its necessity
+is supported by the committed ablation.
+```
+
+If no such tool exists in the run, **M038 claims nothing about Gate 2**. A tool absorbed
+from the adopted trace after adoption does not meet this condition: it was not available to
+build the thing it came from — see ADR 0003.
 
 ## Measures
 
 Reported as a **vector**, never as a synthetic score:
 
-`deterministic_operations` · `search_nodes` · `candidates_constructed` ·
-`candidates_evaluated` · `hash_operations` · `body_serializations` ·
-`compact_event_serializations` · `full_checkpoint_serializations` · `journal_bytes` ·
-`archive_projection_operations` · `tool_calls` · `rng_draws` ·
-`peak_persistent_artifacts` · `escalations` · `false_escalations` · `missed_escalations` ·
-`wall_clock_diagnostic`
+`functional_deterministic_operations` · `audit_deterministic_operations` · `search_nodes` ·
+`candidates_constructed` · `candidates_evaluated` · `hash_operations` ·
+`body_serializations` · `compact_event_serializations` · `full_event_serializations` ·
+`full_checkpoint_serializations` · `journal_bytes` · `archive_projection_operations` ·
+`tool_calls` · `rng_draws` · `peak_persistent_artifacts` ·
+`peak_persistent_audit_artifacts` · `escalations` · `false_escalations` ·
+`missed_escalations` · `wall_clock_diagnostic`
+
+An earlier draft carried a single `deterministic_operations` and introduced
+`full_event_serializations`, audit operations and audit artifacts only inside the comparison
+rule. A dimension that exists solely in the rule cannot be reported, so the four names below
+are part of the **primary vector** and are used under exactly these spellings throughout this
+protocol:
+
+```
+functional_deterministic_operations
+audit_deterministic_operations
+full_event_serializations
+peak_persistent_audit_artifacts
+```
+
+The functional/audit split is the same one ADR 0001 makes between `functional_state` and
+`audit_state`: only the functional half must be identical between arms.
 
 Weights collapsing these dimensions into a single cost would themselves be a policy, and
 would have to be committed separately. M038 does not define them.
@@ -164,15 +273,15 @@ the rule is pre-registered here.
 **Dimensions that must be exactly equal** between B and C — a difference in any of them
 invalidates decision equivalence, and with it the whole comparison:
 
-`search_nodes` · `candidates_constructed` · `candidates_evaluated` · `tool_calls` ·
-`rng_draws` · `escalations` · functional deterministic operations · final functional state
+`functional_deterministic_operations` · `search_nodes` · `candidates_constructed` ·
+`candidates_evaluated` · `tool_calls` · `rng_draws` · `escalations` · final functional state
 digest
 
 **Proof-cost dimensions**, on which B is compared to C:
 
-`hash_operations` · `body_serializations` · `compact_event_serializations` ·
-`full_event_serializations` · `full_checkpoint_serializations` · `journal_bytes` ·
-`archive_projection_operations` · audit deterministic operations ·
+`audit_deterministic_operations` · `hash_operations` · `body_serializations` ·
+`compact_event_serializations` · `full_event_serializations` ·
+`full_checkpoint_serializations` · `journal_bytes` · `archive_projection_operations` ·
 `peak_persistent_audit_artifacts`
 
 **Rule.** B must be **no worse than C on every** proof-cost dimension, and **strictly better
@@ -181,8 +290,11 @@ on the primary dimensions**, designated now and not after measurement:
 ```
 body_serializations
 journal_bytes
-audit deterministic operations
+audit_deterministic_operations
 ```
+
+The superset rule above is what makes "no worse on every dimension" a meaningful test rather
+than an artifact of which arm was instrumented differently.
 
 Wall clock plays no part in this rule.
 

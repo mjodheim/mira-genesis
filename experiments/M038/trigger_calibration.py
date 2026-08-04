@@ -17,10 +17,12 @@ ambiguous:
 Both are summed over cases and also reported per case.
 """
 
+import hashlib
 import json
 import platform
 import sys
 from itertools import combinations
+from pathlib import Path
 
 from metamorphosis.m012b_dfa import minimize_dfa, random_minimal_dfa
 from metamorphosis.m017_lab import make_out_of_language_target
@@ -28,7 +30,9 @@ from metamorphosis.structural import enumerate_words, normalize_dfa
 
 ALGORITHM_ID = "exact-max-pairwise-distinguishable"
 ALGORITHM_VERSION = "1"
-MAX_SEARCH_NODES = 2_000_000
+# Named a development safety ceiling, not a budget: no versioned commitment fixed it
+# before this calibration. The M038 budget is committed separately, in the protocol.
+DEVELOPMENT_SAFETY_CEILING = 2_000_000
 
 
 class Counters:
@@ -86,7 +90,7 @@ def greedy(nodes, edges):
     return kept
 
 
-def exact_max_clique(nodes, edges, counters, budget):
+def exact_max_clique(nodes, edges, counters, ceiling):
     """Branch and bound. Canonical: lexicographically smallest among equal-size maxima."""
     incumbent = sorted(greedy(nodes, edges))
     best = [list(incumbent)]
@@ -95,7 +99,7 @@ def exact_max_clique(nodes, edges, counters, budget):
 
     def expand(clique, candidates):
         counters.search_nodes += 1
-        if counters.search_nodes > budget:
+        if counters.search_nodes > ceiling:
             exceeded[0] = True
             return
         if len(clique) > len(best[0]) or (
@@ -125,7 +129,7 @@ for depth in (5, 6):
         evidence = evidence_from(target, words)
         nodes, edges, witness = build_graph(evidence, counters)
         g = len(greedy(nodes, edges))
-        clique, exceeded = exact_max_clique(nodes, edges, counters, MAX_SEARCH_NODES)
+        clique, exceeded = exact_max_clique(nodes, edges, counters, DEVELOPMENT_SAFETY_CEILING)
         e = len(clique)
 
         rows.append({
@@ -144,15 +148,15 @@ for depth in (5, 6):
             "pair_tests": counters.pair_tests,
             "suffix_probes": counters.suffix_probes,
             "search_nodes": counters.search_nodes,
-            "budget_exceeded": exceeded,
+            "ceiling_exceeded": exceeded,
         })
 
-print(json.dumps({
+# The versioned artifact holds only machine-independent content, so its SHA-256 reproduces
+# on any platform. The interpreter and platform are diagnostic and are printed instead.
+record = {
     "algorithm_id": ALGORITHM_ID,
     "algorithm_version": ALGORITHM_VERSION,
-    "maximum_search_nodes": MAX_SEARCH_NODES,
-    "python": sys.version.split()[0],
-    "platform": platform.platform(),
+    "development_safety_ceiling": DEVELOPMENT_SAFETY_CEILING,
     "rows": rows,
     "totals": {
         "gap_a_sum": sum(r["gap_a_algorithmic"] for r in rows),
@@ -161,6 +165,19 @@ print(json.dumps({
         "cases_where_evidence_understated": sum(1 for r in rows if r["gap_b_evidence"] > 0),
         "max_search_nodes_used": max(r["search_nodes"] for r in rows),
         "max_pair_tests": max(r["pair_tests"] for r in rows),
-        "any_budget_exceeded": any(r["budget_exceeded"] for r in rows),
+        "any_ceiling_exceeded": any(r["ceiling_exceeded"] for r in rows),
     },
-}, indent=2))
+}
+
+payload = json.dumps(record, indent=2, sort_keys=True) + "\n"
+artifact = Path(__file__).resolve().parents[2] / "results" / "artifacts" / "M038_TRIGGER_CALIBRATION.json"
+artifact.parent.mkdir(parents=True, exist_ok=True)
+# newline="\n" so the digest does not depend on the platform's line ending.
+with open(artifact, "w", encoding="utf-8", newline="\n") as handle:
+    handle.write(payload)
+
+print(payload, end="")
+print(f"artifact: {artifact}")
+print(f"sha256:   {hashlib.sha256(payload.encode('utf-8')).hexdigest()}")
+print(f"python:   {sys.version.split()[0]} (diagnostic)")
+print(f"platform: {platform.platform()} (diagnostic)")

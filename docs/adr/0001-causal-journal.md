@@ -1,6 +1,11 @@
 # ADR 0001 — A single causal journal, with three levels of trace
 
-**Status: proposed for M038. Awaiting human review. No mechanism implemented yet.**
+**Status: accepted for development implementation.**
+
+This authorises the canonical serialisation, the append-only journal, its integrity tests,
+the projected archive and the checkpoint structures. It does **not** authorise opening a
+sealed block, any M038 claim, freezing the protocol, or changing a rule after observing a
+future block.
 
 ## Context
 
@@ -124,27 +129,56 @@ therefore **typed and length-prefixed**:
 value := type_tag ‖ length ‖ payload
 ```
 
-| Tag | Type |
-|---|---|
-| `N` | absent |
-| `B` | boolean |
-| `I` | integer |
-| `S` | UTF-8 string |
-| `Y` | raw bytes |
-| `T` | tuple |
-| `L` | list |
-| `M` | mapping |
+**`length` must itself be encoded exactly**, or the decoder cannot know where the length ends
+and the payload begins. An earlier draft left this open, which made the whole encoding
+underspecified. Fixed here, before any code:
+
+```
+type_tag: exactly one ASCII byte
+length:   unsigned 64-bit big-endian integer, exactly 8 bytes
+payload:  exactly `length` bytes
+```
+
+Element counts for lists, tuples and mappings use the **same** unsigned 64-bit big-endian
+encoding.
+
+| Tag | Type | Payload |
+|---|---|---|
+| `N` | absent | length 0, no bytes |
+| `B` | boolean | exactly one byte, `0x00` or `0x01` |
+| `I` | integer | canonical decimal ASCII, no leading zeros, minus sign only for negative values, `0` written as `0` |
+| `S` | UTF-8 string | valid UTF-8, no BOM |
+| `Y` | raw bytes | arbitrary bytes |
+| `T` | tuple | element count, then each element encoded |
+| `L` | list | element count, then each element encoded |
+| `M` | mapping | field count, then each field as name (`S`) followed by its encoded value |
 
 | Aspect | Decision |
 |---|---|
-| Field order | canonical, sorted by field name, declared per schema |
-| Integers | decimal ASCII, no padding, explicit minus sign |
-| Sequences | element count first, then each element typed and length-prefixed |
-| Mappings | field count, then each field name encoded, canonical order, typed values |
-| Absent | tag `N`, distinct from an empty string or empty list |
+| Field order | canonical, sorted by field name as UTF-8 bytes, declared per schema |
+| Absent | tag `N`, distinct from an empty string, an empty list, and `false` |
 | Schema version | mandatory; an unknown version is a replay failure, never a skip |
-| Domain separators | one per decision, never reused |
 | Hash | SHA-256 |
+
+### Domain separators are fixed byte constants
+
+A domain separator supplied freely by the caller is not a separator: two call sites could
+pass the same string, or one could pass a value derived from data. They are fixed constants,
+one per decision, never reused:
+
+```
+DOMAIN_CAUSAL_EVENT     = b"m038-causal-event-v1"
+DOMAIN_FUNCTIONAL_STATE = b"m038-functional-state-v1"
+DOMAIN_CHECKPOINT       = b"m038-escalation-checkpoint-v1"
+DOMAIN_COMPACT_TRACE    = b"m038-compact-trace-v1"
+DOMAIN_TOOL             = b"m038-tool-v1"
+DOMAIN_PROJECTED_ARCHIVE = b"m038-projected-archive-v1"
+
+GENESIS_HASH = SHA256(b"m038-causal-journal-genesis-v1")
+```
+
+The journal API accepts a domain only from this closed set. A test asserts that no domain
+constant is a prefix of another and that none is caller-supplied.
 
 **Test obligation, stated realistically.** Proving that no two logically different structures
 can ever collide is not achievable by testing. What is required instead: a documented
@@ -193,8 +227,9 @@ event_hash
 event_hash = SHA-256( domain ‖ canonical_serialisation(all fields except event_hash) )
 ```
 
-The chain's first record uses `previous_event_hash = GENESIS_HASH`, a fixed constant under
-its own domain separator.
+The chain's first record uses `previous_event_hash = GENESIS_HASH`, defined above as
+`SHA256(b"m038-causal-journal-genesis-v1")` — a fixed constant, not a zero digest, so a
+truncation to an empty chain cannot masquerade as a valid root.
 
 `previous_state_digest` and `result_state_digest` cover the **`functional_state` only**. They
 do not include the journal being produced; the audit state is bound by
@@ -250,4 +285,12 @@ checkpoints and slow-path events.
 - an archive modified without a corresponding event is detected;
 - replay fails on a missing, altered, or reordered event, and on an unknown schema version;
 - a component consuming the RNG is classified `seeded_reproducible`;
-- disabling the detailed journalling changes the produced evidence and **not** any decision.
+- disabling the detailed journalling changes the produced evidence and **not** any decision;
+- the encoding round-trips: decoding consumes exactly the bytes the encoder produced, with no
+  trailing remainder, for every tag;
+- a truncated length field, a truncated payload, and a payload longer than its declared
+  length are each rejected rather than silently accepted;
+- the known confusable pairs encode differently — `1` against `"1"`, `""` against absent,
+  `false` against absent, a tuple against a list of the same elements, a field whose content
+  contains a domain constant's bytes, and nested structures;
+- no domain constant is a prefix of another, and none is caller-supplied.
