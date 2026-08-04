@@ -27,14 +27,19 @@ def test_complete_lineage_migrates_and_rewrites_after_migration(result) -> None:
 def test_post_migration_controls_have_the_committed_direction(result) -> None:
     arms = result.arms
     assert arms["complete_migrated_lineage"].exact is True
-    assert arms["fresh_on_b"].exact is True
+    for name in (
+        "fresh_on_b",
+        "unchanged_parent_migrated",
+        "output_only",
+        "learned_tool_ablated",
+    ):
+        assert arms[name].exact is False
     assert (
         arms["complete_migrated_lineage"].counters["symbolic_search_nodes"]
-        < arms["fresh_on_b"].counters["symbolic_search_nodes"]
+        < arms["learning_state_ablated"].counters["symbolic_search_nodes"]
     )
-    assert arms["output_only"].exact is False
     assert result.trans_substrate_continuity_supported is True
-    assert result.post_migration_plasticity_supported is False
+    assert result.post_migration_plasticity_supported is True
 
 
 def test_packet_requires_the_externally_committed_digest(result) -> None:
@@ -120,7 +125,7 @@ def test_independent_search_audits_bind_every_arm(result) -> None:
         assert audit["accepted_candidate_id"] == result.arms[name].accepted_candidate_id
 
 
-def test_prefix_adaptation_task_is_not_fully_stored_in_packet(result) -> None:
+def test_consumed_seed_400046_used_the_actual_prefix_family(result) -> None:
     packet = rehydrate_packet(result.packet_json, expected_sha256=result.packet_sha256)
     accepted = tuple(result.arms["complete_migrated_lineage"].accepted_tool_ids)
     assert result.task.task_family == "prefix_plus_primitive"

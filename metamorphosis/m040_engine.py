@@ -34,16 +34,20 @@ from .m039_search_audit import audit_result_searches
 from .m039_lineage import LineageTool, ORIGIN_LINEAGE_CONSTRUCTED, ORIGIN_PROTOCOL_SUPPLIED
 from .m040_packet import M040LearningState, M040TransportPacket
 from .m040_packet_verify import rehydrate_packet
+from .m040_anchor import (
+    derive_adapted_programs,
+    generate_lineage_anchor_task,
+)
 from .structural import Atom, apply_atom, flip, normalize_dfa
 
 Word = tuple[int, ...]
 
-DEVELOPMENT_SEED = 400_044
+DEVELOPMENT_SEED = 400_046
 DEVELOPMENT_COMMITMENT = "m040-development-v1"
 OBSERVATION_DEPTH = 6
-POST_MIGRATION_DEPTH = 3
-POST_MIGRATION_NODE_BUDGET = 20_000
-TASK_GENERATION_ATTEMPTS = 256
+POST_MIGRATION_DEPTH = 4
+POST_MIGRATION_NODE_BUDGET = 4_096
+TASK_GENERATION_ATTEMPTS = 2_048
 MIGRATION_CANDIDATE_BUDGET = 75_000
 NATIVE_COMPONENT_BUDGET = 320
 NATIVE_BYTE_BUDGET = 16_777_216
@@ -923,7 +927,7 @@ def _execute(
     master_seed: int,
     protocol_commitment: str,
     *,
-    task_family: str = "prefix_adaptation",
+    task_family: str = "lineage_anchor",
 ) -> M040DevelopmentResult:
     journal = M040Journal()
     pre_seed = _derive_seed(master_seed, "pre-migration-lineage", protocol_commitment)
@@ -1061,9 +1065,33 @@ def _execute(
         task = _post_task_exact_frontier(
             packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
         )
+        preferred_post_programs = rehydrated.learning_state.continuation_programs
     elif task_family == "prefix_adaptation":
         task = _post_task_prefix_adaptation(
             packet=rehydrated, founder=rehydrated_source, task_seed=task_seed
+        )
+        preferred_post_programs = rehydrated.learning_state.continuation_programs
+    elif task_family == "lineage_anchor":
+        anchor_task = generate_lineage_anchor_task(
+            packet=rehydrated,
+            founder=rehydrated_source,
+            task_seed=task_seed,
+            maximum_depth=POST_MIGRATION_DEPTH,
+            node_budget=POST_MIGRATION_NODE_BUDGET,
+            observations=OBSERVATIONS,
+        )
+        task = M040PostTask(
+            task_seed=anchor_task.task_seed,
+            parent_digest=anchor_task.parent_digest,
+            target=anchor_task.target,
+            generating_tool_ids=anchor_task.generating_tool_ids,
+            generating_program=anchor_task.generating_program,
+            task_family="lineage_anchor",
+        )
+        preferred_post_programs = derive_adapted_programs(
+            rehydrated,
+            task_seed=task_seed,
+            maximum_depth=POST_MIGRATION_DEPTH,
         )
     else:
         raise M040EngineError(f"unknown M040 task family {task_family!r}")
@@ -1103,7 +1131,7 @@ def _execute(
         observations=observations,
         registry=full_registry,
         preferred_tool_ids=rehydrated.learning_state.preferred_tool_ids,
-        preferred_programs=rehydrated.learning_state.continuation_programs,
+        preferred_programs=preferred_post_programs,
         adapt_prefixes=(task_family == "prefix_adaptation"),
     )
     fresh = _search_arm(
@@ -1187,7 +1215,7 @@ def _execute(
             None,
             full_registry,
             rehydrated.learning_state.preferred_tool_ids,
-            rehydrated.learning_state.continuation_programs,
+            preferred_post_programs,
             task_family == "prefix_adaptation",
         ),
         "fresh_on_b": (rehydrated_source, None, primitive_registry, (), (), False),
