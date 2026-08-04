@@ -1,0 +1,33 @@
+name: Clean merged research branches
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/m040-branch-cleanup.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  delete-merged-research-refs:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete fully merged M037-M039 branches
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for branch in \
+            research/m037-replayable-lineage \
+            research/m038-two-speed-lineage \
+            research/m039-three-cycle-lineage
+          do
+            encoded=${branch//\//%2F}
+            gh api --method DELETE "repos/${REPOSITORY}/git/refs/heads/${encoded}" || {
+              status=$?
+              echo "Could not delete ${branch}; leaving the ref visible." >&2
+              exit "$status"
+            }
+          done
