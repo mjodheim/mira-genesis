@@ -39,7 +39,11 @@ jobs:
           python -m pip install -e ".[dev]"
 
       - name: Run M039 permanent tests first
-        run: pytest -q tests/test_m039_lineage.py tests/test_m039_journal.py
+        run: >-
+          pytest -q
+          tests/test_m039_lineage.py
+          tests/test_m039_journal.py
+          tests/test_m039_provenance.py
 
       - name: Run the committed development lineage
         run: |
@@ -61,6 +65,7 @@ jobs:
           assert payload['later_tool_reuse_supported'] is True
           assert payload['tool_ablation_supported'] is True
           assert payload['seed_to_head_replay_supported'] is True
+          assert payload['gate2_eligibility_verified_from_journal'] is True
           assert payload['gate2_tool_ids']
           assert payload['no_sealed_block_opened'] is True
           assert payload['no_canonical_claim'] is True
