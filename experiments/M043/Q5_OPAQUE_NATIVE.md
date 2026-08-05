@@ -1,6 +1,6 @@
 # M043 Q5 — opaque field discovery and table-free native Mealy synthesis
 
-**Status: development implementation complete; complete repository CI pending.**
+**Status: passed in development. Qualification CI completed successfully.**
 
 ## Question
 
@@ -121,5 +121,22 @@ execution, parser round trips, forward references, unreachable payloads, direct-
 smuggling, wrong substrate/discovery bindings, capacity limits, independent certificate
 recomputation, complete-lineage bundle bindings and the deterministic Q5 development report.
 
-Q5 is not marked passed until the complete repository suite and integrity audit pass on
-Python 3.11 and Python 3.13 in GitHub Actions.
+## Qualification evidence
+
+GitHub Actions workflow run `31008963611` completed successfully on the final qualification
+head:
+
+- **745 tests passed on Python 3.11** in 535.16 seconds;
+- **745 tests passed on Python 3.13** in 581.31 seconds;
+- every module imported cleanly;
+- no orphan module remained;
+- declared dependencies matched real imports.
+
+No job failed and no rerun was used.
+
+## Next boundary
+
+Q6 must reproduce the complete development chain from founder-side inputs through Q1–Q5,
+including constructive tasks, exact rewrites, adoption decisions, lineage state, opaque
+probes, native DAGs, certificates and migration bundles. Q5 does not authorise a hidden
+bank, selected seed or canonical M043 workflow.
