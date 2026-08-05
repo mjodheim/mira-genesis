@@ -26,8 +26,8 @@ intelligence, consciousness or production authority.
 
 ### Phase-two scientific status
 
-**M043 qualification gates Q1, Q2 and Q3 passed in development; Q4 is active. No canonical
-result exists.**
+**M043 qualification gates Q1, Q2, Q3 and Q4 passed in development; Q5 is active. No
+canonical result exists.**
 
 M043 tests structural-domain transfer from deterministic language acceptors to
 deterministic total Mealy machines. The body, mutation language, hidden task generator and
@@ -50,14 +50,23 @@ Q3 established honest constructive task availability. The seed-free development 
 contains three targets whose exact minimal machines require three states while the declared
 parent requires two. Candidate operations are proposed without target-table access; every
 admitted target is reached by an exact replayable Q2 trace within depth 2, 512 visited nodes
-and a four-state cap. Six control surfaces are causally distinct and share the same budget,
-and failure to construct enough admissible tasks terminates explicitly. Qualification
-workflow run `30997105933` passed 672 tests on Python 3.11 and 672 on Python 3.13 plus the
-complete integrity audit, with no failed job or rerun.
+and a four-state cap. Six control surfaces are causally distinct and share the same budget.
+Qualification workflow run `30997105933` passed 672 tests on Python 3.11 and 672 on Python
+3.13 plus the complete integrity audit.
 
-The active boundary is Q4: disposable independent candidate validation, versioned adoption
-and exact rollback of the accepted body, registry and causal journal. No hidden task bank,
-seed block or canonical workflow is authorised yet.
+Q4 established isolated validation and transactional adoption. Candidate packages bind the
+complete parent lineage, exact parent body, public task, target commitment, Q2 trace and
+frozen budget. A fresh Python process replays the candidate without Q3 evaluator code or the
+hidden target body; the private evaluator then checks exact target equivalence. Accepted
+state versions the body, tool registry, portable learning state, commitments and
+hash-chained journal. Forced corruption of the body, registry, learning state and journal
+restores the exact prior checkpoint bytes and digest. Final workflow run `31001898372`
+passed 705 tests on Python 3.11, 705 on Python 3.13 and every integrity check.
+
+The active boundary is Q5: discover a genuinely opaque Mealy-native substrate through
+bounded public probes and synthesize an exact native implementation without embedding a
+renamed source transition/output table. No hidden task bank, seed block or canonical
+workflow is authorised yet.
 
 ## Canonical result map
 
@@ -71,7 +80,7 @@ seed block or canonical workflow is authorised yet.
 | M040 | **POSITIVE CANONICAL** | Exact unknown-substrate migration followed by an exact post-migration rewrite. |
 | M041 | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because no admissible tool-dependent cycle-3 target existed. |
 | M042 | **POSITIVE CANONICAL** | Constructive availability repaired the M041 failure; all ten audited gates are true in one continuous frozen lineage. |
-| M043 | Q1–Q3 PASSED IN DEVELOPMENT | Exact Mealy kernel, certified rewrite language and honest constructive task availability qualified; Q4 adoption/rollback active; no canonical result. |
+| M043 | Q1–Q4 PASSED IN DEVELOPMENT | Exact Mealy kernel, certified rewrites, honest constructive tasks and transactional adoption/rollback qualified; Q5 opaque-native substrate active; no canonical result. |
 
 M001–M011 remain historical and not independently verifiable in the current repository.
 M017–M037 remain development, failure and integration evidence; their records are not
@@ -112,49 +121,35 @@ rerunning the raw result.
 
 ## M043 qualified and active boundaries
 
-Q1 fixes and verifies:
+Q1 fixes exact total Mealy representation, canonical serialisation, equivalence,
+minimisation, shortest distinguishing words and strict parsing.
 
-- deterministic total Mealy machines;
-- input alphabet `{0, 1, 2}`;
-- output alphabet `{0, 1, 2}`;
-- finite state sets with a declared development cap;
-- exact product equivalence;
-- exact behavioural minimisation;
-- canonical reachable-state ordering and serialisation;
-- deterministic shortest distinguishing input words;
-- strict malformed-machine rejection.
+Q2 fixes a Mealy-specific capacity-changing language, exact state effects, neutral reachable
+growth, later specialisation, exact indexed identities and independently replayed traces.
 
-Q2 fixes and verifies:
+Q3 fixes exact structural incapacity, target-blind constructive search, exact trace replay,
+mandatory growth exploitation, bounded observations, six equal-budget control surfaces and
+explicit negative termination.
 
-- a Mealy-specific mutation language independent from M039/M042's executable DFA macro;
-- exact physical and reachable state-count certificates;
-- behaviour-preserving growth by exactly one reachable state;
-- later output and transition specialisation of the new capacity;
-- behaviour-preserving unreachable-state compaction;
-- exact indexed parent/child identities;
-- versioned canonical traces with independently recomputed replay certificates;
-- strict rejection of wrong parents, malformed traces and tampering.
+Q4 fixes:
 
-Q3 fixes and verifies:
+- strict full-lineage candidate commitments;
+- fresh disposable replay without hidden-target access;
+- exact evaluator-side target acceptance and parent-incapacity confirmation;
+- immutable versioned snapshots for body, registry, learning state and journal;
+- commit only after complete post-commit audit;
+- byte-identical rollback after four forced component faults;
+- explicit restoration to archived version zero;
+- deterministic qualification identities independent of runtime process identifiers.
 
-- an exact minimal-state structural-incapacity certificate;
-- target-blind deterministic search over the Q2 language;
-- exact parent-bound replay for every admitted development target;
-- mandatory capacity growth followed by exploitation of the new state;
-- bounded observations and commitments without public target tables or witness operations;
-- six distinct equal-budget control surfaces;
-- a deterministic three-entry seed-free development catalogue;
-- explicit negative termination without weaker retries or larger budgets.
+Q5 must now establish:
 
-Q4 must now establish:
-
-- fresh disposable resource-limited candidate workspaces;
-- independent checks of parent identity, syntax, totality and resource compliance;
-- exact preservation of protected regressions;
-- strict improvement and exact target validation;
-- versioned adoption and exact accepted-state archives;
-- rejection of a fixed invalid provisional rewrite;
-- exact restoration of the accepted body, registry and causal journal head.
+- a native representation with undeclared operational semantics;
+- bounded public probes sufficient for semantic discovery;
+- exact native synthesis of the accepted Mealy behaviour;
+- distinct, auditable source and native identities;
+- fail-closed malformed probes, partial discovery and wrong native programs;
+- proof that native storage does not contain a renamed source body.
 
 See:
 
@@ -162,6 +157,7 @@ See:
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
+- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Measurement track

@@ -41,7 +41,7 @@ formal object it rewrites.
 
 ### M043 — deterministic Mealy qualification
 
-**Status: Q1, Q2 and Q3 passed in development; Q4 active. No canonical result exists.**
+**Status: Q1, Q2, Q3 and Q4 passed in development; Q5 active. No canonical result exists.**
 
 M043 moves from language acceptors to deterministic reactive transducers:
 
@@ -65,20 +65,23 @@ body encoding or executable `flip/grow/redirect` macro.
 | Q1 — exact Mealy kernel | **PASSED IN DEVELOPMENT** | Canonical serialisation, equivalence, counterexamples, minimisation and malformed-input rejection passed permanent metamorphic tests; complete CI passed 625 tests on Python 3.11 and 3.13. |
 | Q2 — capacity-changing rewrite language | **PASSED IN DEVELOPMENT** | Exact physical/reachable state effects, neutral reachable-capacity growth, later specialisation and exact parent-bound trace replay passed permanent falsification tests; CI run `30992682534` passed 643 tests on Python 3.11 and 3.13 plus integrity. |
 | Q3 — constructively available hidden tasks | **PASSED IN DEVELOPMENT** | Exact minimal-state incapacity, target-blind constructive reachability, six distinct equal-budget controls and explicit negative termination passed permanent tests; CI run `30997105933` passed 672 tests on Python 3.11 and 3.13 plus integrity. |
-| Q4 — isolated adoption and rollback | **ACTIVE** | Independent validation fails closed and a forced bad rewrite restores the exact accepted body, registry and journal state. |
-| Q5 — opaque native substrate | NOT STARTED | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
+| Q4 — isolated adoption and rollback | **PASSED IN DEVELOPMENT** | Disposable replay without hidden-target access, exact evaluator acceptance, versioned adoption and byte-identical rollback after four forced component faults passed permanent tests; CI run `31001898372` passed 705 tests on Python 3.11 and 3.13 plus integrity. |
+| Q5 — opaque native substrate | **ACTIVE** | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
 | Q6 — complete development replay | NOT STARTED | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
 
 Q3 excludes the M041 failure mode by construction. A task cannot enter its development
 catalogue unless the parent has an exact structural-incapacity certificate and a target-blind
-Q2 search reaches the exact target within depth 2, 512 nodes and a four-state cap. The
-qualified seed-free catalogue contains three distinct tasks; inability to meet admission
-terminates explicitly as `insufficient` rather than weakening the gate.
+Q2 search reaches the exact target within depth 2, 512 nodes and a four-state cap.
 
-Q4 now turns qualified proposals into safe self-rewrite. It must separate proposal from
-release authority, execute candidates in disposable workspaces, independently verify exact
-parent identity and protected behaviour, archive accepted state and restore it exactly after
-a forced invalid provisional rewrite.
+Q4 separates proposal from release authority. The candidate is replayed in a fresh isolated
+process that never receives the hidden target, then checked exactly by the evaluator. An
+accepted rewrite versions the body, tool registry, learning state, target commitment and
+hash-chained journal. Forced corruption of each mutable component restores the exact prior
+checkpoint bytes and digest.
+
+Q5 now moves the accepted Mealy body into a genuinely opaque native substrate. Native
+semantics must be discovered experimentally through bounded probes, and exact synthesis may
+not contain a renamed copy of the source transition or output tables.
 
 M043 is a rig-qualification experiment, not a new canonical ten-gate claim. A later
 continuous Mealy lineage would require a separate experiment, fresh frozen protocol and
@@ -88,7 +91,8 @@ See:
 
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
-- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md).
+- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
+- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md).
 
 ## Parallel measurement track
 
