@@ -64,56 +64,51 @@ The full evidence is preserved in:
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
 
-## Current work — Phase 2
+## Phase-two integrated result
 
-Phase 2 tests whether the architecture is structurally transferable rather than merely
-successful in one DFA representation.
+Phase 2 tested whether the architecture transfers from deterministic binary DFAs to
+deterministic total **Mealy machines**, whose behaviour is an output stream produced during
+interaction.
 
-M043 begins with deterministic total **Mealy machines**, where behaviour is an output
-stream produced during interaction instead of a final accept/reject bit. Exact
-equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
-rewrite language, hidden tasks and opaque substrate were rebuilt independently.
+M043 qualified the new formal kernel, rewrite language, constructive tasks, isolated
+adoption, exact rollback and opaque-native compiler independently. M044 then deliberately
+stopped adding component gates and assembled those mechanisms into one accelerated bounded
+lineage.
 
-Qualification gates **Q1, Q2, Q3, Q4 and Q5 are complete in development**:
+**M044 PASSED IN DEVELOPMENT.** One deterministic lineage:
 
-- Q1 provides the independent exact Mealy kernel: strict immutable representation,
-  canonical state-renaming-invariant serialisation, exact product equivalence,
-  deterministic shortest counterexamples, exact minimisation and fail-closed parsing;
-- Q2 provides the independent certified rewrite language: exact state-count effects,
-  behaviour-preserving reachable-capacity growth, later specialisation of duplicated
-  capacity, exact indexed-body identities and byte-identical trace replay;
-- Q3 provides exact structural-incapacity certificates, target-blind constructive search,
-  exact Q2 witness replay, six distinct equal-budget controls and explicit negative
-  termination. Its seed-free development catalogue contains three tasks that each require
-  three minimal states while the declared parent requires two;
-- Q4 provides a strict full-lineage candidate package, replay in a disposable process with
-  no hidden-target access, exact evaluator-side acceptance, immutable versioned snapshots
-  and byte-identical rollback after forced body, registry, learning-state and journal
-  faults;
-- Q5 provides three genuinely opaque native field substrates, bounded repeated public
-  probing, exact algebraic Mealy synthesis as a table-free scalar DAG, independent
-  certificate recomputation and migration bundles bound to the complete Q4 lineage state.
+- started from a two-state Mealy founder;
+- adopted two exact capacity-changing rewrites before migration;
+- reused an acquired abstract tool pattern on the second rewrite;
+- discovered an opaque finite-field substrate through bounded public probes;
+- migrated the complete accepted state into a table-free native scalar DAG;
+- adopted a third exact rewrite from the native-reconstructed parent behaviour;
+- reused an acquired tool pattern after migration;
+- resynthesised a changed exact native body;
+- preserved body, tool registry, portable learning state and causal journal;
+- restored the exact version-three checkpoint after a forced version-four journal fault;
+- reproduced its complete canonical manifest byte-for-byte on an immediate replay within
+  each supported runtime.
 
-Qualification workflow run `31008963611` passed **745 tests on Python 3.11 and 745 on
+Qualification workflow run `31015992729` passed **755 tests on Python 3.11 and 755 on
 Python 3.13**, together with the complete repository-integrity audit. No job failed and no
 rerun was used.
 
-The active boundary is **Q6**: regenerate the complete development chain from founder-side
-inputs through task construction, certified rewrites, isolated adoption, lineage state,
-opaque semantic discovery, native DAG synthesis and migration. All final bytes and digests
-must agree on Python 3.11 and Python 3.13.
+This is a positive integrated **development** result, not a new canonical result. M042
+remains the only positive canonical continuous-lineage completion. No seed block, hidden
+task bank or canonical M044 workflow was authorised.
 
-No hidden task bank, seed block or canonical workflow is authorised yet.
+The next construction frontier is no longer another exact finite gate. It is to replace the
+small exhaustive search regime with a scalable, resource-aware, non-exhaustive learner while
+retaining independent validation, causal records and exact rollback wherever exact checks
+remain available.
 
 See:
 
-- [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md);
-- [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
-- [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
-- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
-- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
-- [`experiments/M043/Q5_OPAQUE_NATIVE.md`](experiments/M043/Q5_OPAQUE_NATIVE.md);
-- [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
+- [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
+- [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md);
+- [`PROJECT_STATE.md`](PROJECT_STATE.md);
+- [`ROADMAP.md`](ROADMAP.md).
 
 ## Parallel measurement track
 
@@ -123,7 +118,7 @@ different finite grammar. The remaining distinct optimisation question is whethe
 pre-written resource-aware adaptive allocation can beat that uniform baseline without
 recreating M029's allocation failure.
 
-The measurement and construction tracks remain separate: a stronger organism cannot
+That experiment remains **M045** and stays separate from M044: a stronger organism cannot
 retroactively validate a proxy, and a proxy failure cannot be hidden inside a larger
 construction result.
 

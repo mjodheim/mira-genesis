@@ -1,18 +1,19 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_one_bounded_completion_positive_phase_two_q6_active
+status: phase_two_integrated_mealy_transfer_positive_in_development
 
 active_research_question: >-
-  Which Genesis mechanisms transfer across formal behavioural domains, and which were
-  specific to deterministic binary language acceptors?
+  Can a continuous lineage retain validated self-rewrite, causal memory, migration and
+  rollback when exhaustive enumeration is no longer available?
 
 measurement_question: >-
-  When does a proxy measure stop tracking exact hidden quality, and under what
-  optimisation pressure?
+  Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
+  baseline without recreating M029's allocation failure?
 
 phase_one:
   status: completed_bounded_deterministic_binary_dfa
   completion_experiment: M042
+  canonical: true
   completion_claim: >-
     One frozen continuous lineage satisfied all ten Genesis completion gates inside the
     declared finite task, substrate and budget families.
@@ -29,49 +30,30 @@ phase_one:
 canonical_results:
   M012b:
     status: validated_bounded_finite_domain
-    evaluated_commit: c60ddc28e3bea8c7c71d615dace4263f5cf3d187
-    protocol_sha256: b949b9d4fc61cd118af075985d1d4218c37ce7f970f28bd3598d1f38dadbd651
     github_run_id: 30635291887
     exact_principal_births: 36
   M013e:
     status: validated_bounded_finite_opaque_substrate
-    evaluated_commit: e309169b4edf8a508ec60990e68ba079fd032f2c
-    protocol_sha256: e29f024e3cc04ebd18ebd9484d499bdfbf1d98a3fbe0beb9c0ec318c8c394c5f
     github_run_id: 30637689966
     exact_principal_migrations: 36
   M014b:
     status: failed_no_generalisable_learning_advantage
-    evaluated_commit: 5a0947afb96d7d59438c222028f2cabb34bc0cd5
     github_run_id: 30650363802
   M038:
     status: positive_canonical_one_cycle
     merge_commit: c9d5749a6d28d3f957c18a862ad4f1303dd502fd
-    repository_tests_python_311: 466
-    repository_tests_python_313: 466
   M039:
     status: positive_canonical_repeated_cycles_and_tool_reuse
     merge_commit: 0663c885346c41e310a0ae47eca122e7e2b6ed82
     lineage_state_counts: [4, 5, 6, 7]
-    repository_tests_python_311: 498
-    repository_tests_python_313: 498
   M040:
     status: positive_canonical_post_migration_plasticity
     merge_commit: 6189a93e49152dd0eccae375ddcdff4660bb9d9f
-    frozen_protocol_sha256: 4816bc3c32e4fc04df5de4fad784a8935f0b8757c544dbc3862a1d2cb7b59d30
     canonical_workflow_run: 30930249547
-    preservation_workflow_run: 30930586262
-    complete_quality: 127
-    fresh_b_quality: 120
-    learned_tool_ablated_quality: 120
-    learning_state_ablated_quality: 124
-    unchanged_parent_quality: 101
-    output_only_quality: 104
   M041:
     status: negative_canonical_constructive_availability_failure
     merge_commit: 1ef6407275057a109a6ef0f4377d234d4f59eddf
     canonical_workflow_run: 30937650241
-    failure: cycle_3_task_generation_found_no_tool_dependent_target
-    m038_to_m040_claims_unchanged: true
   M042:
     status: positive_canonical_phase_one_completion
     merge_commit: 48a4d5d0f6a25de275e646e5abb876fc912024fb
@@ -80,9 +62,6 @@ canonical_results:
     canonical_workflow_run: 30958542929
     canonical_workflow_attempt: 1
     frozen_protocol_sha256: d3d2b60a23d5847238aaec87e0d04200b707761ba8e0eb1418632e59dd39a366
-    selected_bank_index: 2
-    selected_entry_digest: 732c5c86b67b13826cfb46dc1d839577ff32af8d3afc882f8abf0b0fe95a8442
-    selected_task_seed: 420004
     exact_raw_result_sha256: 2d6c75abf526f0b3a3edba381f6f7b820d4dd03ccc3276784301e3c6a65b7830
     exact_first_result_seal_sha256: bc39b5d494efcefa6fbfbf95170b2fe38436e90e4168fac9a347030a56e404b2
     artifact_digest: sha256:14abb40f77c5fe3821c7e87f3d3078e378e0763efa1cd4a68296d7224f30de38
@@ -93,15 +72,11 @@ canonical_results:
     learning_state_ablated_quality: 123
     unchanged_parent_quality: 117
     output_only_quality: 96
-    passive_validation_exact: true
-    native_synthesis_exact: true
-    rollback_exact: true
     first_result_reexecuted: false
     retuned_after_freeze: false
 
 phase_two:
-  status: q1_q2_q3_q4_q5_passed_q6_active
-  active_experiment: M043
+  status: integrated_mealy_lineage_passed_in_development
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
   target_domain:
@@ -109,181 +84,117 @@ phase_two:
     input_alphabet: [0, 1, 2]
     output_alphabet: [0, 1, 2]
     ground_truth: exact_product_equivalence
-    canonical_minimisation: implemented_and_tested
-    shortest_distinguishing_inputs: implemented_and_tested
-  qualified_gates:
+  M043:
+    status: q1_to_q5_passed_in_development
+    role: component_qualification
     Q1:
-      status: passed_in_development
-      implementation: metamorphosis/m043_mealy.py
       ci_workflow_run: 30983777610
       repository_tests_python_311: 625
       repository_tests_python_313: 625
       repository_integrity_passed: true
-      state_renaming_invariant_serialisation: true
-      exact_product_equivalence: true
-      shortest_distinguishing_inputs: true
-      exact_minimisation: true
-      fail_closed_parsing: true
     Q2:
-      status: passed_in_development
-      implementation: metamorphosis/m043_rewrite.py
-      specification: experiments/M043/Q2_REWRITE_LANGUAGE.md
       qualification_ci_workflow_run: 30992682534
       repository_tests_python_311: 643
       repository_tests_python_313: 643
       repository_integrity_passed: true
-      exact_state_count_effects: true
-      behaviour_preserving_reachable_capacity_growth: true
-      later_capacity_exploitation: true
-      exact_parent_bound_trace_replay: true
-      fail_closed_trace_parsing: true
-      wrong_parent_rejected: true
-      tampered_certificate_rejected: true
-      independent_from_dfa_executable_macro: true
     Q3:
-      status: passed_in_development
-      implementation:
-        - metamorphosis/m043_task_model.py
-        - metamorphosis/m043_task_search.py
-        - metamorphosis/m043_tasks.py
-      specification: experiments/M043/Q3_CONSTRUCTIVE_TASKS.md
-      runner: scripts/run_m043_q3_catalogue.py
       qualification_ci_workflow_run: 30997105933
       repository_tests_python_311: 672
       repository_tests_python_313: 672
       repository_integrity_passed: true
-      exact_parent_structural_incapacity_certificates: true
-      target_blind_constructive_search: true
-      admissible_exact_q2_trace_replay: true
-      mandatory_capacity_growth_and_exploitation: true
-      fixed_search_budget:
-        max_depth: 2
-        max_nodes: 512
-        max_states: 4
-      six_distinct_causal_control_surfaces: true
-      equal_budget_controls: true
-      deterministic_negative_termination: true
       seed_free_development_catalogue_entries: 3
-      selected_seed: false
-      hidden_target_tables_exported: false
-      witness_traces_exposed_to_public_surface: false
-      failed_ci_jobs: 0
-      ci_reruns: 0
     Q4:
-      status: passed_in_development
-      implementation:
-        - metamorphosis/m043_adoption_codec.py
-        - metamorphosis/m043_lineage_state.py
-        - metamorphosis/m043_adoption_validation.py
-        - metamorphosis/m043_adoption_transaction.py
-        - metamorphosis/m043_adoption.py
-        - metamorphosis/m043_validation_worker.py
-      specification: experiments/M043/Q4_ADOPTION_ROLLBACK.md
-      runner: scripts/run_m043_q4_qualification.py
       qualification_ci_workflow_run: 31001898372
       repository_tests_python_311: 705
       repository_tests_python_313: 705
       repository_integrity_passed: true
-      candidate_bound_to_full_parent_lineage: true
       disposable_worker_process: true
       worker_has_hidden_target_access: false
-      exact_evaluator_side_target_validation: true
-      candidate_has_release_authority: false
-      immutable_versioned_lineage_snapshot: true
-      versioned_components:
-        - accepted_body
-        - tool_registry
-        - portable_learning_state
-        - accepted_target_commitments
-        - hash_chained_causal_journal
-      post_commit_audit_required: true
       forced_fault_exact_restoration:
         body: true
         registry: true
         learning_state: true
         journal: true
-      explicit_version_zero_rollback: true
-      runtime_pid_excluded_from_report_identity: true
-      focused_falsification_tests: 33
-      initial_integrity_only_failure_run: 31001191874
-      functional_test_failures: 0
     Q5:
-      status: passed_in_development
-      implementation:
-        - metamorphosis/m043_opaque_substrate.py
-        - metamorphosis/m043_native_program.py
-        - metamorphosis/m043_native_verify.py
-        - metamorphosis/m043_migration.py
-      specification: experiments/M043/Q5_OPAQUE_NATIVE.md
-      runner: scripts/run_m043_q5_qualification.py
       qualification_ci_workflow_run: 31008963611
       repository_tests_python_311: 745
       repository_tests_python_313: 745
       repository_integrity_passed: true
-      functional_test_failures: 0
-      ci_reruns: 0
-      field_modulus: 5
-      public_probe_repetitions: 3
-      public_probe_budget: 512
       positive_substrate_families: 3
-      positive_probe_calls: [345, 345, 360]
-      distinct_machine_identities: true
-      distinct_opaque_role_assignments: true
-      recovered_core_roles:
-        - field_addition
-        - field_multiplication
-        - additive_negation
-      missing_core_role_rejected: true
-      unstable_addition_rejected: true
-      unstable_multiplication_rejected: true
-      probe_budget_exhaustion_rejected: true
+      bounded_public_probe_discovery: true
       synthesis_method: finite_field_lagrange_scalar_dag
-      native_call_arity_maximum: 2
-      every_native_node_reachable: true
-      transition_output_table_fields_present: false
-      source_exact_body_bytes_embedded: false
       exact_indexed_body_reconstruction: true
-      exact_product_equivalence: true
+      transition_output_table_fields_present: false
       independent_certificate_recomputation: true
-      migration_bound_to_complete_q4_snapshot: true
-      q4_components_bound:
-        - accepted_body
-        - tool_registry
-        - portable_learning_state
-        - causal_journal
-      selected_seed: false
-      hidden_task_bank_authorised: false
-  current_gate: Q6_complete_development_replay
-  next_required_properties:
-    - one_frozen_founder_side_development_specification
-    - complete_q1_to_q5_regeneration
-    - deterministic_task_catalogue_and_control_identities
-    - deterministic_rewrite_trace_and_certificate_identities
-    - deterministic_adoption_and_lineage_state_identities
-    - deterministic_opaque_discovery_identities
-    - deterministic_native_program_and_migration_bundle_identities
-    - byte_identical_manifest_python_311_python_313
-    - explicit_negative_termination_on_any_divergence
-    - permanent_q6_falsification_tests
-  canonical_workflow_authorised: false
-  hidden_task_bank_authorised: false
-  development_seed_block_authorised: false
-  canonical_result_exists: false
-  required_python_versions: ["3.11", "3.13"]
-  forbidden_reuse:
-    - M040_or_M042_canonical_seed
-    - M042_constructive_task_bank
-    - DFA_target_generators
-    - DFA_body_encoding
-    - executable_M039_flip_grow_redirect_macro
+    Q6:
+      status: absorbed_by_M044
+      reason: >-
+        Complete replay became an integrated M044 exit condition instead of another
+        standalone component gate.
+  M044:
+    status: positive_integrated_development_result
+    canonical: false
+    implementation: metamorphosis/m044_integrated_lineage.py
+    protocol: experiments/M044/PROTOCOL.md
+    runner: scripts/run_m044_integrated_lineage.py
+    qualification_ci_workflow_run: 31015992729
+    repository_tests_python_311: 755
+    repository_tests_python_313: 755
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_cycles:
+      pre_migration: 2
+      post_migration: 1
+    lineage_state_counts: [2, 3, 4, 5]
+    acquired_tool_pattern_reused_pre_migration: true
+    acquired_tool_pattern_reused_post_migration: true
+    opaque_substrate_discovered_by_public_probes: true
+    first_native_migration_exact: true
+    post_migration_parent_from_native_reconstruction: true
+    post_migration_native_resynthesis_exact: true
+    native_program_changed_after_learning: true
+    preserved_components:
+      - accepted_body
+      - tool_registry
+      - portable_learning_state
+      - accepted_target_commitments
+      - causal_journal
+    final_tool_registry_entries: 3
+    final_learning_trace_entries: 3
+    final_causal_journal_entries: 3
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 4
+    exact_restored_version: 3
+    immediate_replay_byte_identical_within_each_runtime: true
+    separately_archived_cross_runtime_manifest_comparison: false
+    selected_seed: false
+    hidden_task_bank_authorised: false
+    canonical_workflow_authorised: false
+    canonical_result_exists: false
+
+active_construction_frontier:
+  proposed_experiment: M046
+  objective: scalable_non_exhaustive_lineage
+  required_properties:
+    - learned_candidate_proposals_without_complete_enumeration
+    - explicit_resource_allocation_and_stopping_policy
+    - independent_validation_after_approximate_search
+    - longer_multi_cycle_horizon
+    - larger_bodies_and_task_families
+    - causal_provenance_under_partial_observability
+    - exact_or_checkpointed_rollback
+    - fail_closed_insufficient_evidence_termination
+  development_strategy: one_integrated_experiment_not_another_gate_sequence
 
 measurement_track:
-  status: open
+  reserved_experiment: M045
+  status: open_and_separate
   supported_through: M031
   next_question: >-
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
-  separate_from_M043: true
+  separate_from_M044_and_M046: true
 
 engineering_release_boundary:
   human_control_required_for:
