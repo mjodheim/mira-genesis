@@ -1,6 +1,6 @@
 # M043 Q4 — disposable validation, versioned adoption and exact rollback
 
-**Status: development implementation complete; complete repository CI pending.**
+**Status: passed in development. Qualification CI completed successfully.**
 
 ## Question
 
@@ -148,12 +148,17 @@ The focused suite contains 33 tests covering:
 - worker malformed-request, wrong-parent and budget rejection;
 - deterministic complete Q4 development reporting.
 
-Q4 is not marked passed until the complete repository suite and integrity audit pass on
-Python 3.11 and Python 3.13 in GitHub Actions.
+Final qualification workflow run `31001898372` passed the complete repository with **705
+tests on Python 3.11**, **705 tests on Python 3.13**, clean imports, no orphan modules and
+consistent declared dependencies.
+
+The initial workflow run `31001191874` already passed both 705-test matrices but exposed one
+repository-integrity defect: the disposable worker was launched dynamically through `-m`
+and was therefore invisible to the static reachability audit. The runner now declares that
+entry-point edge explicitly. No functional Q4 test failed and no failed test job was rerun.
 
 ## Next boundary
 
-After Q4 qualification, Q5 may define a genuinely opaque Mealy-native substrate whose
-semantics are recovered only through bounded public probes, followed by exact native
-synthesis. Q4 does not authorise that substrate, a hidden bank, selected seed or canonical
-M043 workflow.
+Q5 may now define a genuinely opaque Mealy-native substrate whose semantics are recovered
+only through bounded public probes, followed by exact native synthesis. Q4 does not
+authorise that substrate, a hidden bank, selected seed or canonical M043 workflow.
