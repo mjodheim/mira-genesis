@@ -1,10 +1,10 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_two_integrated_mealy_transfer_positive_in_development
+status: phase_three_scalable_non_exhaustive_positive_in_development
 
 active_research_question: >-
-  Can a continuous lineage retain validated self-rewrite, causal memory, migration and
-  rollback when exhaustive enumeration is no longer available?
+  Can a continuous lineage diagnose and repair a limiting module in a real modular software
+  body while preserving independent validation, causal memory and transactional rollback?
 
 measurement_question: >-
   Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
@@ -128,9 +128,6 @@ phase_two:
       independent_certificate_recomputation: true
     Q6:
       status: absorbed_by_M044
-      reason: >-
-        Complete replay became an integrated M044 exit condition instead of another
-        standalone component gate.
   M044:
     status: positive_integrated_development_result
     canonical: false
@@ -143,9 +140,7 @@ phase_two:
     repository_integrity_passed: true
     failed_ci_jobs: 0
     ci_reruns: 0
-    accepted_cycles:
-      pre_migration: 2
-      post_migration: 1
+    accepted_cycles: 3
     lineage_state_counts: [2, 3, 4, 5]
     acquired_tool_pattern_reused_pre_migration: true
     acquired_tool_pattern_reused_post_migration: true
@@ -154,12 +149,6 @@ phase_two:
     post_migration_parent_from_native_reconstruction: true
     post_migration_native_resynthesis_exact: true
     native_program_changed_after_learning: true
-    preserved_components:
-      - accepted_body
-      - tool_registry
-      - portable_learning_state
-      - accepted_target_commitments
-      - causal_journal
     final_tool_registry_entries: 3
     final_learning_trace_entries: 3
     final_causal_journal_entries: 3
@@ -173,18 +162,93 @@ phase_two:
     canonical_workflow_authorised: false
     canonical_result_exists: false
 
+phase_three:
+  status: scalable_non_exhaustive_lineage_passed_in_development
+  objective: bounded_non_exhaustive_adaptive_continuation
+  M046:
+    status: positive_integrated_development_result
+    canonical: false
+    implementation:
+      - metamorphosis/m046_search.py
+      - metamorphosis/m046_task.py
+      - metamorphosis/m046_scalable_lineage.py
+    protocol: experiments/M046/PROTOCOL.md
+    qualification: experiments/M046/DEVELOPMENT_QUALIFICATION.md
+    result: results/M046_DEVELOPMENT_RESULT.md
+    runner: scripts/run_m046_scalable_lineage.py
+    qualification_marker_commit: 872f90060902cea2b94be653845036340b91cde3
+    qualification_ci_workflow_run: 31021072262
+    qualification_ci_run_number: 398
+    repository_tests_python_311: 770
+    repository_tests_python_311_seconds: 569.73
+    repository_tests_python_313: 770
+    repository_tests_python_313_seconds: 585.56
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_cycles: 6
+    lineage_state_counts: [2, 3, 4, 5, 6, 7, 8]
+    hidden_task_families:
+      - split_emit_1
+      - split_emit_2
+    proposal_generator_exact_equivalence_access: false
+    hidden_target_body_exposed_to_generator: false
+    witness_trace_exposed_to_generator: false
+    complete_candidate_space_enumerated: false
+    explicit_resource_budgets:
+      observations_per_task: 128
+      generated_candidates_per_task: 48
+      exact_task_validation_attempts: 8
+      rewrite_depth: 3
+      body_state_ceiling: 10
+      working_memory_bytes: 262144
+      causal_memory_bytes: 262144
+      search_seconds_per_task: 30
+      maximum_exploration_fraction_ppm: 100000
+    independent_task_side_exact_validation: true
+    disposable_adoption_validation: true
+    registered_tool_reuse: true
+    causal_success_and_failure_memory: true
+    verified_combined_checkpoints: 6
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 7
+    exact_restored_version: 6
+    combined_lineage_and_memory_rollback_exact: true
+    terminal_required_growth: 2
+    terminal_action: terminate_insufficient_evidence
+    terminal_body_unchanged: true
+    immediate_replay_byte_identical_within_each_runtime: true
+    separately_archived_cross_runtime_manifest_comparison: false
+    selected_seed: false
+    hidden_task_bank_authorised: false
+    canonical_workflow_authorised: false
+    canonical_result_exists: false
+
 active_construction_frontier:
-  proposed_experiment: M046
-  objective: scalable_non_exhaustive_lineage
+  objective: real_modular_software_body
   required_properties:
-    - learned_candidate_proposals_without_complete_enumeration
-    - explicit_resource_allocation_and_stopping_policy
-    - independent_validation_after_approximate_search
-    - longer_multi_cycle_horizon
-    - larger_bodies_and_task_families
-    - causal_provenance_under_partial_observability
-    - exact_or_checkpointed_rollback
+    - diagnose_limiting_module
+    - propose_code_or_configuration_transformation
+    - construct_or_extend_tests
+    - execute_candidate_in_disposable_sandbox
+    - compare_incumbent_and_candidate_under_fixed_resources
+    - independently_validate_before_adoption
+    - transactional_adoption_rejection_and_restore
+    - retain_success_and_failure_causal_memory
+    - reuse_acquired_transformations
     - fail_closed_insufficient_evidence_termination
+  suggested_modules:
+    - interpretation
+    - working_memory
+    - durable_memory
+    - planning
+    - proposal_generation
+    - tool_selection
+    - execution
+    - critique
+    - resource_allocation
+    - validation
+    - orchestration
   development_strategy: one_integrated_experiment_not_another_gate_sequence
 
 measurement_track:

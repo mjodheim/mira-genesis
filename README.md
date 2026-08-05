@@ -4,8 +4,9 @@ Mira Genesis is a bounded, auditable research program about self-rewrite,
 trans-substrate continuity and the gap between what an adaptive system optimises and what
 actually makes it better.
 
-The laboratory uses finite models whose behaviour can be proved exactly. This keeps the
-central question falsifiable:
+The laboratory begins with finite models whose behaviour can be proved exactly, then uses
+those qualified mechanisms to approach larger and more realistic adaptive software bodies.
+The central question remains falsifiable:
 
 > Can one lineage diagnose a limitation, construct the tools needed to change itself,
 > adopt a verified improvement, migrate to an initially unknown substrate and continue
@@ -64,51 +65,76 @@ The full evidence is preserved in:
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
 
-## Phase-two integrated result
+## Mealy structural transfer and integration
 
-Phase 2 tested whether the architecture transfers from deterministic binary DFAs to
-deterministic total **Mealy machines**, whose behaviour is an output stream produced during
-interaction.
+M043 rebuilt the exact body, rewrite language, structural tasks, isolated adoption, rollback
+and opaque-native compiler for deterministic total **Mealy machines**. M044 then stopped the
+component-gate sequence and assembled them into one continuous integrated lineage.
 
-M043 qualified the new formal kernel, rewrite language, constructive tasks, isolated
-adoption, exact rollback and opaque-native compiler independently. M044 then deliberately
-stopped adding component gates and assembled those mechanisms into one accelerated bounded
-lineage.
-
-**M044 PASSED IN DEVELOPMENT.** One deterministic lineage:
-
-- started from a two-state Mealy founder;
-- adopted two exact capacity-changing rewrites before migration;
-- reused an acquired abstract tool pattern on the second rewrite;
-- discovered an opaque finite-field substrate through bounded public probes;
-- migrated the complete accepted state into a table-free native scalar DAG;
-- adopted a third exact rewrite from the native-reconstructed parent behaviour;
-- reused an acquired tool pattern after migration;
-- resynthesised a changed exact native body;
-- preserved body, tool registry, portable learning state and causal journal;
-- restored the exact version-three checkpoint after a forced version-four journal fault;
-- reproduced its complete canonical manifest byte-for-byte on an immediate replay within
-  each supported runtime.
+**M044 PASSED IN DEVELOPMENT.** One deterministic lineage completed two rewrites before
+migration, discovered an opaque finite-field substrate, migrated to a table-free native DAG,
+continued learning after migration, resynthesised a changed native body, preserved tools and
+causal state, restored an exact checkpoint after a forced fault and replayed deterministically.
 
 Qualification workflow run `31015992729` passed **755 tests on Python 3.11 and 755 on
 Python 3.13**, together with the complete repository-integrity audit. No job failed and no
 rerun was used.
 
-This is a positive integrated **development** result, not a new canonical result. M042
-remains the only positive canonical continuous-lineage completion. No seed block, hidden
-task bank or canonical M044 workflow was authorised.
+M044 is a positive integrated **development** result, not a new canonical result.
 
-The next construction frontier is no longer another exact finite gate. It is to replace the
-small exhaustive search regime with a scalable, resource-aware, non-exhaustive learner while
-retaining independent validation, causal records and exact rollback wherever exact checks
-remain available.
+## Scalable non-exhaustive continuation
+
+M046 addressed the principal remaining limitation of M042 and M044: useful transformations
+were still found inside small candidate spaces that could be traversed broadly or
+exhaustively.
+
+**M046 PASSED IN DEVELOPMENT.** It reused the exact M043/M044 validation and transaction
+mechanisms but replaced exhaustive candidate search with bounded diagnostic observations,
+evidence-backed proposal generation, ranking from observation fit and causal memory, and a
+separate exact proposal validator.
+
+One lineage:
+
+- completed six accepted adaptive cycles and grew from two to eight states;
+- solved two alternating hidden transformation families;
+- generated only a small recorded fraction of a conservative candidate-space lower bound;
+- never exposed the hidden target body or witness transformation to the generator;
+- passed an exact task-side validator and the disposable M043 validator before adoption;
+- preserved six registered tools, six learning traces and six causal-journal entries;
+- retained causal evidence for successes, exact rejections and dominated proposals;
+- created six verified combined lineage-and-memory checkpoints;
+- restored version six exactly after forced provisional version-seven journal corruption;
+- terminated explicitly for insufficient evidence on a larger two-growth challenge without
+  changing the accepted body;
+- replayed the complete experiment deterministically.
+
+Qualification workflow run `31021072262` passed **770 tests on Python 3.11 in 569.73 seconds
+and 770 tests on Python 3.13 in 585.56 seconds**, together with every repository-integrity
+check. No job failed and no rerun was used.
+
+M046 is a positive integrated **development** result, not canonical evidence. M042 remains
+the only positive canonical continuous-lineage completion.
 
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
 - [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md);
+- [`experiments/M046/PROTOCOL.md`](experiments/M046/PROTOCOL.md);
+- [`results/M046_DEVELOPMENT_RESULT.md`](results/M046_DEVELOPMENT_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
+
+## Current construction frontier
+
+The next direct step is to leave automata as the primary mutable body and build a small real
+modular software architecture. The lineage should diagnose a limiting module, propose code or
+configuration changes, construct or extend tests, run candidates in a disposable sandbox,
+compare them under fixed resources, adopt or restore transactionally and retain successful
+and failed causal evidence for reuse.
+
+This should remain one integrated experiment rather than another sequence of preparatory
+gates. A language model may generate proposals, but it must not control validation or
+adoption.
 
 ## Parallel measurement track
 
@@ -118,8 +144,8 @@ different finite grammar. The remaining distinct optimisation question is whethe
 pre-written resource-aware adaptive allocation can beat that uniform baseline without
 recreating M029's allocation failure.
 
-That experiment remains **M045** and stays separate from M044: a stronger organism cannot
-retroactively validate a proxy, and a proxy failure cannot be hidden inside a larger
+That experiment remains **M045** and stays separate from M044 and M046: a stronger organism
+cannot retroactively validate a proxy, and a proxy failure cannot be hidden inside a larger
 construction result.
 
 ## Reproduce the repository

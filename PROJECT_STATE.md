@@ -4,14 +4,16 @@
 
 ## Authoritative summary
 
-Mira Genesis is a bounded, auditable research program in exact behavioural models.
+Mira Genesis is a bounded, auditable research program in adaptive software lineages.
 
 - **Phase 1 is complete canonically through M042** in deterministic binary DFAs.
-- **Phase 2 has a positive integrated development result through M044** in deterministic
+- **Phase 2 transferred and integrated the architecture through M044** in deterministic
   total Mealy machines.
+- **M046 is a positive integrated development result** for scalable non-exhaustive proposal,
+  selection, validation, adoption, memory, checkpointing and fail-closed termination.
 - **M042 remains the only positive canonical continuous-lineage completion.**
-- The next construction frontier is scalable non-exhaustive continuation, not another chain
-  of exact finite component gates.
+- The next construction frontier is a real modular software body, not another automata gate
+  sequence.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over external systems.
@@ -69,62 +71,101 @@ exact rollback, bounded opaque semantic discovery and table-free native synthesi
 
 **M044 PASSED IN DEVELOPMENT.**
 
-Instead of building another rig, M044 directly composed the qualified M043 mechanisms into
-one deterministic bounded lineage:
-
-1. a two-state founder adopted an exact rewrite and grew to three states;
-2. it adopted a second rewrite, grew to four states and reused an acquired abstract effect
-   pattern;
-3. it discovered one opaque finite-field substrate by bounded public probes;
-4. it migrated the complete accepted snapshot into an exact table-free native scalar DAG;
-5. it continued from the native-reconstructed behaviour, adopted a third rewrite and grew
-   to five states;
-6. it reused an acquired effect pattern after migration;
-7. it resynthesised a changed exact native program on the same substrate;
-8. it preserved three tool records, three portable learning traces and three hash-chained
-   journal entries;
-9. a valid provisional version-four adoption was deliberately corrupted in its journal and
-   restored the exact version-three checkpoint;
-10. the complete experiment immediately replayed to byte-identical canonical manifest bytes
-    within each supported Python runtime.
+M044 directly composed the qualified M043 mechanisms into one deterministic bounded lineage.
+It completed two accepted rewrites before migration, discovered an opaque finite-field
+substrate, migrated into a table-free native DAG, completed another accepted rewrite from
+native-reconstructed behaviour, resynthesised a changed native body, preserved three tools,
+learning traces and journal entries, restored version three after a forced version-four
+journal fault and replayed deterministically.
 
 Qualification workflow run `31015992729` passed:
 
 - **755 tests on Python 3.11** in 421.14 seconds;
 - **755 tests on Python 3.13** in 580.77 seconds;
-- clean imports;
-- no orphan modules;
-- dependency consistency;
+- repository integrity;
 - no failed job and no rerun.
-
-The generic CI workflow did not archive a cross-job manifest artifact, so M044 does not claim
-a separately preserved byte-for-byte comparison between the two Python jobs. Both versions
-executed the complete lineage twice and passed the same permanent assertions.
 
 M044 is a positive integrated development result, not a canonical run. It selected no seed,
 froze no hidden task bank and authorised no canonical workflow.
 
 See [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md).
 
+## Phase 3 — scalable non-exhaustive continuation
+
+### M046 — integrated scalable lineage
+
+**M046 PASSED IN DEVELOPMENT.**
+
+M046 reused the exact Mealy body, rewrite certificates, disposable validator, transaction
+store, journal and rollback mechanisms already qualified by M043 and integrated by M044. It
+replaced broad exhaustive candidate search with a bounded proposal mechanism driven by
+partial diagnostic observations and causal memory.
+
+One deterministic lineage:
+
+1. started from the two-state M043 founder;
+2. faced six hidden structural tasks from alternating one-edit and two-edit families;
+3. generated only a small evidence-backed set of capacity-changing proposals;
+4. ranked proposals using observation fit plus causal success and failure memory;
+5. submitted proposals to an exact validator outside the generator;
+6. replayed admitted traces again in the disposable M043 validator;
+7. adopted six transformations and grew from two to eight states;
+8. preserved six registered tools, six learning traces and six journal entries;
+9. created six verified combined lineage-and-proposal-memory checkpoints;
+10. restored the exact version-six combined checkpoint after forced provisional version-seven
+    journal corruption;
+11. faced a two-growth challenge outside the fixed proposal surface;
+12. terminated explicitly for insufficient evidence without changing the accepted body;
+13. replayed the complete experiment deterministically.
+
+The generator contains no exact-equivalence call and receives neither the hidden target body
+nor a witness transformation. Each cycle records a conservative candidate-space lower bound,
+the generated candidate count, the explored fraction and an explicit non-enumeration marker.
+The experiment fails closed on resource exhaustion, excessive exploration or insufficient
+validation evidence.
+
+Qualification workflow run `31021072262` on marker commit
+`872f90060902cea2b94be653845036340b91cde3` passed:
+
+- **770 tests on Python 3.11** in 569.73 seconds;
+- **770 tests on Python 3.13** in 585.56 seconds;
+- clean imports;
+- no orphan modules;
+- dependency consistency;
+- no failed job and no rerun.
+
+M046 is a positive integrated development result, not a canonical run. It selected no seed,
+froze no hidden bank and authorised no canonical workflow.
+
+See:
+
+- [`experiments/M046/PROTOCOL.md`](experiments/M046/PROTOCOL.md);
+- [`experiments/M046/DEVELOPMENT_QUALIFICATION.md`](experiments/M046/DEVELOPMENT_QUALIFICATION.md);
+- [`results/M046_DEVELOPMENT_RESULT.md`](results/M046_DEVELOPMENT_RESULT.md).
+
 ## Current construction frontier
 
-The architecture is now integrated across two exact formal domains. The remaining central
-limitation is the laboratory's reliance on small finite spaces and exhaustive candidate
-search.
+M046 crosses the immediate exhaustive-search boundary, but the mutable body is still a formal
+Mealy machine and the proposal language is fixed. The next integrated construction should
+move to a small real modular software architecture with modules such as interpretation,
+working memory, durable memory, planning, proposal generation, tool selection, execution,
+critique, resource allocation, validation and orchestration.
 
-The next construction experiment should be **M046**, because M045 remains reserved for the
-measurement track. M046 should be one integrated scalable experiment, not another long
-sequence of preparatory gates. It must investigate:
+The next experiment should require one lineage to:
 
-- learned proposal generation without complete candidate enumeration;
-- explicit resource allocation and stopping policies;
-- approximate search followed by independent exact or high-confidence validation;
-- longer horizons and larger bodies;
-- causal provenance under partial observability;
-- checkpointed or exact rollback;
-- fail-closed termination when evidence is insufficient.
+- diagnose which module limits performance on a new task family;
+- propose a code or configuration transformation without receiving the solution;
+- construct or extend the required tests;
+- execute the candidate in a disposable sandbox;
+- compare the incumbent and candidate under fixed resources;
+- adopt, reject or restore transactionally;
+- preserve successful transformations and causal failure evidence for reuse;
+- terminate without adoption when independent evidence is insufficient.
 
-## Canonical result map
+This should remain one direct integrated experiment. New component proofs are justified only
+when they unblock a real adaptive capability.
+
+## Canonical and development result map
 
 | Experiment | Status | Authoritative interpretation |
 |---|---|---|
@@ -138,6 +179,7 @@ sequence of preparatory gates. It must investigate:
 | M042 | **POSITIVE CANONICAL** | All ten bounded completion gates passed in one frozen continuous lineage. |
 | M043 | **Q1–Q5 PASSED IN DEVELOPMENT** | Independent Mealy component qualification; Q6 absorbed by M044. |
 | M044 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Three-cycle Mealy lineage, opaque migration, post-migration learning, exact rollback and immediate replay. |
+| M046 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Six-cycle non-exhaustive proposal and adoption lineage with bounded resources, causal success/failure memory, verified checkpoints, exact rollback and insufficient-evidence termination. |
 
 ## Parallel measurement track — M045
 
