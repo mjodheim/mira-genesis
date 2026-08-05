@@ -2,8 +2,8 @@
 
 ## Current phase
 
-**Qualification gates Q1, Q2, Q3 and Q4 passed in development; Q5 is active. No canonical
-result exists.**
+**Qualification gates Q1, Q2, Q3, Q4 and Q5 passed in development; Q6 is active. No
+canonical result exists.**
 
 M043 begins the second research phase after the positive M042 bounded completion. It tests
 structural-domain transfer from deterministic binary DFAs to deterministic total Mealy
@@ -85,22 +85,54 @@ tests on Python 3.13** and all integrity checks. The prior run `31001191874` pas
 matrices but exposed a static orphan-edge declaration for the dynamically launched worker;
 that repository-integrity defect was corrected without changing Q4 behaviour.
 
-## Active work — Q5
+## Q5 — opaque-native migration
 
-The next boundary is a genuinely opaque Mealy-native substrate. Q5 must establish that:
+Q5 is implemented across:
 
-- native instructions and storage semantics are not supplied as a renamed source table;
-- bounded public probes are sufficient to recover the required operational semantics;
-- exact native synthesis reproduces the accepted Mealy behaviour;
-- source and native identities remain distinct and auditable;
-- malformed probes, partial discoveries and wrong native programs fail closed;
-- no Q1/Q2 source-body encoding is smuggled into the native representation.
+- `metamorphosis/m043_opaque_substrate.py`;
+- `metamorphosis/m043_native_program.py`;
+- `metamorphosis/m043_native_verify.py`;
+- `metamorphosis/m043_migration.py`;
+- `scripts/run_m043_q5_qualification.py`.
+
+The protocol is specified in [`Q5_OPAQUE_NATIVE.md`](Q5_OPAQUE_NATIVE.md). It establishes:
+
+- three opaque prime-field substrates whose opcode identifiers and semantic assignments
+  differ while public descriptors reveal only arity and cost;
+- recovery of stable addition, multiplication and negation semantics through bounded
+  repeated public probes only;
+- explicit rejection of missing, unstable and under-budget substrate discoveries;
+- table-free native synthesis as a reachable scalar DAG of unary and binary opaque calls;
+- finite-field Lagrange interpolation for next state and emitted output;
+- exact reconstruction of every indexed state/symbol pair and exact Mealy equivalence;
+- strict rejection of extra table fields, forward references, unreachable payload nodes,
+  wrong substrates and wrong discovery bindings;
+- independent recomputation of every synthesis-certificate field;
+- a migration bundle bound to the complete Q4 snapshot, body, tool registry, portable
+  learning state and causal journal;
+- no selected seed, hidden task bank or canonical workflow authority.
+
+Qualification workflow run `31008963611` passed **745 tests on Python 3.11** in 535.16
+seconds, **745 tests on Python 3.13** in 581.31 seconds and every repository-integrity
+check. No job failed and no rerun was used.
+
+## Active work — Q6
+
+The final M043 qualification boundary is complete deterministic development replay. Q6 must
+regenerate from one frozen founder-side specification:
+
+- the exact Mealy kernel identities;
+- the Q2 rewrite traces and certificates;
+- the Q3 constructive catalogue and control outcomes;
+- the Q4 accepted snapshot, tool registry, learning state and causal journal;
+- the Q5 public-probe discovery records, native DAGs, certificates and migration bundles;
+- one complete manifest whose bytes and digests agree on Python 3.11 and Python 3.13.
 
 No hidden task bank, development seed block or canonical workflow is authorised yet.
 
 ## Claim boundary
 
 M042 remains the only positive canonical continuous-lineage completion result. M043 does
-not widen or replace it. Q1–Q4 qualify the Mealy substrate, rewrite language, honest task
-availability and safe transactional adoption only; they do not yet establish opaque-native
-migration or post-migration plasticity in that domain.
+not widen or replace it. Q1–Q5 qualify the Mealy substrate, rewrite language, constructive
+tasks, transactional adoption and exact opaque-native migration only. They do not yet
+establish a complete seed-only replay or continuous post-migration learning in this domain.

@@ -72,9 +72,9 @@ successful in one DFA representation.
 M043 begins with deterministic total **Mealy machines**, where behaviour is an output
 stream produced during interaction instead of a final accept/reject bit. Exact
 equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
-rewrite language, hidden tasks and opaque substrate must be rebuilt independently.
+rewrite language, hidden tasks and opaque substrate were rebuilt independently.
 
-Qualification gates **Q1, Q2, Q3 and Q4 are complete in development**:
+Qualification gates **Q1, Q2, Q3, Q4 and Q5 are complete in development**:
 
 - Q1 provides the independent exact Mealy kernel: strict immutable representation,
   canonical state-renaming-invariant serialisation, exact product equivalence,
@@ -89,15 +89,19 @@ Qualification gates **Q1, Q2, Q3 and Q4 are complete in development**:
 - Q4 provides a strict full-lineage candidate package, replay in a disposable process with
   no hidden-target access, exact evaluator-side acceptance, immutable versioned snapshots
   and byte-identical rollback after forced body, registry, learning-state and journal
-  faults.
+  faults;
+- Q5 provides three genuinely opaque native field substrates, bounded repeated public
+  probing, exact algebraic Mealy synthesis as a table-free scalar DAG, independent
+  certificate recomputation and migration bundles bound to the complete Q4 lineage state.
 
-Qualification workflow run `31001898372` passed **705 tests on Python 3.11 and 705 on
-Python 3.13**, together with the complete repository-integrity audit.
+Qualification workflow run `31008963611` passed **745 tests on Python 3.11 and 745 on
+Python 3.13**, together with the complete repository-integrity audit. No job failed and no
+rerun was used.
 
-The active boundary is **Q5**: define a genuinely opaque Mealy-native substrate, recover its
-undeclared operational semantics only through bounded public probes and synthesize an exact
-native implementation without smuggling the source transition/output tables into the native
-representation.
+The active boundary is **Q6**: regenerate the complete development chain from founder-side
+inputs through task construction, certified rewrites, isolated adoption, lineage state,
+opaque semantic discovery, native DAG synthesis and migration. All final bytes and digests
+must agree on Python 3.11 and Python 3.13.
 
 No hidden task bank, seed block or canonical workflow is authorised yet.
 
@@ -108,6 +112,7 @@ See:
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
 - [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
+- [`experiments/M043/Q5_OPAQUE_NATIVE.md`](experiments/M043/Q5_OPAQUE_NATIVE.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Parallel measurement track

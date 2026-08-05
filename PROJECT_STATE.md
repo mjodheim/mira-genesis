@@ -26,13 +26,13 @@ intelligence, consciousness or production authority.
 
 ### Phase-two scientific status
 
-**M043 qualification gates Q1, Q2, Q3 and Q4 passed in development; Q5 is active. No
+**M043 qualification gates Q1, Q2, Q3, Q4 and Q5 passed in development; Q6 is active. No
 canonical result exists.**
 
 M043 tests structural-domain transfer from deterministic language acceptors to
 deterministic total Mealy machines. The body, mutation language, hidden task generator and
-opaque native representation must be rebuilt independently. Only domain-neutral journal,
-serialisation, sandbox, adoption and rollback infrastructure may be reused.
+opaque native representation were rebuilt independently. Only domain-neutral journal,
+serialisation, sandbox, adoption and rollback infrastructure was reused.
 
 Q1 established the independent formal substrate: strict immutable representation,
 state-renaming-invariant canonical serialisation, exact product equivalence, deterministic
@@ -63,10 +63,23 @@ hash-chained journal. Forced corruption of the body, registry, learning state an
 restores the exact prior checkpoint bytes and digest. Final workflow run `31001898372`
 passed 705 tests on Python 3.11, 705 on Python 3.13 and every integrity check.
 
-The active boundary is Q5: discover a genuinely opaque Mealy-native substrate through
-bounded public probes and synthesize an exact native implementation without embedding a
-renamed source transition/output table. No hidden task bank, seed block or canonical
-workflow is authorised yet.
+Q5 established opaque-native migration. Three prime-field substrates expose only shuffled
+opcode identities, arity, cost and public probe behaviour. Repeated bounded observations
+recover stable addition, multiplication and negation; incomplete or unstable substrates
+fail explicitly. The accepted Q4 body is compiled by finite-field interpolation into a
+reachable scalar DAG with only constants, state/symbol registers and unary/binary opaque
+calls. No transition/output table fields or unreachable payload nodes are permitted. The
+native program reconstructs the exact indexed source body, and an independent verifier
+recomputes every synthesis-certificate field. The migration bundle remains bound to the
+complete Q4 snapshot, registry, learning state and journal. Workflow run `31008963611`
+passed 745 tests on Python 3.11, 745 on Python 3.13 and every integrity check, with no failed
+job or rerun.
+
+The active boundary is Q6: reproduce the complete Q1→Q5 development chain from one frozen
+founder-side specification and obtain byte-identical manifests, task/catalogue identities,
+rewrite traces, adoption records, lineage state, opaque discoveries, native DAGs,
+certificates and migration bundles on Python 3.11 and Python 3.13. No hidden task bank, seed
+block or canonical workflow is authorised yet.
 
 ## Canonical result map
 
@@ -80,7 +93,7 @@ workflow is authorised yet.
 | M040 | **POSITIVE CANONICAL** | Exact unknown-substrate migration followed by an exact post-migration rewrite. |
 | M041 | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because no admissible tool-dependent cycle-3 target existed. |
 | M042 | **POSITIVE CANONICAL** | Constructive availability repaired the M041 failure; all ten audited gates are true in one continuous frozen lineage. |
-| M043 | Q1–Q4 PASSED IN DEVELOPMENT | Exact Mealy kernel, certified rewrites, honest constructive tasks and transactional adoption/rollback qualified; Q5 opaque-native substrate active; no canonical result. |
+| M043 | Q1–Q5 PASSED IN DEVELOPMENT | Exact Mealy formalism, rewrites, constructive tasks, transactional adoption and opaque-native migration qualified; Q6 complete replay active; no canonical result. |
 
 M001–M011 remain historical and not independently verifiable in the current repository.
 M017–M037 remain development, failure and integration evidence; their records are not
@@ -131,25 +144,30 @@ Q3 fixes exact structural incapacity, target-blind constructive search, exact tr
 mandatory growth exploitation, bounded observations, six equal-budget control surfaces and
 explicit negative termination.
 
-Q4 fixes:
+Q4 fixes strict full-lineage commitments, disposable replay without hidden-target access,
+exact evaluator acceptance, immutable versioned state, post-commit audit and byte-identical
+rollback after four forced component faults.
 
-- strict full-lineage candidate commitments;
-- fresh disposable replay without hidden-target access;
-- exact evaluator-side target acceptance and parent-incapacity confirmation;
-- immutable versioned snapshots for body, registry, learning state and journal;
-- commit only after complete post-commit audit;
-- byte-identical rollback after four forced component faults;
-- explicit restoration to archived version zero;
-- deterministic qualification identities independent of runtime process identifiers.
+Q5 fixes:
 
-Q5 must now establish:
+- opaque prime-field instructions with undeclared semantic assignments;
+- bounded public-probe recovery of a stable field basis;
+- three distinct positive substrate identities and role assignments;
+- explicit rejection of incomplete, unstable and under-budget discoveries;
+- table-free finite-field Lagrange DAG synthesis;
+- exact indexed-body reconstruction and exact Mealy equivalence;
+- strict absence of transition/output table fields and unreachable payload nodes;
+- independent certificate recomputation;
+- full Q4 snapshot, body, registry, learning-state and journal binding.
 
-- a native representation with undeclared operational semantics;
-- bounded public probes sufficient for semantic discovery;
-- exact native synthesis of the accepted Mealy behaviour;
-- distinct, auditable source and native identities;
-- fail-closed malformed probes, partial discovery and wrong native programs;
-- proof that native storage does not contain a renamed source body.
+Q6 must now establish:
+
+- one deterministic founder-side development specification;
+- complete regeneration of Q1–Q5 decisions and evidence;
+- exact manifests for tasks, traces, tools, learning state, journals, discoveries and native
+  programs;
+- byte-identical replay records on Python 3.11 and Python 3.13;
+- explicit negative termination if any identity differs.
 
 See:
 
@@ -158,6 +176,7 @@ See:
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
 - [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
+- [`experiments/M043/Q5_OPAQUE_NATIVE.md`](experiments/M043/Q5_OPAQUE_NATIVE.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Measurement track

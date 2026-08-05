@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_one_bounded_completion_positive_phase_two_q5_active
+status: phase_one_bounded_completion_positive_phase_two_q6_active
 
 active_research_question: >-
   Which Genesis mechanisms transfer across formal behavioural domains, and which were
@@ -100,7 +100,7 @@ canonical_results:
     retuned_after_freeze: false
 
 phase_two:
-  status: q1_q2_q3_q4_passed_q5_active
+  status: q1_q2_q3_q4_q5_passed_q6_active
   active_experiment: M043
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
@@ -207,17 +207,64 @@ phase_two:
       focused_falsification_tests: 33
       initial_integrity_only_failure_run: 31001191874
       functional_test_failures: 0
-  current_gate: Q5_opaque_native_substrate
+    Q5:
+      status: passed_in_development
+      implementation:
+        - metamorphosis/m043_opaque_substrate.py
+        - metamorphosis/m043_native_program.py
+        - metamorphosis/m043_native_verify.py
+        - metamorphosis/m043_migration.py
+      specification: experiments/M043/Q5_OPAQUE_NATIVE.md
+      runner: scripts/run_m043_q5_qualification.py
+      qualification_ci_workflow_run: 31008963611
+      repository_tests_python_311: 745
+      repository_tests_python_313: 745
+      repository_integrity_passed: true
+      functional_test_failures: 0
+      ci_reruns: 0
+      field_modulus: 5
+      public_probe_repetitions: 3
+      public_probe_budget: 512
+      positive_substrate_families: 3
+      positive_probe_calls: [345, 345, 360]
+      distinct_machine_identities: true
+      distinct_opaque_role_assignments: true
+      recovered_core_roles:
+        - field_addition
+        - field_multiplication
+        - additive_negation
+      missing_core_role_rejected: true
+      unstable_addition_rejected: true
+      unstable_multiplication_rejected: true
+      probe_budget_exhaustion_rejected: true
+      synthesis_method: finite_field_lagrange_scalar_dag
+      native_call_arity_maximum: 2
+      every_native_node_reachable: true
+      transition_output_table_fields_present: false
+      source_exact_body_bytes_embedded: false
+      exact_indexed_body_reconstruction: true
+      exact_product_equivalence: true
+      independent_certificate_recomputation: true
+      migration_bound_to_complete_q4_snapshot: true
+      q4_components_bound:
+        - accepted_body
+        - tool_registry
+        - portable_learning_state
+        - causal_journal
+      selected_seed: false
+      hidden_task_bank_authorised: false
+  current_gate: Q6_complete_development_replay
   next_required_properties:
-    - undeclared_native_instruction_semantics
-    - bounded_public_probe_discovery
-    - exact_native_synthesis
-    - distinct_source_and_native_identities
-    - fail_closed_malformed_probes
-    - fail_closed_partial_discovery
-    - fail_closed_wrong_native_programs
-    - no_renamed_source_transition_or_output_tables
-    - permanent_q5_falsification_tests
+    - one_frozen_founder_side_development_specification
+    - complete_q1_to_q5_regeneration
+    - deterministic_task_catalogue_and_control_identities
+    - deterministic_rewrite_trace_and_certificate_identities
+    - deterministic_adoption_and_lineage_state_identities
+    - deterministic_opaque_discovery_identities
+    - deterministic_native_program_and_migration_bundle_identities
+    - byte_identical_manifest_python_311_python_313
+    - explicit_negative_termination_on_any_divergence
+    - permanent_q6_falsification_tests
   canonical_workflow_authorised: false
   hidden_task_bank_authorised: false
   development_seed_block_authorised: false

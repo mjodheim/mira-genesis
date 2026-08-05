@@ -41,7 +41,8 @@ formal object it rewrites.
 
 ### M043 — deterministic Mealy qualification
 
-**Status: Q1, Q2, Q3 and Q4 passed in development; Q5 active. No canonical result exists.**
+**Status: Q1, Q2, Q3, Q4 and Q5 passed in development; Q6 active. No canonical result
+exists.**
 
 M043 moves from language acceptors to deterministic reactive transducers:
 
@@ -66,8 +67,8 @@ body encoding or executable `flip/grow/redirect` macro.
 | Q2 — capacity-changing rewrite language | **PASSED IN DEVELOPMENT** | Exact physical/reachable state effects, neutral reachable-capacity growth, later specialisation and exact parent-bound trace replay passed permanent falsification tests; CI run `30992682534` passed 643 tests on Python 3.11 and 3.13 plus integrity. |
 | Q3 — constructively available hidden tasks | **PASSED IN DEVELOPMENT** | Exact minimal-state incapacity, target-blind constructive reachability, six distinct equal-budget controls and explicit negative termination passed permanent tests; CI run `30997105933` passed 672 tests on Python 3.11 and 3.13 plus integrity. |
 | Q4 — isolated adoption and rollback | **PASSED IN DEVELOPMENT** | Disposable replay without hidden-target access, exact evaluator acceptance, versioned adoption and byte-identical rollback after four forced component faults passed permanent tests; CI run `31001898372` passed 705 tests on Python 3.11 and 3.13 plus integrity. |
-| Q5 — opaque native substrate | **ACTIVE** | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
-| Q6 — complete development replay | NOT STARTED | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
+| Q5 — opaque native substrate | **PASSED IN DEVELOPMENT** | Bounded public probes recovered three distinct opaque field bases; table-free Lagrange DAG synthesis reconstructed the exact accepted Mealy body with independently recomputed certificates; CI run `31008963611` passed 745 tests on Python 3.11 and 3.13 plus integrity. |
+| Q6 — complete development replay | **ACTIVE** | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
 
 Q3 excludes the M041 failure mode by construction. A task cannot enter its development
 catalogue unless the parent has an exact structural-incapacity certificate and a target-blind
@@ -79,9 +80,14 @@ accepted rewrite versions the body, tool registry, learning state, target commit
 hash-chained journal. Forced corruption of each mutable component restores the exact prior
 checkpoint bytes and digest.
 
-Q5 now moves the accepted Mealy body into a genuinely opaque native substrate. Native
-semantics must be discovered experimentally through bounded probes, and exact synthesis may
-not contain a renamed copy of the source transition or output tables.
+Q5 migrates the accepted Q4 body into three genuinely opaque native field substrates.
+Semantic roles are recovered through bounded repeated probes, while native next-state and
+output functions are compiled into reachable scalar DAGs of opaque unary and binary calls.
+The native representation contains no transition/output table fields or unreachable payload
+nodes, and every certificate is independently recomputed from source and native execution.
+
+Q6 now closes rig qualification by reproducing the entire Q1→Q5 development chain and its
+final manifest identically across both required Python versions.
 
 M043 is a rig-qualification experiment, not a new canonical ten-gate claim. A later
 continuous Mealy lineage would require a separate experiment, fresh frozen protocol and
@@ -92,7 +98,8 @@ See:
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
-- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md).
+- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
+- [`experiments/M043/Q5_OPAQUE_NATIVE.md`](experiments/M043/Q5_OPAQUE_NATIVE.md).
 
 ## Parallel measurement track
 
