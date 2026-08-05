@@ -56,7 +56,7 @@ def test_migrated_body_is_real_node_esm_without_python_delegation(manifest) -> N
     assert mapping["native_module_count_after_migration"] == 9
     assert mapping["semantic_delegation_to_python"] is False
     assert mapping["native_migration_all_retained_passed"] is True
-    assert mapping["native_migration_worker_pid"] > 0
+    assert mapping["native_migration_disposable_process"] is True
 
 
 def test_pre_migration_skill_remains_useful_after_migration(manifest) -> None:
