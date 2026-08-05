@@ -2,8 +2,8 @@
 
 ## Current phase
 
-**Qualification gates Q1 and Q2 passed in development; Q3 is active. No canonical result
-exists.**
+**Qualification gates Q1, Q2 and Q3 passed in development; Q4 is active. No canonical
+result exists.**
 
 M043 begins the second research phase after the positive M042 bounded completion. It tests
 structural-domain transfer from deterministic binary DFAs to deterministic total Mealy
@@ -52,26 +52,56 @@ neutral duplication across 64 deterministic random machines.
 Qualification workflow run `30992682534` passed the complete repository with **643 tests on
 Python 3.11**, **643 tests on Python 3.13** and a successful integrity audit.
 
-## Active work — Q3
+## Q3 — constructively available hidden tasks
 
-The next boundary is constructively available hidden Mealy tasks. Before admission, every
-task must have:
+The Q3 task model and target-blind search are implemented in:
 
-- an exact certificate that the declared parent is structurally incapable of the target;
-- at least one admissible Q2 trace reaching the exact target within frozen depth and node
-  budgets;
-- rewrite arguments that do not directly encode the target table;
-- meaningful equal-budget fresh, unchanged-parent, output-only, learning-state and tool
-  controls;
-- explicit deterministic negative termination when no admissible task exists.
+- `metamorphosis/m043_task_model.py`;
+- `metamorphosis/m043_task_search.py`;
+- `metamorphosis/m043_tasks.py`;
+- `scripts/run_m043_q3_catalogue.py`.
 
-M041's constructive-unavailability failure must be impossible after bank admission, not
-merely unlikely. No hidden task bank, development seed block or canonical workflow is
-authorised yet.
+The protocol is specified in
+[`Q3_CONSTRUCTIVE_TASKS.md`](Q3_CONSTRUCTIVE_TASKS.md). It establishes:
+
+- an exact minimal-state certificate that the declared parent cannot express an admitted
+  target within its current capacity;
+- deterministic target-blind breadth-first search over Q2 operations;
+- an exact parent-bound replay trace for every admitted target;
+- mandatory growth followed by actual use of the new reachable state;
+- bounded public observations and commitments without exposing target tables or witness
+  operations;
+- six causally distinct equal-budget control surfaces;
+- a seed-free three-entry development catalogue;
+- explicit `insufficient` termination when no admissible catalogue can be constructed.
+
+The development parent has two minimal states. Every admitted task in the qualified
+catalogue requires three minimal states and is reached within depth 2, 512 visited nodes and
+a four-state cap. No task seed was selected and no hidden target body or witness trace was
+exported to the public task surface.
+
+Qualification workflow run `30997105933` passed the complete repository with **672 tests on
+Python 3.11**, **672 tests on Python 3.13** and a successful integrity audit. No failed job
+or rerun was needed.
+
+## Active work — Q4
+
+The next boundary is isolated validation, versioned adoption and exact rollback for Mealy
+bodies. Q4 must establish that:
+
+- candidates execute in fresh disposable resource-limited workspaces;
+- an independent validator checks exact parent identity, totality, protected regressions,
+  strict improvement and exact target behaviour;
+- candidate code has no release authority;
+- accepted source bodies, tool registries and causal journals are versioned and archived;
+- a fixed invalid provisional rewrite is rejected;
+- rollback restores the exact accepted body, registry and journal head.
+
+No hidden task bank, development seed block or canonical workflow is authorised yet.
 
 ## Claim boundary
 
 M042 remains the only positive canonical continuous-lineage completion result. M043 does
-not widen or replace it. Q1 and Q2 qualify the Mealy substrate and rewrite language only;
-they do not yet establish hidden-task construction, isolated adoption, migration or
-post-migration plasticity in that domain.
+not widen or replace it. Q1–Q3 qualify the Mealy substrate, rewrite language and honest task
+availability only; they do not yet establish isolated adoption, opaque-substrate migration
+or post-migration plasticity in that domain.
