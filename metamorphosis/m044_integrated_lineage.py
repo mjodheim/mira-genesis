@@ -8,7 +8,7 @@ rewrite -> native resynthesis -> forced transactional rollback -> exact replay.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 import hashlib
 import json
 from typing import Mapping
@@ -26,8 +26,8 @@ from metamorphosis.m043_lineage_state import (
     learning_state_digest,
     tool_registry_digest,
 )
+from metamorphosis.m043_mealy import MealyMachine, mealy_digest, minimize_mealy
 from metamorphosis.m043_migration import (
-    NativeMigrationBundle,
     audit_native_migration_bundle,
     build_native_migration_bundle,
 )
@@ -36,14 +36,25 @@ from metamorphosis.m043_opaque_substrate import (
     discover_field_substrate,
     make_development_positive_machine,
 )
-from metamorphosis.m043_rewrite import exact_body_digest, trace_digest
+from metamorphosis.m043_rewrite import (
+    RewriteError,
+    apply_rewrite,
+    exact_body_digest,
+    trace_digest,
+)
 from metamorphosis.m043_task_model import (
     AdmittedConstructiveTask,
-    CatalogueStatus,
+    ControlArm,
+    HiddenTargetEvaluator,
+    PublicTaskView,
     SearchBudget,
+    StructuralIncapacityCertificate,
+    control_capabilities,
+    prove_structural_incapacity,
 )
 from metamorphosis.m043_task_search import (
-    build_development_catalogue,
+    blind_constructive_search,
+    propose_operation_paths,
     q3_development_parent,
 )
 
@@ -71,7 +82,7 @@ class M044Protocol:
     pre_migration_cycles: int = 2
     post_migration_cycles: int = 1
     search_depth: int = 2
-    search_nodes: int = 4_096
+    search_nodes: int = 1_024
     maximum_states: int = 6
     catalogue_candidates: int = 96
     observation_limit: int = 64
@@ -83,7 +94,9 @@ class M044Protocol:
         if self.schema != PROTOCOL_SCHEMA:
             raise IntegratedLineageError("unsupported M044 protocol schema")
         if self.pre_migration_cycles != 2 or self.post_migration_cycles != 1:
-            raise IntegratedLineageError("M044 fixes exactly two pre- and one post-migration cycle")
+            raise IntegratedLineageError(
+                "M044 fixes exactly two pre- and one post-migration cycle"
+            )
         for name, value in (
             ("search_depth", self.search_depth),
             ("search_nodes", self.search_nodes),
@@ -98,7 +111,9 @@ class M044Protocol:
         if self.opaque_family != 0:
             raise IntegratedLineageError("M044 fixes opaque development family zero")
         if self.rollback_fault != FaultKind.JOURNAL.value:
-            raise IntegratedLineageError("M044 fixes a journal-corruption rollback probe")
+            raise IntegratedLineageError(
+                "M044 fixes a journal-corruption rollback probe"
+            )
 
     def budget(self) -> SearchBudget:
         return SearchBudget(
@@ -255,24 +270,135 @@ class IntegratedManifest:
         return _canonical_json(self.to_dict())
 
     def digest(self) -> str:
-        return hashlib.sha256(b"m044-manifest-v1\x00" + self.to_bytes()).hexdigest()
+        return hashlib.sha256(
+            b"m044-manifest-v1\x00" + self.to_bytes()
+        ).hexdigest()
 
 
 def _catalogue_digest(value: Mapping[str, object]) -> str:
     return _domain_digest(b"m044-catalogue-v1\x00", value)
 
 
-def _choose_task(snapshot: LineageSnapshot, protocol: M044Protocol) -> tuple[object, AdmittedConstructiveTask]:
-    catalogue = build_development_catalogue(
-        snapshot.accepted_body,
-        budget=protocol.budget(),
-        minimum_entries=1,
-        maximum_candidates=protocol.catalogue_candidates,
-        observation_limit=protocol.observation_limit,
+def _sequential_incapacity(
+    parent: MealyMachine, target: MealyMachine
+) -> StructuralIncapacityCertificate:
+    canonical_parent = minimize_mealy(parent)
+    if canonical_parent.n_states != parent.n_states:
+        raise IntegratedLineageError(
+            "M044 parent contains redundant physical capacity"
+        )
+    base = prove_structural_incapacity(canonical_parent, target)
+    return replace(
+        base,
+        parent_exact_digest=exact_body_digest(parent),
+        parent_physical_states=parent.n_states,
+        parent_minimal_states=canonical_parent.n_states,
     )
-    if catalogue.status is not CatalogueStatus.QUALIFIED or not catalogue.entries:
-        raise IntegratedLineageError("M044 could not construct the next exact task")
-    return catalogue, catalogue.entries[0]
+
+
+def _m044_task_id(
+    snapshot: LineageSnapshot,
+    target_commitment: str,
+    protocol: M044Protocol,
+) -> str:
+    return _domain_digest(
+        b"m044-task-id-v1\x00",
+        {
+            "schema": "m044-task-id-v1",
+            "protocol_digest": protocol.digest(),
+            "lineage_version": snapshot.version,
+            "parent_body_digest": exact_body_digest(snapshot.accepted_body),
+            "target_commitment": target_commitment,
+        },
+    )
+
+
+def _choose_task(
+    snapshot: LineageSnapshot,
+    protocol: M044Protocol,
+    *,
+    include_controls: bool = True,
+) -> tuple[Mapping[str, object], AdmittedConstructiveTask]:
+    parent = snapshot.accepted_body
+    surfaces = control_capabilities()
+    candidates_considered = 0
+
+    for path in propose_operation_paths(parent, surfaces[ControlArm.COMPLETE]):
+        if path.source != "lineage_composed_split_tool" or len(path.operations) != 2:
+            continue
+        candidates_considered += 1
+        if candidates_considered > protocol.catalogue_candidates:
+            break
+        target = parent
+        try:
+            for operation in path.operations:
+                target, _ = apply_rewrite(target, operation)
+                if target.n_states > protocol.maximum_states:
+                    raise RewriteError("M044 candidate exceeds the fixed state ceiling")
+            incapacity = _sequential_incapacity(parent, target)
+        except (RewriteError, ValueError, IntegratedLineageError):
+            continue
+
+        evaluator = HiddenTargetEvaluator(
+            target, observation_limit=protocol.observation_limit
+        )
+        complete = blind_constructive_search(
+            parent,
+            evaluator,
+            protocol.budget(),
+            surfaces[ControlArm.COMPLETE],
+        )
+        if not complete.exact or complete.trace is None:
+            continue
+
+        controls = []
+        if include_controls:
+            for arm in (
+                ControlArm.UNCHANGED_PARENT,
+                ControlArm.LEARNING_STATE_ABLATED,
+                ControlArm.TOOL_ABLATED,
+            ):
+                controls.append(
+                    blind_constructive_search(
+                        parent,
+                        HiddenTargetEvaluator(
+                            target, observation_limit=protocol.observation_limit
+                        ),
+                        protocol.budget(),
+                        surfaces[arm],
+                    )
+                )
+
+        commitment = mealy_digest(target, minimise=True)
+        task = AdmittedConstructiveTask(
+            public=PublicTaskView(
+                schema="m044-public-task-v1",
+                task_id=_m044_task_id(snapshot, commitment, protocol),
+                parent_exact_digest=exact_body_digest(parent),
+                target_commitment=commitment,
+                input_alphabet=parent.input_alphabet,
+                output_alphabet=parent.output_alphabet,
+                observation_limit=protocol.observation_limit,
+                search_budget=protocol.budget(),
+            ),
+            incapacity=incapacity,
+            constructive_outcome=complete,
+            controls=tuple(controls),
+            target_minimal_states=minimize_mealy(target).n_states,
+            evaluator=evaluator,
+        )
+        catalogue = {
+            "schema": "m044-single-task-catalogue-v1",
+            "protocol_digest": protocol.digest(),
+            "lineage_version": snapshot.version,
+            "candidates_considered": candidates_considered,
+            "task_digest": task.digest(),
+            "control_arms": [control.arm.value for control in controls],
+            "explicit_negative_termination": False,
+        }
+        return catalogue, task
+
+    raise IntegratedLineageError("M044 could not construct the next exact task")
 
 
 def _control_nodes(task: AdmittedConstructiveTask, arm: str) -> int:
@@ -315,9 +441,13 @@ def _adopt_cycle(
         )
     after = store.current
     if after.accepted_body.n_states != before.accepted_body.n_states + 1:
-        raise IntegratedLineageError("M044 accepted cycle did not grow exact capacity by one")
-    tool_nodes = _control_nodes(task, "tool_ablated")
-    learning_nodes = _control_nodes(task, "learning_state_ablated")
+        raise IntegratedLineageError(
+            "M044 accepted cycle did not grow exact capacity by one"
+        )
+    tool_nodes = _control_nodes(task, ControlArm.TOOL_ABLATED.value)
+    learning_nodes = _control_nodes(
+        task, ControlArm.LEARNING_STATE_ABLATED.value
+    )
     complete_nodes = task.constructive_outcome.nodes_seen
     return CycleRecord(
         phase=phase,
@@ -325,7 +455,7 @@ def _adopt_cycle(
         parent_snapshot_digest=before.digest(),
         parent_body_digest=exact_body_digest(before.accepted_body),
         parent_states=before.accepted_body.n_states,
-        catalogue_digest=_catalogue_digest(catalogue.to_dict()),
+        catalogue_digest=_catalogue_digest(catalogue),
         task_digest=task.digest(),
         task_id=task.public.task_id,
         target_commitment=task.public.target_commitment,
@@ -336,7 +466,9 @@ def _adopt_cycle(
         adopted_body_digest=exact_body_digest(after.accepted_body),
         adopted_states=after.accepted_body.n_states,
         registered_tool_count=len(after.tool_registry),
-        learning_trace_count=len(after.learning_state.successful_trace_digests),
+        learning_trace_count=len(
+            after.learning_state.successful_trace_digests
+        ),
         journal_entries=len(after.causal_journal),
         reused_prior_tool_pattern=reused is not None,
         reused_prior_tool_trace_digest=reused,
@@ -352,7 +484,7 @@ def _adopt_cycle(
 def _prepare_fault_candidate(
     store: VersionedLineageStore, protocol: M044Protocol
 ) -> tuple[object, object]:
-    _, task = _choose_task(store.current, protocol)
+    _, task = _choose_task(store.current, protocol, include_controls=False)
     package = build_candidate_package(store.current, task)
     decision = validate_candidate_disposably(store.current, task, package)
     if not decision.report.accepted:
@@ -368,37 +500,66 @@ def _execute_once(protocol: M044Protocol) -> IntegratedManifest:
 
     for ordinal in range(1, protocol.pre_migration_cycles + 1):
         cycles.append(
-            _adopt_cycle(store, protocol, phase="pre_migration", ordinal=ordinal)
+            _adopt_cycle(
+                store, protocol, phase="pre_migration", ordinal=ordinal
+            )
         )
 
     if not cycles[1].reused_prior_tool_pattern:
-        raise IntegratedLineageError("second cycle did not reuse an acquired tool pattern")
+        raise IntegratedLineageError(
+            "second cycle did not reuse an acquired tool pattern"
+        )
 
     machine = make_development_positive_machine(protocol.opaque_family)
     discovery = discover_field_substrate(machine)
-    first_bundle = build_native_migration_bundle(store.current, machine, discovery)
-    audit_native_migration_bundle(first_bundle, store.current, machine, discovery)
-    native_parent = native_program_to_mealy(first_bundle.native_program, machine)
+    first_bundle = build_native_migration_bundle(
+        store.current, machine, discovery
+    )
+    audit_native_migration_bundle(
+        first_bundle, store.current, machine, discovery
+    )
+    native_parent = native_program_to_mealy(
+        first_bundle.native_program, machine
+    )
     if native_parent != store.current.accepted_body:
-        raise IntegratedLineageError("first native migration did not reconstruct the lineage")
+        raise IntegratedLineageError(
+            "first native migration did not reconstruct the lineage"
+        )
 
     cycles.append(
         _adopt_cycle(store, protocol, phase="post_migration", ordinal=1)
     )
     post_cycle = cycles[-1]
     if post_cycle.parent_body_digest != exact_body_digest(native_parent):
-        raise IntegratedLineageError("post-migration cycle did not start from native behaviour")
+        raise IntegratedLineageError(
+            "post-migration cycle did not start from native behaviour"
+        )
     if not post_cycle.reused_prior_tool_pattern:
-        raise IntegratedLineageError("post-migration cycle did not reuse an acquired tool pattern")
+        raise IntegratedLineageError(
+            "post-migration cycle did not reuse an acquired tool pattern"
+        )
 
-    updated_bundle = build_native_migration_bundle(store.current, machine, discovery)
-    audit_native_migration_bundle(updated_bundle, store.current, machine, discovery)
-    reconstructed = native_program_to_mealy(updated_bundle.native_program, machine)
+    updated_bundle = build_native_migration_bundle(
+        store.current, machine, discovery
+    )
+    audit_native_migration_bundle(
+        updated_bundle, store.current, machine, discovery
+    )
+    reconstructed = native_program_to_mealy(
+        updated_bundle.native_program, machine
+    )
     native_exact = reconstructed == store.current.accepted_body
     if not native_exact:
-        raise IntegratedLineageError("post-learning native resynthesis is not exact")
-    if updated_bundle.native_program.digest() == first_bundle.native_program.digest():
-        raise IntegratedLineageError("native body did not change after post-migration learning")
+        raise IntegratedLineageError(
+            "post-learning native resynthesis is not exact"
+        )
+    if (
+        updated_bundle.native_program.digest()
+        == first_bundle.native_program.digest()
+    ):
+        raise IntegratedLineageError(
+            "native body did not change after post-migration learning"
+        )
 
     stable_before_fault = store.current
     decision, package = _prepare_fault_candidate(store, protocol)
@@ -408,7 +569,9 @@ def _execute_once(protocol: M044Protocol) -> IntegratedManifest:
         forced_fault=FaultKind(protocol.rollback_fault),
     )
     if not rollback.exact_restoration or store.current != stable_before_fault:
-        raise IntegratedLineageError("forced post-migration fault did not restore exactly")
+        raise IntegratedLineageError(
+            "forced post-migration fault did not restore exactly"
+        )
 
     final = store.current
     return IntegratedManifest(
@@ -428,14 +591,20 @@ def _execute_once(protocol: M044Protocol) -> IntegratedManifest:
             != updated_bundle.native_program.digest()
         ),
         final_snapshot_digest=final.digest(),
-        final_snapshot_bytes_sha256=hashlib.sha256(final.to_bytes()).hexdigest(),
+        final_snapshot_bytes_sha256=hashlib.sha256(
+            final.to_bytes()
+        ).hexdigest(),
         final_body_digest=exact_body_digest(final.accepted_body),
         final_body_states=final.accepted_body.n_states,
         final_tool_registry_digest=tool_registry_digest(final.tool_registry),
-        final_learning_state_digest=learning_state_digest(final.learning_state),
+        final_learning_state_digest=learning_state_digest(
+            final.learning_state
+        ),
         final_journal_digest=journal_digest(final.causal_journal),
         final_tool_count=len(final.tool_registry),
-        final_learning_trace_count=len(final.learning_state.successful_trace_digests),
+        final_learning_trace_count=len(
+            final.learning_state.successful_trace_digests
+        ),
         final_journal_entries=len(final.causal_journal),
         native_reconstruction_exact=native_exact,
         rollback_exact=rollback.exact_restoration,
@@ -454,37 +623,7 @@ def run_m044_integrated_lineage(
     second = _execute_once(protocol)
     if first.to_bytes() != second.to_bytes():
         raise IntegratedLineageError("M044 exact replay diverged")
-    mapping = first.to_dict()
-    mapping["replay_identical"] = True
-    return IntegratedManifest(
-        protocol_digest=str(mapping["protocol_digest"]),
-        founder_body_digest=str(mapping["founder_body_digest"]),
-        founder_snapshot_digest=str(mapping["founder_snapshot_digest"]),
-        cycles=first.cycles,
-        first_migration_bundle_digest=str(mapping["first_migration_bundle_digest"]),
-        first_native_program_digest=str(mapping["first_native_program_digest"]),
-        discovery_digest=str(mapping["discovery_digest"]),
-        opaque_machine_id=str(mapping["opaque_machine_id"]),
-        post_migration_parent_from_native=bool(mapping["post_migration_parent_from_native"]),
-        updated_migration_bundle_digest=str(mapping["updated_migration_bundle_digest"]),
-        updated_native_program_digest=str(mapping["updated_native_program_digest"]),
-        native_program_changed_after_learning=bool(mapping["native_program_changed_after_learning"]),
-        final_snapshot_digest=str(mapping["final_snapshot_digest"]),
-        final_snapshot_bytes_sha256=str(mapping["final_snapshot_bytes_sha256"]),
-        final_body_digest=str(mapping["final_body_digest"]),
-        final_body_states=int(mapping["final_body_states"]),
-        final_tool_registry_digest=str(mapping["final_tool_registry_digest"]),
-        final_learning_state_digest=str(mapping["final_learning_state_digest"]),
-        final_journal_digest=str(mapping["final_journal_digest"]),
-        final_tool_count=int(mapping["final_tool_count"]),
-        final_learning_trace_count=int(mapping["final_learning_trace_count"]),
-        final_journal_entries=int(mapping["final_journal_entries"]),
-        native_reconstruction_exact=bool(mapping["native_reconstruction_exact"]),
-        rollback_exact=bool(mapping["rollback_exact"]),
-        rollback_attempted_version=int(mapping["rollback_attempted_version"]),
-        rollback_restored_version=int(mapping["rollback_restored_version"]),
-        replay_identical=True,
-    )
+    return replace(first, replay_identical=True)
 
 
 __all__ = [
