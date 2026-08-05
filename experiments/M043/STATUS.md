@@ -2,7 +2,8 @@
 
 ## Current phase
 
-**Qualification gate Q1 passed in development. No canonical result exists.**
+**Qualification gates Q1 and Q2 passed in development; Q3 is active. No canonical result
+exists.**
 
 M043 begins the second research phase after the positive M042 bounded completion. It tests
 structural-domain transfer from deterministic binary DFAs to deterministic total Mealy
@@ -27,26 +28,50 @@ with exhaustive bounded exploration on 64 random machine pairs, minimisation ide
 and behavioural preservation on 32 random machines.
 
 CI workflow run `30983777610` passed the complete repository suite with **625 tests on
-Python 3.11** and **625 tests on Python 3.13**. Repository integrity also passed: every
-module imports, no orphan module remains and declared dependencies match real imports.
+Python 3.11** and **625 tests on Python 3.13**. Repository integrity also passed.
 
-## Active work — Q2
+## Q2 — certified capacity-changing rewrite language
 
-The next boundary is the independent Mealy rewrite language. It must:
+The independent rewrite language is implemented in `metamorphosis/m043_rewrite.py` and
+specified in [`Q2_REWRITE_LANGUAGE.md`](Q2_REWRITE_LANGUAGE.md). It provides:
 
-- declare exact state-count effects for every primitive;
-- include at least one behaviour-preserving capacity-increasing operation;
-- include later operations that can exploit the duplicated capacity;
-- replay every trace byte-identically from its declared parent;
-- remain independent from the executable M039/M042 DFA macro and target generators;
-- expose permanent falsification tests before any hidden task bank or seed block exists.
+- exact physical and reachable state-count certificates for every primitive;
+- guarded behaviour-preserving duplication that adds exactly one reachable state;
+- later output and transition operations that can specialise the duplicated history;
+- behaviour-preserving removal of unreachable storage;
+- exact indexed-body identities distinct from state-renaming-invariant behavioural
+  identities;
+- versioned canonical traces bound to one exact parent body;
+- independent certificate recomputation during replay;
+- fail-closed rejection of malformed traces, wrong parents and tampered certificates.
 
-No M043 canonical workflow, selected seed, hidden-task result or ten-gate claim is
-authorised.
+The permanent falsification suite rejects pseudo-growth where a clone merely replaces the
+original target, demonstrates later use of the new capacity and checks every admitted
+neutral duplication across 64 deterministic random machines.
+
+Qualification workflow run `30992682534` passed the complete repository with **643 tests on
+Python 3.11**, **643 tests on Python 3.13** and a successful integrity audit.
+
+## Active work — Q3
+
+The next boundary is constructively available hidden Mealy tasks. Before admission, every
+task must have:
+
+- an exact certificate that the declared parent is structurally incapable of the target;
+- at least one admissible Q2 trace reaching the exact target within frozen depth and node
+  budgets;
+- rewrite arguments that do not directly encode the target table;
+- meaningful equal-budget fresh, unchanged-parent, output-only, learning-state and tool
+  controls;
+- explicit deterministic negative termination when no admissible task exists.
+
+M041's constructive-unavailability failure must be impossible after bank admission, not
+merely unlikely. No hidden task bank, development seed block or canonical workflow is
+authorised yet.
 
 ## Claim boundary
 
 M042 remains the only positive canonical continuous-lineage completion result. M043 does
-not widen or replace it. Q1 qualifies only the formal Mealy substrate; it does not yet
-establish self-rewrite, task construction, migration or post-migration plasticity in that
-domain.
+not widen or replace it. Q1 and Q2 qualify the Mealy substrate and rewrite language only;
+they do not yet establish hidden-task construction, isolated adoption, migration or
+post-migration plasticity in that domain.
