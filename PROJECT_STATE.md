@@ -26,8 +26,8 @@ intelligence, consciousness or production authority.
 
 ### Phase-two scientific status
 
-**M043 qualification gate Q1 passed in development; Q2 is active. No canonical result
-exists.**
+**M043 qualification gates Q1 and Q2 passed in development; Q3 is active. No canonical
+result exists.**
 
 M043 tests structural-domain transfer from deterministic language acceptors to
 deterministic total Mealy machines. The body, mutation language, hidden task generator and
@@ -40,9 +40,15 @@ shortest distinguishing words, exact behavioural minimisation, domain-separated 
 and fail-closed parsing. CI workflow run `30983777610` passed 625 tests on Python 3.11 and
 625 on Python 3.13, together with every repository-integrity check.
 
-The active boundary is Q2: a Mealy-specific rewrite language with proved state-count
-effects, behaviour-preserving capacity growth, later capacity exploitation and exact trace
-replay. No hidden task bank, seed block or canonical workflow is authorised yet.
+Q2 established the independent Mealy rewrite language: exact physical and reachable
+state-count effects, guarded behaviour-preserving reachable-capacity growth, later
+specialisation of duplicated capacity, exact indexed-body identities and parent-bound
+byte-identical trace replay. Qualification workflow run `30992682534` passed 643 tests on
+Python 3.11 and 643 on Python 3.13, together with every repository-integrity check.
+
+The active boundary is Q3: every admitted development task must be structurally impossible
+for its declared parent and exactly reachable by an admissible Q2 trace within frozen depth
+and node budgets. No hidden task bank, seed block or canonical workflow is authorised yet.
 
 ## Canonical result map
 
@@ -56,7 +62,7 @@ replay. No hidden task bank, seed block or canonical workflow is authorised yet.
 | M040 | **POSITIVE CANONICAL** | Exact unknown-substrate migration followed by an exact post-migration rewrite. |
 | M041 | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because no admissible tool-dependent cycle-3 target existed. |
 | M042 | **POSITIVE CANONICAL** | Constructive availability repaired the M041 failure; all ten audited gates are true in one continuous frozen lineage. |
-| M043 | Q1 PASSED IN DEVELOPMENT | Exact Mealy formal kernel qualified; Q2 rewrite language active; no canonical result. |
+| M043 | Q1 AND Q2 PASSED IN DEVELOPMENT | Exact Mealy kernel and certified capacity-changing rewrite language qualified; Q3 task construction active; no canonical result. |
 
 M001–M011 remain historical and not independently verifiable in the current repository.
 M017–M037 remain development, failure and integration evidence; their records are not
@@ -109,15 +115,33 @@ Q1 fixes and verifies:
 - deterministic shortest distinguishing input words;
 - strict malformed-machine rejection.
 
-Q2 must define an independent mutation language before any hidden task generator or seed
-block exists. It must prove the state-count effect of each primitive, support at least one
-behaviour-preserving capacity increase, later exploit that capacity and replay every trace
-byte-identically from its declared parent.
+Q2 fixes and verifies:
+
+- a Mealy-specific mutation language independent from M039/M042's executable DFA macro;
+- exact physical and reachable state-count certificates;
+- behaviour-preserving growth by exactly one reachable state;
+- later output and transition specialisation of the new capacity;
+- behaviour-preserving unreachable-state compaction;
+- exact indexed parent/child identities;
+- versioned canonical traces with independently recomputed replay certificates;
+- strict rejection of wrong parents, malformed traces and tampering.
+
+Q3 must construct a finite task bank with permanent certificates that:
+
+- the declared parent cannot express the exact target under its current structural bound;
+- an admissible Q2 trace reaches that target within declared depth and node budgets;
+- rewrite arguments do not directly encode the target table;
+- equal-budget control arms remain causally meaningful;
+- generation terminates explicitly when no admissible task exists.
+
+M041's constructive-unavailability failure must be impossible after bank admission, not
+merely unlikely.
 
 See:
 
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md);
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
+- [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Measurement track
