@@ -26,7 +26,7 @@ intelligence, consciousness or production authority.
 
 ### Phase-two scientific status
 
-**M043 qualification gates Q1 and Q2 passed in development; Q3 is active. No canonical
+**M043 qualification gates Q1, Q2 and Q3 passed in development; Q4 is active. No canonical
 result exists.**
 
 M043 tests structural-domain transfer from deterministic language acceptors to
@@ -46,9 +46,18 @@ specialisation of duplicated capacity, exact indexed-body identities and parent-
 byte-identical trace replay. Qualification workflow run `30992682534` passed 643 tests on
 Python 3.11 and 643 on Python 3.13, together with every repository-integrity check.
 
-The active boundary is Q3: every admitted development task must be structurally impossible
-for its declared parent and exactly reachable by an admissible Q2 trace within frozen depth
-and node budgets. No hidden task bank, seed block or canonical workflow is authorised yet.
+Q3 established honest constructive task availability. The seed-free development catalogue
+contains three targets whose exact minimal machines require three states while the declared
+parent requires two. Candidate operations are proposed without target-table access; every
+admitted target is reached by an exact replayable Q2 trace within depth 2, 512 visited nodes
+and a four-state cap. Six control surfaces are causally distinct and share the same budget,
+and failure to construct enough admissible tasks terminates explicitly. Qualification
+workflow run `30997105933` passed 672 tests on Python 3.11 and 672 on Python 3.13 plus the
+complete integrity audit, with no failed job or rerun.
+
+The active boundary is Q4: disposable independent candidate validation, versioned adoption
+and exact rollback of the accepted body, registry and causal journal. No hidden task bank,
+seed block or canonical workflow is authorised yet.
 
 ## Canonical result map
 
@@ -62,7 +71,7 @@ and node budgets. No hidden task bank, seed block or canonical workflow is autho
 | M040 | **POSITIVE CANONICAL** | Exact unknown-substrate migration followed by an exact post-migration rewrite. |
 | M041 | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because no admissible tool-dependent cycle-3 target existed. |
 | M042 | **POSITIVE CANONICAL** | Constructive availability repaired the M041 failure; all ten audited gates are true in one continuous frozen lineage. |
-| M043 | Q1 AND Q2 PASSED IN DEVELOPMENT | Exact Mealy kernel and certified capacity-changing rewrite language qualified; Q3 task construction active; no canonical result. |
+| M043 | Q1–Q3 PASSED IN DEVELOPMENT | Exact Mealy kernel, certified rewrite language and honest constructive task availability qualified; Q4 adoption/rollback active; no canonical result. |
 
 M001–M011 remain historical and not independently verifiable in the current repository.
 M017–M037 remain development, failure and integration evidence; their records are not
@@ -126,22 +135,33 @@ Q2 fixes and verifies:
 - versioned canonical traces with independently recomputed replay certificates;
 - strict rejection of wrong parents, malformed traces and tampering.
 
-Q3 must construct a finite task bank with permanent certificates that:
+Q3 fixes and verifies:
 
-- the declared parent cannot express the exact target under its current structural bound;
-- an admissible Q2 trace reaches that target within declared depth and node budgets;
-- rewrite arguments do not directly encode the target table;
-- equal-budget control arms remain causally meaningful;
-- generation terminates explicitly when no admissible task exists.
+- an exact minimal-state structural-incapacity certificate;
+- target-blind deterministic search over the Q2 language;
+- exact parent-bound replay for every admitted development target;
+- mandatory capacity growth followed by exploitation of the new state;
+- bounded observations and commitments without public target tables or witness operations;
+- six distinct equal-budget control surfaces;
+- a deterministic three-entry seed-free development catalogue;
+- explicit negative termination without weaker retries or larger budgets.
 
-M041's constructive-unavailability failure must be impossible after bank admission, not
-merely unlikely.
+Q4 must now establish:
+
+- fresh disposable resource-limited candidate workspaces;
+- independent checks of parent identity, syntax, totality and resource compliance;
+- exact preservation of protected regressions;
+- strict improvement and exact target validation;
+- versioned adoption and exact accepted-state archives;
+- rejection of a fixed invalid provisional rewrite;
+- exact restoration of the accepted body, registry and causal journal head.
 
 See:
 
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md);
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
+- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Measurement track

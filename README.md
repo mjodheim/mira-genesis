@@ -74,22 +74,27 @@ stream produced during interaction instead of a final accept/reject bit. Exact
 equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
 rewrite language, hidden tasks and opaque substrate must be rebuilt independently.
 
-Qualification gates **Q1 and Q2 are complete in development**:
+Qualification gates **Q1, Q2 and Q3 are complete in development**:
 
 - Q1 provides the independent exact Mealy kernel: strict immutable representation,
   canonical state-renaming-invariant serialisation, exact product equivalence,
   deterministic shortest counterexamples, exact minimisation and fail-closed parsing;
 - Q2 provides the independent certified rewrite language: exact state-count effects,
   behaviour-preserving reachable-capacity growth, later specialisation of duplicated
-  capacity, exact indexed-body identities and byte-identical trace replay.
+  capacity, exact indexed-body identities and byte-identical trace replay;
+- Q3 provides exact structural-incapacity certificates, target-blind constructive search,
+  exact Q2 witness replay, six distinct equal-budget controls and explicit negative
+  termination. Its seed-free development catalogue contains three tasks that each require
+  three minimal states while the declared parent requires two.
 
-Qualification workflow run `30992682534` passed **643 tests on Python 3.11 and 643 on
-Python 3.13**, together with the complete repository-integrity audit.
+Qualification workflow run `30997105933` passed **672 tests on Python 3.11 and 672 on
+Python 3.13**, together with the complete repository-integrity audit. No failed job or rerun
+was needed.
 
-The active boundary is **Q3**: construct a finite development bank in which every admitted
-hidden Mealy task is both structurally impossible for its declared parent and exactly
-reachable by an admissible Q2 trace within frozen depth and node budgets. The M041 failure
-mode must be excluded by admission rather than hidden by retries.
+The active boundary is **Q4**: candidates must run in disposable resource-limited
+workspaces, be validated independently, adopt through a versioned release mechanism and
+survive a forced invalid rewrite with exact rollback of the accepted body, registry and
+journal state.
 
 No hidden task bank, seed block or canonical workflow is authorised yet.
 
@@ -98,6 +103,7 @@ See:
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md);
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
+- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Parallel measurement track
