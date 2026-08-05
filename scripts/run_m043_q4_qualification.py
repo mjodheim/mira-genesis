@@ -3,10 +3,13 @@ from __future__ import annotations
 
 import json
 
+import metamorphosis.m043_validation_worker as validation_worker
 from metamorphosis.m043_adoption import run_q4_development_qualification
 
 
 def main() -> int:
+    if validation_worker.__name__ != "metamorphosis.m043_validation_worker":
+        raise RuntimeError("unexpected Q4 validation-worker identity")
     print(
         json.dumps(
             run_q4_development_qualification(),
