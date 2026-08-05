@@ -1,51 +1,16 @@
-name: M042 preserve canonical first result
+name: M042 constructive completion (archived)
 
+# M042 closed with the unique preserved canonical result from workflow run 30958542929.
+# Development and preservation reruns are disabled.
 on:
-  pull_request:
-    paths:
-      - 'experiments/M042/**'
-      - 'metamorphosis/m042_*.py'
-      - 'scripts/run_m042_constructive_bank.py'
-      - 'scripts/preserve_m042_canonical.py'
-      - 'tests/test_m042_*.py'
-      - '.github/workflows/m042-development.yml'
+  workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: m042-first-result-preservation
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  preserve:
-    if: github.event.pull_request.head.repo.full_name == github.repository
+  archived:
+    if: false
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.ref }}
-          fetch-depth: 0
-      - name: Download unique first-result artifact
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          gh api repos/${{ github.repository }}/actions/artifacts/8912305339/zip > /tmp/m042.zip
-          rm -rf /tmp/m042-first-result
-          mkdir -p /tmp/m042-first-result
-          unzip -q /tmp/m042.zip -d /tmp/m042-first-result
-      - name: Preserve and audit without reexecution
-        run: python scripts/preserve_m042_canonical.py
-      - name: Commit preservation records once
-        run: |
-          git config user.name 'mjodheim'
-          git config user.email '110968830+mjodheim@users.noreply.github.com'
-          git add experiments/M042/STATUS.md results/M042_CANONICAL_RESULT.md results/artifacts/M042_CANONICAL_*.json
-          if git diff --cached --quiet; then
-            echo 'Canonical records already preserved.'
-            exit 0
-          fi
-          git diff --cached --check
-          git commit -m 'M042: preserve positive canonical first result'
-          git push origin HEAD:${{ github.event.pull_request.head.ref }}
+      - run: echo 'M042 is closed.'
