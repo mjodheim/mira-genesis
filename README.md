@@ -74,10 +74,17 @@ stream produced during interaction instead of a final accept/reject bit. Exact
 equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
 rewrite language, hidden tasks and opaque substrate must be rebuilt independently.
 
-M043 is currently a protocol draft and rig-qualification effort. No development result or
-canonical outcome exists. Its first implementation boundary is the exact formal kernel:
-canonical state-renaming-invariant serialisation, product equivalence, shortest
-counterexamples, minimisation and malformed-machine rejection.
+Qualification gate **Q1 is complete in development**. The repository now contains an
+independent exact Mealy kernel with strict immutable representation, canonical
+state-renaming-invariant serialisation, exact product equivalence, deterministic shortest
+counterexamples, exact minimisation, domain-separated identities and fail-closed parsing.
+The complete repository passed **625 tests on Python 3.11 and 625 on Python 3.13**, together
+with the integrity audit.
+
+The active boundary is **Q2**: define a Mealy-specific rewrite language with proved
+state-count effects, behaviour-preserving capacity growth, later operations that can exploit
+that capacity and byte-identical trace replay. No hidden task bank, seed block or canonical
+workflow is authorised yet.
 
 See:
 
