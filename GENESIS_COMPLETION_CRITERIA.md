@@ -1,19 +1,25 @@
 # Mira Genesis — completion criteria
 
-Mira Genesis is not complete when it can produce code, call an external coding model,
-or pass one hand-picked benchmark. The project reaches its intended first complete
-form only when one lineage satisfies every gate below under a frozen protocol.
+## Frozen phase-one definition
+
+This document defines the first complete bounded form of Mira Genesis. The ten scientific
+gates below were established before the M042 canonical result and are not widened by the
+later Phase 2 agenda.
+
+Mira Genesis is not complete merely because it can produce code, call an external coding
+model or pass one hand-picked benchmark. The first complete form requires one lineage to
+satisfy every gate under a frozen protocol.
 
 ## Target claim
 
-A Genesis organism can diagnose a limitation in its current cognitive body, construct
-or extend the tools needed to change that body, propose and validate a replacement,
-adopt it without human architectural intervention, migrate the improved competence to
-an initially unknown substrate, preserve relevant memory and plasticity, and continue
-to improve on unseen tasks more efficiently than an unchanged lineage.
+A Genesis organism can diagnose a limitation in its current cognitive body, construct or
+extend the tools needed to change that body, propose and validate a replacement, adopt it
+without human architectural intervention, migrate the improved competence to an initially
+unknown substrate, preserve relevant memory and plasticity, and continue to improve on
+unseen tasks more efficiently than an unchanged lineage.
 
-The claim is bounded to the frozen task and substrate families used by the protocol. It
-is not a claim of universal intelligence, consciousness or unlimited self-improvement.
+The claim is bounded to the frozen task and substrate families used by the protocol. It is
+not a claim of universal intelligence, consciousness or unlimited self-improvement.
 
 ## Gate 1 — autonomous diagnosis
 
@@ -30,8 +36,8 @@ Evidence:
 ## Gate 2 — internal tool ownership
 
 Every operation used to inspect, transform, build or test a candidate body is present in
-the organism's serialised tool registry. External infrastructure may execute a tool,
-but may not invent its transformation or choose its arguments on the organism's behalf.
+the organism's serialised tool registry. External infrastructure may execute a tool, but
+may not invent its transformation or choose its arguments on the organism's behalf.
 
 At least one required tool must be constructed or composed by the organism from more
 primitive tools during the evaluation lineage.
@@ -71,8 +77,8 @@ Required result:
 
 ## Gate 6 — adoption and rollback
 
-The organism adopts the candidate through its own versioned body mechanism. The parent
-is archived exactly, and rollback restores both code and behaviour.
+The organism adopts the candidate through its own versioned body mechanism. The parent is
+archived exactly, and rollback restores both code and behaviour.
 
 The evaluator must force at least one rollback scenario. A lineage that cannot survive a
 bad adoption attempt does not pass.
@@ -113,8 +119,8 @@ The full lineage must remain replayable from the original seed and immutable inp
 
 ## Gate 10 — measurement integrity
 
-The protocol, generators, thresholds, seed commitments, cost accounting and decision
-rule are frozen and hashed before the canonical run.
+The protocol, generators, thresholds, seed commitments, cost accounting and decision rule
+are frozen and hashed before the canonical run.
 
 The canonical workflow runs once on an immutable commit. Failures, contaminations and
 negative results remain in the repository. No rerun replaces a first attempt and no
@@ -127,15 +133,35 @@ network access and production changes remain behind an explicit human-controlled
 boundary. Scientific autonomy inside a sandbox does not imply permission to modify
 external systems.
 
-## Current distance from completion
+## Completion record
 
-- M012b validates bounded autonomous morphogenesis.
-- M013e validates bounded migration to an opaque finite substrate.
-- M017 is ready to freeze a bounded self-extending task language.
-- M020 begins proof-gated executable self-rewrite and internal tool learning.
-- Memory and strategy transfer, operating-system sandboxing, autonomous diagnosis,
-  multi-file rewriting, post-migration rewrite, and repeated improvement cycles remain
-  unvalidated.
+**Phase-one status: completed in the bounded deterministic binary-DFA laboratory.**
 
-No document may describe Mira Genesis as complete until every gate above has passed a
-single frozen evaluation lineage.
+M042 is the first experiment whose continuous frozen lineage satisfies all ten audited
+gates together. Its unique canonical workflow selected one task from a pre-verified
+constructive bank, reached 127/127 exact observations, kept all equal-budget control arms
+non-exact, passed passive isolated validation, synthesised the accepted rewrite natively
+on the discovered opaque substrate and rolled back a fixed provisional failure exactly.
+
+Gate 10 is supported by the separate immutable first-result seal and post-preservation
+audit. The raw result itself was not rerun, rewritten or retuned. M041's negative first
+attempt remains preserved as a separate experiment and was not replaced.
+
+The authoritative evidence is:
+
+- [`experiments/M042/STATUS.md`](experiments/M042/STATUS.md);
+- [`results/M042_CANONICAL_RESULT.md`](results/M042_CANONICAL_RESULT.md);
+- `results/artifacts/M042_CANONICAL_RESULT.json`;
+- `results/artifacts/M042_CANONICAL_FIRST_RESULT_SEAL.json`;
+- `results/artifacts/M042_CANONICAL_AUDIT.json`.
+
+## Claim boundary after completion
+
+Completion of these criteria does not authorise a universal or open-ended interpretation.
+The result remains bounded to the frozen deterministic finite task and substrate families,
+127-observation evaluations, symbolic depth four and 4,096-node search budgets recorded
+by M042.
+
+Phase 2 is a separately governed research program. M043 may test whether the architecture
+can be reconstructed in a deterministic Mealy-machine domain, but it cannot retroactively
+widen the M042 claim or change these phase-one gates.
