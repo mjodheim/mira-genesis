@@ -92,6 +92,17 @@ def test_bundle_rejects_tampered_certificate(migration_case) -> None:
         replace(bundle, synthesis_certificate=certificate)
 
 
+def test_audit_recomputes_certificate_metadata(migration_case) -> None:
+    source, machine, discovery, bundle = migration_case
+    certificate = replace(
+        bundle.synthesis_certificate,
+        source_behaviour_digest="0" * 64,
+    )
+    tampered = replace(bundle, synthesis_certificate=certificate)
+    with pytest.raises(MigrationError, match="failed recomputation"):
+        audit_native_migration_bundle(tampered, source, machine, discovery)
+
+
 def test_q5_development_qualification_is_complete() -> None:
     result = run_q5_development_qualification()
     assert result["status"] == "qualified"
