@@ -35,6 +35,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Set up the native M048 target runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Record runtime identities
+        run: |
+          python --version
+          node --version
+
       - name: Install the package and its development dependencies
         run: |
           python -m pip install --upgrade pip
