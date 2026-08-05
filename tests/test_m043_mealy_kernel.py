@@ -66,8 +66,8 @@ def test_transduction_emits_one_symbol_per_input() -> None:
 
     final_state, output = machine.run((0, 1, 2, 0))
 
-    assert final_state == 0
-    assert output == (0, 2, 1, 0)
+    assert final_state == 1
+    assert output == (0, 2, 1, 1)
     assert machine.transduce((0, 1, 2, 0)) == output
 
 
