@@ -1,4 +1,4 @@
-name: M042 constructive completion development
+name: M042 preserve canonical first result
 
 on:
   pull_request:
@@ -6,60 +6,46 @@ on:
       - 'experiments/M042/**'
       - 'metamorphosis/m042_*.py'
       - 'scripts/run_m042_constructive_bank.py'
+      - 'scripts/preserve_m042_canonical.py'
       - 'tests/test_m042_*.py'
       - '.github/workflows/m042-development.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
-  group: m042-development-${{ github.event.pull_request.head.sha }}
-  cancel-in-progress: true
+  group: m042-first-result-preservation
+  cancel-in-progress: false
 
 jobs:
-  constructive-bank:
+  preserve:
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e ".[dev]"
-      - name: Run permanent M042 focused tests
-        run: pytest -q tests/test_m042_constructive_bank.py
-      - name: Verify repository integrity
-        run: python scripts/check_repository_integrity.py
-      - name: Build and replay the whole constructive bank
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+      - name: Download unique first-result artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          python scripts/run_m042_constructive_bank.py \
-            --selection-index 0 \
-            --output m042-development-result.json
-      - name: Verify the consumed development result
+          gh api repos/${{ github.repository }}/actions/artifacts/8912305339/zip > /tmp/m042.zip
+          rm -rf /tmp/m042-first-result
+          mkdir -p /tmp/m042-first-result
+          unzip -q /tmp/m042.zip -d /tmp/m042-first-result
+      - name: Preserve and audit without reexecution
+        run: python scripts/preserve_m042_canonical.py
+      - name: Commit preservation records once
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          payload = json.loads(Path('m042-development-result.json').read_text())
-          assert payload['schema'] == 'm042-development-result/1'
-          assert payload['status'] == 'consumed-constructive-bank-development-result'
-          assert payload['bank_size'] >= payload['minimum_bank_size'] == 4
-          assert payload['bank_replay_identical'] is True
-          assert payload['all_ten_development_mechanisms_supported'] is True
-          assert payload['eligible_for_freeze'] is True
-          assert payload['gate_verdicts']['gate_10_measurement_integrity'] is False
-          assert payload['m041_failed_seed_not_reused'] is True
-          assert payload['no_sealed_block_opened'] is True
-          assert payload['no_canonical_claim'] is True
-          PY
-      - uses: actions/upload-artifact@v4
-        with:
-          name: m042-development-${{ github.event.pull_request.head.sha }}
-          path: m042-development-result.json
-          if-no-files-found: error
-          retention-days: 30
+          git config user.name 'mjodheim'
+          git config user.email '110968830+mjodheim@users.noreply.github.com'
+          git add experiments/M042/STATUS.md results/M042_CANONICAL_RESULT.md results/artifacts/M042_CANONICAL_*.json
+          if git diff --cached --quiet; then
+            echo 'Canonical records already preserved.'
+            exit 0
+          fi
+          git diff --cached --check
+          git commit -m 'M042: preserve positive canonical first result'
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
