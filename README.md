@@ -74,7 +74,7 @@ stream produced during interaction instead of a final accept/reject bit. Exact
 equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
 rewrite language, hidden tasks and opaque substrate must be rebuilt independently.
 
-Qualification gates **Q1, Q2 and Q3 are complete in development**:
+Qualification gates **Q1, Q2, Q3 and Q4 are complete in development**:
 
 - Q1 provides the independent exact Mealy kernel: strict immutable representation,
   canonical state-renaming-invariant serialisation, exact product equivalence,
@@ -85,16 +85,19 @@ Qualification gates **Q1, Q2 and Q3 are complete in development**:
 - Q3 provides exact structural-incapacity certificates, target-blind constructive search,
   exact Q2 witness replay, six distinct equal-budget controls and explicit negative
   termination. Its seed-free development catalogue contains three tasks that each require
-  three minimal states while the declared parent requires two.
+  three minimal states while the declared parent requires two;
+- Q4 provides a strict full-lineage candidate package, replay in a disposable process with
+  no hidden-target access, exact evaluator-side acceptance, immutable versioned snapshots
+  and byte-identical rollback after forced body, registry, learning-state and journal
+  faults.
 
-Qualification workflow run `30997105933` passed **672 tests on Python 3.11 and 672 on
-Python 3.13**, together with the complete repository-integrity audit. No failed job or rerun
-was needed.
+Qualification workflow run `31001898372` passed **705 tests on Python 3.11 and 705 on
+Python 3.13**, together with the complete repository-integrity audit.
 
-The active boundary is **Q4**: candidates must run in disposable resource-limited
-workspaces, be validated independently, adopt through a versioned release mechanism and
-survive a forced invalid rewrite with exact rollback of the accepted body, registry and
-journal state.
+The active boundary is **Q5**: define a genuinely opaque Mealy-native substrate, recover its
+undeclared operational semantics only through bounded public probes and synthesize an exact
+native implementation without smuggling the source transition/output tables into the native
+representation.
 
 No hidden task bank, seed block or canonical workflow is authorised yet.
 
@@ -104,6 +107,7 @@ See:
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
 - [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
+- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Parallel measurement track
