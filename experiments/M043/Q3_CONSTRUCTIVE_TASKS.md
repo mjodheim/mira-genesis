@@ -1,6 +1,6 @@
 # M043 Q3 — constructively available Mealy tasks
 
-**Status: development implementation complete; complete repository CI running.**
+**Status: passed in development. Qualification CI completed successfully.**
 
 ## Question
 
@@ -127,11 +127,15 @@ The focused suite contains 29 tests covering:
 - explicit negative termination;
 - seed-free development qualification without canonical authority.
 
-The focused local suite passes. Q3 is not marked passed until the complete repository suite
-and integrity audit pass on Python 3.11 and Python 3.13 in GitHub Actions.
+Qualification workflow run `30997105933` passed the complete repository with **672 tests on
+Python 3.11**, **672 tests on Python 3.13** and a successful integrity audit covering clean
+imports, orphan-module detection and dependency consistency. No failed job or rerun was
+needed.
 
-## Next boundary
+## Exit and next boundary
 
-After Q3 qualification, Q4 may integrate disposable candidate validation, versioned
-adoption and exact rollback for Mealy bodies. No hidden task bank, selected seed or canonical
-M043 workflow is authorised by Q3.
+Q3 is passed in development. Q4 is the next active gate: disposable independent validation,
+versioned adoption and exact rollback for Mealy bodies. A fixed invalid provisional rewrite
+must be rejected while restoring the accepted body, registry and journal identities exactly.
+
+No hidden task bank, selected seed or canonical M043 workflow is authorised by Q3.
