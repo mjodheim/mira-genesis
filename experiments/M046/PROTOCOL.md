@@ -1,6 +1,6 @@
 # M046 — integrated scalable non-exhaustive lineage
 
-**Status: IN DEVELOPMENT.**
+**Status: PASSED IN DEVELOPMENT.**
 
 ## Why M046 exists
 
@@ -135,6 +135,24 @@ M046 passes in development only if all permanent tests establish:
 - accepted body unchanged by that termination;
 - immediate deterministic replay;
 - bounded, noncanonical claim metadata.
+
+## Qualification evidence
+
+The first development qualification was workflow run `31021072262` on marker commit
+`872f90060902cea2b94be653845036340b91cde3`.
+
+It passed without a failed job or rerun:
+
+- **770 tests on Python 3.11** in `569.73` seconds;
+- **770 tests on Python 3.13** in `585.56` seconds;
+- every module imported cleanly;
+- no orphan module remained;
+- declared dependencies matched real imports.
+
+Every permanent M046 success criterion passed. The complete lineage was executed twice in
+each Python matrix and its manifest was required to be byte-identical within that runtime.
+The generic CI workflow did not archive a cross-job manifest artifact, so M046 does not claim
+a separately preserved byte comparison between the Python 3.11 and Python 3.13 jobs.
 
 ## Claim boundary
 
