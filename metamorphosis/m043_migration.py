@@ -27,6 +27,7 @@ from metamorphosis.m043_native_program import (
     native_program_to_mealy,
     synthesize_native_mealy,
 )
+from metamorphosis.m043_native_verify import verify_native_synthesis_certificate
 from metamorphosis.m043_opaque_substrate import (
     DiscoveredFieldSubstrate,
     OpaqueFieldMachine,
@@ -252,11 +253,16 @@ def audit_native_migration_bundle(
     reconstructed = native_program_to_mealy(bundle.native_program, machine)
     if reconstructed != source.accepted_body:
         raise MigrationError("native program does not reconstruct the accepted source body")
-    certificate = bundle.synthesis_certificate
-    if certificate.native_program_digest != bundle.native_program.digest():
-        raise MigrationError("native program digest mismatch")
-    if not certificate.exact:
-        raise MigrationError("native synthesis certificate is not exact")
+    try:
+        verify_native_synthesis_certificate(
+            source.accepted_body,
+            bundle.native_program,
+            discovery,
+            machine,
+            bundle.synthesis_certificate,
+        )
+    except NativeProgramError as exc:
+        raise MigrationError("native synthesis certificate failed recomputation") from exc
 
 
 def _q4_accepted_development_snapshot() -> LineageSnapshot:
