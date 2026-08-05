@@ -1,6 +1,6 @@
 # M044 — accelerated integrated continuous Mealy lineage
 
-**Status: protocol and implementation prepared; primary integrated qualification pending.**
+**Status: protocol frozen; primary integrated qualification launched.**
 
 ## Why M044 exists
 
