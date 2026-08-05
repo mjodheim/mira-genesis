@@ -5,7 +5,7 @@
 ## Authoritative summary
 
 Mira Genesis is a bounded, auditable research program in exact finite behavioural models.
-Its first construction phase is complete; its second structural-transfer phase has begun.
+Its first construction phase is complete; its second structural-transfer phase is active.
 
 ### Phase-one scientific status
 
@@ -26,16 +26,23 @@ intelligence, consciousness or production authority.
 
 ### Phase-two scientific status
 
-**M043 protocol draft active; no development or canonical result exists.**
+**M043 qualification gate Q1 passed in development; Q2 is active. No canonical result
+exists.**
 
 M043 tests structural-domain transfer from deterministic language acceptors to
 deterministic total Mealy machines. The body, mutation language, hidden task generator and
 opaque native representation must be rebuilt independently. Only domain-neutral journal,
 serialisation, sandbox, adoption and rollback infrastructure may be reused.
 
-The immediate implementation boundary is qualification gate Q1: exact equivalence,
-shortest distinguishing inputs, canonical minimisation, state-renaming-invariant
-serialisation and malformed-machine rejection.
+Q1 established the independent formal substrate: strict immutable representation,
+state-renaming-invariant canonical serialisation, exact product equivalence, deterministic
+shortest distinguishing words, exact behavioural minimisation, domain-separated identities
+and fail-closed parsing. CI workflow run `30983777610` passed 625 tests on Python 3.11 and
+625 on Python 3.13, together with every repository-integrity check.
+
+The active boundary is Q2: a Mealy-specific rewrite language with proved state-count
+effects, behaviour-preserving capacity growth, later capacity exploitation and exact trace
+replay. No hidden task bank, seed block or canonical workflow is authorised yet.
 
 ## Canonical result map
 
@@ -49,7 +56,7 @@ serialisation and malformed-machine rejection.
 | M040 | **POSITIVE CANONICAL** | Exact unknown-substrate migration followed by an exact post-migration rewrite. |
 | M041 | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because no admissible tool-dependent cycle-3 target existed. |
 | M042 | **POSITIVE CANONICAL** | Constructive availability repaired the M041 failure; all ten audited gates are true in one continuous frozen lineage. |
-| M043 | PROTOCOL DRAFT | Mealy-domain rig qualification; no outcome exists. |
+| M043 | Q1 PASSED IN DEVELOPMENT | Exact Mealy formal kernel qualified; Q2 rewrite language active; no canonical result. |
 
 M001–M011 remain historical and not independently verifiable in the current repository.
 M017–M037 remain development, failure and integration evidence; their records are not
@@ -88,9 +95,9 @@ The raw payload retains its pre-preservation gate vector. Gate 10 is established
 the separate immutable first-result seal and post-result audit, without altering or
 rerunning the raw result.
 
-## M043 active boundary
+## M043 qualified and active boundaries
 
-M043's draft fixes the initial formal domain:
+Q1 fixes and verifies:
 
 - deterministic total Mealy machines;
 - input alphabet `{0, 1, 2}`;
@@ -98,10 +105,14 @@ M043's draft fixes the initial formal domain:
 - finite state sets with a declared development cap;
 - exact product equivalence;
 - exact behavioural minimisation;
-- canonical reachable-state ordering and serialisation.
+- canonical reachable-state ordering and serialisation;
+- deterministic shortest distinguishing input words;
+- strict malformed-machine rejection.
 
-Before any hidden task generator or seed block exists, the Q1 kernel must pass permanent
-metamorphic tests on Python 3.11 and 3.13. The draft authorises no canonical workflow.
+Q2 must define an independent mutation language before any hidden task generator or seed
+block exists. It must prove the state-count effect of each primitive, support at least one
+behaviour-preserving capacity increase, later exploit that capacity and replay every trace
+byte-identically from its declared parent.
 
 See:
 
