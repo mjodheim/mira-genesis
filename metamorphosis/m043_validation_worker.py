@@ -10,7 +10,7 @@ import os
 import sys
 from typing import Mapping
 
-from metamorphosis.m043_adoption import (
+from metamorphosis.m043_adoption_codec import (
     CandidatePackage,
     WORKER_REQUEST_SCHEMA,
     WorkerResult,
