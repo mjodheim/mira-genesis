@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from typing import Mapping
 
-from metamorphosis import m048_native_support as _support
+import metamorphosis.m048_native_support as _support
 
 
 def _render_qualified_allocation(policy: str) -> str:
@@ -19,12 +19,37 @@ def _render_qualified_allocation(policy: str) -> str:
     ) + f"export function allocate(ir,plan){{return {expression};}}\n"
 
 
-# Patch the compiler before importing the integrated lineage. This bounded
-# compatibility layer accepts the exact M047 allocation strategies that can
-# reach the qualified version-six state.
-_support._render_allocation = _render_qualified_allocation
+def _qualified_native_checkpoint(state: Mapping[str, object]) -> dict[str, object]:
+    """Checkpoint the journal key used by the accepted native state schema."""
+    mapping = {
+        "schema": "m048-native-checkpoint-v1",
+        "version": state["version"],
+        "body_digest": _support._native_body_digest(state["body"]),
+        "patch_registry_digest": _support._digest(
+            b"m048-native-patch-registry-v1\x00", state["patch_registry"]
+        ),
+        "journal_digest": _support._digest(
+            b"m048-native-journal-v1\x00", state["native_journal"]
+        ),
+        "memory_digest": _support._digest(
+            b"m048-native-memory-v1\x00", state["causal_memory"]
+        ),
+        "migration_digest": state["migration"]["digest"],
+    }
+    return {
+        **mapping,
+        "state_digest": _support._native_state_digest(state),
+        "digest": _support._digest(b"m048-native-checkpoint-v1\x00", mapping),
+    }
 
-from metamorphosis import m048_native_lineage as _lineage  # noqa: E402
+
+# Patch the compiler and checkpoint builder before importing the integrated
+# lineage. These bounded compatibility corrections accept the exact M047
+# allocation strategies and the journal key defined by the M048 state schema.
+_support._render_allocation = _render_qualified_allocation
+_support._native_checkpoint = _qualified_native_checkpoint
+
+import metamorphosis.m048_native_lineage as _lineage  # noqa: E402
 
 _original_audit = _lineage._audit_native_state
 
