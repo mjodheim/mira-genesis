@@ -1,235 +1,97 @@
 # Mira Genesis — Roadmap
 
-The roadmap has two connected tracks. The measurement track studies proxy divergence
-against decidable ground truth. The construction track builds the bounded metamorphosis
-lineage that supplies that testbed and remains the project's first-phase completion
-target.
+Mira Genesis now has two chronological phases and one parallel measurement track.
 
-## Experiment map
+- **Phase 1 — bounded Genesis construction:** complete through M042.
+- **Phase 2 — structural-domain transfer:** active at M043.
+- **Measurement track:** proxy objectives versus exact hidden quality; still open.
 
-| Step | Goal | Status | Exit condition or result |
+## Phase 1 — completed bounded construction
+
+| Step | Goal | Status | Result |
 |---|---|---|---|
-| M001–M011 | Metamorphosis foundations | HISTORICAL, NOT VERIFIABLE HERE | No versioned archive; see `archives/README.md`. |
-| M012 | Autonomous morphogenesis | INCONCLUSIVE — CONTAMINATED | Evaluation seeds appeared in tests. |
-| M012b | Clean autonomous morphogenesis | **VALIDATED** | Sealed 36/36 evaluation and independent reproduction. |
-| M013 / M013b | Unknown substrate | INCONCLUSIVE — CONTAMINATED | No result claimed. |
-| M013c | Unknown substrate | INCONCLUSIVE — NON-REPRODUCIBLE | Announced commit was incomplete. |
-| M013d | Unknown substrate, absolute threshold | FAILED IN DEVELOPMENT | Baseline invalidated the absolute criterion. |
-| M013e | Unknown substrate, relative advantage | **VALIDATED** | Sealed 36/36 migration after experimental opcode discovery. |
-| M014 | Initial portable plasticity | HALTED | Prerequisites revoked; replaced by M014b. |
-| M014b | Sealed portable plasticity | **FAILED** | Exact transport passed; two generalisable-advantage criteria failed. |
-| M014c | Distribution-general plasticity | HALTED — SUPERSEDED | Closed catalogue could not express new structure. |
-| M017 | Self-extending language | SIGNED, FREEZE BLOCKED | §2 thresholds signed; gate 5 re-opened after a false success on an out-of-language control. |
-| M018 | Selective dissolution | HYPOTHESIS NOT SUPPORTED | Destruction did not remove the 0.69× transport liability. |
-| M019 | Selection pressure | RIG NOT VALID | Selection acted before learning could repay its cost. |
-| M020 | Proof-gated self-rewrite | DEVELOPMENT BASE VERIFIED | Strict improvement, adoption, archive, rollback and learned tools passed CI. |
-| M021 | Proxy measures versus exact quality | DEVELOPMENT RESULT SUPPORTED | 24 paired seeds separated the four implemented rankers. |
-| M022 | Post-selection adaptation stress | SEED-0 CONTROLS PASSED | Persistent language growth separated from open search under pre-written gates. |
-| M023 | Disposable candidate workspaces | DEVELOPMENT BASE VERIFIED | Independent subprocess and regression gates fail closed. |
-| M024 | Portable rewrite passport | DEVELOPMENT BASE VERIFIED | Source, rollback lineage and rewrite tools migrate exactly. |
-| M025 | Portable proof-gated rewrite lifecycle | DEVELOPMENT BASE VERIFIED | M020, M023 and M024 execute as one fail-closed transaction. |
-| M026 | Decidable metaproductivity guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Exact mismatch passed; clade aggregation did not beat immediate guidance. |
-| M027 | Hidden-blind seeded clade guidance | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Complete depth-three coverage exposed the signal; clade guidance still tied immediate guidance 64/64. |
-| M028 | Adaptive evaluation weighting | HYPOTHESIS NOT SUPPORTED IN DEVELOPMENT | Adaptive allocation stayed anti-aligned and tied uniform final hidden quality. |
-| M029 | Hidden-disjoint component probes | ESTIMATOR ALIGNED WITHOUT POLICY ADVANTAGE | Component evidence aligned with exact CMP; adaptive concentration missed the final gates. |
-| M030 | Untouched-seed component confirmation | DEVELOPMENT CONFIRMATION SUPPORTED | +1,000 per mille paired hidden quality, 48 wins, 16 ties and no losses on seeds 64–127. |
-| M031 | Structural component-signal transport | DEVELOPMENT TRANSPORT SUPPORTED | The frozen uniform signal transported to cyclic/permuted triads with +500 per mille median hidden quality and 43/18/3. |
-| M032 | Trans-substrate rewrite lifecycle | DEVELOPMENT BASE VERIFIED | Adopted rewrite compiles and migrates with a validated passport and declared learning state; exact rollback and tamper rejection pass. |
-| M033 | Post-migration plasticity | BODY-ANCHORED CONTROLS PASSED, GATE 8 NOT MET | A collapsed control was repaired; the migrated body now beats fresh-B and the parent 32/0/0, but the learned tool ties it 0/32/0; primary seeds 0–63 unopened. |
-| M015 | Memory and strategy | PARTLY ABSORBED BY M032, FUNCTIONAL TEST OPEN | State now transports exactly; its causal learning value remains untested. |
-| M016 | Sensorimotor competence | DEFERRED | Transport a world model between different architectures. |
+| M001–M011 | Early metamorphosis foundations | HISTORICAL, NOT VERIFIABLE HERE | No current claim relies on them alone. |
+| M012b | Clean autonomous morphogenesis | **VALIDATED** | 36/36 sealed bounded births. |
+| M013e | Unknown finite substrate | **VALIDATED** | 36/36 exact migrations after experimental opcode discovery. |
+| M014b | Portable plasticity | **FAILED CANONICAL** | Exact transport passed; the registered learning-advantage criteria failed. |
+| M017–M037 | Rewrite, validation, portability, measurement and causal-control development | DEVELOPMENT / RECORDED FAILURES | Built and falsified the mechanisms later integrated by M038–M042. |
+| M038 | One proof-gated rewrite cycle | **POSITIVE CANONICAL** | Exact F0→F1 adoption, two-speed causal journal and rollback. |
+| M039 | Repeated improvement and tool reuse | **POSITIVE CANONICAL** | F0(4)→F1(5)→F2(6)→F3(7), complete replay and later reuse of a lineage-owned tool. |
+| M040 | Cumulative post-migration plasticity | **POSITIVE CANONICAL** | The same lineage migrated to an opaque substrate and adopted an exact eight-state rewrite there. |
+| M041 | Single-lineage completion audit | **NEGATIVE CANONICAL** | The sealed lineage failed before migration because cycle 3 had no constructively available tool-dependent target. |
+| M042 | Constructive continuous-lineage completion | **POSITIVE CANONICAL — PHASE 1 COMPLETE** | A pre-verified task bank closed the M041 gap; all ten audited Genesis gates are true in one frozen lineage. |
 
-## Why the project changed direction
+M041 remains a valid negative result. M042 did not rerun it or alter its seed, protocol or
+artifact; it introduced a separately named constructive-availability mechanism.
 
-The M012b–M014c line exposed a capability ceiling that no early criterion measured: the
-organism could express only structures already handwritten into its catalogue. M017
-therefore moved before memory and sensorimotor work and replaced the closed catalogue
-with a language that can absorb successful compositions.
+## Phase-one finish line
 
-Development then produced a second correction. M014b, M017, M018 and M019 each showed a
-different way for a proxy to lose contact with what it claimed to measure. The
-metamorphosis system held; the judgement rule failed. That evidence made proxy-measure
-divergence the active measurement question without abandoning the construction goal.
+The frozen completion definition remains
+[`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md). M042 satisfies it only
+inside the declared deterministic binary-DFA task and substrate families, with the exact
+budgets and observation counts preserved by its canonical artifacts.
 
-## Measurement track
+No phase-one result implies unrestricted self-modification, production authority, general
+intelligence or consciousness.
 
-### M021–M022 — separate selection from adaptation
+## Phase 2 — structural-domain transfer
 
-M021 showed that four implemented selection measures preserve different exact hidden
-quality. Its adaptive and frozen audits were nearly identical, so it did not establish
-learning after selection. M022's seed-0 controls then created an audit in which
-persistent language growth reduced late search by 224.84× while open search remained
-exactly unchanged. Cross-seed confirmation remains open.
+Phase 2 asks whether the architecture is domain-general enough to survive a change in the
+formal object it rewrites.
 
-### M026–M028 — locate the metaproductivity measurement failure
+### M043 — deterministic Mealy qualification
 
-M026 established an exact immediate-performance/potential reversal, but observed clade
-averaging did not guide the higher-potential lineage. M027 added exhaustive
-hidden-blind coverage; the signal was exposed, yet an unweighted mean remained
-anti-aligned with the exact maximum. M028 used individual-performance Thompson sampling
-to allocate finite evaluations. It improved alignment by only 40 per mille, tied
-uniform final quality and allocated less evidence to high-potential nodes.
+**Status: Q1 passed in development; Q2 active. No canonical result exists.**
 
-Breadth and individual-performance weighting are therefore rejected as repairs in this
-finite rig.
+M043 moves from language acceptors to deterministic reactive transducers:
 
-### M029–M031 — reusable components as observable potential evidence
+- input alphabet `{0, 1, 2}`;
+- output alphabet `{0, 1, 2}`;
+- outputs emitted along transitions;
+- exact product equivalence;
+- canonical minimisation;
+- shortest distinguishing input words;
+- a new Mealy-specific rewrite language;
+- a new opaque native representation.
 
-M029 introduced hidden-disjoint tasks that test whether generic internal components
-transfer beyond their development and hidden suites. Component-adaptive estimation
-aligned with exact potential, but its registered policy gates failed. A pre-declared
-uniform component diagnostic produced 50 wins, 14 ties and no losses.
+The experiment may reuse domain-neutral journal, sandbox, serialisation, adoption and
+rollback infrastructure. It may not reuse M042's seed, task bank, target generator, DFA
+body encoding or executable `flip/grow/redirect` macro.
 
-M030 froze that uniform contrast on untouched seeds 64–127 and confirmed it with 48
-wins, 16 ties and no losses. M031 changed four structural properties before observing
-its primary seeds: two-atom motifs became length-three motifs, pair reversals became
-cyclic/permuted triads, one scaffold became two and the reusable route grew to depth
-five. The signal transported with 43 wins, 18 ties and 3 losses.
+#### M043 qualification sequence
 
-The narrow information claim is supported across two finite generators. The next
-measurement experiment must be a distinct optimisation test: resource-aware adaptive
-allocation versus the frozen component-uniform baseline. It may not retroactively
-change M031's estimator or thresholds.
+| Gate | Status | Exit condition |
+|---|---|---|
+| Q1 — exact Mealy kernel | **PASSED IN DEVELOPMENT** | Canonical serialisation, equivalence, counterexamples, minimisation and malformed-input rejection passed permanent metamorphic tests; complete CI passed 625 tests on Python 3.11 and 3.13. |
+| Q2 — capacity-changing rewrite language | **ACTIVE** | State-count effects are proven; traces replay exactly; at least one neutral growth operation can later become useful. |
+| Q3 — constructively available hidden tasks | NOT STARTED | Every admitted task is reachable by an admissible lineage and structurally impossible for its parent under declared bounds. |
+| Q4 — isolated adoption and rollback | NOT STARTED | Independent validation fails closed and a forced bad rewrite restores the exact accepted state. |
+| Q5 — opaque native substrate | NOT STARTED | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
+| Q6 — complete development replay | NOT STARTED | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
 
-## Construction track
+M043 is a rig-qualification experiment, not a new canonical ten-gate claim. A later
+continuous Mealy lineage would require a separate experiment, fresh frozen protocol and
+unique first-result workflow.
 
-### M017 — language growth
+See [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md).
 
-Successful transformation traces become reusable macros. The candidate frozen protocol
-passes its six development gates but still requires a human signature before a
-canonical run.
+## Parallel measurement track
 
-### M020 — executable self-rewrite
+M030 confirmed component-uniform guidance on untouched seeds. M031 transported that
+signal to a structurally different finite grammar. The supported information claim is
+narrow: reusable component evidence tracked exact hidden potential better than the frozen
+development-adaptive baseline in those two generators.
 
-M020 searches bounded policy source, selects a strict development improvement without
-held-out answers, adopts it, archives the parent exactly, rolls back and absorbs the
-successful transformation as a learned tool.
+The next distinct optimisation question remains:
 
-### M023 — independent execution boundary
+> Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
+> baseline without recreating M029's allocation failure?
 
-Parent, candidate and regression cases run in disposable subprocess workspaces.
-Adoption fails closed if the baseline workspace or any required check fails. POSIX
-resource limits are defence in depth, not arbitrary-code sandboxing.
+This experiment must remain separate from M043. Construction success cannot validate a
+measurement policy, and measurement failure cannot be hidden inside a richer organism.
 
-### M024 — portable rewrite state
+## Release boundary
 
-The active source, archive, adopted digest history, primitive tools and learned traces
-cross a canonical JSON boundary. Inconsistent state is rejected before rehydration.
-SHA-256 supplies corruption evidence, not authenticated authorship.
-
-### M025 — integrated portable rewrite lifecycle
-
-Proposal, independent validation, adoption, serialisation, learned-tool replay and
-forced rollback execute as one transaction. Rejection or workspace exceptions restore
-both the versioned body and tool registry exactly.
-
-### M032 — integrated opaque-substrate bridge
-
-M032 carries that transaction through M013e's unknown-substrate boundary:
-
-1. M025 independently adopts a strict bounded rewrite;
-2. every declared state-symbol pair is evaluated to compile the adopted policy into a
-   complete DFA;
-3. M013e discovers the opaque machine's Boolean operations by probing;
-4. an equivalent native body is synthesised for the discovered substrate;
-5. the M025 passport, source DFA, opaque body, opcode identifiers, memory, uncertainty
-   and exploration frontier cross one canonical packet;
-6. packet import validates all embedded structures and rejects tampering;
-7. compilation or migration failure restores source, archive, digest ledger and learned
-   tools exactly.
-
-The evaluated implementation commit is
-`4080ccc4b9381b1a2b0f8714e904c57335330877`. Five focused controls, 211 repository tests
-on Python 3.11 and Python 3.13 and the integrity audit passed. This is a development
-integration base, not a canonical evaluation.
-
-### M033 — open construction gate: post-migration plasticity
-
-Transport is not enough. M033 must reveal a genuinely new task family only after M032
-has completed migration. The pre-result comparison must include:
-
-1. the complete migrated M032 lineage;
-2. a fresh organism on substrate B;
-3. the unchanged parent lineage migrated to B;
-4. an output-only migrated body without retained plasticity;
-5. the improved lineage with memory, uncertainty and exploration state ablated;
-6. the improved lineage with learned rewrite tools ablated.
-
-The primary measure must include total diagnosis, search, failed-candidate, validation
-and migration cost. A positive result requires better exact held-out quality or faster
-improvement under a frozen paired-seed decision rule. A negative result remains a valid
-outcome and may not be repaired by changing the task family or thresholds after
-observation.
-
-Its pre-threshold controls have passed on two disjoint development blocks. The
-fixed-structure block on seeds 1024–1031 isolated both mechanisms causally: removing
-learned tools erased the entire measured search reduction, and a relevant transported
-memory trace cut median post-reveal candidates from 959 to 264 while permuted and empty
-traces did not. The structural block on seeds 2048–2063 then varied the source scaffold
-four ways and returned 12/16 complete-lineage wins with directions of 4/4, 4/4, 0/4 and
-4/4.
-
-That non-uniformity is the point. Scaffold 2 is retained as a declared counterexample in
-which transported state stays exact but pays a small median branching cost, so no
-threshold may be frozen around universal directional wins, and the strong scaffold-3
-effect may not be pooled into a single median presented as a worst-case bound.
-
-A third block on seeds 3072–3103 then measured both mechanisms together across the same
-four scaffolds. It is the most informative and the least encouraging of the three. Every
-learning-capable variant was exactly equivalent on all 32 tasks, so cost alone separates
-them. The complete lineage beat fresh-B 24/0/8 but went 8/16/8 against its own unchanged
-parent and 8/16/8 against the learned-tool ablation.
-
-The reason is that the two mechanisms never help at the same time. Memory carries
-scaffolds 0 and 1, where the unchanged parent and the tool ablation reach an identical
-median of 264 candidates. Learned tools carry scaffold 3, cutting search from 1,879 to
-568. On scaffold 2 neither helps and the complete lineage loses every comparison. Because
-the unchanged parent retains the same learning state without having adopted the rewrite,
-the adopted rewrite itself buys nothing on three of the four scaffolds.
-
-Auditing that outcome found a defect rather than a weak effect. All three blocks anchored
-every lineage on the task's own baseline source, so the migrated body was never read and
-the unchanged parent and the learned-tool ablation became the same experiment — hence the
-identical 8/16/8. A fourth block on seeds 4096–4127 anchors each lineage on the body it
-migrated, leaving the default and every recorded block untouched.
-
-The repaired picture is sharper. The complete lineage beats fresh-B 32/0/0 and its own
-unchanged parent 32/0/0, at a median of 26 candidates against 1,427.5 and 264.5 — the
-first M033 evidence that transported competence works after migration.
-
-The remaining tie against the learned-tool ablation then turned out to be a second
-structural limit rather than a tunable one. A learned tool replays fixed operations at
-fixed AST indices, and the tool a single-cycle lineage carries is precisely the trace that
-produced its body, so applying it there is a no-op. The complete lineage and its tool
-ablation differ by something that cannot act, and no choice of task target changes that.
-The control is structurally uninformative rather than failed, Gate 8's tool comparison must
-be run on a multi-cycle or rolled-back lineage, and Gates 8 and 9 are therefore not
-independent. This is D009 recurring at the level of tools: the tool language is closed in
-the same way the old catalogue was, because a learned tool cannot abstract over the site it
-was learned at. Recorded as D013.
-
-The repair path was then measured. A three-cycle lineage accumulates three learned tools,
-one of which can still act on the final body; the newest is always inert because it is the
-trace that produced that body, and an earlier tool reactivates only once a later cycle
-moves the body away from it. **Gate 9 is therefore a precondition for Gate 8's tool
-comparison.** The roadmap order changes accordingly: repeated improvement cycles come
-before freezing M033's thresholds, because freezing now would fix a rule one of whose four
-controls cannot act.
-
-Three gates remain before seeds 0–63 may open: a frozen primary generator committed
-without instantiating them, a threshold-freeze amendment fixing the primary statistic,
-directional rule, critical regressions, abstention limit and artifact identity, and
-complete Python 3.11 and 3.13 CI on that frozen pre-result implementation. The combined
-block adds two questions that amendment must now answer explicitly: whether beating the
-unchanged parent is a required gate or a secondary diagnostic, and whether a margin of one
-deterministic evaluation counts as a win or falls inside an abstention band. No primary
-result exists and no plasticity advantage is claimed.
-
-## First-phase finish line
-
-The project is not complete when it can generate code, transport a program or pass one
-repair benchmark. One lineage must satisfy every gate in
-[`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md), including autonomous
-diagnosis, internal tool ownership, isolated validation, held-out improvement, complete
-trans-substrate migration, post-migration plasticity, repeated improvement cycles and a
-frozen one-shot decision rule.
+All scientific autonomy remains inside explicit finite sandboxes. Repository writes,
+network access, credentials, deployment and production changes remain human-controlled,
+even after a scientific gate passes.
