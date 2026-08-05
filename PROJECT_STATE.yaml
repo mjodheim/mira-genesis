@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_one_bounded_completion_positive_phase_two_q4_active
+status: phase_one_bounded_completion_positive_phase_two_q5_active
 
 active_research_question: >-
   Which Genesis mechanisms transfer across formal behavioural domains, and which were
@@ -100,7 +100,7 @@ canonical_results:
     retuned_after_freeze: false
 
 phase_two:
-  status: q1_q2_q3_passed_q4_active
+  status: q1_q2_q3_q4_passed_q5_active
   active_experiment: M043
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
@@ -169,18 +169,55 @@ phase_two:
       witness_traces_exposed_to_public_surface: false
       failed_ci_jobs: 0
       ci_reruns: 0
-  current_gate: Q4_isolated_adoption_and_rollback
+    Q4:
+      status: passed_in_development
+      implementation:
+        - metamorphosis/m043_adoption_codec.py
+        - metamorphosis/m043_lineage_state.py
+        - metamorphosis/m043_adoption_validation.py
+        - metamorphosis/m043_adoption_transaction.py
+        - metamorphosis/m043_adoption.py
+        - metamorphosis/m043_validation_worker.py
+      specification: experiments/M043/Q4_ADOPTION_ROLLBACK.md
+      runner: scripts/run_m043_q4_qualification.py
+      qualification_ci_workflow_run: 31001898372
+      repository_tests_python_311: 705
+      repository_tests_python_313: 705
+      repository_integrity_passed: true
+      candidate_bound_to_full_parent_lineage: true
+      disposable_worker_process: true
+      worker_has_hidden_target_access: false
+      exact_evaluator_side_target_validation: true
+      candidate_has_release_authority: false
+      immutable_versioned_lineage_snapshot: true
+      versioned_components:
+        - accepted_body
+        - tool_registry
+        - portable_learning_state
+        - accepted_target_commitments
+        - hash_chained_causal_journal
+      post_commit_audit_required: true
+      forced_fault_exact_restoration:
+        body: true
+        registry: true
+        learning_state: true
+        journal: true
+      explicit_version_zero_rollback: true
+      runtime_pid_excluded_from_report_identity: true
+      focused_falsification_tests: 33
+      initial_integrity_only_failure_run: 31001191874
+      functional_test_failures: 0
+  current_gate: Q5_opaque_native_substrate
   next_required_properties:
-    - independent_disposable_candidate_validation
-    - exact_declared_parent_identity
-    - syntax_totality_and_resource_validation
-    - exact_protected_regression_preservation
-    - strict_improvement_and_exact_target_validation
-    - candidate_has_no_release_authority
-    - versioned_adoption_and_exact_archive
-    - fixed_invalid_provisional_rewrite
-    - exact_body_registry_and_journal_rollback
-    - permanent_q4_falsification_tests
+    - undeclared_native_instruction_semantics
+    - bounded_public_probe_discovery
+    - exact_native_synthesis
+    - distinct_source_and_native_identities
+    - fail_closed_malformed_probes
+    - fail_closed_partial_discovery
+    - fail_closed_wrong_native_programs
+    - no_renamed_source_transition_or_output_tables
+    - permanent_q5_falsification_tests
   canonical_workflow_authorised: false
   hidden_task_bank_authorised: false
   development_seed_block_authorised: false
