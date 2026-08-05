@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_one_bounded_completion_positive_phase_two_active
+status: phase_one_bounded_completion_positive_phase_two_q2_active
 
 active_research_question: >-
   Which Genesis mechanisms transfer across formal behavioural domains, and which were
@@ -100,7 +100,7 @@ canonical_results:
     retuned_after_freeze: false
 
 phase_two:
-  status: active_protocol_draft
+  status: q1_passed_q2_active
   active_experiment: M043
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
@@ -109,11 +109,32 @@ phase_two:
     input_alphabet: [0, 1, 2]
     output_alphabet: [0, 1, 2]
     ground_truth: exact_product_equivalence
-    canonical_minimisation: required
-    shortest_distinguishing_inputs: required
-  current_gate: Q1_exact_formal_kernel
+    canonical_minimisation: implemented_and_tested
+    shortest_distinguishing_inputs: implemented_and_tested
+  qualified_gates:
+    Q1:
+      status: passed_in_development
+      implementation: metamorphosis/m043_mealy.py
+      ci_workflow_run: 30983777610
+      repository_tests_python_311: 625
+      repository_tests_python_313: 625
+      repository_integrity_passed: true
+      state_renaming_invariant_serialisation: true
+      exact_product_equivalence: true
+      shortest_distinguishing_inputs: true
+      exact_minimisation: true
+      fail_closed_parsing: true
+  current_gate: Q2_capacity_changing_rewrite_language
+  next_required_properties:
+    - proved_state_count_effects
+    - behaviour_preserving_capacity_increase
+    - later_capacity_exploitation
+    - byte_identical_trace_replay
+    - permanent_falsification_tests
   canonical_workflow_authorised: false
-  development_result_exists: false
+  hidden_task_bank_authorised: false
+  development_seed_block_authorised: false
+  canonical_result_exists: false
   required_python_versions: ["3.11", "3.13"]
   forbidden_reuse:
     - M040_or_M042_canonical_seed
