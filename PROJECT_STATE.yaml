@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-05
-status: phase_one_bounded_completion_positive_phase_two_q3_active
+status: phase_one_bounded_completion_positive_phase_two_q4_active
 
 active_research_question: >-
   Which Genesis mechanisms transfer across formal behavioural domains, and which were
@@ -100,7 +100,7 @@ canonical_results:
     retuned_after_freeze: false
 
 phase_two:
-  status: q1_q2_passed_q3_active
+  status: q1_q2_q3_passed_q4_active
   active_experiment: M043
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
@@ -140,15 +140,47 @@ phase_two:
       wrong_parent_rejected: true
       tampered_certificate_rejected: true
       independent_from_dfa_executable_macro: true
-  current_gate: Q3_constructively_available_hidden_tasks
+    Q3:
+      status: passed_in_development
+      implementation:
+        - metamorphosis/m043_task_model.py
+        - metamorphosis/m043_task_search.py
+        - metamorphosis/m043_tasks.py
+      specification: experiments/M043/Q3_CONSTRUCTIVE_TASKS.md
+      runner: scripts/run_m043_q3_catalogue.py
+      qualification_ci_workflow_run: 30997105933
+      repository_tests_python_311: 672
+      repository_tests_python_313: 672
+      repository_integrity_passed: true
+      exact_parent_structural_incapacity_certificates: true
+      target_blind_constructive_search: true
+      admissible_exact_q2_trace_replay: true
+      mandatory_capacity_growth_and_exploitation: true
+      fixed_search_budget:
+        max_depth: 2
+        max_nodes: 512
+        max_states: 4
+      six_distinct_causal_control_surfaces: true
+      equal_budget_controls: true
+      deterministic_negative_termination: true
+      seed_free_development_catalogue_entries: 3
+      selected_seed: false
+      hidden_target_tables_exported: false
+      witness_traces_exposed_to_public_surface: false
+      failed_ci_jobs: 0
+      ci_reruns: 0
+  current_gate: Q4_isolated_adoption_and_rollback
   next_required_properties:
-    - exact_parent_structural_incapacity_certificates
-    - admissible_exact_target_reachability
-    - frozen_depth_and_node_budgets
-    - target_not_directly_encoded_in_rewrite_arguments
-    - meaningful_equal_budget_controls
-    - deterministic_negative_termination
-    - permanent_constructive_availability_tests
+    - independent_disposable_candidate_validation
+    - exact_declared_parent_identity
+    - syntax_totality_and_resource_validation
+    - exact_protected_regression_preservation
+    - strict_improvement_and_exact_target_validation
+    - candidate_has_no_release_authority
+    - versioned_adoption_and_exact_archive
+    - fixed_invalid_provisional_rewrite
+    - exact_body_registry_and_journal_rollback
+    - permanent_q4_falsification_tests
   canonical_workflow_authorised: false
   hidden_task_bank_authorised: false
   development_seed_block_authorised: false
