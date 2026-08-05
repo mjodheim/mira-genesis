@@ -19,8 +19,9 @@ def _render_qualified_allocation(policy: str) -> str:
     ) + f"export function allocate(ir,plan){{return {expression};}}\n"
 
 
-# Patch the compiler before importing the integrated lineage.  This is a bounded
-# compatibility fix for the exact M047 strategies that may reach version six.
+# Patch the compiler before importing the integrated lineage. This bounded
+# compatibility layer accepts the exact M047 allocation strategies that can
+# reach the qualified version-six state.
 _support._render_allocation = _render_qualified_allocation
 
 from metamorphosis import m048_native_lineage as _lineage  # noqa: E402
@@ -70,7 +71,18 @@ M048Protocol = _support.M048Protocol
 NativeMigrationError = _support.NativeMigrationError
 M048Manifest = _lineage.M048Manifest
 compile_m047_body_to_node = _support.compile_m047_body_to_node
-run_m048_native_runtime_migration = _lineage.run_m048_native_runtime_migration
+
+
+def run_m048_native_runtime_migration(
+    protocol: M048Protocol = M048_PROTOCOL,
+) -> M048Manifest:
+    """Run M048 while excluding volatile process identities from its manifest."""
+    raw = _lineage.run_m048_native_runtime_migration(protocol)
+    mapping = raw.to_dict()
+    worker_pid = int(mapping.pop("native_migration_worker_pid"))
+    mapping["native_migration_disposable_process"] = worker_pid > 0
+    return M048Manifest(mapping)
+
 
 __all__ = [
     "M048_PROTOCOL",
