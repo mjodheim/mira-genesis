@@ -74,6 +74,10 @@ For every positive substrate, the independent certificate records:
 - complete root reachability of every native node;
 - maximum executable call arity two.
 
+`metamorphosis/m043_native_verify.py` independently reconstructs every certificate field
+from the accepted source, native DAG, discovery record and opaque machine. Bundle audit
+rejects any self-consistent-looking certificate whose metadata differs from recomputation.
+
 The native program is reconstructed back into a `MealyMachine` and must equal the accepted
 source body exactly, not only behaviourally.
 
@@ -111,11 +115,11 @@ migrates it independently to all three positive opaque families. The report requ
 
 ## Permanent falsification suite
 
-The focused suite adds 39 tests covering public opacity, role discovery, deterministic
+The focused suite adds 40 tests covering public opacity, role discovery, deterministic
 probing, unstable and incomplete machines, strict budgets, exact interpolation, native
 execution, parser round trips, forward references, unreachable payloads, direct-table
-smuggling, wrong substrate/discovery bindings, capacity limits, complete-lineage bundle
-bindings and the deterministic Q5 development report.
+smuggling, wrong substrate/discovery bindings, capacity limits, independent certificate
+recomputation, complete-lineage bundle bindings and the deterministic Q5 development report.
 
 Q5 is not marked passed until the complete repository suite and integrity audit pass on
 Python 3.11 and Python 3.13 in GitHub Actions.
