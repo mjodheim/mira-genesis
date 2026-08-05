@@ -1,6 +1,6 @@
 # M044 — accelerated integrated continuous Mealy lineage
 
-**Status: protocol frozen; primary integrated qualification launched.**
+**Status: PASSED IN DEVELOPMENT.**
 
 ## Why M044 exists
 
@@ -69,11 +69,30 @@ That native-reconstructed behaviour is the parent of the third task. After adopt
 full updated snapshot is compiled again on the same discovered substrate. Success requires
 a changed native-program identity and exact reconstruction of the new accepted body.
 
-## Replay and claim boundary
+## Qualification evidence
 
-The runner executes the entire experiment twice and compares canonical manifest bytes. CI
-must expose the same manifest SHA-256 on Python 3.11 and Python 3.13.
+Workflow run `31015992729` passed on the frozen integrated head:
 
-M044 remains a bounded integrated development result. It does not claim open-ended
-evolution, AGI, consciousness, production authority or unrestricted native self-modification.
-The separate proxy-measurement experiment remains outside M044 and retains the M045 number.
+- **755 tests on Python 3.11** in 421.14 seconds;
+- **755 tests on Python 3.13** in 580.77 seconds;
+- every module imported cleanly;
+- no orphan module remained;
+- declared dependencies matched imports;
+- no failed job and no rerun.
+
+Each Python matrix executed the complete lineage twice and required byte-identical canonical
+manifest bytes within that runtime. Both supported Python versions passed the same permanent
+M044 assertions. The generic CI workflow did not publish a cross-job manifest artifact, so
+this development result does not claim a separately archived cross-runtime byte comparison.
+
+The accepted development lineage completed three exact adoptions, grew from two to five
+states, reused an acquired effect pattern before and after migration, changed its exact
+native program after post-migration learning, preserved three tool, learning and journal
+records, and restored version three exactly after a forced version-four journal fault.
+
+## Claim boundary
+
+M044 is a bounded integrated development result. It does not claim open-ended evolution,
+AGI, consciousness, production authority or unrestricted native self-modification. M042
+remains the only positive canonical continuous-lineage completion. The separate
+proxy-measurement experiment remains outside M044 and retains the M045 number.
