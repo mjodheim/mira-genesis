@@ -41,7 +41,7 @@ formal object it rewrites.
 
 ### M043 — deterministic Mealy qualification
 
-**Status: protocol draft; implementation not yet qualified.**
+**Status: Q1 passed in development; Q2 active. No canonical result exists.**
 
 M043 moves from language acceptors to deterministic reactive transducers:
 
@@ -60,14 +60,14 @@ body encoding or executable `flip/grow/redirect` macro.
 
 #### M043 qualification sequence
 
-| Gate | Implementation boundary | Exit condition |
+| Gate | Status | Exit condition |
 |---|---|---|
-| Q1 | Exact Mealy kernel | Canonical serialisation, equivalence, counterexamples, minimisation and malformed-input rejection pass permanent metamorphic tests. |
-| Q2 | Capacity-changing rewrite language | State-count effects are proven; traces replay exactly; at least one neutral growth operation can later become useful. |
-| Q3 | Constructively available hidden tasks | Every admitted task is reachable by an admissible lineage and structurally impossible for its parent under declared bounds. |
-| Q4 | Isolated adoption and rollback | Independent validation fails closed and a forced bad rewrite restores the exact accepted state. |
-| Q5 | Opaque native substrate | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
-| Q6 | Complete development replay | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
+| Q1 — exact Mealy kernel | **PASSED IN DEVELOPMENT** | Canonical serialisation, equivalence, counterexamples, minimisation and malformed-input rejection passed permanent metamorphic tests; complete CI passed 625 tests on Python 3.11 and 3.13. |
+| Q2 — capacity-changing rewrite language | **ACTIVE** | State-count effects are proven; traces replay exactly; at least one neutral growth operation can later become useful. |
+| Q3 — constructively available hidden tasks | NOT STARTED | Every admitted task is reachable by an admissible lineage and structurally impossible for its parent under declared bounds. |
+| Q4 — isolated adoption and rollback | NOT STARTED | Independent validation fails closed and a forced bad rewrite restores the exact accepted state. |
+| Q5 — opaque native substrate | NOT STARTED | Public probes recover undeclared semantics and exact native synthesis succeeds without a renamed source table. |
+| Q6 — complete development replay | NOT STARTED | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
 
 M043 is a rig-qualification experiment, not a new canonical ten-gate claim. A later
 continuous Mealy lineage would require a separate experiment, fresh frozen protocol and
