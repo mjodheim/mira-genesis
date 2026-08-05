@@ -1,6 +1,6 @@
 # M043 Q2 — certified capacity-changing Mealy rewrite language
 
-**Status: development implementation complete; complete repository CI pending.**
+**Status: passed in development. Qualification CI completed successfully.**
 
 ## Question
 
@@ -98,15 +98,17 @@ domain-separated trace digest.
 - 64 deterministic random machines, with every admitted duplication independently checked
   for exact equivalence and `+1` reachable capacity.
 
-The focused local suite passes. Q2 is not marked qualified until the complete repository
-suite and integrity audit pass on Python 3.11 and 3.13 in GitHub Actions.
+Qualification workflow run `30992682534` passed the complete repository with **643 tests on
+Python 3.11**, **643 tests on Python 3.13** and a successful integrity audit covering clean
+imports, orphan-module detection and dependency consistency.
 
 ## Exit and next boundary
 
-After complete CI passes, Q2 may be marked passed in development. The next authorised gate
-is Q3: constructively available hidden Mealy tasks. Before any task can enter a development
-bank, the parent must be structurally incapable of exact behaviour and an admissible Q2
-trace must be proven to reach the target within declared depth and node budgets.
+Q2 is passed in development. The next authorised gate is Q3: constructively available
+hidden Mealy tasks. Before any task can enter a development bank, the parent must be
+structurally incapable of exact behaviour and an admissible Q2 trace must be proven to reach
+the target within declared depth and node budgets.
 
 M041's constructive-unavailability failure must be made impossible by admission, not hidden
-by retries or larger search budgets.
+by retries or larger search budgets. No hidden task bank, seed block or canonical workflow
+is authorised yet.
