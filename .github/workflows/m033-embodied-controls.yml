@@ -3,7 +3,6 @@ name: M033 embodied controls
 # Body-anchored calibration only. Primary seeds 0–63 remain unopened.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

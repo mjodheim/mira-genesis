@@ -4,7 +4,6 @@ name: M030 untouched-seed confirmation
 # block 64-127 remains untouched until the recorded local development run.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

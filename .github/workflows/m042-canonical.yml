@@ -1,0 +1,16 @@
+name: M042 frozen canonical execution (archived)
+
+# The unique canonical run completed as workflow run 30958542929.
+# No rerun is permitted. This file remains only as an immutable execution record.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archived:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'M042 canonical execution is closed.'

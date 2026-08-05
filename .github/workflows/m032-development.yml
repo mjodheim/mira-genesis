@@ -4,7 +4,6 @@ name: M032 trans-substrate lifecycle
 # controls; it does not produce a canonical scientific result.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

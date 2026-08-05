@@ -1,0 +1,16 @@
+name: M042 constructive completion (archived)
+
+# M042 closed with the unique preserved canonical result from workflow run 30958542929.
+# Development and preservation reruns are disabled.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  archived:
+    if: false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'M042 is closed.'

@@ -4,7 +4,6 @@ name: M028 adaptive evaluation weighting
 # remains a separately recorded local development run.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:

@@ -3,7 +3,6 @@ name: M022 adaptation-stress controls
 # Development controls only. This workflow cannot produce a canonical result.
 
 on:
-  pull_request:
   workflow_dispatch:
 
 permissions:
