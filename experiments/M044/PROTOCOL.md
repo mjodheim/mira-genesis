@@ -29,9 +29,9 @@ One deterministic lineage must:
 - pre-migration accepted cycles: `2`;
 - post-migration accepted cycles: `1`;
 - search depth: `2` operations;
-- search node budget: `4,096`;
+- search node budget: `1,024`;
 - state ceiling: `6`;
-- catalogue candidates per cycle: `96`;
+- candidate paths considered per cycle: `96`;
 - hidden observation limit: `64`;
 - opaque substrate family: development family `0`;
 - forced rollback fault: causal-journal corruption.
@@ -42,14 +42,18 @@ bounded to five declared states.
 
 ## Reused mechanisms
 
-M044 does not define another body model, mutation language, target generator, validator,
-transaction store or native compiler. It calls the M043 Q1-Q5 implementations directly:
+M044 does not define another body model, mutation language, validator, transaction store or
+native compiler. It calls the M043 Q1-Q5 implementations directly:
 
 - exact total Mealy representation and equivalence;
 - Q2 duplicate-and-specialise rewrites and certificates;
-- Q3 target-blind constructive catalogue admission;
+- Q3 target-blind proposal order, exact search, hidden evaluator and incapacity proof;
 - Q4 disposable replay, evaluator acceptance, versioned state and rollback;
 - Q5 public opaque discovery, finite-field DAG synthesis and migration audit.
+
+For speed, M044 retains only the three controls needed by the integrated claim: unchanged
+parent, learned-tool ablation and learning-state ablation. It does not rebuild the full six-arm
+Q3 qualification suite on every cycle.
 
 ## Tool reuse interpretation
 
