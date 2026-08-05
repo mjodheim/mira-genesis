@@ -74,22 +74,30 @@ stream produced during interaction instead of a final accept/reject bit. Exact
 equivalence, minimisation and finite distinguishing inputs remain decidable, but the body,
 rewrite language, hidden tasks and opaque substrate must be rebuilt independently.
 
-Qualification gate **Q1 is complete in development**. The repository now contains an
-independent exact Mealy kernel with strict immutable representation, canonical
-state-renaming-invariant serialisation, exact product equivalence, deterministic shortest
-counterexamples, exact minimisation, domain-separated identities and fail-closed parsing.
-The complete repository passed **625 tests on Python 3.11 and 625 on Python 3.13**, together
-with the integrity audit.
+Qualification gates **Q1 and Q2 are complete in development**:
 
-The active boundary is **Q2**: define a Mealy-specific rewrite language with proved
-state-count effects, behaviour-preserving capacity growth, later operations that can exploit
-that capacity and byte-identical trace replay. No hidden task bank, seed block or canonical
-workflow is authorised yet.
+- Q1 provides the independent exact Mealy kernel: strict immutable representation,
+  canonical state-renaming-invariant serialisation, exact product equivalence,
+  deterministic shortest counterexamples, exact minimisation and fail-closed parsing;
+- Q2 provides the independent certified rewrite language: exact state-count effects,
+  behaviour-preserving reachable-capacity growth, later specialisation of duplicated
+  capacity, exact indexed-body identities and byte-identical trace replay.
+
+Qualification workflow run `30992682534` passed **643 tests on Python 3.11 and 643 on
+Python 3.13**, together with the complete repository-integrity audit.
+
+The active boundary is **Q3**: construct a finite development bank in which every admitted
+hidden Mealy task is both structurally impossible for its declared parent and exactly
+reachable by an admissible Q2 trace within frozen depth and node budgets. The M041 failure
+mode must be excluded by admission rather than hidden by retries.
+
+No hidden task bank, seed block or canonical workflow is authorised yet.
 
 See:
 
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md);
 - [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
+- [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md).
 
 ## Parallel measurement track
