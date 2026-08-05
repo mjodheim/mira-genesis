@@ -1,10 +1,12 @@
 # Mira Genesis — Roadmap
 
-Mira Genesis now has two chronological phases and one parallel measurement track.
+Mira Genesis has two completed bounded construction phases and one parallel measurement
+track.
 
 - **Phase 1 — bounded Genesis construction:** complete through M042.
-- **Phase 2 — structural-domain transfer:** active at M043.
-- **Measurement track:** proxy objectives versus exact hidden quality; still open.
+- **Phase 2 — structural-domain transfer and integrated Mealy lineage:** complete in
+  development through M044.
+- **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 ## Phase 1 — completed bounded construction
 
@@ -36,76 +38,89 @@ intelligence or consciousness.
 
 ## Phase 2 — structural-domain transfer
 
-Phase 2 asks whether the architecture is domain-general enough to survive a change in the
-formal object it rewrites.
+Phase 2 asked whether the architecture was transferable beyond deterministic binary
+language acceptors.
 
 ### M043 — deterministic Mealy qualification
 
-**Status: Q1, Q2, Q3, Q4 and Q5 passed in development; Q6 active. No canonical result
-exists.**
+**Status: Q1–Q5 PASSED IN DEVELOPMENT. The proposed Q6 gate was absorbed by M044.**
 
-M043 moves from language acceptors to deterministic reactive transducers:
+M043 rebuilt the formal and operational machinery for deterministic reactive transducers:
 
-- input alphabet `{0, 1, 2}`;
-- output alphabet `{0, 1, 2}`;
+- input and output alphabet `{0, 1, 2}`;
 - outputs emitted along transitions;
-- exact product equivalence;
-- canonical minimisation;
-- shortest distinguishing input words;
+- exact product equivalence and canonical minimisation;
+- deterministic shortest distinguishing words;
 - a new Mealy-specific rewrite language;
-- a new opaque native representation.
+- constructive hidden tasks and structural incapacity proofs;
+- disposable validation, versioned adoption and exact rollback;
+- an opaque table-free native representation.
 
-The experiment may reuse domain-neutral journal, sandbox, serialisation, adoption and
-rollback infrastructure. It may not reuse M042's seed, task bank, target generator, DFA
-body encoding or executable `flip/grow/redirect` macro.
-
-#### M043 qualification sequence
-
-| Gate | Status | Exit condition |
+| Gate | Status | Evidence |
 |---|---|---|
-| Q1 — exact Mealy kernel | **PASSED IN DEVELOPMENT** | Canonical serialisation, equivalence, counterexamples, minimisation and malformed-input rejection passed permanent metamorphic tests; complete CI passed 625 tests on Python 3.11 and 3.13. |
-| Q2 — capacity-changing rewrite language | **PASSED IN DEVELOPMENT** | Exact physical/reachable state effects, neutral reachable-capacity growth, later specialisation and exact parent-bound trace replay passed permanent falsification tests; CI run `30992682534` passed 643 tests on Python 3.11 and 3.13 plus integrity. |
-| Q3 — constructively available hidden tasks | **PASSED IN DEVELOPMENT** | Exact minimal-state incapacity, target-blind constructive reachability, six distinct equal-budget controls and explicit negative termination passed permanent tests; CI run `30997105933` passed 672 tests on Python 3.11 and 3.13 plus integrity. |
-| Q4 — isolated adoption and rollback | **PASSED IN DEVELOPMENT** | Disposable replay without hidden-target access, exact evaluator acceptance, versioned adoption and byte-identical rollback after four forced component faults passed permanent tests; CI run `31001898372` passed 705 tests on Python 3.11 and 3.13 plus integrity. |
-| Q5 — opaque native substrate | **PASSED IN DEVELOPMENT** | Bounded public probes recovered three distinct opaque field bases; table-free Lagrange DAG synthesis reconstructed the exact accepted Mealy body with independently recomputed certificates; CI run `31008963611` passed 745 tests on Python 3.11 and 3.13 plus integrity. |
-| Q6 — complete development replay | **ACTIVE** | Founder, tasks, search, tools, decisions, migration, native body and journals reproduce identically on Python 3.11 and 3.13. |
+| Q1 — exact Mealy kernel | **PASSED IN DEVELOPMENT** | 625 tests on Python 3.11 and 3.13 plus integrity. |
+| Q2 — capacity-changing rewrite language | **PASSED IN DEVELOPMENT** | Run `30992682534`; 643 tests on each version plus integrity. |
+| Q3 — constructively available hidden tasks | **PASSED IN DEVELOPMENT** | Run `30997105933`; 672 tests on each version plus integrity. |
+| Q4 — isolated adoption and rollback | **PASSED IN DEVELOPMENT** | Run `31001898372`; 705 tests on each version plus integrity. |
+| Q5 — opaque native substrate | **PASSED IN DEVELOPMENT** | Run `31008963611`; 745 tests on each version plus integrity. |
+| Q6 — separate complete replay gate | **ABSORBED BY M044** | Replay became an exit condition of the integrated lineage instead of another standalone rig. |
 
-Q3 excludes the M041 failure mode by construction. A task cannot enter its development
-catalogue unless the parent has an exact structural-incapacity certificate and a target-blind
-Q2 search reaches the exact target within depth 2, 512 nodes and a four-state cap.
+M043 is qualification evidence, not a canonical continuous-lineage result.
 
-Q4 separates proposal from release authority. The candidate is replayed in a fresh isolated
-process that never receives the hidden target, then checked exactly by the evaluator. An
-accepted rewrite versions the body, tool registry, learning state, target commitment and
-hash-chained journal. Forced corruption of each mutable component restores the exact prior
-checkpoint bytes and digest.
+### M044 — accelerated integrated continuous Mealy lineage
 
-Q5 migrates the accepted Q4 body into three genuinely opaque native field substrates.
-Semantic roles are recovered through bounded repeated probes, while native next-state and
-output functions are compiled into reachable scalar DAGs of opaque unary and binary calls.
-The native representation contains no transition/output table fields or unreachable payload
-nodes, and every certificate is independently recomputed from source and native execution.
+**Status: PASSED IN DEVELOPMENT.**
 
-Q6 now closes rig qualification by reproducing the entire Q1→Q5 development chain and its
-final manifest identically across both required Python versions.
+M044 assembled Q1–Q5 directly instead of adding further component gates. One bounded
+lineage:
 
-M043 is a rig-qualification experiment, not a new canonical ten-gate claim. A later
-continuous Mealy lineage would require a separate experiment, fresh frozen protocol and
-unique first-result workflow.
+1. grew from two to three states through an independently validated adoption;
+2. grew from three to four states and reused an acquired effect pattern;
+3. discovered and migrated to one opaque table-free native substrate;
+4. continued from native-reconstructed behaviour and grew from four to five states;
+5. reused an acquired effect pattern after migration;
+6. resynthesised a changed exact native program;
+7. preserved three tool records, three learning traces and three causal-journal entries;
+8. rejected a forced provisional journal corruption and restored version three exactly;
+9. reproduced its canonical manifest byte-for-byte on an immediate replay within each
+   supported runtime.
+
+Workflow run `31015992729` passed **755 tests on Python 3.11 and 755 on Python 3.13**, plus
+all repository-integrity checks. No job failed and no rerun was used.
+
+M044 is a positive integrated development result. It is not canonical, does not select a
+seed or hidden bank and does not replace M042 as the only positive canonical completion.
 
 See:
 
-- [`experiments/M043/PROTOCOL_DRAFT.md`](experiments/M043/PROTOCOL_DRAFT.md);
-- [`experiments/M043/Q2_REWRITE_LANGUAGE.md`](experiments/M043/Q2_REWRITE_LANGUAGE.md);
-- [`experiments/M043/Q3_CONSTRUCTIVE_TASKS.md`](experiments/M043/Q3_CONSTRUCTIVE_TASKS.md);
-- [`experiments/M043/Q4_ADOPTION_ROLLBACK.md`](experiments/M043/Q4_ADOPTION_ROLLBACK.md);
-- [`experiments/M043/Q5_OPAQUE_NATIVE.md`](experiments/M043/Q5_OPAQUE_NATIVE.md).
+- [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
+- [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md).
 
-## Parallel measurement track
+## Next construction frontier — scalable non-exhaustive lineage
 
-M030 confirmed component-uniform guidance on untouched seeds. M031 transported that
-signal to a structurally different finite grammar. The supported information claim is
-narrow: reusable component evidence tracked exact hidden potential better than the frozen
+The immediate blocker is no longer integration. It is scale.
+
+The current exact laboratory still relies on small finite state spaces, bounded candidate
+enumeration and exact evaluators. The next construction experiment must test whether the
+lineage can continue when exhaustive search is unavailable:
+
+- learned proposal models instead of enumerating all candidates;
+- explicit resource allocation and stopping policies;
+- approximate search followed by independent exact or high-confidence validation;
+- longer horizons than three accepted cycles;
+- larger bodies and task families;
+- preservation of causal provenance and rollback under partial observability;
+- fail-closed termination when evidence is insufficient.
+
+This frontier should be developed as a single integrated experiment rather than another
+long chain of preliminary gates. The next available construction number is **M046**, because
+M045 remains reserved for the independent measurement track.
+
+## Parallel measurement track — M045
+
+M030 confirmed component-uniform guidance on untouched seeds. M031 transported that signal
+to a structurally different finite grammar. The supported information claim is narrow:
+reusable component evidence tracked exact hidden potential better than the frozen
 development-adaptive baseline in those two generators.
 
 The next distinct optimisation question remains:
@@ -113,11 +128,11 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-This experiment must remain separate from M043. Construction success cannot validate a
+M045 must remain separate from M044 and M046. Construction success cannot validate a
 measurement policy, and measurement failure cannot be hidden inside a richer organism.
 
 ## Release boundary
 
-All scientific autonomy remains inside explicit finite sandboxes. Repository writes,
-network access, credentials, deployment and production changes remain human-controlled,
-even after a scientific gate passes.
+All scientific autonomy remains inside explicit finite or resource-limited sandboxes.
+Repository writes, network access, credentials, deployment and production changes remain
+human-controlled, even after a scientific result passes.
