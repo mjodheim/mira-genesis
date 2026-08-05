@@ -1,6 +1,17 @@
 # M047 — integrated modular-software lineage
 
-**Status: IN DEVELOPMENT.**
+**Status: PASSED IN DEVELOPMENT.**
+
+## Development qualification
+
+The first generic CI workflow run `31039609326` (run number `400`) qualified marker commit
+`c791ad0b460faebde6625cc986f4b14cdf304ea9` without a failed job or rerun:
+
+- **788 tests passed on Python 3.11** in `577.03` seconds;
+- **788 tests passed on Python 3.13** in `587.07` seconds;
+- repository imports, orphan detection and dependency consistency passed.
+
+This remains a positive integrated development result, not a canonical result.
 
 ## Why M047 exists
 
