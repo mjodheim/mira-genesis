@@ -1,6 +1,6 @@
 # M043 Q3 — constructively available Mealy tasks
 
-**Status: development implementation complete; complete repository CI pending.**
+**Status: development implementation complete; complete repository CI running.**
 
 ## Question
 
