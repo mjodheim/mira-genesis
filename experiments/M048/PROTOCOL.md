@@ -1,6 +1,23 @@
 # M048 — genuine native runtime migration with post-migration learning
 
-**Status: IN DEVELOPMENT.**
+**Status: PASSED IN DEVELOPMENT.**
+
+## Recorded qualification history
+
+M048 preserves the complete CI history of the coherent pull request rather than replacing
+negative results with a later success:
+
+- run 402 on commit `616f316`: failed because the checkpoint expected `causal_journal`
+  while the native state exposed `native_journal`, and static integrity checks could not see
+  indirect imports;
+- run 403 on commit `839883d`: failed with one remaining contract mismatch because the
+  checkpoint did not expose `combined_digest`;
+- run 404 on commit `0dfd822`: passed after the observed defects were corrected;
+- run 405 on commit `b2c00de`: passed after adding the development-result record.
+
+The positive development qualification therefore means that the corrected implementation
+satisfies the permanent tests. It does not erase the two earlier failures, establish a
+first-attempt success, or upgrade M048 to a canonical result.
 
 ## Why M048 exists
 
