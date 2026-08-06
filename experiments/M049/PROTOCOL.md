@@ -1,6 +1,17 @@
 # M049 — bounded migration-strategy selection
 
-**Status: DEVELOPMENT — qualification pending.**
+**Status: PASSED IN DEVELOPMENT.**
+
+## Recorded qualification
+
+CI run `31076192847` (run number `408`) qualified commit `b8a8bb064ff456c491369bd1ca25c72ca187b545` on the first attempt:
+
+- `812` tests passed on Python `3.11.15` with Node.js `20.20.2`;
+- `812` tests passed on Python `3.13` with the same pinned Node.js target runtime;
+- repository integrity passed clean imports, orphan detection and dependency consistency;
+- no job failed and no rerun was used.
+
+The code-qualified head is followed only by documentation consolidation commits marked `skip ci`. The authoritative development result is preserved in `DEVELOPMENT_RESULT.md`.
 
 ## Question
 
@@ -43,11 +54,11 @@ A separate public probe set intentionally leaves all four strategies plausible. 
 - repository, credential, network and deployment authority: absent;
 - canonical claim: forbidden.
 
-M049 is a bounded development probe of migration-strategy acquisition. A positive result would not establish general translation, open-ended evolution, AGI, consciousness or production safety. M042 remains the only positive canonical continuous-lineage completion.
+M049 is a bounded development probe of migration-strategy acquisition. The positive result does not establish general translation, open-ended evolution, AGI, consciousness or production safety. M042 remains the only positive canonical continuous-lineage completion.
 
 ## Qualification criteria
 
-M049 passes in development only if permanent tests establish:
+M049 passed in development because permanent tests establish:
 
 1. unique public evidence selects the correct frozen strategy;
 2. ambiguous and contradictory evidence fail closed;
