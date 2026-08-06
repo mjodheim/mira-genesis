@@ -127,10 +127,10 @@ def independently_validate(result: PrunedSearchResult, hidden_probes: Iterable[P
 def run_m052_behavioral_equivalence_pruning() -> dict[str, object]:
     public = (
         Probe((-1, 1, -1), 1),
-        Probe((-2, -2, 1), 1),
+        Probe((-2, -2, 1), 3),
         Probe((), 0),
     )
-    hidden = (Probe((-2, 2, 1), 1), Probe((-1, -1, 2), 2))
+    hidden = (Probe((-2, 2, 1), 3), Probe((-1, -1, 2), 3))
     positive = search_with_pruning(public)
     if positive.status != "composed" or not independently_validate(positive, hidden):
         raise M052Error("positive episode failed")
