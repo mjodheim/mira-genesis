@@ -36,10 +36,15 @@ def _qualified_native_checkpoint(state: Mapping[str, object]) -> dict[str, objec
         ),
         "migration_digest": state["migration"]["digest"],
     }
+    state_digest = _support._native_state_digest(state)
+    checkpoint_digest = _support._digest(
+        b"m048-native-checkpoint-v1\x00", {**mapping, "state_digest": state_digest}
+    )
     return {
         **mapping,
-        "state_digest": _support._native_state_digest(state),
-        "digest": _support._digest(b"m048-native-checkpoint-v1\x00", mapping),
+        "state_digest": state_digest,
+        "combined_digest": checkpoint_digest,
+        "digest": checkpoint_digest,
     }
 
 
