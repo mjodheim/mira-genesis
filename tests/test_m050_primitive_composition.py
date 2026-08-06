@@ -15,19 +15,16 @@ from metamorphosis.m050_primitive_composition import (
 )
 
 
+POSITIVE_PUBLIC = (Probe((1, 1, 2), 3), Probe((-2, 1), -1), Probe((), 0))
+
+
 def test_budget_and_family_are_frozen() -> None:
     assert COMPOSITION_BUDGET == 24
     assert len(FROZEN_PIPELINES) == COMPOSITION_BUDGET
 
 
 def test_public_evidence_composes_unique_pipeline() -> None:
-    result = compose_pipeline(
-        (
-            Probe((-7, 2, -7), 9),
-            Probe((-3, -4), 7),
-            Probe((), 0),
-        )
-    )
+    result = compose_pipeline(POSITIVE_PUBLIC)
     assert result.status == "composed"
     assert result.pipeline is not None
     names = [item["name"] for item in result.pipeline["primitives"]]
@@ -50,10 +47,8 @@ def test_contradictory_public_evidence_fails_closed() -> None:
 
 
 def test_hidden_validation_accepts_independently() -> None:
-    composition = compose_pipeline(
-        (Probe((-7, 2, -7), 9), Probe((-3, -4), 7), Probe((), 0))
-    )
-    verdict = independently_validate(composition, (Probe((-5, 1, -5, 2), 8),))
+    composition = compose_pipeline(POSITIVE_PUBLIC)
+    verdict = independently_validate(composition, (Probe((-5, 1, -5, 2), -2),))
     assert verdict.accepted is True
 
 
@@ -66,9 +61,7 @@ def test_hidden_contradiction_is_preserved_as_rejection() -> None:
 
 
 def test_tampered_pipeline_is_rejected() -> None:
-    composition = compose_pipeline(
-        (Probe((-7, 2, -7), 9), Probe((-3, -4), 7), Probe((), 0))
-    )
+    composition = compose_pipeline(POSITIVE_PUBLIC)
     assert composition.pipeline is not None
     tampered = dict(composition.pipeline)
     tampered["runtime"] = "python"
@@ -82,9 +75,7 @@ def test_empty_evidence_is_rejected() -> None:
 
 
 def test_validation_requires_hidden_evidence() -> None:
-    composition = compose_pipeline(
-        (Probe((-7, 2, -7), 9), Probe((-3, -4), 7), Probe((), 0))
-    )
+    composition = compose_pipeline(POSITIVE_PUBLIC)
     with pytest.raises(M050Error, match="requires hidden probes"):
         independently_validate(composition, ())
 
