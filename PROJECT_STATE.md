@@ -1,6 +1,6 @@
 # Mira Genesis — Project state
 
-**Updated: 5 August 2026**
+**Updated: 6 August 2026**
 
 ## Authoritative summary
 
@@ -13,9 +13,14 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   selection, validation, adoption, causal memory, checkpointing and fail-closed termination.
 - **M047 is a positive integrated development result** in a real executable modular Python
   software body.
+- **M048 is a positive integrated development result** for genuine trans-runtime migration:
+  the accepted Python body was compiled into native Node.js modules, executed without
+  semantic delegation back to Python, and then learned a new capability in the new runtime.
+- **M049–M052 are bounded qualification and search-efficiency results** on migration-strategy
+  selection, composition and exact behavioral-equivalence pruning. The series is closed.
 - **M042 remains the only positive canonical continuous-lineage completion.**
-- The current construction frontier is **M048: genuine migration of the M047 lineage to a
-  different language/runtime followed by new post-migration learning**.
+- The current construction frontier is **M053: endogenous extension of the transformation
+  language, proposed and preregistered but not yet qualified**.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -180,34 +185,102 @@ See:
 - [`experiments/M047/DEVELOPMENT_QUALIFICATION.md`](experiments/M047/DEVELOPMENT_QUALIFICATION.md);
 - [`results/M047_DEVELOPMENT_RESULT.md`](results/M047_DEVELOPMENT_RESULT.md).
 
-## Current construction frontier — M048
+## Phase 4 — trans-runtime continuity
 
-M047 establishes a real modular mutable software body, but both the lineage controller and
-accepted executable body still live in Python. M048 must test genuine trans-runtime
-continuity rather than another internal Python rewrite.
+### M048 — genuine Node runtime migration
 
-The shortest integrated M048 path must require one lineage to:
+**M048 PASSED IN DEVELOPMENT after two preserved failing qualification runs.**
 
-- begin from the exact qualified M047 version-six body and retained lineage state;
-- discover or compile a native representation for a genuinely different language/runtime;
-- execute the migrated body without using the original Python modules as a semantic wrapper;
-- preserve pre-migration capabilities, generated tests, acquired `mean` tool, patch registry,
-  causal success/failure memory, reasons for adoption and exact checkpoints;
-- demonstrate that a skill learned before migration remains operational and useful after it;
-- diagnose a new post-migration limitation;
-- write or modify native modules and native executable tests under fixed resources;
-- submit the post-migration candidate to an independent validator;
-- adopt or reject transactionally and restore exactly after a forced fault;
-- learn at least one genuinely new capability after migration;
-- replay the migration and post-migration learning with verifiable artifacts.
+M047 established a real modular mutable body, but both the controller and the accepted
+executable body still lived in Python. M048 tested genuine trans-runtime continuity rather
+than another internal Python rewrite.
 
-A subprocess wrapper around the Python body, a source encoding change, a table lookup of
-known answers or a native shell that delegates semantics back to Python does not count as
-migration. The native body must carry executable semantics and remain evolvable after the
-original runtime is removed from the execution path.
+One lineage reconstructed the accepted M047 version-six state exactly, compiled its nine
+accepted Python modules into nine native Node.js ESM modules, executed the migrated body
+without semantic delegation back to Python, preserved all twenty-eight inherited retained
+capabilities, used the inherited `mean` tool after migration, proposed the unseen `maximum`
+capability in a separate Node process, validated it in another separate Node process, adopted
+a new executable `tool_max` module as version eight, detected forced version-nine journal
+corruption, restored version eight exactly and replayed the whole sequence from artifacts.
+A `median` challenge terminated explicitly for insufficient evidence.
 
-M048 should remain one direct integrated experiment. Additional component gates are justified
-only when they unlock the migration or post-migration learning itself.
+The qualification history is append-only and contains two negative verdicts:
+
+| Run | Number | Commit | Verdict |
+|---|---:|---|---|
+| `31046715149` | 402 | `616f316` | **FAILED** — orphan import plus `causal_journal`/`native_journal` schema defect. |
+| `31054844770` | 403 | `839883d` | **FAILED** — missing public `combined_digest` checkpoint field. |
+| `31061450556` | 404 | `0dfd822` | **PASSED** — full matrix on pinned Node.js 20, no rerun of either failing commit. |
+
+Neither failing commit was rerun. Both negative verdicts remain part of the M048 record.
+
+A subprocess wrapper, a source encoding change, a lookup table of known answers or a native
+shell delegating semantics back to Python would not have counted. The native body carries
+executable semantics and remained evolvable after Python left the execution path.
+
+See [`experiments/M048/PROTOCOL.md`](experiments/M048/PROTOCOL.md) and
+[`experiments/M048/DEVELOPMENT_RESULT.md`](experiments/M048/DEVELOPMENT_RESULT.md).
+
+### M049–M052 — bounded migration-strategy series, now closed
+
+Four bounded experiments refined how a migration strategy is chosen from public evidence
+alone, each independently validated and each fail-closed on ambiguous evidence.
+
+| Experiment | Run | Tests | Result |
+|---|---|---:|---|
+| M049 — strategy selection | `31076192847` (408) | 812 | Deterministic selection among four frozen strategies; no hidden-evidence access by the selector. |
+| M050 — primitive composition | `31087299169` (413) | 822 | 24 three-stage pipelines from frozen primitives; one preserved failing run (410) exposed a grammar/fixture mismatch. |
+| M051 — variable-length composition | run 418 | 830 | 80 admissible compositions, transform chains of length zero to two, unique public identification. |
+| M052 — behavioral-equivalence pruning | run 422 | 839 | The 80 candidates collapse to 38 behavioral classes on a declared 156-input finite domain; 42 pruned before public search. |
+
+**M052 closes the series.** [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
+records that adding candidates, depth, another human-declared primitive or another pruning
+rule over the same fixed admissible language no longer counts as a material advance. Such
+work may remain valid engineering; it is outside the active construction frontier.
+
+This closure changes the research direction, not the interpretation of M049–M052. Each
+remains a valid bounded result inside its frozen grammar and probe families.
+
+## Current construction frontier — M053
+
+**Status: PROPOSED AND PREREGISTERED — UNQUALIFIED.**
+
+The required rupture is endogenous extension of the transformation language. The continuing
+lineage must:
+
+- encounter a public task for which every transformation expressible in its accepted language
+  is demonstrably insufficient;
+- diagnose that insufficiency as a limitation of the language or proposal architecture, not
+  merely pick a different existing candidate;
+- construct a new reusable primitive, abstraction, tool or language rule absent from the
+  founder catalogue;
+- derive the implementation and its executable tests without hidden validation cases;
+- execute the extension in a disposable sandbox under fixed resources;
+- submit it to an independent validator holding no proposal or adoption authority;
+- adopt transactionally only after validation, preserving body, tools, tests, causal reasons
+  and rollback state;
+- reuse the acquired extension on a structurally distinct second task family;
+- preserve a negative or insufficient-evidence episode in which widening is refused;
+- restore the exact accepted state after a forced post-adoption fault and replay
+  deterministically.
+
+M053 does not pass if the supposedly new primitive is selected from a hidden pre-enumerated
+catalogue, copied from evaluator-only data, encoded as a lookup table of expected answers or
+useful only on the task that created it.
+
+The bounded design under review in [PR #73](https://github.com/mjodheim/mira-genesis/pull/73)
+uses the unchanged M051 catalogue of 80 programs as the founder language and a closed
+pair-expression meta-language of exactly 16 ASTs. Synthesis is forbidden unless zero founder
+candidates survive the public probes. The creation task is a sum reduction over adjacent
+transitions; the reuse task changes the reduction family to maximum, so replay of the
+creation answer cannot satisfy it.
+
+**M053 is not qualified.** Its first CI attempt did not produce a scientific verdict: run
+`31118366409` failed during *Set up job* with a GitHub Actions `Service Unavailable` error
+while resolving action downloads, and the remaining jobs were cancelled in cascade. That is
+an infrastructure fault, not evidence about the construction. It is recorded in
+[`FAILURE_LOG.md`](FAILURE_LOG.md) as such and does not count as a preserved negative
+qualification verdict.
 
 ## Canonical and development result map
 
@@ -225,6 +298,12 @@ only when they unlock the migration or post-migration learning itself.
 | M044 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Three-cycle Mealy lineage, opaque migration, post-migration learning, exact rollback and replay. |
 | M046 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Six-cycle non-exhaustive proposal/adoption lineage with bounded resources, causal memory, checkpoints, rollback and insufficient-evidence termination. |
 | M047 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Six-version executable modular Python lineage with source/test transformation, new tool construction and reuse, hidden validation, exact rollback and replay. |
+| M048 | **POSITIVE INTEGRATED DEVELOPMENT RESULT** | Genuine Python-to-Node migration of the accepted body without semantic delegation, preserved capabilities, native post-migration learning, exact rollback and replay. Two failing runs preserved. |
+| M049 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Deterministic public-evidence-only selection among four frozen migration strategies with independent hidden validation. |
+| M050 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Enumeration and selection over 24 three-stage compositions of frozen primitives. One failing run preserved. |
+| M051 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Variable-length transform chains over 80 admissible compositions with fail-closed ambiguity handling. |
+| M052 | **POSITIVE BOUNDED DEVELOPMENT RESULT — SERIES CLOSED** | Exact behavioral-equivalence pruning to 38 classes on a declared 156-input finite domain. |
+| M053 | **PROPOSED — UNQUALIFIED** | Endogenous transformation-language extension. No scientific verdict yet; first CI attempt failed on infrastructure. |
 
 ## Parallel measurement track — M045
 

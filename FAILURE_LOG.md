@@ -592,6 +592,83 @@ clears it" was false; no previous threshold was ever stored.
 This is the same methodological shape as M014b, M017's confirmation bound and M033's
 degenerate controls: the mechanism held, and the description of it did not.
 
+## M048 — two qualification runs failed before the migration qualified
+
+The M048 qualification history is append-only. Neither failing commit was rerun; each was
+corrected in a new commit, and both negative verdicts remain part of the record.
+
+### First verdict — run `31046715149`, number 402, commit `616f316`
+
+`FAILED`. Repository integrity and the M048 checkpoint path exposed two defects together:
+an orphan import, and a schema mismatch between `causal_journal` and `native_journal`. The
+migration code could write a journal entry that the native reader could not interpret.
+
+### Second verdict — run `31054844770`, number 403, commit `839883d`
+
+`FAILED` again after the schema correction. The suite now reached the checkpoint contract
+and exposed a missing public `combined_digest` field. The first correction was real and
+incomplete: fixing the schema simply let the tests advance far enough to find the next
+defect.
+
+### Resolution — run `31061450556`, number 404, commit `0dfd822`
+
+`PASSED` on the pinned Node.js 20 target runtime across the Python 3.11 and 3.13 matrix,
+with repository integrity and no rerun.
+
+### Lesson
+
+The two failures are the causal history that localised the defects *before* qualification,
+not noise to be discarded once the third run went green. A qualification suite that only
+ever reports its final state cannot show that it was the checkpoint contract, and not the
+migration semantics, that was wrong the second time.
+
+## M050 — the declared grammar and the positive fixture disagreed
+
+### Verdict — run `31083479890`, number 410, commit `3bc3b50`
+
+`FAILED` in both Python matrices while repository integrity passed. Five M050 tests failed
+because the positive fixture required both the `absolute` and `unique` input primitives,
+while the frozen three-stage grammar permits exactly one input primitive.
+
+### What was corrected, and what was not
+
+The correction changed only the public and hidden probes. It added no primitive, did not
+enlarge the search budget, did not weaken validation and did not rerun the failing commit.
+Run `31087299169`, number 413, commit `c75e9e70`, then passed with 822 tests on each
+Python version.
+
+### Lesson
+
+The defect was in the experiment's own fixture, not in the mechanism under test. The
+temptation in that situation is to widen the grammar until the fixture passes, which would
+have silently changed what M050 claims. Fixing the probe instead keeps the frozen grammar
+as the object of study.
+
+## M053 — a CI failure that carries no scientific information
+
+### What happened
+
+The first CI attempt on the M053 pull request, run `31118366409`, failed during *Set up
+job* with `Failed to resolve action download info. Error: Service Unavailable` while
+resolving GitHub Actions downloads. `Tests (Python 3.11)` never started. `Repository
+integrity` and `Tests (Python 3.13)` were cancelled in cascade, and the companion
+`Attribution policy` run `31118366475` was cancelled with them.
+
+### Why it is recorded here but is not a negative verdict
+
+No M053 code executed. The run reports the availability of GitHub's action registry, not
+anything about endogenous language extension. Recording it as a preserved negative
+qualification verdict would put a fact about a third-party service into the causal history
+of the experiment, and would later read as evidence that the construction had been tested
+and found wanting.
+
+The distinction has to be drawn explicitly, because the append-only rule that makes M048
+and M050 trustworthy also makes it tempting to append everything. An append-only history is
+only useful if each entry states what was actually observed.
+
+M053 therefore remains `PROPOSED — UNQUALIFIED`, with zero qualification attempts that
+reached a verdict.
+
 ## M048 — the replay claim holds only inside one process
 
 Found while making a successor experiment's manifest reproducible, not by the test suite, the

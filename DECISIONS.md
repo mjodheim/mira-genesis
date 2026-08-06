@@ -264,6 +264,86 @@ A cost figure may only be compared against another cost figure from the same ker
 generation. This is a narrower version of the discipline D010 already imposes: a measured
 quantity needs a dynamic range, and it also needs a fixed instrument.
 
+## D016 — The M049–M052 series is closed at its own success
+
+M049 selected one record from a frozen family of four. M050 composed frozen primitives in
+a fixed three-stage grammar, giving 24 candidates. M051 allowed a bounded variable-length
+prefix, giving 80. M052 proved that those 80 collapse to 38 behavioral classes on a
+declared 156-input finite domain, pruning 42 syntactic duplicates before public search.
+
+Every one of them passed. That is the reason to stop.
+
+### The decision
+
+A successor experiment **may not be justified solely** by any of:
+
+- increasing the number of frozen candidates;
+- increasing composition depth;
+- adding another human-declared primitive to the same grammar;
+- changing ranking, enumeration, caching or pruning while the admissible language stays
+  fixed;
+- repeating the same selection and hidden-validation pattern on another small arithmetic
+  task family;
+- describing a larger bounded search as open-ended self-extension.
+
+Such work may remain valid engineering or measurement. It is outside the active
+construction frontier.
+
+### Why a passing series is closed rather than extended
+
+Each step made the search cheaper or more exact over a language that a human wrote and
+froze. None of them changed what the lineage can express. The set of reachable behaviours
+after M052 is the set it inherited from M051, minus the duplicates — a strict subset.
+
+Extending the series is attractive precisely because it is safe: the next increment is
+always well-defined, always measurable and always passes. That is the failure mode D009
+was written against, one experiment number at a time instead of all at once.
+
+### Consequence
+
+M053 must test endogenous extension: the lineage has to demonstrate that its accepted
+language cannot express a solution, and then construct a primitive that was not in the
+founder catalogue. The record is [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md).
+
+This changes the research direction, not the interpretation of M049–M052. Each remains a
+valid bounded result inside its frozen grammar and probe families, and M042 remains the
+only positive canonical continuous-lineage completion.
+
+## D017 — An infrastructure failure is not a qualification verdict
+
+M053's first CI attempt, run `31118366409`, failed during *Set up job* with
+`Service Unavailable` while resolving GitHub Actions downloads. No experiment code ran.
+
+The append-only rule that preserves M048's two failing runs and M050's one failing run
+creates pressure to append this one too. The decision is that it does **not** enter the
+qualification history as a negative verdict.
+
+### The rule
+
+A run enters the append-only qualification history as a scientific verdict only if the
+experiment's own code executed and produced the failure. A run that fails before the
+experiment starts — runner provisioning, action resolution, dependency mirrors, cancelled
+in cascade — is recorded in [`FAILURE_LOG.md`](FAILURE_LOG.md) as an infrastructure event
+and named as such.
+
+### Why the distinction is worth a decision
+
+A preserved negative verdict is a claim: *this construction was tested and did not hold.*
+M048's run 402 says the journal schema was wrong. M050's run 410 says the fixture
+contradicted the grammar. Both are about the object of study.
+
+`Service Unavailable` says something about a third-party registry on 6 August 2026. Filed
+next to the others without qualification, it would later read as evidence that endogenous
+language extension had been attempted and had failed. An append-only history is only
+trustworthy if every entry states what was actually observed.
+
+### What it does not license
+
+Re-running is permitted here because nothing was observed, but the permission is narrow.
+It does not extend to re-running a job that failed after the experiment's code executed,
+and it does not license retrying until a green result appears. If a re-attempt reaches the
+tests and fails, that verdict is preserved under the ordinary rule.
+
 ## D018 — An identity is computed over what was decided, not over what the producer returned
 
 M048's `validation_digest` was computed over the whole mapping `_validate` returns. That mapping
