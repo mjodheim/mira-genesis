@@ -1,6 +1,6 @@
 # M050 — bounded composition of migration primitives
 
-**Status: IN DEVELOPMENT after one preserved failing qualification run.**
+**Status: PASSED IN DEVELOPMENT after one preserved failing qualification run.**
 
 ## Question
 
@@ -20,7 +20,14 @@ Every pipeline contains exactly one primitive from each family. The composer may
 
 CI run `31083479890` (run number `410`) on commit `3bc3b50` failed in both Python matrices while repository integrity passed. The frozen positive episode expected outputs that required applying both `absolute` and `unique`, although the declared grammar permits exactly one input primitive. Consequently no pipeline survived and five M050 tests failed. This negative result is retained as evidence of a protocol-fixture mismatch rather than erased or rerun.
 
-The correction changes only the public and hidden probes so they uniquely identify the already-declared `unique + sum + zero` pipeline. It does not add primitives, enlarge the 24-candidate budget, weaken validation, or reinterpret the failed run.
+The correction changed only the public and hidden probes so they uniquely identify the already-declared `unique + sum + zero` pipeline. It did not add primitives, enlarge the 24-candidate budget, weaken validation, or reinterpret the failed run.
+
+CI run `31087299169` (run number `413`) on corrected commit `c75e9e70a48b382feeacefdca3d5b5e85d390d46` then passed:
+
+- 822 tests on Python 3.11 with Node.js 20.20.2;
+- 822 tests on Python 3.13 with Node.js 20.20.2;
+- repository integrity, clean imports, orphan detection, and dependency consistency;
+- no failed job and no rerun of either failing commit.
 
 ## Episodes
 
@@ -36,9 +43,9 @@ Primitive, pipeline, composition, evidence, verdict, and manifest artifacts are 
 
 The experiment has no repository, network, credential, deployment, or production authority. It does not perform arbitrary code generation, unknown-runtime discovery, unrestricted compiler synthesis, open-ended evolution, or general intelligence.
 
-## Success criteria
+## Qualified result
 
-M050 may pass in development only if a later complete repository test matrix and integrity job establish:
+Within the fixed grammar and probe family, M050 establishes:
 
 - deterministic exploration of exactly 24 frozen pipelines;
 - unique public-only composition when evidence is sufficient;
@@ -50,4 +57,4 @@ M050 may pass in development only if a later complete repository test matrix and
 
 ## Claim boundary
 
-A positive result would apply only to this fixed three-stage grammar and fixed arithmetic probe family. It would not establish general program synthesis, arbitrary compiler construction, autonomous substrate discovery, production safety, or canonical continuous-lineage evidence. M042 remains the only positive canonical continuous-lineage completion.
+The positive result applies only to this fixed three-stage grammar and fixed arithmetic probe family. It does not establish general program synthesis, arbitrary compiler construction, autonomous substrate discovery, production safety, or canonical continuous-lineage evidence. M042 remains the only positive canonical continuous-lineage completion.
