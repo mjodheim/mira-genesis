@@ -220,11 +220,11 @@ def independently_validate(composition: Composition, hidden_probes: Iterable[Pro
 
 def run_m050_bounded_primitive_composition() -> dict[str, object]:
     positive_public = (
-        Probe((-7, 2, -7), 9),
-        Probe((-3, -4), 7),
+        Probe((1, 1, 2), 3),
+        Probe((-2, 1), -1),
         Probe((), 0),
     )
-    positive_hidden = (Probe((-5, 1, -5, 2), 8), Probe((0, -2), 2))
+    positive_hidden = (Probe((2, 2, 3), 5), Probe((-5, 1, -5, 2), -2))
     composed = compose_pipeline(positive_public)
     validated = independently_validate(composed, positive_hidden)
     if not validated.accepted:
