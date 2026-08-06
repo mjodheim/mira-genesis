@@ -1,6 +1,6 @@
 # M052 — exact finite-domain behavioral-equivalence pruning
 
-**Status: DEVELOPMENT — qualification pending.**
+**Status: PASSED IN DEVELOPMENT — final documented-head qualification pending.**
 
 ## Purpose
 
@@ -14,6 +14,8 @@ The declared finite domain contains every integer sequence of length zero throug
 
 Each candidate is executed on every domain input. Its complete value/error vector is hashed into a behavioral signature. Candidates with the same signature form one exact finite-domain equivalence class. One deterministic canonical representative is retained per class; all other members are pruned before public task search.
 
+The frozen audit partitions the 80 candidates into exactly 38 finite-domain behavioral classes and prunes 42 redundant syntactic candidates. The largest observed class contains four candidates. These counts are properties only of the declared grammar and finite domain.
+
 ## Authority separation
 
 - the equivalence audit sees only the frozen grammar and declared finite domain;
@@ -24,7 +26,7 @@ Each candidate is executed on every domain input. Its complete value/error vecto
 
 ## Permanent episodes
 
-The tests must preserve:
+The tests preserve:
 
 - exact enumeration of all 156 domain inputs;
 - complete partition of all eighty M051 candidates;
@@ -36,6 +38,12 @@ The tests must preserve:
 - rejection of tampered candidate artifacts;
 - rejection of empty or out-of-domain evidence;
 - deterministic manifest replay.
+
+## Qualification history
+
+- CI run 422 on head `3ab33da7fdbcc27ba786c20e8516e83e29c76fee`: successful across the complete Python 3.11 and Python 3.13 matrices and repository-integrity job.
+- No failed M052 qualification preceded this result. This absence is recorded but is not evidence of correctness beyond the frozen tests and declared domain.
+- A final qualification is required on the exact documented head before merge.
 
 ## Qualification rule
 
