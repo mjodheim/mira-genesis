@@ -1,6 +1,6 @@
 # M050 — bounded composition of migration primitives
 
-**Status: IN DEVELOPMENT.**
+**Status: IN DEVELOPMENT after one preserved failing qualification run.**
 
 ## Question
 
@@ -15,6 +15,12 @@ The composer explores exactly 24 pipelines:
 - empty input: `zero` or `reject`.
 
 Every pipeline contains exactly one primitive from each family. The composer may not invent primitives, change their order, widen the budget, generate source code, access hidden probes, or discover a runtime.
+
+## Preserved qualification history
+
+CI run `31083479890` (run number `410`) on commit `3bc3b50` failed in both Python matrices while repository integrity passed. The frozen positive episode expected outputs that required applying both `absolute` and `unique`, although the declared grammar permits exactly one input primitive. Consequently no pipeline survived and five M050 tests failed. This negative result is retained as evidence of a protocol-fixture mismatch rather than erased or rerun.
+
+The correction changes only the public and hidden probes so they uniquely identify the already-declared `unique + sum + zero` pipeline. It does not add primitives, enlarge the 24-candidate budget, weaken validation, or reinterpret the failed run.
 
 ## Episodes
 
@@ -32,7 +38,7 @@ The experiment has no repository, network, credential, deployment, or production
 
 ## Success criteria
 
-M050 may pass in development only if the complete repository test matrix and integrity job establish:
+M050 may pass in development only if a later complete repository test matrix and integrity job establish:
 
 - deterministic exploration of exactly 24 frozen pipelines;
 - unique public-only composition when evidence is sufficient;
