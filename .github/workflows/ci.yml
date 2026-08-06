@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Set up the native M048 target runtime
+      - name: Set up the native Node.js target runtime
         uses: actions/setup-node@v4
         with:
           node-version: '20'
