@@ -22,7 +22,13 @@ A deliberately weak public episode must remain ambiguous and terminate as `insuf
 
 ## Transaction and rollback
 
-The founder and adopted registries have deterministic content-addressed checkpoints. An unvalidated artifact cannot be adopted. A forced post-adoption fault is represented by discarding the proposed registry and restoring the exact founder registry; the checkpoint must match byte-for-byte.
+The founder and adopted registries have deterministic content-addressed checkpoints. An unvalidated artifact cannot be adopted.
+
+The forced post-adoption fault tampers with the accepted extension artifact itself: the newest accepted artifact's operator is changed while its content address is left untouched. The fault must then be *detected* — the registry no longer matches its recorded checkpoint, and re-deriving the artifact digest raises. Only after detection is the accepted state restored, from a serialised snapshot rather than from a retained object, and the restored registry is refused unless its checkpoint matches the recorded one and every artifact digest re-derives.
+
+Rollback is exact only when all of the following hold: the fault is detected, the intact registry reports no fault under the same detector, the restored accepted tuple equals the pre-fault one, and both its checkpoint and its serialisation match byte-for-byte.
+
+The detector must be able to answer no. A rollback claim proved only against an object that was never mutated asserts nothing about fault recovery, so the negative case is pinned by its own permanent test.
 
 ## Qualification rule
 

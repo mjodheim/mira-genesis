@@ -167,11 +167,49 @@ class Registry:
     def checkpoint(self) -> str:
         return _digest(b"m053-registry-v1\0", self.accepted)
 
+    def snapshot(self) -> str:
+        """Serialise the accepted registry so it can be restored without its objects."""
+        return json.dumps(self.accepted, sort_keys=True, separators=(",", ":"))
+
+    def verify(self) -> None:
+        """Re-derive every accepted artifact digest; raise when one has been tampered with."""
+        for artifact in self.accepted:
+            _load_extension(artifact)
+
     def adopt(self, artifact: dict[str, object], validated: bool) -> "Registry":
         if not validated:
             raise M053Error("unvalidated extensions cannot be adopted")
         _load_extension(artifact)
         return Registry(self.accepted + (artifact,))
+
+    @classmethod
+    def restore(cls, snapshot: str, expected_checkpoint: str) -> "Registry":
+        """Rebuild a registry from a snapshot and refuse it unless it matches byte for byte."""
+        restored = cls(tuple(json.loads(snapshot)))
+        if restored.checkpoint() != expected_checkpoint:
+            raise M053Error("restored registry does not match its checkpoint")
+        restored.verify()
+        return restored
+
+
+def corrupt_registry(registry: Registry) -> Registry:
+    """Force a post-adoption fault by tampering with the newest accepted artifact."""
+    if not registry.accepted:
+        raise M053Error("an empty registry cannot carry a post-adoption fault")
+    tampered = dict(registry.accepted[-1])
+    tampered["operator"] = "add" if tampered["operator"] != "add" else "subtract"
+    return Registry(registry.accepted[:-1] + (tampered,))
+
+
+def detect_fault(registry: Registry, expected_checkpoint: str) -> bool:
+    """True when the registry no longer matches its checkpoint or fails digest verification."""
+    if registry.checkpoint() != expected_checkpoint:
+        return True
+    try:
+        registry.verify()
+    except M053Error:
+        return True
+    return False
 
 
 def run_m053_endogenous_extension() -> dict[str, object]:
@@ -194,9 +232,20 @@ def run_m053_endogenous_extension() -> dict[str, object]:
     if not reuse_passed or founder_matches(reuse_probe):
         raise M053Error("extension did not demonstrate bounded reusable capability gain")
     ambiguous = synthesize_extension((Probe((1, 2), "sum", 1),))
-    before_fault = adopted.checkpoint()
-    restored = founder
-    rollback_exact = restored.checkpoint() == founder_checkpoint and before_fault != founder_checkpoint
+    adopted_checkpoint = adopted.checkpoint()
+    adopted_snapshot = adopted.snapshot()
+    if adopted_checkpoint == founder_checkpoint:
+        raise M053Error("adoption did not move the registry checkpoint")
+    faulted = corrupt_registry(adopted)
+    fault_detected = detect_fault(faulted, adopted_checkpoint)
+    restored = Registry.restore(adopted_snapshot, adopted_checkpoint)
+    rollback_exact = (
+        fault_detected
+        and not detect_fault(adopted, adopted_checkpoint)
+        and restored.accepted == adopted.accepted
+        and restored.checkpoint() == adopted_checkpoint
+        and restored.snapshot() == adopted_snapshot
+    )
     manifest = {
         "schema": "m053-manifest-v1",
         "status": "development_pending_qualification",
@@ -207,6 +256,8 @@ def run_m053_endogenous_extension() -> dict[str, object]:
         "reuse_family": "maximum_adjacent_transition",
         "reuse_passed": reuse_passed,
         "negative_status": ambiguous["status"],
+        "forced_fault": "adopted_extension_artifact_tampering",
+        "fault_detected": fault_detected,
         "rollback_exact": rollback_exact,
         "arbitrary_code_generation": False,
         "network_authority": False,
@@ -220,6 +271,6 @@ def run_m053_endogenous_extension() -> dict[str, object]:
 
 __all__ = [
     "EXTENSION_BUDGET", "META_PROGRAMS", "M053Error", "PairProgram", "Probe", "Registry",
-    "certify_founder_insufficiency", "founder_matches", "independently_validate",
-    "run_m053_endogenous_extension", "synthesize_extension",
+    "certify_founder_insufficiency", "corrupt_registry", "detect_fault", "founder_matches",
+    "independently_validate", "run_m053_endogenous_extension", "synthesize_extension",
 ]

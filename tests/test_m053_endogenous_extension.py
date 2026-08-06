@@ -4,8 +4,8 @@ import pytest
 
 from metamorphosis.m053_endogenous_extension import (
     EXTENSION_BUDGET, META_PROGRAMS, M053Error, Probe, Registry,
-    certify_founder_insufficiency, independently_validate,
-    run_m053_endogenous_extension, synthesize_extension,
+    certify_founder_insufficiency, corrupt_registry, detect_fault,
+    independently_validate, run_m053_endogenous_extension, synthesize_extension,
 )
 
 PUBLIC = (
@@ -68,6 +68,57 @@ def test_unvalidated_extension_cannot_be_adopted_and_rollback_is_exact():
     assert founder.checkpoint() == checkpoint
 
 
+def test_an_intact_registry_reports_no_fault():
+    """The fault detector must be able to answer no, or detecting a fault proves nothing."""
+    result = synthesize_extension(PUBLIC)
+    adopted = Registry().adopt(result["extension"], True)
+    assert detect_fault(adopted, adopted.checkpoint()) is False
+
+
+def test_a_tampered_accepted_artifact_is_detected():
+    result = synthesize_extension(PUBLIC)
+    adopted = Registry().adopt(result["extension"], True)
+    checkpoint = adopted.checkpoint()
+
+    faulted = corrupt_registry(adopted)
+
+    assert faulted.accepted[-1] != adopted.accepted[-1]
+    assert detect_fault(faulted, checkpoint) is True
+    with pytest.raises(M053Error, match="digest mismatch"):
+        faulted.verify()
+
+
+def test_an_empty_registry_cannot_carry_a_post_adoption_fault():
+    with pytest.raises(M053Error, match="empty registry"):
+        corrupt_registry(Registry())
+
+
+def test_restore_rebuilds_the_accepted_state_byte_for_byte():
+    result = synthesize_extension(PUBLIC)
+    adopted = Registry().adopt(result["extension"], True)
+    checkpoint = adopted.checkpoint()
+    snapshot = adopted.snapshot()
+
+    corrupt_registry(adopted)
+    restored = Registry.restore(snapshot, checkpoint)
+
+    assert restored.accepted == adopted.accepted
+    assert restored.checkpoint() == checkpoint
+    assert restored.snapshot() == snapshot
+    assert detect_fault(restored, checkpoint) is False
+
+
+def test_restore_refuses_a_snapshot_that_does_not_match_its_checkpoint():
+    result = synthesize_extension(PUBLIC)
+    adopted = Registry().adopt(result["extension"], True)
+
+    with pytest.raises(M053Error, match="does not match its checkpoint"):
+        Registry.restore(adopted.snapshot(), Registry().checkpoint())
+
+    with pytest.raises(M053Error, match="does not match its checkpoint"):
+        Registry.restore(corrupt_registry(adopted).snapshot(), adopted.checkpoint())
+
+
 def test_manifest_is_deterministic_and_preserves_authority_boundaries():
     first = run_m053_endogenous_extension()
     second = run_m053_endogenous_extension()
@@ -75,6 +126,8 @@ def test_manifest_is_deterministic_and_preserves_authority_boundaries():
     assert first["hidden_validated"] is True
     assert first["reuse_passed"] is True
     assert first["negative_status"] == "insufficient_evidence"
+    assert first["forced_fault"] == "adopted_extension_artifact_tampering"
+    assert first["fault_detected"] is True
     assert first["rollback_exact"] is True
     assert first["network_authority"] is False
     assert first["repository_authority"] is False
