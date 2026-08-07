@@ -45,6 +45,88 @@ The successful development run establishes, within the fixed M048 protocol and t
 - exact restoration of the version-eight body, registry, journal, memory and checkpoint;
 - explicit insufficient-evidence termination for `median`, with rejection evidence retained;
 - exact artifact replay of migration, accepted learning, rollback and terminal evidence.
+  As qualified, this held **within a single process**; it now holds across processes. See the
+  reproducibility record below.
+
+## Reproducibility record
+
+The replay claim was narrower than it read, and the difference was found after qualification
+rather than during it. It has since been repaired.
+
+### The defect
+
+`experiments/M048/PROTOCOL.md` §Replay requires the run to "reproduce the exact final native
+state digest". That held when replay happened inside one process, which is what the manifest's
+`replay_identical` field checks and what the qualifying CI run exercised. It did **not** hold
+across processes: two runs of `run_m048_native_runtime_migration` in the same environment
+produced different `final_state_digest` and `post_migration_checkpoint` values.
+
+The cause is exact and bounded. `metamorphosis/m048_native_lineage.py` computes
+
+    validation_digest = _digest(b"m048-native-validation-v1\x00", selection)
+
+over the selection mapping returned by `_validate`, and that mapping contains `worker_pid`.
+The Node worker pid changes per process, so `validation_digest` changes with it, and the change
+propagates into the patch registry record, the native journal, the causal memory and the final
+state digest. Neutralising `worker_pid` alone restores full manifest reproducibility, which
+establishes it as the sole cause.
+
+This is the M014c defect recurring: a recorded identity that includes something environmental.
+It is also the distinction `PROJECT_STATE.yaml` already draws for M044 and M046, whose records
+separate `immediate_replay_byte_identical_within_each_runtime` from
+`separately_archived_cross_runtime_manifest_comparison`. M048's record did not draw it.
+
+### What is and is not affected
+
+No recorded value is invalidated. No literal M048 state digest appears in this file, in the
+protocol, or in the project registers; only commit SHAs are cited, and those are unaffected.
+The accepted body itself has a stable identity: `_native_body_digest` reproduces exactly across
+processes. The scientific content of M048 — the migration, the preserved capabilities, the
+post-migration learning, the rollback — is unchanged.
+
+What failed was the published traceability claim, not the result.
+
+### The repair
+
+`_decided` now removes the environmental fields from a validation selection before it is
+digested. `worker_pid` is evidence that a disposable process ran; it is not part of what was
+decided, and an identity computed over a mapping should be computed over the fields that carry
+meaning. Recorded as **D018**.
+
+After the repair the manifest is byte-identical across processes, verified by
+`tests/test_m048_cross_process_reproducibility.py`, which spawns a separate interpreter and
+compares.
+
+### What the repair moved, and what it did not
+
+Exactly two fields move, both identities:
+
+| Field | Status |
+|---|---|
+| `final_state_digest` | moved |
+| `post_migration_checkpoint` | moved |
+
+Thirty-nine manifest fields are unchanged, including every scientific outcome:
+`native_migration_all_retained_passed`, `post_migration_all_retained_passed`,
+`pre_migration_mean_tool_reused_after_migration`, `post_migration_version`,
+`post_migration_selected_template`, `forced_fault_exact_restoration`,
+`forced_fault_restored_version`, `terminal_action`, `terminal_body_unchanged`,
+`replay_identical`, `semantic_delegation_to_python` and `source_retained_case_count`.
+
+**No finding changed.** This is pinned by a permanent test that runs the lineage under both the
+repaired and the previous digest rule and asserts that the moved set is exactly those two
+fields.
+
+### Digest generation
+
+Following D015, M048 artifacts are read as belonging to a digest generation. Generation 1 is
+everything produced before this repair, including the qualifying run `31061450556`. Generation 2
+is everything produced after it. A digest may only be compared against another digest from the
+same generation.
+
+The qualifying run is **not** re-executed. Its verdict stands: it exercised the science, and the
+science is untouched. Re-running it would replace intact evidence with cosmetically different
+identities and would contradict the rule that no rerun replaces a first attempt.
 
 ## Qualification boundary
 

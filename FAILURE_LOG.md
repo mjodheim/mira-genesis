@@ -591,3 +591,77 @@ clears it" was false; no previous threshold was ever stored.
 
 This is the same methodological shape as M014b, M017's confirmation bound and M033's
 degenerate controls: the mechanism held, and the description of it did not.
+
+## M048 — the replay claim holds only inside one process
+
+Found while making a successor experiment's manifest reproducible, not by the test suite, the
+integrity audit or the qualifying CI run. All of them passed over it.
+
+### What was claimed
+
+`experiments/M048/PROTOCOL.md` §Replay requires the run to "reproduce the exact final native
+state digest". `experiments/M048/DEVELOPMENT_RESULT.md` recorded "exact artifact replay of
+migration, accepted learning, rollback and terminal evidence", unqualified.
+
+### What holds
+
+Two runs of `run_m048_native_runtime_migration` in the same environment produce different
+`final_state_digest` and different `post_migration_checkpoint`. The manifest is not
+byte-identical across processes.
+
+The manifest's own `replay_identical` field is not false. It compares two runs inside a single
+process, where the volatile value is constant. The claim in the prose is what over-reaches.
+
+### Mechanism
+
+`metamorphosis/m048_native_lineage.py` computes
+
+    validation_digest = _digest(b"m048-native-validation-v1\x00", selection)
+
+over the mapping returned by `_validate`, and that mapping carries `worker_pid` — the pid of
+the disposable Node validation process. The pid changes per process, so `validation_digest`
+changes, and the change propagates into the patch registry record, the native journal, the
+causal memory and the final state digest.
+
+Neutralising `worker_pid` alone restores full manifest reproducibility. It is the sole cause,
+and the defect is therefore bounded and identifiable.
+
+### Why it survived two corrections aimed at it
+
+The M048 development history contains `M048: remove volatile process identity from manifest`
+and `M048: keep manifest identity deterministic across runtime processes`. Both removed the pid
+from the manifest's top level. Neither removed it from the value the manifest's digests are
+derived from, so the visible field disappeared while the dependency remained.
+
+### Blast radius
+
+No recorded value is invalidated. No literal M048 state digest appears in its result, its
+protocol or the project registers; only commit SHAs are cited. `_native_body_digest` reproduces
+exactly across processes, so the accepted body keeps a stable identity. The migration, the
+preserved capabilities, the post-migration learning and the rollback are unchanged.
+
+### Lesson
+
+This is M014c recurring, and the repository already knew the shape: `PROJECT_STATE.yaml`
+records `immediate_replay_byte_identical_within_each_runtime` separately from
+`separately_archived_cross_runtime_manifest_comparison` for M044 and M046. M048 was written
+without that distinction, and the distinction is exactly what it needed.
+
+An identity that is computed over a mapping should be computed over the fields that carry
+meaning, not over whatever the producer happened to return. `worker_pid` is evidence that a
+disposable process ran; it is not part of what was decided.
+
+### Resolution
+
+`_decided` now removes the environmental fields from a validation selection before it is
+digested. The manifest is byte-identical across processes, verified by a permanent test that
+spawns a separate interpreter and compares. Recorded as D018.
+
+Exactly two fields move: `final_state_digest` and `post_migration_checkpoint`. Thirty-nine are
+unchanged, including every scientific outcome — retained-capability passes, tool reuse after
+migration, the adopted version, the selected template, the forced-fault restoration, the
+terminal action and the replay flag. **No finding changed**, and that is pinned by a test that
+runs the lineage under both digest rules and asserts the moved set is exactly those two fields.
+
+Following D015, M048 artifacts now belong to a digest generation, and the qualifying run
+`31061450556` is not re-executed. It exercised the science; the science is untouched.

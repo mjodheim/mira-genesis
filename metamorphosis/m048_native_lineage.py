@@ -185,6 +185,21 @@ def _append_memory_episode(state: Mapping[str, object], episode: Mapping[str, ob
     return updated
 
 
+#: Fields a validation selection carries that describe the environment rather than the
+#: decision. They are evidence that a disposable process ran, not part of what was decided,
+#: and digesting them made every derived identity depend on the pid of that process.
+_VOLATILE_VALIDATION_FIELDS = ("worker_pid",)
+
+
+def _decided(selection: Mapping[str, object]) -> dict[str, object]:
+    """The part of a validation selection that carries meaning.
+
+    An identity computed over a mapping should be computed over the fields that carry
+    meaning, not over whatever the producer happened to return. See D018.
+    """
+    return {key: value for key, value in selection.items() if key not in _VOLATILE_VALIDATION_FIELDS}
+
+
 def _adopt_native_candidate(
     state: Mapping[str, object],
     task_id: str,
@@ -198,7 +213,7 @@ def _adopt_native_candidate(
     if selection.get("action") != "adopt" or not isinstance(selection.get("selected_candidate"), Mapping):
         return before, {"adopted": False, "exact_restoration": False, "reason": "selection was not accepted"}
     candidate = selection["selected_candidate"]
-    validation_digest = _digest(b"m048-native-validation-v1\x00", selection)
+    validation_digest = _digest(b"m048-native-validation-v1\x00", _decided(selection))
     record_core = {
         "runtime": "node-esm",
         "task_id": task_id,
