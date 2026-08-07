@@ -261,12 +261,14 @@ def validate_candidate(
 
 
 def _state_digest(state: Mapping[str, object]) -> str:
-    """M048's full-state digest. Process-local; see `body_digest` for the reproducible one.
+    """M048's full-state digest, reproducible across processes since D018.
 
-    This is correct for the rollback comparison, which happens inside one process, and wrong
-    to publish. M048's `validation_digest` is computed over a selection mapping that contains
-    the Node worker pid (`m048_native_lineage.py:201`), so the value drifts between processes
-    and carries that drift into the patch registry, the native journal and causal memory.
+    It was not, when M055 was first written: M048 computed `validation_digest` over a selection
+    mapping containing the Node worker pid, so the value drifted between processes and carried
+    that drift into the patch registry, the native journal and causal memory. M055 could
+    publish only `body_digest` and had to declare the full-state identity unusable.
+
+    That defect was found here, repaired under D018, and the identity is publishable again.
     """
     return _m048._native_state_digest(state)
 
@@ -427,7 +429,7 @@ def run_m055_native_construction(protocol: M055Protocol = M055_PROTOCOL) -> M055
         "protocol_digest": protocol.digest(),
         "inherited_version": lineage.version(),
         "inherited_body_digest": body_digest(lineage.state),
-        "inherited_state_digest_reproducible_across_processes": False,
+        "inherited_state_digest": inherited_digest,
         "inherited_retained_case_count": len(lineage.retained),
         "source_m047_retained_case_count": lineage.source_retained_count,
         "admissible_space": int(creation["admissible_space"]),
@@ -443,6 +445,7 @@ def run_m055_native_construction(protocol: M055Protocol = M055_PROTOCOL) -> M055
         "creation_hidden_passed": creation_verdict["hidden_passed"],
         "accepted_version": int(accepted["version"]),
         "accepted_body_digest": body_digest(accepted),
+        "accepted_state_digest": accepted_digest,
         "reuse_expression": reuse["expression_canonical"],
         "reuse_uses_acquired_expression": reuse_uses_acquired,
         "reuse_candidates_constructed": int(reuse["candidates_constructed"]),
