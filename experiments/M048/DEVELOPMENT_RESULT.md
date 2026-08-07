@@ -44,7 +44,53 @@ The successful development run establishes, within the fixed M048 protocol and t
 - detection of forced version-nine causal-journal corruption;
 - exact restoration of the version-eight body, registry, journal, memory and checkpoint;
 - explicit insufficient-evidence termination for `median`, with rejection evidence retained;
-- exact artifact replay of migration, accepted learning, rollback and terminal evidence.
+- exact artifact replay of migration, accepted learning, rollback and terminal evidence,
+  **within a single process**. See the reproducibility qualification below.
+
+## Reproducibility qualification
+
+The replay claim above is narrower than it first reads, and the difference was found after
+qualification rather than during it.
+
+`experiments/M048/PROTOCOL.md` §Replay requires the run to "reproduce the exact final native
+state digest". That holds when replay happens inside one process, which is what the manifest's
+`replay_identical` field checks and what the qualifying CI run exercised. It does **not** hold
+across processes: two runs of `run_m048_native_runtime_migration` in the same environment
+produce different `final_state_digest` and `post_migration_checkpoint` values.
+
+The cause is exact and bounded. `metamorphosis/m048_native_lineage.py` computes
+
+    validation_digest = _digest(b"m048-native-validation-v1\x00", selection)
+
+over the selection mapping returned by `_validate`, and that mapping contains `worker_pid`.
+The Node worker pid changes per process, so `validation_digest` changes with it, and the change
+propagates into the patch registry record, the native journal, the causal memory and the final
+state digest. Neutralising `worker_pid` alone restores full manifest reproducibility, which
+establishes it as the sole cause.
+
+This is the M014c defect recurring: a recorded identity that includes something environmental.
+It is also the distinction `PROJECT_STATE.yaml` already draws for M044 and M046, whose records
+separate `immediate_replay_byte_identical_within_each_runtime` from
+`separately_archived_cross_runtime_manifest_comparison`. M048's record did not draw it.
+
+### What is and is not affected
+
+No recorded value is invalidated. No literal M048 state digest appears in this file, in the
+protocol, or in the project registers; only commit SHAs are cited, and those are unaffected.
+The accepted body itself has a stable identity: `_native_body_digest` reproduces exactly across
+processes. The scientific content of M048 — the migration, the preserved capabilities, the
+post-migration learning, the rollback — is unchanged.
+
+What fails is the published traceability claim, and the correction is to state the claim
+accurately rather than to restate the result.
+
+### Why the defect is not repaired here
+
+Removing `worker_pid` from the digested selection changes every derived digest. Under D014 that
+is a protocol-owner decision rather than a repair to slip into a documentation change.
+`tests/test_m048_cross_process_reproducibility.py` asserts the current behaviour, including a
+genuine cross-process comparison, so a repair must update that pin deliberately instead of
+passing unnoticed.
 
 ## Qualification boundary
 
