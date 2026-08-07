@@ -13,3 +13,6 @@ results/local/
 # Development outputs are reproducible through `scripts/run_*_development.py` and
 # published as CI artifacts. Only canonical results are versioned.
 results/*_development.json
+
+# Contribution and process documentation is kept locally, not published.
+CONTRIBUTING.md
