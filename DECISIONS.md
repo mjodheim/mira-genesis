@@ -392,3 +392,73 @@ This is M014c a third time — `consolidation_record_sha256` differed between en
 it included floating scores. D010 asked for a fixed instrument; D018 asks for a fixed *input* to
 the instrument. Both failures were found by trying to build the next thing on top, never by the
 test suite or the integrity audit.
+
+## D019 — Compositional acquisition buys search cost, not expressive power
+
+D016 closed the M049–M052 series and demanded endogenous extension of the transformation
+language. Three experiments attempted it. The line is now closed too, and for a reason that is
+worth stating rather than hiding in a status change.
+
+### What the three attempts established
+
+**M053** extends the language by filtering `META_PROGRAMS`, sixteen pair expressions
+materialised at import. Its capability gain is real and structural — the founder language cannot
+express any operation over adjacent elements — but the mechanism is selection from a declared
+catalogue. The level moved; the shape did not.
+
+**M054** removes the catalogue. Candidates are built from two atoms and five operators over a
+space of 29,330,422 under a budget of 1,024, so enumeration is impossible by construction. It
+demonstrates construction rather than selection, and second-order reuse: the acquired primitive
+becomes material for the next acquisition.
+
+**M055** puts that inside the migrated M048 body: the lineage reconstructs its accepted
+version-eight native state, constructs a tool compiled to JavaScript, re-verifies all
+thirty-two inherited capabilities, adopts, faults and restores. The construction works. Its
+ablation refutes the point of it.
+
+### The negative result
+
+M055's ablation gives the from-scratch arm the same composition power as the continued lineage.
+It still solves the reuse task: 737 candidates without the acquisition against 48 with it. The
+acquisition made the search fifteen times cheaper and made nothing newly reachable.
+
+Two reuse tasks were tried and both were refuted the same way. The first because applying a
+candidate twice was available to every arm. The second because `max(|d|, |d|·|d|)` reduces to
+`|d|·|d|`, reachable at depth two. A third task was not attempted: after two ablations, choosing
+the task that flatters the hypothesis is the tuning illusion recorded in CHANGELOG 0.33.0.
+
+### Why this is structural and not bad luck
+
+In a language closed under composition, with a budget that reaches the relevant depth, acquiring
+a sub-expression cannot enlarge what is expressible. Everything the acquisition makes reachable
+was already reachable by rebuilding it. The acquisition is a cache.
+
+A capability gain can be manufactured by lowering the depth bound or the budget until the
+from-scratch arm fails, but then the gain is an artifact of the declared bound, not of the
+acquisition. That is measuring the instrument.
+
+### The decision
+
+**A successor may not be justified by compositional acquisition inside a closed formation
+language.** M053, M054 and M055 stand as valid bounded results — the construction machinery, the
+second-order reuse, the inherited-regression check and the exact rollback all hold — and none of
+them may be cited as evidence that the lineage grew a capability.
+
+This is D009 reaching its own limit. D009 rejected choosing better inside a hand-written
+catalogue. D019 records that replacing the catalogue with a hand-written *grammar* does not
+escape it, because a grammar is a catalogue you have not enumerated yet.
+
+### Where the frontier goes
+
+Back to the objective the project was started for, and the one thing it has produced that
+nothing else has: **M048 changed substrate and kept adapting.**
+
+That result is a single hop, performed once, with a hand-written compiler, on a protocol that
+told the lineage when to move. Nothing has migrated twice. Nothing has had to decide that its
+substrate no longer suits it. Whether a capability learned *after* a migration survives the
+*next* one has never been asked, and it is the question that separates continuity from
+translation.
+
+A substrate is not closed under composition. What is acquired there — a body that executes
+natively, tools that run in the new runtime — is not a sub-expression of a grammar, so the
+argument above does not apply to it. That is why the frontier moves rather than stops.

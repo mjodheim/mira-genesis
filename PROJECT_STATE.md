@@ -18,9 +18,16 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   semantic delegation back to Python, and then learned a new capability in the new runtime.
 - **M049–M052 are bounded qualification and search-efficiency results** on migration-strategy
   selection, composition and exact behavioral-equivalence pruning. The series is closed.
+- **M053–M055 attempted endogenous extension of the transformation language.** The
+  construction machinery works; the capability claim does not. M055's ablation shows that
+  compositional acquisition buys search cost, not expressive power. The line is closed by
+  **D019**.
 - **M042 remains the only positive canonical continuous-lineage completion.**
-- The current construction frontier is **M053: endogenous extension of the transformation
-  language, proposed and preregistered but not yet qualified**.
+- The current construction frontier returns to the objective the project was started for:
+  **repeated trans-substrate continuity**. M048 changed substrate once and kept adapting.
+  Nothing has migrated twice, nothing has had to judge its own substrate unsuitable, and
+  whether a capability learned *after* a migration survives the *next* one has never been
+  asked.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
