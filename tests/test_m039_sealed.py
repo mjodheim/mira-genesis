@@ -81,7 +81,7 @@ def test_ordinary_commit_never_opens_the_block(tmp_path, monkeypatch):
 def test_exact_marker_only_commit_is_accepted(tmp_path, monkeypatch):
     marker = write_marker(tmp_path)
     monkeypatch.chdir(tmp_path)
-    relative = str(marker.relative_to(tmp_path)).replace("\\", "/")
+    relative = str(marker.relative_to(tmp_path))
     assert inspect_arm(
         head_sha=HEAD_A,
         parent_sha=PARENT,
@@ -91,10 +91,47 @@ def test_exact_marker_only_commit_is_accepted(tmp_path, monkeypatch):
     ) == marker_payload()
 
 
+def test_the_marker_comparison_does_not_depend_on_the_host_separator(tmp_path, monkeypatch):
+    """Both sides of the comparison are normalised, not only the marker path.
+
+    Git emits forward slashes everywhere, but a caller holding a host path does not. While
+    only one side was normalised, the tests in this file supplied an already-normalised
+    path and so compensated for the defect instead of exposing it.
+    """
+    marker = write_marker(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    relative = str(marker.relative_to(tmp_path))
+
+    for spelling in (relative, relative.replace("/", "\\"), relative.replace("\\", "/")):
+        assert inspect_arm(
+            head_sha=HEAD_A,
+            parent_sha=PARENT,
+            commit_message=ARM_MESSAGE,
+            changed_files=(spelling,),
+            marker_path=marker.relative_to(tmp_path),
+        ) == marker_payload(), spelling
+
+
+def test_normalisation_does_not_widen_what_can_arm(tmp_path, monkeypatch):
+    """Rewriting separators must not let a different file stand in for the marker."""
+    marker = write_marker(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    relative = str(marker.relative_to(tmp_path))
+
+    for other in ("results/M039.md", relative + ".bak", "x/" + relative):
+        assert inspect_arm(
+            head_sha=HEAD_A,
+            parent_sha=PARENT,
+            commit_message=ARM_MESSAGE,
+            changed_files=(other,),
+            marker_path=marker.relative_to(tmp_path),
+        ) is None, other
+
+
 def test_wrong_message_parent_or_schema_fails_loudly(tmp_path, monkeypatch):
     marker = write_marker(tmp_path)
     monkeypatch.chdir(tmp_path)
-    relative = str(marker.relative_to(tmp_path)).replace("\\", "/")
+    relative = str(marker.relative_to(tmp_path))
 
     with pytest.raises(GuardError, match="exact arming message"):
         inspect_arm(

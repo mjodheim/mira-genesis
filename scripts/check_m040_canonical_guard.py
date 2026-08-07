@@ -22,6 +22,17 @@ class GuardError(ValueError):
     pass
 
 
+def _posix(path: str | Path) -> str:
+    """Render a path in the one separator convention both sides of the comparison use.
+
+    Git reports forward slashes on every platform, but `str(Path(...))` uses the host
+    separator. Normalising only the marker path made the comparison in `inspect_arm`
+    unsatisfiable off Linux, and its failure mode was a silent `return None` — the guard
+    declining to arm rather than reporting anything — so no CI job could observe it.
+    """
+    return str(path).replace("\\", "/")
+
+
 def _write_output(path: Path | None, *, armed: bool, reason: str) -> None:
     if path is None:
         return
@@ -38,9 +49,8 @@ def inspect_arm(
     changed_files: tuple[str, ...],
     marker_path: Path = ARM_PATH,
 ) -> dict[str, object] | None:
-    canonical_files = tuple(sorted(path for path in changed_files if path))
-    canonical_marker = str(marker_path).replace("\\", "/")
-    if canonical_files != (canonical_marker,):
+    canonical_files = tuple(sorted(_posix(path) for path in changed_files if path))
+    if canonical_files != (_posix(marker_path),):
         return None
 
     if commit_message.strip() != ARM_MESSAGE:

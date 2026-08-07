@@ -95,11 +95,52 @@ def test_the_exact_marker_only_commit_is_accepted(tmp_path, monkeypatch):
         head_sha=HEAD_A,
         parent_sha=PARENT,
         commit_message=ARM_MESSAGE,
-        changed_files=(str(marker.relative_to(tmp_path)).replace("\\", "/"),),
+        changed_files=(str(marker.relative_to(tmp_path)),),
         marker_path=marker.relative_to(tmp_path),
     )
 
     assert result == marker_payload()
+
+
+def test_the_marker_comparison_does_not_depend_on_the_host_separator(tmp_path, monkeypatch):
+    """Both sides of the comparison are normalised, not only the marker path.
+
+    Git emits forward slashes everywhere, but a caller holding a host path does not. While
+    only one side was normalised, the tests in this file supplied an already-normalised
+    path and so compensated for the defect instead of exposing it.
+    """
+    marker = write_marker(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    relative = str(marker.relative_to(tmp_path))
+
+    for spelling in (relative, relative.replace("/", "\\"), relative.replace("\\", "/")):
+        result = inspect_arm(
+            head_sha=HEAD_A,
+            parent_sha=PARENT,
+            commit_message=ARM_MESSAGE,
+            changed_files=(spelling,),
+            marker_path=marker.relative_to(tmp_path),
+        )
+
+        assert result == marker_payload(), spelling
+
+
+def test_normalisation_does_not_widen_what_can_arm(tmp_path, monkeypatch):
+    """Rewriting separators must not let a different file stand in for the marker."""
+    marker = write_marker(tmp_path)
+    monkeypatch.chdir(tmp_path)
+    relative = str(marker.relative_to(tmp_path))
+
+    for other in ("results/M038.md", relative + ".bak", "x/" + relative):
+        result = inspect_arm(
+            head_sha=HEAD_A,
+            parent_sha=PARENT,
+            commit_message=ARM_MESSAGE,
+            changed_files=(other,),
+            marker_path=marker.relative_to(tmp_path),
+        )
+
+        assert result is None, other
 
 
 def test_a_marker_only_commit_with_the_wrong_message_fails_loudly(tmp_path, monkeypatch):
@@ -111,7 +152,7 @@ def test_a_marker_only_commit_with_the_wrong_message_fails_loudly(tmp_path, monk
             head_sha=HEAD_A,
             parent_sha=PARENT,
             commit_message="almost canonical",
-            changed_files=(str(marker.relative_to(tmp_path)).replace("\\", "/"),),
+            changed_files=(str(marker.relative_to(tmp_path)),),
             marker_path=marker.relative_to(tmp_path),
         )
 
@@ -125,7 +166,7 @@ def test_the_marker_must_name_the_actual_parent(tmp_path, monkeypatch):
             head_sha=HEAD_A,
             parent_sha=PARENT,
             commit_message=ARM_MESSAGE,
-            changed_files=(str(marker.relative_to(tmp_path)).replace("\\", "/"),),
+            changed_files=(str(marker.relative_to(tmp_path)),),
             marker_path=marker.relative_to(tmp_path),
         )
 
@@ -141,7 +182,7 @@ def test_the_marker_schema_is_closed(tmp_path, monkeypatch):
             head_sha=HEAD_A,
             parent_sha=PARENT,
             commit_message=ARM_MESSAGE,
-            changed_files=(str(marker.relative_to(tmp_path)).replace("\\", "/"),),
+            changed_files=(str(marker.relative_to(tmp_path)),),
             marker_path=marker.relative_to(tmp_path),
         )
 
