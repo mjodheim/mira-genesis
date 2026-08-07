@@ -263,3 +263,52 @@ preserves both.
 A cost figure may only be compared against another cost figure from the same kernel
 generation. This is a narrower version of the discipline D010 already imposes: a measured
 quantity needs a dynamic range, and it also needs a fixed instrument.
+
+## D018 — An identity is computed over what was decided, not over what the producer returned
+
+M048's `validation_digest` was computed over the whole mapping `_validate` returns. That mapping
+carries `worker_pid`, the pid of the disposable Node validation process, so the digest changed
+with the pid and carried that drift into the patch registry record, the native journal, the
+causal memory and the final state digest.
+
+Two runs of the same experiment in the same environment therefore produced different
+`final_state_digest` values, while the protocol required replay to "reproduce the exact final
+native state digest".
+
+### The rule
+
+**A recorded identity is derived from the fields that carry the decision, and from nothing
+else.** Anything a producer attaches that describes the environment — process ids, host names,
+paths, wall-clock times, durations — is evidence that something ran. It is not part of what was
+decided, and it must be excluded before digesting.
+
+The exclusion is explicit and named, not incidental: `_VOLATILE_VALIDATION_FIELDS` states which
+fields are environmental, so adding one is a visible change.
+
+### Why the earlier corrections did not settle it
+
+The M048 history contains `M048: remove volatile process identity from manifest` and
+`M048: keep manifest identity deterministic across runtime processes`. Both removed the pid from
+the manifest's top level; neither removed it from the value the digests were derived from. The
+visible field disappeared and the dependency remained, which is why the defect survived two
+corrections aimed at it and a full qualification run.
+
+Removing a volatile field from a *report* is cosmetic. Removing it from what an *identity* is
+computed over is the fix.
+
+### Applying D015
+
+The repair moves `final_state_digest` and `post_migration_checkpoint`. Thirty-nine manifest
+fields are unchanged, including every scientific outcome, and a permanent test runs the lineage
+under both digest rules to assert the moved set is exactly those two.
+
+M048 artifacts therefore belong to a digest generation, as M033's do to a kernel generation. The
+qualifying run is not re-executed: it exercised the science, the science is untouched, and no
+rerun replaces a first attempt.
+
+### Corollary
+
+This is M014c a third time — `consolidation_record_sha256` differed between environments because
+it included floating scores. D010 asked for a fixed instrument; D018 asks for a fixed *input* to
+the instrument. Both failures were found by trying to build the next thing on top, never by the
+test suite or the integrity audit.

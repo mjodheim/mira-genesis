@@ -651,8 +651,17 @@ An identity that is computed over a mapping should be computed over the fields t
 meaning, not over whatever the producer happened to return. `worker_pid` is evidence that a
 disposable process ran; it is not part of what was decided.
 
-### Not repaired here
+### Resolution
 
-Removing the pid from the digested selection moves every derived digest, which under D014 is a
-protocol-owner decision. `tests/test_m048_cross_process_reproducibility.py` pins the current
-behaviour, including a genuine cross-process comparison, so a repair cannot land silently.
+`_decided` now removes the environmental fields from a validation selection before it is
+digested. The manifest is byte-identical across processes, verified by a permanent test that
+spawns a separate interpreter and compares. Recorded as D018.
+
+Exactly two fields move: `final_state_digest` and `post_migration_checkpoint`. Thirty-nine are
+unchanged, including every scientific outcome — retained-capability passes, tool reuse after
+migration, the adopted version, the selected template, the forced-fault restoration, the
+terminal action and the replay flag. **No finding changed**, and that is pinned by a test that
+runs the lineage under both digest rules and asserts the moved set is exactly those two fields.
+
+Following D015, M048 artifacts now belong to a digest generation, and the qualifying run
+`31061450556` is not re-executed. It exercised the science; the science is untouched.
