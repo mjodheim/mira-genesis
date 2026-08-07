@@ -264,6 +264,86 @@ A cost figure may only be compared against another cost figure from the same ker
 generation. This is a narrower version of the discipline D010 already imposes: a measured
 quantity needs a dynamic range, and it also needs a fixed instrument.
 
+## D016 — The M049–M052 series is closed at its own success
+
+M049 selected one record from a frozen family of four. M050 composed frozen primitives in
+a fixed three-stage grammar, giving 24 candidates. M051 allowed a bounded variable-length
+prefix, giving 80. M052 proved that those 80 collapse to 38 behavioral classes on a
+declared 156-input finite domain, pruning 42 syntactic duplicates before public search.
+
+Every one of them passed. That is the reason to stop.
+
+### The decision
+
+A successor experiment **may not be justified solely** by any of:
+
+- increasing the number of frozen candidates;
+- increasing composition depth;
+- adding another human-declared primitive to the same grammar;
+- changing ranking, enumeration, caching or pruning while the admissible language stays
+  fixed;
+- repeating the same selection and hidden-validation pattern on another small arithmetic
+  task family;
+- describing a larger bounded search as open-ended self-extension.
+
+Such work may remain valid engineering or measurement. It is outside the active
+construction frontier.
+
+### Why a passing series is closed rather than extended
+
+Each step made the search cheaper or more exact over a language that a human wrote and
+froze. None of them changed what the lineage can express. The set of reachable behaviours
+after M052 is the set it inherited from M051, minus the duplicates — a strict subset.
+
+Extending the series is attractive precisely because it is safe: the next increment is
+always well-defined, always measurable and always passes. That is the failure mode D009
+was written against, one experiment number at a time instead of all at once.
+
+### Consequence
+
+M053 must test endogenous extension: the lineage has to demonstrate that its accepted
+language cannot express a solution, and then construct a primitive that was not in the
+founder catalogue. The record is [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md).
+
+This changes the research direction, not the interpretation of M049–M052. Each remains a
+valid bounded result inside its frozen grammar and probe families, and M042 remains the
+only positive canonical continuous-lineage completion.
+
+## D017 — An infrastructure failure is not a qualification verdict
+
+M053's first CI attempt, run `31118366409`, failed during *Set up job* with
+`Service Unavailable` while resolving GitHub Actions downloads. No experiment code ran.
+
+The append-only rule that preserves M048's two failing runs and M050's one failing run
+creates pressure to append this one too. The decision is that it does **not** enter the
+qualification history as a negative verdict.
+
+### The rule
+
+A run enters the append-only qualification history as a scientific verdict only if the
+experiment's own code executed and produced the failure. A run that fails before the
+experiment starts — runner provisioning, action resolution, dependency mirrors, cancelled
+in cascade — is recorded in [`FAILURE_LOG.md`](FAILURE_LOG.md) as an infrastructure event
+and named as such.
+
+### Why the distinction is worth a decision
+
+A preserved negative verdict is a claim: *this construction was tested and did not hold.*
+M048's run 402 says the journal schema was wrong. M050's run 410 says the fixture
+contradicted the grammar. Both are about the object of study.
+
+`Service Unavailable` says something about a third-party registry on 6 August 2026. Filed
+next to the others without qualification, it would later read as evidence that endogenous
+language extension had been attempted and had failed. An append-only history is only
+trustworthy if every entry states what was actually observed.
+
+### What it does not license
+
+Re-running is permitted here because nothing was observed, but the permission is narrow.
+It does not extend to re-running a job that failed after the experiment's code executed,
+and it does not license retrying until a green result appears. If a re-attempt reaches the
+tests and fails, that verdict is preserved under the ordinary rule.
+
 ## D018 — An identity is computed over what was decided, not over what the producer returned
 
 M048's `validation_digest` was computed over the whole mapping `_validate` returns. That mapping
@@ -312,3 +392,73 @@ This is M014c a third time — `consolidation_record_sha256` differed between en
 it included floating scores. D010 asked for a fixed instrument; D018 asks for a fixed *input* to
 the instrument. Both failures were found by trying to build the next thing on top, never by the
 test suite or the integrity audit.
+
+## D019 — Compositional acquisition buys search cost, not expressive power
+
+D016 closed the M049–M052 series and demanded endogenous extension of the transformation
+language. Three experiments attempted it. The line is now closed too, and for a reason that is
+worth stating rather than hiding in a status change.
+
+### What the three attempts established
+
+**M053** extends the language by filtering `META_PROGRAMS`, sixteen pair expressions
+materialised at import. Its capability gain is real and structural — the founder language cannot
+express any operation over adjacent elements — but the mechanism is selection from a declared
+catalogue. The level moved; the shape did not.
+
+**M054** removes the catalogue. Candidates are built from two atoms and five operators over a
+space of 29,330,422 under a budget of 1,024, so enumeration is impossible by construction. It
+demonstrates construction rather than selection, and second-order reuse: the acquired primitive
+becomes material for the next acquisition.
+
+**M055** puts that inside the migrated M048 body: the lineage reconstructs its accepted
+version-eight native state, constructs a tool compiled to JavaScript, re-verifies all
+thirty-two inherited capabilities, adopts, faults and restores. The construction works. Its
+ablation refutes the point of it.
+
+### The negative result
+
+M055's ablation gives the from-scratch arm the same composition power as the continued lineage.
+It still solves the reuse task: 737 candidates without the acquisition against 48 with it. The
+acquisition made the search fifteen times cheaper and made nothing newly reachable.
+
+Two reuse tasks were tried and both were refuted the same way. The first because applying a
+candidate twice was available to every arm. The second because `max(|d|, |d|·|d|)` reduces to
+`|d|·|d|`, reachable at depth two. A third task was not attempted: after two ablations, choosing
+the task that flatters the hypothesis is the tuning illusion recorded in CHANGELOG 0.33.0.
+
+### Why this is structural and not bad luck
+
+In a language closed under composition, with a budget that reaches the relevant depth, acquiring
+a sub-expression cannot enlarge what is expressible. Everything the acquisition makes reachable
+was already reachable by rebuilding it. The acquisition is a cache.
+
+A capability gain can be manufactured by lowering the depth bound or the budget until the
+from-scratch arm fails, but then the gain is an artifact of the declared bound, not of the
+acquisition. That is measuring the instrument.
+
+### The decision
+
+**A successor may not be justified by compositional acquisition inside a closed formation
+language.** M053, M054 and M055 stand as valid bounded results — the construction machinery, the
+second-order reuse, the inherited-regression check and the exact rollback all hold — and none of
+them may be cited as evidence that the lineage grew a capability.
+
+This is D009 reaching its own limit. D009 rejected choosing better inside a hand-written
+catalogue. D019 records that replacing the catalogue with a hand-written *grammar* does not
+escape it, because a grammar is a catalogue you have not enumerated yet.
+
+### Where the frontier goes
+
+Back to the objective the project was started for, and the one thing it has produced that
+nothing else has: **M048 changed substrate and kept adapting.**
+
+That result is a single hop, performed once, with a hand-written compiler, on a protocol that
+told the lineage when to move. Nothing has migrated twice. Nothing has had to decide that its
+substrate no longer suits it. Whether a capability learned *after* a migration survives the
+*next* one has never been asked, and it is the question that separates continuity from
+translation.
+
+A substrate is not closed under composition. What is acquired there — a body that executes
+natively, tools that run in the new runtime — is not a sub-expression of a grammar, so the
+argument above does not apply to it. That is why the frontier moves rather than stops.

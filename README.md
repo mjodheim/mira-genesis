@@ -115,26 +115,99 @@ check. No job failed and no rerun was used.
 M046 is a positive integrated **development** result, not canonical evidence. M042 remains
 the only positive canonical continuous-lineage completion.
 
+M046 is a positive integrated **development** result, not canonical evidence.
+
+## Real modular software — M047
+
+**M047 PASSED IN DEVELOPMENT.** The continuing body left formal automata for a small real
+executable modular Python application, with independently versioned modules for
+interpretation, planning, selection, execution, critique, resource allocation, orchestration
+and core tools.
+
+One lineage diagnosed six module-level limitations and repaired each by rewriting source,
+adding executable regression tests or writing a new tool module. It learned an interpretation
+alias, installed recursive postorder planning, wrote and routed a new `tool_mean` module,
+installed output normalization and plan-dependent allocation, then reused both the acquired
+patch template and the acquired runtime tool on a later task. It preserved twelve generated
+tests, twenty-eight retained cases, six patch records and six verified checkpoints, restored
+version six exactly after a forced fault, and terminated for insufficient evidence on a
+compound defect outside its fixed proposal surface.
+
+Candidate source is parsed and bounded, forbids unsafe external-system operations and runs
+only in disposable isolated workers. The generator sees public evidence and causal memory,
+never hidden cases, and holds no release authority.
+
+Workflow run `31039609326` passed **788 tests on each Python version** plus integrity, with
+no failed job and no rerun.
+
+## Trans-runtime continuity — M048
+
+**M048 PASSED IN DEVELOPMENT after two preserved failing qualification runs.**
+
+M047 left both the controller and the accepted body in Python. M048 tested whether the
+lineage survives a genuinely different runtime.
+
+It reconstructed the accepted M047 version-six state exactly, compiled its nine accepted
+Python modules into nine native Node.js ESM modules, and executed the migrated body **without
+semantic delegation back to Python**. All twenty-eight inherited capabilities survived, the
+inherited `mean` tool was observably used after migration, and the lineage then proposed,
+independently validated and adopted a new executable `tool_max` module as version eight —
+learning a genuinely new capability in the new runtime. It detected forced version-nine
+journal corruption, restored version eight exactly and replayed from artifacts.
+
+A subprocess wrapper, an encoding change, a lookup table or a native shell delegating back to
+Python would not have counted.
+
+Runs `31046715149` (402) and `31054844770` (403) failed and are preserved: the first on an
+orphan import and a journal schema defect, the second on a missing checkpoint field. Neither
+failing commit was rerun. Run `31061450556` (404) then passed on pinned Node.js 20.
+
+## Bounded migration-strategy series — M049 to M052
+
+Four bounded experiments refined how a migration strategy is chosen from public evidence
+alone: selection among four frozen strategies (M049), composition into 24 three-stage
+pipelines (M050), variable-length chains over 80 admissible compositions (M051), and exact
+behavioral-equivalence pruning of those 80 into 38 classes on a declared 156-input domain
+(M052). All passed; each is fail-closed on ambiguous evidence and independently validated.
+
+**The series is closed at M052.** Each step made the search cheaper or more exact over a
+language a human wrote and froze; none changed what the lineage can express. Adding
+candidates, depth, another declared primitive or another pruning rule no longer counts as a
+material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
+and decision D016.
+
+## Current construction frontier — M053
+
+**Status: proposed and preregistered, not yet qualified.**
+
+The required rupture is endogenous extension of the transformation language. The lineage must
+demonstrate that *every* transformation expressible in its accepted language is insufficient
+for a public task, diagnose that as a language-level limitation rather than a bad choice among
+existing candidates, and construct a new reusable primitive that was not in the founder
+catalogue — deriving its implementation and tests without hidden cases, running it in a
+disposable sandbox, submitting it to an independent validator, adopting transactionally, and
+then reusing it on a structurally distinct second task family.
+
+M053 does not pass if the new primitive comes from a hidden pre-enumerated catalogue, from
+evaluator-only data, from a lookup table of expected answers, or is useful only on the task
+that created it.
+
+This remains one integrated experiment rather than another sequence of preparatory gates. A
+language model may generate proposals, but it must not control validation or adoption.
+
+Every result from M043 onward is a **development** result. M042 remains the only positive
+canonical continuous-lineage completion.
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
 - [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md);
 - [`experiments/M046/PROTOCOL.md`](experiments/M046/PROTOCOL.md);
-- [`results/M046_DEVELOPMENT_RESULT.md`](results/M046_DEVELOPMENT_RESULT.md);
+- [`experiments/M047/PROTOCOL.md`](experiments/M047/PROTOCOL.md);
+- [`experiments/M048/DEVELOPMENT_RESULT.md`](experiments/M048/DEVELOPMENT_RESULT.md);
+- [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
-
-## Current construction frontier
-
-The next direct step is to leave automata as the primary mutable body and build a small real
-modular software architecture. The lineage should diagnose a limiting module, propose code or
-configuration changes, construct or extend tests, run candidates in a disposable sandbox,
-compare them under fixed resources, adopt or restore transactionally and retain successful
-and failed causal evidence for reuse.
-
-This should remain one integrated experiment rather than another sequence of preparatory
-gates. A language model may generate proposals, but it must not control validation or
-adoption.
 
 ## Parallel measurement track
 

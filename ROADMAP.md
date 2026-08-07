@@ -5,8 +5,12 @@ Mira Genesis has three bounded construction phases and one parallel measurement 
 - **Phase 1 — bounded Genesis construction:** complete canonically through M042.
 - **Phase 2 — structural-domain transfer and integrated Mealy lineage:** complete in
   development through M044.
-- **Phase 3 — scalable non-exhaustive continuation:** positive integrated development result
-  through M046.
+- **Phase 3 — scalable non-exhaustive continuation and real modular software:** positive
+  integrated development results through M046 and M047.
+- **Phase 4 — trans-runtime continuity:** positive integrated development result at M048;
+  the bounded migration-strategy series M049–M052 is closed.
+- **Active frontier — M053:** endogenous extension of the transformation language, proposed
+  and preregistered, not yet qualified.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 ## Phase 1 — completed bounded construction
@@ -86,7 +90,7 @@ See:
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
 - [`experiments/M044/PROTOCOL.md`](experiments/M044/PROTOCOL.md).
 
-## Phase 3 — scalable non-exhaustive continuation
+## Phase 3 — scalable non-exhaustive continuation and real modular software
 
 ### M046 — bounded scalable lineage
 
@@ -128,34 +132,123 @@ See:
 - [`experiments/M046/DEVELOPMENT_QUALIFICATION.md`](experiments/M046/DEVELOPMENT_QUALIFICATION.md);
 - [`results/M046_DEVELOPMENT_RESULT.md`](results/M046_DEVELOPMENT_RESULT.md).
 
-## Next construction frontier — real modular software body
+### M047 — real modular software body
 
-M046 crosses the immediate exhaustive-search boundary, but the mutable body remains a formal
-Mealy machine and its rewrite language is fixed. The next experiment should move directly to
-a small real modular architecture containing interpretation, memory, planning, proposal,
-tool selection, execution, critique, resource allocation, validation and orchestration.
+**Status: PASSED IN DEVELOPMENT.**
 
-One integrated lineage should be required to:
+M046 crossed the exhaustive-search boundary, but its mutable body was still a formal Mealy
+machine with a fixed rewrite language. M047 moved the continuing body to a small real
+modular Python application with independently versioned modules for interpretation,
+planning, selection, execution, critique, resource allocation, orchestration and core tools.
 
-- identify which module causes a failure on a new task family;
-- propose a code or configuration transformation without receiving the solution;
-- create or extend the tests needed to evaluate it;
-- execute the candidate in a disposable sandbox;
-- compare incumbent and candidate under explicit resource bounds;
-- keep proposal generation independent from validation and adoption;
-- adopt, reject or restore transactionally;
-- preserve reusable successful transformations and causal failure evidence;
-- terminate without adoption when evidence is insufficient.
+One lineage diagnosed six distinct module-level limitations and repaired each one by
+replacing source text, adding executable regression tests or writing a new tool module. It
+learned an interpretation alias, installed recursive postorder planning, wrote and routed a
+new `tool_mean` module, installed output normalization, installed plan-dependent resource
+allocation, and then reused both the acquired patch template and the acquired runtime tool
+on a seventh task. It kept twelve generated regression tests, twenty-eight retained cases,
+six patch records, six journal entries and six verified combined checkpoints; restored
+version six exactly after a forced fault; and terminated for insufficient evidence on a
+compound `maximum` defect outside its fixed proposal surface.
 
-A language model may generate proposals, but it must not control validation or release. New
-component proofs should be added only when they unblock one of these adaptive capacities.
+Candidate source is parsed and bounded, forbids unsafe external-system operations and runs
+only in disposable isolated workers. The generator receives public evidence and causal
+memory but no hidden cases and no release authority.
 
-## Later frontier — migration between real substrates
+Workflow run `31039609326` (run number `400`) passed **788 tests on Python 3.11 and 788 on
+Python 3.13** plus repository integrity, with no failed job and no rerun.
 
-After the modular software body works, continuity must be tested across genuinely different
-substrates such as Python and Rust, remote and local language models, different runtimes or
-different machines. Skills, tools, causal memory, checkpoints and the ability to continue
-adapting must survive the migration.
+See:
+
+- [`experiments/M047/PROTOCOL.md`](experiments/M047/PROTOCOL.md);
+- [`experiments/M047/DEVELOPMENT_QUALIFICATION.md`](experiments/M047/DEVELOPMENT_QUALIFICATION.md);
+- [`results/M047_DEVELOPMENT_RESULT.md`](results/M047_DEVELOPMENT_RESULT.md).
+
+## Phase 4 — migration between real runtimes
+
+Continuity had to be tested across a genuinely different substrate. Skills, tools, causal
+memory, checkpoints and the ability to keep adapting all had to survive the move.
+
+### M048 — genuine Node runtime migration
+
+**Status: PASSED IN DEVELOPMENT after two preserved failing qualification runs.**
+
+M048 reconstructed the accepted M047 version-six state exactly, compiled its nine accepted
+Python modules into nine native Node.js ESM modules and executed the migrated body without
+semantic delegation back to Python. All twenty-eight inherited retained capabilities
+survived. The inherited `mean` tool was observably used after migration. The lineage then
+proposed the unseen `maximum` capability in a separate Node process, validated it in another
+separate Node process, adopted a new executable `tool_max` module as version eight, detected
+forced version-nine journal corruption, restored version eight exactly and replayed the
+whole sequence from artifacts. A `median` challenge terminated for insufficient evidence.
+
+The qualification history is append-only:
+
+| Run | Number | Commit | Verdict |
+|---|---:|---|---|
+| `31046715149` | 402 | `616f316` | **FAILED** — orphan import and `causal_journal`/`native_journal` schema defect. |
+| `31054844770` | 403 | `839883d` | **FAILED** — missing public `combined_digest` checkpoint field. |
+| `31061450556` | 404 | `0dfd822` | **PASSED** — full matrix on pinned Node.js 20, no rerun of either failing commit. |
+
+A subprocess wrapper, an encoding change, a lookup table or a native shell delegating back to
+Python would not have counted. The native body carries executable semantics and stayed
+evolvable after Python left the execution path.
+
+See [`experiments/M048/PROTOCOL.md`](experiments/M048/PROTOCOL.md) and
+[`experiments/M048/DEVELOPMENT_RESULT.md`](experiments/M048/DEVELOPMENT_RESULT.md).
+
+### M049–M052 — bounded migration-strategy series
+
+**Status: ALL PASSED IN DEVELOPMENT. SERIES CLOSED AT M052.**
+
+| Step | Goal | Evidence | Result |
+|---|---|---|---|
+| M049 | Select a migration strategy from public evidence alone | Run `31076192847` (408), 812 tests | Deterministic selection among four frozen strategies; selector has no hidden-evidence access; fail-closed on ambiguity. |
+| M050 | Compose frozen primitives in a fixed grammar | Run `31087299169` (413), 822 tests | 24 three-stage pipelines; one preserved failing run (410) exposed a grammar/fixture mismatch, corrected in the probes only. |
+| M051 | Allow a bounded variable-length prefix | Run 418, 830 tests | 80 admissible compositions, chain lengths zero to two, no repeated transform. |
+| M052 | Remove exact behavioral duplicates | Run 422, 839 tests | The 80 candidates collapse to 38 behavioral classes on a declared 156-input domain; 42 pruned before public search. |
+
+Each step is genuine qualification and search-efficiency work. None of them widens what the
+lineage can express.
+
+[`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md) therefore closes
+the series and forbids justifying a successor by any of: more candidates, greater depth,
+another human-declared primitive, another ranking/enumeration/caching/pruning rule over the
+same fixed language, the same selection pattern on another small arithmetic family, or
+describing a larger bounded search as open-ended self-extension.
+
+This closes a direction, not a result. M049–M052 each remain valid inside their frozen
+grammars and probe families.
+
+## Active construction frontier — M053
+
+**Status: PROPOSED AND PREREGISTERED — UNQUALIFIED.**
+
+The required rupture is endogenous extension of the transformation language. The lineage must
+prove that everything expressible in its accepted language is insufficient for a public task,
+diagnose that as a language-level limitation, construct a new reusable primitive absent from
+the founder catalogue, derive its implementation and tests without hidden cases, run it in a
+disposable sandbox under fixed resources, submit it to an independent validator with no
+adoption authority, adopt transactionally, reuse the extension on a structurally distinct
+second task family, preserve an episode where widening is refused, and restore exactly after
+a forced post-adoption fault.
+
+M053 fails if the new primitive comes from a hidden pre-enumerated catalogue, from
+evaluator-only data, from a lookup table of expected answers, or is useful only on the task
+that created it. The founder may carry a bounded meta-language for describing safe
+extensions, but the concrete accepted extension must be produced after the limitation is
+observed.
+
+The design under review in [PR #73](https://github.com/mjodheim/mira-genesis/pull/73) keeps
+the M051 catalogue of 80 programs as the founder language and adds a closed pair-expression
+meta-language of exactly 16 ASTs. Synthesis is forbidden while any founder candidate survives
+the public probes. The creation task is a sum reduction over adjacent transitions; the reuse
+task changes the reduction family to maximum, so replaying the creation answer cannot satisfy
+it.
+
+M053 has no scientific verdict yet. Its first CI attempt failed on GitHub Actions
+infrastructure during job setup, not on the construction. See
+[`FAILURE_LOG.md`](FAILURE_LOG.md).
 
 ## Final frontier — frozen independent experiment
 
@@ -175,8 +268,9 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046. Construction success cannot validate a
-measurement policy, and measurement failure cannot be hidden inside a richer organism.
+M045 must remain separate from M044 and M046, and equally from M047–M053. Construction
+success cannot validate a measurement policy, and measurement failure cannot be hidden inside
+a richer organism.
 
 ## Release boundary
 

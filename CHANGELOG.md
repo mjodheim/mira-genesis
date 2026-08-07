@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.35.0 — 2026-08-06
+
+Register synchronisation. The root registers had not been updated since M047 was still the
+frontier, while `main` had advanced through M048–M052. No scientific claim is changed by
+this release; the experiment records under `experiments/` were already authoritative.
+
+- **Recorded M048 as a positive integrated development result.** The accepted M047
+  version-six body was compiled into nine native Node.js ESM modules and executed without
+  semantic delegation back to Python. Twenty-eight inherited capabilities survived, the
+  inherited `mean` tool was used after migration, a new `tool_max` module was learned in the
+  new runtime as version eight, forced journal corruption was detected and version eight
+  restored exactly.
+- **Recorded M049–M052** as bounded development results, with their run numbers, commits and
+  test counts, and recorded that the series is closed at M052.
+- **Added D016 — the M049–M052 series is closed at its own success.** Every step passed and
+  none of them changed what the lineage can express; the closure lists the six continuation
+  patterns that can no longer justify a successor experiment.
+- **Added D017 — an infrastructure failure is not a qualification verdict.** A run enters the
+  append-only qualification history only if the experiment's own code executed and produced
+  the failure.
+- **Entered the preserved negative verdicts into `FAILURE_LOG.md`.** M048's runs 402 and 403
+  and M050's run 410 were documented only under `experiments/`, so the project's central
+  failure register did not contain them. For a project whose append-only negative history is
+  a load-bearing claim, that was the largest gap in the registers.
+- **Recorded the M053 frontier as proposed and unqualified**, and recorded its first CI
+  attempt as an infrastructure event rather than a negative result, per D017.
+- Added M047 to `PROJECT_STATE.yaml`, which had never carried it, and added a `phase_four`
+  block for trans-runtime continuity.
+
 ## 0.34.0 — 2026-08-03
 
 - **Corrected a selector that was named for a mechanism it did not implement.**

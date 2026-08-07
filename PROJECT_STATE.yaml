@@ -1,10 +1,17 @@
 project: Mira Genesis
-updated_at: 2026-08-05
-status: phase_three_scalable_non_exhaustive_positive_in_development
+updated_at: 2026-08-06
+status: phase_four_trans_runtime_continuity_positive_in_development
 
 active_research_question: >-
+  Can a continuous lineage prove that its own accepted transformation language is
+  insufficient for a task, synthesize a new reusable primitive only after observing that
+  limitation, validate it independently, adopt it transactionally and reuse it on a
+  structurally distinct task family?
+
+previous_research_question: >-
   Can a continuous lineage diagnose and repair a limiting module in a real modular software
   body while preserving independent validation, causal memory and transactional rollback?
+  Answered positively in development by M047, then carried across runtimes by M048.
 
 measurement_question: >-
   Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
@@ -223,32 +230,227 @@ phase_three:
     hidden_task_bank_authorised: false
     canonical_workflow_authorised: false
     canonical_result_exists: false
+  M047:
+    status: positive_integrated_development_result
+    canonical: false
+    objective: real_executable_modular_python_software_body
+    protocol: experiments/M047/PROTOCOL.md
+    qualification: experiments/M047/DEVELOPMENT_QUALIFICATION.md
+    result: results/M047_DEVELOPMENT_RESULT.md
+    qualification_marker_commit: c791ad0b460faebde6625cc986f4b14cdf304ea9
+    merge_commit: d2c6308
+    qualification_ci_workflow_run: 31039609326
+    qualification_ci_run_number: 400
+    repository_tests_python_311: 788
+    repository_tests_python_311_seconds: 577.03
+    repository_tests_python_313: 788
+    repository_tests_python_313_seconds: 587.07
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_versions: 6
+    prepublication_manifest_sha256: 9dda8dc075a47ee1e24f7984804726d95733c749b6202ca056413dec030b2778
+    generated_regression_tests: 12
+    retained_public_and_hidden_cases: 28
+    patch_tool_records: 6
+    causal_journal_entries: 6
+    verified_combined_checkpoints: 6
+    new_runtime_tool_constructed: tool_mean
+    acquired_patch_template_reused: true
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 7
+    exact_restored_version: 6
+    terminal_action: terminate_insufficient_evidence
+    terminal_challenge: maximum
+    generator_has_hidden_case_access: false
+    generator_has_release_authority: false
+    candidate_source_runs_in_disposable_isolated_worker: true
+    canonical_result_exists: false
+
+phase_four:
+  status: trans_runtime_continuity_passed_in_development
+  objective: genuine_migration_between_real_runtimes
+  M048:
+    status: positive_integrated_development_result
+    canonical: false
+    protocol: experiments/M048/PROTOCOL.md
+    result: experiments/M048/DEVELOPMENT_RESULT.md
+    merge_commit: 18402be50eec77d099a7a6bafe1a76fe7dcf40ab
+    source_runtime: cpython
+    target_runtime: nodejs_20_esm
+    target_runtime_pinned: true
+    qualification_history_append_only: true
+    failed_qualification_runs:
+      - ci_workflow_run: 31046715149
+        ci_run_number: 402
+        commit: 616f31619e7337dd0c114fc1f09e1cefa1a8f7fd
+        cause: orphan_import_and_causal_native_journal_schema_defect
+        rerun_of_failing_commit: false
+      - ci_workflow_run: 31054844770
+        ci_run_number: 403
+        commit: 839883d1c2353d47005d14fd8e42c073e049b0d8
+        cause: missing_public_combined_digest_checkpoint_field
+        rerun_of_failing_commit: false
+    qualification_ci_workflow_run: 31061450556
+    qualification_ci_run_number: 404
+    qualification_commit: 0dfd822ac1c81692abe45f9499ece420a947fd0f
+    repository_integrity_passed: true
+    ci_reruns: 0
+    migrated_python_modules: 9
+    emitted_native_modules: 9
+    semantic_delegation_back_to_python: false
+    inherited_retained_capabilities_preserved: 28
+    inherited_tool_used_after_migration: mean
+    post_migration_capability_learned: maximum
+    post_migration_tool_adopted: tool_max
+    adopted_version_after_migration: 8
+    proposal_process_in_separate_node_process: true
+    hidden_validation_in_separate_node_process: true
+    proposal_has_hidden_test_access: false
+    validator_has_adoption_authority: false
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 9
+    exact_restored_version: 8
+    terminal_action: terminate_insufficient_evidence
+    terminal_challenge: median
+    artifact_replay_exact: true
+    canonical_result_exists: false
+  migration_strategy_series:
+    status: closed_at_M052
+    closure_record: experiments/M052/SERIES_CLOSURE.md
+    closure_rationale: >-
+      Adding candidates, composition depth, another human-declared primitive or another
+      ranking, caching or pruning rule over the same fixed admissible language is no longer
+      a material advance toward the objective. See decision D016.
+    closure_changes_interpretation_of_M049_to_M052: false
+    M049:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M049/PROTOCOL.md
+      result: experiments/M049/DEVELOPMENT_RESULT.md
+      merge_commit: 6662c7a4844604f9ce3d02fafce11b048156f4b9
+      qualification_commit: b8a8bb064ff456c491369bd1ca25c72ca187b545
+      qualification_ci_workflow_run: 31076192847
+      qualification_ci_run_number: 408
+      repository_tests_python_311: 812
+      repository_tests_python_313: 812
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      frozen_strategy_artifacts: 4
+      selector_has_hidden_evidence_access: false
+      fail_closed_on_ambiguous_or_contradictory_public_evidence: true
+      independent_hidden_validation: true
+      validator_has_adoption_authority: false
+    M050:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M050/PROTOCOL.md
+      result: experiments/M050/DEVELOPMENT_RESULT.md
+      merge_commit: 552ab5ec4b4e279a13e22c47418876af7f61a848
+      failed_qualification_runs:
+        - ci_workflow_run: 31083479890
+          ci_run_number: 410
+          commit: 3bc3b50
+          cause: positive_fixture_required_two_input_primitives_but_grammar_permits_one
+          correction_scope: public_and_hidden_probes_only
+          primitives_added: 0
+          search_budget_enlarged: false
+          validation_weakened: false
+          rerun_of_failing_commit: false
+      qualification_ci_workflow_run: 31087299169
+      qualification_ci_run_number: 413
+      qualification_commit: c75e9e70a48b382feeacefdca3d5b5e85d390d46
+      repository_tests_python_311: 822
+      repository_tests_python_313: 822
+      repository_integrity_passed: true
+      enumerated_pipelines: 24
+      grammar_stages: 3
+      unique_public_selection: unique_sum_zero
+      fail_closed_insufficient_evidence: true
+    M051:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M051/PROTOCOL.md
+      result: experiments/M051/DEVELOPMENT_RESULT.md
+      merge_commit: dfccb44399e7fd18aff710db0437ab63a8f01d58
+      qualification_commit: ff30ff1f71a11b0d2e09c8c3ab15e082725a33e6
+      qualification_ci_run_number: 418
+      repository_tests_python_311: 830
+      repository_tests_python_313: 830
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      admissible_compositions: 80
+      transform_chain_lengths: [0, 1, 2]
+      repeated_transform_permitted: false
+      unique_public_selection: absolute_unique_sum_zero
+    M052:
+      status: positive_bounded_development_result_series_closed
+      canonical: false
+      protocol: experiments/M052/PROTOCOL.md
+      result: experiments/M052/DEVELOPMENT_RESULT.md
+      merge_commit: bc17ce151c34eeaa68112269edc0b6ba89fb9afd
+      qualification_commit: 3ab33da7fdbcc27ba786c20e8516e83e29c76fee
+      qualification_ci_run_number: 422
+      repository_tests_python_311: 839
+      repository_tests_python_313: 839
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      inherited_grammar_candidates: 80
+      declared_finite_domain_inputs: 156
+      behavioral_equivalence_classes: 38
+      pruned_syntactic_duplicates: 42
+      largest_equivalence_class: 4
+      hidden_contradiction_episode_preserved: true
+      equivalence_exact_outside_declared_domain: false
 
 active_construction_frontier:
-  objective: real_modular_software_body
+  experiment: M053
+  status: proposed_and_preregistered_unqualified
+  objective: endogenous_transformation_language_extension
+  protocol: experiments/M053/PROTOCOL.md
+  pull_request: 73
+  pull_request_state: draft
   required_properties:
-    - diagnose_limiting_module
-    - propose_code_or_configuration_transformation
-    - construct_or_extend_tests
-    - execute_candidate_in_disposable_sandbox
-    - compare_incumbent_and_candidate_under_fixed_resources
+    - demonstrate_founder_language_insufficiency_on_a_public_task
+    - diagnose_language_or_architecture_limitation_not_candidate_choice
+    - construct_new_reusable_primitive_absent_from_founder_catalogue
+    - derive_implementation_and_tests_without_hidden_cases
+    - execute_extension_in_disposable_sandbox_under_fixed_resources
     - independently_validate_before_adoption
-    - transactional_adoption_rejection_and_restore
-    - retain_success_and_failure_causal_memory
-    - reuse_acquired_transformations
-    - fail_closed_insufficient_evidence_termination
-  suggested_modules:
-    - interpretation
-    - working_memory
-    - durable_memory
-    - planning
-    - proposal_generation
-    - tool_selection
-    - execution
-    - critique
-    - resource_allocation
-    - validation
-    - orchestration
+    - transactional_adoption_preserving_body_tools_tests_and_reasons
+    - reuse_extension_on_structurally_distinct_second_task_family
+    - preserve_a_refused_widening_episode
+    - exact_restore_after_forced_post_adoption_fault_and_deterministic_replay
+  anti_cheating_requirements:
+    - extension_not_selected_from_hidden_pre_enumerated_catalogue
+    - extension_not_copied_from_evaluator_only_data
+    - extension_not_encoded_as_lookup_table_of_expected_answers
+    - extension_not_useful_only_on_the_task_that_created_it
+  bounded_design_under_review:
+    founder_language: unchanged_M051_catalogue_of_80_programs
+    meta_language_asts: 16
+    meta_language_operands: [current, previous]
+    meta_language_operators: [add, subtract, minimum, maximum]
+    synthesis_forbidden_unless_zero_founder_candidates_survive: true
+    creation_task_reduction: sum_over_adjacent_transitions
+    reuse_task_reduction: maximum_over_adjacent_transitions
+    positive_target_expression: current_subtract_previous
+    target_stored_as_accepted_founder_primitive: false
+  qualification_status:
+    scientific_verdict_reached: false
+    attempts:
+      - ci_workflow_run: 31118366409
+        outcome: infrastructure_fault
+        stage: set_up_job
+        error: github_actions_service_unavailable_resolving_action_downloads
+        counts_as_negative_scientific_verdict: false
+        cancelled_jobs:
+          - repository_integrity
+          - tests_python_313
+      - ci_workflow_run: 31118366475
+        workflow: attribution_policy
+        outcome: cancelled_in_cascade
+        counts_as_negative_scientific_verdict: false
   development_strategy: one_integrated_experiment_not_another_gate_sequence
 
 measurement_track:
@@ -259,6 +461,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
+  separate_from_M047_to_M053: true
 
 engineering_release_boundary:
   human_control_required_for:
