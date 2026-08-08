@@ -2,12 +2,11 @@
 
 ## Status
 
-**POSITIVE ON THE BOUNDED CENTRAL QUESTION — PENDING QUALIFICATION.**
+**POSITIVE ON THE BOUNDED CENTRAL QUESTION — QUALIFIED IN DEVELOPMENT.**
 
 The final copy-loop arrangement was selected from a constructed grammar using public evidence,
 then every public survivor and every observationally equivalent region representative passed
-independent hidden validation. This is a local, noncanonical development result. No GitHub
-qualification run exists yet.
+independent hidden validation. This is a qualified, noncanonical development result.
 
 ## Observed result
 
@@ -23,6 +22,21 @@ qualification run exists yet.
 | Hidden cases | **3** |
 | Survivor/region programs admitted | **32 / 32** |
 | Selected module | **97 bytes** |
+
+## Qualification
+
+The exact experiment head is `f5cfe35c265cf83640fddc2ae80e54805776f84f`.
+
+GitHub Actions run [`31269732461`](https://github.com/mjodheim/mira-genesis/actions/runs/31269732461),
+attempt 1, passed without a failed job or rerun:
+
+- **1,038 tests on Python 3.11** in `889.83` seconds;
+- **1,038 tests on Python 3.13** in `914.03` seconds;
+- repository integrity: clean imports, no orphan modules and dependency consistency.
+
+The separate human-only attribution workflow also passed. Warnings about GitHub Actions moving
+their JavaScript action runtime from Node 20 to Node 24 are infrastructure annotations, not
+scientific failures and not a change to the pinned native target runtime used by the tests.
 
 The deterministic selected arrangement is:
 
@@ -105,6 +119,6 @@ and hashed before a canonical real-substrate run.
 ## Claim boundary
 
 One substrate, one copy task, 480 grammar products, three public cases and three hidden cases.
-M062 is noncanonical and pending qualification. It does not establish arbitrary compilation,
+M062 is noncanonical and qualified in development. It does not establish arbitrary compilation,
 open-ended evolution, general intelligence, consciousness or authority over repositories,
 credentials, networks, deployments or production systems.

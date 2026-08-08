@@ -2,8 +2,8 @@
 
 ## 0.37.0 — 2026-08-08
 
-M062 begins the arrangement frontier left by M061. This is a local development result pending
-qualification; no canonical or real-substrate claim is added.
+M062 begins the arrangement frontier left by M061. This is a qualified development result; no
+canonical or real-substrate claim is added.
 
 - Replayed the six M061 structural scans and added a seventh 256-opcode region-effect scan.
   A discovered branch distinguishes exit behaviour from repetition without using `block` to
@@ -22,7 +22,10 @@ qualification; no canonical or real-substrate claim is added.
   complete lineage; the fixed `i32` blocktype is now part of the explicit floor.
 - Kept the boundary explicit. The task decomposition, grammar, emitter, scaffold shapes,
   blocktypes, label encoding and cases remain authored. M062 is not arbitrary compiler synthesis,
-  does not close the real-substrate canonical frontier and remains pending qualification.
+  and does not close the real-substrate canonical frontier.
+- Qualified exact head `f5cfe35c265cf83640fddc2ae80e54805776f84f` on the first and only
+  GitHub Actions run `31269732461`, attempt 1: 1,038 tests on Python 3.11, 1,038 on
+  Python 3.13 and repository integrity, with no failed job or rerun.
 
 ## 0.36.0 — 2026-08-08
 

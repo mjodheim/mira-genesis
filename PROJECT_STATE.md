@@ -32,8 +32,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
 - **M042 remains the only positive canonical continuous-lineage completion.**
 - **Every result from M048 onward is a development result.** Nothing on a real substrate has
   been run as a frozen canonical lineage against the ten gates. M056–M061 did not discharge
-  their qualification rules in their own records, and M062 is a local result with no
-  qualification run yet.
+  their qualification rules in their own records; M062 did, on exact head `f5cfe35` and first
+  run `31269732461`.
 - The current frontier is therefore still two questions, but the first is now narrower:
   **M062 removed one literal copy-loop arrangement while leaving the task grammar and generic
   emitter authored**, and **nothing on a real substrate is yet claimable**.
@@ -405,7 +405,9 @@ three public cases. Every survivor, with both exit-region representatives, passe
 independent hidden cases: **32 / 32** complete programs admitted. D021 requires this class-wide
 validation before a digest or opcode may serve as the canonical representation.
 
-The result is bounded and pending qualification. The copy-task decomposition, search grammar,
+The result is bounded and qualified in development. Exact head `f5cfe35` passed first run
+`31269732461`, attempt 1: 1,038 tests on each of Python 3.11 and 3.13 plus repository integrity.
+The copy-task decomposition, search grammar,
 generic emitter, blocktypes, label encoding, scaffold shapes and cases remain authored. M062
 removes a literal final arrangement; it does not synthesize an arbitrary compiler.
 
@@ -431,8 +433,9 @@ This table is recorded retrospectively and is evidence that the suite was green,
 discharge of the qualification rules. Those rules require each experiment to document its head
 and record the verdict in its own result, and that was not done at the time.
 
-M062 has only local development evidence on this branch. No GitHub qualification workflow has
-run, so its own result correctly remains *PENDING QUALIFICATION*.
+M062 is different: its own record now discharges its qualification rule. Exact head
+`f5cfe35c265cf83640fddc2ae80e54805776f84f` passed run `31269732461`, attempt 1,
+with 1,038 tests on each Python version and repository integrity. No failed job or rerun occurred.
 
 ## Current construction frontier — two open questions
 
@@ -489,7 +492,7 @@ a human decision and is not automated here.
 | M059 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | `f64 → i32 → f64`. Three families, three decisions, and the judgement reverses. Every accepted body verified on unseen arguments. |
 | M060 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | The whole accepted body in WebAssembly: 10/10 modules, 0 left in JavaScript, 1,792 bytes, 0 imports, 32/32 capabilities, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
-| M062 | **POSITIVE LOCAL DEVELOPMENT RESULT — PENDING QUALIFICATION** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. The grammar and generic emitter remain authored. |
+| M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
 
 ## Parallel measurement track — M045
 

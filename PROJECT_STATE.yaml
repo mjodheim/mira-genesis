@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-08
-status: phase_six_bounded_arrangement_positive_locally_pending_qualification
+status: phase_six_bounded_arrangement_positive_qualified_in_development
 
 active_research_question: >-
   Two questions remain. M062 answers the first only inside one authored 480-program copy
@@ -465,8 +465,8 @@ phase_six:
     written before CI returned and none was updated, so all six still read PENDING
     QUALIFICATION. The run identifiers below are recorded retrospectively - one run per
     experiment commit, no rerun and no selection among runs - as evidence that the suite was
-    green, not as a discharge of those rules. M062 has local development evidence only and no
-    GitHub qualification run.
+    green, not as a discharge of those rules. M062 separately discharged its own rule on exact
+    head f5cfe35c265cf83640fddc2ae80e54805776f84f, first run 31269732461, attempt 1.
   M056:
     status: positive_bounded_development_result
     canonical: false
@@ -587,12 +587,20 @@ phase_six:
       why_invisible: loop_counter_never_goes_negative
       m060_emitter_was_correct: true
   M062:
-    status: positive_local_development_result_pending_qualification
+    status: positive_qualified_development_result
     canonical: false
     protocol: experiments/M062/PROTOCOL.md
     result: experiments/M062/DEVELOPMENT_RESULT.md
-    experiment_commit: null
-    qualification_ci_workflow_run: null
+    experiment_commit: f5cfe35c265cf83640fddc2ae80e54805776f84f
+    qualification_ci_workflow_run: 31269732461
+    qualification_ci_attempt: 1
+    qualification_failed_jobs: 0
+    qualification_rerun_used: false
+    tests_python_3_11: 1038
+    tests_python_3_13: 1038
+    test_seconds_python_3_11: 889.83
+    test_seconds_python_3_13: 914.03
+    repository_integrity_passed: true
     m061_scaffolds_replayed: 6
     region_opcode_space_scanned: 256
     region_outcomes:

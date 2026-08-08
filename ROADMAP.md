@@ -261,7 +261,7 @@ three supports one at a time, and returned the project to the question it was st
 | M059 | Let the lineage judge its own substrate | Run 455 on `6f4f20a` | `f64 → i32 → f64`. Three families, three decisions: migrate, migrate back, stay. **It reverses**, which is what makes it a judgement. `i32` exposes 27 operations against `f64`'s 9. Every accepted body verified on unseen arguments. |
 | M060 | Move the **whole** body, not four tools | Run 457 on `154c92a` | 10/10 modules migrated, 0 left in JavaScript, one 1,792-byte module with 0 declared imports and no import object, 32/32 capabilities executed, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
-| M062 | Construct one control arrangement instead of handing it over | Local development manifest `752fecdc`; qualification pending | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
+| M062 | Construct one control arrangement instead of handing it over | Run `31269732461` on `f5cfe35`; 1,038 tests on each Python version plus integrity | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
 
 ### What M061 also produced
 
@@ -284,8 +284,9 @@ QUALIFICATION*. The runs above are recorded retrospectively — one run per expe
 no rerun and no selection among runs — as evidence that the suite was green, not as a
 discharge of those rules.
 
-M062 has no GitHub qualification run yet. Its positive local development result remains
-*PENDING QUALIFICATION* by construction.
+M062 discharged its own qualification rule on exact head `f5cfe35`: first run
+`31269732461`, attempt 1, passed 1,038 tests on Python 3.11, 1,038 on Python 3.13 and
+repository integrity, with no failed job or rerun.
 
 ## Active construction frontier — two open questions
 

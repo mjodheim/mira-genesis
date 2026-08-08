@@ -1,6 +1,10 @@
 # M062 — synthesizing a bounded control arrangement
 
-**Status: PROPOSED — local development result exists; qualification pending.**
+**Status: QUALIFIED IN DEVELOPMENT.**
+
+The exact experiment head `f5cfe35c265cf83640fddc2ae80e54805776f84f` passed the first
+and only qualification run `31269732461`, attempt 1: 1,038 tests on Python 3.11 and
+1,038 on Python 3.13, plus repository integrity. The result remains noncanonical.
 
 ## Research question
 
