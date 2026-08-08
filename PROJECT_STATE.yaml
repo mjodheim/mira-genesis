@@ -1,13 +1,13 @@
 project: Mira Genesis
 updated_at: 2026-08-08
-status: phase_six_bounded_arrangement_positive_qualified_in_development
+status: phase_six_control_transfer_positive_pending_qualification
 
 active_research_question: >-
-  Two questions remain. M062 answers the first only inside one authored 480-program copy
-  grammar: can the lineage remove the authored task decomposition and generic emitter, or
-  transfer arrangement synthesis to a genuinely new body? And can anything built on a real
-  substrate be frozen and run against the ten completion gates, rather than accumulating
-  another development result?
+  Two questions remain. M063 transfers M062's arrangement mechanism from a copy body to a
+  distinct checksum reduction, but each task decomposition and emitter remains authored: can
+  the lineage remove one of those handholds? And can anything built on a real substrate be
+  frozen and run against the ten completion gates, rather than accumulating another
+  development result?
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -653,28 +653,94 @@ phase_six:
       - unrestricted_code_generation
       - open_ended_evolution
     decision: D021
+  M063:
+    status: positive_local_development_result_pending_qualification
+    canonical: false
+    protocol: experiments/M063/PROTOCOL.md
+    result: experiments/M063/DEVELOPMENT_RESULT.md
+    qualification_ci_workflow_run: null
+    repository_integrity_passed: null
+    local_tests: 16
+    local_test_seconds: 130.94
+    joint_M062_M063_tests: 31
+    joint_M062_M063_test_seconds: 310.38
+    complete_repository_tests: 1054
+    complete_repository_test_seconds: 1763.31
+    local_repository_integrity_passed: true
+    deterministic_complete_executions: 2
+    source_mechanism_protocol_digest: 3780dc998a5df0cee783ba435671e1b349b27e9cd96315130ae7a34f41e7b97e
+    protocol_digest: 4ac3f4629771a4f111bcadd83b8cc9e17a5723e7198de6b392b7ae9081156e02
+    manifest_digest: c2f0cdb05bef741b003740c2148fe3ad5d8bf78b802085c8234fa77fe0779107
+    region_effect_classes:
+      exit_region: ["0x02", "0x06"]
+      repeat_region: ["0x03"]
+    target_body:
+      kind: byte_checksum_reduction
+      signature: [i32_source, i32_count, i32_result]
+      accumulator_local: true
+      memory_write: false
+    arrangements_constructed: 96
+    public_survivors: 6
+    public_cases: 3
+    hidden_cases: 3
+    survivor_region_programs_admitted: 12
+    survivor_region_programs_tested: 12
+    selected_module_bytes: 91
+    selected_module_imports: 0
+    selected_arrangement:
+      topology: block_then_loop
+      condition: remaining_le_zero
+      exit_position: 0
+      step_order: [decrement_remaining, accumulate_byte, advance_source]
+    copy_body_negative_control:
+      source_arrangement_digest: 0c6334a9384cbd52db9713ff18c95c8d713ccd9e4ff91e79cbcf674a13f0eadb
+      zero_case_passed: true
+      nonzero_cases_failed: 2
+      rejected: true
+      evidence_digest: e10c77dccc82be7d087830ab86993fd62ede5715cc76ae7925a1545a3adc3412
+    authored_elements:
+      - checksum_task_decomposition
+      - three_checksum_atomic_steps
+      - finite_transferred_cartesian_grammar
+      - checksum_wasm_emitter
+      - local_blocktype_and_label_depth_encoding
+      - public_and_hidden_cases
+    claim_exclusions:
+      - arbitrary_compiler_synthesis
+      - self_authored_grammar
+      - unrestricted_code_generation
+      - open_ended_evolution
+    decision: D022
 
 active_construction_frontier:
-  status: bounded_arrangement_step_positive_general_compiler_and_canonical_claim_open
+  status: bounded_control_transfer_positive_general_compiler_and_canonical_claim_open
   question_one:
-    name: bounded_arrangement_synthesized_general_compiler_still_authored
+    name: bounded_arrangement_transfers_once_general_compiler_still_authored
     named_by: experiments/M061/DEVELOPMENT_RESULT.md
-    bounded_step: experiments/M062/DEVELOPMENT_RESULT.md
+    bounded_steps:
+      - experiments/M062/DEVELOPMENT_RESULT.md
+      - experiments/M063/DEVELOPMENT_RESULT.md
     removed_in_M062:
       - literal_final_copy_loop_arrangement
       - authored_exit_and_repeat_region_opcode_choice
+    demonstrated_in_M063:
+      - transfer_from_copy_to_checksum_reduction
+      - distinct_function_signature
+      - distinct_returned_effect
+      - no_memory_write
+      - source_body_rejected_by_target_evidence
     still_authored:
-      - copy_task_decomposition
-      - atomic_steps
-      - finite_search_grammar
-      - generic_emitter
+      - task_decompositions
+      - atomic_step_sets
+      - finite_search_grammars
+      - task_specific_emitters
       - blocktype_and_label_encoding
       - the_scaffold_shapes
       - public_and_hidden_cases
     next_advance_must: >-
-      Remove one of the authored grammar or emitter handholds, or demonstrate transfer of the
-      arrangement mechanism to a genuinely new body. A larger search inside the same copy
-      grammar is not an advance.
+      Remove one of the authored grammar or emitter handholds, or enter the frozen
+      real-substrate completion experiment. A larger search or a third small loop using the
+      same transferred pattern is not an advance under D022.
   question_two:
     name: nothing_on_a_real_substrate_is_claimable
     gates_with_working_parts: [1, 2, 3, 4, 5, 6, 7]
@@ -683,7 +749,7 @@ active_construction_frontier:
       - four_arm_post_migration_plasticity_comparison
       - three_accepted_cycles_across_new_held_out_families
       - frozen_protocol_hashed_before_a_canonical_run
-    consecutive_development_results_without_a_claimable_one: 16
+    consecutive_development_results_without_a_claimable_one: 17
     pattern_guarded_against_by: [D016, experiments/M052/SERIES_CLOSURE.md]
     freezing_and_launching_is_a_human_decision: true
 
@@ -695,7 +761,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M062: true
+  separate_from_M047_to_M063: true
 
 engineering_release_boundary:
   human_control_required_for:

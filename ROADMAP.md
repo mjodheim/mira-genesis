@@ -11,11 +11,13 @@ Mira Genesis has six bounded construction phases and one parallel measurement tr
   the bounded migration-strategy series M049–M052 is closed.
 - **Phase 5 — endogenous language extension:** M053 and M054 build the machinery; M055's
   ablation refutes the capability claim. Closed by **D019**.
-- **Phase 6 — substrate discovery and the whole-body crossing:** M056–M061. The lineage
+- **Phase 6 — substrate discovery and the whole-body crossing:** M056–M063. The lineage
   discovers an opaque substrate, judges whether to move, carries its whole body across and
-  identifies the structural instructions by their effect.
+  identifies structural instructions by effect, synthesizes one arrangement and transfers that
+  arrangement mechanism from copying to reduction.
 - **Active frontier — two questions:** the compiler that arranges the discovered instructions
-  is still written by a person, and nothing on a real substrate is yet claimable.
+  is still written by a person despite one bounded transfer, and nothing on a real substrate is
+  yet claimable.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 **Every result from M048 onward is a development result.** M042 remains the only positive
@@ -262,6 +264,7 @@ three supports one at a time, and returned the project to the question it was st
 | M060 | Move the **whole** body, not four tools | Run 457 on `154c92a` | 10/10 modules migrated, 0 left in JavaScript, one 1,792-byte module with 0 declared imports and no import object, 32/32 capabilities executed, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
 | M062 | Construct one control arrangement instead of handing it over | Run `31269732461` on `f5cfe35`; 1,038 tests on each Python version plus integrity | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
+| M063 | Transfer the arrangement mechanism to a new body | Local: 1,054 repository tests in 1,763.31s; qualification pending | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
 
 ### What M061 also produced
 
@@ -288,19 +291,22 @@ M062 discharged its own qualification rule on exact head `f5cfe35`: first run
 `31269732461`, attempt 1, passed 1,038 tests on Python 3.11, 1,038 on Python 3.13 and
 repository integrity, with no failed job or rerun.
 
+M063 is locally positive and pending qualification. Its exact experiment head and the first
+GitHub Actions verdict must be recorded before the status can change.
+
 ## Active construction frontier — two open questions
 
-### M062 removes one literal arrangement; the general compiler is still authored
+### M063 transfers arrangement synthesis once; the general compiler is still authored
 
-M062 discovers exit/repeat region effects and chooses the final topology, predicate, exit
-position and step ordering for one copy task from public evidence. It does not receive a
-catalogue of complete programs, and D021 prevents canonicalisation from choosing hidden
-behaviour among the sixteen survivors.
+M062 constructs a copy arrangement. M063 transfers the same bounded search dimensions to a
+checksum reduction with a different signature, returned value and memory effect. The old copy
+body fails the non-zero checksum evidence, and D021 still requires admission of every survivor
+before canonical representation.
 
-The task decomposition, atomic steps, finite grammar, generic emitter, blocktypes, label depths,
-scaffold shapes and evidence cases remain authored. The next structural advance must remove one
-of those handholds or demonstrate transfer of the arrangement mechanism to a genuinely new body;
-another larger search inside the same copy grammar is not an advance.
+Each task decomposition, atomic-step set, finite grammar, emitter, encoding and evidence suite
+remains authored. D022 closes a third small-loop repetition as a claimed advance. The next
+structural step must remove one of those handholds or enter the frozen real-substrate completion
+experiment; a larger search or another relabelled loop is not an advance.
 
 ### Nothing on a real substrate is claimable
 
@@ -309,7 +315,7 @@ parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-mig
 plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
 frozen protocol hashed before a canonical run.
 
-Sixteen consecutive development results and no claimable one is the pattern **D016** and the
+Seventeen consecutive development results and no claimable one is the pattern **D016** and the
 M052 series closure exist to prevent. Freezing a protocol and launching its evaluation is a
 human decision and is not automated here.
 
@@ -331,7 +337,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M062. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M063. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 
