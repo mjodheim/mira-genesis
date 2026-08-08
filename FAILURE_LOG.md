@@ -742,3 +742,77 @@ runs the lineage under both digest rules and asserts the moved set is exactly th
 
 Following D015, M048 artifacts now belong to a digest generation, and the qualifying run
 `31061450556` is not re-executed. It exercised the science; the science is untouched.
+
+## M061 — the manifest asserted what the builder contradicted
+
+Found by an external review of PR #90, reading the manifest against the code it describes. Not
+found by the sixteen permanent tests, the repository-integrity audit or the green CI run on the
+experiment commit. All of them passed over it.
+
+### What was claimed
+
+`m061_discovered_structure.py` recorded two fields:
+
+    "copy_loop_uses_only_discovered_instructions": True,
+    "structural_instructions_authored": False,
+
+`experiments/M061/DEVELOPMENT_RESULT.md` said the copy loop was built "from discovered
+instructions alone", and its protocol's anti-cheating clause forbade the loop using "an
+instruction the scans did not recover".
+
+### What held
+
+`build_copy_loop` took three opcodes from the resolution and wrote seven in by hand:
+
+| Written in | Byte |
+|---|---|
+| `block` | `0x02` |
+| `loop` | `0x03` |
+| `br` | `0x0c` |
+| `local.set` | `0x21` |
+| `i32.le_s` | `0x4d` |
+| `i32.add` | `0x6a` |
+| `i32.sub` | `0x6b` |
+
+The loop computed correctly and recovered its phrase. The measurement of *how* it was built was
+false.
+
+### Mechanism
+
+The scans resolved five instructions. The loop needed twelve. The gap was filled at the point of
+emission, in a byte literal inside a `bytes([...])` call, where no resolver and no test looked.
+The manifest field was a constant written a few lines below the builder that contradicted it.
+
+The tests asserted `value["copy_loop_uses_only_discovered_instructions"] is True`, which is true
+whenever the constant is `True`. See **D020**.
+
+### What the correction found
+
+`i32.le_s` is `0x4c`. The hand-written loop had `0x4d`, the **unsigned** comparison. Nothing
+caught it because the loop counter never goes negative, so the two opcodes agree on every value
+the loop ever produces. M060's emitter had it right; the defect was local to M061.
+
+The scan that replaced the literal named `0x4c` from behaviour and contradicted the author. A
+latent defect in the authored code was found by the procedure built to reproduce it.
+
+### Blast radius
+
+No other recorded value is invalidated. M060's authored instruction set is unaffected and was
+independently correct. The copy loop's computed output — the recovered phrase — was always
+genuine; only the provenance claim was false.
+
+The false manifest reached `main` in merge `1c7cceb`, because the correction was pushed after
+PR #90 merged. It is corrected by PR #91.
+
+### Resolution
+
+Six of the seven are now discovered, through three additional scaffolds scanned in a second
+stage that bootstraps on the first stage's integer scan. `block` and `loop` remain authored and
+are named in `copy_loop_authored_elements`, at the same level as what was found. The boolean
+reads `False`. The protocol's anti-cheating clause now names this failure mode explicitly.
+
+### Lesson
+
+The experiment whose subject was honesty about what a scan found shipped a false statement about
+what a scan found, and its own falsifiers were arranged so that they could not notice. Writing
+about rigour is not the same as being subject to it. **D020** states the rule this produced.
