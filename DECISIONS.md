@@ -531,3 +531,30 @@ This is bounded behavioural equivalence, not semantic equivalence for all progra
 class is admitted only for M062's committed copy grammar and hidden cases. A later task, substrate
 or grammar must establish its own class again; it may not inherit the canonical representative as
 an authored fact.
+
+## D022 — Transfer requires a falsifiable change of contract
+
+M063 reuses M062's arrangement dimensions on a checksum loop. Superficially, any second loop can
+be described as transfer: both have an exit predicate, a repeated region and ordered effects. If
+the target is distinguished only by prose or by a new task label, the experiment can pass while
+executing the old body unchanged.
+
+### The rule
+
+**A claimed mechanism transfer must predeclare a target with a distinct observable contract and
+must execute a source-body negative control against the target evidence.** The target evidence
+must be capable of rejecting the source body for a measured reason. Interface, output, state
+effect or another executable property must differ; changing only constants or case sizes is not
+enough.
+
+M063's target has two parameters instead of three, returns a byte reduction instead of a constant
+and leaves memory unchanged instead of copying into a destination. The exact M062 copy body is
+executed by the checksum observer. It passes the shared zero case and fails both non-zero cases,
+so the distinction is observed rather than asserted.
+
+### Boundary
+
+One successful transfer does not make the grammar or emitter endogenous. The checksum
+decomposition, atomic effects and renderer remain authored. Repeating the same control pattern on
+a third small loop cannot be justified as a new structural advance without removing another
+handhold or entering the frozen completion experiment.

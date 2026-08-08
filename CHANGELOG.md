@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.38.0 — 2026-08-08
+
+M063 transfers M062's bounded arrangement mechanism from byte copying to byte reduction. The
+development result is qualified; no canonical claim is added.
+
+- Replayed M061/M062 effect discovery and constructed 96 checksum-loop arrangements from the
+  transferred topology, predicate, exit-position and step-permutation dimensions.
+- Retained six public survivors and admitted all six on three disjoint hidden cases under both
+  exit-region representatives: 12/12 complete programs.
+- Emitted a 91-byte `(source, count) -> checksum` WebAssembly module with an accumulator local,
+  zero imports and no memory write.
+- Added a cross-body negative control: M062's selected copy body passes only the zero checksum
+  case and fails both non-zero cases.
+- Added D022: a claimed mechanism transfer needs a target with a distinct observable contract
+  and a source-body control that the target evidence can falsify.
+- Kept the boundary explicit. The checksum decomposition, three atomic steps, finite grammar,
+  emitter, encodings and evidence cases remain authored. A third small loop using the same
+  pattern would not count as the next advance.
+- Added 16 permanent M063 falsifiers. The complete M063 file passes locally in 130.94 seconds,
+  the joint M062–M063 regression passes 31 tests in 310.38 seconds and the complete repository
+  suite passes **1,054 tests in 1,763.31 seconds**. The required GitHub matrices are recorded
+  below.
+- Qualified exact head `d4eb5ed981727fd1343e6e1031494771d9dec220` on the first and only
+  GitHub Actions run `31275085485`, attempt 1: 1,054 tests on Python 3.11 in 969.51 seconds,
+  1,054 on Python 3.13 in 985.12 seconds, repository integrity and attribution, with no failed
+  job or rerun.
+
 ## 0.37.0 — 2026-08-08
 
 M062 begins the arrangement frontier left by M061. This is a qualified development result; no
