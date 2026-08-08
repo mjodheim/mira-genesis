@@ -247,7 +247,7 @@ A grammar is closed under composition, so anything the acquisition can build was
 reachable by building it directly. Two reuse task designs were refuted the same way and a third
 was refused rather than attempted.
 
-## Phase 6 — substrate discovery and the whole-body crossing
+## Phase 6 — substrate discovery, whole-body crossing and bounded arrangement
 
 M048 changed substrate once, with a compiler written by a person who knew the nine modules it
 had to translate, on a protocol that told the lineage when to move. This phase removed those
@@ -261,6 +261,7 @@ three supports one at a time, and returned the project to the question it was st
 | M059 | Let the lineage judge its own substrate | Run 455 on `6f4f20a` | `f64 → i32 → f64`. Three families, three decisions: migrate, migrate back, stay. **It reverses**, which is what makes it a judgement. `i32` exposes 27 operations against `f64`'s 9. Every accepted body verified on unseen arguments. |
 | M060 | Move the **whole** body, not four tools | Run 457 on `154c92a` | 10/10 modules migrated, 0 left in JavaScript, one 1,792-byte module with 0 declared imports and no import object, 32/32 capabilities executed, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
+| M062 | Construct one control arrangement instead of handing it over | Local development manifest `752fecdc`; qualification pending | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
 
 ### What M061 also produced
 
@@ -283,17 +284,22 @@ QUALIFICATION*. The runs above are recorded retrospectively — one run per expe
 no rerun and no selection among runs — as evidence that the suite was green, not as a
 discharge of those rules.
 
+M062 has no GitHub qualification run yet. Its positive local development result remains
+*PENDING QUALIFICATION* by construction.
+
 ## Active construction frontier — two open questions
 
-### The compiler is still written by a person
+### M062 removes one literal arrangement; the general compiler is still authored
 
-M061 names it in its own result. The lineage discovers **which** instructions a foreign
-substrate offers, by their effect alone; it does not decide **how to arrange them**. The
-compiler, the `block`/`loop` control structure and the scaffold shapes are authored.
+M062 discovers exit/repeat region effects and chooses the final topology, predicate, exit
+position and step ordering for one copy task from public evidence. It does not receive a
+catalogue of complete programs, and D021 prevents canonicalisation from choosing hidden
+behaviour among the sixteen survivors.
 
-This is the deepest remaining structural handhold and it is harder than M061. An opcode is
-characterised by its effect on a value; an arrangement strategy has no isolated observable
-effect, so the M058/M061 method does not transfer to it directly.
+The task decomposition, atomic steps, finite grammar, generic emitter, blocktypes, label depths,
+scaffold shapes and evidence cases remain authored. The next structural advance must remove one
+of those handholds or demonstrate transfer of the arrangement mechanism to a genuinely new body;
+another larger search inside the same copy grammar is not an advance.
 
 ### Nothing on a real substrate is claimable
 
@@ -302,7 +308,7 @@ parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-mig
 plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
 frozen protocol hashed before a canonical run.
 
-Fifteen consecutive development results and no claimable one is the pattern **D016** and the
+Sixteen consecutive development results and no claimable one is the pattern **D016** and the
 M052 series closure exist to prevent. Freezing a protocol and launching its evaluation is a
 human decision and is not automated here.
 
@@ -324,7 +330,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M061. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M062. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 

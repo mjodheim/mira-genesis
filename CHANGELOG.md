@@ -1,5 +1,29 @@
 # Changelog
 
+## 0.37.0 — 2026-08-08
+
+M062 begins the arrangement frontier left by M061. This is a local development result pending
+qualification; no canonical or real-substrate claim is added.
+
+- Replayed the six M061 structural scans and added a seventh 256-opcode region-effect scan.
+  A discovered branch distinguishes exit behaviour from repetition without using `block` to
+  expose `loop` or the reverse.
+- Preserved the scan's real ambiguity: `0x02` and `0x06` form the observed exit-region class;
+  `0x03` is the sole repeat-region candidate. No familiar opcode is preferred silently.
+- Constructed 480 copy-loop arrangements from a finite grammar rather than a catalogue of
+  finished programs. Sixteen satisfy the three public cases.
+- Required all sixteen public survivors with both exit-region representatives to pass all three
+  hidden cases: 32/32 complete programs admitted. The canonical digest therefore selects source
+  representation, not hidden behaviour.
+- Added D021: canonicalisation inside an observational equivalence class is allowed only after
+  every member survives independent validation.
+- Preserved the first region-scaffold defect: it declared an empty result and could not transport
+  the value its post-region addition consumed. The permanent witness test caught it before the
+  complete lineage; the fixed `i32` blocktype is now part of the explicit floor.
+- Kept the boundary explicit. The task decomposition, grammar, emitter, scaffold shapes,
+  blocktypes, label encoding and cases remain authored. M062 is not arbitrary compiler synthesis,
+  does not close the real-substrate canonical frontier and remains pending qualification.
+
 ## 0.36.0 — 2026-08-08
 
 Register synchronisation, again. The previous release synchronised the registers on 6 August

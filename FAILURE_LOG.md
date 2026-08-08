@@ -816,3 +816,26 @@ reads `False`. The protocol's anti-cheating clause now names this failure mode e
 The experiment whose subject was honesty about what a scan found shipped a false statement about
 what a scan found, and its own falsifiers were arranged so that they could not notice. Writing
 about rigour is not the same as being subject to it. **D020** states the rule this produced.
+
+## M062 — the first region scaffold could not transport its witness value
+
+Found by `test_a_branch_makes_block_and_loop_observably_different` before the complete M062
+development lineage ran.
+
+### Defect
+
+The candidate opener was followed by the empty blocktype `0x40`. The branch placed `7` on the
+stack and targeted depth zero; code after the region then attempted to add one. An empty-result
+region cannot transport `7`, so WebAssembly correctly refused the `0x02` witness. The scan would
+therefore have reported no exit-region candidate if its witness guard had not stopped it.
+
+### Resolution
+
+The region probe now declares the `i32` result blocktype `0x7f`. The exit-region branch transports
+`7` and returns `8`; the repeat region restarts and does not terminate. The blocktype is explicitly
+listed in M062's presupposed floor because it is authored. The resolver was not loosened.
+
+### Status
+
+Instrument defect found before the full development result, not a scientific verdict and not a
+qualification attempt. The failing permanent test remains the regression guard.
