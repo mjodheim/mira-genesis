@@ -839,3 +839,15 @@ listed in M062's presupposed floor because it is authored. The resolver was not 
 
 Instrument defect found before the full development result, not a scientific verdict and not a
 qualification attempt. The failing permanent test remains the regression guard.
+
+## M064 — a fixture guessed two intermediate module sizes
+
+The first complete four-bank whole-WebAssembly test invocation finished every scientific run and
+emitted all four manifests. Nineteen tests passed. One assertion expected the three selected
+module sizes to be `1903, 1970, 2037`; the emitted modules were `1887, 1962, 2037`.
+
+The failure was in the fixture, not the engine or decision rule: the test values had been inferred
+from the final size instead of read from the completed evidence. Hidden quality, survivor counts,
+imports, archive, rollback, memory and replay all passed. The assertion was corrected to the
+observed identities without changing code generation, task cases, thresholds, budgets or the
+protocol. A clean rerun is required before M064 may be frozen.

@@ -176,27 +176,34 @@ candidates, depth, another declared primitive or another pruning rule no longer 
 material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
 and decision D016.
 
-## Current construction frontier — M053
+## Current construction frontier — M064
 
-**Status: proposed and preregistered, not yet qualified.**
+**Status: positive in development and eligible for freeze; not yet canonical.**
 
-The required rupture is endogenous extension of the transformation language. The lineage must
-demonstrate that *every* transformation expressible in its accepted language is insufficient
-for a public task, diagnose that as a language-level limitation rather than a bad choice among
-existing candidates, and construct a new reusable primitive that was not in the founder
-catalogue — deriving its implementation and tests without hidden cases, running it in a
-disposable sandbox, submitting it to an independent validator, adopting transactionally, and
-then reusing it on a structurally distinct second task family.
+M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. After
+scanning arithmetic and structural effects, every semantic pipeline stage lives in one
+zero-import module. Four equal-budget arms then receive three task families selected only after
+migration. Across all four precommitted development banks, the complete lineage accepts three
+whole-module rewrites and passes 18/18 hidden observations; fresh-on-B, unchanged-parent and
+learned-state-ablated controls each pass 0/18.
 
-M053 does not pass if the new primitive comes from a hidden pre-enumerated catalogue, from
-evaluator-only data, from a lookup table of expected answers, or is useful only on the task
-that created it.
+Every public-equivalent candidate module is recompiled from its serialised trace, inspected for
+zero imports and independently executed on retained, public and hidden evidence before digest
+selection. Versions 9–11 are archived exactly, a corrupt provisional journal is rolled back with
+code and behaviour restored, causal memory grows with each adoption and replay reaches the same
+version-twelve state.
 
-This remains one integrated experiment rather than another sequence of preparatory gates. A
-language model may generate proposals, but it must not control validation or adoption.
+The scientific construction phase is now closed. The remaining work is to qualify and freeze the
+exact parent, make one marker-only commit, preserve the first canonical artifact and require a
+separate Python 3.13 reproduction to match it byte-for-byte. A failed first run or reproduction is
+preserved; changing M064 afterward requires a new experiment number.
 
-Every result from M043 onward is a **development** result. M042 remains the only positive
-canonical continuous-lineage completion.
+The pre-freeze tree passes the complete local repository suite: **1,085 tests in 2,035.10
+seconds**. GitHub qualification of the exact frozen parent remains a separate required gate.
+
+M064 keeps its limits explicit. The whole-body compiler, block structure, finite grammar, task
+families and evidence cases are authored and precommitted. The result cannot support unrestricted
+compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
 See:
 
@@ -206,6 +213,8 @@ See:
 - [`experiments/M047/PROTOCOL.md`](experiments/M047/PROTOCOL.md);
 - [`experiments/M048/DEVELOPMENT_RESULT.md`](experiments/M048/DEVELOPMENT_RESULT.md);
 - [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md);
+- [`experiments/M064/PROTOCOL.md`](experiments/M064/PROTOCOL.md);
+- [`experiments/M064/DEVELOPMENT_RESULT.md`](experiments/M064/DEVELOPMENT_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
 

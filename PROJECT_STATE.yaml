@@ -1,13 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-08
-status: phase_six_control_transfer_positive_qualified_in_development
+status: phase_seven_whole_wasm_completion_positive_eligible_for_freeze
 
 active_research_question: >-
-  Two questions remain. M063 transfers M062's arrangement mechanism from a copy body to a
-  distinct checksum reduction, but each task decomposition and emitter remains authored: can
-  the lineage remove one of those handholds? And can anything built on a real substrate be
-  frozen and run against the ten completion gates, rather than accumulating another
-  development result?
+  Will the exact frozen M064 parent produce one positive marker-selected canonical first result
+  and an independent Python 3.13 byte-identical reproduction, without repair, rerun or threshold
+  change? Construction is closed; only freeze, qualification, arming, preservation and audit remain.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -720,47 +718,87 @@ phase_six:
       - unrestricted_code_generation
       - open_ended_evolution
     decision: D022
+  M064:
+    status: positive_integrated_development_result_eligible_for_freeze
+    canonical: false
+    protocol: experiments/M064/PROTOCOL.md
+    result: experiments/M064/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d
+    frozen_protocol_file_sha256: d5c4e38b45eb99567e98618259276648962fd3cb12569d0798f2a06ddc2940ef
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    development_bank_manifest_digests:
+      - fc663fa6f0eebb73238cff1e9338db37e9d95dbc8e07fd99888a93402a65f6e6
+      - 5557da22e075cf7226ad56e59da5010b8abd8c8cc6b7660f0605e598f532a2e3
+      - 156768e27e23208be8f52bc7638e00e1cc736545ecde9e8612229474c29e928a
+      - 988d46a3e7d6ad64e0fa4b437f8d8e5c4f3d3ec19d73bdeea0c690583b47432a
+    runtime_path: [cpython_v6, node_esm_v8, whole_webassembly_v9]
+    final_version: 12
+    arithmetic_opcode_space_scanned: 256
+    structural_shapes_replayed: 6
+    structural_effects_recovered: 10
+    initial_whole_wasm_bytes: 1834
+    initial_declared_imports: 0
+    inherited_capabilities_passed: 32
+    inherited_capabilities_total: 32
+    arms:
+      - complete_continued_lineage
+      - fresh_on_b
+      - unchanged_parent_migrated
+      - learned_state_ablated
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    expressions_constructed_complete: [740, 1496, 2668]
+    public_survivors_complete: [12, 8, 8]
+    all_public_survivors_independently_admitted: true
+    final_retained_passed: 68
+    final_retained_total: 68
+    archived_parent_versions: [9, 10, 11]
+    forced_fault_exact_restoration: true
+    causal_memory_episodes_appended: 3
+    deterministic_replay_identical: true
+    canonical_first_result_run: null
+    independent_reproduction_run: null
+    clean_m064_local_tests: 26
+    clean_m064_local_test_seconds: 274.65
+    complete_repository_local_tests: 1085
+    complete_repository_local_test_seconds: 2035.10
+    clean_complete_local_rerun_required_before_freeze: false
+    authored_elements:
+      - whole_body_compiler
+      - block_and_loop_structure
+      - finite_expression_grammar
+      - three_task_families
+      - four_task_bank_entries
+      - public_and_hidden_cases
+    claim_exclusions:
+      - unrestricted_compiler_synthesis
+      - unbounded_substrate_discovery
+      - open_ended_evolution
+      - general_intelligence
+      - consciousness
 
 active_construction_frontier:
-  status: bounded_control_transfer_positive_general_compiler_and_canonical_claim_open
-  question_one:
-    name: bounded_arrangement_transfers_once_general_compiler_still_authored
-    named_by: experiments/M061/DEVELOPMENT_RESULT.md
-    bounded_steps:
-      - experiments/M062/DEVELOPMENT_RESULT.md
-      - experiments/M063/DEVELOPMENT_RESULT.md
-    removed_in_M062:
-      - literal_final_copy_loop_arrangement
-      - authored_exit_and_repeat_region_opcode_choice
-    demonstrated_in_M063:
-      - transfer_from_copy_to_checksum_reduction
-      - distinct_function_signature
-      - distinct_returned_effect
-      - no_memory_write
-      - source_body_rejected_by_target_evidence
-    still_authored:
-      - task_decompositions
-      - atomic_step_sets
-      - finite_search_grammars
-      - task_specific_emitters
-      - blocktype_and_label_encoding
-      - the_scaffold_shapes
-      - public_and_hidden_cases
-    next_advance_must: >-
-      Remove one of the authored grammar or emitter handholds, or enter the frozen
-      real-substrate completion experiment. A larger search or a third small loop using the
-      same transferred pattern is not an advance under D022.
-  question_two:
-    name: nothing_on_a_real_substrate_is_claimable
-    gates_with_working_parts: [1, 2, 3, 4, 5, 6, 7]
-    gates_with_nothing: [8, 9, 10]
-    missing:
-      - four_arm_post_migration_plasticity_comparison
-      - three_accepted_cycles_across_new_held_out_families
-      - frozen_protocol_hashed_before_a_canonical_run
-    consecutive_development_results_without_a_claimable_one: 17
-    pattern_guarded_against_by: [D016, experiments/M052/SERIES_CLOSURE.md]
-    freezing_and_launching_is_a_human_decision: true
+  status: m064_construction_closed_freeze_and_canonical_execution_only
+  gates_positive_in_one_development_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9]
+  gate_pending_canonical_execution: 10
+  ordered_remaining_steps:
+    - clean_complete_local_suite
+    - repository_integrity
+    - freeze_exact_parent_and_protocol_hashes
+    - python_3_11_and_3_13_parent_qualification
+    - marker_only_arming_commit
+    - preserve_unique_first_result
+    - require_independent_exact_reproduction
+    - archive_consumed_workflow
+    - publish_bounded_final_verdict
+  post_freeze_repair_permitted: false
+  failed_first_run_or_reproduction_is_preserved: true
+  changed_experiment_requires: M065
 
 measurement_track:
   reserved_experiment: M045
@@ -770,7 +808,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M063: true
+  separate_from_M047_to_M064: true
 
 engineering_release_boundary:
   human_control_required_for:

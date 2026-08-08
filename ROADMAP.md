@@ -265,6 +265,7 @@ three supports one at a time, and returned the project to the question it was st
 | M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
 | M062 | Construct one control arrangement instead of handing it over | Run `31269732461` on `f5cfe35`; 1,038 tests on each Python version plus integrity | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
 | M063 | Transfer the arrangement mechanism to a new body | Run `31275085485` on `d4eb5ed`; 1,054 tests on each Python version plus integrity | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
+| M064 | Integrate the real-substrate completion gates | Four precommitted development banks; canonical run not armed | CPython v6 → Node v8 → whole Wasm v9, then three accepted native rewrites to v12. Complete arm 18/18 hidden; fresh, unchanged-parent and learned-state-ablated controls each 0/18. Zero imports, exact archive/rollback/replay. |
 
 ### What M061 also produced
 
@@ -295,36 +296,25 @@ M063 discharged its own rule on exact head `d4eb5ed`: first run `31275085485`, a
 passed 1,054 tests on Python 3.11, 1,054 on Python 3.13, repository integrity and attribution,
 with no failed job or rerun.
 
-## Active construction frontier — two open questions
+## Active construction frontier — M064 freeze and first result
 
-### M063 transfers arrangement synthesis once; the general compiler is still authored
+M064 supplies in development what the real-substrate line lacked: one continuous
+CPython→Node→whole-WebAssembly lineage, four adversarial equal-budget arms, three accepted
+post-migration cycles, executable reuse of earlier learned routes, class-wide hidden admission,
+exact archives, rollback, causal memory and replay.
 
-M062 constructs a copy arrangement. M063 transfers the same bounded search dimensions to a
-checksum reduction with a different signature, returned value and memory effect. The old copy
-body fails the non-zero checksum evidence, and D021 still requires admission of every survivor
-before canonical representation.
+The construction phase is closed. Do not add another task, grammar, control or threshold to M064.
+The remaining ordered steps are operational and immutable:
 
-Each task decomposition, atomic-step set, finite grammar, emitter, encoding and evidence suite
-remains authored. D022 closes a third small-loop repetition as a claimed advance. The next
-structural step must remove one of those handholds or enter the frozen real-substrate completion
-experiment; a larger search or another relabelled loop is not an advance.
+1. preserve the completed local suite (**1,085 tests in 2,035.10 seconds**) and pass Python
+   3.11/3.13 repository qualification on the exact frozen parent;
+2. merge one marker-only arming commit bound to that exact parent and frozen-protocol file;
+3. preserve the first Python 3.11 canonical artifact whether positive or negative;
+4. require the dependent Python 3.13 reproduction to match its bytes exactly;
+5. archive the consumed workflow and publish the bounded verdict.
 
-### Nothing on a real substrate is claimable
-
-Gates 1–7 of [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) have working
-parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-migration
-plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
-frozen protocol hashed before a canonical run.
-
-Seventeen consecutive development results and no claimable one is the pattern **D016** and the
-M052 series closure exist to prevent. Freezing a protocol and launching its evaluation is a
-human decision and is not automated here.
-
-## Final frontier — frozen independent experiment
-
-The final claim requires a protocol frozen before observation, genuinely unknown tasks,
-multiple predeclared substrates, no post-launch repair, adversarial controls, independent
-validation, preserved negative results and independent reproduction.
+Failure at steps 2–4 is an M064 result, not permission to repair M064. A changed generator,
+threshold, bank, runtime or workflow requires M065.
 
 ## Parallel measurement track — M045
 

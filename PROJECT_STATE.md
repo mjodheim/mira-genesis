@@ -433,6 +433,30 @@ attribution. The checksum decomposition, three atomic steps, finite grammar, emi
 and cases remain authored. A third small loop using the same pattern would not be another
 structural advance.
 
+### M064 — whole-WebAssembly completion candidate
+
+M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. It
+scans all 256 arithmetic opcode bytes, replays M061's six structural shapes, migrates every
+semantic pipeline stage into a 1,834-byte zero-import module and preserves 32/32 inherited
+capabilities before selecting a task-bank entry.
+
+Four equal-budget arms then receive three new families. Across all four precommitted development
+banks the complete lineage accepts three complete-module rewrites, reaches v12 and passes 18/18
+hidden observations. Fresh-on-B, unchanged-parent-migrated and learned-state-ablated controls
+each accept zero and pass 0/18. All 12, 8 and 8 public survivors are independently recompiled,
+inspected and hidden-validated before selection. Parents 9–11 are archived exactly; a forced
+journal fault restores code and behaviour; causal memory grows by three episodes; replay is exact.
+
+This is positive development evidence for gates 1–9 in one real-substrate lineage. The protocol,
+guard and independent-reproduction workflow are eligible for freeze. Gate 10 and the final claim
+remain unavailable until the frozen parent qualifies, one marker-only commit runs once, and the
+separate Python 3.13 job reproduces the first artifact byte-for-byte.
+
+The exact pre-freeze local tree passed the complete repository suite: **1,085 tests in 2,035.10
+seconds**. This is local construction qualification only; the frozen-parent Python 3.11/3.13
+GitHub matrix remains required before the marker can be armed. The frozen protocol file has
+SHA-256 `d5c4e38b45eb99567e98618259276648962fd3cb12569d0798f2a06ddc2940ef`.
+
 ### Qualification status of M056–M063
 
 **None of M056–M061 discharged its own qualification rule in its own record.** Each result was
@@ -464,30 +488,20 @@ M063 also discharged its own rule. Exact head
 with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
 repository integrity and attribution. No failed job or rerun occurred.
 
-## Current construction frontier — two open questions
+## Current construction frontier — freeze, do not extend
 
-### Arrangement synthesis transfers once; the general compiler is still authored
+M064 supplies the previously missing four-arm comparison and three accepted cycles on a complete
+real WebAssembly body. Adding another development family, search rule or component experiment is
+now prohibited by the same anti-drift principle as D016. The only active construction path is:
 
-M062 supplies the first bounded arrangement and M063 transfers that search pattern from copying
-to reduction. The checksum body has a different signature, returned value and state effect; the
-M062 body fails its non-zero target cases. Public search and class-wide hidden admission choose
-the arrangement without a complete program literal.
+1. clean local and GitHub qualification of the exact frozen parent;
+2. a separate marker-only commit bound to that parent;
+3. one immutable canonical first result;
+4. an exact independent Python 3.13 reproduction;
+5. preservation, audit, workflow archival and a bounded final verdict.
 
-The deeper handhold remains. A person still wrote each task decomposition, the atomic steps,
-finite grammars, emitters, encodings and evidence cases. Constructing the grammar or compiler
-architecture is not demonstrated. Repeating the transferred pattern on another small loop is
-closed as a claimed advance by D022.
-
-### Nothing on a real substrate is claimable
-
-Gates 1–7 of [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) now have
-working parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-migration
-plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
-frozen protocol hashed before a canonical run.
-
-Seventeen consecutive development results without a claimable one is the pattern **D016** and the
-M052 series closure were written to prevent. Freezing a protocol and launching its evaluation is
-a human decision and is not automated here.
+If the first run or reproduction fails, that negative M064 result is preserved. Repair requires a
+new experiment number; M064 may not be retuned or rerun into success.
 
 ## Canonical and development result map
 
@@ -521,12 +535,13 @@ a human decision and is not automated here.
 | M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
 | M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
 | M063 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. Exact head `d4eb5ed`, run `31275085485`; the task grammar and emitter remain authored. |
+| M064 | **POSITIVE INTEGRATED DEVELOPMENT RESULT — ELIGIBLE FOR FREEZE** | One CPython→Node→whole-Wasm lineage, four equal-budget arms and three accepted native rewrites. Complete 18/18 hidden; all three controls 0/18 across four committed banks. Canonical first run and reproduction remain unexecuted. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M063: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M064: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary
