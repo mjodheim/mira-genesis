@@ -1,5 +1,53 @@
 # Changelog
 
+## 0.36.0 — 2026-08-08
+
+Register synchronisation, again. The previous release synchronised the registers on 6 August
+with M053 as the frontier. Eight experiments landed in the two days since and none of them
+reached the root registers, so `PROJECT_STATE.md` still announced a frontier that had been
+superseded six times. No scientific claim is changed by this release; the records under
+`experiments/` were already authoritative.
+
+- **Recorded M053 as a positive bounded development result.** Documented head `12b0c31`, run
+  `31162378285`, 852 tests. Its capability gain is structural and real; its mechanism filters a
+  declared sixteen-AST meta-language, which is selection at a higher level.
+- **Recorded M054** as construction rather than selection — 29,330,422 admissible candidates
+  under a budget of 1,024 — together with the three design defects found before it ran and
+  disclosed in its protocol.
+- **Recorded M055 as negative on its central claim.** The construction, adoption, forced fault
+  and exact restore all work. The ablation still solves the reuse task with 737 candidates
+  against 48, so the acquisition bought a fifteen-fold search saving and no new expressive
+  power. This is the result behind **D019**.
+- **Added Phase 6 — substrate discovery and the whole-body crossing**, covering M056 through
+  M061: an acquisition survives a second crossing; the authored migration map is removed; the
+  authored list of operations is removed and discovery finds `copysign`, which a person had
+  omitted; the lineage judges its substrate and reverses; the whole body crosses into a
+  1,792-byte WebAssembly module with zero imports; and the structural instructions are
+  identified by their effect alone.
+- **Recorded that none of M056–M061 discharged its own qualification rule.** Each result was
+  written before CI returned and none was updated, so all six still read *PENDING
+  QUALIFICATION*. The CI runs are now listed retrospectively — one run per experiment commit,
+  no rerun, no selection among runs — as evidence that the suite was green and explicitly not
+  as a discharge of those rules.
+- **Added D020 — a manifest field is a claim, and reading it back proves nothing.** M061
+  asserted `copy_loop_uses_only_discovered_instructions: True` while its builder wrote seven
+  opcodes in by hand. Sixteen permanent tests passed over it because the test read the field
+  back. The same shape appears in M053's `rollback_exact` and M048's `replay_identical`: the
+  falsifier's input was downstream of the thing it was supposed to falsify.
+- **Entered the M061 false manifest into `FAILURE_LOG.md`.** It was found by external review of
+  PR #90, not by the test suite, the integrity audit or the green CI run. It reached `main` in
+  merge `1c7cceb` because the correction was pushed after the merge, and is corrected by PR #91.
+- **Recorded that the scan contradicted the authored code and was right.** `i32.le_s` is
+  `0x4c`; the hand-written copy loop carried `0x4d`, the unsigned comparison. Nothing caught it
+  because the loop counter never goes negative. M060's emitter was independently correct.
+- **Replaced the frontier with two questions instead of one experiment.** The compiler that
+  arranges the discovered instructions is still written by a person, and nothing built on a
+  real substrate is claimable: gates 8, 9 and 10 have no working parts there. Fifteen
+  consecutive development results without a claimable one is the pattern **D016** and the M052
+  series closure exist to prevent.
+- Rewrote `PROJECT_STATE.yaml` with `phase_five`, `phase_six` and a two-question frontier,
+  replacing the `active_construction_frontier` block that still described M053 as unqualified.
+
 ## 0.35.0 — 2026-08-06
 
 Register synchronisation. The root registers had not been updated since M047 was still the

@@ -1,6 +1,6 @@
 # Mira Genesis — Project state
 
-**Updated: 6 August 2026**
+**Updated: 8 August 2026**
 
 ## Authoritative summary
 
@@ -22,12 +22,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   construction machinery works; the capability claim does not. M055's ablation shows that
   compositional acquisition buys search cost, not expressive power. The line is closed by
   **D019**.
+- **M056–M061 returned to the objective the project was started for** and moved it further
+  than any earlier series: a capability learned after one migration survives the next; the
+  lineage discovers an opaque substrate by probing instead of receiving a map; it judges its
+  own substrate inadequate and reverses direction; the whole accepted body executes in
+  WebAssembly with nothing left behind; and the structural instructions are identified by
+  their effect rather than named by a person.
 - **M042 remains the only positive canonical continuous-lineage completion.**
-- The current construction frontier returns to the objective the project was started for:
-  **repeated trans-substrate continuity**. M048 changed substrate once and kept adapting.
-  Nothing has migrated twice, nothing has had to judge its own substrate unsuitable, and
-  whether a capability learned *after* a migration survives the *next* one has never been
-  asked.
+- **Every result from M048 onward is a development result.** Nothing on a real substrate has
+  been run as a frozen canonical lineage against the ten gates, and M056–M061 have not
+  discharged their own qualification rules in their own records.
+- The current frontier is therefore two questions, not one: **the compiler that arranges the
+  discovered instructions is still written by a person**, and **nothing on a real substrate is
+  yet claimable**.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -248,12 +255,22 @@ work may remain valid engineering; it is outside the active construction frontie
 This closure changes the research direction, not the interpretation of M049–M052. Each
 remains a valid bounded result inside its frozen grammar and probe families.
 
-## Current construction frontier — M053
+## Phase 5 — endogenous language extension, and its negative
 
-**Status: PROPOSED AND PREREGISTERED — UNQUALIFIED.**
+### M053 — extension by filtering a declared meta-language
 
-The required rupture is endogenous extension of the transformation language. The continuing
-lineage must:
+**M053 PASSED IN DEVELOPMENT on a re-attempted qualification.**
+
+Documented head `12b0c31507872f91c368480f8b30d246e6887023`; run `31162378285` passed the
+complete Python 3.11 matrix (852 tests), the complete 3.13 matrix and repository integrity in
+one run. Its first attempt failed during *Set up job* on a GitHub Actions `Service Unavailable`
+error and is recorded as an infrastructure event under **D017**, not as a negative verdict.
+
+The capability gain is real and structural — the founder language cannot express any operation
+over adjacent elements. The mechanism is selection from a catalogue of sixteen pair expressions
+materialised at import. The level moved; the shape did not.
+
+The original preregistration required:
 
 - encounter a public task for which every transformation expressible in its accepted language
   is demonstrably insufficient;
@@ -271,23 +288,152 @@ lineage must:
 - restore the exact accepted state after a forced post-adoption fault and replay
   deterministically.
 
-M053 does not pass if the supposedly new primitive is selected from a hidden pre-enumerated
-catalogue, copied from evaluator-only data, encoded as a lookup table of expected answers or
-useful only on the task that created it.
+### M054 — construction instead of selection
 
-The bounded design under review in [PR #73](https://github.com/mjodheim/mira-genesis/pull/73)
-uses the unchanged M051 catalogue of 80 programs as the founder language and a closed
-pair-expression meta-language of exactly 16 ASTs. Synthesis is forbidden unless zero founder
-candidates survive the public probes. The creation task is a sum reduction over adjacent
-transitions; the reuse task changes the reduction family to maximum, so replay of the
-creation answer cannot satisfy it.
+M054 removed the catalogue. Candidates are built from two atoms and five operators over an
+admissible space of **29,330,422** under a budget of 1,024, so enumeration is impossible by
+construction rather than merely avoided. It demonstrated construction and second-order reuse:
+the acquired primitive becomes material for the next acquisition.
 
-**M053 is not qualified.** Its first CI attempt did not produce a scientific verdict: run
-`31118366409` failed during *Set up job* with a GitHub Actions `Service Unavailable` error
-while resolving action downloads, and the remaining jobs were cancelled in cascade. That is
-an infrastructure fault, not evidence about the construction. It is recorded in
-[`FAILURE_LOG.md`](FAILURE_LOG.md) as such and does not count as a preserved negative
-qualification verdict.
+Three defects in its own design were found and corrected before it ran, and each is disclosed in
+its protocol: a beam width of six silently dropped a rank-ten subtraction; the ablation arm was
+a straw man because it was denied composition; and the search picked arbitrarily under ambiguity
+instead of classing candidates behaviourally on a declared domain.
+
+### M055 — the ablation that closed the line
+
+**M055 IS NEGATIVE ON ITS CENTRAL CLAIM.**
+
+M055 put the construction inside the migrated M048 body. The lineage reconstructed its accepted
+version-eight native state, constructed `maximum(current - previous, previous - current)` at
+formation depth two touching **722** candidates out of 29,330,422, compiled it to JavaScript,
+re-verified all **32** inherited capabilities before adoption, reached version nine, used the
+acquired expression as material for the next construction, terminated on ambiguous evidence and
+restored exactly after a forced fault.
+
+The construction works. Its ablation refutes the point of it: given the same composition power,
+the from-scratch arm still solves the reuse task — 737 candidates without the acquisition
+against 48 with it. **The acquisition made the search fifteen times cheaper and made nothing
+newly reachable.** Two reuse tasks were tried and both were refuted the same way. A third task
+design was refused rather than attempted.
+
+This is the result behind **D019**, and the line is closed.
+
+## Phase 6 — substrate discovery and the whole-body crossing
+
+M048 changed substrate once, with a compiler written by a person who knew the nine modules it
+had to translate, on a protocol that told the lineage when to move. M056–M061 removed those
+three supports one at a time.
+
+| Experiment | What was handed | What was found |
+|---|---|---|
+| M056 | a compiler, a substrate | that acquisitions survive a **second** crossing |
+| M057 | six opaque handles, no labels | what they do, and how to compose them |
+| M058 | a signature shape | which arithmetic **exists** |
+| M059 | two substrates, no ranking | whether to move at all, and where |
+| M060 | the structural instruction set | that the **whole body** can cross |
+| M061 | six scaffold shapes and a floor | which structural instructions exist |
+
+### M056 — a capability learned after a migration survives the next one
+
+Reconstructed M048 version eight; emitted a **107-byte** WebAssembly module with **0** declared
+imports; **32 / 32** inherited capabilities passed, of which 28 predate the first migration.
+The capability learned *after* migration one survived, 4/4 cases. With the module removed,
+**0 / 32** answered — the substrate carries the semantics, not a wrapper. A further capability
+was then learned in the migrated substrate, reaching version nine.
+
+### M057 — the lineage builds its own way in
+
+Six handles `h1`…`h6` with no semantic labels; four probe pairs separated all six. Four tools
+were synthesised, of which `mean` required composition at size seven —
+`h4(h1(p0,h1(p1,p2)),k)` — found across 44,240 candidates in 16,883 behaviour classes. The
+authored map is gone; the authored *list of operations* was not.
+
+### M058 — which instructions exist
+
+The full **256**-byte opcode space was scanned; **247** were refused by the substrate's own
+validator; **9** operations were discovered. Three of them — `0x0f`, `0x1a`, `0xa6` — were
+absent from M057's authored list. `0xa6` is `copysign`, a genuine arithmetic operation a person
+simply omitted. Discovery found what authorship had missed.
+
+### M059 — the lineage judges its own substrate
+
+Starting in `f64`, the journey is **`f64 → i32 → f64`**. Three task families produced three
+different decisions: migrate to `i32`, migrate back to `f64`, and stay. **It reverses** — no
+substrate wins globally, which is what makes it a judgement rather than an instruction. `i32`
+exposes 27 operations against `f64`'s 9. Every accepted body was verified on arguments the
+judgement never saw.
+
+### M060 — the whole body crosses
+
+**10 / 10** modules migrated, seven shell and three tool; **0** left in JavaScript; one
+**1,792-byte** module with **0** declared imports, not instantiated with an import object;
+**32 / 32** inherited capabilities executed in the new substrate; **4 / 4** arithmetic opcodes
+resolved by scan rather than authored.
+
+A first implementation passed 23/32 and every one of the nine failures was nested, because the
+planner allocated the parent step before recursing. Flat requests never exposed it.
+
+### M061 — which structural instructions exist
+
+The instructions that move data and direct control were identified by their effect alone, in six
+scaffold shapes over two stages, **10** resolved and all matching M060's emitter. A conditional
+branch produces no value; the scaffold gives it one, and `0x0d` is the only byte in 256 that
+returns 7 when taken and 9 when not.
+
+The scan named `i32.le_s` as `0x4c` and **contradicted the hand-written copy loop**, which
+carried `0x4d`, the unsigned comparison. The defect was invisible because the loop counter never
+goes negative.
+
+M061 shipped a **false manifest**, found by external review and not by its own sixteen tests:
+two fields claimed the loop used discovered instructions alone while the builder wrote seven
+opcodes in. Six of the seven are now discovered; `block` and `loop` remain authored and are
+named as such. See **D020** and [`FAILURE_LOG.md`](FAILURE_LOG.md).
+
+### Qualification status of M056–M061
+
+**None of these six discharged its own qualification rule in its own record.** Each result was
+written before CI returned and none was updated afterwards, so all six still read *PENDING
+QUALIFICATION*.
+
+CI ran exactly once on each experiment commit, with no rerun and no selection among runs:
+
+| Experiment | Commit | Run | Verdict |
+|---|---|---|---|
+| M055 | `74689ca` | 444 | success |
+| M056 | `9e4e6ba` | 449 | success |
+| M057 | `0e05ebe` | 450 | success |
+| M058 | `9d727e5` | 453 | success |
+| M059 | `6f4f20a` | 455 | success |
+| M060 | `154c92a` | 457 | success |
+| M061 | `2b6ef0e` | 459 | success |
+
+This table is recorded retrospectively and is evidence that the suite was green, not a
+discharge of the qualification rules. Those rules require each experiment to document its head
+and record the verdict in its own result, and that was not done at the time.
+
+## Current construction frontier — two open questions
+
+### The compiler is still written by a person
+
+M061 names it in its own result. The lineage now discovers **which** instructions a foreign
+substrate offers, by their effect alone. It does not decide **how to arrange them**: the
+compiler, the `block`/`loop` control structure and the scaffold shapes are authored.
+
+This is the deepest remaining structural handhold, and it is harder than M061. An opcode is
+characterised by its effect on a value; an arrangement strategy has no isolated observable
+effect, so the M058/M061 method does not transfer to it directly.
+
+### Nothing on a real substrate is claimable
+
+Gates 1–7 of [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) now have
+working parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-migration
+plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
+frozen protocol hashed before a canonical run.
+
+Fifteen consecutive development results without a claimable one is the pattern **D016** and the
+M052 series closure were written to prevent. Freezing a protocol and launching its evaluation is
+a human decision and is not automated here.
 
 ## Canonical and development result map
 
@@ -310,7 +456,15 @@ qualification verdict.
 | M050 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Enumeration and selection over 24 three-stage compositions of frozen primitives. One failing run preserved. |
 | M051 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Variable-length transform chains over 80 admissible compositions with fail-closed ambiguity handling. |
 | M052 | **POSITIVE BOUNDED DEVELOPMENT RESULT — SERIES CLOSED** | Exact behavioral-equivalence pruning to 38 classes on a declared 156-input finite domain. |
-| M053 | **PROPOSED — UNQUALIFIED** | Endogenous transformation-language extension. No scientific verdict yet; first CI attempt failed on infrastructure. |
+| M053 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Endogenous language extension by filtering a declared sixteen-AST meta-language. Real structural gain; the mechanism is still selection. First CI attempt was an infrastructure event under D017. |
+| M054 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Construction rather than selection: candidates built from two atoms and five operators over 29,330,422 admissible, budget 1,024. Three self-inflicted design defects disclosed in the protocol. |
+| M055 | **NEGATIVE — LINE CLOSED BY D019** | The construction runs inside the migrated body and adopts. Its ablation shows the acquisition buys a fifteen-fold search saving and no new expressive power. Two reuse designs refuted; a third refused. |
+| M056 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | A capability learned after migration one survives migration two. 107-byte WebAssembly module, 0 imports, 32/32 inherited; 0/32 with the module removed. |
+| M057 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | Six unlabelled handles separated by four probe pairs; four tools synthesised, `mean` requiring composition at size seven. The authored migration map is removed. |
+| M058 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | The 256-opcode space scanned; 9 operations discovered, 3 absent from the authored list, including `copysign`. Discovery found what authorship missed. |
+| M059 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | `f64 → i32 → f64`. Three families, three decisions, and the judgement reverses. Every accepted body verified on unseen arguments. |
+| M060 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | The whole accepted body in WebAssembly: 10/10 modules, 0 left in JavaScript, 1,792 bytes, 0 imports, 32/32 capabilities, 4/4 arithmetic opcodes resolved by scan. |
+| M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
 
 ## Parallel measurement track — M045
 

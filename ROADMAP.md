@@ -1,6 +1,6 @@
 # Mira Genesis — Roadmap
 
-Mira Genesis has three bounded construction phases and one parallel measurement track.
+Mira Genesis has six bounded construction phases and one parallel measurement track.
 
 - **Phase 1 — bounded Genesis construction:** complete canonically through M042.
 - **Phase 2 — structural-domain transfer and integrated Mealy lineage:** complete in
@@ -9,9 +9,18 @@ Mira Genesis has three bounded construction phases and one parallel measurement 
   integrated development results through M046 and M047.
 - **Phase 4 — trans-runtime continuity:** positive integrated development result at M048;
   the bounded migration-strategy series M049–M052 is closed.
-- **Active frontier — M053:** endogenous extension of the transformation language, proposed
-  and preregistered, not yet qualified.
+- **Phase 5 — endogenous language extension:** M053 and M054 build the machinery; M055's
+  ablation refutes the capability claim. Closed by **D019**.
+- **Phase 6 — substrate discovery and the whole-body crossing:** M056–M061. The lineage
+  discovers an opaque substrate, judges whether to move, carries its whole body across and
+  identifies the structural instructions by their effect.
+- **Active frontier — two questions:** the compiler that arranges the discovered instructions
+  is still written by a person, and nothing on a real substrate is yet claimable.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
+
+**Every result from M048 onward is a development result.** M042 remains the only positive
+canonical continuous-lineage completion, and it holds only inside the deterministic binary-DFA
+laboratory.
 
 ## Phase 1 — completed bounded construction
 
@@ -220,35 +229,82 @@ describing a larger bounded search as open-ended self-extension.
 This closes a direction, not a result. M049–M052 each remain valid inside their frozen
 grammars and probe families.
 
-## Active construction frontier — M053
+## Phase 5 — endogenous extension of the transformation language
 
-**Status: PROPOSED AND PREREGISTERED — UNQUALIFIED.**
+**Status: MACHINERY POSITIVE, CAPABILITY CLAIM NEGATIVE. CLOSED BY D019.**
 
-The required rupture is endogenous extension of the transformation language. The lineage must
-prove that everything expressible in its accepted language is insufficient for a public task,
-diagnose that as a language-level limitation, construct a new reusable primitive absent from
-the founder catalogue, derive its implementation and tests without hidden cases, run it in a
-disposable sandbox under fixed resources, submit it to an independent validator with no
-adoption authority, adopt transactionally, reuse the extension on a structurally distinct
-second task family, preserve an episode where widening is refused, and restore exactly after
-a forced post-adoption fault.
+| Step | Goal | Evidence | Result |
+|---|---|---|---|
+| M053 | Extend the language after proving it insufficient | Head `12b0c31`, run `31162378285`, 852 tests | Real structural gain — the founder language cannot express any operation over adjacent elements — but the mechanism filters a declared sixteen-AST meta-language. Selection at a higher level. |
+| M054 | Construct instead of selecting | 29,330,422 admissible under a budget of 1,024 | Construction and second-order reuse. Three self-inflicted design defects found before the run and disclosed: a beam width that dropped a rank-ten candidate, a straw-man ablation denied composition, and arbitrary choice under ambiguity. |
+| M055 | Do it inside the migrated body, and ablate | Run 444 on `74689ca` | **NEGATIVE.** Construction, adoption, fault and exact restore all work. The ablation still solves the reuse task: 737 candidates without the acquisition against 48 with it. |
 
-M053 fails if the new primitive comes from a hidden pre-enumerated catalogue, from
-evaluator-only data, from a lookup table of expected answers, or is useful only on the task
-that created it. The founder may carry a bounded meta-language for describing safe
-extensions, but the concrete accepted extension must be produced after the limitation is
-observed.
+M053's first CI attempt failed during job setup on a GitHub Actions `Service Unavailable`
+error. Under **D017** that is an infrastructure event, not a negative scientific verdict.
 
-The design under review in [PR #73](https://github.com/mjodheim/mira-genesis/pull/73) keeps
-the M051 catalogue of 80 programs as the founder language and adds a closed pair-expression
-meta-language of exactly 16 ASTs. Synthesis is forbidden while any founder candidate survives
-the public probes. The creation task is a sum reduction over adjacent transitions; the reuse
-task changes the reduction family to maximum, so replaying the creation answer cannot satisfy
-it.
+**D019** records the closure: compositional acquisition buys search cost, not expressive power.
+A grammar is closed under composition, so anything the acquisition can build was already
+reachable by building it directly. Two reuse task designs were refuted the same way and a third
+was refused rather than attempted.
 
-M053 has no scientific verdict yet. Its first CI attempt failed on GitHub Actions
-infrastructure during job setup, not on the construction. See
+## Phase 6 — substrate discovery and the whole-body crossing
+
+M048 changed substrate once, with a compiler written by a person who knew the nine modules it
+had to translate, on a protocol that told the lineage when to move. This phase removed those
+three supports one at a time, and returned the project to the question it was started for.
+
+| Step | Goal | Evidence | Result |
+|---|---|---|---|
+| M056 | Does an acquisition survive a **second** crossing? | Run 449 on `9e4e6ba` | **Yes.** 107-byte WebAssembly module, 0 declared imports, 32/32 inherited capabilities, of which 28 predate migration one. The capability learned *after* migration one survives, 4/4. With the module removed, 0/32 answer. A further capability is then learned in the migrated substrate. |
+| M057 | Remove the authored migration map | Run 450 on `0e05ebe` | Six handles `h1`…`h6` with no labels, separated by four probe pairs. Four tools synthesised; `mean` required composition at size seven, found across 44,240 candidates in 16,883 behaviour classes. |
+| M058 | Remove the authored list of operations | Run 453 on `9d727e5` | The full 256-byte opcode space scanned, 247 refused by the substrate's own validator, **9 operations discovered**. Three were absent from M057's authored list — `0x0f`, `0x1a` and `0xa6`, the last being `copysign`. Discovery found what authorship had missed. |
+| M059 | Let the lineage judge its own substrate | Run 455 on `6f4f20a` | `f64 → i32 → f64`. Three families, three decisions: migrate, migrate back, stay. **It reverses**, which is what makes it a judgement. `i32` exposes 27 operations against `f64`'s 9. Every accepted body verified on unseen arguments. |
+| M060 | Move the **whole** body, not four tools | Run 457 on `154c92a` | 10/10 modules migrated, 0 left in JavaScript, one 1,792-byte module with 0 declared imports and no import object, 32/32 capabilities executed, 4/4 arithmetic opcodes resolved by scan. |
+| M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
+
+### What M061 also produced
+
+The scan named `i32.le_s` as `0x4c` and **contradicted the hand-written copy loop**, which
+carried `0x4d` — the unsigned comparison. The defect was invisible because the loop counter
+never goes negative. A discovery procedure found a latent bug in the code it was built to
+reproduce.
+
+M061 also shipped a **false manifest**: two fields claimed the loop used discovered
+instructions alone while the builder wrote seven opcodes directly in. It was found by external
+review, not by its own sixteen permanent tests. Six of the seven are now discovered; `block`
+and `loop` remain authored and are named as such. See **D020** and
 [`FAILURE_LOG.md`](FAILURE_LOG.md).
+
+### Qualification status
+
+None of M056–M061 discharged its own qualification rule in its own record: each result was
+written before CI returned and none was updated, so all six still read *PENDING
+QUALIFICATION*. The runs above are recorded retrospectively — one run per experiment commit,
+no rerun and no selection among runs — as evidence that the suite was green, not as a
+discharge of those rules.
+
+## Active construction frontier — two open questions
+
+### The compiler is still written by a person
+
+M061 names it in its own result. The lineage discovers **which** instructions a foreign
+substrate offers, by their effect alone; it does not decide **how to arrange them**. The
+compiler, the `block`/`loop` control structure and the scaffold shapes are authored.
+
+This is the deepest remaining structural handhold and it is harder than M061. An opcode is
+characterised by its effect on a value; an arrangement strategy has no isolated observable
+effect, so the M058/M061 method does not transfer to it directly.
+
+### Nothing on a real substrate is claimable
+
+Gates 1–7 of [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) have working
+parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm post-migration
+plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
+frozen protocol hashed before a canonical run.
+
+Fifteen consecutive development results and no claimable one is the pattern **D016** and the
+M052 series closure exist to prevent. Freezing a protocol and launching its evaluation is a
+human decision and is not automated here.
 
 ## Final frontier — frozen independent experiment
 
@@ -268,7 +324,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M053. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M061. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 

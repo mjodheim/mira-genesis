@@ -1,17 +1,19 @@
 project: Mira Genesis
-updated_at: 2026-08-06
-status: phase_four_trans_runtime_continuity_positive_in_development
+updated_at: 2026-08-08
+status: phase_six_substrate_discovery_positive_in_development
 
 active_research_question: >-
+  Two questions, neither answered. Can the lineage decide how to arrange the instructions it
+  discovered, rather than receiving an authored compiler? And can anything built on a real
+  substrate be frozen and run against the ten completion gates, rather than accumulating
+  another development result?
+
+previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that
   limitation, validate it independently, adopt it transactionally and reuse it on a
-  structurally distinct task family?
-
-previous_research_question: >-
-  Can a continuous lineage diagnose and repair a limiting module in a real modular software
-  body while preserving independent validation, causal memory and transactional rollback?
-  Answered positively in development by M047, then carried across runtimes by M048.
+  structurally distinct task family? Answered by M053-M055: the machinery works and the
+  capability claim is false. Closed by D019.
 
 measurement_question: >-
   Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
@@ -403,55 +405,209 @@ phase_four:
       hidden_contradiction_episode_preserved: true
       equivalence_exact_outside_declared_domain: false
 
-active_construction_frontier:
-  experiment: M053
-  status: proposed_and_preregistered_unqualified
+phase_five:
+  status: machinery_positive_capability_claim_negative_closed_by_D019
   objective: endogenous_transformation_language_extension
-  protocol: experiments/M053/PROTOCOL.md
-  pull_request: 73
-  pull_request_state: draft
-  required_properties:
-    - demonstrate_founder_language_insufficiency_on_a_public_task
-    - diagnose_language_or_architecture_limitation_not_candidate_choice
-    - construct_new_reusable_primitive_absent_from_founder_catalogue
-    - derive_implementation_and_tests_without_hidden_cases
-    - execute_extension_in_disposable_sandbox_under_fixed_resources
-    - independently_validate_before_adoption
-    - transactional_adoption_preserving_body_tools_tests_and_reasons
-    - reuse_extension_on_structurally_distinct_second_task_family
-    - preserve_a_refused_widening_episode
-    - exact_restore_after_forced_post_adoption_fault_and_deterministic_replay
-  anti_cheating_requirements:
-    - extension_not_selected_from_hidden_pre_enumerated_catalogue
-    - extension_not_copied_from_evaluator_only_data
-    - extension_not_encoded_as_lookup_table_of_expected_answers
-    - extension_not_useful_only_on_the_task_that_created_it
-  bounded_design_under_review:
-    founder_language: unchanged_M051_catalogue_of_80_programs
-    meta_language_asts: 16
-    meta_language_operands: [current, previous]
-    meta_language_operators: [add, subtract, minimum, maximum]
-    synthesis_forbidden_unless_zero_founder_candidates_survive: true
-    creation_task_reduction: sum_over_adjacent_transitions
-    reuse_task_reduction: maximum_over_adjacent_transitions
-    positive_target_expression: current_subtract_previous
-    target_stored_as_accepted_founder_primitive: false
-  qualification_status:
-    scientific_verdict_reached: false
-    attempts:
-      - ci_workflow_run: 31118366409
-        outcome: infrastructure_fault
-        stage: set_up_job
-        error: github_actions_service_unavailable_resolving_action_downloads
-        counts_as_negative_scientific_verdict: false
-        cancelled_jobs:
-          - repository_integrity
-          - tests_python_313
-      - ci_workflow_run: 31118366475
-        workflow: attribution_policy
-        outcome: cancelled_in_cascade
-        counts_as_negative_scientific_verdict: false
-  development_strategy: one_integrated_experiment_not_another_gate_sequence
+  M053:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M053/PROTOCOL.md
+    result: experiments/M053/DEVELOPMENT_RESULT.md
+    documented_head: 12b0c31507872f91c368480f8b30d246e6887023
+    qualification_ci_workflow_run: 31162378285
+    repository_tests_python_311: 852
+    repository_integrity_passed: true
+    mechanism: filters_a_declared_sixteen_ast_meta_language
+    capability_gain_structural: true
+    mechanism_is_construction: false
+    first_attempt:
+      ci_workflow_run: 31118366409
+      outcome: infrastructure_fault
+      stage: set_up_job
+      counts_as_negative_scientific_verdict: false
+  M054:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M054/PROTOCOL.md
+    admissible_space: 29330422
+    construction_budget: 1024
+    enumeration_possible: false
+    second_order_reuse: true
+    disclosed_design_defects:
+      - beam_width_six_dropped_a_rank_ten_subtraction
+      - ablation_arm_was_denied_composition
+      - arbitrary_choice_under_ambiguity_replaced_by_behavioural_classing
+  M055:
+    status: negative_on_central_claim
+    canonical: false
+    protocol: experiments/M055/PROTOCOL.md
+    result: experiments/M055/DEVELOPMENT_RESULT.md
+    qualification_ci_workflow_run: 31174803126
+    experiment_commit: 74689ca
+    inherited_state: M048_version_8
+    retained_capabilities: 32
+    candidates_touched: 722
+    inherited_capabilities_verified_before_adoption: 32
+    adopted_version: 9
+    ablation_candidates_without_acquisition: 737
+    ablation_candidates_with_acquisition: 48
+    acquisition_made_anything_newly_reachable: false
+    reuse_designs_refuted: 2
+    third_design_attempted: false
+    closing_decision: D019
+
+phase_six:
+  status: substrate_discovery_and_whole_body_crossing_positive_in_development
+  objective: repeated_trans_substrate_continuity_without_an_authored_map
+  qualification_note: >-
+    None of M056-M061 discharged its own qualification rule in its own record. Each result was
+    written before CI returned and none was updated, so all six still read PENDING
+    QUALIFICATION. The run identifiers below are recorded retrospectively - one run per
+    experiment commit, no rerun and no selection among runs - as evidence that the suite was
+    green, not as a discharge of those rules.
+  M056:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M056/PROTOCOL.md
+    result: experiments/M056/DEVELOPMENT_RESULT.md
+    experiment_commit: 9e4e6ba
+    ci_workflow_run: 31179484406
+    target_substrate: webassembly
+    emitted_module_bytes: 107
+    declared_imports: 0
+    inherited_capabilities_passing: 32
+    capabilities_predating_first_migration: 28
+    post_migration_capability_survives_second_migration: true
+    capabilities_answering_with_module_removed: 0
+    capability_learned_in_migrated_substrate: minimum
+    adopted_version: 9
+  M057:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M057/PROTOCOL.md
+    result: experiments/M057/DEVELOPMENT_RESULT.md
+    experiment_commit: 0e05ebe
+    ci_workflow_run: 31209268812
+    authored_migration_map_removed: true
+    opaque_handles: 6
+    handle_labels_exposed: false
+    probe_pairs: 4
+    tools_synthesized: [add, max, mean, mul]
+    largest_composition_size: 7
+    candidates_constructed_for_mean: 44240
+    behaviour_classes: 16883
+    authored_operation_list_still_present: true
+  M058:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M058/PROTOCOL.md
+    result: experiments/M058/DEVELOPMENT_RESULT.md
+    experiment_commit: 9d727e5
+    ci_workflow_run: 31213826221
+    opcode_space_scanned: 256
+    refused_by_substrate_validator: 247
+    operations_discovered: 9
+    authored_by_M057: 6
+    added_by_discovery: ["0x0f", "0x1a", "0xa6"]
+    discovery_found_what_authorship_missed: copysign
+    declared_imports: 0
+    inherited_capabilities_on_discovered_set: 32
+  M059:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M059/PROTOCOL.md
+    result: experiments/M059/DEVELOPMENT_RESULT.md
+    experiment_commit: 6f4f20a
+    ci_workflow_run: 31230664857
+    journey: [f64, i32, f64]
+    decisions:
+      bitwise_difference: migrate_to_i32
+      fractional_mean: migrate_to_f64
+      larger_of_two: stay
+    judgement_reverses: true
+    operations_discovered_f64: 9
+    operations_discovered_i32: 27
+    accepted_bodies_verified_on_unseen_arguments: true
+  M060:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M060/PROTOCOL.md
+    result: experiments/M060/DEVELOPMENT_RESULT.md
+    experiment_commit: 154c92a
+    ci_workflow_run: 31250012799
+    modules_in_accepted_body: 10
+    modules_migrated: 10
+    modules_left_in_javascript: 0
+    emitted_module_bytes: 1792
+    declared_imports: 0
+    instantiated_with_import_object: false
+    exported_functions: 11
+    inherited_capabilities_executed: 32
+    arithmetic_opcodes_resolved_by_scan: 4
+    emission_deterministic: true
+    structural_instruction_set_authored: true
+  M061:
+    status: positive_bounded_development_result_one_false_manifest_corrected
+    canonical: false
+    protocol: experiments/M061/PROTOCOL.md
+    result: experiments/M061/DEVELOPMENT_RESULT.md
+    experiment_commit: 2b6ef0e
+    ci_workflow_run: 31254846616
+    scaffold_shapes: 6
+    scan_stages: 2
+    opcode_space_scanned_per_shape: 256
+    structural_instructions_resolved: 10
+    match_m060_emitter: true
+    unresolved_ambiguity: ["0x2e", "0x2f"]
+    copy_loop_bytes: 97
+    copy_loop_authored_elements:
+      - block 0x02
+      - loop 0x03
+      - blocktype byte
+      - label immediates
+    compiler_authored: true
+    false_manifest_incident:
+      found_by: external_review_of_pull_request_90
+      found_by_own_tests: false
+      false_fields:
+        - copy_loop_uses_only_discovered_instructions
+        - structural_instructions_authored
+      opcodes_hardcoded_while_claiming_otherwise: 7
+      opcodes_subsequently_discovered: 6
+      reached_main_in_merge: 1c7cceb
+      corrected_by_pull_request: 91
+      recorded_in: [FAILURE_LOG.md, DECISIONS.md]
+      decision: D020
+    latent_defect_found_by_the_scan:
+      instruction: i32.le_s
+      authored_byte: "0x4d"
+      discovered_byte: "0x4c"
+      why_invisible: loop_counter_never_goes_negative
+      m060_emitter_was_correct: true
+
+active_construction_frontier:
+  status: two_open_questions_neither_started
+  question_one:
+    name: the_compiler_is_still_written_by_a_person
+    named_by: experiments/M061/DEVELOPMENT_RESULT.md
+    still_authored:
+      - the_compiler_that_arranges_discovered_instructions
+      - block_and_loop_control_structure
+      - the_scaffold_shapes
+    why_harder_than_M061: >-
+      An opcode is characterised by its effect on a value. An arrangement strategy has no
+      isolated observable effect, so the M058/M061 method does not transfer directly.
+  question_two:
+    name: nothing_on_a_real_substrate_is_claimable
+    gates_with_working_parts: [1, 2, 3, 4, 5, 6, 7]
+    gates_with_nothing: [8, 9, 10]
+    missing:
+      - four_arm_post_migration_plasticity_comparison
+      - three_accepted_cycles_across_new_held_out_families
+      - frozen_protocol_hashed_before_a_canonical_run
+    consecutive_development_results_without_a_claimable_one: 15
+    pattern_guarded_against_by: [D016, experiments/M052/SERIES_CLOSURE.md]
+    freezing_and_launching_is_a_human_decision: true
 
 measurement_track:
   reserved_experiment: M045
@@ -461,7 +617,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M053: true
+  separate_from_M047_to_M061: true
 
 engineering_release_boundary:
   human_control_required_for:

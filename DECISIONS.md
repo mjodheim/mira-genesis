@@ -462,3 +462,46 @@ translation.
 A substrate is not closed under composition. What is acquired there — a body that executes
 natively, tools that run in the new runtime — is not a sub-expression of a grammar, so the
 argument above does not apply to it. That is why the frontier moves rather than stops.
+
+## D020 — A manifest field is a claim, and reading it back proves nothing
+
+M061 recorded `copy_loop_uses_only_discovered_instructions: True` and
+`structural_instructions_authored: False` while its own builder wrote seven opcodes directly
+into the loop. An external review found it by reading the manifest against the code. Sixteen
+permanent tests passed over it.
+
+### Why the tests could not catch it
+
+The test read:
+
+    assert value["copy_loop_uses_only_discovered_instructions"] is True
+
+That assertion is true whenever the constant is `True`. It verifies that the field holds the
+value the author wrote in the same file, and nothing about the loop. A field and a test that
+reads it back are one claim asserted twice, not a claim and its verification.
+
+The same shape appears twice before in this project's history. M053's `rollback_exact` compared
+a frozen dataclass to itself and could never be `False`. M048's `replay_identical` compared two
+runs inside one process, where the volatile value is constant. In all three the mechanism is
+identical: **the falsifier's input is downstream of the thing it is supposed to falsify.**
+
+### The rule
+
+A manifest field asserting a property of an artifact must be computed from that artifact, and
+its test must be able to fail against a deliberately wrong artifact.
+
+Where a property cannot be computed — because it is a statement about what a human wrote rather
+than about a value — the manifest names the exception in a list at the same level as what it
+claims. M061 now carries `copy_loop_discovered_instructions` beside
+`copy_loop_authored_elements`, and the boolean reads `False`.
+
+### What this does not license
+
+This is not a demand that every claim be machine-checked before it can be recorded. It is a
+demand that a claim which *looks* machine-checked actually be one. A prose sentence in a result
+document is understood to be an argument; a manifest field named
+`uses_only_discovered_instructions` reads as a measurement, and inherits the credibility of one
+without having earned it.
+
+Prose that over-reaches is a writing defect. A manifest field that over-reaches is a fabricated
+measurement, and it belongs in `FAILURE_LOG.md`.
