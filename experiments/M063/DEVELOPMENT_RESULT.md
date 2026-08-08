@@ -1,6 +1,6 @@
 # M063 — development result
 
-**Status: POSITIVE LOCALLY; PENDING QUALIFICATION.**
+**Status: QUALIFIED IN DEVELOPMENT.**
 
 ## Verdict
 
@@ -70,9 +70,8 @@ This prevents the positive verdict from being based on naming the old copy body 
 - repository integrity: imports clean, no orphan modules and declared dependencies match imports;
 - a second complete deterministic execution emitted the same manifest digest.
 
-No negative qualification run exists yet because qualification has not been launched. No
-development defect was found during these two complete executions. This statement is not a
-substitute for the required GitHub matrices.
+No negative qualification run occurred. No development defect was found during the complete
+local executions or the first qualification run.
 
 ## What changed in the supported claim
 
@@ -95,8 +94,16 @@ Nothing here supplies the four-arm post-migration plasticity comparison, three a
 across genuinely new held-out families or a protocol frozen before a canonical run. Gates 8–10
 remain open on real substrates.
 
-## Qualification disposition
+## Qualification
 
-Pending. The exact experiment head and the first GitHub Actions verdict will be appended without
-changing the experiment implementation. A failed scientific job will remain a negative result;
-an infrastructure-only failure will be classified under D017.
+Exact experiment head `d4eb5ed981727fd1343e6e1031494771d9dec220` passed first workflow
+run `31275085485`, attempt 1, with no failed job and no rerun:
+
+- **1,054 tests on Python 3.11** in 969.51 seconds (16:09);
+- **1,054 tests on Python 3.13** in 985.12 seconds (16:25);
+- repository integrity passed;
+- human-only attribution passed.
+
+The workflow annotation that older GitHub actions target Node.js 20 and were forced to run on
+Node.js 24 belongs to GitHub's action host. The experiment's pinned target runtime setup passed
+and the annotation does not change the scientific runtime or verdict.

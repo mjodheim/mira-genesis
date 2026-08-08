@@ -264,7 +264,7 @@ three supports one at a time, and returned the project to the question it was st
 | M060 | Move the **whole** body, not four tools | Run 457 on `154c92a` | 10/10 modules migrated, 0 left in JavaScript, one 1,792-byte module with 0 declared imports and no import object, 32/32 capabilities executed, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | Discover the structural instructions too | Run 459 on `2b6ef0e` | Ten instructions identified by effect alone across six shapes in two stages, all matching M060's emitter. A conditional branch has no value; the scaffold gives it one. |
 | M062 | Construct one control arrangement instead of handing it over | Run `31269732461` on `f5cfe35`; 1,038 tests on each Python version plus integrity | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
-| M063 | Transfer the arrangement mechanism to a new body | Local: 1,054 repository tests in 1,763.31s; qualification pending | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
+| M063 | Transfer the arrangement mechanism to a new body | Run `31275085485` on `d4eb5ed`; 1,054 tests on each Python version plus integrity | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
 
 ### What M061 also produced
 
@@ -291,8 +291,9 @@ M062 discharged its own qualification rule on exact head `f5cfe35`: first run
 `31269732461`, attempt 1, passed 1,038 tests on Python 3.11, 1,038 on Python 3.13 and
 repository integrity, with no failed job or rerun.
 
-M063 is locally positive and pending qualification. Its exact experiment head and the first
-GitHub Actions verdict must be recorded before the status can change.
+M063 discharged its own rule on exact head `d4eb5ed`: first run `31275085485`, attempt 1,
+passed 1,054 tests on Python 3.11, 1,054 on Python 3.13, repository integrity and attribution,
+with no failed job or rerun.
 
 ## Active construction frontier — two open questions
 

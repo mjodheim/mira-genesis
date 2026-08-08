@@ -1,6 +1,11 @@
 # M063 — transfer of bounded control arrangement to a checksum body
 
-**Status: DEVELOPMENT PROTOCOL EXECUTED LOCALLY; PENDING QUALIFICATION.**
+**Status: QUALIFIED IN DEVELOPMENT.**
+
+The exact experiment head `d4eb5ed981727fd1343e6e1031494771d9dec220` passed the first
+and only qualification run `31275085485`, attempt 1: 1,054 tests on Python 3.11 and
+1,054 on Python 3.13, plus repository integrity. Human-only attribution also passed. The
+result remains noncanonical.
 
 ## Research question
 

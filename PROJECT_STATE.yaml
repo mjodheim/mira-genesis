@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-08
-status: phase_six_control_transfer_positive_pending_qualification
+status: phase_six_control_transfer_positive_qualified_in_development
 
 active_research_question: >-
   Two questions remain. M063 transfers M062's arrangement mechanism from a copy body to a
@@ -654,12 +654,21 @@ phase_six:
       - open_ended_evolution
     decision: D021
   M063:
-    status: positive_local_development_result_pending_qualification
+    status: positive_qualified_development_result
     canonical: false
     protocol: experiments/M063/PROTOCOL.md
     result: experiments/M063/DEVELOPMENT_RESULT.md
-    qualification_ci_workflow_run: null
-    repository_integrity_passed: null
+    experiment_commit: d4eb5ed981727fd1343e6e1031494771d9dec220
+    qualification_ci_workflow_run: 31275085485
+    qualification_ci_attempt: 1
+    qualification_failed_jobs: 0
+    qualification_rerun_used: false
+    tests_python_3_11: 1054
+    tests_python_3_13: 1054
+    test_seconds_python_3_11: 969.51
+    test_seconds_python_3_13: 985.12
+    repository_integrity_passed: true
+    human_only_attribution_passed: true
     local_tests: 16
     local_test_seconds: 130.94
     joint_M062_M063_tests: 31

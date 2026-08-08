@@ -34,7 +34,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
 - **Every result from M048 onward is a development result.** Nothing on a real substrate has
   been run as a frozen canonical lineage against the ten gates. M056–M061 did not discharge
   their qualification rules in their own records; M062 did, on exact head `f5cfe35` and first
-  run `31269732461`; M063 is locally positive and pending qualification.
+  run `31269732461`; M063 did likewise on exact head `d4eb5ed` and first run
+  `31275085485`.
 - The current frontier is therefore still two questions, but the first is now narrower:
   **M063 transfers bounded arrangement search from copying to reduction while leaving each task
   grammar and emitter authored**, and **nothing on a real substrate is yet claimable**.
@@ -426,9 +427,11 @@ a target-task control: it passes the shared zero case and fails both non-zero ch
 D022 therefore treats the transfer as an observed change of executable contract, not a new label
 on the old program.
 
-The result is locally positive and pending qualification. The checksum decomposition, three
-atomic steps, finite grammar, emitter, encodings and cases remain authored. A third small loop
-using the same pattern would not be another structural advance.
+The result is qualified in development. Exact head `d4eb5ed` passed first run `31275085485`,
+attempt 1: 1,054 tests on Python 3.11 and 1,054 on Python 3.13 plus repository integrity and
+attribution. The checksum decomposition, three atomic steps, finite grammar, emitter, encodings
+and cases remain authored. A third small loop using the same pattern would not be another
+structural advance.
 
 ### Qualification status of M056–M063
 
@@ -456,10 +459,10 @@ M062 is different: its own record now discharges its qualification rule. Exact h
 `f5cfe35c265cf83640fddc2ae80e54805776f84f` passed run `31269732461`, attempt 1,
 with 1,038 tests on each Python version and repository integrity. No failed job or rerun occurred.
 
-M063 is not yet qualified. Its local development evidence is 16/16 M063 tests in 130.94 seconds,
-31/31 joint M062–M063 tests in 310.38 seconds, 1,054/1,054 repository tests in 1,763.31 seconds,
-repository integrity and a second deterministic execution with the same manifest digest. Its
-exact experiment head and first GitHub Actions verdict remain to be recorded.
+M063 also discharged its own rule. Exact head
+`d4eb5ed981727fd1343e6e1031494771d9dec220` passed first run `31275085485`, attempt 1,
+with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
+repository integrity and attribution. No failed job or rerun occurred.
 
 ## Current construction frontier — two open questions
 
@@ -517,7 +520,7 @@ a human decision and is not automated here.
 | M060 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | The whole accepted body in WebAssembly: 10/10 modules, 0 left in JavaScript, 1,792 bytes, 0 imports, 32/32 capabilities, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
 | M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
-| M063 | **POSITIVE LOCAL DEVELOPMENT RESULT — PENDING QUALIFICATION** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. The task grammar and emitter remain authored. |
+| M063 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. Exact head `d4eb5ed`, run `31275085485`; the task grammar and emitter remain authored. |
 
 ## Parallel measurement track — M045
 

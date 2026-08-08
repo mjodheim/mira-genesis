@@ -3,8 +3,7 @@
 ## 0.38.0 — 2026-08-08
 
 M063 transfers M062's bounded arrangement mechanism from byte copying to byte reduction. The
-local development result is positive and pending GitHub qualification; no canonical claim is
-added.
+development result is qualified; no canonical claim is added.
 
 - Replayed M061/M062 effect discovery and constructed 96 checksum-loop arrangements from the
   transferred topology, predicate, exit-position and step-permutation dimensions.
@@ -21,8 +20,12 @@ added.
   pattern would not count as the next advance.
 - Added 16 permanent M063 falsifiers. The complete M063 file passes locally in 130.94 seconds,
   the joint M062–M063 regression passes 31 tests in 310.38 seconds and the complete repository
-  suite passes **1,054 tests in 1,763.31 seconds**. GitHub matrices remain required for
-  qualification.
+  suite passes **1,054 tests in 1,763.31 seconds**. The required GitHub matrices are recorded
+  below.
+- Qualified exact head `d4eb5ed981727fd1343e6e1031494771d9dec220` on the first and only
+  GitHub Actions run `31275085485`, attempt 1: 1,054 tests on Python 3.11 in 969.51 seconds,
+  1,054 on Python 3.13 in 985.12 seconds, repository integrity and attribution, with no failed
+  job or rerun.
 
 ## 0.37.0 — 2026-08-08
 
