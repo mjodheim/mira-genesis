@@ -1,10 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-08
-status: phase_six_substrate_discovery_positive_in_development
+status: phase_six_bounded_arrangement_positive_qualified_in_development
 
 active_research_question: >-
-  Two questions, neither answered. Can the lineage decide how to arrange the instructions it
-  discovered, rather than receiving an authored compiler? And can anything built on a real
+  Two questions remain. M062 answers the first only inside one authored 480-program copy
+  grammar: can the lineage remove the authored task decomposition and generic emitter, or
+  transfer arrangement synthesis to a genuinely new body? And can anything built on a real
   substrate be frozen and run against the ten completion gates, rather than accumulating
   another development result?
 
@@ -457,14 +458,15 @@ phase_five:
     closing_decision: D019
 
 phase_six:
-  status: substrate_discovery_and_whole_body_crossing_positive_in_development
-  objective: repeated_trans_substrate_continuity_without_an_authored_map
+  status: substrate_discovery_whole_body_crossing_and_bounded_arrangement_positive_in_development
+  objective: repeated_trans_substrate_continuity_without_an_authored_map_or_literal_arrangement
   qualification_note: >-
     None of M056-M061 discharged its own qualification rule in its own record. Each result was
     written before CI returned and none was updated, so all six still read PENDING
     QUALIFICATION. The run identifiers below are recorded retrospectively - one run per
     experiment commit, no rerun and no selection among runs - as evidence that the suite was
-    green, not as a discharge of those rules.
+    green, not as a discharge of those rules. M062 separately discharged its own rule on exact
+    head f5cfe35c265cf83640fddc2ae80e54805776f84f, first run 31269732461, attempt 1.
   M056:
     status: positive_bounded_development_result
     canonical: false
@@ -584,19 +586,95 @@ phase_six:
       discovered_byte: "0x4c"
       why_invisible: loop_counter_never_goes_negative
       m060_emitter_was_correct: true
+  M062:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M062/PROTOCOL.md
+    result: experiments/M062/DEVELOPMENT_RESULT.md
+    experiment_commit: f5cfe35c265cf83640fddc2ae80e54805776f84f
+    qualification_ci_workflow_run: 31269732461
+    qualification_ci_attempt: 1
+    qualification_failed_jobs: 0
+    qualification_rerun_used: false
+    tests_python_3_11: 1038
+    tests_python_3_13: 1038
+    test_seconds_python_3_11: 889.83
+    test_seconds_python_3_13: 914.03
+    repository_integrity_passed: true
+    m061_scaffolds_replayed: 6
+    region_opcode_space_scanned: 256
+    region_outcomes:
+      refused: 253
+      observed: 2
+      did_not_terminate: 1
+    region_effect_classes:
+      exit_region: ["0x02", "0x06"]
+      repeat_region: ["0x03"]
+    arrangements_constructed: 480
+    public_survivors: 16
+    public_cases: 3
+    hidden_cases: 3
+    survivor_region_programs_admitted: 32
+    survivor_region_programs_tested: 32
+    selected_module_bytes: 97
+    protocol_digest: 3780dc998a5df0cee783ba435671e1b349b27e9cd96315130ae7a34f41e7b97e
+    manifest_digest: 752fecdc5891911038ef04813a57f736a7f65c14c62c41a907269500fe88b03b
+    selected_arrangement:
+      topology: block_then_loop
+      condition: remaining_le_zero
+      exit_position: 0
+      step_order: [copy_byte, decrement_remaining, advance_source, advance_destination]
+    emitter_inputs_from_discovery:
+      operation_labels:
+        - br
+        - br_if
+        - i32.add
+        - i32.le_s
+        - i32.load
+        - i32.load8_u
+        - i32.store
+        - i32.store8
+        - i32.sub
+        - local.set
+      region_effect_classes:
+        exit_region: ["0x02", "0x06"]
+        repeat_region: ["0x03"]
+    authored_elements:
+      - copy_task_decomposition
+      - atomic_steps
+      - finite_search_grammar
+      - generic_emitter
+      - blocktype_and_label_encoding
+      - scaffold_shapes
+      - public_and_hidden_cases
+    claim_exclusions:
+      - arbitrary_compiler_synthesis
+      - self_authored_grammar
+      - unrestricted_code_generation
+      - open_ended_evolution
+    decision: D021
 
 active_construction_frontier:
-  status: two_open_questions_neither_started
+  status: bounded_arrangement_step_positive_general_compiler_and_canonical_claim_open
   question_one:
-    name: the_compiler_is_still_written_by_a_person
+    name: bounded_arrangement_synthesized_general_compiler_still_authored
     named_by: experiments/M061/DEVELOPMENT_RESULT.md
+    bounded_step: experiments/M062/DEVELOPMENT_RESULT.md
+    removed_in_M062:
+      - literal_final_copy_loop_arrangement
+      - authored_exit_and_repeat_region_opcode_choice
     still_authored:
-      - the_compiler_that_arranges_discovered_instructions
-      - block_and_loop_control_structure
+      - copy_task_decomposition
+      - atomic_steps
+      - finite_search_grammar
+      - generic_emitter
+      - blocktype_and_label_encoding
       - the_scaffold_shapes
-    why_harder_than_M061: >-
-      An opcode is characterised by its effect on a value. An arrangement strategy has no
-      isolated observable effect, so the M058/M061 method does not transfer directly.
+      - public_and_hidden_cases
+    next_advance_must: >-
+      Remove one of the authored grammar or emitter handholds, or demonstrate transfer of the
+      arrangement mechanism to a genuinely new body. A larger search inside the same copy
+      grammar is not an advance.
   question_two:
     name: nothing_on_a_real_substrate_is_claimable
     gates_with_working_parts: [1, 2, 3, 4, 5, 6, 7]
@@ -605,7 +683,7 @@ active_construction_frontier:
       - four_arm_post_migration_plasticity_comparison
       - three_accepted_cycles_across_new_held_out_families
       - frozen_protocol_hashed_before_a_canonical_run
-    consecutive_development_results_without_a_claimable_one: 15
+    consecutive_development_results_without_a_claimable_one: 16
     pattern_guarded_against_by: [D016, experiments/M052/SERIES_CLOSURE.md]
     freezing_and_launching_is_a_human_decision: true
 
@@ -617,7 +695,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M061: true
+  separate_from_M047_to_M062: true
 
 engineering_release_boundary:
   human_control_required_for:

@@ -505,3 +505,29 @@ without having earned it.
 
 Prose that over-reaches is a writing defect. A manifest field that over-reaches is a fabricated
 measurement, and it belongs in `FAILURE_LOG.md`.
+
+## D021 — Canonicalisation may not decide hidden behaviour
+
+M062's 480-program grammar leaves sixteen arrangements that satisfy every public observation.
+Its region probe also leaves two bytes, `0x02` and `0x06`, with the same observed exit-region
+effect. Picking the lowest source digest or byte before independent validation would be
+deterministic, but it would not be neutral: the arbitrary representation could carry a different
+hidden outcome.
+
+### The rule
+
+**A deterministic representative may be chosen from an observational equivalence class only
+after every member of the class passes the independent admission evidence.** If any member
+disagrees, the evidence has not established equivalence and the result must stop as ambiguous.
+
+M062 therefore validates the Cartesian product of all sixteen public arrangement survivors and
+both exit-region candidates against all three hidden cases. All 32 complete programs pass. Only
+then does the smallest digest select one arrangement, and only then does the smallest opcode serve
+as the emitted representative of the region-effect class.
+
+### Boundary
+
+This is bounded behavioural equivalence, not semantic equivalence for all programs or inputs. The
+class is admitted only for M062's committed copy grammar and hidden cases. A later task, substrate
+or grammar must establish its own class again; it may not inherit the canonical representative as
+an authored fact.

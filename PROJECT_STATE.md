@@ -22,19 +22,21 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   construction machinery works; the capability claim does not. M055's ablation shows that
   compositional acquisition buys search cost, not expressive power. The line is closed by
   **D019**.
-- **M056–M061 returned to the objective the project was started for** and moved it further
+- **M056–M062 returned to the objective the project was started for** and moved it further
   than any earlier series: a capability learned after one migration survives the next; the
   lineage discovers an opaque substrate by probing instead of receiving a map; it judges its
   own substrate inadequate and reverses direction; the whole accepted body executes in
-  WebAssembly with nothing left behind; and the structural instructions are identified by
-  their effect rather than named by a person.
+  WebAssembly with nothing left behind; the structural instructions are identified by their
+  effect rather than named by a person; and one copy-loop arrangement is synthesized from a
+  480-program grammar instead of supplied as a finished program.
 - **M042 remains the only positive canonical continuous-lineage completion.**
 - **Every result from M048 onward is a development result.** Nothing on a real substrate has
-  been run as a frozen canonical lineage against the ten gates, and M056–M061 have not
-  discharged their own qualification rules in their own records.
-- The current frontier is therefore two questions, not one: **the compiler that arranges the
-  discovered instructions is still written by a person**, and **nothing on a real substrate is
-  yet claimable**.
+  been run as a frozen canonical lineage against the ten gates. M056–M061 did not discharge
+  their qualification rules in their own records; M062 did, on exact head `f5cfe35` and first
+  run `31269732461`.
+- The current frontier is therefore still two questions, but the first is now narrower:
+  **M062 removed one literal copy-loop arrangement while leaving the task grammar and generic
+  emitter authored**, and **nothing on a real substrate is yet claimable**.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -322,8 +324,8 @@ This is the result behind **D019**, and the line is closed.
 ## Phase 6 — substrate discovery and the whole-body crossing
 
 M048 changed substrate once, with a compiler written by a person who knew the nine modules it
-had to translate, on a protocol that told the lineage when to move. M056–M061 removed those
-three supports one at a time.
+had to translate, on a protocol that told the lineage when to move. M056–M062 removed those
+supports one at a time and began the arrangement question left after opcode discovery.
 
 | Experiment | What was handed | What was found |
 |---|---|---|
@@ -333,6 +335,7 @@ three supports one at a time.
 | M059 | two substrates, no ranking | whether to move at all, and where |
 | M060 | the structural instruction set | that the **whole body** can cross |
 | M061 | six scaffold shapes and a floor | which structural instructions exist |
+| M062 | a copy-task grammar and evidence split | which bounded control arrangement satisfies the task |
 
 ### M056 — a capability learned after a migration survives the next one
 
@@ -390,7 +393,25 @@ two fields claimed the loop used discovered instructions alone while the builder
 opcodes in. Six of the seven are now discovered; `block` and `loop` remain authored and are
 named as such. See **D020** and [`FAILURE_LOG.md`](FAILURE_LOG.md).
 
-### Qualification status of M056–M061
+### M062 — one control arrangement is synthesized
+
+M062 replays M061's six scans, then scans all 256 bytes in a region-effect scaffold built from
+the discovered `br` and `i32.add`. The scaffold preserves a real ambiguity: `0x02` and `0x06`
+both have the observed exit-region effect, while `0x03` alone repeats without terminating.
+
+A finite grammar constructs **480** arrangements from two region nestings, two predicate
+directions, five exit positions and twenty-four orderings of four atomic steps. **16** survive
+three public cases. Every survivor, with both exit-region representatives, passes all three
+independent hidden cases: **32 / 32** complete programs admitted. D021 requires this class-wide
+validation before a digest or opcode may serve as the canonical representation.
+
+The result is bounded and qualified in development. Exact head `f5cfe35` passed first run
+`31269732461`, attempt 1: 1,038 tests on each of Python 3.11 and 3.13 plus repository integrity.
+The copy-task decomposition, search grammar,
+generic emitter, blocktypes, label encoding, scaffold shapes and cases remain authored. M062
+removes a literal final arrangement; it does not synthesize an arbitrary compiler.
+
+### Qualification status of M056–M062
 
 **None of these six discharged its own qualification rule in its own record.** Each result was
 written before CI returned and none was updated afterwards, so all six still read *PENDING
@@ -412,17 +433,23 @@ This table is recorded retrospectively and is evidence that the suite was green,
 discharge of the qualification rules. Those rules require each experiment to document its head
 and record the verdict in its own result, and that was not done at the time.
 
+M062 is different: its own record now discharges its qualification rule. Exact head
+`f5cfe35c265cf83640fddc2ae80e54805776f84f` passed run `31269732461`, attempt 1,
+with 1,038 tests on each Python version and repository integrity. No failed job or rerun occurred.
+
 ## Current construction frontier — two open questions
 
-### The compiler is still written by a person
+### A bounded arrangement is synthesized; the general compiler is still authored
 
-M061 names it in its own result. The lineage now discovers **which** instructions a foreign
-substrate offers, by their effect alone. It does not decide **how to arrange them**: the
-compiler, the `block`/`loop` control structure and the scaffold shapes are authored.
+M062 supplies the first bounded answer to the question M061 left. The final region nesting,
+predicate direction, exit position and step ordering for one byte-copy task come from public
+behavioural search rather than a complete program literal. The region openers also come from an
+effect scan, including its unresolved `0x02`/`0x06` class.
 
-This is the deepest remaining structural handhold, and it is harder than M061. An opcode is
-characterised by its effect on a value; an arrangement strategy has no isolated observable
-effect, so the M058/M061 method does not transfer to it directly.
+The deeper handhold remains. A person still wrote the copy-task decomposition, the four atomic
+steps, the 480-program grammar, the generic emitter, blocktypes, label encoding, scaffold shapes
+and evidence cases. Generalising beyond that authored grammar — or having the lineage construct
+the grammar and compiler architecture — is not demonstrated.
 
 ### Nothing on a real substrate is claimable
 
@@ -431,7 +458,7 @@ working parts on WebAssembly and Node. Gates 8, 9 and 10 have none: no four-arm 
 plasticity comparison, no three accepted cycles across genuinely new held-out families, and no
 frozen protocol hashed before a canonical run.
 
-Fifteen consecutive development results without a claimable one is the pattern **D016** and the
+Sixteen consecutive development results without a claimable one is the pattern **D016** and the
 M052 series closure were written to prevent. Freezing a protocol and launching its evaluation is
 a human decision and is not automated here.
 
@@ -465,12 +492,13 @@ a human decision and is not automated here.
 | M059 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | `f64 → i32 → f64`. Three families, three decisions, and the judgement reverses. Every accepted body verified on unseen arguments. |
 | M060 | **POSITIVE BOUNDED DEVELOPMENT RESULT** | The whole accepted body in WebAssembly: 10/10 modules, 0 left in JavaScript, 1,792 bytes, 0 imports, 32/32 capabilities, 4/4 arithmetic opcodes resolved by scan. |
 | M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
+| M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M062: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary
