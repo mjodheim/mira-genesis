@@ -12,12 +12,13 @@ import sys
 import pytest
 
 from metamorphosis.m061_discovered_structure import (
-    COPY_PHRASE, M061_PROTOCOL, resolve_structure, run_copy_loop, run_m061_discovered_structure,
-    unresolved_shapes,
+    COPY_PHRASE, M061_PROTOCOL, SCAFFOLD_NAMES, resolve_structure, run_all_scans, run_copy_loop,
+    run_m061_discovered_structure, unresolved_shapes,
 )
 from metamorphosis.m061_structural_discovery import (
-    M060_AUTHORED_STRUCTURAL, OPCODE_SPACE, PRESUPPOSED, SCAFFOLDS, M061Error, build_copy_loop,
-    load_shapes, probe, resolve_load, resolve_width, scan_scaffold, store_widths,
+    LOOP_REQUIRED, M060_AUTHORED_STRUCTURAL, OPCODE_SPACE, PRESUPPOSED, SCAFFOLDS,
+    UNDISCOVERED_IN_LOOP, M061Error, build_copy_loop, load_shapes, probe, resolve_i32_binary,
+    resolve_load, resolve_unique, resolve_width, scan_scaffold, staged_scaffolds, store_widths,
 )
 
 
@@ -28,7 +29,7 @@ def manifest():
 
 @pytest.fixture(scope="module")
 def scans():
-    return {s.name: scan_scaffold(s, M061_PROTOCOL.probe_timeout_seconds) for s in SCAFFOLDS}
+    return run_all_scans(M061_PROTOCOL)
 
 
 def test_every_scaffold_finds_its_own_witness(scans):
@@ -102,12 +103,19 @@ def test_a_conditional_branch_is_discovered_by_its_effect(scans):
 
 
 def test_some_candidates_never_terminate(manifest):
-    """`0x12` is a tail call: it recurses without growing the stack, so it never traps."""
+    """`0x12` is a tail call: it recurses without growing the stack, so it never traps.
+
+    It only hangs where the shape lets it call the enclosing function with matching arity. The
+    counts are per shape rather than a single number, because that difference is a property of the
+    scaffolds and not noise.
+    """
     counts = manifest.to_dict()["non_terminating_candidates"]
 
-    assert counts == {"conditional_branch": 1, "memory_load": 1, "memory_store": 1}
-    for scan in manifest.to_dict()["outcome_counts"].values():
-        assert scan["did_not_terminate"] == 1
+    assert counts == {
+        "conditional_branch": 1, "i32_binary": 0, "local_set": 0,
+        "memory_load": 1, "memory_store": 1, "unconditional_branch": 1,
+    }
+    assert sum(counts.values()) == 4
 
 
 def test_the_timeout_is_what_makes_a_scan_possible():
@@ -126,7 +134,67 @@ def test_discovery_recovers_every_instruction_m060_authored(manifest):
     assert value["resolved_structural_opcodes"] == {
         label: hex(code) for label, code in sorted(M060_AUTHORED_STRUCTURAL.items())
     }
-    assert value["structural_instructions_authored"] is False
+    assert len(M060_AUTHORED_STRUCTURAL) == 10
+    assert value["structural_operations_authored"] is False
+
+
+def test_the_second_stage_is_scanned_with_what_the_first_stage_found(scans):
+    """Two shapes cannot observe their candidate without an addition, and it is a discovered one.
+
+    Writing `0x6a` into the scaffold that discovers opcodes would have been the same shortcut this
+    experiment exists to remove, so the first stage's integer scan supplies it.
+    """
+    add = resolve_i32_binary(scans["i32_binary"])["i32.add"]
+    staged = staged_scaffolds(add)
+
+    assert [scaffold.name for scaffold in staged] == ["local_set", "unconditional_branch"]
+    assert [scaffold.name for scaffold in SCAFFOLDS] == SCAFFOLD_NAMES[:4]
+    # The stage-two shapes are built from `add`, so a wrong byte changes the module they scan.
+    assert staged[0].build(0x21) != _local_set_module_with_a_wrong_addition()
+
+
+def _local_set_module_with_a_wrong_addition() -> bytes:
+    return staged_scaffolds(0x6B)[0].build(0x21)   # subtraction where the addition belongs
+
+
+def test_storing_a_value_is_separated_from_discarding_it_and_from_leaving(scans):
+    """Three candidates inhabit this shape and two earlier versions could not tell them apart.
+
+    Ending on the constant made `local.set` and `drop` identical, because nothing read the local
+    back. Ending on `local.get 1` made `local.set` and `return` identical, because both surface the
+    parameter. Reading the local *and* adding the constant separates all three.
+    """
+    scan = scans["local_set"]
+    seen = scan["all_observations"]
+
+    assert scan["matches"] == ["0x21"]
+    assert seen["0x21"] == [74, 24]      # local.set: 33 + 41 and 33 - 9
+    assert seen["0x1a"] == [33, 33]      # drop: the local stays at its default, so 33 + 0
+    assert seen["0x0f"] == [41, -9]      # return: leaves before the addition happens
+    assert "0x22" not in seen            # local.tee leaves two values against one result
+    assert resolve_unique(scan, "local.set") == "0x21"
+
+
+def test_an_unconditional_branch_is_separated_from_a_return(scans):
+    """Both leave the block with 7. Only the branch comes back to have one added to it."""
+    scan = scans["unconditional_branch"]
+
+    assert scan["matches"] == ["0x0c"]
+    assert scan["all_observations"]["0x0c"] == [8, 8]
+    assert scan["all_observations"]["0x0f"] == [7, 7]
+
+
+def test_the_scan_disagreed_with_the_authored_loop_and_was_right():
+    """`i32.le_s` is `0x4c`; the first copy loop hardcoded `0x4d`, the unsigned comparison.
+
+    Nothing caught it, because the loop's counter never goes negative. The scan named the opcode
+    from behaviour rather than from a table, and in doing so found a defect in the code it was
+    meant to reproduce. M060's own emitter had it right.
+    """
+    from metamorphosis.m060_wasm_emit import Code
+
+    assert M060_AUTHORED_STRUCTURAL["i32.le_s"] == 0x4C
+    assert Code().i32_le_s().bytes()[-1:] == b"\x4c"
 
 
 def test_the_recovered_instructions_actually_compute(manifest):
@@ -134,8 +202,32 @@ def test_the_recovered_instructions_actually_compute(manifest):
     value = manifest.to_dict()
 
     assert value["copy_phrase_recovered"] is True
-    assert value["copy_loop_uses_only_discovered_instructions"] is True
     assert value["copy_loop_bytes"] == 97
+
+
+def test_the_manifest_names_what_the_loop_still_writes_by_hand(manifest):
+    """The claim this replaces was false, and the correction is a list rather than softer wording.
+
+    An earlier manifest asserted the loop used discovered instructions alone while the builder
+    hardcoded seven opcodes. Six are now discovered; `block` and `loop` are not instructions with an
+    observable effect on a value, so they stay authored and are named here at the same level as
+    what was found.
+    """
+    value = manifest.to_dict()
+
+    assert value["copy_loop_uses_only_discovered_instructions"] is False
+    assert value["copy_loop_discovered_instructions"] == sorted(LOOP_REQUIRED)
+    assert value["copy_loop_authored_elements"] == list(UNDISCOVERED_IN_LOOP)
+    assert value["block_structure_authored"] is True
+    assert set(LOOP_REQUIRED) <= set(value["resolved_structural_opcodes"])
+
+
+def test_the_loop_refuses_to_be_built_from_an_incomplete_discovery():
+    """Every operation it needs must have been found; there is no fallback to an authored byte."""
+    partial = {label: 0x6A for label in LOOP_REQUIRED if label != "local.set"}
+
+    with pytest.raises(M061Error, match="local.set"):
+        build_copy_loop(partial)
 
 
 def test_the_copy_loop_fails_when_given_the_wrong_branch(scans):
@@ -170,6 +262,7 @@ def test_the_floor_is_named(manifest):
     assert manifest.to_dict()["presupposed"] == list(PRESUPPOSED)
     assert "local.get" in PRESUPPOSED
     assert "i32.const" in PRESUPPOSED
+    assert "end 0x0b" in PRESUPPOSED
 
 
 def test_the_whole_space_is_scanned_per_scaffold(manifest):

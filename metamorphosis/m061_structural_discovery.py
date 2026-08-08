@@ -58,11 +58,13 @@ _LOCAL_GET = 0x20
 _I32_CONST = 0x41
 _END = 0x0B
 
-#: The floor. Every scaffold reads its parameters and frames a module, so `local.get`, `i32.const`
-#: and the section layout are presupposed rather than discovered. A scaffold that avoided them
-#: would have no way to present an operand or return a result, and the experiment says so instead
-#: of pretending the floor is not there.
-PRESUPPOSED = ("local.get", "i32.const", "module framing", "function signature shape")
+#: The floor. Every scaffold reads its parameters and frames a module, so `local.get`, `i32.const`,
+#: the `end` that closes every body and the section layout are presupposed rather than discovered.
+#: A scaffold that avoided them would have no way to present an operand or return a result, and the
+#: experiment says so instead of pretending the floor is not there.
+PRESUPPOSED = (
+    "local.get", "i32.const", "end 0x0b", "module framing", "function signature shape",
+)
 
 
 def _uleb(value: int) -> bytes:
@@ -164,6 +166,68 @@ def _branch_scaffold(opcode: int) -> bytes:
     return _module([I32], [I32], body)
 
 
+#: Constants in a scaffold are emitted as one SLEB128 byte, where bit 0x40 is the sign. Anything
+#: from 64 upward flips negative: an earlier version wrote 99 and the module returned -29, the
+#: witness vanished, and the scan disqualified itself exactly as it should have. Every scaffold
+#: constant stays below 64.
+_SCAFFOLD_CONSTANT = 33
+
+
+def _local_set_scaffold(add: int):
+    """Build a shape that separates storing a value from discarding it and from leaving.
+
+    Three candidates inhabit `local.get 0; OP 1; ...` and two earlier versions could not tell them
+    apart. Ending on the constant made `local.set` and `drop` identical, because nothing ever read
+    the local back. Ending on `local.get 1` made `local.set` and `return` identical, because both
+    surface x.
+
+    Reading the local *and* adding the constant separates all three: `local.set` yields 33+x,
+    `drop` leaves the local at its default and yields 33, and `return` leaves with x before either
+    happens. `local.tee` writes the local but also leaves x on the stack, so the body ends with two
+    values against one declared result and the substrate refuses it outright.
+
+    The addition is the operation the integer scan already recovered, so a discovery is what makes
+    the next discovery possible rather than an authored constant.
+    """
+    def build(opcode: int) -> bytes:
+        body = bytes([
+            _LOCAL_GET, 0,
+            opcode, 0x01,       # candidate, with a local index immediate
+            _I32_CONST, _SCAFFOLD_CONSTANT,
+            _LOCAL_GET, 1,
+            add,
+        ])
+        return _module([I32], [I32], body, locals_=[I32])
+    return build
+
+
+def _unconditional_branch_scaffold(add: int):
+    """Build a shape that separates a branch out of a block from a return out of the function.
+
+    Both leave with 7, so an earlier version matched `br` and `return` alike. Adding one to the
+    block's result distinguishes them: a branch lands after `end` and is incremented, a return
+    never comes back. The increment uses the operation the integer scan already recovered, so a
+    discovery is what makes the next discovery possible rather than an authored constant.
+    """
+    def build(opcode: int) -> bytes:
+        body = bytes([
+            0x02, I32,          # block (result i32)
+            _I32_CONST, 7,
+            opcode, 0x00,       # candidate, with a label immediate
+            0x1A,               # drop
+            _I32_CONST, 9,
+            _END,
+            _I32_CONST, 1, add,
+        ])
+        return _module([I32], [I32], body)
+    return build
+
+
+def _i32_binary_scaffold(opcode: int) -> bytes:
+    """(i32, i32) -> i32, body `local.get 0; local.get 1; OP`. M058's shape, over integers."""
+    return _module([I32, I32], [I32], bytes([_LOCAL_GET, 0, _LOCAL_GET, 1, opcode]))
+
+
 SCAFFOLDS: tuple[Scaffold, ...] = (
     Scaffold(
         name="memory_load",
@@ -200,7 +264,71 @@ SCAFFOLDS: tuple[Scaffold, ...] = (
         expected=(7, 9),
         build=_branch_scaffold,
     ),
+    Scaffold(
+        name="i32_binary",
+        witness="0x6a",  # i32.add
+        # Characterised, not matched: this one shape holds every integer binary operation, and
+        # the arithmetic the copy loop needs is picked out of it afterwards by behaviour.
+        calls=({"args": [12, 5], "memory": []}, {"args": [7, 7], "memory": []},
+               {"args": [-8, 3], "memory": []}),
+        expected=None,
+        build=_i32_binary_scaffold,
+    ),
 )
+
+#: What the copy loop needs from the integer shape, keyed by what each operation does. Resolved
+#: against observations rather than written as opcodes.
+I32_BINARY_NEEDED = {
+    "i32.add": lambda a, b: a + b,
+    "i32.sub": lambda a, b: a - b,
+    "i32.le_s": lambda a, b: 1 if a <= b else 0,
+}
+
+
+#: The second stage. Both of these shapes need an operation the first stage recovered, so neither
+#: can be scanned until the integer shape has been. Discovery bootstrapping discovery is the point:
+#: the alternative was an authored opcode inside the scaffold that discovers opcodes.
+def staged_scaffolds(add_opcode: int) -> tuple[Scaffold, ...]:
+    return (
+        Scaffold(
+            name="local_set",
+            witness="0x21",  # local.set
+            calls=({"args": [41], "memory": []}, {"args": [-9], "memory": []}),
+            expected=(_SCAFFOLD_CONSTANT + 41, _SCAFFOLD_CONSTANT - 9),
+            build=_local_set_scaffold(add_opcode),
+        ),
+        Scaffold(
+            name="unconditional_branch",
+            witness="0x0c",  # br
+            calls=({"args": [1], "memory": []}, {"args": [0], "memory": []}),
+            expected=(8, 8),
+            build=_unconditional_branch_scaffold(add_opcode),
+        ),
+    )
+
+
+def _scaffold(name: str) -> Scaffold:
+    """Look a shape up by name, so reordering the tuple cannot silently repoint a resolver."""
+    for scaffold in SCAFFOLDS:
+        if scaffold.name == name:
+            return scaffold
+    raise M061Error(f"no scaffold named {name}")
+
+
+def resolve_i32_binary(scan: Mapping[str, object]) -> dict[str, int]:
+    """Name the integer operations the loop needs, refusing where the probes do not separate."""
+    resolved: dict[str, int] = {}
+    calls = [call["args"] for call in _scaffold("i32_binary").calls]
+    for label, function in I32_BINARY_NEEDED.items():
+        expected = [function(a, b) for a, b in calls]
+        matches = sorted(
+            name for name, observations in scan["observations"].items()
+            if list(observations) == expected
+        )
+        if len(matches) != 1:
+            raise M061Error(f"{label} is not uniquely determined by the probes: {matches}")
+        resolved[label] = int(matches[0], 16)
+    return resolved
 
 
 def _probe_script() -> Path:
@@ -265,6 +393,10 @@ def scan_scaffold(scaffold: Scaffold, timeout_seconds: float = 2.0) -> dict[str,
         "observed_count": len(observed),
         "matches": sorted(matches),
         "observations": {name: observed[name] for name in sorted(matches)},
+        # Every candidate that ran and returned, matching or not. The resolvers read `observations`
+        # and must not see the near misses; showing what the rejected candidates did is how an
+        # ambiguity can be argued about rather than merely asserted.
+        "all_observations": {name: observed[name] for name in sorted(observed)},
         "witness": scaffold.witness,
         "witness_found": scaffold.witness in matches,
     }
@@ -335,48 +467,87 @@ def resolve_unique(scan: Mapping[str, object], label: str) -> str:
     return matches[0]
 
 
-#: What M060 authored, and what the scans must recover if discovery is to replace authorship.
+#: What M060 authored in its emitter, and what the scans must recover if discovery is to replace
+#: authorship. Every entry is the byte `m060_wasm_emit` writes for that operation.
+#:
+#: `i32.le_s` is the one that repaid the exercise. M060 wrote `0x4c` and was right; the first M061
+#: copy loop hardcoded `0x4d`, which is the *unsigned* comparison, and nothing caught it because
+#: the loop's counter never goes negative. The scan named `0x4c` from behaviour and disagreed with
+#: the authored code — the discovery found a defect in what it was meant to reproduce.
 M060_AUTHORED_STRUCTURAL = {
     "i32.load8_u": 0x2D,
     "i32.load": 0x28,
     "i32.store8": 0x3A,
     "i32.store": 0x36,
     "br_if": 0x0D,
+    "br": 0x0C,
+    "local.set": 0x21,
+    "i32.add": 0x6A,
+    "i32.sub": 0x6B,
+    "i32.le_s": 0x4C,
 }
+
+#: The shapes that cannot be scanned until the first stage has run, named without running it.
+STAGED_SCAFFOLD_NAMES = ("local_set", "unconditional_branch")
+
+#: The instructions the copy loop takes from discovery. Every one must be in the resolved mapping
+#: before the loop is built, and the manifest reports this list against what remains authored.
+LOOP_REQUIRED = (
+    "i32.load8_u", "i32.store8", "br_if", "br", "local.set", "i32.add", "i32.sub", "i32.le_s",
+)
+
+
+#: Emitted by the loop and not recovered by any scaffold. `block` and `loop` are not instructions
+#: with an observable effect on a value: they open a region and decide where a branch lands, and a
+#: scaffold that used one to expose the other would be assuming what it set out to find. The
+#: blocktype byte and the label immediates are part of the encoding rather than opcodes at all.
+UNDISCOVERED_IN_LOOP = ("block 0x02", "loop 0x03", "blocktype byte", "label immediates")
 
 
 def build_copy_loop(opcodes: Mapping[str, int]) -> bytes:
-    """A byte-copy loop built only from discovered instructions, to prove they are usable.
+    """A byte-copy loop, to prove the recovered instructions are usable rather than merely named.
 
-    Recovering an opcode by probe is not the same as being able to compute with it. This emits
-    `(i32 source, i32 destination, i32 count) -> i32`, copying byte by byte and returning the
-    number copied, using the discovered load, store and conditional branch inside a loop. If the
-    discovery named the wrong bytes the module either fails to validate or returns wrong data.
+    Every opcode with an observable effect comes from `opcodes`: the load, the store, both
+    branches, `local.set`, and the integer add, subtract and comparison. What remains written here
+    is listed in `UNDISCOVERED_IN_LOOP` and in the manifest.
+
+    An earlier version took only three opcodes from discovery and hardcoded seven more while the
+    manifest claimed the loop used discovered instructions alone. That claim was false, and the
+    fix was to discover the seven rather than to soften the wording.
     """
+    missing = [label for label in LOOP_REQUIRED if label not in opcodes]
+    if missing:
+        raise M061Error(f"the loop cannot be built from discovery alone: {missing}")
     load8 = opcodes["i32.load8_u"]
     store8 = opcodes["i32.store8"]
     br_if = opcodes["br_if"]
+    br = opcodes["br"]
+    local_set = opcodes["local.set"]
+    add = opcodes["i32.add"]
+    sub = opcodes["i32.sub"]
+    le_s = opcodes["i32.le_s"]
     body = bytes([
-        0x02, 0x40,                       # block
-        0x03, 0x40,                       # loop
-        _LOCAL_GET, 2, _I32_CONST, 0x00, 0x4D,   # count <= 0 ?  (i32.le_s)
-        br_if, 0x01,                      # leave the block when it is
-        _LOCAL_GET, 1,                    # destination
-        _LOCAL_GET, 0, load8, 0x00, 0x00,  # load a byte from source
-        store8, 0x00, 0x00,               # store it at destination
-        _LOCAL_GET, 0, _I32_CONST, 0x01, 0x6A, 0x21, 0,   # source += 1
-        _LOCAL_GET, 1, _I32_CONST, 0x01, 0x6A, 0x21, 1,   # destination += 1
-        _LOCAL_GET, 2, _I32_CONST, 0x01, 0x6B, 0x21, 2,   # count -= 1
-        0x0C, 0x00,                       # br to the loop
-        _END,                             # end loop
-        _END,                             # end block
+        0x02, 0x40,                                       # block   (not discovered)
+        0x03, 0x40,                                       # loop    (not discovered)
+        _LOCAL_GET, 2, _I32_CONST, 0x00, le_s,
+        br_if, 0x01,
+        _LOCAL_GET, 1,
+        _LOCAL_GET, 0, load8, 0x00, 0x00,
+        store8, 0x00, 0x00,
+        _LOCAL_GET, 0, _I32_CONST, 0x01, add, local_set, 0,
+        _LOCAL_GET, 1, _I32_CONST, 0x01, add, local_set, 1,
+        _LOCAL_GET, 2, _I32_CONST, 0x01, sub, local_set, 2,
+        br, 0x00,
+        _END,
+        _END,
         _I32_CONST, 0x00,
     ])
     return _module([I32, I32, I32], [I32], body)
 
 
 __all__ = [
-    "M060_AUTHORED_STRUCTURAL", "OPCODE_SPACE", "PRESUPPOSED", "RESPONSE_SCHEMA", "SCAFFOLDS",
-    "M061Error", "Scaffold", "build_copy_loop", "load_shapes", "probe", "resolve_load",
-    "resolve_unique", "resolve_width", "scan_scaffold", "store_widths",
+    "I32_BINARY_NEEDED", "LOOP_REQUIRED", "M060_AUTHORED_STRUCTURAL", "OPCODE_SPACE", "PRESUPPOSED",
+    "RESPONSE_SCHEMA", "SCAFFOLDS", "STAGED_SCAFFOLD_NAMES", "UNDISCOVERED_IN_LOOP", "M061Error",
+    "Scaffold", "build_copy_loop", "load_shapes", "probe", "resolve_i32_binary", "resolve_load",
+    "resolve_unique", "resolve_width", "scan_scaffold", "staged_scaffolds", "store_widths",
 ]
