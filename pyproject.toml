@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mira-genesis"
-version = "0.42.0"
+version = "0.43.0"
 description = "Auditable adaptive-embodiment and trans-substrate continuity research"
 readme = "README.md"
 license = "AGPL-3.0-only"
@@ -31,7 +31,7 @@ dev = ["pytest"]
 [tool.setuptools]
 # `scripts/` contains repository entry points executed from the project root rather
 # than an installable package; `pytest.ini_options.pythonpath` exposes it to tests.
-packages = ["metamorphosis"]
+packages = ["metamorphosis", "mira_core"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "scripts"]

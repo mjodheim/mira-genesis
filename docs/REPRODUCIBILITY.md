@@ -8,6 +8,18 @@
 4. `python scripts/check_repository_integrity.py` — importability, absence of orphan
    modules, and consistency of the declared dependencies.
 
+For the current adaptive-embodiment frontier:
+
+```bash
+python scripts/check_m068_frozen_protocol.py
+python scripts/run_m068_development.py
+python scripts/run_mira_core_demo.py
+```
+
+The freeze check verifies the LF-normalised target bytes and live opaque attestation. The M068
+runner emits the deterministic development manifest; the Mira Core demo exercises the reusable
+least-privilege agent loop independently of the scientific result.
+
 These four steps are exactly what `.github/workflows/ci.yml` runs on every pull request,
 on Python 3.11 and 3.13.
 

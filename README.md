@@ -253,6 +253,21 @@ See [`experiments/M067/PROTOCOL.md`](experiments/M067/PROTOCOL.md),
 [`experiments/M067/DEVELOPMENT_RESULT.md`](experiments/M067/DEVELOPMENT_RESULT.md) and the
 [`Phase 8 agenda`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md).
 
+**M068 is a positive qualified development result.** The target bank
+was frozen before its learner. One unchanged engine then enumerated all 37,448 non-empty words of
+length at most five, found four commands per body and induced four distinct semantic adapters.
+Each unique public survivor passed **12/12 disjoint hidden observations**; declaration-order,
+lexical-semantic, empty-transcript, corrupted-source, unknown-action, non-command and semantic-
+mutation controls all reject.
+
+M068 removes M067's descriptor-product grammar, but not the project-authored finite word bound,
+host envelope or target bank. It is bounded interface-novelty mechanism evidence, not arbitrary
+protocol induction, independently authored target evidence, real-device competence or AGI. See
+[`experiments/M068/DEVELOPMENT_RESULT.md`](experiments/M068/DEVELOPMENT_RESULT.md).
+
+Exact learner commit `f033ac7` passed first GitHub run `31314960014`: **1,153 tests on Python
+3.11 and 1,153 on Python 3.13**, plus repository integrity. Attribution run `31314960009` passed.
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -301,6 +316,23 @@ Canonical workflows are archived after their unique execution. Reproduction uses
 committed artifacts, deterministic replay engines and independent verifiers; it does not
 replace a first canonical run.
 
+## Operational Mira Core
+
+The installable `mira_core` package is the engineering bridge from the experiment series to real
+agent bodies. It provides typed goal/action/observation contracts, a bounded policy loop, immutable
+least-privilege admission and hash-chained checkpointable memory. It has no model-provider
+dependency and grants no filesystem, network, repository, credential or deployment authority by
+default.
+
+Run the dependency-free smoke demonstration after installation:
+
+```bash
+python scripts/run_mira_core_demo.py
+```
+
+See [`docs/MIRA_CORE_ARCHITECTURE.md`](docs/MIRA_CORE_ARCHITECTURE.md). The demo is engineering
+evidence only; it is not M068's scientific result and not a generality claim.
+
 ## Repository map
 
 - [`PROJECT_STATE.md`](PROJECT_STATE.md) — authoritative human-readable snapshot;
@@ -311,6 +343,8 @@ replace a first canonical run.
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md) — post-M042 research rules;
 - [`PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md) —
   contract-blind re-embodiment question and falsifiers;
+- [`MIRA_GENERALITY_CRITERIA.md`](MIRA_GENERALITY_CRITERIA.md) — preregistered gates separating
+  bounded mechanisms, general-agent evidence and any future AGI-candidate claim;
 - [`MEASURES.md`](MEASURES.md) — proxy/ground-truth divergences;
 - [`FAILURE_LOG.md`](FAILURE_LOG.md) — failures and contaminations, never deleted;
 - `metamorphosis/` — experimental implementations;

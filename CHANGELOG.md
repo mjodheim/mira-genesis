@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Added the M068 open command-language learner after a separate target freeze. One unchanged
+  engine scans all 37,448 admissible words and discovers four distinct complete adapters.
+- All four unique public classes pass 12/12 disjoint hidden observations. Declaration-order,
+  lexical-semantic, empty-transcript, corrupted-source, unknown-action, non-command and semantic-
+  mutation controls reject, and a second process reproduces the exact manifest bytes.
+- Recorded deterministic M068 manifest digest `0f012c41` and tamper-evident Mira Core evidence
+  digest `75df381e`; preserved project-authored-target, finite-language and non-AGI limits.
+- Qualified exact M068 learner commit `f033ac7` in first run `31314960014`: 1,153 tests on
+  Python 3.11 and 1,153 on Python 3.13 plus integrity; attribution run `31314960009` passed.
+- Added the first installable `mira_core` runtime with stable body/policy contracts, a bounded
+  agent loop, immutable least-privilege admission and deterministic hash-chained memory.
+- Added exact checkpoint restoration, tamper rejection, explicit policy refusal, body-fault
+  evidence and fail-closed step budgets, plus a dependency-free runnable demonstration.
+- Extended repository integrity checks from the historical `metamorphosis` package to every
+  installable Mira package and documented the operational architecture and its current limits.
+- Defined ten preregistered Mira generality gates covering interface novelty, multimodal grounding,
+  planning, transfer, continual learning, real environments, long horizons, governed
+  self-improvement, evaluation integrity and safety. M067 remains mechanism evidence, not AGI.
+- Added the M068 pre-learner freeze: four opaque command-language bodies, eight action handles,
+  37,448 admissible non-empty words, fixed public/hidden evidence and eight required controls.
+- Bound the M068 runtime, bank and protocol by portable SHA-256 before any discovery engine exists.
+  D028 forbids later target drift and explicitly declines an independent-authorship claim.
 - Began Phase 8 with M067, a distinct adaptive-embodiment question that removes the complete
   supplied target adapter retained by the closed M043–M066 construction line.
 - Added a separately executed four-body bank committed by SHA-256. Its interface exposes opaque

@@ -25,7 +25,7 @@ import sys
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGE = "metamorphosis"
+PACKAGES = ("metamorphosis", "mira_core")
 
 # Modules under `scripts/` that are legitimate entry points. They do not need to be
 # imported by another module to be considered live.
@@ -45,7 +45,7 @@ DISTRIBUTION_ALIASES = {
 
 
 def source_files() -> list[Path]:
-    directories = (ROOT / PACKAGE, ROOT / "scripts", ROOT / "tests")
+    directories = tuple(ROOT / package for package in PACKAGES) + (ROOT / "scripts", ROOT / "tests")
     return sorted(
         path
         for directory in directories
@@ -56,8 +56,11 @@ def source_files() -> list[Path]:
 
 def module_name(path: Path) -> str:
     relative = path.relative_to(ROOT)
-    if relative.parts[0] == PACKAGE:
-        return ".".join(relative.with_suffix("").parts)
+    if relative.parts[0] in PACKAGES:
+        parts = relative.with_suffix("").parts
+        if parts[-1] == "__init__":
+            parts = parts[:-1]
+        return ".".join(parts)
     return relative.stem
 
 
@@ -68,7 +71,8 @@ def parse(path: Path) -> ast.Module:
 def imported_names(path: Path) -> set[str]:
     """Return imported module names, resolving relative imports."""
     found: set[str] = set()
-    package = module_name(path).rsplit(".", 1)[0] if path.parts[-2] == PACKAGE else ""
+    relative = path.relative_to(ROOT)
+    package = module_name(path).rsplit(".", 1)[0] if relative.parts[0] in PACKAGES else ""
     for node in ast.walk(parse(path)):
         if isinstance(node, ast.Import):
             found.update(alias.name for alias in node.names)
@@ -146,7 +150,7 @@ def check_dependencies() -> list[str]:
     for extra in project.get("optional-dependencies", {}).values():
         declared |= distributions(extra)
 
-    local = {PACKAGE} | {module_name(path) for path in source_files()}
+    local = set(PACKAGES) | {module_name(path) for path in source_files()}
     used: set[str] = set()
     for path in source_files():
         for name in imported_names(path):
