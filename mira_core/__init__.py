@@ -23,6 +23,10 @@ from mira_core.model import (
     CodexExecBackend, ModelBackendError, ModelPolicyLimits, ModelRequest, StructuredModelBackend,
     StructuredModelPolicy, find_codex_executable,
 )
+from mira_core.probing import (
+    ProbeExecutionError, harbor_probe_executor, label_task, probe_environment,
+    probe_environment_async,
+)
 from mira_core.safety import Authority, SafetyDecision, SafetyPolicy
 from mira_core.terminal import CommandSpec, GovernedTerminalBody, TerminalBodyError, TerminalLimits
 
@@ -32,8 +36,9 @@ __all__ = [
     "CommandSpec", "ContainerBodyError", "ContainerExecResult", "ContainerLimits", "ContainerSpec",
     "DockerCliEngine", "EpisodeOutcome", "EpisodeRecord", "Goal", "GovernedTerminalBody",
     "IsolatedContainerBody", "MemoryEvent", "MemoryLedger", "MiraAgent", "ModelBackendError",
-    "ModelPolicyLimits", "ModelRequest", "Observation", "Policy", "ProbeVerdict", "SafetyDecision",
-    "SafetyPolicy", "Solvability", "StructuredModelBackend", "StructuredModelPolicy", "TaskLabel",
-    "TerminalBodyError", "TerminalLimits", "calibration_digest", "certify", "find_codex_executable",
-    "measure_calibration",
+    "ModelPolicyLimits", "ModelRequest", "Observation", "Policy", "ProbeExecutionError",
+    "ProbeVerdict", "SafetyDecision", "SafetyPolicy", "Solvability", "StructuredModelBackend",
+    "StructuredModelPolicy", "TaskLabel", "TerminalBodyError", "TerminalLimits",
+    "calibration_digest", "certify", "find_codex_executable", "harbor_probe_executor",
+    "label_task", "measure_calibration", "probe_environment", "probe_environment_async",
 ]

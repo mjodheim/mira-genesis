@@ -164,9 +164,16 @@ class TaskLabel:
 
 
 class EpisodeOutcome(Enum):
-    """How one agent episode ended, independent of any external reward."""
+    """How one agent episode ended, independent of any external reward.
+
+    `REFUSED` means the agent itself concluded it should stop.  `HALTED` means the governance layer
+    stopped it — the agent proposed something outside its authority and never recognised
+    impossibility.  Only `REFUSED` counts as a refusal: crediting a governed halt would let the
+    harness's own restraint inflate the agent's calibration score.
+    """
 
     REFUSED = "refused"
+    HALTED = "halted"
     SUBMITTED = "submitted"
     EXHAUSTED = "exhausted"
     FAULTED = "faulted"
