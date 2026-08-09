@@ -1,0 +1,13 @@
+{
+  "correction_recorded_before_selected_task_execution": true,
+  "frozen_selection_protocol_field": "harbor_release_commit",
+  "frozen_selection_protocol_value": "f75477f2ad0b04fad199b0cb80689cc23a06c72d",
+  "harbor_release_annotated_tag_object": "f75477f2ad0b04fad199b0cb80689cc23a06c72d",
+  "harbor_release_peeled_commit": "459ff6ec99417589b7f679d14ddf3b3f0ae4f1dc",
+  "harbor_release_tag": "v0.20.0",
+  "harbor_release_tree": "09557fdc853ce5826f5b69643034ac20d1ff80b6",
+  "reason": "The frozen selection protocol called the annotated tag object a commit. This append-only correction preserves that record and pins the executable source commit separately.",
+  "schema": "m070-harbor-pin-correction-v1",
+  "scientific_effect": "none; benchmark family, selection rule, selected tasks and agent design are unchanged",
+  "status": "corrected_before_execution"
+}
