@@ -267,7 +267,7 @@ three supports one at a time, and returned the project to the question it was st
 | M063 | Transfer the arrangement mechanism to a new body | Run `31275085485` on `d4eb5ed`; 1,054 tests on each Python version plus integrity | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
 | M064 | Integrate the real-substrate completion gates | **Failed qualification** `31281234286`; no marker | Development was 18/18 versus 0/18 controls, but the frozen hash was checkout-dependent and review invalidated the rollback falsifier. |
 | M065 | Correct M064 without changing its scientific bank | Parent qualification passed; canonical run `31287477458` failed in guard before selection | Same 18/18 versus 0/18 development outcome. All-ref marker history misclassified the lateral PR ref; no bank or artifact was produced. |
-| M066 | Correct canonical history scope without changing science | Four unchanged banks and Git graph falsifier pass | First-parent `main` history ignores lateral refs, still rejects repeat canonical path history, and preserves the M065 scientific outcome exactly. |
+| M066 | Correct canonical history scope without changing science | **Positive canonical run `31291899534`, attempt 1** | Bank 0: 18/18 versus 0/18 controls; exact Python 3.13 byte reproduction; all ten audited gates true. Construction line closed by D026. |
 
 ### What M061 also produced
 
@@ -298,7 +298,7 @@ M063 discharged its own rule on exact head `d4eb5ed`: first run `31275085485`, a
 passed 1,054 tests on Python 3.11, 1,054 on Python 3.13, repository integrity and attribution,
 with no failed job or rerun.
 
-## Active construction frontier — M066 freeze and first result
+## Construction frontier — closed by positive M066 canonical result
 
 M064 supplied in development what the real-substrate line lacked: one continuous
 CPython→Node→whole-WebAssembly lineage, four adversarial equal-budget arms, three accepted
@@ -308,17 +308,9 @@ source commitment was not checkout-portable and the rollback proof was tautologi
 
 M065 corrected those mechanisms without adding a task, grammar, control or threshold, then failed
 its canonical guard before selection because its frozen history query traversed all fetched refs.
-M066 corrects only that scope. Its construction phase is closed.
-The remaining ordered steps are operational and immutable:
-
-1. preserve the completed M066 local suite (**1,112 tests in 1,689.93 seconds**) and pass Python
-   3.11/3.13 qualification on the exact M066 frozen parent;
-2. merge one marker-only arming commit bound to that exact parent and frozen-protocol file;
-3. preserve the first Python 3.11 canonical artifact whether positive or negative;
-4. require the dependent Python 3.13 reproduction to match its bytes exactly;
-5. archive the consumed workflow and publish the bounded verdict.
-
-Failure at steps 2–4 is an M066 result, not permission to repair it. Any correction requires M067.
+M066 corrected only that scope and completed every remaining step exactly once. Run `31291899534`,
+attempt 1, preserved a positive Python 3.11 result and an exact Python 3.13 reproduction. The
+construction line is closed under D026; scaling the same instrument cannot justify M067.
 
 ## Parallel measurement track — M045
 
@@ -332,7 +324,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M063. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M066. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 

@@ -626,3 +626,31 @@ M065 is a negative canonical guard qualification and is never rerun into success
 bank and produced no scientific artifact. M066 is a governance-only successor: it may reuse M065's
 unchanged engine, bank, budgets, thresholds, arms and decision rule, but receives a new protocol
 digest, marker path and immutable first run.
+
+## D026 — Positive bounded real-substrate completion closes the construction line
+
+M066's unique run `31291899534`, attempt 1, passed its first-parent guard, produced one preserved
+Python 3.11 result and reproduced those exact bytes independently on Python 3.13. The selected
+whole-WebAssembly lineage accepted three cycles and passed 18/18 hidden observations; every
+equal-budget control accepted zero and passed 0/18. The preservation audit binds all ten Genesis
+completion gates without changing the raw result.
+
+### The decision
+
+**The bounded construction objective is confirmed on the CPython → Node ESM → whole-WebAssembly
+path and the M043–M066 construction line is closed.** M067 may not be justified by more banks,
+larger budgets, another authored task family, a deeper finite grammar, another small body or a
+repeat of the same migration pattern. Those changes enlarge the instrument without removing a
+new structural handhold.
+
+A successor requires a separately stated, falsifiable research question that changes a material
+assumption and has its own verification strategy. The parallel M045 measurement question remains
+distinct and open; it is not a missing completion gate and cannot retroactively widen or weaken
+M066.
+
+### Claim boundary
+
+Closure is scientific, not operational. The result remains bounded by its authored compiler,
+block structure, grammar, task families, cases and resources. Repository writes, network access,
+credentials, deployment and production remain human-controlled. No open-ended evolution, general
+intelligence or consciousness claim follows.

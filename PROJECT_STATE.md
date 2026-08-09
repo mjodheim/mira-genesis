@@ -494,6 +494,16 @@ The executable protocol digest is
 `f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b`; the portable 23-file
 commitment has SHA-256 `02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0`.
 
+Exact parent `4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5` passed first run `31290364464` with
+1,112 tests on both Python versions and repository integrity. Marker-only head
+`2cf454ca4e393a319f89ae5afbcd5e3f9250182c` then triggered unique canonical run
+`31291899534`, attempt 1. The guard passed, bank 0 was selected and the complete arm retained the
+same positive outcome. Python 3.13.14 reproduced the exact 51,553 result bytes with SHA-256
+`eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace`.
+
+The preserved seal and audit bind the first result, reproduction, negative M064/M065 path and all
+ten completion gates. D026 closes the M043–M066 construction line.
+
 ### Qualification status of M056–M063
 
 **None of M056–M061 discharged its own qualification rule in its own record.** Each result was
@@ -525,19 +535,13 @@ M063 also discharged its own rule. Exact head
 with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
 repository integrity and attribution. No failed job or rerun occurred.
 
-## Current construction frontier — qualify M066, do not extend
+## Construction frontier — positive canonical closure at M066
 
-M064's negative qualification and M065's negative canonical guard run are preserved. M066 reuses
-M065's corrected rollback and changes only the canonical-history scope. The only active path is:
-
-1. clean local and GitHub qualification of the exact frozen parent;
-2. a separate marker-only commit bound to that parent;
-3. one immutable canonical first result;
-4. an exact independent Python 3.13 reproduction;
-5. preservation, audit, workflow archival and a bounded final verdict.
-
-If the first M066 run or reproduction fails, that negative result is preserved. Any correction
-then requires M067; M066 may not be retuned or rerun into success.
+M064's negative qualification and M065's negative guard run remain preserved. M066 completed every
+ordered operational gate once: parent qualification, marker-only arming, immutable first result,
+exact Python 3.13 reproduction, preservation and audit. The bounded real-substrate construction
+objective is confirmed and this direction is closed under D026. The separate M045 measurement
+question remains open but is not a missing completion gate.
 
 ## Canonical and development result map
 
@@ -573,7 +577,7 @@ then requires M067; M066 may not be retuned or rerun into success.
 | M063 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. Exact head `d4eb5ed`, run `31275085485`; the task grammar and emitter remain authored. |
 | M064 | **NEGATIVE PRE-CANONICAL QUALIFICATION** | Development outcome was positive, but run `31281234286` failed the source commitment and review invalidated the rollback falsifier. No marker or canonical result. |
 | M065 | **NEGATIVE CANONICAL GUARD QUALIFICATION** | Corrected science and parent qualification passed, but run `31287477458` stopped before bank selection because all-ref history counted the PR branch. No artifact; no rerun. |
-| M066 | **POSITIVE GOVERNANCE-CORRECTED DEVELOPMENT RESULT — FROZEN** | Same engine, bank, budgets and outcomes as M065; canonical marker identity is first-parent `main` history and is falsified against a lateral Git ref. |
+| M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
 
 ## Parallel measurement track — M045
 

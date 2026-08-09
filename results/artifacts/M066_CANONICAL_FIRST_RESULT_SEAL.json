@@ -1,0 +1,53 @@
+{
+  "schema": "m066-canonical-first-result-seal/1",
+  "status": "first-result-and-independent-reproduction-preserved",
+  "scientific_verdict": "positive",
+  "canonical_head_sha": "2cf454ca4e393a319f89ae5afbcd5e3f9250182c",
+  "frozen_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+  "workflow_run_id": 31291899534,
+  "workflow_run_attempt": 1,
+  "guard_job_id": 93190409159,
+  "first_result_job_id": 93190426542,
+  "reproduction_job_id": 93190562898,
+  "protocol_sha256": "f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b",
+  "frozen_protocol_file_sha256": "02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0",
+  "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+  "canonical_selected_bank_index": 0,
+  "canonical_manifest_digest": "b7d4c39c4c89c85346f4b0b2ebbf390e9f8818d4369a6ed4e21fb8d0580a62b1",
+  "canonical_result_bytes": 51553,
+  "canonical_result_sha256": "eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace",
+  "canonical_result_artifact": {
+    "artifact_id": 9031676214,
+    "artifact_name": "m066-canonical-first-result",
+    "github_digest": "sha256:d6167537d783cc830a5eb3a2dbda4279a972fd749478e0484d1e3bffaa085966",
+    "retention_expires_at": "2026-11-07T03:10:49Z"
+  },
+  "reproduction_report_bytes": 374,
+  "reproduction_report_sha256": "b990efa4c85c808349de046b7b7ed7477138b77c5111f7385e913f7583ab77cc",
+  "reproduction_artifact": {
+    "artifact_id": 9031692862,
+    "artifact_name": "m066-independent-reproduction",
+    "github_digest": "sha256:1f8f7ee82fe95e1a521b2f74181978a93eddd4cc8792fad892c73f9bd63b7da7",
+    "retention_expires_at": "2026-11-07T03:10:49Z"
+  },
+  "reproduction_python": "3.13.14",
+  "reproduced_result_sha256": "eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace",
+  "exact_bytes_reproduced": true,
+  "first_result_preserved_without_reexecution": true,
+  "no_retuning_performed": true,
+  "m065_negative_run_preserved": 31287477458,
+  "m065_selected_no_bank": true,
+  "gate_verdicts_before_preservation_audit": {
+    "gate_1_autonomous_diagnosis": true,
+    "gate_2_internal_tool_ownership": true,
+    "gate_3_self_rewrite": true,
+    "gate_4_isolated_validation": true,
+    "gate_5_held_out_improvement": true,
+    "gate_6_adoption_and_rollback": true,
+    "gate_7_trans_substrate_metamorphosis": true,
+    "gate_8_post_migration_plasticity": true,
+    "gate_9_repeated_improvement_cycles": true,
+    "gate_10_measurement_integrity": false
+  },
+  "repository_write_authority_granted_to_lineage": false
+}

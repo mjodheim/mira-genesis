@@ -2,7 +2,7 @@
 
 ## Verdict
 
-**Positive in four-bank development; not canonical.**
+**Positive in four-bank development. Canonical result is separately positive and closed.**
 
 ## Scientific boundary
 
@@ -34,3 +34,10 @@ the first-result job only on `github.run_attempt == 1`.
 2. merge a separate marker-only commit bound to that parent and the 23-file commitment;
 3. preserve the unique Python 3.11 result and exact Python 3.13 byte reproduction;
 4. publish the bounded verdict without widening the release boundary.
+
+## Canonical outcome
+
+All remaining gates passed. Qualified parent `4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5` was armed by
+marker-only head `2cf454ca4e393a319f89ae5afbcd5e3f9250182c`. Workflow run `31291899534`, attempt
+1, selected bank 0, preserved a positive first result and reproduced its exact bytes independently
+on Python 3.13.14. The authoritative closure record is `experiments/M066/STATUS.md`.

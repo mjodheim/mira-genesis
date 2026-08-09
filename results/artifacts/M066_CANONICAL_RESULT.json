@@ -1,0 +1,932 @@
+{
+  "manifest": {
+    "base_m065_manifest": {
+      "base_manifest": {
+        "all_arms_migrated_before_task_selection": true,
+        "arm_results": {
+          "complete_continued_lineage": {
+            "accepted_cycles": 3,
+            "cost_accounting": {
+              "accepted_rewrites": 3,
+              "expressions_constructed": 4904,
+              "independent_execution_processes": 28,
+              "independent_inspection_processes": 28,
+              "native_host_process_invocations": 95,
+              "public_candidate_processes": 28
+            },
+            "cycles": [
+              {
+                "adopted": true,
+                "cycle": 1,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:crest0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 740,
+                "hidden_passes_after_cycle": 6,
+                "hidden_total": 6,
+                "proposal_digest": "f79bfd58220f41cbf4c7f06c13a3c83342425c4969a24afe855023b601ef309a",
+                "public_survivors": 12,
+                "rollback_receipt": {
+                  "adopted": false,
+                  "after_digest": "00cd09822494aaf90b6b5e10de73de1656ace8c71c508e16bf79f026df21bb14",
+                  "attempted_version": 10,
+                  "before_digest": "00cd09822494aaf90b6b5e10de73de1656ace8c71c508e16bf79f026df21bb14",
+                  "corrupted_state_digest": "428883bf8e309fc99cf2b73994ae8b9e234a407ad1bf2158eb1de8fc59d562d1",
+                  "exact_restoration": true,
+                  "reason": "native journal no longer binds its patch record",
+                  "restoration_verified_against_pre_fault_snapshot": true,
+                  "restored_object_is_distinct": true,
+                  "restored_version": 9,
+                  "rollback_operation": "deserialize_and_audit_pretransaction_snapshot"
+                },
+                "selected_module_bytes": 1887,
+                "selected_referenced_tools": [
+                  "max",
+                  "mean"
+                ],
+                "selected_template": "m064_whole_wasm_b9199401775f5e37b19c",
+                "selection_action": "adopt",
+                "task_id": "m064_bank_0_cycle_1",
+                "validation_attempts": 12
+              },
+              {
+                "adopted": true,
+                "cycle": 2,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:lift0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 1496,
+                "hidden_passes_after_cycle": 6,
+                "hidden_total": 6,
+                "proposal_digest": "e13b81580c73ce9038ed6c33374bfeff79ab324ebe30031f96141e43d8687adf",
+                "public_survivors": 8,
+                "rollback_receipt": null,
+                "selected_module_bytes": 1962,
+                "selected_referenced_tools": [
+                  "add",
+                  "crest0",
+                  "max"
+                ],
+                "selected_template": "m064_whole_wasm_31e41d400d7de7e4e82f",
+                "selection_action": "adopt",
+                "task_id": "m064_bank_0_cycle_2",
+                "validation_attempts": 8
+              },
+              {
+                "adopted": true,
+                "cycle": 3,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:weave0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 2668,
+                "hidden_passes_after_cycle": 6,
+                "hidden_total": 6,
+                "proposal_digest": "1a09808384b6d339d3c88d44b76de0823a61931e96972ea002249800fd908356",
+                "public_survivors": 8,
+                "rollback_receipt": null,
+                "selected_module_bytes": 2037,
+                "selected_referenced_tools": [
+                  "crest0",
+                  "lift0",
+                  "mul"
+                ],
+                "selected_template": "m064_whole_wasm_e981b7e4d11792b86362",
+                "selection_action": "adopt",
+                "task_id": "m064_bank_0_cycle_3",
+                "validation_attempts": 8
+              }
+            ],
+            "equal_candidate_budget_per_cycle": 8192,
+            "final_body_digest": "127594a375a8a4fd4fed7f621b233209cd22410bf3693bcc48157c089fb6f16d",
+            "final_module_bytes": 2037,
+            "held_out_quality": {
+              "exact": true,
+              "hidden_passes": 18,
+              "hidden_total": 18
+            },
+            "migration_body_digest": "69945c51e3790fcfb6be96cb64fa4f40ef4b9b15252c56f6a0b32b860e6cedab",
+            "migration_imports": 0,
+            "migration_retained_passed": 32,
+            "provenance": {
+              "continuous": true,
+              "node_version": 8,
+              "source_version": 6,
+              "wasm_version": 9
+            }
+          },
+          "fresh_on_b": {
+            "accepted_cycles": 0,
+            "cost_accounting": {
+              "accepted_rewrites": 0,
+              "expressions_constructed": 600,
+              "independent_execution_processes": 0,
+              "independent_inspection_processes": 0,
+              "native_host_process_invocations": 9,
+              "public_candidate_processes": 0
+            },
+            "cycles": [
+              {
+                "adopted": false,
+                "cycle": 1,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:crest0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "28b0be3ec60d18044d6328efeca3d556a5d9b273fdce58d6dc47af7741b6ca63",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_1",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 2,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:lift0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "79bd0f63e20d9079fa4480d7155d460dab2af9c2a54751bb034418bc69182a10",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_2",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 3,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:weave0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "4107bd074697f53d9c7e95f221dc604585471ce68d0a4cfdd02eb1bb46471b2c",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_3",
+                "validation_attempts": 0
+              }
+            ],
+            "equal_candidate_budget_per_cycle": 8192,
+            "final_body_digest": "be5e5b83d2cf0fa4378855ea623ab92275d298ad1a3d0bf48343ff1010d9bdfe",
+            "final_module_bytes": 1742,
+            "held_out_quality": {
+              "exact": false,
+              "hidden_passes": 0,
+              "hidden_total": 18
+            },
+            "migration_body_digest": "be5e5b83d2cf0fa4378855ea623ab92275d298ad1a3d0bf48343ff1010d9bdfe",
+            "migration_imports": 0,
+            "migration_retained_passed": 4,
+            "provenance": {
+              "continuous": false,
+              "native_founder": true,
+              "source_version": 0
+            }
+          },
+          "learned_state_ablated": {
+            "accepted_cycles": 0,
+            "cost_accounting": {
+              "accepted_rewrites": 0,
+              "expressions_constructed": 600,
+              "independent_execution_processes": 0,
+              "independent_inspection_processes": 0,
+              "native_host_process_invocations": 9,
+              "public_candidate_processes": 0
+            },
+            "cycles": [
+              {
+                "adopted": false,
+                "cycle": 1,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:crest0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "28b0be3ec60d18044d6328efeca3d556a5d9b273fdce58d6dc47af7741b6ca63",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_1",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 2,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:lift0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "79bd0f63e20d9079fa4480d7155d460dab2af9c2a54751bb034418bc69182a10",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_2",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 3,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:weave0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "4107bd074697f53d9c7e95f221dc604585471ce68d0a4cfdd02eb1bb46471b2c",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_3",
+                "validation_attempts": 0
+              }
+            ],
+            "equal_candidate_budget_per_cycle": 8192,
+            "final_body_digest": "69945c51e3790fcfb6be96cb64fa4f40ef4b9b15252c56f6a0b32b860e6cedab",
+            "final_module_bytes": 1834,
+            "held_out_quality": {
+              "exact": false,
+              "hidden_passes": 0,
+              "hidden_total": 18
+            },
+            "migration_body_digest": "69945c51e3790fcfb6be96cb64fa4f40ef4b9b15252c56f6a0b32b860e6cedab",
+            "migration_imports": 0,
+            "migration_retained_passed": 32,
+            "provenance": {
+              "continuous": true,
+              "mean_and_max_available_to_execution": true,
+              "mean_and_max_withheld_from_constructor": true,
+              "node_version": 8,
+              "source_version": 6,
+              "wasm_version": 9
+            }
+          },
+          "unchanged_parent_migrated": {
+            "accepted_cycles": 0,
+            "cost_accounting": {
+              "accepted_rewrites": 0,
+              "expressions_constructed": 600,
+              "independent_execution_processes": 0,
+              "independent_inspection_processes": 0,
+              "native_host_process_invocations": 9,
+              "public_candidate_processes": 0
+            },
+            "cycles": [
+              {
+                "adopted": false,
+                "cycle": 1,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:crest0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "28b0be3ec60d18044d6328efeca3d556a5d9b273fdce58d6dc47af7741b6ca63",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_1",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 2,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:lift0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "79bd0f63e20d9079fa4480d7155d460dab2af9c2a54751bb034418bc69182a10",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_2",
+                "validation_attempts": 0
+              },
+              {
+                "adopted": false,
+                "cycle": 3,
+                "diagnosis": {
+                  "emitted_before_hidden_validation": true,
+                  "limitation": "unknown_operator:weave0",
+                  "predicted_recovery": "extend the owned whole-body compiler trace and native route registry",
+                  "stage": "native_interpretation"
+                },
+                "entire_public_class_validated": true,
+                "expressions_constructed": 200,
+                "hidden_passes_after_cycle": 0,
+                "hidden_total": 6,
+                "proposal_digest": "4107bd074697f53d9c7e95f221dc604585471ce68d0a4cfdd02eb1bb46471b2c",
+                "public_survivors": 0,
+                "rollback_receipt": null,
+                "selected_module_bytes": null,
+                "selected_referenced_tools": [],
+                "selected_template": null,
+                "selection_action": "terminate_insufficient_public_evidence",
+                "task_id": "m064_bank_0_cycle_3",
+                "validation_attempts": 0
+              }
+            ],
+            "equal_candidate_budget_per_cycle": 8192,
+            "final_body_digest": "cbde1f96d7887621b72dab31ae28b81343a865d2282ea4543cd6783b111830c5",
+            "final_module_bytes": 1747,
+            "held_out_quality": {
+              "exact": false,
+              "hidden_passes": 0,
+              "hidden_total": 18
+            },
+            "migration_body_digest": "cbde1f96d7887621b72dab31ae28b81343a865d2282ea4543cd6783b111830c5",
+            "migration_imports": 0,
+            "migration_retained_passed": 12,
+            "provenance": {
+              "continuous": false,
+              "pre_mean_parent": true,
+              "source_version": 2
+            }
+          }
+        },
+        "authorship_boundary": {
+          "block_structure_authored": true,
+          "candidate_expressions_constructed_by_serialised_registry": true,
+          "task_families_authored_and_precommitted": true,
+          "whole_body_compiler_authored": true
+        },
+        "canonical_workflow_authorised": false,
+        "claim_scope": "bounded_cpython_node_whole_webassembly_four_arm_three_cycle_completion_candidate",
+        "complete_archived_parent_versions": [
+          9,
+          10,
+          11
+        ],
+        "complete_final_retained_cases": 68,
+        "complete_final_retained_passed": 68,
+        "complete_final_version": 12,
+        "complete_patch_records": 3,
+        "constructor_receives_hidden_cases": false,
+        "constructor_registry": {
+          "digest": "177abd80fa39d51da37a1ac88749c04b68b70efcb30641878d798f51b1aacdf6",
+          "expression_registry": {
+            "constructor": {
+              "implementation_sha256": "14bda87ad0a821c545dd2aa7e4cb76d58d2b45948ac9584d6c62db13de994dad",
+              "implementation_source": "def _enumerate_expression_candidates(\n    tools: Mapping[str, Mapping[str, object]],\n    node_limit: int,\n    candidate_budget: int,\n) -> tuple[Expression, ...]:\n    \"\"\"Construct bounded expressions from owned tools; no complete programs are catalogued.\"\"\"\n    atoms = (_arg(0), _arg(1))\n    binary = tuple(sorted(name for name, spec in tools.items() if int(spec[\"arity\"]) == 2))\n    ternary = tuple(sorted(name for name, spec in tools.items() if int(spec[\"arity\"]) == 3))\n    components: list[Expression] = [dict(atom) for atom in atoms]\n    for tool in binary:\n        for left in atoms:\n            for right in atoms:\n                components.append(_call(tool, left, right))\n    generated: dict[str, Expression] = {}\n    for tool in binary:\n        for left in components:\n            for right in components:\n                expression = _call(tool, left, right)\n                if _expression_nodes(expression) <= node_limit:\n                    generated.setdefault(_expression_key(expression), expression)\n    composites = tuple(component for component in components if component.get(\"kind\") == \"call\")\n    for tool in ternary:\n        for first in atoms:\n            for second in atoms:\n                for third in atoms:\n                    expression = _call(tool, first, second, third)\n                    generated.setdefault(_expression_key(expression), expression)\n        for position in range(3):\n            for composite in composites:\n                for first in atoms:\n                    for second in atoms:\n                        arguments = [dict(first), dict(second)]\n                        arguments.insert(position, dict(composite))\n                        expression = _call(tool, *arguments)\n                        if _expression_nodes(expression) <= node_limit:\n                            generated.setdefault(_expression_key(expression), expression)\n    ordered = tuple(generated[key] for key in sorted(generated))\n    if len(ordered) > candidate_budget:\n        return ordered[:candidate_budget]\n    return ordered\n",
+              "name": "bounded_expression_constructor"
+            },
+            "digest": "e809ec413e6762a1cb3a184b03631bc9518aedcddd02dba0b6a904135bea0b8a",
+            "evaluator": {
+              "implementation_sha256": "013b352435a58e10949cebe9b61307f60af34820720dd6867ea4aa49de0f048c",
+              "implementation_source": "def _evaluate_expression(\n    expression: Mapping[str, object],\n    arguments: Sequence[float],\n    tools: Mapping[str, Mapping[str, object]],\n    *,\n    depth: int = 0,\n) -> float:\n    if depth > 16:\n        raise M064Error(\"tool expansion exceeded the frozen recursion guard\")\n    if expression.get(\"kind\") == \"arg\":\n        index = int(expression[\"index\"])\n        return float(arguments[index])\n    if expression.get(\"kind\") != \"call\":\n        raise M064Error(\"unknown expression node\")\n    tool = str(expression[\"tool\"])\n    spec = tools.get(tool)\n    if spec is None:\n        raise M064Error(f\"expression references an unowned tool: {tool}\")\n    raw_children = expression.get(\"args\")\n    if not isinstance(raw_children, list) or len(raw_children) != int(spec[\"arity\"]):\n        raise M064Error(\"expression arity mismatch\")\n    values = [\n        _evaluate_expression(child, arguments, tools, depth=depth + 1)\n        for child in raw_children\n        if isinstance(child, Mapping)\n    ]\n    if spec[\"kind\"] == \"primitive\":\n        return _primitive(str(spec[\"primitive\"]), values)\n    nested = spec.get(\"expression\")\n    if spec[\"kind\"] != \"constructed\" or not isinstance(nested, Mapping):\n        raise M064Error(\"tool registry entry is malformed\")\n    return _evaluate_expression(nested, values, tools, depth=depth + 1)\n",
+              "name": "recursive_owned_tool_evaluator"
+            },
+            "renderer": {
+              "implementation_sha256": "f297fea6aa9f428591e5ea47cba64b9d1dd4ae2f0e1f923fc4fbcf04f15e697e",
+              "implementation_source": "def _render_expression(expression: Mapping[str, object]) -> str:\n    if expression.get(\"kind\") == \"arg\":\n        return f\"args[{int(expression['index'])}]\"\n    tool = str(expression[\"tool\"])\n    children = expression.get(\"args\")\n    if not isinstance(children, list):\n        raise M064Error(\"cannot render malformed expression\")\n    rendered = \",\".join(_render_expression(child) for child in children if isinstance(child, Mapping))\n    return f\"tools[{json.dumps(tool)}]([{rendered}],tools)\"\n",
+              "name": "node_registry_call_renderer"
+            },
+            "schema": "m064-serialised-construction-registry-v1"
+          },
+          "schema": "m064-whole-wasm-construction-registry-v1",
+          "whole_body_compiler": {
+            "implementation_sha256": "06730a0826c4a78e70531a1a298fec80a6594482fb8877bac96a6736d1519861",
+            "implementation_source": "\"\"\"Dynamic whole-body WebAssembly compiler for the M064 completion lineage.\n\nThe fixed M060 shell already owns parsing, planning, allocation, execution and\ncritique in one import-free module.  M064 parameterises the four pieces that a\nnative rewrite must extend: aliases, arities, route admission and tool dispatch.\nConstructed tools call earlier routes through the WebAssembly ``tool`` function;\ntheir reuse is therefore executable rather than a metadata-only assertion.\n\"\"\"\nfrom __future__ import annotations\n\nfrom typing import Mapping, Sequence\n\nimport metamorphosis.m060_body_compiler as m060\nfrom metamorphosis.m060_wasm_emit import Code, WasmEmitError, WasmModule\n\n\nclass M064WasmCompileError(ValueError):\n    \"\"\"Raised when a dynamic native body cannot be emitted safely.\"\"\"\n\n\ndef _extend(target: Code, fragment: Code) -> Code:\n    # Code deliberately exposes no public concatenation method.  Both classes\n    # are repository-owned emitters and named-call placeholders must remain\n    # unresolved until WasmModule.emit(), so copying the parts is the exact\n    # composition operation required here.\n    target._parts.extend(fragment._parts)\n    return target\n\n\ndef route_codes(tool_specs: Mapping[str, Mapping[str, object]]) -> dict[str, int]:\n    preferred = (\"add\", \"max\", \"mean\", \"mul\")\n    ordered = [name for name in preferred if name in tool_specs]\n    ordered.extend(sorted(name for name in tool_specs if name not in ordered))\n    if len(ordered) > 255:\n        raise M064WasmCompileError(\"the one-byte route space is exhausted\")\n    return {name: index for index, name in enumerate(ordered)}\n\n\ndef alias_table(\n    aliases: Mapping[str, str],\n    codes: Mapping[str, int],\n) -> bytes:\n    payload = bytearray()\n    for token, tool in sorted((str(key), str(value)) for key, value in aliases.items()):\n        encoded = token.encode(\"ascii\")\n        if not encoded or len(encoded) > 255 or any(byte > 0x7F for byte in encoded):\n            raise M064WasmCompileError(\"aliases must be non-empty bounded ASCII\")\n        if tool not in codes:\n            raise M064WasmCompileError(f\"alias {token!r} points to an unavailable tool\")\n        payload.extend((len(encoded), codes[tool]))\n        payload.extend(encoded)\n    payload.append(0)\n    return bytes(payload)\n\n\ndef _arity(tool_specs: Mapping[str, Mapping[str, object]], codes: Mapping[str, int]) -> Code:\n    code = Code()\n    for name, route in sorted(codes.items(), key=lambda item: item[1]):\n        arity = int(tool_specs[name][\"arity\"])\n        if arity not in {2, 3}:\n            raise M064WasmCompileError(\"M064 admits binary and ternary tools only\")\n        code.local_get(0).i32_const(route).i32_eq().if_()\n        code.i32_const(arity).ret().end()\n    return code.unreachable()\n\n\ndef _select(route_count: int) -> Code:\n    if route_count <= 0:\n        raise M064WasmCompileError(\"a native body must expose at least one route\")\n    return (\n        Code()\n        .local_get(0).i32_const(0).i32_ge_s()\n        .local_get(0).i32_const(route_count).i32_lt_s().i32_and()\n        .if_(\"i32\").local_get(0).else_().i32_const(-1).end()\n    )\n\n\ndef _primitive_body(name: str, opcodes: Mapping[str, int]) -> Code:\n    if name == \"add\":\n        return Code().local_get(1).local_get(2).op(int(opcodes[\"add\"]))\n    if name == \"mul\":\n        return Code().local_get(1).local_get(2).op(int(opcodes[\"mul\"]))\n    if name == \"max\":\n        return Code().local_get(1).local_get(2).op(int(opcodes[\"max\"]))\n    if name == \"mean\":\n        return (\n            Code()\n            .local_get(1).local_get(2).op(int(opcodes[\"add\"]))\n            .local_get(3).op(int(opcodes[\"add\"]))\n            .f64_const(3.0).op(int(opcodes[\"div\"]))\n        )\n    raise M064WasmCompileError(f\"unsupported discovered primitive: {name}\")\n\n\ndef _expression(\n    value: Mapping[str, object],\n    tool_specs: Mapping[str, Mapping[str, object]],\n    codes: Mapping[str, int],\n) -> Code:\n    if value.get(\"kind\") == \"arg\":\n        index = int(value[\"index\"])\n        if index not in {0, 1, 2}:\n            raise M064WasmCompileError(\"expression argument is outside the tool frame\")\n        return Code().local_get(index + 1)\n    if value.get(\"kind\") != \"call\":\n        raise M064WasmCompileError(\"unknown expression node\")\n    tool = str(value.get(\"tool\"))\n    if tool not in tool_specs or tool not in codes:\n        raise M064WasmCompileError(f\"expression calls an unavailable route: {tool}\")\n    arguments = value.get(\"args\")\n    arity = int(tool_specs[tool][\"arity\"])\n    if not isinstance(arguments, list) or len(arguments) != arity:\n        raise M064WasmCompileError(\"expression call arity mismatch\")\n    code = Code().i32_const(codes[tool])\n    for argument in arguments:\n        if not isinstance(argument, Mapping):\n            raise M064WasmCompileError(\"expression child is malformed\")\n        _extend(code, _expression(argument, tool_specs, codes))\n    for _ in range(3 - arity):\n        code.f64_const(0.0)\n    return code.call(\"tool\")\n\n\ndef _tool(\n    tool_specs: Mapping[str, Mapping[str, object]],\n    codes: Mapping[str, int],\n    opcodes: Mapping[str, int],\n) -> Code:\n    code = Code()\n    for name, route in sorted(codes.items(), key=lambda item: item[1]):\n        spec = tool_specs[name]\n        code.local_get(0).i32_const(route).i32_eq().if_()\n        if spec.get(\"kind\") == \"primitive\":\n            primitive = str(spec.get(\"primitive\"))\n            _extend(code, _primitive_body(primitive, opcodes))\n        elif spec.get(\"kind\") == \"constructed\":\n            expression = spec.get(\"expression\")\n            if not isinstance(expression, Mapping):\n                raise M064WasmCompileError(\"constructed route lacks its expression\")\n            _extend(code, _expression(expression, tool_specs, codes))\n        else:\n            raise M064WasmCompileError(f\"malformed tool specification for {name}\")\n        code.ret().end()\n    return code.unreachable()\n\n\ndef build_dynamic_module(\n    aliases: Mapping[str, str],\n    tool_specs: Mapping[str, Mapping[str, object]],\n    opcodes: Mapping[str, int],\n) -> WasmModule:\n    required_opcodes = {\"add\", \"max\", \"mul\", \"div\"}\n    if set(opcodes) != required_opcodes:\n        raise M064WasmCompileError(\n            f\"discovered arithmetic must be exactly {sorted(required_opcodes)}\"\n        )\n    codes = route_codes(tool_specs)\n    module = WasmModule(memory_pages=1)\n    module.add_data(m060.ALIASES, alias_table(aliases, codes))\n\n    module.add_function(\"tokenize\", [], [\"i32\"], [\"i32\"] * 5, m060._tokenize())\n    module.add_function(\"token_is_number\", [\"i32\"], [\"i32\"], [\"i32\"] * 6, m060._token_is_number())\n    module.add_function(\"token_number\", [\"i32\"], [\"f64\"], [\"i32\"] * 7, m060._token_number())\n    module.add_function(\"alias_index\", [\"i32\"], [\"i32\"], [\"i32\"] * 10, m060._alias_index())\n    module.add_function(\"arity\", [\"i32\"], [\"i32\"], [], _arity(tool_specs, codes), export=False)\n    module.add_function(\"parse\", [\"i32\"], [\"i32\", \"i32\"], [\"i32\"] * 7, m060._parse(), export=False)\n    module.add_function(\"interpret\", [], [\"i32\"], [\"i32\"] * 2, m060._interpret())\n    module.add_function(\n        \"emit\", [\"i32\"], [\"i32\"], [\"i32\"] * 7 + [\"f64\"] * 3, m060._emit_step(), export=False\n    )\n    module.add_function(\"descriptor\", [\"i32\"], [\"i32\", \"f64\"], [\"i32\"], m060._descriptor(), export=False)\n    module.add_function(\"plan\", [\"i32\"], [\"i32\"], [], m060._plan())\n    module.add_function(\"allocate\", [\"i32\"], [\"i32\"], [], m060._allocate())\n    module.add_function(\"select\", [\"i32\"], [\"i32\"], [], _select(len(codes)))\n    module.add_function(\n        \"tool\",\n        [\"i32\", \"f64\", \"f64\", \"f64\"],\n        [\"f64\"],\n        [],\n        _tool(tool_specs, codes, opcodes),\n        export=False,\n    )\n    module.add_function(\n        \"execute\",\n        [\"i32\", \"i32\"],\n        [\"f64\"],\n        [\"i32\", \"i32\", \"i32\", \"i32\", \"f64\", \"f64\", \"f64\", \"i32\"],\n        m060._execute(),\n    )\n    module.add_function(\n        \"argument\", [\"i32\", \"i32\"], [\"f64\"], [\"i32\", \"i32\", \"f64\"], m060._argument(), export=False\n    )\n    module.add_function(\"critique\", [\"f64\"], [\"f64\"], [], m060._critique())\n    module.add_function(\"run\", [], [\"f64\"], [\"i32\"] * 3, m060._run())\n    return module\n\n\ndef compile_dynamic_body(\n    aliases: Mapping[str, str],\n    tool_specs: Mapping[str, Mapping[str, object]],\n    opcodes: Mapping[str, int],\n) -> bytes:\n    return build_dynamic_module(aliases, tool_specs, opcodes).emit()\n\n\n__all__ = [\n    \"M064WasmCompileError\",\n    \"alias_table\",\n    \"build_dynamic_module\",\n    \"compile_dynamic_body\",\n    \"route_codes\",\n]\n"
+          }
+        },
+        "event_trace": [
+          {
+            "arm": "complete_continued_lineage",
+            "event": "arm_migrated",
+            "sequence": 1,
+            "substrate": "whole_webassembly"
+          },
+          {
+            "arm": "fresh_on_b",
+            "event": "arm_migrated",
+            "sequence": 2,
+            "substrate": "whole_webassembly"
+          },
+          {
+            "arm": "unchanged_parent_migrated",
+            "event": "arm_migrated",
+            "sequence": 3,
+            "substrate": "whole_webassembly"
+          },
+          {
+            "arm": "learned_state_ablated",
+            "event": "arm_migrated",
+            "sequence": 4,
+            "substrate": "whole_webassembly"
+          },
+          {
+            "bank_index": 0,
+            "event": "task_bank_selected",
+            "selection_mode": "m066_marker_parent_commitment",
+            "sequence": 5
+          }
+        ],
+        "execution_limits": {
+          "candidate_budget_per_arm_cycle": 8192,
+          "expression_node_limit": 7,
+          "filesystem": "disposable_host_working_directory",
+          "linear_memory_pages": 1,
+          "network_and_syscalls": "zero-import_webassembly_module",
+          "node_old_space_megabytes": 128,
+          "wall_timeout_seconds": 30.0
+        },
+        "final_native_memory_episodes": 4,
+        "forced_rollback": {
+          "adopted": false,
+          "after_digest": "00cd09822494aaf90b6b5e10de73de1656ace8c71c508e16bf79f026df21bb14",
+          "attempted_version": 10,
+          "before_digest": "00cd09822494aaf90b6b5e10de73de1656ace8c71c508e16bf79f026df21bb14",
+          "corrupted_state_digest": "428883bf8e309fc99cf2b73994ae8b9e234a407ad1bf2158eb1de8fc59d562d1",
+          "exact_restoration": true,
+          "reason": "native journal no longer binds its patch record",
+          "restoration_verified_against_pre_fault_snapshot": true,
+          "restored_behaviour_passed": true,
+          "restored_body_digest": "69945c51e3790fcfb6be96cb64fa4f40ef4b9b15252c56f6a0b32b860e6cedab",
+          "restored_object_is_distinct": true,
+          "restored_version": 9,
+          "rollback_operation": "deserialize_and_audit_pretransaction_snapshot"
+        },
+        "intermediate_runtime": "node-esm",
+        "intermediate_version": 8,
+        "marker_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+        "migration_digest": "e8ac66a3aaaaa988c654a1b066f54628b1607ceb1bf4948fae22fc52ddde97d9",
+        "migration_version": 9,
+        "protocol_digest": "c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d",
+        "replay_identical": true,
+        "repository_write_authority_granted_to_lineage": false,
+        "schema": "m064-whole-webassembly-completion-manifest-v1",
+        "selected_bank_index": 0,
+        "selected_task_commitments": [
+          {
+            "family": "crest",
+            "hidden_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_1",
+                "expected": 7.67,
+                "origin": "crest0",
+                "request": "crest0 3 10"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_2",
+                "expected": 9.67,
+                "origin": "crest0",
+                "request": "crest0 12 5"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_3",
+                "expected": 7.33,
+                "origin": "crest0",
+                "request": "crest0 6 8"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_4",
+                "expected": 6.33,
+                "origin": "crest0",
+                "request": "crest0 9 1"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_5",
+                "expected": 10.33,
+                "origin": "crest0",
+                "request": "crest0 5 13"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_hidden_6",
+                "expected": 11.67,
+                "origin": "crest0",
+                "request": "crest0 14 7"
+              }
+            ],
+            "public_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_1_public_1",
+                "expected": 3.67,
+                "origin": "crest0",
+                "request": "crest0 1 5"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_public_2",
+                "expected": 5.33,
+                "origin": "crest0",
+                "request": "crest0 7 2"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_public_3",
+                "expected": 7.33,
+                "origin": "crest0",
+                "request": "crest0 4 9"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_public_4",
+                "expected": 6.33,
+                "origin": "crest0",
+                "request": "crest0 8 3"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_public_5",
+                "expected": 4.67,
+                "origin": "crest0",
+                "request": "crest0 2 6"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_1_public_6",
+                "expected": 8.67,
+                "origin": "crest0",
+                "request": "crest0 11 4"
+              }
+            ],
+            "required_prior_tools": [],
+            "task_id": "m064_bank_0_cycle_1",
+            "token": "crest0"
+          },
+          {
+            "family": "lift",
+            "hidden_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_1",
+                "expected": 19.67,
+                "origin": "lift0",
+                "request": "lift0 4 11"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_2",
+                "expected": 27.67,
+                "origin": "lift0",
+                "request": "lift0 15 8"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_3",
+                "expected": 18.67,
+                "origin": "lift0",
+                "request": "lift0 6 10"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_4",
+                "expected": 20.33,
+                "origin": "lift0",
+                "request": "lift0 12 1"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_5",
+                "expected": 25.67,
+                "origin": "lift0",
+                "request": "lift0 7 14"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_hidden_6",
+                "expected": 29.67,
+                "origin": "lift0",
+                "request": "lift0 16 9"
+              }
+            ],
+            "public_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_2_public_1",
+                "expected": 12.33,
+                "origin": "lift0",
+                "request": "lift0 2 7"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_public_2",
+                "expected": 16.33,
+                "origin": "lift0",
+                "request": "lift0 9 4"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_public_3",
+                "expected": 14.33,
+                "origin": "lift0",
+                "request": "lift0 3 8"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_public_4",
+                "expected": 17.33,
+                "origin": "lift0",
+                "request": "lift0 10 2"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_public_5",
+                "expected": 21.67,
+                "origin": "lift0",
+                "request": "lift0 5 12"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_2_public_6",
+                "expected": 23.67,
+                "origin": "lift0",
+                "request": "lift0 13 6"
+              }
+            ],
+            "required_prior_tools": [
+              "crest0"
+            ],
+            "task_id": "m064_bank_0_cycle_2",
+            "token": "lift0"
+          },
+          {
+            "family": "weave",
+            "hidden_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_1",
+                "expected": 219.11,
+                "origin": "weave0",
+                "request": "weave0 3 13"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_2",
+                "expected": 263.11,
+                "origin": "weave0",
+                "request": "weave0 14 4"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_3",
+                "expected": 377,
+                "origin": "weave0",
+                "request": "weave0 7 16"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_4",
+                "expected": 404.44,
+                "origin": "weave0",
+                "request": "weave0 17 6"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_5",
+                "expected": 241.78,
+                "origin": "weave0",
+                "request": "weave0 8 12"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_hidden_6",
+                "expected": 432.78,
+                "origin": "weave0",
+                "request": "weave0 18 5"
+              }
+            ],
+            "public_cases": [
+              {
+                "case_id": "m064_bank_0_cycle_3_public_1",
+                "expected": 77.44,
+                "origin": "weave0",
+                "request": "weave0 1 8"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_public_2",
+                "expected": 135.44,
+                "origin": "weave0",
+                "request": "weave0 10 3"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_public_3",
+                "expected": 199.11,
+                "origin": "weave0",
+                "request": "weave0 4 12"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_public_4",
+                "expected": 241.11,
+                "origin": "weave0",
+                "request": "weave0 13 5"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_public_5",
+                "expected": 189.78,
+                "origin": "weave0",
+                "request": "weave0 6 11"
+              },
+              {
+                "case_id": "m064_bank_0_cycle_3_public_6",
+                "expected": 273.78,
+                "origin": "weave0",
+                "request": "weave0 15 2"
+              }
+            ],
+            "required_prior_tools": [
+              "crest0",
+              "lift0"
+            ],
+            "task_id": "m064_bank_0_cycle_3",
+            "token": "weave0"
+          }
+        ],
+        "selection_mode": "m066_marker_parent_commitment",
+        "source_native_memory_episodes": 1,
+        "source_retained_cases_after_node_learning": 32,
+        "source_runtime": "cpython",
+        "source_version": 6,
+        "strict_held_out_advantage": true,
+        "substrate_discovery": {
+          "arithmetic_observations_digest": "60a71796b92847c08015234dacc6d79720824ec45cdbf3e32fd05b6764a6c6da",
+          "arithmetic_opcodes": {
+            "add": 160,
+            "div": 163,
+            "max": 165,
+            "mul": 162
+          },
+          "arithmetic_space_scanned": 256,
+          "block_structure_authored": true,
+          "compiler_authored": true,
+          "structural_manifest_digest": "916c4846ff6dabaf6a0b3ef939cf467eb680b00f9b2966bd3d88f961ebf9800b",
+          "structural_opcodes": {
+            "br": "0xc",
+            "br_if": "0xd",
+            "i32.add": "0x6a",
+            "i32.le_s": "0x4c",
+            "i32.load": "0x28",
+            "i32.load8_u": "0x2d",
+            "i32.store": "0x36",
+            "i32.store8": "0x3a",
+            "i32.sub": "0x6b",
+            "local.set": "0x21"
+          },
+          "structural_protocol_digest": "4b667915ad37d345526398734411f4ecea34b08746d9f5866753ce26be54f3f2",
+          "structural_shapes": [
+            "memory_load",
+            "memory_store",
+            "conditional_branch",
+            "i32_binary",
+            "local_set",
+            "unconditional_branch"
+          ]
+        },
+        "target_declared_imports": 0,
+        "target_runtime": "webassembly",
+        "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+        "validator_owns_adoption": false,
+        "whole_body_modules_left_in_node": 0
+      },
+      "base_manifest_digest": "be8e3ec6cac81861a5895d03771ebeebc60943a2ed844b8ef583d3d1378eae1c",
+      "canonical_workflow_authorised": false,
+      "correction_scope": [
+        "transaction_restoration",
+        "canonical_governance"
+      ],
+      "m064_failed_parent_commit": "ec92af78b57203d32c2ee504db91b4166ec83fdf",
+      "m064_failed_qualification_run": 31281234286,
+      "marker_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+      "protocol": {
+        "accepted_post_migration_cycles": 3,
+        "arms": [
+          "complete_continued_lineage",
+          "fresh_on_b",
+          "unchanged_parent_migrated",
+          "learned_state_ablated"
+        ],
+        "base_experiment": "M064",
+        "base_protocol_sha256": "c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d",
+        "candidate_budget_per_arm_cycle": 8192,
+        "canonical_selection_rule": "sha256(m065_protocol_digest || marker_parent_sha) mod bank_size",
+        "expression_node_limit": 7,
+        "governance_corrections": [
+          "marker_must_be_first_path_history_occurrence",
+          "canonical_first_result_requires_workflow_attempt_one"
+        ],
+        "hidden_cases_per_cycle": 6,
+        "max_candidate_bytes": 262144,
+        "node_timeout_seconds": 30.0,
+        "public_cases_per_cycle": 6,
+        "schema": "m065-qualified-completion-protocol-v1",
+        "scientific_corrections": [
+          "non_tautological_snapshot_restoration"
+        ],
+        "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+        "task_bank_entries": 4
+      },
+      "protocol_sha256": "1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51",
+      "repository_write_authority_granted_to_lineage": false,
+      "schema": "m065-qualified-completion-manifest-v1",
+      "selected_bank_index": 0,
+      "selection_mode": "m066_marker_parent_commitment",
+      "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da"
+    },
+    "base_m065_manifest_digest": "6d80a1e358bc1857fdda39e302b2a8b6e41267c6e3443802f6f6f4e99dc4d95e",
+    "canonical_workflow_authorised": true,
+    "governance_correction": "first_parent_history_of_pushed_main_head",
+    "m065_bank_selected": false,
+    "m065_first_result_created": false,
+    "m065_negative_canonical_run": 31287477458,
+    "m065_negative_guard_job": 93178824313,
+    "m065_negative_marker_commit": "a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57",
+    "m065_reproduction_created": false,
+    "marker_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+    "protocol": {
+      "accepted_post_migration_cycles": 3,
+      "arms": [
+        "complete_continued_lineage",
+        "fresh_on_b",
+        "unchanged_parent_migrated",
+        "learned_state_ablated"
+      ],
+      "base_experiment": "M065",
+      "base_protocol_sha256": "1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51",
+      "candidate_budget_per_arm_cycle": 8192,
+      "canonical_selection_rule": "sha256(m066_protocol_digest || marker_parent_sha) mod bank_size",
+      "expression_node_limit": 7,
+      "governance_corrections": [
+        "marker_history_is_first_parent_of_pushed_main_head",
+        "side_branch_refs_do_not_count_as_canonical_history"
+      ],
+      "hidden_cases_per_cycle": 6,
+      "m065_bank_selected": false,
+      "m065_negative_canonical_run": 31287477458,
+      "m065_negative_marker_commit": "a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57",
+      "max_candidate_bytes": 262144,
+      "node_timeout_seconds": 30.0,
+      "public_cases_per_cycle": 6,
+      "schema": "m066-canonical-governance-protocol-v1",
+      "scientific_changes": [],
+      "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+      "task_bank_entries": 4
+    },
+    "protocol_sha256": "f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b",
+    "repository_write_authority_granted_to_lineage": false,
+    "schema": "m066-canonical-governance-manifest-v1",
+    "scientific_changes_from_m065": [],
+    "selected_bank_index": 0,
+    "selection_mode": "m066_marker_parent_commitment",
+    "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da"
+  },
+  "manifest_digest": "b7d4c39c4c89c85346f4b0b2ebbf390e9f8818d4369a6ed4e21fb8d0580a62b1",
+  "marker_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+  "schema": "m066-canonical-result-v1"
+}
