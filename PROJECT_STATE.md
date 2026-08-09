@@ -47,6 +47,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   repairs all four compatible real-file/process workspaces and passes 3/3 hidden cases per task.
   The incompatible protocol is refused before mutation, all ten frozen controls pass and the
   deterministic manifest digest is `c5c80701`.
+- **M070 is at a pre-target engineering boundary, with no scientific result.** A strict structured
+  model policy and an attested, digest-pinned isolated Docker body pass synthetic tests. No external
+  benchmark task has been selected, inspected or executed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added the M070 pre-target engineering baseline before selecting any external task: a strict
+  provider-neutral structured-model policy, explicit read-only Codex adapter and digest-pinned
+  isolated Docker body.
+- The container body verifies Docker's realized no-network, no-capability, no-new-privileges,
+  read-only-rootfs, resource-limit and single-task-mount contract, and fails closed on mismatch.
+- Model/backend and body-reset failures now enter the tamper-evident episode ledger. Submission
+  never self-declares success; a later external evaluator must decide from final container state.
 - Added the separately frozen M069 repair policy. One unchanged policy repairs four governed
   real-file/process workspaces, passes 3/3 hidden cases per task and refuses an incompatible
   protocol before any write or process execution.

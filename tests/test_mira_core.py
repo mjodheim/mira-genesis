@@ -66,6 +66,18 @@ class BrokenAuthorityBody(CounterBody):
         raise RuntimeError("broken authority contract")
 
 
+class BrokenResetBody(CounterBody):
+    def reset(self, goal: Goal) -> Observation:
+        raise RuntimeError("body runtime unavailable")
+
+
+class BrokenPolicy:
+    policy_id = "broken-policy"
+
+    def propose(self, goal, observation, history):
+        raise RuntimeError("model backend unavailable")
+
+
 def test_agent_completes_a_goal_and_records_a_verifiable_episode() -> None:
     agent = MiraAgent(IncrementPolicy(), CounterBody(), max_steps=4)
     result = agent.run(Goal("reach-three", "increment until value is at least three"))
@@ -115,6 +127,28 @@ def test_broken_body_authority_contract_fails_closed() -> None:
     assert result.steps == 0
     assert agent.body.value == 0
     assert result.final_observation.error == "RuntimeError: broken authority contract"
+
+
+def test_policy_or_model_backend_exception_becomes_fail_closed_evidence() -> None:
+    agent = MiraAgent(BrokenPolicy(), CounterBody())
+    result = agent.run(Goal("broken-policy", "record backend failure"))
+    assert result.status == "policy_error"
+    assert result.steps == 0
+    assert result.final_observation.error == "RuntimeError: model backend unavailable"
+    assert [event.kind for event in agent.memory.events] == [
+        "episode_started", "policy_error", "episode_finished",
+    ]
+
+
+def test_body_reset_exception_becomes_fail_closed_evidence() -> None:
+    agent = MiraAgent(IncrementPolicy(), BrokenResetBody())
+    result = agent.run(Goal("broken-reset", "record reset failure"))
+    assert result.status == "body_reset_error"
+    assert result.steps == 0
+    assert result.final_observation.error == "RuntimeError: body runtime unavailable"
+    assert [event.kind for event in agent.memory.events] == [
+        "episode_started", "body_reset_error", "episode_finished",
+    ]
 
 
 def test_high_impact_authority_still_requires_human_release_when_granted() -> None:

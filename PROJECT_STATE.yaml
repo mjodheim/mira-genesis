@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m069_positive_qualified_development
+status: phase_eight_m070_pretarget_agent_engineering
 
 active_research_question: >-
   Can Mira transfer the governed terminal mechanism to independently maintained tasks frozen
@@ -1079,6 +1079,21 @@ phase_eight:
     permission_change_authority: false
     physical_actuation_authority: false
     general_intelligence_claimed: false
+  M070:
+    status: pretarget_agent_engineering_no_scientific_result
+    canonical: false
+    design_record: docs/M070_PRETARGET_AGENT.md
+    structured_model_policy_present: true
+    explicit_codex_backend_present: true
+    digest_pinned_container_body_present: true
+    realized_isolation_attestation_present: true
+    success_decided_by_agent: false
+    external_task_selected: false
+    external_task_inspected: false
+    external_task_executed: false
+    scientific_result_exists: false
+    public_benchmark_claim_limit: development_only
+    private_uncontaminated_split_required_for_stronger_claim: true
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
   next_required_boundary: external_post_design_tasks_in_os_isolation

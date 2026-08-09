@@ -39,7 +39,24 @@ class MiraAgent:
         self.max_steps = max_steps
 
     def run(self, goal: Goal) -> AgentResult:
-        observation = self.body.reset(goal)
+        try:
+            observation = self.body.reset(goal)
+        except Exception as exc:  # noqa: BLE001 - reset failures are evidence
+            self.memory.append("episode_started", {
+                "goal_id": goal.goal_id,
+                "policy_id": self.policy.policy_id,
+                "body_id": self.body.body_id,
+                "initial_observation_id": None,
+            })
+            self.memory.append("body_reset_error", {
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            })
+            failed = Observation(
+                "body-reset-error", {}, terminal=True, success=False,
+                error=f"{type(exc).__name__}: {exc}",
+            )
+            return self._finish("body_reset_error", 0, failed)
         self.memory.append("episode_started", {
             "goal_id": goal.goal_id,
             "policy_id": self.policy.policy_id,
@@ -51,7 +68,20 @@ class MiraAgent:
             return self._finish(status, 0, observation)
 
         for step in range(1, self.max_steps + 1):
-            action = self.policy.propose(goal, observation, self.memory.history())
+            try:
+                action = self.policy.propose(goal, observation, self.memory.history())
+            except Exception as exc:  # noqa: BLE001 - policy/backend failures are evidence
+                self.memory.append("policy_error", {
+                    "step": step,
+                    "observation_id": observation.observation_id,
+                    "error_type": type(exc).__name__,
+                    "error": str(exc),
+                })
+                failed = Observation(
+                    f"policy-error-{step}", {"step": step}, terminal=True,
+                    success=False, error=f"{type(exc).__name__}: {exc}",
+                )
+                return self._finish("policy_error", step - 1, failed)
             if action is None:
                 self.memory.append("policy_refused", {
                     "step": step,
