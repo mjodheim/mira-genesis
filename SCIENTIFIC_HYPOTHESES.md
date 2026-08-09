@@ -219,8 +219,8 @@ A continuing lineage can preserve inherited skills in a body whose complete invo
 not disclosed, by inferring a bounded contract from public interaction and validating the entire
 public equivalence class on disjoint evidence.
 
-**Status:** supported locally by M067 across one finite committed body class; exact-commit
-qualification pending.
+**Status:** supported by the qualified M067 development result across one finite committed body
+class; not canonical.
 
 **Pre-written implication:** one uniform search must discover all four committed bodies, cover the
 three frame families, retain no adapter from empty or corrupted evidence, reject default semantics
@@ -233,3 +233,5 @@ evolution.
 **Result:** four distinct adapters were discovered; every body had exactly one public survivor and
 that survivor passed 12/12 hidden observations. All registered controls rejected. The deterministic
 local manifest digest is `81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208`.
+Exact experiment commit `7d38ac8` passed GitHub run `31311020868` on Python 3.11 and 3.13,
+with repository integrity; attribution run `31311020869` also passed.

@@ -19,8 +19,8 @@ and one parallel measurement track.
 - **Phase 7 — canonical real-substrate completion:** M064–M066. M066 passed all ten gates
   canonically; the construction line is closed by D026.
 - **Phase 8 — adaptive embodiment:** M067 removes the complete supplied target adapter and
-  discovers four opaque contracts across a committed body class. Positive locally; exact-commit
-  qualification is pending.
+  discovers four opaque contracts across a committed body class. Positive and qualified in
+  development on exact commit `7d38ac8`.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -323,7 +323,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 
 | Step | Goal | Status | Result |
 |---|---|---|---|
-| M067 | Discover an undisclosed body contract without a complete target adapter | **Positive locally; qualification pending** | All four committed contracts discovered across three frame families; one public survivor per body, each 12/12 hidden; default, framing-only, empty and corrupted evidence controls reject. |
+| M067 | Discover an undisclosed body contract without a complete target adapter | **Positive qualified development result** | All four committed contracts discovered across three frame families; one public survivor per body, each 12/12 hidden; all controls reject. Exact commit `7d38ac8`, run `31311020868`. |
 
 The M067 body bank and descriptor grammar remain authored. Adding contracts or widening this same
 grammar is not the next step. Any M068 proposal must remove a new structural handhold and declare

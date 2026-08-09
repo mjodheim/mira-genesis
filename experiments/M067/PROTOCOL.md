@@ -1,6 +1,10 @@
 # M067 — bounded opaque body-contract discovery
 
-**Status: PASSED LOCALLY; EXACT-COMMIT QUALIFICATION PENDING.**
+**Status: QUALIFIED IN DEVELOPMENT.**
+
+Exact experiment commit `7d38ac8b35729e19d5f16843905b80654f657c5e` passed GitHub CI run
+`31311020868`: 1,130 tests on Python 3.11 and 1,130 on Python 3.13, plus repository
+integrity. Attribution run `31311020869` also passed. M067 remains noncanonical.
 
 ## Research question
 
@@ -70,9 +74,10 @@ For every body, the protocol requires:
 ## Qualification rule
 
 M067 is qualified in development only if the complete Python 3.11 and Python 3.13 GitHub matrices,
-repository integrity and attribution checks pass on the exact documented commit. Local success is
-development evidence only. M067 is not a canonical experiment and does not reopen or replace the
-M066 canonical result.
+repository integrity and attribution checks pass on the exact documented experiment commit. Exact
+commit `7d38ac8b35729e19d5f16843905b80654f657c5e` discharged that rule in CI run
+`31311020868`; attribution run `31311020869` passed independently. M067 is not a canonical
+experiment and does not reopen or replace the M066 canonical result.
 
 ## Frozen identities and boundary
 

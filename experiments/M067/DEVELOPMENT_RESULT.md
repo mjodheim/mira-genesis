@@ -1,6 +1,6 @@
 # M067 — development result
 
-**Status: PASSED LOCALLY; EXACT-COMMIT QUALIFICATION PENDING.**
+**Status: QUALIFIED IN DEVELOPMENT.**
 
 ## Verdict
 
@@ -47,8 +47,12 @@ Across all four bodies:
 The dedicated M067 suite passes **13/13 locally** and includes cross-process byte reproducibility,
 source-observation provenance, API separation, authority checks and a hidden semantic-mutation
 falsifier. The complete repository passes **1,130 tests in 2,133.92 seconds on Python 3.14.6**;
-repository integrity and dependency checks pass. GitHub qualification counts will be recorded only
-after the exact commit passes.
+repository integrity and dependency checks pass.
+
+Exact experiment commit `7d38ac8b35729e19d5f16843905b80654f657c5e` then passed GitHub
+run `31311020868`, with **1,130 tests on Python 3.11 in 1,205.32 seconds**, **1,130 tests on
+Python 3.13 in 1,245.53 seconds** and repository integrity. Separate attribution run
+`31311020869` passed. No failed qualification run or rerun preceded this verdict.
 
 ## What changed in the supported claim
 

@@ -62,7 +62,7 @@ The full evidence is preserved in:
 | M041 | **NEGATIVE CANONICAL** | A sealed completion lineage failed before migration because its generated cycle-3 target was not constructively available. |
 | M042 | **POSITIVE CANONICAL** | Constructive task availability repaired the M041 failure; all ten audited Genesis gates are true in one frozen lineage. |
 | M066 | **POSITIVE CANONICAL** | The bounded real-substrate construction passed all ten gates; the M043–M066 line is closed. |
-| M067 | **POSITIVE LOCALLY; QUALIFICATION PENDING** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
+| M067 | **POSITIVE QUALIFIED DEVELOPMENT** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -227,7 +227,7 @@ compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
 ## Adaptive embodiment — M067
 
-**Status: POSITIVE LOCALLY; EXACT-COMMIT QUALIFICATION PENDING.**
+**Status: POSITIVE QUALIFIED DEVELOPMENT RESULT.**
 
 M067 begins a new question instead of scaling the closed M066 instrument. A separate Node process
 holds four committed body contracts and exposes only opaque handles, accepted or rejected byte
@@ -244,6 +244,10 @@ This is the first result in the repository where a complete target-body adapter 
 It supports **bounded contract-blind re-embodiment across a committed body class**. The descriptor
 grammar and body bank remain authored, so it does not establish universal device adaptation or a
 general compiler.
+
+Exact experiment commit `7d38ac8` passed GitHub run `31311020868`: **1,130 tests on Python
+3.11 and 1,130 on Python 3.13**, plus repository integrity. Attribution run `31311020869`
+also passed.
 
 See [`experiments/M067/PROTOCOL.md`](experiments/M067/PROTOCOL.md),
 [`experiments/M067/DEVELOPMENT_RESULT.md`](experiments/M067/DEVELOPMENT_RESULT.md) and the

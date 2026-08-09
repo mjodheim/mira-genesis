@@ -12,8 +12,9 @@
 - Added empty-transcript, corrupted-transcript, default-adapter, framing-only and semantic-mutation
   falsifiers. All reject; the discovery API has no hidden-evidence parameter.
 - Added the Phase 8 agenda, D027, H14, M067 protocol/result records and permanent tests. The result
-  is positive locally; the complete repository passed 1,130 tests on Python 3.14.6 and awaits
-  exact-commit GitHub qualification.
+  is positive and qualified in development. Exact experiment commit `7d38ac8` passed run
+  `31311020868`: 1,130 tests on Python 3.11 and 1,130 on Python 3.13 plus integrity;
+  attribution run `31311020869` passed.
 - Licensed all project software under AGPL-3.0-only and the non-software research record
   under CC BY 4.0.
 - Added explicit authorship, citation, provenance and trademark records naming Anthony Mets as

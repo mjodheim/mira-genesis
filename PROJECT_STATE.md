@@ -36,8 +36,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
 - **M067 begins Phase 8 with a distinct question.** It removes the supplied complete target
   adapter. One finite discovery procedure recovered four different opaque body contracts,
   covering three frame families, and every public survivor passed 12/12 hidden observations.
-- **M067 is positive locally and awaits exact-commit GitHub qualification.** Its grammar and
-  body bank remain authored; arbitrary unknown-device adaptation is not claimed.
+- **M067 is a positive qualified development result.** Exact experiment commit `7d38ac8` passed
+  1,130 tests on Python 3.11 and 1,130 on Python 3.13 in run `31311020868`, plus integrity;
+  attribution run `31311020869` passed. Its grammar and body bank remain authored.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -551,8 +552,11 @@ empty-transcript, corrupted-transcript and semantic-mutation controls all reject
 `79447865ea7af9c47d482cbc4deb297d469fd07ab9c6c6b364a8be04ed305c91`; local manifest digest
 `81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208`.
 
-This is a local positive development result pending exact-commit GitHub qualification. It supports
-bounded contract-blind re-embodiment, not arbitrary hardware adaptation.
+Exact experiment commit `7d38ac8b35729e19d5f16843905b80654f657c5e` passed GitHub run
+`31311020868`: 1,130 tests on Python 3.11 in 1,205.32 seconds, 1,130 on Python 3.13 in
+1,245.53 seconds and repository integrity. Attribution run `31311020869` passed. This is a
+positive qualified development result supporting bounded contract-blind re-embodiment, not
+arbitrary hardware adaptation.
 
 ## Construction frontier — positive canonical closure at M066
 
@@ -597,7 +601,7 @@ question remains open but is not a missing completion gate.
 | M064 | **NEGATIVE PRE-CANONICAL QUALIFICATION** | Development outcome was positive, but run `31281234286` failed the source commitment and review invalidated the rollback falsifier. No marker or canonical result. |
 | M065 | **NEGATIVE CANONICAL GUARD QUALIFICATION** | Corrected science and parent qualification passed, but run `31287477458` stopped before bank selection because all-ref history counted the PR branch. No artifact; no rerun. |
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
-| M067 | **POSITIVE LOCALLY — QUALIFICATION PENDING** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. |
+| M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
 
 ## Parallel measurement track — M045
 
