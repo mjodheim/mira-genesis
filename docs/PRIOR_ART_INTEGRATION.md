@@ -16,10 +16,13 @@ Every entry records what is **not** taken, because that is usually the more impo
 
 ## A constraint that shapes every entry
 
-Mira's kernel has **no dependency on any external model**. `pyproject.toml` declares a
-single runtime dependency, `numpy`. The only files mentioning language models are
-`check_attribution_policy.py` and `check_repository_integrity.py` — guards *against* such a
-dependency.
+This section described the endogenous Genesis line through M069. It remains binding for claims
+under the frozen Genesis gates, but it no longer describes every runtime in the repository.
+
+The bounded lineage kernel has **no dependency on any external model**. `pyproject.toml` declares a
+single runtime dependency, `numpy`. Starting at M070, a separately named model-mediated track uses
+an external Codex CLI and named model as an explicit operational proposal component. Keeping that
+CLI out of the Python dependency graph does not erase the dependency.
 
 **Four** of the six works below place a large language model at the point where the
 transformation is invented — DGM, Voyager, AlphaEvolve and Gödel Agent. POET and
@@ -31,11 +34,13 @@ That point is precisely what Gate 2 reserves for the organism:
 > the organism's serialised tool registry. External infrastructure may execute a tool, but
 > may not invent its transformation or choose its arguments on the organism's behalf.
 
-So for every such work, the generative core is **not transposable**. What is transposable is
-the surrounding machinery: archives, registries, evaluator cascades, curricula.
+So for a Gate 2 claim, the generative core is **not transposable**. What is transposable is the
+surrounding machinery: archives, registries, evaluator cascades and curricula.
 
 An external model may be a development tool, a named baseline, or a proposal generator in an
-explicitly declared experiment. It may never be counted as a tool the lineage owns.
+explicitly declared Track B experiment. It may never be counted as a tool the lineage owns, and a
+composed-system benchmark score may not be attributed to Mira's governance layer alone. See
+[`EPISTEMIC_TRACKS.md`](EPISTEMIC_TRACKS.md).
 
 ---
 

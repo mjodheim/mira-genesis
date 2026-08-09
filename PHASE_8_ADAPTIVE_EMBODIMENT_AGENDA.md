@@ -71,5 +71,10 @@ M071 must first prove explicit UTF-8 round trips and whole-process-tree timeout 
 pre-target regressions. Only after a new design freeze may it select a fresh external pair by a new
 blind rule. Reusing M070's pair as the next scientific threshold is forbidden.
 
+M071 also formalizes the epistemic split introduced by M070. External-model actions are declared
+proposal inputs, not lineage-owned tools. External reward is reported for the named composed
+system; the Mira layer is evaluated through governance, isolation, audit and robustness evidence.
+This track does not amend the frozen Genesis completion gates.
+
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

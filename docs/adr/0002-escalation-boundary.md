@@ -2,6 +2,10 @@
 
 **Status: accepted for development implementation.**
 
+**Scope note (M071):** this decision governs the endogenous bounded-lineage track. M070+ may call
+a named external model explicitly in the separate model-mediated track, but cannot count that call
+as lineage-owned generation or evidence for Genesis Gate 2.
+
 This authorises the canonical serialisation, the append-only journal, its integrity tests,
 the projected archive and the checkpoint structures. It does **not** authorise opening a
 sealed block, any M038 claim, freezing the protocol, or changing a rule after observing a

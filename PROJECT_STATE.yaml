@@ -8,6 +8,28 @@ active_research_question: >-
   a fresh blind independently maintained pair while retaining no-network isolation and
   evaluator-owned success?
 
+epistemic_tracks:
+  endogenous_bounded_lineage:
+    scope: M012b-M069
+    external_model_proposes_actions: false
+    genesis_gate_2_unchanged: true
+    strongest_canonical_results: [M042, M066]
+  model_mediated_governed_agent:
+    scope: M070+
+    external_model_proposes_actions: true
+    external_model_is_lineage_owned: false
+    task_reward_attribution: named_composed_system
+    primary_mira_layer_evidence:
+      - authority_containment
+      - isolation
+      - calibrated_refusal
+      - audit_integrity
+      - transport_robustness
+    genesis_gate_2_claim_permitted: false
+  measurement_track:
+    reserved_experiment: M045
+    separate: true
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

@@ -792,3 +792,28 @@ material, never as M071's scientific threshold.
 M070 proves that Mira can be connected to official external container evaluation while preserving
 network isolation and external success ownership. It does not prove competence on either external
 task, cross-domain transfer, general agency or AGI.
+
+## D033 — The external-model line is epistemically separate from Genesis ownership
+
+M070 added a named external model at the point where shell actions and their arguments are
+proposed. That is an intentional operational dependency even though the Python package has no
+model-provider dependency. It is incompatible with counting the proposal as lineage-owned under
+the frozen Genesis Gate 2.
+
+### The decision
+
+The Gate 2 text is not amended. The original endogenous bounded-lineage track and the M070+
+model-mediated governed-agent track are reported separately. Track B may test containment,
+isolation, refusal, audit, transport and the competence of an explicitly named composed system.
+Model capability and task reward may not be attributed to the Mira governance layer alone.
+
+Every Track B protocol must name the model, interface, body, budgets, authority envelope,
+evaluator, attempts and contamination boundary. A governance-layer capability claim requires a
+direct invariant or an isolating baseline/ablation. Shared code and chronological continuity do not
+satisfy endogenous ownership.
+
+### M071 consequence
+
+Before selecting targets, M071 must fix transport across all affected host-process paths, add
+Unicode and descendant-process regressions, and freeze the whole model-mediated design again. Its
+external score remains composed-system evidence and cannot advance Genesis Gate 2 or Gate 3.

@@ -2,6 +2,10 @@
 
 **Status: accepted for development implementation.**
 
+**Scope note (M071):** an external model action in the model-mediated track has
+`origin = external_development` and is ineligible for Gate 2. The governance layer may admit or
+refuse the action; that does not make the transformation lineage-owned.
+
 This authorises the canonical serialisation, the append-only journal, its integrity tests,
 the projected archive and the checkpoint structures. It does **not** authorise opening a
 sealed block, any M038 claim, freezing the protocol, or changing a rule after observing a

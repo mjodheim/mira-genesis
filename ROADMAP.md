@@ -3,6 +3,11 @@
 Mira Genesis has seven completed bounded construction phases, an active adaptive-embodiment phase
 and one parallel measurement track.
 
+From M070 onward, adaptive embodiment contains a separately attributed model-mediated track. It
+shares infrastructure with the endogenous Genesis line but cannot claim internal tool ownership or
+attribute external-model competence to Mira. See
+[`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 - **Phase 1 — bounded Genesis construction:** complete canonically through M042.
 - **Phase 2 — structural-domain transfer and integrated Mealy lineage:** complete in
   development through M044.
@@ -333,7 +338,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M068 | Induce commands without M067's descriptor-product grammar | **Positive qualified development result** | One complete scan per body finds four commands and one semantic adapter; four distinct adapters each pass 12/12 hidden cases and all controls reject. Exact learner `f033ac7`, run `31314960014`. |
 | M069 | Cross a governed real filesystem/process body and refuse an incompatible protocol | **Positive qualified development result** | One unchanged policy repairs 4/4 tasks, each 3/3 hidden, and refuses the incompatible task before mutation. All ten controls pass; manifest `c5c80701`; exact run `31319062535` passed. |
 | M070 | Transfer to post-design external tasks in an OS-isolated body | **Negative external development result** | Exact design `41ebe79` was frozen before blind selection. Official Harbor rewards were 0.0 on both selected tasks and both `nop` controls; UTF-8 stdin transport and Windows descendant timeout handling failed closed. No retry or replacement. |
-| M071 | Harden model transport, freeze again and evaluate a fresh blind pair | **Next** | Require explicit UTF-8 stdin/stdout, whole-process-tree timeout enforcement and permanent Unicode/descendant regressions before any new task identifier is selected. |
+| M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Active pre-target engineering** | Track B attribution is explicit. Require shared UTF-8 stdin/stdout, whole-process-tree timeout enforcement and permanent Unicode/descendant regressions across model, container and governed-terminal paths before any new task identifier is selected. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target

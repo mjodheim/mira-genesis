@@ -57,6 +57,11 @@ The project does not claim open-ended evolution, unrestricted program rewriting,
 intelligence, consciousness or authority over repositories, credentials, networks,
 deployments or production systems.
 
+M070 also creates an explicit epistemic split. M012b–M069 form the endogenous bounded-lineage
+program; M070+ is a declared model-mediated governed-agent line. In the latter, external reward
+belongs to the named composed system and cannot be attributed to Mira's governance layer or used
+as Genesis Gate 2 evidence. See [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 ## Phase 1 — canonical bounded completion
 
 M042 is the first canonical experiment whose one frozen continuous lineage satisfies all ten

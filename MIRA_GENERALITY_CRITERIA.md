@@ -22,6 +22,14 @@ M070 is negative external development evidence. It preserved blind independent-t
 container isolation and evaluator-owned success, but scored 0/2 after a model-transport failure.
 It does not advance a competence gate.
 
+## Model-mediated attribution rule
+
+M070+ uses a named external model to propose actions. Task reward therefore measures the composed
+model, policy wrapper, body and evaluator. It is not evidence that Mira owns the transformation and
+cannot satisfy Genesis Gate 2 or Gate 3. Governance claims require direct containment/audit
+evidence or a baseline that isolates the governance layer. See
+[`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 ## G1 — interface novelty
 
 The agent must enter bodies whose interaction language was not encoded as a descriptor product in

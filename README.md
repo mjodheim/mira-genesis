@@ -12,6 +12,13 @@ The central question remains falsifiable:
 > adopt a verified improvement, migrate to an initially unknown substrate and continue
 > improving there without human architectural intervention?
 
+The repository now separates two epistemic tracks. The endogenous bounded-lineage track studies
+lineage-owned transformations and retains the frozen Genesis ownership gates. The M070+ track is a
+declared model-mediated governed agent: a named external model proposes actions while Mira supplies
+authority control, isolation, budgets, audit and evaluator-owned success. Benchmark reward belongs
+to that composed system, not to the Mira layer alone. See
+[`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 ## Phase-one result
 
 **The first bounded Genesis construction is complete.**

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Split the endogenous bounded-lineage and M070+ model-mediated tracks explicitly. Genesis Gate 2
+  remains unchanged; external model proposals are not lineage-owned and benchmark rewards belong
+  to the named composed system rather than Mira's governance layer alone.
+- Corrected the stale prior-art statement that no runtime used an external model. The Python
+  package still has no provider dependency, but M070+ has an explicit operational Codex/model
+  dependency. Added D033 and the Track B attribution rule before M071 target selection.
 - Preserved M070 as a negative external development result. The agent design and blind selection
   rule were committed before two of 89 Terminal-Bench 2 tasks were opened or executed.
 - Official Harbor v0.20.0 returned reward `0.0` for both Mira trials and both `nop` controls, with
