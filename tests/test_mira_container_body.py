@@ -1,13 +1,17 @@
 from __future__ import annotations
 
+import io
 from pathlib import Path
+import subprocess
 from typing import Sequence
 
 import pytest
+import mira_core.container as container_module
 
 from mira_core import (
-    Action, ContainerBodyError, ContainerExecResult, ContainerLimits, ContainerSpec, Goal,
-    IsolatedContainerBody, MiraAgent, SafetyPolicy, StructuredModelPolicy,
+    Action, ContainerBodyError, ContainerExecResult, ContainerLimits, ContainerSpec,
+    DockerCliEngine, Goal, IsolatedContainerBody, MiraAgent, SafetyPolicy,
+    StructuredModelPolicy,
 )
 from mira_core.safety import Authority
 
@@ -167,3 +171,75 @@ def test_image_script_and_workspace_contracts_fail_closed(tmp_path: Path) -> Non
             "large", "container_exec", {"script": "1234"},
             ("compute", "filesystem_read", "filesystem_write"),
         ))
+
+
+def test_docker_control_commands_use_shared_utf8_transport(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    executable = tmp_path / "docker.cmd"
+    executable.write_bytes(b"")
+    observed: dict[str, object] = {}
+
+    def fake_run(argv, *, timeout_seconds):
+        observed.update(argv=argv, timeout_seconds=timeout_seconds)
+        return subprocess.CompletedProcess(argv, 0, "résultat\n", "")
+
+    monkeypatch.setattr(container_module, "run_utf8_process", fake_run)
+    engine = DockerCliEngine(executable.resolve())
+    completed = engine._trusted(("inspect", "identifiant‑utf8"))
+    assert completed.stdout == "résultat\n"
+    assert observed == {
+        "argv": [str(executable.resolve()), "inspect", "identifiant‑utf8"],
+        "timeout_seconds": 60,
+    }
+
+
+def test_docker_timeout_stops_container_before_host_process_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    executable = tmp_path / "docker.cmd"
+    executable.write_bytes(b"")
+    events: list[str] = []
+
+    class FakeProcess:
+        def __init__(self) -> None:
+            self.stdout = io.BytesIO(b"partial output")
+            self.returncode = None
+            self.waits = 0
+
+        def wait(self, timeout=None):
+            self.waits += 1
+            if self.returncode is None:
+                raise subprocess.TimeoutExpired("docker exec", timeout)
+            return self.returncode
+
+        def poll(self):
+            return self.returncode
+
+    process = FakeProcess()
+
+    def fake_start(*args, **kwargs):
+        events.append("host-start")
+        return process
+
+    def fake_terminate(observed):
+        assert observed is process
+        events.append("host-tree-stop")
+        process.returncode = -9
+
+    def fake_control(self, args, *, check=True):
+        events.append("container-stop")
+        assert args == ("kill", "a" * 64)
+        assert check is False
+        return subprocess.CompletedProcess(args, 0, "", "")
+
+    monkeypatch.setattr(container_module, "start_process_tree", fake_start)
+    monkeypatch.setattr(container_module, "terminate_process_tree", fake_terminate)
+    monkeypatch.setattr(DockerCliEngine, "_trusted", fake_control)
+    result = DockerCliEngine(executable.resolve()).execute(
+        "a" * 64, ("/bin/sh", "-lc", "sleep infinity"),
+        timeout_seconds=0.01, max_output_bytes=100,
+    )
+    assert result.timed_out is True
+    assert result.output == b"partial output"
+    assert events == ["host-start", "container-stop", "host-tree-stop"]

@@ -18,6 +18,7 @@ import threading
 from typing import Mapping, Sequence
 
 from mira_core.contracts import Action, Goal, JsonValue, Observation
+from mira_core.process import ProcessSupervisorError, start_process_tree, terminate_process_tree
 from mira_core.safety import Authority
 
 
@@ -334,21 +335,30 @@ class GovernedTerminalBody:
                 if value:
                     environment[name] = value
         try:
-            process = subprocess.Popen(
+            process = start_process_tree(
                 command.argv,
                 cwd=cwd,
                 env=environment,
                 stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
-                shell=False,
-                close_fds=True,
             )
-        except OSError as exc:
+        except ProcessSupervisorError as exc:
             raise TerminalBodyError(f"registered terminal command could not start: {type(exc).__name__}") from exc
         assert process.stdout is not None
         captured = bytearray()
         output_truncated = threading.Event()
+        stop_lock = threading.Lock()
+        stop_errors: list[ProcessSupervisorError] = []
+
+        def stop_tree() -> None:
+            with stop_lock:
+                if process.poll() is not None:
+                    return
+                try:
+                    terminate_process_tree(process)
+                except ProcessSupervisorError as exc:
+                    stop_errors.append(exc)
 
         def read_output() -> None:
             while True:
@@ -358,12 +368,12 @@ class GovernedTerminalBody:
                 remaining = self.limits.max_output_bytes - len(captured)
                 if remaining <= 0:
                     output_truncated.set()
-                    process.kill()
+                    stop_tree()
                     return
                 captured.extend(chunk[:remaining])
                 if len(chunk) > remaining:
                     output_truncated.set()
-                    process.kill()
+                    stop_tree()
                     return
 
         reader = threading.Thread(target=read_output, name=f"mira-output-{command.command_id}", daemon=True)
@@ -373,13 +383,16 @@ class GovernedTerminalBody:
             process.wait(timeout=command.timeout_seconds)
         except subprocess.TimeoutExpired:
             timed_out = True
-            process.kill()
-            process.wait()
+            stop_tree()
         reader.join(timeout=5.0)
         if reader.is_alive():
-            process.kill()
+            stop_tree()
             raise TerminalBodyError("registered terminal command output reader did not stop")
+        if stop_errors:
+            raise TerminalBodyError("registered terminal command process tree did not stop") from stop_errors[0]
         process.stdout.close()
+        if process.returncode is None:
+            raise TerminalBodyError("registered terminal command did not return an exit status")
         return _ProcessResult(
             int(process.returncode), bytes(captured), timed_out, output_truncated.is_set(),
         )

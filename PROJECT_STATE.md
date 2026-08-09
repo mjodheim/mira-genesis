@@ -52,10 +52,28 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Harbor trials and both `nop` controls scored `0.0`; no trial was retried or replaced. The frozen
   backend failed closed on Windows Unicode stdin encoding and descendant-process timeout handling.
   This validates the isolated external evaluation path, not external task competence.
+- **M071 is a positive external development result.** Generic runtime `0820ebc` uses strict
+  UTF-8 bytes pipes and whole-process-tree cleanup across model, Docker and governed-terminal
+  paths; bridge `132476a` carries a distinct M071 identity. Real Windows Unicode/orphan
+  regressions, 1,215 local design tests and a live schema-validated model smoke pass. No new
+  task content or scientific result existed at the freeze. A later one-draw rule excluded both
+  M070 tasks and selected `sqlite-with-gcov` then `custom-memory-heap-crash` before either task was
+  opened. Instructions and environments were then inspected, while solutions and verifier tests
+  remained closed; execution protocol `31d3c7bd` was frozen before all four ordered trials.
+  Official rewards were `0.0` on SQLite and **`1.0` on custom-memory**, versus `0.0` for both
+  `nop` floors, with no exception, retry or replacement. Result digest `d3526513`; the final local
+  suite passed 1,225 tests with two skips. Exact evidence commit `0875fa7` passed first CI run
+  `31332620871`: 1,226 passed/1 skipped on Python 3.11 and 3.13, plus integrity; attribution run
+  `31332620902` passed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
 deployments or production systems.
+
+M070 also creates an explicit epistemic split. M012b–M069 form the endogenous bounded-lineage
+program; M070+ is a declared model-mediated governed-agent line. In the latter, external reward
+belongs to the named composed system and cannot be attributed to Mira's governance layer or used
+as Genesis Gate 2 evidence. See [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
 
 ## Phase 1 — canonical bounded completion
 
@@ -651,12 +669,13 @@ question remains open but is not a missing completion gate.
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
+| M071 | **POSITIVE EXTERNAL DEVELOPMENT RESULT** | Frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus `0.0, 0.0` `nop` floors; no exception, retry or replacement. Result `d3526513`. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M070: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M071: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

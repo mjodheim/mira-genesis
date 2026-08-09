@@ -67,9 +67,24 @@ Harbor verifier returned 0.0 for both Mira trials and both `nop` controls. The f
 on locale-dependent Unicode stdin transport and Windows descendant timeout handling. The negative
 result is preserved; it supplies isolation/evaluation-path evidence, not task competence.
 
-M071 must first prove explicit UTF-8 round trips and whole-process-tree timeout enforcement on
-pre-target regressions. Only after a new design freeze may it select a fresh external pair by a new
-blind rule. Reusing M070's pair as the next scientific threshold is forbidden.
+M071 now proves explicit UTF-8 round trips and whole-process-tree timeout enforcement on pre-target
+Windows regressions. Runtime `0820ebc`, bridge `132476a` and their 17-blob commitment are frozen.
+Rule `fa5d896` then excluded M070's pair before ranking and selected `sqlite-with-gcov` and
+`custom-memory-heap-crash` without opening either task. Reusing M070's pair as the next scientific
+threshold remains forbidden. After binding, task instructions and environments were inspected,
+images pinned by digest and execution protocol `31d3c7bd` frozen before any `nop` or Mira trial;
+solutions and verifier tests remain closed.
+
+M071 passed its exact narrow threshold: `custom-memory-heap-crash` earned reward `1.0`, SQLite
+earned `0.0`, and both `nop` floors earned `0.0`. There were no Harbor exceptions, retries or task
+replacements. This is positive public development evidence for the named composed system. A next
+step must isolate Mira governance causally or cross a private uncontaminated multi-domain split;
+running more samples from the same public benchmark is not a phase advance.
+
+M071 also formalizes the epistemic split introduced by M070. External-model actions are declared
+proposal inputs, not lineage-owned tools. External reward is reported for the named composed
+system; the Mira layer is evaluated through governance, isolation, audit and robustness evidence.
+This track does not amend the frozen Genesis completion gates.
 
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

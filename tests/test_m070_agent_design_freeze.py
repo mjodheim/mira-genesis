@@ -8,7 +8,7 @@ import pytest
 import check_m070_agent_design_freeze as freeze
 
 
-def test_exact_m070_agent_design_commit_and_blobs_are_immutable() -> None:
+def test_exact_m070_agent_design_commit_and_historical_blobs_are_immutable() -> None:
     result = freeze.verify_freeze()
     assert result == {
         "status": "agent_design_frozen_before_external_task_selection",
@@ -18,6 +18,22 @@ def test_exact_m070_agent_design_commit_and_blobs_are_immutable() -> None:
         ),
         "frozen_blob_count": 9,
     }
+
+
+def test_closed_m070_freeze_reads_committed_blobs_not_evolving_worktree(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    real_git = freeze._git
+    calls: list[tuple[str, ...]] = []
+
+    def recording_git(*args: str, root: Path = freeze.ROOT) -> str:
+        calls.append(args)
+        return real_git(*args, root=root)
+
+    monkeypatch.setattr(freeze, "_git", recording_git)
+    freeze.verify_freeze()
+    assert any(":" in arg for call in calls for arg in call)
+    assert all("hash-object" not in call for call in calls)
 
 
 def test_m070_design_freeze_rejects_commitment_tampering(tmp_path: Path) -> None:

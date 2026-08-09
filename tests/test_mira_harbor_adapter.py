@@ -5,7 +5,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from mira_core.harbor import HarborEpisodeLimits, run_harbor_episode
+from mira_core.harbor import M071_POLICY_ID, HarborEpisodeLimits, run_harbor_episode
 
 
 @dataclass
@@ -56,6 +56,7 @@ def test_harbor_bridge_executes_then_submits_without_claiming_success() -> None:
         limits=HarborEpisodeLimits(max_steps=3, command_timeout_seconds=7),
     ))
     assert manifest["status"] == "submitted_for_external_evaluation"
+    assert manifest["schema"] == "m071-harbor-agent-manifest-v1"
     assert manifest["agent_claimed_success"] is False
     assert manifest["success_decided_externally"] is True
     assert environment.commands == [("find /app -maxdepth 2 -type f", 7)]
@@ -63,6 +64,8 @@ def test_harbor_bridge_executes_then_submits_without_claiming_success() -> None:
     assert [event.kind for event in memory.events][-2:] == [
         "workspace_submitted", "episode_finished",
     ]
+    assert memory.events[0].payload["goal_id"] == "m071-external-task"
+    assert memory.events[0].payload["policy_id"] == M071_POLICY_ID
 
 
 def test_harbor_bridge_refuses_any_agent_network_access() -> None:

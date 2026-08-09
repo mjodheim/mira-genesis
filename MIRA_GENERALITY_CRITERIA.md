@@ -22,6 +22,19 @@ M070 is negative external development evidence. It preserved blind independent-t
 container isolation and evaluator-owned success, but scored 0/2 after a model-transport failure.
 It does not advance a competence gate.
 
+M071 is positive public external development evidence for the named composed system: one of two
+fresh blind tasks earned reward `1.0`, both `nop` floors earned `0.0`, and no retry or replacement
+occurred. One accepted task does not demonstrate cross-domain transfer, isolate Mira governance or
+change a generality-gate status.
+
+## Model-mediated attribution rule
+
+M070+ uses a named external model to propose actions. Task reward therefore measures the composed
+model, policy wrapper, body and evaluator. It is not evidence that Mira owns the transformation and
+cannot satisfy Genesis Gate 2 or Gate 3. Governance claims require direct containment/audit
+evidence or a baseline that isolates the governance layer. See
+[`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 ## G1 — interface novelty
 
 The agent must enter bodies whose interaction language was not encoded as a descriptor product in
@@ -105,15 +118,15 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted authored bank and refuses one incompatible protocol. M070 adds correct blind external-target ordering but no accepted external task. |
+| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted authored bank and refuses one incompatible protocol. M071 adds one accepted fresh blind external task, but the task source is visible and no opaque incompatible-body test is present. |
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
-| G4 | open | No frozen transfer across real, materially different domains. |
+| G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
 | G5 | partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. |
-| G6 | partial mechanism evidence | M069 completes authored real-file/process tasks. M070 reaches official digest-pinned external containers with no-network agent phases, but completes 0/2 tasks after transport failure; browser/desktop competence remains absent. |
+| G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. A second task is refused; browser/desktop competence and broad environment coverage remain absent. |
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | stronger partial mechanism evidence | M069 passes its authority/refusal controls. M070 preserves no-network isolation, tamper-evident failure and evaluator-owned success under a real transport fault; no general-agent red-team suite exists. |
+| G10 | stronger partial mechanism evidence | M071 preserves no-network isolation, tamper-evident memory, evaluator-owned success and failed-attempt preservation across a positive external trial; no governance ablation or general-agent red-team suite exists. |
 
 The next accepted result must change this table by evidence, not wording.

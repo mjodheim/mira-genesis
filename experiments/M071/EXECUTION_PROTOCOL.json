@@ -1,0 +1,136 @@
+{
+  "agent": {
+    "bridge_commit": "132476a5db532812a0cd223d02f8eba9ad88e346",
+    "codex_cli_version": "0.147.0",
+    "design_commit": "0820ebc3a638e8ae0e06fceed7addbdb71bafbb7",
+    "design_commitment_sha256": "2e76a1b8b390bee0ee55095a6f3f61366176e7a4ac0791add9d6d37fca5c30a2",
+    "design_freeze_commit": "de85e31b95520d0ff90e451d192d106cf56589a8",
+    "model": "gpt-5.6-sol",
+    "model_provider_snapshot_available": false,
+    "policy_id": "m071-governed-model-policy-v1",
+    "transport": "strict UTF-8 bytes pipes plus whole-process-tree timeout cleanup"
+  },
+  "attempt_policy": {
+    "concurrency": 1,
+    "infrastructure_retry_permitted": "only before any model decision and before any verifier reward, with identical frozen inputs and a documented incident",
+    "mira_attempts_per_task": 1,
+    "nop_attempts_per_task": 1,
+    "order": [
+      "sqlite-with-gcov:nop",
+      "sqlite-with-gcov:mira",
+      "custom-memory-heap-crash:nop",
+      "custom-memory-heap-crash:mira"
+    ],
+    "replacement_permitted": false,
+    "scientifically_valid_retry_permitted": false
+  },
+  "attribution": {
+    "benchmark_reward_owner": "named composed system: gpt-5.6-sol, M071 policy wrapper, process transport, Harbor body and external evaluator",
+    "genesis_gate_2_evidence": false,
+    "governance_layer_isolating_baseline_present": false,
+    "nop_role": "empty-workspace floor control, not a governance-layer ablation"
+  },
+  "benchmark": {
+    "repository": "https://github.com/harbor-framework/terminal-bench-2.git",
+    "revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6"
+  },
+  "budgets": {
+    "codex_decision_timeout_seconds": 180,
+    "command_output_chars": 65536,
+    "command_timeout_seconds": 120,
+    "harbor_agent_timeout_seconds": {
+      "custom-memory-heap-crash": 1800,
+      "sqlite-with-gcov": 900
+    },
+    "max_agent_steps": 16,
+    "verifier_timeout_seconds": {
+      "custom-memory-heap-crash": 1800,
+      "sqlite-with-gcov": 900
+    }
+  },
+  "contamination_boundary": {
+    "benchmark_is_public_development_evidence": true,
+    "environment_source_inspected_after_binding": true,
+    "instructions_inspected_after_binding": true,
+    "reference_solution_visible_to_agent_or_operator": false,
+    "selected_task_content_opened_before_blind_selection": false,
+    "verifier_tests_visible_to_agent_or_operator": false
+  },
+  "failure_classification": {
+    "inconclusive": "a Harbor, Docker or verifier infrastructure failure prevents an official reward and occurs independently of an agent decision",
+    "negative": "a valid externally scored Mira trial earns reward below 1.0, including policy error, refusal, budget exhaustion or a task solution rejected by the verifier",
+    "positive": "all protocol invariants hold, both nop controls score exactly 0.0 and at least one valid Mira trial earns reward at least 1.0"
+  },
+  "falsifiable_hypothesis": "The frozen M071 composed system can produce an externally accepted solution on at least one of two fresh blindly selected independent container tasks without agent network access.",
+  "harness": {
+    "annotated_tag_object": "f75477f2ad0b04fad199b0cb80689cc23a06c72d",
+    "peeled_commit": "459ff6ec99417589b7f679d14ddf3b3f0ae4f1dc",
+    "release": "harbor==0.20.0",
+    "tag": "v0.20.0",
+    "tree": "09557fdc853ce5826f5b69643034ac20d1ff80b6"
+  },
+  "images": {
+    "custom-memory-heap-crash": "alexgshaw/custom-memory-heap-crash@sha256:1895d7d6240d5fb2ec774d6bfdd1057d170f8d199c15c582e4585d3c63802557",
+    "sqlite-with-gcov": "alexgshaw/sqlite-with-gcov@sha256:f986820b00c74ce75db7288719d364df313fde7c7917bea6eb6352a08431a89f"
+  },
+  "network": {
+    "agent_phase": "no-network",
+    "agent_setup_action": "none",
+    "original_environment_baseline_preserved": "public",
+    "verifier_phase": "original benchmark policy"
+  },
+  "prohibited_adaptation": [
+    "change any blob in the M071 agent-design commitment",
+    "change the M071 Harbor bridge",
+    "change the execution protocol after a selected task begins",
+    "replace, filter or reorder a selected task or attempt",
+    "open reference solutions or verifier tests",
+    "grant the agent network access",
+    "retry a scientifically valid attempt",
+    "reinterpret composed-system reward as endogenous Mira ownership"
+  ],
+  "required_positive_controls": {
+    "agent_claimed_success": false,
+    "both_external_verifiers_return_rewards": true,
+    "m070_historical_freeze_checker_passes": true,
+    "m071_design_checker_passes": true,
+    "nop_reward_must_be_zero_on_both_tasks": true,
+    "preservation_suite_passes": true,
+    "unicode_and_descendant_regressions_pass": true
+  },
+  "schema": "m071-external-execution-protocol-v1",
+  "selection": {
+    "binding_commit": "b403920c4ac2fbf55b83e81b2ac309affef2d9f6",
+    "eligible_inventory_sha256": "c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9",
+    "excluded_identifiers": [
+      "llm-inference-batching-scheduler",
+      "rstan-to-pystan"
+    ],
+    "rule_commit": "fa5d8962bce1659831f98938a194a226883d347c",
+    "selected": [
+      "sqlite-with-gcov",
+      "custom-memory-heap-crash"
+    ]
+  },
+  "status": "frozen_before_any_selected_task_execution",
+  "task_package_overrides": [
+    "replace each mutable image tag with the already-resolved digest for the same image",
+    "set [agent].network_mode to no-network"
+  ],
+  "task_packages": {
+    "custom-memory-heap-crash": {
+      "environment_tree": "115751df4f5b28a62e8014b335d135e4520351f4",
+      "instruction_blob": "c895319d1b5aa380326198dcfa7c0c6b86305247",
+      "original_task_config_blob": "340c070a35b11e710ef4c38d1849ecb045d89902",
+      "original_tree": "256228d99e7625dd1fded79beade531e41c47a4b",
+      "run_task_config_sha256": "9fdc14d5b298f973e693e19f416f52423a406018b17553c6c4fca7848a634699"
+    },
+    "sqlite-with-gcov": {
+      "environment_tree": "e82c4f002902e3c149eb8f589f39e07f9d38235c",
+      "instruction_blob": "401604f7e1c5547b2d5b17074ef97dfce995aa95",
+      "original_task_config_blob": "35469a2a89a75c5e68528860a5133e07c5b50300",
+      "original_tree": "444713ae2f03788ea2f04d8f6ef8a1f8e2106c21",
+      "run_task_config_sha256": "d53444e0dda4cf694393d4424860cc7becaa686542f3054f574343567fa336c2"
+    }
+  }
+}

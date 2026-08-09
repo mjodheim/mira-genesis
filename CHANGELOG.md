@@ -2,6 +2,40 @@
 
 ## Unreleased
 
+- Froze M071 runtime `0820ebc`, Harbor bridge `132476a` and 17 committed blobs before pinning a
+  benchmark revision or selecting a fresh external identifier. Commitment `2e76a1b8`; no M071
+  scientific result exists.
+- Pinned the unchanged Terminal-Bench 2 remote head and a one-draw cryptographic blind-selection
+  salt before enumerating eligible identifiers. The rule excludes both closed M070 tasks before
+  ranking and forbids replacement.
+- Applied the committed M071 rule once: 87 of 89 identifiers were eligible and the fresh pair is
+  `sqlite-with-gcov`, then `custom-memory-heap-crash`. Inventory digest `c21c3e62`; neither task
+  was opened before the binding.
+- Froze M071 execution before any trial: Harbor 0.20.0, digest-pinned images, no-network agent
+  phases, four ordered single attempts, zero valid retries/replacements, external success and
+  composed-system score attribution. Solutions and verifier tests remain unopened.
+- M071 passed its narrow external threshold: official rewards were `0.0` on SQLite and `1.0` on
+  custom-memory, while both `nop` floors were `0.0`. All four jobs had zero Harbor exception,
+  retry or replacement; success remained evaluator-owned.
+- The final local Python 3.14 preservation suite passed 1,225 tests with two skips in 2,257.69
+  seconds; repository integrity and every committed external artifact check passed.
+- Exact M071 evidence commit `0875fa7` passed first CI run `31332620871`: 1,226 passed and one
+  skipped on Python 3.11 and 3.13, plus integrity. Attribution run `31332620902` passed; no
+  workflow rerun was used.
+- Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
+  replaced parent-only timeout kills in the model, container and terminal paths with one shared
+  whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed
+  descendants cannot act after a timeout.
+- Changed the closed M070 freeze audit to verify the exact historical commit and its committed
+  blobs instead of forbidding legitimate post-M070 evolution of the current working tree.
+- Rebound the task-agnostic Harbor bridge to a separately named M071 policy, manifest schema and
+  agent identity so new evidence cannot be mistaken for a rerun of the closed M070 design.
+- Split the endogenous bounded-lineage and M070+ model-mediated tracks explicitly. Genesis Gate 2
+  remains unchanged; external model proposals are not lineage-owned and benchmark rewards belong
+  to the named composed system rather than Mira's governance layer alone.
+- Corrected the stale prior-art statement that no runtime used an external model. The Python
+  package still has no provider dependency, but M070+ has an explicit operational Codex/model
+  dependency. Added D033 and the Track B attribution rule before M071 target selection.
 - Preserved M070 as a negative external development result. The agent design and blind selection
   rule were committed before two of 89 Terminal-Bench 2 tasks were opened or executed.
 - Official Harbor v0.20.0 returned reward `0.0` for both Mira trials and both `nop` controls, with

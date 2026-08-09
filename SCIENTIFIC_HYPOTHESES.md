@@ -276,5 +276,25 @@ entered `policy_error` after one or two actions because locale-dependent stdin e
 Unicode and Windows descendants retained the timeout pipe. Harbor reported no trial exception.
 
 **Scope:** this refutes the exact M070 design and threshold. It does not show that the selected
-tasks are impossible, that model reasoning is generally incapable, or that an UTF-8-hardened
+tasks are impossible, that model reasoning is generally incapable, or that a UTF-8-hardened
 successor will transfer. M071 requires a fresh freeze and blind pair.
+
+## H17 — Corrected composed system on a fresh blind external pair
+
+A separately frozen UTF-8/process-tree-corrected composed system can complete at least one of two
+fresh blindly selected independently maintained container tasks, with no agent network access and
+success decided only by the external verifier.
+
+**Status:** supported by the M071 external development result; public benchmark evidence only.
+
+**Pre-written implication:** after excluding M070's pair, both fresh `nop` floors must score zero,
+both M071 trials must be valid and externally scored, and at least one M071 reward must be at least
+`1.0`. No replacement or scientifically valid retry is permitted.
+
+**Result:** SQLite earned `0.0` after a calibrated policy refusal; custom-memory earned `1.0`
+after external submission. Both `nop` floors earned `0.0`. All four Harbor jobs completed with
+zero exception, retry or replacement under no-network agent phases. Result digest `d3526513`.
+
+**Scope:** H17 concerns the named `gpt-5.6-sol`/M071/Harbor composed system. It does not isolate the
+Mira governance layer, establish success across two domains, satisfy endogenous Genesis ownership,
+or support a general-agent or AGI claim.

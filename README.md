@@ -12,6 +12,13 @@ The central question remains falsifiable:
 > adopt a verified improvement, migrate to an initially unknown substrate and continue
 > improving there without human architectural intervention?
 
+The repository now separates two epistemic tracks. The endogenous bounded-lineage track studies
+lineage-owned transformations and retains the frozen Genesis ownership gates. The M070+ track is a
+declared model-mediated governed agent: a named external model proposes actions while Mira supplies
+authority control, isolation, budgets, audit and evaluator-owned success. Benchmark reward belongs
+to that composed system, not to the Mira layer alone. See
+[`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+
 ## Phase-one result
 
 **The first bounded Genesis construction is complete.**
@@ -66,6 +73,7 @@ The full evidence is preserved in:
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
+| M071 | **POSITIVE EXTERNAL DEVELOPMENT** | The frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus two `0.0` `nop` floors, with no exception, retry or replacement. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -300,6 +308,25 @@ descendants then retained the pipe past the declared timeout. M070 was not repai
 This proves the external evaluation and isolation path exists, but supplies no external-task
 competence or AGI evidence. See
 [`experiments/M070/EXTERNAL_RESULT.md`](experiments/M070/EXTERNAL_RESULT.md).
+
+**M071 is a positive external development result.** The corrected runtime uses strict UTF-8 bytes
+pipes and whole-process-tree cleanup across model, Docker and governed terminal paths. Real Windows
+regressions prove that the failing Unicode code point survives and that delayed descendants cannot
+act after timeout. The complete design suite passed 1,215 tests locally, repository integrity
+passed, and a live `gpt-5.6-sol` call produced a valid bounded submission through the full policy.
+The runtime/bridge commitment is `2e76a1b8b390bee0ee55095a6f3f61366176e7a4ac0791add9d6d37fca5c30a2`.
+No M071 benchmark revision, task identifier, task content or result exists at this boundary. See
+[`experiments/M071/AGENT_DESIGN_FREEZE.md`](experiments/M071/AGENT_DESIGN_FREEZE.md).
+After that freeze, rule `fa5d896` selected the fresh pair without opening its task content; see
+[`experiments/M071/TASK_SELECTION.md`](experiments/M071/TASK_SELECTION.md).
+The instructions and environments were then inspected, image tags resolved to digests and protocol
+`31d3c7bd` frozen. Reference solutions and verifier tests remained unopened. Official Harbor
+rewards were `0.0` for SQLite and **`1.0` for custom-memory**, while both `nop` floors were `0.0`.
+All jobs had zero exception, retry and replacement; success remained evaluator-owned. Result
+digest `d3526513`; the final local suite passed 1,225 tests with two skips. See
+[`experiments/M071/EXTERNAL_RESULT.md`](experiments/M071/EXTERNAL_RESULT.md).
+Exact evidence commit `0875fa7` then passed first CI run `31332620871` with 1,226 tests passed and
+one skipped on both Python 3.11 and 3.13, plus integrity; attribution run `31332620902` passed.
 
 See:
 

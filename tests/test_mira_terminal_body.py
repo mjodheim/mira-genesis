@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import sys
+import time
 from typing import Mapping, Sequence
 
 import pytest
@@ -164,6 +165,30 @@ def test_process_timeout_and_output_limit_fail_closed(tmp_path: Path) -> None:
     assert loud.terminal is False
     assert loud.state["output_truncated"] is True
     assert loud.state["output_bytes"] == 32
+
+
+def test_terminal_timeout_kills_registered_command_descendants(tmp_path: Path) -> None:
+    marker = tmp_path / "orphan-marker.txt"
+    child = (
+        "from pathlib import Path; import time; time.sleep(1.0); "
+        "Path('orphan-marker.txt').write_text('acted',encoding='utf-8')"
+    )
+    parent = (
+        "import subprocess,sys,time; "
+        "subprocess.Popen([sys.executable,'-I','-c',sys.argv[1]]); time.sleep(30)"
+    )
+    command = CommandSpec(
+        "tree-timeout", (sys.executable, "-I", "-c", parent, child),
+        timeout_seconds=0.5,
+    )
+    body = GovernedTerminalBody("tree-timeout-terminal", tmp_path, (command,))
+    body.reset(Goal("tree-timeout", "leave no descendants"))
+    observed = body.act(Action(
+        "tree-timeout", "run_command", {"command_id": "tree-timeout"}, RUN,
+    ))
+    assert observed.state["timed_out"] is True
+    time.sleep(1.2)
+    assert not marker.exists()
 
 
 def test_workspace_snapshot_rejects_symlinks_or_excessive_files(tmp_path: Path) -> None:

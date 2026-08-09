@@ -1,0 +1,32 @@
+{
+  "all_identifier_count": 89,
+  "benchmark_repository": "https://github.com/harbor-framework/terminal-bench-2.git",
+  "benchmark_revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6",
+  "eligible_inventory_count": 87,
+  "excluded_identifiers": [
+    "llm-inference-batching-scheduler",
+    "rstan-to-pystan"
+  ],
+  "fresh_task_content_inspected_before_selection": false,
+  "fresh_task_executed": false,
+  "inventory_pair_schema": [
+    "selection_sha256",
+    "task_identifier"
+  ],
+  "inventory_sha256": "c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9",
+  "replacement_permitted": false,
+  "schema": "m071-external-task-selection-v1",
+  "scientific_result_exists": false,
+  "selected": [
+    [
+      "013058dfbae753f97a6fb2aae47a8cb0cb662a6f935105e66dc74b8feb1cd8de",
+      "sqlite-with-gcov"
+    ],
+    [
+      "04b44778a1b9acc9e9ccf912e76f0bf2ccc588302e0d43215bcce4f740ee9684",
+      "custom-memory-heap-crash"
+    ]
+  ],
+  "selection_count": 2,
+  "selection_protocol_commit": "fa5d8962bce1659831f98938a194a226883d347c"
+}

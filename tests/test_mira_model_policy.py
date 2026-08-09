@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Mapping
 
 import pytest
+import mira_core.model as model_module
 
 from mira_core import (
     CodexExecBackend, Goal, ModelBackendError, ModelPolicyLimits, ModelRequest, Observation,
@@ -101,3 +102,28 @@ def test_codex_backend_rejects_relative_or_missing_executable(tmp_path: Path) ->
         CodexExecBackend(Path("codex"), tmp_path, "explicit-model")
     with pytest.raises(ModelBackendError, match="absolute executable"):
         CodexExecBackend(tmp_path / "missing-codex", tmp_path, "explicit-model")
+
+
+def test_codex_backend_preserves_unicode_through_explicit_utf8_transport(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    executable = tmp_path / "codex.cmd"
+    executable.write_bytes(b"")
+    observed: dict[str, object] = {}
+
+    def fake_run(argv, *, input_text, timeout_seconds):
+        observed.update(argv=argv, input_text=input_text, timeout_seconds=timeout_seconds)
+        output_path = Path(argv[argv.index("--output-last-message") + 1])
+        output_path.write_text(
+            json.dumps({"decision": "finish", "script": None, "reason": None}),
+            encoding="utf-8",
+        )
+        return __import__("subprocess").CompletedProcess(argv, 0, "sortie été", "")
+
+    monkeypatch.setattr(model_module, "run_utf8_process", fake_run)
+    backend = CodexExecBackend(executable.resolve(), tmp_path, "explicit-model")
+    request = ModelRequest("Décider sans ambiguïté ‑ 🧭", '{"entrée":"été"}', {})
+    assert backend.complete(request)["decision"] == "finish"
+    assert observed["input_text"] == (
+        'Décider sans ambiguïté ‑ 🧭\n\nINPUT_JSON\n{"entrée":"été"}\n'
+    )
