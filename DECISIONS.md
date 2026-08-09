@@ -654,3 +654,23 @@ Closure is scientific, not operational. The result remains bounded by its author
 block structure, grammar, task families, cases and resources. Repository writes, network access,
 credentials, deployment and production remain human-controlled. No open-ended evolution, general
 intelligence or consciousness claim follows.
+
+## D027 — Adaptive embodiment begins only by removing the supplied target adapter
+
+D026 forbids an M067 justified by more of the same construction. M067 therefore opens a separate
+phase around a different handhold: previous real-substrate experiments knew the target ABI and
+complete compilation route even when they discovered instruction effects.
+
+### The decision
+
+A body-contract discovery result is admissible only when the target interface returns no complete
+descriptor, discovery consumes public source behaviour alone, hidden evidence is absent from the
+discovery API and every public survivor is validated before representation selection. A uniform
+procedure must cover the whole precommitted body class. Empty, corrupted and semantic-default
+controls must fail.
+
+M067's finite contract grammar and four-body bank satisfy this entry rule. They remain authored,
+so the claim is bounded contract-blind re-embodiment. More bodies or a larger grammar do not justify
+a successor; M068 would need to remove another structural assumption with a new falsifier.
+
+Repository writes, networks, credentials and deployments remain outside the scientific lineage.

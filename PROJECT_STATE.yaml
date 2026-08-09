@@ -1,11 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_seven_m066_positive_canonical_real_substrate_completion_closed
+status: phase_eight_m067_positive_qualified_development
 
 active_research_question: >-
-  Answered positively by M066. One bounded CPython-to-Node-to-whole-WebAssembly lineage passed all
-  ten audited completion gates in unique run 31291899534 with exact Python 3.13 reproduction. The
-  construction line is closed by D026; M045 remains a separate measurement question.
+  Can a continuing lineage discover an undisclosed target-body invocation contract from public
+  interaction, preserve inherited skills on disjoint hidden evidence and refuse adaptation when
+  evidence is absent or inconsistent? M067 is positive and qualified in development across four
+  committed bodies; its authored grammar still bounds the claim.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -920,6 +921,53 @@ active_construction_frontier:
   distinct_structural_question_required_for_successor: true
   closure_decision: D026
 
+phase_eight:
+  status: m067_positive_qualified_development
+  objective: bounded_contract_blind_adaptive_embodiment
+  agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
+  entry_decision: D027
+  hypothesis: H14
+  M067:
+    canonical: false
+    protocol: experiments/M067/PROTOCOL.md
+    result: experiments/M067/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: 79447865ea7af9c47d482cbc4deb297d469fd07ab9c6c6b364a8be04ed305c91
+    local_manifest_digest: 81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208
+    body_bank_commitment: 019c70ec4ec82e45747cabf495ef4778a52b76036d6f3292217d91187c5fbfe3
+    body_bank_size: 4
+    frame_families_discovered: [mailbox, register, stack]
+    distinct_contracts_discovered: 4
+    inherited_source_version: 8
+    inherited_skills: [add, max, mean, mul]
+    public_cases_per_body: 20
+    hidden_cases_per_body: 12
+    base_candidates_per_body: 288
+    public_discovery_attempts_per_body: 1560
+    public_survivors_per_body: 1
+    hidden_passes_per_body: [12, 12]
+    complete_target_adapter_disclosed: false
+    default_adapter_passed: false
+    framing_only_default_semantics_passed: false
+    empty_transcript_adapter_count: 0
+    corrupted_transcript_survivor_count: 0
+    arbitrary_unknown_body_adaptation_claimed: false
+    dedicated_local_tests: 13
+    complete_repository_local_tests: 1130
+    complete_repository_local_test_seconds: 2133.92
+    complete_repository_local_python: 3.14.6
+    exact_experiment_commit: 7d38ac8b35729e19d5f16843905b80654f657c5e
+    exact_commit_qualification: passed
+    github_ci_run: 31311020868
+    github_python_3_11: [1130, 1130]
+    github_python_3_11_seconds: 1205.32
+    github_python_3_13: [1130, 1130]
+    github_python_3_13_seconds: 1245.53
+    repository_integrity_passed: true
+    attribution_run: 31311020869
+    attribution_passed: true
+  successor_by_larger_same_grammar_permitted: false
+  distinct_structural_question_required_for_successor: true
+
 measurement_track:
   reserved_experiment: M045
   status: open_and_separate
@@ -928,7 +976,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M066: true
+  separate_from_M047_to_M067: true
 
 engineering_release_boundary:
   human_control_required_for:

@@ -1,6 +1,7 @@
-# Mira Genesis — Roadmap
+# Mira Genesis — Adaptive Embodiment roadmap
 
-Mira Genesis has six bounded construction phases and one parallel measurement track.
+Mira Genesis has seven completed bounded construction phases, an active adaptive-embodiment phase
+and one parallel measurement track.
 
 - **Phase 1 — bounded Genesis construction:** complete canonically through M042.
 - **Phase 2 — structural-domain transfer and integrated Mealy lineage:** complete in
@@ -15,14 +16,15 @@ Mira Genesis has six bounded construction phases and one parallel measurement tr
   discovers an opaque substrate, judges whether to move, carries its whole body across and
   identifies structural instructions by effect, synthesizes one arrangement and transfers that
   arrangement mechanism from copying to reduction.
-- **Active frontier — two questions:** the compiler that arranges the discovered instructions
-  is still written by a person despite one bounded transfer, and nothing on a real substrate is
-  yet claimable.
+- **Phase 7 — canonical real-substrate completion:** M064–M066. M066 passed all ten gates
+  canonically; the construction line is closed by D026.
+- **Phase 8 — adaptive embodiment:** M067 removes the complete supplied target adapter and
+  discovers four opaque contracts across a committed body class. Positive and qualified in
+  development on exact commit `7d38ac8`.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
-**Every result from M048 onward is a development result.** M042 remains the only positive
-canonical continuous-lineage completion, and it holds only inside the deterministic binary-DFA
-laboratory.
+M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
+real-substrate completion. Both are bounded; neither implies arbitrary self-modification.
 
 ## Phase 1 — completed bounded construction
 
@@ -94,7 +96,7 @@ Workflow run `31015992729` passed **755 tests on Python 3.11 and 755 on Python 3
 all repository-integrity checks. No job failed and no rerun was used.
 
 M044 is a positive integrated development result. It is not canonical, does not select a
-seed or hidden bank and does not replace M042 as the only positive canonical completion.
+seed or hidden bank and does not replace M042's finite-DFA canonical completion.
 
 See:
 
@@ -135,7 +137,7 @@ Workflow run `31021072262` passed:
 - no failed job and no rerun.
 
 M046 is a positive integrated development result. It is not canonical, selects no seed or
-hidden bank and does not replace M042 as the only positive canonical completion.
+hidden bank and does not replace M042's finite-DFA canonical completion.
 
 See:
 
@@ -312,6 +314,21 @@ M066 corrected only that scope and completed every remaining step exactly once. 
 attempt 1, preserved a positive Python 3.11 result and an exact Python 3.13 reproduction. The
 construction line is closed under D026; scaling the same instrument cannot justify M067.
 
+## Phase 8 — adaptive embodiment
+
+M067 is justified by a new structural question: the target body's complete ABI adapter is no
+longer supplied. A committed four-body bank exposes opaque handles and raw transactions only. The
+lineage searches a finite descriptor grammar from public observations of its own inherited tools,
+then sends the entire public equivalence class to disjoint hidden validation.
+
+| Step | Goal | Status | Result |
+|---|---|---|---|
+| M067 | Discover an undisclosed body contract without a complete target adapter | **Positive qualified development result** | All four committed contracts discovered across three frame families; one public survivor per body, each 12/12 hidden; all controls reject. Exact commit `7d38ac8`, run `31311020868`. |
+
+The M067 body bank and descriptor grammar remain authored. Adding contracts or widening this same
+grammar is not the next step. Any M068 proposal must remove a new structural handhold and declare
+its falsifier before implementation.
+
 ## Parallel measurement track — M045
 
 M030 confirmed component-uniform guidance on untouched seeds. M031 transported that signal
@@ -324,7 +341,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M066. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M067. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 

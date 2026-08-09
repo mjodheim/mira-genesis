@@ -1,4 +1,4 @@
-# Mira Genesis
+# Mira Genesis — Adaptive Embodiment
 
 Mira Genesis is a bounded, auditable research program about self-rewrite,
 trans-substrate continuity and the gap between what an adaptive system optimises and what
@@ -61,6 +61,8 @@ The full evidence is preserved in:
 | M040 | **POSITIVE CANONICAL** | The lineage migrated to an opaque substrate and learned again after migration. |
 | M041 | **NEGATIVE CANONICAL** | A sealed completion lineage failed before migration because its generated cycle-3 target was not constructively available. |
 | M042 | **POSITIVE CANONICAL** | Constructive task availability repaired the M041 failure; all ten audited Genesis gates are true in one frozen lineage. |
+| M066 | **POSITIVE CANONICAL** | The bounded real-substrate construction passed all ten gates; the M043–M066 line is closed. |
+| M067 | **POSITIVE QUALIFIED DEVELOPMENT** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -112,8 +114,8 @@ Qualification workflow run `31021072262` passed **770 tests on Python 3.11 in 56
 and 770 tests on Python 3.13 in 585.56 seconds**, together with every repository-integrity
 check. No job failed and no rerun was used.
 
-M046 is a positive integrated **development** result, not canonical evidence. M042 remains
-the only positive canonical continuous-lineage completion.
+M046 is a positive integrated **development** result, not canonical evidence. It does not alter
+M042's finite-DFA canonical result or M066's later real-substrate canonical result.
 
 M046 is a positive integrated **development** result, not canonical evidence.
 
@@ -223,6 +225,34 @@ M066 keeps the limits explicit. The whole-body compiler, block structure, finite
 families and evidence cases are authored and precommitted. The result cannot support unrestricted
 compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
+## Adaptive embodiment — M067
+
+**Status: POSITIVE QUALIFIED DEVELOPMENT RESULT.**
+
+M067 begins a new question instead of scaling the closed M066 instrument. A separate Node process
+holds four committed body contracts and exposes only opaque handles, accepted or rejected byte
+transactions and raw four-byte replies. No interface returns a frame descriptor, checksum rule,
+semantic opcode map or reply decoder.
+
+Using public observations of its inherited M048 version-eight skills, one bounded search recovers
+the frame family, checksum, four-operation permutation and reply decoding. The same mechanism
+discovers all four contracts, covering register, stack and mailbox frames. Each unique public
+survivor passes **12/12 disjoint hidden observations**. Default and framing-only adapters fail;
+empty evidence yields no adapter; a corrupted transcript yields no survivor.
+
+This is the first result in the repository where a complete target-body adapter is not supplied.
+It supports **bounded contract-blind re-embodiment across a committed body class**. The descriptor
+grammar and body bank remain authored, so it does not establish universal device adaptation or a
+general compiler.
+
+Exact experiment commit `7d38ac8` passed GitHub run `31311020868`: **1,130 tests on Python
+3.11 and 1,130 on Python 3.13**, plus repository integrity. Attribution run `31311020869`
+also passed.
+
+See [`experiments/M067/PROTOCOL.md`](experiments/M067/PROTOCOL.md),
+[`experiments/M067/DEVELOPMENT_RESULT.md`](experiments/M067/DEVELOPMENT_RESULT.md) and the
+[`Phase 8 agenda`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md).
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -279,6 +309,8 @@ replace a first canonical run.
 - [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) — frozen phase-one
   completion definition;
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md) — post-M042 research rules;
+- [`PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md) —
+  contract-blind re-embodiment question and falsifiers;
 - [`MEASURES.md`](MEASURES.md) — proxy/ground-truth divergences;
 - [`FAILURE_LOG.md`](FAILURE_LOG.md) — failures and contaminations, never deleted;
 - `metamorphosis/` — experimental implementations;
