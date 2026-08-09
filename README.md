@@ -176,10 +176,10 @@ candidates, depth, another declared primitive or another pruning rule no longer 
 material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
 and decision D016.
 
-## Current construction frontier — M065
+## Current construction frontier — M066
 
-**Status: M064 failed pre-canonical qualification; M065 is positive in corrected development and
-eligible for freeze, but not yet canonical.**
+**Status: M064 failed pre-canonical qualification; M065 failed its canonical guard before bank
+selection; M066 is positive in governance-corrected development and frozen, but not canonical.**
 
 M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. After
 scanning arithmetic and structural effects, every semantic pipeline stage lives in one
@@ -199,14 +199,22 @@ M064 parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed qualification run
 source-hash mismatch; review also found that the rollback proof compared the saved state to itself.
 No M064 marker or canonical result was created.
 
-M065 keeps every scientific input and outcome above but restores the actual returned state from
-pre-transaction bytes, audits it and binds the corrupt and restored digests. Its marker must be
-the first path-history occurrence, and its first result can run only on workflow attempt one.
-Four-bank development and 20 focused M064/M065 governance/freeze tests pass. GitHub qualification of the
-exact M065 parent remains required. The complete corrected local repository suite passes
-**1,101 tests in 1,762.37 seconds**.
+M065 kept every scientific input and outcome above but restored the actual returned state from
+pre-transaction bytes, audited it and bound the corrupt and restored digests. Exact parent
+`b1489d7` passed GitHub qualification run `31286019961`. Its marker commit `a517e6b` then triggered
+run `31287477458`, whose guard stopped before bank selection because `git rev-list --all` counted
+the lateral pull-request ref as another canonical occurrence. The first result and reproduction
+were skipped; no artifact exists and M065 is not rerun.
 
-M065 keeps the limits explicit. The whole-body compiler, block structure, finite grammar, task
+M066 changes only that governance scope. It counts occurrences along the first-parent history of
+the pushed `main` head, and a real Git graph falsifier proves that lateral refs are excluded while
+delete/re-add or update history on `main` still fails closed. All four banks again produce 18/18
+for the complete lineage and 0/18 for every control. Eleven M066 tests pass in 202.78 seconds,
+the complete repository passes **1,112 tests in 1,689.93 seconds**, repository integrity passes,
+and its portable 23-file commitment is frozen. Exact-parent GitHub
+qualification remains required before a separate marker-only commit can run once.
+
+M066 keeps the limits explicit. The whole-body compiler, block structure, finite grammar, task
 families and evidence cases are authored and precommitted. The result cannot support unrestricted
 compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
@@ -222,6 +230,8 @@ See:
 - [`experiments/M064/DEVELOPMENT_RESULT.md`](experiments/M064/DEVELOPMENT_RESULT.md);
 - [`experiments/M065/PROTOCOL.md`](experiments/M065/PROTOCOL.md);
 - [`experiments/M065/DEVELOPMENT_RESULT.md`](experiments/M065/DEVELOPMENT_RESULT.md);
+- [`experiments/M066/PROTOCOL.md`](experiments/M066/PROTOCOL.md);
+- [`experiments/M066/DEVELOPMENT_RESULT.md`](experiments/M066/DEVELOPMENT_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
 

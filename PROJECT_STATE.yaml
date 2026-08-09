@@ -1,11 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_seven_m065_corrected_completion_positive_eligible_for_freeze
+status: phase_seven_m066_governance_corrected_completion_positive_frozen
 
 active_research_question: >-
-  Will the exact frozen M065 parent produce one positive marker-selected canonical first result
+  Will the exact frozen M066 parent produce one positive marker-selected canonical first result
   and an independent Python 3.13 byte-identical reproduction, without repair, rerun or threshold
-  change? Construction is closed; only freeze, qualification, arming, preservation and audit remain.
+  change? Construction is closed; only qualification, arming, preservation and audit remain.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -789,7 +789,7 @@ phase_six:
       - general_intelligence
       - consciousness
   M065:
-    status: positive_corrected_development_result_eligible_for_freeze
+    status: negative_canonical_guard_qualification
     canonical: false
     protocol: experiments/M065/PROTOCOL.md
     result: experiments/M065/DEVELOPMENT_RESULT.md
@@ -819,15 +819,63 @@ phase_six:
     focused_guard_and_freeze_tests: 20
     complete_repository_local_tests: 1101
     complete_repository_local_test_seconds: 1762.37
+    qualified_parent_commit: b1489d7a3a264de8a9e783eb139dafe28732b040
+    parent_qualification_run: 31286019961
+    parent_qualification_attempt: 1
+    parent_qualification_python_3_11: [1101, 1101]
+    parent_qualification_python_3_13: [1101, 1101]
+    marker_commit: a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57
+    canonical_workflow_run: 31287477458
+    canonical_workflow_attempt: 1
+    failed_guard_job: 93178824313
+    failure: all_ref_history_counted_lateral_pull_request_marker
+    task_bank_selected: false
+    canonical_first_result_created: false
+    independent_reproduction_created: false
+    closed_by: M066
+  M066:
+    status: positive_governance_corrected_development_result_frozen
+    canonical: false
+    protocol: experiments/M066/PROTOCOL.md
+    result: experiments/M066/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b
+    frozen_protocol_file_sha256: 02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0
+    frozen_committed_files: 23
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    base_experiment: M065
+    scientific_changes: []
+    governance_changes:
+      - marker_history_is_first_parent_of_pushed_main_head
+      - side_branch_refs_do_not_count_as_canonical_history
+    task_bank_changed: false
+    budgets_changed: false
+    thresholds_changed: false
+    candidate_grammar_changed: false
+    development_banks_passed: 4
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    final_retained_quality: [68, 68]
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    dedicated_tests: 11
+    dedicated_test_seconds: 202.78
+    complete_repository_local_tests: 1112
+    complete_repository_local_test_seconds: 1689.93
+    marker_history_scope: first_parent_of_pushed_main_head
+    lateral_ref_falsifier_passed: true
+    repeat_first_parent_marker_rejected: true
     canonical_first_result_run: null
     independent_reproduction_run: null
 
 active_construction_frontier:
-  status: m065_construction_closed_freeze_and_canonical_execution_only
+  status: m066_construction_closed_qualification_and_canonical_execution_only
   gates_positive_in_one_development_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9]
   gate_pending_canonical_execution: 10
   ordered_remaining_steps:
-    - clean_complete_local_suite_with_m065
+    - clean_complete_local_suite_with_m066
     - repository_integrity
     - freeze_exact_parent_and_protocol_hashes
     - python_3_11_and_3_13_parent_qualification
@@ -838,7 +886,7 @@ active_construction_frontier:
     - publish_bounded_final_verdict
   post_freeze_repair_permitted: false
   failed_first_run_or_reproduction_is_preserved: true
-  changed_experiment_requires: M066
+  changed_experiment_requires: M067
 
 measurement_track:
   reserved_experiment: M045
@@ -848,7 +896,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M065: true
+  separate_from_M047_to_M066: true
 
 engineering_release_boundary:
   human_control_required_for:

@@ -871,3 +871,26 @@ rerun still computed temporary M064/M065 source expectations from raw CRLF bytes
 M065 tests all passed; the complete run reached 1,100 passes and one fixture failure. Each fixture
 was changed only to hash LF-normalised temporary bytes. The final complete rerun passed 1,101 tests
 in 1,762.37 seconds.
+
+## M065 — all-ref marker history blocked the canonical run before selection
+
+Exact M065 parent `b1489d7a3a264de8a9e783eb139dafe28732b040` passed qualification run
+`31286019961`, attempt 1. The marker-only commit
+`a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57` then triggered canonical workflow run
+`31287477458`, attempt 1. Guard job `93178824313` failed with “marker is not its first and only
+path-history occurrence”. The first-result and independent-reproduction jobs were skipped. No bank
+was selected and no artifact was created.
+
+The frozen workflow used `git rev-list --all` after a depth-zero checkout. GitHub's clone contained
+both the squash-merged `main` marker commit and the pull-request branch commit that introduced the
+same path. The guard treated this lateral ref as canonical history and counted two occurrences,
+although `main` contained exactly one.
+
+The run is preserved as M065's negative canonical guard qualification and is not rerun. D025
+requires canonical identity to follow `git rev-list --first-parent HEAD`. M066 applies only that
+governance correction and changes no scientific engine, bank, budget, threshold, arm or rule.
+
+During M066 development, an initial local test command was terminated by the terminal's 120-second
+command timeout before pytest emitted a verdict. It was rerun with a suitable development-only
+window; the final strengthened campaign passed all eleven tests in 202.78 seconds. This local process timeout created no canonical
+observation and changed no frozen input.

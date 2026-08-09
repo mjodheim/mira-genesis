@@ -1,0 +1,126 @@
+name: M066 governance-corrected whole-WebAssembly canonical execution
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - experiments/M066/CANONICAL_ARMED.json
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: Validate first-parent marker-only arming commit
+    runs-on: ubuntu-latest
+    outputs:
+      armed: ${{ steps.guard.outputs.armed }}
+      marker_parent: ${{ steps.identity.outputs.marker_parent }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install the frozen package
+        run: python -m pip install -e .
+
+      - name: Record immutable commit identity
+        id: identity
+        run: echo "marker_parent=$(git rev-parse HEAD^)" >> "$GITHUB_OUTPUT"
+
+      - name: Enforce marker-only canonical first-parent semantics
+        id: guard
+        shell: bash
+        run: |
+          marker="experiments/M066/CANONICAL_ARMED.json"
+          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r HEAD)
+          args=()
+          for path in "${changed[@]}"; do args+=(--changed-file "$path"); done
+          history_count="$(git rev-list --first-parent HEAD -- "$marker" | wc -l)"
+          python scripts/check_m066_canonical_guard.py \
+            --head-sha "$GITHUB_SHA" \
+            --parent-sha "$(git rev-parse HEAD^)" \
+            --commit-message "$(git log -1 --pretty=%B)" \
+            --marker-first-parent-history-count "$history_count" \
+            --github-output "$GITHUB_OUTPUT" \
+            "${args[@]}"
+
+  canonical-first-result:
+    name: Unique canonical first result (Python 3.11)
+    needs: guard
+    if: needs.guard.outputs.armed == 'true' && github.run_attempt == 1
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install the frozen package
+        run: python -m pip install -e .
+
+      - name: Run the marker-selected immutable experiment once
+        run: |
+          python scripts/run_m066_canonical.py \
+            --marker-parent-sha "${{ needs.guard.outputs.marker_parent }}" \
+            --output raw/M066_CANONICAL_RESULT.json
+          sha256sum raw/M066_CANONICAL_RESULT.json
+
+      - name: Preserve the first result
+        uses: actions/upload-artifact@v4
+        with:
+          name: m066-canonical-first-result
+          path: raw/M066_CANONICAL_RESULT.json
+          if-no-files-found: error
+          retention-days: 90
+
+  independent-reproduction:
+    name: Independent exact reproduction (Python 3.13)
+    needs: [guard, canonical-first-result]
+    if: always() && needs.guard.result == 'success' && needs.guard.outputs.armed == 'true' && (needs.canonical-first-result.result == 'success' || needs.canonical-first-result.result == 'skipped')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install the frozen package
+        run: python -m pip install -e .
+
+      - name: Download the immutable first result
+        uses: actions/download-artifact@v4
+        with:
+          name: m066-canonical-first-result
+          path: first
+
+      - name: Reproduce and compare exact bytes
+        run: |
+          python scripts/reproduce_m066_canonical.py \
+            --marker-parent-sha "${{ needs.guard.outputs.marker_parent }}" \
+            --canonical-result first/M066_CANONICAL_RESULT.json \
+            --output reproduction/M066_INDEPENDENT_REPRODUCTION.json
+
+      - name: Preserve the independent reproduction report
+        uses: actions/upload-artifact@v4
+        with:
+          name: m066-independent-reproduction
+          path: reproduction/M066_INDEPENDENT_REPRODUCTION.json
+          if-no-files-found: error
+          retention-days: 90

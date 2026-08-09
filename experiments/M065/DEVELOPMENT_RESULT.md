@@ -2,7 +2,7 @@
 
 ## Verdict
 
-**Positive in four-bank development; not canonical.**
+**Positive in four-bank development; negative canonical guard qualification. Closed by M066.**
 
 M065 reran every precommitted bank with the unchanged M064 tasks, controls, budgets, thresholds,
 substrates and candidate language. The complete lineage again accepted three rewrites, reached
@@ -37,10 +37,13 @@ supports only the same bounded completion claim as M064, now with a non-tautolog
 falsifier and a non-replayable canonical first-result path. It grants no repository, network,
 credential, deployment or production authority.
 
-## Remaining gates
+## Canonical qualification verdict
 
-1. pass all focused M065 guard/freeze tests and the complete repository suite;
-2. qualify the exact frozen parent on Python 3.11 and 3.13 without rerun;
-3. merge a first-history marker-only commit bound to that parent;
-4. preserve the first result and byte-identical independent reproduction;
-5. publish the bounded final verdict.
+Exact parent `b1489d7a3a264de8a9e783eb139dafe28732b040` passed GitHub qualification run
+`31286019961`, attempt 1: 1,101 tests on Python 3.11 and 1,101 on Python 3.13 plus integrity.
+Marker commit `a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57` then triggered canonical run
+`31287477458`, attempt 1. The guard failed before bank selection because `git rev-list --all`
+counted the marker on both `main` and the fetched pull-request branch. The unique first result and
+independent reproduction were correctly skipped. No task-bank index was observed and no result
+artifact was created. M065 is preserved as negative and closed; M066 is its governance-only
+successor.

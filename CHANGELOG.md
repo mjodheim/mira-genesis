@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.41.0 — 2026-08-09
+
+M065 is preserved as a negative canonical guard qualification. M066 corrects only the Git-history
+scope that caused the false rejection; every scientific input and result remains frozen.
+
+- Qualified exact M065 parent `b1489d7a3a264de8a9e783eb139dafe28732b040` in first run
+  `31286019961`: 1,101 tests on Python 3.11 and 1,101 on Python 3.13 plus integrity.
+- Preserved canonical run `31287477458`, attempt 1, on marker commit
+  `a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57`. Guard job `93178824313` rejected before
+  bank selection; result and reproduction jobs were skipped and no artifact was created.
+- Identified the exact defect: `git rev-list --all` counted the canonical marker and the lateral
+  pull-request ref. D025 now defines canonical marker identity over first-parent `main` history.
+- Added M066 with no scientific changes, a new executable digest
+  `f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b` and a portable
+  23-file commitment `02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0`.
+- Added a real Git graph falsifier proving that lateral marker refs are ignored while repeat
+  first-parent occurrences are rejected. The first-result job remains attempt-one only.
+- Repeated all four banks through the unchanged M065 engine: complete lineage 18/18 with three
+  accepted cycles and 68/68 retained; every control 0/18 with zero accepted cycles. Eleven M066
+  tests passed in 202.78 seconds; the complete repository passed 1,112 tests in 1,689.93 seconds
+  and repository integrity passed.
+
 ## 0.40.0 — 2026-08-09
 
 M064 is preserved as a failed pre-canonical qualification and M065 carries the required
