@@ -2,8 +2,9 @@
 
 The historical `metamorphosis` package preserves experiment-specific mechanisms.  `mira_core`
 starts the operational platform: typed body interactions, least-privilege action admission,
-tamper-evident memory and a bounded agent loop.  It deliberately contains no model provider and
-grants no external authority by default.
+tamper-evident memory and a bounded agent loop.  Its contracts remain provider-neutral, while an
+explicit optional Codex CLI adapter makes the external model dependency visible.  It grants no
+external authority by default.
 """
 
 from mira_core.agent import AgentResult, MiraAgent

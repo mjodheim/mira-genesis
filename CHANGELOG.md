@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
+  replaced parent-only timeout kills in the model, container and terminal paths with one shared
+  whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed
+  descendants cannot act after a timeout.
+- Changed the closed M070 freeze audit to verify the exact historical commit and its committed
+  blobs instead of forbidding legitimate post-M070 evolution of the current working tree.
 - Split the endogenous bounded-lineage and M070+ model-mediated tracks explicitly. Genesis Gate 2
   remains unchanged; external model proposals are not lineage-owned and benchmark rewards belong
   to the named composed system rather than Mira's governance layer alone.

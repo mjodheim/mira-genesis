@@ -16,6 +16,9 @@ import threading
 from typing import Mapping, Protocol, Sequence
 
 from mira_core.contracts import Action, Goal, JsonValue, Observation
+from mira_core.process import (
+    ProcessSupervisorError, run_utf8_process, start_process_tree, terminate_process_tree,
+)
 from mira_core.safety import Authority
 
 
@@ -184,10 +187,13 @@ class DockerCliEngine:
         max_output_bytes: int,
     ) -> ContainerExecResult:
         command = [str(self.executable), "exec", container_id, *argv]
-        process = subprocess.Popen(
-            command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-        )
+        try:
+            process = start_process_tree(
+                command, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+            )
+        except ProcessSupervisorError as exc:
+            raise ContainerBodyError("Docker task command could not start") from exc
         output = bytearray()
         truncated = False
 
@@ -211,13 +217,28 @@ class DockerCliEngine:
             process.wait(timeout=timeout_seconds)
         except subprocess.TimeoutExpired:
             timed_out = True
-            process.kill()
-            process.wait(timeout=10)
-            self._trusted(("kill", container_id), check=False)
+            cleanup_error: ContainerBodyError | None = None
+            try:
+                container_stop = self._trusted(("kill", container_id), check=False)
+                if container_stop.returncode != 0:
+                    cleanup_error = ContainerBodyError(
+                        "timed-out Docker container could not be stopped"
+                    )
+            except ContainerBodyError as exc:
+                cleanup_error = exc
+            try:
+                terminate_process_tree(process)
+            except ProcessSupervisorError:
+                cleanup_error = ContainerBodyError("Docker task process tree did not stop")
         reader.join(timeout=10)
         if reader.is_alive():
-            process.kill()
+            try:
+                terminate_process_tree(process)
+            except ProcessSupervisorError as exc:
+                raise ContainerBodyError("Docker output reader cleanup failed") from exc
             raise ContainerBodyError("Docker output reader did not terminate")
+        if timed_out and cleanup_error is not None:
+            raise cleanup_error
         return ContainerExecResult(
             process.returncode, bytes(output), timed_out=timed_out,
             output_truncated=truncated,
@@ -230,11 +251,10 @@ class DockerCliEngine:
         self, args: Sequence[str], *, check: bool = True,
     ) -> subprocess.CompletedProcess[str]:
         try:
-            completed = subprocess.run(
-                [str(self.executable), *args], stdin=subprocess.DEVNULL,
-                capture_output=True, text=True, timeout=60, check=False,
+            completed = run_utf8_process(
+                [str(self.executable), *args], timeout_seconds=60,
             )
-        except (OSError, subprocess.TimeoutExpired) as exc:
+        except (ProcessSupervisorError, subprocess.TimeoutExpired, UnicodeError) as exc:
             raise ContainerBodyError(f"Docker control command failed: {type(exc).__name__}") from exc
         if check and completed.returncode != 0:
             detail = (completed.stderr or completed.stdout)[-2_000:]

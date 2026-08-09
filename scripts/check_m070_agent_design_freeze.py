@@ -38,14 +38,6 @@ def verify_freeze(path: Path = DEFAULT_FREEZE, *, root: Path = ROOT) -> Mapping[
         observed = _git("rev-parse", f"{commit}:{relative}", root=root)
         if observed != expected:
             raise ValueError(f"frozen M070 design blob mismatch for {relative}")
-        working = root / relative
-        if not working.is_file():
-            raise ValueError(f"frozen M070 design file missing from working tree: {relative}")
-        working_blob = _git(
-            "hash-object", f"--path={relative}", relative, root=root,
-        )
-        if working_blob != expected:
-            raise ValueError(f"frozen M070 design file changed after freeze: {relative}")
     commitment_value = {
         "exact_agent_design_commit": commit,
         "m070_pretarget_protocol_version": value.get("m070_pretarget_protocol_version"),

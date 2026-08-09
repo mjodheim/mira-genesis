@@ -16,6 +16,7 @@ import tempfile
 from typing import Mapping, Protocol, Sequence
 
 from mira_core.contracts import Action, Goal, JsonValue, Observation
+from mira_core.process import ProcessSupervisorError, run_utf8_process
 
 
 class ModelBackendError(RuntimeError):
@@ -214,12 +215,13 @@ class CodexExecBackend:
                 "--output-schema", str(schema_path), "--output-last-message", str(output_path), "-",
             ]
             try:
-                completed = subprocess.run(
-                    argv, input=prompt, text=True, capture_output=True,
-                    timeout=self.timeout_seconds, check=False,
+                completed = run_utf8_process(
+                    argv, input_text=prompt, timeout_seconds=self.timeout_seconds,
                 )
             except subprocess.TimeoutExpired as exc:
                 raise ModelBackendError("Codex decision exceeded its time budget") from exc
+            except (ProcessSupervisorError, UnicodeError) as exc:
+                raise ModelBackendError("Codex decision transport failed closed") from exc
             if completed.returncode != 0:
                 detail = (completed.stderr or completed.stdout)[-2_000:]
                 raise ModelBackendError(
