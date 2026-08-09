@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+- Licensed all project software under AGPL-3.0-only and the non-software research record
+  under CC BY 4.0.
+- Added explicit authorship, citation, provenance and trademark records naming Anthony Mets as
+  project author and research director while disclosing AI-assisted implementation and analysis.
+- Added Developer Certificate of Origin sign-off requirements for future contributions so that
+  public authorship and licensing provenance remain auditable.
+
 ## 0.41.0 — 2026-08-09
 
 M065 is preserved as a negative canonical guard qualification. M066 corrects only the Git-history

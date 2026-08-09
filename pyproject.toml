@@ -11,6 +11,12 @@ build-backend = "setuptools.build_meta"
 name = "mira-genesis"
 version = "0.41.0"
 description = "Experimental trans-substrate cognitive metamorphosis research"
+readme = "README.md"
+license = "AGPL-3.0-only"
+license-files = ["LICENSE", "NOTICE", "LICENSES/CC-BY-4.0.txt"]
+authors = [
+  { name = "Anthony Mets" },
+]
 requires-python = ">=3.11"
 # `numpy` is the only runtime dependency. It supports batched behavioural-equivalence
 # calculations in the `*_eval_support` modules. `torch` and `scipy` were declared but
