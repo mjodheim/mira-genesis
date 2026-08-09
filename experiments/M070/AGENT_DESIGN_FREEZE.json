@@ -1,0 +1,32 @@
+{
+  "benchmark_revision_pinned": false,
+  "benchmark_task_identifier_selected": false,
+  "benchmark_task_content_inspected": false,
+  "benchmark_task_executed": false,
+  "blobs": {
+    "docs/M070_PRETARGET_AGENT.md": "30c701b6528bd88e6ec6373caa8bd70c39c977b3",
+    "mira_core/__init__.py": "fa67bb2a5225d659478fbf684f00234a3baa554a",
+    "mira_core/agent.py": "261e31c076a8344fb4932090a294c80a28539968",
+    "mira_core/container.py": "4a10d8a6714dc958bef46a8a284df0f4f31adc5d",
+    "mira_core/model.py": "c6b158a34fa2cea001270b95d4403f48af7898a3",
+    "tests/test_mira_container_body.py": "b17d73586e886a41bc7da765650042aefc437052",
+    "tests/test_mira_container_integration.py": "82bdb1f474ad91fc70c45732b99d326900936017",
+    "tests/test_mira_core.py": "75641d2c12604a92f1beffe01755c91b7f177a96",
+    "tests/test_mira_model_policy.py": "f70c1c7745a00ff805a0eb36779ef7365677fcff"
+  },
+  "codex_cli_version": "0.147.0",
+  "design_commitment_contract": "sha256(canonical_json({exact_agent_design_commit,m070_pretarget_protocol_version,blobs}))",
+  "design_commitment_sha256": "14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46",
+  "docker_engine_version": "29.6.2",
+  "exact_agent_design_commit": "41ebe791605f55e7a44df8f0939d730139cf219a",
+  "external_success_decided_by_agent": false,
+  "m070_pretarget_protocol_version": 1,
+  "model_smoke_identity": "gpt-5.6-sol",
+  "real_docker_synthetic_test_passed": true,
+  "repository_integrity_passed": true,
+  "schema": "m070-agent-design-freeze-v1",
+  "scientific_result_exists": false,
+  "status": "agent_design_frozen_before_external_task_selection",
+  "targeted_tests_passed": 48,
+  "targeted_tests_skipped": 2
+}

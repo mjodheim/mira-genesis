@@ -1,0 +1,80 @@
+{
+  "agent_design_commit": "41ebe791605f55e7a44df8f0939d730139cf219a",
+  "bridge_commit": "06c23402e443dec699d7caf11595baebd1ae8409",
+  "claim_passed": false,
+  "controls": {
+    "llm-inference-batching-scheduler_nop_reward": 0.0,
+    "nop_control_confound": false,
+    "rstan-to-pystan_nop_reward": 0.0
+  },
+  "diagnosis": {
+    "configured_model_timeout_seconds": 180,
+    "failure": "UnicodeEncodeError in subprocess stdin transport followed by descendant pipe retention",
+    "observed_exception": "UnicodeEncodeError: 'charmap' codec can't encode character '\u2011' in position 6004",
+    "python_locale_encoding": "cp1252",
+    "root_cause": "CodexExecBackend used subprocess text mode without an explicit UTF-8 encoding and timed out only the Windows command wrapper, not its descendant process tree.",
+    "scientific_retry_performed": false,
+    "timeout_cleanup": "After each configured timeout had elapsed, only the verified orphan node/codex descendants belonging to that decision were stopped so Python could record the already-determined timeout. No decision was retried.",
+    "transport_fix_applied_to_m070": false
+  },
+  "external_artifacts": {
+    "llm-inference-batching-scheduler": {
+      "job_result_sha256": "038f2a200fcae5d4a9e443decf752f81e9201d26b725af973c25c57b080cde7b",
+      "manifest_sha256": "85216335a62e33c46191cf2da7739bce86f5eec2316856ce36173e997bdcf326",
+      "memory_sha256": "933288049bcdbe276b350ed7ea1f39fa5dbcfb77071972c49e7ec8d0c4b1b04c",
+      "nop_job_result_sha256": "054a4992d4214957f841fdcda228ef388a4647ec1646cba5d839ea3ae7de187b",
+      "nop_trial_result_sha256": "65227b5698dcb5fea0600985a199899fbbe92cf6267b9d3572d3d7c00b45bee2",
+      "trial_result_sha256": "8a7de5bf9a458ae86a42aadd53620bea25e9e92ac90e72cbe476e32e1e312f96"
+    },
+    "rstan-to-pystan": {
+      "job_result_sha256": "eeba5092329a91a7263eec24d4eddec896cbb4a9303e32bcb1443ba28d470d5b",
+      "manifest_sha256": "a564726f5901e40937389f780d69ef5c80a4e6f35a2ddad308b3eac2cfbd9056",
+      "memory_sha256": "6910b623a6410486118e5eb3a21275ad7fa945dfb67cb41baa73409faed98868",
+      "nop_job_result_sha256": "33c01771d00905bcbf26dd78be0f80ab4d7659213f285c8af0d1880f07590642",
+      "nop_trial_result_sha256": "370997c53c22382e87564b97779c9da79f7088979a888d0b51e0c51359e359d9",
+      "trial_result_sha256": "f23bddda376bfc4cc3f4e0369199a8b2a2109cddcafd295f2350e963f2f9f0d4"
+    }
+  },
+  "external_jobs_root": "C:/Users/antho/Dev/external/mira-m070-runs/jobs",
+  "falsifiable_threshold": {
+    "observed_successes": 0,
+    "required_successes": 1,
+    "selected_task_count": 2
+  },
+  "harness": {
+    "harbor_version": "0.20.0",
+    "peeled_commit": "459ff6ec99417589b7f679d14ddf3b3f0ae4f1dc"
+  },
+  "model": "gpt-5.6-sol",
+  "protocol_sha256": "1441d37fb9da2750d3244a392de5ae8032776ff03c5240bfcfb2cf5317c5d566",
+  "schema": "m070-external-result-v1",
+  "status": "failed_falsifiable_threshold",
+  "trials": [
+    {
+      "agent_claimed_success": false,
+      "agent_status": "policy_error",
+      "harbor_exception": false,
+      "memory_digest": "b5187648162c8eb9048f5ba39c94247ed131850bdbc35e4b530a92a06bf94f5f",
+      "network_mode": "no-network",
+      "reward": 0.0,
+      "scientific_retries": 0,
+      "steps": 2,
+      "task": "rstan-to-pystan",
+      "task_checksum": "56ad69f7e1617103b8b96377a007a9fc7efead8936ed88104aa82b97d0e7b083",
+      "trial_name": "rstan-to-pystan__KCZthdV"
+    },
+    {
+      "agent_claimed_success": false,
+      "agent_status": "policy_error",
+      "harbor_exception": false,
+      "memory_digest": "912b3556ad1d6bf561ddf7924a9164d64a33693ac83418499eb14fa7cb5b4c0f",
+      "network_mode": "no-network",
+      "reward": 0.0,
+      "scientific_retries": 0,
+      "steps": 1,
+      "task": "llm-inference-batching-scheduler",
+      "task_checksum": "7dd7031eff7d2d815dd2fd3ae735a5315d802181d06ad9f2d77c1253c1d0d2cc",
+      "trial_name": "llm-inference-batching-scheduler__p7pjuaM"
+    }
+  ]
+}

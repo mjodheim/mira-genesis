@@ -1,12 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m069_positive_qualified_development
+status: phase_eight_m071_transport_hardening_required
 
 active_research_question: >-
-  Can Mira transfer the governed terminal mechanism to independently maintained tasks frozen
-  after agent design and execute untrusted work in an OS-isolated container or VM? M069 is a
-  positive qualified development result for project-authored real-file/process tasks and calibrated
-  refusal; the independently maintained, OS-isolated external-task gate remains open.
+  After M070's frozen agent scored 0/2 because Windows Unicode and descendant-process transport
+  failed, can a separately frozen UTF-8/process-tree-hardened agent complete at least one task from
+  a fresh blind independently maintained pair while retaining no-network isolation and
+  evaluator-owned success?
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -1079,9 +1079,49 @@ phase_eight:
     permission_change_authority: false
     physical_actuation_authority: false
     general_intelligence_claimed: false
+  M070:
+    status: negative_external_development_result
+    canonical: false
+    design_record: docs/M070_PRETARGET_AGENT.md
+    design_freeze: experiments/M070/AGENT_DESIGN_FREEZE.json
+    selection_protocol: experiments/M070/SELECTION_PROTOCOL.json
+    task_selection: experiments/M070/TASK_SELECTION.json
+    execution_protocol: experiments/M070/EXECUTION_PROTOCOL.json
+    external_result: experiments/M070/EXTERNAL_RESULT.json
+    exact_agent_design_commit: 41ebe791605f55e7a44df8f0939d730139cf219a
+    design_commitment_sha256: 14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46
+    structured_model_policy_present: true
+    explicit_codex_backend_present: true
+    digest_pinned_container_body_present: true
+    realized_isolation_attestation_present: true
+    success_decided_by_agent: false
+    external_task_selected: true
+    selected_external_tasks:
+      - rstan-to-pystan
+      - llm-inference-batching-scheduler
+    external_task_inspected_after_selection: true
+    external_task_executed: true
+    scientific_result_exists: true
+    required_external_successes: 1
+    observed_external_successes: 0
+    external_rewards: [0.0, 0.0]
+    nop_control_rewards: [0.0, 0.0]
+    harbor_exceptions: 0
+    scientific_retries: 0
+    agent_network_mode: no-network
+    agent_statuses: [policy_error, policy_error]
+    agent_steps: [2, 1]
+    agent_claimed_success: false
+    failure_mode: windows_unicode_stdin_and_descendant_timeout_transport
+    protocol_sha256: 1441d37fb9da2750d3244a392de5ae8032776ff03c5240bfcfb2cf5317c5d566
+    result_sha256: 9b22e63869302539f31025102a83f3ccc1415e19faf9066379ca3ecd1b7253e3
+    task_replacement_performed: false
+    transport_fix_applied_to_M070: false
+    public_benchmark_claim_limit: development_only
+    private_uncontaminated_split_required_for_stronger_claim: true
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: external_post_design_tasks_in_os_isolation
+  next_required_boundary: utf8_process_tree_hardened_agent_on_fresh_blind_external_pair
 
 measurement_track:
   reserved_experiment: M045
@@ -1091,7 +1131,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M069: true
+  separate_from_M047_to_M070: true
 
 engineering_release_boundary:
   human_control_required_for:

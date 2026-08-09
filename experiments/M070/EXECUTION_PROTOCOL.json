@@ -1,0 +1,109 @@
+{
+  "agent": {
+    "bridge_commit": "06c23402e443dec699d7caf11595baebd1ae8409",
+    "codex_cli_version": "0.147.0",
+    "design_commit": "41ebe791605f55e7a44df8f0939d730139cf219a",
+    "design_commitment_sha256": "14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46",
+    "model": "gpt-5.6-sol",
+    "model_provider_snapshot_available": false,
+    "policy_id": "m070-frozen-structured-model-policy-v1"
+  },
+  "attempt_policy": {
+    "concurrency": 1,
+    "infrastructure_retry_permitted": "only before any model decision and before any verifier reward, with identical frozen inputs and a documented incident",
+    "mira_attempts_per_task": 1,
+    "nop_attempts_per_task": 1,
+    "replacement_permitted": false,
+    "task_order": [
+      "rstan-to-pystan",
+      "llm-inference-batching-scheduler"
+    ]
+  },
+  "benchmark": {
+    "repository": "https://github.com/harbor-framework/terminal-bench-2.git",
+    "revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6"
+  },
+  "budgets": {
+    "codex_decision_timeout_seconds": 180,
+    "command_output_chars": 65536,
+    "command_timeout_seconds": 120,
+    "harbor_agent_timeout_seconds": 1800,
+    "harbor_verifier_timeout_seconds": 1800,
+    "max_agent_steps": 16
+  },
+  "contamination_boundary": {
+    "benchmark_is_public_development_evidence": true,
+    "reference_solution_visible_to_agent": false,
+    "selected_task_content_opened_before_blind_selection": false,
+    "verifier_tests_visible_to_agent": false
+  },
+  "failure_classification": {
+    "inconclusive": "harness or container failure prevents both agent evidence and an external reward",
+    "negative": "a valid externally scored Mira trial earns reward below 1.0, including refusal or budget exhaustion",
+    "positive": "all protocol invariants hold and at least one of the two valid Mira trials earns reward at least 1.0"
+  },
+  "falsifiable_hypothesis": "The frozen task-agnostic Mira agent can produce an externally accepted solution on at least one of two blindly selected independent container tasks without agent network access.",
+  "harness": {
+    "annotated_tag_object": "f75477f2ad0b04fad199b0cb80689cc23a06c72d",
+    "peeled_commit": "459ff6ec99417589b7f679d14ddf3b3f0ae4f1dc",
+    "release": "harbor==0.20.0",
+    "tag": "v0.20.0",
+    "tree": "09557fdc853ce5826f5b69643034ac20d1ff80b6"
+  },
+  "images": {
+    "llm-inference-batching-scheduler": "alexgshaw/llm-inference-batching-scheduler@sha256:19e79aa49be4e55dccca1dde966515ebe6852314b6010bcb9230afb48b996774",
+    "rstan-to-pystan": "alexgshaw/rstan-to-pystan@sha256:b23d48839408524326095c15ada4145c772b87646cf299022ff1f58c97baba91"
+  },
+  "network": {
+    "agent_phase": "no-network",
+    "agent_setup_action": "none",
+    "original_environment_baseline_preserved": "public",
+    "verifier_phase": "original benchmark policy"
+  },
+  "prohibited_adaptation": [
+    "change frozen agent files",
+    "change the Harbor bridge after a selected task begins",
+    "replace or filter a selected task",
+    "expose reference solutions or verifier tests to the model",
+    "grant the agent network access",
+    "retry a scientifically valid Mira attempt"
+  ],
+  "required_positive_controls": {
+    "agent_claimed_success": false,
+    "both_external_verifiers_return_rewards": true,
+    "frozen_design_checker_passes": true,
+    "nop_reward_must_be_zero_on_both_tasks": true,
+    "preservation_suite_passes": true
+  },
+  "schema": "m070-external-execution-protocol-v1",
+  "selection": {
+    "binding_commit": "f336d7128377aa7f7d866f5e3c190989c79b0570",
+    "inventory_sha256": "bfee1eb8b84160924a296256845a90fe49dba86fb7d746851eca0857e058db52",
+    "rule_commit": "9bbec79d10d362d386ad473ea56caafb20dcbcbc",
+    "selected": [
+      "rstan-to-pystan",
+      "llm-inference-batching-scheduler"
+    ]
+  },
+  "status": "frozen_before_selected_task_execution",
+  "task_packages": {
+    "llm-inference-batching-scheduler": {
+      "environment_tree": "94e08626472f730f13ec28d5213bb03eece6e8a1",
+      "instruction_blob": "dfc55a1e125230a4a4583ed4057985427f85637b",
+      "original_task_config_blob": "71281e82a9ea8670b906fcd384a2d03303597469",
+      "original_tree": "ce785157dffd58efd621a02030190768fcb57a53",
+      "run_task_config_sha256": "0c3f10dc52957a7c4c2c4999bbf69682943cf7659fa59123341fb7326685baf1"
+    },
+    "rstan-to-pystan": {
+      "environment_tree": "e8ddef33fceeac45662bf3358407d81f3f5c5b93",
+      "instruction_blob": "efe07fe95e67ccb18cfcaf3fe14a5fe33a080dad",
+      "original_task_config_blob": "e36c80ade5216bb06e575899839e9c52e0dfd21f",
+      "original_tree": "f6bc420786f2bf5aca77631e0095ab4cbf77e35e",
+      "run_task_config_sha256": "6625c1f84cfbb5553ccf71fee437edfe6bf764bd8d917384ec641ffce8b47a5c"
+    }
+  },
+  "task_package_overrides": [
+    "replace each mutable image tag with the already-resolved digest for the same image",
+    "set [agent].network_mode to no-network"
+  ]
+}

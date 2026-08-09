@@ -65,6 +65,7 @@ The full evidence is preserved in:
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
+| M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -287,6 +288,18 @@ are trusted host code rather than an OS security sandbox.
 See [`experiments/M069/PROTOCOL.md`](experiments/M069/PROTOCOL.md),
 [`experiments/M069/DEVELOPMENT_RESULT.md`](experiments/M069/DEVELOPMENT_RESULT.md) and
 [`experiments/M069/STATUS.md`](experiments/M069/STATUS.md).
+
+**M070 is a negative external development result.** The agent design was committed before a
+deterministic blind selection from 89 Terminal-Bench 2 tasks. Harbor ran the two selected tasks in
+digest-pinned containers with `no-network` during the agent phase and evaluator-owned success.
+Both `nop` controls scored `0.0`; the unchanged Mira agent also scored `0.0` on both tasks.
+
+The external tasks exposed a Windows transport defect in the frozen backend: subprocess text mode
+used `cp1252`, and a true `U+2011` observation caused `UnicodeEncodeError`; the command wrapper's
+descendants then retained the pipe past the declared timeout. M070 was not repaired or retried.
+This proves the external evaluation and isolation path exists, but supplies no external-task
+competence or AGI evidence. See
+[`experiments/M070/EXTERNAL_RESULT.md`](experiments/M070/EXTERNAL_RESULT.md).
 
 See:
 

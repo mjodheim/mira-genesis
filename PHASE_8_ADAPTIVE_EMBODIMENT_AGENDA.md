@@ -62,5 +62,14 @@ execute untrusted work inside an OS-isolated container or VM. Longer word langua
 repair statements or more bodies written inside Mira Genesis repeat the M069 instrument and do not
 qualify as new evidence.
 
+M070 attempted that boundary under a frozen design and blind two-task selection. The official
+Harbor verifier returned 0.0 for both Mira trials and both `nop` controls. The frozen backend failed
+on locale-dependent Unicode stdin transport and Windows descendant timeout handling. The negative
+result is preserved; it supplies isolation/evaluation-path evidence, not task competence.
+
+M071 must first prove explicit UTF-8 round trips and whole-process-tree timeout enforcement on
+pre-target regressions. Only after a new design freeze may it select a fresh external pair by a new
+blind rule. Reusing M070's pair as the next scientific threshold is forbidden.
+
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

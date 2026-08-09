@@ -767,3 +767,28 @@ M069 moves G1, G6 and G10 only to partial mechanism evidence. It contains no tas
 foundation model, multimodal grounding, learned cross-domain transfer, hour-scale autonomy,
 external task authorship or adversarial OS isolation. It cannot support broad software-engineering,
 general-agent or AGI language.
+
+## D032 — M070 remains negative; M071 must fix transport before a fresh blind pair
+
+M070 obeyed D031's ordering: the task-agnostic agent was frozen, a deterministic selection rule was
+committed, and only then were two independently maintained Terminal-Bench 2 tasks selected. Harbor
+realized `no-network` agent phases and evaluator-owned rewards. Both Mira trials and both `nop`
+controls scored `0.0`; there was no Harbor exception, valid retry or task replacement.
+
+### The decision
+
+M070 is closed as a negative external development result. Its frozen files, pair and outcomes are
+not repaired or rerun. The observed Windows `cp1252` stdin failure and descendant pipe retention
+are agent-design failures because they prevented bounded decisions inside an otherwise valid
+external evaluation.
+
+M071 may correct explicit UTF-8 transport and whole-process-tree timeout enforcement, with direct
+regressions, before any new target identifier is selected. It must then create a new design freeze,
+new blind salt and fresh selected pair. M070's tasks may be used only as disclosed regression
+material, never as M071's scientific threshold.
+
+### Claim boundary
+
+M070 proves that Mira can be connected to official external container evaluation while preserving
+network isolation and external success ownership. It does not prove competence on either external
+task, cross-domain transfer, general agency or AGI.

@@ -24,6 +24,10 @@ flowchart LR
 The policy may be symbolic, learned or backed by a future foundation model. The core does not
 silently choose a provider and does not treat model output as authority.
 
+`StructuredModelPolicy` now supplies the provider-neutral model boundary. It validates one closed
+JSON decision and maps it to a fixed body action; malformed output and backend exceptions become
+fail-closed evidence. `CodexExecBackend` is one explicit adapter, not a hidden default.
+
 ## Contracts
 
 - `Goal` carries a stable identifier, instruction and machine-readable success criteria.
@@ -58,25 +62,38 @@ These are application-level affordance controls. Registered commands are trusted
 not confined by an OS security boundary. Use an independently configured container or VM before
 registering untrusted executables.
 
+## Isolated container body
+
+`IsolatedContainerBody` crosses that engineering boundary for untrusted task commands. It accepts
+only digest-pinned images and starts a disposable Docker container with no network, no Linux
+capabilities, `no-new-privileges`, a read-only root filesystem and fixed CPU, memory, PID, time,
+step, script and output budgets. The only host mount is a disposable task directory; neither the
+repository nor Docker socket is exposed.
+
+The body inspects Docker's realized configuration after creation and removes the container if any
+security invariant differs. A model can execute one bounded script or submit the workspace, but
+submission never marks success. An external evaluator owns the final-state verdict.
+
 ## Evidence and recovery
 
 Every episode appends canonical events to `MemoryLedger`. Each digest binds the event index, kind,
 payload and previous digest. Checkpoints restore the complete chain exactly; payload, ordering,
 link or head-digest tampering fails validation.
 
-The agent records starts, admissions, observations, refusals, body errors, budget exhaustion and
-termination. Body exceptions become evidence rather than disappearing behind a generic failure.
+The agent records starts, admissions, observations, refusals, policy/backend errors, body reset or
+action errors, budget exhaustion and termination. Failures become evidence rather than disappearing
+behind a generic exception.
 
 ## Current limits
 
 This is an engineering foundation, not a general cognitive system. It currently provides no:
 
-- language or multimodal model;
+- built-in language or multimodal model (one explicit external Codex adapter exists);
 - planner or learned world model;
 - semantic retrieval system;
 - online parameter learning;
 - browser or physical body;
-- strong container or VM isolation for registered terminal processes;
+- independent adversarial validation of the Docker isolation boundary;
 - authenticated high-impact release service.
 
 Those features must be added behind the existing body, policy, memory and safety boundaries and
