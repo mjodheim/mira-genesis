@@ -47,11 +47,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   repairs all four compatible real-file/process workspaces and passes 3/3 hidden cases per task.
   The incompatible protocol is refused before mutation, all ten frozen controls pass and the
   deterministic manifest digest is `c5c80701`.
-- **M070 is at a frozen pre-target engineering boundary, with no scientific result.** Exact design
-  commit `41ebe79` contains a strict structured model policy and an attested, digest-pinned isolated
-  Docker body. Blind rule `9bbec79` selected `rstan-to-pystan` and
-  `llm-inference-batching-scheduler` from 89 external tasks; no task content has yet been inspected
-  or executed.
+- **M070 is a negative external development result.** Exact design `41ebe79` and deterministic
+  selection rule `9bbec79` were frozen before selecting two of 89 Terminal-Bench 2 tasks. Official
+  Harbor trials and both `nop` controls scored `0.0`; no trial was retried or replaced. The frozen
+  backend failed closed on Windows Unicode stdin encoding and descendant-process timeout handling.
+  This validates the isolated external evaluation path, not external task competence.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -650,12 +650,13 @@ question remains open but is not a missing completion gate.
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
+| M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M069: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M070: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

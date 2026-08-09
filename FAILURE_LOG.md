@@ -894,3 +894,22 @@ During M066 development, an initial local test command was terminated by the ter
 command timeout before pytest emitted a verdict. It was rerun with a suitable development-only
 window; the final strengthened campaign passed all eleven tests in 202.78 seconds. This local process timeout created no canonical
 observation and changed no frozen input.
+
+## M070 — external Unicode and process-tree transport failed before task completion
+
+M070 froze exact agent design `41ebe791605f55e7a44df8f0939d730139cf219a`, then blindly
+selected two Terminal-Bench 2 tasks from a pinned 89-task inventory. Both official Harbor trials
+completed with reward `0.0`; both `nop` controls also scored `0.0`. Harbor recorded no exception,
+retry or replacement.
+
+The frozen `CodexExecBackend` used `subprocess.run(..., text=True)` without an explicit encoding.
+Python 3.14.6 selected Windows `cp1252`. A true non-breaking hyphen (`U+2011`) in a later prompt
+raised `UnicodeEncodeError` in the stdin writer thread. Timeout killed the `.cmd` wrapper but not
+its `node`/`codex` descendants, which retained the pipe and delayed return. After the configured
+180 seconds had elapsed, only those verified orphan descendants were stopped so the existing
+decision could record `ModelBackendError`; no decision was retried.
+
+M070 therefore fails its preregistered 1/2 threshold. The result is not reclassified as an
+infrastructure pass and the two selected tasks cannot become M071's fresh evidence. Explicit UTF-8
+transport, whole-process-tree timeout enforcement and permanent non-ASCII/descendant regressions
+are mandatory before a new freeze.

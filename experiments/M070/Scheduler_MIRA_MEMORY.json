@@ -1,0 +1,11 @@
+{
+  "events": [
+    {"digest":"53baeca3c7c33bc277a6812c8a5cdfabf73086cda1489e956e8e805c067a1887","index":0,"kind":"episode_started","payload":{"body_id":"harbor-external-container-body-v1","goal_id":"m070-external-task","initial_observation_id":"harbor:0:reset","policy_id":"m070-frozen-structured-model-policy-v1"},"previous_digest":"0000000000000000000000000000000000000000000000000000000000000000"},
+    {"digest":"210376d303e474316cb04e7aa8aa14b31a06812405fe47d1ac38cb533112c151","index":1,"kind":"action_admission","payload":{"action_id":"model-1-exec","action_kind":"container_exec","allowed":true,"missing_authorities":[],"reason":"action is inside the immutable authority envelope","step":1},"previous_digest":"53baeca3c7c33bc277a6812c8a5cdfabf73086cda1489e956e8e805c067a1887"},
+    {"digest":"bf2fe777467b99ba2e3edf72a1156fbf8601406dce5439a17546b0dd80a097d1","index":2,"kind":"observation","payload":{"observation_id":"harbor:1:command","output_truncated":false,"returncode":0,"step":1},"previous_digest":"210376d303e474316cb04e7aa8aa14b31a06812405fe47d1ac38cb533112c151"},
+    {"digest":"c4ba0670883f5588bb9d0f835cb5ad61449763a86a2e18090b882621b38c7030","index":3,"kind":"policy_error","payload":{"error":"Codex decision exceeded its time budget","error_type":"ModelBackendError","step":2},"previous_digest":"bf2fe777467b99ba2e3edf72a1156fbf8601406dce5439a17546b0dd80a097d1"},
+    {"digest":"912b3556ad1d6bf561ddf7924a9164d64a33693ac83418499eb14fa7cb5b4c0f","index":4,"kind":"episode_finished","payload":{"agent_claimed_success":false,"status":"policy_error","steps":1},"previous_digest":"c4ba0670883f5588bb9d0f835cb5ad61449763a86a2e18090b882621b38c7030"}
+  ],
+  "head_digest": "912b3556ad1d6bf561ddf7924a9164d64a33693ac83418499eb14fa7cb5b4c0f",
+  "schema": "mira-memory-ledger-v1"
+}

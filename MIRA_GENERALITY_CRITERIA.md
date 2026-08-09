@@ -18,6 +18,10 @@ M069 is positive qualified development mechanism evidence for a governed real-te
 and incompatible-task refusal after a separate task freeze. Exact run `31319062535` passed.
 It is not cross-domain or general-agent evidence.
 
+M070 is negative external development evidence. It preserved blind independent-task selection,
+container isolation and evaluator-owned success, but scored 0/2 after a model-transport failure.
+It does not advance a competence gate.
+
 ## G1 — interface novelty
 
 The agent must enter bodies whose interaction language was not encoded as a descriptor product in
@@ -101,15 +105,15 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted task bank and refuses one incompatible protocol before mutation; targets and the finite candidate language remain project-authored. |
+| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted authored bank and refuses one incompatible protocol. M070 adds correct blind external-target ordering but no accepted external task. |
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | No frozen transfer across real, materially different domains. |
 | G5 | partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. |
-| G6 | partial mechanism evidence | M069 completes four tasks through real temporary files and registered host processes; there is no strong OS isolation, browser/desktop body or external task suite. |
+| G6 | partial mechanism evidence | M069 completes authored real-file/process tasks. M070 reaches official digest-pinned external containers with no-network agent phases, but completes 0/2 tasks after transport failure; browser/desktop competence remains absent. |
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | stronger partial mechanism evidence | M069 passes authority ablation, under-declaration, traversal, command-schema, secret-stripping, hidden-output and incompatible-refusal controls; no adversarial OS sandbox or general-agent red-team suite exists. |
+| G10 | stronger partial mechanism evidence | M069 passes its authority/refusal controls. M070 preserves no-network isolation, tamper-evident failure and evaluator-owned success under a real transport fault; no general-agent red-team suite exists. |
 
 The next accepted result must change this table by evidence, not wording.

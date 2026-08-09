@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Preserved M070 as a negative external development result. The agent design and blind selection
+  rule were committed before two of 89 Terminal-Bench 2 tasks were opened or executed.
+- Official Harbor v0.20.0 returned reward `0.0` for both Mira trials and both `nop` controls, with
+  no Harbor exception, scientific retry or task replacement. Agent phases were `no-network` and
+  success remained evaluator-owned.
+- Diagnosed the frozen backend failure: locale-dependent subprocess text mode rejected a true
+  `U+2011` under Windows `cp1252`, while orphan `node`/`codex` descendants retained the pipe after
+  the wrapper timeout. M070 remains unmodified; M071 must freeze a UTF-8/process-tree correction
+  before selecting a fresh pair.
 - Added the M070 pre-target engineering baseline before selecting any external task: a strict
   provider-neutral structured-model policy, explicit read-only Codex adapter and digest-pinned
   isolated Docker body.

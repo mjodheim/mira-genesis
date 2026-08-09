@@ -258,3 +258,23 @@ incompatible task refused after one read with zero writes and zero processes; ev
 Manifest digest `c5c807017f05788dc22d21f88192279b9f177b648403b2cc41ca149b25ff6289`
 reproduced exactly. Exact learner commit `c603dd5` passed CI run `31319062535`; attribution run
 `31319062599` also passed.
+
+## H16 — Frozen isolated agent transfer to a blind external pair
+
+A task-agnostic agent frozen before target selection can complete at least one of two blindly
+selected independently maintained container tasks, with no agent network access and success
+decided only by the external verifier.
+
+**Status:** refuted by the M070 external development result.
+
+**Pre-written implication:** both `nop` floors must score zero, both Mira trials must be valid and
+externally scored, and at least one Mira reward must be at least `1.0`. No task replacement or
+scientifically valid retry is permitted.
+
+**Result:** both `nop` rewards were `0.0` and both Mira rewards were `0.0`. The frozen backend
+entered `policy_error` after one or two actions because locale-dependent stdin encoding rejected
+Unicode and Windows descendants retained the timeout pipe. Harbor reported no trial exception.
+
+**Scope:** this refutes the exact M070 design and threshold. It does not show that the selected
+tasks are impossible, that model reasoning is generally incapable, or that an UTF-8-hardened
+successor will transfer. M071 requires a fresh freeze and blind pair.
