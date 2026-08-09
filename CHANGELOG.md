@@ -11,6 +11,9 @@
 - Applied the committed M071 rule once: 87 of 89 identifiers were eligible and the fresh pair is
   `sqlite-with-gcov`, then `custom-memory-heap-crash`. Inventory digest `c21c3e62`; neither task
   was opened before the binding.
+- Froze M071 execution before any trial: Harbor 0.20.0, digest-pinned images, no-network agent
+  phases, four ordered single attempts, zero valid retries/replacements, external success and
+  composed-system score attribution. Solutions and verifier tests remain unopened.
 - Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
   replaced parent-only timeout kills in the model, container and terminal paths with one shared
   whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed

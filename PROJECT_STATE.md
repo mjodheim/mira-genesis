@@ -58,7 +58,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   regressions, 1,215 local design tests and a live schema-validated model smoke pass. No new
   task content or scientific result existed at the freeze. A later one-draw rule excluded both
   M070 tasks and selected `sqlite-with-gcov` then `custom-memory-heap-crash` before either task was
-  opened.
+  opened. Instructions and environments were then inspected, while solutions and verifier tests
+  remained closed; execution protocol `31d3c7bd` is frozen before all four ordered trials.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -663,7 +664,7 @@ question remains open but is not a missing completion gate.
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
-| M071 | **PRE-TARGET DESIGN FROZEN** | Runtime `0820ebc` and bridge `132476a` are committed by `2e76a1b8`; UTF-8 and descendant-process regressions pass. No fresh task has been selected, inspected or executed. |
+| M071 | **EXECUTION PROTOCOL FROZEN** | Runtime `0820ebc` and bridge `132476a` are committed by `2e76a1b8`; rule `fa5d896` selected a fresh pair before inspection. Protocol `31d3c7bd` now fixes four single attempts before execution. |
 
 ## Parallel measurement track — M045
 
