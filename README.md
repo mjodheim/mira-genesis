@@ -297,3 +297,24 @@ relaxed afterward, and failures remain visible.
 Development runs may improve a rig but may not be described as canonical evidence.
 English is the only language permitted on the active repository surface; historical
 immutable evidence remains governed by [`LANGUAGE_POLICY.md`](LANGUAGE_POLICY.md).
+
+## Authorship, citation and licensing
+
+Mira Genesis was conceived and directed by **Anthony Mets**. Implementation and experimental
+analysis were AI-assisted, including the use of OpenAI Codex. The public Git history and
+[`PROVENANCE.md`](PROVENANCE.md) preserve the exact origin and canonical result lineage.
+
+Project software is licensed under the
+[GNU Affero General Public License v3.0 only](LICENSE). Non-software documentation, protocols,
+reports and experimental result records are licensed under
+[Creative Commons Attribution 4.0 International](LICENSES/CC-BY-4.0.txt). The precise boundary
+and required attribution are defined in [`LICENSE_POLICY.md`](LICENSE_POLICY.md).
+
+Reuse must preserve the applicable copyright and licence notices. Modified versions must identify
+their changes and may not present themselves as the original or official Mira Genesis project.
+The software licences do not grant rights to the Mira Genesis name or visual identity; see
+[`TRADEMARKS.md`](TRADEMARKS.md).
+
+For academic or research use, cite the project using [`CITATION.cff`](CITATION.cff). GitHub exposes
+that record through its **Cite this repository** action. Contributors must follow
+[`CONTRIBUTING.md`](CONTRIBUTING.md) and certify origin through the [`DCO`](DCO).

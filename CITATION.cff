@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: >-
+  If you use Mira Genesis in software, research, teaching or a publication,
+  please cite the project using this metadata and identify any modifications.
+type: software
+title: "Mira Genesis"
+abstract: >-
+  A bounded and auditable research program on self-rewrite, trans-substrate
+  functional continuity and governed adaptive software bodies.
+authors:
+  - family-names: "Mets"
+    given-names: "Anthony"
+version: "0.41.0"
+date-released: "2026-08-09"
+license: "AGPL-3.0-only"
+repository-code: "https://github.com/mjodheim/mira-genesis"
+url: "https://github.com/mjodheim/mira-genesis"
+keywords:
+  - "adaptive software"
+  - "self-rewrite"
+  - "trans-substrate continuity"
+  - "WebAssembly"
+  - "reproducible research"
