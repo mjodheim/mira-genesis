@@ -1,12 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m071_execution_protocol_frozen_before_trials
+status: phase_eight_m071_positive_external_development_result
 
 active_research_question: >-
-  After M070's frozen agent scored 0/2 because Windows Unicode and descendant-process transport
-  failed, can a separately frozen UTF-8/process-tree-hardened agent complete at least one task from
-  a fresh blind independently maintained pair while retaining no-network isolation and
-  evaluator-owned success?
+  After M071 passed one of two fresh blind public external tasks as a declared model-mediated
+  composed system, can a successor isolate the causal contribution of Mira governance and then
+  reproduce transfer across materially different private uncontaminated tasks without weakening
+  no-network, audit or evaluator-owned success?
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -1142,7 +1142,7 @@ phase_eight:
     public_benchmark_claim_limit: development_only
     private_uncontaminated_split_required_for_stronger_claim: true
   M071:
-    status: fresh_external_pair_selected_before_task_content_inspection
+    status: positive_external_development_result
     canonical: false
     design_record: docs/M071_PRETARGET_AGENT.md
     design_freeze: experiments/M071/AGENT_DESIGN_FREEZE.json
@@ -1169,16 +1169,35 @@ phase_eight:
     external_task_content_inspected: true
     reference_solution_inspected: false
     verifier_tests_inspected: false
-    external_task_executed: false
-    scientific_result_exists: false
+    external_task_executed: true
+    scientific_result_exists: true
+    external_result: experiments/M071/EXTERNAL_RESULT.json
+    external_result_sha256: d352651327898c3d51bfab3a9b86814de6c8fe7a01c70be2ae66702109feb14e
+    required_external_successes: 1
+    observed_external_successes: 1
+    external_rewards: [0.0, 1.0]
+    nop_control_rewards: [0.0, 0.0]
+    agent_statuses: [policy_refused, submitted_for_external_evaluation]
+    agent_steps: [7, 12]
+    harbor_exceptions: 0
+    scientific_retries: 0
+    task_replacement_performed: false
+    agent_network_mode: no-network
+    agent_claimed_success: false
+    public_benchmark_claim_limit: development_only
+    private_uncontaminated_split_required_for_stronger_claim: true
+    governance_layer_isolating_baseline_present: false
     local_design_suite_python_314: [1215, 1215]
     local_design_suite_skipped: 2
+    local_result_suite_python_314: [1225, 1225]
+    local_result_suite_seconds: 2257.69
+    local_result_suite_skipped: 2
     repository_integrity_passed: true
     genesis_gate_2_evidence: false
-    reward_attribution_if_executed: named_composed_system
+    reward_attribution: named_composed_system
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: utf8_process_tree_hardened_agent_on_fresh_blind_external_pair
+  next_required_boundary: governance_isolating_ablation_then_private_cross_domain_reproduction
 
 measurement_track:
   reserved_experiment: M045

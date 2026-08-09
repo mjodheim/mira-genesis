@@ -75,6 +75,12 @@ threshold remains forbidden. After binding, task instructions and environments w
 images pinned by digest and execution protocol `31d3c7bd` frozen before any `nop` or Mira trial;
 solutions and verifier tests remain closed.
 
+M071 passed its exact narrow threshold: `custom-memory-heap-crash` earned reward `1.0`, SQLite
+earned `0.0`, and both `nop` floors earned `0.0`. There were no Harbor exceptions, retries or task
+replacements. This is positive public development evidence for the named composed system. A next
+step must isolate Mira governance causally or cross a private uncontaminated multi-domain split;
+running more samples from the same public benchmark is not a phase advance.
+
 M071 also formalizes the epistemic split introduced by M070. External-model actions are declared
 proposal inputs, not lineage-owned tools. External reward is reported for the named composed
 system; the Mira layer is evaluated through governance, isolation, audit and robustness evidence.

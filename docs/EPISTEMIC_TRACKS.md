@@ -30,6 +30,10 @@ M071 applies this rule before evaluation: its model, policy identity, process tr
 bridge are frozen as named components before any fresh external task selection. This ordering
 improves auditability but does not convert the model's proposals into lineage-owned work.
 
+M071 later passed one of its two selected public tasks. That reward is the first positive external
+Track B competence result, but it still belongs to the full composed system. Without an isolating
+governance baseline it does not measure the Mira layer independently.
+
 Evidence from this line may support claims about:
 
 - authority containment and calibrated refusal;

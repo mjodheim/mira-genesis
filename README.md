@@ -73,7 +73,7 @@ The full evidence is preserved in:
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
-| M071 | **EXECUTION PROTOCOL FROZEN** | Runtime `0820ebc` and bridge `132476a` were frozen first. Rule `fa5d896` selected a fresh pair before inspection; protocol `31d3c7bd` fixes four single attempts before execution. |
+| M071 | **POSITIVE EXTERNAL DEVELOPMENT** | The frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus two `0.0` `nop` floors, with no exception, retry or replacement. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -309,7 +309,7 @@ This proves the external evaluation and isolation path exists, but supplies no e
 competence or AGI evidence. See
 [`experiments/M070/EXTERNAL_RESULT.md`](experiments/M070/EXTERNAL_RESULT.md).
 
-**M071 is frozen before fresh external selection.** The corrected runtime uses strict UTF-8 bytes
+**M071 is a positive external development result.** The corrected runtime uses strict UTF-8 bytes
 pipes and whole-process-tree cleanup across model, Docker and governed terminal paths. Real Windows
 regressions prove that the failing Unicode code point survives and that delayed descendants cannot
 act after timeout. The complete design suite passed 1,215 tests locally, repository integrity
@@ -320,7 +320,11 @@ No M071 benchmark revision, task identifier, task content or result exists at th
 After that freeze, rule `fa5d896` selected the fresh pair without opening its task content; see
 [`experiments/M071/TASK_SELECTION.md`](experiments/M071/TASK_SELECTION.md).
 The instructions and environments were then inspected, image tags resolved to digests and protocol
-`31d3c7bd` frozen. Reference solutions and verifier tests remain unopened; no trial has run yet.
+`31d3c7bd` frozen. Reference solutions and verifier tests remained unopened. Official Harbor
+rewards were `0.0` for SQLite and **`1.0` for custom-memory**, while both `nop` floors were `0.0`.
+All jobs had zero exception, retry and replacement; success remained evaluator-owned. Result
+digest `d3526513`; the final local suite passed 1,225 tests with two skips. See
+[`experiments/M071/EXTERNAL_RESULT.md`](experiments/M071/EXTERNAL_RESULT.md).
 
 See:
 

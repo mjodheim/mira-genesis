@@ -1,0 +1,120 @@
+{
+  "attribution": {
+    "benchmark_reward_owner": "named composed system: gpt-5.6-sol, M071 policy wrapper, process transport, Harbor body and external evaluator",
+    "generality_gate_advanced": false,
+    "genesis_gate_2_evidence": false,
+    "governance_layer_isolating_baseline_present": false,
+    "supported_claim": "one frozen named composed system solved one of two fresh blindly selected public external tasks under no-network agent phases"
+  },
+  "benchmark_revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6",
+  "claim_passed": true,
+  "contamination": {
+    "environment_source_inspected_after_binding": true,
+    "instructions_inspected_after_binding": true,
+    "reference_solution_inspected_by_operator_or_agent": false,
+    "selected_task_content_opened_before_binding": false,
+    "verifier_tests_executed_by_harbor": true,
+    "verifier_tests_inspected_by_operator_or_agent": false
+  },
+  "controls": {
+    "all_jobs_harbor_exceptions": 0,
+    "all_jobs_retries": 0,
+    "nop_control_confound": false,
+    "nop_rewards": {
+      "custom-memory-heap-crash": 0.0,
+      "sqlite-with-gcov": 0.0
+    },
+    "task_replacement_performed": false
+  },
+  "execution_protocol_commit": "6cc064bc07e2187ef51311a6a48fd96b445bd5b6",
+  "execution_protocol_sha256": "31d3c7bd968cb3fc381b8c3272b599695f3294c8537a1d8d805fc0ef334e0555",
+  "external_artifacts": {
+    "custom-memory-heap-crash": {
+      "job_result_sha256": "ad72fd804a567236751b7eb56d728c50bd5765ee7d3c7637496df33c61650a37",
+      "manifest_sha256": "acf8c8bbc0f488b7220f155454a75e0b9127b1888be4d8df46a70c27ceb192db",
+      "memory_sha256": "ef96fd48d45ac21d948c8840a2536c07631f4b43ac87437346a4639a944df7d4",
+      "nop_job_result_sha256": "bec34ce93602e96624a67455d54f113c4b534c13b82c01f22bb3efca24fc24d8",
+      "nop_trial_result_sha256": "05a36e5fa63e69c469af063e1051769608d9efca688b0f7b984c34418f613f07",
+      "trial_result_sha256": "4281aab801d6f7b8fd5a17d3a06d52c8eaebfa96412b1c2f3811c76254c2a635"
+    },
+    "sqlite-with-gcov": {
+      "job_result_sha256": "2060c7efcd47433285ae5504324f417cf2039288a8db44e04aab83d1f362e0c3",
+      "manifest_sha256": "f0296ec19673fa0d1b8eabfef5bda7e6863c3fafc31336b32717f82eefca195f",
+      "memory_sha256": "1fcb8d75b63300795f482ac745b6aefca3720e4b016249feb88059f67f224ff3",
+      "nop_job_result_sha256": "bb6bc4c6bd8f429f1ad937d680be4a43214520e47f2522cf5d65a6514c8e3f05",
+      "nop_trial_result_sha256": "e6dcf3c2596d3edb8929a72c7c85a437b764f052a4c35a5e0a3b9b7f1bb8c580",
+      "trial_result_sha256": "ff9c7be0e5758fa66755d38af1a72675fe5c1f2f38211b1887b8407cc0eca796"
+    }
+  },
+  "external_jobs_root": "C:/Users/antho/Dev/external/mira-m071-runs/jobs",
+  "falsifiable_threshold": {
+    "observed_successes": 1,
+    "required_successes": 1,
+    "selected_task_count": 2
+  },
+  "nop_trials": [
+    {
+      "harbor_exceptions": 0,
+      "harbor_job_id": "b2b41701-e8ce-4580-b5aa-800bc4532d2b",
+      "harbor_retries": 0,
+      "harbor_trial_id": "291bba7c-f062-4079-ab6e-16523e4864dd",
+      "reward": 0.0,
+      "task": "sqlite-with-gcov",
+      "trial_name": "sqlite-with-gcov__wW3dAYy"
+    },
+    {
+      "harbor_exceptions": 0,
+      "harbor_job_id": "8f0e6e65-e519-44cb-a9b1-7973d4b079b2",
+      "harbor_retries": 0,
+      "harbor_trial_id": "461d07a4-d249-4263-a798-ea639d66eecc",
+      "reward": 0.0,
+      "task": "custom-memory-heap-crash",
+      "trial_name": "custom-memory-heap-crash__PxWrLGf"
+    }
+  ],
+  "preservation": {
+    "local_python_version": "3.14",
+    "passed": 1225,
+    "repository_integrity_passed": true,
+    "seconds": 2257.69,
+    "skipped": 2
+  },
+  "schema": "m071-external-result-v1",
+  "selection_binding_commit": "b403920c4ac2fbf55b83e81b2ac309affef2d9f6",
+  "selection_inventory_sha256": "c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9",
+  "status": "passed_falsifiable_threshold",
+  "trials": [
+    {
+      "agent_claimed_success": false,
+      "agent_status": "policy_refused",
+      "backend_id": "openai-codex-exec-v1",
+      "harbor_exceptions": 0,
+      "harbor_job_id": "f1f38175-99f5-4842-bbe8-b5ce8d685900",
+      "harbor_retries": 0,
+      "harbor_trial_id": "e564ca08-447e-4aeb-9625-876c37453a55",
+      "memory_digest": "6a728234835b0276505203fb2b80f3a44f4345e47937f55f61459af6f6beeea4",
+      "network_mode": "no-network",
+      "reward": 0.0,
+      "steps": 7,
+      "task": "sqlite-with-gcov",
+      "task_checksum": "815fe5f7eb1ac4f4c0287051534f3623cbc709ae7fcb4f149dab6e4c1dc35bee",
+      "trial_name": "sqlite-with-gcov__NcgHJWY"
+    },
+    {
+      "agent_claimed_success": false,
+      "agent_status": "submitted_for_external_evaluation",
+      "backend_id": "openai-codex-exec-v1",
+      "harbor_exceptions": 0,
+      "harbor_job_id": "bce1bc28-564c-46aa-a9bf-55cf6ab98d60",
+      "harbor_retries": 0,
+      "harbor_trial_id": "7e7474db-38b3-459e-a98d-051a0b23d564",
+      "memory_digest": "377c284a6aca077bb204f634b813308373b726cc0bd6472e9cf62a40c2ee462e",
+      "network_mode": "no-network",
+      "reward": 1.0,
+      "steps": 12,
+      "task": "custom-memory-heap-crash",
+      "task_checksum": "e1f77a2ca57a0fe980f9f082ec656a66106b5425aab0b634190fd175000add59",
+      "trial_name": "custom-memory-heap-crash__zyfmiQY"
+    }
+  ]
+}

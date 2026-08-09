@@ -817,3 +817,30 @@ satisfy endogenous ownership.
 Before selecting targets, M071 must fix transport across all affected host-process paths, add
 Unicode and descendant-process regressions, and freeze the whole model-mediated design again. Its
 external score remains composed-system evidence and cannot advance Genesis Gate 2 or Gate 3.
+
+## D034 — M071 passes the narrow external threshold; the next step must isolate or broaden
+
+M071 followed D032 and D033. Runtime `0820ebc`, bridge `132476a` and their blob commitment were
+frozen before selection. A one-draw rule excluded both M070 tasks and selected a fresh pair before
+inspection. Execution protocol `31d3c7bd` fixed four single no-network trials.
+
+Official rewards were `0.0` for SQLite and `1.0` for custom-memory; both `nop` floors were `0.0`.
+There were no Harbor exceptions, retries or replacements, and the agent never claimed success.
+
+### The decision
+
+M071 is a positive external development result for the named composed system. The M070 transport
+defect is closed, and the project now has one evaluator-accepted independently maintained task.
+The score is not attributed to Mira governance alone and does not amend any endogenous Genesis
+ownership gate.
+
+Repeating more public Terminal-Bench samples with the same composition is not a distinct research
+advance. The next accepted experiment must either include a causal baseline/ablation that isolates
+the value of Mira governance or use a frozen private uncontaminated, materially cross-domain split
+with independent reproduction. Ideally it must do both.
+
+### Claim boundary
+
+One of two public tasks passed. There is no two-domain transfer result, multimodal grounding,
+hour-scale autonomy, continual learning, governance-layer causal effect, private holdout or
+independent reproduction. M071 is not general-agent or AGI evidence.

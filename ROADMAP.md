@@ -33,7 +33,8 @@ attribute external-model competence to Mira. See
   M070 then crossed into independently maintained, blindly selected Terminal-Bench 2 containers,
   but scored 0/2 after a UTF-8/process-tree transport failure. The negative result is preserved.
   M071's corrected runtime and separately named Harbor bridge are now frozen before a fresh blind
-  selection; no M071 external result exists yet.
+  selection. The frozen system then passed 1/2 selected tasks, establishing a narrow positive
+  external composed-system result without changing the endogenous Genesis ownership claims.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -340,7 +341,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M068 | Induce commands without M067's descriptor-product grammar | **Positive qualified development result** | One complete scan per body finds four commands and one semantic adapter; four distinct adapters each pass 12/12 hidden cases and all controls reject. Exact learner `f033ac7`, run `31314960014`. |
 | M069 | Cross a governed real filesystem/process body and refuse an incompatible protocol | **Positive qualified development result** | One unchanged policy repairs 4/4 tasks, each 3/3 hidden, and refuses the incompatible task before mutation. All ten controls pass; manifest `c5c80701`; exact run `31319062535` passed. |
 | M070 | Transfer to post-design external tasks in an OS-isolated body | **Negative external development result** | Exact design `41ebe79` was frozen before blind selection. Official Harbor rewards were 0.0 on both selected tasks and both `nop` controls; UTF-8 stdin transport and Windows descendant timeout handling failed closed. No retry or replacement. |
-| M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Execution protocol frozen before trials** | Runtime `0820ebc`, bridge `132476a` and commitment `2e76a1b8` were frozen first. Rule `fa5d896` selected the fresh pair before inspection; protocol `31d3c7bd` fixes four ordered single attempts with no-network agent phases. |
+| M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Positive external development result** | Frozen runtime/bridge passed `custom-memory-heap-crash` and refused `sqlite-with-gcov`: rewards `0.0, 1.0`; both `nop` floors `0.0`; no exception, retry or replacement. Result `d3526513`. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
@@ -351,6 +352,10 @@ task bank inside a container or VM; more project-authored repair slots cannot ju
 M070 preserved that boundary and returned a valid negative result. M071 has corrected only the
 transport/process defect and frozen the resulting design. Its next blind rule may not reuse M070's
 task pair as its scientific threshold.
+
+M071 then met that fresh threshold on one of two tasks. A successor is not justified by sampling
+more tasks from the same public benchmark. It must isolate the governance layer causally and/or
+move to a private uncontaminated cross-domain split with independent reproduction.
 
 ## Parallel measurement track — M045
 

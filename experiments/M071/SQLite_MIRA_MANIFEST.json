@@ -1,0 +1,10 @@
+{
+  "agent_claimed_success": false,
+  "backend_id": "openai-codex-exec-v1",
+  "memory_digest": "6a728234835b0276505203fb2b80f3a44f4345e47937f55f61459af6f6beeea4",
+  "network_mode": "no-network",
+  "schema": "m071-harbor-agent-manifest-v1",
+  "status": "policy_refused",
+  "steps": 7,
+  "success_decided_externally": true
+}

@@ -14,6 +14,11 @@
 - Froze M071 execution before any trial: Harbor 0.20.0, digest-pinned images, no-network agent
   phases, four ordered single attempts, zero valid retries/replacements, external success and
   composed-system score attribution. Solutions and verifier tests remain unopened.
+- M071 passed its narrow external threshold: official rewards were `0.0` on SQLite and `1.0` on
+  custom-memory, while both `nop` floors were `0.0`. All four jobs had zero Harbor exception,
+  retry or replacement; success remained evaluator-owned.
+- The final local Python 3.14 preservation suite passed 1,225 tests with two skips in 2,257.69
+  seconds; repository integrity and every committed external artifact check passed.
 - Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
   replaced parent-only timeout kills in the model, container and terminal paths with one shared
   whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed
