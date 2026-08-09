@@ -8,6 +8,8 @@
   descendants cannot act after a timeout.
 - Changed the closed M070 freeze audit to verify the exact historical commit and its committed
   blobs instead of forbidding legitimate post-M070 evolution of the current working tree.
+- Rebound the task-agnostic Harbor bridge to a separately named M071 policy, manifest schema and
+  agent identity so new evidence cannot be mistaken for a rerun of the closed M070 design.
 - Split the endogenous bounded-lineage and M070+ model-mediated tracks explicitly. Genesis Gate 2
   remains unchanged; external model proposals are not lineage-owned and benchmark rewards belong
   to the named composed system rather than Mira's governance layer alone.

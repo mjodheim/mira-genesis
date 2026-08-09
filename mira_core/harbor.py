@@ -19,6 +19,10 @@ from mira_core.model import CodexExecBackend, StructuredModelBackend, Structured
 from mira_core.safety import Authority, SafetyPolicy
 
 
+M071_AGENT_DESIGN_COMMIT = "0820ebc3a638e8ae0e06fceed7addbdb71bafbb7"
+M071_POLICY_ID = "m071-governed-model-policy-v1"
+
+
 try:
     _HarborBaseAgent = importlib.import_module("harbor.agents.base").BaseAgent
     _HARBOR_AVAILABLE = True
@@ -55,17 +59,15 @@ async def run_harbor_episode(
     mode = _network_mode(environment)
     if mode != "no-network":
         raise RuntimeError(
-            f"M070 requires Harbor network_mode=no-network, observed {mode!r}"
+            f"M071 requires Harbor network_mode=no-network, observed {mode!r}"
         )
-    policy = StructuredModelPolicy(
-        backend, policy_id="m070-frozen-structured-model-policy-v1",
-    )
+    policy = StructuredModelPolicy(backend, policy_id=M071_POLICY_ID)
     safety = SafetyPolicy.from_authorities({
         Authority.COMPUTE, Authority.FILESYSTEM_READ, Authority.FILESYSTEM_WRITE,
     })
     memory = MemoryLedger()
     goal = Goal(
-        "m070-external-task", instruction,
+        "m071-external-task", instruction,
         {"success_decided_by": "harbor_external_verifier"},
     )
     observation = Observation("harbor:0:reset", {
@@ -154,7 +156,7 @@ async def run_harbor_episode(
     })
     memory.verify()
     manifest: dict[str, JsonValue] = {
-        "schema": "m070-harbor-agent-manifest-v1",
+        "schema": "m071-harbor-agent-manifest-v1",
         "status": status,
         "steps": steps,
         "memory_digest": memory.digest,
@@ -167,7 +169,7 @@ async def run_harbor_episode(
 
 
 class HarborMiraAgent(_HarborBaseAgent):
-    """Harbor custom-agent entry point for the frozen M070 structured policy."""
+    """Harbor custom-agent entry point for the pre-target M071 structured policy."""
 
     SUPPORTS_ATIF = False
     SUPPORTS_RESUME = False
@@ -189,10 +191,10 @@ class HarborMiraAgent(_HarborBaseAgent):
 
     @staticmethod
     def name() -> str:
-        return "mira-m070"
+        return "mira-m071"
 
     def version(self) -> str:
-        return "41ebe791605f55e7a44df8f0939d730139cf219a"
+        return M071_AGENT_DESIGN_COMMIT
 
     async def setup(self, environment: Any) -> None:
         # Harbor performs setup against the task's baseline policy, then applies the explicit
@@ -201,12 +203,12 @@ class HarborMiraAgent(_HarborBaseAgent):
 
     async def run(self, instruction: str, environment: Any, context: Any) -> None:
         if not self.model_name:
-            raise ValueError("M070 Harbor adapter requires an explicit model name")
+            raise ValueError("M071 Harbor adapter requires an explicit model name")
         executable = find_codex_executable()
         if executable is None:
-            raise RuntimeError("M070 Harbor adapter cannot find the official Codex CLI")
+            raise RuntimeError("M071 Harbor adapter cannot find the official Codex CLI")
         model = self.model_name.split("/", 1)[-1]
-        with tempfile.TemporaryDirectory(prefix="mira-m070-neutral-") as directory:
+        with tempfile.TemporaryDirectory(prefix="mira-m071-neutral-") as directory:
             backend = CodexExecBackend(
                 executable, Path(directory), model,
                 timeout_seconds=self._codex_timeout_seconds,
