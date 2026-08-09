@@ -26,6 +26,10 @@ This line has an operational external-model dependency even though `pyproject.to
 keeps the model provider and CLI out of the package dependency graph. The external model is a
 declared proposal component, not a tool learned or owned by the lineage.
 
+M071 applies this rule before evaluation: its model, policy identity, process transport and Harbor
+bridge are frozen as named components before any fresh external task selection. This ordering
+improves auditability but does not convert the model's proposals into lineage-owned work.
+
 Evidence from this line may support claims about:
 
 - authority containment and calibrated refusal;

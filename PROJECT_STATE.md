@@ -52,6 +52,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Harbor trials and both `nop` controls scored `0.0`; no trial was retried or replaced. The frozen
   backend failed closed on Windows Unicode stdin encoding and descendant-process timeout handling.
   This validates the isolated external evaluation path, not external task competence.
+- **M071 is frozen before fresh external task selection.** Generic runtime `0820ebc` uses strict
+  UTF-8 bytes pipes and whole-process-tree cleanup across model, Docker and governed-terminal
+  paths; bridge `132476a` carries a distinct M071 identity. Real Windows Unicode/orphan
+  regressions, 1,215 local design tests and a live schema-validated model smoke pass. No new
+  benchmark revision, identifier, task content or scientific result exists yet.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -656,12 +661,13 @@ question remains open but is not a missing completion gate.
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
+| M071 | **PRE-TARGET DESIGN FROZEN** | Runtime `0820ebc` and bridge `132476a` are committed by `2e76a1b8`; UTF-8 and descendant-process regressions pass. No fresh task has been selected, inspected or executed. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M070: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M071: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

@@ -22,6 +22,10 @@ M070 is negative external development evidence. It preserved blind independent-t
 container isolation and evaluator-owned success, but scored 0/2 after a model-transport failure.
 It does not advance a competence gate.
 
+M071's pre-target transport freeze is governance/robustness mechanism evidence only. It fixes and
+tests the M070 failure before a fresh task is selected; without an external result it changes no
+generality-gate status.
+
 ## Model-mediated attribution rule
 
 M070+ uses a named external model to propose actions. Task reward therefore measures the composed

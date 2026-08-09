@@ -32,6 +32,8 @@ attribute external-model competence to Mira. See
   is refused before mutation. Exact learner `c603dd5` passed qualification run `31319062535`.
   M070 then crossed into independently maintained, blindly selected Terminal-Bench 2 containers,
   but scored 0/2 after a UTF-8/process-tree transport failure. The negative result is preserved.
+  M071's corrected runtime and separately named Harbor bridge are now frozen before a fresh blind
+  selection; no M071 external result exists yet.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -338,7 +340,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M068 | Induce commands without M067's descriptor-product grammar | **Positive qualified development result** | One complete scan per body finds four commands and one semantic adapter; four distinct adapters each pass 12/12 hidden cases and all controls reject. Exact learner `f033ac7`, run `31314960014`. |
 | M069 | Cross a governed real filesystem/process body and refuse an incompatible protocol | **Positive qualified development result** | One unchanged policy repairs 4/4 tasks, each 3/3 hidden, and refuses the incompatible task before mutation. All ten controls pass; manifest `c5c80701`; exact run `31319062535` passed. |
 | M070 | Transfer to post-design external tasks in an OS-isolated body | **Negative external development result** | Exact design `41ebe79` was frozen before blind selection. Official Harbor rewards were 0.0 on both selected tasks and both `nop` controls; UTF-8 stdin transport and Windows descendant timeout handling failed closed. No retry or replacement. |
-| M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Active pre-target engineering** | Track B attribution is explicit. Require shared UTF-8 stdin/stdout, whole-process-tree timeout enforcement and permanent Unicode/descendant regressions across model, container and governed-terminal paths before any new task identifier is selected. |
+| M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Pre-target design frozen** | Runtime `0820ebc`, bridge `132476a` and commitment `2e76a1b8` are frozen. Shared UTF-8 bytes transport, whole-tree timeout enforcement, Windows regressions and live model smoke pass; no new task is selected. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
@@ -346,9 +348,9 @@ authorship and unbounded protocol induction remain later gates. M069 supplies pa
 environment and incompatible-refusal evidence, but its tasks and finite repair statements remain
 authored and its processes are not OS-isolated. The successor must cross a post-design external
 task bank inside a container or VM; more project-authored repair slots cannot justify it.
-M070 preserved that boundary and returned a valid negative result. M071 may correct only the
-transport/process defect before a new pre-target freeze; it may not reuse M070's task pair as its
-scientific threshold.
+M070 preserved that boundary and returned a valid negative result. M071 has corrected only the
+transport/process defect and frozen the resulting design. Its next blind rule may not reuse M070's
+task pair as its scientific threshold.
 
 ## Parallel measurement track — M045
 

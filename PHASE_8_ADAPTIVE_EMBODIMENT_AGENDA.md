@@ -67,9 +67,10 @@ Harbor verifier returned 0.0 for both Mira trials and both `nop` controls. The f
 on locale-dependent Unicode stdin transport and Windows descendant timeout handling. The negative
 result is preserved; it supplies isolation/evaluation-path evidence, not task competence.
 
-M071 must first prove explicit UTF-8 round trips and whole-process-tree timeout enforcement on
-pre-target regressions. Only after a new design freeze may it select a fresh external pair by a new
-blind rule. Reusing M070's pair as the next scientific threshold is forbidden.
+M071 now proves explicit UTF-8 round trips and whole-process-tree timeout enforcement on pre-target
+Windows regressions. Runtime `0820ebc`, bridge `132476a` and their 17-blob commitment are frozen.
+Only now may it commit a new blind rule and then select a fresh external pair. Reusing M070's pair
+as the next scientific threshold is forbidden.
 
 M071 also formalizes the epistemic split introduced by M070. External-model actions are declared
 proposal inputs, not lineage-owned tools. External reward is reported for the named composed
