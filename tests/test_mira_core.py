@@ -56,6 +56,16 @@ class FixedPolicy:
         return self.action
 
 
+class AuthorityCounterBody(CounterBody):
+    def required_authorities(self, action: Action) -> tuple[str, ...]:
+        return (Authority.FILESYSTEM_WRITE.value,)
+
+
+class BrokenAuthorityBody(CounterBody):
+    def required_authorities(self, action: Action) -> tuple[str, ...]:
+        raise RuntimeError("broken authority contract")
+
+
 def test_agent_completes_a_goal_and_records_a_verifiable_episode() -> None:
     agent = MiraAgent(IncrementPolicy(), CounterBody(), max_steps=4)
     result = agent.run(Goal("reach-three", "increment until value is at least three"))
@@ -79,6 +89,32 @@ def test_default_policy_denies_external_authority() -> None:
     admission = next(event for event in agent.memory.events if event.kind == "action_admission")
     assert admission.payload["allowed"] is False
     assert admission.payload["missing_authorities"] == ["repository_write"]
+
+
+def test_body_contract_prevents_policy_authority_underdeclaration() -> None:
+    underdeclared = Action("write", "increment", {"amount": 1}, (Authority.COMPUTE.value,))
+    agent = MiraAgent(FixedPolicy(underdeclared), AuthorityCounterBody())
+    result = agent.run(Goal("authority-contract", "exercise an authority-aware body"))
+    assert result.status == "action_contract_refused"
+    assert result.steps == 0
+    assert agent.body.value == 0
+    assert result.final_observation.state["missing_authority_declarations"] == ["filesystem_write"]
+
+    declared = Action("write", "increment", {"amount": 1}, (Authority.FILESYSTEM_WRITE.value,))
+    denied = MiraAgent(FixedPolicy(declared), AuthorityCounterBody()).run(
+        Goal("authority-envelope", "remain inside the granted authority envelope")
+    )
+    assert denied.status == "safety_refused"
+
+
+def test_broken_body_authority_contract_fails_closed() -> None:
+    action = Action("broken", "increment", {"amount": 1})
+    agent = MiraAgent(FixedPolicy(action), BrokenAuthorityBody())
+    result = agent.run(Goal("broken-contract", "fail closed on a broken body contract"))
+    assert result.status == "body_contract_error"
+    assert result.steps == 0
+    assert agent.body.value == 0
+    assert result.final_observation.error == "RuntimeError: broken authority contract"
 
 
 def test_high_impact_authority_still_requires_human_release_when_granted() -> None:
