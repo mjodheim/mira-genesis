@@ -30,6 +30,9 @@ jobs:
         python-version: ['3.11', '3.13']
     steps:
       - uses: actions/checkout@v6
+        with:
+          # M070+ freeze guards verify exact pre-target commits and their blobs.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
