@@ -1,0 +1,109 @@
+{
+  "canonical_execution": {
+    "first_result_runtime": {"node": "20", "python": "3.11"},
+    "first_run_only": true,
+    "independent_reproduction_required": true,
+    "marker_commit_message": "m066(canonical): arm first immutable governance-corrected whole-wasm run",
+    "marker_history_command": "git rev-list --first-parent HEAD -- experiments/M066/CANONICAL_ARMED.json",
+    "marker_history_scope": "first_parent_of_pushed_main_head",
+    "marker_path": "experiments/M066/CANONICAL_ARMED.json",
+    "marker_schema": "m066-canonical-arm/1",
+    "reproduction_runtime": {"node": "20", "python": "3.13"},
+    "reproduction_rule": "exact canonical JSON bytes",
+    "rerun_first_result_job_condition": "github.run_attempt == 1",
+    "reruns_are_reproductions_only": true,
+    "side_branch_marker_refs_ignored": true,
+    "workflow": ".github/workflows/m066-canonical.yml"
+  },
+  "correction_boundary": {
+    "budgets_changed": false,
+    "candidate_grammar_changed": false,
+    "controls_changed": false,
+    "m065_bank_selected": false,
+    "m065_first_result_created": false,
+    "m065_negative_canonical_run": 31287477458,
+    "m065_negative_guard_job": 93178824313,
+    "m065_negative_marker_commit": "a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57",
+    "scientific_change": null,
+    "task_bank_changed": false,
+    "thresholds_changed": false
+  },
+  "decision_rule": {
+    "complete_required_hidden_quality": "18/18",
+    "controls_required_hidden_quality": "0/18",
+    "minimum_accepted_post_migration_cycles": 3,
+    "required_result": "complete arm strictly exceeds every control arm",
+    "rollback": "unchanged M065 corrected snapshot restoration and audit"
+  },
+  "file_sha256": {
+    ".github/workflows/m066-canonical.yml": "e6803284de1fdc213cbec9a7e750969f82b1c0ad45acb54c775e18d21e44e92c",
+    "metamorphosis/m048_native_lineage.py": "a5c9dc9c4b0d2b6884fa357d4bb97a99f1fedf0f5b15b74bd0e8619529bd3add",
+    "metamorphosis/m048_native_support.py": "34ca9f425587d4090192ad3fd352714902182d2a4603df4d1e773d450f0de66a",
+    "metamorphosis/m048_node_runtime.mjs": "026ad0a47d0970dfbf1bf5680383d94e1c46db26cce4a5af4913ce62313a7cd7",
+    "metamorphosis/m048_runtime_migration.py": "8a4b8cc98cbb9889c9af8cc57adc9b98763fe0689bdadca9b85b82d4711063a7",
+    "metamorphosis/m058_discovered_migration.py": "c3407e240d3bdfe523de7f04aa1d726f10618588bc21790f25699beb76490e34",
+    "metamorphosis/m058_instruction_discovery.py": "29fdb86dd2bb48462c01edd222310dd8667627e807503d82ff828096dfd84499",
+    "metamorphosis/m060_body_compiler.py": "523157b602c20125d0fbca1064c510c4192e837ef66eb519af7ec6097bc05a25",
+    "metamorphosis/m060_wasm_emit.py": "1c04c9e9f58b16a9dd184bf86bd4565c7e2e25c8ca7947437a2dd9d6fe5da5e5",
+    "metamorphosis/m060_wasm_runtime.mjs": "d2425bebe4b14d5576ee1c612bddc10968fd412b1336ae02ec2ea3527be0e63a",
+    "metamorphosis/m060_whole_body_migration.py": "e6331d5278bfc4603054d262e2b7d895f84655187effa16d871accc59ea09030",
+    "metamorphosis/m061_discovered_structure.py": "82f098dfa8d66fa87319d471f843e9b243849defd430b17bbcd6ce16844cf1eb",
+    "metamorphosis/m061_structural_discovery.py": "2ec6cd367ccc3c1963cd9c5e224e5bddd00d3171b3d264d413514b6348a44095",
+    "metamorphosis/m061_structural_probe.mjs": "03a5aa5de4bb2cfa1531a7d92273cfcf415f6ae332a7aa081f69ac851d9bd79d",
+    "metamorphosis/m064_real_substrate_completion.py": "3359747385e582df05a14e0963fd98c902870277b3ba93b29f514a63f16d0d9f",
+    "metamorphosis/m064_wasm_body_compiler.py": "06730a0826c4a78e70531a1a298fec80a6594482fb8877bac96a6736d1519861",
+    "metamorphosis/m064_whole_wasm_completion.py": "1f14b9e703323646006d4183402d54e43db9484ccf7aa3544a4c97ccd6359e23",
+    "metamorphosis/m065_qualified_completion.py": "26f7f7b423554528b5a674f707f10859ed1e90d0bd3466e569bfaf52300cf449",
+    "metamorphosis/m066_canonical_governance.py": "e07fe95946bac98dca1092fb693cbbf9596a04185d8357d7a36e276191bfb8fa",
+    "scripts/check_m066_canonical_guard.py": "83105481fd88ad6138b580c114187aae66310b5bf59cedfe85e5f94174b2bcb3",
+    "scripts/check_m066_frozen_protocol.py": "2194f929dadd768bb5adb6ea5f20175b592821260ff16f9cf5fe37a4dc6918a7",
+    "scripts/reproduce_m066_canonical.py": "50ea8beff724335c2f5f4c080a642113a3da28d87438d25843e2865d11dbb540",
+    "scripts/run_m066_canonical.py": "015ded2515d1e0bf2a9040d24b781293576ddb03ee0c000cdc690fb14d7b755b"
+  },
+  "negative_result_policy": {
+    "failed_first_run_is_m066_verdict": true,
+    "failed_reproduction_is_m066_verdict": true,
+    "post_freeze_correction_requires": "M067",
+    "threshold_relaxation_permitted": false
+  },
+  "protocol": {
+    "accepted_post_migration_cycles": 3,
+    "arms": [
+      "complete_continued_lineage",
+      "fresh_on_b",
+      "unchanged_parent_migrated",
+      "learned_state_ablated"
+    ],
+    "base_experiment": "M065",
+    "base_protocol_sha256": "1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51",
+    "candidate_budget_per_arm_cycle": 8192,
+    "canonical_selection_rule": "sha256(m066_protocol_digest || marker_parent_sha) mod bank_size",
+    "expression_node_limit": 7,
+    "governance_corrections": [
+      "marker_history_is_first_parent_of_pushed_main_head",
+      "side_branch_refs_do_not_count_as_canonical_history"
+    ],
+    "hidden_cases_per_cycle": 6,
+    "m065_bank_selected": false,
+    "m065_negative_canonical_run": 31287477458,
+    "m065_negative_marker_commit": "a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57",
+    "max_candidate_bytes": 262144,
+    "node_timeout_seconds": 30.0,
+    "public_cases_per_cycle": 6,
+    "schema": "m066-canonical-governance-protocol-v1",
+    "scientific_changes": [],
+    "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+    "task_bank_entries": 4
+  },
+  "protocol_sha256": "f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b",
+  "release_boundary": {
+    "credentials": false,
+    "deployment": false,
+    "network": false,
+    "production": false,
+    "repository_write_authority_for_lineage": false
+  },
+  "schema": "m066-frozen-protocol/1",
+  "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+  "task_bank_entry_count": 4
+}

@@ -599,3 +599,30 @@ the exact task bank and decision rule, but must restore a distinct returned obje
 pre-fault bytes, audit it and bind both the corrupt and restored digests. Its marker must also be
 the first occurrence in path history and its first-result job must be impossible on workflow
 reruns.
+
+## D025 — Canonical marker identity follows canonical history, not every fetched ref
+
+M065 marker commit `a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57` was the first and only occurrence
+of its path on `main`. Its workflow fetched complete history and then evaluated `git rev-list
+--all`, which also traversed the pull-request branch where the same marker had first been authored.
+The guard therefore counted two occurrences and stopped canonical run `31287477458` before a task
+bank was selected. The first-result and reproduction jobs were correctly skipped.
+
+### The rule
+
+**A first-history canonical marker is unique on the first-parent history of the pushed canonical
+head. Lateral branch, pull-request and other fetched refs are not canonical history.** The guard
+must count `git rev-list --first-parent HEAD -- <marker>`, while the marker-only diff, exact parent,
+message, frozen hashes and attempt-one checks remain mandatory.
+
+This does not permit deleting and re-adding a marker on `main`: every change to that path along
+first-parent history is counted and any total other than one is rejected. A permanent Git graph
+test must demonstrate that a lateral same-path commit does not affect the canonical count and that
+`--all` would have produced the M065 false rejection.
+
+### Consequence
+
+M065 is a negative canonical guard qualification and is never rerun into success. It selected no
+bank and produced no scientific artifact. M066 is a governance-only successor: it may reuse M065's
+unchanged engine, bank, budgets, thresholds, arms and decision rule, but receives a new protocol
+digest, marker path and immutable first run.

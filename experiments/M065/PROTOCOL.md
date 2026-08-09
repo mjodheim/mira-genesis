@@ -1,5 +1,7 @@
 # M065 — corrected qualification protocol
 
+**Status: NEGATIVE CANONICAL GUARD QUALIFICATION. CLOSED BY M066.**
+
 M065 is the required successor to the failed M064 freeze candidate. It changes no task bank,
 budget, threshold, substrate, candidate grammar or four-arm decision rule.
 
@@ -43,3 +45,9 @@ Development evidence is not canonical. The exact parent must first pass the comp
 repository integrity, the portable 22-file commitment audit and the Python 3.11/3.13 GitHub
 matrix. Only then may a first-history marker-only commit select one bank. A failed first result or
 byte reproduction is preserved and requires M066 for any scientific repair.
+
+The exact parent passed qualification run `31286019961`, attempt 1. Marker commit
+`a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57` triggered canonical run `31287477458`, attempt 1.
+Guard job `93178824313` rejected the marker because frozen `git rev-list --all` counted both the
+canonical commit and its still-fetched pull-request branch occurrence. The first-result and
+reproduction jobs were skipped; no bank or artifact exists. M065 is not rerun. D025 requires M066.

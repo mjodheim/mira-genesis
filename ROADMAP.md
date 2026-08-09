@@ -266,7 +266,8 @@ three supports one at a time, and returned the project to the question it was st
 | M062 | Construct one control arrangement instead of handing it over | Run `31269732461` on `f5cfe35`; 1,038 tests on each Python version plus integrity | A 256-opcode region scan preserves the exit class `{0x02, 0x06}` and repeat class `{0x03}`. A 480-product grammar leaves 16 public survivors; all 16 with both exit representatives pass all three hidden cases, 32/32. |
 | M063 | Transfer the arrangement mechanism to a new body | Run `31275085485` on `d4eb5ed`; 1,054 tests on each Python version plus integrity | A 96-product grammar emits a checksum reduction with an accumulator and no memory write. Six public survivors pass all hidden cases under both exit representatives, 12/12. M062's copy body fails the two non-zero target controls. |
 | M064 | Integrate the real-substrate completion gates | **Failed qualification** `31281234286`; no marker | Development was 18/18 versus 0/18 controls, but the frozen hash was checkout-dependent and review invalidated the rollback falsifier. |
-| M065 | Correct M064 without changing its scientific bank | Four corrected development banks; canonical run not armed | Same 18/18 versus 0/18 outcome. The returned rollback state is separately deserialised, audited and digest-bound; marker history and workflow reruns are locked. |
+| M065 | Correct M064 without changing its scientific bank | Parent qualification passed; canonical run `31287477458` failed in guard before selection | Same 18/18 versus 0/18 development outcome. All-ref marker history misclassified the lateral PR ref; no bank or artifact was produced. |
+| M066 | Correct canonical history scope without changing science | Four unchanged banks and Git graph falsifier pass | First-parent `main` history ignores lateral refs, still rejects repeat canonical path history, and preserves the M065 scientific outcome exactly. |
 
 ### What M061 also produced
 
@@ -297,7 +298,7 @@ M063 discharged its own rule on exact head `d4eb5ed`: first run `31275085485`, a
 passed 1,054 tests on Python 3.11, 1,054 on Python 3.13, repository integrity and attribution,
 with no failed job or rerun.
 
-## Active construction frontier — M065 freeze and first result
+## Active construction frontier — M066 freeze and first result
 
 M064 supplied in development what the real-substrate line lacked: one continuous
 CPython→Node→whole-WebAssembly lineage, four adversarial equal-budget arms, three accepted
@@ -305,19 +306,19 @@ post-migration cycles, executable reuse of earlier learned routes, class-wide hi
 exact archives, rollback, causal memory and replay. Its qualification is negative because the
 source commitment was not checkout-portable and the rollback proof was tautological.
 
-M065 corrects those mechanisms without adding a task, grammar, control or threshold. Its
-construction phase is closed.
+M065 corrected those mechanisms without adding a task, grammar, control or threshold, then failed
+its canonical guard before selection because its frozen history query traversed all fetched refs.
+M066 corrects only that scope. Its construction phase is closed.
 The remaining ordered steps are operational and immutable:
 
-1. preserve the completed local suite (**1,101 tests in 1,762.37 seconds**) and pass Python
-   3.11/3.13 qualification on the exact M065 parent;
+1. preserve the completed M066 local suite (**1,112 tests in 1,689.93 seconds**) and pass Python
+   3.11/3.13 qualification on the exact M066 frozen parent;
 2. merge one marker-only arming commit bound to that exact parent and frozen-protocol file;
 3. preserve the first Python 3.11 canonical artifact whether positive or negative;
 4. require the dependent Python 3.13 reproduction to match its bytes exactly;
 5. archive the consumed workflow and publish the bounded verdict.
 
-Failure at steps 2–4 is an M065 result, not permission to repair it. A scientific change requires
-M066.
+Failure at steps 2–4 is an M066 result, not permission to repair it. Any correction requires M067.
 
 ## Parallel measurement track — M045
 

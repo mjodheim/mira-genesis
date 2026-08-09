@@ -458,7 +458,7 @@ itself. D023 closes M064 and requires M065; no M064 marker was created. Its hist
 protocol file now has SHA-256
 `f05f0fdda2f9de03eee149b5a83dde290e576d164b4e2226333fbe10f45c7a4b`.
 
-### M065 — corrected whole-WebAssembly completion candidate
+### M065 — corrected science, negative canonical guard qualification
 
 M065 changes no task bank, budget, threshold, substrate, candidate grammar or decision rule. It
 replaces only the false rollback proof: the corrupt staged state is distinct, the pre-transaction
@@ -472,6 +472,27 @@ attempt one. Thirteen focused guard/freeze tests pass. The 22-file frozen protoc
 `1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51`; its file SHA-256 is
 `360f4ae7dac895aed2af071a80c45d100eb2b6a7201f107728e5ad70d781f83a`. The complete corrected
 repository suite passes **1,101 tests in 1,762.37 seconds**.
+
+Exact parent `b1489d7a3a264de8a9e783eb139dafe28732b040` passed qualification run
+`31286019961`, attempt 1, on both Python versions. Marker commit
+`a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57` triggered canonical run `31287477458`, attempt 1.
+The guard failed before task-bank selection because `git rev-list --all` counted the marker on
+both `main` and the fetched pull-request branch. The first result and reproduction were skipped;
+no canonical artifact exists. D025 closes M065 as negative and forbids a rerun.
+
+### M066 — canonical first-parent governance correction
+
+M066 changes no scientific source, bank, budget, threshold, substrate, grammar, arm or decision
+rule. It replaces only all-ref marker counting with `git rev-list --first-parent HEAD`. A permanent
+Git graph test constructs a lateral marker branch and proves the canonical count remains one while
+`--all` would return two; repeat first-parent path history remains rejected.
+
+All four banks retain the M065 result: complete lineage reaches version twelve with three accepted
+cycles, 68/68 retained and 18/18 hidden; every control accepts zero and passes 0/18. Eleven dedicated
+tests pass in 202.78 seconds and the complete repository passes **1,112 tests in 1,689.93 seconds**.
+The executable protocol digest is
+`f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b`; the portable 23-file
+commitment has SHA-256 `02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0`.
 
 ### Qualification status of M056–M063
 
@@ -504,10 +525,10 @@ M063 also discharged its own rule. Exact head
 with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
 repository integrity and attribution. No failed job or rerun occurred.
 
-## Current construction frontier — qualify M065, do not extend
+## Current construction frontier — qualify M066, do not extend
 
-M064's negative qualification is preserved. M065 supplies its required rollback and governance
-corrections without changing the scientific bank or rule. The only active construction path is:
+M064's negative qualification and M065's negative canonical guard run are preserved. M066 reuses
+M065's corrected rollback and changes only the canonical-history scope. The only active path is:
 
 1. clean local and GitHub qualification of the exact frozen parent;
 2. a separate marker-only commit bound to that parent;
@@ -515,8 +536,8 @@ corrections without changing the scientific bank or rule. The only active constr
 4. an exact independent Python 3.13 reproduction;
 5. preservation, audit, workflow archival and a bounded final verdict.
 
-If the first M065 run or reproduction fails, that negative result is preserved. Scientific repair
-then requires M066; M065 may not be retuned or rerun into success.
+If the first M066 run or reproduction fails, that negative result is preserved. Any correction
+then requires M067; M066 may not be retuned or rerun into success.
 
 ## Canonical and development result map
 
@@ -551,13 +572,14 @@ then requires M066; M065 may not be retuned or rerun into success.
 | M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
 | M063 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. Exact head `d4eb5ed`, run `31275085485`; the task grammar and emitter remain authored. |
 | M064 | **NEGATIVE PRE-CANONICAL QUALIFICATION** | Development outcome was positive, but run `31281234286` failed the source commitment and review invalidated the rollback falsifier. No marker or canonical result. |
-| M065 | **POSITIVE CORRECTED DEVELOPMENT RESULT — ELIGIBLE FOR FREEZE** | Same bank, budgets and outcomes as M064; returned rollback state is now separately deserialised, audited and digest-bound. First-history marker and attempt-one result guards pass locally. |
+| M065 | **NEGATIVE CANONICAL GUARD QUALIFICATION** | Corrected science and parent qualification passed, but run `31287477458` stopped before bank selection because all-ref history counted the PR branch. No artifact; no rerun. |
+| M066 | **POSITIVE GOVERNANCE-CORRECTED DEVELOPMENT RESULT — FROZEN** | Same engine, bank, budgets and outcomes as M065; canonical marker identity is first-parent `main` history and is falsified against a lateral Git ref. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M065: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M066: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary
