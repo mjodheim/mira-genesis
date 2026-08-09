@@ -1,0 +1,8 @@
+{
+  "exact_bytes_reproduced": true,
+  "first_result_sha256": "eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace",
+  "marker_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+  "python_runtime": "3.13.14",
+  "reproduced_result_sha256": "eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace",
+  "schema": "m066-independent-reproduction-v1"
+}

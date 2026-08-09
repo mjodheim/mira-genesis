@@ -176,10 +176,9 @@ candidates, depth, another declared primitive or another pruning rule no longer 
 material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
 and decision D016.
 
-## Current construction frontier — M066
+## Canonical real-substrate completion — M066
 
-**Status: M064 failed pre-canonical qualification; M065 failed its canonical guard before bank
-selection; M066 is positive in governance-corrected development and frozen, but not canonical.**
+**Status: POSITIVE CANONICAL. THE M043–M066 CONSTRUCTION LINE IS CLOSED.**
 
 M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. After
 scanning arithmetic and structural effects, every semantic pipeline stage lives in one
@@ -211,8 +210,14 @@ the pushed `main` head, and a real Git graph falsifier proves that lateral refs 
 delete/re-add or update history on `main` still fails closed. All four banks again produce 18/18
 for the complete lineage and 0/18 for every control. Eleven M066 tests pass in 202.78 seconds,
 the complete repository passes **1,112 tests in 1,689.93 seconds**, repository integrity passes,
-and its portable 23-file commitment is frozen. Exact-parent GitHub
-qualification remains required before a separate marker-only commit can run once.
+and its portable 23-file commitment is frozen.
+
+Marker-only head `2cf454c` triggered unique run `31291899534`, attempt 1. The first-parent guard
+passed, bank 0 produced three accepted cycles, version twelve, 68/68 retained and 18/18 hidden
+against 0/18 in every control. Python 3.13.14 independently reproduced the exact 51,553 Python
+3.11 result bytes with SHA-256 `eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace`.
+The separate seal and audit establish Gate 10 without rerunning or rewriting the raw result; all
+ten bounded completion gates are true on this real-substrate path.
 
 M066 keeps the limits explicit. The whole-body compiler, block structure, finite grammar, task
 families and evidence cases are authored and precommitted. The result cannot support unrestricted
@@ -232,6 +237,8 @@ See:
 - [`experiments/M065/DEVELOPMENT_RESULT.md`](experiments/M065/DEVELOPMENT_RESULT.md);
 - [`experiments/M066/PROTOCOL.md`](experiments/M066/PROTOCOL.md);
 - [`experiments/M066/DEVELOPMENT_RESULT.md`](experiments/M066/DEVELOPMENT_RESULT.md);
+- [`experiments/M066/STATUS.md`](experiments/M066/STATUS.md);
+- [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
 

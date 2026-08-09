@@ -21,6 +21,15 @@ scope that caused the false rejection; every scientific input and result remains
   accepted cycles and 68/68 retained; every control 0/18 with zero accepted cycles. Eleven M066
   tests passed in 202.78 seconds; the complete repository passed 1,112 tests in 1,689.93 seconds
   and repository integrity passed.
+- Qualified exact parent `4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5` in first run
+  `31290364464`, then armed it with marker-only head `2cf454ca4e393a319f89ae5afbcd5e3f9250182c`.
+- Preserved positive canonical run `31291899534`, attempt 1: bank 0, three accepted cycles, v12,
+  68/68 retained and 18/18 hidden versus 0/18 for every control. Python 3.13.14 reproduced the
+  exact 51,553 Python 3.11 result bytes with SHA-256
+  `eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace`.
+- Added the immutable raw result, reproduction, first-result seal, independent evidence verifier
+  and canonical audit. All ten bounded completion gates are true; D026 closes the M043–M066
+  construction line while leaving M045's separate measurement question open.
 
 ## 0.40.0 — 2026-08-09
 

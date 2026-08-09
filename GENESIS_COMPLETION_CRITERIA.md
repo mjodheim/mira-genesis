@@ -165,3 +165,22 @@ by M042.
 Phase 2 is a separately governed research program. M043 may test whether the architecture
 can be reconstructed in a deterministic Mealy-machine domain, but it cannot retroactively
 widen the M042 claim or change these phase-one gates.
+
+## Phase-two real-substrate confirmation
+
+M066 later confirmed the same ten bounded gates on the separate CPython → Node ESM → whole-
+WebAssembly construction path. Its unique run `31291899534`, attempt 1, selected bank zero from a
+four-entry commitment, accepted three post-migration whole-body rewrites and reached 18/18 hidden
+observations against 0/18 in all three equal-budget controls. Python 3.13 independently reproduced
+the exact Python 3.11 result bytes.
+
+This does not rewrite the frozen phase-one record or make the claim open-ended. It supplies a
+second, more realistic bounded confirmation with authored compiler structure, finite grammar,
+precommitted task families and explicit resource limits. Its authoritative evidence is:
+
+- [`experiments/M066/STATUS.md`](experiments/M066/STATUS.md);
+- [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
+- `results/artifacts/M066_CANONICAL_RESULT.json`;
+- `results/artifacts/M066_INDEPENDENT_REPRODUCTION.json`;
+- `results/artifacts/M066_CANONICAL_FIRST_RESULT_SEAL.json`;
+- `results/artifacts/M066_CANONICAL_AUDIT.json`.

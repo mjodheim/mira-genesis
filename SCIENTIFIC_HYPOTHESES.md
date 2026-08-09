@@ -55,19 +55,26 @@ laterally extend a paradigm whose core is not established.
 An organism can diagnose a limit of its own body, propose descendants, evaluate them on
 hidden tests and migrate to a better embodiment.
 
-**Status:** not validated. **Blocked by H7**: an organism that cannot extend its
-language cannot describe itself a body its primitives are unable to write.
+**Status:** supported in the bounded M066 real-substrate protocol; not open-ended.
+
+M066's unique canonical run `31291899534`, attempt 1, preserves one continuous CPython → Node ESM
+→ whole-WebAssembly lineage through three post-migration whole-body rewrites. The complete arm
+reaches 18/18 hidden observations while every equal-budget control remains 0/18, rollback and
+replay are exact, and Python 3.13 independently reproduces the first-result bytes. The compiler,
+grammar, tasks and resources remain authored and finite, so this does not support unrestricted
+self-description or unlimited self-improvement.
 
 ## H7 — Self-extending language
 
 An organism whose starting vocabulary holds only atoms can absorb the recurring
 compositions of its environment, and gain expressive power it did not have.
 
-**Status:** not validated, subject of M017, in development.
-**Provenance:** verifiable. The development benchmark shows 0/42 for the closed
-catalogue, 34/42 for open search at constant cost, and 37/42 for the self-extending
-organism whose median cost falls from 4,222 to 43 nodes. No canonical result is claimed:
-the protocol is not frozen.
+**Status:** the expressive-power claim is not supported; the direction is closed by D019.
+**Provenance:** M017 demonstrated useful acquisition inside its bounded development language, but
+M053–M055 exposed the structural limit. The acquired compositions reduce search cost and do not
+make anything reachable that the closed formation grammar could not build directly. M055's
+ablation solved the reuse task in 737 candidates without the acquisition against 48 with it. The
+mechanism is a cache, not a proof of new expressive power.
 
 H7 is not a new hypothesis for the project — it is the recognition that M017 was already
 on the roadmap, and was badly placed on it.

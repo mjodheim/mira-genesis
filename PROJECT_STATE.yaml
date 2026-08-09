@@ -1,11 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_seven_m066_governance_corrected_completion_positive_frozen
+status: phase_seven_m066_positive_canonical_real_substrate_completion_closed
 
 active_research_question: >-
-  Will the exact frozen M066 parent produce one positive marker-selected canonical first result
-  and an independent Python 3.13 byte-identical reproduction, without repair, rerun or threshold
-  change? Construction is closed; only qualification, arming, preservation and audit remain.
+  Answered positively by M066. One bounded CPython-to-Node-to-whole-WebAssembly lineage passed all
+  ten audited completion gates in unique run 31291899534 with exact Python 3.13 reproduction. The
+  construction line is closed by D026; M045 remains a separate measurement question.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -82,9 +82,26 @@ canonical_results:
     output_only_quality: 96
     first_result_reexecuted: false
     retuned_after_freeze: false
+  M066:
+    status: positive_canonical_real_substrate_completion
+    frozen_parent: 4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5
+    canonical_head: 2cf454ca4e393a319f89ae5afbcd5e3f9250182c
+    canonical_workflow_run: 31291899534
+    canonical_workflow_attempt: 1
+    selected_bank_index: 0
+    protocol_sha256: f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b
+    exact_raw_result_sha256: eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace
+    exact_reproduction: true
+    all_ten_audited_gates_true: true
+    complete_hidden_quality: [18, 18]
+    control_hidden_quality: [0, 18]
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    first_result_reexecuted: false
+    retuned_after_freeze: false
 
 phase_two:
-  status: integrated_mealy_lineage_passed_in_development
+  status: positive_canonical_real_substrate_completion_closed
   objective: structural_domain_transfer
   source_domain: deterministic_binary_dfa
   target_domain:
@@ -834,10 +851,12 @@ phase_six:
     independent_reproduction_created: false
     closed_by: M066
   M066:
-    status: positive_governance_corrected_development_result_frozen
-    canonical: false
+    status: positive_canonical_real_substrate_completion_closed
+    canonical: true
     protocol: experiments/M066/PROTOCOL.md
     result: experiments/M066/DEVELOPMENT_RESULT.md
+    status_record: experiments/M066/STATUS.md
+    canonical_report: results/M066_CANONICAL_RESULT.md
     executable_protocol_digest: f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b
     frozen_protocol_file_sha256: 02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0
     frozen_committed_files: 23
@@ -867,26 +886,39 @@ phase_six:
     marker_history_scope: first_parent_of_pushed_main_head
     lateral_ref_falsifier_passed: true
     repeat_first_parent_marker_rejected: true
-    canonical_first_result_run: null
-    independent_reproduction_run: null
+    qualified_parent_commit: 4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5
+    parent_qualification_run: 31290364464
+    parent_qualification_attempt: 1
+    parent_qualification_python_3_11: [1112, 1112]
+    parent_qualification_python_3_13: [1112, 1112]
+    marker_commit: 2cf454ca4e393a319f89ae5afbcd5e3f9250182c
+    marker_first_parent_history_occurrences: 1
+    canonical_workflow_run: 31291899534
+    canonical_workflow_attempt: 1
+    guard_job: 93190409159
+    canonical_first_result_job: 93190426542
+    independent_reproduction_job: 93190562898
+    selected_bank_index: 0
+    canonical_manifest_digest: b7d4c39c4c89c85346f4b0b2ebbf390e9f8818d4369a6ed4e21fb8d0580a62b1
+    canonical_result_bytes: 51553
+    canonical_result_sha256: eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace
+    reproduction_python: 3.13.14
+    reproduction_exact_bytes: true
+    reproduction_report_sha256: b990efa4c85c808349de046b7b7ed7477138b77c5111f7385e913f7583ab77cc
+    first_result_seal_sha256: 0468dbccbe95d0185579b8e46500c0c9518e4912821aed1ab6a63b16b61c198a
+    canonical_audit_sha256: 9923a385a8a73eda87c80cfa90e8841f9cb6aa9bac3d9004914ed44c49360d23
+    all_ten_audited_gates_true: true
+    construction_line_closed_by: D026
 
 active_construction_frontier:
-  status: m066_construction_closed_qualification_and_canonical_execution_only
-  gates_positive_in_one_development_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-  gate_pending_canonical_execution: 10
-  ordered_remaining_steps:
-    - clean_complete_local_suite_with_m066
-    - repository_integrity
-    - freeze_exact_parent_and_protocol_hashes
-    - python_3_11_and_3_13_parent_qualification
-    - marker_only_arming_commit
-    - preserve_unique_first_result
-    - require_independent_exact_reproduction
-    - archive_consumed_workflow
-    - publish_bounded_final_verdict
+  status: closed_positive_canonical_m066
+  gates_positive_in_one_canonical_real_substrate_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  ordered_remaining_steps: []
   post_freeze_repair_permitted: false
   failed_first_run_or_reproduction_is_preserved: true
-  changed_experiment_requires: M067
+  successor_by_scaling_same_instrument_permitted: false
+  distinct_structural_question_required_for_successor: true
+  closure_decision: D026
 
 measurement_track:
   reserved_experiment: M045

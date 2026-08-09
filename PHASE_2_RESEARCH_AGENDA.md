@@ -55,6 +55,18 @@ Moving beyond deterministic finite transducers — for example to timing, stocha
 continuous state or unrestricted programs — requires another explicit boundary and a new
 verification strategy. None of those steps is implied by M043.
 
+## Construction outcome through M066
+
+The construction line progressed beyond the immediate M043 qualification through integrated
+Mealy, modular-software, native-runtime and whole-WebAssembly stages. M066 is the positive
+canonical closure: one bounded CPython → Node ESM → whole-WebAssembly lineage satisfies all ten
+completion gates, including exact independent reproduction of its first result. D026 closes the
+M043–M066 construction direction; a successor requires a distinct structural question rather than
+more scale inside the same instrument.
+
+This outcome does not close the parallel measurement track below and does not authorise production
+or external-system autonomy.
+
 ## Parallel measurement track
 
 The proxy-measurement track remains open. M030 and M031 support component-uniform evidence

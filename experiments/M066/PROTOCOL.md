@@ -1,6 +1,6 @@
 # M066 — canonical-history governance correction
 
-**Status: POSITIVE IN FOUR-BANK DEVELOPMENT. FROZEN; CANONICAL BLOCK CLOSED.**
+**Status: POSITIVE CANONICAL. CLOSED.**
 
 M066 is the required successor to the negative M065 canonical attempt. It changes no task bank,
 budget, threshold, substrate, candidate grammar, rollback mechanism, evidence case, arm or
@@ -51,3 +51,7 @@ The exact frozen parent must pass the complete suite, integrity and Python 3.11/
 Only a subsequent marker-only commit may run a first Python 3.11 result on workflow attempt one.
 Python 3.13 must consume that artifact and reproduce its exact bytes. Any M066 failure is preserved
 and requires a new successor; M066 is never rerun into success.
+
+Canonical run `31291899534`, attempt 1, passed this boundary without repair or rerun. Bank index 0
+was selected, the first result was preserved and Python 3.13.14 reproduced its exact bytes. The
+experiment is closed; see `STATUS.md` and `results/M066_CANONICAL_RESULT.md`.
