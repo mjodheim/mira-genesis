@@ -1,4 +1,4 @@
-# Mira Genesis — Project state
+# Mira Genesis — Adaptive Embodiment project state
 
 **Updated: 8 August 2026**
 
@@ -30,15 +30,14 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   effect rather than named by a person; one copy-loop arrangement is synthesized from a
   480-program grammar instead of supplied as a finished program; and the arrangement mechanism
   transfers to a distinct checksum body whose old-body control fails the new task.
-- **M042 remains the only positive canonical continuous-lineage completion.**
-- **Every result from M048 onward is a development result.** Nothing on a real substrate has
-  been run as a frozen canonical lineage against the ten gates. M056–M061 did not discharge
-  their qualification rules in their own records; M062 did, on exact head `f5cfe35` and first
-  run `31269732461`; M063 did likewise on exact head `d4eb5ed` and first run
-  `31275085485`.
-- The current frontier is therefore still two questions, but the first is now narrower:
-  **M063 transfers bounded arrangement search from copying to reduction while leaving each task
-  grammar and emitter authored**, and **nothing on a real substrate is yet claimable**.
+- **M066 is the positive canonical real-substrate completion.** Unique run `31291899534`,
+  attempt 1, passed all ten audited gates and reproduced exact result bytes on Python 3.13.
+  D026 closes the M043–M066 construction line.
+- **M067 begins Phase 8 with a distinct question.** It removes the supplied complete target
+  adapter. One finite discovery procedure recovered four different opaque body contracts,
+  covering three frame families, and every public survivor passed 12/12 hidden observations.
+- **M067 is positive locally and awaits exact-commit GitHub qualification.** Its grammar and
+  body bank remain authored; arbitrary unknown-device adaptation is not claimed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -535,6 +534,26 @@ M063 also discharged its own rule. Exact head
 with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
 repository integrity and attribution. No failed job or rerun occurred.
 
+## Phase 8 — adaptive embodiment
+
+M067 asks whether the continuing lineage can recover a target invocation contract that is not
+disclosed as a complete adapter. Four precommitted bodies live behind a separate process boundary.
+Only opaque handles, transaction acceptance and raw four-byte responses cross it.
+
+The bounded 288-candidate anchor grammar covers three frame families, two checksums, four opaque
+operation bytes, three reply offsets, two byte orders and two transforms. Source targets are
+observed from the inherited M048 version-eight body. The discovery API has no hidden input; a
+separate validation mode owns 12 disjoint cases.
+
+One uniform search found one public and hidden-valid contract for each body. The discovered class
+covers register, stack and mailbox frames and four distinct adapter digests. Default, framing-only,
+empty-transcript, corrupted-transcript and semantic-mutation controls all reject. Protocol digest
+`79447865ea7af9c47d482cbc4deb297d469fd07ab9c6c6b364a8be04ed305c91`; local manifest digest
+`81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208`.
+
+This is a local positive development result pending exact-commit GitHub qualification. It supports
+bounded contract-blind re-embodiment, not arbitrary hardware adaptation.
+
 ## Construction frontier — positive canonical closure at M066
 
 M064's negative qualification and M065's negative guard run remain preserved. M066 completed every
@@ -578,12 +597,13 @@ question remains open but is not a missing completion gate.
 | M064 | **NEGATIVE PRE-CANONICAL QUALIFICATION** | Development outcome was positive, but run `31281234286` failed the source commitment and review invalidated the rollback falsifier. No marker or canonical result. |
 | M065 | **NEGATIVE CANONICAL GUARD QUALIFICATION** | Corrected science and parent qualification passed, but run `31287477458` stopped before bank selection because all-ref history counted the PR branch. No artifact; no rerun. |
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
+| M067 | **POSITIVE LOCALLY — QUALIFICATION PENDING** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M066: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M067: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

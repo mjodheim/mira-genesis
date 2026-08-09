@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Began Phase 8 with M067, a distinct adaptive-embodiment question that removes the complete
+  supplied target adapter retained by the closed M043–M066 construction line.
+- Added a separately executed four-body bank committed by SHA-256. Its interface exposes opaque
+  handles, acceptance bits and raw replies but no frame, checksum, opcode or decoder descriptor.
+- Added a bounded 288-candidate contract search. One uniform procedure discovered four distinct
+  adapters across register, stack and mailbox frames; each unique public survivor passed 12/12
+  disjoint hidden observations.
+- Added empty-transcript, corrupted-transcript, default-adapter, framing-only and semantic-mutation
+  falsifiers. All reject; the discovery API has no hidden-evidence parameter.
+- Added the Phase 8 agenda, D027, H14, M067 protocol/result records and permanent tests. The result
+  is positive locally; the complete repository passed 1,130 tests on Python 3.14.6 and awaits
+  exact-commit GitHub qualification.
 - Licensed all project software under AGPL-3.0-only and the non-software research record
   under CC BY 4.0.
 - Added explicit authorship, citation, provenance and trademark records naming Anthony Mets as
