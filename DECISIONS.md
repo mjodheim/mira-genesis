@@ -739,3 +739,31 @@ The governed body constrains paths, action schemas, environment, time and output
 container or VM and does not claim strong adversarial isolation. The tasks and complete finite
 replacement statements remain project-authored. Even a positive M069 result is terminal-body
 mechanism evidence, not broad software engineering, external-target evidence or AGI.
+
+## D031 — M069 closes the project-authored governed-terminal step
+
+Exact learner commit `c603dd52c6484034de3a11a7c3c660335fda14b0` follows the M069 freeze
+without changing its runtime, protocol or bank commitment. One unchanged policy repairs all four
+compatible workspaces, each passes 3/3 hidden cases, and the incompatible task refuses after one
+read with zero writes and zero processes. All ten preregistered controls pass and a second process
+reproduces manifest digest `c5c807017f05788dc22d21f88192279b9f177b648403b2cc41ca149b25ff6289`.
+
+### The decision
+
+M069 is positive mechanism evidence for real filesystem/process affordances and calibrated
+incompatibility refusal. The project-authored governed-terminal step is closed. A successor may
+not be justified by more marker-based tasks, more complete candidate statements, longer finite
+search or another trusted evaluator registered directly on the host.
+
+The next accepted result must use tasks maintained independently of Mira Genesis and frozen after
+the evaluated agent design. Any untrusted candidate execution must occur in an independently
+configured container or VM, with evaluator-owned state checks, fixed resources, least privilege,
+negative controls and preserved failed attempts. A public suite alone is development evidence;
+stronger claims require a private uncontaminated split and independent reproduction.
+
+### Claim boundary
+
+M069 moves G1, G6 and G10 only to partial mechanism evidence. It contains no task-specific planner,
+foundation model, multimodal grounding, learned cross-domain transfer, hour-scale autonomy,
+external task authorship or adversarial OS isolation. It cannot support broad software-engineering,
+general-agent or AGI language.

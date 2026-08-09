@@ -52,9 +52,15 @@ First run `31314960014` qualified that exact commit on Python 3.11 and 3.13 plus
 targets remain authored by this project, so independent target authorship and real-device crossing
 remain open.
 
-The next phase advance must cross an external interface or governed real software environment and
-must include an incompatible-body refusal trial. Longer words, larger alphabets or more bodies
-written inside Mira Genesis repeat the M068 instrument and do not qualify as new evidence.
+M069 took the governed-real-software path after separately freezing its task bank. One unchanged
+policy repaired four real temporary workspaces through registered host processes, passed all
+hidden cases and refused an incompatible protocol before mutation. All ten controls pass and the
+manifest is byte-reproducible. This makes G6 partial rather than open.
+
+The next phase advance must use independently maintained tasks frozen after the agent design and
+execute untrusted work inside an OS-isolated container or VM. Longer word languages, more supplied
+repair statements or more bodies written inside Mira Genesis repeat the M069 instrument and do not
+qualify as new evidence.
 
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

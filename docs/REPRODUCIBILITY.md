@@ -14,14 +14,19 @@ For the current adaptive-embodiment frontier:
 python scripts/check_m068_frozen_protocol.py
 python scripts/run_m068_development.py
 python scripts/run_mira_core_demo.py
+python scripts/check_m069_frozen_protocol.py
+python scripts/run_m069_development.py
+python scripts/run_mira_terminal_demo.py
 ```
 
 The freeze check verifies the LF-normalised target bytes and live opaque attestation. The M068
 runner emits the deterministic development manifest; the Mira Core demo exercises the reusable
-least-privilege agent loop independently of the scientific result.
+least-privilege agent loop independently of the scientific result. The M069 commands attest the
+separately frozen terminal bank, reproduce its byte-stable manifest and print a compact governed-
+terminal report. M069 launches trusted registered host commands and is not an OS sandbox.
 
-These four steps are exactly what `.github/workflows/ci.yml` runs on every pull request,
-on Python 3.11 and 3.13.
+The four repository-wide installation and audit steps at the top are exactly what
+`.github/workflows/ci.yml` runs on every pull request, on Python 3.11 and 3.13.
 
 ## Reproducing a canonical result
 

@@ -63,6 +63,8 @@ The full evidence is preserved in:
 | M042 | **POSITIVE CANONICAL** | Constructive task availability repaired the M041 failure; all ten audited Genesis gates are true in one frozen lineage. |
 | M066 | **POSITIVE CANONICAL** | The bounded real-substrate construction passed all ten gates; the M043–M066 line is closed. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
+| M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
+| M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -268,13 +270,22 @@ protocol induction, independently authored target evidence, real-device competen
 Exact learner commit `f033ac7` passed first GitHub run `31314960014`: **1,153 tests on Python
 3.11 and 1,153 on Python 3.13**, plus repository integrity. Attribution run `31314960009` passed.
 
-**M069 is now at a pre-policy task-bank freeze, with no result.** It moves from simulated opaque
-transactions to a real temporary filesystem and real registered host processes. Four compatible
-repair workspaces, one incompatible protocol, eleven bounded replacements, hidden evaluator cases,
-authority limits and falsifiers are committed before the policy. The evaluator remains project-
-authored and the governed process boundary is not an OS security sandbox.
+**M069 has a positive qualified development result.** One
+unchanged policy crosses a real temporary filesystem and registered host processes, finds the
+unique public repair for all four compatible workspaces and passes **3/3 hidden cases per task**.
+The incompatible protocol is refused after one read and before any write or process. All ten
+frozen controls pass and a second process reproduces manifest digest `c5c80701` exactly.
 
-See [`experiments/M069/PROTOCOL.md`](experiments/M069/PROTOCOL.md) and
+Exact learner commit `c603dd5` passed GitHub qualification run `31319062535`: **1,181 tests on
+Python 3.11 in 1,241.52 seconds and 1,181 tests on Python 3.13 in 1,260.38 seconds**, plus
+repository integrity. Attribution run `31319062599` passed.
+
+This advances governed terminal competence and calibrated refusal, not open-ended programming.
+The eleven complete repair statements and tasks remain project-authored, and registered commands
+are trusted host code rather than an OS security sandbox.
+
+See [`experiments/M069/PROTOCOL.md`](experiments/M069/PROTOCOL.md),
+[`experiments/M069/DEVELOPMENT_RESULT.md`](experiments/M069/DEVELOPMENT_RESULT.md) and
 [`experiments/M069/STATUS.md`](experiments/M069/STATUS.md).
 
 See:
@@ -343,10 +354,12 @@ Run the dependency-free smoke demonstration after installation:
 
 ```bash
 python scripts/run_mira_core_demo.py
+python scripts/run_mira_terminal_demo.py
 ```
 
-See [`docs/MIRA_CORE_ARCHITECTURE.md`](docs/MIRA_CORE_ARCHITECTURE.md). The demo is engineering
-evidence only; it is not M068 or M069 scientific evidence and not a generality claim.
+The first command exercises the dependency-free loop. The second reproduces M069 over real
+temporary files and host processes and emits its repairs, refusal, controls and claim boundary.
+See [`docs/MIRA_CORE_ARCHITECTURE.md`](docs/MIRA_CORE_ARCHITECTURE.md).
 
 ## Repository map
 

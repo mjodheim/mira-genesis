@@ -235,3 +235,26 @@ that survivor passed 12/12 hidden observations. All registered controls rejected
 local manifest digest is `81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208`.
 Exact experiment commit `7d38ac8` passed GitHub run `31311020868` on Python 3.11 and 3.13,
 with repository integrity; attribution run `31311020869` also passed.
+
+## H15 — Governed terminal transfer with calibrated incompatibility refusal
+
+One unchanged bounded policy can act through real filesystem/process affordances, select repairs
+from public outcome evidence, pass evaluator-owned hidden cases and refuse a task outside its
+declared protocol before mutation.
+
+**Status:** supported by the M069 qualified development result; exact run `31319062535` passed.
+
+**Pre-written implication:** after the separate task-bank freeze, one policy must find one public
+survivor for every one of four compatible tasks, pass 3/3 hidden cases for each, refuse the fifth
+task before any write or process, pass all ten controls and reproduce identical manifest bytes in
+a second process.
+
+**Scope:** the five tasks and eleven complete replacement statements are project-authored.
+Registered commands are trusted host code in a governed workspace, not untrusted code inside an OS
+sandbox. H15 does not claim open-ended programming, external-task transfer or general agency.
+
+**Result:** all four compatible tasks produced one survivor and passed hidden validation. The
+incompatible task refused after one read with zero writes and zero processes; every control passed.
+Manifest digest `c5c807017f05788dc22d21f88192279b9f177b648403b2cc41ca149b25ff6289`
+reproduced exactly. Exact learner commit `c603dd5` passed CI run `31319062535`; attribution run
+`31319062599` also passed.
