@@ -1,0 +1,10 @@
+{
+  "first_run_only": true,
+  "frozen_parent_sha": "b1489d7a3a264de8a9e783eb139dafe28732b040",
+  "frozen_protocol_file_sha256": "360f4ae7dac895aed2af071a80c45d100eb2b6a7201f107728e5ad70d781f83a",
+  "independent_reproduction_required": true,
+  "protocol_sha256": "1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51",
+  "reruns_are_reproductions_only": true,
+  "schema": "m065-canonical-arm/1",
+  "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da"
+}
