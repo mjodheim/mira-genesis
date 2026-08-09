@@ -42,6 +42,21 @@ third arm separates them.
 Same model identity, same prompt contract, same step and time budgets across A, B and C. The
 model, its version and its settings are declared and pinned before any arm runs.
 
+### The authority gate is inert under the M071 grant — found while implementing
+
+`StructuredModelPolicy` emits only `container_exec`, carrying exactly the three authorities the
+M071 safety policy grants. The gate therefore never fires, and under that grant arm A and arm B
+differ in nothing observable: `enforce_authorities` would have been a flag with no effect, and the
+ablation would have silently measured only the refusal path.
+
+The authority dimension is measurable only when the granted set is **narrower than the action
+language declares** — for example a read-only grant against a task requiring writes. The frozen
+protocol must therefore declare the grant per condition, and at least one condition must narrow it,
+or drop the authority dimension and claim only the refusal result.
+
+`tests/test_m072_ablation_arms.py::test_default_grant_leaves_the_authority_gate_inert` pins this so
+the design cannot quietly come to rest on an ablation that cannot fire.
+
 ## Measures
 
 Reward alone cannot answer the question. Preregister all of these:
