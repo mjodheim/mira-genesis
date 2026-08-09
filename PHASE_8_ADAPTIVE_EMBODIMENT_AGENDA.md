@@ -45,5 +45,11 @@ successor would need a fresh falsifiable question, for example learning a descri
 fixed in advance or crossing a real device boundary. Merely adding more bodies, operations or
 candidate combinations does not count as a phase advance.
 
+M068 takes the first of those paths. It freezes four opaque command languages before the learner
+and replaces M067's named descriptor dimensions with every word inside a generic length bound. The
+freeze is not a result: a later commit must still implement the learner, run all controls and
+qualify the exact code. The targets remain authored by this project, so independent target
+authorship and real-device crossing remain open even if M068 succeeds.
+
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Defined ten preregistered Mira generality gates covering interface novelty, multimodal grounding,
+  planning, transfer, continual learning, real environments, long horizons, governed
+  self-improvement, evaluation integrity and safety. M067 remains mechanism evidence, not AGI.
+- Added the M068 pre-learner freeze: four opaque command-language bodies, eight action handles,
+  37,448 admissible non-empty words, fixed public/hidden evidence and eight required controls.
+- Bound the M068 runtime, bank and protocol by portable SHA-256 before any discovery engine exists.
+  D028 forbids later target drift and explicitly declines an independent-authorship claim.
 - Began Phase 8 with M067, a distinct adaptive-embodiment question that removes the complete
   supplied target adapter retained by the closed M043–M066 construction line.
 - Added a separately executed four-body bank committed by SHA-256. Its interface exposes opaque

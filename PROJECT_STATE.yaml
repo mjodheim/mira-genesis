@@ -1,12 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m067_positive_qualified_development
+status: phase_eight_m068_target_bank_freeze_no_result
 
 active_research_question: >-
   Can a continuing lineage discover an undisclosed target-body invocation contract from public
   interaction, preserve inherited skills on disjoint hidden evidence and refuse adaptation when
-  evidence is absent or inconsistent? M067 is positive and qualified in development across four
-  committed bodies; its authored grammar still bounds the claim.
+  evidence is absent or inconsistent? M067 is positive and qualified in development. M068 now
+  freezes a generic opaque command-language bank before its discovery engine; no M068 result exists.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -922,7 +922,7 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m067_positive_qualified_development
+  status: m068_target_bank_freeze_no_result
   objective: bounded_contract_blind_adaptive_embodiment
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
@@ -965,6 +965,25 @@ phase_eight:
     repository_integrity_passed: true
     attribution_run: 31311020869
     attribution_passed: true
+  M068:
+    status: target_bank_freeze_candidate_no_result
+    canonical: false
+    protocol: experiments/M068/PROTOCOL.md
+    frozen_protocol: experiments/M068/FROZEN_PROTOCOL.json
+    status_record: experiments/M068/STATUS.md
+    generality_register: MIRA_GENERALITY_CRITERIA.md
+    executable_protocol_digest: 2c9296b8232e2ff8b8a74cdb8bc0af6b724dcb324378be2ee3a33fe783ff22b7
+    body_bank_commitment: f4d2a9da99de42fa1f08ec90bd5b14b92942927d1784d917ca3064268824ceac
+    target_runtime_lf_sha256: d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c
+    body_bank_size: 4
+    opaque_action_count: 8
+    max_word_length: 5
+    complete_word_count: 37448
+    target_bank_frozen_before_discovery_engine: true
+    discovery_engine_present: false
+    scientific_result_exists: false
+    external_target_authorship_claimed: false
+    arbitrary_protocol_induction_claimed: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
 

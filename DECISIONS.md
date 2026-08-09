@@ -674,3 +674,18 @@ so the claim is bounded contract-blind re-embodiment. More bodies or a larger gr
 a successor; M068 would need to remove another structural assumption with a new falsifier.
 
 Repository writes, networks, credentials and deployments remain outside the scientific lineage.
+
+## D028 — The M068 target language is committed before its learner
+
+M067's learner and descriptor-product body bank were introduced together. That is sufficient for a
+bounded mechanism test, but it permits unconscious co-design between target and discoverer.
+
+M068 therefore separates construction in Git history. The opaque runtime, body-bank commitment,
+generic word bound, evidence split, controls and decision rule are committed first. The discovery
+engine does not exist at that boundary. Its later commit may not modify the LF-normalised runtime
+digest `d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c` or protocol digest
+`2c9296b8232e2ff8b8a74cdb8bc0af6b724dcb324378be2ee3a33fe783ff22b7`.
+
+This controls freeze order, not authorship. The targets remain authored inside Mira Genesis; M068
+must not call them independently authored. A target change after the freeze closes M068 without a
+positive result and requires a named successor.

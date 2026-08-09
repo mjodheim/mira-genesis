@@ -253,6 +253,11 @@ See [`experiments/M067/PROTOCOL.md`](experiments/M067/PROTOCOL.md),
 [`experiments/M067/DEVELOPMENT_RESULT.md`](experiments/M067/DEVELOPMENT_RESULT.md) and the
 [`Phase 8 agenda`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md).
 
+**M068 is now a pre-result target-bank freeze.** It replaces M067's six-dimensional descriptor
+product with the generic language of all 37,448 non-empty words of length at most five over eight
+opaque actions. Four target bodies, their runtime bytes, the enumeration rule, evidence split and
+negative controls are committed before the discovery engine exists. No M068 result is claimed yet.
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -311,6 +316,8 @@ replace a first canonical run.
 - [`PHASE_2_RESEARCH_AGENDA.md`](PHASE_2_RESEARCH_AGENDA.md) — post-M042 research rules;
 - [`PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md) —
   contract-blind re-embodiment question and falsifiers;
+- [`MIRA_GENERALITY_CRITERIA.md`](MIRA_GENERALITY_CRITERIA.md) — preregistered gates separating
+  bounded mechanisms, general-agent evidence and any future AGI-candidate claim;
 - [`MEASURES.md`](MEASURES.md) — proxy/ground-truth divergences;
 - [`FAILURE_LOG.md`](FAILURE_LOG.md) — failures and contaminations, never deleted;
 - `metamorphosis/` — experimental implementations;
