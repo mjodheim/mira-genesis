@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added the first installable `mira_core` runtime with stable body/policy contracts, a bounded
+  agent loop, immutable least-privilege admission and deterministic hash-chained memory.
+- Added exact checkpoint restoration, tamper rejection, explicit policy refusal, body-fault
+  evidence and fail-closed step budgets, plus a dependency-free runnable demonstration.
+- Extended repository integrity checks from the historical `metamorphosis` package to every
+  installable Mira package and documented the operational architecture and its current limits.
 - Defined ten preregistered Mira generality gates covering interface novelty, multimodal grounding,
   planning, transfer, continual learning, real environments, long horizons, governed
   self-improvement, evaluation integrity and safety. M067 remains mechanism evidence, not AGI.

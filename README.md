@@ -306,6 +306,23 @@ Canonical workflows are archived after their unique execution. Reproduction uses
 committed artifacts, deterministic replay engines and independent verifiers; it does not
 replace a first canonical run.
 
+## Operational Mira Core
+
+The installable `mira_core` package is the engineering bridge from the experiment series to real
+agent bodies. It provides typed goal/action/observation contracts, a bounded policy loop, immutable
+least-privilege admission and hash-chained checkpointable memory. It has no model-provider
+dependency and grants no filesystem, network, repository, credential or deployment authority by
+default.
+
+Run the dependency-free smoke demonstration after installation:
+
+```bash
+python scripts/run_mira_core_demo.py
+```
+
+See [`docs/MIRA_CORE_ARCHITECTURE.md`](docs/MIRA_CORE_ARCHITECTURE.md). The demo is engineering
+evidence only; it is not M068's scientific result and not a generality claim.
+
 ## Repository map
 
 - [`PROJECT_STATE.md`](PROJECT_STATE.md) — authoritative human-readable snapshot;

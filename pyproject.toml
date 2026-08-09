@@ -31,7 +31,7 @@ dev = ["pytest"]
 [tool.setuptools]
 # `scripts/` contains repository entry points executed from the project root rather
 # than an installable package; `pytest.ini_options.pythonpath` exposes it to tests.
-packages = ["metamorphosis"]
+packages = ["metamorphosis", "mira_core"]
 
 [tool.pytest.ini_options]
 pythonpath = [".", "scripts"]
