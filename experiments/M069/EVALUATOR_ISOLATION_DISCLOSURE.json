@@ -1,0 +1,17 @@
+{
+  "candidate_execution_site": "metamorphosis/m069_terminal_task_bank.py:129",
+  "disclosure_recorded_after_merge": true,
+  "frozen_artifacts_rewritten": false,
+  "hidden_evidence_resident_in_evaluator_process": true,
+  "leak_path": "policy write_text places arbitrary bytes in solution.py; the evaluator imports it in the process holding TASKS; public evaluator output is exposed to the policy",
+  "public_evaluator_exposes_output": true,
+  "public_evaluator_registration": "metamorphosis/m069_governed_terminal_repair.py:283",
+  "reason": "M069 falsifier 10 verified the learner's source text, not the interface. No reported falsifier established that hidden evidence was unreachable through admitted actions.",
+  "recorded_learner_exploits_leak": false,
+  "recorded_learner_commit": "c603dd52c6484034de3a11a7c3c660335fda14b0",
+  "schema": "m069-evaluator-isolation-disclosure-v1",
+  "scientific_effect": "reported rewards, selected sources and hidden results are unchanged; the non-reachability property is downgraded from established-by-construction to holds-by-audit for this frozen learner",
+  "successor_constraint": "evaluators that execute candidate code must do so in a separate process that never holds hidden evidence in memory",
+  "verdict_reclassified": false,
+  "verdict_decision_reserved_to": "project owner"
+}

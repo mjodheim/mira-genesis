@@ -913,3 +913,25 @@ M070 therefore fails its preregistered 1/2 threshold. The result is not reclassi
 infrastructure pass and the two selected tasks cannot become M071's fresh evidence. Explicit UTF-8
 transport, whole-process-tree timeout enforcement and permanent non-ASCII/descendant regressions
 are mandatory before a new freeze.
+
+## M069 — a falsifier audited the learner's text instead of the interface (found after M071)
+
+This defect was found by review after M069 had been qualified and merged, and after M071 closed.
+The frozen evaluator imports each candidate with `exec_module` in the process that holds `TASKS`,
+so every hidden case is resident in memory while candidate code runs. The policy owns `write_text`
+and the public evaluator is registered with output exposed, so a candidate printing
+`sys.modules["__main__"].TASKS` would have carried hidden cases back through admitted actions
+alone.
+
+M069 falsifier 10 checks that the learner's *source* does not read the evaluator implementation. It
+audits the wrong object: it constrains the text that was written rather than what the interface
+permits. No reported M069 falsifier established non-reachability.
+
+The recorded rewards do not move. The frozen learner at `c603dd5` is auditable and does not exploit
+the leak, so the positive finding survives — but it survives by inspection of one artifact, not by
+construction of the setup. The distinction matters because M061 already cost this project a false
+manifest that its own sixteen tests could not see.
+
+Full record in `experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md`. No frozen M069 artifact was
+rewritten, and the verdict label remains the project owner's decision. Successor evaluators must
+execute candidate code in a separate process that never holds hidden evidence.
