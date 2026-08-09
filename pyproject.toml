@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mira-genesis"
-version = "0.42.0"
+version = "0.43.0"
 description = "Auditable adaptive-embodiment and trans-substrate continuity research"
 readme = "README.md"
 license = "AGPL-3.0-only"

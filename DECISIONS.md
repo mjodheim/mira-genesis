@@ -689,3 +689,27 @@ digest `d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c` or pro
 This controls freeze order, not authorship. The targets remain authored inside Mira Genesis; M068
 must not call them independently authored. A target change after the freeze closes M068 without a
 positive result and requires a named successor.
+
+## D029 — M068 closes the project-authored finite command-language step
+
+Exact learner commit `f033ac70628e79550e6263ac2bb60a6769bca42e` follows the frozen target
+commit without changing it. In development, one unchanged learner scanned the complete 37,448-word
+language for every body, recovered four distinct complete adapters, passed all 12 hidden cases per
+body and rejected every preregistered control.
+
+### The decision
+
+M068 is positive mechanism evidence that M067's named descriptor-product grammar was not necessary
+inside this finite bank. The project-authored finite command-language step is now closed. M069 may
+not be justified by more authored bodies, a larger alphabet, longer words or a wider finite scan.
+
+A successor must cross a materially external interface or governed real software environment and
+must include at least one incompatible-body refusal trial. The same reusable Mira agent must retain
+least privilege, evaluator-owned success, bounded action budgets and tamper-evident evidence.
+
+### Claim boundary
+
+M068 does not complete G1 because its targets and resource bounds remain authored inside the
+project. It supplies no multimodal grounding, cross-domain transfer, real-device competence or
+human-hour autonomy. It cannot be described as arbitrary body adaptation, a universal compiler or
+AGI, regardless of exact-commit qualification.

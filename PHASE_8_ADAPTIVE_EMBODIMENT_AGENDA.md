@@ -45,11 +45,16 @@ successor would need a fresh falsifiable question, for example learning a descri
 fixed in advance or crossing a real device boundary. Merely adding more bodies, operations or
 candidate combinations does not count as a phase advance.
 
-M068 takes the first of those paths. It freezes four opaque command languages before the learner
-and replaces M067's named descriptor dimensions with every word inside a generic length bound. The
-freeze is not a result: a later commit must still implement the learner, run all controls and
-qualify the exact code. The targets remain authored by this project, so independent target
-authorship and real-device crossing remain open even if M068 succeeds.
+M068 took the first of those paths. It froze four opaque command languages before the learner and
+replaced M067's named descriptor dimensions with every word inside a generic length bound. Exact
+learner commit `f033ac7` recovered four distinct adapters and passed all hidden cases and controls.
+First run `31314960014` qualified that exact commit on Python 3.11 and 3.13 plus integrity. The
+targets remain authored by this project, so independent target authorship and real-device crossing
+remain open.
+
+The next phase advance must cross an external interface or governed real software environment and
+must include an incompatible-body refusal trial. Longer words, larger alphabets or more bodies
+written inside Mira Genesis repeat the M068 instrument and do not qualify as new evidence.
 
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

@@ -20,8 +20,9 @@ and one parallel measurement track.
   canonically; the construction line is closed by D026.
 - **Phase 8 — adaptive embodiment:** M067 removes the complete supplied target adapter and
   discovers four opaque contracts across a committed body class. Positive and qualified in
-  development on exact commit `7d38ac8`. M068 freezes a generic opaque command-language bank
-  before its learner; no M068 result exists yet.
+  development on exact commit `7d38ac8`. M068 then induces four distinct command languages from
+  the complete 37,448-word space after a separate target freeze. Positive in development on exact
+  learner commit `f033ac7`, qualified by first run `31314960014`.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -325,11 +326,12 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | Step | Goal | Status | Result |
 |---|---|---|---|
 | M067 | Discover an undisclosed body contract without a complete target adapter | **Positive qualified development result** | All four committed contracts discovered across three frame families; one public survivor per body, each 12/12 hidden; all controls reject. Exact commit `7d38ac8`, run `31311020868`. |
-| M068 | Induce commands without M067's descriptor-product grammar | **Target bank frozen; no result** | Four bodies, eight opaque actions and all 37,448 words of length ≤5 are fixed before the discovery engine. |
+| M068 | Induce commands without M067's descriptor-product grammar | **Positive qualified development result** | One complete scan per body finds four commands and one semantic adapter; four distinct adapters each pass 12/12 hidden cases and all controls reject. Exact learner `f033ac7`, run `31314960014`. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
-but the finite word bound, host envelope and target bank remain project-authored. Its freeze is not
-a result. External target authorship and unbounded protocol induction remain later gates.
+but the finite word bound, host envelope and target bank remain project-authored. External target
+authorship, incompatible-body refusal, real-environment competence and unbounded protocol
+induction remain later gates. More project-authored bodies or longer words cannot justify M069.
 
 ## Parallel measurement track — M045
 

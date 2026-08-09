@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Added the M068 open command-language learner after a separate target freeze. One unchanged
+  engine scans all 37,448 admissible words and discovers four distinct complete adapters.
+- All four unique public classes pass 12/12 disjoint hidden observations. Declaration-order,
+  lexical-semantic, empty-transcript, corrupted-source, unknown-action, non-command and semantic-
+  mutation controls reject, and a second process reproduces the exact manifest bytes.
+- Recorded deterministic M068 manifest digest `0f012c41` and tamper-evident Mira Core evidence
+  digest `75df381e`; preserved project-authored-target, finite-language and non-AGI limits.
+- Qualified exact M068 learner commit `f033ac7` in first run `31314960014`: 1,153 tests on
+  Python 3.11 and 1,153 on Python 3.13 plus integrity; attribution run `31314960009` passed.
 - Added the first installable `mira_core` runtime with stable body/policy contracts, a bounded
   agent loop, immutable least-privilege admission and deterministic hash-chained memory.
 - Added exact checkpoint restoration, tamper rejection, explicit policy refusal, body-fault

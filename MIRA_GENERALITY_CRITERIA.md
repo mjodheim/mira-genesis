@@ -14,8 +14,8 @@ from being relabelled as AGI after the fact.
 - **AGI confirmed** — reserved for a broader scientific and societal conclusion, not a repository
   label Mira Genesis can assign to itself.
 
-M067 is mechanism evidence for bounded contract-blind re-embodiment. It is not cross-domain or
-general-agent evidence.
+M068 is positive qualified-development mechanism evidence for bounded command induction after a
+separate target freeze. It is not cross-domain or general-agent evidence.
 
 ## G1 — interface novelty
 
@@ -100,7 +100,7 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | partial mechanism evidence | M067 discovers four contracts inside one authored descriptor grammar. |
+| G1 | stronger partial mechanism evidence | M068 removes M067's descriptor product and induces four frozen command languages; targets and bounds remain project-authored and no incompatible body was tested. |
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | No frozen transfer across real, materially different domains. |
@@ -109,6 +109,6 @@ results are known.
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | partial mechanism evidence | Authority boundaries are explicit; no general-agent red-team suite exists. |
+| G10 | partial mechanism evidence | `mira_core` now denies high-impact authority by default and preserves tamper-evident evidence; no general-agent red-team suite exists. |
 
 The next accepted result must change this table by evidence, not wording.

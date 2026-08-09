@@ -39,9 +39,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
 - **M067 is a positive qualified development result.** Exact experiment commit `7d38ac8` passed
   1,130 tests on Python 3.11 and 1,130 on Python 3.13 in run `31311020868`, plus integrity;
   attribution run `31311020869` passed. Its grammar and body bank remain authored.
-- **M068 is at the target-bank freeze boundary, with no result.** The four-body runtime,
-  37,448-word generic action language, evidence split, controls and decision rule are bound before
-  any discovery engine is committed.
+- **M068 is a positive qualified development result.** After the
+  four-body runtime was frozen separately, one unchanged learner scanned the complete 37,448-word
+  language, induced four distinct semantic adapters and passed 12/12 hidden cases per body. All
+  preregistered controls reject.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -561,11 +562,21 @@ Exact experiment commit `7d38ac8b35729e19d5f16843905b80654f657c5e` passed GitHub
 positive qualified development result supporting bounded contract-blind re-embodiment, not
 arbitrary hardware adaptation.
 
-M068 now removes the descriptor-product grammar. Its protocol digest is
+M068 removes the descriptor-product grammar. Its protocol digest is
 `2c9296b8232e2ff8b8a74cdb8bc0af6b724dcb324378be2ee3a33fe783ff22b7`; the opaque body-bank
 commitment is `f4d2a9da99de42fa1f08ec90bd5b14b92942927d1784d917ca3064268824ceac` and the frozen
-runtime digest is `d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c`. The learner is
-intentionally absent at this boundary, so no positive or negative result exists yet.
+runtime digest is `d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c`.
+Freeze commit `f8c67f1` predates learner commit `f033ac7`. One complete 37,448-word scan plus four
+additional diagnostics and 20 public cases found one adapter for each body; every adapter passed
+12/12 hidden cases. Declaration-order, lexical-semantic, empty-transcript, corrupted-source,
+unknown-action, non-command and semantic-mutation controls reject. The deterministic manifest
+digest is `0f012c41a676ff7fcb8ca088d54f26cd83a90037dcaa1290406ecd86ecb459f7`.
+
+This is stronger partial G1 mechanism evidence, not arbitrary protocol induction: the action
+alphabet, length bound, host envelope and targets remain project-authored. Exact-commit GitHub
+run `31314960014` passed 1,153 tests on Python 3.11 and 1,153 on Python 3.13 plus integrity;
+attribution run `31314960009` passed. Independent target authorship, incompatible-body refusal and
+a governed real-environment crossing remain open.
 
 ## Construction frontier — positive canonical closure at M066
 
@@ -611,7 +622,7 @@ question remains open but is not a missing completion gate.
 | M065 | **NEGATIVE CANONICAL GUARD QUALIFICATION** | Corrected science and parent qualification passed, but run `31287477458` stopped before bank selection because all-ref history counted the PR branch. No artifact; no rerun. |
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
-| M068 | **TARGET BANK FROZEN — NO RESULT** | Four opaque command languages and the complete finite word bound are committed before the learner. Protocol digest `2c9296b8`; runtime digest `d6090e20`. |
+| M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
 
 ## Parallel measurement track — M045
 

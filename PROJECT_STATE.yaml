@@ -1,12 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m068_target_bank_freeze_no_result
+status: phase_eight_m068_positive_qualified_development
 
 active_research_question: >-
   Can a continuing lineage discover an undisclosed target-body invocation contract from public
   interaction, preserve inherited skills on disjoint hidden evidence and refuse adaptation when
-  evidence is absent or inconsistent? M067 is positive and qualified in development. M068 now
-  freezes a generic opaque command-language bank before its discovery engine; no M068 result exists.
+  evidence is absent or inconsistent? M067 is positive and qualified in development. M068 is
+  positive and qualified in development after a separate target freeze.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -922,7 +922,7 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m068_target_bank_freeze_no_result
+  status: m068_positive_qualified_development
   objective: bounded_contract_blind_adaptive_embodiment
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
@@ -966,11 +966,12 @@ phase_eight:
     attribution_run: 31311020869
     attribution_passed: true
   M068:
-    status: target_bank_freeze_candidate_no_result
+    status: positive_qualified_development
     canonical: false
     protocol: experiments/M068/PROTOCOL.md
     frozen_protocol: experiments/M068/FROZEN_PROTOCOL.json
     status_record: experiments/M068/STATUS.md
+    result: experiments/M068/DEVELOPMENT_RESULT.md
     generality_register: MIRA_GENERALITY_CRITERIA.md
     executable_protocol_digest: 2c9296b8232e2ff8b8a74cdb8bc0af6b724dcb324378be2ee3a33fe783ff22b7
     body_bank_commitment: f4d2a9da99de42fa1f08ec90bd5b14b92942927d1784d917ca3064268824ceac
@@ -980,8 +981,40 @@ phase_eight:
     max_word_length: 5
     complete_word_count: 37448
     target_bank_frozen_before_discovery_engine: true
-    discovery_engine_present: false
-    scientific_result_exists: false
+    freeze_commit: f8c67f1853743e473785d92bed5195c5621e8943
+    exact_learner_commit: f033ac70628e79550e6263ac2bb60a6769bca42e
+    discovery_engine_present: true
+    scientific_result_exists: true
+    inherited_source_version: 8
+    inherited_skills: [add, max, mean, mul]
+    public_cases_per_body: 20
+    hidden_cases_per_body: 12
+    language_scan_attempts_per_body: 37448
+    additional_diagnostic_attempts_per_body: 4
+    public_validation_attempts_per_body: 20
+    public_discovery_attempts_per_body: 37472
+    accepted_commands_per_body: 4
+    public_survivors_per_body: 1
+    hidden_passes_per_body: [12, 12]
+    distinct_command_languages_discovered: 4
+    all_preregistered_controls_reject: true
+    deterministic_manifest_digest: 0f012c41a676ff7fcb8ca088d54f26cd83a90037dcaa1290406ecd86ecb459f7
+    evidence_memory_event_count: 6
+    evidence_memory_digest: 75df381e2d44de27eee519feda030e39d7af2a3d8097936aa87a921a05a16966
+    dedicated_local_tests: 15
+    targeted_m068_and_core_local_tests: 23
+    complete_repository_local_tests: 1153
+    complete_repository_local_test_seconds: 2219.64
+    complete_repository_local_python: 3.14.6
+    exact_commit_qualification: passed
+    github_ci_run: 31314960014
+    github_python_3_11: [1153, 1153]
+    github_python_3_11_seconds: 1249.61
+    github_python_3_13: [1153, 1153]
+    github_python_3_13_seconds: 1262.52
+    repository_integrity_passed: true
+    attribution_run: 31314960009
+    attribution_passed: true
     external_target_authorship_claimed: false
     arbitrary_protocol_induction_claimed: false
   successor_by_larger_same_grammar_permitted: false

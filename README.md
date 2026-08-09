@@ -253,10 +253,20 @@ See [`experiments/M067/PROTOCOL.md`](experiments/M067/PROTOCOL.md),
 [`experiments/M067/DEVELOPMENT_RESULT.md`](experiments/M067/DEVELOPMENT_RESULT.md) and the
 [`Phase 8 agenda`](PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md).
 
-**M068 is now a pre-result target-bank freeze.** It replaces M067's six-dimensional descriptor
-product with the generic language of all 37,448 non-empty words of length at most five over eight
-opaque actions. Four target bodies, their runtime bytes, the enumeration rule, evidence split and
-negative controls are committed before the discovery engine exists. No M068 result is claimed yet.
+**M068 is a positive qualified development result.** The target bank
+was frozen before its learner. One unchanged engine then enumerated all 37,448 non-empty words of
+length at most five, found four commands per body and induced four distinct semantic adapters.
+Each unique public survivor passed **12/12 disjoint hidden observations**; declaration-order,
+lexical-semantic, empty-transcript, corrupted-source, unknown-action, non-command and semantic-
+mutation controls all reject.
+
+M068 removes M067's descriptor-product grammar, but not the project-authored finite word bound,
+host envelope or target bank. It is bounded interface-novelty mechanism evidence, not arbitrary
+protocol induction, independently authored target evidence, real-device competence or AGI. See
+[`experiments/M068/DEVELOPMENT_RESULT.md`](experiments/M068/DEVELOPMENT_RESULT.md).
+
+Exact learner commit `f033ac7` passed first GitHub run `31314960014`: **1,153 tests on Python
+3.11 and 1,153 on Python 3.13**, plus repository integrity. Attribution run `31314960009` passed.
 
 See:
 
