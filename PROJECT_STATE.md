@@ -62,7 +62,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   remained closed; execution protocol `31d3c7bd` was frozen before all four ordered trials.
   Official rewards were `0.0` on SQLite and **`1.0` on custom-memory**, versus `0.0` for both
   `nop` floors, with no exception, retry or replacement. Result digest `d3526513`; the final local
-  suite passed 1,225 tests with two skips.
+  suite passed 1,225 tests with two skips. Exact evidence commit `0875fa7` passed first CI run
+  `31332620871`: 1,226 passed/1 skipped on Python 3.11 and 3.13, plus integrity; attribution run
+  `31332620902` passed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,

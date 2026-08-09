@@ -1193,6 +1193,15 @@ phase_eight:
     local_result_suite_seconds: 2257.69
     local_result_suite_skipped: 2
     repository_integrity_passed: true
+    exact_evidence_commit: 0875fa72d724db2af8a7b10b33c876a0e047576d
+    github_ci_run: 31332620871
+    github_python_3_11: [1226, 1226]
+    github_python_3_11_seconds: 1240.29
+    github_python_3_13: [1226, 1226]
+    github_python_3_13_seconds: 1145.84
+    attribution_run: 31332620902
+    attribution_passed: true
+    github_workflow_rerun_used: false
     genesis_gate_2_evidence: false
     reward_attribution: named_composed_system
   successor_by_larger_same_grammar_permitted: false

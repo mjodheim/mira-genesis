@@ -325,6 +325,8 @@ rewards were `0.0` for SQLite and **`1.0` for custom-memory**, while both `nop` 
 All jobs had zero exception, retry and replacement; success remained evaluator-owned. Result
 digest `d3526513`; the final local suite passed 1,225 tests with two skips. See
 [`experiments/M071/EXTERNAL_RESULT.md`](experiments/M071/EXTERNAL_RESULT.md).
+Exact evidence commit `0875fa7` then passed first CI run `31332620871` with 1,226 tests passed and
+one skipped on both Python 3.11 and 3.13, plus integrity; attribution run `31332620902` passed.
 
 See:
 

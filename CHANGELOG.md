@@ -19,6 +19,9 @@
   retry or replacement; success remained evaluator-owned.
 - The final local Python 3.14 preservation suite passed 1,225 tests with two skips in 2,257.69
   seconds; repository integrity and every committed external artifact check passed.
+- Exact M071 evidence commit `0875fa7` passed first CI run `31332620871`: 1,226 passed and one
+  skipped on Python 3.11 and 3.13, plus integrity. Attribution run `31332620902` passed; no
+  workflow rerun was used.
 - Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
   replaced parent-only timeout kills in the model, container and terminal paths with one shared
   whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed
