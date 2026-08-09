@@ -1,0 +1,19 @@
+{
+  "agent_design_commit": "41ebe791605f55e7a44df8f0939d730139cf219a",
+  "agent_design_commitment_sha256": "14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46",
+  "benchmark_repository": "https://github.com/harbor-framework/terminal-bench-2.git",
+  "benchmark_revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6",
+  "harbor_release_commit": "f75477f2ad0b04fad199b0cb80689cc23a06c72d",
+  "harbor_release_tag": "v0.20.0",
+  "identifier_source": "final path component of each tracked task.toml parent directory",
+  "replacement_permitted": false,
+  "schema": "m070-external-selection-protocol-v1",
+  "scientific_result_exists": false,
+  "selected_identifiers": [],
+  "selection_count": 2,
+  "selection_digest_contract": "sha256(bytes.fromhex(selection_salt_utf8_hex) + utf8(identifier))",
+  "selection_salt_utf8_hex": "6d6972612d6d3037302d73656c656374696f6e2d763100",
+  "status": "selection_rule_frozen_before_task_inventory",
+  "task_content_inspected": false,
+  "task_identifier_inspected": false
+}

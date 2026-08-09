@@ -1084,6 +1084,7 @@ phase_eight:
     canonical: false
     design_record: docs/M070_PRETARGET_AGENT.md
     design_freeze: experiments/M070/AGENT_DESIGN_FREEZE.json
+    selection_protocol: experiments/M070/SELECTION_PROTOCOL.json
     exact_agent_design_commit: 41ebe791605f55e7a44df8f0939d730139cf219a
     design_commitment_sha256: 14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46
     structured_model_policy_present: true
