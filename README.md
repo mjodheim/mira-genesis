@@ -73,7 +73,7 @@ The full evidence is preserved in:
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
-| M071 | **PRE-TARGET DESIGN FROZEN** | Strict UTF-8 bytes transport and whole-process-tree cleanup are fixed in runtime `0820ebc`; bridge `132476a` has a distinct M071 identity. No fresh external task has been selected. |
+| M071 | **FRESH PAIR SELECTED BEFORE INSPECTION** | Runtime `0820ebc` and bridge `132476a` were frozen first. Rule `fa5d896` then selected `sqlite-with-gcov` and `custom-memory-heap-crash` after excluding M070's pair. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -317,6 +317,8 @@ passed, and a live `gpt-5.6-sol` call produced a valid bounded submission throug
 The runtime/bridge commitment is `2e76a1b8b390bee0ee55095a6f3f61366176e7a4ac0791add9d6d37fca5c30a2`.
 No M071 benchmark revision, task identifier, task content or result exists at this boundary. See
 [`experiments/M071/AGENT_DESIGN_FREEZE.md`](experiments/M071/AGENT_DESIGN_FREEZE.md).
+After that freeze, rule `fa5d896` selected the fresh pair without opening its task content; see
+[`experiments/M071/TASK_SELECTION.md`](experiments/M071/TASK_SELECTION.md).
 
 See:
 

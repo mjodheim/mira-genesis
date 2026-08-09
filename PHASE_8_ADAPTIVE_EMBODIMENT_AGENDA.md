@@ -69,8 +69,9 @@ result is preserved; it supplies isolation/evaluation-path evidence, not task co
 
 M071 now proves explicit UTF-8 round trips and whole-process-tree timeout enforcement on pre-target
 Windows regressions. Runtime `0820ebc`, bridge `132476a` and their 17-blob commitment are frozen.
-Only now may it commit a new blind rule and then select a fresh external pair. Reusing M070's pair
-as the next scientific threshold is forbidden.
+Rule `fa5d896` then excluded M070's pair before ranking and selected `sqlite-with-gcov` and
+`custom-memory-heap-crash` without opening either task. Reusing M070's pair as the next scientific
+threshold remains forbidden.
 
 M071 also formalizes the epistemic split introduced by M070. External-model actions are declared
 proposal inputs, not lineage-owned tools. External reward is reported for the named composed

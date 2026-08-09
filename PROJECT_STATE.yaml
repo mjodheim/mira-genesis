@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m071_agent_frozen_before_external_selection
+status: phase_eight_m071_fresh_pair_selected_before_content_inspection
 
 active_research_question: >-
   After M070's frozen agent scored 0/2 because Windows Unicode and descendant-process transport
@@ -1142,7 +1142,7 @@ phase_eight:
     public_benchmark_claim_limit: development_only
     private_uncontaminated_split_required_for_stronger_claim: true
   M071:
-    status: agent_and_bridge_frozen_before_external_task_selection
+    status: fresh_external_pair_selected_before_task_content_inspection
     canonical: false
     design_record: docs/M071_PRETARGET_AGENT.md
     design_freeze: experiments/M071/AGENT_DESIGN_FREEZE.json
@@ -1157,8 +1157,13 @@ phase_eight:
     model: gpt-5.6-sol
     policy_id: m071-governed-model-policy-v1
     success_decided_by_agent: false
-    benchmark_revision_pinned: false
-    external_task_selected: false
+    benchmark_revision_pinned: true
+    benchmark_revision: 2fd12b88aafdd04a52c298e3940bcb189f9766d6
+    selection_protocol_commit: fa5d8962bce1659831f98938a194a226883d347c
+    eligible_inventory_sha256: c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9
+    excluded_prior_tasks: [llm-inference-batching-scheduler, rstan-to-pystan]
+    external_task_selected: true
+    selected_external_tasks: [sqlite-with-gcov, custom-memory-heap-crash]
     external_task_content_inspected: false
     external_task_executed: false
     scientific_result_exists: false

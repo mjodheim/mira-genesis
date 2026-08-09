@@ -66,3 +66,32 @@ def test_real_protocol_contains_no_selection_or_result() -> None:
     assert protocol["excluded_identifiers"] == [
         "llm-inference-batching-scheduler", "rstan-to-pystan",
     ]
+
+
+def test_committed_selection_binds_fresh_pair_without_task_content() -> None:
+    artifact = json.loads(
+        (selection.ROOT / "experiments" / "M071" / "TASK_SELECTION.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert artifact["selection_protocol_commit"] == (
+        "fa5d8962bce1659831f98938a194a226883d347c"
+    )
+    assert artifact["inventory_sha256"] == (
+        "c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9"
+    )
+    assert [record[1] for record in artifact["selected"]] == [
+        "sqlite-with-gcov", "custom-memory-heap-crash",
+    ]
+    protocol = json.loads(selection.PROTOCOL.read_text(encoding="utf-8"))
+    salt = bytes.fromhex(protocol["selection_salt_hex"])
+    for digest, identifier in artifact["selected"]:
+        assert __import__("hashlib").sha256(
+            salt + identifier.encode("utf-8")
+        ).hexdigest() == digest
+    assert not {
+        record[1] for record in artifact["selected"]
+    } & set(artifact["excluded_identifiers"])
+    assert artifact["fresh_task_content_inspected_before_selection"] is False
+    assert artifact["fresh_task_executed"] is False
+    assert artifact["scientific_result_exists"] is False

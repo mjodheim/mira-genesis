@@ -8,6 +8,9 @@
 - Pinned the unchanged Terminal-Bench 2 remote head and a one-draw cryptographic blind-selection
   salt before enumerating eligible identifiers. The rule excludes both closed M070 tasks before
   ranking and forbids replacement.
+- Applied the committed M071 rule once: 87 of 89 identifiers were eligible and the fresh pair is
+  `sqlite-with-gcov`, then `custom-memory-heap-crash`. Inventory digest `c21c3e62`; neither task
+  was opened before the binding.
 - Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
   replaced parent-only timeout kills in the model, container and terminal paths with one shared
   whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed

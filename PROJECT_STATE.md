@@ -56,7 +56,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   UTF-8 bytes pipes and whole-process-tree cleanup across model, Docker and governed-terminal
   paths; bridge `132476a` carries a distinct M071 identity. Real Windows Unicode/orphan
   regressions, 1,215 local design tests and a live schema-validated model smoke pass. No new
-  benchmark revision, identifier, task content or scientific result exists yet.
+  task content or scientific result existed at the freeze. A later one-draw rule excluded both
+  M070 tasks and selected `sqlite-with-gcov` then `custom-memory-heap-crash` before either task was
+  opened.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
