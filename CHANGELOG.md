@@ -1,5 +1,63 @@
 # Changelog
 
+## 0.40.0 — 2026-08-09
+
+M064 is preserved as a failed pre-canonical qualification and M065 carries the required
+scientific and governance corrections without changing the task bank, budgets, thresholds,
+substrates, candidate grammar or four-arm decision rule.
+
+- Preserved M064 commit `ec92af78b57203d32c2ee504db91b4166ec83fdf` and GitHub run
+  `31281234286`, attempt 1. Integrity and attribution passed; Python 3.11 passed 1,084/1,085
+  tests in 1,037.15 seconds and Python 3.13 passed 1,084/1,085 in 1,094.43 seconds. Both rejected
+  the same checkout-dependent source hash. No marker or canonical result was created.
+- Recorded the review finding that M064's rollback receipt compared the untouched saved input to
+  itself. D023 therefore requires M065 rather than a scientific repair under M064.
+- Added an M065 transaction that corrupts a distinct staged state, deserialises the committed
+  pre-transaction bytes into the state actually returned, audits that object and requires exact
+  byte and state-digest restoration before continuing.
+- Repeated all four banks. The complete lineage remains 18/18 hidden with three accepted cycles
+  and 68/68 retained cases; every control remains 0/18 with zero accepted cycles.
+- Required the canonical marker to be its first occurrence anywhere in path history and gated the
+  first-result job on `github.run_attempt == 1`; reruns can only consume the preserved artifact.
+- Added portable LF-normalised source commitments. M064's historical 21-file audit and M065's
+  22-file audit now agree across Windows and Linux checkouts.
+- The complete corrected repository suite passes **1,101 tests in 1,762.37 seconds**. An earlier
+  full M065 invocation passed 1,100 and exposed the last CRLF-based M064 guard fixture; that
+  fixture alone was normalised before the clean rerun.
+
+## 0.39.0 — 2026-08-08
+
+M064 assembles the real-substrate completion experiment in one continuous
+CPython → Node ESM → whole-WebAssembly lineage. It is positive in development and eligible for
+freeze; no canonical verdict is added yet.
+
+- Reconstructed M047 version six and M048 version eight, scanned all 256 arithmetic bytes and
+  replayed M061's six structural shapes before compiling the entire accepted body into a
+  1,834-byte, zero-import WebAssembly module with 32/32 inherited capabilities.
+- Added a serialised seven-node expression constructor and dynamic whole-body compiler. Each
+  accepted route recompiles parser aliases, arities, route admission and tool dispatch into one
+  native module; Node remains only a passive bounded host.
+- Added four equal-budget post-migration arms and three committed task families. Across all four
+  preverified banks the complete lineage accepts three rewrites, reaches version twelve and
+  passes 18/18 hidden observations; fresh-on-B, unchanged-parent and learned-state-ablated arms
+  each accept zero rewrites and pass 0/18.
+- Required class-wide D021 admission: 12, 8 and 8 public survivors are each independently
+  recompiled, inspected for zero imports and executed on retained, public and hidden evidence
+  before digest selection.
+- Archived exact parents 9, 10 and 11, appended three causal-memory episodes, forced a corrupt
+  journal binding, restored code and behaviour exactly, and replayed the final state.
+- Added a marker-only canonical guard, immutable first-result runner and separate Python 3.13
+  exact-reproduction job. These mechanisms remain closed until the frozen-parent commit passes
+  qualification and a separate marker commit is made.
+- Preserved the authorship boundary: the whole-body compiler, block structure, finite grammar,
+  task families and evidence remain human-written and precommitted. M064 claims bounded
+  construction and continuity, not unrestricted compiler synthesis or open-ended evolution.
+- The first complete four-bank test invocation finished every scientific computation. Nineteen
+  tests passed; one fixture expected two intermediate module
+  sizes incorrectly. The fixture was corrected without changing engine, protocol, bank,
+  threshold or result. The clean M064 rerun then passed **26/26 tests in 274.65 seconds**. The
+  complete local repository suite subsequently passed **1,085 tests in 2,035.10 seconds**.
+
 ## 0.38.0 — 2026-08-08
 
 M063 transfers M062's bounded arrangement mechanism from byte copying to byte reduction. The

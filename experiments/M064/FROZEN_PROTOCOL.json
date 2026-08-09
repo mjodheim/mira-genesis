@@ -1,0 +1,115 @@
+{
+  "canonical_execution": {
+    "first_result_runtime": {
+      "node": "20",
+      "python": "3.11"
+    },
+    "first_run_only": true,
+    "independent_reproduction_required": true,
+    "marker_commit_message": "m064(canonical): arm first immutable whole-wasm run",
+    "marker_path": "experiments/M064/CANONICAL_ARMED.json",
+    "marker_schema": "m064-canonical-arm/1",
+    "reproduction_runtime": {
+      "node": "20",
+      "python": "3.13"
+    },
+    "reproduction_rule": "exact canonical JSON bytes",
+    "reruns_are_reproductions_only": true,
+    "trigger": "one marker-only commit on main",
+    "workflow": ".github/workflows/m064-canonical.yml"
+  },
+  "decision_rule": {
+    "adoption": "every public survivor passes safety, retained, public and hidden admission",
+    "canonicalisation": "minimum whole-body digest only after entire public class admission",
+    "complete_required_hidden_quality": "18/18",
+    "control_arms": [
+      "fresh_on_b",
+      "unchanged_parent_migrated",
+      "learned_state_ablated"
+    ],
+    "critical_regressions_permitted": 0,
+    "minimum_accepted_post_migration_cycles": 3,
+    "primary_quality": "exact hidden cases passed across three selected task families",
+    "required_result": "complete arm strictly exceeds every control arm",
+    "rollback": "exact state bytes and retained behaviour",
+    "selection": "sha256(protocol_digest || marker_parent_sha) mod 4"
+  },
+  "development_evidence": {
+    "bank_manifest_sha256": [
+      "fc663fa6f0eebb73238cff1e9338db37e9d95dbc8e07fd99888a93402a65f6e6",
+      "5557da22e075cf7226ad56e59da5010b8abd8c8cc6b7660f0605e598f532a2e3",
+      "156768e27e23208be8f52bc7638e00e1cc736545ecde9e8612229474c29e928a",
+      "988d46a3e7d6ad64e0fa4b437f8d8e5c4f3d3ec19d73bdeea0c690583b47432a"
+    ],
+    "clean_m064_test_count": 26,
+    "clean_m064_test_seconds": 274.65,
+    "complete_hidden_quality_each_bank": "18/18",
+    "control_hidden_quality_each_bank": "0/18 for every control",
+    "development_is_not_canonical": true
+  },
+  "file_sha256": {
+    ".github/workflows/m064-canonical.yml": "3ee72e2b958cb83e34920fa45653fa19f641777df16c4b4e412b814c5376c41e",
+    "metamorphosis/m048_native_lineage.py": "a5c9dc9c4b0d2b6884fa357d4bb97a99f1fedf0f5b15b74bd0e8619529bd3add",
+    "metamorphosis/m048_native_support.py": "34ca9f425587d4090192ad3fd352714902182d2a4603df4d1e773d450f0de66a",
+    "metamorphosis/m048_node_runtime.mjs": "026ad0a47d0970dfbf1bf5680383d94e1c46db26cce4a5af4913ce62313a7cd7",
+    "metamorphosis/m048_runtime_migration.py": "8a4b8cc98cbb9889c9af8cc57adc9b98763fe0689bdadca9b85b82d4711063a7",
+    "metamorphosis/m058_discovered_migration.py": "c3407e240d3bdfe523de7f04aa1d726f10618588bc21790f25699beb76490e34",
+    "metamorphosis/m058_instruction_discovery.py": "29fdb86dd2bb48462c01edd222310dd8667627e807503d82ff828096dfd84499",
+    "metamorphosis/m060_body_compiler.py": "523157b602c20125d0fbca1064c510c4192e837ef66eb519af7ec6097bc05a25",
+    "metamorphosis/m060_wasm_emit.py": "1c04c9e9f58b16a9dd184bf86bd4565c7e2e25c8ca7947437a2dd9d6fe5da5e5",
+    "metamorphosis/m060_wasm_runtime.mjs": "d2425bebe4b14d5576ee1c612bddc10968fd412b1336ae02ec2ea3527be0e63a",
+    "metamorphosis/m060_whole_body_migration.py": "e6331d5278bfc4603054d262e2b7d895f84655187effa16d871accc59ea09030",
+    "metamorphosis/m061_discovered_structure.py": "82f098dfa8d66fa87319d471f843e9b243849defd430b17bbcd6ce16844cf1eb",
+    "metamorphosis/m061_structural_discovery.py": "2ec6cd367ccc3c1963cd9c5e224e5bddd00d3171b3d264d413514b6348a44095",
+    "metamorphosis/m061_structural_probe.mjs": "03a5aa5de4bb2cfa1531a7d92273cfcf415f6ae332a7aa081f69ac851d9bd79d",
+    "metamorphosis/m064_real_substrate_completion.py": "3359747385e582df05a14e0963fd98c902870277b3ba93b29f514a63f16d0d9f",
+    "metamorphosis/m064_wasm_body_compiler.py": "06730a0826c4a78e70531a1a298fec80a6594482fb8877bac96a6736d1519861",
+    "metamorphosis/m064_whole_wasm_completion.py": "1f14b9e703323646006d4183402d54e43db9484ccf7aa3544a4c97ccd6359e23",
+    "scripts/check_m064_canonical_guard.py": "e5522cf08bf2a0e6c9d8d5c4b0d1ddb6de94c55b8c13b265eb4bcd25fcc99c70",
+    "scripts/check_m064_frozen_protocol.py": "f8669c99aa3de02b0fdd0545aed8dde53a20927e0271db3061b3805166fd85c1",
+    "scripts/reproduce_m064_canonical.py": "738d1b75331451691fe88f319e004c0e3d06c4364faf0336ed6bdba023948eb9",
+    "scripts/run_m064_canonical.py": "52a7eb37ef434ee7264ba002ce49a8830b8e311e5c9e348c8e2cb8657e37ff8a"
+  },
+  "negative_result_policy": {
+    "failed_first_run_is_m064_verdict": true,
+    "failed_reproduction_is_m064_verdict": true,
+    "post_freeze_repair_requires": "M065",
+    "threshold_relaxation_permitted": false
+  },
+  "protocol": {
+    "accepted_post_migration_cycles": 3,
+    "arms": [
+      "complete_continued_lineage",
+      "fresh_on_b",
+      "unchanged_parent_migrated",
+      "learned_state_ablated"
+    ],
+    "candidate_budget_per_arm_cycle": 8192,
+    "canonical_selection_rule": "sha256(protocol_digest || marker_parent_sha) mod bank_size",
+    "expression_node_limit": 7,
+    "extensions": [],
+    "hidden_cases_per_cycle": 6,
+    "intermediate_runtime": "node-esm",
+    "max_candidate_bytes": 262144,
+    "node_timeout_seconds": 30.0,
+    "public_cases_per_cycle": 6,
+    "public_survivor_rule": "validate_entire_class_before_digest_selection",
+    "schema": "m064-real-substrate-completion-protocol-v1",
+    "source_runtime": "cpython",
+    "target_runtime": "webassembly",
+    "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+    "task_bank_entries": 4
+  },
+  "protocol_sha256": "c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d",
+  "release_boundary": {
+    "credentials": false,
+    "deployment": false,
+    "network": false,
+    "production": false,
+    "repository_write_authority_for_lineage": false
+  },
+  "schema": "m064-frozen-protocol/1",
+  "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+  "task_bank_entry_count": 4,
+  "task_bank_is_bound_by_m064_source_hash": true
+}

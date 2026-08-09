@@ -176,27 +176,39 @@ candidates, depth, another declared primitive or another pruning rule no longer 
 material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
 and decision D016.
 
-## Current construction frontier — M053
+## Current construction frontier — M065
 
-**Status: proposed and preregistered, not yet qualified.**
+**Status: M064 failed pre-canonical qualification; M065 is positive in corrected development and
+eligible for freeze, but not yet canonical.**
 
-The required rupture is endogenous extension of the transformation language. The lineage must
-demonstrate that *every* transformation expressible in its accepted language is insufficient
-for a public task, diagnose that as a language-level limitation rather than a bad choice among
-existing candidates, and construct a new reusable primitive that was not in the founder
-catalogue — deriving its implementation and tests without hidden cases, running it in a
-disposable sandbox, submitting it to an independent validator, adopting transactionally, and
-then reusing it on a structurally distinct second task family.
+M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. After
+scanning arithmetic and structural effects, every semantic pipeline stage lives in one
+zero-import module. Four equal-budget arms then receive three task families selected only after
+migration. Across all four precommitted development banks, the complete lineage accepts three
+whole-module rewrites and passes 18/18 hidden observations; fresh-on-B, unchanged-parent and
+learned-state-ablated controls each pass 0/18.
 
-M053 does not pass if the new primitive comes from a hidden pre-enumerated catalogue, from
-evaluator-only data, from a lookup table of expected answers, or is useful only on the task
-that created it.
+Every public-equivalent candidate module is recompiled from its serialised trace, inspected for
+zero imports and independently executed on retained, public and hidden evidence before digest
+selection. Versions 9–11 are archived exactly, a corrupt provisional journal is rolled back with
+code and behaviour restored, causal memory grows with each adoption and replay reaches the same
+version-twelve state.
 
-This remains one integrated experiment rather than another sequence of preparatory gates. A
-language model may generate proposals, but it must not control validation or adoption.
+M064 parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed qualification run
+`31281234286`, attempt 1. Each Python version passed 1,084/1,085 tests before the same Windows/Linux
+source-hash mismatch; review also found that the rollback proof compared the saved state to itself.
+No M064 marker or canonical result was created.
 
-Every result from M043 onward is a **development** result. M042 remains the only positive
-canonical continuous-lineage completion.
+M065 keeps every scientific input and outcome above but restores the actual returned state from
+pre-transaction bytes, audits it and binds the corrupt and restored digests. Its marker must be
+the first path-history occurrence, and its first result can run only on workflow attempt one.
+Four-bank development and 20 focused M064/M065 governance/freeze tests pass. GitHub qualification of the
+exact M065 parent remains required. The complete corrected local repository suite passes
+**1,101 tests in 1,762.37 seconds**.
+
+M065 keeps the limits explicit. The whole-body compiler, block structure, finite grammar, task
+families and evidence cases are authored and precommitted. The result cannot support unrestricted
+compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
 See:
 
@@ -206,6 +218,10 @@ See:
 - [`experiments/M047/PROTOCOL.md`](experiments/M047/PROTOCOL.md);
 - [`experiments/M048/DEVELOPMENT_RESULT.md`](experiments/M048/DEVELOPMENT_RESULT.md);
 - [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md);
+- [`experiments/M064/PROTOCOL.md`](experiments/M064/PROTOCOL.md);
+- [`experiments/M064/DEVELOPMENT_RESULT.md`](experiments/M064/DEVELOPMENT_RESULT.md);
+- [`experiments/M065/PROTOCOL.md`](experiments/M065/PROTOCOL.md);
+- [`experiments/M065/DEVELOPMENT_RESULT.md`](experiments/M065/DEVELOPMENT_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
 

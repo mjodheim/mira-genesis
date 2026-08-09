@@ -558,3 +558,44 @@ One successful transfer does not make the grammar or emitter endogenous. The che
 decomposition, atomic effects and renderer remain authored. Repeating the same control pattern on
 a third small loop cannot be justified as a new structural advance without removing another
 handhold or entering the frozen completion experiment.
+
+## D023 — A freeze candidate closes construction before it sees the canonical bank
+
+M064's four development banks all pass the same four-arm, three-cycle whole-WebAssembly decision
+rule. At that point another task, grammar production, control or threshold would not improve the
+measurement; it would increase the number of ways the authors can adapt the experiment before a
+claim.
+
+### The rule
+
+**Once an integrated experiment is declared eligible for freeze, its scientific construction is
+closed.** The frozen parent may receive only documentation, guards and mechanically derived
+commitments that do not change its generator, task bank, thresholds, substrates, budgets or
+decision rule. A scientific correction after that boundary creates a new experiment number.
+
+The canonical first result is the first artifact produced by the guarded marker commit. A rerun
+is never a replacement. M064's Python 3.13 job is a reproduction: it consumes the preserved first
+artifact and must match its bytes exactly. If it disagrees, M064 is not positive even if either
+individual run looks favourable.
+
+### Boundary
+
+This decision freezes a bounded scientific protocol, not the engineering repository forever.
+After the first result, documentation may preserve the artifacts, audit their identities and
+archive the consumed workflow. None of those writes grants the experimental lineage repository,
+network, credential, deployment or production authority.
+
+## D024 — A failed freeze qualification and a false rollback proof require a successor experiment
+
+M064's first frozen-parent qualification passed 1,084 of 1,085 tests on both Python versions but
+failed its source-identity guard because commitments were made from a Windows checkout rather than
+canonical Git text bytes. That mechanical defect alone could be repaired without changing the
+experiment. External review also found that the forced rollback compared the untouched saved
+input to itself instead of verifying the state actually returned by a restore operation.
+
+The latter is a scientific correction after D023's construction boundary. **M064 is therefore
+closed as a negative pre-canonical qualification; no M064 marker may be created.** M065 may reuse
+the exact task bank and decision rule, but must restore a distinct returned object from committed
+pre-fault bytes, audit it and bind both the corrupt and restored digests. Its marker must also be
+the first occurrence in path history and its first-result job must be impossible on workflow
+reruns.
