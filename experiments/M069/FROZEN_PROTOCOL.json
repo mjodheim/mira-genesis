@@ -1,0 +1,100 @@
+{
+  "schema": "m069-frozen-protocol/1",
+  "protocol_sha256": "2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499",
+  "protocol": {
+    "schema": "m069-governed-terminal-protocol-v1",
+    "base_experiment": "M068",
+    "research_question": "cross a governed real filesystem and process boundary with calibrated incompatible-task refusal",
+    "task_count": 5,
+    "compatible_task_count": 4,
+    "incompatible_task_count": 1,
+    "task_handles": [
+      "workcell-13a9d2",
+      "workcell-4c70be",
+      "workcell-806f41",
+      "workcell-b5287f",
+      "workcell-fde304"
+    ],
+    "source_file": "solution.py",
+    "repair_slot_marker": "# MIRA_REPAIR_SLOT",
+    "candidate_replacements": [
+      "return x",
+      "return y",
+      "return x + y",
+      "return x - y",
+      "return x * y",
+      "return max(x, y)",
+      "return min(x, y)",
+      "return str(x).strip().lower().replace(\" \", \"-\")",
+      "return max(x) - min(x)",
+      "return max(y[0], min(y[1], x))",
+      "return len(x)"
+    ],
+    "candidate_enumeration_order": "complete_source_sha256_lexicographic",
+    "selection_rule": "minimum_complete_source_sha256_after_public_evaluation",
+    "public_cases_per_compatible_task": 3,
+    "hidden_cases_per_compatible_task": 3,
+    "max_agent_steps": 32,
+    "terminal_limits": {
+      "max_files": 8,
+      "max_workspace_bytes": 16384,
+      "max_read_bytes": 8192,
+      "max_write_bytes": 8192,
+      "max_output_bytes": 8192,
+      "command_timeout_seconds": 5.0
+    },
+    "granted_authorities": ["compute", "filesystem_read", "filesystem_write"],
+    "required_controls": [
+      "unmodified_source_fails_public",
+      "first_candidate_without_observation_fails_public",
+      "write_authority_ablation_refuses",
+      "underdeclared_authority_refuses_before_body",
+      "path_traversal_rejected_without_outside_change",
+      "unknown_command_and_dynamic_arguments_rejected",
+      "parent_secret_not_inherited",
+      "hidden_output_not_disclosed",
+      "incompatible_task_policy_refusal_before_mutation",
+      "policy_does_not_inspect_evaluator_source"
+    ],
+    "task_bank_frozen_before_policy": true,
+    "policy_has_hidden_input": false,
+    "evaluator_source_available_to_policy": false,
+    "real_filesystem_process_body": true,
+    "operating_system_security_sandbox_claimed": false,
+    "external_task_authorship_claimed": false,
+    "open_ended_code_generation_claimed": false,
+    "network_authority": false,
+    "repository_authority": false,
+    "credential_authority": false,
+    "deployment_authority": false,
+    "permission_change_authority": false,
+    "physical_actuation_authority": false,
+    "general_intelligence_claimed": false,
+    "canonical": false
+  },
+  "target_runtime_lf_sha256": "6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639",
+  "task_bank_attestation": {
+    "task_schema": "m069-terminal-task-bank-v1",
+    "task_count": 5,
+    "compatible_task_count": 4,
+    "incompatible_task_count": 1,
+    "task_handles": [
+      "workcell-13a9d2",
+      "workcell-4c70be",
+      "workcell-806f41",
+      "workcell-b5287f",
+      "workcell-fde304"
+    ],
+    "task_digests": [
+      "066ed4fefe7be772d616f7fd9860e583483a01a6e5ce632a86882c0e76bc84ba",
+      "a42723b5ea88a8b98632120ec7003cd439e928162ab254e2b90d28d412160194",
+      "d413e65a8c0b54a7440ea4c74ebcdfc1cbbc273ac01f503c20a80d37672f9b29",
+      "d3f19c385c6f87be1a6585189fc4faaa02cd7e689437190450ca17f37d8de58d",
+      "636300162e8db94a7fa48235bec36ee4bb9f2ed165a27c91e03f2a7354e5d8c1"
+    ],
+    "task_bank_commitment": "66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed",
+    "hidden_cases_disclosed": false,
+    "solutions_disclosed": false,
+    "external_task_authorship_claimed": false
+  }
+}

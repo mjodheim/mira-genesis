@@ -713,3 +713,29 @@ M068 does not complete G1 because its targets and resource bounds remain authore
 project. It supplies no multimodal grounding, cross-domain transfer, real-device competence or
 human-hour autonomy. It cannot be described as arbitrary body adaptation, a universal compiler or
 AGI, regardless of exact-commit qualification.
+
+## D030 — M069 freezes a real-terminal task bank before its repair policy
+
+D029 requires a materially real environment and incompatible-body refusal. M069 therefore moves
+the reusable Mira loop into temporary real files and evaluator-registered host processes. Four
+compatible tasks, one incompatible protocol, eleven supplied replacement statements, public and
+hidden cases, resources and controls are bound before the policy exists.
+
+The frozen protocol digest is
+`2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499`; the evaluator runtime
+LF digest is `6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639` and the private task-bank
+commitment is `66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed`.
+
+### The decision
+
+The later policy may materialize workspaces and invoke opaque public/hidden evaluator modes, but it
+may not import or read the evaluator source. It must use the same candidate language and control
+flow for every compatible handle, and it must refuse the incompatible handle before a write or
+process action. A post-freeze task or evaluator change closes M069 without a positive result.
+
+### Claim boundary
+
+The governed body constrains paths, action schemas, environment, time and output; it is not a
+container or VM and does not claim strong adversarial isolation. The tasks and complete finite
+replacement statements remain project-authored. Even a positive M069 result is terminal-body
+mechanism evidence, not broad software engineering, external-target evidence or AGI.

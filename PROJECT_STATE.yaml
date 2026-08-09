@@ -1,12 +1,13 @@
 project: Mira Genesis
 updated_at: 2026-08-09
-status: phase_eight_m068_positive_qualified_development
+status: phase_eight_m069_task_bank_freeze_no_result
 
 active_research_question: >-
   Can a continuing lineage discover an undisclosed target-body invocation contract from public
   interaction, preserve inherited skills on disjoint hidden evidence and refuse adaptation when
-  evidence is absent or inconsistent? M067 is positive and qualified in development. M068 is
-  positive and qualified in development after a separate target freeze.
+  evidence is absent or inconsistent? M068 is positive and qualified in development. M069 now
+  freezes governed real-terminal tasks and one incompatible protocol before its policy; no M069
+  result exists.
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -922,7 +923,7 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m068_positive_qualified_development
+  status: m069_task_bank_freeze_no_result
   objective: bounded_contract_blind_adaptive_embodiment
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
@@ -1017,6 +1018,33 @@ phase_eight:
     attribution_passed: true
     external_target_authorship_claimed: false
     arbitrary_protocol_induction_claimed: false
+  M069:
+    status: task_bank_freeze_candidate_no_result
+    canonical: false
+    protocol: experiments/M069/PROTOCOL.md
+    frozen_protocol: experiments/M069/FROZEN_PROTOCOL.json
+    status_record: experiments/M069/STATUS.md
+    executable_protocol_digest: 2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499
+    task_bank_commitment: 66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed
+    target_runtime_lf_sha256: 6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639
+    task_count: 5
+    compatible_task_count: 4
+    incompatible_task_count: 1
+    repair_candidate_count: 11
+    public_cases_per_compatible_task: 3
+    hidden_cases_per_compatible_task: 3
+    real_filesystem_process_body: true
+    governed_terminal_body_present: true
+    task_bank_frozen_before_policy: true
+    repair_policy_present: false
+    scientific_result_exists: false
+    operating_system_security_sandbox_claimed: false
+    external_task_authorship_claimed: false
+    open_ended_code_generation_claimed: false
+    network_authority: false
+    repository_authority: false
+    credential_authority: false
+    deployment_authority: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
 

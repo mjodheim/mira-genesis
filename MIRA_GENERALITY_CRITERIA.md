@@ -105,10 +105,10 @@ results are known.
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | No frozen transfer across real, materially different domains. |
 | G5 | partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. |
-| G6 | open | Native runtimes are real; user environments and tasks are not. |
+| G6 | open, engineering boundary present | `GovernedTerminalBody` now confines real file affordances and registered processes; M069 is frozen but has no result, strong OS isolation or external task. |
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | partial mechanism evidence | `mira_core` now denies high-impact authority by default and preserves tamper-evident evidence; no general-agent red-team suite exists. |
+| G10 | partial mechanism evidence | `mira_core` denies high-impact authority, rejects policy under-declaration and preserves tamper-evident evidence; no general-agent red-team suite exists. |
 
 The next accepted result must change this table by evidence, not wording.

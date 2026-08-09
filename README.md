@@ -268,6 +268,15 @@ protocol induction, independently authored target evidence, real-device competen
 Exact learner commit `f033ac7` passed first GitHub run `31314960014`: **1,153 tests on Python
 3.11 and 1,153 on Python 3.13**, plus repository integrity. Attribution run `31314960009` passed.
 
+**M069 is now at a pre-policy task-bank freeze, with no result.** It moves from simulated opaque
+transactions to a real temporary filesystem and real registered host processes. Four compatible
+repair workspaces, one incompatible protocol, eleven bounded replacements, hidden evaluator cases,
+authority limits and falsifiers are committed before the policy. The evaluator remains project-
+authored and the governed process boundary is not an OS security sandbox.
+
+See [`experiments/M069/PROTOCOL.md`](experiments/M069/PROTOCOL.md) and
+[`experiments/M069/STATUS.md`](experiments/M069/STATUS.md).
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -324,6 +333,12 @@ least-privilege admission and hash-chained checkpointable memory. It has no mode
 dependency and grants no filesystem, network, repository, credential or deployment authority by
 default.
 
+`GovernedTerminalBody` adds a real workspace/process interface: confined UTF-8 file operations,
+atomic bounded writes and immutable registered commands executed without a shell. Bodies declare
+their own required authorities, preventing a policy from gaining access by under-declaring an
+action. This is governed host execution, not strong adversarial isolation; use a container or VM
+before executing untrusted commands.
+
 Run the dependency-free smoke demonstration after installation:
 
 ```bash
@@ -331,7 +346,7 @@ python scripts/run_mira_core_demo.py
 ```
 
 See [`docs/MIRA_CORE_ARCHITECTURE.md`](docs/MIRA_CORE_ARCHITECTURE.md). The demo is engineering
-evidence only; it is not M068's scientific result and not a generality claim.
+evidence only; it is not M068 or M069 scientific evidence and not a generality claim.
 
 ## Repository map
 

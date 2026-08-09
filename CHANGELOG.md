@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added `GovernedTerminalBody` for bounded real-file reads, atomic writes and immutable registered
+  subprocesses without a shell, plus path, symlink, environment, timeout and output controls.
+- Added body-owned authority requirements so an action cannot gain access by under-declaring what
+  its body needs; broken and under-declared contracts fail closed before execution.
+- Froze M069 before its repair policy: four compatible real-terminal tasks, one incompatible
+  protocol, eleven supplied replacements, hidden evaluator cases and ten falsifiers.
 - Added the M068 open command-language learner after a separate target freeze. One unchanged
   engine scans all 37,448 admissible words and discovers four distinct complete adapters.
 - All four unique public classes pass 12/12 disjoint hidden observations. Declaration-order,

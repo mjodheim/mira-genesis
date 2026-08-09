@@ -43,6 +43,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   four-body runtime was frozen separately, one unchanged learner scanned the complete 37,448-word
   language, induced four distinct semantic adapters and passed 12/12 hidden cases per body. All
   preregistered controls reject.
+- **M069 is at the task-bank freeze boundary, with no result.** A reusable governed terminal body,
+  four compatible real-file/process tasks, one incompatible protocol, a bounded repair language,
+  hidden evaluator domains and ten controls are fixed before the repair policy exists.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -578,6 +581,15 @@ run `31314960014` passed 1,153 tests on Python 3.11 and 1,153 on Python 3.13 plu
 attribution run `31314960009` passed. Independent target authorship, incompatible-body refusal and
 a governed real-environment crossing remain open.
 
+M069 now targets the last two items inside a governed real software workspace. Its protocol digest
+is `2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499`; task-bank
+commitment `66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed` binds four
+compatible tasks and one incompatible task, and evaluator runtime digest
+`6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639` is frozen before the
+policy. The tasks remain project-authored, the repair language contains eleven supplied complete
+statements, and registered host processes are governed rather than strongly OS-isolated. No M069
+scientific result exists yet.
+
 ## Construction frontier — positive canonical closure at M066
 
 M064's negative qualification and M065's negative guard run remain preserved. M066 completed every
@@ -623,6 +635,7 @@ question remains open but is not a missing completion gate.
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
+| M069 | **TASK BANK FROZEN — NO RESULT** | Real temporary files and registered host processes, four compatible repairs, one incompatible protocol and ten controls are committed before the policy. Protocol `2da6abe8`; evaluator `6e2d1e0c`. |
 
 ## Parallel measurement track — M045
 
