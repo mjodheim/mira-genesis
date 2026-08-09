@@ -101,4 +101,3 @@ def test_codex_backend_rejects_relative_or_missing_executable(tmp_path: Path) ->
         CodexExecBackend(Path("codex"), tmp_path, "explicit-model")
     with pytest.raises(ModelBackendError, match="absolute executable"):
         CodexExecBackend(tmp_path / "missing-codex", tmp_path, "explicit-model")
-
