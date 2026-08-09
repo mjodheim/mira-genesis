@@ -1,0 +1,10 @@
+{
+  "schema": "m066-canonical-arm/1",
+  "frozen_parent_sha": "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5",
+  "protocol_sha256": "f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b",
+  "frozen_protocol_file_sha256": "02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0",
+  "task_bank_commitment": "7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da",
+  "first_run_only": true,
+  "reruns_are_reproductions_only": true,
+  "independent_reproduction_required": true
+}
