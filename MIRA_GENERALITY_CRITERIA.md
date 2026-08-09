@@ -14,8 +14,9 @@ from being relabelled as AGI after the fact.
 - **AGI confirmed** — reserved for a broader scientific and societal conclusion, not a repository
   label Mira Genesis can assign to itself.
 
-M068 is positive qualified-development mechanism evidence for bounded command induction after a
-separate target freeze. It is not cross-domain or general-agent evidence.
+M069 is positive qualified development mechanism evidence for a governed real-terminal crossing
+and incompatible-task refusal after a separate task freeze. Exact run `31319062535` passed.
+It is not cross-domain or general-agent evidence.
 
 ## G1 — interface novelty
 
@@ -100,15 +101,15 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | stronger partial mechanism evidence | M068 removes M067's descriptor product and induces four frozen command languages; targets and bounds remain project-authored and no incompatible body was tested. |
+| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted task bank and refuses one incompatible protocol before mutation; targets and the finite candidate language remain project-authored. |
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | No frozen transfer across real, materially different domains. |
 | G5 | partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. |
-| G6 | open | Native runtimes are real; user environments and tasks are not. |
+| G6 | partial mechanism evidence | M069 completes four tasks through real temporary files and registered host processes; there is no strong OS isolation, browser/desktop body or external task suite. |
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | partial mechanism evidence | `mira_core` now denies high-impact authority by default and preserves tamper-evident evidence; no general-agent red-team suite exists. |
+| G10 | stronger partial mechanism evidence | M069 passes authority ablation, under-declaration, traversal, command-schema, secret-stripping, hidden-output and incompatible-refusal controls; no adversarial OS sandbox or general-agent red-team suite exists. |
 
 The next accepted result must change this table by evidence, not wording.

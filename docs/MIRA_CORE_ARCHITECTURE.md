@@ -12,6 +12,8 @@ flowchart LR
     O["Observation"] --> P
     M["Hash-chained memory"] --> P
     P --> A["Proposed action"]
+    B --> C["Body-required authorities"]
+    C --> S
     A --> S["Immutable safety policy"]
     S -->|allowed| B["Body"]
     S -->|refused| M
@@ -28,6 +30,7 @@ silently choose a provider and does not treat model output as authority.
 - `Action` carries a kind, payload and explicit authority requirements.
 - `Observation` carries environment state and evaluator-owned terminal/success flags.
 - `Body` resets an episode and executes admitted actions.
+- `AuthorityAwareBody` declares the minimum authority for each action independently of the policy.
 - `Policy` proposes an action or explicitly refuses.
 
 Success belongs to the body/evaluator boundary, never to the policy's self-report.
@@ -39,6 +42,21 @@ repository writes, credentials, deployment, permission changes and physical actu
 Even if a high-impact authority is placed in a policy object, it remains blocked until a separate
 authenticated human-release mechanism exists. An agent can reduce authority for a descendant but
 cannot expand its own immutable set.
+
+Before admission, `MiraAgent` compares an authority-aware body's requirement with the action's own
+declaration. Under-declaration and broken body contracts fail closed before the body executes.
+
+## Governed terminal body
+
+`GovernedTerminalBody` acts on a resolved real directory. It supports bounded listing, UTF-8 reads,
+atomic UTF-8 writes and immutable evaluator-registered commands. Paths cannot be absolute, contain
+parent traversal or cross symlinks. Policies select command identifiers only; they cannot provide
+arguments or shell syntax. Child processes receive a minimal environment, closed stdin, combined
+bounded output and a timeout.
+
+These are application-level affordance controls. Registered commands are trusted host code and are
+not confined by an OS security boundary. Use an independently configured container or VM before
+registering untrusted executables.
 
 ## Evidence and recovery
 
@@ -57,7 +75,8 @@ This is an engineering foundation, not a general cognitive system. It currently 
 - planner or learned world model;
 - semantic retrieval system;
 - online parameter learning;
-- terminal, browser or physical body;
+- browser or physical body;
+- strong container or VM isolation for registered terminal processes;
 - authenticated high-impact release service.
 
 Those features must be added behind the existing body, policy, memory and safety boundaries and

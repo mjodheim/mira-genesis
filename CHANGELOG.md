@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Added the separately frozen M069 repair policy. One unchanged policy repairs four governed
+  real-file/process workspaces, passes 3/3 hidden cases per task and refuses an incompatible
+  protocol before any write or process execution.
+- All ten M069 falsifiers pass, including write-authority ablation, under-declaration, traversal,
+  immutable command schema, environment stripping, hidden-output suppression and source-
+  inspection controls. A second process reproduces manifest digest `c5c80701` exactly.
+- Added a compact governed-terminal demonstration and documented the finite supplied repair
+  language, project-authored targets, trusted-host-command and non-AGI limits.
+- Qualified exact learner `c603dd5` in run `31319062535`: 1,181 tests on Python 3.11 in
+  1,241.52 seconds, 1,181 on Python 3.13 in 1,260.38 seconds and repository integrity all passed.
+  Attribution run `31319062599` passed. The final local Python 3.14.6 suite passed 1,180 tests with
+  one Windows symlink test skipped in 2,088.15 seconds.
+- Recorded H15, D031 and the G1/G6/G10 evidence change; the next accepted step now requires
+  post-design external tasks and container or VM isolation.
+- Migrated the permanent CI and attribution workflows to the Node 24-based checkout, Python setup
+  and Node setup action majors before GitHub's Node 20 action-runtime retirement.
+- Added `GovernedTerminalBody` for bounded real-file reads, atomic writes and immutable registered
+  subprocesses without a shell, plus path, symlink, environment, timeout and output controls.
+- Added body-owned authority requirements so an action cannot gain access by under-declaring what
+  its body needs; broken and under-declared contracts fail closed before execution.
+- Froze M069 before its repair policy: four compatible real-terminal tasks, one incompatible
+  protocol, eleven supplied replacements, hidden evaluator cases and ten falsifiers.
 - Added the M068 open command-language learner after a separate target freeze. One unchanged
   engine scans all 37,448 admissible words and discovers four distinct complete adapters.
 - All four unique public classes pass 12/12 disjoint hidden observations. Declaration-order,

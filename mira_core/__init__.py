@@ -7,11 +7,13 @@ grants no external authority by default.
 """
 
 from mira_core.agent import AgentResult, MiraAgent
-from mira_core.contracts import Action, Body, Goal, Observation, Policy
+from mira_core.contracts import Action, AuthorityAwareBody, Body, Goal, Observation, Policy
 from mira_core.memory import MemoryEvent, MemoryLedger
 from mira_core.safety import Authority, SafetyDecision, SafetyPolicy
+from mira_core.terminal import CommandSpec, GovernedTerminalBody, TerminalBodyError, TerminalLimits
 
 __all__ = [
-    "Action", "AgentResult", "Authority", "Body", "Goal", "MemoryEvent", "MemoryLedger",
-    "MiraAgent", "Observation", "Policy", "SafetyDecision", "SafetyPolicy",
+    "Action", "AgentResult", "Authority", "AuthorityAwareBody", "Body", "CommandSpec", "Goal",
+    "GovernedTerminalBody", "MemoryEvent", "MemoryLedger", "MiraAgent", "Observation", "Policy",
+    "SafetyDecision", "SafetyPolicy", "TerminalBodyError", "TerminalLimits",
 ]

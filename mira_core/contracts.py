@@ -60,6 +60,13 @@ class Body(Protocol):
 
 
 @runtime_checkable
+class AuthorityAwareBody(Protocol):
+    """Optional body contract preventing policies from under-declaring action authority."""
+
+    def required_authorities(self, action: Action) -> tuple[str, ...]: ...
+
+
+@runtime_checkable
 class Policy(Protocol):
     @property
     def policy_id(self) -> str: ...

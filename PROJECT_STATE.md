@@ -43,6 +43,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   four-body runtime was frozen separately, one unchanged learner scanned the complete 37,448-word
   language, induced four distinct semantic adapters and passed 12/12 hidden cases per body. All
   preregistered controls reject.
+- **M069 is a positive qualified development result.** One unchanged policy
+  repairs all four compatible real-file/process workspaces and passes 3/3 hidden cases per task.
+  The incompatible protocol is refused before mutation, all ten frozen controls pass and the
+  deterministic manifest digest is `c5c80701`.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -576,7 +580,24 @@ This is stronger partial G1 mechanism evidence, not arbitrary protocol induction
 alphabet, length bound, host envelope and targets remain project-authored. Exact-commit GitHub
 run `31314960014` passed 1,153 tests on Python 3.11 and 1,153 on Python 3.13 plus integrity;
 attribution run `31314960009` passed. Independent target authorship, incompatible-body refusal and
-a governed real-environment crossing remain open.
+a governed real-environment crossing remained open at M068.
+
+M069 addresses the latter two items inside a governed real software workspace. Its protocol digest
+is `2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499`; task-bank
+commitment `66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed` binds four
+compatible tasks and one incompatible task, and evaluator runtime digest
+`6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639` is frozen before the
+policy. Exact learner commit `c603dd5` later used one unchanged finite-search policy. All four
+compatible tasks produced one public survivor and passed 3/3 hidden cases; the incompatible task
+refused after one read with zero writes and zero processes. All ten controls pass, seven evidence
+events end at `59a27788`, and a second process reproduces manifest `c5c80701` exactly.
+
+This is partial G1, G6 and G10 mechanism evidence. The tasks remain project-authored, the repair
+language contains eleven supplied complete statements, and registered host processes are governed
+rather than strongly OS-isolated. Exact learner `c603dd5` passed exact-commit run `31319062535`:
+1,181 tests on Python 3.11 in 1,241.52 seconds and 1,181 on Python 3.13 in 1,260.38 seconds, plus
+repository integrity. Attribution run `31319062599` passed. The final local suite passed 1,180
+tests with one Windows symlink test skipped in 2,088.15 seconds on Python 3.14.6.
 
 ## Construction frontier — positive canonical closure at M066
 
@@ -623,12 +644,13 @@ question remains open but is not a missing completion gate.
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
+| M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M067: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M069: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

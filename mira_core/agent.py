@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Mapping
 
-from mira_core.contracts import Body, Goal, JsonValue, Observation, Policy
+from mira_core.contracts import AuthorityAwareBody, Body, Goal, JsonValue, Observation, Policy
 from mira_core.memory import MemoryLedger
 from mira_core.safety import SafetyPolicy
 
@@ -58,6 +58,39 @@ class MiraAgent:
                     "observation_id": observation.observation_id,
                 })
                 return self._finish("policy_refused", step - 1, observation)
+            if isinstance(self.body, AuthorityAwareBody):
+                try:
+                    body_required = tuple(self.body.required_authorities(action))
+                except Exception as exc:  # noqa: BLE001 - broken authority contracts fail closed
+                    self.memory.append("body_contract_error", {
+                        "step": step,
+                        "action_id": action.action_id,
+                        "error_type": type(exc).__name__,
+                        "error": str(exc),
+                    })
+                    failed = Observation(
+                        f"body-contract-error-{step}", {"step": step}, terminal=True,
+                        success=False, error=f"{type(exc).__name__}: {exc}",
+                    )
+                    return self._finish("body_contract_error", step - 1, failed)
+                missing_declarations = tuple(sorted(
+                    set(body_required) - set(action.required_authorities)
+                ))
+                if missing_declarations:
+                    self.memory.append("action_contract_refused", {
+                        "step": step,
+                        "action_id": action.action_id,
+                        "action_kind": action.kind,
+                        "missing_authority_declarations": list(missing_declarations),
+                    })
+                    failed = Observation(
+                        f"action-contract-refusal-{step}", {
+                            "step": step,
+                            "missing_authority_declarations": list(missing_declarations),
+                        }, terminal=True, success=False,
+                        error="action omitted an authority required by the body contract",
+                    )
+                    return self._finish("action_contract_refused", step - 1, failed)
             decision = self.safety.decide(action)
             self.memory.append("action_admission", {
                 "step": step,

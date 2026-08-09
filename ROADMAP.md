@@ -22,7 +22,9 @@ and one parallel measurement track.
   discovers four opaque contracts across a committed body class. Positive and qualified in
   development on exact commit `7d38ac8`. M068 then induces four distinct command languages from
   the complete 37,448-word space after a separate target freeze. Positive in development on exact
-  learner commit `f033ac7`, qualified by first run `31314960014`.
+  learner commit `f033ac7`, qualified by first run `31314960014`. M069 then crosses a governed real
+  filesystem/process body: four compatible tasks pass hidden evaluation and one incompatible task
+  is refused before mutation. Exact learner `c603dd5` passed qualification run `31319062535`.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -327,11 +329,14 @@ then sends the entire public equivalence class to disjoint hidden validation.
 |---|---|---|---|
 | M067 | Discover an undisclosed body contract without a complete target adapter | **Positive qualified development result** | All four committed contracts discovered across three frame families; one public survivor per body, each 12/12 hidden; all controls reject. Exact commit `7d38ac8`, run `31311020868`. |
 | M068 | Induce commands without M067's descriptor-product grammar | **Positive qualified development result** | One complete scan per body finds four commands and one semantic adapter; four distinct adapters each pass 12/12 hidden cases and all controls reject. Exact learner `f033ac7`, run `31314960014`. |
+| M069 | Cross a governed real filesystem/process body and refuse an incompatible protocol | **Positive qualified development result** | One unchanged policy repairs 4/4 tasks, each 3/3 hidden, and refuses the incompatible task before mutation. All ten controls pass; manifest `c5c80701`; exact run `31319062535` passed. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
-authorship, incompatible-body refusal, real-environment competence and unbounded protocol
-induction remain later gates. More project-authored bodies or longer words cannot justify M069.
+authorship and unbounded protocol induction remain later gates. M069 supplies partial real-
+environment and incompatible-refusal evidence, but its tasks and finite repair statements remain
+authored and its processes are not OS-isolated. The successor must cross a post-design external
+task bank inside a container or VM; more project-authored repair slots cannot justify it.
 
 ## Parallel measurement track — M045
 
@@ -345,7 +350,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M067. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M069. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 
