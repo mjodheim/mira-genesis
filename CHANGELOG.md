@@ -5,6 +5,9 @@
 - Froze M071 runtime `0820ebc`, Harbor bridge `132476a` and 17 committed blobs before pinning a
   benchmark revision or selecting a fresh external identifier. Commitment `2e76a1b8`; no M071
   scientific result exists.
+- Pinned the unchanged Terminal-Bench 2 remote head and a one-draw cryptographic blind-selection
+  salt before enumerating eligible identifiers. The rule excludes both closed M070 tasks before
+  ranking and forbids replacement.
 - Replaced locale-dependent model and Docker control pipes with strict UTF-8 bytes transport and
   replaced parent-only timeout kills in the model, container and terminal paths with one shared
   whole-process-tree supervisor. Real Windows regressions prove that `U+2011` survives and delayed

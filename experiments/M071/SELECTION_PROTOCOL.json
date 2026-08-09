@@ -1,0 +1,29 @@
+{
+  "agent_design_commit": "0820ebc3a638e8ae0e06fceed7addbdb71bafbb7",
+  "agent_design_commitment_sha256": "2e76a1b8b390bee0ee55095a6f3f61366176e7a4ac0791add9d6d37fca5c30a2",
+  "agent_design_freeze_commit": "de85e31b95520d0ff90e451d192d106cf56589a8",
+  "benchmark_repository": "https://github.com/harbor-framework/terminal-bench-2.git",
+  "benchmark_revision": "2fd12b88aafdd04a52c298e3940bcb189f9766d6",
+  "benchmark_revision_remote_head_verified_utc": "2026-08-09",
+  "eligible_identifier_inventory_enumerated": false,
+  "excluded_identifiers": [
+    "llm-inference-batching-scheduler",
+    "rstan-to-pystan"
+  ],
+  "excluded_identifiers_source": "closed M070 TASK_SELECTION and EXTERNAL_RESULT; never eligible for M071",
+  "fresh_task_content_inspected": false,
+  "fresh_task_executed": false,
+  "fresh_task_identifier_selected": false,
+  "harbor_release_tag": "v0.20.0",
+  "identifier_source": "final path component of each tracked task.toml parent directory",
+  "replacement_permitted": false,
+  "salt_generation": "single 32-byte System.Security.Cryptography.RandomNumberGenerator.Fill draw after freeze de85e31 and before eligible inventory enumeration",
+  "schema": "m071-external-selection-protocol-v1",
+  "scientific_result_exists": false,
+  "selected_identifiers": [],
+  "selection_count": 2,
+  "selection_digest_contract": "sha256(bytes.fromhex(selection_salt_hex) + utf8(identifier))",
+  "selection_salt_hex": "b9db5c4d38298a951c4cb17289e70df5ad4ef71b262bd54ca115099782ae8f87",
+  "status": "fresh_selection_rule_frozen_before_eligible_inventory",
+  "task_order": "ascending selection digest"
+}
