@@ -1085,6 +1085,7 @@ phase_eight:
     design_record: docs/M070_PRETARGET_AGENT.md
     design_freeze: experiments/M070/AGENT_DESIGN_FREEZE.json
     selection_protocol: experiments/M070/SELECTION_PROTOCOL.json
+    task_selection: experiments/M070/TASK_SELECTION.json
     exact_agent_design_commit: 41ebe791605f55e7a44df8f0939d730139cf219a
     design_commitment_sha256: 14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46
     structured_model_policy_present: true
@@ -1092,7 +1093,10 @@ phase_eight:
     digest_pinned_container_body_present: true
     realized_isolation_attestation_present: true
     success_decided_by_agent: false
-    external_task_selected: false
+    external_task_selected: true
+    selected_external_tasks:
+      - rstan-to-pystan
+      - llm-inference-batching-scheduler
     external_task_inspected: false
     external_task_executed: false
     scientific_result_exists: false

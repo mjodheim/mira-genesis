@@ -49,7 +49,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   deterministic manifest digest is `c5c80701`.
 - **M070 is at a frozen pre-target engineering boundary, with no scientific result.** Exact design
   commit `41ebe79` contains a strict structured model policy and an attested, digest-pinned isolated
-  Docker body. No external benchmark task has been selected, inspected or executed.
+  Docker body. Blind rule `9bbec79` selected `rstan-to-pystan` and
+  `llm-inference-batching-scheduler` from 89 external tasks; no task content has yet been inspected
+  or executed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
