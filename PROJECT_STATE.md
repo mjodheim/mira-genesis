@@ -433,7 +433,7 @@ attribution. The checksum decomposition, three atomic steps, finite grammar, emi
 and cases remain authored. A third small loop using the same pattern would not be another
 structural advance.
 
-### M064 — whole-WebAssembly completion candidate
+### M064 — positive development result, failed pre-canonical qualification
 
 M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. It
 scans all 256 arithmetic opcode bytes, replays M061's six structural shapes, migrates every
@@ -447,15 +447,31 @@ each accept zero and pass 0/18. All 12, 8 and 8 public survivors are independent
 inspected and hidden-validated before selection. Parents 9–11 are archived exactly; a forced
 journal fault restores code and behaviour; causal memory grows by three episodes; replay is exact.
 
-This is positive development evidence for gates 1–9 in one real-substrate lineage. The protocol,
-guard and independent-reproduction workflow are eligible for freeze. Gate 10 and the final claim
-remain unavailable until the frozen parent qualifies, one marker-only commit runs once, and the
-separate Python 3.13 job reproduces the first artifact byte-for-byte.
+This remains positive development evidence for gates 1–9 in one real-substrate lineage. It is not
+qualified evidence. Exact parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed run
+`31281234286`, attempt 1: each Python version passed 1,084/1,085 tests and rejected the same
+checkout-dependent frozen-source hash. Integrity and attribution passed.
 
 The exact pre-freeze local tree passed the complete repository suite: **1,085 tests in 2,035.10
-seconds**. This is local construction qualification only; the frozen-parent Python 3.11/3.13
-GitHub matrix remains required before the marker can be armed. The frozen protocol file has
-SHA-256 `d5c4e38b45eb99567e98618259276648962fd3cb12569d0798f2a06ddc2940ef`.
+seconds**. Review then found that its rollback receipt compared the untouched saved state to
+itself. D023 closes M064 and requires M065; no M064 marker was created. Its historical portable
+protocol file now has SHA-256
+`f05f0fdda2f9de03eee149b5a83dde290e576d164b4e2226333fbe10f45c7a4b`.
+
+### M065 — corrected whole-WebAssembly completion candidate
+
+M065 changes no task bank, budget, threshold, substrate, candidate grammar or decision rule. It
+replaces only the false rollback proof: the corrupt staged state is distinct, the pre-transaction
+bytes are deserialised into the state actually returned, and that object is audited and compared
+to the committed pre-fault bytes and digest.
+
+All four banks retain the M064 outcome: three accepted cycles, version twelve, 68/68 retained and
+18/18 hidden in the complete lineage; every control accepts zero and passes 0/18. The marker must
+be its first occurrence anywhere in path history and the first-result job requires workflow
+attempt one. Thirteen focused guard/freeze tests pass. The 22-file frozen protocol digest is
+`1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51`; its file SHA-256 is
+`360f4ae7dac895aed2af071a80c45d100eb2b6a7201f107728e5ad70d781f83a`. The complete corrected
+repository suite passes **1,101 tests in 1,762.37 seconds**.
 
 ### Qualification status of M056–M063
 
@@ -488,11 +504,10 @@ M063 also discharged its own rule. Exact head
 with 1,054 tests on Python 3.11 in 969.51 seconds, 1,054 on Python 3.13 in 985.12 seconds,
 repository integrity and attribution. No failed job or rerun occurred.
 
-## Current construction frontier — freeze, do not extend
+## Current construction frontier — qualify M065, do not extend
 
-M064 supplies the previously missing four-arm comparison and three accepted cycles on a complete
-real WebAssembly body. Adding another development family, search rule or component experiment is
-now prohibited by the same anti-drift principle as D016. The only active construction path is:
+M064's negative qualification is preserved. M065 supplies its required rollback and governance
+corrections without changing the scientific bank or rule. The only active construction path is:
 
 1. clean local and GitHub qualification of the exact frozen parent;
 2. a separate marker-only commit bound to that parent;
@@ -500,8 +515,8 @@ now prohibited by the same anti-drift principle as D016. The only active constru
 4. an exact independent Python 3.13 reproduction;
 5. preservation, audit, workflow archival and a bounded final verdict.
 
-If the first run or reproduction fails, that negative M064 result is preserved. Repair requires a
-new experiment number; M064 may not be retuned or rerun into success.
+If the first M065 run or reproduction fails, that negative result is preserved. Scientific repair
+then requires M066; M065 may not be retuned or rerun into success.
 
 ## Canonical and development result map
 
@@ -535,13 +550,14 @@ new experiment number; M064 may not be retuned or rerun into success.
 | M061 | **POSITIVE BOUNDED DEVELOPMENT RESULT — ONE FALSE MANIFEST CORRECTED** | Ten structural instructions identified by effect alone across six shapes in two stages. A false provenance claim reached `main` and is recorded under D020 and in `FAILURE_LOG.md`. |
 | M062 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | 480 bounded control arrangements constructed; 16 public survivors and both exit-region representatives pass all three hidden cases. Exact head `f5cfe35`, run `31269732461`; the grammar and generic emitter remain authored. |
 | M063 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Arrangement synthesis transfers to a 91-byte checksum body: 96 candidates, 6 public survivors, 12/12 survivor/region programs admitted; the M062 copy body fails the non-zero checksum controls. Exact head `d4eb5ed`, run `31275085485`; the task grammar and emitter remain authored. |
-| M064 | **POSITIVE INTEGRATED DEVELOPMENT RESULT — ELIGIBLE FOR FREEZE** | One CPython→Node→whole-Wasm lineage, four equal-budget arms and three accepted native rewrites. Complete 18/18 hidden; all three controls 0/18 across four committed banks. Canonical first run and reproduction remain unexecuted. |
+| M064 | **NEGATIVE PRE-CANONICAL QUALIFICATION** | Development outcome was positive, but run `31281234286` failed the source commitment and review invalidated the rollback falsifier. No marker or canonical result. |
+| M065 | **POSITIVE CORRECTED DEVELOPMENT RESULT — ELIGIBLE FOR FREEZE** | Same bank, budgets and outcomes as M064; returned rollback state is now separately deserialised, audited and digest-bound. First-history marker and attempt-one result guards pass locally. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M064: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M065: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

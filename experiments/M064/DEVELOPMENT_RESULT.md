@@ -101,14 +101,14 @@ emitted the four final manifest digests above. Fields binding the later canonica
 added before that rerun; no executable or scientific commitment changed.
 
 The exact pre-freeze tree then passed the complete repository suite: **1,085 tests in 2,035.10
-seconds**. `FROZEN_PROTOCOL.json` has SHA-256
-`d5c4e38b45eb99567e98618259276648962fd3cb12569d0798f2a06ddc2940ef`.
+seconds**. The portable historical `FROZEN_PROTOCOL.json` now has SHA-256
+`f05f0fdda2f9de03eee149b5a83dde290e576d164b4e2226333fbe10f45c7a4b`.
 
-## What remains
+## Qualification outcome
 
-1. obtain the final repository-integrity pass;
-2. freeze `FROZEN_PROTOCOL.json`, code, workflow and exact hashes in one commit;
-3. qualify that frozen parent through the normal Python 3.11/3.13 CI matrix;
-4. create one marker-only commit;
-5. preserve the first canonical artifact and the separate Python 3.13 exact reproduction;
-6. publish the bounded final verdict without widening it.
+Exact parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed GitHub run
+`31281234286`, attempt 1. Python 3.11 passed 1,084/1,085 tests in 1,037.15 seconds and Python 3.13
+passed 1,084/1,085 in 1,094.43 seconds; both rejected a checkout-dependent source hash. Integrity
+and attribution passed. Review also showed that the rollback receipt compared the untouched saved
+input to itself. No marker was created. M064 is closed as negative pre-canonical qualification;
+the required scientific correction is M065.

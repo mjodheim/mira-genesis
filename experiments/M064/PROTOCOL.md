@@ -1,6 +1,10 @@
 # M064 — frozen whole-WebAssembly completion protocol
 
-**Status: DEVELOPMENT-POSITIVE — ELIGIBLE FOR FREEZE, NOT YET CANONICAL.**
+**Status: DEVELOPMENT-POSITIVE, PRE-CANONICAL QUALIFICATION FAILED — CLOSED BY M065.**
+
+Exact parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed run `31281234286`,
+attempt 1. No marker was created. Review invalidated the rollback falsifier, so D023 forbids an
+M064 scientific repair; see M065.
 
 ## Research question
 
@@ -155,6 +159,6 @@ runtime file hashes, decision rules and workflow before arming.
 
 ## Claim and release boundaries
 
-A development pass makes M064 eligible for freeze; it is not canonical evidence. Even a positive
-canonical result grants no repository, network, credential, deployment or production authority
-to the lineage. Those remain human-controlled.
+The development pass made M064 eligible for freeze but did not qualify it. No M064 canonical
+result exists. The negative qualification grants no repository, network, credential, deployment
+or production authority to the lineage; those remain human-controlled.

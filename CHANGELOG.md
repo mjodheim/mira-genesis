@@ -1,5 +1,30 @@
 # Changelog
 
+## 0.40.0 — 2026-08-09
+
+M064 is preserved as a failed pre-canonical qualification and M065 carries the required
+scientific and governance corrections without changing the task bank, budgets, thresholds,
+substrates, candidate grammar or four-arm decision rule.
+
+- Preserved M064 commit `ec92af78b57203d32c2ee504db91b4166ec83fdf` and GitHub run
+  `31281234286`, attempt 1. Integrity and attribution passed; Python 3.11 passed 1,084/1,085
+  tests in 1,037.15 seconds and Python 3.13 passed 1,084/1,085 in 1,094.43 seconds. Both rejected
+  the same checkout-dependent source hash. No marker or canonical result was created.
+- Recorded the review finding that M064's rollback receipt compared the untouched saved input to
+  itself. D023 therefore requires M065 rather than a scientific repair under M064.
+- Added an M065 transaction that corrupts a distinct staged state, deserialises the committed
+  pre-transaction bytes into the state actually returned, audits that object and requires exact
+  byte and state-digest restoration before continuing.
+- Repeated all four banks. The complete lineage remains 18/18 hidden with three accepted cycles
+  and 68/68 retained cases; every control remains 0/18 with zero accepted cycles.
+- Required the canonical marker to be its first occurrence anywhere in path history and gated the
+  first-result job on `github.run_attempt == 1`; reruns can only consume the preserved artifact.
+- Added portable LF-normalised source commitments. M064's historical 21-file audit and M065's
+  22-file audit now agree across Windows and Linux checkouts.
+- The complete corrected repository suite passes **1,101 tests in 1,762.37 seconds**. An earlier
+  full M065 invocation passed 1,100 and exposed the last CRLF-based M064 guard fixture; that
+  fixture alone was normalised before the clean rerun.
+
 ## 0.39.0 — 2026-08-08
 
 M064 assembles the real-substrate completion experiment in one continuous

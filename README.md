@@ -176,9 +176,10 @@ candidates, depth, another declared primitive or another pruning rule no longer 
 material advance. See [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md)
 and decision D016.
 
-## Current construction frontier — M064
+## Current construction frontier — M065
 
-**Status: positive in development and eligible for freeze; not yet canonical.**
+**Status: M064 failed pre-canonical qualification; M065 is positive in corrected development and
+eligible for freeze, but not yet canonical.**
 
 M064 reconstructs one continuous CPython v6 → Node ESM v8 → whole-WebAssembly v9 lineage. After
 scanning arithmetic and structural effects, every semantic pipeline stage lives in one
@@ -193,15 +194,19 @@ selection. Versions 9–11 are archived exactly, a corrupt provisional journal i
 code and behaviour restored, causal memory grows with each adoption and replay reaches the same
 version-twelve state.
 
-The scientific construction phase is now closed. The remaining work is to qualify and freeze the
-exact parent, make one marker-only commit, preserve the first canonical artifact and require a
-separate Python 3.13 reproduction to match it byte-for-byte. A failed first run or reproduction is
-preserved; changing M064 afterward requires a new experiment number.
+M064 parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed qualification run
+`31281234286`, attempt 1. Each Python version passed 1,084/1,085 tests before the same Windows/Linux
+source-hash mismatch; review also found that the rollback proof compared the saved state to itself.
+No M064 marker or canonical result was created.
 
-The pre-freeze tree passes the complete local repository suite: **1,085 tests in 2,035.10
-seconds**. GitHub qualification of the exact frozen parent remains a separate required gate.
+M065 keeps every scientific input and outcome above but restores the actual returned state from
+pre-transaction bytes, audits it and binds the corrupt and restored digests. Its marker must be
+the first path-history occurrence, and its first result can run only on workflow attempt one.
+Four-bank development and 20 focused M064/M065 governance/freeze tests pass. GitHub qualification of the
+exact M065 parent remains required. The complete corrected local repository suite passes
+**1,101 tests in 1,762.37 seconds**.
 
-M064 keeps its limits explicit. The whole-body compiler, block structure, finite grammar, task
+M065 keeps the limits explicit. The whole-body compiler, block structure, finite grammar, task
 families and evidence cases are authored and precommitted. The result cannot support unrestricted
 compiler synthesis, open-ended evolution, general intelligence or consciousness.
 
@@ -215,6 +220,8 @@ See:
 - [`experiments/M052/SERIES_CLOSURE.md`](experiments/M052/SERIES_CLOSURE.md);
 - [`experiments/M064/PROTOCOL.md`](experiments/M064/PROTOCOL.md);
 - [`experiments/M064/DEVELOPMENT_RESULT.md`](experiments/M064/DEVELOPMENT_RESULT.md);
+- [`experiments/M065/PROTOCOL.md`](experiments/M065/PROTOCOL.md);
+- [`experiments/M065/DEVELOPMENT_RESULT.md`](experiments/M065/DEVELOPMENT_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
 

@@ -29,7 +29,9 @@ def _files(tmp_path: Path) -> tuple[Path, Path]:
                 "task_bank_commitment": M064_PROTOCOL.task_bank_commitment,
                 "task_bank_entry_count": 4,
                 "file_sha256": {
-                    str(committed): hashlib.sha256(committed.read_bytes()).hexdigest()
+                    str(committed): hashlib.sha256(
+                        committed.read_bytes().replace(b"\r\n", b"\n")
+                    ).hexdigest()
                 },
             },
             sort_keys=True,

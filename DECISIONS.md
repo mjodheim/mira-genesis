@@ -584,3 +584,18 @@ This decision freezes a bounded scientific protocol, not the engineering reposit
 After the first result, documentation may preserve the artifacts, audit their identities and
 archive the consumed workflow. None of those writes grants the experimental lineage repository,
 network, credential, deployment or production authority.
+
+## D024 — A failed freeze qualification and a false rollback proof require a successor experiment
+
+M064's first frozen-parent qualification passed 1,084 of 1,085 tests on both Python versions but
+failed its source-identity guard because commitments were made from a Windows checkout rather than
+canonical Git text bytes. That mechanical defect alone could be repaired without changing the
+experiment. External review also found that the forced rollback compared the untouched saved
+input to itself instead of verifying the state actually returned by a restore operation.
+
+The latter is a scientific correction after D023's construction boundary. **M064 is therefore
+closed as a negative pre-canonical qualification; no M064 marker may be created.** M065 may reuse
+the exact task bank and decision rule, but must restore a distinct returned object from committed
+pre-fault bytes, audit it and bind both the corrupt and restored digests. Its marker must also be
+the first occurrence in path history and its first-result job must be impossible on workflow
+reruns.

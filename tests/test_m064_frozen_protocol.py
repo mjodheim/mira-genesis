@@ -23,7 +23,9 @@ def _fixture(tmp_path: Path) -> tuple[Path, Path]:
                 "task_bank_commitment": M064_PROTOCOL.task_bank_commitment,
                 "task_bank_entry_count": 4,
                 "file_sha256": {
-                    str(source): hashlib.sha256(source.read_bytes()).hexdigest()
+                    str(source): hashlib.sha256(
+                        source.read_bytes().replace(b"\r\n", b"\n")
+                    ).hexdigest()
                 },
             },
             sort_keys=True,
@@ -37,6 +39,12 @@ def test_repository_frozen_protocol_matches_all_committed_bytes() -> None:
     value = validate_frozen_protocol()
     assert value["protocol_sha256"] == M064_PROTOCOL.digest()
     assert len(value["file_sha256"]) == 21
+
+
+def test_frozen_source_identity_is_checkout_platform_independent(tmp_path: Path) -> None:
+    frozen, source = _fixture(tmp_path)
+    source.write_bytes(b"VALUE = 1\r\n")
+    validate_frozen_protocol(frozen)
 
 
 def test_executable_protocol_drift_is_rejected(tmp_path: Path) -> None:

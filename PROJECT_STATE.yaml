@@ -1,9 +1,9 @@
 project: Mira Genesis
-updated_at: 2026-08-08
-status: phase_seven_whole_wasm_completion_positive_eligible_for_freeze
+updated_at: 2026-08-09
+status: phase_seven_m065_corrected_completion_positive_eligible_for_freeze
 
 active_research_question: >-
-  Will the exact frozen M064 parent produce one positive marker-selected canonical first result
+  Will the exact frozen M065 parent produce one positive marker-selected canonical first result
   and an independent Python 3.13 byte-identical reproduction, without repair, rerun or threshold
   change? Construction is closed; only freeze, qualification, arming, preservation and audit remain.
 
@@ -719,12 +719,12 @@ phase_six:
       - open_ended_evolution
     decision: D022
   M064:
-    status: positive_integrated_development_result_eligible_for_freeze
+    status: negative_precanonical_qualification
     canonical: false
     protocol: experiments/M064/PROTOCOL.md
     result: experiments/M064/DEVELOPMENT_RESULT.md
     executable_protocol_digest: c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d
-    frozen_protocol_file_sha256: d5c4e38b45eb99567e98618259276648962fd3cb12569d0798f2a06ddc2940ef
+    frozen_protocol_file_sha256: f05f0fdda2f9de03eee149b5a83dde290e576d164b4e2226333fbe10f45c7a4b
     task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
     development_bank_manifest_digests:
       - fc663fa6f0eebb73238cff1e9338db37e9d95dbc8e07fd99888a93402a65f6e6
@@ -768,6 +768,13 @@ phase_six:
     complete_repository_local_tests: 1085
     complete_repository_local_test_seconds: 2035.10
     clean_complete_local_rerun_required_before_freeze: false
+    failed_parent_commit: ec92af78b57203d32c2ee504db91b4166ec83fdf
+    failed_qualification_run: 31281234286
+    failed_qualification_attempt: 1
+    qualification_python_3_11: [1084, 1085]
+    qualification_python_3_13: [1084, 1085]
+    rollback_falsifier_valid: false
+    marker_created: false
     authored_elements:
       - whole_body_compiler
       - block_and_loop_structure
@@ -781,13 +788,46 @@ phase_six:
       - open_ended_evolution
       - general_intelligence
       - consciousness
+  M065:
+    status: positive_corrected_development_result_eligible_for_freeze
+    canonical: false
+    protocol: experiments/M065/PROTOCOL.md
+    result: experiments/M065/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: 1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51
+    frozen_protocol_file_sha256: 360f4ae7dac895aed2af071a80c45d100eb2b6a7201f107728e5ad70d781f83a
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    scientific_changes: [non_tautological_snapshot_restoration]
+    governance_changes:
+      - marker_must_be_first_path_history_occurrence
+      - canonical_first_result_requires_workflow_attempt_one
+    task_bank_changed: false
+    budgets_changed: false
+    thresholds_changed: false
+    candidate_grammar_changed: false
+    development_banks_passed: 4
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    final_retained_quality: [68, 68]
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    corrected_rollback_returned_object_distinct: true
+    corrected_rollback_state_audited: true
+    corrected_rollback_exact_digest: true
+    focused_guard_and_freeze_tests: 20
+    complete_repository_local_tests: 1101
+    complete_repository_local_test_seconds: 1762.37
+    canonical_first_result_run: null
+    independent_reproduction_run: null
 
 active_construction_frontier:
-  status: m064_construction_closed_freeze_and_canonical_execution_only
+  status: m065_construction_closed_freeze_and_canonical_execution_only
   gates_positive_in_one_development_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9]
   gate_pending_canonical_execution: 10
   ordered_remaining_steps:
-    - clean_complete_local_suite
+    - clean_complete_local_suite_with_m065
     - repository_integrity
     - freeze_exact_parent_and_protocol_hashes
     - python_3_11_and_3_13_parent_qualification
@@ -798,7 +838,7 @@ active_construction_frontier:
     - publish_bounded_final_verdict
   post_freeze_repair_permitted: false
   failed_first_run_or_reproduction_is_preserved: true
-  changed_experiment_requires: M065
+  changed_experiment_requires: M066
 
 measurement_track:
   reserved_experiment: M045
@@ -808,7 +848,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M064: true
+  separate_from_M047_to_M065: true
 
 engineering_release_boundary:
   human_control_required_for:

@@ -17,7 +17,10 @@ class FrozenProtocolError(ValueError):
 
 
 def _sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    # Git stores these committed text sources with LF endings, while a Windows
+    # checkout may materialise CRLF.  Commitments therefore bind the canonical
+    # Git text bytes rather than one checkout platform's representation.
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
 def validate_frozen_protocol(path: Path = FROZEN_PROTOCOL_PATH) -> dict[str, object]:

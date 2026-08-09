@@ -851,3 +851,23 @@ from the final size instead of read from the completed evidence. Hidden quality,
 imports, archive, rollback, memory and replay all passed. The assertion was corrected to the
 observed identities without changing code generation, task cases, thresholds, budgets or the
 protocol. A clean rerun is required before M064 may be frozen.
+
+## M064 — frozen qualification exposed checkout-dependent hashes and a false rollback proof
+
+Exact parent `ec92af78b57203d32c2ee504db91b4166ec83fdf` failed GitHub run
+`31281234286`, attempt 1. Python 3.11 passed 1,084 tests and failed one in 1,037.15 seconds;
+Python 3.13 passed 1,084 and failed one in 1,094.43 seconds. Both observed Git's LF bytes for
+`m048_native_lineage.py` while the frozen commitment named the Windows CRLF checkout bytes.
+Integrity and attribution passed. No canonical marker was created.
+
+The same pull request review found three defects before arming: the marker could be updated and
+run again, a workflow rerun could recreate the first artifact, and the rollback receipt compared
+the untouched `before` copy to its own previously calculated bytes and digest. The first two are
+governance defects. The third invalidates the claimed rollback falsifier and, under D023, requires
+M065. M064 remains preserved as a negative pre-canonical qualification.
+
+During the M065 portability correction, two focused fixture invocations and the first complete
+rerun still computed temporary M064/M065 source expectations from raw CRLF bytes. The scientific
+M065 tests all passed; the complete run reached 1,100 passes and one fixture failure. Each fixture
+was changed only to hash LF-normalised temporary bytes. The final complete rerun passed 1,101 tests
+in 1,762.37 seconds.
