@@ -27,12 +27,24 @@ fresh blind tasks earned reward `1.0`, both `nop` floors earned `0.0`, and no re
 occurred. One accepted task does not demonstrate cross-domain transfer, isolate Mira governance or
 change a generality-gate status.
 
+M072 is positive bounded causal-governance mechanism evidence. Matched non-executing ablations show
+that authority admission and tamper-evident audit chaining cause their respective authored
+containment and integrity invariants. It is not an independent red-team or external competence
+result.
+
+M073 is positive bounded skill-appropriation mechanism evidence. One capsule induced from four
+external demonstrations remains useful on twelve alpha-renamed holdouts after the teacher is
+removed. The family and evaluator are authored and structurally homogeneous, so this is not
+cross-domain, general-programming or Gate 2 evidence.
+
 ## Model-mediated attribution rule
 
-M070+ uses a named external model to propose actions. Task reward therefore measures the composed
+M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
 model, policy wrapper, body and evaluator. It is not evidence that Mira owns the transformation and
 cannot satisfy Genesis Gate 2 or Gate 3. Governance claims require direct containment/audit
-evidence or a baseline that isolates the governance layer. See
+evidence or a baseline that isolates the governance layer; M072 performs such an ablation without
+calling a model. M073 may attribute only the induced serialized capsule and its later model-free
+execution to the lineage; its teacher outputs and repair objective remain external. See
 [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
 
 ## G1 — interface novelty
@@ -122,11 +134,11 @@ results are known.
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
-| G5 | partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. |
+| G5 | stronger partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill that survives complete teacher removal, but tests only one homogeneous authored family and no forgetting. |
 | G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. A second task is refused; browser/desktop competence and broad environment coverage remain absent. |
 | G7 | open | No human-hour task-horizon evaluation. |
-| G8 | partial bounded evidence | Disposable self-rewrite exists; official adoption remains human-controlled. |
+| G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | stronger partial mechanism evidence | M071 preserves no-network isolation, tamper-evident memory, evaluator-owned success and failed-attempt preservation across a positive external trial; no governance ablation or general-agent red-team suite exists. |
+| G10 | strong bounded mechanism evidence | M071 preserves no-network isolation and evaluator-owned success; M072 causally isolates authority admission and tamper-evident audit chaining under 48 authored non-executing scenarios. No independent general-agent red-team or calibrated-refusal rate exists. |
 
 The next accepted result must change this table by evidence, not wording.

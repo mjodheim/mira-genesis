@@ -12,11 +12,14 @@ The central question remains falsifiable:
 > adopt a verified improvement, migrate to an initially unknown substrate and continue
 > improving there without human architectural intervention?
 
-The repository now separates two epistemic tracks. The endogenous bounded-lineage track studies
-lineage-owned transformations and retains the frozen Genesis ownership gates. The M070+ track is a
-declared model-mediated governed agent: a named external model proposes actions while Mira supplies
-authority control, isolation, budgets, audit and evaluator-owned success. Benchmark reward belongs
-to that composed system, not to the Mira layer alone. See
+The repository separates an endogenous bounded-lineage track from a model-mediated governed-agent
+track. The first studies lineage-owned transformations and retains the frozen Genesis ownership
+gates. In M070–M071, a named external model may propose actions while Mira supplies authority
+control, isolation, budgets, audit and evaluator-owned success; benchmark reward belongs to that
+composed system, not to Mira alone. M072 isolates two of those governance mechanisms without
+calling a model. M073 adds a deliberately narrow bridge: demonstrations remain external, but the
+lineage induces and later executes a serialized skill after the model is removed.
+See
 [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
 
 ## Phase-one result
@@ -74,6 +77,8 @@ The full evidence is preserved in:
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT** | The frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus two `0.0` `nop` floors, with no exception, retry or replacement. |
+| M072 | **POSITIVE QUALIFIED DEVELOPMENT** | Matched authored ablations isolate causal contributions from authority admission and tamper-evident audit over 48 non-executing scenarios. |
+| M073 | **POSITIVE QUALIFIED DEVELOPMENT** | Four external demonstrations induce one committed AST skill; after teacher removal it passes 12/12 fresh authored holdouts while two controls pass 0/12. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -328,6 +333,22 @@ digest `d3526513`; the final local suite passed 1,225 tests with two skips. See
 Exact evidence commit `0875fa7` then passed first CI run `31332620871` with 1,226 tests passed and
 one skipped on both Python 3.11 and 3.13, plus integrity; attribution run `31332620902` passed.
 
+**M072 is positive bounded causal-mechanism evidence.** A protocol frozen before implementation and
+a separately committed 48-scenario suite compare full governance with admission-ablated and
+audit-ablated arms. Full governance released zero unauthorized proposals, falsely refused zero
+authorized controls and detected 18/18 committed ledger corruptions. Each matched ablation loses
+exactly the invariant supplied by the removed mechanism. No represented action was executed and no
+external model or external task contributes to the result. Digest `ab555d2f`; see
+[`experiments/M072/RESULT.md`](experiments/M072/RESULT.md).
+
+**M073 is positive bounded model-to-lineage skill-appropriation evidence.** Four frozen single-call
+teacher demonstrations induced one identifier-generalized AST rewrite. Capsule `444a8a54` was
+committed before twelve holdout programs were materialized. With the teacher removed, the capsule
+passed 12/12 holdouts and 84/84 evaluator cases; unchanged-source and exact-hash memorizer controls
+both passed 0/12, and a corrupted demonstration set induced no capsule. This is one authored repair
+family, not general program synthesis, Genesis Gate 2 or AGI. Result `edaf03b4`; see
+[`experiments/M073/RESULT.md`](experiments/M073/RESULT.md).
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -343,6 +364,8 @@ See:
 - [`experiments/M066/PROTOCOL.md`](experiments/M066/PROTOCOL.md);
 - [`experiments/M066/DEVELOPMENT_RESULT.md`](experiments/M066/DEVELOPMENT_RESULT.md);
 - [`experiments/M066/STATUS.md`](experiments/M066/STATUS.md);
+- [`experiments/M072/RESULT.md`](experiments/M072/RESULT.md);
+- [`experiments/M073/RESULT.md`](experiments/M073/RESULT.md);
 - [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).

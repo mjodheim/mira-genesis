@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 9 August 2026**
+**Updated: 10 August 2026**
 
 ## Authoritative summary
 
@@ -65,15 +65,29 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   suite passed 1,225 tests with two skips. Exact evidence commit `0875fa7` passed first CI run
   `31332620871`: 1,226 passed/1 skipped on Python 3.11 and 3.13, plus integrity; attribution run
   `31332620902` passed.
+- **M072 is a positive qualified causal-mechanism result.** Under a protocol frozen before the
+  harness existed and a separately bound 48-scenario authored suite, full governance released zero
+  unauthorized proposals, falsely refused zero authorized controls and detected 18/18 committed
+  ledger corruptions. Admission and audit ablations each lose 18 corresponding invariants. No
+  represented action, external model or external task contributes to result `ab555d2f`.
+- **M073 is a positive qualified model-to-lineage bridge result.** Four frozen single-call
+  `gpt-5.6-sol` demonstrations produced one identifier-generalized AST skill capsule. The capsule
+  was committed before twelve holdouts were materialized; after teacher removal it passed 12/12
+  holdouts and 84/84 cases, while unchanged-source and exact-hash memorizer controls passed 0/12.
+  Result `edaf03b4` is bounded to one project-authored division-repair family.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
 deployments or production systems.
 
-M070 also creates an explicit epistemic split. M012b–M069 form the endogenous bounded-lineage
-program; M070+ is a declared model-mediated governed-agent line. In the latter, external reward
-belongs to the named composed system and cannot be attributed to Mira's governance layer or used
-as Genesis Gate 2 evidence. See [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
+M070 creates an explicit epistemic split. M012b–M069 form the endogenous bounded-lineage program;
+M070–M071 are a declared model-mediated governed-agent line. External reward belongs to the named
+composition and cannot be attributed to Mira's governance layer without an ablation. M072 supplies
+such an ablation only for authored containment/audit invariants and makes no model call. M073 is a
+narrow bridge back to model-free execution: demonstrations remain external, but its committed
+capsule is induced and applied by the lineage after teacher removal. None of these changes Genesis
+Gate 2 retroactively.
+See [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md).
 
 ## Phase 1 — canonical bounded completion
 
@@ -670,12 +684,14 @@ question remains open but is not a missing completion gate.
 | M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT RESULT** | Frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus `0.0, 0.0` `nop` floors; no exception, retry or replacement. Result `d3526513`. |
+| M072 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Full governance satisfies every authored containment/audit invariant over 48 scenarios; matched admission and audit ablations each lose 18 corresponding invariants. Result `ab555d2f`. |
+| M073 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Four external demonstrations induce one committed capsule; model-free execution passes 12/12 held-out programs and 84/84 cases while no-capsule and memorizer controls pass 0/12. Result `edaf03b4`. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M071: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M073: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

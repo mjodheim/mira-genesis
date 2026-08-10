@@ -1,12 +1,12 @@
 project: Mira Genesis
-updated_at: 2026-08-09
-status: phase_eight_m071_positive_external_development_result
+updated_at: 2026-08-10
+status: phase_eight_m073_positive_qualified_development_result_pending_ci
 
 active_research_question: >-
-  After M071 passed one of two fresh blind public external tasks as a declared model-mediated
-  composed system, can a successor isolate the causal contribution of Mira governance and then
-  reproduce transfer across materially different private uncontaminated tasks without weakening
-  no-network, audit or evaluator-owned success?
+  After M072 causally isolated two authored governance mechanisms and M073 induced one reusable
+  model-free skill from external demonstrations, can a successor calibrate refusal and transfer
+  learned representations across private uncontaminated, materially different task families with
+  independent reproduction?
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -15,7 +15,7 @@ epistemic_tracks:
     genesis_gate_2_unchanged: true
     strongest_canonical_results: [M042, M066]
   model_mediated_governed_agent:
-    scope: M070+
+    scope: M070-M071
     external_model_proposes_actions: true
     external_model_is_lineage_owned: false
     task_reward_attribution: named_composed_system
@@ -26,6 +26,19 @@ epistemic_tracks:
       - audit_integrity
       - transport_robustness
     genesis_gate_2_claim_permitted: false
+  governance_mechanism_ablation:
+    scope: M072
+    external_model_called_for_result: false
+    represented_action_executed: false
+    authored_threat_model: true
+    genesis_gate_2_claim_permitted: false
+  model_to_lineage_bridge:
+    scope: M073
+    external_teacher_outputs_are_lineage_owned: false
+    induced_serialized_capsule_is_lineage_owned: true
+    external_model_available_during_holdout: false
+    genesis_gate_2_claim_permitted: false
+    current_scope: one_project_authored_ast_repair_family
   measurement_track:
     reserved_experiment: M045
     separate: true
@@ -1204,9 +1217,60 @@ phase_eight:
     github_workflow_rerun_used: false
     genesis_gate_2_evidence: false
     reward_attribution: named_composed_system
+  M072:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M072/PROTOCOL.json
+    protocol_commit: a844b10dc558a16f2609d204f886d63fd193a9d3
+    scenario_commitment_commit: 59b7bdfeac75a7ab3ffa1cd87e0c6cf5050b34e8
+    result: experiments/M072/RESULT.json
+    result_sha256: ab555d2f0a7088193569053219f7edda4668a3f7b8849f03b6781eb3fe09005e
+    scenario_count: 48
+    full_governance_unauthorized_releases: 0
+    full_governance_authorized_false_refusals: 0
+    committed_tampers_detected: [18, 18]
+    admission_ablated_invariant_failures: 18
+    audit_ablated_invariant_failures: 18
+    represented_actions_executed: 0
+    external_model_called_for_result: false
+    external_task_selected: false
+    governance_layer_isolating_baseline_present: true
+    threat_model_authored_by_project: true
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+  M073:
+    status: positive_qualified_development_result_pending_full_repository_ci
+    canonical: false
+    protocol: experiments/M073/PROTOCOL.json
+    protocol_commit: 78d53d733bdf77eab773414e8d273ed70e31391d
+    teacher_model: gpt-5.6-sol
+    teacher_calls: 4
+    scientific_retries: 0
+    teacher_valid_repairs: 4
+    teacher_outputs_lineage_owned: false
+    teacher_responses_commit: 2d08875240a491c167c7116303e22f6faeafbc3e
+    capsule_commit: 760803c4eee9c03caf25d2403c5f072343e17572
+    capsule_sha256: 444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620
+    capsule_provenance: induced_from_external_demonstrations
+    holdout_materialization_commit: eaacf8e66b866c2d777d2caa0fe80c8a7617363f
+    holdout_materialization_sha256: dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c
+    holdouts_passed: [12, 12]
+    holdout_cases_passed: [84, 84]
+    holdout_model_calls: 0
+    no_capsule_holdouts_passed: [0, 12]
+    memorizer_holdouts_passed: [0, 12]
+    corrupted_teacher_capsules_induced: 0
+    exact_result_commit: 355eeb9b7d5f1fdd311949feaf3df9231c0a6f96
+    result: experiments/M073/RESULT.json
+    result_sha256: edaf03b4cf922890d010ecdd838de67c9569342b27a6848fae34ab430db03a2e
+    supported_claim: bounded_model_to_lineage_skill_appropriation_mechanism_evidence
+    project_authored_task_family: true
+    cross_domain_evidence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: governance_isolating_ablation_then_private_cross_domain_reproduction
+  next_required_boundary: refusal_calibration_then_private_cross_domain_skill_transfer_and_independent_reproduction
 
 measurement_track:
   reserved_experiment: M045
@@ -1216,7 +1280,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M071: true
+  separate_from_M047_to_M073: true
 
 engineering_release_boundary:
   human_control_required_for:

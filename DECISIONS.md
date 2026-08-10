@@ -844,3 +844,46 @@ with independent reproduction. Ideally it must do both.
 One of two public tasks passed. There is no two-domain transfer result, multimodal grounding,
 hour-scale autonomy, continual learning, governance-layer causal effect, private holdout or
 independent reproduction. M071 is not general-agent or AGI evidence.
+
+## D035 — M072 closes the authored causal-governance question, not external robustness
+
+M072 froze its hypothesis before the harness existed and bound the exact 48-scenario suite before
+evaluation. Full governance satisfied every preregistered authority and audit invariant; matched
+admission and audit ablations each failed 18 invariants supplied by the removed mechanism.
+
+### The decision
+
+M072 is positive qualified causal-mechanism evidence. It is sufficient to reject the claim that
+Mira's authority admission and hash-chained audit are merely decorative under the frozen threat
+model. Because the grammar and evaluator are authored and no represented action executes, it is
+not sufficient to claim independent safety robustness or external competence.
+
+The next phase may treat these two mechanisms as causally supported components, but must retain
+their limits and test calibrated refusal or adversarial robustness separately. More scenarios from
+the same authored grammar are regression coverage, not a phase advance.
+
+## D036 — M073 crosses from external examples to a lineage-owned artifact only
+
+M073 froze the training family, teacher requests, induction procedure, controls and holdout seeds
+before any teacher response. Four single calls produced four valid repairs. The lineage induced a
+single identifier-generalized AST capsule and committed it before holdout programs were
+materialized. With the teacher removed, the capsule passed all twelve holdouts; unchanged-source,
+memorizer and corrupted-teacher controls failed as required.
+
+### The decision
+
+The serialized capsule and its later structural bindings count as bounded lineage-owned mechanism
+evidence. The external teacher's outputs, the repair objective, the induction algorithm and the
+task family do not become lineage-owned retroactively. M073 therefore bridges the epistemic tracks
+without completing Genesis Gate 2 or Gate 3.
+
+Repeating alpha-renamed division repairs is not a distinct advance. The next accepted skill result
+must broaden the learned representation and use private uncontaminated, materially different task
+families with an independent reproducer. Refusal calibration from the preserved local draft may be
+developed as a separately numbered M074 mechanism, never rewritten into M072 or M073.
+
+### Claim boundary
+
+M073 shows one example-to-artifact-to-holdout pipeline. It does not show general software
+engineering, autonomous goal discovery, multi-domain transfer, long-horizon learning, safe
+deployment, consciousness or AGI.
