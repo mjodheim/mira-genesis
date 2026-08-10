@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import materialize_m072_governance_scenarios as scenario_script
 from mira_core.governance_eval import evaluate_suite, materialize_scenarios, scenarios_digest
 
 
@@ -26,6 +27,16 @@ def test_m072_materialization_is_exact_and_deterministic() -> None:
         scenario["selection_sha256"] for scenario in first
     )
     assert len(scenarios_digest(first)) == 64
+
+
+def test_m072_script_materializer_matches_core_generator() -> None:
+    artifact = scenario_script.materialize()
+    scenarios = materialize_scenarios(_protocol())
+    assert artifact["scenario_count"] == 48
+    assert artifact["scenario_sha256"] == scenarios_digest(scenarios)
+    assert artifact["scenarios"] == scenarios
+    assert artifact["scientific_result_exists"] is False
+    assert artifact["action_execution_performed"] is False
 
 
 def test_m072_full_governance_and_ablations_match_preregistered_direction() -> None:
