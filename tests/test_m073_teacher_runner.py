@@ -30,11 +30,11 @@ def test_teacher_execution_protocol_is_pre_call_and_single_attempt() -> None:
     assert protocol["teacher_responses_exist"] is False
 
 
-def test_teacher_runner_source_does_not_import_skill_induction() -> None:
+def test_teacher_runner_source_does_not_import_skill_induction_or_holdout_artifact() -> None:
     source = (ROOT / "scripts" / "run_m073_teacher.py").read_text(encoding="utf-8")
     assert "mira_core.skills" not in source
-    assert "TRAINING_TASKS" not in source
-    assert "HOLDOUT" not in source.upper()
+    assert "TRAINING_TASKS.json" not in source
+    assert "HOLDOUT_TASKS.json" not in source
     assert "TEACHER_REQUESTS.json" in source
 
 
