@@ -405,3 +405,26 @@ Separate-bank, separate-maintainer reproduction is required before H21 can becom
 **Scope:** even a positive H21 would be bounded refusal-transfer evidence for the named composed
 system. It would not establish mathematical impossibility, broad safety, lineage ownership,
 Genesis Gate 2/3 or AGI.
+
+## H22 — Each grounding channel is required by exactly the tasks that depend on it
+
+One persistent agent consuming language, structured state and pixels, and emitting both symbolic
+tool calls and embodied actions, can be shown to use each channel causally: an ablation that
+preserves byte length, key order and token count must remove exactly the competence whose decisive
+information lived in that channel, and must leave every other competence numerically unchanged.
+
+**Status:** supported by the M076 qualified development result. The full arm scored 36/36 across
+three precommitted twelve-episode families. Each matched ablation zeroed its dependent family and
+left both non-dependent families at exactly the full-arm score, against a measured guessing floor of
+3/36 (expected 2.3, bound 8). First result `aa312e95…a52639`, attempt 1, no retry; suite commitment
+`20ff63f3…a4f7e`.
+
+**Required implication:** the unchanged half of each contrast carries the claim. An arm that
+degraded every family would show only that inputs matter, so exact per-family equality was
+preregistered rather than inspected afterwards. The measured floor exists so that a fail-closed
+ablation cannot be read as informative against an assumed zero.
+
+**Scope:** bounded to project-authored 24×24 synthetic panels in one domain with a deterministic
+agent that does not learn. It establishes no natural-image perception, no cross-domain transfer, no
+continual learning, no Genesis Gate 2 or Gate 3 evidence, and does not close G2. Independent
+reproduction is still required before stronger language is used.

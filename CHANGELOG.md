@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Added M076, the first endogenous result to address generality gate G2. One persistent
+  deterministic agent consumes a UTF-8 instruction, an ordered structured mapping and a raw
+  1728-byte RGB888 raster, and emits both symbolic `set_dial` calls and embodied effector moves
+  scored from terminal grid state. The full arm reached 36/36 across three precommitted families.
+- Recorded an exact triple dissociation under matched ablations that preserve byte length, key
+  order and token count: each ablation zeroes its own dependent family and leaves both others at
+  exactly the full-arm score, against a measured guessing floor of 3/36. G2 moves from open to
+  partial mechanism evidence and is explicitly not closed.
+- Preserved M076 amendment A1 rather than repairing it silently. The first freeze paired a
+  chance-distribution floor with a bound of one success across 36 episodes, which no faithful
+  guessing policy can satisfy; the bound was corrected before materialization and the arithmetic
+  is recorded in the protocol.
 - Added M075's fail-closed pre-private readiness layer. It accepts only a signed closed-metadata
   envelope from a non-project maintainer, requires at least eight matched capability pairs across
   four opaque domains, and refuses reveal until an exact scientific protocol binds the envelope.
