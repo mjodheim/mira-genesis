@@ -742,6 +742,9 @@ mechanism evidence, not broad software engineering, external-target evidence or 
 
 ## D031 — M069 closes the project-authored governed-terminal step
 
+**Historical decision, superseded by D037 for M069's verdict and gate attribution.** Its successor
+ordering constraints remain useful, but its positive interpretation does not.
+
 Exact learner commit `c603dd52c6484034de3a11a7c3c660335fda14b0` follows the M069 freeze
 without changing its runtime, protocol or bank commitment. One unchanged policy repairs all four
 compatible workspaces, each passes 3/3 hidden cases, and the incompatible task refuses after one
@@ -763,7 +766,8 @@ stronger claims require a private uncontaminated split and independent reproduct
 
 ### Claim boundary
 
-M069 moves G1, G6 and G10 only to partial mechanism evidence. It contains no task-specific planner,
+M069 was judged here to move G1, G6 and G10 only to partial mechanism evidence. D037 later withdraws
+that attribution. It contains no task-specific planner,
 foundation model, multimodal grounding, learned cross-domain transfer, hour-scale autonomy,
 external task authorship or adversarial OS isolation. It cannot support broad software-engineering,
 general-agent or AGI language.
@@ -887,3 +891,52 @@ developed as a separately numbered M074 mechanism, never rewritten into M072 or 
 M073 shows one example-to-artifact-to-holdout pipeline. It does not show general software
 engineering, autonomous goal discovery, multi-domain transfer, long-horizon learning, safe
 deployment, consciousness or AGI.
+
+## D037 — M069's interface falsifier withdraws its positive qualification
+
+A post-M071 audit established that M069 imported candidate code in the evaluator process holding
+the complete `TASKS` object, including hidden cases. The policy could write arbitrary candidate
+bytes and observe public-evaluator output, so admitted actions could transport that hidden evidence
+back to the learner. Falsifier 10 inspected the learner text and did not test this interface path.
+
+### The decision
+
+The Phase 8 rule says an experiment stops without a positive verdict when hidden evidence is
+reachable by the discovery API. The governed write/evaluate/output path is part of that API, so the
+rule fires. M069 is reclassified as a **post-hoc disqualified development result (evaluator-
+isolation falsifier)**. H15 returns to unresolved and M069 no longer advances a generality gate.
+
+The historical rewards, repairs, refusal and manifest remain exact diagnostic observations. The
+frozen learner is not accused of exploiting the path: its source audit finds no such behavior. No
+frozen protocol, bank, evaluator, learner or result byte is rewritten.
+
+### Successor constraint
+
+Static inspection of generated code cannot substitute for non-reachability. Any successor that
+executes candidate code must isolate it from the process holding hidden evidence and must test that
+the admitted action surface cannot recover those bytes. A later corrected experiment receives a
+new identifier and may not retroactively rehabilitate M069.
+
+## D038 — M074 isolates refusal termination and qualifies only its apparatus
+
+The preserved local draft mixed refusal termination, authority enforcement and ledger integrity in
+three arms. M072 already supplies positive causal evidence for authority admission and hash-chained
+audit. In the first repaired real-container dry run, the raw and governed-nonterminal arms produced
+identical refusal outcomes, confirming that the extra arm added no information to M074.
+
+### The decision
+
+M074 uses two arms with identical authority admission, isolation, budgets and tamper-evident audit.
+Only `refusal_terminates_episode` differs. Capability absence must be declared by exact return code,
+certificates bind the exact probe and materialized environment, and every arm must cover every label.
+
+The locally preserved zero-token dry run qualifies this apparatus for protocol design. It is not a
+scientific result, does not support H20 and moves no generality gate. Its observed margin is a wiring
+control produced by a scripted policy, not evidence about a model or Mira's general competence.
+
+### Next boundary
+
+Before any scientific execution, a separate commit must freeze code/task/environment digests,
+model identity, prompt, budgets, numeric threshold and ordered single attempts. No model may receive
+expected solvability, certificate verdicts or evaluator outcomes. Any retry, missing task,
+`INCONCLUSIVE` probe, realized-isolation drift or feasible-control failure invalidates that attempt.

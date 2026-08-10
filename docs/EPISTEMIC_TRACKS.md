@@ -11,6 +11,10 @@ transport its own bounded transformations. M012b–M066 contain the decidable fi
 M067–M069 extend selected mechanisms into opaque and governed software bodies without calling a
 foundation model during evaluation.
 
+M069's chronological place in Track A does not imply a valid positive result. D037 post-hoc
+disqualifies its positive qualification because hidden evidence was reachable through the admitted
+candidate-execution/evaluator-output path. Its historical outcomes remain diagnostic only.
+
 Gate 2 in `GENESIS_COMPLETION_CRITERIA.md` remains frozen: an external system may execute a
 lineage-owned tool, but it may not invent the transformation or choose its arguments. Only an
 experiment that meets its own frozen ownership and causality evidence may claim that gate. Later
@@ -41,7 +45,7 @@ independent red-team robustness.
 
 Evidence from this line may support claims about:
 
-- authority containment and calibrated refusal;
+- authority containment and refusal behavior; calibrated refusal remains an open measurement;
 - isolation and process/resource enforcement;
 - transport reliability and failure recovery;
 - tamper-evident audit and evaluator-owned success;
@@ -77,6 +81,13 @@ lineage-owned artifacts. The teacher outputs, task semantics, family generator a
 algorithm do not. Positive bridge evidence cannot be cited as a retroactive Gate 2 completion and
 does not become cross-domain evidence until materially distinct private families are transferred by
 one unchanged learning mechanism and independently reproduced.
+
+## Refusal-calibration instrument — M074
+
+M074 is a separate mechanism-measurement step. Its current real-container records use a label-blind
+scripted policy with zero model tokens to validate probes, environment binding, matched tasks,
+terminal outcomes and external final-state checks. They are apparatus evidence only. A later frozen
+model run may test H20; until then no calibrated-refusal or generality claim exists.
 
 The separate M045 measurement track remains unchanged: proxy-quality experiments answer neither
 Track A ownership nor Track B governance questions.

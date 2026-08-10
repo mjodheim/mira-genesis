@@ -913,3 +913,39 @@ M070 therefore fails its preregistered 1/2 threshold. The result is not reclassi
 infrastructure pass and the two selected tasks cannot become M071's fresh evidence. Explicit UTF-8
 transport, whole-process-tree timeout enforcement and permanent non-ASCII/descendant regressions
 are mandatory before a new freeze.
+
+## M069 — a falsifier audited the learner's text instead of the interface (found after M071)
+
+This defect was found by review after M069 had been qualified and merged, and after M071 closed.
+The frozen evaluator imports each candidate with `exec_module` in the process that holds `TASKS`,
+so every hidden case is resident in memory while candidate code runs. The policy owns `write_text`
+and the public evaluator is registered with output exposed, so a candidate printing
+`sys.modules["__main__"].TASKS` would have carried hidden cases back through admitted actions
+alone.
+
+M069 falsifier 10 checks that the learner's *source* does not read the evaluator implementation. It
+audits the wrong object: it constrains the text that was written rather than what the interface
+permits. No reported M069 falsifier established non-reachability.
+
+The recorded rewards do not move. The frozen learner at `c603dd5` is auditable and does not exploit
+the leak, so the task outcomes remain useful diagnostics. They cannot retain a positive scientific
+qualification by inspection of one benign artifact: the setup failed the declared interface-level
+falsifier. The distinction matters because M061 already cost this project a false manifest that its
+own sixteen tests could not see.
+
+Full record in `experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md`. No frozen M069 artifact was
+rewritten. M069 is now post-hoc disqualified as a positive development result by the evaluator-
+isolation falsifier. Successor evaluators must execute candidate code in a separate process that
+never holds hidden evidence.
+
+## M074 development — live BusyBox absence code contradicted the stub expectation
+
+The first real-container probe of the M074 development bank returned `127` for missing `python3` in
+the digest-pinned Alpine image. The draft probe had declared `1` as its only absence code. The new
+calibration core correctly classified `127` as `INCONCLUSIVE`, leaving that task unlabelled and
+failing the bank instead of manufacturing evidence of absence.
+
+No protocol was frozen, no model was called and no scientific result existed. The probe contract
+was corrected to the live BusyBox behavior, then all six labels and the complete 12-episode dry run
+passed. The failed development observation is retained here because it demonstrates why unexpected
+non-zero codes must never default to `ABSENT`.

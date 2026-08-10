@@ -43,10 +43,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   four-body runtime was frozen separately, one unchanged learner scanned the complete 37,448-word
   language, induced four distinct semantic adapters and passed 12/12 hidden cases per body. All
   preregistered controls reject.
-- **M069 is a positive qualified development result.** One unchanged policy
-  repairs all four compatible real-file/process workspaces and passes 3/3 hidden cases per task.
-  The incompatible protocol is refused before mutation, all ten frozen controls pass and the
-  deterministic manifest digest is `c5c80701`.
+- **M069 is a post-hoc disqualified development result.** Its historical policy repaired four
+  workspaces and refused the incompatible protocol, but candidate code ran in the evaluator process
+  holding hidden cases and could expose them through an admitted output path. The recorded outcomes
+  remain diagnostic; the Phase 8 isolation falsifier withdraws the positive qualification.
 - **M070 is a negative external development result.** Exact design `41ebe79` and deterministic
   selection rule `9bbec79` were frozen before selecting two of 89 Terminal-Bench 2 tasks. Official
   Harbor trials and both `nop` controls scored `0.0`; no trial was retried or replaced. The frozen
@@ -77,6 +77,12 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Result `edaf03b4` is bounded to one project-authored division-repair family. Exact evidence head
   `2eaa5c7` passed first CI run `31370311326`: 1,257 passed/1 skipped on Python 3.11 and 3.13,
   plus integrity; attribution run `31370349333` passed.
+- **M074 has a locally qualified development apparatus and no scientific result.** Six live
+  container labels split 3/3 feasible/capability-impossible. A zero-token label-blind scripted
+  policy completed 12 fresh two-arm episodes with external state checks and zero apparatus defect.
+  Exact apparatus commit `27a2e1f` passed first CI run `31377768229` with 1,322 passed/1 skipped on
+  Python 3.11 and Python 3.13 plus integrity; attribution passed. The protocol, model, numeric
+  threshold and scientific execution remain unfrozen.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -621,7 +627,7 @@ run `31314960014` passed 1,153 tests on Python 3.11 and 1,153 on Python 3.13 plu
 attribution run `31314960009` passed. Independent target authorship, incompatible-body refusal and
 a governed real-environment crossing remained open at M068.
 
-M069 addresses the latter two items inside a governed real software workspace. Its protocol digest
+M069 attempted the latter two items inside a governed real software workspace. Its protocol digest
 is `2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499`; task-bank
 commitment `66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed` binds four
 compatible tasks and one incompatible task, and evaluator runtime digest
@@ -631,12 +637,19 @@ compatible tasks produced one public survivor and passed 3/3 hidden cases; the i
 refused after one read with zero writes and zero processes. All ten controls pass, seven evidence
 events end at `59a27788`, and a second process reproduces manifest `c5c80701` exactly.
 
-This is partial G1, G6 and G10 mechanism evidence. The tasks remain project-authored, the repair
-language contains eleven supplied complete statements, and registered host processes are governed
-rather than strongly OS-isolated. Exact learner `c603dd5` passed exact-commit run `31319062535`:
+This was originally interpreted as partial G1, G6 and G10 mechanism evidence. The tasks remain
+project-authored, the repair language contains eleven supplied complete statements, and registered
+host processes are governed rather than strongly OS-isolated. Exact learner `c603dd5` passed
+exact-commit run `31319062535`:
 1,181 tests on Python 3.11 in 1,241.52 seconds and 1,181 on Python 3.13 in 1,260.38 seconds, plus
 repository integrity. Attribution run `31319062599` passed. The final local suite passed 1,180
 tests with one Windows symlink test skipped in 2,088.15 seconds on Python 3.14.6.
+
+A later interface audit established that candidate code executed in the process holding every
+hidden case and could return those cases through exposed public-evaluator output. The recorded
+learner does not exploit the path, so the outcomes above remain historical diagnostics, but Phase 8
+falsifier 2 is nevertheless satisfied. Under D037, M069 is post-hoc disqualified, H15 is unresolved
+and this result no longer supplies G1, G6 or G10 evidence.
 
 ## Construction frontier — positive canonical closure at M066
 
@@ -683,17 +696,18 @@ question remains open but is not a missing completion gate.
 | M066 | **POSITIVE CANONICAL — REAL-SUBSTRATE CONSTRUCTION CLOSED** | Unique run `31291899534`, attempt 1: bank 0, 18/18 versus 0/18 controls, exact Python 3.13 byte reproduction and all ten audited gates true. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | The same bounded search discovers four undisclosed contracts across three frame families; each public class passes 12/12 hidden cases and all no-discovery controls fail. Exact commit `7d38ac8`, run `31311020868`. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After separate freeze `f8c67f1`, exact learner `f033ac7` induces four distinct adapters from the complete 37,448-word language; each passes 12/12 hidden and all controls reject. Run `31314960014`. |
-| M069 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | After freeze `9d482d2`, exact learner `c603dd5` repairs 4/4 tasks with 3/3 hidden each, refuses the incompatible task before mutation and passes all ten controls. Manifest `c5c80701`; run `31319062535` passed 1,181 tests on each Python version plus integrity. |
+| M069 | **POST-HOC DISQUALIFIED DEVELOPMENT RESULT** | The historical run met its task thresholds, but hidden cases were reachable through candidate execution in the evaluator process and exposed output. D037 fires the Phase 8 isolation falsifier; outcomes remain diagnostic, not qualified. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT RESULT** | Frozen design `41ebe79` scored 0/2 on the blind Terminal-Bench 2 pair, with 0.0 `nop` floors and no Harbor exceptions or retries. Explicit UTF-8 and process-tree timeout handling are required before M071. |
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT RESULT** | Frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus `0.0, 0.0` `nop` floors; no exception, retry or replacement. Result `d3526513`. |
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Full governance satisfies every authored containment/audit invariant over 48 scenarios; matched admission and audit ablations each lose 18 corresponding invariants. Result `ab555d2f`. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Four external demonstrations induce one committed capsule; model-free execution passes 12/12 held-out programs and 84/84 cases while no-capsule and memorizer controls pass 0/12. Result `edaf03b4`. |
+| M074 | **DEVELOPMENT APPARATUS QUALIFIED — NO SCIENTIFIC RESULT** | Six real-container labels and 12 label-blind two-arm episodes pass with external state checks. Terminal refusal saves 12 development steps; no model, threshold or protocol is frozen. |
 
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
 pre-written resource-aware adaptive allocation experiment. It must remain separate from
-M044, M046 and M047–M073: construction success cannot validate a measurement policy, and
+M044, M046 and M047–M074: construction success cannot validate a measurement policy, and
 measurement failure cannot be hidden inside a richer organism.
 
 ## Engineering boundary

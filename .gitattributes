@@ -1,3 +1,5 @@
 # Digest-bearing artifacts are stored byte-exact. Any end-of-line conversion would change
 # their SHA-256 between platforms and break the reproducibility claims that cite it.
 results/artifacts/*.json -text
+experiments/M074/DEVELOPMENT_PROBE_BANK.json -text
+experiments/M074/DEVELOPMENT_DRYRUN.json -text

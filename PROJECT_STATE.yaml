@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m073_positive_qualified_development_result
+status: phase_eight_m074_development_apparatus_qualified_no_scientific_result
 
 active_research_question: >-
   After M072 causally isolated two authored governance mechanisms and M073 induced one reusable
@@ -22,7 +22,7 @@ epistemic_tracks:
     primary_mira_layer_evidence:
       - authority_containment
       - isolation
-      - calibrated_refusal
+      - refusal_behavior_calibration_open
       - audit_integrity
       - transport_robustness
     genesis_gate_2_claim_permitted: false
@@ -39,6 +39,12 @@ epistemic_tracks:
     external_model_available_during_holdout: false
     genesis_gate_2_claim_permitted: false
     current_scope: one_project_authored_ast_repair_family
+  refusal_calibration:
+    scope: M074
+    status: development_apparatus_qualified_no_scientific_result
+    external_model_called: false
+    real_container_dryrun: true
+    genesis_gate_2_claim_permitted: false
   measurement_track:
     reserved_experiment: M045
     separate: true
@@ -957,7 +963,7 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m069_positive_qualified_development
+  status: m073_positive_qualified_with_m069_posthoc_disqualification
   objective: bounded_contract_blind_adaptive_embodiment
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
@@ -1054,12 +1060,13 @@ phase_eight:
     external_target_authorship_claimed: false
     arbitrary_protocol_induction_claimed: false
   M069:
-    status: positive_qualified_development
+    status: posthoc_disqualified_evaluator_isolation_falsifier
     canonical: false
     protocol: experiments/M069/PROTOCOL.md
     frozen_protocol: experiments/M069/FROZEN_PROTOCOL.json
     status_record: experiments/M069/STATUS.md
     result: experiments/M069/DEVELOPMENT_RESULT.md
+    evaluator_isolation_disclosure: experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md
     generality_register: MIRA_GENERALITY_CRITERIA.md
     executable_protocol_digest: 2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499
     task_bank_commitment: 66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed
@@ -1077,6 +1084,12 @@ phase_eight:
     exact_learner_commit: c603dd52c6484034de3a11a7c3c660335fda14b0
     repair_policy_present: true
     scientific_result_exists: true
+    qualified_scientific_result_exists: false
+    historical_outcomes_retained_as_diagnostic: true
+    hidden_evidence_reachable_through_admitted_interface: true
+    recorded_learner_exploited_reachable_hidden_evidence: false
+    positive_qualification_withdrawn: true
+    reclassification_decision: D037
     same_policy_for_every_task: true
     compatible_tasks_completed: 4
     public_survivors_per_compatible_task: 1
@@ -1278,6 +1291,57 @@ phase_eight:
     cross_domain_evidence: false
     genesis_gate_2_evidence: false
     agi_evidence: false
+  M074:
+    status: development_apparatus_qualified_no_scientific_result
+    canonical: false
+    design: experiments/M074/DRAFT_REFUSAL_CALIBRATION_DESIGN.md
+    development_qualification: experiments/M074/DEVELOPMENT_QUALIFICATION.md
+    development_probe_record: experiments/M074/DEVELOPMENT_PROBE_BANK.json
+    development_probe_record_sha256: 51a82ca7a8ecec1a2ce43d55de87a3871c358e6bb3f427682ec98756e1ad0827
+    development_dryrun_record: experiments/M074/DEVELOPMENT_DRYRUN.json
+    development_dryrun_record_sha256: 2abbf79444e37c38b1f2fb6c17ef764c281d98579c54dbfd2511211914ee114f
+    development_calibration_digest: 71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3
+    docker_client_server_version: 29.6.2
+    digest_pinned_images: true
+    no_network: true
+    root_filesystem_read_only: true
+    agent_non_root: true
+    matched_task_pairs: 3
+    feasible_live_labels: 3
+    capability_impossible_live_labels: 3
+    arms: [A-terminal-refusal, B-nonterminal-refusal]
+    development_episodes: 12
+    development_apparatus_defects: 0
+    development_model_tokens: 0
+    exact_final_focused_local_tests: 65
+    pre_final_guard_complete_repository_local_tests: 1320
+    pre_final_guard_complete_repository_local_skips: 2
+    pre_final_guard_complete_repository_local_test_seconds: 2321.91
+    pre_final_guard_complete_repository_local_python: 3.14.6
+    terminal_arm_calibration_margin: 1.0
+    terminal_arm_wasted_steps: 0
+    nonterminal_arm_calibration_margin: 0.0
+    nonterminal_arm_wasted_steps: 12
+    scientific_protocol_frozen: false
+    scientific_model_called: false
+    scientific_result_exists: false
+    exact_apparatus_commit: 27a2e1f
+    exact_commit_qualification: passed
+    github_ci_run: 31377768229
+    github_python_3_11: [1322, 1322]
+    github_python_3_11_skips: 1
+    github_python_3_11_seconds: 1238.57
+    github_python_3_13: [1322, 1322]
+    github_python_3_13_skips: 1
+    github_python_3_13_seconds: 1255.09
+    repository_integrity_passed: true
+    attribution_run: 31377768244
+    attribution_passed: true
+    github_workflow_rerun_used: false
+    supported_claim: development_apparatus_operates_as_declared
+    calibrated_agent_refusal_claimed: false
+    generality_gate_advanced: false
+    agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
   next_required_boundary: refusal_calibration_then_private_cross_domain_skill_transfer_and_independent_reproduction
@@ -1290,7 +1354,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M073: true
+  separate_from_M047_to_M074: true
 
 engineering_release_boundary:
   human_control_required_for:

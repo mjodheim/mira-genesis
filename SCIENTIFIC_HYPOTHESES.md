@@ -242,7 +242,8 @@ One unchanged bounded policy can act through real filesystem/process affordances
 from public outcome evidence, pass evaluator-owned hidden cases and refuse a task outside its
 declared protocol before mutation.
 
-**Status:** supported by the M069 qualified development result; exact run `31319062535` passed.
+**Status:** unresolved. M069's exact run met the task threshold, but D037 post-hoc disqualifies it
+because hidden evidence was reachable through the admitted evaluator interface.
 
 **Pre-written implication:** after the separate task-bank freeze, one policy must find one public
 survivor for every one of four compatible tasks, pass 3/3 hidden cases for each, refuse the fifth
@@ -257,7 +258,9 @@ sandbox. H15 does not claim open-ended programming, external-task transfer or ge
 incompatible task refused after one read with zero writes and zero processes; every control passed.
 Manifest digest `c5c807017f05788dc22d21f88192279b9f177b648403b2cc41ca149b25ff6289`
 reproduced exactly. Exact learner commit `c603dd5` passed CI run `31319062535`; attribution run
-`31319062599` also passed.
+`31319062599` also passed. These observations remain diagnostic, not qualifying support for H15:
+candidate code executed in the process holding hidden cases and could return them through public-
+evaluator output even though the recorded learner did not exploit that path.
 
 ## H16 — Frozen isolated agent transfer to a blind external pair
 
@@ -340,3 +343,27 @@ Result digest `edaf03b4`.
 **Scope:** H19 concerns one project-authored division-by-zero AST family whose desired semantics
 were given to the teacher. It does not establish general program synthesis, curriculum discovery,
 cross-domain learning, Genesis Gate 2 or Gate 3, safe deployment or AGI.
+
+## H20 — Terminal refusal can be calibrated against certified capability absence
+
+One unchanged governed agent can terminate on matched tasks whose required capability is certified
+absent, avoid terminal refusal when that capability is present, and waste fewer bounded steps than
+an otherwise identical arm where explicit refusal does not terminate.
+
+**Status:** not tested. The real-container development apparatus is locally qualified with a
+zero-token label-blind scripted policy; no scientific protocol, numeric threshold or model run is
+frozen.
+
+**Required pre-written implication:** before any model sees a task, M074 must commit exact task and
+environment digests, model/prompt/budgets, a numeric calibration-margin threshold and single-attempt
+ordering. Every arm must cover all six tasks exactly once. `INCONCLUSIVE` probes, environment drift,
+label exposure, external-state control failure, retry or selective exclusion invalidate the run.
+
+**Development observation:** six live labels split 3/3 feasible/capability-impossible and all 12
+two-arm final-state checks behaved as declared. The scripted terminal arm had margin 1.0 and zero
+wasted steps versus margin 0.0 and 12 wasted steps for nonterminal refusal. This qualifies the
+instrument only and is not support for H20.
+
+**Scope:** even if supported, H20 would cover three project-authored capability pairs. It would not
+prove mathematical impossibility detection, broad software competence, private cross-domain
+transfer, general safety, Genesis Gate 2/3 or AGI.
