@@ -50,6 +50,12 @@ policy, defensible causal control, sealed independent cross-domain bank and repr
 The pre-private checker now makes that boundary mechanical and currently returns false: no signed
 external envelope, signer allowlist or frozen private protocol exists, and no payload was accessed.
 
+M077 contributes no gate advance and is preserved as a valid negative. Its checkpoint ablation
+behaved exactly as preregistered, but its constraint-monitor ablation did not lose detection: silent
+corruption eventually breaks a guarded operation, so the boundary audit buys latency rather than
+coverage in that body. The result may not be cited as long-horizon autonomy, and its episode-count
+horizons may not be reported as human-equivalent task horizons.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -149,7 +155,7 @@ results are known.
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
 | G5 | stronger partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill that survives complete teacher removal, but tests only one homogeneous authored family and no forgetting. |
 | G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. A second task is refused; browser/desktop competence and broad environment coverage remain absent. |
-| G7 | open | No human-hour task-horizon evaluation. |
+| G7 | open | No human-hour task-horizon evaluation. M077 addressed only the fault-recovery and constraint-retention components and returned a valid negative on its dissociation hypothesis; its undegraded retention to 2048 episodes and its isolated checkpoint mechanism are bounded observations in one authored in-memory body, and episode counts are not human-equivalent horizons. |
 | G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
 | G10 | strong bounded mechanism evidence with a negative calibration result | M071 preserves no-network isolation and evaluator-owned success; M072 causally isolates authority admission and audit chaining. M074 validly records 0/3 true refusals on authored capability-absence pairs, so no independent calibrated-refusal claim exists. |
