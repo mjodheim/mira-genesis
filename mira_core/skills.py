@@ -1,7 +1,7 @@
 """Bounded model-to-lineage skill appropriation primitives for M073.
 
-The teacher may provide complete repaired training modules.  It never provides a generalized
-rewrite.  This module extracts one parameterized return-expression transformation from multiple
+The teacher may provide complete repaired training modules. It never provides a generalized
+rewrite. This module extracts one parameterized return-region transformation from multiple
 consistent demonstrations, serializes it, and can later apply it without importing or calling a
 model backend.
 """
@@ -18,8 +18,8 @@ from typing import Iterable, Mapping, Sequence
 _SLOT_PREFIX = "__MIRA_SLOT_"
 _ALLOWED_NODES = (
     ast.Module, ast.FunctionDef, ast.arguments, ast.arg, ast.Assign, ast.Name, ast.Store, ast.Load,
-    ast.Return, ast.BinOp, ast.Div, ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Constant,
-    ast.UnaryOp, ast.USub, ast.UAdd, ast.Expr,
+    ast.Return, ast.If, ast.BinOp, ast.Div, ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Constant,
+    ast.UnaryOp, ast.Not, ast.USub, ast.UAdd, ast.Expr,
 )
 
 
@@ -117,7 +117,9 @@ def _parse_safe_module(source: str) -> ast.Module:
         raise SkillInductionError("Python module does not parse") from exc
     for node in ast.walk(tree):
         if not isinstance(node, _ALLOWED_NODES):
-            raise SkillInductionError(f"unsupported Python node in bounded skill domain: {type(node).__name__}")
+            raise SkillInductionError(
+                f"unsupported Python node in bounded skill domain: {type(node).__name__}"
+            )
     functions = [node for node in tree.body if isinstance(node, ast.FunctionDef)]
     if len(functions) != 1:
         raise SkillInductionError("bounded skill module must contain exactly one function")
@@ -135,16 +137,53 @@ def _function(tree: ast.Module) -> ast.FunctionDef:
     return function
 
 
-def _single_return(function: ast.FunctionDef) -> ast.Return:
-    returns = [node for node in function.body if isinstance(node, ast.Return)]
-    if len(returns) != 1 or returns[0].value is None:
-        raise SkillInductionError("bounded skill function requires one value-return statement")
-    return returns[0]
+def _return_value(statement: ast.stmt) -> ast.expr:
+    if not isinstance(statement, ast.Return) or statement.value is None:
+        raise SkillInductionError("bounded rewrite region requires value-return statements")
+    return statement.value
 
 
-def _without_return(function: ast.FunctionDef) -> str:
+def _rewrite_region(function: ast.FunctionDef) -> tuple[ast.expr, list[ast.stmt]]:
+    """Normalize one terminal return region to an equivalent expression plus unchanged prefix.
+
+    Accepted shapes are deliberately small and task-agnostic: one final return, a final if with one
+    return in each branch, or a guard-if with one return followed by a final return. The latter two
+    become an IfExp only for induction; the teacher's original syntax is not copied into the skill.
+    """
+
+    body = function.body
+    if not body:
+        raise SkillInductionError("bounded skill function has no executable body")
+    if len(body) >= 2 and isinstance(body[-2], ast.If) and isinstance(body[-1], ast.Return):
+        guard = body[-2]
+        if not guard.orelse and len(guard.body) == 1 and isinstance(guard.body[0], ast.Return):
+            expression = ast.IfExp(
+                test=copy.deepcopy(guard.test),
+                body=copy.deepcopy(_return_value(guard.body[0])),
+                orelse=copy.deepcopy(_return_value(body[-1])),
+            )
+            return expression, list(body[:-2])
+    final = body[-1]
+    if isinstance(final, ast.If):
+        if (
+            len(final.body) == 1 and isinstance(final.body[0], ast.Return)
+            and len(final.orelse) == 1 and isinstance(final.orelse[0], ast.Return)
+        ):
+            expression = ast.IfExp(
+                test=copy.deepcopy(final.test),
+                body=copy.deepcopy(_return_value(final.body[0])),
+                orelse=copy.deepcopy(_return_value(final.orelse[0])),
+            )
+            return expression, list(body[:-1])
+        raise SkillInductionError("bounded final if must contain exactly one return per branch")
+    if isinstance(final, ast.Return):
+        return copy.deepcopy(_return_value(final)), list(body[:-1])
+    raise SkillInductionError("bounded skill function lacks a supported terminal return region")
+
+
+def _prefix_dump(function: ast.FunctionDef, prefix: Sequence[ast.stmt]) -> str:
     clone = copy.deepcopy(function)
-    clone.body = [node for node in clone.body if not isinstance(node, ast.Return)]
+    clone.body = [copy.deepcopy(node) for node in prefix]
     return ast.dump(clone, annotate_fields=True, include_attributes=False)
 
 
@@ -203,9 +242,10 @@ def _capsule_digest(capsule: SkillCapsule, *, include_digest: bool) -> str:
 
 
 def induce_skill_capsule(
-    demonstrations: Sequence[SkillDemonstration], *, skill_id: str = "m073-induced-return-rewrite-v1",
+    demonstrations: Sequence[SkillDemonstration], *,
+    skill_id: str = "m073-induced-return-rewrite-v1",
 ) -> SkillCapsule:
-    """Induce exactly one alpha-generalized return-expression rewrite from demonstrations."""
+    """Induce exactly one alpha-generalized terminal-return rewrite from demonstrations."""
 
     if len(demonstrations) < 4:
         raise SkillInductionError("skill induction requires at least four demonstrations")
@@ -227,12 +267,14 @@ def induce_skill_capsule(
             after_function.args, include_attributes=False
         ):
             raise SkillInductionError("teacher repair changed the function signature")
-        if _without_return(before_function) != _without_return(after_function):
-            raise SkillInductionError("teacher repair changed content outside the return expression")
-        before_return = _single_return(before_function)
-        after_return = _single_return(after_function)
-        source_pattern, concrete_to_slot = _abstract_expression(before_return.value)
-        target_template = _abstract_target(after_return.value, concrete_to_slot)
+        before_expression, before_prefix = _rewrite_region(before_function)
+        after_expression, after_prefix = _rewrite_region(after_function)
+        if _prefix_dump(before_function, before_prefix) != _prefix_dump(
+            after_function, after_prefix
+        ):
+            raise SkillInductionError("teacher repair changed content outside the terminal return region")
+        source_pattern, concrete_to_slot = _abstract_expression(before_expression)
+        target_template = _abstract_target(after_expression, concrete_to_slot)
         if source_pattern == target_template:
             raise SkillInductionError("teacher demonstration contains no executable transformation")
         source_patterns.append(source_pattern)
@@ -259,7 +301,7 @@ def induce_skill_capsule(
         target_template=target_templates[0],
         preconditions=(
             "one safe Python function",
-            "one return expression",
+            "one supported terminal return region",
             "source expression structurally matches the learned alpha-template",
             "all target identifiers bind to source-expression roles",
         ),
@@ -279,8 +321,8 @@ def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
         raise SkillInductionError("skill capsule digest mismatch before application")
     tree = _parse_safe_module(source)
     function = _function(tree)
-    return_node = _single_return(function)
-    observed_pattern, concrete_to_slot = _abstract_expression(return_node.value)
+    observed_expression, prefix = _rewrite_region(function)
+    observed_pattern, concrete_to_slot = _abstract_expression(observed_expression)
     if observed_pattern != capsule.source_pattern:
         raise SkillInductionError("held-out source does not satisfy capsule preconditions")
     slot_to_concrete = {slot: concrete for concrete, slot in concrete_to_slot.items()}
@@ -300,7 +342,7 @@ def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
 
     instantiated = Binder().visit(copy.deepcopy(target_expr))
     ast.fix_missing_locations(instantiated)
-    return_node.value = instantiated
+    function.body = [copy.deepcopy(node) for node in prefix] + [ast.Return(value=instantiated)]
     ast.fix_missing_locations(tree)
     rewritten = ast.unparse(tree) + "\n"
     _parse_safe_module(rewritten)
@@ -331,27 +373,34 @@ def generate_division_repair_task(seed: int, *, split: str) -> RepairTask:
 
 
 def expected_division_repair(task: RepairTask) -> str:
-    """Evaluator-owned canonical repair used only by tests/materialization, never by induction."""
+    """Evaluator-owned canonical repair used only by fixtures, never by scientific induction."""
 
     tree = _parse_safe_module(task.source)
     function = _function(tree)
-    return_node = _single_return(function)
-    assert isinstance(return_node.value, ast.BinOp)
-    denominator = copy.deepcopy(return_node.value.right)
-    return_node.value = ast.IfExp(
-        test=ast.Compare(left=copy.deepcopy(denominator), ops=[ast.NotEq()], comparators=[ast.Constant(0)]),
-        body=copy.deepcopy(return_node.value),
+    source_expression, prefix = _rewrite_region(function)
+    if not isinstance(source_expression, ast.BinOp):
+        raise SkillInductionError("fixture source lacks its expected binary expression")
+    denominator = copy.deepcopy(source_expression.right)
+    target = ast.IfExp(
+        test=ast.Compare(
+            left=copy.deepcopy(denominator), ops=[ast.NotEq()], comparators=[ast.Constant(0)]
+        ),
+        body=copy.deepcopy(source_expression),
         orelse=ast.Constant(0),
     )
+    function.body = [copy.deepcopy(node) for node in prefix] + [ast.Return(value=target)]
     ast.fix_missing_locations(tree)
     return ast.unparse(tree) + "\n"
 
 
-def _safe_execute_function(source: str, function_name: str, a: float, b: float) -> float | int:
+def _safe_execute_function(
+    source: str, function_name: str, a: float, b: float,
+) -> float | int:
     tree = _parse_safe_module(source)
     function = _function(tree)
     if function.name != function_name:
         raise SkillInductionError("evaluated repair changed the function identity")
+    _rewrite_region(function)
     namespace: dict[str, object] = {"__builtins__": {}}
     compiled = compile(tree, "<m073-bounded-module>", "exec")
     exec(compiled, namespace, namespace)  # noqa: S102 - AST allowlist makes this bounded
@@ -383,7 +432,11 @@ def repair_passes(task: RepairTask, source: str) -> bool:
             original_function.args, include_attributes=False
         ):
             return False
-        if _without_return(repaired_function) != _without_return(original_function):
+        _, repaired_prefix = _rewrite_region(repaired_function)
+        _, original_prefix = _rewrite_region(original_function)
+        if _prefix_dump(repaired_function, repaired_prefix) != _prefix_dump(
+            original_function, original_prefix
+        ):
             return False
         for numerator, denominator in EVALUATION_CASES:
             observed = _safe_execute_function(
@@ -404,7 +457,7 @@ def source_sha256(source: str) -> str:
 def evaluate_capsule_on_tasks(
     capsule: SkillCapsule, tasks: Iterable[RepairTask], *, teacher_trap: TeacherCallTrap,
 ) -> dict[str, object]:
-    """Evaluate a capsule after teacher removal.  The trap is reported and intentionally unused."""
+    """Evaluate a capsule after teacher removal. The trap is reported and intentionally unused."""
 
     records: list[dict[str, object]] = []
     for task in tasks:
