@@ -378,6 +378,12 @@ samples and the bank is public/authored, so H21 remains scientifically untested.
 [`experiments/M075/MODEL_DEVELOPMENT_RESULT.md`](experiments/M075/MODEL_DEVELOPMENT_RESULT.md) and
 [`experiments/M075/DEVELOPMENT_QUALIFICATION.md`](experiments/M075/DEVELOPMENT_QUALIFICATION.md).
 
+The pre-private boundary is executable and fail-closed. `python
+scripts/check_m075_private_readiness.py --require-ready` refuses until a non-project maintainer's
+signed opaque envelope covers at least eight matched capability pairs across four domains and an
+exact frozen protocol binds its payload digest, model, code, budgets, thresholds, paired analysis
+and reproduction contract. No private payload or result is currently present.
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);

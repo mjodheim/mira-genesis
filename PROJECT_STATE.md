@@ -89,7 +89,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   decisions with zero defect or retry. Explicit self-evidence produced 2/3 true refusals, zero
   false refusal and all three feasible submissions; independent baseline samples produced no
   refusal or submission. The public authored bank and independent samples make this non-causal and
-  non-scientific; H21 remains untested.
+  non-scientific; H21 remains untested. A fail-closed pre-private validator now requires a signed
+  opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
+  protocol before payload reveal. All four active inputs are absent and no private data was read.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,

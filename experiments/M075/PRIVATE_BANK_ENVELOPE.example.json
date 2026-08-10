@@ -1,0 +1,40 @@
+{
+  "bank_id": "replace-with-external-bank-id",
+  "conflicts_disclosed": "replace-with-complete-conflict-disclosure",
+  "created_at": "YYYY-MM-DDTHH:MM:SSZ",
+  "domains": [
+    {
+      "matched_capability_pairs": 2,
+      "opaque_domain_id": "opaque-0000000000000001"
+    },
+    {
+      "matched_capability_pairs": 2,
+      "opaque_domain_id": "opaque-0000000000000002"
+    },
+    {
+      "matched_capability_pairs": 2,
+      "opaque_domain_id": "opaque-0000000000000003"
+    },
+    {
+      "matched_capability_pairs": 2,
+      "opaque_domain_id": "opaque-0000000000000004"
+    }
+  ],
+  "evaluator_owned_success_attested": true,
+  "maintainer_identity": "replace-with-signing-identity",
+  "maintainer_independence_attested": true,
+  "maintainer_public_key_sha256": "replace-with-64-lowercase-hex-digest",
+  "maintainer_role": "independent-task-bank-maintainer",
+  "matched_capability_pairs": 8,
+  "materially_cross_domain_attested": true,
+  "payload_bytes": 1,
+  "payload_custody": "external-until-protocol-freeze",
+  "payload_media_type": "application/vnd.mira.m075-private-bank+tar",
+  "payload_revealed_to_policy_authors": false,
+  "payload_sha256": "replace-with-64-lowercase-hex-digest",
+  "public_task_reuse_excluded_attested": true,
+  "schema": "m075-private-bank-envelope-v1",
+  "signature_namespace": "mira-m075-private-bank-v1",
+  "status": "sealed_unrevealed",
+  "task_count": 16
+}

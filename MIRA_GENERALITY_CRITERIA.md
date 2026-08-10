@@ -47,6 +47,8 @@ promising but non-causal signal: explicit self-evidence produced 2/3 true refusa
 and all three feasible submissions, while independently sampled baseline requests produced no
 refusal or submission. The bank is public and authored. H21 still requires a frozen pre-private
 policy, defensible causal control, sealed independent cross-domain bank and reproduction.
+The pre-private checker now makes that boundary mechanical and currently returns false: no signed
+external envelope, signer allowlist or frozen private protocol exists, and no payload was accessed.
 
 ## Model-mediated attribution rule
 

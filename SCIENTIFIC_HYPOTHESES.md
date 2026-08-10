@@ -395,6 +395,13 @@ numeric calibration/success thresholds, paired causal procedure and single attem
 solutions, evaluators and arm identity remain hidden from the model; no retry or task replacement
 is permitted after private execution begins.
 
+**Pre-private operational gate:** the signed envelope must attest at least eight matched
+feasible/absent pairs across four opaque domains. Every task runs once per condition on fresh
+clones. Frozen thresholds require at least 6/8 context true refusals, zero false refusal, all
+feasible external successes, an eight-step wasted-work advantage, six context-only versus zero
+baseline-only correct terminal decisions, exact two-sided McNemar `p <= 0.05` and zero faults.
+Separate-bank, separate-maintainer reproduction is required before H21 can become supported.
+
 **Scope:** even a positive H21 would be bounded refusal-transfer evidence for the named composed
 system. It would not establish mathematical impossibility, broad safety, lineage ownership,
 Genesis Gate 2/3 or AGI.

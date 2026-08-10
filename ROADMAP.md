@@ -354,6 +354,11 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
 | M075 | Add explicit epistemic/budget state, then test fresh private refusal transfer | **Public model development complete — non-scientific** | Committed public comparison: 12/12 episodes, 43 live decisions, zero defect/retry. Context reached 2/3 true refusals, no false refusal and 3/3 feasible submission versus baseline 0/3 and none. Public independent samples are non-causal; private H21 remains open. |
 
+M075's next gate is now executable rather than aspirational. Private reveal remains disabled until
+an external maintainer supplies a signed opaque envelope for at least eight matched pairs across
+four domains and an exact protocol binds it. The paired design runs each task once per condition,
+uses exact McNemar inference and requires separate-bank reproduction; current readiness is false.
+
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
 authorship and unbounded protocol induction remain later gates. M069's historical observations do
