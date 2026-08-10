@@ -14,6 +14,9 @@
 - Added persistent non-root, no-network, read-only-root Docker workspaces with materialized fixtures,
   exact `/workspace` probes, external final-state evaluation and a permanent verifier for the two
   non-scientific M074 development records. No M074 protocol or result is frozen yet.
+- Exact M074 apparatus commit `27a2e1f` passed first CI run `31377768229`: 1,322 passed and one
+  skipped on Python 3.11 and Python 3.13, plus repository integrity. Attribution run `31377768244`
+  passed; no workflow rerun was used.
 - Post-hoc disqualified M069's positive qualification under D037. Candidate code executed in the
   evaluator process holding hidden cases and could return them through an admitted public-output
   path, so the Phase 8 hidden-evidence-reachability falsifier fires. Historical rewards and learner

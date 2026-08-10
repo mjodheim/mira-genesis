@@ -1325,6 +1325,19 @@ phase_eight:
     scientific_protocol_frozen: false
     scientific_model_called: false
     scientific_result_exists: false
+    exact_apparatus_commit: 27a2e1f
+    exact_commit_qualification: passed
+    github_ci_run: 31377768229
+    github_python_3_11: [1322, 1322]
+    github_python_3_11_skips: 1
+    github_python_3_11_seconds: 1238.57
+    github_python_3_13: [1322, 1322]
+    github_python_3_13_skips: 1
+    github_python_3_13_seconds: 1255.09
+    repository_integrity_passed: true
+    attribution_run: 31377768244
+    attribution_passed: true
+    github_workflow_rerun_used: false
     supported_claim: development_apparatus_operates_as_declared
     calibrated_agent_refusal_claimed: false
     generality_gate_advanced: false

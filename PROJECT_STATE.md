@@ -80,7 +80,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
 - **M074 has a locally qualified development apparatus and no scientific result.** Six live
   container labels split 3/3 feasible/capability-impossible. A zero-token label-blind scripted
   policy completed 12 fresh two-arm episodes with external state checks and zero apparatus defect.
-  The protocol, model, numeric threshold and scientific execution remain unfrozen.
+  Exact apparatus commit `27a2e1f` passed first CI run `31377768229` with 1,322 passed/1 skipped on
+  Python 3.11 and Python 3.13 plus integrity; attribution passed. The protocol, model, numeric
+  threshold and scientific execution remain unfrozen.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,

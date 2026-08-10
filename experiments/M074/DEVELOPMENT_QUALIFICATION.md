@@ -68,7 +68,11 @@ The exact final focused campaign passes 65 tests, including mutation checks for 
 drift, selective episode removal and malformed certificate inputs. Immediately before the final
 input-type guards, the complete local Python 3.14.6 suite passed **1,320 tests with two expected
 skips in 2,321.91 seconds**; the affected final tests and repository integrity then passed again.
-Exact-commit repository-wide CI remains required before development qualification can be merged.
+
+Exact apparatus commit `27a2e1f` passed first GitHub CI run `31377768229`: **1,322 passed and one
+skipped on Python 3.11 in 1,238.57 seconds, and 1,322 passed and one skipped on Python 3.13 in
+1,255.09 seconds**, plus repository integrity. Attribution run `31377768244` passed. No workflow
+rerun was used.
 
 ## Decision boundary
 

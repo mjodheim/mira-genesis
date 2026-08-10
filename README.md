@@ -361,6 +361,8 @@ terminal-refusal arm recorded development margin 1.0 with zero wasted steps, whi
 identical nonterminal arm recorded margin 0.0 and 12 wasted steps. This validates the instrument,
 not an agent. Exact protocol, model, prompt, threshold and single-attempt order remain to be frozen.
 See [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md).
+Exact apparatus commit `27a2e1f` passed first CI run `31377768229`: 1,322 passed and one skipped on
+Python 3.11 and Python 3.13, plus integrity; attribution run `31377768244` passed.
 
 See:
 
