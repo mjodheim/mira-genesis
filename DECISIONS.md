@@ -940,3 +940,35 @@ Before any scientific execution, a separate commit must freeze code/task/environ
 model identity, prompt, budgets, numeric threshold and ordered single attempts. No model may receive
 expected solvability, certificate verdicts or evaluator outcomes. Any retry, missing task,
 `INCONCLUSIVE` probe, realized-isolation drift or feasible-control failure invalidates that attempt.
+
+## D039 — M074 is a valid negative; refusal requires an explicit epistemic successor
+
+M074 froze apparatus, thresholds, model, host/runtime identities and an exact paired A→B order at
+commit `28ddd8b` before every scientific model decision. The commit passed first GitHub CI without a
+rerun. The single campaign then completed all twelve episodes with zero protocol defect.
+
+### The decision
+
+H20 is refuted under its bounded threshold. The composed system completed 6/6 feasible arm
+episodes and no impossible episode passed, but emitted zero refusals. Both arms therefore recorded
+0/3 true refusals, margin 0.0 and twelve wasted impossible-task steps. The terminal-refusal switch
+had no refusal event to terminate and saved zero steps.
+
+The negative result is preserved and M074 is closed. It may not be retried, have its budget changed
+or be reinterpreted through the successful feasible final states. Those states demonstrate bounded
+execution competence, not capability-absence judgement.
+
+### Successor constraint
+
+A successor receives a new identifier. It may develop an explicit task-agnostic epistemic state —
+including current/remaining budget, repeated-failure evidence and a calibrated stop decision — on
+a separate public development bank. Its scientific threshold must then use private,
+independently maintained, materially cross-domain capability pairs frozen after the policy. M074's
+six public tasks may be regression tests only, never the successor's scientific threshold.
+
+### Claim boundary
+
+This failure advances no Genesis or generality gate and does not erase M071, M072 or M073. It shows
+only that the frozen M074 composed system did not convert repeated capability failures into refusal
+on three authored pairs. It is not evidence about mathematical impossibility, general safety or
+AGI.

@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Preserved M074's single frozen scientific campaign as a negative result. All 12 paired episodes
+  completed without defect or retry; all six feasible arm episodes succeeded and no impossible
+  episode did, but the model emitted zero refusals, producing margin 0.0 and zero saved steps.
+- Froze M074 at protocol commit `28ddd8b` before every model decision. First CI run `31385331662`
+  and attribution `31385331849` passed without rerun. The result's raw SHA-256 is `75e84682` and
+  its calibration digest is `78d7b27e`.
+- Added permanent verification of code/task/runtime bindings, live container attestations,
+  capability labels, 24 live decisions, 24 exact paired replays, ledgers, evaluator outcomes and
+  the negative verdict. D039 closes M074 and prohibits an in-place retry.
 - Qualified the M074 refusal-calibration apparatus locally without a scientific model call. Six
   exact real-container labels split 3/3 feasible/capability-impossible; a label-blind zero-token
   policy completed 12 fresh two-arm episodes with external final-state checks and no defect.
@@ -13,7 +22,7 @@
   which unexpected BusyBox code 127 correctly became `INCONCLUSIVE` instead of false absence.
 - Added persistent non-root, no-network, read-only-root Docker workspaces with materialized fixtures,
   exact `/workspace` probes, external final-state evaluation and a permanent verifier for the two
-  non-scientific M074 development records. No M074 protocol or result is frozen yet.
+  non-scientific M074 development records. The later frozen scientific result remains separate.
 - Exact M074 apparatus commit `27a2e1f` passed first CI run `31377768229`: 1,322 passed and one
   skipped on Python 3.11 and Python 3.13, plus repository integrity. Attribution run `31377768244`
   passed; no workflow rerun was used.

@@ -79,7 +79,7 @@ The full evidence is preserved in:
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT** | The frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus two `0.0` `nop` floors, with no exception, retry or replacement. |
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT** | Matched authored ablations isolate causal contributions from authority admission and tamper-evident audit over 48 non-executing scenarios. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT** | Four external demonstrations induce one committed AST skill; after teacher removal it passes 12/12 fresh authored holdouts while two controls pass 0/12. |
-| M074 | **DEVELOPMENT APPARATUS QUALIFIED — NO RESULT** | Six live matched capability labels and 12 label-blind real-container dry-run episodes validate the refusal-calibration instrument; no scientific model has been called. |
+| M074 | **NEGATIVE SCIENTIFIC RESULT** | The single frozen paired campaign completed 6/6 feasible arm tasks but produced 0/3 true refusals, margin 0.0 and zero saved steps; H20 fails without retry or protocol defect. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -354,15 +354,15 @@ family, not general program synthesis, Genesis Gate 2 or AGI. Result `edaf03b4`;
 Exact evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 tests passed and one skipped
 on Python 3.11 and Python 3.13, plus integrity; attribution run `31370349333` passed.
 
-**M074 has a locally qualified refusal-calibration apparatus, not a scientific result.** Three
-matched capability pairs are materialized in digest-pinned, no-network, non-root containers. A
-zero-token label-blind scripted policy exercised 12 fresh episodes and external state checks: the
-terminal-refusal arm recorded development margin 1.0 with zero wasted steps, while the otherwise
-identical nonterminal arm recorded margin 0.0 and 12 wasted steps. This validates the instrument,
-not an agent. Exact protocol, model, prompt, threshold and single-attempt order remain to be frozen.
-See [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md).
-Exact apparatus commit `27a2e1f` passed first CI run `31377768229`: 1,322 passed and one skipped on
-Python 3.11 and Python 3.13, plus integrity; attribution run `31377768244` passed.
+**M074 is a complete negative scientific refusal-calibration result.** Protocol commit `28ddd8b`
+froze the model, runtime, 14 code hashes, six task/environment bindings, paired A→B order, budgets
+and thresholds before any scientific decision, then passed first CI run `31385331662` and
+attribution `31385331849` without rerun. The single 12-episode campaign had zero defect: all six
+feasible arm episodes passed externally and zero impossible episode did, but `gpt-5.6-sol` emitted
+no refusal. Both arms therefore recorded 0/3 true refusals, margin 0.0 and 12 wasted steps; terminal
+refusal saved zero. H20 fails under its frozen threshold and M074 cannot be retried. See
+[`experiments/M074/SCIENTIFIC_RESULT.md`](experiments/M074/SCIENTIFIC_RESULT.md) and
+[`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md).
 
 See:
 
@@ -383,6 +383,7 @@ See:
 - [`experiments/M073/RESULT.md`](experiments/M073/RESULT.md);
 - [`experiments/M073/DEVELOPMENT_QUALIFICATION.md`](experiments/M073/DEVELOPMENT_QUALIFICATION.md);
 - [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md);
+- [`experiments/M074/SCIENTIFIC_RESULT.md`](experiments/M074/SCIENTIFIC_RESULT.md);
 - [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).

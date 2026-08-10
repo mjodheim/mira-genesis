@@ -77,12 +77,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Result `edaf03b4` is bounded to one project-authored division-repair family. Exact evidence head
   `2eaa5c7` passed first CI run `31370311326`: 1,257 passed/1 skipped on Python 3.11 and 3.13,
   plus integrity; attribution run `31370349333` passed.
-- **M074 has a locally qualified development apparatus and no scientific result.** Six live
-  container labels split 3/3 feasible/capability-impossible. A zero-token label-blind scripted
-  policy completed 12 fresh two-arm episodes with external state checks and zero apparatus defect.
-  Exact apparatus commit `27a2e1f` passed first CI run `31377768229` with 1,322 passed/1 skipped on
-  Python 3.11 and Python 3.13 plus integrity; attribution passed. The protocol, model, numeric
-  threshold and scientific execution remain unfrozen.
+- **M074 is a negative scientific refusal-calibration result.** Exact protocol commit `28ddd8b`
+  passed first CI before the single campaign. All 12 paired episodes completed with zero defect;
+  feasible external success was 6/6 and impossible success 0/6, but the model emitted zero refusal.
+  Both arms recorded 0/3 true refusals, margin 0.0 and 12 wasted impossible-task steps, so terminal
+  refusal saved zero and H20 fails. Result `75e84682`; M074 is closed without retry or gate advance.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -701,7 +700,7 @@ question remains open but is not a missing completion gate.
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT RESULT** | Frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus `0.0, 0.0` `nop` floors; no exception, retry or replacement. Result `d3526513`. |
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Full governance satisfies every authored containment/audit invariant over 48 scenarios; matched admission and audit ablations each lose 18 corresponding invariants. Result `ab555d2f`. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Four external demonstrations induce one committed capsule; model-free execution passes 12/12 held-out programs and 84/84 cases while no-capsule and memorizer controls pass 0/12. Result `edaf03b4`. |
-| M074 | **DEVELOPMENT APPARATUS QUALIFIED — NO SCIENTIFIC RESULT** | Six real-container labels and 12 label-blind two-arm episodes pass with external state checks. Terminal refusal saves 12 development steps; no model, threshold or protocol is frozen. |
+| M074 | **NEGATIVE SCIENTIFIC RESULT** | Frozen paired execution passed 6/6 feasible arm tasks and 0/6 impossible tasks, but emitted no refusal: true-refusal rate 0/3, margin 0.0, zero saved steps, zero defect and no retry. Result `75e84682`. |
 
 ## Parallel measurement track — M045
 

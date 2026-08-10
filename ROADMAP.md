@@ -36,8 +36,9 @@ attribute external-model competence to Mira. See
   M071's corrected system then passed 1/2 fresh blindly selected tasks. M072 isolates the causal
   value of authority admission and audit chaining under a bounded authored threat model. M073 then
   induces one executable capsule from four external demonstrations, removes the teacher and applies
-  the capsule successfully to twelve fresh authored programs. M074 now has a locally qualified
-  real-container refusal-calibration apparatus, but no frozen protocol or scientific model result.
+  the capsule successfully to twelve fresh authored programs. M074 then froze and ran one paired
+  refusal-calibration campaign: all feasible tasks succeeded, but the model never refused an
+  impossible member, so its precommitted threshold failed.
   These results remain mechanism
   evidence and do not change the endogenous Genesis ownership gates.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
@@ -349,7 +350,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Positive external development result** | Frozen runtime/bridge passed `custom-memory-heap-crash` and refused `sqlite-with-gcov`: rewards `0.0, 1.0`; both `nop` floors `0.0`; no exception, retry or replacement. Result `d3526513`. |
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
-| M074 | Measure calibrated refusal and the causal value of terminal refusal | **Development apparatus qualified — no result** | Three matched capability pairs, six live labels and 12 label-blind real-container episodes pass external state checks. Scientific protocol/model/threshold remain unfrozen. |
+| M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
@@ -363,11 +364,11 @@ task pair as its scientific threshold.
 
 M071 met its fresh threshold on one of two tasks. M072 closes only the bounded causal-governance
 question; its threat grammar remains authored. M073 closes only the existence of a model-to-lineage
-artifact bridge on one authored AST family. M074 currently qualifies only its measurement apparatus;
-it has not tested an agent. A successor is not justified by sampling more public
-tasks with the same composition or generating more alpha-renamed division programs. It must broaden
-the learned representation and move to a private uncontaminated, materially cross-domain split with
-independent reproduction.
+artifact bridge on one authored AST family. M074 validly tests and rejects its bounded refusal
+hypothesis: execution competence did not become capability-absence judgement. A successor is not
+justified by retrying or sampling more from the same public bank. It must develop task-agnostic
+epistemic/budget state separately, broaden the learned representation and move to a private
+uncontaminated, materially cross-domain split with independent reproduction.
 
 ## Parallel measurement track — M045
 

@@ -949,3 +949,22 @@ No protocol was frozen, no model was called and no scientific result existed. Th
 was corrected to the live BusyBox behavior, then all six labels and the complete 12-episode dry run
 passed. The failed development observation is retained here because it demonstrates why unexpected
 non-zero codes must never default to `ABSENT`.
+
+## M074 scientific — the model acted through every impossible-task budget and never refused
+
+M074 protocol commit `28ddd8b` passed exact first CI before execution. Its single paired campaign
+completed all twelve episodes with no inconclusive probe, drift, replay mismatch, backend/body
+fault, retry or replacement. All six feasible arm episodes passed external evaluation and no
+impossible episode did.
+
+The performance hypothesis nevertheless failed. On all three impossible tasks, arm A emitted four
+`act` decisions and zero `refuse` decisions. It searched alternative interpreters after return code
+127, attempted permission or privileged fallbacks after write failures, and attempted alternate
+read/chmod paths on the unreadable manifest. Both arms exhausted twelve impossible-task steps;
+terminal refusal saved none. Arm A true-refusal rate and margin were both 0.0.
+
+The current model request reports observations and recent ledger evidence but not an explicit
+remaining-step budget or a task-agnostic belief that repeated failures target the same required
+capability. This is a diagnosis, not a post-hoc excuse or proof of cause. M074 remains negative and
+cannot be rerun. D039 requires any successor to develop explicit epistemic/budget state on a
+separate bank and freeze before private independently maintained cross-domain evaluation.

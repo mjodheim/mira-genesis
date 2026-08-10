@@ -1,11 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m074_development_apparatus_qualified_no_scientific_result
+status: phase_eight_m074_negative_refusal_calibration_result
 
 active_research_question: >-
-  After M072 causally isolated two authored governance mechanisms and M073 induced one reusable
-  model-free skill from external demonstrations, can a successor calibrate refusal and transfer
-  learned representations across private uncontaminated, materially different task families with
+  After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
+  successor develop task-agnostic epistemic and remaining-budget state on a separate bank, then
+  transfer it across private uncontaminated, materially different capability families with
   independent reproduction?
 
 epistemic_tracks:
@@ -15,14 +15,14 @@ epistemic_tracks:
     genesis_gate_2_unchanged: true
     strongest_canonical_results: [M042, M066]
   model_mediated_governed_agent:
-    scope: M070-M071
+    scope: M070-M071_and_M074
     external_model_proposes_actions: true
     external_model_is_lineage_owned: false
     task_reward_attribution: named_composed_system
     primary_mira_layer_evidence:
       - authority_containment
       - isolation
-      - refusal_behavior_calibration_open
+      - refusal_behavior_calibration_negative_in_M074
       - audit_integrity
       - transport_robustness
     genesis_gate_2_claim_permitted: false
@@ -41,9 +41,13 @@ epistemic_tracks:
     current_scope: one_project_authored_ast_repair_family
   refusal_calibration:
     scope: M074
-    status: development_apparatus_qualified_no_scientific_result
-    external_model_called: false
+    status: negative_scientific_result
+    external_model_called: true
     real_container_dryrun: true
+    single_frozen_scientific_campaign: true
+    true_refusals: 0
+    false_refusals: 0
+    calibration_margin: 0.0
     genesis_gate_2_claim_permitted: false
   measurement_track:
     reserved_experiment: M045
@@ -1292,7 +1296,7 @@ phase_eight:
     genesis_gate_2_evidence: false
     agi_evidence: false
   M074:
-    status: development_apparatus_qualified_no_scientific_result
+    status: negative_scientific_result_locally_verified_result_commit_ci_pending
     canonical: false
     design: experiments/M074/DRAFT_REFUSAL_CALIBRATION_DESIGN.md
     development_qualification: experiments/M074/DEVELOPMENT_QUALIFICATION.md
@@ -1322,9 +1326,36 @@ phase_eight:
     terminal_arm_wasted_steps: 0
     nonterminal_arm_calibration_margin: 0.0
     nonterminal_arm_wasted_steps: 12
-    scientific_protocol_frozen: false
-    scientific_model_called: false
-    scientific_result_exists: false
+    scientific_protocol: experiments/M074/SCIENTIFIC_PROTOCOL.json
+    scientific_protocol_raw_sha256: 5a4e12a9d6cd188723f2ae9771293298917a9397f3fa20d8725da713b2261e7c
+    scientific_protocol_commitment_sha256: ef3996d00e3d84afbda7b94f3b5670c02a8d36848845ac9f99f704c8a8e5b698
+    scientific_protocol_frozen: true
+    scientific_protocol_commit: 28ddd8bcad931904b160c43c6f728bf8d13fcedc
+    scientific_protocol_ci_run: 31385331662
+    scientific_protocol_attribution_run: 31385331849
+    scientific_protocol_ci_rerun_used: false
+    scientific_model: gpt-5.6-sol
+    scientific_model_called: true
+    scientific_live_model_decisions: 24
+    scientific_paired_replay_decisions: 24
+    scientific_result: experiments/M074/SCIENTIFIC_RESULT.json
+    scientific_result_raw_sha256: 75e846820d2045c1036f0d716f1803eb8d8c560f1589529a86bc04beb73669d4
+    scientific_calibration_digest: 78d7b27e7cd1789ecb058bc5e2f6017f18a58f23464b60c19a42b885f72b5cd7
+    scientific_result_exists: true
+    scientific_episodes: 12
+    scientific_protocol_defects: 0
+    scientific_true_refusals: 0
+    scientific_false_refusals: 0
+    scientific_terminal_calibration_margin: 0.0
+    scientific_terminal_wasted_steps: 12
+    scientific_nonterminal_wasted_steps: 12
+    scientific_wasted_steps_advantage: 0
+    scientific_feasible_external_successes: 6
+    scientific_impossible_external_successes: 0
+    scientific_faulted_episodes: 0
+    scientific_verdict: negative
+    scientific_retry_used: false
+    scientific_result_commit_ci: pending
     exact_apparatus_commit: 27a2e1f
     exact_commit_qualification: passed
     github_ci_run: 31377768229
@@ -1338,13 +1369,13 @@ phase_eight:
     attribution_run: 31377768244
     attribution_passed: true
     github_workflow_rerun_used: false
-    supported_claim: development_apparatus_operates_as_declared
+    supported_claim: valid_negative_refusal_calibration_result_on_three_authored_pairs
     calibrated_agent_refusal_claimed: false
     generality_gate_advanced: false
     agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: refusal_calibration_then_private_cross_domain_skill_transfer_and_independent_reproduction
+  next_required_boundary: task_agnostic_epistemic_budget_state_then_private_cross_domain_refusal_transfer_and_independent_reproduction
 
 measurement_track:
   reserved_experiment: M045
