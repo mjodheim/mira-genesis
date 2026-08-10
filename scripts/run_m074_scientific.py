@@ -12,6 +12,7 @@ import asyncio
 import json
 import os
 from pathlib import Path
+import platform
 import sys
 import tempfile
 from typing import Mapping
@@ -87,6 +88,10 @@ def run(protocol_path: Path, output_path: Path) -> dict[str, object]:
         raise ScientificRunnerError(
             "Docker server identity differs from the frozen scientific protocol"
         )
+    if platform.python_version() != runtime.get("python_version"):
+        raise ScientificRunnerError("Python identity differs from the frozen scientific protocol")
+    if platform.system() != runtime.get("host_system"):
+        raise ScientificRunnerError("host system differs from the frozen scientific protocol")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="mira-m074-neutral-") as raw_workspace:

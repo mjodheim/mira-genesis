@@ -128,7 +128,11 @@ def protocol(tmp_path: Path | None = None) -> dict[str, object]:
             "codex_cli_version": "test-cli",
             "policy_id": "m071-governed-model-policy-v1",
         },
-        "runtime": {"docker_server_version": "test-docker"},
+        "runtime": {
+            "docker_server_version": "test-docker",
+            "python_version": "test-python",
+            "host_system": "test-system",
+        },
         "budgets": {
             "max_agent_steps": 4,
             "command_timeout_seconds": 30,
@@ -196,6 +200,12 @@ def test_protocol_commitment_and_exact_pair_order_are_enforced() -> None:
     changed["protocol_commitment_sha256"] = protocol_commitment(changed)
     with pytest.raises(ScientificRunnerError, match="thresholds"):
         validate_protocol(changed, verify_code_files=False)
+
+    incomplete_runtime = deepcopy(frozen)
+    del incomplete_runtime["runtime"]["python_version"]
+    incomplete_runtime["protocol_commitment_sha256"] = protocol_commitment(incomplete_runtime)
+    with pytest.raises(ScientificRunnerError, match="runtime identity"):
+        validate_protocol(incomplete_runtime, verify_code_files=False)
 
     reordered = deepcopy(frozen)
     reordered["episode_order"][0], reordered["episode_order"][1] = (

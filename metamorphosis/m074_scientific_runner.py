@@ -300,9 +300,10 @@ def validate_protocol(
         raise ScientificRunnerError("protocol changes the reviewed M074 model or policy")
 
     runtime = protocol.get("runtime")
-    if not isinstance(runtime, Mapping) or not isinstance(
-        runtime.get("docker_server_version"), str,
-    ) or not runtime.get("docker_server_version"):
+    if not isinstance(runtime, Mapping) or not all(
+        isinstance(runtime.get(field), str) and runtime.get(field)
+        for field in ("docker_server_version", "python_version", "host_system")
+    ):
         raise ScientificRunnerError("protocol runtime identity is incomplete")
 
     information_boundary = protocol.get("information_boundary")
