@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Qualified the M074 refusal-calibration apparatus locally without a scientific model call. Six
+  exact real-container labels split 3/3 feasible/capability-impossible; a label-blind zero-token
+  policy completed 12 fresh two-arm episodes with external final-state checks and no defect.
+- Reduced M074 to one causal contrast: identical authority, isolation, budgets and hash-chained
+  audit, with only refusal termination ablated. The terminal arm produced development margin 1.0
+  and zero wasted steps; the nonterminal arm produced margin 0.0 and 12 wasted steps.
+- Hardened capability certificates with explicit absence codes, probe/environment SHA-256 binding,
+  cross-environment rejection and exact per-arm task coverage. Preserved the first live failure in
+  which unexpected BusyBox code 127 correctly became `INCONCLUSIVE` instead of false absence.
+- Added persistent non-root, no-network, read-only-root Docker workspaces with materialized fixtures,
+  exact `/workspace` probes, external final-state evaluation and a permanent verifier for the two
+  non-scientific M074 development records. No M074 protocol or result is frozen yet.
+- Post-hoc disqualified M069's positive qualification under D037. Candidate code executed in the
+  evaluator process holding hidden cases and could return them through an admitted public-output
+  path, so the Phase 8 hidden-evidence-reachability falsifier fires. Historical rewards and learner
+  behavior remain diagnostic; there is no evidence the frozen learner exploited the path.
+- Added an append-only evaluator-isolation disclosure and corrected the status, hypothesis,
+  generality, state and roadmap registers without rewriting M069's frozen protocol, bank, learner,
+  evaluator or result bytes.
 - Preserved M073's first preregistered result: four frozen single-call external demonstrations
   induced one committed identifier-generalized AST capsule. After teacher removal it passed 12/12
   holdouts and 84/84 cases; unchanged-source and exact-hash memorizer controls passed 0/12, the

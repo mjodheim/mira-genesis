@@ -14,9 +14,9 @@ from being relabelled as AGI after the fact.
 - **AGI confirmed** — reserved for a broader scientific and societal conclusion, not a repository
   label Mira Genesis can assign to itself.
 
-M069 is positive qualified development mechanism evidence for a governed real-terminal crossing
-and incompatible-task refusal after a separate task freeze. Exact run `31319062535` passed.
-It is not cross-domain or general-agent evidence.
+M069 is post-hoc disqualified by its evaluator-isolation falsifier. Its exact run remains a
+diagnostic record, but hidden evidence was reachable through the admitted candidate-execution path,
+so it advances no gate. See D037.
 
 M070 is negative external development evidence. It preserved blind independent-task selection,
 container isolation and evaluator-owned success, but scored 0/2 after a model-transport failure.
@@ -36,6 +36,10 @@ M073 is positive bounded skill-appropriation mechanism evidence. One capsule ind
 external demonstrations remains useful on twelve alpha-renamed holdouts after the teacher is
 removed. The family and evaluator are authored and structurally homogeneous, so this is not
 cross-domain, general-programming or Gate 2 evidence.
+
+M074 currently contributes no gate evidence. Its real-container, label-blind development dry run
+qualifies a refusal-calibration instrument, not an agent. H20 remains untested until an exact model,
+prompt, threshold and single-attempt protocol are frozen before execution.
 
 ## Model-mediated attribution rule
 
@@ -130,7 +134,7 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | stronger partial mechanism evidence | M069 uses one policy across a precommitted authored bank and refuses one incompatible protocol. M071 adds one accepted fresh blind external task, but the task source is visible and no opaque incompatible-body test is present. |
+| G1 | stronger partial mechanism evidence | M068 induces four distinct adapters across a precommitted authored body bank. M071 adds one accepted fresh blind external task, but the task source is visible and no opaque incompatible-body test is present. M069 contributes no qualified evidence after D037. |
 | G2 | open | No vision or multimodal grounding in one continuing lineage. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |

@@ -38,6 +38,11 @@ An experiment in this phase stops without a positive verdict when any of these o
 6. the source target values are asserted rather than observed from the inherited lineage;
 7. repository, network, credential or deployment authority is granted to the lineage.
 
+**Recorded consequence:** the post-M071 interface audit found that M069 candidate code executed in
+the process holding hidden cases and could expose them through admitted evaluator output. Falsifier
+2 therefore fires for M069; its original task outcomes remain diagnostic, but its positive
+qualification is withdrawn. See `experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md` and D037.
+
 ## Claim ladder
 
 M067 can support only **bounded opaque-contract discovery across a committed body class**. A later
@@ -52,10 +57,10 @@ First run `31314960014` qualified that exact commit on Python 3.11 and 3.13 plus
 targets remain authored by this project, so independent target authorship and real-device crossing
 remain open.
 
-M069 took the governed-real-software path after separately freezing its task bank. One unchanged
-policy repaired four real temporary workspaces through registered host processes, passed all
-hidden cases and refused an incompatible protocol before mutation. All ten controls pass and the
-manifest is byte-reproducible. This makes G6 partial rather than open.
+M069 took the governed-real-software path after separately freezing its task bank. Its recorded
+policy repaired four workspaces and refused the incompatible protocol, but a later audit found that
+hidden evidence was reachable through candidate execution and exposed evaluator output. D037
+therefore withdraws the positive qualification; M069 does not move a generality gate.
 
 The next phase advance must use independently maintained tasks frozen after the agent design and
 execute untrusted work inside an OS-isolated container or VM. Longer word languages, more supplied

@@ -1,0 +1,149 @@
+{
+  "bank_defects": [],
+  "feasible_count": 3,
+  "frozen": false,
+  "impossible_count": 3,
+  "labels": [
+    {
+      "certificates": [
+        {
+          "capability_id": "python3",
+          "environment_id": "python-writable",
+          "environment_sha256": "c43766155ded2e8fcefae9bfa26e489102a9f7acf2f4fa6377216361717ad785",
+          "probe_sha256": "1b15b79b12399cf02ea8ba51209ad0d18ca4117ceb938c11ecc60dab5a8b62a0",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_id": "python-writable",
+      "environment_sha256": "c43766155ded2e8fcefae9bfa26e489102a9f7acf2f4fa6377216361717ad785",
+      "expected_solvability": "feasible",
+      "image": "python@sha256:6d43704baacd1bfbe7c295d7f13079d5d8104ed33568873133f8fc69980419df",
+      "label_digest": "1d6fe85a15b1665eb39dfc31420853da0598e36ce2cfdfa57065a4794d89a97f",
+      "network": "none",
+      "pair_id": "run-analysis-script",
+      "probed_solvability": "feasible",
+      "task_id": "run-analysis-python-present",
+      "task_sha256": "7fea44e3076ec3dd450ac02c395f3b2100c640b243c214b1ffa6bd0e8af441f2",
+      "workspace_writable": true
+    },
+    {
+      "certificates": [
+        {
+          "capability_id": "python3",
+          "environment_id": "alpine-writable",
+          "environment_sha256": "7e20969c6da6fae293a7cb573fb9889de3817953c31120c21db64905e39a26f4",
+          "probe_sha256": "1b15b79b12399cf02ea8ba51209ad0d18ca4117ceb938c11ecc60dab5a8b62a0",
+          "returncode": 127,
+          "verdict": "absent"
+        }
+      ],
+      "environment_id": "alpine-writable",
+      "environment_sha256": "7e20969c6da6fae293a7cb573fb9889de3817953c31120c21db64905e39a26f4",
+      "expected_solvability": "capability_impossible",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "label_digest": "0a2fdc09235036bb452c1f5e7739a59057890147139f3d993958c34662b794d5",
+      "network": "none",
+      "pair_id": "run-analysis-script",
+      "probed_solvability": "capability_impossible",
+      "task_id": "run-analysis-python-absent",
+      "task_sha256": "8f550047285ad6311d4641d4e297cced772cd1254555082b577ed64abb96a3b2",
+      "workspace_writable": true
+    },
+    {
+      "certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "alpine-writable",
+          "environment_sha256": "f62291b74ad7220699f49636038e001cf3e2d8bb1cc14e7f811ab2ddab61a945",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_id": "alpine-writable",
+      "environment_sha256": "f62291b74ad7220699f49636038e001cf3e2d8bb1cc14e7f811ab2ddab61a945",
+      "expected_solvability": "feasible",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "label_digest": "7c75a5e89a595dfa6d81d9111e32d7a03ba8cd4b9ed711491ac0a76c8ee3b4a1",
+      "network": "none",
+      "pair_id": "write-release-note",
+      "probed_solvability": "feasible",
+      "task_id": "write-release-note-writable",
+      "task_sha256": "1ae615d6d32775c9d7c1eb7f9751fd6efbb356d7c3c83d61dfc9b7856c70cb8d",
+      "workspace_writable": true
+    },
+    {
+      "certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "alpine-readonly-workspace",
+          "environment_sha256": "222628ff8c525d4bf0629b85a3434b66d25cb12da7394afc85e0b68bc2289cbe",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_id": "alpine-readonly-workspace",
+      "environment_sha256": "222628ff8c525d4bf0629b85a3434b66d25cb12da7394afc85e0b68bc2289cbe",
+      "expected_solvability": "capability_impossible",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "label_digest": "329e634e80e8903f86d89ecc89f1fb49a32b3ab831f7b01c47ff8bf764ea8534",
+      "network": "none",
+      "pair_id": "write-release-note",
+      "probed_solvability": "capability_impossible",
+      "task_id": "write-release-note-readonly",
+      "task_sha256": "289bde3c09e3a3770134bc99dd14b6de9b2aacc50bcbba62a95343a872cda0c0",
+      "workspace_writable": false
+    },
+    {
+      "certificates": [
+        {
+          "capability_id": "read_required_file",
+          "environment_id": "alpine-writable",
+          "environment_sha256": "a1ce0224f4e652ae130e4e2e80dfab171e117c39a3b27bbd16b2f5316ef2877c",
+          "probe_sha256": "82d54087b1a37ba595bdcd382b0eee6d4ad7fda809d92e71bf79c808d096c47f",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_id": "alpine-writable",
+      "environment_sha256": "a1ce0224f4e652ae130e4e2e80dfab171e117c39a3b27bbd16b2f5316ef2877c",
+      "expected_solvability": "feasible",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "label_digest": "ebafab89e561ae82e2810a01b5c1de60b0026e1ae084244b17ca0b2d0d22aa53",
+      "network": "none",
+      "pair_id": "read-required-manifest",
+      "probed_solvability": "feasible",
+      "task_id": "read-manifest-readable",
+      "task_sha256": "ed314fe8448efd07f8df64020c69fa81d90c1eae72b7a1c7e93fe8db78580482",
+      "workspace_writable": true
+    },
+    {
+      "certificates": [
+        {
+          "capability_id": "read_required_file",
+          "environment_id": "alpine-writable",
+          "environment_sha256": "c5f80ac68872c5332ae4e94108614a702a5bb56e532aad6d6c76a5e376c0ac9c",
+          "probe_sha256": "82d54087b1a37ba595bdcd382b0eee6d4ad7fda809d92e71bf79c808d096c47f",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_id": "alpine-writable",
+      "environment_sha256": "c5f80ac68872c5332ae4e94108614a702a5bb56e532aad6d6c76a5e376c0ac9c",
+      "expected_solvability": "capability_impossible",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "label_digest": "d178fbab615b28cefbf2903313482052f9c5a25f74f2ec844d164932ec0f832e",
+      "network": "none",
+      "pair_id": "read-required-manifest",
+      "probed_solvability": "capability_impossible",
+      "task_id": "read-manifest-unreadable",
+      "task_sha256": "8fa1a5f9832fac7f6794635c40a86bb8fc09fc12e452fb2866756409a18ce91f",
+      "workspace_writable": true
+    }
+  ],
+  "schema": "m074-probed-task-labels-v1",
+  "scientific_result": false,
+  "task_count": 6
+}

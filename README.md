@@ -74,11 +74,12 @@ The full evidence is preserved in:
 | M066 | **POSITIVE CANONICAL** | The bounded real-substrate construction passed all ten gates; the M043–M066 line is closed. |
 | M067 | **POSITIVE QUALIFIED DEVELOPMENT** | One procedure discovered four undisclosed body contracts from interaction alone and preserved four inherited skills on hidden evidence. |
 | M068 | **POSITIVE QUALIFIED DEVELOPMENT** | One complete finite command-language scan induced four frozen adapters after a separate target freeze. |
-| M069 | **POSITIVE QUALIFIED DEVELOPMENT** | One governed terminal policy repaired four real workspaces and refused one incompatible protocol before mutation. |
+| M069 | **POST-HOC DISQUALIFIED DEVELOPMENT** | Historical task outcomes remain diagnostic, but hidden evidence was reachable through candidate execution and exposed evaluator output; the Phase 8 isolation falsifier fires. |
 | M070 | **NEGATIVE EXTERNAL DEVELOPMENT** | The frozen isolated agent scored 0/2 on a blind independent task pair; UTF-8/process-tree transport failed closed and both `nop` controls scored zero. |
 | M071 | **POSITIVE EXTERNAL DEVELOPMENT** | The frozen composed system passed 1/2 fresh blind tasks: rewards `0.0, 1.0` versus two `0.0` `nop` floors, with no exception, retry or replacement. |
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT** | Matched authored ablations isolate causal contributions from authority admission and tamper-evident audit over 48 non-executing scenarios. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT** | Four external demonstrations induce one committed AST skill; after teacher removal it passes 12/12 fresh authored holdouts while two controls pass 0/12. |
+| M074 | **DEVELOPMENT APPARATUS QUALIFIED — NO RESULT** | Six live matched capability labels and 12 label-blind real-container dry-run episodes validate the refusal-calibration instrument; no scientific model has been called. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -284,23 +285,25 @@ protocol induction, independently authored target evidence, real-device competen
 Exact learner commit `f033ac7` passed first GitHub run `31314960014`: **1,153 tests on Python
 3.11 and 1,153 on Python 3.13**, plus repository integrity. Attribution run `31314960009` passed.
 
-**M069 has a positive qualified development result.** One
-unchanged policy crosses a real temporary filesystem and registered host processes, finds the
-unique public repair for all four compatible workspaces and passes **3/3 hidden cases per task**.
-The incompatible protocol is refused after one read and before any write or process. All ten
-frozen controls pass and a second process reproduces manifest digest `c5c80701` exactly.
+**M069 is post-hoc disqualified by its evaluator-isolation falsifier.** The historical run remains
+exact: one unchanged policy found the public repair for all four compatible workspaces, passed
+**3/3 hidden cases per task**, refused the incompatible protocol before mutation and reproduced
+manifest `c5c80701`. A later audit proved that candidate code executed in the process holding the
+hidden cases and could return them through exposed public-evaluator output. The frozen learner did
+not use that path, but the interface made hidden evidence reachable, so the positive qualification
+is withdrawn and H15 remains unresolved.
 
 Exact learner commit `c603dd5` passed GitHub qualification run `31319062535`: **1,181 tests on
 Python 3.11 in 1,241.52 seconds and 1,181 tests on Python 3.13 in 1,260.38 seconds**, plus
 repository integrity. Attribution run `31319062599` passed.
 
-This advances governed terminal competence and calibrated refusal, not open-ended programming.
-The eleven complete repair statements and tasks remain project-authored, and registered commands
-are trusted host code rather than an OS security sandbox.
+These outcomes are diagnostic evidence about that learner, not qualified governed-terminal or
+calibrated-refusal evidence. The eleven complete repair statements and tasks remain project-
+authored, and registered commands are trusted host code rather than an OS security sandbox.
 
 See [`experiments/M069/PROTOCOL.md`](experiments/M069/PROTOCOL.md),
 [`experiments/M069/DEVELOPMENT_RESULT.md`](experiments/M069/DEVELOPMENT_RESULT.md) and
-[`experiments/M069/STATUS.md`](experiments/M069/STATUS.md).
+[`experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md`](experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md).
 
 **M070 is a negative external development result.** The agent design was committed before a
 deterministic blind selection from 89 Terminal-Bench 2 tasks. Harbor ran the two selected tasks in
@@ -351,6 +354,14 @@ family, not general program synthesis, Genesis Gate 2 or AGI. Result `edaf03b4`;
 Exact evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 tests passed and one skipped
 on Python 3.11 and Python 3.13, plus integrity; attribution run `31370349333` passed.
 
+**M074 has a locally qualified refusal-calibration apparatus, not a scientific result.** Three
+matched capability pairs are materialized in digest-pinned, no-network, non-root containers. A
+zero-token label-blind scripted policy exercised 12 fresh episodes and external state checks: the
+terminal-refusal arm recorded development margin 1.0 with zero wasted steps, while the otherwise
+identical nonterminal arm recorded margin 0.0 and 12 wasted steps. This validates the instrument,
+not an agent. Exact protocol, model, prompt, threshold and single-attempt order remain to be frozen.
+See [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md).
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -369,6 +380,7 @@ See:
 - [`experiments/M072/RESULT.md`](experiments/M072/RESULT.md);
 - [`experiments/M073/RESULT.md`](experiments/M073/RESULT.md);
 - [`experiments/M073/DEVELOPMENT_QUALIFICATION.md`](experiments/M073/DEVELOPMENT_QUALIFICATION.md);
+- [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md);
 - [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).
