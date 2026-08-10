@@ -1,0 +1,48 @@
+{
+  "attribution": {
+    "agi_claim": false,
+    "general_software_engineering_claim": false,
+    "genesis_gate_2_or_3_completed": false,
+    "holdout_transformations_are_model_free": true,
+    "safe_deployment_claim": false,
+    "supported_claim_if_positive": "bounded model-to-lineage skill appropriation mechanism evidence",
+    "teacher_is_external_and_not_lineage_owned": true
+  },
+  "capsule_sha256": "444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620",
+  "checks": {
+    "capsule_committed_before_holdout_materialization": true,
+    "complete_lineage_case_failures": true,
+    "complete_lineage_holdouts_passed": true,
+    "complete_lineage_holdouts_total": true,
+    "corrupted_teacher_capsules_induced": true,
+    "holdout_model_calls": true,
+    "lineage_did_not_read_teacher_responses": true,
+    "lineage_did_not_read_training_tasks": true,
+    "lineage_external_model_absent": true,
+    "memorizer_has_no_holdout_hash_hit": true,
+    "memorizer_holdouts_passed_max": true,
+    "no_capsule_holdouts_passed_max": true,
+    "teacher_calls_during_controls": true,
+    "teacher_valid_repairs": true,
+    "unique_capsules_induced": true
+  },
+  "claim_passed": true,
+  "control_result_sha256": "18d76e299dad1d92e0dc39fd6c73f4bd6b2c230ce10aaeb6d715bcb5982871fa",
+  "holdout_materialization_sha256": "dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c",
+  "lineage_result_sha256": "ea7ab4f96e550df7b37d7867b468b5ddd2733cf657b0fa63bbd24e3981064427",
+  "observed": {
+    "capsule_committed_before_holdout_materialization": true,
+    "complete_lineage_case_failures": 0,
+    "complete_lineage_holdouts_passed": 12,
+    "complete_lineage_holdouts_total": 12,
+    "corrupted_teacher_capsules_induced": 0,
+    "holdout_model_calls": 0,
+    "memorizer_holdouts_passed": 0,
+    "no_capsule_holdouts_passed": 0,
+    "teacher_valid_repairs": 4,
+    "unique_capsules_induced": 1
+  },
+  "result_sha256": "edaf03b4cf922890d010ecdd838de67c9569342b27a6848fae34ab430db03a2e",
+  "schema": "m073-result-v1",
+  "status": "passed_preregistered_threshold"
+}
