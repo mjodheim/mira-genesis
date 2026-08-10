@@ -1,9 +1,9 @@
 """Bounded model-to-lineage skill appropriation primitives for M073.
 
 The teacher may provide complete repaired training modules. It never provides a generalized
-rewrite. This module extracts one parameterized return-region transformation from multiple
-consistent demonstrations, serializes it, and can later apply it without importing or calling a
-model backend.
+rewrite. This module extracts one parameterized terminal-return transformation from multiple
+consistent demonstrations, serializes it, and can later apply it without importing a task
+evaluator or calling a model backend.
 """
 from __future__ import annotations
 
@@ -12,14 +12,15 @@ import copy
 from dataclasses import dataclass
 import hashlib
 import json
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
 
 
 _SLOT_PREFIX = "__MIRA_SLOT_"
 _ALLOWED_NODES = (
     ast.Module, ast.FunctionDef, ast.arguments, ast.arg, ast.Assign, ast.Name, ast.Store, ast.Load,
-    ast.Return, ast.If, ast.BinOp, ast.Div, ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Constant,
-    ast.UnaryOp, ast.Not, ast.USub, ast.UAdd, ast.Expr,
+    ast.Return, ast.If, ast.BinOp, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod,
+    ast.Pow, ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Lt, ast.LtE, ast.Gt, ast.GtE,
+    ast.Constant, ast.UnaryOp, ast.Not, ast.USub, ast.UAdd, ast.BoolOp, ast.And, ast.Or, ast.Expr,
 )
 
 
@@ -77,18 +78,9 @@ class SkillCapsule:
             provenance=str(value["provenance"]),
             capsule_sha256=str(value["capsule_sha256"]),
         )
-        if capsule.capsule_sha256 != _capsule_digest(capsule, include_digest=False):
+        if capsule.capsule_sha256 != _capsule_digest(capsule):
             raise SkillInductionError("skill capsule digest mismatch")
         return capsule
-
-
-@dataclass(frozen=True)
-class RepairTask:
-    task_id: str
-    source: str
-    function_name: str
-    numerator_name: str
-    denominator_name: str
 
 
 class TeacherCallTrap:
@@ -144,11 +136,11 @@ def _return_value(statement: ast.stmt) -> ast.expr:
 
 
 def _rewrite_region(function: ast.FunctionDef) -> tuple[ast.expr, list[ast.stmt]]:
-    """Normalize one terminal return region to an equivalent expression plus unchanged prefix.
+    """Normalize one terminal return region to an expression plus unchanged prefix.
 
     Accepted shapes are deliberately small and task-agnostic: one final return, a final if with one
-    return in each branch, or a guard-if with one return followed by a final return. The latter two
-    become an IfExp only for induction; the teacher's original syntax is not copied into the skill.
+    return in each branch, or a guard-if with one return followed by a final return. Conditional
+    control flow is represented as an IfExp only for induction; teacher syntax itself is not copied.
     """
 
     body = function.body
@@ -157,24 +149,22 @@ def _rewrite_region(function: ast.FunctionDef) -> tuple[ast.expr, list[ast.stmt]
     if len(body) >= 2 and isinstance(body[-2], ast.If) and isinstance(body[-1], ast.Return):
         guard = body[-2]
         if not guard.orelse and len(guard.body) == 1 and isinstance(guard.body[0], ast.Return):
-            expression = ast.IfExp(
+            return ast.IfExp(
                 test=copy.deepcopy(guard.test),
                 body=copy.deepcopy(_return_value(guard.body[0])),
                 orelse=copy.deepcopy(_return_value(body[-1])),
-            )
-            return expression, list(body[:-2])
+            ), list(body[:-2])
     final = body[-1]
     if isinstance(final, ast.If):
         if (
             len(final.body) == 1 and isinstance(final.body[0], ast.Return)
             and len(final.orelse) == 1 and isinstance(final.orelse[0], ast.Return)
         ):
-            expression = ast.IfExp(
+            return ast.IfExp(
                 test=copy.deepcopy(final.test),
                 body=copy.deepcopy(_return_value(final.body[0])),
                 orelse=copy.deepcopy(_return_value(final.orelse[0])),
-            )
-            return expression, list(body[:-1])
+            ), list(body[:-1])
         raise SkillInductionError("bounded final if must contain exactly one return per branch")
     if isinstance(final, ast.Return):
         return copy.deepcopy(_return_value(final)), list(body[:-1])
@@ -190,14 +180,12 @@ def _prefix_dump(function: ast.FunctionDef, prefix: Sequence[ast.stmt]) -> str:
 class _Slotter(ast.NodeTransformer):
     def __init__(self, bindings: Mapping[str, str] | None = None) -> None:
         self.concrete_to_slot = dict(bindings or {})
-        self.slot_to_concrete = {slot: concrete for concrete, slot in self.concrete_to_slot.items()}
 
     def visit_Name(self, node: ast.Name) -> ast.AST:
         slot = self.concrete_to_slot.get(node.id)
         if slot is None:
             slot = f"{_SLOT_PREFIX}{len(self.concrete_to_slot)}__"
             self.concrete_to_slot[node.id] = slot
-            self.slot_to_concrete[slot] = node.id
         return ast.copy_location(ast.Name(id=slot, ctx=copy.deepcopy(node.ctx)), node)
 
 
@@ -225,7 +213,7 @@ def _abstract_target(expression: ast.expr, concrete_to_slot: Mapping[str, str]) 
     return ast.unparse(rewritten)
 
 
-def _capsule_digest(capsule: SkillCapsule, *, include_digest: bool) -> str:
+def _capsule_digest(capsule: SkillCapsule) -> str:
     value = {
         "schema": "mira-skill-capsule-v1",
         "skill_id": capsule.skill_id,
@@ -236,8 +224,6 @@ def _capsule_digest(capsule: SkillCapsule, *, include_digest: bool) -> str:
         "induction_trace_sha256": capsule.induction_trace_sha256,
         "provenance": capsule.provenance,
     }
-    if include_digest:
-        value["capsule_sha256"] = capsule.capsule_sha256
     return hashlib.sha256(_canonical_json(value)).hexdigest()
 
 
@@ -272,7 +258,9 @@ def induce_skill_capsule(
         if _prefix_dump(before_function, before_prefix) != _prefix_dump(
             after_function, after_prefix
         ):
-            raise SkillInductionError("teacher repair changed content outside the terminal return region")
+            raise SkillInductionError(
+                "teacher repair changed content outside the terminal return region"
+            )
         source_pattern, concrete_to_slot = _abstract_expression(before_expression)
         target_template = _abstract_target(after_expression, concrete_to_slot)
         if source_pattern == target_template:
@@ -292,9 +280,9 @@ def induce_skill_capsule(
         })
 
     if len(set(source_patterns)) != 1 or len(set(target_templates)) != 1:
-        raise SkillInductionError("teacher demonstrations do not justify one unique generalized rewrite")
-    training_evidence_sha256 = _sha256(evidence)
-    induction_trace_sha256 = _sha256(trace)
+        raise SkillInductionError(
+            "teacher demonstrations do not justify one unique generalized rewrite"
+        )
     provisional = SkillCapsule(
         skill_id=skill_id,
         source_pattern=source_patterns[0],
@@ -305,19 +293,18 @@ def induce_skill_capsule(
             "source expression structurally matches the learned alpha-template",
             "all target identifiers bind to source-expression roles",
         ),
-        training_evidence_sha256=training_evidence_sha256,
-        induction_trace_sha256=induction_trace_sha256,
+        training_evidence_sha256=_sha256(evidence),
+        induction_trace_sha256=_sha256(trace),
         provenance="induced_from_external_demonstrations",
         capsule_sha256="",
     )
-    digest = _capsule_digest(provisional, include_digest=False)
-    return SkillCapsule(**{**provisional.__dict__, "capsule_sha256": digest})
+    return SkillCapsule(**{**provisional.__dict__, "capsule_sha256": _capsule_digest(provisional)})
 
 
 def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
-    """Apply a serialized capsule by structural matching and lineage-chosen identifier bindings."""
+    """Apply a serialized capsule by structural matching and lineage-chosen bindings."""
 
-    if capsule.capsule_sha256 != _capsule_digest(capsule, include_digest=False):
+    if capsule.capsule_sha256 != _capsule_digest(capsule):
         raise SkillInductionError("skill capsule digest mismatch before application")
     tree = _parse_safe_module(source)
     function = _function(tree)
@@ -349,142 +336,7 @@ def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
     return rewritten
 
 
-def generate_division_repair_task(seed: int, *, split: str) -> RepairTask:
-    """Generate one deterministic identifier-novel M073 repair task from a committed seed."""
-
-    if not isinstance(seed, int) or seed < 0:
-        raise ValueError("repair-task seed must be a non-negative integer")
-    if split not in {"training", "holdout", "fixture"}:
-        raise ValueError("repair-task split is unknown")
-    digest = hashlib.sha256(f"m073:{split}:{seed}".encode()).hexdigest()
-    function_name = f"ratio_{digest[:10]}"
-    numerator = f"value_{digest[10:18]}"
-    denominator = f"scale_{digest[18:26]}"
-    marker = f"marker_{digest[26:34]}"
-    source = (
-        f"def {function_name}({numerator}, {denominator}):\n"
-        f"    {marker} = {seed % 17}\n"
-        f"    return {numerator} / {denominator}\n"
-    )
-    return RepairTask(
-        task_id=f"m073-{split}-{seed}", source=source, function_name=function_name,
-        numerator_name=numerator, denominator_name=denominator,
-    )
-
-
-def expected_division_repair(task: RepairTask) -> str:
-    """Evaluator-owned canonical repair used only by fixtures, never by scientific induction."""
-
-    tree = _parse_safe_module(task.source)
-    function = _function(tree)
-    source_expression, prefix = _rewrite_region(function)
-    if not isinstance(source_expression, ast.BinOp):
-        raise SkillInductionError("fixture source lacks its expected binary expression")
-    denominator = copy.deepcopy(source_expression.right)
-    target = ast.IfExp(
-        test=ast.Compare(
-            left=copy.deepcopy(denominator), ops=[ast.NotEq()], comparators=[ast.Constant(0)]
-        ),
-        body=copy.deepcopy(source_expression),
-        orelse=ast.Constant(0),
-    )
-    function.body = [copy.deepcopy(node) for node in prefix] + [ast.Return(value=target)]
-    ast.fix_missing_locations(tree)
-    return ast.unparse(tree) + "\n"
-
-
-def _safe_execute_function(
-    source: str, function_name: str, a: float, b: float,
-) -> float | int:
-    tree = _parse_safe_module(source)
-    function = _function(tree)
-    if function.name != function_name:
-        raise SkillInductionError("evaluated repair changed the function identity")
-    _rewrite_region(function)
-    namespace: dict[str, object] = {"__builtins__": {}}
-    compiled = compile(tree, "<m073-bounded-module>", "exec")
-    exec(compiled, namespace, namespace)  # noqa: S102 - AST allowlist makes this bounded
-    candidate = namespace.get(function_name)
-    if not callable(candidate):
-        raise SkillInductionError("bounded module did not expose its declared function")
-    result = candidate(a, b)
-    if not isinstance(result, (int, float)) or isinstance(result, bool):
-        raise SkillInductionError("bounded repair returned a non-numeric result")
-    return result
-
-
-EVALUATION_CASES: tuple[tuple[float, float], ...] = (
-    (12, 3), (-12, 3), (12, -3), (0, 5), (12, 0), (-12, 0), (0, 0),
-)
-
-
-def repair_passes(task: RepairTask, source: str) -> bool:
-    """Evaluator-owned semantic check for the complete seven-case M073 contract."""
-
-    try:
-        repaired_tree = _parse_safe_module(source)
-        original_tree = _parse_safe_module(task.source)
-        repaired_function = _function(repaired_tree)
-        original_function = _function(original_tree)
-        if repaired_function.name != original_function.name:
-            return False
-        if ast.dump(repaired_function.args, include_attributes=False) != ast.dump(
-            original_function.args, include_attributes=False
-        ):
-            return False
-        _, repaired_prefix = _rewrite_region(repaired_function)
-        _, original_prefix = _rewrite_region(original_function)
-        if _prefix_dump(repaired_function, repaired_prefix) != _prefix_dump(
-            original_function, original_prefix
-        ):
-            return False
-        for numerator, denominator in EVALUATION_CASES:
-            observed = _safe_execute_function(
-                source, task.function_name, numerator, denominator,
-            )
-            expected = numerator / denominator if denominator != 0 else 0
-            if observed != expected:
-                return False
-    except (SkillInductionError, ZeroDivisionError, TypeError, ValueError):
-        return False
-    return True
-
-
-def source_sha256(source: str) -> str:
-    return hashlib.sha256(source.encode("utf-8")).hexdigest()
-
-
-def evaluate_capsule_on_tasks(
-    capsule: SkillCapsule, tasks: Iterable[RepairTask], *, teacher_trap: TeacherCallTrap,
-) -> dict[str, object]:
-    """Evaluate a capsule after teacher removal. The trap is reported and intentionally unused."""
-
-    records: list[dict[str, object]] = []
-    for task in tasks:
-        try:
-            rewritten = apply_skill_capsule(capsule, task.source)
-            passed = repair_passes(task, rewritten)
-            rewritten_sha = source_sha256(rewritten)
-        except SkillInductionError:
-            passed = False
-            rewritten_sha = None
-        records.append({
-            "task_id": task.task_id,
-            "source_sha256": source_sha256(task.source),
-            "rewritten_sha256": rewritten_sha,
-            "passed": passed,
-        })
-    return {
-        "teacher_calls": teacher_trap.calls,
-        "passed": sum(1 for record in records if record["passed"]),
-        "total": len(records),
-        "records": records,
-    }
-
-
 __all__ = [
-    "EVALUATION_CASES", "RepairTask", "SkillCapsule", "SkillDemonstration",
-    "SkillInductionError", "TeacherCallTrap", "apply_skill_capsule",
-    "evaluate_capsule_on_tasks", "expected_division_repair", "generate_division_repair_task",
-    "induce_skill_capsule", "repair_passes", "source_sha256",
+    "SkillCapsule", "SkillDemonstration", "SkillInductionError", "TeacherCallTrap",
+    "apply_skill_capsule", "induce_skill_capsule",
 ]
