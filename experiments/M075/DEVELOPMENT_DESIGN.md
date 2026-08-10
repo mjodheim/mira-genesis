@@ -52,6 +52,8 @@ Development stops rather than qualifying the apparatus if:
 6. M074 tasks are used as the M075 scientific threshold;
 7. a private task is opened before the policy freeze or an observed episode is retried.
 
-The public, contaminated model-development protocol is now committed in
-`MODEL_DEVELOPMENT_PROTOCOL.json`; it is not a scientific protocol and cannot test H21. No M075
-scientific model call, protocol or result exists yet.
+The public, contaminated model-development protocol and its single completed result are preserved
+in `MODEL_DEVELOPMENT_PROTOCOL.json` and `MODEL_DEVELOPMENT_RESULT.json`. The epistemic condition
+improved from 0/3 to 2/3 true refusals with no false refusal, but missed the read-only-write case.
+Independent samples, public authorship and the absence of a precommitted performance verdict keep
+this non-causal and non-scientific. No M075 scientific protocol, private call or result exists.

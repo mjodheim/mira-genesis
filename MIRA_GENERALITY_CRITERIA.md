@@ -42,9 +42,11 @@ paired campaign completed all feasible tasks and no impossible task, yet emitted
 true-refusal rate and margin were 0.0 and terminal refusal saved no step. H20 is refuted on the
 three public authored pairs; the result cannot establish a general calibrated-refusal rate.
 
-M075 currently contributes no additional gate evidence. Its explicit self-evidence projection and
-separate public development bank have only a deterministic zero-token wiring qualification. H21
-requires a frozen pre-private policy and independent cross-domain reproduction.
+M075 contributes no additional gate evidence. Its committed public model-development record is a
+promising but non-causal signal: explicit self-evidence produced 2/3 true refusals, no false refusal
+and all three feasible submissions, while independently sampled baseline requests produced no
+refusal or submission. The bank is public and authored. H21 still requires a frozen pre-private
+policy, defensible causal control, sealed independent cross-domain bank and reproduction.
 
 ## Model-mediated attribution rule
 

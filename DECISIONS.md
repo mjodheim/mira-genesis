@@ -997,3 +997,29 @@ scientific bank must be private until then, independently maintained and materia
 Exact paired control, false-refusal cost, evaluator-owned success, no retry/replacement and
 independent reproduction remain mandatory. Until that boundary is met, H21 is untested and no gate
 moves.
+
+## D041 — M075's public signal closes tuning but does not open the private bank
+
+The committed public comparison completed without defect. Relative to independent baseline
+samples, explicit self-evidence moved true refusal from 0/3 to 2/3, introduced no false refusal,
+reduced wasted impossible-task steps from 12 to 4 and made all three successful workspaces submit.
+It still failed to refuse the read-only-write task despite three visible failures and one remaining
+decision.
+
+### The decision
+
+The outcome is promising development evidence, not a threshold result. Mira preserves the miss and
+stops tuning on this six-task bank. Selecting a stricter prompt after inspecting that task would
+optimize the public counterexample rather than demonstrate transfer.
+
+M075 does not enter private execution yet. The pre-private package must first specify a defensible
+causal control for a model interface without a seed or provider snapshot, plus a sealed task-bank
+intake whose maintainer is outside the policy-development path. If either cannot be established,
+H21 remains open rather than being weakened. The policy, model, budgets, thresholds and single-
+attempt rule must be frozen before any private task content is revealed.
+
+### Claim boundary
+
+The two public conditions used independent model samples, so their difference is an association,
+not an isolated treatment effect. The authored public bank is contaminated. D041 advances no
+generality or Genesis gate and provides no AGI evidence.

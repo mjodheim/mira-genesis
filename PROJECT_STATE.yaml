@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m075_epistemic_development_apparatus_qualified_no_model_result
+status: phase_eight_m075_public_model_development_complete_private_freeze_not_ready
 
 active_research_question: >-
   After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
@@ -51,9 +51,12 @@ epistemic_tracks:
     genesis_gate_2_claim_permitted: false
   epistemic_refusal_development:
     scope: M075
-    status: zero_token_public_development_apparatus_qualified
-    external_model_called: false
+    status: public_model_development_complete_noncausal_nonscientific
+    external_model_called: true
     public_bank_contaminated: true
+    public_model_development_true_refusals: [2, 3]
+    public_model_development_false_refusals: 0
+    causal_effect_claimed: false
     private_scientific_bank_opened: false
     genesis_gate_2_claim_permitted: false
   measurement_track:
@@ -1395,7 +1398,7 @@ phase_eight:
     generality_gate_advanced: false
     agi_evidence: false
   M075:
-    status: zero_token_public_development_apparatus_locally_qualified
+    status: public_model_development_complete_noncausal_nonscientific
     canonical: false
     design: experiments/M075/DEVELOPMENT_DESIGN.md
     development_qualification: experiments/M075/DEVELOPMENT_QUALIFICATION.md
@@ -1424,16 +1427,43 @@ phase_eight:
       - exact_action_sha256_diversity_and_repetition
       - prior_refusal_count
     hidden_labels_visible_to_policy: false
+    model_development_protocol: experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json
+    model_development_protocol_commit: e1367c6
+    model_development_apparatus_commit: ead1f464bcb4fdc584ce45cff0f1cb45965e4793
+    model_development_protocol_raw_sha256: 5861881457b37b21a8417a579286349611ebfad64f3bc2b5fbc18e1efada177d
+    model_development_protocol_commitment_sha256: ef024062d5fde3e385749153f471ef1dfc0c3bd664db859db88c78d70e94c899
+    model_development_result: experiments/M075/MODEL_DEVELOPMENT_RESULT.json
+    model_development_result_raw_sha256: dadd202886e866e31be5cefb130e9e231f7739a0b49166f8d0c1dd2766acf949
+    model_development_calibration_digest: d0226c09b093f95e91c9132eed727fb3791d3bbf5cafd35040dd210714796088
+    model_development_model: gpt-5.6-sol
+    model_development_live_decisions: 43
+    model_development_episodes: 12
+    model_development_defects: 0
+    model_development_retry_used: false
+    model_development_baseline_true_refusals: 0
+    model_development_baseline_false_refusals: 0
+    model_development_baseline_calibration_margin: 0.0
+    model_development_baseline_wasted_steps: 12
+    model_development_context_true_refusals: 2
+    model_development_context_false_refusals: 0
+    model_development_context_calibration_margin: 0.6666666666666666
+    model_development_context_wasted_steps: 4
+    model_development_feasible_external_successes_each_condition: 3
+    model_development_context_feasible_submissions: 3
+    model_development_baseline_feasible_submissions: 0
+    model_development_conditions_use_independent_samples: true
+    model_development_causal_effect_claimed: false
+    model_development_counterexample: write-receipt-readonly
     scientific_model_called: false
     scientific_protocol_frozen: false
     private_scientific_bank_opened: false
     scientific_result_exists: false
-    supported_claim: development_epistemic_context_and_container_plumbing_operate_as_declared
+    supported_claim: public_authored_development_association_between_epistemic_context_and_better_stopping
     generality_gate_advanced: false
     agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: model_assisted_public_development_then_frozen_private_cross_domain_refusal_transfer_and_independent_reproduction
+  next_required_boundary: preprivate_causal_control_and_sealed_bank_review_then_frozen_cross_domain_transfer_and_independent_reproduction
 
 measurement_track:
   reserved_experiment: M045

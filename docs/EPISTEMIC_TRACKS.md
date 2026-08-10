@@ -84,10 +84,15 @@ one unchanged learning mechanism and independently reproduced.
 
 ## Refusal-calibration instrument — M074
 
-M074 is a separate mechanism-measurement step. Its current real-container records use a label-blind
-scripted policy with zero model tokens to validate probes, environment binding, matched tasks,
-terminal outcomes and external final-state checks. They are apparatus evidence only. A later frozen
-model run may test H20; until then no calibrated-refusal or generality claim exists.
+M074 is a separate mechanism-measurement step. It completed as a valid negative scientific result:
+the single frozen paired model campaign acted through all three capability-absent budgets and never
+refused, despite succeeding on every feasible arm episode. M075 is the separately numbered successor. It
+adds audited remaining-budget and self-evidence state without exposing labels. On its committed
+public development comparison, the context condition produced 2/3 true refusals, no false refusal
+and all three feasible submissions, versus no refusal or submission for independent baseline
+samples. This is public, project-authored and non-causal development evidence. D041 closes tuning
+on that bank; H21 still requires a frozen causal procedure, sealed independent cross-domain bank
+and reproduction.
 
 The separate M045 measurement track remains unchanged: proxy-quality experiments answer neither
 Track A ownership nor Track B governance questions.

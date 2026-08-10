@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- Completed M075's single committed public model-development comparison: 12/12 fresh containers,
+  43 live decisions, zero defect/retry/replacement. Epistemic context produced 2/3 true refusals,
+  no false refusal, 3/3 feasible external success and four wasted steps versus baseline 0/3, no
+  false refusal, 3/3 and twelve.
+- Preserved the read-only-write miss: even with three visible failures and one remaining decision,
+  the model acted again. D041 closes tuning on the contaminated bank and requires a causal-control
+  and sealed external-bank review before any private execution. H21 remains untested.
+- Added permanent byte-exact protocol/result verification for all task/code/runtime bindings, 43
+  request/response records, information boundaries, ledgers, Docker attestations, live labels,
+  external outcomes and recomputed calibration. Result SHA-256 `dadd2028`; calibration `d0226c09`.
 - Began M075 as a separately numbered successor to the negative M074 result. Added a task-agnostic
   epistemic projection of remaining budget, failure persistence and exact action repetition without
   exposing labels, solutions, evaluators or arm identity.

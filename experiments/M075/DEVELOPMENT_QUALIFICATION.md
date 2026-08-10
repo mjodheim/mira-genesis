@@ -1,8 +1,8 @@
 # M075 — epistemic-context development qualification
 
-**STATUS: LOCALLY QUALIFIED ZERO-TOKEN DEVELOPMENT APPARATUS. NOT A SCIENTIFIC RESULT.**
+**STATUS: APPARATUS AND PUBLIC MODEL-DEVELOPMENT RECORD QUALIFIED. NOT A SCIENTIFIC RESULT.**
 
-Date: 2026-08-10. Docker 29.6.2. No external model was called.
+Date: 2026-08-10. Docker 29.6.2.
 
 ## What is qualified
 
@@ -47,9 +47,22 @@ certificates, labels, boundaries, epistemic step/budget accounting, external out
 Mutation tests reject missing episodes, changed budgets, hidden-label injection and cross-arm label
 drift. The focused campaign passes 19 tests and all repository integrity modes.
 
+## Public model-development result
+
+The model-development protocol was committed before any call. Its single twelve-episode campaign
+preserved 43 live `gpt-5.6-sol` decisions with zero defect or retry. The baseline produced 0/3 true
+refusals, margin 0.0 and 12 wasted impossible-task steps. The epistemic condition produced 2/3 true
+refusals, no false refusal, margin 2/3 and four wasted steps. Both completed 3/3 feasible tasks
+externally; only the context condition submitted those workspaces instead of repeating successful
+actions through the budget.
+
+This is a useful but non-causal signal because the conditions use independent samples. The one
+missed read-only-write refusal remains a declared counterexample. Complete interpretation and
+digests are in `MODEL_DEVELOPMENT_RESULT.md`.
+
 ## Next boundary
 
-The next permitted phase is model-assisted **development** on this public bank with every raw
-request/response preserved and no positive scientific language. The context/prompt may be revised
-there. After it is fixed, a separate commit must freeze policy, model, thresholds and attempts
-before an unopened private, independently maintained, materially cross-domain bank is revealed.
+Public prompt tuning now closes rather than optimizing against that miss. A pre-private review must
+first resolve the causal-control procedure and sealed external bank intake. A separate commit must
+then freeze the unchanged policy, model, thresholds and attempts before an unopened private,
+independently maintained, materially cross-domain bank is revealed.

@@ -84,10 +84,12 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   refusal saved zero and H20 fails. Result `75e84682`; exact evidence commit `1eeb345` passed first
   CI run `31388068187` with 1,341 passed/1 skipped on Python 3.11 and 3.13 plus integrity;
   attribution `31388066466` passed. M074 is closed without retry or gate advance.
-- **M075 has a locally qualified zero-token development apparatus.** A task-agnostic projection of
-  remaining budget, failure persistence and exact action repetition is exercised on a separate
-  public six-task Node/write/read bank. Twelve fresh container episodes pass with zero defect; no
-  external model was called and H21 remains untested.
+- **M075 has a complete public model-development record.** Its zero-token apparatus qualification
+  was followed by one committed twelve-container comparison preserving 43 live `gpt-5.6-sol`
+  decisions with zero defect or retry. Explicit self-evidence produced 2/3 true refusals, zero
+  false refusal and all three feasible submissions; independent baseline samples produced no
+  refusal or submission. The public authored bank and independent samples make this non-causal and
+  non-scientific; H21 remains untested.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
@@ -707,7 +709,7 @@ question remains open but is not a missing completion gate.
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Full governance satisfies every authored containment/audit invariant over 48 scenarios; matched admission and audit ablations each lose 18 corresponding invariants. Result `ab555d2f`. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Four external demonstrations induce one committed capsule; model-free execution passes 12/12 held-out programs and 84/84 cases while no-capsule and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | Frozen paired execution passed 6/6 feasible arm tasks and 0/6 impossible tasks, but emitted no refusal: true-refusal rate 0/3, margin 0.0, zero saved steps, zero defect and no retry. Result `75e84682`. |
-| M075 | **DEVELOPMENT APPARATUS QUALIFIED — NO MODEL RESULT** | Explicit self-evidence plus a distinct public Node/write/read bank pass a zero-token 12-container control. This is plumbing only; H21 and private transfer remain untested. |
+| M075 | **PUBLIC MODEL DEVELOPMENT COMPLETE — NON-SCIENTIFIC** | One committed 12-container run preserved 43 decisions: context 2/3 true refusals, no false refusal, 3/3 feasible submission; independent baseline 0/3 and no submission. H21/private transfer remain untested. |
 
 ## Parallel measurement track — M045
 
