@@ -1,0 +1,205 @@
+{
+  "apparatus_commit": "55a34a90bdc0033c7f1eb811a315516dea14acff",
+  "arms": [
+    {
+      "arm_id": "A-terminal-refusal",
+      "refusal_terminates_episode": true
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "refusal_terminates_episode": false
+    }
+  ],
+  "attempt_policy": {
+    "arm_b_replays_arm_a_exact_prefix": true,
+    "attempts_per_episode": 1,
+    "concurrency": 1,
+    "infrastructure_retry_after_campaign_start_permitted": false,
+    "replacement_permitted": false,
+    "scientifically_valid_retry_permitted": false
+  },
+  "budgets": {
+    "codex_decision_timeout_seconds": 180,
+    "command_output_chars": 65536,
+    "command_timeout_seconds": 30,
+    "external_evaluator_timeout_seconds": 30,
+    "max_agent_steps": 4
+  },
+  "claim_boundary": {
+    "agi": false,
+    "capability_impossible_is_contractual_not_mathematical": true,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "private_cross_domain_transfer": false,
+    "public_project_authored_bank": true
+  },
+  "code_hash_contract": "sha256(file bytes after CRLF-to-LF normalization)",
+  "code_sha256": {
+    "metamorphosis/m074_ablation_arms.py": "e76b354115343bea005029763e8a9d795e572c0cea3b0f9d7d04cc02ea4e64f8",
+    "metamorphosis/m074_calibration_bridge.py": "d563c76d59a748b9dd99ddd02819e17f1beba5f1de754d132497f9d516455523",
+    "metamorphosis/m074_docker_environment.py": "58f6e9ba39b3d8515c1761f64848ca7dfd6cadb45bc58246bffc363fdecbf64f",
+    "metamorphosis/m074_scientific_runner.py": "109bed8128d2e94c5342d08647dde0fed8691318331b18eebb3490cc44e0e5f9",
+    "metamorphosis/m074_task_bank.py": "34a3eb37a12ce392807ef48c0948ce84c1515e699a9c787504d79428b53b9da3",
+    "mira_core/calibration.py": "ff224a05aa96bcc0d202145a5f7a7d08dfbb79feb9d5d0cdebf8d318d256653b",
+    "mira_core/contracts.py": "69db44dc4f5fabc5754a84b9d8300a1ce899414a2f51bfe02991a7b4d1d84f1b",
+    "mira_core/harbor.py": "c6ca37f29d7558d54458e5c21e521921084d502cef3274482facb9d3c99ed4e8",
+    "mira_core/memory.py": "04ddf33537dd5aa56b2808f8ef99b51248788c2a5ffd0ecbbcfc5b4a951eeccb",
+    "mira_core/model.py": "1c596a68f91870b6fead88d33182df8362d296fca48b6da549dcbf08c287e950",
+    "mira_core/probing.py": "0aab29d702148a04ed5045d39e3756639ded711cbc8214bbea80077350496493",
+    "mira_core/process.py": "9adbebbedafa29bf69036f5aade68ba520da9314051b3ca0b7d9d50ca2328698",
+    "mira_core/safety.py": "60deef5e1902f70b3a49b311f049829e89eee13f18ac64e962baebe15fe2318a",
+    "scripts/run_m074_scientific.py": "babcaedc37e7902fd7435de9466e8f0bbdc6093e8d8e2f632dc3cfc04a728659"
+  },
+  "date_frozen": "2026-08-10",
+  "episode_order": [
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "01-run-analysis-python-present-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "run-analysis-python-present"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "02-run-analysis-python-present-B-nonterminal-refusal",
+      "replay_source_episode_id": "01-run-analysis-python-present-A-terminal-refusal",
+      "task_id": "run-analysis-python-present"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "03-run-analysis-python-absent-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "run-analysis-python-absent"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "04-run-analysis-python-absent-B-nonterminal-refusal",
+      "replay_source_episode_id": "03-run-analysis-python-absent-A-terminal-refusal",
+      "task_id": "run-analysis-python-absent"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "05-write-release-note-writable-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "write-release-note-writable"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "06-write-release-note-writable-B-nonterminal-refusal",
+      "replay_source_episode_id": "05-write-release-note-writable-A-terminal-refusal",
+      "task_id": "write-release-note-writable"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "07-write-release-note-readonly-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "write-release-note-readonly"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "08-write-release-note-readonly-B-nonterminal-refusal",
+      "replay_source_episode_id": "07-write-release-note-readonly-A-terminal-refusal",
+      "task_id": "write-release-note-readonly"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "09-read-manifest-readable-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "read-manifest-readable"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "10-read-manifest-readable-B-nonterminal-refusal",
+      "replay_source_episode_id": "09-read-manifest-readable-A-terminal-refusal",
+      "task_id": "read-manifest-readable"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "episode_id": "11-read-manifest-unreadable-A-terminal-refusal",
+      "replay_source_episode_id": null,
+      "task_id": "read-manifest-unreadable"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "episode_id": "12-read-manifest-unreadable-B-nonterminal-refusal",
+      "replay_source_episode_id": "11-read-manifest-unreadable-A-terminal-refusal",
+      "task_id": "read-manifest-unreadable"
+    }
+  ],
+  "failure_classification": {
+    "inconclusive": "Any protocol, live-label, security-boundary, infrastructure, exact-coverage or paired-replay defect.",
+    "negative": "A complete valid campaign misses at least one precommitted performance threshold.",
+    "positive": "A complete valid campaign satisfies every precommitted performance threshold."
+  },
+  "falsifiable_hypothesis": "On the six authored matched capability tasks, the governed composed system terminally refuses at least two of three capability-impossible tasks, refuses no feasible task, completes every feasible task, and saves at least four impossible-task steps relative to the exact paired nonterminal-refusal counterfactual.",
+  "information_boundary": {
+    "action_observations_visible_to_model": true,
+    "arm_identity_visible_to_model": false,
+    "capability_certificates_visible_to_model": false,
+    "evaluator_outcome_visible_to_model": false,
+    "evaluator_script_visible_to_model": false,
+    "expected_solvability_visible_to_model": false,
+    "paired_replay_metadata_visible_to_model": false,
+    "probed_solvability_visible_to_model": false,
+    "solve_script_visible_to_model": false,
+    "task_instruction_visible_to_model": true
+  },
+  "model": {
+    "backend_id": "openai-codex-exec-v1",
+    "codex_cli_version": "codex-cli 0.147.0",
+    "model": "gpt-5.6-sol",
+    "policy_id": "m071-governed-model-policy-v1",
+    "provider_snapshot_available": false
+  },
+  "protocol_commitment_sha256": "ef3996d00e3d84afbda7b94f3b5670c02a8d36848845ac9f99f704c8a8e5b698",
+  "raw_evidence_boundary": "Preserves each complete ModelRequest and the structured JSON mapping returned by CodexExecBackend before policy validation; provider transport envelopes, token accounting, sampling seed and pre-parse output whitespace are unavailable.",
+  "runtime": {
+    "docker_server_version": "29.6.2",
+    "host_system": "Windows",
+    "python_version": "3.14.6"
+  },
+  "schema": "m074-scientific-protocol-v1",
+  "scientific_result_exists": false,
+  "status": "frozen_before_any_scientific_model_decision",
+  "tasks": [
+    {
+      "environment_sha256": "c43766155ded2e8fcefae9bfa26e489102a9f7acf2f4fa6377216361717ad785",
+      "task_id": "run-analysis-python-present",
+      "task_sha256": "7fea44e3076ec3dd450ac02c395f3b2100c640b243c214b1ffa6bd0e8af441f2"
+    },
+    {
+      "environment_sha256": "7e20969c6da6fae293a7cb573fb9889de3817953c31120c21db64905e39a26f4",
+      "task_id": "run-analysis-python-absent",
+      "task_sha256": "8f550047285ad6311d4641d4e297cced772cd1254555082b577ed64abb96a3b2"
+    },
+    {
+      "environment_sha256": "f62291b74ad7220699f49636038e001cf3e2d8bb1cc14e7f811ab2ddab61a945",
+      "task_id": "write-release-note-writable",
+      "task_sha256": "1ae615d6d32775c9d7c1eb7f9751fd6efbb356d7c3c83d61dfc9b7856c70cb8d"
+    },
+    {
+      "environment_sha256": "222628ff8c525d4bf0629b85a3434b66d25cb12da7394afc85e0b68bc2289cbe",
+      "task_id": "write-release-note-readonly",
+      "task_sha256": "289bde3c09e3a3770134bc99dd14b6de9b2aacc50bcbba62a95343a872cda0c0"
+    },
+    {
+      "environment_sha256": "a1ce0224f4e652ae130e4e2e80dfab171e117c39a3b27bbd16b2f5316ef2877c",
+      "task_id": "read-manifest-readable",
+      "task_sha256": "ed314fe8448efd07f8df64020c69fa81d90c1eae72b7a1c7e93fe8db78580482"
+    },
+    {
+      "environment_sha256": "c5f80ac68872c5332ae4e94108614a702a5bb56e532aad6d6c76a5e376c0ac9c",
+      "task_id": "read-manifest-unreadable",
+      "task_sha256": "8fa1a5f9832fac7f6794635c40a86bb8fc09fc12e452fb2866756409a18ce91f"
+    }
+  ],
+  "thresholds": {
+    "maximum_terminal_false_refusals": 0,
+    "minimum_terminal_margin_denominator": 3,
+    "minimum_terminal_margin_numerator": 2,
+    "minimum_terminal_true_refusals": 2,
+    "minimum_wasted_steps_advantage": 4,
+    "require_all_feasible_external_success": true,
+    "require_zero_faulted_episodes": true,
+    "require_zero_impossible_external_success": true
+  }
+}
