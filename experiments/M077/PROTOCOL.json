@@ -1,0 +1,110 @@
+{
+  "schema": "m077-long-horizon-recovery-protocol-v1",
+  "status": "frozen_before_shift_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G7",
+  "addresses_gate_components": [
+    "intervention_count",
+    "recovery_after_injected_faults",
+    "constraint_retention",
+    "verification_quality"
+  ],
+  "explicitly_not_addressed": [
+    "human_equivalent_task_horizons",
+    "wall_clock_ten_minute_to_one_day_calibration",
+    "metr_style_fitted_time_horizon"
+  ],
+  "horizon_unit": "episode_count_not_human_equivalent_time",
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "One persistent deterministic lineage will hold four declared invariants at every episode boundary and recover from every injected fault without a single intervention, at each of four increasing episode-count horizons and without degradation as the horizon grows; and two matched ablations will each lose exactly their own capability, one losing fault recovery while retaining violation detection and the other losing violation detection while retaining fault recovery.",
+  "claim_boundary": {
+    "establishes_constraint_retention_across_episode_horizons": true,
+    "establishes_unattended_fault_recovery": true,
+    "establishes_human_equivalent_time_horizon": false,
+    "establishes_long_horizon_autonomy_in_real_environments": false,
+    "closes_generality_gate_g7": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "agi_evidence": false
+  },
+  "body": {
+    "slots": 16,
+    "record_types": ["alpha", "beta", "gamma", "delta"],
+    "journal": "append-only sha256 digest chain over accepted transitions",
+    "checkpoint_interval_episodes": 16
+  },
+  "invariants": {
+    "I1": "no slot holds a record whose type differs from its declared slot type",
+    "I2": "the journal digest chain is unbroken from genesis to head",
+    "I3": "occupied slots never exceed the declared capacity",
+    "I4": "the completed work-item count is monotone and never loses an accepted item"
+  },
+  "injected_faults": {
+    "slot_type_corruption": "rewrite one occupied slot with a wrong-typed record",
+    "journal_truncation": "drop the journal head so the chain no longer reaches the recorded head",
+    "capacity_spike": "insert one record beyond declared capacity",
+    "stale_checkpoint": "present a checkpoint older than the recorded head"
+  },
+  "fault_schedule": {
+    "rule": "sha256(salt || uint32_be(horizon) || uint32_be(ordinal)) selects the episode index and fault kind; every fault kind appears at least once per horizon",
+    "faults_per_horizon_rule": "max(4, horizon_length // 64)",
+    "schedule_materialized": false
+  },
+  "horizons": [32, 128, 512, 2048],
+  "arms": {
+    "full": {
+      "checkpoint_recovery": "enabled",
+      "constraint_monitor": "enabled"
+    },
+    "no_checkpoint": {
+      "checkpoint_recovery": "removed",
+      "constraint_monitor": "enabled",
+      "preregistered_loss": "unrecovered faults appear while violation detection stays identical to the full arm"
+    },
+    "no_constraint_monitor": {
+      "checkpoint_recovery": "enabled",
+      "constraint_monitor": "removed",
+      "preregistered_loss": "undetected violations appear while fault recovery stays identical to the full arm"
+    },
+    "idle_floor": {
+      "checkpoint_recovery": "not applicable",
+      "constraint_monitor": "not applicable",
+      "purpose": "measure the work-item floor of a lineage that emits no transition, so that a zero-violation arm cannot be read as competent"
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "c24a8c49ebd2357c34299ec706f93ce323d4aba383281f8680cc4db722d12e03",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || uint32_be(horizon) || uint32_be(index)) determines the work item, target slot and record type",
+    "schedule_materialized": false
+  },
+  "positive_threshold": {
+    "full_arm_unrecovered_faults": 0,
+    "full_arm_undetected_violations": 0,
+    "full_arm_interventions_required": 0,
+    "full_arm_work_items_completed_fraction": 1.0,
+    "full_arm_exact_replay_required": true,
+    "full_arm_no_degradation_across_horizons": true,
+    "no_checkpoint_min_unrecovered_faults": 1,
+    "no_checkpoint_violation_detection_must_equal_full": true,
+    "no_constraint_monitor_min_undetected_violations": 1,
+    "no_constraint_monitor_fault_recovery_must_equal_full": true,
+    "idle_floor_max_work_items_completed": 0
+  },
+  "failure_classification": {
+    "negative": "Any unrecovered fault, undetected violation, required intervention, incomplete work item or replay mismatch in the full arm; any degradation of full-arm retention as the horizon grows; either ablation failing to lose its own capability; or either ablation changing the capability it was meant to retain.",
+    "inconclusive": "The frozen schedule cannot be reproduced exactly from this committed protocol.",
+    "positive": "The full arm holds every invariant and recovers every fault at all four horizons with zero interventions, and both ablations show their preregistered single-capability loss on the first materialized schedule."
+  },
+  "prohibited_adaptation": [
+    "change the hypothesis, thresholds, salt, invariants or fault grammar after schedule materialization",
+    "remove or reposition a fault after observing an arm outcome",
+    "retry the first materialized schedule",
+    "grant the lineage repository, network, credential, deployment, permission-change or physical authority",
+    "report episode-count horizons as human-equivalent task horizons",
+    "describe this bounded mechanism result as closing G7, as real-environment long-horizon autonomy or as AGI evidence"
+  ]
+}

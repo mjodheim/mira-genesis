@@ -1057,3 +1057,36 @@ policy does not change between episodes; persistence is identity and audit, not 
 supplies no perception, cross-domain, continual-learning, Genesis Gate 2 or Gate 3 evidence and no
 AGI evidence. It does not touch, weaken or satisfy the M075 pre-private readiness boundary, which
 remains fail-closed on independent inputs.
+
+## D043 — M077 is a valid negative; the boundary monitor must earn coverage, not latency
+
+M077 asked whether detection and restoration are separable mechanisms across increasing
+episode-count horizons. Its protocol was frozen before the harness existed and its schedule was
+bound before any arm ran. The answer is half yes and half no, and the no is the result.
+
+### The decision
+
+The preregistered dissociation is refuted and preserved as a negative. M077 advances no generality
+gate; G7 remains open. The two positive sub-results — undegraded retention to 2048 episodes and a
+causally isolated checkpoint mechanism — are recorded as bounded mechanism observations and may not
+be cited as a G7 advance or as long-horizon autonomy.
+
+Two instrument corrections were applied before materialization and are stored in the result: raw
+detection events could exceed injected faults, and a single outstanding-fault slot could not
+represent faults on adjacent episodes. The first correction moved the failing arm rather than
+removing a failure, which is the signature of a real refutation. No third correction was made. A
+change shaped to make the remaining arm comply would have been tuning against an observed outcome,
+and `check_m077_result.py` now fails closed if the negative is ever silently converted.
+
+### What the refutation teaches
+
+A periodic invariant audit is redundant with operational failure whenever every corruption
+eventually reaches a guarded operation. It purchases detection latency, not coverage. A successor
+may not simply add horizons, faults or invariants to this body; it must introduce corruption that
+can stay quiescent indefinitely, or a body whose operations do not guard the corrupted state.
+
+### Claim boundary
+
+Episode counts are not human-equivalent time horizons and may never be reported as such. M077
+supplies no real-environment autonomy, no cost model, no Genesis Gate 2 or Gate 3 evidence and no
+AGI evidence, and it does not touch the M075 pre-private readiness boundary.

@@ -428,3 +428,29 @@ ablation cannot be read as informative against an assumed zero.
 agent that does not learn. It establishes no natural-image perception, no cross-domain transfer, no
 continual learning, no Genesis Gate 2 or Gate 3 evidence, and does not close G2. Independent
 reproduction is still required before stronger language is used.
+
+## H23 — Boundary constraint monitoring and checkpoint recovery are separable mechanisms
+
+In a persistent lineage running long shifts over a typed pool with a digest-chained journal,
+removing checkpoint recovery should cost restoration while leaving detection intact, and removing
+the boundary invariant monitor should cost detection while leaving restoration intact. Each
+mechanism should be necessary for exactly one capability.
+
+**Status:** **refuted** by the M077 negative result on its first materialized schedule. Removing
+checkpoint recovery behaved as predicted: restoration fell to exactly 0.00 at every horizon while
+detection stayed numerically identical to the full arm. Removing the boundary monitor did not:
+detection was unchanged at 32, 128 and 512 episodes and lost a single fault of 32 at 2048.
+
+**Why:** silent corruption does not stay silent across a long shift. A corrupted pool keeps being
+written to until the corruption reaches an operation that cannot complete, and the body raises on
+its own. The boundary monitor buys detection latency, not detection coverage, whenever every
+corruption eventually touches a guarded operation.
+
+**Preserved sub-results:** the full arm held all four invariants, recovered every injected fault and
+required zero interventions at 32, 128, 512 and 2048 episodes with no degradation as the horizon
+grew; and checkpoint recovery was causally isolated by its matched ablation. These are bounded
+mechanism observations inside one project-authored in-memory body, not a gate advance.
+
+**Scope:** horizons are episode counts. Nothing in M077 measures a human-equivalent task horizon,
+real-environment autonomy or cost, and the refutation is bounded to a body whose operations guard
+the corrupted state. A successor must supply corruptions that can remain quiescent indefinitely.
