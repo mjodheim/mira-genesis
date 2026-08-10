@@ -1,0 +1,145 @@
+{
+  "schema": "m073-skill-appropriation-protocol-v1",
+  "status": "protocol_frozen_before_capsule_implementation_teacher_demonstrations_or_holdout_materialization",
+  "research_question": "Can a continuing lineage induce one executable reusable skill from external-model demonstrations, serialize it as a lineage-owned capsule, remove the model completely, and use only that capsule to repair fresh held-out programs that were never shown to the teacher?",
+  "epistemic_bridge": {
+    "source_track": "model-mediated external teacher",
+    "target_track": "endogenous execution after teacher removal",
+    "teacher_outputs_are_lineage_owned": false,
+    "generalized_capsule_may_count_as_bridge_evidence_only_if": [
+      "the teacher emits only solved training examples, never the generalized rewrite template",
+      "the lineage induces the generalized executable transformation from at least four distinct demonstrations",
+      "the capsule is serialized before holdout task content is materialized",
+      "the external model is unavailable during every holdout decision and transformation",
+      "the lineage chooses every held-out match binding and transformation argument itself"
+    ],
+    "genesis_gate_2_claim_permitted": false,
+    "claim_if_positive": "bounded model-to-lineage skill appropriation mechanism evidence, not a retroactive Genesis Gate 2 completion claim"
+  },
+  "teacher": {
+    "model": "gpt-5.6-sol",
+    "provider_snapshot_available": false,
+    "interface": "complete Python source replacement for one training task",
+    "maximum_calls": 4,
+    "training_task_count": 4,
+    "teacher_may_see": [
+      "one training source file",
+      "that task's public tests",
+      "the instruction to preserve the signature and return a complete replacement"
+    ],
+    "teacher_may_not_see": [
+      "the skill-capsule induction implementation",
+      "holdout materialized source",
+      "holdout expected outputs",
+      "holdout evaluator cases",
+      "a generalized AST rewrite template"
+    ],
+    "teacher_output_contract": {
+      "language": "python",
+      "one_complete_module": true,
+      "markdown_fences_forbidden": true,
+      "explanation_forbidden": true
+    }
+  },
+  "task_family": {
+    "language": "Python 3",
+    "module_shape": "one pure function plus harmless distractor assignments",
+    "latent_training_failure": "a two-operand division return expression fails the zero-denominator evaluator case",
+    "teacher_instruction": "Repair the function so division by zero returns numeric zero while non-zero division preserves Python true-division semantics. Preserve the function signature. Return only the complete Python module.",
+    "generator_must_be_task_agnostic_to_identifiers": true,
+    "training_seeds": [3, 7, 11, 19],
+    "holdout_seeds": [101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157],
+    "holdout_count": 12,
+    "holdout_content_may_be_materialized_only_after_capsule_commit": true,
+    "holdout_identifiers_must_be_disjoint_from_training_identifiers": true
+  },
+  "capsule_contract": {
+    "schema": "mira-skill-capsule-v1",
+    "representation": "parameterized Python AST return-expression rewrite",
+    "required_fields": [
+      "skill_id",
+      "source_pattern",
+      "target_template",
+      "preconditions",
+      "training_evidence_sha256",
+      "induction_trace_sha256",
+      "provenance",
+      "capsule_sha256"
+    ],
+    "provenance": "induced_from_external_demonstrations",
+    "teacher_output_bytes_may_not_be_embedded_as_lookup_entries": true,
+    "raw_training_source_hash_lookup_forbidden": true,
+    "induction": {
+      "minimum_distinct_demonstrations": 4,
+      "all_demonstrations_must_pass_public_and_private_training_evaluation": true,
+      "single_changed_return_expression_required": true,
+      "identifier_roles_must_be_abstracted": true,
+      "one_unique_generalized_template_required": true,
+      "corrupted_or_inconsistent_demonstrations_must_yield_no_capsule": true
+    }
+  },
+  "teacher_removal_boundary": {
+    "capsule_must_be_committed_before_holdout_materialization": true,
+    "model_calls_during_holdout": 0,
+    "model_import_or_backend_required_for_holdout": false,
+    "network_required_for_holdout": false,
+    "teacher_demonstration_files_readable_by_holdout_runner": false,
+    "holdout_runner_inputs": [
+      "serialized capsule",
+      "one held-out source module",
+      "evaluator-owned test inputs"
+    ]
+  },
+  "control_arms": {
+    "complete_lineage": "apply the induced capsule by structural matching and lineage-chosen bindings",
+    "no_capsule": "return the unchanged held-out module",
+    "memorizer": "may replay a teacher output only on an exact training-source SHA-256 match; unseen hashes remain unchanged",
+    "corrupted_teacher": "one teacher repair is deterministically corrupted before induction; induction must refuse to create a capsule",
+    "teacher_call_trap": "any attempt to invoke an external model after the removal boundary fails the experiment"
+  },
+  "evaluation": {
+    "per_holdout_cases": [
+      "positive numerator and positive denominator",
+      "negative numerator and positive denominator",
+      "positive numerator and negative denominator",
+      "zero numerator and nonzero denominator",
+      "positive numerator and zero denominator",
+      "negative numerator and zero denominator",
+      "zero numerator and zero denominator"
+    ],
+    "success_decided_by": "deterministic evaluator outside the capsule",
+    "source_must_parse_after_rewrite": true,
+    "function_signature_must_be_preserved": true,
+    "unrelated_assignments_must_be_preserved": true
+  },
+  "preregistered_positive_threshold": {
+    "teacher_valid_repairs": 4,
+    "unique_capsules_induced": 1,
+    "complete_lineage_holdouts_passed": 12,
+    "complete_lineage_holdouts_total": 12,
+    "complete_lineage_case_failures": 0,
+    "no_capsule_holdouts_passed_max": 0,
+    "memorizer_holdouts_passed_max": 0,
+    "corrupted_teacher_capsules_induced": 0,
+    "holdout_model_calls": 0,
+    "capsule_committed_before_holdout_materialization": true
+  },
+  "failure_classification": {
+    "negative": "any preregistered positive threshold condition fails, including teacher failure, ambiguous induction, holdout failure, a control solving a holdout, or any model call after teacher removal",
+    "inconclusive": "only repository or CI infrastructure prevents the deterministic experiment from executing before any scientific result is produced",
+    "positive": "the entire conjunction in preregistered_positive_threshold holds without changing the protocol, task seeds, demonstrations, capsule, evaluator or controls after observation"
+  },
+  "prohibited_adaptation": [
+    "change training or holdout seeds after any teacher output",
+    "show holdout materialized content to the teacher",
+    "hand-write the generalized capsule after seeing teacher outputs",
+    "filter or replace a teacher demonstration because induction rejects it",
+    "change the capsule after any holdout content is materialized",
+    "call the teacher during holdout",
+    "interpret a positive result as general software engineering, open-ended learning, AGI, consciousness or safe deployment"
+  ],
+  "scientific_result_exists": false,
+  "teacher_demonstrations_exist": false,
+  "capsule_exists": false,
+  "holdout_materialized": false
+}

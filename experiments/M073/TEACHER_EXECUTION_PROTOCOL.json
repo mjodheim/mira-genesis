@@ -1,0 +1,50 @@
+{
+  "schema": "m073-teacher-execution-protocol-v1",
+  "status": "frozen_before_any_teacher_call",
+  "protocol_commit": "78d53d733bdf77eab773414e8d273ed70e31391d",
+  "training_tasks_commit": "898380d86aef7f67e39367c06e0ebe498395d33b",
+  "request_set_commit": "521895af33e30320c06437d4d9fbd83dee581a47",
+  "teacher_runner_commit": "4351fc007a95d341b017e10511de730e20651947",
+  "teacher_runner_path": "scripts/run_m073_teacher.py",
+  "model": "gpt-5.6-sol",
+  "codex_interface": "official Codex CLI exec in an empty temporary read-only sandbox workspace",
+  "calls": {
+    "count": 4,
+    "order": [
+      "m073-training-3",
+      "m073-training-7",
+      "m073-training-11",
+      "m073-training-19"
+    ],
+    "attempts_per_task": 1,
+    "scientifically_valid_retry_permitted": false,
+    "replacement_permitted": false,
+    "timeout_seconds_per_call": 180
+  },
+  "teacher_context": {
+    "repository_visible": false,
+    "skill_induction_implementation_visible": false,
+    "holdout_content_visible": false,
+    "prompt_inputs_only": [
+      "frozen M073 repair instruction",
+      "three frozen public input-output cases",
+      "one frozen training source module"
+    ]
+  },
+  "response": {
+    "complete_python_module_only": true,
+    "markdown_forbidden": true,
+    "explanation_forbidden": true,
+    "raw_response_preserved_before_induction": true
+  },
+  "failure_classification": {
+    "negative": "a scientifically valid teacher response violates the frozen contract or the four responses later fail the preregistered induction/training threshold",
+    "inconclusive": "Codex transport or authentication prevents a teacher response before model output is produced; no scientific retry is performed inside M073",
+    "positive_teacher_phase": "all four single calls return contract-valid raw Python modules; this alone is not an M073 positive result"
+  },
+  "teacher_calls_executed": false,
+  "teacher_responses_exist": false,
+  "capsule_exists": false,
+  "holdout_materialized": false,
+  "scientific_result_exists": false
+}

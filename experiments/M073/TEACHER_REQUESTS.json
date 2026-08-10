@@ -1,0 +1,60 @@
+{
+  "schema": "m073-teacher-request-set-v1",
+  "status": "frozen_before_any_teacher_response",
+  "protocol_commit": "78d53d733bdf77eab773414e8d273ed70e31391d",
+  "training_tasks_commit": "898380d86aef7f67e39367c06e0ebe498395d33b",
+  "teacher": {
+    "model": "gpt-5.6-sol",
+    "provider_snapshot_available": false,
+    "maximum_calls": 4,
+    "response_contract": "complete Python module only; no markdown fences; no explanation"
+  },
+  "context_excluded_from_teacher": [
+    "mira_core/skills.py",
+    "tests/test_m073_skill_capsule.py",
+    "holdout materialized source",
+    "holdout evaluator outputs",
+    "generalized source_pattern",
+    "generalized target_template"
+  ],
+  "instruction": "Repair the function so division by zero returns numeric zero while non-zero division preserves Python true-division semantics. Preserve the function signature and every unrelated assignment. Return only the complete Python module, without markdown fences or explanation.",
+  "public_cases": [
+    {"args": [10, 2], "expected": 5.0},
+    {"args": [7, -2], "expected": -3.5},
+    {"args": [5, 0], "expected": 0}
+  ],
+  "requests": [
+    {
+      "call_index": 1,
+      "task_id": "m073-training-3",
+      "source_sha256": "7876de71ed2c55be4278c325bf9e89f020dd581c393ef57f5a89228d6c8a7b6d",
+      "source": "def ratio_3e3cd29106(value_3b39da07, scale_df501cf0):\n    marker_5b58d1e7 = 3\n    return value_3b39da07 / scale_df501cf0\n",
+      "teacher_response_sha256": null
+    },
+    {
+      "call_index": 2,
+      "task_id": "m073-training-7",
+      "source_sha256": "9e8ef4a5c95ecdff6b5ebcab635e42ee622b18c6cdd4ec723c6d688f73b47752",
+      "source": "def ratio_1fa34e1873(value_66e4bb98, scale_bc887928):\n    marker_76cf66ba = 7\n    return value_66e4bb98 / scale_bc887928\n",
+      "teacher_response_sha256": null
+    },
+    {
+      "call_index": 3,
+      "task_id": "m073-training-11",
+      "source_sha256": "7b892b38a8cd892203f6cf8e6971ffeb350003dadf48a7aafc85cb19c38e264a",
+      "source": "def ratio_96d8ac6a10(value_841ed04a, scale_9be2184b):\n    marker_f06621db = 11\n    return value_841ed04a / scale_9be2184b\n",
+      "teacher_response_sha256": null
+    },
+    {
+      "call_index": 4,
+      "task_id": "m073-training-19",
+      "source_sha256": "c96f444e347c84f62a16d4cbcf8113bdb6eb0a5a10cb6e0a764c42650e98f928",
+      "source": "def ratio_3a51f9d897(value_082df437, scale_7be2bcb4):\n    marker_95fa5807 = 2\n    return value_082df437 / scale_7be2bcb4\n",
+      "teacher_response_sha256": null
+    }
+  ],
+  "teacher_responses_exist": false,
+  "capsule_exists": false,
+  "holdout_materialized": false,
+  "scientific_result_exists": false
+}

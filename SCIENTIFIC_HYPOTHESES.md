@@ -298,3 +298,45 @@ zero exception, retry or replacement under no-network agent phases. Result diges
 **Scope:** H17 concerns the named `gpt-5.6-sol`/M071/Harbor composed system. It does not isolate the
 Mira governance layer, establish success across two domains, satisfy endogenous Genesis ownership,
 or support a general-agent or AGI claim.
+
+## H18 — Authority admission and audit chaining have isolable causal value
+
+Under a frozen authored threat model, full governance can preserve authority and audit invariants
+that matched arms lacking admission or digest chaining cannot preserve.
+
+**Status:** supported by the M072 qualified development result.
+
+**Pre-written implication:** full governance must release zero unauthorized proposals, falsely
+refuse zero authorized controls and detect every committed tamper. Each ablated arm must lose at
+least one invariant supplied by its removed mechanism while the 48-scenario suite remains fixed.
+
+**Result:** full governance released zero unauthorized proposals, recorded zero false refusal and
+detected 18/18 committed tampers. Admission and audit ablations each lost 18 corresponding
+invariants. No represented action was executed. Result digest `ab555d2f`.
+
+**Scope:** H18 establishes causality only for two mechanisms and a project-authored non-executing
+scenario grammar. It does not establish external red-team robustness, model competence, calibrated
+refusal, private transfer, Genesis ownership or AGI.
+
+## H19 — External demonstrations can become one model-free lineage skill
+
+A lineage can induce one identifier-generalized executable transformation from four externally
+solved training examples, commit it before holdout materialization, remove the teacher and apply
+only the serialized artifact successfully to twelve fresh programs from the frozen family.
+
+**Status:** supported by the M073 qualified development result. Exact evidence head `2eaa5c7`
+passed CI run `31370311326` on Python 3.11 and 3.13 plus repository integrity.
+
+**Pre-written implication:** all four single-call teacher repairs must pass; exactly one capsule
+must be induced; a corrupted demonstration set must yield none; after teacher removal the complete
+lineage must pass 12/12 holdouts with zero case failure and zero model call; unchanged-source and
+exact-hash memorizer controls must each pass at most 0/12.
+
+**Result:** four valid teacher repairs induced capsule `444a8a54`, committed at `760803c` before
+holdouts existed. The model-free lineage passed 12/12 holdouts and 84/84 cases. Both controls passed
+0/12, the memorizer had zero hash hit and the corrupted set induced no capsule. No retry occurred.
+Result digest `edaf03b4`.
+
+**Scope:** H19 concerns one project-authored division-by-zero AST family whose desired semantics
+were given to the teacher. It does not establish general program synthesis, curriculum discovery,
+cross-domain learning, Genesis Gate 2 or Gate 3, safe deployment or AGI.

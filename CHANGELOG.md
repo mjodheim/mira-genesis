@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Preserved M073's first preregistered result: four frozen single-call external demonstrations
+  induced one committed identifier-generalized AST capsule. After teacher removal it passed 12/12
+  holdouts and 84/84 cases; unchanged-source and exact-hash memorizer controls passed 0/12, the
+  corrupted-teacher control induced no capsule and no scientific retry occurred. Result `edaf03b4`.
+- Added a permanent M073 verifier that reconstructs teacher prompt bindings, induction, the
+  capsule-before-holdout commit boundary, all holdout outcomes, controls and final verdict. The
+  supported claim is bounded model-to-lineage skill appropriation, not general programming,
+  Genesis Gate 2, safe deployment or AGI.
+- Exact M073 evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 passed and one
+  skipped on both Python 3.11 and Python 3.13, plus repository integrity. Attribution run
+  `31370349333` passed; no workflow rerun was used.
+- Recorded M072's already-fused positive causal-governance result in the root registers: full
+  governance satisfies the frozen authored invariants over 48 scenarios, while admission and audit
+  ablations each lose 18 matching invariants. No represented action or external model was executed.
 - Froze M071 runtime `0820ebc`, Harbor bridge `132476a` and 17 committed blobs before pinning a
   benchmark revision or selecting a fresh external identifier. Commitment `2e76a1b8`; no M071
   scientific result exists.

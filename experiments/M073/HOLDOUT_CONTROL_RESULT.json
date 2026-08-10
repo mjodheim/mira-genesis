@@ -1,0 +1,147 @@
+{
+  "control_result_sha256": "18d76e299dad1d92e0dc39fd6c73f4bd6b2c230ce10aaeb6d715bcb5982871fa",
+  "holdout_materialization_sha256": "dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c",
+  "memorizer_exact_training_hash_hits": 0,
+  "memorizer_holdouts_passed": 0,
+  "memorizer_records": [
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "dc14ca83d1b43e4551b91872a3a5c48af5e26105e5febf61f9c65e2a0c661d5b",
+      "task_id": "m073-holdout-101"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "4655f7d958f3e4a9f36245753be20a780743abd85ec982e4752dcd061b8327fb",
+      "task_id": "m073-holdout-103"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "998c30e860a3d26a00a7d8eae416e0530bd0dca059f094e2a82fa3a9c80c5a26",
+      "task_id": "m073-holdout-107"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "822dd31527dbdbf28444cc956ff1bf7d42ba43c0619d56b4ede22abcd545e524",
+      "task_id": "m073-holdout-109"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "580cde7f07af03c28d170e75ee2b8cd7fe9fecfae315748eaef064c1fb9833f8",
+      "task_id": "m073-holdout-113"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "f2de2c343b5b70021b6ec54950f6707077f387189d21cba68b4331a86cbacd73",
+      "task_id": "m073-holdout-127"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "44fa736d24a116c41d5496093ad09d0d4057817e8843c89f946fd85bfc9c010c",
+      "task_id": "m073-holdout-131"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "d6374a025688ed879d0b086fdc3d93ad61394d510a3864c3daf7ab4f6993d142",
+      "task_id": "m073-holdout-137"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "4eb5f93cc5aa7c88083f0976fe54327986adab3c0cfb683e7166f7693639bed2",
+      "task_id": "m073-holdout-139"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "f8a19e4bf0d040741b7f2edf8a87d08b386ac3fa3458993e7389ce255bb24fc8",
+      "task_id": "m073-holdout-149"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "76523f048f11da60a290f3a26c405792a97bbb6705c8e87827816dcc56188b85",
+      "task_id": "m073-holdout-151"
+    },
+    {
+      "exact_training_hash_hit": false,
+      "passed": false,
+      "source_sha256": "b8c31d5289e27add6ea87fde8aade60b4e8078f76dac5363d1c463dce73d1d0a",
+      "task_id": "m073-holdout-157"
+    }
+  ],
+  "no_capsule_holdouts_passed": 0,
+  "no_capsule_records": [
+    {
+      "passed": false,
+      "source_sha256": "dc14ca83d1b43e4551b91872a3a5c48af5e26105e5febf61f9c65e2a0c661d5b",
+      "task_id": "m073-holdout-101"
+    },
+    {
+      "passed": false,
+      "source_sha256": "4655f7d958f3e4a9f36245753be20a780743abd85ec982e4752dcd061b8327fb",
+      "task_id": "m073-holdout-103"
+    },
+    {
+      "passed": false,
+      "source_sha256": "998c30e860a3d26a00a7d8eae416e0530bd0dca059f094e2a82fa3a9c80c5a26",
+      "task_id": "m073-holdout-107"
+    },
+    {
+      "passed": false,
+      "source_sha256": "822dd31527dbdbf28444cc956ff1bf7d42ba43c0619d56b4ede22abcd545e524",
+      "task_id": "m073-holdout-109"
+    },
+    {
+      "passed": false,
+      "source_sha256": "580cde7f07af03c28d170e75ee2b8cd7fe9fecfae315748eaef064c1fb9833f8",
+      "task_id": "m073-holdout-113"
+    },
+    {
+      "passed": false,
+      "source_sha256": "f2de2c343b5b70021b6ec54950f6707077f387189d21cba68b4331a86cbacd73",
+      "task_id": "m073-holdout-127"
+    },
+    {
+      "passed": false,
+      "source_sha256": "44fa736d24a116c41d5496093ad09d0d4057817e8843c89f946fd85bfc9c010c",
+      "task_id": "m073-holdout-131"
+    },
+    {
+      "passed": false,
+      "source_sha256": "d6374a025688ed879d0b086fdc3d93ad61394d510a3864c3daf7ab4f6993d142",
+      "task_id": "m073-holdout-137"
+    },
+    {
+      "passed": false,
+      "source_sha256": "4eb5f93cc5aa7c88083f0976fe54327986adab3c0cfb683e7166f7693639bed2",
+      "task_id": "m073-holdout-139"
+    },
+    {
+      "passed": false,
+      "source_sha256": "f8a19e4bf0d040741b7f2edf8a87d08b386ac3fa3458993e7389ce255bb24fc8",
+      "task_id": "m073-holdout-149"
+    },
+    {
+      "passed": false,
+      "source_sha256": "76523f048f11da60a290f3a26c405792a97bbb6705c8e87827816dcc56188b85",
+      "task_id": "m073-holdout-151"
+    },
+    {
+      "passed": false,
+      "source_sha256": "b8c31d5289e27add6ea87fde8aade60b4e8078f76dac5363d1c463dce73d1d0a",
+      "task_id": "m073-holdout-157"
+    }
+  ],
+  "schema": "m073-holdout-control-result-v1",
+  "scientific_result_exists": false,
+  "status": "holdout_controls_completed",
+  "teacher_calls_during_controls": 0
+}

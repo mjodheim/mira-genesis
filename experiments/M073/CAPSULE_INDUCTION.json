@@ -1,0 +1,41 @@
+{
+  "capsule_sha256": "444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620",
+  "corrupted_teacher_capsules_induced": 0,
+  "holdout_materialized": false,
+  "holdout_model_calls": 0,
+  "protocol_commit": "78d53d733bdf77eab773414e8d273ed70e31391d",
+  "schema": "m073-capsule-induction-v1",
+  "scientific_result_exists": false,
+  "status": "capsule_induced_before_holdout_materialization",
+  "teacher_request_commit": "521895af33e30320c06437d4d9fbd83dee581a47",
+  "teacher_response_set_sha256": "e01b062a9fead119b40cc35906d0aa9d8584391cba4f79be36c48a4d1ac0ce7e",
+  "teacher_valid_repairs": 4,
+  "training_audit": [
+    {
+      "response_sha256": "e400ca0fff46acce09aec0d99046454088270aadad389a3ce063c5760b5580a1",
+      "source_sha256": "7876de71ed2c55be4278c325bf9e89f020dd581c393ef57f5a89228d6c8a7b6d",
+      "task_id": "m073-training-3",
+      "training_evaluator_passed": true
+    },
+    {
+      "response_sha256": "0e0a9db491155c8e8d2b478ea0c4623e8c04a05666e8b0846e4d814fda18853a",
+      "source_sha256": "9e8ef4a5c95ecdff6b5ebcab635e42ee622b18c6cdd4ec723c6d688f73b47752",
+      "task_id": "m073-training-7",
+      "training_evaluator_passed": true
+    },
+    {
+      "response_sha256": "89ba4fba44247815d26c68873d862d5ad68c022dfd62bf514bf1ea507daf2c8a",
+      "source_sha256": "7b892b38a8cd892203f6cf8e6971ffeb350003dadf48a7aafc85cb19c38e264a",
+      "task_id": "m073-training-11",
+      "training_evaluator_passed": true
+    },
+    {
+      "response_sha256": "815e99fcdd2fecf64ba957be404248860cfd5c3fd6ca2f16b46ee7a763a07a20",
+      "source_sha256": "c96f444e347c84f62a16d4cbcf8113bdb6eb0a5a10cb6e0a764c42650e98f928",
+      "task_id": "m073-training-19",
+      "training_evaluator_passed": true
+    }
+  ],
+  "training_tasks_commit": "898380d86aef7f67e39367c06e0ebe498395d33b",
+  "unique_capsules_induced": 1
+}

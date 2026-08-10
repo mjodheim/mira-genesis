@@ -32,9 +32,11 @@ attribute external-model competence to Mira. See
   is refused before mutation. Exact learner `c603dd5` passed qualification run `31319062535`.
   M070 then crossed into independently maintained, blindly selected Terminal-Bench 2 containers,
   but scored 0/2 after a UTF-8/process-tree transport failure. The negative result is preserved.
-  M071's corrected runtime and separately named Harbor bridge are now frozen before a fresh blind
-  selection. The frozen system then passed 1/2 selected tasks, establishing a narrow positive
-  external composed-system result without changing the endogenous Genesis ownership claims.
+  M071's corrected system then passed 1/2 fresh blindly selected tasks. M072 isolates the causal
+  value of authority admission and audit chaining under a bounded authored threat model. M073 then
+  induces one executable capsule from four external demonstrations, removes the teacher and applies
+  the capsule successfully to twelve fresh authored programs. These results remain mechanism
+  evidence and do not change the endogenous Genesis ownership gates.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -342,6 +344,8 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M069 | Cross a governed real filesystem/process body and refuse an incompatible protocol | **Positive qualified development result** | One unchanged policy repairs 4/4 tasks, each 3/3 hidden, and refuses the incompatible task before mutation. All ten controls pass; manifest `c5c80701`; exact run `31319062535` passed. |
 | M070 | Transfer to post-design external tasks in an OS-isolated body | **Negative external development result** | Exact design `41ebe79` was frozen before blind selection. Official Harbor rewards were 0.0 on both selected tasks and both `nop` controls; UTF-8 stdin transport and Windows descendant timeout handling failed closed. No retry or replacement. |
 | M071 | Separate attribution, harden model transport, freeze again and evaluate a fresh blind pair | **Positive external development result** | Frozen runtime/bridge passed `custom-memory-heap-crash` and refused `sqlite-with-gcov`: rewards `0.0, 1.0`; both `nop` floors `0.0`; no exception, retry or replacement. Result `d3526513`. |
+| M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
+| M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target
@@ -353,9 +357,12 @@ M070 preserved that boundary and returned a valid negative result. M071 has corr
 transport/process defect and frozen the resulting design. Its next blind rule may not reuse M070's
 task pair as its scientific threshold.
 
-M071 then met that fresh threshold on one of two tasks. A successor is not justified by sampling
-more tasks from the same public benchmark. It must isolate the governance layer causally and/or
-move to a private uncontaminated cross-domain split with independent reproduction.
+M071 met its fresh threshold on one of two tasks. M072 closes only the bounded causal-governance
+question; its threat grammar remains authored. M073 closes only the existence of a model-to-lineage
+artifact bridge on one authored AST family. A successor is not justified by sampling more public
+tasks with the same composition or generating more alpha-renamed division programs. It must broaden
+the learned representation and move to a private uncontaminated, materially cross-domain split with
+independent reproduction.
 
 ## Parallel measurement track — M045
 
@@ -369,7 +376,7 @@ The next distinct optimisation question remains:
 > Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
 > baseline without recreating M029's allocation failure?
 
-M045 must remain separate from M044 and M046, and equally from M047–M069. Construction
+M045 must remain separate from M044 and M046, and equally from M047–M073. Construction
 success cannot validate a measurement policy, and measurement failure cannot be hidden inside
 a richer organism.
 

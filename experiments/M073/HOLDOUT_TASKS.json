@@ -1,0 +1,99 @@
+{
+  "capsule_blob": "b8fe1ed5e53898b59dbf5c3324f102a1050765f6",
+  "capsule_commit": "760803c4eee9c03caf25d2403c5f072343e17572",
+  "capsule_sha256": "444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620",
+  "holdout_materialization_sha256": "dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c",
+  "protocol_commit": "78d53d733bdf77eab773414e8d273ed70e31391d",
+  "schema": "m073-holdout-task-materialization-v1",
+  "scientific_result_exists": false,
+  "status": "holdouts_materialized_after_committed_capsule",
+  "task_count": 12,
+  "tasks": [
+    {
+      "function_name": "ratio_0974ae4b32",
+      "seed": 101,
+      "source": "def ratio_0974ae4b32(value_fa9c0964, scale_3e43fd6a):\n    marker_de340ad1 = 16\n    return value_fa9c0964 / scale_3e43fd6a\n",
+      "source_sha256": "dc14ca83d1b43e4551b91872a3a5c48af5e26105e5febf61f9c65e2a0c661d5b",
+      "task_id": "m073-holdout-101"
+    },
+    {
+      "function_name": "ratio_aab18f828b",
+      "seed": 103,
+      "source": "def ratio_aab18f828b(value_e8fcae8e, scale_27883495):\n    marker_b885c6fa = 1\n    return value_e8fcae8e / scale_27883495\n",
+      "source_sha256": "4655f7d958f3e4a9f36245753be20a780743abd85ec982e4752dcd061b8327fb",
+      "task_id": "m073-holdout-103"
+    },
+    {
+      "function_name": "ratio_fef66727ab",
+      "seed": 107,
+      "source": "def ratio_fef66727ab(value_96cad08d, scale_abf36ac2):\n    marker_e5bf21fe = 5\n    return value_96cad08d / scale_abf36ac2\n",
+      "source_sha256": "998c30e860a3d26a00a7d8eae416e0530bd0dca059f094e2a82fa3a9c80c5a26",
+      "task_id": "m073-holdout-107"
+    },
+    {
+      "function_name": "ratio_75c2102d4e",
+      "seed": 109,
+      "source": "def ratio_75c2102d4e(value_8b17d419, scale_96c5084e):\n    marker_10269bc1 = 7\n    return value_8b17d419 / scale_96c5084e\n",
+      "source_sha256": "822dd31527dbdbf28444cc956ff1bf7d42ba43c0619d56b4ede22abcd545e524",
+      "task_id": "m073-holdout-109"
+    },
+    {
+      "function_name": "ratio_debca763f2",
+      "seed": 113,
+      "source": "def ratio_debca763f2(value_64f9a1de, scale_ac2d1e12):\n    marker_1d8ea6dc = 11\n    return value_64f9a1de / scale_ac2d1e12\n",
+      "source_sha256": "580cde7f07af03c28d170e75ee2b8cd7fe9fecfae315748eaef064c1fb9833f8",
+      "task_id": "m073-holdout-113"
+    },
+    {
+      "function_name": "ratio_0589d997d1",
+      "seed": 127,
+      "source": "def ratio_0589d997d1(value_3401857e, scale_76e91e15):\n    marker_13630d39 = 8\n    return value_3401857e / scale_76e91e15\n",
+      "source_sha256": "f2de2c343b5b70021b6ec54950f6707077f387189d21cba68b4331a86cbacd73",
+      "task_id": "m073-holdout-127"
+    },
+    {
+      "function_name": "ratio_0da62ec5b8",
+      "seed": 131,
+      "source": "def ratio_0da62ec5b8(value_a0f703ef, scale_84fafdc3):\n    marker_8605e20b = 12\n    return value_a0f703ef / scale_84fafdc3\n",
+      "source_sha256": "44fa736d24a116c41d5496093ad09d0d4057817e8843c89f946fd85bfc9c010c",
+      "task_id": "m073-holdout-131"
+    },
+    {
+      "function_name": "ratio_fba4b696d3",
+      "seed": 137,
+      "source": "def ratio_fba4b696d3(value_d3be67db, scale_52eec08a):\n    marker_e79b8c63 = 1\n    return value_d3be67db / scale_52eec08a\n",
+      "source_sha256": "d6374a025688ed879d0b086fdc3d93ad61394d510a3864c3daf7ab4f6993d142",
+      "task_id": "m073-holdout-137"
+    },
+    {
+      "function_name": "ratio_0d8d26b9ea",
+      "seed": 139,
+      "source": "def ratio_0d8d26b9ea(value_108df082, scale_357e6253):\n    marker_798fff79 = 3\n    return value_108df082 / scale_357e6253\n",
+      "source_sha256": "4eb5f93cc5aa7c88083f0976fe54327986adab3c0cfb683e7166f7693639bed2",
+      "task_id": "m073-holdout-139"
+    },
+    {
+      "function_name": "ratio_18ef21b979",
+      "seed": 149,
+      "source": "def ratio_18ef21b979(value_f3cb60b7, scale_92cb9fc0):\n    marker_9919a253 = 13\n    return value_f3cb60b7 / scale_92cb9fc0\n",
+      "source_sha256": "f8a19e4bf0d040741b7f2edf8a87d08b386ac3fa3458993e7389ce255bb24fc8",
+      "task_id": "m073-holdout-149"
+    },
+    {
+      "function_name": "ratio_7a0d49f7a5",
+      "seed": 151,
+      "source": "def ratio_7a0d49f7a5(value_8f412ba5, scale_d78d9f5f):\n    marker_89d59f5c = 15\n    return value_8f412ba5 / scale_d78d9f5f\n",
+      "source_sha256": "76523f048f11da60a290f3a26c405792a97bbb6705c8e87827816dcc56188b85",
+      "task_id": "m073-holdout-151"
+    },
+    {
+      "function_name": "ratio_d7e41b8622",
+      "seed": 157,
+      "source": "def ratio_d7e41b8622(value_67dbcfbf, scale_b5984902):\n    marker_bb81c456 = 4\n    return value_67dbcfbf / scale_b5984902\n",
+      "source_sha256": "b8c31d5289e27add6ea87fde8aade60b4e8078f76dac5363d1c463dce73d1d0a",
+      "task_id": "m073-holdout-157"
+    }
+  ],
+  "teacher_model_available_to_holdout_runner": false,
+  "teacher_responses_required_by_holdout_runner": false
+}

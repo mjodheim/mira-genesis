@@ -1,6 +1,6 @@
 # Mira Genesis epistemic tracks
 
-Mira Genesis now contains two construction tracks with different objects of evidence. They share
+Mira Genesis contains two construction tracks plus one explicitly bounded bridge. They share
 contracts, isolation, memory and evaluation infrastructure, but their results are not
 interchangeable.
 
@@ -34,6 +34,11 @@ M071 later passed one of its two selected public tasks. That reward is the first
 Track B competence result, but it still belongs to the full composed system. Without an isolating
 governance baseline it does not measure the Mira layer independently.
 
+M072 supplies a matched ablation for two Mira mechanisms. Under its project-authored non-executing
+threat grammar, authority admission and tamper-evident chaining each causally preserve the
+corresponding frozen invariants. This isolates those mechanisms, not the model's competence and not
+independent red-team robustness.
+
 Evidence from this line may support claims about:
 
 - authority containment and calibrated refusal;
@@ -59,6 +64,19 @@ that layer; model capability must not be renamed Mira capability.
 A future experiment may connect the tracks only with a new frozen hypothesis that measures both
 endogenous ownership and model-mediated competence. Sharing code or chronology is not evidence that
 the epistemic gap has been crossed.
+
+## Bridge — demonstrated skill to model-free lineage artifact
+
+M073 instantiates the allowed connection narrowly. The external teacher receives four frozen
+training programs and returns four complete repairs. Those responses remain external evidence. A
+precommitted lineage mechanism induces one parameterized AST capsule, commits it before holdout
+materialization and later applies it with the teacher, training responses and network absent.
+
+Only the induced capsule, its provenance record and the lineage-chosen held-out bindings count as
+lineage-owned artifacts. The teacher outputs, task semantics, family generator and induction
+algorithm do not. Positive bridge evidence cannot be cited as a retroactive Gate 2 completion and
+does not become cross-domain evidence until materially distinct private families are transferred by
+one unchanged learning mechanism and independently reproduced.
 
 The separate M045 measurement track remains unchanged: proxy-quality experiments answer neither
 Track A ownership nor Track B governance questions.

@@ -1,0 +1,1038 @@
+{
+  "capsule_sha256": "444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620",
+  "case_failures": 0,
+  "external_model_imported_or_invoked": false,
+  "holdout_materialization_sha256": "dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c",
+  "holdouts_passed": 12,
+  "holdouts_total": 12,
+  "lineage_result_sha256": "ea7ab4f96e550df7b37d7867b468b5ddd2733cf657b0fa63bbd24e3981064427",
+  "network_required": false,
+  "outcomes": [
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "63f5865f5d7be30bf77a51fdc24aacbc7cddb7c6d03d6f259989229ce0ff2134",
+      "source_sha256": "dc14ca83d1b43e4551b91872a3a5c48af5e26105e5febf61f9c65e2a0c661d5b",
+      "task_id": "m073-holdout-101"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "3c85295f0d0bf3697f4c4c796d255d2998d45778946941432140ab6e11db3a89",
+      "source_sha256": "4655f7d958f3e4a9f36245753be20a780743abd85ec982e4752dcd061b8327fb",
+      "task_id": "m073-holdout-103"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "81b136709ea05e772581aa9d82c7a6e912abcc427c3d448eb333ba3072ba0cdb",
+      "source_sha256": "998c30e860a3d26a00a7d8eae416e0530bd0dca059f094e2a82fa3a9c80c5a26",
+      "task_id": "m073-holdout-107"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "afc4511a928ae60079c2cbcecfdb2c8c6c07e7d859350bf424753e035253dbc4",
+      "source_sha256": "822dd31527dbdbf28444cc956ff1bf7d42ba43c0619d56b4ede22abcd545e524",
+      "task_id": "m073-holdout-109"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "87c7cc2e780fcba059becd89b1d546d076835623cc3482af20f313873ad0e55d",
+      "source_sha256": "580cde7f07af03c28d170e75ee2b8cd7fe9fecfae315748eaef064c1fb9833f8",
+      "task_id": "m073-holdout-113"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "40217ed75d37cb467aa5d17dde51a2aa71a810b9eab288de5f9904a7f37fb90c",
+      "source_sha256": "f2de2c343b5b70021b6ec54950f6707077f387189d21cba68b4331a86cbacd73",
+      "task_id": "m073-holdout-127"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "85feaedee9de55b09b45e5f9b3cb68a65e9c40befb1f6032610d920310654ef6",
+      "source_sha256": "44fa736d24a116c41d5496093ad09d0d4057817e8843c89f946fd85bfc9c010c",
+      "task_id": "m073-holdout-131"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "55f59a20293436e885d6301f21539b120012688bcf947f143cb0703c20509d46",
+      "source_sha256": "d6374a025688ed879d0b086fdc3d93ad61394d510a3864c3daf7ab4f6993d142",
+      "task_id": "m073-holdout-137"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "bd4a535ee3325c9c4729697de456ad2968095bb76d92ee3b2226e8a7717df4c0",
+      "source_sha256": "4eb5f93cc5aa7c88083f0976fe54327986adab3c0cfb683e7166f7693639bed2",
+      "task_id": "m073-holdout-139"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "d336d15c0075f2b538d0dcb4db04f9444c561a4d75b40b69235a66c08c26a090",
+      "source_sha256": "f8a19e4bf0d040741b7f2edf8a87d08b386ac3fa3458993e7389ce255bb24fc8",
+      "task_id": "m073-holdout-149"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "0a9847b93d7ec0a60d22a9d266f3156a9a8b26e47185bc96515591f8e341ef61",
+      "source_sha256": "76523f048f11da60a290f3a26c405792a97bbb6705c8e87827816dcc56188b85",
+      "task_id": "m073-holdout-151"
+    },
+    {
+      "evaluator": {
+        "case_count": 7,
+        "case_failures": 0,
+        "cases": [
+          {
+            "args": [
+              12,
+              3
+            ],
+            "error": null,
+            "expected": 4.0,
+            "observed": 4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              -3
+            ],
+            "error": null,
+            "expected": -4.0,
+            "observed": -4.0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              5
+            ],
+            "error": null,
+            "expected": 0.0,
+            "observed": 0.0,
+            "passed": true
+          },
+          {
+            "args": [
+              12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              -12,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          },
+          {
+            "args": [
+              0,
+              0
+            ],
+            "error": null,
+            "expected": 0,
+            "observed": 0,
+            "passed": true
+          }
+        ],
+        "passed": true,
+        "structural_error": null
+      },
+      "passed": true,
+      "rewrite_error": null,
+      "rewritten_sha256": "5a8efee23415ac757e51e17a958adde7f4399d744fc8ca74cd9c9e19d9a7e3a7",
+      "source_sha256": "b8c31d5289e27add6ea87fde8aade60b4e8078f76dac5363d1c463dce73d1d0a",
+      "task_id": "m073-holdout-157"
+    }
+  ],
+  "schema": "m073-holdout-lineage-result-v1",
+  "scientific_result_exists": false,
+  "status": "model_removed_holdout_execution_completed",
+  "teacher_calls": 0,
+  "teacher_responses_read": false,
+  "training_tasks_read": false
+}
