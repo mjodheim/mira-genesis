@@ -53,6 +53,10 @@ scripts/check_m075_model_development_result.py` recomputes labels, Docker bounda
 chains, request/response hashes, condition isolation, external outcomes, calibration and the 43
 live-decision total.
 
+Exact evidence commit `0c19d6b` passed the complete local Python 3.14.6 suite on its first run:
+1,369 tests passed, two skipped, in 2,390.27 seconds. The three repository-integrity modes and both
+M074 permanent scientific checkers also passed.
+
 ## Decision for the next phase
 
 The project will not tune the prompt against the single missed public task. Before any stronger

@@ -1454,6 +1454,12 @@ phase_eight:
     model_development_conditions_use_independent_samples: true
     model_development_causal_effect_claimed: false
     model_development_counterexample: write-receipt-readonly
+    model_development_exact_evidence_commit: 0c19d6b414d0b74a5974520aed7c17d6cd592646
+    model_development_complete_local_tests: 1369
+    model_development_complete_local_skips: 2
+    model_development_complete_local_seconds: 2390.27
+    model_development_complete_local_python: 3.14.6
+    model_development_repository_integrity_passed: true
     scientific_model_called: false
     scientific_protocol_frozen: false
     private_scientific_bank_opened: false
