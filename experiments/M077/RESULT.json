@@ -1,0 +1,246 @@
+{
+  "arms": {
+    "full": {
+      "arm": "full",
+      "horizons": {
+        "128": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "5a9374290c39b6d905f3562bb8e422add3d34202f0b672a684d07911985f0a92",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 4,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 125
+        },
+        "2048": {
+          "detections": 32,
+          "faults_injected": 32,
+          "interventions": 0,
+          "replay_digest": "1693dcb05cad8f3b5643aa83f40b381429f8607e01abc2f42e6f4193109999cc",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 32,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 2021
+        },
+        "32": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "14d23d99cd965f70120208b37776fb9c2f98622ee4f5934da95152574734d839",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 4,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 29
+        },
+        "512": {
+          "detections": 8,
+          "faults_injected": 8,
+          "interventions": 0,
+          "replay_digest": "8171a07d47d21964d1685601ecdca798f6095bd7422c373bdca9026968effa75",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 8,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 507
+        }
+      }
+    },
+    "idle_floor": {
+      "arm": "idle_floor",
+      "horizons": {
+        "128": {
+          "detections": 0,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "residual_violations": 2,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 0,
+          "undetected_faults": 4,
+          "unrecovered_faults": 0,
+          "work_items_completed": 0
+        },
+        "2048": {
+          "detections": 0,
+          "faults_injected": 32,
+          "interventions": 0,
+          "replay_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "residual_violations": 2,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 0,
+          "undetected_faults": 32,
+          "unrecovered_faults": 0,
+          "work_items_completed": 0
+        },
+        "32": {
+          "detections": 0,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "residual_violations": 2,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 0,
+          "undetected_faults": 4,
+          "unrecovered_faults": 0,
+          "work_items_completed": 0
+        },
+        "512": {
+          "detections": 0,
+          "faults_injected": 8,
+          "interventions": 0,
+          "replay_digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "residual_violations": 2,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 0,
+          "undetected_faults": 8,
+          "unrecovered_faults": 0,
+          "work_items_completed": 0
+        }
+      }
+    },
+    "no_checkpoint": {
+      "arm": "no_checkpoint",
+      "horizons": {
+        "128": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "46c6dc9227695f54c5c3b1430eaa7fd35f83c3f723b3436e69f1f8fa3d566a5c",
+          "residual_violations": 3,
+          "restoration_rate_on_detected": 0.0,
+          "restorations": 0,
+          "undetected_faults": 0,
+          "unrecovered_faults": 4,
+          "work_items_completed": 40
+        },
+        "2048": {
+          "detections": 32,
+          "faults_injected": 32,
+          "interventions": 0,
+          "replay_digest": "ae0ce8aefe8d30267676e5d463d0000e43c67ce1348b6b16cac582e176050329",
+          "residual_violations": 2,
+          "restoration_rate_on_detected": 0.0,
+          "restorations": 0,
+          "undetected_faults": 0,
+          "unrecovered_faults": 32,
+          "work_items_completed": 6
+        },
+        "32": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "025f0ff0863a957ad1d8ba12d0dcafe3ef13dd208ba3ed6ee487dbc86e563e03",
+          "residual_violations": 3,
+          "restoration_rate_on_detected": 0.0,
+          "restorations": 0,
+          "undetected_faults": 0,
+          "unrecovered_faults": 4,
+          "work_items_completed": 5
+        },
+        "512": {
+          "detections": 8,
+          "faults_injected": 8,
+          "interventions": 0,
+          "replay_digest": "26a187ed70465b5c8bc1f8f3e33bbfdf561b28319fe94fec4bbb6fe9f1606484",
+          "residual_violations": 3,
+          "restoration_rate_on_detected": 0.0,
+          "restorations": 0,
+          "undetected_faults": 0,
+          "unrecovered_faults": 8,
+          "work_items_completed": 108
+        }
+      }
+    },
+    "no_constraint_monitor": {
+      "arm": "no_constraint_monitor",
+      "horizons": {
+        "128": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "b0370abb61be292b26f70c344dbb93c60170687d2b64f1ce8f8c7c1e2d3265ac",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 4,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 125
+        },
+        "2048": {
+          "detections": 31,
+          "faults_injected": 32,
+          "interventions": 0,
+          "replay_digest": "43982a2e7c738e18ce427fc5c324449d4daad3d6266a099b483294dfb250025d",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 31,
+          "undetected_faults": 1,
+          "unrecovered_faults": 0,
+          "work_items_completed": 2021
+        },
+        "32": {
+          "detections": 4,
+          "faults_injected": 4,
+          "interventions": 0,
+          "replay_digest": "e76ba0108c551bb55e8ed3a0852f44d73f7a8c5418604b5bba3bc0b3872805d3",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 4,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 29
+        },
+        "512": {
+          "detections": 8,
+          "faults_injected": 8,
+          "interventions": 0,
+          "replay_digest": "c4edbcccb9a7dd3f90a529c1a431441dba9ff787d928ccb408021a4afcc83483",
+          "residual_violations": 0,
+          "restoration_rate_on_detected": 1.0,
+          "restorations": 8,
+          "undetected_faults": 0,
+          "unrecovered_faults": 0,
+          "work_items_completed": 507
+        }
+      }
+    }
+  },
+  "attempt": 1,
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g7": false,
+    "establishes_constraint_retention_across_episode_horizons": true,
+    "establishes_human_equivalent_time_horizon": false,
+    "establishes_long_horizon_autonomy_in_real_environments": false,
+    "establishes_unattended_fault_recovery": true,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false
+  },
+  "external_model_called": false,
+  "failed_conditions": [
+    "no_constraint_monitor detected everything at 32",
+    "no_constraint_monitor detected everything at 128",
+    "no_constraint_monitor detected everything at 512"
+  ],
+  "horizon_unit": "episode_count_not_human_equivalent_time",
+  "instrument_corrections_before_materialization": [
+    "per-unique-fault accounting replaced raw detection events, which could exceed the number of injected faults because an unrepaired fault re-triggers every episode",
+    "the outstanding-fault tracker became a set, because faults land on adjacent episodes and a single slot silently dropped the earlier one"
+  ],
+  "network_used": false,
+  "protocol_commitment": "95277aac476f3e3d9641b62a6448a192d21a12a2eefc3a7ddbf3a9c805da3c11",
+  "python": "3.14.6",
+  "result_sha256": "93ecd2d082e9b58e2913355f86b4b5a576cd72a63fe1b9fff232477c15d983d9",
+  "retried": false,
+  "schedule_commitment": "80e92af496798417117b5b173aa852aefb1ec1351474ea3f138c2c800e8a9d13",
+  "schema": "m077-long-horizon-recovery-result-v1",
+  "verdict": "negative"
+}

@@ -93,6 +93,15 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M077 is a valid negative on long-horizon mechanism separability.** Protocol frozen before the
+  harness at `31b2778`; schedule commitment `80e92af4…a9d13` bound before any arm ran; first result
+  `93ecd2d0…d983d9`, attempt 1, no retry. The full arm held four invariants, recovered every
+  injected fault and required zero interventions at 32, 128, 512 and 2048 episodes with no
+  degradation, and the `no_checkpoint` ablation dropped restoration to exactly 0.00 while leaving
+  detection numerically identical. The `no_constraint_monitor` ablation did **not** lose detection
+  at three of four horizons: silent corruption eventually breaks a guarded operation, so the
+  boundary audit buys detection latency rather than coverage. H23 is refuted; G7 remains open and
+  no gate advances. Episode counts are not human-equivalent horizons.
 - **M076 is a positive qualified multimodal-grounding development result and the first new
   endogenous gate evidence since M066.** One persistent deterministic agent consumed a UTF-8
   instruction, an ordered structured mapping and a raw 1728-byte RGB888 raster, emitted symbolic

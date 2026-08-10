@@ -1,0 +1,70 @@
+{
+  "generator_version": 1,
+  "horizons": [
+    32,
+    128,
+    512,
+    2048
+  ],
+  "salt_sha256": "18d26272711f749774aa480fd1ace0a27960ad3dada4e494d7035b0ec3411895",
+  "schedule_commitment": "80e92af496798417117b5b173aa852aefb1ec1351474ea3f138c2c800e8a9d13",
+  "schedules": {
+    "128": {
+      "111": "capacity_spike",
+      "40": "stale_checkpoint",
+      "58": "journal_truncation",
+      "69": "slot_type_corruption"
+    },
+    "2048": {
+      "103": "slot_type_corruption",
+      "105": "slot_type_corruption",
+      "115": "stale_checkpoint",
+      "121": "stale_checkpoint",
+      "125": "journal_truncation",
+      "136": "stale_checkpoint",
+      "142": "capacity_spike",
+      "143": "journal_truncation",
+      "146": "capacity_spike",
+      "150": "capacity_spike",
+      "152": "stale_checkpoint",
+      "177": "capacity_spike",
+      "186": "stale_checkpoint",
+      "205": "journal_truncation",
+      "208": "journal_truncation",
+      "214": "capacity_spike",
+      "22": "capacity_spike",
+      "229": "stale_checkpoint",
+      "233": "journal_truncation",
+      "25": "stale_checkpoint",
+      "256": "slot_type_corruption",
+      "29": "slot_type_corruption",
+      "37": "journal_truncation",
+      "39": "stale_checkpoint",
+      "42": "stale_checkpoint",
+      "5": "slot_type_corruption",
+      "58": "journal_truncation",
+      "6": "journal_truncation",
+      "60": "stale_checkpoint",
+      "68": "stale_checkpoint",
+      "80": "journal_truncation",
+      "86": "journal_truncation"
+    },
+    "32": {
+      "14": "journal_truncation",
+      "29": "capacity_spike",
+      "5": "stale_checkpoint",
+      "6": "slot_type_corruption"
+    },
+    "512": {
+      "108": "journal_truncation",
+      "147": "slot_type_corruption",
+      "162": "slot_type_corruption",
+      "174": "capacity_spike",
+      "185": "stale_checkpoint",
+      "215": "slot_type_corruption",
+      "242": "capacity_spike",
+      "255": "stale_checkpoint"
+    }
+  },
+  "schema": "m077-schedule-commitment-v1"
+}

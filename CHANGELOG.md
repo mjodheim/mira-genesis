@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Added M077 and preserved it as a **negative** result on H23. One persistent lineage ran shifts of
+  32, 128, 512 and 2048 episodes over a typed sixteen-slot pool with a digest-chained journal, under
+  four declared invariants and four injected fault kinds.
+- Refuted the preregistered dissociation. Removing checkpoint recovery cost exactly restoration
+  (0.00 at every horizon) while leaving detection numerically identical, as predicted. Removing the
+  boundary constraint monitor did **not** cost detection: silent corruption eventually breaks a
+  guarded operation, so the monitor buys detection latency rather than coverage.
+- Preserved two positive sub-results without promoting them to a gate advance: the full arm held
+  every invariant, recovered every fault and required zero interventions at all four horizons with
+  no degradation as the horizon grew; and checkpoint recovery was causally isolated by its matched
+  ablation. G7 remains open.
+- Recorded both M077 instrument corrections in the result rather than hiding them, and added a
+  checker that fails closed if the preserved negative is ever silently converted to positive.
 - Added M076, the first endogenous result to address generality gate G2. One persistent
   deterministic agent consumes a UTF-8 instruction, an ordered structured mapping and a raw
   1728-byte RGB888 raster, and emits both symbolic `set_dial` calls and embodied effector moves

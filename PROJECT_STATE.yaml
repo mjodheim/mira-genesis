@@ -1552,6 +1552,50 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M077:
+    title: long-horizon fault recovery and constraint retention across episode-count horizons
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G7
+    addressed_gate_components:
+      - intervention_count
+      - recovery_after_injected_faults
+      - constraint_retention
+    explicitly_not_addressed:
+      - human_equivalent_task_horizons
+    horizon_unit: episode_count_not_human_equivalent_time
+    status: negative_result_preserved
+    hypothesis: H23
+    hypothesis_status: refuted
+    decision: D043
+    protocol: experiments/M077/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 31b2778
+    harness_commit: 720bad4
+    schedule_commitment: 80e92af496798417117b5b173aa852aefb1ec1351474ea3f138c2c800e8a9d13
+    result_sha256: 93ecd2d082e9b58e2913355f86b4b5a576cd72a63fe1b9fff232477c15d983d9
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    horizons: [32, 128, 512, 2048]
+    full_arm_faults_recovered_fraction: 1.0
+    full_arm_residual_violations: 0
+    full_arm_interventions: 0
+    full_arm_degradation_with_horizon: false
+    no_checkpoint_restoration_rate: 0.0
+    no_checkpoint_detection_equals_full: true
+    no_constraint_monitor_lost_detection: false
+    refutation_cause: silent_corruption_eventually_breaks_a_guarded_operation
+    instrument_corrections_before_materialization: 2
+    third_iteration_declined_as_tuning: true
+    local_regressions_passed: 25
+    independent_checker: scripts/check_m077_result.py
+    checker_fails_closed_if_negative_becomes_positive: true
+    generality_gate_advanced: false
+    generality_gate_g7_closed: false
+    agi_evidence: false
+    successor_must_supply_quiescent_corruption: true
+    successor_may_reuse_this_schedule: false
+
 measurement_track:
   reserved_experiment: M045
   status: open_and_separate
