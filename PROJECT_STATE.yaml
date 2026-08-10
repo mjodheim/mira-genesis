@@ -1296,7 +1296,7 @@ phase_eight:
     genesis_gate_2_evidence: false
     agi_evidence: false
   M074:
-    status: negative_scientific_result_locally_verified_result_commit_ci_pending
+    status: negative_qualified_scientific_result
     canonical: false
     design: experiments/M074/DRAFT_REFUSAL_CALIBRATION_DESIGN.md
     development_qualification: experiments/M074/DEVELOPMENT_QUALIFICATION.md
@@ -1355,7 +1355,21 @@ phase_eight:
     scientific_faulted_episodes: 0
     scientific_verdict: negative
     scientific_retry_used: false
-    scientific_result_commit_ci: pending
+    scientific_result_commit: 1eeb345fe66308b8995f4b35618cffd9a3b0205e
+    scientific_result_commit_ci: passed
+    scientific_result_ci_run: 31388068187
+    scientific_result_ci_attempt: 1
+    scientific_result_ci_python_3_11_passed: 1341
+    scientific_result_ci_python_3_11_skipped: 1
+    scientific_result_ci_python_3_11_seconds: 1262.75
+    scientific_result_ci_python_3_13_passed: 1341
+    scientific_result_ci_python_3_13_skipped: 1
+    scientific_result_ci_python_3_13_seconds: 1259.32
+    scientific_result_ci_repository_integrity_passed: true
+    scientific_result_attribution_run: 31388066466
+    scientific_result_attribution_passed: true
+    scientific_result_ci_rerun_used: false
+    scientific_result_local_focused_tests: 61
     exact_apparatus_commit: 27a2e1f
     exact_commit_qualification: passed
     github_ci_run: 31377768229

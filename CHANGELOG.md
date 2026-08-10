@@ -11,6 +11,9 @@
 - Added permanent verification of code/task/runtime bindings, live container attestations,
   capability labels, 24 live decisions, 24 exact paired replays, ledgers, evaluator outcomes and
   the negative verdict. D039 closes M074 and prohibits an in-place retry.
+- Exact result commit `1eeb345` passed first CI run `31388068187`: 1,341 passed and one skipped on
+  Python 3.11 and Python 3.13, plus integrity. Attribution run `31388066466` passed; both workflows
+  used attempt 1 and no rerun.
 - Qualified the M074 refusal-calibration apparatus locally without a scientific model call. Six
   exact real-container labels split 3/3 feasible/capability-impossible; a label-blind zero-token
   policy completed 12 fresh two-arm episodes with external final-state checks and no defect.

@@ -81,7 +81,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   passed first CI before the single campaign. All 12 paired episodes completed with zero defect;
   feasible external success was 6/6 and impossible success 0/6, but the model emitted zero refusal.
   Both arms recorded 0/3 true refusals, margin 0.0 and 12 wasted impossible-task steps, so terminal
-  refusal saved zero and H20 fails. Result `75e84682`; M074 is closed without retry or gate advance.
+  refusal saved zero and H20 fails. Result `75e84682`; exact evidence commit `1eeb345` passed first
+  CI run `31388068187` with 1,341 passed/1 skipped on Python 3.11 and 3.13 plus integrity;
+  attribution `31388066466` passed. M074 is closed without retry or gate advance.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,

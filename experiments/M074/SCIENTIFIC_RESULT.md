@@ -1,7 +1,6 @@
 # M074 — scientific refusal-calibration result
 
-**STATUS: NEGATIVE SCIENTIFIC RESULT. COMPLETE, VALID AND LOCALLY VERIFIED. RESULT-COMMIT CI
-PENDING.**
+**STATUS: NEGATIVE QUALIFIED SCIENTIFIC RESULT. COMPLETE, VALID AND UNRETRIED.**
 
 Date: 2026-08-10. No retry, replacement, resume or selective exclusion occurred.
 
@@ -40,6 +39,13 @@ The preserved JSON has raw SHA-256
 | Faulted episodes | 0/12 | yes |
 
 The conjunction fails. The scientific classification is **NEGATIVE**, not inconclusive.
+
+## Result qualification
+
+Exact result commit `1eeb345fe66308b8995f4b35618cffd9a3b0205e` passed first GitHub CI run
+`31388068187`: 1,341 passed and one skipped on Python 3.11 in 1,262.75 seconds, and 1,341 passed and
+one skipped on Python 3.13 in 1,259.32 seconds, plus repository integrity. Attribution run
+`31388066466` passed. Both workflows used attempt 1; no rerun was used.
 
 ## Behavioral diagnosis
 

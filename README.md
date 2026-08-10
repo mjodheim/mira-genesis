@@ -363,6 +363,8 @@ no refusal. Both arms therefore recorded 0/3 true refusals, margin 0.0 and 12 wa
 refusal saved zero. H20 fails under its frozen threshold and M074 cannot be retried. See
 [`experiments/M074/SCIENTIFIC_RESULT.md`](experiments/M074/SCIENTIFIC_RESULT.md) and
 [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md).
+Exact result commit `1eeb345` passed first CI run `31388068187`: 1,341 passed/1 skipped on Python
+3.11 and Python 3.13, plus integrity; attribution run `31388066466` passed without rerun.
 
 See:
 
