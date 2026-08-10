@@ -10,6 +10,7 @@ probes and the episode therefore observe the same persistent container state.
 from __future__ import annotations
 
 from dataclasses import dataclass
+import json
 from pathlib import PurePosixPath
 import shlex
 import subprocess
@@ -174,6 +175,66 @@ class DockerTaskEnvironment:
         if completed.returncode == 125:
             return None, False
         return int(completed.returncode), True
+
+    def inspect_security_boundary(self) -> dict[str, object]:
+        """Attest Docker's realized boundary before a scientific model decision.
+
+        The start argv is only an intention.  This read-back makes a daemon-side discrepancy a
+        fail-closed protocol defect and records the concrete fields needed for later verification.
+        """
+
+        completed = self._run(
+            ["docker", "inspect", self.container_id], timeout_seconds=30,
+        )
+        if completed.returncode != 0:
+            detail = (completed.stderr or completed.stdout).strip()[-500:]
+            raise DockerEnvironmentError(f"container boundary could not be inspected: {detail}")
+        try:
+            decoded = json.loads(completed.stdout)
+            value = decoded[0]
+            config = value["Config"]
+            host = value["HostConfig"]
+            state = value["State"]
+        except (IndexError, KeyError, TypeError, json.JSONDecodeError) as exc:
+            raise DockerEnvironmentError("container inspection response is malformed") from exc
+        tmpfs = host.get("Tmpfs") or {}
+        security_options = host.get("SecurityOpt") or []
+        cap_drop = host.get("CapDrop") or []
+        observed = {
+            "image": config.get("Image"),
+            "running": state.get("Running"),
+            "network_mode": host.get("NetworkMode"),
+            "root_filesystem_read_only": host.get("ReadonlyRootfs"),
+            "cap_drop": list(cap_drop) if isinstance(cap_drop, list) else cap_drop,
+            "security_options": (
+                list(security_options) if isinstance(security_options, list) else security_options
+            ),
+            "memory_bytes": host.get("Memory"),
+            "nano_cpus": host.get("NanoCpus"),
+            "pids_limit": host.get("PidsLimit"),
+            "workspace_tmpfs": tmpfs.get("/workspace") if isinstance(tmpfs, dict) else None,
+            "agent_exec_user": f"{self.spec.agent_uid}:{self.spec.agent_gid}",
+        }
+        expected_tmpfs_tokens = {
+            "rw", "nosuid", "nodev", "noexec", "size=16777216",
+        }
+        raw_tmpfs = observed["workspace_tmpfs"]
+        tmpfs_tokens = set(str(raw_tmpfs).split(",")) if isinstance(raw_tmpfs, str) else set()
+        observed["matches_declaration"] = all((
+            observed["image"] == self.spec.image,
+            observed["running"] is True,
+            observed["network_mode"] == "none",
+            observed["root_filesystem_read_only"] is True,
+            isinstance(observed["cap_drop"], list) and "ALL" in observed["cap_drop"],
+            isinstance(observed["security_options"], list)
+            and any(str(option).startswith("no-new-privileges") for option in observed["security_options"]),
+            observed["memory_bytes"] == 256 * 1024 * 1024,
+            observed["nano_cpus"] == 1_000_000_000,
+            observed["pids_limit"] == self.spec.pids_limit,
+            tmpfs_tokens == expected_tmpfs_tokens,
+            observed["agent_exec_user"] == "65534:65534",
+        ))
+        return observed
 
     async def exec(self, script: str, timeout_sec: int | None = None) -> DockerExecResult:
         """Run one agent-proposed shell script as the non-root task identity."""

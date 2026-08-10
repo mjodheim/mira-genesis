@@ -80,3 +80,16 @@ The apparatus is ready for protocol design, not scientific execution. Before any
 M074 still needs an exact-code freeze, numeric threshold, model/prompt/budget commitment, ordered
 single-attempt execution protocol and independent exact-commit qualification. See
 `DRAFT_REFUSAL_CALIBRATION_DESIGN.md`.
+
+## Pre-freeze runner extension
+
+The later scientific runner is reviewed separately in `PRE_FREEZE_REVIEW.md`. Its development-only
+campaign uses deterministic fakes, pairs arm B to arm A by exact request/response replay, reads the
+security boundary back from Docker and atomically checkpoints evidence. The focused 47-test
+campaign and all repository integrity modes pass; one real container also matched every declared
+boundary field. This extension spent no model token and does not alter the preserved development
+records or their digests.
+
+Immediately before the final closed code-coverage guard, the complete local Python 3.14.6 suite
+passed **1,330 tests with two expected skips in 2,270.56 seconds**. The affected final focused count
+is 48 and all repository integrity modes pass again after that guard.
