@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 from copy import deepcopy
-import hashlib
 import json
 from pathlib import Path
 
@@ -11,7 +10,7 @@ import pytest
 from metamorphosis.m074_ablation_arms import ABLATION_ARMS
 from metamorphosis.m074_scientific_runner import (
     EvidenceBackend, PairedReplayError, ScientificRunnerError, execute_campaign,
-    protocol_commitment, validate_protocol,
+    portable_file_sha256, protocol_commitment, validate_protocol,
 )
 from metamorphosis.m074_task_bank import TASKS, BankTask
 from mira_core.model import ModelRequest
@@ -182,9 +181,7 @@ def protocol(tmp_path: Path | None = None) -> dict[str, object]:
     if tmp_path is not None:
         bound = tmp_path / "bound.py"
         bound.write_bytes(b"print('bound')\n")
-        value["code_sha256"] = {
-            "bound.py": hashlib.sha256(bound.read_bytes()).hexdigest(),
-        }
+        value["code_sha256"] = {"bound.py": portable_file_sha256(bound)}
     value["protocol_commitment_sha256"] = protocol_commitment(value)
     return value
 
@@ -221,6 +218,14 @@ def test_protocol_code_bytes_are_verified_before_execution(tmp_path: Path) -> No
     missing["protocol_commitment_sha256"] = protocol_commitment(missing)
     with pytest.raises(ScientificRunnerError, match="exact coverage"):
         validate_protocol(missing, root=tmp_path, required_code_paths=("bound.py",))
+
+
+def test_code_binding_is_portable_across_lf_and_crlf_checkouts(tmp_path: Path) -> None:
+    source = tmp_path / "source.py"
+    source.write_bytes(b"one\ntwo\n")
+    expected = portable_file_sha256(source)
+    source.write_bytes(b"one\r\ntwo\r\n")
+    assert portable_file_sha256(source) == expected
 
 
 def test_evidence_backend_replays_only_an_exact_request_prefix() -> None:

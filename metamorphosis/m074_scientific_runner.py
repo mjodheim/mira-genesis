@@ -64,6 +64,12 @@ def _sha256(value: object) -> str:
     return hashlib.sha256(_canonical_json(value)).hexdigest()
 
 
+def portable_file_sha256(path: Path) -> str:
+    """Hash source bytes after the repository's only portable checkout normalization."""
+
+    return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
+
+
 def protocol_commitment(protocol: Mapping[str, object]) -> str:
     """Commit a protocol without creating a self-referential digest."""
 
@@ -231,7 +237,7 @@ def _verify_code_files(
             path.relative_to(root.resolve())
         except ValueError as exc:
             raise ScientificRunnerError("a protocol code binding escaped the repository") from exc
-        if not path.is_file() or hashlib.sha256(path.read_bytes()).hexdigest() != expected:
+        if not path.is_file() or portable_file_sha256(path) != expected:
             raise ScientificRunnerError(f"protocol-bound code drifted: {relative}")
 
 
@@ -604,5 +610,5 @@ async def execute_campaign(
 __all__ = [
     "EvidenceBackend", "PairedReplayError", "PROTOCOL_SCHEMA", "RESULT_SCHEMA",
     "REQUIRED_CODE_PATHS", "ScientificRunnerError", "execute_campaign",
-    "protocol_commitment", "validate_protocol",
+    "portable_file_sha256", "protocol_commitment", "validate_protocol",
 ]

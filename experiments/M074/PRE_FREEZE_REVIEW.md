@@ -87,3 +87,6 @@ The next permitted action is to commit this runner, obtain exact local/CI qualif
 write a separate protocol artifact that binds its exact bytes, task/environment digests, tool
 identities, order and thresholds. Scientific execution remains prohibited until that freeze is
 committed and independently checks cleanly.
+
+Source-file SHA-256 bindings normalize only CRLF to LF before hashing. This makes the same Git text
+content portable across Windows and Linux checkouts while every other byte change remains a drift.
