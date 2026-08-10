@@ -13,4 +13,7 @@
 - Result SHA-256: `dadd202886e866e31be5cefb130e9e231f7739a0b49166f8d0c1dd2766acf949`.
 - H21: still scientifically untested; public independent samples are not a causal estimate.
 - Private independent scientific bank: absent and unopened.
+- Pre-private causal/sealed-bank validator: implemented; 8 focused tests pass.
+- Readiness: correctly blocked on missing external envelope, SSH signature, signer allowlist and
+  frozen private protocol; no private payload was accessed.
 - Gate advance: none.

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added M075's fail-closed pre-private readiness layer. It accepts only a signed closed-metadata
+  envelope from a non-project maintainer, requires at least eight matched capability pairs across
+  four opaque domains, and refuses reveal until an exact scientific protocol binds the envelope.
+- Precommitted the paired causal minimum: each private task runs once per condition on fresh clones;
+  thresholds require 6/8 true refusals, zero false refusal, complete feasible success, eight saved
+  steps, six context-only/zero baseline-only correct terminals, exact McNemar `p <= 0.05`, zero
+  faults and separate-bank reproduction. Current readiness correctly remains false.
 - Completed M075's single committed public model-development comparison: 12/12 fresh containers,
   43 live decisions, zero defect/retry/replacement. Epistemic context produced 2/3 true refusals,
   no false refusal, 3/3 feasible external success and four wasted steps versus baseline 0/3, no

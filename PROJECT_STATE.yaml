@@ -1473,6 +1473,25 @@ phase_eight:
     model_development_attribution_run: 31398661318
     model_development_attribution_passed: true
     model_development_github_workflow_rerun_used: false
+    preprivate_design: experiments/M075/PRE_PRIVATE_CAUSAL_DESIGN.md
+    preprivate_readiness_module: metamorphosis/m075_private_readiness.py
+    preprivate_readiness_checker: scripts/check_m075_private_readiness.py
+    preprivate_ready_for_payload_reveal: false
+    preprivate_payload_accessed: false
+    preprivate_current_blockers:
+      - missing_private_bank_envelope
+      - missing_private_bank_ssh_signature
+      - missing_private_bank_allowed_signers
+      - missing_private_scientific_protocol
+    preprivate_minimum_domains: 4
+    preprivate_minimum_matched_capability_pairs: 8
+    preprivate_minimum_context_true_refusals: 6
+    preprivate_maximum_context_false_refusals: 0
+    preprivate_minimum_wasted_steps_advantage: 8
+    preprivate_minimum_context_only_correct_terminals: 6
+    preprivate_maximum_baseline_only_correct_terminals: 0
+    preprivate_maximum_two_sided_exact_mcnemar_p: 0.05
+    preprivate_independent_reproduction_required: true
     scientific_model_called: false
     scientific_protocol_frozen: false
     private_scientific_bank_opened: false

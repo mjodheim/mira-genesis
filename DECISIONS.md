@@ -1018,6 +1018,12 @@ intake whose maintainer is outside the policy-development path. If either cannot
 H21 remains open rather than being weakened. The policy, model, budgets, thresholds and single-
 attempt rule must be frozen before any private task content is revealed.
 
+The readiness boundary is executable: a closed signed envelope exposes only opaque domain/pair
+counts and a payload digest; the private protocol must bind those exact bytes before reveal. The
+paired unit is the task instance, run once per condition on fresh clones, with post-freeze condition
+order and exact McNemar analysis. Until all inputs validate, the checker reports false without
+accessing a payload.
+
 ### Claim boundary
 
 The two public conditions used independent model samples, so their difference is an association,
