@@ -1,0 +1,99 @@
+{
+  "arms": {
+    "blind_guess": {
+      "arm": "blind_guess",
+      "emitted_move_sequences": 12,
+      "emitted_tool_calls": 24,
+      "evaluated": 36,
+      "successes_per_family": {
+        "language_route": 2,
+        "pixel_target": 0,
+        "structured_dial": 1
+      },
+      "successes_total": 3
+    },
+    "full": {
+      "arm": "full",
+      "emitted_move_sequences": 12,
+      "emitted_tool_calls": 24,
+      "evaluated": 36,
+      "successes_per_family": {
+        "language_route": 12,
+        "pixel_target": 12,
+        "structured_dial": 12
+      },
+      "successes_total": 36
+    },
+    "language_ablated": {
+      "arm": "language_ablated",
+      "emitted_move_sequences": 12,
+      "emitted_tool_calls": 12,
+      "evaluated": 36,
+      "successes_per_family": {
+        "language_route": 0,
+        "pixel_target": 12,
+        "structured_dial": 12
+      },
+      "successes_total": 24
+    },
+    "pixel_ablated": {
+      "arm": "pixel_ablated",
+      "emitted_move_sequences": 0,
+      "emitted_tool_calls": 24,
+      "evaluated": 36,
+      "successes_per_family": {
+        "language_route": 12,
+        "pixel_target": 0,
+        "structured_dial": 12
+      },
+      "successes_total": 24
+    },
+    "structure_ablated": {
+      "arm": "structure_ablated",
+      "emitted_move_sequences": 12,
+      "emitted_tool_calls": 12,
+      "evaluated": 36,
+      "successes_per_family": {
+        "language_route": 12,
+        "pixel_target": 12,
+        "structured_dial": 0
+      },
+      "successes_total": 24
+    }
+  },
+  "attempt": 1,
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g2": false,
+    "establishes_bounded_multimodal_grounding_mechanism": true,
+    "establishes_cross_domain_transfer": false,
+    "establishes_double_dissociation_under_matched_ablation": true,
+    "establishes_perception_of_natural_images": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false
+  },
+  "decisive_channel": {
+    "language_route": "language",
+    "pixel_target": "pixels",
+    "structured_dial": "structured"
+  },
+  "dissociation_positive": true,
+  "dissociation_reasons": [],
+  "episode_count": 36,
+  "evaluation_count": 180,
+  "external_model_called": false,
+  "network_used": false,
+  "protocol_commitment": "c24f29931b1754159dbd4a52bc82b0bd84b299a71b173d4d9a20b8cfd3225efb",
+  "python": "3.14.6",
+  "result_sha256": "aa312e9530a46556755111630f85911460fff965b428cf59905b5555d0a52639",
+  "retried": false,
+  "schema": "g2-multimodal-grounding-result-v1",
+  "suite_commitment": "20ff63f37e7708b175af5ab5bdfd6dd3374ef487cecb41504e489f2a214a4f7e",
+  "third_party_attestation_present": false,
+  "threshold_applied": {
+    "ablated_dependent_family_max_successes": 0,
+    "blind_guess_max_per_family_successes": 4,
+    "blind_guess_max_total_successes": 8,
+    "full_arm_exact_successes_required": 36
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "schema": "g2-multimodal-grounding-protocol-v1",
+  "status": "frozen_before_grounding_harness_implementation",
+  "experiment_number_assigned_at_merge": true,
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G2",
+  "parent_result": "M066",
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "One persistent deterministic agent consuming language, structured state and pixels, and emitting both symbolic tool calls and embodied effector actions, will reach exact success on every episode of three precommitted task families whose decisive information is confined to exactly one channel; and three matched shape-preserving channel ablations will each reduce their own dependent family to at most the exact chance floor while leaving both non-dependent families at exactly the full-arm score.",
+  "claim_boundary": {
+    "establishes_bounded_multimodal_grounding_mechanism": true,
+    "establishes_double_dissociation_under_matched_ablation": true,
+    "establishes_perception_of_natural_images": false,
+    "establishes_cross_domain_transfer": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "closes_generality_gate_g2": false,
+    "agi_evidence": false
+  },
+  "channels": {
+    "language": {
+      "encoding": "utf-8 instruction string",
+      "carries_family_selector": true
+    },
+    "structured": {
+      "encoding": "ordered mapping of named integer and enum fields",
+      "carries_dial_operands": true
+    },
+    "pixels": {
+      "encoding": "raw RGB888 raster, width 24, height 24, 1728 bytes, no image library",
+      "cell_size_pixels": 4,
+      "carries_effector_target": true
+    }
+  },
+  "outputs": {
+    "symbolic_tool_call": "set_dial(name, value) with exact integer argument",
+    "embodied_action": "ordered step_north|step_south|step_east|step_west effector moves scored from terminal grid state only, never from agent self-report"
+  },
+  "task_families": {
+    "pixel_target": {
+      "decisive_channel": "pixels",
+      "episodes": 12,
+      "description": "the effector destination exists only as a marker triple in the raster; structured state supplies grid extent and effector origin but never the destination"
+    },
+    "structured_dial": {
+      "decisive_channel": "structured",
+      "episodes": 12,
+      "description": "the dial value is an exact function of named structured operands; the raster renders the panel frame without operand values"
+    },
+    "language_route": {
+      "decisive_channel": "language",
+      "episodes": 12,
+      "description": "several structured operands are equally present and only the instruction identifies which operand and which operation are authoritative"
+    }
+  },
+  "arms": {
+    "full": {
+      "language": "intact",
+      "structured": "intact",
+      "pixels": "intact"
+    },
+    "pixel_ablated": {
+      "language": "intact",
+      "structured": "intact",
+      "pixels": "constant salt-derived raster of identical 1728-byte length containing no marker triple"
+    },
+    "structure_ablated": {
+      "language": "intact",
+      "structured": "identical key order with every value replaced by the fixed sentinel 0",
+      "pixels": "intact"
+    },
+    "language_ablated": {
+      "language": "fixed selector-free string of identical token count",
+      "structured": "intact",
+      "pixels": "intact"
+    },
+    "blind_guess": {
+      "language": "absent",
+      "structured": "absent",
+      "pixels": "absent",
+      "purpose": "establish the exact chance floor so a fail-closed ablation cannot be mistaken for an informative one"
+    }
+  },
+  "matched_ablation_rule": "every ablation preserves byte length, key order, token count and schema so that degradation cannot arise from a detectable format change",
+  "grid": {
+    "width_cells": 6,
+    "height_cells": 6,
+    "cell_count": 36,
+    "chance_floor_pixel_target_per_episode": "1/36"
+  },
+  "episode_generation": {
+    "salt_hex": "7d0348363ccb580e7189d90189d73ee649be007db8339c7b03d77f497be2987a",
+    "generator_version": 1,
+    "episode_count": 36,
+    "evaluation_count": 180,
+    "selection_rule": "sha256(salt || utf8(family) || uint32_be(index)); episodes are emitted in ascending selection-digest order within each fixed family",
+    "episode_content_materialized": false
+  },
+  "positive_threshold": {
+    "full_arm_exact_successes_required": 36,
+    "full_arm_required_per_family": 12,
+    "ablated_dependent_family_max_successes": 0,
+    "ablated_non_dependent_family_must_equal_full_arm": true,
+    "blind_guess_max_total_successes": 8,
+    "blind_guess_max_per_family_successes": 4,
+    "episode_count_must_equal": 36,
+    "evaluation_count_must_equal": 180
+  },
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_episode_materialization": true,
+      "applied_before_any_recorded_result": true,
+      "changed": [
+        "positive_threshold.blind_guess_max_successes = 1 replaced by max_total 8 and max_per_family 4",
+        "arms.blind_guess purpose restated as a faithful guessing policy rather than a fail-closed arm"
+      ],
+      "reason": "The first draft threshold was arithmetically wrong. A faithful chance policy guessing a dial value over the frozen 7..12 modulus range succeeds on roughly one episode in twelve, so about 2 to 3 successes across 36 episodes are expected and a bound of 1 could not be met by any honest floor. Implementing the floor as fail-closed instead would have produced a second ablation arm rather than a measured floor, and would have made a zero-scoring ablation self-confirming.",
+      "expected_floor_reasoning": "pixel_target 12 * 1/36 = 0.33; each dial family 12 * 1/12 = 1.0; expected total about 2.3 with the amended bound of 8 left as exact headroom.",
+      "not_permitted_after_materialization": true
+    }
+  ],
+  "failure_classification": {
+    "negative": "Any full-arm episode failure, any ablation that preserves its dependent family, any ablation that changes a non-dependent family, a blind_guess arm exceeding its floor, or episode-count drift.",
+    "inconclusive": "The frozen episode generator cannot be reproduced exactly from this committed protocol.",
+    "positive": "The full arm reaches exact success on all 36 episodes and all three matched ablations show the preregistered double dissociation on the first materialized suite."
+  },
+  "prohibited_adaptation": [
+    "change the hypothesis, thresholds, salt or family grammar after episode materialization",
+    "remove or replace an episode after observing an arm outcome",
+    "retry the first materialized suite",
+    "grant the agent repository, network, credential, deployment, permission-change or physical authority",
+    "score an embodied action from the agent's own report rather than terminal grid state",
+    "describe this bounded mechanism result as closing G2, as natural-image perception, as cross-domain transfer or as AGI evidence"
+  ]
+}
