@@ -1,7 +1,7 @@
 """Bounded model-to-lineage skill appropriation primitives for M073.
 
 The teacher may provide complete repaired training modules. It never provides a generalized
-rewrite. This module extracts one parameterized terminal-return transformation from multiple
+rewrite. This module extracts one parameterized return-expression transformation from multiple
 consistent demonstrations, serializes it, and can later apply it without importing a task
 evaluator or calling a model backend.
 """
@@ -18,9 +18,9 @@ from typing import Mapping, Sequence
 _SLOT_PREFIX = "__MIRA_SLOT_"
 _ALLOWED_NODES = (
     ast.Module, ast.FunctionDef, ast.arguments, ast.arg, ast.Assign, ast.Name, ast.Store, ast.Load,
-    ast.Return, ast.If, ast.BinOp, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod,
-    ast.Pow, ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Lt, ast.LtE, ast.Gt, ast.GtE,
-    ast.Constant, ast.UnaryOp, ast.Not, ast.USub, ast.UAdd, ast.BoolOp, ast.And, ast.Or, ast.Expr,
+    ast.Return, ast.BinOp, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.FloorDiv, ast.Mod, ast.Pow,
+    ast.IfExp, ast.Compare, ast.NotEq, ast.Eq, ast.Lt, ast.LtE, ast.Gt, ast.GtE, ast.Constant,
+    ast.UnaryOp, ast.Not, ast.USub, ast.UAdd, ast.BoolOp, ast.And, ast.Or, ast.Expr,
 )
 
 
@@ -129,51 +129,18 @@ def _function(tree: ast.Module) -> ast.FunctionDef:
     return function
 
 
-def _return_value(statement: ast.stmt) -> ast.expr:
-    if not isinstance(statement, ast.Return) or statement.value is None:
-        raise SkillInductionError("bounded rewrite region requires value-return statements")
-    return statement.value
+def _single_return(function: ast.FunctionDef) -> ast.Return:
+    returns = [node for node in function.body if isinstance(node, ast.Return)]
+    if len(returns) != 1 or returns[0].value is None:
+        raise SkillInductionError(
+            "frozen M073 induction requires exactly one direct value-return expression"
+        )
+    return returns[0]
 
 
-def _rewrite_region(function: ast.FunctionDef) -> tuple[ast.expr, list[ast.stmt]]:
-    """Normalize one terminal return region to an expression plus unchanged prefix.
-
-    Accepted shapes are deliberately small and task-agnostic: one final return, a final if with one
-    return in each branch, or a guard-if with one return followed by a final return. Conditional
-    control flow is represented as an IfExp only for induction; teacher syntax itself is not copied.
-    """
-
-    body = function.body
-    if not body:
-        raise SkillInductionError("bounded skill function has no executable body")
-    if len(body) >= 2 and isinstance(body[-2], ast.If) and isinstance(body[-1], ast.Return):
-        guard = body[-2]
-        if not guard.orelse and len(guard.body) == 1 and isinstance(guard.body[0], ast.Return):
-            return ast.IfExp(
-                test=copy.deepcopy(guard.test),
-                body=copy.deepcopy(_return_value(guard.body[0])),
-                orelse=copy.deepcopy(_return_value(body[-1])),
-            ), list(body[:-2])
-    final = body[-1]
-    if isinstance(final, ast.If):
-        if (
-            len(final.body) == 1 and isinstance(final.body[0], ast.Return)
-            and len(final.orelse) == 1 and isinstance(final.orelse[0], ast.Return)
-        ):
-            return ast.IfExp(
-                test=copy.deepcopy(final.test),
-                body=copy.deepcopy(_return_value(final.body[0])),
-                orelse=copy.deepcopy(_return_value(final.orelse[0])),
-            ), list(body[:-1])
-        raise SkillInductionError("bounded final if must contain exactly one return per branch")
-    if isinstance(final, ast.Return):
-        return copy.deepcopy(_return_value(final)), list(body[:-1])
-    raise SkillInductionError("bounded skill function lacks a supported terminal return region")
-
-
-def _prefix_dump(function: ast.FunctionDef, prefix: Sequence[ast.stmt]) -> str:
+def _without_return(function: ast.FunctionDef) -> str:
     clone = copy.deepcopy(function)
-    clone.body = [copy.deepcopy(node) for node in prefix]
+    clone.body = [node for node in clone.body if not isinstance(node, ast.Return)]
     return ast.dump(clone, annotate_fields=True, include_attributes=False)
 
 
@@ -231,7 +198,7 @@ def induce_skill_capsule(
     demonstrations: Sequence[SkillDemonstration], *,
     skill_id: str = "m073-induced-return-rewrite-v1",
 ) -> SkillCapsule:
-    """Induce exactly one alpha-generalized terminal-return rewrite from demonstrations."""
+    """Induce exactly one alpha-generalized return-expression rewrite from demonstrations."""
 
     if len(demonstrations) < 4:
         raise SkillInductionError("skill induction requires at least four demonstrations")
@@ -253,16 +220,12 @@ def induce_skill_capsule(
             after_function.args, include_attributes=False
         ):
             raise SkillInductionError("teacher repair changed the function signature")
-        before_expression, before_prefix = _rewrite_region(before_function)
-        after_expression, after_prefix = _rewrite_region(after_function)
-        if _prefix_dump(before_function, before_prefix) != _prefix_dump(
-            after_function, after_prefix
-        ):
-            raise SkillInductionError(
-                "teacher repair changed content outside the terminal return region"
-            )
-        source_pattern, concrete_to_slot = _abstract_expression(before_expression)
-        target_template = _abstract_target(after_expression, concrete_to_slot)
+        if _without_return(before_function) != _without_return(after_function):
+            raise SkillInductionError("teacher repair changed content outside the return expression")
+        before_return = _single_return(before_function)
+        after_return = _single_return(after_function)
+        source_pattern, concrete_to_slot = _abstract_expression(before_return.value)
+        target_template = _abstract_target(after_return.value, concrete_to_slot)
         if source_pattern == target_template:
             raise SkillInductionError("teacher demonstration contains no executable transformation")
         source_patterns.append(source_pattern)
@@ -289,7 +252,7 @@ def induce_skill_capsule(
         target_template=target_templates[0],
         preconditions=(
             "one safe Python function",
-            "one supported terminal return region",
+            "exactly one direct value-return expression",
             "source expression structurally matches the learned alpha-template",
             "all target identifiers bind to source-expression roles",
         ),
@@ -308,8 +271,8 @@ def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
         raise SkillInductionError("skill capsule digest mismatch before application")
     tree = _parse_safe_module(source)
     function = _function(tree)
-    observed_expression, prefix = _rewrite_region(function)
-    observed_pattern, concrete_to_slot = _abstract_expression(observed_expression)
+    return_node = _single_return(function)
+    observed_pattern, concrete_to_slot = _abstract_expression(return_node.value)
     if observed_pattern != capsule.source_pattern:
         raise SkillInductionError("held-out source does not satisfy capsule preconditions")
     slot_to_concrete = {slot: concrete for concrete, slot in concrete_to_slot.items()}
@@ -329,7 +292,7 @@ def apply_skill_capsule(capsule: SkillCapsule, source: str) -> str:
 
     instantiated = Binder().visit(copy.deepcopy(target_expr))
     ast.fix_missing_locations(instantiated)
-    function.body = [copy.deepcopy(node) for node in prefix] + [ast.Return(value=instantiated)]
+    return_node.value = instantiated
     ast.fix_missing_locations(tree)
     rewritten = ast.unparse(tree) + "\n"
     _parse_safe_module(rewritten)
