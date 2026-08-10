@@ -122,31 +122,61 @@ def _execute(source: str, function_name: str, a: float, b: float) -> float | int
     return value
 
 
-def repair_passes(task: RepairTask, candidate_source: str) -> bool:
+def repair_case_results(task: RepairTask, candidate_source: str) -> dict[str, object]:
+    """Return evaluator-owned structural and semantic evidence for one candidate module."""
+
+    records: list[dict[str, object]] = []
+    structural_error: str | None = None
     try:
         original_tree = _parse(task.source)
         candidate_tree = _parse(candidate_source)
         original = _function(original_tree)
         candidate = _function(candidate_tree)
         if original.name != candidate.name:
-            return False
-        if ast.dump(original.args, include_attributes=False) != ast.dump(
+            structural_error = "function_name_changed"
+        elif ast.dump(original.args, include_attributes=False) != ast.dump(
             candidate.args, include_attributes=False
         ):
-            return False
-        if _prefix_signature(original) != _prefix_signature(candidate):
-            return False
-        for numerator, denominator in EVALUATION_CASES:
-            observed = _execute(candidate_source, task.function_name, numerator, denominator)
-            expected = numerator / denominator if denominator != 0 else 0
-            if observed != expected:
-                return False
-    except (ValueError, ZeroDivisionError, TypeError):
-        return False
-    return True
+            structural_error = "function_signature_changed"
+        elif _prefix_signature(original) != _prefix_signature(candidate):
+            structural_error = "unrelated_prefix_changed"
+        if structural_error is None:
+            for numerator, denominator in EVALUATION_CASES:
+                try:
+                    observed: object = _execute(
+                        candidate_source, task.function_name, numerator, denominator,
+                    )
+                    error = None
+                except (ValueError, ZeroDivisionError, TypeError) as exc:
+                    observed = None
+                    error = type(exc).__name__
+                expected = numerator / denominator if denominator != 0 else 0
+                records.append({
+                    "args": [numerator, denominator],
+                    "expected": expected,
+                    "observed": observed,
+                    "error": error,
+                    "passed": error is None and observed == expected,
+                })
+    except (ValueError, TypeError) as exc:
+        structural_error = f"{type(exc).__name__}:{exc}"
+    case_failures = sum(1 for record in records if record["passed"] is not True)
+    if structural_error is not None:
+        case_failures = len(EVALUATION_CASES)
+    return {
+        "structural_error": structural_error,
+        "case_count": len(EVALUATION_CASES),
+        "case_failures": case_failures,
+        "passed": structural_error is None and case_failures == 0,
+        "cases": records,
+    }
+
+
+def repair_passes(task: RepairTask, candidate_source: str) -> bool:
+    return bool(repair_case_results(task, candidate_source)["passed"])
 
 
 __all__ = [
-    "EVALUATION_CASES", "RepairTask", "generate_division_repair_task", "repair_passes",
-    "source_sha256",
+    "EVALUATION_CASES", "RepairTask", "generate_division_repair_task", "repair_case_results",
+    "repair_passes", "source_sha256",
 ]
