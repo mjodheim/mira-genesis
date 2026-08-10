@@ -6,3 +6,5 @@ experiments/M074/DEVELOPMENT_DRYRUN.json -text
 experiments/M074/SCIENTIFIC_PROTOCOL.json -text
 experiments/M074/SCIENTIFIC_RESULT.json -text
 experiments/M075/DEVELOPMENT_DRYRUN.json -text
+experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json -text
+experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text

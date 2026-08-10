@@ -52,4 +52,6 @@ Development stops rather than qualifying the apparatus if:
 6. M074 tasks are used as the M075 scientific threshold;
 7. a private task is opened before the policy freeze or an observed episode is retried.
 
-No M075 scientific model call, protocol or result exists yet.
+The public, contaminated model-development protocol is now committed in
+`MODEL_DEVELOPMENT_PROTOCOL.json`; it is not a scientific protocol and cannot test H21. No M075
+scientific model call, protocol or result exists yet.
