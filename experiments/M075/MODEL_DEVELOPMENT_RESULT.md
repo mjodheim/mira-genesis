@@ -57,6 +57,10 @@ Exact evidence commit `0c19d6b` passed the complete local Python 3.14.6 suite on
 1,369 tests passed, two skipped, in 2,390.27 seconds. The three repository-integrity modes and both
 M074 permanent scientific checkers also passed.
 
+Published head `2dd6ccb` passed first CI run `31398661236` without rerun: 1,370 passed and one
+skipped on Python 3.11 in 1,243.62 seconds, and the same counts on Python 3.13 in 1,265.61 seconds,
+plus repository integrity. Attribution run `31398661318` passed on attempt 1.
+
 ## Decision for the next phase
 
 The project will not tune the prompt against the single missed public task. Before any stronger

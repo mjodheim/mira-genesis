@@ -1460,6 +1460,19 @@ phase_eight:
     model_development_complete_local_seconds: 2390.27
     model_development_complete_local_python: 3.14.6
     model_development_repository_integrity_passed: true
+    model_development_published_head: 2dd6ccb3b2770bc1e44e222d635d4a98342bfe20
+    model_development_ci_run: 31398661236
+    model_development_ci_attempt: 1
+    model_development_ci_python_3_11_passed: 1370
+    model_development_ci_python_3_11_skipped: 1
+    model_development_ci_python_3_11_seconds: 1243.62
+    model_development_ci_python_3_13_passed: 1370
+    model_development_ci_python_3_13_skipped: 1
+    model_development_ci_python_3_13_seconds: 1265.61
+    model_development_ci_repository_integrity_passed: true
+    model_development_attribution_run: 31398661318
+    model_development_attribution_passed: true
+    model_development_github_workflow_rerun_used: false
     scientific_model_called: false
     scientific_protocol_frozen: false
     private_scientific_bank_opened: false

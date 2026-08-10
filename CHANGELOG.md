@@ -14,6 +14,8 @@
   external outcomes and recomputed calibration. Result SHA-256 `dadd2028`; calibration `d0226c09`.
 - Exact evidence commit `0c19d6b` passed the complete local Python 3.14.6 suite on its first run:
   1,369 passed, two skipped in 2,390.27 seconds, plus all repository-integrity modes.
+- Published head `2dd6ccb` passed first CI run `31398661236`: 1,370 passed/1 skipped on Python 3.11
+  and Python 3.13, plus integrity. Attribution run `31398661318` passed; no workflow rerun was used.
 - Began M075 as a separately numbered successor to the negative M074 result. Added a task-agnostic
   epistemic projection of remaining budget, failure persistence and exact action repetition without
   exposing labels, solutions, evaluators or arm identity.
