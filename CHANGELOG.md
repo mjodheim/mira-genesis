@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Added the M075 independent-maintainer intake kit. The readiness gate already states that the
+  project may not proceed without a signed external attestation, but reconstructing its 22-field
+  closed envelope, opaque domain identifiers and signature namespace from source was hours of work
+  for an outside volunteer. `metamorphosis/m075_intake_kit.py` and
+  `scripts/run_m075_intake_kit.py` emit the template, print the exact `ssh-keygen` commands and
+  validate a candidate envelope before it is sent, reusing the gate's own validator so the two
+  cannot diverge.
+- Added `experiments/M075/MAINTAINER_BRIEF.md`, a standalone brief for someone with no prior
+  knowledge of the project: what they attest, what they must refuse to hand over, and the ordering
+  that makes the arrangement evidence rather than theatre.
+- Pinned the boundary in regressions: the kit has no process, network or archive module in its
+  import graph, so it cannot sign or open payload, and it still rejects a project author as signer.
+  Readiness remains fail-closed and unchanged at four blockers.
 - Added M077 and preserved it as a **negative** result on H23. One persistent lineage ran shifts of
   32, 128, 512 and 2048 episodes over a typed sixteen-slot pool with a digest-chained journal, under
   four declared invariants and four injected fault kinds.

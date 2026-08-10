@@ -1476,6 +1476,12 @@ phase_eight:
     preprivate_design: experiments/M075/PRE_PRIVATE_CAUSAL_DESIGN.md
     preprivate_readiness_module: metamorphosis/m075_private_readiness.py
     preprivate_readiness_checker: scripts/check_m075_private_readiness.py
+    preprivate_maintainer_brief: experiments/M075/MAINTAINER_BRIEF.md
+    preprivate_intake_kit_module: metamorphosis/m075_intake_kit.py
+    preprivate_intake_kit_entry_point: scripts/run_m075_intake_kit.py
+    preprivate_intake_kit_can_sign: false
+    preprivate_intake_kit_can_open_payload: false
+    preprivate_intake_kit_reuses_gate_validator: true
     preprivate_ready_for_payload_reveal: false
     preprivate_payload_accessed: false
     preprivate_current_blockers:
