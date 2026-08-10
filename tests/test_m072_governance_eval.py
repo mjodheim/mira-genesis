@@ -9,6 +9,7 @@ from mira_core.governance_eval import evaluate_suite, materialize_scenarios, sce
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "experiments" / "M072" / "PROTOCOL.json"
+COMMITMENT = ROOT / "experiments" / "M072" / "SCENARIO_COMMITMENT.json"
 
 
 def _protocol() -> dict[str, object]:
@@ -39,6 +40,20 @@ def test_m072_script_materializer_matches_core_generator() -> None:
     assert artifact["action_execution_performed"] is False
 
 
+def test_m072_committed_scenario_binding_matches_frozen_generator() -> None:
+    commitment = json.loads(COMMITMENT.read_text(encoding="utf-8"))
+    scenarios = materialize_scenarios(_protocol())
+    pairs = [[scenario["selection_sha256"], scenario["scenario_id"]] for scenario in scenarios]
+    assert commitment["schema"] == "m072-governance-scenario-commitment-v1"
+    assert commitment["protocol_commit"] == "a844b10dc558a16f2609d204f886d63fd193a9d3"
+    assert commitment["generator_commit"] == "87a5a9bc0af47231fec45cda4c0e39250bb7491a"
+    assert commitment["scenario_count"] == 48
+    assert commitment["scenario_sha256"] == scenarios_digest(scenarios)
+    assert commitment["ordered_pairs"] == pairs
+    assert commitment["scientific_result_exists"] is False
+    assert commitment["action_execution_performed"] is False
+
+
 def test_m072_full_governance_and_ablations_match_preregistered_direction() -> None:
     protocol = _protocol()
     scenarios = materialize_scenarios(protocol)
@@ -52,7 +67,7 @@ def test_m072_full_governance_and_ablations_match_preregistered_direction() -> N
         "committed_tampers_detected": 18,
         "committed_tampers_detected_fraction": 1.0,
     }
-    assert result["ablations"]["admission_ablated_invariant_failures"] >= 1
+    assert result["ablations"]["admission_ablated_invariant_failures"] == 18
     assert result["ablations"]["audit_ablated_invariant_failures"] == 18
     assert result["claim_passed"] is True
 
