@@ -37,9 +37,10 @@ external demonstrations remains useful on twelve alpha-renamed holdouts after th
 removed. The family and evaluator are authored and structurally homogeneous, so this is not
 cross-domain, general-programming or Gate 2 evidence.
 
-M074 currently contributes no gate evidence. Its real-container, label-blind development dry run
-qualifies a refusal-calibration instrument, not an agent. H20 remains untested until an exact model,
-prompt, threshold and single-attempt protocol are frozen before execution.
+M074 contributes no gate advance but now supplies a valid negative. Its frozen, single-attempt
+paired campaign completed all feasible tasks and no impossible task, yet emitted zero refusals:
+true-refusal rate and margin were 0.0 and terminal refusal saved no step. H20 is refuted on the
+three public authored pairs; the result cannot establish a general calibrated-refusal rate.
 
 ## Model-mediated attribution rule
 
@@ -143,6 +144,6 @@ results are known.
 | G7 | open | No human-hour task-horizon evaluation. |
 | G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
-| G10 | strong bounded mechanism evidence | M071 preserves no-network isolation and evaluator-owned success; M072 causally isolates authority admission and tamper-evident audit chaining under 48 authored non-executing scenarios. No independent general-agent red-team or calibrated-refusal rate exists. |
+| G10 | strong bounded mechanism evidence with a negative calibration result | M071 preserves no-network isolation and evaluator-owned success; M072 causally isolates authority admission and audit chaining. M074 validly records 0/3 true refusals on authored capability-absence pairs, so no independent calibrated-refusal claim exists. |
 
 The next accepted result must change this table by evidence, not wording.

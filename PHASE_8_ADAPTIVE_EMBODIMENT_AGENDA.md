@@ -91,5 +91,20 @@ proposal inputs, not lineage-owned tools. External reward is reported for the na
 system; the Mira layer is evaluated through governance, isolation, audit and robustness evidence.
 This track does not amend the frozen Genesis completion gates.
 
+M072 then isolated authority admission and tamper-evident audit causally on an authored threat
+grammar, and M073 induced one reusable model-free AST capsule from external demonstrations. These
+are bounded mechanism results, not general autonomy.
+
+M074 tested calibrated capability refusal separately. Its exact paired protocol was frozen and
+qualified before one 12-episode model campaign. The composed system completed all six feasible arm
+episodes and no impossible episode, but emitted zero refusals; arm-A true-refusal rate and margin
+were 0.0 and terminal refusal saved no step. H20 is therefore refuted under its bounded threshold.
+The result is negative rather than inconclusive and M074 cannot be retried.
+
+A successor must not tune on M074 and call the same six tasks new evidence. It must first develop
+task-agnostic epistemic state — including remaining budget and repeated-failure evidence — on a
+separate development bank, then freeze before private independently maintained cross-domain
+capability pairs. M074 remains regression evidence only.
+
 The phase remains separate from M045's measurement track. Better embodiment does not validate a
 proxy objective, and proxy performance cannot establish successful re-embodiment.

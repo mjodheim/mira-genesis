@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import subprocess
 
 import pytest
@@ -128,6 +129,63 @@ def test_agent_runs_non_root_and_external_evaluator_runs_as_harness_root(
 
 def test_network_mode_is_reported_in_harbor_vocabulary() -> None:
     assert DockerTaskEnvironment(WRITABLE_TASK).network_policy.network_mode.value == "no-network"
+
+
+def test_scientific_boundary_is_read_back_from_the_live_container(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inspection = [{
+        "Config": {"Image": WRITABLE_TASK.environment.image},
+        "State": {"Running": True},
+        "HostConfig": {
+            "NetworkMode": "none",
+            "ReadonlyRootfs": True,
+            "CapDrop": ["ALL"],
+            "SecurityOpt": ["no-new-privileges:true"],
+            "Memory": 256 * 1024 * 1024,
+            "NanoCpus": 1_000_000_000,
+            "PidsLimit": 64,
+            "Tmpfs": {"/workspace": "rw,nosuid,nodev,noexec,size=16777216"},
+        },
+    }]
+    recorder = Recorder([
+        (0, "container\n", ""), (0, "", ""),
+        (0, json.dumps(inspection), ""), (0, "", ""),
+    ])
+    _patch(monkeypatch, recorder)
+    with DockerTaskEnvironment(WRITABLE_TASK) as environment:
+        attestation = environment.inspect_security_boundary()
+    assert attestation["matches_declaration"] is True
+    assert attestation["agent_exec_user"] == "65534:65534"
+    assert any(call[1] == "inspect" for call in recorder.calls)
+
+
+def test_scientific_boundary_mismatch_is_reported_not_normalized(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inspection = [{
+        "Config": {"Image": WRITABLE_TASK.environment.image},
+        "State": {"Running": True},
+        "HostConfig": {
+            "NetworkMode": "bridge",
+            "ReadonlyRootfs": True,
+            "CapDrop": ["ALL"],
+            "SecurityOpt": ["no-new-privileges:true"],
+            "Memory": 256 * 1024 * 1024,
+            "NanoCpus": 1_000_000_000,
+            "PidsLimit": 64,
+            "Tmpfs": {"/workspace": "rw,nosuid,nodev,noexec,size=16777216"},
+        },
+    }]
+    recorder = Recorder([
+        (0, "container\n", ""), (0, "", ""),
+        (0, json.dumps(inspection), ""), (0, "", ""),
+    ])
+    _patch(monkeypatch, recorder)
+    with DockerTaskEnvironment(WRITABLE_TASK) as environment:
+        attestation = environment.inspect_security_boundary()
+    assert attestation["network_mode"] == "bridge"
+    assert attestation["matches_declaration"] is False
 
 
 def test_a_timeout_is_reported_as_a_command_result_not_an_exception(

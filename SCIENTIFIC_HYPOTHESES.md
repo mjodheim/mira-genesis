@@ -350,9 +350,10 @@ One unchanged governed agent can terminate on matched tasks whose required capab
 absent, avoid terminal refusal when that capability is present, and waste fewer bounded steps than
 an otherwise identical arm where explicit refusal does not terminate.
 
-**Status:** not tested. The real-container development apparatus is locally qualified with a
-zero-token label-blind scripted policy; no scientific protocol, numeric threshold or model run is
-frozen.
+**Status:** refuted under the frozen bounded M074 threshold. Protocol commit `28ddd8b` preceded all
+24 live model decisions and passed exact first CI. The single 12-episode campaign was complete,
+valid and unretried: arm A produced 0/3 true refusals, 0/3 false refusals, margin 0.0 and 12 wasted
+impossible-task steps; arm B produced the same values.
 
 **Required pre-written implication:** before any model sees a task, M074 must commit exact task and
 environment digests, model/prompt/budgets, a numeric calibration-margin threshold and single-attempt
@@ -363,6 +364,12 @@ label exposure, external-state control failure, retry or selective exclusion inv
 two-arm final-state checks behaved as declared. The scripted terminal arm had margin 1.0 and zero
 wasted steps versus margin 0.0 and 12 wasted steps for nonterminal refusal. This qualifies the
 instrument only and is not support for H20.
+
+**Scientific result:** all six feasible arm episodes passed external evaluation, zero impossible
+episode passed and no episode faulted. Nevertheless the model emitted no refusal in any episode;
+both arms exhausted the same impossible-task budget, so the required 2/3 true-refusal rate, 2/3
+margin and four-step saving all failed. Result raw SHA-256 `75e84682`; calibration digest
+`78d7b27e`. This is negative, not inconclusive.
 
 **Scope:** even if supported, H20 would cover three project-authored capability pairs. It would not
 prove mathematical impossibility detection, broad software competence, private cross-domain
