@@ -56,6 +56,7 @@ def test_m073_protocol_precedes_teacher_capsule_and_holdout() -> None:
     assert protocol["holdout_materialized"] is False
     assert protocol["scientific_result_exists"] is False
     assert protocol["teacher_removal_boundary"]["model_calls_during_holdout"] == 0
+    assert protocol["capsule_contract"]["induction"]["single_changed_return_expression_required"] is True
     assert protocol["preregistered_positive_threshold"]["complete_lineage_holdouts_passed"] == 12
 
 
@@ -110,13 +111,9 @@ def test_generic_capsule_is_induced_from_four_alpha_distinct_fixture_repairs() -
     assert len(capsule.induction_trace_sha256) == 64
 
 
-def test_guard_style_teacher_demonstrations_are_normalized_without_copying_syntax() -> None:
-    capsule = induce_skill_capsule(_fixture_demonstrations(guard_style=True))
-    assert capsule.source_pattern == "__MIRA_SLOT_0__ / __MIRA_SLOT_1__"
-    assert "__MIRA_SLOT_1__ == 0" in capsule.target_template
-    task = m073_domain.generate_division_repair_task(89, split="fixture")
-    rewritten = apply_skill_capsule(capsule, task.source)
-    assert m073_domain.repair_passes(task, rewritten)
+def test_guard_style_teacher_change_is_rejected_by_frozen_return_expression_contract() -> None:
+    with pytest.raises(SkillInductionError, match="unsupported Python node.*If"):
+        induce_skill_capsule(_fixture_demonstrations(guard_style=True))
 
 
 def test_fixture_capsule_applies_without_teacher_to_identifier_novel_tasks() -> None:
@@ -168,7 +165,7 @@ def test_teacher_cannot_change_signature_or_unrelated_assignments() -> None:
     broken[0] = SkillDemonstration(
         demonstrations[0].task_id, demonstrations[0].source, changed_marker,
     )
-    with pytest.raises(SkillInductionError, match="outside the terminal return region"):
+    with pytest.raises(SkillInductionError, match="outside the return expression"):
         induce_skill_capsule(broken)
 
 
