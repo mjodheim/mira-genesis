@@ -57,6 +57,27 @@ fixes the exact floor — the effector destination is one of 36 cells — so tha
 ablation is read against a measured floor rather than an assumed one. This mirrors the `nop` floors
 used in M070 and M071.
 
+## Amendment A1, before materialization
+
+The first freeze contained a defect and it is recorded rather than quietly repaired. It described
+the floor arm as answering "from the chance distribution" while also requiring at most **one**
+success across all 36 episodes. Those two clauses are inconsistent: a faithful guess over the frozen
+7..12 modulus range lands on roughly one episode in twelve, so about two to three successes are
+expected. A bound of one was unreachable by any honest floor.
+
+Implementing the floor as fail-closed instead would have been worse. It would have produced a fourth
+ablation arm dressed as a floor, and a zero-scoring ablation compared against a zero-scoring "floor"
+proves nothing.
+
+Amendment A1 therefore restates the floor as a real guessing policy and sets the bound from the
+arithmetic: at most 8 successes in total and at most 4 in any family, against an expected 2.3. The
+amendment was applied before any episode was materialized and before any result existed, which is
+the boundary the frozen protocol itself sets. No threshold may move after materialization.
+
+The floor arm knows only which output class is scored for the current episode, because that is part
+of the task interface rather than the decisive information. It receives no language, no structured
+field and no raster, and the harness raises if any channel reaches it.
+
 ## Embodied scoring
 
 Embodied success is computed from the terminal grid state after the emitted move sequence is
