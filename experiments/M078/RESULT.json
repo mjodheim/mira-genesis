@@ -1,0 +1,255 @@
+{
+  "arms": {
+    "always_refuse": {
+      "adapters_recovered": 0,
+      "arm": "always_refuse",
+      "compatible_adapters": 0,
+      "compatible_hidden_perfect": 0,
+      "empty_set_refusals": 0,
+      "false_refusals": 4,
+      "incompatible_hidden_failures": 0,
+      "invented_adapters": 0,
+      "records": [
+        {
+          "body_class": "compatible",
+          "commitment": "388e37e0d756c06183ecef27e575087019b6735aa747292034dc8176427c9653",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "542543713e583d4c61ea77fbcc8b4d27903ce9082de3da689fe2ac82260355b7",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "80c9d820bffcb84481fd4fe7a07db1c8f8024d46ffcec980fd776bbf7a7e3e7e",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "84aa6c81fa807c20847a1143da3ca25f50357d5e9874bb9be7f3367700bff36e",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "3c3a26f851455cfcd9ad630d97781ff760eda49d0dff4dfb79942ccfe2496607",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "8df3a73c96742aebcbeab34af87818ccd61aa8c826db4c5bed410af00939b162",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "998bcbc6e9e122b5a619414e3b102f5223da475c222b2a7c5d0385c5f53ce6de",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "a705ed25917a5fef15efd72e6a4287a3f66de898e5bb5f1669375c0839137c96",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        }
+      ],
+      "true_refusals": 4
+    },
+    "discoverer": {
+      "adapters_recovered": 4,
+      "arm": "discoverer",
+      "compatible_adapters": 4,
+      "compatible_hidden_perfect": 4,
+      "empty_set_refusals": 0,
+      "false_refusals": 0,
+      "incompatible_hidden_failures": 0,
+      "invented_adapters": 0,
+      "records": [
+        {
+          "body_class": "compatible",
+          "commitment": "388e37e0d756c06183ecef27e575087019b6735aa747292034dc8176427c9653",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "542543713e583d4c61ea77fbcc8b4d27903ce9082de3da689fe2ac82260355b7",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "80c9d820bffcb84481fd4fe7a07db1c8f8024d46ffcec980fd776bbf7a7e3e7e",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "84aa6c81fa807c20847a1143da3ca25f50357d5e9874bb9be7f3367700bff36e",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "3c3a26f851455cfcd9ad630d97781ff760eda49d0dff4dfb79942ccfe2496607",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "8df3a73c96742aebcbeab34af87818ccd61aa8c826db4c5bed410af00939b162",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "998bcbc6e9e122b5a619414e3b102f5223da475c222b2a7c5d0385c5f53ce6de",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "a705ed25917a5fef15efd72e6a4287a3f66de898e5bb5f1669375c0839137c96",
+          "hidden_passed": 0,
+          "hidden_total": 12,
+          "refusal_kind": "refused_underdetermined",
+          "refused": true
+        }
+      ],
+      "true_refusals": 4
+    },
+    "never_refuse": {
+      "adapters_recovered": 8,
+      "arm": "never_refuse",
+      "compatible_adapters": 4,
+      "compatible_hidden_perfect": 4,
+      "empty_set_refusals": 0,
+      "false_refusals": 0,
+      "incompatible_hidden_failures": 4,
+      "invented_adapters": 4,
+      "records": [
+        {
+          "body_class": "compatible",
+          "commitment": "388e37e0d756c06183ecef27e575087019b6735aa747292034dc8176427c9653",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "542543713e583d4c61ea77fbcc8b4d27903ce9082de3da689fe2ac82260355b7",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "80c9d820bffcb84481fd4fe7a07db1c8f8024d46ffcec980fd776bbf7a7e3e7e",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "compatible",
+          "commitment": "84aa6c81fa807c20847a1143da3ca25f50357d5e9874bb9be7f3367700bff36e",
+          "hidden_passed": 12,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "3c3a26f851455cfcd9ad630d97781ff760eda49d0dff4dfb79942ccfe2496607",
+          "hidden_passed": 9,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "8df3a73c96742aebcbeab34af87818ccd61aa8c826db4c5bed410af00939b162",
+          "hidden_passed": 9,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "998bcbc6e9e122b5a619414e3b102f5223da475c222b2a7c5d0385c5f53ce6de",
+          "hidden_passed": 9,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        },
+        {
+          "body_class": "incompatible",
+          "commitment": "a705ed25917a5fef15efd72e6a4287a3f66de898e5bb5f1669375c0839137c96",
+          "hidden_passed": 9,
+          "hidden_total": 12,
+          "refusal_kind": null,
+          "refused": false
+        }
+      ],
+      "true_refusals": 0
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "c37ea3dc6ea9ddfbaf1c0528b8fbeef225e9b24ad3ecb90f524b8985147c0c0e",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g1": false,
+    "establishes_calibrated_refusal_on_observable_incompatibility": true,
+    "establishes_cross_domain_transfer": false,
+    "establishes_general_epistemic_humility": false,
+    "establishes_refusal_by_exhaustion_only": false,
+    "genesis_gate_2_evidence": false
+  },
+  "external_model_called": false,
+  "failed_conditions": [],
+  "network_used": false,
+  "protocol_commitment": "dedba477a66f1541bd690e94128d3b10207b065b4ad3fc588c353ee98a0d60e3",
+  "python": "3.14.6",
+  "result_sha256": "430f78229203a88d1f11fd36a433191fbe9af71bfd6b95d877c4ec1cb81e4976",
+  "retried": false,
+  "schema": "m078-incompatible-refusal-result-v1",
+  "verdict": "positive"
+}

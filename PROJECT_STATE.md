@@ -93,6 +93,16 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M078 exercises the G1 refusal clause that M068 left untested.** Protocol frozen before the
+  harness at `f8a7dc4`; bank commitment `c37ea3dc…c0c0e` bound before any arm ran; first result
+  `430f7822…e4976`, attempt 1, no retry. One unchanged procedure adapted all four compatible bodies
+  at 12/12 hidden observations each, refused all four incompatible bodies, and produced zero false
+  refusals, zero invented adapters and zero empty-set refusals. Refusal is not an exhausted search:
+  each incompatible body carries one command stitched from two skills over their disjoint public
+  inputs, so a public-fitting candidate always exists, and the `never_refuse` control adopted one on
+  all four bodies and failed hidden validation four times. The `always_refuse` control recovers
+  nothing. G1 does **not** advance — the bodies are project-authored — and D044 forbids citing this
+  as repairing M074, whose negative remains the only result on model refusal.
 - **M077 is a valid negative on long-horizon mechanism separability.** Protocol frozen before the
   harness at `31b2778`; schedule commitment `80e92af4…a9d13` bound before any arm ran; first result
   `93ecd2d0…d983d9`, attempt 1, no retry. The full arm held four invariants, recovered every
