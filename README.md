@@ -80,6 +80,7 @@ The full evidence is preserved in:
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT** | Matched authored ablations isolate causal contributions from authority admission and tamper-evident audit over 48 non-executing scenarios. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT** | Four external demonstrations induce one committed AST skill; after teacher removal it passes 12/12 fresh authored holdouts while two controls pass 0/12. |
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | The single frozen paired campaign completed 6/6 feasible arm tasks but produced 0/3 true refusals, margin 0.0 and zero saved steps; H20 fails without retry or protocol defect. |
+| M075 | **DEVELOPMENT APPARATUS QUALIFIED — NO MODEL RESULT** | A task-agnostic epistemic/budget projection and distinct six-task public bank pass a zero-token 12-container wiring control; H21 remains untested. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is
 a separately named experiment with a separately frozen mechanism.
@@ -366,6 +367,13 @@ refusal saved zero. H20 fails under its frozen threshold and M074 cannot be retr
 Exact result commit `1eeb345` passed first CI run `31388068187`: 1,341 passed/1 skipped on Python
 3.11 and Python 3.13, plus integrity; attribution run `31388066466` passed without rerun.
 
+**M075 begins the constrained successor, not a repair of M074.** It exposes only self-generated
+facts—remaining budget, return-code persistence, generic visible failure class and exact action
+repetition digests—to the structured policy. A separate public Node/write/read development bank
+passes 12 fresh real-container episodes with a deterministic zero-token policy and no defect. This
+qualifies plumbing only; no model-assisted result or private scientific bank exists. See
+[`experiments/M075/DEVELOPMENT_QUALIFICATION.md`](experiments/M075/DEVELOPMENT_QUALIFICATION.md).
+
 See:
 
 - [`experiments/M043/STATUS.md`](experiments/M043/STATUS.md);
@@ -386,6 +394,7 @@ See:
 - [`experiments/M073/DEVELOPMENT_QUALIFICATION.md`](experiments/M073/DEVELOPMENT_QUALIFICATION.md);
 - [`experiments/M074/DEVELOPMENT_QUALIFICATION.md`](experiments/M074/DEVELOPMENT_QUALIFICATION.md);
 - [`experiments/M074/SCIENTIFIC_RESULT.md`](experiments/M074/SCIENTIFIC_RESULT.md);
+- [`experiments/M075/DEVELOPMENT_QUALIFICATION.md`](experiments/M075/DEVELOPMENT_QUALIFICATION.md);
 - [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).

@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m074_negative_refusal_calibration_result
+status: phase_eight_m075_epistemic_development_apparatus_qualified_no_model_result
 
 active_research_question: >-
   After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
@@ -48,6 +48,13 @@ epistemic_tracks:
     true_refusals: 0
     false_refusals: 0
     calibration_margin: 0.0
+    genesis_gate_2_claim_permitted: false
+  epistemic_refusal_development:
+    scope: M075
+    status: zero_token_public_development_apparatus_qualified
+    external_model_called: false
+    public_bank_contaminated: true
+    private_scientific_bank_opened: false
     genesis_gate_2_claim_permitted: false
   measurement_track:
     reserved_experiment: M045
@@ -1387,9 +1394,46 @@ phase_eight:
     calibrated_agent_refusal_claimed: false
     generality_gate_advanced: false
     agi_evidence: false
+  M075:
+    status: zero_token_public_development_apparatus_locally_qualified
+    canonical: false
+    design: experiments/M075/DEVELOPMENT_DESIGN.md
+    development_qualification: experiments/M075/DEVELOPMENT_QUALIFICATION.md
+    development_record: experiments/M075/DEVELOPMENT_DRYRUN.json
+    development_record_raw_sha256: cb194a4092c3900b0befbe259d851a8b145b14c8110f8df3b462a2ee5b745699
+    development_calibration_digest: 71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3
+    development_bank_public_and_contaminated: true
+    development_bank_distinct_from_m074: true
+    node_image: node@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    matched_task_pairs: 3
+    feasible_live_labels: 3
+    capability_impossible_live_labels: 3
+    development_episodes: 12
+    development_defects: 0
+    development_model_tokens: 0
+    development_terminal_true_refusals: 3
+    development_terminal_false_refusals: 0
+    development_terminal_margin: 1.0
+    development_terminal_wasted_steps: 0
+    development_nonterminal_wasted_steps: 12
+    local_focused_tests: 19
+    epistemic_state_includes:
+      - step_and_remaining_budget
+      - success_failure_and_consecutive_nonzero_counts
+      - generic_visible_failure_class
+      - exact_action_sha256_diversity_and_repetition
+      - prior_refusal_count
+    hidden_labels_visible_to_policy: false
+    scientific_model_called: false
+    scientific_protocol_frozen: false
+    private_scientific_bank_opened: false
+    scientific_result_exists: false
+    supported_claim: development_epistemic_context_and_container_plumbing_operate_as_declared
+    generality_gate_advanced: false
+    agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: task_agnostic_epistemic_budget_state_then_private_cross_domain_refusal_transfer_and_independent_reproduction
+  next_required_boundary: model_assisted_public_development_then_frozen_private_cross_domain_refusal_transfer_and_independent_reproduction
 
 measurement_track:
   reserved_experiment: M045
@@ -1399,7 +1443,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M074: true
+  separate_from_M047_to_M075: true
 
 engineering_release_boundary:
   human_control_required_for:

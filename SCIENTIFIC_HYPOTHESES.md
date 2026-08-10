@@ -374,3 +374,24 @@ margin and four-step saving all failed. Result raw SHA-256 `75e84682`; calibrati
 **Scope:** even if supported, H20 would cover three project-authored capability pairs. It would not
 prove mathematical impossibility detection, broad software competence, private cross-domain
 transfer, general safety, Genesis Gate 2/3 or AGI.
+
+## H21 — Explicit self-evidence can support calibrated stopping across fresh capabilities
+
+A task-agnostic projection of current/remaining budget, self-generated failure persistence and
+action repetition can help one unchanged governed agent complete feasible tasks, refuse certified
+capability-absent tasks without false refusal and save bounded work on a private independently
+maintained cross-domain split.
+
+**Status:** not scientifically tested. M075 currently has only a separate public authored
+development bank and a deterministic zero-token wiring control. No model-assisted development
+record, frozen scientific protocol, private bank or result exists.
+
+**Required implication:** public development may revise the context and prompt but cannot support
+H21. Before any private task is revealed, M075 must freeze exact code, model, prompt, budgets,
+numeric calibration/success thresholds, paired causal procedure and single attempts. Labels,
+solutions, evaluators and arm identity remain hidden from the model; no retry or task replacement
+is permitted after private execution begins.
+
+**Scope:** even a positive H21 would be bounded refusal-transfer evidence for the named composed
+system. It would not establish mathematical impossibility, broad safety, lineage ownership,
+Genesis Gate 2/3 or AGI.

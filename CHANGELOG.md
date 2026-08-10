@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Began M075 as a separately numbered successor to the negative M074 result. Added a task-agnostic
+  epistemic projection of remaining budget, failure persistence and exact action repetition without
+  exposing labels, solutions, evaluators or arm identity.
+- Added a distinct public Node/write/read development bank. Its zero-token deterministic policy
+  completed 12 fresh real-container episodes with six exact live labels and zero defect; preserved
+  record SHA-256 `cb194a40`. This is apparatus evidence only and H21 remains untested.
 - Preserved M074's single frozen scientific campaign as a negative result. All 12 paired episodes
   completed without defect or retry; all six feasible arm episodes succeeded and no impossible
   episode did, but the model emitted zero refusals, producing margin 0.0 and zero saved steps.

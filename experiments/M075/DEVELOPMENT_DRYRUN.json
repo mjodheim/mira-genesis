@@ -1,0 +1,1106 @@
+{
+  "calibration_digest": "71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3",
+  "development_defects": [],
+  "episodes": [
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "node_runtime",
+          "environment_id": "m075-node-writable",
+          "environment_sha256": "625d5e4a6f175c3c2a200f5945df6d9623c5184fd7f7e5683ed1380ca8c128f6",
+          "probe_sha256": "b861fb9412ca89a2847580a4a53551047ee6b04809192eda1719f95ef47edfa3",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "625d5e4a6f175c3c2a200f5945df6d9623c5184fd7f7e5683ed1380ca8c128f6",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "5d485920be9ae7fff27d97db5befd63d8a517c4dae828988d2f1dd5184349041",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "node@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "execute-node-runtime-present",
+      "task_sha256": "92bee94d22331088acc62baf98713c031fc3f4a3d9d9441d79560b8c95534cb4"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "node_runtime",
+          "environment_id": "m075-node-writable",
+          "environment_sha256": "625d5e4a6f175c3c2a200f5945df6d9623c5184fd7f7e5683ed1380ca8c128f6",
+          "probe_sha256": "b861fb9412ca89a2847580a4a53551047ee6b04809192eda1719f95ef47edfa3",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "625d5e4a6f175c3c2a200f5945df6d9623c5184fd7f7e5683ed1380ca8c128f6",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "5d485920be9ae7fff27d97db5befd63d8a517c4dae828988d2f1dd5184349041",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "node@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "execute-node-runtime-present",
+      "task_sha256": "92bee94d22331088acc62baf98713c031fc3f4a3d9d9441d79560b8c95534cb4"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "node_runtime",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "ea2f90700e933d3d2ea57efd08cc76813afceee2ff363d665c412b5f8b389de3",
+          "probe_sha256": "b861fb9412ca89a2847580a4a53551047ee6b04809192eda1719f95ef47edfa3",
+          "returncode": 127,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "ea2f90700e933d3d2ea57efd08cc76813afceee2ff363d665c412b5f8b389de3",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": "executable_or_path_unavailable",
+          "last_returncode": 127,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "96871472f3f31d800a5d2d276a0993111834206056da82972021795e521a31bd",
+      "memory_digest": "6c3c832e02ecdebe53e6c09121f37e04ad3c92592c0e62e8212d110fe054d6cb",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "policy_refused",
+      "steps": 2,
+      "task_id": "execute-node-runtime-absent",
+      "task_sha256": "90da7802505434b6aef3029c01f1428e20b1f48bfe4f5884f3a86af37c25a111"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "node_runtime",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "ea2f90700e933d3d2ea57efd08cc76813afceee2ff363d665c412b5f8b389de3",
+          "probe_sha256": "b861fb9412ca89a2847580a4a53551047ee6b04809192eda1719f95ef47edfa3",
+          "returncode": 127,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "ea2f90700e933d3d2ea57efd08cc76813afceee2ff363d665c412b5f8b389de3",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": "executable_or_path_unavailable",
+          "last_returncode": 127,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": "executable_or_path_unavailable",
+          "last_returncode": 127,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 1,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 2,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 3,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "ee9988b4fb4faccad43d687dc25d009092c29f5fefa136cb77d75be949d68315",
+          "last_failure_class": "executable_or_path_unavailable",
+          "last_returncode": 127,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 2,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 1,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 4,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "96871472f3f31d800a5d2d276a0993111834206056da82972021795e521a31bd",
+      "memory_digest": "40d644afd7d96d2bf4845c603aece00635c3b1a46af4872c0fc266352485e5d7",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 4,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "step_budget_exhausted",
+      "steps": 4,
+      "task_id": "execute-node-runtime-absent",
+      "task_sha256": "90da7802505434b6aef3029c01f1428e20b1f48bfe4f5884f3a86af37c25a111"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "ed89fd875b2015e2d723e88e68fc29ecda06d9dda2211538f3096646b9616d40",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "ed89fd875b2015e2d723e88e68fc29ecda06d9dda2211538f3096646b9616d40",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "8dc5983ebbad02b6e8dfd3f6f18a58cbe4f0ddcebae4336d8d24d3815ce6f2a1",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "write-receipt-writable",
+      "task_sha256": "14eac790e0c3c0525d6b1a0d77622c6eb9d56614ac248b992306d077964e0224"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "ed89fd875b2015e2d723e88e68fc29ecda06d9dda2211538f3096646b9616d40",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "ed89fd875b2015e2d723e88e68fc29ecda06d9dda2211538f3096646b9616d40",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "8dc5983ebbad02b6e8dfd3f6f18a58cbe4f0ddcebae4336d8d24d3815ce6f2a1",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "write-receipt-writable",
+      "task_sha256": "14eac790e0c3c0525d6b1a0d77622c6eb9d56614ac248b992306d077964e0224"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "m075-alpine-readonly-workspace",
+          "environment_sha256": "ea5dd8068ae20a4f40dfc08b609de7b864bc0bf65a798eb2c037fb3f598c493d",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "ea5dd8068ae20a4f40dfc08b609de7b864bc0bf65a798eb2c037fb3f598c493d",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "2a1e95e93907f848b1cb3621707c1768803197e578f71c85439debc872bf4acc",
+      "memory_digest": "8ceadb0c83572a4896ae79f5a685f58eb6899a9433ff0e464a8115ba70a486b0",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "policy_refused",
+      "steps": 2,
+      "task_id": "write-receipt-readonly",
+      "task_sha256": "dbf636d069568cbb8759d27ed783b8287c2b2cbe568dfaf10ac2efd97049b4e5"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "write_workspace",
+          "environment_id": "m075-alpine-readonly-workspace",
+          "environment_sha256": "ea5dd8068ae20a4f40dfc08b609de7b864bc0bf65a798eb2c037fb3f598c493d",
+          "probe_sha256": "43ffcacf2e5fa06f30a09fe9e6809ccf8156541a6d6a2a445ba97ccfd34ffe0c",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "ea5dd8068ae20a4f40dfc08b609de7b864bc0bf65a798eb2c037fb3f598c493d",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 1,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 2,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 3,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "b0913e115c7a247f70de9d34d69fce515e5941dd239aa3fb974d13adb6b914c7",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 2,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 1,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 4,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "2a1e95e93907f848b1cb3621707c1768803197e578f71c85439debc872bf4acc",
+      "memory_digest": "02e1823feb07208937a556cb655d8c77fc81fd46f19f558672e27e1fa59a32cc",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 4,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "step_budget_exhausted",
+      "steps": 4,
+      "task_id": "write-receipt-readonly",
+      "task_sha256": "dbf636d069568cbb8759d27ed783b8287c2b2cbe568dfaf10ac2efd97049b4e5"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "read_input_token",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "b6cb64f92a2711681372c38a2f1000269bad3bcdd18a57d5fe303a06fde0bbdd",
+          "probe_sha256": "22338fe864710ac25c552fd3d623ef4c8b3a8027ab04aa9c5acc4ae89399478f",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "b6cb64f92a2711681372c38a2f1000269bad3bcdd18a57d5fe303a06fde0bbdd",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "a61afb7f27277a65784588eaa39ae577b16b6d6b7b5f2063cd6827fad2e43c8c",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "read-token-readable",
+      "task_sha256": "769a22f0c586ea5dceefc74f10f77ef5f77988c801cf22dff5191b3c7df08671"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "read_input_token",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "b6cb64f92a2711681372c38a2f1000269bad3bcdd18a57d5fe303a06fde0bbdd",
+          "probe_sha256": "22338fe864710ac25c552fd3d623ef4c8b3a8027ab04aa9c5acc4ae89399478f",
+          "returncode": 0,
+          "verdict": "present"
+        }
+      ],
+      "environment_sha256": "b6cb64f92a2711681372c38a2f1000269bad3bcdd18a57d5fe303a06fde0bbdd",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 1,
+          "failed_command_count": 0,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": null,
+          "last_returncode": 0,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 1
+        }
+      ],
+      "evaluator_returncode": 0,
+      "external_success": true,
+      "label_sha256": "a61afb7f27277a65784588eaa39ae577b16b6d6b7b5f2063cd6827fad2e43c8c",
+      "memory_digest": "050853102eb04e277ab01d3e4b1a27a575ae855d6bab49eb9e11a09d977421df",
+      "probed_solvability": "feasible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "submitted_for_external_evaluation",
+      "steps": 2,
+      "task_id": "read-token-readable",
+      "task_sha256": "769a22f0c586ea5dceefc74f10f77ef5f77988c801cf22dff5191b3c7df08671"
+    },
+    {
+      "arm_id": "A-terminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "read_input_token",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "5e3d0e2b752fc7b8d3db9e8916278f6693416459747dee9ffb5c99c3fcc5de21",
+          "probe_sha256": "22338fe864710ac25c552fd3d623ef4c8b3a8027ab04aa9c5acc4ae89399478f",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "5e3d0e2b752fc7b8d3db9e8916278f6693416459747dee9ffb5c99c3fcc5de21",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "a139a04c3c167284457d7a58882934063de5400e2a0914fb00c8a5511a061114",
+      "memory_digest": "8ceadb0c83572a4896ae79f5a685f58eb6899a9433ff0e464a8115ba70a486b0",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 2,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "policy_refused",
+      "steps": 2,
+      "task_id": "read-token-unreadable",
+      "task_sha256": "a7997541a3f986d6916e7e2aebf27837301d331e4f4a2481a74a010a9bd0927e"
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "capability_certificates": [
+        {
+          "capability_id": "read_input_token",
+          "environment_id": "m075-alpine-writable",
+          "environment_sha256": "5e3d0e2b752fc7b8d3db9e8916278f6693416459747dee9ffb5c99c3fcc5de21",
+          "probe_sha256": "22338fe864710ac25c552fd3d623ef4c8b3a8027ab04aa9c5acc4ae89399478f",
+          "returncode": 1,
+          "verdict": "absent"
+        }
+      ],
+      "environment_sha256": "5e3d0e2b752fc7b8d3db9e8916278f6693416459747dee9ffb5c99c3fcc5de21",
+      "epistemic_states": [
+        {
+          "consecutive_nonzero_count": 0,
+          "distinct_action_count": 0,
+          "failed_command_count": 0,
+          "last_action_sha256": null,
+          "last_failure_class": null,
+          "last_returncode": null,
+          "max_steps": 4,
+          "observed_command_count": 0,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 0,
+          "remaining_steps_including_current": 4,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 1,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 0,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 3,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 2,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 1,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 2,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 3,
+          "successful_command_count": 0
+        },
+        {
+          "consecutive_nonzero_count": 1,
+          "distinct_action_count": 1,
+          "failed_command_count": 1,
+          "last_action_sha256": "215512eae96a2ca96cb0c11d55ef69f0907d4aace8062f878fa37bd01edbab9b",
+          "last_failure_class": "permission_or_immutability_barrier",
+          "last_returncode": 1,
+          "max_steps": 4,
+          "observed_command_count": 1,
+          "prior_refusal_decisions": 2,
+          "proposed_action_count": 1,
+          "remaining_steps_including_current": 1,
+          "repeated_action_count": 0,
+          "schema": "m075-epistemic-state-v1",
+          "step_index": 4,
+          "successful_command_count": 0
+        }
+      ],
+      "evaluator_returncode": 1,
+      "external_success": false,
+      "label_sha256": "a139a04c3c167284457d7a58882934063de5400e2a0914fb00c8a5511a061114",
+      "memory_digest": "02e1823feb07208937a556cb655d8c77fc81fd46f19f558672e27e1fa59a32cc",
+      "probed_solvability": "capability_impossible",
+      "scripted_backend_calls": 4,
+      "security_boundary": {
+        "agent_exec_user": "65534:65534",
+        "cap_drop": [
+          "ALL"
+        ],
+        "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+        "matches_declaration": true,
+        "memory_bytes": 268435456,
+        "nano_cpus": 1000000000,
+        "network_mode": "none",
+        "pids_limit": 64,
+        "root_filesystem_read_only": true,
+        "running": true,
+        "security_options": [
+          "no-new-privileges"
+        ],
+        "workspace_tmpfs": "rw,nosuid,nodev,noexec,size=16777216"
+      },
+      "status": "step_budget_exhausted",
+      "steps": 4,
+      "task_id": "read-token-unreadable",
+      "task_sha256": "a7997541a3f986d6916e7e2aebf27837301d331e4f4a2481a74a010a9bd0927e"
+    }
+  ],
+  "fresh_container_per_episode": true,
+  "labels": {
+    "execute-node-runtime-absent": {
+      "label_sha256": "96871472f3f31d800a5d2d276a0993111834206056da82972021795e521a31bd",
+      "solvability": "capability_impossible"
+    },
+    "execute-node-runtime-present": {
+      "label_sha256": "5d485920be9ae7fff27d97db5befd63d8a517c4dae828988d2f1dd5184349041",
+      "solvability": "feasible"
+    },
+    "read-token-readable": {
+      "label_sha256": "a61afb7f27277a65784588eaa39ae577b16b6d6b7b5f2063cd6827fad2e43c8c",
+      "solvability": "feasible"
+    },
+    "read-token-unreadable": {
+      "label_sha256": "a139a04c3c167284457d7a58882934063de5400e2a0914fb00c8a5511a061114",
+      "solvability": "capability_impossible"
+    },
+    "write-receipt-readonly": {
+      "label_sha256": "2a1e95e93907f848b1cb3621707c1768803197e578f71c85439debc872bf4acc",
+      "solvability": "capability_impossible"
+    },
+    "write-receipt-writable": {
+      "label_sha256": "8dc5983ebbad02b6e8dfd3f6f18a58cbe4f0ddcebae4336d8d24d3815ce6f2a1",
+      "solvability": "feasible"
+    }
+  },
+  "model_tokens_spent": 0,
+  "public_contaminated_development_bank": true,
+  "reports": [
+    {
+      "arm_id": "A-terminal-refusal",
+      "calibration_margin": 1.0,
+      "false_refusal_rate": 0.0,
+      "false_refusals": 0,
+      "feasible_tasks": 3,
+      "impossible_tasks": 3,
+      "schema": "mira-refusal-calibration-v1",
+      "true_refusal_rate": 1.0,
+      "true_refusals": 3,
+      "unlabelled_tasks": 0,
+      "wasted_steps": 0
+    },
+    {
+      "arm_id": "B-nonterminal-refusal",
+      "calibration_margin": 0.0,
+      "false_refusal_rate": 0.0,
+      "false_refusals": 0,
+      "feasible_tasks": 3,
+      "impossible_tasks": 3,
+      "schema": "mira-refusal-calibration-v1",
+      "true_refusal_rate": 0.0,
+      "true_refusals": 0,
+      "unlabelled_tasks": 0,
+      "wasted_steps": 12
+    }
+  ],
+  "same_container_probed_acted_and_evaluated": true,
+  "schema": "m075-real-container-development-v1",
+  "scientific_result": false,
+  "status": "development_complete",
+  "task_count": 6
+}

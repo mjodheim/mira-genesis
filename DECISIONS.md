@@ -972,3 +972,28 @@ This failure advances no Genesis or generality gate and does not erase M071, M07
 only that the frozen M074 composed system did not convert repeated capability failures into refusal
 on three authored pairs. It is not evidence about mathematical impossibility, general safety or
 AGI.
+
+## D040 — M075 develops explicit self-evidence without turning it into an oracle
+
+M074 exposed missing decision context: the model could inspect command output but was not given an
+explicit remaining budget or compact record of repeated actions and persistent failures. That
+diagnosis does not justify an automatic capability label or an in-place M074 retry.
+
+### The decision
+
+M075 adds only task-agnostic audited facts to the model request: budget position, return-code
+counts, consecutive failure count, generic visible-output failure class, action-script SHA-256
+diversity/repetition and prior refusal count. It neither receives hidden labels nor decides refusal
+itself. Unknown failures remain generic non-zero outcomes, never certified absence.
+
+A separate public development bank is openly contaminated and may be used to revise this context.
+Its zero-token scripted result qualifies plumbing only. M074's six tasks are regression material;
+neither bank may be the M075 scientific threshold.
+
+### Scientific boundary
+
+After development closes, a pre-private commit must freeze the unchanged agent and threshold. The
+scientific bank must be private until then, independently maintained and materially cross-domain.
+Exact paired control, false-refusal cost, evaluator-owned success, no retry/replacement and
+independent reproduction remain mandatory. Until that boundary is met, H21 is untested and no gate
+moves.
