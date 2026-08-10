@@ -38,7 +38,8 @@ attribute external-model competence to Mira. See
   induces one executable capsule from four external demonstrations, removes the teacher and applies
   the capsule successfully to twelve fresh authored programs. M074 then froze and ran one paired
   refusal-calibration campaign: all feasible tasks succeeded, but the model never refused an
-  impossible member, so its precommitted threshold failed.
+  impossible member, so its precommitted threshold failed. M075 now develops explicit
+  self-evidence on a separate public bank, with no model result yet.
   These results remain mechanism
   evidence and do not change the endogenous Genesis ownership gates.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
@@ -351,6 +352,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
+| M075 | Add explicit epistemic/budget state, then test fresh private refusal transfer | **Public model development complete — non-scientific** | Committed public comparison: 12/12 episodes, 43 live decisions, zero defect/retry. Context reached 2/3 true refusals, no false refusal and 3/3 feasible submission versus baseline 0/3 and none. Public independent samples are non-causal; private H21 remains open. |
 
 The M067 body bank and descriptor grammar remain authored. M068 removes that descriptor product,
 but the finite word bound, host envelope and target bank remain project-authored. External target

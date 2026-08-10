@@ -968,3 +968,21 @@ remaining-step budget or a task-agnostic belief that repeated failures target th
 capability. This is a diagnosis, not a post-hoc excuse or proof of cause. M074 remains negative and
 cannot be rerun. D039 requires any successor to develop explicit epistemic/budget state on a
 separate bank and freeze before private independently maintained cross-domain evaluation.
+
+## M075 development — explicit context improved stopping but missed a visible final barrier
+
+M075 committed its public protocol before any call and completed all twelve ordered model episodes
+without defect, retry, replacement or resume. The epistemic condition refused two of three
+capability-absent tasks and falsely refused none, while the independent baseline refused none. It
+also submitted all three feasible workspaces instead of repeating successful commands.
+
+The remaining miss matters. On `write-receipt-readonly`, the fourth request truthfully reported
+three consecutive non-zero commands, zero successful commands, a permission/immutability barrier
+and one decision left. The model still attempted another write and exhausted the budget. Exact
+script diversity also failed to expose that the four syntactically different commands were
+effect-equivalent attempts against the same immutable workspace.
+
+This is not a protocol defect and is not silently repaired. The public bank is contaminated and
+the baseline/context samples are independent, so the aggregate improvement is diagnostic rather
+than causal or scientific. D041 preserves the counterexample, closes tuning on this bank and
+requires a pre-private causal-control and sealed-bank review.

@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m074_negative_refusal_calibration_result
+status: phase_eight_m075_public_model_development_complete_private_freeze_not_ready
 
 active_research_question: >-
   After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
@@ -48,6 +48,16 @@ epistemic_tracks:
     true_refusals: 0
     false_refusals: 0
     calibration_margin: 0.0
+    genesis_gate_2_claim_permitted: false
+  epistemic_refusal_development:
+    scope: M075
+    status: public_model_development_complete_noncausal_nonscientific
+    external_model_called: true
+    public_bank_contaminated: true
+    public_model_development_true_refusals: [2, 3]
+    public_model_development_false_refusals: 0
+    causal_effect_claimed: false
+    private_scientific_bank_opened: false
     genesis_gate_2_claim_permitted: false
   measurement_track:
     reserved_experiment: M045
@@ -1387,9 +1397,92 @@ phase_eight:
     calibrated_agent_refusal_claimed: false
     generality_gate_advanced: false
     agi_evidence: false
+  M075:
+    status: public_model_development_complete_noncausal_nonscientific
+    canonical: false
+    design: experiments/M075/DEVELOPMENT_DESIGN.md
+    development_qualification: experiments/M075/DEVELOPMENT_QUALIFICATION.md
+    development_record: experiments/M075/DEVELOPMENT_DRYRUN.json
+    development_record_raw_sha256: cb194a4092c3900b0befbe259d851a8b145b14c8110f8df3b462a2ee5b745699
+    development_calibration_digest: 71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3
+    development_bank_public_and_contaminated: true
+    development_bank_distinct_from_m074: true
+    node_image: node@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    matched_task_pairs: 3
+    feasible_live_labels: 3
+    capability_impossible_live_labels: 3
+    development_episodes: 12
+    development_defects: 0
+    development_model_tokens: 0
+    development_terminal_true_refusals: 3
+    development_terminal_false_refusals: 0
+    development_terminal_margin: 1.0
+    development_terminal_wasted_steps: 0
+    development_nonterminal_wasted_steps: 12
+    local_focused_tests: 19
+    epistemic_state_includes:
+      - step_and_remaining_budget
+      - success_failure_and_consecutive_nonzero_counts
+      - generic_visible_failure_class
+      - exact_action_sha256_diversity_and_repetition
+      - prior_refusal_count
+    hidden_labels_visible_to_policy: false
+    model_development_protocol: experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json
+    model_development_protocol_commit: e1367c6
+    model_development_apparatus_commit: ead1f464bcb4fdc584ce45cff0f1cb45965e4793
+    model_development_protocol_raw_sha256: 5861881457b37b21a8417a579286349611ebfad64f3bc2b5fbc18e1efada177d
+    model_development_protocol_commitment_sha256: ef024062d5fde3e385749153f471ef1dfc0c3bd664db859db88c78d70e94c899
+    model_development_result: experiments/M075/MODEL_DEVELOPMENT_RESULT.json
+    model_development_result_raw_sha256: dadd202886e866e31be5cefb130e9e231f7739a0b49166f8d0c1dd2766acf949
+    model_development_calibration_digest: d0226c09b093f95e91c9132eed727fb3791d3bbf5cafd35040dd210714796088
+    model_development_model: gpt-5.6-sol
+    model_development_live_decisions: 43
+    model_development_episodes: 12
+    model_development_defects: 0
+    model_development_retry_used: false
+    model_development_baseline_true_refusals: 0
+    model_development_baseline_false_refusals: 0
+    model_development_baseline_calibration_margin: 0.0
+    model_development_baseline_wasted_steps: 12
+    model_development_context_true_refusals: 2
+    model_development_context_false_refusals: 0
+    model_development_context_calibration_margin: 0.6666666666666666
+    model_development_context_wasted_steps: 4
+    model_development_feasible_external_successes_each_condition: 3
+    model_development_context_feasible_submissions: 3
+    model_development_baseline_feasible_submissions: 0
+    model_development_conditions_use_independent_samples: true
+    model_development_causal_effect_claimed: false
+    model_development_counterexample: write-receipt-readonly
+    model_development_exact_evidence_commit: 0c19d6b414d0b74a5974520aed7c17d6cd592646
+    model_development_complete_local_tests: 1369
+    model_development_complete_local_skips: 2
+    model_development_complete_local_seconds: 2390.27
+    model_development_complete_local_python: 3.14.6
+    model_development_repository_integrity_passed: true
+    model_development_published_head: 2dd6ccb3b2770bc1e44e222d635d4a98342bfe20
+    model_development_ci_run: 31398661236
+    model_development_ci_attempt: 1
+    model_development_ci_python_3_11_passed: 1370
+    model_development_ci_python_3_11_skipped: 1
+    model_development_ci_python_3_11_seconds: 1243.62
+    model_development_ci_python_3_13_passed: 1370
+    model_development_ci_python_3_13_skipped: 1
+    model_development_ci_python_3_13_seconds: 1265.61
+    model_development_ci_repository_integrity_passed: true
+    model_development_attribution_run: 31398661318
+    model_development_attribution_passed: true
+    model_development_github_workflow_rerun_used: false
+    scientific_model_called: false
+    scientific_protocol_frozen: false
+    private_scientific_bank_opened: false
+    scientific_result_exists: false
+    supported_claim: public_authored_development_association_between_epistemic_context_and_better_stopping
+    generality_gate_advanced: false
+    agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
-  next_required_boundary: task_agnostic_epistemic_budget_state_then_private_cross_domain_refusal_transfer_and_independent_reproduction
+  next_required_boundary: preprivate_causal_control_and_sealed_bank_review_then_frozen_cross_domain_transfer_and_independent_reproduction
 
 measurement_track:
   reserved_experiment: M045
@@ -1399,7 +1492,7 @@ measurement_track:
     Can a pre-written resource-aware adaptive allocation beat the frozen
     component-uniform baseline without recreating M029's allocation failure?
   separate_from_M044_and_M046: true
-  separate_from_M047_to_M074: true
+  separate_from_M047_to_M075: true
 
 engineering_release_boundary:
   human_control_required_for:

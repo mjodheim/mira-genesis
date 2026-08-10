@@ -972,3 +972,54 @@ This failure advances no Genesis or generality gate and does not erase M071, M07
 only that the frozen M074 composed system did not convert repeated capability failures into refusal
 on three authored pairs. It is not evidence about mathematical impossibility, general safety or
 AGI.
+
+## D040 — M075 develops explicit self-evidence without turning it into an oracle
+
+M074 exposed missing decision context: the model could inspect command output but was not given an
+explicit remaining budget or compact record of repeated actions and persistent failures. That
+diagnosis does not justify an automatic capability label or an in-place M074 retry.
+
+### The decision
+
+M075 adds only task-agnostic audited facts to the model request: budget position, return-code
+counts, consecutive failure count, generic visible-output failure class, action-script SHA-256
+diversity/repetition and prior refusal count. It neither receives hidden labels nor decides refusal
+itself. Unknown failures remain generic non-zero outcomes, never certified absence.
+
+A separate public development bank is openly contaminated and may be used to revise this context.
+Its zero-token scripted result qualifies plumbing only. M074's six tasks are regression material;
+neither bank may be the M075 scientific threshold.
+
+### Scientific boundary
+
+After development closes, a pre-private commit must freeze the unchanged agent and threshold. The
+scientific bank must be private until then, independently maintained and materially cross-domain.
+Exact paired control, false-refusal cost, evaluator-owned success, no retry/replacement and
+independent reproduction remain mandatory. Until that boundary is met, H21 is untested and no gate
+moves.
+
+## D041 — M075's public signal closes tuning but does not open the private bank
+
+The committed public comparison completed without defect. Relative to independent baseline
+samples, explicit self-evidence moved true refusal from 0/3 to 2/3, introduced no false refusal,
+reduced wasted impossible-task steps from 12 to 4 and made all three successful workspaces submit.
+It still failed to refuse the read-only-write task despite three visible failures and one remaining
+decision.
+
+### The decision
+
+The outcome is promising development evidence, not a threshold result. Mira preserves the miss and
+stops tuning on this six-task bank. Selecting a stricter prompt after inspecting that task would
+optimize the public counterexample rather than demonstrate transfer.
+
+M075 does not enter private execution yet. The pre-private package must first specify a defensible
+causal control for a model interface without a seed or provider snapshot, plus a sealed task-bank
+intake whose maintainer is outside the policy-development path. If either cannot be established,
+H21 remains open rather than being weakened. The policy, model, budgets, thresholds and single-
+attempt rule must be frozen before any private task content is revealed.
+
+### Claim boundary
+
+The two public conditions used independent model samples, so their difference is an association,
+not an isolated treatment effect. The authored public bank is contaminated. D041 advances no
+generality or Genesis gate and provides no AGI evidence.

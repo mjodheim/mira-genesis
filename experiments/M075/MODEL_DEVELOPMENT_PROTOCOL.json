@@ -1,0 +1,174 @@
+{
+  "apparatus_commit": "ead1f464bcb4fdc584ce45cff0f1cb45965e4793",
+  "attempt_policy": {
+    "attempts_per_condition_task": 1,
+    "concurrency": 1,
+    "development_retry_permitted": false,
+    "independent_model_samples_make_comparison_noncausal": true,
+    "replacement_permitted": false
+  },
+  "budgets": {
+    "codex_decision_timeout_seconds": 180,
+    "command_output_chars": 65536,
+    "command_timeout_seconds": 30,
+    "external_evaluator_timeout_seconds": 30,
+    "max_agent_steps": 4
+  },
+  "claim_boundary": {
+    "agi": false,
+    "causal_comparison": false,
+    "m074_tasks_reused": false,
+    "private_cross_domain_transfer": false,
+    "public_project_authored_bank": true,
+    "scientific_evidence": false
+  },
+  "code_sha256": {
+    "metamorphosis/m074_ablation_arms.py": "e76b354115343bea005029763e8a9d795e572c0cea3b0f9d7d04cc02ea4e64f8",
+    "metamorphosis/m074_calibration_bridge.py": "d563c76d59a748b9dd99ddd02819e17f1beba5f1de754d132497f9d516455523",
+    "metamorphosis/m074_docker_environment.py": "58f6e9ba39b3d8515c1761f64848ca7dfd6cadb45bc58246bffc363fdecbf64f",
+    "metamorphosis/m074_scientific_runner.py": "109bed8128d2e94c5342d08647dde0fed8691318331b18eebb3490cc44e0e5f9",
+    "metamorphosis/m075_development_bank.py": "6af1d68430e76b43e869b5c38a5d5f62e3edd12c6d8a3dcbba502b4cdc4a32bd",
+    "metamorphosis/m075_epistemic_context.py": "c068838bd1ae631eb154448ce69d4359ff74e4574e225a34621d35348f399880",
+    "metamorphosis/m075_model_development_runner.py": "c43e7733f0a5fb0b7d30bfbf3218a126d07083395ef4939496d2d17d322d22fd",
+    "mira_core/calibration.py": "ff224a05aa96bcc0d202145a5f7a7d08dfbb79feb9d5d0cdebf8d318d256653b",
+    "mira_core/contracts.py": "69db44dc4f5fabc5754a84b9d8300a1ce899414a2f51bfe02991a7b4d1d84f1b",
+    "mira_core/harbor.py": "c6ca37f29d7558d54458e5c21e521921084d502cef3274482facb9d3c99ed4e8",
+    "mira_core/memory.py": "04ddf33537dd5aa56b2808f8ef99b51248788c2a5ffd0ecbbcfc5b4a951eeccb",
+    "mira_core/model.py": "1c596a68f91870b6fead88d33182df8362d296fca48b6da549dcbf08c287e950",
+    "mira_core/probing.py": "0aab29d702148a04ed5045d39e3756639ded711cbc8214bbea80077350496493",
+    "mira_core/process.py": "9adbebbedafa29bf69036f5aade68ba520da9314051b3ca0b7d9d50ca2328698",
+    "mira_core/safety.py": "60deef5e1902f70b3a49b311f049829e89eee13f18ac64e962baebe15fe2318a",
+    "scripts/run_m075_model_development.py": "c46b7047d910cf9827d4f59ea4fba57bd9d9dbed091783116da779cc5e10d17b"
+  },
+  "conditions": [
+    {
+      "arm_id": "baseline-structured-request",
+      "refusal_terminates_episode": true
+    },
+    {
+      "arm_id": "epistemic-context-request",
+      "refusal_terminates_episode": true
+    }
+  ],
+  "date_committed": "2026-08-10",
+  "episode_order": [
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "01-execute-node-runtime-present-baseline-structured-request",
+      "task_id": "execute-node-runtime-present"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "02-execute-node-runtime-present-epistemic-context-request",
+      "task_id": "execute-node-runtime-present"
+    },
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "03-execute-node-runtime-absent-baseline-structured-request",
+      "task_id": "execute-node-runtime-absent"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "04-execute-node-runtime-absent-epistemic-context-request",
+      "task_id": "execute-node-runtime-absent"
+    },
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "05-write-receipt-writable-baseline-structured-request",
+      "task_id": "write-receipt-writable"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "06-write-receipt-writable-epistemic-context-request",
+      "task_id": "write-receipt-writable"
+    },
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "07-write-receipt-readonly-baseline-structured-request",
+      "task_id": "write-receipt-readonly"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "08-write-receipt-readonly-epistemic-context-request",
+      "task_id": "write-receipt-readonly"
+    },
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "09-read-token-readable-baseline-structured-request",
+      "task_id": "read-token-readable"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "10-read-token-readable-epistemic-context-request",
+      "task_id": "read-token-readable"
+    },
+    {
+      "condition_id": "baseline-structured-request",
+      "episode_id": "11-read-token-unreadable-baseline-structured-request",
+      "task_id": "read-token-unreadable"
+    },
+    {
+      "condition_id": "epistemic-context-request",
+      "episode_id": "12-read-token-unreadable-epistemic-context-request",
+      "task_id": "read-token-unreadable"
+    }
+  ],
+  "information_boundary": {
+    "action_observations_visible_to_model": true,
+    "capability_certificates_visible_to_model": false,
+    "condition_identity_visible_to_model": false,
+    "epistemic_self_evidence_visible_only_in_context_condition": true,
+    "evaluator_or_outcome_visible_to_model": false,
+    "expected_or_probed_solvability_visible_to_model": false,
+    "solve_script_visible_to_model": false,
+    "task_instruction_visible_to_model": true
+  },
+  "model": {
+    "backend_id": "openai-codex-exec-v1",
+    "codex_cli_version": "codex-cli 0.147.0",
+    "model": "gpt-5.6-sol"
+  },
+  "protocol_commitment_sha256": "ef024062d5fde3e385749153f471ef1dfc0c3bd664db859db88c78d70e94c899",
+  "public_contaminated_development": true,
+  "raw_evidence_boundary": "Preserves each complete ModelRequest and the structured JSON mapping returned by CodexExecBackend; provider transport envelopes, token accounting, sampling seed and pre-parse output whitespace are unavailable.",
+  "runtime": {
+    "docker_server_version": "29.6.2",
+    "host_system": "Windows",
+    "python_version": "3.14.6"
+  },
+  "schema": "m075-public-model-development-protocol-v1",
+  "scientific_result": false,
+  "status": "committed_before_public_model_development",
+  "tasks": [
+    {
+      "environment_sha256": "625d5e4a6f175c3c2a200f5945df6d9623c5184fd7f7e5683ed1380ca8c128f6",
+      "task_id": "execute-node-runtime-present",
+      "task_sha256": "92bee94d22331088acc62baf98713c031fc3f4a3d9d9441d79560b8c95534cb4"
+    },
+    {
+      "environment_sha256": "ea2f90700e933d3d2ea57efd08cc76813afceee2ff363d665c412b5f8b389de3",
+      "task_id": "execute-node-runtime-absent",
+      "task_sha256": "90da7802505434b6aef3029c01f1428e20b1f48bfe4f5884f3a86af37c25a111"
+    },
+    {
+      "environment_sha256": "ed89fd875b2015e2d723e88e68fc29ecda06d9dda2211538f3096646b9616d40",
+      "task_id": "write-receipt-writable",
+      "task_sha256": "14eac790e0c3c0525d6b1a0d77622c6eb9d56614ac248b992306d077964e0224"
+    },
+    {
+      "environment_sha256": "ea5dd8068ae20a4f40dfc08b609de7b864bc0bf65a798eb2c037fb3f598c493d",
+      "task_id": "write-receipt-readonly",
+      "task_sha256": "dbf636d069568cbb8759d27ed783b8287c2b2cbe568dfaf10ac2efd97049b4e5"
+    },
+    {
+      "environment_sha256": "b6cb64f92a2711681372c38a2f1000269bad3bcdd18a57d5fe303a06fde0bbdd",
+      "task_id": "read-token-readable",
+      "task_sha256": "769a22f0c586ea5dceefc74f10f77ef5f77988c801cf22dff5191b3c7df08671"
+    },
+    {
+      "environment_sha256": "5e3d0e2b752fc7b8d3db9e8916278f6693416459747dee9ffb5c99c3fcc5de21",
+      "task_id": "read-token-unreadable",
+      "task_sha256": "a7997541a3f986d6916e7e2aebf27837301d331e4f4a2481a74a010a9bd0927e"
+    }
+  ]
+}

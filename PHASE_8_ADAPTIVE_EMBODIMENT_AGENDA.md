@@ -101,7 +101,8 @@ episodes and no impossible episode, but emitted zero refusals; arm-A true-refusa
 were 0.0 and terminal refusal saved no step. H20 is therefore refuted under its bounded threshold.
 The result is negative rather than inconclusive and M074 cannot be retried.
 
-A successor must not tune on M074 and call the same six tasks new evidence. It must first develop
+A successor must not tune on M074 and call the same six tasks new evidence. M075 therefore first
+develops
 task-agnostic epistemic state — including remaining budget and repeated-failure evidence — on a
 separate development bank, then freeze before private independently maintained cross-domain
 capability pairs. M074 remains regression evidence only.
