@@ -1,6 +1,6 @@
 # M073 status
 
-**POSITIVE QUALIFIED DEVELOPMENT RESULT — FULL REPOSITORY QUALIFICATION PENDING.**
+**POSITIVE QUALIFIED DEVELOPMENT RESULT — FULL REPOSITORY QUALIFIED.**
 
 M073 asks whether a continuing lineage can induce one reusable executable skill from external
 demonstrations, commit it, remove the external model and apply only the serialized skill to fresh
@@ -45,5 +45,6 @@ The next distinct step must broaden the induced representation and evaluate it o
 uncontaminated, materially different family with an independent reproducer; repeating identifier
 renaming inside this family is not a phase advance.
 
-Full Python 3.11/3.13 and repository-integrity qualification belongs in a separate
-`DEVELOPMENT_QUALIFICATION.md` after GitHub CI observes the exact evidence commit.
+Exact evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 tests passed and one
+skipped on Python 3.11 and Python 3.13, plus repository integrity. Attribution run `31370349333`
+passed. See [`DEVELOPMENT_QUALIFICATION.md`](DEVELOPMENT_QUALIFICATION.md).

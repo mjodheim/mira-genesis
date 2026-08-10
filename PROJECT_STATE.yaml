@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m073_positive_qualified_development_result_pending_ci
+status: phase_eight_m073_positive_qualified_development_result
 
 active_research_question: >-
   After M072 causally isolated two authored governance mechanisms and M073 induced one reusable
@@ -1239,7 +1239,7 @@ phase_eight:
     genesis_gate_2_evidence: false
     agi_evidence: false
   M073:
-    status: positive_qualified_development_result_pending_full_repository_ci
+    status: positive_qualified_development_result
     canonical: false
     protocol: experiments/M073/PROTOCOL.json
     protocol_commit: 78d53d733bdf77eab773414e8d273ed70e31391d
@@ -1263,6 +1263,16 @@ phase_eight:
     exact_result_commit: 355eeb9b7d5f1fdd311949feaf3df9231c0a6f96
     result: experiments/M073/RESULT.json
     result_sha256: edaf03b4cf922890d010ecdd838de67c9569342b27a6848fae34ab430db03a2e
+    exact_evidence_commit: 2eaa5c73c00299cb8be4fc3e649d42e5de6fdec0
+    github_ci_run: 31370311326
+    github_python_3_11: [1257, 1257]
+    github_python_3_11_seconds: 1230.77
+    github_python_3_13: [1257, 1257]
+    github_python_3_13_seconds: 1304.59
+    repository_integrity_passed: true
+    attribution_run: 31370349333
+    attribution_passed: true
+    github_workflow_rerun_used: false
     supported_claim: bounded_model_to_lineage_skill_appropriation_mechanism_evidence
     project_authored_task_family: true
     cross_domain_evidence: false

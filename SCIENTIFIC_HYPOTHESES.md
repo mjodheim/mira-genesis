@@ -324,7 +324,8 @@ A lineage can induce one identifier-generalized executable transformation from f
 solved training examples, commit it before holdout materialization, remove the teacher and apply
 only the serialized artifact successfully to twelve fresh programs from the frozen family.
 
-**Status:** supported by the M073 qualified development result; full repository CI pending.
+**Status:** supported by the M073 qualified development result. Exact evidence head `2eaa5c7`
+passed CI run `31370311326` on Python 3.11 and 3.13 plus repository integrity.
 
 **Pre-written implication:** all four single-call teacher repairs must pass; exactly one capsule
 must be induced; a corrupted demonstration set must yield none; after teacher removal the complete

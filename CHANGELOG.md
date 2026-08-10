@@ -10,6 +10,9 @@
   capsule-before-holdout commit boundary, all holdout outcomes, controls and final verdict. The
   supported claim is bounded model-to-lineage skill appropriation, not general programming,
   Genesis Gate 2, safe deployment or AGI.
+- Exact M073 evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 passed and one
+  skipped on both Python 3.11 and Python 3.13, plus repository integrity. Attribution run
+  `31370349333` passed; no workflow rerun was used.
 - Recorded M072's already-fused positive causal-governance result in the root registers: full
   governance satisfies the frozen authored invariants over 48 scenarios, while admission and audit
   ablations each lose 18 matching invariants. No represented action or external model was executed.

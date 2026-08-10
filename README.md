@@ -348,6 +348,8 @@ passed 12/12 holdouts and 84/84 evaluator cases; unchanged-source and exact-hash
 both passed 0/12, and a corrupted demonstration set induced no capsule. This is one authored repair
 family, not general program synthesis, Genesis Gate 2 or AGI. Result `edaf03b4`; see
 [`experiments/M073/RESULT.md`](experiments/M073/RESULT.md).
+Exact evidence head `2eaa5c7` passed first CI run `31370311326`: 1,257 tests passed and one skipped
+on Python 3.11 and Python 3.13, plus integrity; attribution run `31370349333` passed.
 
 See:
 
@@ -366,6 +368,7 @@ See:
 - [`experiments/M066/STATUS.md`](experiments/M066/STATUS.md);
 - [`experiments/M072/RESULT.md`](experiments/M072/RESULT.md);
 - [`experiments/M073/RESULT.md`](experiments/M073/RESULT.md);
+- [`experiments/M073/DEVELOPMENT_QUALIFICATION.md`](experiments/M073/DEVELOPMENT_QUALIFICATION.md);
 - [`results/M066_CANONICAL_RESULT.md`](results/M066_CANONICAL_RESULT.md);
 - [`PROJECT_STATE.md`](PROJECT_STATE.md);
 - [`ROADMAP.md`](ROADMAP.md).

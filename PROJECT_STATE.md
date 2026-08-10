@@ -74,7 +74,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   `gpt-5.6-sol` demonstrations produced one identifier-generalized AST skill capsule. The capsule
   was committed before twelve holdouts were materialized; after teacher removal it passed 12/12
   holdouts and 84/84 cases, while unchanged-source and exact-hash memorizer controls passed 0/12.
-  Result `edaf03b4` is bounded to one project-authored division-repair family.
+  Result `edaf03b4` is bounded to one project-authored division-repair family. Exact evidence head
+  `2eaa5c7` passed first CI run `31370311326`: 1,257 passed/1 skipped on Python 3.11 and 3.13,
+  plus integrity; attribution run `31370349333` passed.
 
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
