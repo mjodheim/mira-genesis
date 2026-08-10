@@ -1,0 +1,16 @@
+{
+  "capsule_sha256": "444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620",
+  "induction_trace_sha256": "c01b20839fb3e75d4cad15578ae35390811f9a26d366873b6a1a833a62958168",
+  "preconditions": [
+    "one safe Python function",
+    "exactly one direct value-return expression",
+    "source expression structurally matches the learned alpha-template",
+    "all target identifiers bind to source-expression roles"
+  ],
+  "provenance": "induced_from_external_demonstrations",
+  "schema": "mira-skill-capsule-v1",
+  "skill_id": "m073-induced-return-rewrite-v1",
+  "source_pattern": "__MIRA_SLOT_0__ / __MIRA_SLOT_1__",
+  "target_template": "__MIRA_SLOT_0__ / __MIRA_SLOT_1__ if __MIRA_SLOT_1__ != 0 else 0",
+  "training_evidence_sha256": "4b5790eae646ce0799f5db2a02f9a921369a0775734c17933e281bdc1af294ec"
+}
