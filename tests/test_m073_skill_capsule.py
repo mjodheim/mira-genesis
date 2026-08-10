@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -8,12 +9,13 @@ import pytest
 from mira_core.skills import (
     SkillCapsule, SkillDemonstration, SkillInductionError, TeacherCallTrap,
     apply_skill_capsule, evaluate_capsule_on_tasks, expected_division_repair,
-    generate_division_repair_task, induce_skill_capsule, repair_passes,
+    generate_division_repair_task, induce_skill_capsule, repair_passes, source_sha256,
 )
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = ROOT / "experiments" / "M073" / "PROTOCOL.json"
+TRAINING = ROOT / "experiments" / "M073" / "TRAINING_TASKS.json"
 
 
 def _fixture_demonstrations() -> list[SkillDemonstration]:
@@ -36,6 +38,34 @@ def test_m073_protocol_precedes_teacher_capsule_and_holdout() -> None:
     assert protocol["scientific_result_exists"] is False
     assert protocol["teacher_removal_boundary"]["model_calls_during_holdout"] == 0
     assert protocol["preregistered_positive_threshold"]["complete_lineage_holdouts_passed"] == 12
+
+
+def test_scientific_training_tasks_match_frozen_seeds_before_teacher() -> None:
+    protocol = json.loads(PROTOCOL.read_text(encoding="utf-8"))
+    artifact = json.loads(TRAINING.read_text(encoding="utf-8"))
+    assert artifact["protocol_commit"] == "78d53d733bdf77eab773414e8d273ed70e31391d"
+    assert artifact["task_count"] == 4
+    assert artifact["teacher_demonstrations_exist"] is False
+    assert artifact["capsule_exists"] is False
+    assert artifact["holdout_materialized"] is False
+    assert artifact["scientific_result_exists"] is False
+    expected_seeds = protocol["task_family"]["training_seeds"]
+    assert expected_seeds == [3, 7, 11, 19]
+    for seed, record in zip(expected_seeds, artifact["tasks"], strict=True):
+        task = generate_division_repair_task(seed, split="training")
+        assert record["seed"] == seed
+        assert record["task_id"] == task.task_id
+        assert record["function_name"] == task.function_name
+        assert record["source"] == task.source
+        assert record["source_sha256"] == source_sha256(task.source)
+    digest_value = dict(artifact)
+    expected_digest = digest_value.pop("training_materialization_sha256")
+    observed = hashlib.sha256(json.dumps(
+        digest_value, sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")).hexdigest()
+    assert observed == expected_digest == (
+        "f64c8c1d57e9298811da68bbc9313e537611a217924c835c96611f780a06741d"
+    )
 
 
 def test_generic_capsule_is_induced_from_four_alpha_distinct_fixture_repairs() -> None:
