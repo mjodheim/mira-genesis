@@ -99,7 +99,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   `set_dial` calls on 24 episodes and embodied effector moves on 12, and reached 36/36 exact success
   on the bound suite. Three matched ablations preserving byte length, key order and token count each
   zeroed their own dependent family and left both non-dependent families at exactly the full-arm
-  score, against a measured guessing floor of 3/36. Protocol frozen before the harness at `510b78d`
+  score, against a measured guessing floor of 3/36. Protocol frozen before the harness at `cd55035`
   with the salt drawn first; suite commitment `20ff63f3…a4f7e` bound before any arm ran; first
   result `aa312e95…a52639` on attempt 1 with no retry. Amendment A1, a threshold defect corrected
   before materialization, is recorded in the protocol with its arithmetic. G2 moves from open to

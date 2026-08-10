@@ -28,9 +28,9 @@ under the bound of 8 across 50 independent alternative salts inside the regressi
 
 ## Preserved evidence
 
-- Protocol frozen before the harness existed: commit `510b78d`.
-- Harness and recorded amendment A1: commit `327dc74`.
-- Bound episode suite: commit `c622bd2`, suite commitment
+- Protocol frozen before the harness existed: commit `cd55035`.
+- Harness and recorded amendment A1: commit `4a56de6`.
+- Bound episode suite: commit `5fdf7b4`, suite commitment
   `20ff63f37e7708b175af5ab5bdfd6dd3374ef487cecb41504e489f2a214a4f7e`.
 - Salt drawn before any harness code: `7d0348363ccb580e7189d90189d73ee649be007db8339c7b03d77f497be2987a`.
 - First result, attempt 1, no retry:

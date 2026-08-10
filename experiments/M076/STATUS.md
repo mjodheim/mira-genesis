@@ -17,10 +17,10 @@
 
 ## Frozen ordering
 
-1. `510b78d` froze `PROTOCOL.json` and `PROTOCOL.md` before any harness code existed; the salt was
+1. `cd55035` froze `PROTOCOL.json` and `PROTOCOL.md` before any harness code existed; the salt was
    drawn first and episode content was absent from the freeze.
-2. `327dc74` added the harness and recorded amendment A1 before materialization.
-3. `c622bd2` bound the 36-episode suite before any arm was run.
+2. `4a56de6` added the harness and recorded amendment A1 before materialization.
+3. `5fdf7b4` bound the 36-episode suite before any arm was run.
 4. The result was preserved once, on attempt 1, with no retry and no episode replacement.
 
 ## Outstanding before merge
