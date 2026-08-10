@@ -50,6 +50,13 @@ policy, defensible causal control, sealed independent cross-domain bank and repr
 The pre-private checker now makes that boundary mechanical and currently returns false: no signed
 external envelope, signer allowlist or frozen private protocol exists, and no payload was accessed.
 
+M076 is positive bounded multimodal-grounding mechanism evidence on the endogenous track. Matched
+ablations that preserve byte length, key order and token count show that each of three channels is
+required by exactly the family that depends on it, and by neither of the others. It calls no model,
+selects no external task and consumes no third-party attestation. Its rasters and families are
+project-authored and confined to one domain, so it moves G2 off open without closing it and supplies
+no cross-domain, perception or Gate 2 evidence.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -144,7 +151,7 @@ results are known.
 | Gate | Current status | Strongest evidence |
 |---|---|---|
 | G1 | stronger partial mechanism evidence | M068 induces four distinct adapters across a precommitted authored body bank. M071 adds one accepted fresh blind external task, but the task source is visible and no opaque incompatible-body test is present. M069 contributes no qualified evidence after D037. |
-| G2 | open | No vision or multimodal grounding in one continuing lineage. |
+| G2 | partial mechanism evidence | M076 runs one persistent agent over language, structured state and synthetic pixels, emitting both symbolic calls and embodied actions. Matched shape-preserving ablations give an exact triple dissociation against a measured guessing floor. The rasters are authored 24×24 panels in one domain, so natural-image perception and modality breadth remain absent. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
 | G5 | stronger partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill that survives complete teacher removal, but tests only one homogeneous authored family and no forgetting. |

@@ -15,7 +15,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
+from metamorphosis.m076_multimodal_grounding import (  # noqa: E402
     ARMS,
     BLIND_GUESS_MAX_PER_FAMILY,
     BLIND_GUESS_MAX_TOTAL,
@@ -27,9 +27,9 @@ from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
     run_arm,
 )
 
-PROTOCOL_PATH = ROOT / "experiments/G2_GROUNDING/PROTOCOL.json"
-COMMITMENT_PATH = ROOT / "experiments/G2_GROUNDING/EPISODE_COMMITMENT.json"
-RESULT_PATH = ROOT / "experiments/G2_GROUNDING/RESULT.json"
+PROTOCOL_PATH = ROOT / "experiments/M076/PROTOCOL.json"
+COMMITMENT_PATH = ROOT / "experiments/M076/EPISODE_COMMITMENT.json"
+RESULT_PATH = ROOT / "experiments/M076/RESULT.json"
 
 
 def main() -> int:
@@ -48,7 +48,7 @@ def main() -> int:
     threshold = protocol["positive_threshold"]
 
     payload = {
-        "schema": "g2-multimodal-grounding-result-v1",
+        "schema": "m076-multimodal-grounding-result-v1",
         "protocol_commitment": hashlib.sha256(
             PROTOCOL_PATH.read_bytes(),
         ).hexdigest(),

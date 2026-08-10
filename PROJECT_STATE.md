@@ -93,6 +93,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M076 is a positive qualified multimodal-grounding development result and the first new
+  endogenous gate evidence since M066.** One persistent deterministic agent consumed a UTF-8
+  instruction, an ordered structured mapping and a raw 1728-byte RGB888 raster, emitted symbolic
+  `set_dial` calls on 24 episodes and embodied effector moves on 12, and reached 36/36 exact success
+  on the bound suite. Three matched ablations preserving byte length, key order and token count each
+  zeroed their own dependent family and left both non-dependent families at exactly the full-arm
+  score, against a measured guessing floor of 3/36. Protocol frozen before the harness at `510b78d`
+  with the salt drawn first; suite commitment `20ff63f3…a4f7e` bound before any arm ran; first
+  result `aa312e95…a52639` on attempt 1 with no retry. Amendment A1, a threshold defect corrected
+  before materialization, is recorded in the protocol with its arithmetic. G2 moves from open to
+  partial mechanism evidence and is **not** closed: the rasters are project-authored 24×24 panels in
+  one domain and the agent does not learn.
+
 The project does not claim open-ended evolution, unrestricted program rewriting, general
 intelligence, consciousness or authority over repositories, credentials, networks,
 deployments or production systems.

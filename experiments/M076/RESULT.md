@@ -36,7 +36,7 @@ under the bound of 8 across 50 independent alternative salts inside the regressi
 - First result, attempt 1, no retry:
   `aa312e9530a46556755111630f85911460fff965b428cf59905b5555d0a52639`.
 
-`python scripts/check_g2_grounding_result.py` independently rebuilds the suite from the salt,
+`python scripts/check_m076_result.py` independently rebuilds the suite from the salt,
 re-derives all five arms, re-verifies the matched-ablation invariants and marker isolation, and
 recomputes the preserved digest. It reported `failures: []`.
 

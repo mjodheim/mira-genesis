@@ -14,7 +14,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
+from metamorphosis.m076_multimodal_grounding import (  # noqa: E402
     EPISODES_PER_FAMILY,
     FAMILIES,
     GENERATOR_VERSION,
@@ -22,8 +22,8 @@ from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
     materialize_suite,
 )
 
-PROTOCOL_PATH = ROOT / "experiments/G2_GROUNDING/PROTOCOL.json"
-COMMITMENT_PATH = ROOT / "experiments/G2_GROUNDING/EPISODE_COMMITMENT.json"
+PROTOCOL_PATH = ROOT / "experiments/M076/PROTOCOL.json"
+COMMITMENT_PATH = ROOT / "experiments/M076/EPISODE_COMMITMENT.json"
 
 
 def main() -> int:
@@ -61,7 +61,7 @@ def main() -> int:
             raise SystemExit(f"family {family} is not in ascending selection-digest order")
 
     payload = {
-        "schema": "g2-episode-commitment-v1",
+        "schema": "m076-episode-commitment-v1",
         "generator_version": GENERATOR_VERSION,
         "salt_sha256": hashlib.sha256(salt).hexdigest(),
         "episode_count": len(records),

@@ -15,7 +15,7 @@ from dataclasses import dataclass, field
 from typing import Iterable, Mapping, Sequence
 
 
-PROTOCOL_SCHEMA = "g2-multimodal-grounding-protocol-v1"
+PROTOCOL_SCHEMA = "m076-multimodal-grounding-protocol-v1"
 GENERATOR_VERSION = 1
 
 GRID_WIDTH = 6

@@ -1029,3 +1029,31 @@ accessing a payload.
 The two public conditions used independent model samples, so their difference is an association,
 not an isolated treatment effect. The authored public bank is contaminated. D041 advances no
 generality or Genesis gate and provides no AGI evidence.
+
+## D042 — M076 moves G2 off open and reopens the endogenous track
+
+The endogenous Track A line produced no new gate evidence between M066 and M075: every result from
+M070 onward belonged to the model-mediated track, and G2 remained the largest empty entry in the
+generality register. M076 addresses it with no model call, no external task and no third-party
+input, so it could be executed and audited entirely inside the repository while M075 stayed blocked
+on inputs only an external maintainer can sign.
+
+### The decision
+
+M076 is accepted as positive bounded mechanism evidence and G2 moves from open to partial mechanism
+evidence. The register entry records the triple dissociation and the measured floor, not a summary
+score. G2 is not closed and no wording elsewhere may imply that it is.
+
+Amendment A1 stays in the protocol permanently. The first freeze was internally inconsistent, and
+the project's standard is that a defect found before materialization is corrected in the open with
+its arithmetic rather than quietly replaced. Implementing the floor as fail-closed would have been
+the concealing option and is rejected explicitly: a zero-scoring ablation measured against a
+zero-scoring floor proves nothing.
+
+### Claim boundary
+
+M076 uses project-authored synthetic rasters in a single domain and a deterministic agent whose
+policy does not change between episodes; persistence is identity and audit, not adaptation. It
+supplies no perception, cross-domain, continual-learning, Genesis Gate 2 or Gate 3 evidence and no
+AGI evidence. It does not touch, weaken or satisfy the M075 pre-private readiness boundary, which
+remains fail-closed on independent inputs.
