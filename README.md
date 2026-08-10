@@ -80,6 +80,7 @@ The full evidence is preserved in:
 | M072 | **POSITIVE QUALIFIED DEVELOPMENT** | Matched authored ablations isolate causal contributions from authority admission and tamper-evident audit over 48 non-executing scenarios. |
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT** | Four external demonstrations induce one committed AST skill; after teacher removal it passes 12/12 fresh authored holdouts while two controls pass 0/12. |
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | The single frozen paired campaign completed 6/6 feasible arm tasks but produced 0/3 true refusals, margin 0.0 and zero saved steps; H20 fails without retry or protocol defect. |
+| M076 | **POSITIVE QUALIFIED DEVELOPMENT** | One persistent agent grounded language, structured state and pixels, scoring 36/36; matched ablations gave an exact triple dissociation against a measured 3/36 guessing floor. G2 moves off open without closing. |
 | M075 | **PUBLIC MODEL DEVELOPMENT COMPLETE — NON-SCIENTIFIC** | One committed 12-container comparison preserved 43 live decisions without defect: context reached 2/3 true refusals, 0 false and 3/3 feasible submission versus baseline 0/3 and no submissions. Independent samples and a public authored bank prevent a causal/scientific claim. |
 
 Negative results remain part of the scientific record. M041 was not overwritten; M042 is

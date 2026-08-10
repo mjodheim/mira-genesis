@@ -15,7 +15,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
+from metamorphosis.m076_multimodal_grounding import (  # noqa: E402
     ARMS,
     BLIND_GUESS_MAX_PER_FAMILY,
     BLIND_GUESS_MAX_TOTAL,
@@ -32,7 +32,7 @@ from metamorphosis.g2_multimodal_grounding import (  # noqa: E402
     run_arm,
 )
 
-BASE = ROOT / "experiments/G2_GROUNDING"
+BASE = ROOT / "experiments/M076"
 PROTOCOL_PATH = BASE / "PROTOCOL.json"
 COMMITMENT_PATH = BASE / "EPISODE_COMMITMENT.json"
 RESULT_PATH = BASE / "RESULT.json"
@@ -173,7 +173,7 @@ def main() -> int:
     _fail(failures, verdict.positive, f"dissociation not positive: {verdict.reasons}")
 
     print(json.dumps({
-        "schema": "g2-grounding-check-v1",
+        "schema": "m076-grounding-check-v1",
         "suite_commitment": commitment["suite_commitment"],
         "result_sha256": preserved["result_sha256"],
         "arms": {arm: arms[arm]["successes_per_family"] for arm in ARMS},

@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from metamorphosis.g2_multimodal_grounding import (
+from metamorphosis.m076_multimodal_grounding import (
     ARMS,
     BLIND_GUESS_MAX_PER_FAMILY,
     BLIND_GUESS_MAX_TOTAL,
@@ -36,9 +36,9 @@ from metamorphosis.g2_multimodal_grounding import (
 )
 
 ROOT = Path(__file__).resolve().parents[1]
-PROTOCOL_PATH = ROOT / "experiments/G2_GROUNDING/PROTOCOL.json"
-COMMITMENT_PATH = ROOT / "experiments/G2_GROUNDING/EPISODE_COMMITMENT.json"
-RESULT_PATH = ROOT / "experiments/G2_GROUNDING/RESULT.json"
+PROTOCOL_PATH = ROOT / "experiments/M076/PROTOCOL.json"
+COMMITMENT_PATH = ROOT / "experiments/M076/EPISODE_COMMITMENT.json"
+RESULT_PATH = ROOT / "experiments/M076/RESULT.json"
 
 
 @pytest.fixture(scope="module")

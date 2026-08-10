@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-10
-status: phase_eight_m075_public_model_development_complete_private_freeze_not_ready
+status: phase_eight_m076_g2_grounding_positive_and_m075_private_freeze_not_ready
 
 active_research_question: >-
   After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
@@ -1502,6 +1502,55 @@ phase_eight:
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
   next_required_boundary: preprivate_causal_control_and_sealed_bank_review_then_frozen_cross_domain_transfer_and_independent_reproduction
+
+  M076:
+    title: bounded multimodal state grounding with matched per-channel ablation
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G2
+    status: positive_qualified_development
+    hypothesis: H22
+    decision: D042
+    protocol: experiments/M076/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 510b78d
+    harness_and_amendment_commit: 327dc74
+    suite_bound_commit: c622bd2
+    result_preserved_commit: 5ab2e68
+    salt_drawn_before_any_harness_code: true
+    suite_commitment: 20ff63f37e7708b175af5ab5bdfd6dd3374ef487cecb41504e489f2a214a4f7e
+    result_sha256: aa312e9530a46556755111630f85911460fff965b428cf59905b5555d0a52639
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    channels:
+      - utf8_instruction
+      - ordered_structured_mapping
+      - rgb888_raster_1728_bytes
+    output_classes:
+      - symbolic_set_dial_call
+      - embodied_effector_moves_scored_from_terminal_state
+    episode_count: 36
+    evaluation_count: 180
+    full_arm_successes: 36
+    ablation_dependent_family_successes: 0
+    ablation_non_dependent_families_equal_full_arm: true
+    measured_guessing_floor_successes: 3
+    guessing_floor_bound: 8
+    amendment_a1_applied_before_materialization: true
+    amendment_a1_reason: chance_floor_bound_of_one_was_arithmetically_unreachable
+    local_regressions_passed: 26
+    independent_checker: scripts/check_m076_result.py
+    generality_gate_advanced: true
+    generality_gate_g2_closed: false
+    perception_of_natural_images: false
+    cross_domain_transfer: false
+    continual_learning: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
 
 measurement_track:
   reserved_experiment: M045
