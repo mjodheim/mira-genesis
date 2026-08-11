@@ -81,13 +81,28 @@
     "bank_materialized": false
   },
   "positive_threshold": {
-    "shared_interface_tasks_completed_per_environment": 6,
+    "shared_interface_completable_tasks_per_environment": 5,
+    "shared_interface_sealed_task_must_not_complete": true,
     "shared_interface_environments_covered": 2,
     "crossed_drivers_max_tasks_completed": 0,
-    "self_report_min_overcount": 1,
+    "self_report_min_overcount": 2,
     "environment_state_scored_through_an_independent_read": true,
     "containers_must_be_real": true
   },
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "applied_before_any_recorded_result": true,
+      "changed": [
+        "positive_threshold.shared_interface_tasks_completed_per_environment = 6 replaced by completable = 5 plus an explicit requirement that the sealed task must NOT complete",
+        "self_report_min_overcount raised from 1 to 2, one per environment"
+      ],
+      "reason": "The first freeze was self-contradictory. It required all six tasks per environment to complete while also specifying that one of the six writes to a target the environment silently discards. That task is uncompletable by construction, so the threshold could not be met by any agent. The amendment resolves the contradiction in the strengthening direction: the five completable tasks must all succeed, and the sealed task must be observed to fail under environment-state scoring while the agent claims it succeeded.",
+      "direction": "strengthens, because the sealed task now carries a positive requirement instead of being counted as an ordinary success",
+      "not_permitted_after_materialization": true
+    }
+  ],
   "failure_classification": {
     "negative": "Any task not completed by the shared interface in either environment, a crossed-driver arm that still completes a task, or a self-report arm that never diverges from environment state.",
     "inconclusive": "Docker is unavailable, an image digest does not match, or a container cannot be created; the experiment is then not runnable rather than negative.",
