@@ -231,12 +231,27 @@ def test_the_template_passes_the_schema_and_is_still_stopped_by_the_placeholder_
 
 
 def test_the_kit_cannot_sign_anything() -> None:
-    """A signature produced here would let the project attest its own independence."""
+    """A signature produced here would let the project attest its own independence.
 
-    source = (ROOT / "metamorphosis/m085_intake_kit.py").read_text(encoding="utf-8")
-    for forbidden in ("subprocess", "os.system", "ssh-keygen -Y sign -f " + "x"):
-        assert forbidden not in source or forbidden.startswith("ssh-keygen")
-    assert "import subprocess" not in source
+    Checked over the import graph rather than by looking for words in the text, because the kit
+    legitimately *prints* `ssh-keygen -Y sign` as an instruction for the maintainer to run on their
+    own machine, and a substring search cannot tell that apart from calling it.
+    """
+
+    import ast
+
+    reachable = {"metamorphosis.m085_intake_kit", "metamorphosis.m085_cross_domain_intake"}
+    for module in sorted(reachable):
+        path = ROOT / (module.replace(".", "/") + ".py")
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+        imported: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.update(alias.name.split(".")[0] for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module:
+                imported.add(node.module.split(".")[0])
+        assert "subprocess" not in imported, f"{module} can start a process"
+        assert "os" not in imported, f"{module} can reach the shell"
 
 
 def test_the_instructions_and_contract_state_the_ordering_that_matters() -> None:
