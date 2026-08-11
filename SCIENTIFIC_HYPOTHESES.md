@@ -528,3 +528,26 @@ measure nothing.
 side store, so this is bounded policy learning, not retrieval and not weight learning. It does not
 close G5, which needs capabilities maintained outside this project and independent reproduction.
 See D046.
+
+## H27 — One interface can drive two real environments, and state scoring catches what claims miss
+
+One unchanged agent emitting a single abstract action vocabulary can complete tasks in two
+materially different real isolated environments — a container shell over a filesystem and a
+container HTTP service over a socket — with completion judged from a fresh environment-state read;
+and that scoring rule will catch successes the agent claims but did not achieve.
+
+**Status:** supported by the M081 qualified development result. The shared interface completed 5/5
+completable tasks in each environment. The crossed-driver arm completed none, showing the two
+environments are distinct systems rather than one mock under two labels. The self-report arm
+over-reported by two, one per environment. Bank `5261974e…9ccbd`; result `cc9a6e89…41bdc`, attempt 1,
+no retry.
+
+**Required implication:** the divergence must be constructed, not hoped for. Each environment carries
+one task whose action returns success while the state does not change — a shell script ending in
+`; true` after a failed write, and a service that answers `204` to a write it discards. Scored by
+claim the interface looks 12/12; scored by state it is 10/12, and the gap is exactly those two.
+
+**Scope:** two real environments, neither of them a browser or a desktop VM, which is the larger part
+of G6 and stays untouched. Tasks are project-authored. The container-backed evidence is local and
+opt-in rather than CI-attested. This does not close G6, establishes no external-suite competence and
+supplies no AGI evidence. See D047.

@@ -1,0 +1,438 @@
+{
+  "arms": {
+    "crossed_drivers": {
+      "arm": "crossed_drivers",
+      "claimed_total": 12,
+      "completed_per_environment": {
+        "service": 0,
+        "shell": 0
+      },
+      "completed_total": 0,
+      "environments_covered": 0,
+      "overcount": 12,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "22a4f4733cd81a6a4c5e668dbba7bf2703a9c043f33af1da53a369c0cca8d004",
+          "driver": "service",
+          "environment": "shell",
+          "index": 0,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "36f3e619763b28a486adba6512d2f735407ecc2ad012b3e86a52d5c26b543cff",
+          "driver": "service",
+          "environment": "shell",
+          "index": 1,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "e77e86104d544857e0ed56a424e1d50a3fd486275ed3ecbf34fa0aef8cee730e",
+          "driver": "service",
+          "environment": "shell",
+          "index": 2,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "692a491e11c0e054dfc523077827d01e8a02b22bec51b2953b65ef3dcc7725b6",
+          "driver": "service",
+          "environment": "shell",
+          "index": 3,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "6e0ce68421527b3bf6d9e77ebe1e7ebc458b178189cb2eb48da67bac0a3c4788",
+          "driver": "service",
+          "environment": "shell",
+          "index": 4,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "2841a92c1f055ed009ab5adb42a7f275ee7d08d7376d7dc44f17d44e5168c9c9",
+          "driver": "service",
+          "environment": "shell",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "e3b7699d1e9d7c6cdc9e7da48274a1292528dd7f3acfb460e6333f55af1da502",
+          "driver": "shell",
+          "environment": "service",
+          "index": 0,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8ea9d2ae47cc597dd7fcfc7dd3ed10f25a6278e00431602d4a86d6597ec63e6b",
+          "driver": "shell",
+          "environment": "service",
+          "index": 1,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "bc462c26e76498821a4d0fccb4d876c619c9532c67e7d39576a7d3f3f03dfea7",
+          "driver": "shell",
+          "environment": "service",
+          "index": 2,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "291036b702b3e0f81f37ed4923bd42e395eceedd2187418db340c91463a02f5e",
+          "driver": "shell",
+          "environment": "service",
+          "index": 3,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9dab27b8e6970288285f6ed9cb68d28b7c81d80d31389a944665bd307001f3a9",
+          "driver": "shell",
+          "environment": "service",
+          "index": 4,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "337d2fff2205a59337bed0279580336e20c52e3c45c02689d2bad2ab06814fd1",
+          "driver": "shell",
+          "environment": "service",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "environment_state",
+      "state_reached_total": 0
+    },
+    "self_report_scored": {
+      "arm": "self_report_scored",
+      "claimed_total": 12,
+      "completed_per_environment": {
+        "service": 6,
+        "shell": 6
+      },
+      "completed_total": 12,
+      "environments_covered": 2,
+      "overcount": 2,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "22a4f4733cd81a6a4c5e668dbba7bf2703a9c043f33af1da53a369c0cca8d004",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 0,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "36f3e619763b28a486adba6512d2f735407ecc2ad012b3e86a52d5c26b543cff",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 1,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "e77e86104d544857e0ed56a424e1d50a3fd486275ed3ecbf34fa0aef8cee730e",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 2,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "692a491e11c0e054dfc523077827d01e8a02b22bec51b2953b65ef3dcc7725b6",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 3,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "6e0ce68421527b3bf6d9e77ebe1e7ebc458b178189cb2eb48da67bac0a3c4788",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 4,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "2841a92c1f055ed009ab5adb42a7f275ee7d08d7376d7dc44f17d44e5168c9c9",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "e3b7699d1e9d7c6cdc9e7da48274a1292528dd7f3acfb460e6333f55af1da502",
+          "driver": "service",
+          "environment": "service",
+          "index": 0,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8ea9d2ae47cc597dd7fcfc7dd3ed10f25a6278e00431602d4a86d6597ec63e6b",
+          "driver": "service",
+          "environment": "service",
+          "index": 1,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "bc462c26e76498821a4d0fccb4d876c619c9532c67e7d39576a7d3f3f03dfea7",
+          "driver": "service",
+          "environment": "service",
+          "index": 2,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "291036b702b3e0f81f37ed4923bd42e395eceedd2187418db340c91463a02f5e",
+          "driver": "service",
+          "environment": "service",
+          "index": 3,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9dab27b8e6970288285f6ed9cb68d28b7c81d80d31389a944665bd307001f3a9",
+          "driver": "service",
+          "environment": "service",
+          "index": 4,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "337d2fff2205a59337bed0279580336e20c52e3c45c02689d2bad2ab06814fd1",
+          "driver": "service",
+          "environment": "service",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "agent_claim",
+      "state_reached_total": 10
+    },
+    "shared_interface": {
+      "arm": "shared_interface",
+      "claimed_total": 12,
+      "completed_per_environment": {
+        "service": 5,
+        "shell": 5
+      },
+      "completed_total": 10,
+      "environments_covered": 2,
+      "overcount": 2,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "22a4f4733cd81a6a4c5e668dbba7bf2703a9c043f33af1da53a369c0cca8d004",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 0,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "36f3e619763b28a486adba6512d2f735407ecc2ad012b3e86a52d5c26b543cff",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 1,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "e77e86104d544857e0ed56a424e1d50a3fd486275ed3ecbf34fa0aef8cee730e",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 2,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "692a491e11c0e054dfc523077827d01e8a02b22bec51b2953b65ef3dcc7725b6",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 3,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "6e0ce68421527b3bf6d9e77ebe1e7ebc458b178189cb2eb48da67bac0a3c4788",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 4,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "2841a92c1f055ed009ab5adb42a7f275ee7d08d7376d7dc44f17d44e5168c9c9",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "e3b7699d1e9d7c6cdc9e7da48274a1292528dd7f3acfb460e6333f55af1da502",
+          "driver": "service",
+          "environment": "service",
+          "index": 0,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8ea9d2ae47cc597dd7fcfc7dd3ed10f25a6278e00431602d4a86d6597ec63e6b",
+          "driver": "service",
+          "environment": "service",
+          "index": 1,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "bc462c26e76498821a4d0fccb4d876c619c9532c67e7d39576a7d3f3f03dfea7",
+          "driver": "service",
+          "environment": "service",
+          "index": 2,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "291036b702b3e0f81f37ed4923bd42e395eceedd2187418db340c91463a02f5e",
+          "driver": "service",
+          "environment": "service",
+          "index": 3,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9dab27b8e6970288285f6ed9cb68d28b7c81d80d31389a944665bd307001f3a9",
+          "driver": "service",
+          "environment": "service",
+          "index": 4,
+          "state_changed": true,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "337d2fff2205a59337bed0279580336e20c52e3c45c02689d2bad2ab06814fd1",
+          "driver": "service",
+          "environment": "service",
+          "index": 5,
+          "state_changed": false,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "environment_state",
+      "state_reached_total": 10
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "5261974e2eb37424816205f8a5c37979df055fbdfa30113d411d65d78ef9ccbd",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g6": false,
+    "establishes_browser_competence": false,
+    "establishes_desktop_or_vm_competence": false,
+    "establishes_environment_state_scoring_over_self_report": true,
+    "establishes_external_suite_competence": false,
+    "establishes_one_interface_across_two_real_isolated_environments": true,
+    "genesis_gate_2_evidence": false
+  },
+  "construction_fixes_before_materialization": [
+    "the crossed arm now sends actions through the other environment's driver while state is read from the environment under test; the first version swapped both and crossed nothing",
+    "the sealed task now expects its resource to exist, so a silent discard is a failure; the first version expected nothing and scored the discard as a pass"
+  ],
+  "docker_server": true,
+  "environments": [
+    "shell",
+    "service"
+  ],
+  "external_model_called": false,
+  "failed_conditions": [],
+  "protocol_commitment": "ebe3824ddcbe343b4ee48a0241ab7a6ac77729d700e03af6d920bb72a389a194",
+  "python": "3.14.6",
+  "result_sha256": "cc9a6e89a023ee3c9f1b5e3f5f1f8a015f57af00d53c1f1611b3b4550bb41bdc",
+  "retried": false,
+  "schema": "m081-two-real-environments-result-v1",
+  "verdict": "positive"
+}

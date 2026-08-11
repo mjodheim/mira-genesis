@@ -93,6 +93,18 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M081 puts one interface into a second real environment.** Protocol frozen before the
+  harness at `7ac5ad4`; bank commitment `5261974e…9ccbd`; first result `cc9a6e89…41bdc`,
+  attempt 1, no retry. One unchanged agent emitting four abstract actions completed 5/5
+  completable tasks in a network-disabled Alpine container shell and 5/5 in a real Python HTTP
+  server process in its own container, judged from a fresh state read. A crossed-driver control
+  completed **none**, showing the two environments are distinct systems rather than one mock
+  under two labels. A self-report control over-reported twice: judged by the agent's claim the
+  interface looks 12/12, judged by environment state it is 10/12, and the gap is exactly two
+  constructed lies — a shell script swallowing a failed write with `; true` and a service
+  answering `204` to a write it discards. **No browser and no desktop VM**, so the larger part of
+  G6 is untouched and the gate does not advance. The container-backed regressions skip in CI
+  under the existing opt-in, so the live half is local evidence rather than CI-attested.
 - **M080 measures forgetting for the first time.** Protocol frozen before the harness at
   `b3e9aba`; bank commitment `3769e826…3ec6d`; first result `42112139…5dfc99`, attempt 1, no
   retry. Six skills are acquired into one bounded 24-slot table where later skills reuse an
