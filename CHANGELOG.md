@@ -21,6 +21,16 @@
   be moved alone.
 - Recorded H31 and D051. Running M085 on project-authored domains is listed as a prohibited
   adaptation, because it is the cheap substitute available on any day the external route feels slow.
+- Built the organism-side shim before any bank exists, and found what named negative 5 anticipated:
+  M084's `Embodiment` abstracted acting and observing, while the organism still reached into M084's
+  own carrier tables in **ten** places — memory keys, memory contexts, carrier costs, probe carriers,
+  the seeded carrier, the value alphabet and the one-carrier-at-a-time read.
+- Routed all ten through a registered `DomainView`. M084's three substrates register views built from
+  the tables they already used, and every arm re-derives its recorded numbers exactly.
+- Added a wiring control on a toy domain sharing no vocabulary with M084, and recorded in
+  `FAILURE_LOG.md` that its first version passed while running zero probes and zero repair cycles: a
+  modulo cost formula made the discarding slot expensive, so the planner routed around the trap it
+  existed to hit. The control now fails if it does not exercise repair.
 
 - Added M084, one persistent lineage crossing `shell → browser → desktop → shell` in four separate
   operating system processes. It reached 11/11 reachable goals scored from environment state,

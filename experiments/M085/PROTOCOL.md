@@ -122,6 +122,48 @@ Named in advance so a negative is informative:
 Outcome 5 would be the most valuable negative, and the most likely to be missed if the contract were
 written after seeing the bank.
 
+## What building the shim already found
+
+Named negative 5 above says the M084 adapter contract might not fit an externally written domain.
+Building the organism-side shim before any bank exists turned that from a worry into a measurement,
+and the answer is **partly**.
+
+M084's `Embodiment` abstracted *acting* and *observing*. That was the smaller half. The organism also
+reached into M084's own carrier tables in **ten** places:
+
+| What it reached for | Where |
+|---|---|
+| integer keys for its bounded memory | `_observation_key`, `observed` |
+| the memory context for a substrate | `_find`, `remember`, `recall`, `remember_affordance`, `recall_affordance` |
+| carrier costs, to plan and to order a plan | `plan_for`, `_execute` |
+| the carriers it probes with | `ensure_affordance`, `propose_transformation` |
+| the carrier a stage is seeded through | `seed_environment` |
+| the value alphabet | the probe and seed value generators |
+| whether a substrate is read one carrier at a time | `Embodiment.observe`, `evaluator_score` |
+
+None of these is supplied by an externally written domain, and none was visible from M084's own
+result. Every one is a way the organism was shaped by the three environments it was written against.
+
+They are now routed through a registered `DomainView`, which is the whole extension point. M084's
+three substrates register views built from the tables they already used, and **every arm re-derives
+its recorded numbers exactly**, so nothing about the M084 result changes.
+
+A wiring control drives the organism through the contract on a toy in-memory domain with numeric slot
+names, a colour-word value alphabet and a discarding rule that is a slot range rather than a name
+prefix — nothing it shares with M084. The organism reaches its three reachable goals, refuses the
+unreachable one, falsely refuses none, and induces a rejection predicate keyed to that domain.
+
+**The wiring control is written by this project and is not a bank domain.** It shows the contract is
+satisfiable from outside; it shows nothing about transfer, and no result may cite it. Its own first
+version is recorded in `FAILURE_LOG.md`: it passed while proving less than it claimed, because the
+costs were derived from a modulo of the slot index, which made the discarding slot expensive and let
+the planner route around the trap it existed to hit.
+
+What remains genuinely unknown until a real bank arrives is whether a maintainer can express their
+domain in this vocabulary at all — carriers holding values, four action kinds, a goal as a desired
+end state. That is a stronger assumption than the ten couplings, and no control this project writes
+can test it.
+
 ## Claim boundary
 
 Even a positive result does **not** close G4. Closure additionally requires independent reproduction

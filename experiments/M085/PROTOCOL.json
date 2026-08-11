@@ -45,6 +45,35 @@
     "adapter_contract_version": "m085-domain-adapter-v1",
     "project_specifies_structure_maintainer_chooses_instances": true
   },
+  "organism_side_shim": {
+    "built_before_any_bank_exists": true,
+    "why": "named negative 5 says the M084 adapter contract may not fit an externally written domain, and writing the contract after seeing a bank would hide that",
+    "m084_embodiment_abstracted": ["acting", "observing"],
+    "m084_organism_still_reached_into_its_own_tables_in_n_places": 10,
+    "couplings_found": [
+      "integer keys for the bounded memory",
+      "the memory context for a substrate",
+      "carrier costs for planning and for plan ordering",
+      "the carriers used for probing",
+      "the carrier a stage is seeded through",
+      "the value alphabet",
+      "whether a substrate is read one carrier at a time"
+    ],
+    "resolution": "all ten routed through a registered DomainView; M084's substrates register views built from the tables they already used",
+    "m084_arms_rederive_recorded_numbers_exactly": true,
+    "organism_reimplemented_for_external_domains": false,
+    "wiring_control": {
+      "module": "metamorphosis/m085_wiring_control.py",
+      "entry_point": "scripts/run_m085_wiring_control.py",
+      "shares_any_vocabulary_with_m084": false,
+      "is_a_bank_domain": false,
+      "is_scientific_evidence": false,
+      "may_be_cited_by_a_result": false,
+      "first_version_passed_while_proving_less_than_it_claimed": true,
+      "first_version_defect": "costs derived from a modulo of the slot index made the discarding slot expensive, so the planner routed around the trap and no repair cycle ran"
+    },
+    "still_unknown_until_a_real_bank_arrives": "whether a maintainer can express their domain in this vocabulary at all; no control this project writes can test that"
+  },
   "held_out_assignment": {
     "derivation": "sha256(m085-target-assignment-v1\\0+payload_sha256+\\0+salt) mod domain_count",
     "salt_generated_by_the_maintainer": true,

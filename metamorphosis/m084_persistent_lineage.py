@@ -21,7 +21,7 @@ import copy
 import hashlib
 import json
 from dataclasses import dataclass, field
-from typing import Iterable, Mapping, Sequence
+from typing import Callable, Iterable, Mapping, Sequence
 
 from metamorphosis.bounded_search import uniform_cost_plans
 from metamorphosis.m077_long_horizon_recovery import GENESIS_DIGEST, Journal
@@ -145,6 +145,101 @@ def substrate_carrier_index(substrate: str) -> dict[str, int]:
     return {name: index for index, name in enumerate(names)}
 
 
+# --------------------------------------------------------------------------------------------
+# What the organism needs to know about a domain that is not acting or observing
+# --------------------------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class DomainView:
+    """The vocabulary, costs, memory keys and probe carriers of one domain.
+
+    Added for M085. M084's `Embodiment` abstracted *acting* and *observing*, and that turned out to
+    be the smaller half: the organism also reached into this module's own carrier tables in ten
+    places — for costs, for the integer keys its bounded memory needs, for the carriers it probes
+    with, and for the value alphabet. Every one of those is a way the organism was shaped by the
+    environments it was written against, and an externally written domain supplies none of them.
+
+    Registering a view is the whole extension point. M084's three substrates register views built
+    from the tables they already used, so nothing about its recorded behaviour changes.
+    """
+
+    key: str
+    context: int
+    costs: Mapping[str, int]
+    carrier_index: Mapping[str, int]
+    observes_one_carrier_at_a_time: bool
+    carrier_for: Callable[[int, str], str]
+    value_for: Callable[[bytes, int, int], str]
+
+    def fingerprint(self) -> str:
+        """Identity over the data, because the two callables are closures and never compare equal.
+
+        Rebuilding a view from the same description must be allowed; registering a *different*
+        domain under a key already taken must not.
+        """
+
+        return hashlib.sha256(_canonical({
+            "key": self.key,
+            "context": self.context,
+            "costs": dict(self.costs),
+            "carrier_index": dict(self.carrier_index),
+            "observes_one_carrier_at_a_time": self.observes_one_carrier_at_a_time,
+        })).hexdigest()
+
+
+_DOMAIN_VIEWS: dict[str, DomainView] = {}
+
+
+def register_domain_view(view: DomainView) -> None:
+    """Make a domain drivable by the organism. Re-registering the same key is refused."""
+
+    existing = _DOMAIN_VIEWS.get(view.key)
+    if existing is not None and existing.fingerprint() != view.fingerprint():
+        raise LineageError(f"a different view is already registered for {view.key!r}")
+    _DOMAIN_VIEWS[view.key] = view
+
+
+def view_for(key: str) -> DomainView:
+    if key not in _DOMAIN_VIEWS:
+        _register_native_views()
+    if key not in _DOMAIN_VIEWS:
+        raise LineageError(f"no domain view is registered for {key!r}")
+    return _DOMAIN_VIEWS[key]
+
+
+def _native_value(substrate: str) -> Callable[[bytes, int, int], str]:
+    def value_for(salt: bytes, stage: int, tag: int) -> str:
+        digest = _digest(salt, substrate, stage, tag)
+        if substrate == "desktop":
+            return PALETTE_ORDER[digest[0] % len(PALETTE_ORDER)]
+        return f"v{int.from_bytes(digest[:2], 'big') % 1000:03d}"
+
+    return value_for
+
+
+def _register_native_views() -> None:
+    """M084's own substrates, expressed through the same interface an external domain uses."""
+
+    for substrate in SUBSTRATES:
+        if substrate in _DOMAIN_VIEWS:
+            continue
+        index = substrate_carrier_index(substrate)
+        costs = {
+            carrier_name(kind, stage, role): ROLE_COSTS[role]
+            for stage, kind in enumerate(STAGE_SUBSTRATES) if kind == substrate
+            for role in ROLES
+        }
+        _DOMAIN_VIEWS[substrate] = DomainView(
+            key=substrate,
+            context=SUBSTRATE_INDEX[substrate],
+            costs=costs,
+            carrier_index=index,
+            observes_one_carrier_at_a_time=substrate == "desktop",
+            carrier_for=lambda stage, role, _s=substrate: carrier_name(_s, stage, role),
+            value_for=_native_value(substrate),
+        )
+
+
 @dataclass(frozen=True)
 class Goal:
     """A desired state of a carrier group. No decomposition is supplied with it."""
@@ -241,15 +336,20 @@ class Embodiment:
     work here. That is the whole adapter, and it holds no state of its own beyond counters.
     """
 
-    def __init__(self, environment, substrate: str) -> None:
+    def __init__(
+        self, environment, substrate: str, *, action_budget: int = ACTION_BUDGET_PER_STAGE,
+    ) -> None:
         self.environment = environment
         self.substrate = substrate
+        # An externally maintained domain carries its own budget with its tasks. M084's own stages
+        # pass nothing and keep the frozen bound they were recorded under.
+        self.action_budget = action_budget
         self.actions = 0
         self.state_reads = 0
 
     def observe(self, carriers: Sequence[str]) -> dict[str, str | None]:
         self.state_reads += 1
-        if self.substrate == "desktop":
+        if view_for(self.substrate).observes_one_carrier_at_a_time:
             return {name: self.environment.colour_at(name) for name in dict.fromkeys(carriers)}
         found = self.environment.state()
         return {name: found.get(name) for name in dict.fromkeys(carriers)}
@@ -261,9 +361,9 @@ class Embodiment:
         """Returns the environment's own claim, which is recorded and never scored."""
 
         self.actions += 1
-        if self.actions > ACTION_BUDGET_PER_STAGE:
+        if self.actions > self.action_budget:
             raise LineageError(
-                f"stage exceeded the frozen {ACTION_BUDGET_PER_STAGE}-action safety bound"
+                f"stage exceeded the frozen {self.action_budget}-action safety bound"
             )
         return self.environment.apply(Action(kind, carrier, value))
 
@@ -419,13 +519,13 @@ class Organism:
     # -- bounded memory ------------------------------------------------------------------
 
     def _observation_key(self, substrate: str, carrier: str) -> int:
-        index = substrate_carrier_index(substrate).get(carrier)
+        index = view_for(substrate).carrier_index.get(carrier)
         if index is None:
             raise LineageError(f"{carrier!r} is not a declared carrier of {substrate!r}")
         return index
 
     def _find(self, substrate: str, key: int) -> ExceptionEntry | None:
-        context = SUBSTRATE_INDEX[substrate]
+        context = view_for(substrate).context
         for slot in self.memory.slots:
             if isinstance(slot, ExceptionEntry) and slot.key == key and context in slot.contexts:
                 return slot
@@ -438,12 +538,12 @@ class Organism:
             existing.output = 1 if durable else 0
             return
         self.memory.allocate(
-            ExceptionEntry(frozenset({SUBSTRATE_INDEX[substrate]}), key, 1 if durable else 0),
+            ExceptionEntry(frozenset({view_for(substrate).context}), key, 1 if durable else 0),
         )
 
     def recall(self, substrate: str, carrier: str) -> bool | None:
         key = self._observation_key(substrate, carrier)
-        value = self.memory.lookup(SUBSTRATE_INDEX[substrate], key)
+        value = self.memory.lookup(view_for(substrate).context, key)
         return None if value is None else bool(value)
 
     def remember_affordance(self, substrate: str, affordance: str, effective: bool) -> None:
@@ -454,7 +554,7 @@ class Organism:
         else:
             self.memory.allocate(
                 ExceptionEntry(
-                    frozenset({SUBSTRATE_INDEX[substrate]}), key, 1 if effective else 0,
+                    frozenset({view_for(substrate).context}), key, 1 if effective else 0,
                 ),
             )
         self.affordances.setdefault(substrate, {})[affordance] = effective
@@ -464,7 +564,7 @@ class Organism:
         if known is not None:
             return known
         key = AFFORDANCE_KEY_BASE + AFFORDANCES.index(affordance)
-        value = self.memory.lookup(SUBSTRATE_INDEX[substrate], key)
+        value = self.memory.lookup(view_for(substrate).context, key)
         return None if value is None else bool(value)
 
     # -- induction -----------------------------------------------------------------------
@@ -472,7 +572,7 @@ class Organism:
     def observed(self, substrate: str) -> tuple[list[str], list[str]]:
         non_durable: list[str] = []
         durable: list[str] = []
-        for carrier in substrate_carrier_index(substrate):
+        for carrier in view_for(substrate).carrier_index:
             seen = self.recall(substrate, carrier)
             if seen is True:
                 durable.append(carrier)
@@ -583,7 +683,7 @@ def plan_for(
 
     def successors(state: BeliefState) -> Iterable[tuple[tuple, BeliefState, int]]:
         for name, held in state:
-            cost = ROLE_COSTS[role_of(substrate, name)]
+            cost = view_for(substrate).costs[name]
             if requirement == "durable" and held != value and not organism.rejects(substrate, name):
                 yield ("put", name, value), _apply_belief(state, name, value), cost
             if requirement == "absent" and held is not None and removal_believed_effective:
@@ -641,13 +741,6 @@ def _new_metrics() -> dict[str, int]:
     }
 
 
-def _probe_value(salt: bytes, substrate: str, stage: int) -> str:
-    digest = _digest(salt, substrate, stage, 800)
-    if substrate == "desktop":
-        return PALETTE_ORDER[digest[0] % len(PALETTE_ORDER)]
-    return f"v{int.from_bytes(digest[:2], 'big') % 1000:03d}"
-
-
 def ensure_affordance(
     organism: Organism, substrate: str, stage: int, embodiment: Embodiment,
     metrics: dict[str, int], salt: bytes,
@@ -664,8 +757,9 @@ def ensure_affordance(
         return known
 
     metrics["affordance_probes"] += 1
-    carrier = carrier_name(substrate, stage, "probe_aff")
-    value = _probe_value(salt, substrate, stage)
+    view = view_for(substrate)
+    carrier = view.carrier_for(stage, "probe_aff")
+    value = view.value_for(salt, stage, 800)
     embodiment.act("put", carrier, value)
     present = embodiment.observe([carrier])[carrier] == value
     organism.remember(substrate, carrier, present)
@@ -688,7 +782,7 @@ def _execute(plan: Sequence[tuple], embodiment: Embodiment, substrate: str) -> b
     """Cheapest carrier first, as the protocol declares. Returns the environment's own claim."""
 
     claimed = True
-    for kind, carrier, value in sorted(plan, key=lambda a: ROLE_COSTS[role_of(substrate, a[1])]):
+    for kind, carrier, value in sorted(plan, key=lambda a: view_for(substrate).costs[a[1]]):
         claimed = embodiment.act(kind, carrier, value) and claimed
     return claimed
 
@@ -890,10 +984,10 @@ def propose_transformation(
     probe_goal = {
         "requirement": "durable",
         "group": (
-            carrier_name(substrate, stage, "probe_trap"),
-            carrier_name(substrate, stage, "probe_alt"),
+            view_for(substrate).carrier_for(stage, "probe_trap"),
+            view_for(substrate).carrier_for(stage, "probe_alt"),
         ),
-        "value": _probe_value(salt, substrate, stage),
+        "value": view_for(substrate).value_for(salt, stage, 800),
     }
     outcome = pursue(
         descendant, probe_goal, embodiment, substrate, stage, dict(_new_metrics()), salt,
@@ -938,10 +1032,10 @@ def seed_environment(embodiment: Embodiment, stage: int, salt: bytes) -> bool:
     """
 
     substrate = STAGE_SUBSTRATES[stage]
-    carrier = carrier_name(substrate, stage, "seeded")
+    carrier = view_for(substrate).carrier_for(stage, "seeded")
     value = seed_value(salt, stage)
     embodiment.environment.apply(Action("put", carrier, value))
-    if substrate == "desktop":
+    if view_for(substrate).observes_one_carrier_at_a_time:
         return embodiment.environment.colour_at(carrier) == value
     return embodiment.environment.state().get(carrier) == value
 
@@ -951,7 +1045,7 @@ def evaluator_score(embodiment: Embodiment, goals: Sequence[Goal]) -> list[bool]
 
     scored: list[bool] = []
     for goal in goals:
-        if embodiment.substrate == "desktop":
+        if view_for(embodiment.substrate).observes_one_carrier_at_a_time:
             seen = {name: embodiment.environment.colour_at(name) for name in goal.group}
         else:
             found = embodiment.environment.state()

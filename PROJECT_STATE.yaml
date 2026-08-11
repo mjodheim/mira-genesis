@@ -1617,6 +1617,14 @@ phase_eight:
     genesis_gate_2_evidence: false
     genesis_gate_3_evidence: false
     agi_evidence: false
+    organism_side_shim: metamorphosis/m085_domain_shim.py
+    wiring_control: metamorphosis/m085_wiring_control.py
+    wiring_control_is_a_bank_domain: false
+    wiring_control_is_scientific_evidence: false
+    m084_organism_couplings_to_its_own_tables_found: 10
+    couplings_rerouted_through_a_registered_domain_view: true
+    m084_arms_rederive_recorded_numbers_exactly: true
+    organism_reimplemented_for_external_domains: false
     local_regressions_passed: 32
     first_ci_run: '31533177300'
     first_ci_attempt: 1

@@ -1439,6 +1439,28 @@ and could never clear the frozen 0.05. Requiring at least six correctness-critic
 is what makes the threshold reachable in principle while leaving it entirely possible to fail. A
 regression asserts both halves of that arithmetic so neither can be adjusted alone.
 
+### What the shim found before any bank exists
+
+The design names, as its most valuable possible negative, that M084's adapter contract might not fit
+an externally written domain. Building the organism-side shim first turned that into a measurement.
+
+M084's `Embodiment` abstracted acting and observing, and that was the smaller half. The organism also
+reached into M084's own carrier tables in **ten** places: memory keys, memory contexts, carrier costs
+for planning and plan ordering, the carriers it probes with, the carrier a stage is seeded through,
+the value alphabet, and whether a substrate is read one carrier at a time. None of those is supplied
+by an outside domain, and none was visible from the M084 result.
+
+All ten now route through a registered `DomainView`. M084's substrates register views built from the
+tables they already used, and every arm re-derives its recorded numbers exactly, so the M084 result is
+untouched. This is the same judgement applied to M079's search extraction earlier: compose through a
+named extension point rather than restate, and prove the parent reproduces.
+
+The wiring control that exercises this is **not evidence**. It is written by this project, which is
+what the M085 boundary exists to exclude, and no result may cite it. Its own first version is in
+`FAILURE_LOG.md`: it passed while running zero probes and zero repair cycles. What remains genuinely
+unknown is whether a maintainer can express their domain in this vocabulary at all, and no control
+this project writes can settle that.
+
 ### Claim boundary
 
 No gate advance is available from M085 without independent reproduction from a separate bank and a
