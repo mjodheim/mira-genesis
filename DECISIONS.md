@@ -1090,3 +1090,36 @@ can stay quiescent indefinitely, or a body whose operations do not guard the cor
 Episode counts are not human-equivalent time horizons and may never be reported as such. M077
 supplies no real-environment autonomy, no cost model, no Genesis Gate 2 or Gate 3 evidence and no
 AGI evidence, and it does not touch the M075 pre-private readiness boundary.
+
+## D044 — M078 supplies the G1 refusal clause without closing the gate
+
+G1 has four requirements and M068 satisfied three of them: bodies frozen before the learner, an
+interaction language not encoded as a descriptor product, and no source inspection during
+evaluation. Every body in that bank was solvable, so the fourth requirement — that an incompatible
+body produce a calibrated refusal rather than an invented adapter — had never been exercised.
+
+### The decision
+
+M078 is accepted as positive bounded mechanism evidence for that clause. G1 **does not** advance from
+`stronger partial mechanism evidence`, because the bank remains project-authored and the missing
+requirement for closure is bodies maintained outside this repository plus independent reproduction.
+The register records the clause as exercised, not as satisfied in the sense G1 finally requires.
+
+The construction is the substance of the decision. An incompatible body that simply had no candidate
+would be refused by any procedure returning its best survivor, which measures nothing. Each
+incompatible body here admits a candidate fitting every public observation, and the `never_refuse`
+control adopted one on all four and failed hidden validation on all four. Refusal caused by an empty
+candidate set is recorded under a separate kind and does not count toward the threshold.
+
+### Boundary against M074
+
+M078 may not be cited as repairing, answering or weakening M074. That result measured whether an
+external model refuses capability-absent tasks and found it did not, 0/3. M078's discoverer is
+deterministic and model-free; it shows that a search procedure can be built to detect observable
+under-determination. Nothing about model behaviour follows. The two live on different tracks and a
+successor that conflates them is making a claim neither result supports.
+
+### Claim boundary
+
+No cross-domain transfer, no general epistemic humility, no Genesis Gate 2 or Gate 3 evidence, no AGI
+evidence. M078 does not touch the M075 pre-private readiness boundary, which remains fail-closed.

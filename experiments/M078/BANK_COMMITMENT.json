@@ -1,0 +1,50 @@
+{
+  "bank_commitment": "c37ea3dc6ea9ddfbaf1c0528b8fbeef225e9b24ad3ecb90f524b8985147c0c0e",
+  "bodies": [
+    {
+      "body_class": "compatible",
+      "commitment": "388e37e0d756c06183ecef27e575087019b6735aa747292034dc8176427c9653",
+      "index": 0
+    },
+    {
+      "body_class": "compatible",
+      "commitment": "542543713e583d4c61ea77fbcc8b4d27903ce9082de3da689fe2ac82260355b7",
+      "index": 1
+    },
+    {
+      "body_class": "compatible",
+      "commitment": "80c9d820bffcb84481fd4fe7a07db1c8f8024d46ffcec980fd776bbf7a7e3e7e",
+      "index": 2
+    },
+    {
+      "body_class": "compatible",
+      "commitment": "84aa6c81fa807c20847a1143da3ca25f50357d5e9874bb9be7f3367700bff36e",
+      "index": 3
+    },
+    {
+      "body_class": "incompatible",
+      "commitment": "3c3a26f851455cfcd9ad630d97781ff760eda49d0dff4dfb79942ccfe2496607",
+      "index": 1
+    },
+    {
+      "body_class": "incompatible",
+      "commitment": "8df3a73c96742aebcbeab34af87818ccd61aa8c826db4c5bed410af00939b162",
+      "index": 0
+    },
+    {
+      "body_class": "incompatible",
+      "commitment": "998bcbc6e9e122b5a619414e3b102f5223da475c222b2a7c5d0385c5f53ce6de",
+      "index": 2
+    },
+    {
+      "body_class": "incompatible",
+      "commitment": "a705ed25917a5fef15efd72e6a4287a3f66de898e5bb5f1669375c0839137c96",
+      "index": 3
+    }
+  ],
+  "body_count": 8,
+  "generator_version": 1,
+  "hidden_observations_per_body": 12,
+  "salt_sha256": "b136721baa7b87bef78033e53dd9c07c41afa2a9c7d20a2b1983d64921793ae7",
+  "schema": "m078-bank-commitment-v1"
+}

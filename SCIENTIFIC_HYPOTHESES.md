@@ -454,3 +454,26 @@ mechanism observations inside one project-authored in-memory body, not a gate ad
 **Scope:** horizons are episode counts. Nothing in M077 measures a human-equivalent task horizon,
 real-environment autonomy or cost, and the refutation is bounded to a body whose operations guard
 the corrupted state. A successor must supply corruptions that can remain quiescent indefinitely.
+
+## H24 — Observable under-determination can be refused without hidden evidence
+
+A bounded discovery procedure probing an opaque body through public observations alone can
+distinguish a body it can adapt from one it cannot, where incompatibility is the collapse of two
+inherited skills onto commands that public evidence cannot separate. It will refuse the second kind
+without refusing the first, and without ever consulting hidden observations.
+
+**Status:** supported by the M078 qualified development result. One unchanged procedure adapted all
+four compatible bodies with 12/12 hidden observations each, refused all four incompatible bodies,
+produced zero false refusals, zero invented adapters and zero empty-set refusals. Bank commitment
+`c37ea3dc…c0c0e`; first result `430f7822…e4976`, attempt 1, no retry.
+
+**Required implication:** refusal must not be reducible to an exhausted search. Every incompatible
+body admits a candidate fitting all public observations, and the `never_refuse` control adopted one
+on each, failing hidden validation four times out of four. That failure is what establishes the
+public evidence as genuinely insufficient. The `always_refuse` control recovers nothing, so refusal
+cannot be earned by refusing everything.
+
+**Scope:** the bank, skills and interaction language are project-authored and maintained inside this
+repository, so this supplies the missing G1 clause as bounded mechanism evidence and does not close
+G1. The discoverer is deterministic; nothing here transfers to whether a model refuses. M074 remains
+the only result on that question and it is negative. See [[m074]] and D044.

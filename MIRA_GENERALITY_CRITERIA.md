@@ -63,6 +63,13 @@ selects no external task and consumes no third-party attestation. Its rasters an
 project-authored and confined to one domain, so it moves G2 off open without closing it and supplies
 no cross-domain, perception or Gate 2 evidence.
 
+M078 is positive bounded refusal-mechanism evidence on the endogenous track. It exercises the one G1
+clause M068 left untested, under a construction where every incompatible body admits a candidate
+fitting all public observations, so refusal cannot be an exhausted search. It does not advance G1:
+the bodies are project-authored and closure requires an externally maintained interaction language
+plus independent reproduction. It says nothing about model refusal behaviour, where M074's negative
+remains the only result.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -156,7 +163,7 @@ results are known.
 
 | Gate | Current status | Strongest evidence |
 |---|---|---|
-| G1 | stronger partial mechanism evidence | M068 induces four distinct adapters across a precommitted authored body bank. M071 adds one accepted fresh blind external task, but the task source is visible and no opaque incompatible-body test is present. M069 contributes no qualified evidence after D037. |
+| G1 | stronger partial mechanism evidence | M068 induces four distinct adapters across a precommitted authored body bank. M078 now exercises the refusal clause: one unchanged procedure adapted four compatible bodies at 12/12 hidden each and refused four incompatible ones with zero false refusals, while a never-refuse control adopted a public-fitting adapter on all four and failed hidden validation. M071 adds one accepted fresh blind external task, but the task source is visible. Every body remains project-authored, so the gate does not advance. M069 contributes no qualified evidence after D037. |
 | G2 | partial mechanism evidence | M076 runs one persistent agent over language, structured state and synthetic pixels, emitting both symbolic calls and embodied actions. Matched shape-preserving ablations give an exact triple dissociation against a measured guessing floor. The rasters are authored 24×24 panels in one domain, so natural-image perception and modality breadth remain absent. |
 | G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |

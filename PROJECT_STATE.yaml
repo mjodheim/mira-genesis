@@ -1558,6 +1558,52 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M078:
+    title: calibrated refusal when an opaque body cannot separate two inherited skills
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G1
+    addresses_gate_clause: incompatible_body_must_refuse_rather_than_invent_an_adapter
+    status: positive_qualified_development
+    hypothesis: H24
+    decision: D044
+    protocol: experiments/M078/PROTOCOL.json
+    protocol_frozen_before_harness_commit: f8a7dc4
+    harness_commit: afc14a9
+    bank_commitment: c37ea3dc6ea9ddfbaf1c0528b8fbeef225e9b24ad3ecb90f524b8985147c0c0e
+    result_sha256: 430f78229203a88d1f11fd36a433191fbe9af71bfd6b95d877c4ec1cb81e4976
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    bodies_total: 8
+    bodies_compatible: 4
+    bodies_incompatible: 4
+    compatible_adapters_recovered: 4
+    compatible_hidden_perfect: 4
+    false_refusals: 0
+    true_refusals: 4
+    invented_adapters: 0
+    empty_set_refusals: 0
+    never_refuse_invented_adapters: 4
+    never_refuse_hidden_failures: 4
+    always_refuse_adapters_recovered: 0
+    incompatibility_construction: stitched_command_over_disjoint_public_inputs
+    refusal_by_exhaustion_counted: false
+    information_boundary_checked_structurally: true
+    local_regressions_passed: 25
+    independent_checker: scripts/check_m078_result.py
+    generality_gate_advanced: false
+    generality_gate_g1_closed: false
+    repairs_m074: false
+    evidence_about_model_refusal: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+    successor_must_use_externally_maintained_bodies: true
+
   M077:
     title: long-horizon fault recovery and constraint retention across episode-count horizons
     epistemic_track: endogenous_bounded_lineage

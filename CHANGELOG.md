@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- Added M078 and exercised the one G1 clause M068 never tested: an incompatible opaque body must
+  produce a calibrated refusal rather than an invented adapter. One unchanged procedure adapted all
+  four compatible bodies with 12/12 hidden observations each, refused all four incompatible bodies,
+  and produced zero false refusals, zero invented adapters and zero empty-set refusals.
+- Built each incompatible body so refusal cannot be an exhausted search. One command is stitched
+  from two skills over their disjoint public inputs, so a candidate fitting every public observation
+  always exists. The `never_refuse` control adopted one on all four bodies and failed hidden
+  validation four times, which is what establishes the public evidence as insufficient; the
+  `always_refuse` control recovers nothing.
+- Enforced the M069 information boundary structurally: a regression and the checker both parse the
+  `discover` function and assert it never reads hidden observations, the body class, the aliased pair
+  or the internal operation table.
+- Recorded H24 and D044. G1 does **not** advance: the bodies are project-authored, and closure needs
+  an externally maintained interaction language plus independent reproduction. D044 also forbids
+  citing M078 as repairing M074, whose negative remains the only result on model refusal.
 - Added the M075 independent-maintainer intake kit. The readiness gate already states that the
   project may not proceed without a signed external attestation, but reconstructing its 22-field
   closed envelope, opaque domain identifiers and signature namespace from source was hours of work

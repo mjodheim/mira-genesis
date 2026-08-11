@@ -1,0 +1,92 @@
+{
+  "schema": "m078-incompatible-refusal-protocol-v1",
+  "status": "frozen_before_discoverer_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G1",
+  "addresses_gate_clause": "at least one incompatible body must produce a calibrated refusal rather than an invented adapter",
+  "parent_result": "M068",
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "One unchanged discovery procedure, probing opaque bodies through public observations only, will recover a correct adapter for every compatible body and refuse every incompatible body, where incompatibility is the observable collapse of two inherited skills onto indistinguishable replies; it will emit zero false refusals on compatible bodies and zero invented adapters on incompatible ones, while an always-refuse control loses every compatible body and a never-refuse control emits adapters that fail hidden validation.",
+  "why_refusal_is_not_trivial": "Each incompatible body admits at least one candidate that reproduces every public observation. Refusal therefore requires recognising under-determination rather than observing an empty candidate set. A procedure that accepts the best public fit will adopt a wrong adapter and fail hidden validation.",
+  "claim_boundary": {
+    "establishes_calibrated_refusal_on_observable_incompatibility": true,
+    "establishes_refusal_by_exhaustion_only": false,
+    "establishes_general_epistemic_humility": false,
+    "establishes_cross_domain_transfer": false,
+    "closes_generality_gate_g1": false,
+    "genesis_gate_2_evidence": false,
+    "agi_evidence": false
+  },
+  "inherited_skills": {
+    "count": 4,
+    "source": "publicly distinguishable behaviours of the inherited source body",
+    "asserted_rather_than_observed": false
+  },
+  "body_bank": {
+    "compatible_bodies": 4,
+    "incompatible_bodies": 4,
+    "total": 8,
+    "frozen_before_discoverer": true,
+    "selected_after_freeze": true,
+    "source_inspection_during_evaluation": false
+  },
+  "incompatibility_construction": {
+    "kind": "observable_alias_collapse",
+    "rule": "two inherited skills are mapped onto body commands whose replies are identical for every word in the bounded language, so no adapter can separate them",
+    "publicly_detectable": true,
+    "requires_hidden_evidence_to_detect": false,
+    "public_fitting_candidate_exists": true
+  },
+  "information_boundary": {
+    "hidden_observations_reachable_by_discoverer": false,
+    "body_class_disclosed_to_discoverer": false,
+    "adapter_or_descriptor_crossing_the_opaque_boundary": false,
+    "evaluator_runs_in_a_separate_process_from_candidate_code": true
+  },
+  "arms": {
+    "discoverer": {
+      "refusal": "enabled",
+      "description": "the unchanged procedure under test"
+    },
+    "always_refuse": {
+      "refusal": "forced",
+      "preregistered_loss": "recovers no adapter on any compatible body"
+    },
+    "never_refuse": {
+      "refusal": "disabled",
+      "preregistered_loss": "emits a public-fitting adapter on every incompatible body which then fails hidden validation"
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "1ee28780e3460f931fd4f27afb08f3fb025b962b3f74170a2cb6c09caac51960",
+    "generator_version": 1,
+    "hidden_observations_per_body": 12,
+    "selection_rule": "sha256(salt || utf8(body_class) || uint32_be(index)) fixes each body's command permutation, reply transform and, for incompatible bodies, the aliased skill pair",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "compatible_adapters_recovered": 4,
+    "compatible_hidden_pass_per_body": 12,
+    "false_refusals_on_compatible_bodies": 0,
+    "true_refusals_on_incompatible_bodies": 4,
+    "invented_adapters_on_incompatible_bodies": 0,
+    "always_refuse_max_adapters_recovered": 0,
+    "never_refuse_min_hidden_failures": 1,
+    "body_count_must_equal": 8
+  },
+  "failure_classification": {
+    "negative": "Any missed compatible adapter, any false refusal, any incompatible body accepted with an adapter, any hidden-validation failure on an accepted adapter, or either control failing to show its preregistered loss.",
+    "inconclusive": "The frozen bank cannot be reproduced exactly from this committed protocol, or an incompatible body turns out to admit a genuinely correct adapter, which would mean the construction is wrong rather than the discoverer.",
+    "positive": "All four compatible bodies are adapted and hidden-validated, all four incompatible bodies are refused with no invented adapter, and both controls show their preregistered loss on the first materialized bank."
+  },
+  "prohibited_adaptation": [
+    "change the hypothesis, thresholds, salt or incompatibility construction after bank materialization",
+    "disclose body class, hidden observations or the aliased pair to the discoverer",
+    "retry the first materialized bank",
+    "count refusal caused by an empty candidate set as calibrated refusal",
+    "describe this bounded result as closing G1, as general epistemic humility or as AGI evidence"
+  ]
+}
