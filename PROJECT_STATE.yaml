@@ -1644,6 +1644,12 @@ phase_eight:
     rehearsal_result_preserved: false
     ablation_costs_correctness: false
     persistence_bought: cost_and_earliness_not_capability
+    first_ci_run: '31518942992'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1624
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31518942706'
     local_suite_passed: 1623
     local_suite_skipped: 10
     m084_regressions_with_docker: 40

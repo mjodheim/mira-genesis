@@ -20,6 +20,9 @@
 - Bank commitment `a4081e5b…7f047`; first result `1cbeef8a…f830b`, attempt 1, no retry.
 - Local suite: **1,623 passed, 10 skipped** in 2,309.73 s; 40 M084 regressions with
   `MIRA_RUN_DOCKER_TESTS=1`. Checker: `failures: []`. Integrity: clean.
+- First CI run `31518942992`, attempt 1, no rerun: **1,624 passed, 9 skipped** on Python 3.11
+  in 1,241.63 s and on Python 3.13 in 1,281.45 s, plus repository integrity. Attribution run
+  `31518942706` passed.
 - Gate advance: **none.** G2, G3, G5 and G6 all stay where M076–M083 left them.
 
 ## Frozen ordering
