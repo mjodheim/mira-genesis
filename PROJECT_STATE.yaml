@@ -1558,6 +1558,55 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M083:
+    title: a GUI desktop session as a fourth environment legible only as rendered pixels
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    parent_results: [M081, M082]
+    environment_kind: gui_desktop_session_in_a_container
+    environment_is_a_virtual_machine: false
+    desktop_vm_clause_met: false
+    why_not_a_vm: container_shares_host_kernel_and_no_hypervisor_available
+    hypervisors_checked_absent: [qemu, virtualbox, multipass, vagrant]
+    status: positive_qualified_development
+    hypothesis: H29
+    decision: D049
+    protocol: experiments/M083/PROTOCOL.json
+    protocol_frozen_before_harness_commit: a1409bf
+    harness_commit: 82e0bf9
+    bank_commitment: cd549c72fb94d6a7e9aa1605d3af857dca954bb580135a24fecc63f92304372a
+    result_sha256: 5d5ccd631cf46bdc6b646f82db27d5418c2f79b3d6a142a5f17af93102970807
+    attempt: 1
+    retried: false
+    external_model_called: false
+    third_party_attestation_required: false
+    display_server: Xvfb
+    window_manager: openbox
+    network_disabled: true
+    client_origin_discovered_at_runtime: true
+    client_origin_hard_coded: false
+    state_read_by: screenshot_pixel_decode
+    state_has_filesystem_http_or_dom_route: false
+    keyboard_used: false
+    keyboard_omitted_by_design: true
+    interface_imported_from_m081: true
+    interface_reimplemented: false
+    completable_tasks: 5
+    shared_interface_completed: 5
+    crossed_drivers_completed: 0
+    self_report_overcount: 1
+    local_regressions_passed_without_docker: 21
+    local_regressions_passed_with_docker: 23
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m083_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    general_desktop_application_competence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
   M082:
     title: a real browser as a third environment under the unchanged M081 interface
     epistemic_track: endogenous_bounded_lineage

@@ -1283,3 +1283,42 @@ launches.
 No desktop VM, no physical device, no external suite, no general web competence, no Genesis Gate 2 or
 Gate 3 evidence, no AGI evidence. The container-backed evidence is local opt-in and not CI-attested.
 M082 does not touch the M075 pre-private readiness boundary.
+
+## D049 — M083 adds a pixel-legible environment and explicitly does not supply the desktop VM
+
+G6 names a terminal, a browser and a desktop VM. M071 supplied the terminal, M082 the browser. M083
+adds a fourth environment but **does not** supply the VM, and this decision exists partly to make that
+refusal durable.
+
+### The decision
+
+M083 is accepted as positive bounded mechanism evidence. G6 **stays** at `partial mechanism evidence`.
+The register gains one interface across four real environments, one legible only as rendered pixels;
+it gains **no desktop VM**.
+
+A Docker container shares the host kernel. No hypervisor was available in this environment: `qemu`,
+`VirtualBox`, `multipass` and `Vagrant` were absent, the Hyper-V feature state could not be queried
+without elevation, and the only VM present was the host's own WSL2 distribution, which is not an
+isolated environment created for the experiment. Describing this session as a desktop VM would be the
+relabelling the M082 protocol prohibited one experiment earlier. The protocol, the preserved result, a
+regression and the checker all assert the denial so that a later reader cannot quietly upgrade it.
+
+### Why the substrate is real
+
+The shell is addressed by filesystem paths, the service by HTTP routes, the browser by DOM selectors.
+This one is addressed only by screen coordinates and observed only as decoded pixels. The
+crossed-driver arm, which drives the desktop tasks through the browser driver, completes nothing —
+there is no path to the rendered grid except the screen.
+
+### A third green-but-wrong trap
+
+A hard-coded window origin would have painted and read different cells while every call returned
+success. That joins M080's tautological rollback check and M082's harness-held browser state: three
+occasions in this series where the tests would have been green and the claim hollow. Each is recorded
+with its diagnosis, because the failure mode is not a bug that announces itself.
+
+### Claim boundary
+
+No desktop VM, no physical device, no external suite, no general desktop application competence, no
+Genesis Gate 2 or Gate 3 evidence, no AGI evidence. The container-backed evidence is local opt-in and
+not CI-attested. M083 does not touch the M075 pre-private readiness boundary.

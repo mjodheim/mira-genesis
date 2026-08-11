@@ -1,0 +1,113 @@
+{
+  "schema": "m083-gui-desktop-session-protocol-v1",
+  "status": "frozen_before_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G6",
+  "parent_results": ["M081", "M082"],
+  "environment_kind": "gui_desktop_session_in_a_container",
+  "environment_is_a_virtual_machine": false,
+  "why_not_a_virtual_machine": "A Docker container shares the host kernel and is not a virtual machine. No hypervisor is available in this environment: qemu, VirtualBox, multipass and Vagrant are all absent, the Hyper-V feature state cannot be queried without elevation, and the only VM present is the host's own WSL2 distribution, which is not an isolated environment created for this experiment. Calling this a desktop VM would be the relabelling that the M082 protocol explicitly prohibits.",
+  "addresses_gate_clauses": [
+    "the same agent interface must operate in an additional real isolated environment",
+    "task completion is measured from environment state, never from the agent's self-report"
+  ],
+  "explicitly_not_addressed": [
+    "desktop VM competence",
+    "physical simulator or device",
+    "external suite competence",
+    "general desktop application competence"
+  ],
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "The unchanged M081 agent interface, emitting the same four abstract resource actions, will complete every completable task in a real X11 desktop session where the only means of acting is a mouse click at a screen coordinate and the only means of observing is decoding exact pixel colours from a screenshot; a crossed-driver arm will complete nothing because no filesystem, HTTP or DOM path to the rendered state exists, and a self-report arm will over-report on a locked cell that accepts the click without changing.",
+  "why_this_substrate_is_distinct": "The shell environment is addressed by filesystem paths, the service by HTTP routes and the browser by DOM selectors. This environment is addressed only by screen coordinates, and its state is legible only as rendered pixels. Nothing in the harness models the window layout: the client-area origin is discovered at run time from the X server, because a window manager places the window where it chooses.",
+  "agent_reuse": {
+    "imports_the_m081_agent_unchanged": true,
+    "imports_the_m081_and_m082_environments": true,
+    "reimplements_the_interface": false
+  },
+  "resource_mapping": {
+    "note": "The action vocabulary is unchanged; only what the names denote is environment-appropriate, exactly as a filesystem path and an HTTP route already denote different things.",
+    "name_denotes": "a grid cell label such as r1c2",
+    "content_denotes": "a palette colour name",
+    "keyboard_used": false,
+    "keyboard_omitted_because": "the substrate's distinguishing property is coordinate-and-pixel interaction; a palette clicked with the mouse exercises it fully and avoids an X focus dependency that would add no conceptual content"
+  },
+  "claim_boundary": {
+    "establishes_one_interface_across_four_real_environments": true,
+    "establishes_coordinate_and_pixel_interaction": true,
+    "establishes_desktop_vm_competence": false,
+    "establishes_general_desktop_application_competence": false,
+    "closes_generality_gate_g6": false,
+    "genesis_gate_2_evidence": false,
+    "agi_evidence": false
+  },
+  "desktop_environment": {
+    "display_server": "Xvfb",
+    "window_manager": "openbox",
+    "application": "a Tk grid painted from a fixed palette",
+    "base_image": "python:3.13-slim",
+    "derived_image_tag": "mira-m083-desktop:1",
+    "derived_image_is_local_build": true,
+    "dockerfile": "experiments/M083/desktop-image/Dockerfile",
+    "network_disabled_at_run_time": true,
+    "client_origin_discovered_at_run_time": true,
+    "state_read_by": "screenshot pixel decode at exact palette colours",
+    "state_has_no_filesystem_http_or_dom_route": true
+  },
+  "shared_interface": {
+    "actions": ["put", "read", "remove", "list"],
+    "identical_vocabulary_in_all_four_environments": true,
+    "agent_may_branch_on_environment_kind": false
+  },
+  "tasks": {
+    "count_for_the_desktop": 6,
+    "includes_one_locked_cell_that_accepts_the_click_without_changing": true
+  },
+  "arms": {
+    "shared_interface": {
+      "scoring": "environment state"
+    },
+    "crossed_drivers": {
+      "description": "desktop tasks driven by the browser driver and browser tasks driven by the desktop driver",
+      "scoring": "environment state",
+      "preregistered_loss": "completes no task, because the rendered grid has no filesystem, HTTP or DOM route"
+    },
+    "self_report_scored": {
+      "scoring": "the agent's own claim",
+      "preregistered_divergence": "reports at least one more success than the rendered pixels support"
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "68b3f29ba5d72b26666dca7f252e4aa80b5fb425aa35a5d3d5ef5be5f07701c3",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || utf8('desktop') || uint32_be(index)) fixes each task's cells, colours and operation order; exactly one task targets the locked cell",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "desktop_completable_tasks_completed": 5,
+    "desktop_locked_task_must_not_complete": true,
+    "crossed_drivers_max_tasks_completed": 0,
+    "self_report_min_overcount_on_desktop": 1,
+    "client_origin_must_be_discovered_not_assumed": true,
+    "state_must_be_read_from_decoded_pixels": true
+  },
+  "failure_classification": {
+    "negative": "Any completable desktop task unfinished, a crossed-driver arm that still completes a task, a self-report arm that never diverges, a hard-coded window origin, or a state read that bypasses the screenshot.",
+    "inconclusive": "Docker is unavailable, the derived image is absent, or the X server or window manager fails to start; the experiment is then not runnable rather than negative.",
+    "positive": "The unchanged interface completes all five completable desktop tasks with state decoded from rendered pixels, the crossed arm completes none, and the self-report arm over-reports at least once, on the first materialized bank."
+  },
+  "prohibited_adaptation": [
+    "describe this environment as a virtual machine",
+    "hard-code the window or client-area origin instead of discovering it",
+    "read desktop state through the application's own memory, a file or a log instead of the screenshot",
+    "let the agent branch on which environment it is in",
+    "reimplement the M081 interface instead of importing it",
+    "change the hypothesis, thresholds, salt or task grammar after bank materialization",
+    "retry the first materialized bank",
+    "describe an authored Tk grid as general desktop application competence",
+    "describe this bounded result as closing G6 or as AGI evidence"
+  ]
+}

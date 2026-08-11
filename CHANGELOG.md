@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Added M083, a real X11 desktop session as a fourth environment under M081's unchanged
+  four-action interface. It is addressed only by mouse clicks at screen coordinates and observed
+  only by decoding exact palette colours from a screenshot; the interface completed all five
+  completable tasks.
+- Stated in the protocol, the result, a regression and the checker that this is **not a virtual
+  machine**. A container shares the host kernel, no hypervisor was available, and the only VM
+  present was the host's own WSL2 distribution. G6's desktop-VM clause remains unmet.
+- Discovered the client-area origin from the X server at run time instead of assuming it. The
+  window manager places the window where it chooses, and an assumed origin painted and read
+  different cells while every call still returned success.
+- Dropped the keyboard by design, with the reason recorded: xdotool could not focus a Tk entry,
+  and a clicked palette exercises coordinate-and-pixel interaction fully.
+- Recorded H29 and D049. G6 stays at partial mechanism evidence: no desktop VM, no physical
+  device, no external suite, and coordinate-and-pixel competence on one authored window rather
+  than general desktop competence.
+
 - Added M082, a real Chromium browser as a third environment under M081's unchanged four-action
   interface. The interface completed 5/5 completable tasks in the container shell, the HTTP
   service and the browser, covering all three in one run.

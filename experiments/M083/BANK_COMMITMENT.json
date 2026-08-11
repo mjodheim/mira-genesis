@@ -1,0 +1,68 @@
+{
+  "bank_commitment": "cd549c72fb94d6a7e9aa1605d3af857dca954bb580135a24fecc63f92304372a",
+  "desktop_image": "mira-m083-desktop:1",
+  "dockerfile_sha256": "b8926ec30c0755ed4b021abe62f2546c65066ce431907fdc8679e88540cc2a2a",
+  "generator_version": 1,
+  "locked_cell": [
+    3,
+    5
+  ],
+  "salt_sha256": "d02beaa66aa414541025023ba853fb63304148aec1ccbc2c6cc331afd6975135",
+  "schema": "m083-bank-commitment-v1",
+  "task_count": 6,
+  "tasks": [
+    {
+      "commitment": "e282259980a4f9431925f4f39edae96dcc34e53e39c0160e6f144d92ed15f19e",
+      "expected": {
+        "r0c3": "cyan",
+        "r1c0": "lime"
+      },
+      "index": 0,
+      "targets_locked_cell": false
+    },
+    {
+      "commitment": "cb90ce1d2b78cc5041ece385e7e32d99bf267c3cb5de1a45b61b4fb30bba264f",
+      "expected": {
+        "r0c2": "cyan",
+        "r2c1": "magenta"
+      },
+      "index": 1,
+      "targets_locked_cell": false
+    },
+    {
+      "commitment": "a5098153170c9929eaeb43f670413ad6c57cd84b2ebffaed8e6831ae4e2dbd1c",
+      "expected": {
+        "r1c5": "cyan",
+        "r2c2": "lime"
+      },
+      "index": 2,
+      "targets_locked_cell": false
+    },
+    {
+      "commitment": "03b88f4b6e2e622cb0524823cac613d90ca9673aeba7ab50302014810058c48e",
+      "expected": {
+        "r1c1": "magenta",
+        "r3c1": "magenta"
+      },
+      "index": 3,
+      "targets_locked_cell": false
+    },
+    {
+      "commitment": "89b522f7c7959f5a10e6f166fd71e8b3bba63a10a42c240cbdb5e676247d97e9",
+      "expected": {
+        "r0c1": "lime",
+        "r3c2": "lime"
+      },
+      "index": 4,
+      "targets_locked_cell": false
+    },
+    {
+      "commitment": "9d183b962b7d025f19f57266ec51b2b214b1892c63c9ee137577cea9c4c1f3ac",
+      "expected": {
+        "r3c5": "cyan"
+      },
+      "index": 5,
+      "targets_locked_cell": true
+    }
+  ]
+}
