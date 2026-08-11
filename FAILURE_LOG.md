@@ -1015,3 +1015,29 @@ or goal grammar changed.
 The clause that caught it is P2, the zero-false-refusal requirement. It was written into the frozen
 protocol as a control against over-eager refusal by the *substrate*; it caught over-eager refusal by
 the organism's own inference instead. See D050.
+
+## M085 wiring control — it passed while exercising none of the path it existed to exercise
+
+The M085 shim drives M084's organism through a domain contract an outside maintainer can satisfy. A
+wiring control was written alongside it, on a toy in-memory domain sharing no vocabulary with M084,
+to prove the contract is satisfiable from outside before a real bank arrives.
+
+The first version reported success: three of three reachable goals reached, the unreachable one
+refused, no false refusal. It had also run **zero diagnostic probes and zero repair cycles**.
+
+Its carrier costs were derived from a modulo of the slot index, `1 + index % 4`. That made the
+discarding slot cost 4 while a durable alternative in the same group cost 1, so the cost-minimising
+planner routed around the trap and never met a silently discarded write. The control was exercising
+the planner and the evaluator and nothing else — not the verification, not the diagnosis, not the
+repair, not the induction from a failure. Every one of those is the part M085 exists to carry into
+another domain.
+
+The costs are now stated explicitly with the discarding slot cheapest in its group, which is the
+property M084's own bank was built around and which the control had quietly dropped. The control now
+fails if it runs fewer than one probe and one repair cycle, and a regression asserts that the trap is
+the cheapest carrier of its group.
+
+This is the fourth entry in this series where a green result would have been hollow, after M080's
+tautological rollback check, M082's harness-held browser state and M083's assumed window origin. It
+is the first where the hollow thing was a *control* rather than an experiment, which is worse in one
+respect: a control is what the project points at when asked whether the instrument works.

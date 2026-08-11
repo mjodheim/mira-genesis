@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+- Prepared M085, the first experiment here aimed directly at G4, and left it **blocked**. Its design
+  protocol, domain adapter contract, intake kit, maintainer brief, fail-closed gate and 32
+  regressions are committed; no scientific protocol is frozen, no bank exists, no payload has been
+  requested and no held-out domain has been drawn.
+- Built a separate external boundary rather than reusing M075's. That validator hard-codes refusal
+  thresholds, the `gpt-5.6-sol` identity and a refusal-transfer-only claim, so a G4 protocol fails
+  it on every such field. `exact_mcnemar_two_sided` is imported from M075 rather than restated, and
+  M075's own private experiment remains open and unsubstituted.
+- Made correctness the primary outcome, not cost. The bank must supply tasks where an action is
+  accepted without effect, a later step is only correct if it took effect, and committing on the
+  false premise reaches a terminal state the budget cannot undo. The freeze validator rejects a
+  protocol that promotes a cost metric to the primary outcome.
+- Made the held-out domain undrawable in advance: it comes from the sealed payload digest and a salt
+  the maintainer withholds until after the protocol is frozen.
+- Chose the threshold and the minimum bank size together — six discordant tasks give an exact
+  two-sided p of 0.03125, five give 0.0625 — and asserted both halves in a regression so neither can
+  be moved alone.
+- Recorded H31 and D051. Running M085 on project-authored domains is listed as a prohibited
+  adaptation, because it is the cheap substitute available on any day the external route feels slow.
+- Built the organism-side shim before any bank exists, and found what named negative 5 anticipated:
+  M084's `Embodiment` abstracted acting and observing, while the organism still reached into M084's
+  own carrier tables in **ten** places — memory keys, memory contexts, carrier costs, probe carriers,
+  the seeded carrier, the value alphabet and the one-carrier-at-a-time read.
+- Routed all ten through a registered `DomainView`. M084's three substrates register views built from
+  the tables they already used, and every arm re-derives its recorded numbers exactly.
+- Added a wiring control on a toy domain sharing no vocabulary with M084, and recorded in
+  `FAILURE_LOG.md` that its first version passed while running zero probes and zero repair cycles: a
+  modulo cost formula made the discarding slot expensive, so the planner routed around the trap it
+  existed to hit. The control now fails if it does not exercise repair.
+
 - Added M084, one persistent lineage crossing `shell → browser → desktop → shell` in four separate
   operating system processes. It reached 11/11 reachable goals scored from environment state,
   refused 5/5 unreachable ones with zero false refusals, and on its return to the shell — with

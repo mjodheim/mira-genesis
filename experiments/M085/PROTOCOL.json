@@ -1,0 +1,146 @@
+{
+  "schema": "m085-cross-domain-design-protocol-v1",
+  "status": "design_frozen_awaiting_external_bank_envelope",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G4",
+  "parent_result": "M084",
+  "hypothesis": "H31",
+  "falsifiable_hypothesis": "A policy acquired by one organism in some domains improves its correct terminal decisions in a materially different, externally maintained, held-out domain, relative to a fresh organism with identical code and an identical budget.",
+  "scientific_protocol_frozen": false,
+  "scientific_result_exists": false,
+  "bank_envelope_present": false,
+  "payload_requested_or_accessed": false,
+  "held_out_domain_drawn": false,
+  "external_model_called": false,
+  "why_m084_does_not_answer_g4": {
+    "domains_were_one_carrier_family_over_three_substrates": true,
+    "every_environment_authored_by_the_project": true,
+    "ablation_cost_efficiency_not_correctness": true
+  },
+  "why_m075_boundary_cannot_be_reused": {
+    "m075_validator_hard_codes_refusal_thresholds": true,
+    "m075_validator_hard_codes_the_gpt_5_6_sol_agent_identity": true,
+    "m075_claim_boundary_is_refusal_transfer_only": true,
+    "a_g4_protocol_fails_that_validator_on_every_such_field": true,
+    "m085_builds_a_separate_instrument_at_the_same_standard": true,
+    "m085_loosens_or_bypasses_the_m075_boundary": false,
+    "m085_substitutes_for_the_open_m075_private_experiment": false,
+    "exact_mcnemar_imported_from_m075_not_restated": true
+  },
+  "external_bank_requirements": {
+    "maintained_by_a_non_project_identity": true,
+    "minimum_domains": 3,
+    "minimum_tasks_per_domain": 8,
+    "minimum_correctness_critical_tasks_per_domain": 6,
+    "correctness_critical_definition": [
+      "some action is accepted by the domain and has no effect on its state",
+      "a later step is only correct if that action actually took effect",
+      "committing on the false premise reaches a terminal state the task budget cannot undo"
+    ],
+    "decomposition_hint_or_ordering_supplied_with_a_goal": false,
+    "evaluator_owned_success_from_domain_state": true,
+    "public_benchmark_reuse_excluded": true,
+    "per_domain_material_difference_statement_digest_required": true,
+    "material_difference_statements_checked_against_digests_after_reveal": true,
+    "adapter_contract_version": "m085-domain-adapter-v1",
+    "project_specifies_structure_maintainer_chooses_instances": true
+  },
+  "organism_side_shim": {
+    "built_before_any_bank_exists": true,
+    "why": "named negative 5 says the M084 adapter contract may not fit an externally written domain, and writing the contract after seeing a bank would hide that",
+    "m084_embodiment_abstracted": ["acting", "observing"],
+    "m084_organism_still_reached_into_its_own_tables_in_n_places": 10,
+    "couplings_found": [
+      "integer keys for the bounded memory",
+      "the memory context for a substrate",
+      "carrier costs for planning and for plan ordering",
+      "the carriers used for probing",
+      "the carrier a stage is seeded through",
+      "the value alphabet",
+      "whether a substrate is read one carrier at a time"
+    ],
+    "resolution": "all ten routed through a registered DomainView; M084's substrates register views built from the tables they already used",
+    "m084_arms_rederive_recorded_numbers_exactly": true,
+    "organism_reimplemented_for_external_domains": false,
+    "wiring_control": {
+      "module": "metamorphosis/m085_wiring_control.py",
+      "entry_point": "scripts/run_m085_wiring_control.py",
+      "shares_any_vocabulary_with_m084": false,
+      "is_a_bank_domain": false,
+      "is_scientific_evidence": false,
+      "may_be_cited_by_a_result": false,
+      "first_version_passed_while_proving_less_than_it_claimed": true,
+      "first_version_defect": "costs derived from a modulo of the slot index made the discarding slot expensive, so the planner routed around the trap and no repair cycle ran"
+    },
+    "still_unknown_until_a_real_bank_arrives": "whether a maintainer can express their domain in this vocabulary at all; no control this project writes can test that"
+  },
+  "held_out_assignment": {
+    "derivation": "sha256(m085-target-assignment-v1\\0+payload_sha256+\\0+salt) mod domain_count",
+    "salt_generated_by_the_maintainer": true,
+    "salt_released_only_after_scientific_protocol_freeze": true,
+    "published_before_the_project_knows_the_salt": true,
+    "why": "with the domains visible the project could test itself on the one its organism happens to suit"
+  },
+  "arms": {
+    "transferred_lineage": {
+      "acquires_in": "every domain except the held-out target",
+      "meets_target_carrying_acquisitions": true
+    },
+    "fresh_agent": {
+      "identical_code_and_budget": true,
+      "acquisitions": "none",
+      "role": "G4's literal control; with no model in the loop the arms differ only in acquired state"
+    },
+    "acquisition_ablated": {
+      "acquisitions_cleared_at_the_domain_boundary": true,
+      "identity_version_and_journal_preserved": true,
+      "role": "must match fresh_agent metric for metric, or the ablation is leaking"
+    }
+  },
+  "thresholds": {
+    "minimum_transferred_only_correct": 6,
+    "maximum_fresh_only_correct": 0,
+    "maximum_two_sided_exact_mcnemar_p": 0.05,
+    "require_zero_faulted_episodes": true,
+    "require_evaluator_owned_success": true,
+    "require_acquisition_ablated_to_match_fresh_agent": true,
+    "cost_metrics_reported_but_not_decisive": true,
+    "threshold_and_minimum_bank_size_chosen_together": "six discordant tasks in one direction give an exact two-sided p of 2/2**6 = 0.03125; five would give 0.0625 and could not clear 0.05"
+  },
+  "named_negative_outcomes": [
+    "the acquisition is substrate-shaped rather than domain-general and dissolves under a real domain change",
+    "the fresh agent does not actually fail, so the correctness-critical category needs rewriting before any successor",
+    "the transfer is real but smaller than the bank can resolve",
+    "acquisition_ablated beats fresh_agent, meaning identity or journal carried something the design assumed they did not",
+    "the M084 adapter contract does not fit an externally written domain, which would be the most valuable negative and the one most easily missed if the contract were written after seeing the bank"
+  ],
+  "claim_boundary": {
+    "closes_generality_gate_g4": false,
+    "independent_reproduction_required_before_any_gate_advance": true,
+    "bounded_cross_domain_transfer_of_one_acquired_policy_only": true,
+    "general_competence_in_any_involved_domain": false,
+    "general_autonomy": false,
+    "open_ended_evolution": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "agi_evidence": false
+  },
+  "authority_envelope": {
+    "repository_write_authority_granted_to_the_organism": false,
+    "credential_authority_granted": false,
+    "network_authority_granted": false,
+    "deployment_authority_granted": false,
+    "permission_changing_authority_granted": false
+  },
+  "prohibited_adaptation": [
+    "write the scientific protocol before a signed envelope exists to bind",
+    "request, accept or describe payload content before the protocol freeze",
+    "draw the held-out domain before the maintainer releases the assignment salt",
+    "accept an envelope signed by a project identity",
+    "substitute project-authored domains and call the result G4 evidence",
+    "relax the correctness-critical definition to whatever the delivered bank happens to contain",
+    "make a cost metric decisive after seeing that the correctness metric did not separate",
+    "claim a gate advance before independent reproduction from a separate bank and maintainer",
+    "treat this design protocol as a substitute for the still-open M075 private experiment"
+  ]
+}
