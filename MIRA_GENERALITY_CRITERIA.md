@@ -88,6 +88,11 @@ rule G6 imposes: judged by the agent's claim the interface looks perfect, judged
 state it is not. It adds no browser and no desktop VM, so the larger part of G6 is untouched and
 the gate does not advance.
 
+M082 is positive bounded browser-environment evidence on the endogenous track. Its browser store
+lives in localStorage with no network route, so the crossed-driver arm completing nothing shows a
+materially different substrate rather than a relabelled service. It adds no desktop VM and its
+page is project-authored, so G6 does not advance.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -186,7 +191,7 @@ results are known.
 | G3 | partial bounded evidence, all four clauses exercised | Earlier lineages plan inside authored finite task languages. M079 adds one planner given only a goal predicate, affordance schemas with costs and a budget: 8/8 static and 8/8 revision tasks solved, revision on all eight, clarification on 8/8 ambiguous and 0/16 unambiguous goals, zero unsafe terminal states. A never-ask control reached six unsafe terminal states and an always-ask floor solved nothing. The world is project-authored, so the gate does not advance. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
 | G5 | stronger partial bounded evidence, forgetting now measured | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill but tests no forgetting. M080 puts retention at risk in one bounded shared table and measures it: zero capabilities lost across six acquisitions, sublinear memory growth and byte-identical rollback, while a consolidation ablation loses five. Retention is replay-dependent, not structural. The skills are project-authored, so the gate does not advance. |
-| G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. M081 adds a second real environment under one unchanged interface — a network-disabled container shell and a real HTTP service process — completing 5/5 completable tasks in each, with a crossed-driver control completing none and a self-report control over-reporting twice. **Browser, desktop VM, physical device and external-suite competence all remain absent**, and the container-backed evidence is local opt-in rather than CI-attested. |
+| G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. M081 then drove a second real environment under one unchanged interface, and M082 adds a **real Chromium browser** as a third: 5/5 completable tasks in each of shell, service and browser, a crossed-driver control completing none anywhere, and the browser's own save confirmation diverging from the rendered DOM. **Desktop VM, physical device and external-suite competence remain absent**, the pages and tasks are project-authored, and the container-backed evidence is local opt-in rather than CI-attested. |
 | G7 | open | No human-hour task-horizon evaluation. M077 addressed only the fault-recovery and constraint-retention components and returned a valid negative on its dissociation hypothesis; its undegraded retention to 2048 episodes and its isolated checkpoint mechanism are bounded observations in one authored in-memory body, and episode counts are not human-equivalent horizons. |
 | G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |

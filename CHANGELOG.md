@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Added M082, a real Chromium browser as a third environment under M081's unchanged four-action
+  interface. The interface completed 5/5 completable tasks in the container shell, the HTTP
+  service and the browser, covering all three in one run.
+- Kept the browser from being the service in a costume. Its store lives in localStorage with no
+  HTTP route, reachable only by filling inputs, clicking and reading rendered DOM nodes; the
+  crossed-driver arm completes nothing in all three environments, which demonstrates rather than
+  asserts that the substrate differs.
+- Imported M081's agent and both prior environments unchanged rather than restating them, with a
+  regression and the checker failing if any is redefined.
+- Recorded three transport defects found while proving the mechanics: MSYS path conversion
+  mangling `docker exec` arguments on Windows, the same class as the negative M070; a fresh
+  browser profile per action that would have left the harness holding the state instead of the
+  browser while every test still passed; and a page flattened into an environment variable where
+  a `//` comment silently disabled the save handler.
+- Recorded H28 and D048. G6 stays at partial mechanism evidence: **no desktop VM**, no physical
+  device, no external suite, and DOM competence on one authored page rather than general web
+  competence.
+
 - Added M081, a second real environment under one unchanged agent interface. A POSIX shell in a
   network-disabled Alpine container and a real Python HTTP server process in its own container
   both receive the same four abstract actions; the shared interface completed 5/5 completable

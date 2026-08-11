@@ -1558,6 +1558,62 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M082:
+    title: a real browser as a third environment under the unchanged M081 interface
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    parent_result: M081
+    addressed_gate_clauses:
+      - same_interface_operates_a_browser
+      - completion_scored_from_environment_state_not_self_report
+    explicitly_not_addressed:
+      - desktop_vm_competence
+      - physical_simulator_or_device
+      - external_suite_competence
+      - general_web_competence
+    status: positive_qualified_development
+    hypothesis: H28
+    decision: D048
+    protocol: experiments/M082/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 0c35847
+    harness_commit: 958c52f
+    bank_commitment: 04916c2825c2b834e1a432b1ee995b6df3d76b3d8d54e4cc6338d83bb91878a1
+    result_sha256: 20fac3690d24134d23eaadca13f1d3ee49b055737fe082fa7db4e5da05b65890
+    attempt: 1
+    retried: false
+    external_model_called: false
+    third_party_attestation_required: false
+    environments: [shell, service, browser]
+    environments_covered: 3
+    browser_base_image_digest_pinned: true
+    browser_derived_image_is_local_build: true
+    browser_network_disabled: true
+    browser_state_location: localStorage
+    browser_store_has_http_route: false
+    browser_state_read_from_rendered_dom: true
+    browser_profile_persistent: true
+    interface_imported_from_m081: true
+    interface_reimplemented: false
+    completable_tasks_per_environment: 5
+    shared_interface_completed_shell: 5
+    shared_interface_completed_service: 5
+    shared_interface_completed_browser: 5
+    crossed_drivers_completed: 0
+    browser_self_report_overcount: 1
+    transport_defects_found_and_fixed: 3
+    local_regressions_passed_without_docker: 16
+    local_regressions_passed_with_docker: 18
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m082_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    desktop_vm_delivered: false
+    general_web_competence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
   M081:
     title: one agent interface across two real isolated container environments
     epistemic_track: endogenous_bounded_lineage

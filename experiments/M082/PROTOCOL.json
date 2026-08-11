@@ -1,0 +1,106 @@
+{
+  "schema": "m082-browser-environment-protocol-v1",
+  "status": "frozen_before_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G6",
+  "parent_result": "M081",
+  "addresses_gate_clauses": [
+    "the same agent interface must operate in a browser as well as a terminal",
+    "task completion is measured from environment state, never from the agent's self-report"
+  ],
+  "explicitly_not_addressed": [
+    "desktop VM competence",
+    "physical simulator or device",
+    "external suites such as SWE-bench, OSWorld or ARC-AGI-2",
+    "human-equivalent task horizons"
+  ],
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "The unchanged M081 agent interface, emitting the same four abstract resource actions, will complete every completable task in a real browser environment whose state lives in localStorage and is reachable only through DOM interaction, in addition to the container shell and HTTP service it already drives; a crossed-driver arm will complete nothing because no HTTP path to browser state exists, and a self-report arm will over-report on a page that displays a save confirmation without persisting.",
+  "why_the_browser_is_not_the_service_again": "The page exposes no HTTP API for its store. State lives in localStorage, which is per-origin browser state with no network endpoint, and the driver reaches it only by filling inputs, clicking and reading rendered DOM nodes. An HTTP client fetching the page receives markup and cannot read or write the store at all, which is what the crossed-driver arm demonstrates. The substrate therefore adds a rendering engine, a JavaScript event loop and DOM state rather than a second name for the M081 service.",
+  "agent_reuse": {
+    "imports_the_m081_agent_unchanged": true,
+    "imports_the_m081_shell_and_service_environments": true,
+    "reimplements_the_interface": false,
+    "note": "The three-environment claim is only meaningful if the same interface object drives all three. M082 imports M081's agent and environments rather than restating them."
+  },
+  "claim_boundary": {
+    "establishes_one_interface_across_three_real_environments": true,
+    "establishes_browser_dom_competence_on_an_authored_page": true,
+    "establishes_desktop_or_vm_competence": false,
+    "establishes_general_web_competence": false,
+    "establishes_external_suite_competence": false,
+    "closes_generality_gate_g6": false,
+    "genesis_gate_2_evidence": false,
+    "agi_evidence": false
+  },
+  "browser_environment": {
+    "kind": "real_chromium_in_an_offline_container",
+    "base_image": "mcr.microsoft.com/playwright@sha256:98b1ad488de36b22d41fdd1b0c5b9cceaa78a8d2661c6ab02d2108a07c182338",
+    "derived_image_tag": "mira-m082-browser:1",
+    "derived_image_is_local_build": true,
+    "dockerfile": "experiments/M082/browser-image/Dockerfile",
+    "network_disabled_at_run_time": true,
+    "page_served_from_container_loopback": true,
+    "state_location": "localStorage",
+    "state_has_no_http_endpoint": true,
+    "driver_reaches_state_only_through_dom_interaction": true
+  },
+  "windows_transport_note": "docker exec arguments beginning with a slash are rewritten by MSYS path conversion on Windows, which silently turns /agent/driver.mjs into a host path. Every container command must therefore be wrapped in sh -c. This is the same class of Windows transport defect that produced the negative M070 result.",
+  "shared_interface": {
+    "actions": ["put", "read", "remove", "list"],
+    "identical_vocabulary_in_all_three_environments": true,
+    "agent_may_branch_on_environment_kind": false
+  },
+  "tasks": {
+    "count_for_the_browser": 6,
+    "includes_one_save_that_confirms_without_persisting": true,
+    "reuses_the_m081_task_generator": true
+  },
+  "arms": {
+    "shared_interface": {
+      "environments": ["shell", "service", "browser"],
+      "scoring": "environment state"
+    },
+    "crossed_drivers": {
+      "description": "browser tasks driven by the HTTP service driver and service tasks driven by the browser driver",
+      "scoring": "environment state",
+      "preregistered_loss": "completes no task, because localStorage has no HTTP endpoint and the service has no DOM"
+    },
+    "self_report_scored": {
+      "scoring": "the agent's own claim",
+      "preregistered_divergence": "reports at least one more success than environment state supports in the browser"
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "e9427a3eda9a2ba96b6066671bdc2347ded3fcb5e14c13b873facb34bdab0b6e",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || utf8(environment) || uint32_be(index)) fixes each task's resource names, contents and operation order",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "browser_completable_tasks_completed": 5,
+    "browser_sealed_task_must_not_complete": true,
+    "shared_interface_environments_covered": 3,
+    "crossed_drivers_max_tasks_completed": 0,
+    "self_report_min_overcount_in_browser": 1,
+    "browser_state_read_through_rendered_dom": true
+  },
+  "failure_classification": {
+    "negative": "Any completable browser task unfinished, a crossed-driver arm that still completes a task, a self-report arm that never diverges in the browser, or a browser state read that bypasses the DOM.",
+    "inconclusive": "Docker is unavailable, the derived image is absent, or Chromium cannot launch; the experiment is then not runnable rather than negative.",
+    "positive": "The unchanged interface completes all five completable browser tasks with state read from the rendered DOM, covers three environments in one run, the crossed arm completes none, and the self-report arm over-reports in the browser, on the first materialized bank."
+  },
+  "prohibited_adaptation": [
+    "give the browser page an HTTP endpoint for its store",
+    "read browser state through anything other than the rendered DOM",
+    "let the agent branch on which environment it is in",
+    "reimplement the M081 interface instead of importing it",
+    "change the hypothesis, thresholds, salt or task grammar after bank materialization",
+    "retry the first materialized bank",
+    "describe an authored local page as general web competence",
+    "describe this bounded result as closing G6, as desktop or VM competence, or as AGI evidence"
+  ]
+}
