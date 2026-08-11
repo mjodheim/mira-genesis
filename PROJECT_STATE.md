@@ -93,6 +93,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M083 adds a fourth environment legible only as rendered pixels, and is not a VM.** Protocol
+  and image recipe frozen before the harness at `a1409bf`; bank commitment `cd549c72…4372a`;
+  first result `5d5ccd63…70807`, attempt 1, no retry. A real X server, window manager and Tk
+  application run in an offline container; the unchanged M081 interface acts only by mouse clicks
+  at screen coordinates and is scored only by decoding exact palette colours from a screenshot,
+  completing 5/5 completable tasks. The crossed-driver arm completed **nothing** — the rendered
+  grid has no filesystem, HTTP or DOM route. One locked cell is accepted by the application and
+  never changes: scored by acceptance the desktop looks 6/6, scored by pixels 5/6. The client
+  origin is **discovered** from the X server at run time; an assumed origin painted and read
+  different cells while every call still succeeded, the third green-but-wrong trap in this series
+  after M080's tautological rollback check and M082's harness-held browser state.
+  **This is not a virtual machine** — a container shares the host kernel and no hypervisor was
+  available — so G6's desktop-VM clause remains unmet and the gate does **not** advance.
 - **M082 adds a real browser as a third environment.** Protocol and image recipe frozen before
   the harness at `0c35847`; bank commitment `04916c28…78a1`; first result `20fac369…65890`,
   attempt 1, no retry. The unchanged M081 interface completed 5/5 completable tasks in the

@@ -1,0 +1,216 @@
+{
+  "arms": {
+    "crossed_drivers": {
+      "arm": "crossed_drivers",
+      "claimed_total": 6,
+      "completed": 0,
+      "overcount": 6,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "e282259980a4f9431925f4f39edae96dcc34e53e39c0160e6f144d92ed15f19e",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 0,
+          "state_reached": false,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cb90ce1d2b78cc5041ece385e7e32d99bf267c3cb5de1a45b61b4fb30bba264f",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 1,
+          "state_reached": false,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "a5098153170c9929eaeb43f670413ad6c57cd84b2ebffaed8e6831ae4e2dbd1c",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 2,
+          "state_reached": false,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "03b88f4b6e2e622cb0524823cac613d90ca9673aeba7ab50302014810058c48e",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 3,
+          "state_reached": false,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "89b522f7c7959f5a10e6f166fd71e8b3bba63a10a42c240cbdb5e676247d97e9",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 4,
+          "state_reached": false,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9d183b962b7d025f19f57266ec51b2b214b1892c63c9ee137577cea9c4c1f3ac",
+          "driver": "browser",
+          "environment": "desktop",
+          "index": 5,
+          "state_reached": false,
+          "targets_locked_cell": true
+        }
+      ],
+      "scored_from": "environment_state",
+      "state_reached_total": 0
+    },
+    "self_report_scored": {
+      "arm": "self_report_scored",
+      "claimed_total": 6,
+      "completed": 6,
+      "overcount": 1,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "e282259980a4f9431925f4f39edae96dcc34e53e39c0160e6f144d92ed15f19e",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 0,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cb90ce1d2b78cc5041ece385e7e32d99bf267c3cb5de1a45b61b4fb30bba264f",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 1,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "a5098153170c9929eaeb43f670413ad6c57cd84b2ebffaed8e6831ae4e2dbd1c",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 2,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "03b88f4b6e2e622cb0524823cac613d90ca9673aeba7ab50302014810058c48e",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 3,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "89b522f7c7959f5a10e6f166fd71e8b3bba63a10a42c240cbdb5e676247d97e9",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 4,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9d183b962b7d025f19f57266ec51b2b214b1892c63c9ee137577cea9c4c1f3ac",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 5,
+          "state_reached": false,
+          "targets_locked_cell": true
+        }
+      ],
+      "scored_from": "agent_claim",
+      "state_reached_total": 5
+    },
+    "shared_interface": {
+      "arm": "shared_interface",
+      "claimed_total": 6,
+      "completed": 5,
+      "overcount": 1,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "e282259980a4f9431925f4f39edae96dcc34e53e39c0160e6f144d92ed15f19e",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 0,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cb90ce1d2b78cc5041ece385e7e32d99bf267c3cb5de1a45b61b4fb30bba264f",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 1,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "a5098153170c9929eaeb43f670413ad6c57cd84b2ebffaed8e6831ae4e2dbd1c",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 2,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "03b88f4b6e2e622cb0524823cac613d90ca9673aeba7ab50302014810058c48e",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 3,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "89b522f7c7959f5a10e6f166fd71e8b3bba63a10a42c240cbdb5e676247d97e9",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 4,
+          "state_reached": true,
+          "targets_locked_cell": false
+        },
+        {
+          "claimed": true,
+          "commitment": "9d183b962b7d025f19f57266ec51b2b214b1892c63c9ee137577cea9c4c1f3ac",
+          "driver": "desktop",
+          "environment": "desktop",
+          "index": 5,
+          "state_reached": false,
+          "targets_locked_cell": true
+        }
+      ],
+      "scored_from": "environment_state",
+      "state_reached_total": 5
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "cd549c72fb94d6a7e9aa1605d3af857dca954bb580135a24fecc63f92304372a",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g6": false,
+    "establishes_coordinate_and_pixel_interaction": true,
+    "establishes_desktop_vm_competence": false,
+    "establishes_general_desktop_application_competence": false,
+    "establishes_one_interface_across_four_real_environments": true,
+    "genesis_gate_2_evidence": false
+  },
+  "environment_is_a_virtual_machine": false,
+  "external_model_called": false,
+  "failed_conditions": [],
+  "protocol_commitment": "8419f6d8281df22326934ec73f0c9d65fa32dd5604385d0234c51fea9356e7da",
+  "python": "3.14.6",
+  "result_sha256": "5d5ccd631cf46bdc6b646f82db27d5418c2f79b3d6a142a5f17af93102970807",
+  "retried": false,
+  "schema": "m083-gui-desktop-session-result-v1",
+  "verdict": "positive"
+}

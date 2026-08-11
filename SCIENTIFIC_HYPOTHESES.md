@@ -573,3 +573,25 @@ redefined.
 **Scope:** one project-authored local page, so this is DOM competence rather than general web
 competence. No desktop VM, no physical device, no external suite. The container-backed evidence is
 local opt-in rather than CI-attested. G6 does not close. See D048.
+
+## H29 — One interface extends to an environment legible only as rendered pixels
+
+The unchanged M081 agent interface can act in a real X11 desktop session where the only means of
+acting is a mouse click at a screen coordinate and the only means of observing is decoding exact
+palette colours from a screenshot, in addition to the shell, service and browser it already drives;
+and the application's own acceptance of a click will diverge from the rendered pixels at least once.
+
+**Status:** supported by the M083 qualified development result. The interface completed 5/5
+completable tasks, the crossed-driver arm completed none because the rendered grid has no filesystem,
+HTTP or DOM route, and the locked cell was accepted by the application while never changing colour.
+Bank `cd549c72…4372a`; result `5d5ccd63…70807`, attempt 1, no retry.
+
+**Required implication:** the window origin must be discovered, not assumed. `openbox` places the
+window where it chooses, and an assumed origin paints and reads different cells while every call still
+returns success — a green result that is wrong. The origin is read from the X server at start-up and
+both a regression and the checker fail if that discovery is removed.
+
+**Scope:** this environment is **not a virtual machine**. A container shares the host kernel and no
+hypervisor was available, so G6's desktop-VM clause remains unmet. The application is an authored Tk
+grid, so this is coordinate-and-pixel competence on one window rather than general desktop competence.
+The container-backed evidence is local opt-in rather than CI-attested. See D049.
