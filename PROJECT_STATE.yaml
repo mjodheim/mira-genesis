@@ -1644,6 +1644,11 @@ phase_eight:
     rehearsal_result_preserved: false
     ablation_costs_correctness: false
     persistence_bought: cost_and_earliness_not_capability
+    local_suite_passed: 1623
+    local_suite_skipped: 10
+    m084_regressions_with_docker: 40
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
     independent_checker: scripts/check_m084_result.py
     generality_gate_advanced: false
     generality_gate_g2_closed: false

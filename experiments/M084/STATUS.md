@@ -18,6 +18,8 @@
 - Forced fault after stage 1 detected **by the stage-2 child** and restored to `81d9d437…`, the
   digest stage 1 recorded before the corruption existed.
 - Bank commitment `a4081e5b…7f047`; first result `1cbeef8a…f830b`, attempt 1, no retry.
+- Local suite: **1,623 passed, 10 skipped** in 2,309.73 s; 40 M084 regressions with
+  `MIRA_RUN_DOCKER_TESTS=1`. Checker: `failures: []`. Integrity: clean.
 - Gate advance: **none.** G2, G3, G5 and G6 all stay where M076–M083 left them.
 
 ## Frozen ordering
@@ -67,6 +69,14 @@ substrates are all project-authored.
 
 The desktop's induced predicate is weaker than the other two: only one non-durable carrier is
 observable there, so `r3` over-generalizes to cells no goal uses. Recorded rather than smoothed over.
+
+## A limit on the evidence
+
+Container-backed regressions skip in CI under the existing opt-in, so CI attests the structural half
+only — the imports, the parent-never-executes-a-stage check, the induction, the restoration and the
+recomputed threshold. The live half is reproducible locally with Docker running and the M082 and M083
+images built. The checker's full live re-derivation is a second complete run across three substrates
+and is opt-in behind `MIRA_M084_LIVE_CHECK=1`.
 
 ## What a successor would need
 
