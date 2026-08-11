@@ -195,6 +195,31 @@ M075 pre-private boundary is untouched.
 No external model is called. No network is opened. No repository, credential, deployment or permission
 authority is granted to the organism.
 
+## Amendments, recorded before materialization
+
+The complete pipeline was rehearsed once on a throwaway salt, with no bank bound and no result
+preserved, so that the recorded run could be attempt 1 with no retry. It found two defects and one
+harness bug, all corrected here **before** any artifact existed. No threshold, salt or goal grammar
+changed.
+
+**A1 — the induction was unsound on one-sided evidence.** The shortest separating prefix is only
+defined against durable carriers. With none observed yet, it collapsed to a single character and
+rejected the organism's own alternatives: the lineage **falsely refused a reachable goal** in the
+browser and desktop stages. That is a false refusal manufactured by the induction rather than by the
+substrate, and it is precisely what P2 exists to catch. The rule now names the observed non-durable
+carriers exactly until there is something to separate them from.
+
+The order of events is what made it visible only there. In stage 0 the organism still verifies at the
+end of the stage, so the affordance probe has already supplied a durable observation by the time it
+diagnoses. From stage 1 onward it verifies per goal, and the diagnosis arrives first.
+
+**A2 — a verified carrier is evidence.** The organism read the goal value back from the environment
+and discarded the observation. Recording it is what makes the induction two-sided, and not recording
+it is what made A1 necessary.
+
+**A3 — a harness bug.** The rehearsal path skipped the bank-sealing step and then read a digest it
+had never computed.
+
 ## Additive changes to qualified modules
 
 Recorded here because they are made **before** the harness and must not be discovered later:

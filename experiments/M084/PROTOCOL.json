@@ -143,6 +143,38 @@
     "never_compared_against_the_checkpoints_own_digest": true,
     "why": "comparing a checkpoint to itself is the tautology M080 recorded"
   },
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the pre-materialization rehearsal on a throwaway salt, with no bank bound and no result preserved",
+      "change": "the induced carrier-rejection predicate falls back to naming the observed non-durable carriers exactly whenever no durable carrier has yet been observed in that substrate",
+      "reason": "the shortest separating prefix is only defined against durable evidence. With none, it degenerates to a single character and rejects the organism's own alternatives, so the lineage falsely refused a reachable goal in the browser and desktop stages of the rehearsal. That is a false refusal manufactured by the induction rather than by the substrate, and P2 exists to catch exactly that.",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    },
+    {
+      "id": "A2",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the same rehearsal",
+      "change": "a carrier the organism verifiably reads as holding the goal value is recorded as durable evidence",
+      "reason": "the organism had just read it from the environment and was discarding the observation, which left its induction one-sided and is what made A1 necessary in the first place",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    },
+    {
+      "id": "A3",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the same rehearsal",
+      "change": "the runner computes the bank digest in rehearsal mode as well, and writes the artifact only outside rehearsal",
+      "reason": "a harness defect: the rehearsal path skipped the sealing step and then read the digest it had never computed",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    }
+  ],
   "episode_generation": {
     "salt_hex": "4a34d82c4239dabb95d5047d6f817f315111b3436f8c620b14030bfe080d82ca",
     "generator_version": 1,
