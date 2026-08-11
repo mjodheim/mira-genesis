@@ -986,3 +986,32 @@ This is not a protocol defect and is not silently repaired. The public bank is c
 the baseline/context samples are independent, so the aggregate improvement is diagnostic rather
 than causal or scientific. D041 preserves the counterexample, closes tuning on this bank and
 requires a pre-private causal-control and sealed-bank review.
+
+## M076-M083 — the checkout-dependent hash defect recurred on a Windows clone
+
+Every independent checker from M077 through M083 failed on a fresh Windows checkout with
+`protocol bytes no longer match the recorded commitment`, and the M082/M083 checkers additionally
+reported that the browser and desktop image recipes had changed after their banks were bound. No
+protocol, result, bank or recipe had in fact changed. `.gitattributes` marked only the M074/M075
+artifacts and `results/artifacts/*.json` as `-text`, so Git applied end-of-line conversion to every
+newer digest-bearing file on checkout. `git show HEAD:experiments/M083/PROTOCOL.json` hashed to the
+recorded `8419f6d8...`; the CRLF working-tree copy hashed to `6479b4c2...`.
+
+This is the same defect class that already disqualified M064, where the frozen commitment named the
+Windows CRLF checkout bytes while CI observed Git's LF bytes. M064's correction normalised the
+fixtures that computed hashes; it did not make the stored artifacts themselves conversion-immune,
+so each experiment frozen afterwards silently reacquired a checkout-dependent hash. The recurrence
+was invisible on the machine that recorded the results, because there the working-tree bytes and
+the committed bytes agree.
+
+The correction is a checkout-portability fix only. `.gitattributes` now marks the digest-bearing
+artifacts by naming convention rather than by individual path, so that a later experiment adopting
+the convention is covered before it freezes anything. No recorded digest, protocol content or
+result content was recomputed or rewritten: the working-tree files were re-materialised from the
+existing blobs and now hash to the commitments already on record.
+
+One trap is worth recording for successors. `git add --renormalize .` is the documented repair, but
+run on a tree whose files are already CRLF it stages those CRLF bytes as the new blob content under
+the fresh `-text` rule — which would have rewritten every frozen digest in exactly the direction the
+fix exists to prevent. The artifacts must be restored from the committed blobs instead, and the
+digests verified against the recorded commitments afterwards rather than recomputed from them.

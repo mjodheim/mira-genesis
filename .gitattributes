@@ -8,3 +8,13 @@ experiments/M074/SCIENTIFIC_RESULT.json -text
 experiments/M075/DEVELOPMENT_DRYRUN.json -text
 experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json -text
 experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
+
+# The M076-M084 experiments name their frozen artifacts by fixed convention. Listing the
+# convention rather than each file keeps a later experiment from silently reintroducing the
+# checkout-dependent hash that already disqualified M064.
+experiments/M0*/PROTOCOL.json -text
+experiments/M0*/RESULT.json -text
+experiments/M0*/BANK_COMMITMENT.json -text
+experiments/M0*/EPISODE_COMMITMENT.json -text
+experiments/M0*/SCHEDULE_COMMITMENT.json -text
+experiments/M0*/*-image/Dockerfile -text
