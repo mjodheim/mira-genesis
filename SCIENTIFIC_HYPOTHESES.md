@@ -551,3 +551,25 @@ claim the interface looks 12/12; scored by state it is 10/12, and the gap is exa
 of G6 and stays untouched. Tasks are project-authored. The container-backed evidence is local and
 opt-in rather than CI-attested. This does not close G6, establishes no external-suite competence and
 supplies no AGI evidence. See D047.
+
+## H28 — One interface extends to a real browser whose state has no network route
+
+The unchanged M081 agent interface, emitting the same four abstract resource actions, can drive a
+real browser whose state lives in localStorage and is reachable only through DOM interaction, in
+addition to the container shell and HTTP service it already drives; and the page's own save
+confirmation will diverge from the rendered DOM at least once.
+
+**Status:** supported by the M082 qualified development result. The interface completed 5/5
+completable tasks in each of three environments and covered all three in one run. The crossed-driver
+arm completed nothing anywhere, so the browser store is genuinely unreachable without the DOM. The
+browser over-reported once: scored by the page's confirmation it looks 6/6, scored by the rendered
+DOM it is 5/6. Bank `04916c28…78a1`; result `20fac369…65890`, attempt 1, no retry.
+
+**Required implication:** the browser must not be the service under another name. The page exposes
+no HTTP route for its store, which is what the crossed arm demonstrates rather than asserts. The
+interface is imported from M081 rather than restated, and a regression fails if any of its classes is
+redefined.
+
+**Scope:** one project-authored local page, so this is DOM competence rather than general web
+competence. No desktop VM, no physical device, no external suite. The container-backed evidence is
+local opt-in rather than CI-attested. G6 does not close. See D048.

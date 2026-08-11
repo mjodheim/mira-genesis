@@ -1,0 +1,562 @@
+{
+  "arms": {
+    "crossed_drivers": {
+      "arm": "crossed_drivers",
+      "browser_overcount": 6,
+      "completed_per_environment": {
+        "browser": 0,
+        "service": 0,
+        "shell": 0
+      },
+      "completed_total": 0,
+      "environments_covered": 0,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "0e139dc351297eb27e14efc094621280c0ea394edf17deeae3248f8b4dc479eb",
+          "driver": "service",
+          "environment": "shell",
+          "index": 0,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "d242e8bd13f23453fbfd5378c63311e4208af5787c7aa9242d7818386f83fc52",
+          "driver": "service",
+          "environment": "shell",
+          "index": 1,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "de4fdec94ac54704609951b2360a118b9dc4bfe406584b10e1bc2e3fafaefbc3",
+          "driver": "service",
+          "environment": "shell",
+          "index": 2,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8a8b0bfe6b1129a85eaa13c6ddc076bce2a477444dcd650860caf8bc82440b6b",
+          "driver": "service",
+          "environment": "shell",
+          "index": 3,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "57babb0c6e0c81f8a650cd08ed95563c2d9adc2e3a8093073bf9c4915c6f8cb3",
+          "driver": "service",
+          "environment": "shell",
+          "index": 4,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "28c474456ee9ad633f4d12c7bcb5944c028f963c2b9a6c76a0131d269cef3eb2",
+          "driver": "service",
+          "environment": "shell",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "269c3ce19503f2b7f6c4f977ad26d41fac77303ab4d7a9cc553d021f10543c29",
+          "driver": "browser",
+          "environment": "service",
+          "index": 0,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "63cc560e174dff612c46e272cf619226f7e631685daf8964ab2132c46d874af3",
+          "driver": "browser",
+          "environment": "service",
+          "index": 1,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "7053bf295015f2d0691dfee00e260f83b79c4cfefb186f5153963c497c8835f1",
+          "driver": "browser",
+          "environment": "service",
+          "index": 2,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cfcbf0c67cab6b195a57298d6f7f28623b916d79bc0e3d26cb6049946adc473b",
+          "driver": "browser",
+          "environment": "service",
+          "index": 3,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "b0ae71a937dd32c8a3804ff9d84ceafdcb27e2a7a641524d0c8a95ccc8bbe577",
+          "driver": "browser",
+          "environment": "service",
+          "index": 4,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "746a11795dd0a1631edecb19c215a55f086dabb12481c13ff983246a629dac64",
+          "driver": "browser",
+          "environment": "service",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "b1a3a328234bc22d934836feae8d64e021d00bd4a1c972d4c0ebaeb4eae9ca0e",
+          "driver": "service",
+          "environment": "browser",
+          "index": 0,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "68ec054ba59d5a756cc13754b9bd7206e991ec14b461ab678dfe83fcca3a7bc1",
+          "driver": "service",
+          "environment": "browser",
+          "index": 1,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "284a13b0588eb049ef6554da5f225f73f4f72b9325240a6a11ee8f4a4237d4ed",
+          "driver": "service",
+          "environment": "browser",
+          "index": 2,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "ae8782124b6fc6d5b290338edb713f52b002b50402d6635f35adf97d865ff171",
+          "driver": "service",
+          "environment": "browser",
+          "index": 3,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "75f18263d431b159f502093c70022613c8ea74c62bd6d26f017c774232683df8",
+          "driver": "service",
+          "environment": "browser",
+          "index": 4,
+          "state_reached": false,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "517e6bf26842e673c90341dd4c8bec854dfb8f575f4ab4f7857a6cdace3c799c",
+          "driver": "service",
+          "environment": "browser",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "environment_state"
+    },
+    "self_report_scored": {
+      "arm": "self_report_scored",
+      "browser_overcount": 1,
+      "completed_per_environment": {
+        "browser": 6,
+        "service": 6,
+        "shell": 6
+      },
+      "completed_total": 18,
+      "environments_covered": 3,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "0e139dc351297eb27e14efc094621280c0ea394edf17deeae3248f8b4dc479eb",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "d242e8bd13f23453fbfd5378c63311e4208af5787c7aa9242d7818386f83fc52",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "de4fdec94ac54704609951b2360a118b9dc4bfe406584b10e1bc2e3fafaefbc3",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8a8b0bfe6b1129a85eaa13c6ddc076bce2a477444dcd650860caf8bc82440b6b",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "57babb0c6e0c81f8a650cd08ed95563c2d9adc2e3a8093073bf9c4915c6f8cb3",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "28c474456ee9ad633f4d12c7bcb5944c028f963c2b9a6c76a0131d269cef3eb2",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "269c3ce19503f2b7f6c4f977ad26d41fac77303ab4d7a9cc553d021f10543c29",
+          "driver": "service",
+          "environment": "service",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "63cc560e174dff612c46e272cf619226f7e631685daf8964ab2132c46d874af3",
+          "driver": "service",
+          "environment": "service",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "7053bf295015f2d0691dfee00e260f83b79c4cfefb186f5153963c497c8835f1",
+          "driver": "service",
+          "environment": "service",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cfcbf0c67cab6b195a57298d6f7f28623b916d79bc0e3d26cb6049946adc473b",
+          "driver": "service",
+          "environment": "service",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "b0ae71a937dd32c8a3804ff9d84ceafdcb27e2a7a641524d0c8a95ccc8bbe577",
+          "driver": "service",
+          "environment": "service",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "746a11795dd0a1631edecb19c215a55f086dabb12481c13ff983246a629dac64",
+          "driver": "service",
+          "environment": "service",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "b1a3a328234bc22d934836feae8d64e021d00bd4a1c972d4c0ebaeb4eae9ca0e",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "68ec054ba59d5a756cc13754b9bd7206e991ec14b461ab678dfe83fcca3a7bc1",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "284a13b0588eb049ef6554da5f225f73f4f72b9325240a6a11ee8f4a4237d4ed",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "ae8782124b6fc6d5b290338edb713f52b002b50402d6635f35adf97d865ff171",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "75f18263d431b159f502093c70022613c8ea74c62bd6d26f017c774232683df8",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "517e6bf26842e673c90341dd4c8bec854dfb8f575f4ab4f7857a6cdace3c799c",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "agent_claim"
+    },
+    "shared_interface": {
+      "arm": "shared_interface",
+      "browser_overcount": 1,
+      "completed_per_environment": {
+        "browser": 5,
+        "service": 5,
+        "shell": 5
+      },
+      "completed_total": 15,
+      "environments_covered": 3,
+      "records": [
+        {
+          "claimed": true,
+          "commitment": "0e139dc351297eb27e14efc094621280c0ea394edf17deeae3248f8b4dc479eb",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "d242e8bd13f23453fbfd5378c63311e4208af5787c7aa9242d7818386f83fc52",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "de4fdec94ac54704609951b2360a118b9dc4bfe406584b10e1bc2e3fafaefbc3",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "8a8b0bfe6b1129a85eaa13c6ddc076bce2a477444dcd650860caf8bc82440b6b",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "57babb0c6e0c81f8a650cd08ed95563c2d9adc2e3a8093073bf9c4915c6f8cb3",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "28c474456ee9ad633f4d12c7bcb5944c028f963c2b9a6c76a0131d269cef3eb2",
+          "driver": "shell",
+          "environment": "shell",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "269c3ce19503f2b7f6c4f977ad26d41fac77303ab4d7a9cc553d021f10543c29",
+          "driver": "service",
+          "environment": "service",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "63cc560e174dff612c46e272cf619226f7e631685daf8964ab2132c46d874af3",
+          "driver": "service",
+          "environment": "service",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "7053bf295015f2d0691dfee00e260f83b79c4cfefb186f5153963c497c8835f1",
+          "driver": "service",
+          "environment": "service",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "cfcbf0c67cab6b195a57298d6f7f28623b916d79bc0e3d26cb6049946adc473b",
+          "driver": "service",
+          "environment": "service",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "b0ae71a937dd32c8a3804ff9d84ceafdcb27e2a7a641524d0c8a95ccc8bbe577",
+          "driver": "service",
+          "environment": "service",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "746a11795dd0a1631edecb19c215a55f086dabb12481c13ff983246a629dac64",
+          "driver": "service",
+          "environment": "service",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        },
+        {
+          "claimed": true,
+          "commitment": "b1a3a328234bc22d934836feae8d64e021d00bd4a1c972d4c0ebaeb4eae9ca0e",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 0,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "68ec054ba59d5a756cc13754b9bd7206e991ec14b461ab678dfe83fcca3a7bc1",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 1,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "284a13b0588eb049ef6554da5f225f73f4f72b9325240a6a11ee8f4a4237d4ed",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 2,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "ae8782124b6fc6d5b290338edb713f52b002b50402d6635f35adf97d865ff171",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 3,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "75f18263d431b159f502093c70022613c8ea74c62bd6d26f017c774232683df8",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 4,
+          "state_reached": true,
+          "targets_sealed": false
+        },
+        {
+          "claimed": true,
+          "commitment": "517e6bf26842e673c90341dd4c8bec854dfb8f575f4ab4f7857a6cdace3c799c",
+          "driver": "browser",
+          "environment": "browser",
+          "index": 5,
+          "state_reached": false,
+          "targets_sealed": true
+        }
+      ],
+      "scored_from": "environment_state"
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "04916c2825c2b834e1a432b1ee995b6df3d76b3d8d54e4cc6338d83bb91878a1",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g6": false,
+    "establishes_browser_dom_competence_on_an_authored_page": true,
+    "establishes_desktop_or_vm_competence": false,
+    "establishes_external_suite_competence": false,
+    "establishes_general_web_competence": false,
+    "establishes_one_interface_across_three_real_environments": true,
+    "genesis_gate_2_evidence": false
+  },
+  "environments": [
+    "shell",
+    "service",
+    "browser"
+  ],
+  "external_model_called": false,
+  "failed_conditions": [],
+  "protocol_commitment": "9dea3dad91e57ddb299565e858cbbb6b10e4987fd49d267f22fd5a23622ddf07",
+  "python": "3.14.6",
+  "result_sha256": "20fac3690d24134d23eaadca13f1d3ee49b055737fe082fa7db4e5da05b65890",
+  "retried": false,
+  "schema": "m082-browser-environment-result-v1",
+  "transport_defects_found_and_fixed": [
+    "docker exec arguments beginning with a slash are rewritten by MSYS path conversion on Windows, so every container command is wrapped in sh -c; this is the defect class that produced the negative M070",
+    "a fresh browser profile per action discarded localStorage, which would have left the harness holding the state instead of the browser; a persistent profile now keeps it",
+    "passing the page through an environment variable required flattening it to one line, which turned a // comment into a comment over the whole script and disabled the save handler; the page is now written to a file"
+  ],
+  "verdict": "positive"
+}

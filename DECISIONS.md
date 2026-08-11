@@ -1244,3 +1244,42 @@ described that way, not as CI-attested.
 
 No browser, no desktop VM, no external suite, no Genesis Gate 2 or Gate 3 evidence, no AGI evidence.
 M081 does not touch the M075 pre-private readiness boundary.
+
+## D048 — M082 supplies G6's browser clause and leaves the desktop VM untouched
+
+G6 names a terminal, a browser and a desktop VM. M071 supplied the terminal, M081 added an HTTP
+service under one interface, and the register still read that browser and desktop competence remain
+absent. M082 removes the first of those.
+
+### The decision
+
+M082 is accepted as positive bounded mechanism evidence. G6 **stays** at `partial mechanism
+evidence`. The register now carries one interface across three real environments including a real
+browser; it still carries no desktop VM, no physical device and no external suite, and the page is
+project-authored so it is DOM competence rather than general web competence.
+
+The crossed-driver arm is again the load-bearing control. A browser page with an HTTP store would
+have been the M081 service with extra steps; state in localStorage with no network route, and a
+crossed arm completing nothing in all three environments, is what makes the browser a materially
+different substrate rather than a relabelling.
+
+### One interface must be imported, not restated
+
+M082 imports M081's agent and both prior environments unchanged, and a regression plus the checker
+fail if any is redefined. A three-environment claim built from three implementations would prove
+nothing about continuity.
+
+### A defect that would have passed every test
+
+Among three recorded transport defects, one deserves separate note. The browser initially used a
+fresh profile per action, so localStorage did not survive and the harness replayed accumulated intent
+to reconstruct state. Nothing failed and every test was green, but the harness would have been
+holding the state rather than the browser, and the claim would have been hollow. A persistent profile
+now keeps state in the browser, verified by a read-only action returning items written by earlier
+launches.
+
+### Claim boundary
+
+No desktop VM, no physical device, no external suite, no general web competence, no Genesis Gate 2 or
+Gate 3 evidence, no AGI evidence. The container-backed evidence is local opt-in and not CI-attested.
+M082 does not touch the M075 pre-private readiness boundary.

@@ -93,6 +93,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M082 adds a real browser as a third environment.** Protocol and image recipe frozen before
+  the harness at `0c35847`; bank commitment `04916c28…78a1`; first result `20fac369…65890`,
+  attempt 1, no retry. The unchanged M081 interface completed 5/5 completable tasks in the
+  container shell, the HTTP service and a real Chromium browser, covering all three in one run.
+  The browser store lives in `localStorage` with **no HTTP route**, reachable only through DOM
+  interaction, and the crossed-driver arm completed **nothing anywhere** — which is what makes
+  the browser a materially different substrate rather than the service relabelled. The page
+  confirms saves it declines to persist: scored by that confirmation the browser looks 6/6,
+  scored by the rendered DOM it is 5/6. Three transport defects are recorded, including a fresh
+  browser profile per action that would have left the harness holding the state instead of the
+  browser while every test stayed green. **No desktop VM**, no physical device, no external
+  suite, and DOM competence on one authored page rather than general web competence, so G6 does
+  **not** advance.
 - **M081 puts one interface into a second real environment.** Protocol frozen before the
   harness at `7ac5ad4`; bank commitment `5261974e…9ccbd`; first result `cc9a6e89…41bdc`,
   attempt 1, no retry. One unchanged agent emitting four abstract actions completed 5/5

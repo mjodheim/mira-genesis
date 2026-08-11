@@ -1,0 +1,125 @@
+{
+  "bank_commitment": "04916c2825c2b834e1a432b1ee995b6df3d76b3d8d54e4cc6338d83bb91878a1",
+  "browser_base_digest": "mcr.microsoft.com/playwright@sha256:98b1ad488de36b22d41fdd1b0c5b9cceaa78a8d2661c6ab02d2108a07c182338",
+  "browser_image": "mira-m082-browser:1",
+  "dockerfile_sha256": "de3e8e6f15ea75a84c938c589517213c81599a9fa01f7be3683e9ef11574e8b7",
+  "environments": [
+    "shell",
+    "service",
+    "browser"
+  ],
+  "generator_version": 1,
+  "salt_sha256": "e258bb6ba569442d94723f981e6e48075b147e19c78c9449d1f506fac3db3477",
+  "schema": "m082-bank-commitment-v1",
+  "task_count": 18,
+  "tasks": [
+    {
+      "commitment": "0e139dc351297eb27e14efc094621280c0ea394edf17deeae3248f8b4dc479eb",
+      "environment": "shell",
+      "index": 0,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "d242e8bd13f23453fbfd5378c63311e4208af5787c7aa9242d7818386f83fc52",
+      "environment": "shell",
+      "index": 1,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "de4fdec94ac54704609951b2360a118b9dc4bfe406584b10e1bc2e3fafaefbc3",
+      "environment": "shell",
+      "index": 2,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "8a8b0bfe6b1129a85eaa13c6ddc076bce2a477444dcd650860caf8bc82440b6b",
+      "environment": "shell",
+      "index": 3,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "57babb0c6e0c81f8a650cd08ed95563c2d9adc2e3a8093073bf9c4915c6f8cb3",
+      "environment": "shell",
+      "index": 4,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "28c474456ee9ad633f4d12c7bcb5944c028f963c2b9a6c76a0131d269cef3eb2",
+      "environment": "shell",
+      "index": 5,
+      "targets_sealed": true
+    },
+    {
+      "commitment": "269c3ce19503f2b7f6c4f977ad26d41fac77303ab4d7a9cc553d021f10543c29",
+      "environment": "service",
+      "index": 0,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "63cc560e174dff612c46e272cf619226f7e631685daf8964ab2132c46d874af3",
+      "environment": "service",
+      "index": 1,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "7053bf295015f2d0691dfee00e260f83b79c4cfefb186f5153963c497c8835f1",
+      "environment": "service",
+      "index": 2,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "cfcbf0c67cab6b195a57298d6f7f28623b916d79bc0e3d26cb6049946adc473b",
+      "environment": "service",
+      "index": 3,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "b0ae71a937dd32c8a3804ff9d84ceafdcb27e2a7a641524d0c8a95ccc8bbe577",
+      "environment": "service",
+      "index": 4,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "746a11795dd0a1631edecb19c215a55f086dabb12481c13ff983246a629dac64",
+      "environment": "service",
+      "index": 5,
+      "targets_sealed": true
+    },
+    {
+      "commitment": "b1a3a328234bc22d934836feae8d64e021d00bd4a1c972d4c0ebaeb4eae9ca0e",
+      "environment": "browser",
+      "index": 0,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "68ec054ba59d5a756cc13754b9bd7206e991ec14b461ab678dfe83fcca3a7bc1",
+      "environment": "browser",
+      "index": 1,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "284a13b0588eb049ef6554da5f225f73f4f72b9325240a6a11ee8f4a4237d4ed",
+      "environment": "browser",
+      "index": 2,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "ae8782124b6fc6d5b290338edb713f52b002b50402d6635f35adf97d865ff171",
+      "environment": "browser",
+      "index": 3,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "75f18263d431b159f502093c70022613c8ea74c62bd6d26f017c774232683df8",
+      "environment": "browser",
+      "index": 4,
+      "targets_sealed": false
+    },
+    {
+      "commitment": "517e6bf26842e673c90341dd4c8bec854dfb8f575f4ab4f7857a6cdace3c799c",
+      "environment": "browser",
+      "index": 5,
+      "targets_sealed": true
+    }
+  ]
+}
