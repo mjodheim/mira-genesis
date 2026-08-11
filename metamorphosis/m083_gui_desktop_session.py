@@ -248,6 +248,21 @@ class DesktopEnvironment:
         self._click(column * CELL + CELL // 2, row * CELL + CELL // 2)
         return True
 
+    def colour_at(self, label: str) -> str | None:
+        """Decode one cell from a fresh screenshot; None when it carries no palette colour.
+
+        Added for M084, which observes far more often than M083 did: reading the whole grid costs
+        about 8.9 seconds against 0.3 for a single cell. `state` is unchanged and still decodes
+        every cell, so the M083 result is untouched.
+        """
+
+        row, column = parse_cell(label)
+        if not (0 <= row < ROWS and 0 <= column < COLUMNS):
+            raise EnvironmentError_(f"{label!r} is outside the rendered grid")
+        colour = self._screenshot_colour(column * CELL + CELL // 2, row * CELL + CELL // 2)
+        inverse = {value: name for name, value in PALETTE.items()}
+        return inverse.get(colour)
+
     def state(self) -> dict[str, str]:
         """Independent read: decode exact palette colours from a fresh screenshot."""
 

@@ -17,9 +17,10 @@ No model is called, no network is opened, and the world is an in-memory graph.
 from __future__ import annotations
 
 import hashlib
-import heapq
 from dataclasses import dataclass
 from typing import Iterable, Mapping, Sequence
+
+from metamorphosis.bounded_search import uniform_cost_plans
 
 
 PROTOCOL_SCHEMA = "m079-planning-clarification-protocol-v1"
@@ -284,33 +285,15 @@ def satisfying_plans(
     """Every cheapest-per-terminal-state plan reaching a goal-satisfying state within budget.
 
     The planner receives no decomposition; this is a uniform-cost search over the affordance
-    schemas alone.
+    schemas alone. The search itself lives in `bounded_search` so that M084 composes the same
+    enumeration over real environments instead of restating it; only the domain is supplied here.
     """
 
-    best: dict[State, tuple[int, tuple]] = {}
-    seen: dict[State, int] = {state: 0}
-    queue: list[tuple[int, int, State, tuple]] = [(0, 0, state, ())]
-    counter = 1
-    while queue:
-        cost, _, current, plan = heapq.heappop(queue)
-        if cost > budget:
-            continue
-        if episode.satisfies_goal(current):
-            if current not in best or cost < best[current][0]:
-                best[current] = (cost, plan)
-            continue
-        for action, successor, step in _successors(episode, current, known_blocks):
-            total = cost + step
-            if total > budget:
-                continue
-            if successor in seen and seen[successor] <= total:
-                continue
-            seen[successor] = total
-            heapq.heappush(queue, (total, counter, successor, plan + (action,)))
-            counter += 1
-    return sorted(
-        ((cost, plan, terminal) for terminal, (cost, plan) in best.items()),
-        key=lambda entry: (entry[0], str(entry[1])),
+    return uniform_cost_plans(
+        state,
+        lambda current: _successors(episode, current, known_blocks),
+        episode.satisfies_goal,
+        budget,
     )
 
 

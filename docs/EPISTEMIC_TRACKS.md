@@ -96,3 +96,28 @@ and reproduction.
 
 The separate M045 measurement track remains unchanged: proxy-quality experiments answer neither
 Track A ownership nor Track B governance questions.
+
+## Integration inside Track A — M084
+
+M084 belongs entirely to Track A. It calls no model, opens no network and selects no external task.
+It composes mechanisms already qualified on this track — M077's journal, M080's bounded table,
+M079's plan enumeration and the M081–M083 environments — into one organism that crosses three real
+substrates while keeping one identity, one causal journal and the knowledge it acquired.
+
+Two attribution points matter here.
+
+**Composition is not a new claim.** M084 adds no modality, planning clause, retention mechanism or
+environment. Nothing it demonstrates may be cited as evidence for a gate that its constituent
+experiments did not already support, and its ablation costs no correctness — every arm reached every
+reachable goal — so the persistence it demonstrates is cost and earliness, not capability.
+
+**A fact does not cross substrates.** The shell and the browser discard the same authored prefix,
+and the organism still re-derives it in the browser. What crosses is the adopted verification
+policy, not the substrate-local fact. This is deliberate: carrying the fact would have been cheaper
+and would have manufactured something that reads like cross-domain transfer without being it. G4
+remains open and belongs behind the M075 private boundary.
+
+M084 also corrects the record on its own inputs. The agent M081, M082 and M083 carry across their
+four substrates replays an action list computed by the bank generator; it perceives nothing, plans
+nothing and detects no failure. Those are interface results, and "one unchanged agent across four
+real environments" must not be read as agent competence.

@@ -1,0 +1,260 @@
+{
+  "schema": "m084-integrated-persistent-embodiment-protocol-v1",
+  "status": "frozen_before_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "integration_of_G2_G3_G5_G6_mechanisms_no_gate_advance_claimed",
+  "parent_results": ["M076", "M077", "M078", "M079", "M080", "M081", "M082", "M083"],
+  "hypothesis": "H30",
+  "falsifiable_hypothesis": "The mechanisms qualified separately in M076-M083 can become the faculties of one persistent lineage: a single organism, serialized between four stages over three real isolated substrates, will reach every reachable goal scored from environment state, refuse every unreachable one, adopt at least one versioned transformation caused by an observed real failure, and reuse knowledge acquired in stage 0 to perform zero diagnostic probes, zero repair cycles and zero affordance probes when it returns to that substrate in stage 3, while a matched arm that is the same lineage minus its acquisitions must re-derive all of it.",
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "network_opened": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "recorded_finding_about_the_parent_results": {
+    "m081_m082_m083_agent_replays_precomputed_actions": true,
+    "m081_m082_m083_agent_perceives_plans_or_detects_failure": false,
+    "consequence": "M081-M083 are interface results rather than agent results, and this is not visible from the registers. M084 does not import M081's Agent because importing it would be an empty citation.",
+    "m081_agent_imported": false,
+    "m081_agent_not_imported_is_deliberate": true
+  },
+  "stages": [
+    {"index": 0, "substrate": "shell", "environment": "metamorphosis.m081_two_real_environments.ShellEnvironment"},
+    {"index": 1, "substrate": "browser", "environment": "metamorphosis.m082_browser_environment.BrowserEnvironment"},
+    {"index": 2, "substrate": "desktop", "environment": "metamorphosis.m083_gui_desktop_session.DesktopEnvironment"},
+    {"index": 3, "substrate": "shell", "environment": "metamorphosis.m081_two_real_environments.ShellEnvironment"}
+  ],
+  "stage_container_is_fresh_each_stage": true,
+  "returns_to_the_first_substrate": true,
+  "mechanism_reuse": {
+    "journal_imported_from": "metamorphosis.m077_long_horizon_recovery.Journal",
+    "genesis_anchor_imported_from": "metamorphosis.m077_long_horizon_recovery.GENESIS_DIGEST",
+    "memory_table_imported_from": "metamorphosis.m080_continual_retention.Table",
+    "memory_entry_imported_from": "metamorphosis.m080_continual_retention.ExceptionEntry",
+    "plan_enumeration_extracted_from": "metamorphosis.m079_planning_clarification.satisfying_plans",
+    "environments_imported_from": ["M081", "M082", "M083"],
+    "reimplements_any_imported_mechanism": false
+  },
+  "additive_changes_to_qualified_modules": [
+    {
+      "change": "extract M079's uniform-cost plan enumeration into metamorphosis/bounded_search.py and make satisfying_plans a thin wrapper",
+      "behaviour_preserving": true,
+      "reason": "M079's search is general but sealed inside its transport affordances; M084 must compose it rather than restate it",
+      "verification": "M079's own checker re-derives its arms live and must still reproduce its preserved result"
+    },
+    {
+      "change": "add DesktopEnvironment.colour_at(label) as a targeted single-carrier read",
+      "behaviour_preserving": true,
+      "reason": "reading the whole grid costs 8.9s against 0.3s for one cell and M084 observes far more often than M083",
+      "state_method_unchanged": true
+    }
+  ],
+  "state_ownership": {
+    "each_stage_runs_in_a_separate_operating_system_process": true,
+    "parent_calls_perception_planning_or_action": false,
+    "organism_records_the_sha256_of_the_file_it_loaded": true,
+    "serialization_chain_carried_by_the_organism_not_the_harness": true,
+    "motivated_by": "the M082 defect where a fresh browser profile per action would have left the harness holding the state while every test stayed green"
+  },
+  "organism": {
+    "fields": [
+      "lineage_id",
+      "body_version",
+      "policy",
+      "facts",
+      "memory_table",
+      "journal",
+      "checkpoints",
+      "provenance",
+      "loaded_file_sha256"
+    ],
+    "genesis_policy": {"verification": "end_of_stage"},
+    "serialized_between_stages": true
+  },
+  "acquisitions": {
+    "T1": {
+      "kind": "body_transformation",
+      "change": "verification: end_of_stage -> per_goal",
+      "trigger": "the first audit-revealed divergence between an action's reported success and the environment state",
+      "validated_on_a_disposable_descendant": true,
+      "validation_uses_a_separate_probe_goal": true,
+      "adoption_increments_body_version": true,
+      "adoption_is_journaled_with_its_causing_evidence": true,
+      "rejected_proposals_are_journaled_and_change_no_version": true,
+      "predicted_effect": "end-of-stage verification must re-observe and re-plan every unsatisfied goal in a repair pass; per-goal verification repairs inside the goal that failed, so actions and state reads fall in stages 1, 2 and 3"
+    },
+    "F": {
+      "kind": "facts",
+      "content": ["carrier_non_durability", "affordance_effectiveness"],
+      "keyed_by_substrate_class": true,
+      "stored_in": "the imported M080 bounded table",
+      "predicted_effect": "stage 3 returns to the shell substrate of stage 0 and performs zero diagnostic probes, zero repair cycles and zero affordance probes",
+      "facts_offered_across_substrates": false,
+      "why_not": "the shell and the browser discard the same authored prefix; carrying a fact between them would be the relabelling this repository forbids and must not be read as cross-domain transfer"
+    }
+  },
+  "goals": {
+    "count_per_stage": 4,
+    "decomposition_supplied": false,
+    "goal_shapes": {
+      "G1_repair": "a value must be durable somewhere in a carrier group whose cheapest member silently discards; reachable through the alternative",
+      "G2_clear": "a carrier written by G1 must become absent; reachable where removal is effective, unreachable on the desktop",
+      "G3_control": "a value must be durable in a group of two durable carriers; reachable, no trap, and a false-refusal control",
+      "G4_unreachable": "a value must be durable in a group whose only member silently discards; unreachable everywhere"
+    },
+    "execution_rule": "the cheapest carrier of a plan is acted on first",
+    "reachable_total": 11,
+    "must_refuse_total": 5,
+    "reachable_per_stage": [3, 3, 2, 3],
+    "must_refuse_per_stage": [1, 1, 2, 1],
+    "actions_safety_bound_per_stage": 60
+  },
+  "diagnosis": {
+    "affordance_discovery_is_by_effect_not_by_return_value": true,
+    "diagnostic_probe": "retry the failing carrier once and re-read, which separates a transient write failure from a carrier that permanently discards",
+    "repair_cycle": "replanning after a carrier has been recorded as non-durable",
+    "refusal": "no plan over the remaining carriers satisfies the goal"
+  },
+  "arms": {
+    "lineage": {"removes": "nothing", "executed": true},
+    "acquisition_ablated": {
+      "removes": "facts and adopted policy at every stage boundary; identity, version and journal preserved",
+      "executed": true,
+      "role": "the falsifier that matters, because it is the same lineage minus what it learned"
+    },
+    "fresh_each_stage": {
+      "removes": "everything; a new genesis organism at every stage",
+      "executed": true,
+      "role": "shows the continuity proofs are not vacuous; its behaviour must be identical to acquisition_ablated"
+    },
+    "self_report_scored": {
+      "executed": false,
+      "derived_from": "the lineage arm's own first-plan records",
+      "scoring": "every action of the first executed plan reported success, ignoring state",
+      "not_re_executed_because": "re-running would resample a live environment for no scientific gain"
+    }
+  },
+  "forced_fault": {
+    "injected_after_stage": 1,
+    "target": "the serialized organism outside its checkpoint blob",
+    "must_be_detected_by": "the stage-2 child",
+    "restoration": "from the last checkpoint",
+    "comparison": "the restored live digest against the pre-corruption digest recorded independently in the stage-1 report",
+    "never_compared_against_the_checkpoints_own_digest": true,
+    "why": "comparing a checkpoint to itself is the tautology M080 recorded"
+  },
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the pre-materialization rehearsal on a throwaway salt, with no bank bound and no result preserved",
+      "change": "the induced carrier-rejection predicate falls back to naming the observed non-durable carriers exactly whenever no durable carrier has yet been observed in that substrate",
+      "reason": "the shortest separating prefix is only defined against durable evidence. With none, it degenerates to a single character and rejects the organism's own alternatives, so the lineage falsely refused a reachable goal in the browser and desktop stages of the rehearsal. That is a false refusal manufactured by the induction rather than by the substrate, and P2 exists to catch exactly that.",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    },
+    {
+      "id": "A2",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the same rehearsal",
+      "change": "a carrier the organism verifiably reads as holding the goal value is recorded as durable evidence",
+      "reason": "the organism had just read it from the environment and was discarding the observation, which left its induction one-sided and is what made A1 necessary in the first place",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    },
+    {
+      "id": "A3",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "the same rehearsal",
+      "change": "the runner computes the bank digest in rehearsal mode as well, and writes the artifact only outside rehearsal",
+      "reason": "a harness defect: the rehearsal path skipped the sealing step and then read the digest it had never computed",
+      "thresholds_changed": false,
+      "salt_changed": false,
+      "goal_grammar_changed": false
+    }
+  ],
+  "episode_generation": {
+    "salt_hex": "4a34d82c4239dabb95d5047d6f817f315111b3436f8c620b14030bfe080d82ca",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || utf8(substrate) || uint32_be(stage) || uint32_be(goal)) fixes each goal's values; carriers and costs are frozen per substrate in this protocol",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "P1_lineage_reachable_goals_reached": 11,
+    "P2_lineage_refusals": 5,
+    "P2_lineage_false_refusals_max": 0,
+    "P2_lineage_unreachable_goals_recorded_reached_max": 0,
+    "P3_lineage_stage3_diagnostic_probes": 0,
+    "P3_lineage_stage3_repair_cycles": 0,
+    "P3_lineage_stage3_affordance_probes": 0,
+    "P4_acquisition_ablated_stage3_diagnostic_probes_min": 1,
+    "P4_acquisition_ablated_stage3_repair_cycles_min": 1,
+    "P4_acquisition_ablated_stage3_affordance_probes_min": 1,
+    "P5_lineage_cost_stages_1_to_3_strictly_below_acquisition_ablated": true,
+    "P6_lineage_transformations_adopted_min": 1,
+    "P6_lineage_final_body_version_min": 1,
+    "P6_journal_verifies_from_genesis_to_head": true,
+    "P6_journal_grows_strictly_every_stage": true,
+    "P6_checkpoint_at_every_stage_boundary": true,
+    "P6_serialization_chain_unbroken": true,
+    "P7_forced_fault_detected_by_the_stage_child": true,
+    "P7_restored_digest_equals_recorded_pre_corruption_digest": true,
+    "P8_fresh_each_stage_continuity_proofs_failed_min": 3,
+    "P9_ablated_and_fresh_agree_on_every_behavioural_metric": true,
+    "P10_self_report_overcount_min_in_each_of_stages_0_1_2": 1,
+    "P11_stages_executed_in_the_parent_process": 0
+  },
+  "failure_classification": {
+    "negative": "any of P1 to P11 false, or a stage exceeding its 60-action safety bound.",
+    "inconclusive": "Docker, the browser image or the desktop image unavailable, or an environment that never starts; not runnable is not negative.",
+    "positive": "every one of P1 to P11 true on the first materialized bank, with no retry."
+  },
+  "named_rupture_points_if_negative": [
+    "serialization: an acquisition does not survive the file boundary",
+    "carrier space: screen coordinates and resource names do not fit one abstract space",
+    "affordance discovery: removal is absent on the desktop and the organism cannot find out by effect",
+    "capacity: the 24-slot shared table saturates across four stages",
+    "refusal calibration: refusal generalizes to a reachable goal in a real substrate",
+    "state ownership: the harness turns out to hold what the organism was supposed to carry",
+    "substrate regression: a transformation adopted in one substrate is harmful in another"
+  ],
+  "claim_boundary": {
+    "establishes_one_persistent_lineage_across_three_real_substrates": true,
+    "establishes_verifiable_descent_across_serialization_boundaries": true,
+    "establishes_cross_domain_transfer": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "establishes_general_desktop_competence": false,
+    "establishes_structural_retention_without_replay": false,
+    "establishes_open_ended_evolution": false,
+    "establishes_general_autonomy": false,
+    "behaviour_on_privately_maintained_external_tasks": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "agi_evidence": false
+  },
+  "authority_envelope": {
+    "repository_write_authority_granted_to_the_organism": false,
+    "credential_authority_granted": false,
+    "network_authority_granted": false,
+    "deployment_authority_granted": false,
+    "permission_changing_authority_granted": false,
+    "containers_run_with_networking_disabled": true,
+    "host_repository_or_docker_socket_mounted": false
+  },
+  "prohibited_adaptation": [
+    "import M081's Agent so that the protocol can claim reuse it does not have",
+    "let the parent process execute a stage in-process",
+    "let the parent mutate the organism outside the declared ablation and the declared forced fault",
+    "offer a fact learned in one substrate to a different substrate",
+    "describe a fact carried between two substrates as cross-domain transfer",
+    "compare a restored state against the checkpoint's own digest",
+    "score a goal from the agent's claim instead of environment state",
+    "change the hypothesis, thresholds, salt, carriers, costs or goal grammar after bank materialization",
+    "retry the first materialized bank",
+    "describe this bounded result as closing any generality gate or as AGI evidence"
+  ]
+}

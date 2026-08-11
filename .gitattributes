@@ -8,3 +8,6 @@ experiments/M074/SCIENTIFIC_RESULT.json -text
 experiments/M075/DEVELOPMENT_DRYRUN.json -text
 experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json -text
 experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
+experiments/M084/PROTOCOL.json -text
+experiments/M084/BANK_COMMITMENT.json -text
+experiments/M084/RESULT.json -text

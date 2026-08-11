@@ -2,6 +2,34 @@
 
 ## Unreleased
 
+- Added M084, one persistent lineage crossing `shell → browser → desktop → shell` in four separate
+  operating system processes. It reached 11/11 reachable goals scored from environment state,
+  refused 5/5 unreachable ones with zero false refusals, and on its return to the shell — with
+  carrier names the first stage never saw — needed no diagnostic probe, no repair cycle and no
+  affordance discovery.
+- Composed the Phase 8 mechanisms instead of restating them: M077's journal, M080's bounded table,
+  M079's plan enumeration and the M081–M083 environments are all imported, and a regression and the
+  checker fail if any is redefined.
+- Extracted M079's uniform-cost plan enumeration into `metamorphosis/bounded_search.py` so both
+  experiments use one copy. Behaviour-preserving: M079's checker re-derives its arms live and still
+  reproduces result `5f7ccf21`.
+- Added `DesktopEnvironment.colour_at` for targeted single-cell reads, 0.3 s against 8.9 s for the
+  whole grid. `state` is unchanged and the M083 result is untouched.
+- Recorded that M081, M082 and M083 are **interface** results: the agent they carry across four real
+  substrates replays an action list computed by their bank generator and detects no failure. M084
+  deliberately does not import it, and the protocol, a regression and the checker enforce that.
+- Answered the M082 state-ownership failure structurally rather than by inspection. Each stage runs
+  in a separate process against an organism file, the parent never calls a perception, planning or
+  action function, and the organism records the digest of the file it loaded.
+- Detected a corruption injected after stage 1 **in the stage-2 child** and restored to the digest
+  stage 1 had recorded before the corruption existed, never to the checkpoint's own digest.
+- Recorded amendments A1–A3 from two pre-materialization rehearsals on throwaway salts. A1 fixes a
+  carrier-rejection predicate that generalized from one-sided evidence and made the lineage falsely
+  refuse a reachable goal; the zero-false-refusal clause is what caught it.
+- Recorded H30 and D050. **No generality gate advances.** The ablation costs no correctness, so
+  persistence bought cost and earliness rather than capability, and a fact learned in one substrate
+  is never offered to another, so nothing here is cross-domain transfer.
+
 - Added M083, a real X11 desktop session as a fourth environment under M081's unchanged
   four-action interface. It is addressed only by mouse clicks at screen coordinates and observed
   only by decoding exact palette colours from a screenshot; the interface completed all five

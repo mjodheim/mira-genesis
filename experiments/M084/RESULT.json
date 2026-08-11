@@ -1,0 +1,1269 @@
+{
+  "arms": {
+    "acquisition_ablated": {
+      "actions_total": 43,
+      "affordance_probes": 4,
+      "arm": "acquisition_ablated",
+      "continuity_proofs": {
+        "body_version_never_resets": true,
+        "checkpoint_at_every_stage_boundary": true,
+        "journal_extends_the_genesis_chain": true,
+        "one_lineage_identity": true,
+        "serialization_chain_unbroken": true
+      },
+      "continuity_proofs_failed": [],
+      "cost_stages_1_to_3": 85,
+      "diagnostic_probes": 4,
+      "digest_recorded_before_the_fault": "9d9c26bcdb802f4a7bb9ff5ddb97a649d5c97bba9fbdc228d04477cb8e0a28f2",
+      "executed_in_child_process": true,
+      "false_refusals": 0,
+      "fault_detected_at_stage": [],
+      "final_body_version": 4,
+      "goals_reached_from_state": 11,
+      "per_stage": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 10,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 2,
+          "refusals": 2,
+          "repair_cycles": 1,
+          "state_reads": 17,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        }
+      ],
+      "predicates_per_stage": [
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "r3"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        }
+      ],
+      "refusals": 5,
+      "rehearsal_salt_used": false,
+      "repair_cycles": 4,
+      "restored_digest": null,
+      "self_report_overcount_per_stage": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots_used_final": 5,
+      "stages": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "676f8ddf18a941aba8c21c806dc8775e5a4d02c3d4d296a32aa1b6fa829f98fc",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "6908e0f5f1d181d27616c8c593f2f814dbac2e772ba27721619e2130bc8d5db0",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "7a0d8a0d9b6d286a048a6e51b36481112b52e63d20d3229efe51eeac5a3d494b",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "8e657e12445702340505da5f9c187d0379637d8f7863232692e2af17a1e3387c",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 0,
+          "state_reads": 18,
+          "substrate": "shell",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 2,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "3bc87f5dcb64cb4e11a19481f566ba840f8d37dbe5e474549d09f24a4475af38",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "f35f94fd7b92f3fd1fb891951f4f3f002bb8b730e260f921130f14375115768c",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "f498867a6fcda4764c105e445886848bf38a5e0bc0c888f237e984dae77aed7c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "2a5fda515230af362f537d096f4a3fa6cf843a23bf32d08aaf102e60b8eb2981",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 1,
+          "state_reads": 18,
+          "substrate": "browser",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 10,
+          "affordance_probes": 1,
+          "body_version_after": 3,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "d70f5d683f9e0c358aa670715efccb307d38c23eaa3040c6ae82d5ea49daa242",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "fd825a4dd967f3fe7843615620322bd9b5517b0a72c78e11a455519224004df5",
+              "first_plan_claimed": null,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            },
+            {
+              "commitment": "92c11bafbd95dba2156b9f6ad5e3f30239508cd55d8a61a7c8941478c0d3dad4",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "726c995b2ce879aa4986c82cb1879744c6eb7cef7160f21a6b3e33568d77a2f6",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 2,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "r3"
+          },
+          "refusals": 2,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 2,
+          "state_reads": 17,
+          "substrate": "desktop",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 4,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "08190cf99357134d73613393949ac7479f67784de83f3eb3c87944b674e99d9b",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "9689ef0925455a90e37503f13e469d8d8d8576145f1c561531680eaba6135e5e",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "aee5d3c625d6ba97ebd0dc531918176efdb7cd40b920f67ecebcf242f1fc1e8c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "11feb9ca169ae48670438d769420da6486be791ad2c118ff4ca803fc951872f4",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 3,
+          "state_reads": 18,
+          "substrate": "shell",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        }
+      ],
+      "state_reads_total": 71,
+      "transformations_adopted": 4,
+      "unreachable_recorded_reached": 0,
+      "wasted_actions_on_unreachable_goals": 4
+    },
+    "fresh_each_stage": {
+      "actions_total": 43,
+      "affordance_probes": 4,
+      "arm": "fresh_each_stage",
+      "continuity_proofs": {
+        "body_version_never_resets": true,
+        "checkpoint_at_every_stage_boundary": false,
+        "journal_extends_the_genesis_chain": false,
+        "one_lineage_identity": false,
+        "serialization_chain_unbroken": false
+      },
+      "continuity_proofs_failed": [
+        "checkpoint_at_every_stage_boundary",
+        "journal_extends_the_genesis_chain",
+        "one_lineage_identity",
+        "serialization_chain_unbroken"
+      ],
+      "cost_stages_1_to_3": 85,
+      "diagnostic_probes": 4,
+      "digest_recorded_before_the_fault": "9f6ce6ea9abfa0f2bb3d74ec0dcd0ac17d89e14cb6337b10fe1f3b5709535b73",
+      "executed_in_child_process": true,
+      "false_refusals": 0,
+      "fault_detected_at_stage": [],
+      "final_body_version": 1,
+      "goals_reached_from_state": 11,
+      "per_stage": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 10,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 2,
+          "refusals": 2,
+          "repair_cycles": 1,
+          "state_reads": 17,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        }
+      ],
+      "predicates_per_stage": [
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "r3"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        }
+      ],
+      "refusals": 5,
+      "rehearsal_salt_used": false,
+      "repair_cycles": 4,
+      "restored_digest": null,
+      "self_report_overcount_per_stage": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "slots_used_final": 5,
+      "stages": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "676f8ddf18a941aba8c21c806dc8775e5a4d02c3d4d296a32aa1b6fa829f98fc",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "6908e0f5f1d181d27616c8c593f2f814dbac2e772ba27721619e2130bc8d5db0",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "7a0d8a0d9b6d286a048a6e51b36481112b52e63d20d3229efe51eeac5a3d494b",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "8e657e12445702340505da5f9c187d0379637d8f7863232692e2af17a1e3387c",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 0,
+          "state_reads": 18,
+          "substrate": "shell",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "3bc87f5dcb64cb4e11a19481f566ba840f8d37dbe5e474549d09f24a4475af38",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "f35f94fd7b92f3fd1fb891951f4f3f002bb8b730e260f921130f14375115768c",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "f498867a6fcda4764c105e445886848bf38a5e0bc0c888f237e984dae77aed7c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "2a5fda515230af362f537d096f4a3fa6cf843a23bf32d08aaf102e60b8eb2981",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 1,
+          "state_reads": 18,
+          "substrate": "browser",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 10,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "d70f5d683f9e0c358aa670715efccb307d38c23eaa3040c6ae82d5ea49daa242",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "fd825a4dd967f3fe7843615620322bd9b5517b0a72c78e11a455519224004df5",
+              "first_plan_claimed": null,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            },
+            {
+              "commitment": "92c11bafbd95dba2156b9f6ad5e3f30239508cd55d8a61a7c8941478c0d3dad4",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "726c995b2ce879aa4986c82cb1879744c6eb7cef7160f21a6b3e33568d77a2f6",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 2,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "r3"
+          },
+          "refusals": 2,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 2,
+          "state_reads": 17,
+          "substrate": "desktop",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "08190cf99357134d73613393949ac7479f67784de83f3eb3c87944b674e99d9b",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "9689ef0925455a90e37503f13e469d8d8d8576145f1c561531680eaba6135e5e",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "aee5d3c625d6ba97ebd0dc531918176efdb7cd40b920f67ecebcf242f1fc1e8c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "11feb9ca169ae48670438d769420da6486be791ad2c118ff4ca803fc951872f4",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 3,
+          "state_reads": 18,
+          "substrate": "shell",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        }
+      ],
+      "state_reads_total": 71,
+      "transformations_adopted": 4,
+      "unreachable_recorded_reached": 0,
+      "wasted_actions_on_unreachable_goals": 4
+    },
+    "lineage": {
+      "actions_total": 27,
+      "affordance_probes": 3,
+      "arm": "lineage",
+      "continuity_proofs": {
+        "body_version_never_resets": true,
+        "checkpoint_at_every_stage_boundary": true,
+        "journal_extends_the_genesis_chain": true,
+        "one_lineage_identity": true,
+        "serialization_chain_unbroken": true
+      },
+      "continuity_proofs_failed": [],
+      "cost_stages_1_to_3": 46,
+      "diagnostic_probes": 3,
+      "digest_recorded_before_the_fault": "81d9d43744646f16a5f1b5512cb2a4b60f88c01b115e38322b8178b64f36bff5",
+      "executed_in_child_process": true,
+      "false_refusals": 0,
+      "fault_detected_at_stage": [
+        2
+      ],
+      "final_body_version": 1,
+      "goals_reached_from_state": 11,
+      "per_stage": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 18,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 7,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 1,
+          "state_reads": 12,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        },
+        {
+          "actions": 6,
+          "affordance_probes": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals_reached_from_state": 2,
+          "refusals": 2,
+          "repair_cycles": 1,
+          "state_reads": 11,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        },
+        {
+          "actions": 3,
+          "affordance_probes": 0,
+          "diagnostic_probes": 0,
+          "false_refusals": 0,
+          "goals_reached_from_state": 3,
+          "refusals": 1,
+          "repair_cycles": 0,
+          "state_reads": 7,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        }
+      ],
+      "predicates_per_stage": [
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        },
+        {
+          "kind": "prefix",
+          "value": "r3"
+        },
+        {
+          "kind": "prefix",
+          "value": "sea"
+        }
+      ],
+      "refusals": 5,
+      "rehearsal_salt_used": false,
+      "repair_cycles": 3,
+      "restored_digest": "81d9d43744646f16a5f1b5512cb2a4b60f88c01b115e38322b8178b64f36bff5",
+      "self_report_overcount_per_stage": [
+        2,
+        1,
+        1,
+        0
+      ],
+      "slots_used_final": 17,
+      "stages": [
+        {
+          "actions": 11,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "676f8ddf18a941aba8c21c806dc8775e5a4d02c3d4d296a32aa1b6fa829f98fc",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "6908e0f5f1d181d27616c8c593f2f814dbac2e772ba27721619e2130bc8d5db0",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "7a0d8a0d9b6d286a048a6e51b36481112b52e63d20d3229efe51eeac5a3d494b",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "8e657e12445702340505da5f9c187d0379637d8f7863232692e2af17a1e3387c",
+              "first_plan_claimed": true,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no carrier survives the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": false,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "end_of_stage",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 2,
+          "slots_used": 5,
+          "stage": 0,
+          "state_reads": 18,
+          "substrate": "shell",
+          "transformations_adopted": 1,
+          "transformations_proposed": 1,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 1
+        },
+        {
+          "actions": 7,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "3bc87f5dcb64cb4e11a19481f566ba840f8d37dbe5e474549d09f24a4475af38",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "f35f94fd7b92f3fd1fb891951f4f3f002bb8b730e260f921130f14375115768c",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "f498867a6fcda4764c105e445886848bf38a5e0bc0c888f237e984dae77aed7c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "2a5fda515230af362f537d096f4a3fa6cf843a23bf32d08aaf102e60b8eb2981",
+              "first_plan_claimed": null,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "per_goal",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 1,
+          "slots_used": 10,
+          "stage": 1,
+          "state_reads": 12,
+          "substrate": "browser",
+          "transformations_adopted": 0,
+          "transformations_proposed": 0,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        },
+        {
+          "actions": 6,
+          "affordance_probes": 1,
+          "body_version_after": 1,
+          "diagnostic_probes": 1,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "d70f5d683f9e0c358aa670715efccb307d38c23eaa3040c6ae82d5ea49daa242",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 1,
+              "state_after_first_plan": false,
+              "state_reached": true
+            },
+            {
+              "commitment": "fd825a4dd967f3fe7843615620322bd9b5517b0a72c78e11a455519224004df5",
+              "first_plan_claimed": null,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            },
+            {
+              "commitment": "92c11bafbd95dba2156b9f6ad5e3f30239508cd55d8a61a7c8941478c0d3dad4",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "726c995b2ce879aa4986c82cb1879744c6eb7cef7160f21a6b3e33568d77a2f6",
+              "first_plan_claimed": null,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 2,
+          "policy_at_entry": "per_goal",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "r3"
+          },
+          "refusals": 2,
+          "repair_cycles": 1,
+          "seeded": true,
+          "self_report_overcount": 1,
+          "slots_used": 15,
+          "stage": 2,
+          "state_reads": 11,
+          "substrate": "desktop",
+          "transformations_adopted": 0,
+          "transformations_proposed": 0,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        },
+        {
+          "actions": 3,
+          "affordance_probes": 0,
+          "body_version_after": 1,
+          "diagnostic_probes": 0,
+          "false_refusals": 0,
+          "goals": [
+            {
+              "commitment": "08190cf99357134d73613393949ac7479f67784de83f3eb3c87944b674e99d9b",
+              "first_plan_claimed": true,
+              "index": 0,
+              "kind": "repair",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "9689ef0925455a90e37503f13e469d8d8d8576145f1c561531680eaba6135e5e",
+              "first_plan_claimed": true,
+              "index": 1,
+              "kind": "clear",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "aee5d3c625d6ba97ebd0dc531918176efdb7cd40b920f67ecebcf242f1fc1e8c",
+              "first_plan_claimed": true,
+              "index": 2,
+              "kind": "control",
+              "organism_outcome": "reached",
+              "reachable": true,
+              "refusal_reason": "",
+              "repair_cycles": 0,
+              "state_after_first_plan": true,
+              "state_reached": true
+            },
+            {
+              "commitment": "11feb9ca169ae48670438d769420da6486be791ad2c118ff4ca803fc951872f4",
+              "first_plan_claimed": null,
+              "index": 3,
+              "kind": "unreachable",
+              "organism_outcome": "refused",
+              "reachable": false,
+              "refusal_reason": "no admissible carrier remains under the acquired evidence",
+              "repair_cycles": 0,
+              "state_after_first_plan": null,
+              "state_reached": false
+            }
+          ],
+          "goals_reached_from_state": 3,
+          "policy_at_entry": "per_goal",
+          "policy_at_exit": "per_goal",
+          "predicate": {
+            "kind": "prefix",
+            "value": "sea"
+          },
+          "refusals": 1,
+          "repair_cycles": 0,
+          "seeded": true,
+          "self_report_overcount": 0,
+          "slots_used": 17,
+          "stage": 3,
+          "state_reads": 7,
+          "substrate": "shell",
+          "transformations_adopted": 0,
+          "transformations_proposed": 0,
+          "unreachable_recorded_reached": 0,
+          "wasted_actions_on_unreachable_goals": 0
+        }
+      ],
+      "state_reads_total": 48,
+      "transformations_adopted": 1,
+      "unreachable_recorded_reached": 0,
+      "wasted_actions_on_unreachable_goals": 1
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "a4081e5bded51e7079c52fd09baf3bd9ff9bae0926e9a7f5ff81426523b7f047",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "behaviour_on_privately_maintained_external_tasks": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "establishes_cross_domain_transfer": false,
+    "establishes_general_autonomy": false,
+    "establishes_general_desktop_competence": false,
+    "establishes_one_persistent_lineage_across_three_real_substrates": true,
+    "establishes_open_ended_evolution": false,
+    "establishes_structural_retention_without_replay": false,
+    "establishes_verifiable_descent_across_serialization_boundaries": true,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false
+  },
+  "external_model_called": false,
+  "failed_conditions": [],
+  "network_opened": false,
+  "protocol_commitment": "ccab500f5a56fb3ce3f18a256d84bf56d8de8b4e80c53807413ab0a0e5b7a3aa",
+  "python": "3.14.6",
+  "rehearsal": false,
+  "result_sha256": "1cbeef8a7caafe487ad3e31123bceac5bd03c1b43eb1e90d2fb3a321902f830b",
+  "retried": false,
+  "schema": "m084-integrated-persistent-embodiment-result-v1",
+  "verdict": "positive"
+}

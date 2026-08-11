@@ -986,3 +986,32 @@ This is not a protocol defect and is not silently repaired. The public bank is c
 the baseline/context samples are independent, so the aggregate improvement is diagnostic rather
 than causal or scientific. D041 preserves the counterexample, closes tuning on this bank and
 requires a pre-private causal-control and sealed-bank review.
+
+## M084 rehearsal — the induction manufactured a false refusal from one-sided evidence
+
+M084's organism learns which carriers a substrate silently discards and induces the **shortest**
+prefix separating them from the carriers it has seen hold a value. Shortest rather than longest,
+because the longest common prefix of two names observed in one stage carries that stage's tag and
+would transfer to nothing.
+
+The rule is unsound when only one side has been observed. With no durable carrier recorded yet, every
+prefix trivially separates, so the shortest is one character: `sealed-a1` induced `s`, which also
+rejects `secure-a1`. The organism then found no admissible carrier and **refused a reachable goal**
+in the browser and desktop stages of the first rehearsal — a false refusal manufactured by the
+induction rather than by the substrate.
+
+Stage 0 hid it. There the organism still verifies at the end of the stage, so an affordance probe had
+already supplied a durable observation before it diagnosed anything, and the predicate came out `sea`
+as intended. From stage 1 onward it verifies per goal and the diagnosis arrives first. A defect that
+appears only after a body transformation changes the order of events is exactly the kind that a
+single-stage experiment cannot see.
+
+Nothing was materialized. The rehearsal ran on a throwaway salt with no bank bound and no result
+preserved, precisely so that the recorded run could be attempt 1. Amendment A1 makes the predicate
+name the observed carriers exactly until the evidence is two-sided; A2 records a verified carrier as
+durable evidence, which is what makes the evidence two-sided in the first place. No threshold, salt
+or goal grammar changed.
+
+The clause that caught it is P2, the zero-false-refusal requirement. It was written into the frozen
+protocol as a control against over-eager refusal by the *substrate*; it caught over-eager refusal by
+the organism's own inference instead. See D050.
