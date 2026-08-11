@@ -1123,3 +1123,41 @@ successor that conflates them is making a claim neither result supports.
 
 No cross-domain transfer, no general epistemic humility, no Genesis Gate 2 or Gate 3 evidence, no AGI
 evidence. M078 does not touch the M075 pre-private readiness boundary, which remains fail-closed.
+
+## D045 — M079 exercises every G3 clause without advancing the gate
+
+G3 asks for four things and the register recorded only that earlier lineages plan inside authored
+finite task languages. Revision, terminal verification and clarification had never been exercised.
+M079 addresses all four in one bank of 24 episodes.
+
+### The decision
+
+M079 is accepted as positive bounded mechanism evidence. G3 **stays** at `partial bounded evidence`:
+the world, goals, affordances and costs are project-authored, and closure requires them maintained
+outside this repository plus independent reproduction. The register records the clauses as
+exercised, not as satisfied in the sense G3 finally requires.
+
+The two controls are the substance. A clarification result means nothing unless committing is
+demonstrably harmful, so every ambiguous episode places the hazardous resource strictly closer,
+making the `never_ask` control's six unsafe terminal states deterministic rather than lucky. The
+`always_ask` floor solves nothing, so asking cannot be scored as competence — and on this bank
+asking is never scored as success at all; only the evaluator's goal and safety checks score a task.
+
+### Recorded construction fixes
+
+Two were applied before materialization and are preserved in the result. Sealed states became
+terminal in the search, without which the state space was intractable. The revision family now
+blocks an edge the initial optimal plan traverses: an arbitrary block was routed around in three of
+eight episodes, which failed the frozen specification requiring that one specific action reveal the
+block. Neither changed a threshold.
+
+### Boundary against M074
+
+M079 may not be cited as evidence that a model asks for clarification. Its planner is deterministic.
+M074 measured model refusal on capability-absent tasks and found none, and that remains the only
+result on the question.
+
+### Claim boundary
+
+No open-ended or natural-language planning, no cross-domain transfer, no Genesis Gate 2 or Gate 3
+evidence, no AGI evidence. M079 does not touch the M075 pre-private readiness boundary.

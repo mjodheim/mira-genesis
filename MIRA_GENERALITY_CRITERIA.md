@@ -70,6 +70,12 @@ the bodies are project-authored and closure requires an externally maintained in
 plus independent reproduction. It says nothing about model refusal behaviour, where M074's negative
 remains the only result.
 
+M079 is positive bounded planning-mechanism evidence on the endogenous track. It exercises all
+four G3 clauses under a construction where committing on an ambiguous goal is demonstrably
+harmful: a never-ask control reached six unsafe terminal states, and asking is never scored as
+success. The world is project-authored, so G3 does not advance. Its planner is deterministic and
+it is not evidence about model clarification behaviour.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -165,7 +171,7 @@ results are known.
 |---|---|---|
 | G1 | stronger partial mechanism evidence | M068 induces four distinct adapters across a precommitted authored body bank. M078 now exercises the refusal clause: one unchanged procedure adapted four compatible bodies at 12/12 hidden each and refused four incompatible ones with zero false refusals, while a never-refuse control adopted a public-fitting adapter on all four and failed hidden validation. M071 adds one accepted fresh blind external task, but the task source is visible. Every body remains project-authored, so the gate does not advance. M069 contributes no qualified evidence after D037. |
 | G2 | partial mechanism evidence | M076 runs one persistent agent over language, structured state and synthetic pixels, emitting both symbolic calls and embodied actions. Matched shape-preserving ablations give an exact triple dissociation against a measured guessing floor. The rasters are authored 24×24 panels in one domain, so natural-image perception and modality breadth remain absent. |
-| G3 | partial bounded evidence | Earlier lineages plan inside authored finite task languages. |
+| G3 | partial bounded evidence, all four clauses exercised | Earlier lineages plan inside authored finite task languages. M079 adds one planner given only a goal predicate, affordance schemas with costs and a budget: 8/8 static and 8/8 revision tasks solved, revision on all eight, clarification on 8/8 ambiguous and 0/16 unambiguous goals, zero unsafe terminal states. A never-ask control reached six unsafe terminal states and an always-ask floor solved nothing. The world is project-authored, so the gate does not advance. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
 | G5 | stronger partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill that survives complete teacher removal, but tests only one homogeneous authored family and no forgetting. |
 | G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. A second task is refused; browser/desktop competence and broad environment coverage remain absent. |

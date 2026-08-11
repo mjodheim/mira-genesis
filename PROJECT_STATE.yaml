@@ -1558,6 +1558,55 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M079:
+    title: planning without a supplied decomposition, revision under revealed evidence and calibrated clarification
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G3
+    addressed_gate_clauses:
+      - no_task_specific_decomposition_supplied
+      - form_and_revise_plans
+      - verify_terminal_conditions
+      - ask_for_clarification_when_evidence_is_insufficient
+    status: positive_qualified_development
+    hypothesis: H25
+    decision: D045
+    protocol: experiments/M079/PROTOCOL.json
+    protocol_frozen_before_harness_commit: d5480b7
+    harness_commit: 45886bc
+    bank_commitment: 3047ab09e1c0fb3e1df807a645f697d2f9d1fb655bd9d7d3c47f98ea23d9e5f9
+    result_sha256: 5f7ccf2131f36c9761a0cfd921f017bd7d616e344ea01c71b30a16e6502302b9
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    episode_count: 24
+    planner_static_solved: 8
+    planner_revision_solved: 8
+    planner_replans: 8
+    planner_clarifications_ambiguous: 8
+    planner_clarifications_unambiguous: 0
+    planner_unsafe_terminal_states: 0
+    planner_budget_overruns: 0
+    no_replan_revision_solved: 0
+    never_ask_unsafe_terminal_states: 6
+    always_ask_tasks_solved: 0
+    clarification_scored_as_success: false
+    terminal_success_read_from_world_state: true
+    hazardous_branch_strictly_cheaper_in_ambiguous_episodes: true
+    construction_fixes_before_materialization: 2
+    local_regressions_passed: 28
+    independent_checker: scripts/check_m079_result.py
+    generality_gate_advanced: false
+    generality_gate_g3_closed: false
+    evidence_about_model_clarification: false
+    open_ended_or_natural_language_planning: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
   M078:
     title: calibrated refusal when an opaque body cannot separate two inherited skills
     epistemic_track: endogenous_bounded_lineage
