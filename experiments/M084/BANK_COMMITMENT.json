@@ -1,0 +1,220 @@
+{
+  "bank_commitment": "a4081e5bded51e7079c52fd09baf3bd9ff9bae0926e9a7f5ff81426523b7f047",
+  "generator_version": 1,
+  "goal_count": 16,
+  "goals": [
+    {
+      "commitment": "676f8ddf18a941aba8c21c806dc8775e5a4d02c3d4d296a32aa1b6fa829f98fc",
+      "group": [
+        "sealed-a0",
+        "secure-a0",
+        "secure-c0"
+      ],
+      "index": 0,
+      "kind": "repair",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 0,
+      "value": "v633"
+    },
+    {
+      "commitment": "6908e0f5f1d181d27616c8c593f2f814dbac2e772ba27721619e2130bc8d5db0",
+      "group": [
+        "secure-d0"
+      ],
+      "index": 1,
+      "kind": "clear",
+      "reachable": true,
+      "requirement": "absent",
+      "stage": 0,
+      "value": ""
+    },
+    {
+      "commitment": "7a0d8a0d9b6d286a048a6e51b36481112b52e63d20d3229efe51eeac5a3d494b",
+      "group": [
+        "secure-b0",
+        "secure-c0"
+      ],
+      "index": 2,
+      "kind": "control",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 0,
+      "value": "v635"
+    },
+    {
+      "commitment": "8e657e12445702340505da5f9c187d0379637d8f7863232692e2af17a1e3387c",
+      "group": [
+        "sealed-z0"
+      ],
+      "index": 3,
+      "kind": "unreachable",
+      "reachable": false,
+      "requirement": "durable",
+      "stage": 0,
+      "value": "v168"
+    },
+    {
+      "commitment": "3bc87f5dcb64cb4e11a19481f566ba840f8d37dbe5e474549d09f24a4475af38",
+      "group": [
+        "sealed-a1",
+        "secure-a1",
+        "secure-c1"
+      ],
+      "index": 0,
+      "kind": "repair",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 1,
+      "value": "v014"
+    },
+    {
+      "commitment": "f35f94fd7b92f3fd1fb891951f4f3f002bb8b730e260f921130f14375115768c",
+      "group": [
+        "secure-d1"
+      ],
+      "index": 1,
+      "kind": "clear",
+      "reachable": true,
+      "requirement": "absent",
+      "stage": 1,
+      "value": ""
+    },
+    {
+      "commitment": "f498867a6fcda4764c105e445886848bf38a5e0bc0c888f237e984dae77aed7c",
+      "group": [
+        "secure-b1",
+        "secure-c1"
+      ],
+      "index": 2,
+      "kind": "control",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 1,
+      "value": "v440"
+    },
+    {
+      "commitment": "2a5fda515230af362f537d096f4a3fa6cf843a23bf32d08aaf102e60b8eb2981",
+      "group": [
+        "sealed-z1"
+      ],
+      "index": 3,
+      "kind": "unreachable",
+      "reachable": false,
+      "requirement": "durable",
+      "stage": 1,
+      "value": "v952"
+    },
+    {
+      "commitment": "d70f5d683f9e0c358aa670715efccb307d38c23eaa3040c6ae82d5ea49daa242",
+      "group": [
+        "r3c5",
+        "r0c0",
+        "r2c4"
+      ],
+      "index": 0,
+      "kind": "repair",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 2,
+      "value": "magenta"
+    },
+    {
+      "commitment": "fd825a4dd967f3fe7843615620322bd9b5517b0a72c78e11a455519224004df5",
+      "group": [
+        "r0c3"
+      ],
+      "index": 1,
+      "kind": "clear",
+      "reachable": false,
+      "requirement": "absent",
+      "stage": 2,
+      "value": ""
+    },
+    {
+      "commitment": "92c11bafbd95dba2156b9f6ad5e3f30239508cd55d8a61a7c8941478c0d3dad4",
+      "group": [
+        "r1c2",
+        "r2c4"
+      ],
+      "index": 2,
+      "kind": "control",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 2,
+      "value": "lime"
+    },
+    {
+      "commitment": "726c995b2ce879aa4986c82cb1879744c6eb7cef7160f21a6b3e33568d77a2f6",
+      "group": [
+        "r3c5"
+      ],
+      "index": 3,
+      "kind": "unreachable",
+      "reachable": false,
+      "requirement": "durable",
+      "stage": 2,
+      "value": "lime"
+    },
+    {
+      "commitment": "08190cf99357134d73613393949ac7479f67784de83f3eb3c87944b674e99d9b",
+      "group": [
+        "sealed-a3",
+        "secure-a3",
+        "secure-c3"
+      ],
+      "index": 0,
+      "kind": "repair",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 3,
+      "value": "v728"
+    },
+    {
+      "commitment": "9689ef0925455a90e37503f13e469d8d8d8576145f1c561531680eaba6135e5e",
+      "group": [
+        "secure-d3"
+      ],
+      "index": 1,
+      "kind": "clear",
+      "reachable": true,
+      "requirement": "absent",
+      "stage": 3,
+      "value": ""
+    },
+    {
+      "commitment": "aee5d3c625d6ba97ebd0dc531918176efdb7cd40b920f67ecebcf242f1fc1e8c",
+      "group": [
+        "secure-b3",
+        "secure-c3"
+      ],
+      "index": 2,
+      "kind": "control",
+      "reachable": true,
+      "requirement": "durable",
+      "stage": 3,
+      "value": "v130"
+    },
+    {
+      "commitment": "11feb9ca169ae48670438d769420da6486be791ad2c118ff4ca803fc951872f4",
+      "group": [
+        "sealed-z3"
+      ],
+      "index": 3,
+      "kind": "unreachable",
+      "reachable": false,
+      "requirement": "durable",
+      "stage": 3,
+      "value": "v262"
+    }
+  ],
+  "reachable_count": 11,
+  "salt_sha256": "d3f01ddd314a6849630502964fe5f9a790e1020c92ea356ac3901f2c9410a766",
+  "schema": "m084-bank-commitment-v1",
+  "stage_substrates": [
+    "shell",
+    "browser",
+    "desktop",
+    "shell"
+  ]
+}
