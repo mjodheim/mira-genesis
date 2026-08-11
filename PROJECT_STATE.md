@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 10 August 2026**
+**Updated: 11 August 2026**
 
 ## Authoritative summary
 
@@ -93,6 +93,23 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M084 makes the Phase 8 mechanisms the faculties of one lineage, and advances no gate.** Protocol
+  frozen before the harness at `ecb297c`; harness and amendments A1–A3 at `f19af86`; bank commitment
+  `a4081e5b…7f047`; first result `1cbeef8a…f830b`, attempt 1, no retry. One organism, serialized to a
+  file and executed in four separate operating system processes, crossed
+  `shell → browser → desktop → shell`. It reached **11/11** reachable goals scored from environment
+  state, refused **5/5** unreachable ones with **zero** false refusals, and on its return to the
+  shell — with carrier names stage 0 never saw — performed **zero** diagnostic probes, zero repair
+  cycles and zero affordance probes, because it still carried the rejection predicate `sea` it had
+  induced and the fact that removal works there. The same lineage with its acquisitions cleared at
+  each boundary needed one of each and cost **85 against 46** over stages 1–3, re-adopting the
+  identical transformation four times; a fresh organism per stage matched it metric for metric and
+  failed four of five continuity proofs. A corruption injected after stage 1 was detected **by the
+  stage-2 child** and restored to the digest stage 1 had recorded before the corruption existed.
+  **The ablation costs no correctness** — every arm reached every reachable goal — so persistence
+  bought cost and earliness rather than capability, and **no generality gate advances**. Recorded
+  finding: the agent M081–M083 carry across four substrates replays a precomputed action list, so
+  those are interface results; M084 deliberately does not import it. See D050 and H30.
 - **M083 adds a fourth environment legible only as rendered pixels, and is not a VM.** Protocol
   and image recipe frozen before the harness at `a1409bf`; bank commitment `cd549c72…4372a`;
   first result `5d5ccd63…70807`, attempt 1, no retry. A real X server, window manager and Tk

@@ -595,3 +595,33 @@ both a regression and the checker fail if that discovery is removed.
 hypervisor was available, so G6's desktop-VM clause remains unmet. The application is an authored Tk
 grid, so this is coordinate-and-pixel competence on one window rather than general desktop competence.
 The container-backed evidence is local opt-in rather than CI-attested. See D049.
+
+## H30 — Separately qualified mechanisms can be the faculties of one persistent lineage
+
+The mechanisms qualified in isolation by M076–M083 can be composed into a single organism that
+crosses several real substrates while keeping one identity, one causal journal, one bounded memory
+and the knowledge it acquired on the way; and knowledge acquired in the first substrate remains
+causally useful when the lineage returns to it after two materially different substrates and three
+serialization boundaries.
+
+**Status:** supported by the M084 qualified development result. One organism crossed
+`shell → browser → desktop → shell` in four separate operating system processes, reached 11/11
+reachable goals scored from environment state, refused 5/5 unreachable goals with zero false
+refusals, and on its return performed zero diagnostic probes, zero repair cycles and zero affordance
+probes. The same lineage with its acquisitions cleared at every boundary needed one of each in that
+stage and cost 85 against 46 over stages 1–3. Bank `a4081e5b…7f047`; result `1cbeef8a…f830b`,
+attempt 1, no retry.
+
+**Required implication:** the acquisition must generalize, not be recalled. The returning stage uses
+carrier names the first stage never saw, so a rule keyed to a name would transfer nothing. The
+organism induces the **shortest** prefix separating the carriers it observed to discard from those it
+observed to hold, which is `sea` across `sealed-*` and `secure-*`. Amendment A1 exists because the
+rule was unsound when the evidence was one-sided: with no durable carrier observed it collapsed to
+`s` and the lineage falsely refused a reachable goal in the rehearsal.
+
+**What it does not support:** the ablation costs no correctness. Every arm reached every reachable
+goal and refused every unreachable one, so persistence bought cost and earliness rather than
+capability, and must be reported that way. A fact learned in the shell is never offered to the
+browser even though both discard the same authored prefix, so nothing here is cross-domain transfer.
+The goals, carriers, applications and substrates are project-authored and eleven reachable goals over
+four stages is a small bank. See D050.

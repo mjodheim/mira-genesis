@@ -1,8 +1,16 @@
 project: Mira Genesis
-updated_at: 2026-08-10
-status: phase_eight_m076_g2_grounding_positive_and_m075_private_freeze_not_ready
+updated_at: 2026-08-11
+status: phase_eight_m084_mechanisms_integrated_into_one_persistent_lineage_no_gate_advanced
 
 active_research_question: >-
+  M084 showed that the mechanisms M076-M083 qualified separately can be the faculties of one
+  persistent lineage across three real substrates, but its ablation cost only efficiency and every
+  goal, carrier and substrate is project-authored. The next question is G4: can knowledge acquired
+  in one domain improve held-out performance in a materially different one, on tasks maintained
+  outside this project, behind the M075 fail-closed private boundary and with independent
+  reproduction?
+
+preceding_research_question: >-
   After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
   successor develop task-agnostic epistemic and remaining-budget state on a separate bank, then
   transfer it across private uncontaminated, materially different capability families with
@@ -1556,6 +1564,105 @@ phase_eight:
     genesis_gate_2_evidence: false
     genesis_gate_3_evidence: false
     agi_evidence: false
+    independent_reproduction_required: true
+
+  M084:
+    title: one persistent lineage integrating the separately qualified Phase 8 mechanisms
+    epistemic_track: endogenous_bounded_lineage
+    result_kind: integration_not_capability
+    parent_results: [M076, M077, M078, M079, M080, M081, M082, M083]
+    status: positive_qualified_development
+    hypothesis: H30
+    decision: D050
+    protocol: experiments/M084/PROTOCOL.json
+    protocol_frozen_before_harness_commit: ecb297c
+    harness_and_amendments_commit: f19af86
+    result_preserved_commit: baba1f2
+    bank_commitment: a4081e5bded51e7079c52fd09baf3bd9ff9bae0926e9a7f5ff81426523b7f047
+    result_sha256: 1cbeef8a7caafe487ad3e31123bceac5bd03c1b43eb1e90d2fb3a321902f830b
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_opened: false
+    third_party_attestation_required: false
+    stage_sequence: [shell, browser, desktop, shell]
+    distinct_real_substrates: 3
+    returns_to_the_first_substrate: true
+    fresh_container_per_stage: true
+    stages_executed_in_separate_os_processes: 4
+    stages_executed_in_the_parent_process: 0
+    organism_records_digest_of_the_file_it_loaded: true
+    mechanisms_imported_not_restated:
+      journal: metamorphosis.m077_long_horizon_recovery.Journal
+      bounded_memory_table: metamorphosis.m080_continual_retention.Table
+      plan_enumeration: metamorphosis.bounded_search.uniform_cost_plans
+      environments: [M081, M082, M083]
+    m081_agent_imported: false
+    m081_agent_omission_is_deliberate: true
+    recorded_finding_m081_m082_m083_are_interface_results: true
+    reachable_goals: 11
+    unreachable_goals: 5
+    lineage_reachable_goals_reached: 11
+    lineage_refusals: 5
+    lineage_false_refusals: 0
+    lineage_unreachable_recorded_reached: 0
+    lineage_returning_stage_diagnostic_probes: 0
+    lineage_returning_stage_repair_cycles: 0
+    lineage_returning_stage_affordance_probes: 0
+    ablated_returning_stage_diagnostic_probes: 1
+    ablated_returning_stage_repair_cycles: 1
+    ablated_returning_stage_affordance_probes: 1
+    lineage_cost_stages_1_to_3: 46
+    ablated_cost_stages_1_to_3: 85
+    lineage_actions_total: 27
+    lineage_state_reads_total: 48
+    ablated_actions_total: 43
+    ablated_state_reads_total: 71
+    lineage_wasted_actions_on_unreachable_goals: 1
+    ablated_wasted_actions_on_unreachable_goals: 4
+    transformations_adopted_lineage: 1
+    transformations_adopted_ablated: 4
+    lineage_final_body_version: 1
+    ablated_final_body_version: 4
+    ablated_and_fresh_behaviourally_identical: true
+    fresh_continuity_proofs_failed: 4
+    lineage_continuity_proofs_failed: 0
+    forced_fault_detected_by_stage_child: true
+    forced_fault_stage: 2
+    restored_digest_equals_recorded_pre_corruption_digest: true
+    restoration_compared_against_checkpoints_own_digest: false
+    self_report_overcount_per_stage: [2, 1, 1, 0]
+    induced_predicate_per_stage: [sea, sea, r3, sea]
+    predicate_carried_from_stage_0_to_stage_3: true
+    returning_stage_uses_carrier_names_never_seen_before: true
+    bounded_table_slots_used_final: 17
+    bounded_table_slots_available: 24
+    amendments_before_materialization: [A1, A2, A3]
+    amendment_a1_reason: shortest_separating_prefix_was_unsound_on_one_sided_evidence_and_caused_a_false_refusal_in_rehearsal
+    rehearsals_on_throwaway_salts: 2
+    rehearsal_bank_bound: false
+    rehearsal_result_preserved: false
+    ablation_costs_correctness: false
+    persistence_bought: cost_and_earliness_not_capability
+    independent_checker: scripts/check_m084_result.py
+    generality_gate_advanced: false
+    generality_gate_g2_closed: false
+    generality_gate_g3_closed: false
+    generality_gate_g4_closed: false
+    generality_gate_g5_closed: false
+    generality_gate_g6_closed: false
+    generality_gate_g7_closed: false
+    cross_domain_transfer: false
+    facts_offered_across_substrates: false
+    structural_retention_without_replay: false
+    open_ended_evolution: false
+    general_autonomy: false
+    general_desktop_competence: false
+    private_external_task_behaviour: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    repository_credential_network_deployment_authority_granted: false
     independent_reproduction_required: true
 
   M083:

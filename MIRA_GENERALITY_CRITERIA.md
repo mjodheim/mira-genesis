@@ -98,6 +98,19 @@ G6's desktop VM: a container shares the host kernel and no hypervisor was availa
 crossed-driver arm completes nothing, so the rendered grid is reachable only through the screen.
 The application is an authored Tk grid, so G6 does not advance.
 
+M084 is positive bounded **integration** evidence on the endogenous track and advances no gate. It
+adds no modality, no planning clause, no retention mechanism and no environment; it shows that the
+mechanisms M076–M083 qualified separately can belong to one organism that crosses three real
+substrates with a verifiable descent. Its ablation costs no correctness — every arm reached every
+reachable goal and refused every unreachable one — so persistence bought cost and earliness, not
+capability, and may not be cited otherwise. A fact learned in the shell is never offered to the
+browser, so nothing here is cross-domain evidence.
+
+M084 also records a correction to how M081–M083 may be read. The agent those three carry across four
+real substrates replays an action list computed by their bank generator: it perceives nothing, plans
+nothing and detects no failure. They are interface results, and the phrase "one unchanged agent"
+must not be read as agent competence.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -201,5 +214,11 @@ results are known.
 | G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |
 | G9 | strong bounded evidence | Frozen canonical workflows, negative preservation and exact reproduction. |
 | G10 | strong bounded mechanism evidence with a negative calibration result | M071 preserves no-network isolation and evaluator-owned success; M072 causally isolates authority admission and audit chaining. M074 validly records 0/3 true refusals on authored capability-absence pairs, so no independent calibrated-refusal claim exists. |
+
+M084 changes no row. It is recorded here because integration without a gate advance is exactly the
+kind of result that later gets cited as one: one organism now carries the G2-adjacent perception, the
+G3-adjacent planning and refusal, the G5-adjacent bounded memory and the G6 environments together,
+with one identity, one journal and a verified serialization chain — and every one of those gates
+stays where its own experiment left it.
 
 The next accepted result must change this table by evidence, not wording.

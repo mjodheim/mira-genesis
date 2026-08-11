@@ -1322,3 +1322,71 @@ with its diagnosis, because the failure mode is not a bug that announces itself.
 No desktop VM, no physical device, no external suite, no general desktop application competence, no
 Genesis Gate 2 or Gate 3 evidence, no AGI evidence. The container-backed evidence is local opt-in and
 not CI-attested. M083 does not touch the M075 pre-private readiness boundary.
+
+## D050 — M084 integrates the Phase 8 mechanisms into one lineage and advances no gate
+
+M076 through M083 each qualified a mechanism inside its own harness. M084 asks the question the
+registers had not: whether those mechanisms can be the **faculties of one persistent lineage**, or
+whether their success depended on the isolation of the harnesses that carried them.
+
+### The decision
+
+M084 is accepted as positive bounded integration evidence. **No generality gate advances.** G2, G3,
+G5 and G6 stay exactly where M076–M083 left them, because M084 adds no new modality, no new planning
+clause, no new retention mechanism and no new environment. What it adds is that these mechanisms now
+belong to one organism with a verifiable descent.
+
+### The finding about the parent results
+
+The agent M081, M082 and M083 drive across four real substrates replays an action list computed by
+their bank generator. It perceives nothing, plans nothing and detects no failure. Those three
+experiments are **interface** results — genuine ones, and correctly bounded in their own records —
+but nothing in the registers made that legible, and a reader could easily have taken "one unchanged
+agent across four real environments" for more than it was.
+
+M084 therefore does **not** import that agent. Importing it would be an empty citation. The omission
+is recorded in the frozen protocol and enforced by a regression and the checker. Everything else is
+imported rather than restated: M077's journal, M080's bounded table, M079's plan enumeration — moved
+into `metamorphosis/bounded_search.py` so both experiments use one copy, with M079 reproducing its
+preserved result `5f7ccf21` exactly — and the three environments unchanged.
+
+### What the ablation shows, and what it does not
+
+`acquisition_ablated` is the same lineage with its facts and adopted policy cleared at every stage
+boundary: same identity, same journal, same version. On the return to the shell it needed one
+diagnostic probe, one repair cycle and one affordance probe where the complete lineage needed none,
+and it cost 85 against 46 over stages 1–3. `fresh_each_stage` reproduced it metric for metric, which
+is what shows the ablation is not leaking, and failed four of five continuity proofs.
+
+**The ablation costs no correctness.** Every arm reached all eleven reachable goals and refused all
+five unreachable ones. Persistence bought cost and earliness — 27 actions and 48 reads against 43 and
+71, one wasted action on an impossible goal instead of four. This must not be reported as a
+capability difference.
+
+### The state-ownership defence is structural
+
+M082 came one design decision away from a green result in which the harness, not the browser, held
+the state. M084 answers that structurally rather than by inspection: each stage runs in a separate
+operating system process, the parent never calls a perception, planning or action function, and the
+organism records inside itself the digest of the file it loaded, so the chain of serializations is
+carried by the lineage rather than asserted by the harness.
+
+### Amendment A1, and why it is not a repair after the fact
+
+The pipeline was rehearsed twice on throwaway salts, with no bank bound and no result preserved. The
+first rehearsal produced a **false refusal**: the carrier-rejection predicate generalized from
+one-sided evidence and collapsed from `sea` to `s`, rejecting the organism's own alternatives. It was
+invisible in stage 0 only because the organism still verified at the end of the stage there. A1 and
+A2 corrected the induction before any artifact existed; no threshold, salt or goal grammar changed.
+The clause that caught it is P2, the zero-false-refusal requirement, which exists for exactly this.
+
+### Claim boundary
+
+No AGI, no general autonomy, no open-ended evolution, no cross-domain transfer, no closed G4, G6 or
+G7, no general desktop competence, no structural retention without replay, nothing about privately
+maintained external tasks. A fact learned in the shell is never offered to the browser even though
+both discard the same authored prefix; carrying it would be the relabelling this repository forbids.
+The desktop's induced predicate over-generalizes to cells no goal uses, because only one non-durable
+carrier is observable there, and that weakness is part of the record. Eleven reachable goals over
+four stages is a small bank and every goal, carrier, application and substrate is project-authored.
+M084 does not touch the M075 pre-private readiness boundary.
