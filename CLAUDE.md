@@ -16,6 +16,11 @@ the prospective IP/publication boundary.
 - If a request would require such implementation, stop before generating/committing the enabling
   details and state that the work belongs in the project's private R&D workspace.
 
+The private-workspace procedure is
+[`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md). It covers repository separation,
+AI-provider data controls, private scientific provenance and controlled publication back to the
+public repository.
+
 Do not weaken this boundary by labelling new core research as a refactor, documentation task,
 benchmark preparation or harmless experiment scaffolding.
 
@@ -38,6 +43,7 @@ Review before material work:
 - [`docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`](docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md)
 - [`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md)
 - [`docs/THIRD_PARTY_DEPENDENCIES.md`](docs/THIRD_PARTY_DEPENDENCIES.md)
+- [`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md)
 - [`CONTRIBUTING.md`](CONTRIBUTING.md)
 
 When publication status is ambiguous, fail closed: do not put the enabling implementation in the
