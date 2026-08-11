@@ -1558,6 +1558,55 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M080:
+    title: continual acquisition under shared-table interference with measured forgetting
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G5
+    addresses_gate_gap: forgetting_was_never_measured
+    status: positive_qualified_development_with_measured_limitation
+    hypothesis: H26
+    decision: D046
+    protocol: experiments/M080/PROTOCOL.json
+    protocol_frozen_before_harness_commit: b3e9aba
+    harness_commit: d68dfd3
+    bank_commitment: 3769e8266189c3ffd33871570e016e33271026cf8d305d9dd81283c9b063ec6d
+    result_sha256: 421121398984cdaec066de7aaf900a7f10ee92d956f5d2b9bb2f7705975dfc99
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    third_party_attestation_required: false
+    skills: 6
+    shared_table_slots: 24
+    private_slots_per_skill: 0
+    lineage_capabilities_lost: 0
+    lineage_final_retention_failures: 0
+    lineage_slots_used: 19
+    private_slot_ceiling: 24
+    memory_growth_sublinear: true
+    rules_reused: 3
+    rollbacks: 2
+    rollback_mismatches: 0
+    no_consolidation_capabilities_lost: 5
+    no_rollback_checkpoint_mismatches: 3
+    no_replay_capabilities_lost: 5
+    replay_dependence: replay_dependent
+    replay_dependence_direction_preregistered: false
+    retention_structural: false
+    retention_measured_over_full_key_set: true
+    rollback_check_previously_tautological: true
+    instrument_fixes_before_materialization: 3
+    structure_modified_is_the_policy: true
+    weight_learning_claimed: false
+    local_regressions_passed: 29
+    independent_checker: scripts/check_m080_result.py
+    generality_gate_advanced: false
+    generality_gate_g5_closed: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
   M079:
     title: planning without a supplied decomposition, revision under revealed evidence and calibrated clarification
     epistemic_track: endogenous_bounded_lineage

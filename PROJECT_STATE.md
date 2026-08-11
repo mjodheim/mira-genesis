@@ -93,6 +93,17 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M080 measures forgetting for the first time.** Protocol frozen before the harness at
+  `b3e9aba`; bank commitment `3769e826…3ec6d`; first result `42112139…5dfc99`, attempt 1, no
+  retry. Six skills are acquired into one bounded 24-slot table where later skills reuse an
+  earlier rule and demand a different output for an exception key the donor owns, so the cheap
+  in-place rewrite is always available and always destructive. The lineage lost zero
+  capabilities, used 19 slots against a private-slot ceiling of 24, reused three rules and
+  rolled back twice byte-identically; the consolidation ablation lost five capabilities and the
+  rollback ablation left three checkpoint mismatches. **Retention is replay-dependent, not
+  structural**: removing replay costs as much as removing consolidation, and the protocol
+  preregistered no direction for that measure. G5 does **not** advance — the skills are
+  project-authored.
 - **M079 exercises all four G3 clauses in one bank.** Protocol frozen before the harness at
   `d5480b7`; bank commitment `3047ab09…e5f9` bound before any arm ran; first result
   `5f7ccf21…302b9`, attempt 1, no retry. Given only a goal predicate, affordance schemas with costs,

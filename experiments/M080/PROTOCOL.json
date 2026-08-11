@@ -1,0 +1,106 @@
+{
+  "schema": "m080-continual-retention-protocol-v1",
+  "status": "frozen_before_lineage_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G5",
+  "addresses_gate_gap": "no forgetting was ever measured; M073 tested one homogeneous family with no interference",
+  "required_measures": [
+    "positive_transfer",
+    "negative_transfer",
+    "memory_growth",
+    "replay_dependence",
+    "exact_rollback"
+  ],
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "One lineage acquiring six skills in sequence into a single bounded shared table, where later skills demand slots earlier skills already hold, will retain every preregistered earlier capability at exact quality after each acquisition, grow memory sublinearly in the number of skills, and restore a byte-identical prior state after a rejected acquisition; a consolidation-ablated arm that writes on collision will lose at least one earlier capability, and a rollback-ablated arm will leave a state that does not match its checkpoint.",
+  "why_retention_is_not_free": "Skills share one bounded table and their key spaces deliberately collide, so an acquisition that writes naively destroys an earlier skill. A design that gave each skill private slots would guarantee retention by construction and measure nothing. The consolidation-ablated arm exists to demonstrate that the interference is real.",
+  "learning_claim": {
+    "structure_modified_is_the_policy_itself": true,
+    "external_memory_consulted_alongside_a_fixed_policy": false,
+    "weight_learning_claimed": false,
+    "note": "The shared table determines behaviour and acquisition rewrites it, so this is bounded policy learning rather than retrieval from a side store. It is not weight learning and no such claim is made."
+  },
+  "claim_boundary": {
+    "establishes_bounded_continual_acquisition_under_interference": true,
+    "establishes_measured_forgetting_and_retention": true,
+    "establishes_weight_learning": false,
+    "establishes_open_ended_skill_acquisition": false,
+    "establishes_cross_domain_transfer": false,
+    "closes_generality_gate_g5": false,
+    "genesis_gate_2_evidence": false,
+    "agi_evidence": false
+  },
+  "body": {
+    "shared_table_slots": 24,
+    "key_space": 64,
+    "output_alphabet": 8,
+    "private_slots_per_skill": 0,
+    "collision_by_construction": true
+  },
+  "skills": {
+    "count": 6,
+    "acquired_in_sequence": true,
+    "examples_per_skill": 10,
+    "held_out_checks_per_skill": 12,
+    "colliding_key_fraction_minimum": 0.25
+  },
+  "arms": {
+    "lineage": {
+      "consolidation": "enabled",
+      "replay": "enabled",
+      "rollback": "enabled"
+    },
+    "no_consolidation": {
+      "consolidation": "removed",
+      "replay": "enabled",
+      "rollback": "enabled",
+      "preregistered_loss": "writes on collision and loses at least one earlier capability"
+    },
+    "no_rollback": {
+      "consolidation": "enabled",
+      "replay": "enabled",
+      "rollback": "removed",
+      "preregistered_loss": "after a rejected acquisition the table does not match its checkpoint"
+    },
+    "no_replay": {
+      "consolidation": "enabled",
+      "replay": "removed",
+      "rollback": "enabled",
+      "measured_not_thresholded": true,
+      "purpose": "measure replay dependence. No direction is preregistered: if retention survives without replay the retention is structural, and if it does not the retention is replay-dependent. Both outcomes are informative and the result must state which occurred rather than selecting the flattering reading afterwards."
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "5f7b41e3511c0d6ed0c8c427c66bc09bb35d7c839d19ea13e05a0b82c1bd1476",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || uint32_be(skill_index)) fixes each skill's key set, output mapping and example/holdout split; later skills are drawn to overlap earlier key sets by at least the declared fraction",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "lineage_skills_acquired": 6,
+    "lineage_holdout_pass_per_skill": 12,
+    "lineage_retention_failures_after_any_acquisition": 0,
+    "lineage_memory_growth_sublinear_in_skills": true,
+    "lineage_rollback_byte_identical": true,
+    "no_consolidation_min_capabilities_lost": 1,
+    "no_rollback_min_checkpoint_mismatches": 1,
+    "skill_count_must_equal": 6,
+    "colliding_keys_must_exist_for_every_skill_after_the_first": true
+  },
+  "failure_classification": {
+    "negative": "Any skill not acquired, any retention failure by the lineage, a rollback that is not byte-identical, memory growth that is not sublinear, or either thresholded ablation failing to show its preregistered loss.",
+    "inconclusive": "The frozen bank cannot be reproduced exactly, or the generated skills do not actually collide, which would mean the construction is wrong rather than the lineage.",
+    "positive": "All six skills are acquired, every earlier capability is retained at exact quality after every later acquisition, rollback is byte-identical, memory growth is sublinear, and both thresholded ablations show their preregistered loss on the first materialized bank."
+  },
+  "prohibited_adaptation": [
+    "give any skill private slots or otherwise remove the interference",
+    "change the hypothesis, thresholds, salt or skill grammar after bank materialization",
+    "preregister or retrofit a direction for replay dependence",
+    "retry the first materialized bank",
+    "describe a side store consulted alongside a fixed policy as policy learning",
+    "describe this bounded result as closing G5, as weight learning, as open-ended acquisition or as AGI evidence"
+  ]
+}

@@ -1,0 +1,456 @@
+{
+  "arms": {
+    "lineage": {
+      "arm": "lineage",
+      "capabilities_lost": 0,
+      "cheap_paths_rejected": 2,
+      "final_retention_failures": 0,
+      "own_holdout_perfect": 6,
+      "rollback_mismatches": 0,
+      "rollbacks": 2,
+      "rules_reused": 3,
+      "slots_used_final": 19,
+      "timeline": [
+        {
+          "earlier_holdouts": {},
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 0,
+          "slots_used_after": 4,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22
+          },
+          "own_holdouts": 12,
+          "own_total": 12,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 1,
+          "slots_used_after": 8,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 2,
+          "slots_used_after": 12,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22,
+            "2": 22
+          },
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": true,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": true,
+          "skill": 3,
+          "slots_used_after": 14,
+          "slots_written": 2
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22,
+            "2": 22,
+            "3": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 4,
+          "slots_used_after": 16,
+          "slots_written": 2
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22,
+            "2": 22,
+            "3": 22,
+            "4": 22
+          },
+          "own_holdouts": 9,
+          "own_total": 9,
+          "rejected_cheap_path": true,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": true,
+          "skill": 5,
+          "slots_used_after": 19,
+          "slots_written": 3
+        }
+      ],
+      "total_slots_written": 19
+    },
+    "no_consolidation": {
+      "arm": "no_consolidation",
+      "capabilities_lost": 5,
+      "cheap_paths_rejected": 0,
+      "final_retention_failures": 3,
+      "own_holdout_perfect": 6,
+      "rollback_mismatches": 0,
+      "rollbacks": 0,
+      "rules_reused": 3,
+      "slots_used_final": 16,
+      "timeline": [
+        {
+          "earlier_holdouts": {},
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 0,
+          "slots_used_after": 4,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22
+          },
+          "own_holdouts": 12,
+          "own_total": 12,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 1,
+          "slots_used_after": 8,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 2,
+          "slots_used_after": 12,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22
+          },
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 3,
+          "slots_used_after": 13,
+          "slots_written": 1
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22,
+            "3": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 4,
+          "slots_used_after": 15,
+          "slots_written": 2
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 21,
+            "2": 21,
+            "3": 22,
+            "4": 22
+          },
+          "own_holdouts": 9,
+          "own_total": 9,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 5,
+          "slots_used_after": 16,
+          "slots_written": 1
+        }
+      ],
+      "total_slots_written": 16
+    },
+    "no_replay": {
+      "arm": "no_replay",
+      "capabilities_lost": 5,
+      "cheap_paths_rejected": 0,
+      "final_retention_failures": 3,
+      "own_holdout_perfect": 6,
+      "rollback_mismatches": 0,
+      "rollbacks": 0,
+      "rules_reused": 3,
+      "slots_used_final": 16,
+      "timeline": [
+        {
+          "earlier_holdouts": {},
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 0,
+          "slots_used_after": 4,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22
+          },
+          "own_holdouts": 12,
+          "own_total": 12,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 1,
+          "slots_used_after": 8,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 2,
+          "slots_used_after": 12,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22
+          },
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 3,
+          "slots_used_after": 13,
+          "slots_written": 1
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22,
+            "3": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 4,
+          "slots_used_after": 15,
+          "slots_written": 2
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 21,
+            "2": 21,
+            "3": 22,
+            "4": 22
+          },
+          "own_holdouts": 9,
+          "own_total": 9,
+          "rejected_cheap_path": false,
+          "reused_rule": true,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 5,
+          "slots_used_after": 16,
+          "slots_written": 1
+        }
+      ],
+      "total_slots_written": 16
+    },
+    "no_rollback": {
+      "arm": "no_rollback",
+      "capabilities_lost": 5,
+      "cheap_paths_rejected": 3,
+      "final_retention_failures": 3,
+      "own_holdout_perfect": 6,
+      "rollback_mismatches": 3,
+      "rollbacks": 0,
+      "rules_reused": 3,
+      "slots_used_final": 16,
+      "timeline": [
+        {
+          "earlier_holdouts": {},
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 0,
+          "slots_used_after": 4,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22
+          },
+          "own_holdouts": 12,
+          "own_total": 12,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 1,
+          "slots_used_after": 8,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 22,
+            "1": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": false,
+          "reused_rule": false,
+          "rollback_exact": true,
+          "rolled_back": false,
+          "skill": 2,
+          "slots_used_after": 12,
+          "slots_written": 4
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22
+          },
+          "own_holdouts": 11,
+          "own_total": 11,
+          "rejected_cheap_path": true,
+          "reused_rule": true,
+          "rollback_exact": false,
+          "rolled_back": false,
+          "skill": 3,
+          "slots_used_after": 13,
+          "slots_written": 0
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 22,
+            "2": 22,
+            "3": 22
+          },
+          "own_holdouts": 10,
+          "own_total": 10,
+          "rejected_cheap_path": true,
+          "reused_rule": true,
+          "rollback_exact": false,
+          "rolled_back": false,
+          "skill": 4,
+          "slots_used_after": 15,
+          "slots_written": 0
+        },
+        {
+          "earlier_holdouts": {
+            "0": 21,
+            "1": 21,
+            "2": 21,
+            "3": 22,
+            "4": 22
+          },
+          "own_holdouts": 9,
+          "own_total": 9,
+          "rejected_cheap_path": true,
+          "reused_rule": true,
+          "rollback_exact": false,
+          "rolled_back": false,
+          "skill": 5,
+          "slots_used_after": 16,
+          "slots_written": 0
+        }
+      ],
+      "total_slots_written": 12
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "3769e8266189c3ffd33871570e016e33271026cf8d305d9dd81283c9b063ec6d",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g5": false,
+    "establishes_bounded_continual_acquisition_under_interference": true,
+    "establishes_cross_domain_transfer": false,
+    "establishes_measured_forgetting_and_retention": true,
+    "establishes_open_ended_skill_acquisition": false,
+    "establishes_weight_learning": false,
+    "genesis_gate_2_evidence": false
+  },
+  "external_model_called": false,
+  "failed_conditions": [],
+  "instrument_fixes_before_materialization": [
+    "interference moved from capacity pressure alone to rule sharing with a conflicting exception key, because capacity never actually bound and no arm ever evicted",
+    "retention is measured over a skill's complete key set; damage lands on exception keys that the split forces into examples, so holdout-only scoring hid it",
+    "the rollback check compared the checkpoint against its own digest and could never fail; it now compares the live table after the rejection is handled"
+  ],
+  "network_used": false,
+  "private_slot_ceiling": 24,
+  "protocol_commitment": "f5366d6e841d4836db4f130cf8d465d9de0c9614f9b9189e98d6975733442c53",
+  "python": "3.14.6",
+  "replay_dependence": "replay_dependent",
+  "result_sha256": "421121398984cdaec066de7aaf900a7f10ee92d956f5d2b9bb2f7705975dfc99",
+  "retried": false,
+  "schema": "m080-continual-retention-result-v1",
+  "verdict": "positive"
+}

@@ -76,6 +76,12 @@ harmful: a never-ask control reached six unsafe terminal states, and asking is n
 success. The world is project-authored, so G3 does not advance. Its planner is deterministic and
 it is not evidence about model clarification behaviour.
 
+M080 is positive bounded continual-acquisition evidence on the endogenous track, and the first
+result here to measure forgetting at all. Its interference is real: the cheap in-place rewrite is
+always available and always destroys an earlier skill, which the consolidation ablation
+demonstrates. Its retention is replay-dependent rather than structural, and that limitation is
+part of the result rather than a caveat. G5 does not advance; the skills are project-authored.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed
@@ -173,7 +179,7 @@ results are known.
 | G2 | partial mechanism evidence | M076 runs one persistent agent over language, structured state and synthetic pixels, emitting both symbolic calls and embodied actions. Matched shape-preserving ablations give an exact triple dissociation against a measured guessing floor. The rasters are authored 24×24 panels in one domain, so natural-image perception and modality breadth remain absent. |
 | G3 | partial bounded evidence, all four clauses exercised | Earlier lineages plan inside authored finite task languages. M079 adds one planner given only a goal predicate, affordance schemas with costs and a budget: 8/8 static and 8/8 revision tasks solved, revision on all eight, clarification on 8/8 ambiguous and 0/16 unambiguous goals, zero unsafe terminal states. A never-ask control reached six unsafe terminal states and an always-ask floor solved nothing. The world is project-authored, so the gate does not advance. |
 | G4 | open | M071 used one frozen agent on two external tasks but succeeded on only one; this is competence, not demonstrated transfer across domains. |
-| G5 | stronger partial bounded evidence | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill that survives complete teacher removal, but tests only one homogeneous authored family and no forgetting. |
+| G5 | stronger partial bounded evidence, forgetting now measured | M066 preserves bounded causal memory and post-migration plasticity. M073 adds one post-demonstration serialized skill but tests no forgetting. M080 puts retention at risk in one bounded shared table and measures it: zero capabilities lost across six acquisitions, sublinear memory growth and byte-identical rollback, while a consolidation ablation loses five. Retention is replay-dependent, not structural. The skills are project-authored, so the gate does not advance. |
 | G6 | partial mechanism evidence | M071 completes one independently maintained task in an official digest-pinned no-network container. A second task is refused; browser/desktop competence and broad environment coverage remain absent. |
 | G7 | open | No human-hour task-horizon evaluation. M077 addressed only the fault-recovery and constraint-retention components and returned a valid negative on its dissociation hypothesis; its undegraded retention to 2048 episodes and its isolated checkpoint mechanism are bounded observations in one authored in-memory body, and episode counts are not human-equivalent horizons. |
 | G8 | stronger partial bounded evidence | Disposable self-rewrite exists, and M073 induces then applies one executable capsule after its external teacher is removed; official adoption and the induction algorithm remain human-controlled. |

@@ -1161,3 +1161,41 @@ result on the question.
 
 No open-ended or natural-language planning, no cross-domain transfer, no Genesis Gate 2 or Gate 3
 evidence, no AGI evidence. M079 does not touch the M075 pre-private readiness boundary.
+
+## D046 — M080 measures forgetting for the first time and records that retention is replay-dependent
+
+The generality register said M073 tested "one homogeneous authored family and **no forgetting**".
+Retention had never been at risk in this repository, so the claim that it is preserved had never
+been earned. M080 puts it at risk and measures what happens.
+
+### The decision
+
+M080 is accepted as positive bounded mechanism evidence. G5 **stays** at `stronger partial bounded
+evidence`: the skills and table are project-authored and closure requires capabilities maintained
+outside this repository plus independent reproduction. The register now records forgetting as
+measured rather than absent.
+
+The interference is the substance. Later skills reuse an earlier rule and demand a different output
+for an exception key the donor owns, so the cheap in-place rewrite is always available and always
+destructive. `no_consolidation` takes it and loses five capabilities. A design with private slots
+would have guaranteed retention by construction and proved nothing.
+
+### The limitation is part of the result
+
+Retention is replay-dependent. Removing replay costs as much as removing consolidation. This is
+recorded as a headline finding, not a caveat, and the protocol deliberately preregistered no
+direction for the measure so that neither outcome could be selected afterwards. Any successor
+claiming robust continual learning must either make retention structural or carry the replay cost
+in the claim.
+
+### A check that could not fail
+
+The first rollback assertion compared the checkpoint against its own digest and was therefore
+vacuous. It is recorded among the instrument fixes because a green check that cannot fail is more
+dangerous than a missing one. A regression and the checker now both assert that a mismatch remains
+reachable.
+
+### Claim boundary
+
+No weight learning, no open-ended acquisition, no cross-domain transfer, no Genesis Gate 2 or Gate 3
+evidence, no AGI evidence. M080 does not touch the M075 pre-private readiness boundary.

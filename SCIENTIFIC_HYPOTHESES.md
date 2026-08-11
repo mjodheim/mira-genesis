@@ -500,3 +500,31 @@ This exercises the G3 clauses without closing the gate, which needs goals and af
 outside this project and independent reproduction. The planner is deterministic, so nothing here is
 evidence about whether a model asks or refuses; M074 remains the only result on that and it is
 negative. See D045.
+
+## H26 — Old capabilities can be retained when acquisition genuinely threatens them
+
+A lineage acquiring skills in sequence into one bounded shared structure, where later skills reuse
+an earlier skill's rule and also demand a different output for an exception key that earlier skill
+owns, can retain every earlier capability at exact quality, grow memory sublinearly, and restore a
+byte-identical prior state after rejecting a destructive acquisition.
+
+**Status:** supported by the M080 qualified development result, with one measured limitation. The
+lineage lost zero capabilities across six acquisitions, generalised on 6/6 skills, used 19 slots
+against a private-slot ceiling of 24, reused three rules and rolled back twice byte-identically.
+Without consolidation it loses five capabilities; without rollback it leaves three checkpoint
+mismatches. Bank `3769e826…3ec6d`; result `42112139…5dfc99`, attempt 1, no retry.
+
+**Measured limitation:** retention is **replay-dependent**. Removing the replay of earlier examples
+costs exactly as much as removing consolidation entirely — five capabilities. The mechanism
+rechecks old skills rather than structurally protecting them. No direction was preregistered for
+this measure, which is why the answer stands as it fell.
+
+**Required implication:** the interference must be real. Skills share one bounded table and the
+cheap in-place rewrite is always available and always destructive, which the `no_consolidation` arm
+demonstrates. A design with private slots per skill would guarantee retention by construction and
+measure nothing.
+
+**Scope:** six project-authored skills over a 24-slot table. The table is the policy rather than a
+side store, so this is bounded policy learning, not retrieval and not weight learning. It does not
+close G5, which needs capabilities maintained outside this project and independent reproduction.
+See D046.
