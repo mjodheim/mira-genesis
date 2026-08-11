@@ -31,6 +31,10 @@ If a requested task would require materially new M086+ core implementation, **st
 or committing that implementation** and report that the task belongs in the project's private R&D
 workspace. Do not create a placeholder containing the secret design.
 
+The operating procedure for that separate workspace is documented in
+[`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md). It includes repository separation,
+AI-provider data controls, private scientific provenance and the controlled public hand-back rule.
+
 M086+ is a prospective boundary. It does not make M085 or earlier public material private after the
 fact.
 
@@ -74,6 +78,7 @@ Read:
 - [`docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`](docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md)
 - [`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md)
 - [`docs/THIRD_PARTY_DEPENDENCIES.md`](docs/THIRD_PARTY_DEPENDENCIES.md)
+- [`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md)
 
 Generated code is not presumed free of third-party obligations. Preserve and review provenance for
 material accepted output.
