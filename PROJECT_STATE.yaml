@@ -1618,6 +1618,12 @@ phase_eight:
     genesis_gate_3_evidence: false
     agi_evidence: false
     local_regressions_passed: 32
+    first_ci_run: '31533177300'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1656
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31533177391'
 
   M084:
     title: one persistent lineage integrating the separately qualified Phase 8 mechanisms
