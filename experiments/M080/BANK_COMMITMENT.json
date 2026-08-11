@@ -1,0 +1,93 @@
+{
+  "bank_commitment": "3769e8266189c3ffd33871570e016e33271026cf8d305d9dd81283c9b063ec6d",
+  "generator_version": 1,
+  "salt_sha256": "91af408bda637e4a2b29c433b8fc5c155ca8d5bede76f4a403a30a8ea3dd985b",
+  "schema": "m080-bank-commitment-v1",
+  "skill_count": 6,
+  "skills": [
+    {
+      "commitment": "a4a19b7d2da42564e4659324bcef5cbcb8d78e68f4c3deb6f50ddcebb0cf6b9f",
+      "conflicts_on_key": null,
+      "examples": 11,
+      "holdouts": 11,
+      "index": 0,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        4,
+        1
+      ],
+      "shares_rule_with": null
+    },
+    {
+      "commitment": "a0482f9ee14f22d765313a6679bc5da66df56fb87ae6fe21010caac93c210cda",
+      "conflicts_on_key": null,
+      "examples": 10,
+      "holdouts": 12,
+      "index": 1,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        1,
+        0
+      ],
+      "shares_rule_with": null
+    },
+    {
+      "commitment": "b2c6f9b9d6320e58108ce01478657d90bfbf7ac210291082f04f6787682f54ec",
+      "conflicts_on_key": null,
+      "examples": 12,
+      "holdouts": 10,
+      "index": 2,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        5,
+        4
+      ],
+      "shares_rule_with": null
+    },
+    {
+      "commitment": "9955ed3f88c9d19cdfbf360b71e30717685892f6b0f011b45c287b81c92105dd",
+      "conflicts_on_key": 32,
+      "examples": 11,
+      "holdouts": 11,
+      "index": 3,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        4,
+        1
+      ],
+      "shares_rule_with": 0
+    },
+    {
+      "commitment": "7c8670fa51de7dc749c87d3af8eb72c5060dec8ed5e80d621900546dc3a5aa00",
+      "conflicts_on_key": 62,
+      "examples": 12,
+      "holdouts": 10,
+      "index": 4,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        1,
+        0
+      ],
+      "shares_rule_with": 1
+    },
+    {
+      "commitment": "24f802162e4aecdf50fbd0fa057c7faa49d6570355b2d0c126c9b2b1a667d1bf",
+      "conflicts_on_key": 0,
+      "examples": 13,
+      "holdouts": 9,
+      "index": 5,
+      "irregulars": 3,
+      "keys": 22,
+      "rule": [
+        5,
+        4
+      ],
+      "shares_rule_with": 2
+    }
+  ]
+}

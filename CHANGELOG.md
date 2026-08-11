@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Added M080 and measured forgetting for the first time. Six skills are acquired in sequence into
+  one bounded 24-slot table where later skills reuse an earlier rule and demand a different output
+  for an exception key the donor owns, so the cheap in-place rewrite is always available and always
+  destructive. The lineage lost zero capabilities, used 19 slots against a private-slot ceiling of
+  24, reused three rules and rolled back twice byte-identically.
+- Recorded the limitation as a headline, not a caveat: retention is **replay-dependent**. Removing
+  the replay of earlier examples costs five capabilities, exactly as much as removing consolidation.
+  The protocol preregistered no direction for this measure so neither outcome could be chosen after
+  the fact.
+- Fixed and recorded three instrument defects before materialization: capacity pressure alone never
+  bound so no arm evicted anything; retention scored on holdouts alone hid damage that lands on
+  exception keys; and the rollback check compared the checkpoint against its own digest and could
+  never fail. A regression and the checker now assert that a rollback mismatch stays reachable.
+- Recorded H26 and D046. G5 stays at stronger partial bounded evidence with forgetting measured;
+  closure needs capabilities maintained outside this project plus independent reproduction.
+
 - Added M079 and exercised all four G3 clauses in one bank: planning with no supplied
   decomposition, plan revision under revealed evidence, terminal verification from world state,
   and calibrated clarification. The planner solved 8/8 static and 8/8 revision tasks within
