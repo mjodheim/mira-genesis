@@ -93,6 +93,18 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M085 is prepared and blocked on an independent maintainer.** It attacks G4 directly: does a
+  policy acquired in some domains improve **correct terminal decisions** in a materially different,
+  externally maintained held-out domain, against a fresh organism with identical code and budget?
+  The design protocol, domain adapter contract, intake kit, maintainer brief, fail-closed gate and
+  32 regressions are committed. `python scripts/check_m085_readiness.py` returns
+  `ready_for_payload_reveal: false` with four blockers — signed envelope, its signature, the
+  allowed-signers line, and a scientific protocol that cannot be written until the first three
+  exist. No bank exists, no payload has been requested or described, and no held-out domain has
+  been drawn. M075's boundary could not be reused: its validator hard-codes refusal thresholds, the
+  `gpt-5.6-sol` identity and a refusal-transfer-only claim, so a G4 protocol fails it on every such
+  field. M085 builds a separate instrument at the same standard and does **not** substitute for the
+  still-open M075 private experiment. See D051 and H31.
 - **M084 makes the Phase 8 mechanisms the faculties of one lineage, and advances no gate.** Protocol
   frozen before the harness at `ecb297c`; harness and amendments A1–A3 at `f19af86`; bank commitment
   `a4081e5b…7f047`; first result `1cbeef8a…f830b`, attempt 1, no retry. One organism, serialized to a

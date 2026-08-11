@@ -1566,6 +1566,59 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M085:
+    title: cross-domain transfer of an acquired policy into an externally maintained held-out domain
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G4
+    parent_result: M084
+    status: prepared_and_blocked_on_an_independent_maintainer
+    hypothesis: H31
+    decision: D051
+    design_protocol: experiments/M085/PROTOCOL.json
+    maintainer_brief: experiments/M085/MAINTAINER_BRIEF.md
+    intake_kit_entry_point: scripts/run_m085_intake_kit.py
+    readiness_gate: scripts/check_m085_readiness.py
+    scientific_protocol_frozen: false
+    scientific_result_exists: false
+    bank_envelope_present: false
+    payload_requested_or_accessed: false
+    held_out_domain_drawn: false
+    external_model_called: false
+    ready_for_payload_reveal: false
+    current_blockers:
+      - missing_cross_domain_bank_envelope
+      - missing_cross_domain_bank_signature
+      - missing_cross_domain_bank_allowed_signers
+      - missing_cross_domain_scientific_protocol
+    every_blocker_requires_a_non_project_person: true
+    intake_kit_can_sign: false
+    intake_kit_can_open_payload: false
+    minimum_domains: 3
+    minimum_tasks_per_domain: 8
+    minimum_correctness_critical_tasks_per_domain: 6
+    minimum_transferred_only_correct: 6
+    maximum_fresh_only_correct: 0
+    maximum_two_sided_exact_mcnemar_p: 0.05
+    threshold_and_bank_size_chosen_together: true
+    primary_outcome: evaluator_owned_correct_terminal_state
+    cost_metrics_decisive: false
+    arms: [transferred_lineage, fresh_agent, acquisition_ablated]
+    held_out_domain_drawn_after_protocol_freeze: true
+    assignment_salt_held_by_maintainer_until_freeze: true
+    material_difference_statements_checked_after_reveal: true
+    reuses_m075_boundary: false
+    why_not: m075_validator_hard_codes_refusal_thresholds_agent_identity_and_a_refusal_transfer_only_claim
+    substitutes_for_the_open_m075_private_experiment: false
+    exact_mcnemar_imported_from_m075: true
+    project_authored_domains_permitted_as_g4_evidence: false
+    independent_reproduction_required_before_gate_advance: true
+    generality_gate_advanced: false
+    generality_gate_g4_closed: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    local_regressions_passed: 32
+
   M084:
     title: one persistent lineage integrating the separately qualified Phase 8 mechanisms
     epistemic_track: endogenous_bounded_lineage

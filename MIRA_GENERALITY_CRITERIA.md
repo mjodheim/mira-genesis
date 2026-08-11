@@ -111,6 +111,13 @@ real substrates replays an action list computed by their bank generator: it perc
 nothing and detects no failure. They are interface results, and the phrase "one unchanged agent"
 must not be read as agent competence.
 
+M085 is stated but not evidence. It is the first experiment here aimed directly at G4, and it is
+deliberately unable to run on anything this project wrote: its gate refuses until an independent
+maintainer supplies a signed envelope for three materially different domains, and the held-out one
+is drawn from a salt that maintainer withholds until after the protocol is frozen. Its primary
+outcome is the correct terminal decision rather than the step count, which is the correction M084
+asks for. Until a bank exists, G4 stays exactly where M071 left it.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed

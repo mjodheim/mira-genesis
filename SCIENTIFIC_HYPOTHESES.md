@@ -625,3 +625,31 @@ capability, and must be reported that way. A fact learned in the shell is never 
 browser even though both discard the same authored prefix, so nothing here is cross-domain transfer.
 The goals, carriers, applications and substrates are project-authored and eleven reachable goals over
 four stages is a small bank. See D050.
+
+## H31 — An acquired policy improves correctness in a materially different held-out domain
+
+A policy acquired by one organism in some domains improves its **correct terminal decisions** in a
+materially different, externally maintained, held-out domain, relative to a fresh organism with
+identical code and an identical budget.
+
+**Status:** stated and instrumented; **untested and untestable from inside this project.** M085's
+design protocol, intake kit, maintainer brief and fail-closed gate are committed, and
+`scripts/check_m085_readiness.py` returns `ready_for_payload_reveal: false` with four blockers, every
+one of which requires a person outside the project.
+
+**Why it is not H30 again.** M084 supports H30 across three substrates, but its four stages drive one
+carrier family the project wrote, and its ablation cost only efficiency. H31 changes both: the
+domains are externally authored and held, and the outcome is correctness. The bank must supply tasks
+where an action is accepted without effect, a later step is only correct if it took effect, and
+committing on the false premise reaches a terminal state the budget cannot undo. An organism that
+trusts what its actions reported must end up **wrong**, not merely slow.
+
+**Required implication:** the held-out domain is drawn from the sealed payload digest and a salt the
+maintainer withholds until after the protocol is frozen. Choosing the target after seeing three
+domains would let the project test itself on the one its organism happens to suit, and no amount of
+later analysis could repair that.
+
+**What it will not support:** even a positive result leaves G4 open until independent reproduction
+from a separate bank and a separate maintainer, which the protocol makes a precondition. It would
+establish bounded cross-domain transfer of one acquired policy, not general competence in any domain
+involved. See D051.

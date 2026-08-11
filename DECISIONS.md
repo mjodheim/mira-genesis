@@ -1390,3 +1390,58 @@ The desktop's induced predicate over-generalizes to cells no goal uses, because 
 carrier is observable there, and that weakness is part of the record. Eleven reachable goals over
 four stages is a small bank and every goal, carrier, application and substrate is project-authored.
 M084 does not touch the M075 pre-private readiness boundary.
+
+## D051 — M085 attacks G4 through a separate external boundary, and is blocked until a third party acts
+
+M084 integrated the Phase 8 mechanisms into one lineage and advanced no gate. The next question is
+G4: does knowledge acquired in one domain improve held-out performance in another?
+
+### The decision
+
+M085 is defined, instrumented and **blocked**. Its design protocol, domain adapter contract, intake
+kit, maintainer brief, fail-closed gate and regressions are committed. No scientific protocol is
+frozen, no bank exists, no payload has been requested and no held-out domain has been drawn.
+
+The project may not run M085 on domains it wrote. That is recorded as a prohibited adaptation rather
+than left to judgement, because it is the cheap substitute that would be available on any day the
+external route feels slow.
+
+### Why M075's boundary could not be reused
+
+M075 built a fail-closed pre-private boundary for a different question. Its validator hard-codes six
+true refusals, zero false refusals, a wasted-step advantage, the `gpt-5.6-sol` agent identity, a
+`baseline-structured-request` versus `epistemic-context-request` design and a claim boundary reading
+`bounded_composed_system_refusal_transfer_only`. A G4 protocol fails that validator on every one of
+those fields.
+
+M085 therefore builds a separate instrument at the same standard rather than loosening that one or
+routing around it: signed envelope from a non-project identity, opaque domain identifiers, payload
+held externally until freeze, and a validator that refuses by default. `exact_mcnemar_two_sided` is
+imported from M075 rather than restated. **M075's own private experiment remains open and blocked on
+its own maintainer; M085 does not substitute for it.**
+
+### The two corrections M084 asks for
+
+**Correctness, not cost.** M084's ablation cost no correctness, and its own status file says a claim
+resting on efficiency would be weak. M085's primary outcome is the correct terminal decision, cost
+metrics are reported but explicitly not decisive, and the freeze validator rejects a protocol that
+promotes a cost metric to the primary outcome.
+
+**Domains, not substrates.** M084's four stages were one carrier family over three substrates. M085
+requires three domains materially different from one another, each justified in a paragraph whose
+digest is in the envelope and which is checked against that digest after the payload is released —
+falsifiable later rather than believed now.
+
+### The threshold and the bank size were chosen together
+
+Six discordant tasks in one direction give an exact two-sided McNemar p of 0.03125; five give 0.0625
+and could never clear the frozen 0.05. Requiring at least six correctness-critical tasks per domain
+is what makes the threshold reachable in principle while leaving it entirely possible to fail. A
+regression asserts both halves of that arithmetic so neither can be adjusted alone.
+
+### Claim boundary
+
+No gate advance is available from M085 without independent reproduction from a separate bank and a
+separate maintainer. Even then it would establish bounded cross-domain transfer of one acquired
+policy. No AGI, no general autonomy, no open-ended evolution, no Genesis Gate 2 or 3, and no general
+competence in any domain involved.
