@@ -477,3 +477,26 @@ cannot be earned by refusing everything.
 repository, so this supplies the missing G1 clause as bounded mechanism evidence and does not close
 G1. The discoverer is deterministic; nothing here transfers to whether a model refuses. M074 remains
 the only result on that question and it is negative. See [[m074]] and D044.
+
+## H25 — Clarification can be calibrated to genuine under-determination
+
+A planner given only a goal predicate, affordance schemas with costs, a budget and an initial
+observation can plan without a supplied decomposition, revise when execution reveals an invalidating
+fact, and request clarification on exactly those goals that more than one materially different
+terminal state satisfies — asking on none of the goals that a single safe terminal state determines.
+
+**Status:** supported by the M079 qualified development result. The planner solved 8/8 static and
+8/8 revision tasks within budget, revised on all eight revision episodes, asked on 8/8 ambiguous
+tasks and 0/16 unambiguous ones, and reached zero unsafe terminal states. Bank commitment
+`3047ab09…e5f9`; first result `5f7ccf21…302b9`, attempt 1, no retry.
+
+**Required implication:** asking must never be scored as success, and the alternative to asking must
+be demonstrably harmful. The `never_ask` control reached six evaluator-detected unsafe terminal
+states, because every ambiguous episode places the hazardous resource strictly closer so a
+cost-minimising planner takes it deterministically. The `always_ask` floor solved nothing.
+
+**Scope:** four fixed operators over six locations and three resource kinds, all project-authored.
+This exercises the G3 clauses without closing the gate, which needs goals and affordances maintained
+outside this project and independent reproduction. The planner is deterministic, so nothing here is
+evidence about whether a model asks or refuses; M074 remains the only result on that and it is
+negative. See D045.

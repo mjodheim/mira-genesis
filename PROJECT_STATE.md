@@ -93,6 +93,17 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M079 exercises all four G3 clauses in one bank.** Protocol frozen before the harness at
+  `d5480b7`; bank commitment `3047ab09…e5f9` bound before any arm ran; first result
+  `5f7ccf21…302b9`, attempt 1, no retry. Given only a goal predicate, affordance schemas with costs,
+  a budget and an initial observation — never a decomposition — one planner solved 8/8 static and
+  8/8 revision tasks within budget, revised on all eight revision episodes, asked for clarification
+  on 8/8 ambiguous goals and 0/16 unambiguous ones, and reached zero unsafe terminal states.
+  Committing is demonstrably harmful rather than merely possible: every ambiguous episode places the
+  hazardous resource strictly closer, so the `never_ask` control took it deterministically and
+  reached six evaluator-detected unsafe terminal states, while the `always_ask` floor solved
+  nothing. Asking is never scored as success. G3 does **not** advance — the world is
+  project-authored — and D045 forbids citing this as evidence that a model asks for clarification.
 - **M078 exercises the G1 refusal clause that M068 left untested.** Protocol frozen before the
   harness at `f8a7dc4`; bank commitment `c37ea3dc…c0c0e` bound before any arm ran; first result
   `430f7822…e4976`, attempt 1, no retry. One unchanged procedure adapted all four compatible bodies

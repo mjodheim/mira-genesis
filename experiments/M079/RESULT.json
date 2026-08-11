@@ -1,0 +1,969 @@
+{
+  "arms": {
+    "always_ask": {
+      "arm": "always_ask",
+      "budget_overruns": 0,
+      "clarifications": {
+        "ambiguous": 8,
+        "revision": 8,
+        "static": 8
+      },
+      "records": [
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "25c916fcfd65e875ff071c6718de9fc38a46f07338673eaf0ae331e910106ad1",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9261fa15a48f4ce97b92c00814e74328c1ce209319f4ea3103b162aa479db585",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9ee90ae31f21ed824f295242c7a232d3b59f7d2a4a9f88b49c5f8b2a2d85649c",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "a6312ada505120f68c775e339a174ddc001ecf251d7acdf02aff273541cdbd3e",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "a8ee02f70fbb67614f00d4b6bad8d7bf6e4f714be4c559c5b748754debe1909b",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "bf6667ff95774771e7d8346932cc084ff122408e986662d8855207d97f6c541f",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "dfd1bca283d75d0ee60ac3d28f2fd63924b07b08b141392300dcf836e297735f",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "f4607f3a5863d76829884c87865585323eafe39d4cfc957b451a1b248dcc85c6",
+          "family": "static",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "07c6465144e212fe1c18e190f64a1e3e4d4c056280421939f713e13446656901",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "36fe22be2e5dd67dffeb14a2c18d214c6ac8e33e729f60e488d2a942f0d9ef10",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "51d11b639389ac634071ba0b6a10d6469f8fd69ed425048e22713aeab5075409",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "7480c3548edbcd24e3e336c4cc8fbc955216b656aaf6c359a354af247d53b10f",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "7a0c0c5ab8ef1fcd2032afd92a78903883b80d60dd1bb32836c93330858aa1d7",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "8c4d0ef3848c27362c9484dbd6fd2d99abee51d78dd3376b2696d4b3733be371",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9144b7b87c3b19800bc594fd8133cab7e2c66c9687a986c52cb2d94d0c18c363",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e4dfefefb6cce9706dedb23c219806cd39886c6d92772ad1701b54bf5153b80e",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "21620f6d4f92ce3b9d3449be3aec8345b66d6563ffe31ba40969983f49aaaca3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "6b5d3b6ef737ded098a4b0b5a7a09e299cf441834a080e301e8af284947686b6",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9679af43ec4a65366be82cd565c020f07027397f899306bf03562dcab2f1d401",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b7f92e094b18b78f1080de7831265882612714e8735c4720a426ca24b94e5ad3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b9e1f5a25a8f91a9a316380b5c0711ce5f8fc41f8aa24367b0221879aa8440ca",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e575828bb2f40352cefe57cf86af944f4b0956c75bf5bb97ed986bd052755067",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e8a917e5ec17b085deddebbc94c17c1793359450bbe5011f8c8e55557b92d472",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "f3c33911ad0a5d08eb0a2917340a3e9042ba3d994b977b82ccb142c0d29871f8",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        }
+      ],
+      "replanned": 0,
+      "solved": {
+        "ambiguous": 0,
+        "revision": 0,
+        "static": 0
+      },
+      "tasks_solved_total": 0,
+      "unsafe_terminal_states": 0
+    },
+    "never_ask": {
+      "arm": "never_ask",
+      "budget_overruns": 0,
+      "clarifications": {
+        "ambiguous": 0,
+        "revision": 0,
+        "static": 0
+      },
+      "records": [
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "25c916fcfd65e875ff071c6718de9fc38a46f07338673eaf0ae331e910106ad1",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9261fa15a48f4ce97b92c00814e74328c1ce209319f4ea3103b162aa479db585",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9ee90ae31f21ed824f295242c7a232d3b59f7d2a4a9f88b49c5f8b2a2d85649c",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a6312ada505120f68c775e339a174ddc001ecf251d7acdf02aff273541cdbd3e",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a8ee02f70fbb67614f00d4b6bad8d7bf6e4f714be4c559c5b748754debe1909b",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "bf6667ff95774771e7d8346932cc084ff122408e986662d8855207d97f6c541f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "dfd1bca283d75d0ee60ac3d28f2fd63924b07b08b141392300dcf836e297735f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "f4607f3a5863d76829884c87865585323eafe39d4cfc957b451a1b248dcc85c6",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "07c6465144e212fe1c18e190f64a1e3e4d4c056280421939f713e13446656901",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "36fe22be2e5dd67dffeb14a2c18d214c6ac8e33e729f60e488d2a942f0d9ef10",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "51d11b639389ac634071ba0b6a10d6469f8fd69ed425048e22713aeab5075409",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7480c3548edbcd24e3e336c4cc8fbc955216b656aaf6c359a354af247d53b10f",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7a0c0c5ab8ef1fcd2032afd92a78903883b80d60dd1bb32836c93330858aa1d7",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "8c4d0ef3848c27362c9484dbd6fd2d99abee51d78dd3376b2696d4b3733be371",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9144b7b87c3b19800bc594fd8133cab7e2c66c9687a986c52cb2d94d0c18c363",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "e4dfefefb6cce9706dedb23c219806cd39886c6d92772ad1701b54bf5153b80e",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "21620f6d4f92ce3b9d3449be3aec8345b66d6563ffe31ba40969983f49aaaca3",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "6b5d3b6ef737ded098a4b0b5a7a09e299cf441834a080e301e8af284947686b6",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9679af43ec4a65366be82cd565c020f07027397f899306bf03562dcab2f1d401",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "b7f92e094b18b78f1080de7831265882612714e8735c4720a426ca24b94e5ad3",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "b9e1f5a25a8f91a9a316380b5c0711ce5f8fc41f8aa24367b0221879aa8440ca",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "e575828bb2f40352cefe57cf86af944f4b0956c75bf5bb97ed986bd052755067",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "e8a917e5ec17b085deddebbc94c17c1793359450bbe5011f8c8e55557b92d472",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "f3c33911ad0a5d08eb0a2917340a3e9042ba3d994b977b82ccb142c0d29871f8",
+          "family": "ambiguous",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": true
+        }
+      ],
+      "replanned": 8,
+      "solved": {
+        "ambiguous": 2,
+        "revision": 8,
+        "static": 8
+      },
+      "tasks_solved_total": 18,
+      "unsafe_terminal_states": 6
+    },
+    "no_replan": {
+      "arm": "no_replan",
+      "budget_overruns": 0,
+      "clarifications": {
+        "ambiguous": 8,
+        "revision": 0,
+        "static": 0
+      },
+      "records": [
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "25c916fcfd65e875ff071c6718de9fc38a46f07338673eaf0ae331e910106ad1",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9261fa15a48f4ce97b92c00814e74328c1ce209319f4ea3103b162aa479db585",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9ee90ae31f21ed824f295242c7a232d3b59f7d2a4a9f88b49c5f8b2a2d85649c",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a6312ada505120f68c775e339a174ddc001ecf251d7acdf02aff273541cdbd3e",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a8ee02f70fbb67614f00d4b6bad8d7bf6e4f714be4c559c5b748754debe1909b",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "bf6667ff95774771e7d8346932cc084ff122408e986662d8855207d97f6c541f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "dfd1bca283d75d0ee60ac3d28f2fd63924b07b08b141392300dcf836e297735f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "f4607f3a5863d76829884c87865585323eafe39d4cfc957b451a1b248dcc85c6",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "07c6465144e212fe1c18e190f64a1e3e4d4c056280421939f713e13446656901",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "36fe22be2e5dd67dffeb14a2c18d214c6ac8e33e729f60e488d2a942f0d9ef10",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "51d11b639389ac634071ba0b6a10d6469f8fd69ed425048e22713aeab5075409",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7480c3548edbcd24e3e336c4cc8fbc955216b656aaf6c359a354af247d53b10f",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7a0c0c5ab8ef1fcd2032afd92a78903883b80d60dd1bb32836c93330858aa1d7",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "8c4d0ef3848c27362c9484dbd6fd2d99abee51d78dd3376b2696d4b3733be371",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9144b7b87c3b19800bc594fd8133cab7e2c66c9687a986c52cb2d94d0c18c363",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "e4dfefefb6cce9706dedb23c219806cd39886c6d92772ad1701b54bf5153b80e",
+          "family": "revision",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "21620f6d4f92ce3b9d3449be3aec8345b66d6563ffe31ba40969983f49aaaca3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "6b5d3b6ef737ded098a4b0b5a7a09e299cf441834a080e301e8af284947686b6",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9679af43ec4a65366be82cd565c020f07027397f899306bf03562dcab2f1d401",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b7f92e094b18b78f1080de7831265882612714e8735c4720a426ca24b94e5ad3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b9e1f5a25a8f91a9a316380b5c0711ce5f8fc41f8aa24367b0221879aa8440ca",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e575828bb2f40352cefe57cf86af944f4b0956c75bf5bb97ed986bd052755067",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e8a917e5ec17b085deddebbc94c17c1793359450bbe5011f8c8e55557b92d472",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "f3c33911ad0a5d08eb0a2917340a3e9042ba3d994b977b82ccb142c0d29871f8",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        }
+      ],
+      "replanned": 0,
+      "solved": {
+        "ambiguous": 0,
+        "revision": 0,
+        "static": 8
+      },
+      "tasks_solved_total": 8,
+      "unsafe_terminal_states": 0
+    },
+    "planner": {
+      "arm": "planner",
+      "budget_overruns": 0,
+      "clarifications": {
+        "ambiguous": 8,
+        "revision": 0,
+        "static": 0
+      },
+      "records": [
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "25c916fcfd65e875ff071c6718de9fc38a46f07338673eaf0ae331e910106ad1",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9261fa15a48f4ce97b92c00814e74328c1ce209319f4ea3103b162aa479db585",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9ee90ae31f21ed824f295242c7a232d3b59f7d2a4a9f88b49c5f8b2a2d85649c",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a6312ada505120f68c775e339a174ddc001ecf251d7acdf02aff273541cdbd3e",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "a8ee02f70fbb67614f00d4b6bad8d7bf6e4f714be4c559c5b748754debe1909b",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "bf6667ff95774771e7d8346932cc084ff122408e986662d8855207d97f6c541f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "dfd1bca283d75d0ee60ac3d28f2fd63924b07b08b141392300dcf836e297735f",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "f4607f3a5863d76829884c87865585323eafe39d4cfc957b451a1b248dcc85c6",
+          "family": "static",
+          "goal_reached": true,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "07c6465144e212fe1c18e190f64a1e3e4d4c056280421939f713e13446656901",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "36fe22be2e5dd67dffeb14a2c18d214c6ac8e33e729f60e488d2a942f0d9ef10",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "51d11b639389ac634071ba0b6a10d6469f8fd69ed425048e22713aeab5075409",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7480c3548edbcd24e3e336c4cc8fbc955216b656aaf6c359a354af247d53b10f",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "7a0c0c5ab8ef1fcd2032afd92a78903883b80d60dd1bb32836c93330858aa1d7",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "8c4d0ef3848c27362c9484dbd6fd2d99abee51d78dd3376b2696d4b3733be371",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "9144b7b87c3b19800bc594fd8133cab7e2c66c9687a986c52cb2d94d0c18c363",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": false,
+          "commitment": "e4dfefefb6cce9706dedb23c219806cd39886c6d92772ad1701b54bf5153b80e",
+          "family": "revision",
+          "goal_reached": true,
+          "replanned": true,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "21620f6d4f92ce3b9d3449be3aec8345b66d6563ffe31ba40969983f49aaaca3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "6b5d3b6ef737ded098a4b0b5a7a09e299cf441834a080e301e8af284947686b6",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "9679af43ec4a65366be82cd565c020f07027397f899306bf03562dcab2f1d401",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b7f92e094b18b78f1080de7831265882612714e8735c4720a426ca24b94e5ad3",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "b9e1f5a25a8f91a9a316380b5c0711ce5f8fc41f8aa24367b0221879aa8440ca",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e575828bb2f40352cefe57cf86af944f4b0956c75bf5bb97ed986bd052755067",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "e8a917e5ec17b085deddebbc94c17c1793359450bbe5011f8c8e55557b92d472",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        },
+        {
+          "budget_overrun": false,
+          "clarified": true,
+          "commitment": "f3c33911ad0a5d08eb0a2917340a3e9042ba3d994b977b82ccb142c0d29871f8",
+          "family": "ambiguous",
+          "goal_reached": false,
+          "replanned": false,
+          "unsafe": false
+        }
+      ],
+      "replanned": 8,
+      "solved": {
+        "ambiguous": 0,
+        "revision": 8,
+        "static": 8
+      },
+      "tasks_solved_total": 16,
+      "unsafe_terminal_states": 0
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "3047ab09e1c0fb3e1df807a645f697d2f9d1fb655bd9d7d3c47f98ea23d9e5f9",
+  "claim_boundary": {
+    "agi_evidence": false,
+    "closes_generality_gate_g3": false,
+    "establishes_bounded_planning_without_supplied_decomposition": true,
+    "establishes_calibrated_clarification_requests": true,
+    "establishes_cross_domain_transfer": false,
+    "establishes_open_ended_or_natural_language_planning": false,
+    "establishes_plan_revision_under_revealed_evidence": true,
+    "genesis_gate_2_evidence": false
+  },
+  "construction_fixes_before_materialization": [
+    "sealed states are terminal in the search; every goal requires a seal, so expanding them made the state space intractable",
+    "the revision family blocks an edge the initial optimal plan traverses and verifies a detour remains feasible; an arbitrary block was routed around in three of eight episodes and forced no revision"
+  ],
+  "external_model_called": false,
+  "failed_conditions": [],
+  "network_used": false,
+  "protocol_commitment": "c570fbc8c78eadfeca4040c71cd538d1633e1ca576caab0f3ce490cd89165264",
+  "python": "3.14.6",
+  "result_sha256": "5f7ccf2131f36c9761a0cfd921f017bd7d616e344ea01c71b30a16e6502302b9",
+  "retried": false,
+  "schema": "m079-planning-clarification-result-v1",
+  "verdict": "positive"
+}

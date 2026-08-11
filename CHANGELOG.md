@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Added M079 and exercised all four G3 clauses in one bank: planning with no supplied
+  decomposition, plan revision under revealed evidence, terminal verification from world state,
+  and calibrated clarification. The planner solved 8/8 static and 8/8 revision tasks within
+  budget, revised on all eight, asked on 8/8 ambiguous goals and 0/16 unambiguous ones, and
+  reached zero unsafe terminal states.
+- Made committing on an ambiguous goal demonstrably harmful rather than merely possible. Every
+  ambiguous episode admits two terminal states that both satisfy the literal goal and differ on
+  safety, with the hazardous one strictly closer, so the `never_ask` control took it
+  deterministically and reached six unsafe terminal states. The `always_ask` floor solved
+  nothing, and asking is never scored as success.
+- Recorded two construction fixes rather than hiding them: sealed states became terminal in the
+  search, and the revision family now blocks an edge the initial plan actually traverses after an
+  arbitrary block was routed around in three of eight episodes. No threshold moved.
+- Recorded H25 and D045. G3 stays at partial bounded evidence with all four clauses exercised;
+  closure needs a world maintained outside this project plus independent reproduction.
+
 - Added M078 and exercised the one G1 clause M068 never tested: an incompatible opaque body must
   produce a calibrated refusal rather than an invented adapter. One unchanged procedure adapted all
   four compatible bodies with 12/12 hidden observations each, refused all four incompatible bodies,
