@@ -1199,3 +1199,48 @@ reachable.
 
 No weight learning, no open-ended acquisition, no cross-domain transfer, no Genesis Gate 2 or Gate 3
 evidence, no AGI evidence. M080 does not touch the M075 pre-private readiness boundary.
+
+## D047 — M081 adds a second real environment without approaching the ones G6 actually names
+
+M071 supplied one terminal task in a real container and the register recorded that browser and
+desktop competence remain absent. M081 adds a second real environment and demonstrates the scoring
+rule G6 insists on, while leaving the named gaps exactly where they were.
+
+### The decision
+
+M081 is accepted as positive bounded mechanism evidence. G6 **stays** at `partial mechanism
+evidence`. The register gains one interface across two real environments and a measured
+self-report divergence; it gains no browser, no desktop VM, no physical device and no external
+suite. Anyone reading the row must still see that the larger part of the gate is untouched.
+
+The crossed-driver arm is the load-bearing control. Without it, "one interface worked in both" would
+also be true of a single environment wearing two labels. It completes nothing, so the shell container
+and the HTTP service are distinct systems.
+
+### Why the scoring clause was measured rather than assumed
+
+Each environment carries one task whose action reports success while the state does not change: a
+shell script that swallows a failed write with `; true`, and a service that answers `204` to a write
+it discards. Both are ordinary real-world failure modes. Scored by claim the interface looks 12/12;
+scored by state it is 10/12. G6 forbids self-report scoring, and this shows the cost of ignoring
+that rather than restating the rule.
+
+### Amendment A1 and two construction fixes
+
+The first freeze required all six tasks per environment to complete while specifying one that is
+uncompletable by construction. A1 resolves the contradiction in the strengthening direction: five
+completable tasks must succeed and the sealed task must be observed to fail while being claimed. Two
+further fixes are recorded in the result: the crossed arm originally swapped both driver and
+environment and crossed nothing, and the sealed task originally expected nothing and scored its own
+discard as a pass.
+
+### A limit on the evidence
+
+The container-backed regressions skip in CI under the existing `MIRA_RUN_DOCKER_TESTS` opt-in, so CI
+attests the structural half only. The live half is reproducible locally on demand and must be
+described that way, not as CI-attested.
+
+### Claim boundary
+
+No browser, no desktop VM, no external suite, no Genesis Gate 2 or Gate 3 evidence, no AGI evidence.
+M081 does not touch the M075 pre-private readiness boundary.

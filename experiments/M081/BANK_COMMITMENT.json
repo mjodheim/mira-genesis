@@ -1,0 +1,109 @@
+{
+  "bank_commitment": "5261974e2eb37424816205f8a5c37979df055fbdfa30113d411d65d78ef9ccbd",
+  "generator_version": 1,
+  "images": {
+    "service": "python@sha256:9662417aace5ae7b8e2609cce472b72a8958e134ba372808abe9cc1a0c0125e6",
+    "shell": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc"
+  },
+  "salt_sha256": "927a3ffe28da64d24d9e6d3f6cfcb7e7b305071040b08ff544c38cd23e5d677d",
+  "schema": "m081-bank-commitment-v1",
+  "task_count": 12,
+  "tasks": [
+    {
+      "actions": 2,
+      "commitment": "22a4f4733cd81a6a4c5e668dbba7bf2703a9c043f33af1da53a369c0cca8d004",
+      "environment": "shell",
+      "expected": 2,
+      "index": 0,
+      "targets_sealed": false
+    },
+    {
+      "actions": 3,
+      "commitment": "36f3e619763b28a486adba6512d2f735407ecc2ad012b3e86a52d5c26b543cff",
+      "environment": "shell",
+      "expected": 1,
+      "index": 1,
+      "targets_sealed": false
+    },
+    {
+      "actions": 2,
+      "commitment": "e77e86104d544857e0ed56a424e1d50a3fd486275ed3ecbf34fa0aef8cee730e",
+      "environment": "shell",
+      "expected": 2,
+      "index": 2,
+      "targets_sealed": false
+    },
+    {
+      "actions": 3,
+      "commitment": "692a491e11c0e054dfc523077827d01e8a02b22bec51b2953b65ef3dcc7725b6",
+      "environment": "shell",
+      "expected": 1,
+      "index": 3,
+      "targets_sealed": false
+    },
+    {
+      "actions": 2,
+      "commitment": "6e0ce68421527b3bf6d9e77ebe1e7ebc458b178189cb2eb48da67bac0a3c4788",
+      "environment": "shell",
+      "expected": 2,
+      "index": 4,
+      "targets_sealed": false
+    },
+    {
+      "actions": 1,
+      "commitment": "2841a92c1f055ed009ab5adb42a7f275ee7d08d7376d7dc44f17d44e5168c9c9",
+      "environment": "shell",
+      "expected": 1,
+      "index": 5,
+      "targets_sealed": true
+    },
+    {
+      "actions": 2,
+      "commitment": "e3b7699d1e9d7c6cdc9e7da48274a1292528dd7f3acfb460e6333f55af1da502",
+      "environment": "service",
+      "expected": 2,
+      "index": 0,
+      "targets_sealed": false
+    },
+    {
+      "actions": 3,
+      "commitment": "8ea9d2ae47cc597dd7fcfc7dd3ed10f25a6278e00431602d4a86d6597ec63e6b",
+      "environment": "service",
+      "expected": 1,
+      "index": 1,
+      "targets_sealed": false
+    },
+    {
+      "actions": 2,
+      "commitment": "bc462c26e76498821a4d0fccb4d876c619c9532c67e7d39576a7d3f3f03dfea7",
+      "environment": "service",
+      "expected": 2,
+      "index": 2,
+      "targets_sealed": false
+    },
+    {
+      "actions": 3,
+      "commitment": "291036b702b3e0f81f37ed4923bd42e395eceedd2187418db340c91463a02f5e",
+      "environment": "service",
+      "expected": 1,
+      "index": 3,
+      "targets_sealed": false
+    },
+    {
+      "actions": 2,
+      "commitment": "9dab27b8e6970288285f6ed9cb68d28b7c81d80d31389a944665bd307001f3a9",
+      "environment": "service",
+      "expected": 2,
+      "index": 4,
+      "targets_sealed": false
+    },
+    {
+      "actions": 1,
+      "commitment": "337d2fff2205a59337bed0279580336e20c52e3c45c02689d2bad2ab06814fd1",
+      "environment": "service",
+      "expected": 1,
+      "index": 5,
+      "targets_sealed": true
+    }
+  ]
+}

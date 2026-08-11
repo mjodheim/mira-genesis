@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- Added M081, a second real environment under one unchanged agent interface. A POSIX shell in a
+  network-disabled Alpine container and a real Python HTTP server process in its own container
+  both receive the same four abstract actions; the shared interface completed 5/5 completable
+  tasks in each, judged from a fresh environment-state read.
+- Made the scoring rule measurable rather than asserted. Each environment carries one task whose
+  action returns success while the state does not change — a shell script swallowing a failed
+  write with `; true`, and a service answering `204` to a write it discards. Judged by the
+  agent's claim the interface looks 12/12; judged by environment state it is 10/12.
+- Added a crossed-driver control that completes nothing, which is what shows the two environments
+  are distinct systems rather than one mock wearing two labels.
+- Recorded amendment A1 and two construction fixes. The first freeze required all six tasks per
+  environment to complete while specifying one that is uncompletable by construction; A1 resolves
+  it by strengthening, requiring the sealed task to be observed failing while claimed. The crossed
+  arm originally swapped both driver and environment and crossed nothing, and the sealed task
+  originally expected nothing and scored its own discard as a pass.
+- Recorded H27 and D047. G6 stays at partial mechanism evidence: **no browser, no desktop VM**, no
+  physical device and no external suite, and the container-backed regressions skip in CI under the
+  existing opt-in, so CI attests the structural half only.
+
 - Added M080 and measured forgetting for the first time. Six skills are acquired in sequence into
   one bounded 24-slot table where later skills reuse an earlier rule and demand a different output
   for an exception key the donor owns, so the cheap in-place rewrite is always available and always

@@ -1558,6 +1558,59 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M081:
+    title: one agent interface across two real isolated container environments
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    addressed_gate_clauses:
+      - same_interface_across_real_isolated_environments
+      - completion_scored_from_environment_state_not_self_report
+    explicitly_not_addressed:
+      - browser_competence
+      - desktop_vm_competence
+      - physical_simulator_or_device
+      - external_suite_competence
+    status: positive_qualified_development
+    hypothesis: H27
+    decision: D047
+    protocol: experiments/M081/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 7ac5ad4
+    harness_commit: 54b90c5
+    bank_commitment: 5261974e2eb37424816205f8a5c37979df055fbdfa30113d411d65d78ef9ccbd
+    result_sha256: cc9a6e89a023ee3c9f1b5e3f5f1f8a015f57af00d53c1f1611b3b4550bb41bdc
+    attempt: 1
+    retried: false
+    external_model_called: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    environments: [shell, service]
+    images_digest_pinned: true
+    shell_network_disabled: true
+    service_loopback_only: true
+    tasks_per_environment: 6
+    completable_tasks_per_environment: 5
+    shared_interface_completed_shell: 5
+    shared_interface_completed_service: 5
+    shared_interface_state_reached: 10
+    shared_interface_claimed: 12
+    crossed_drivers_completed: 0
+    self_report_overcount: 2
+    amendment_a1_applied_before_materialization: true
+    amendment_a1_direction: strengthens
+    construction_fixes_before_materialization: 2
+    local_regressions_passed_without_docker: 17
+    local_regressions_passed_with_docker: 20
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m081_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    browser_delivered: false
+    desktop_vm_delivered: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
   M080:
     title: continual acquisition under shared-table interference with measured forgetting
     epistemic_track: endogenous_bounded_lineage

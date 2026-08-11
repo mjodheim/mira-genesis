@@ -1,0 +1,120 @@
+{
+  "schema": "m081-two-real-environments-protocol-v1",
+  "status": "frozen_before_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "G6",
+  "addresses_gate_clauses": [
+    "the same agent interface must operate in isolated but real software environments",
+    "task completion is measured from environment state, never from the agent's self-report"
+  ],
+  "explicitly_not_addressed": [
+    "browser competence",
+    "desktop VM competence",
+    "physical simulator or device",
+    "external suites such as SWE-bench, OSWorld or ARC-AGI-2"
+  ],
+  "scientific_result_exists": false,
+  "external_model_called_for_this_result": false,
+  "external_task_selected": false,
+  "third_party_attestation_required": false,
+  "falsifiable_hypothesis": "One unchanged agent interface, emitting the same four abstract resource actions, will complete every task in two materially different real isolated environments — a container shell over a filesystem and a container HTTP service over a socket — with completion judged from environment state read through an independent path; a crossed-driver arm will fail because the environments are genuinely distinct, and a self-report arm will over-report success on at least one task where the action returns success while the environment does not change.",
+  "why_this_is_not_a_simulation": "Both environments are real processes inside real Docker containers created from digest-pinned local images. The shell environment runs a POSIX shell over a real filesystem; the service environment runs a real Python HTTP server answering over a real socket. Neither environment is modelled in the harness, and the harness cannot observe their state except by executing a fresh read against them.",
+  "why_self_report_must_be_shown_to_fail": "At least one task is constructed so the agent's action reports success while the environment state does not change, because the write targets a path the container makes read-only. A harness that trusted the return value would score that task as passed. The self-report arm exists to make that divergence visible rather than assumed.",
+  "claim_boundary": {
+    "establishes_one_interface_across_two_real_isolated_environments": true,
+    "establishes_environment_state_scoring_over_self_report": true,
+    "establishes_browser_competence": false,
+    "establishes_desktop_or_vm_competence": false,
+    "establishes_external_suite_competence": false,
+    "closes_generality_gate_g6": false,
+    "genesis_gate_2_evidence": false,
+    "agi_evidence": false
+  },
+  "environments": {
+    "shell": {
+      "kind": "container_shell_over_filesystem",
+      "image": "alpine@sha256:d9e853e87e55526f6b2917df91a2115c36dd7c696a35be12163d44e6e2a4b6bc",
+      "transport": "docker exec, UTF-8 bytes"
+    },
+    "service": {
+      "kind": "container_http_service_over_socket",
+      "image": "python@sha256:9662417aace5ae7b8e2609cce472b72a8958e134ba372808abe9cc1a0c0125e6",
+      "transport": "HTTP over a published loopback port"
+    }
+  },
+  "shared_interface": {
+    "actions": ["put", "read", "remove", "list"],
+    "identical_action_vocabulary_in_both_environments": true,
+    "agent_may_branch_on_environment_kind": false
+  },
+  "isolation": {
+    "network_disabled_for_shell_environment": true,
+    "service_environment_publishes_loopback_only": true,
+    "host_repository_mounted": false,
+    "docker_socket_mounted": false,
+    "credentials_mounted": false
+  },
+  "tasks": {
+    "count_per_environment": 6,
+    "includes_one_readonly_write_that_reports_success": true
+  },
+  "arms": {
+    "shared_interface": {
+      "driver": "matched to the environment",
+      "scoring": "environment state"
+    },
+    "crossed_drivers": {
+      "driver": "deliberately swapped between environments",
+      "scoring": "environment state",
+      "preregistered_loss": "completes no task, because the environments are genuinely distinct rather than two names for one mock"
+    },
+    "self_report_scored": {
+      "driver": "matched to the environment",
+      "scoring": "the agent's own claim",
+      "preregistered_divergence": "reports at least one more success than the environment state supports"
+    }
+  },
+  "episode_generation": {
+    "salt_hex": "42f58959b59b2f4c2fd3c4a318709cdf2f37887916e8f1f33c774e8dbcd76a7c",
+    "generator_version": 1,
+    "selection_rule": "sha256(salt || utf8(environment) || uint32_be(index)) fixes each task's resource names, contents and operation order",
+    "bank_materialized": false
+  },
+  "positive_threshold": {
+    "shared_interface_completable_tasks_per_environment": 5,
+    "shared_interface_sealed_task_must_not_complete": true,
+    "shared_interface_environments_covered": 2,
+    "crossed_drivers_max_tasks_completed": 0,
+    "self_report_min_overcount": 2,
+    "environment_state_scored_through_an_independent_read": true,
+    "containers_must_be_real": true
+  },
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "applied_before_any_recorded_result": true,
+      "changed": [
+        "positive_threshold.shared_interface_tasks_completed_per_environment = 6 replaced by completable = 5 plus an explicit requirement that the sealed task must NOT complete",
+        "self_report_min_overcount raised from 1 to 2, one per environment"
+      ],
+      "reason": "The first freeze was self-contradictory. It required all six tasks per environment to complete while also specifying that one of the six writes to a target the environment silently discards. That task is uncompletable by construction, so the threshold could not be met by any agent. The amendment resolves the contradiction in the strengthening direction: the five completable tasks must all succeed, and the sealed task must be observed to fail under environment-state scoring while the agent claims it succeeded.",
+      "direction": "strengthens, because the sealed task now carries a positive requirement instead of being counted as an ordinary success",
+      "not_permitted_after_materialization": true
+    }
+  ],
+  "failure_classification": {
+    "negative": "Any task not completed by the shared interface in either environment, a crossed-driver arm that still completes a task, or a self-report arm that never diverges from environment state.",
+    "inconclusive": "Docker is unavailable, an image digest does not match, or a container cannot be created; the experiment is then not runnable rather than negative.",
+    "positive": "The shared interface completes all six tasks in both real environments, the crossed-driver arm completes none, and the self-report arm over-reports at least once, on the first materialized bank."
+  },
+  "prohibited_adaptation": [
+    "let the agent branch on which environment it is in",
+    "model or mock either environment inside the harness",
+    "score completion from an action return value rather than an independent state read",
+    "change the hypothesis, thresholds, salt or task grammar after bank materialization",
+    "retry the first materialized bank",
+    "describe a container shell or an HTTP service as a browser or a desktop VM",
+    "describe this bounded result as closing G6 or as AGI evidence"
+  ]
+}
