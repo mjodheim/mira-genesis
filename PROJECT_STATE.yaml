@@ -1625,13 +1625,13 @@ phase_eight:
     couplings_rerouted_through_a_registered_domain_view: true
     m084_arms_rederive_recorded_numbers_exactly: true
     organism_reimplemented_for_external_domains: false
-    local_regressions_passed: 32
-    first_ci_run: '31533177300'
+    local_regressions_passed: 49
+    first_ci_run: '31538428323'
     first_ci_attempt: 1
     first_ci_rerun: false
-    ci_tests_passed_each_python: 1656
+    ci_tests_passed_each_python: 1674
     ci_tests_skipped_each_python: 9
-    attribution_run: '31533177391'
+    attribution_run: '31538426940'
 
   M084:
     title: one persistent lineage integrating the separately qualified Phase 8 mechanisms
