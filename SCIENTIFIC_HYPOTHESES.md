@@ -662,7 +662,11 @@ modification of it; and on a later independently frozen problem the modified mec
 corrective transformation lying outside the **constructive image** of the original mechanism,
 producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.
 
-**Status:** **UNTESTED.** The M086-A attempt is post-hoc disqualified and neither confirms nor refutes this hypothesis; see D053 and `experiments/M086/DISQUALIFICATION.md`. The paragraph below records what that attempt observed, as motivation for M086-B, not as support.
+**Status:** **UNTESTED after two attempts.** M086-B's single attempt is a preserved negative that
+does not refute this hypothesis: the salt drew a limitation whose routeless operation is `add`, whose
+repair the sandbox rejects with `duplicate tool registration`, so no mechanism could have repaired it
+and the hypothesis was never put at risk. All ten conditions were computed and the table names the
+five that failed; see `experiments/M086B/RESULT.md`. The M086-A attempt is post-hoc disqualified and neither confirms nor refutes this hypothesis; see D053 and `experiments/M086/DISQUALIFICATION.md`. The paragraph below records what that attempt observed, as motivation for M086-B, not as support.
 
 **M086-A observations, diagnostic only:** Against evidence naming two stages at
 once, the mechanism M047 froze emits **zero** candidates — enumerated, not inferred. The lineage

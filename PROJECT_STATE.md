@@ -93,6 +93,20 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M086-B is a preserved negative and does not refute H32.** Protocol frozen at `95a5022` before
+  any harness, harness at `96f4fcb`, bank and holdout materialized at `3d30168`, result
+  `8b7f80d4…d31c32`, attempt 1, no rerun. All four corrections the disqualification mandated held:
+  every artifact is byte-identical to its committed blob, all ten conditions were computed with a
+  single false making the result negative, the forced fault is implemented, and the holdout was
+  materialized by a separate process after the adopted mechanism was committed — P9 proves the
+  chronology from recorded digests. The attempt still failed to test the hypothesis: the salt drew a
+  limitation whose routeless operation is `add`, and every candidate that routes it is refused by the
+  sandbox with `duplicate tool registration` because `tool_core` already registers that name. No
+  mechanism could have repaired it, the meta-search returned empty across all ten combinations, and
+  P1, P2, P6, P7 and P8 failed for that one cause while P3, P4, P5, P9 and P10 passed. The bank is
+  materialized and is not redrawn. **H32 remains untested after two attempts**, and the two failures
+  differ: M086-A reported positive against a threshold that could not fail, M086-B reported negative
+  against a threshold that could and named exactly what broke.
 - **M086-A is post-hoc disqualified; its qualification is withdrawn and H32 is untested.** Four defects, set out in `experiments/M086/DISQUALIFICATION.md`: `RESULT.json` binds a protocol digest matching only the CRLF working-tree copy and not the committed blob, which is the M064 checkout-dependent-hash class recurring; **P8 was never implemented** and `evaluate()` computes P1–P6 only, so P7–P10 could not make the verdict negative and the positive verdict rested on six of ten frozen conditions; the holdout existed as module constants before the meta-search and was enumerated before any arm ran, so the promised chronology was replaced by a source-text absence check; and the checker re-derived 3 of 14 preserved fields per arm, never verifying the mechanism digests or the causal journal that P7 exists to guarantee. Every artifact, digest, CI record and history entry is preserved unchanged. The observations remain diagnostic and motivate the successor. **No gate moves.** The original entry follows, preserved for the record:
 - **M086-A originally claimed the following, and it is withdrawn:** Protocol frozen
   before the harness at `8a8a6e7`; bank `fa647e27…c2a5`; first result `a0569361…93bd`, attempt 1, no

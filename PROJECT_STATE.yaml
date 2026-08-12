@@ -1566,6 +1566,48 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M086-B:
+    title: second attempt at the evolvable improvement mechanism, with an enforceable instrument
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: untested_not_refuted_by_this_attempt
+    predecessor: M086-A
+    predecessor_status: post_hoc_disqualified
+    is_a_repair_of_the_predecessor: false
+    reuses_predecessor_bank_or_result: false
+    protocol: experiments/M086B/PROTOCOL.json
+    protocol_frozen_commit: 95a5022
+    harness_commit: 96f4fcb
+    materialization_commit: 3d30168
+    salt_hex: f24bea192055b851ac9945aa9c3dece3b20aa63bbda03872c28baa327b092646
+    bank_commitment: d4b42d4579297a8bf0c3c97033b8dd6f0460a0acc7f5216a78843bf9b5ab0098
+    phase1_commitment: daaf5de592a79355a1548b6d9a1ccfa6c71185d453d57ad83f523e153a5831b5
+    adopted_commitment: 29b691bb2c0b4b79a6469ef12bbe9aff916b1e2e0901c214b19d5747aad0650e
+    holdout_digest: 1113c8857c3d983c71dfff0e71717770090a7a8319919cfdd86b82562313ddba
+    result_sha256: 8b7f80d458eeb02035fada6f3b3a7888c00968f526145ed2348129c768d31c32
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P3, P4, P5, P9, P10]
+    conditions_failed: [P1, P2, P6, P7, P8]
+    single_false_makes_negative: true
+    meta_transformations_adopted: 0
+    meta_transformations_rejected: 10
+    cause_of_failure: sandbox_refuses_duplicate_tool_registration_for_the_drawn_routeless_operation
+    cause_is_the_bank_grammar_not_the_mechanism: true
+    hypothesis_put_at_risk: false
+    artifacts_byte_identical_to_committed_blobs: true
+    holdout_materialized_after_adopted_mechanism_committed: true
+    holdout_generated_by_a_separate_process: true
+    phase1_imported_the_holdout_module: false
+    forced_fault_implemented: true
+    forced_fault_reached: false
+    bank_redrawn: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
   M086-A:
     title: the improvement mechanism itself made an object of endogenous transformation
     epistemic_track: endogenous_bounded_lineage

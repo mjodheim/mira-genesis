@@ -1128,3 +1128,42 @@ because the checker is not in the test suite and no regression asserted the bind
 coverage or the chronology. M086-B makes each of P1–P10 computed and decisive, implements P8 with a
 real fault, separates holdout materialization into its own process and commit, and digests the whole
 arm record so an omission cannot hide.
+
+## M086-B — the bank drew a limitation no mechanism could repair
+
+M086-B's first and only scientific attempt is negative, and the negative says nothing about H32.
+
+The salt drew a development limitation whose routeless operation is `add`. The mechanism behaved
+exactly as designed: widening the hypothesis schema diagnosed both implicated modules and generated
+nine candidates, and adding composition generated twenty, including precisely the right one. Every
+candidate that routes `add` is then refused by the sandbox before it executes:
+
+```
+RuntimeError: duplicate tool registration: add
+```
+
+`tool_core` already registers `add`. A synthesized `tool_add` registers it a second time and the body
+is rejected. No mechanism — starting, widened, composed, or any of the ten combinations — could have
+repaired that limitation, so the meta-search returned empty and five of the ten conditions failed for
+one reason: there was nothing to adopt.
+
+The defect is in the grammar. `ROUTELESS_CANDIDATES` was chosen by asking whether M047's tool
+renderer had a correct *expression* for each operation — `sum` does compute `a + b` — and not whether
+the tool *name* was already taken. `mean` is repairable; `add` is not; the salt chose `add`.
+
+The bank is materialized and the result is preserved rather than redrawn. Fixing the grammar and
+drawing again on the same protocol would be the result-saving retry that disqualified nothing here
+only because nothing positive was claimed; it remains forbidden. A corrected grammar needs a new
+protocol, a new salt and a new experiment.
+
+Two things are worth separating. This is the **third** consecutive attempt at the meta-mechanism
+question to fail for an instrument reason rather than a scientific one — M086-A's threshold could not
+fail, M086-B's bank could not be repaired. But the failure modes are not equivalent: M086-A reported
+*positive* while four of ten conditions sat outside the verdict, and M086-B reported *negative* with
+all ten computed and a table naming exactly which failed. The corrections the disqualification
+mandated did their job; they simply revealed a different defect one layer down.
+
+There is also a smaller lesson about reasoning from availability. Both M086 banks were built by
+checking that a repair *existed in principle* — an expression that computes the right value, an alias
+that parses — without checking that the repair could be *installed*. The sandbox's registration rule
+is not in the renderer's signature, and neither bank consulted it.
