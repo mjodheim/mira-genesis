@@ -1605,6 +1605,14 @@ phase_eight:
     forced_fault_implemented: true
     forced_fault_reached: false
     bank_redrawn: false
+    ci_run: '31577302582'
+    ci_tests_passed_each_python: 1752
+    ci_tests_skipped_each_python: 10
+    attribution_run: '31577301158'
+    earlier_ci_run_failed_on_a_stale_test_assertion: '31575612491'
+    ci_rerun_after_test_fix: true
+    experiment_rerun: false
+    bank_redrawn_after_materialization: false
     generality_gate_advanced: false
     agi_evidence: false
 

@@ -94,6 +94,17 @@ a grammar. Widening it honestly requires either a second synthesizable operation
 or a body whose `tool_core` registers less. That is a change to the bank grammar and therefore a new
 protocol, a new salt and a new experiment; it may not be applied to this one.
 
+## CI
+
+Run `31577302582`: **1,752 passed, 10 skipped** on Python 3.11 and 3.13, plus repository integrity;
+attribution run `31577301158` passed.
+
+An earlier CI run on the same result, `31575612491`, failed on one test. That test was a
+disqualification regression asserting the exact H32 status string, which recording this negative had
+just changed; the assertion was made stable and CI rerun. **The experiment itself was not rerun** —
+`8b7f80d4` is attempt 1 and the bank was never redrawn. The distinction matters: CI may be rerun for
+a defect in a test, a materialized scientific bank may not be rerun for anything.
+
 ## Claim boundary
 
 No gate moves. H32 is untested. This result is not evidence for or against endogenous transformation
