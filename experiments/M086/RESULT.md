@@ -87,6 +87,13 @@ fifth. The human assumption moved up one level; it did not disappear, and the pr
 the second possible negative precisely so it cannot be quietly forgotten now that the result is
 positive.
 
+## Qualification
+
+First CI run `31568691093`, attempt 1, no rerun: **1,703 passed, 9 skipped** on Python 3.11 in
+1,210.84 s and on Python 3.13 in 1,276.50 s, plus repository integrity. Attribution run
+`31568691081` passed. Local suite 1,702 passed / 10 skipped; 29 M086 regressions; checker
+`failures: []`.
+
 ## Claim boundary
 
 In one bounded, project-authored construction, the mechanism producing future transformations became
