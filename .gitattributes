@@ -22,3 +22,10 @@ experiments/M086B/PHASE1.json -text
 experiments/M086B/HOLDOUT.json -text
 experiments/M086B/PRE_ADOPTION_MECHANISM.json -text
 experiments/M086B/RESULT.json -text
+experiments/M086C/PROTOCOL.json -text
+experiments/M086C/BANK_COMMITMENT.json -text
+experiments/M086C/ADOPTED_MECHANISM.json -text
+experiments/M086C/PHASE1.json -text
+experiments/M086C/HOLDOUT.json -text
+experiments/M086C/PRE_ADOPTION_MECHANISM.json -text
+experiments/M086C/RESULT.json -text
