@@ -308,7 +308,7 @@ def test_m086_a_is_recorded_as_disqualified_everywhere_it_is_claimed() -> None:
     for path, marker in (
         (ROOT / "README.md", "M086-A"),
         (ROOT / "ROADMAP.md", "Post-hoc disqualified development"),
-        (ROOT / "SCIENTIFIC_HYPOTHESES.md", "**Status:** **UNTESTED"),
+        (ROOT / "SCIENTIFIC_HYPOTHESES.md", "M086-A attempt is post-hoc disqualified"),
         (ROOT / "DECISIONS.md", "D053"),
     ):
         assert marker in path.read_text(encoding="utf-8"), path.name
