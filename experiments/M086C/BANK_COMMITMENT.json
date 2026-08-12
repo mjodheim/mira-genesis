@@ -1,0 +1,46 @@
+{
+  "bank_commitment": "898c724ca91caff91b085f1e0b50fe99ef17ef2ff880a44a36059b594c134faa",
+  "bank_digest": "d8977d5d7f3c0c7e15a8826d2ab5dd58c24d1168f264fc5ea6ff5d821ed2027a",
+  "development_public": [
+    {
+      "case_id": "development_unknown_token",
+      "expected": 6,
+      "origin": "development",
+      "request": "tot 3 2"
+    },
+    {
+      "case_id": "development_missing_route",
+      "expected": 8.0,
+      "origin": "development",
+      "request": "mean 9 9 6"
+    }
+  ],
+  "generator_version": 1,
+  "protocol_commitment": "28a94339397f5a30dfa31654a7bb614c5b2bc4382c1b13c0ace34f97b8a262aa",
+  "schema": "m086c-bank-commitment-v1",
+  "shape": {
+    "aliases": {
+      "add": "add",
+      "max": "max",
+      "mean": "mean",
+      "mul": "mul"
+    },
+    "routeless_operands": [
+      9,
+      9,
+      6
+    ],
+    "routeless_operation": "mean",
+    "routes": {
+      "add": "add",
+      "mul": "mul"
+    },
+    "unknown_canonical": "mul",
+    "unknown_operands": [
+      3,
+      2
+    ],
+    "unknown_token": "tot"
+  },
+  "starting_body_digest": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d"
+}

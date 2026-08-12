@@ -1,0 +1,79 @@
+{
+  "adopted_commitment": "ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443",
+  "adopted_primitives": [
+    "widen_hypothesis"
+  ],
+  "mechanism": {
+    "composes": false,
+    "provenance": [
+      "widen_hypothesis"
+    ],
+    "rules": [
+      {
+        "module": "interpretation",
+        "options": [
+          "add",
+          "max",
+          "mean",
+          "mul"
+        ],
+        "parameterized": false,
+        "relaxed": false,
+        "requires": "unknown_token",
+        "rule_id": "interpreter_add_alias"
+      },
+      {
+        "module": "planning",
+        "options": [
+          "one_level",
+          "recursive_postorder"
+        ],
+        "parameterized": false,
+        "relaxed": false,
+        "requires": "none",
+        "rule_id": "planner"
+      },
+      {
+        "module": "selection",
+        "options": [
+          "midpoint",
+          "mean",
+          "sum",
+          "maximum",
+          "minimum"
+        ],
+        "parameterized": false,
+        "relaxed": false,
+        "requires": "missing_operation",
+        "rule_id": "synthesize_tool"
+      },
+      {
+        "module": "critique",
+        "options": [
+          "round_one",
+          "round_two",
+          "round_three"
+        ],
+        "parameterized": false,
+        "relaxed": false,
+        "requires": "none",
+        "rule_id": "critic"
+      },
+      {
+        "module": "allocation",
+        "options": [
+          "fixed_five",
+          "plan_length",
+          "double_plan_length"
+        ],
+        "parameterized": false,
+        "relaxed": false,
+        "requires": "none",
+        "rule_id": "allocator"
+      }
+    ],
+    "schema": "multi_module"
+  },
+  "mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+  "schema": "m086c-adopted-mechanism-v1"
+}
