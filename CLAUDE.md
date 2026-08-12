@@ -1,50 +1,58 @@
 # Claude instructions — Mira Genesis public repository
 
 This repository is **public**. Before changing it, read and follow [`AGENTS.md`](AGENTS.md), especially
-the prospective IP/publication boundary.
+the publication/licensing boundary.
 
-## Non-negotiable public/private boundary
+## Public M086+ research is allowed after review
 
 - M085 and earlier already-public material remain public under their existing licences and scientific
   records.
 - M085's independent external-maintainer requirement must remain genuine; do not replace it with
   project-authored or project-controlled AI-generated evidence.
-- Starting with M086, materially new enabling core R&D is **private before publication review by
-  default** under [`docs/IP_PUBLICATION_POLICY.md`](docs/IP_PUBLICATION_POLICY.md).
-- Do **not** implement, scaffold, prototype, commit, branch, discuss in public issues/PRs, or leak via
-  CI/artifacts any unpublished M086+ core mechanism in this repository.
-- If a request would require such implementation, stop before generating/committing the enabling
-  details and state that the work belongs in the project's private R&D workspace.
+- Starting with M086, materially new core R&D is **public after pre-publication review by default**.
+- Before the first enabling implementation/disclosure of a new core mechanism, consult
+  [`docs/IP_PUBLICATION_POLICY.md`](docs/IP_PUBLICATION_POLICY.md),
+  [`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md) and
+  [`docs/DUAL_LICENSING_STRATEGY.md`](docs/DUAL_LICENSING_STRATEGY.md).
+- If the recorded disposition is `PUBLIC_AGPL_COMMERCIAL_OPTION` or another public disposition, the
+  milestone may be implemented, tested and documented in this public repository under the normal
+  scientific discipline.
 
-The private-workspace procedure is
-[`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md). It covers repository separation,
-AI-provider data controls, private scientific provenance and controlled publication back to the
-public repository.
+Public project-controlled software remains available under AGPL. Where Anthony Mets controls the
+necessary rights, separate commercial permissions may be sold under a written agreement to customers
+that need rights beyond the AGPL grant. Do not state that AGPL-compliant commercial activity is
+prohibited or automatically requires payment.
 
-Do not weaken this boundary by labelling new core research as a refactor, documentation task,
-benchmark preparation or harmless experiment scaffolding.
+## Selectively private work
+
+Do not publish enabling material when a recorded disposition requires temporary confidentiality,
+including patent-first review, intentional trade-secret treatment, confidential third-party material,
+contractual embargo, deliberately proprietary product implementation or security-sensitive material.
+
+For those cases, stop before generating/committing enabling details here and follow
+[`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md).
+
+If publication status is genuinely undecided, fail closed only until the owner records the decision.
+Do **not** treat all M086+ work as private by default.
 
 ## Scientific integrity
 
-Private R&D does not permit retroactive scientific repair. Preserve frozen protocols, negative
-results, Track A / Track B attribution and the evidentiary thresholds in the project registers.
+Commercial/IP strategy never permits retroactive scientific repair. Preserve frozen protocols,
+negative results, Track A / Track B attribution, independent evaluator boundaries and the evidentiary
+thresholds in the project registers.
 
 ## Provenance
 
 Anthony Mets (`mjodheim`) is recorded at the 12 August 2026 snapshot as the sole human developer and
 research director. Anthropic Claude, OpenAI Codex and historical OpenAI ChatGPT usage are recorded as
-AI development assistance. This is a production-provenance record, not a claim that AI-provider
-terms clear third-party rights or settle legal authorship/inventorship.
+AI development assistance. This production-provenance record does not mean provider terms clear
+third-party rights or settle legal authorship/inventorship.
 
 Review before material work:
 
-- [`AGENTS.md`](AGENTS.md)
-- [`AUTHORS.md`](AUTHORS.md)
-- [`docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`](docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md)
-- [`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md)
-- [`docs/THIRD_PARTY_DEPENDENCIES.md`](docs/THIRD_PARTY_DEPENDENCIES.md)
-- [`docs/PRIVATE_RND_OPERATIONS.md`](docs/PRIVATE_RND_OPERATIONS.md)
-- [`CONTRIBUTING.md`](CONTRIBUTING.md)
-
-When publication status is ambiguous, fail closed: do not put the enabling implementation in the
-public repository.
+- [`AGENTS.md`](AGENTS.md);
+- [`AUTHORS.md`](AUTHORS.md);
+- [`docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`](docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md);
+- [`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md);
+- [`docs/THIRD_PARTY_DEPENDENCIES.md`](docs/THIRD_PARTY_DEPENDENCIES.md);
+- [`CONTRIBUTING.md`](CONTRIBUTING.md).
