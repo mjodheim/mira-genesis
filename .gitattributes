@@ -52,3 +52,7 @@ experiments/M075B/PUBLIC_BANK_COMMITMENT.json -text
 experiments/M075B/SYSTEM_PROTOCOL.json -text
 experiments/M075B/REVEAL_AUTHORIZATION.json -text
 experiments/M075B/RESULT.json -text
+
+# M087 registers every digest-bearing artifact before any of them exists.
+experiments/M087/PROTOCOL.json -text
+experiments/M087/RESULT.json -text
