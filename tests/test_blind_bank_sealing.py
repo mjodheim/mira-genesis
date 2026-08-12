@@ -216,6 +216,26 @@ def test_a_decryption_key_is_detected(tmp_path: Path) -> None:
     assert scan_tree_for_leaks(tmp_path)
 
 
+def test_the_contracts_own_schema_document_is_not_a_leak() -> None:
+    # `docs/schemas/blind_bank_payload.schema.json` is named after the thing it describes, so a
+    # path pattern keyed on `BANK_PAYLOAD*.json` matches it. It is a description, not a bank.
+    assert scan_tree_for_leaks(
+        ROOT, tracked_paths=["docs/schemas/blind_bank_payload.schema.json"],
+    ) == []
+
+
+def test_a_payload_hidden_under_a_schema_suffix_is_still_a_leak(tmp_path: Path) -> None:
+    # The path patterns skip `.schema.json`; the content check must not.
+    (tmp_path / "innocuous.schema.json").write_text(
+        json.dumps({
+            "schema": PAYLOAD_SCHEMA, "bank_id": "b", "spec_commitment_sha256": "a" * 64,
+            "bank_nonce": "b" * 64, "domains": [],
+        }),
+        encoding="utf-8",
+    )
+    assert scan_tree_for_leaks(tmp_path)
+
+
 def test_a_schema_document_describing_the_payload_is_not_a_leak(tmp_path: Path) -> None:
     (tmp_path / "payload.schema.json").write_text(
         json.dumps({

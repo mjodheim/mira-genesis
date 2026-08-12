@@ -45,6 +45,8 @@ FORBIDDEN_PATH_PATTERNS = (
     re.compile(r"BLIND_BANK.*(?:identity|recipient)", re.IGNORECASE),
 )
 
+SCHEMA_DOCUMENT_SUFFIX = ".schema.json"
+
 REQUIRED_GITIGNORE_ENTRIES = (
     "*.blind-bank-payload.json",
     "*.blind-bank-plaintext",
@@ -187,10 +189,15 @@ def scan_tree_for_leaks(
         if not path.is_file():
             continue
         relative = path.relative_to(base).as_posix()
-        for pattern in FORBIDDEN_PATH_PATTERNS:
-            if pattern.search(relative):
-                problems.append(f"{relative} matches a forbidden sealed-bank path pattern")
-                break
+        # A `.schema.json` file describes a payload rather than being one, and the contract's own
+        # schema document is legitimately named after the thing it describes. The path patterns
+        # skip it; the content check below does not, so a payload hidden under that suffix is
+        # still caught.
+        if not relative.endswith(SCHEMA_DOCUMENT_SUFFIX):
+            for pattern in FORBIDDEN_PATH_PATTERNS:
+                if pattern.search(relative):
+                    problems.append(f"{relative} matches a forbidden sealed-bank path pattern")
+                    break
         if path.suffix.lower() not in {".json", ".txt", ".md", ".yaml", ".yml", ""}:
             continue
         try:
@@ -255,7 +262,8 @@ def missing_gitattributes_entries(
 
 
 __all__ = [
-    "FORBIDDEN_PATH_PATTERNS", "REQUIRED_GITIGNORE_ENTRIES", "SUPPORTED_CIPHERS",
+    "FORBIDDEN_PATH_PATTERNS", "REQUIRED_GITIGNORE_ENTRIES", "SCHEMA_DOCUMENT_SUFFIX",
+    "SUPPORTED_CIPHERS",
     "SealingError", "canonicalize_payload", "finalize_seal", "missing_gitattributes_entries",
     "missing_gitignore_entries", "scan_tree_for_leaks", "sealing_plan",
 ]
