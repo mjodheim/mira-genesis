@@ -1,4 +1,4 @@
-# M086-C result — NEGATIVE, and this one is about H32
+# M086-C result — NEGATIVE, and this one put H32 at risk
 
 **NEGATIVE SCIENTIFIC RESULT — TRACK A, MODEL-FREE. ATTEMPT 1, NO RERUN. NO GATE MOVES.**
 
@@ -7,7 +7,7 @@ Protocol `09ed0d3` frozen before any harness. Harness `5056a56`. Bank and holdou
 
 **Nine of the ten conditions passed. P2 failed, and it failed on exactly the risk the frozen protocol
 named in advance.** Unlike M086-A, whose threshold could not fail, and M086-B, whose bank no mechanism
-could repair, this attempt put H32 at risk and H32 lost.
+could repair, this attempt put H32 at risk, and the hypothesis came out **not supported**.
 
 ## The verdict table
 
@@ -71,10 +71,13 @@ H32 as frozen asks for "a correct outcome the same lineage with a frozen mechani
 The lineage reached an *incorrect* outcome the frozen mechanism could not reach. That is a weaker and
 different thing, and the hypothesis does not get credit for it.
 
-**H32 is refuted on this bank.** It is not refuted in general: one bank, one salt, one draw whose
-public case happened not to discriminate. The honest statement is that the first attempt to put H32
-at genuine risk found the meta-improvement insufficient, because widening what the mechanism can
-*hypothesise* did nothing about how it *chooses among* the candidates that hypothesis admits.
+**H32 is not supported by this attempt.** That is a statement about one bank, one salt and one draw
+whose public case happened not to discriminate — **not** a finding that meta-plasticity is
+impossible, and nothing here licenses that claim. The honest statement is that the first attempt to
+put H32 at genuine risk found this meta-improvement insufficient, because widening what the
+mechanism can *hypothesise* did nothing about how it *chooses among* the candidates that hypothesis
+admits. Whether a lineage with a mutable selection rule, or a different bank, would support H32 is
+left open.
 
 ## The limitation this exposes, which is not the one the experiment was designed around
 
@@ -96,7 +99,7 @@ Run 31582950744: **1,797 passed, 11 skipped** on Python 3.11 and 3.13, plus repo
 attribution run 31582949069 passed.
 
 An earlier run failed on a disqualification regression that asserted the H32 status line still began
-UNTESTED — a line this refutation had just changed. The check is now anchored to the sentence
+UNTESTED — a line this result had just changed. The check is now anchored to the sentence
 recording M086-A as disqualified, which is what it was actually protecting. **The experiment was not
 rerun**: 67786012 is attempt 1 and the bank was never redrawn.
 

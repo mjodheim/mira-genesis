@@ -1571,7 +1571,7 @@ phase_eight:
     epistemic_track: endogenous_bounded_lineage
     status: negative_scientific_result
     hypothesis: H32
-    hypothesis_status: not_supported_refuted_on_this_bank
+    hypothesis_status: not_supported_by_this_attempt
     predecessors: [M086-A, M086-B]
     protocol_frozen_commit: 09ed0d3
     harness_commit: 5056a56
