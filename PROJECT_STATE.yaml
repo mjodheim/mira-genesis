@@ -1577,6 +1577,26 @@ phase_eight:
     reveal_signature_namespace: mira-blind-bank-reveal-v1
     ci_leakage_check_decisive: true
     ci_reveal_assertion_decisive: true
+    ci_asserts_m075_boundary_fail_closed: true
+    ci_asserts_m085_boundary_fail_closed: true
+    instrument_evidence_commit: 7002e4a843f347d4f494946a3c8a1fbb2d07387f
+    instrument_ci_run: 31618867270
+    instrument_ci_attempt: 1
+    instrument_ci_python_3_11_passed: 1949
+    instrument_ci_python_3_11_skipped: 11
+    instrument_ci_python_3_11_seconds: 1237.13
+    instrument_ci_python_3_13_passed: 1949
+    instrument_ci_python_3_13_skipped: 11
+    instrument_ci_python_3_13_seconds: 1266.31
+    instrument_ci_repository_integrity_passed: true
+    instrument_ci_sealed_bank_boundary_passed: true
+    instrument_ci_attribution_run: 31618864163
+    instrument_ci_attribution_passed: true
+    instrument_ci_first_run_failed_then_fixed: true
+    instrument_ci_first_run: 31618681563
+    instrument_ci_first_run_defect: leak_scanner_matched_the_payload_schema_document_as_a_payload
+    github_workflow_rerun_used: false
+    new_focused_tests: 150
     evidence_tier_reachable: blind_generated_sealed_bank
     evidence_tier_required_for_h21_support: independently_reproduced_human_maintained_sealed_bank
     procedural_independence_claimed: true

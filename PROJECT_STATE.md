@@ -112,6 +112,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   the attestation's own booleans. One frozen spec admits exactly one materialized bank, and a
   second is a hard failure rather than a warning. No generator is chosen, no prompt is written, no
   bank exists, no reveal is authorized; `check_blind_bank_readiness.py` reports `phase: draft`.
+  Exact instrument commit `7002e4a` passed run `31618867270`, attempt 1, with 1,949 passed and 11
+  skipped on Python 3.11 and 3.13, repository integrity and a new decisive sealed-bank boundary job
+  that also asserts the M075 and M085 boundaries remain fail-closed; attribution `31618864163`
+  passed. A first run `31618681563` failed on the leak scanner matching this contract's own payload
+  schema document, and is preserved rather than replaced.
   **M075 is untouched** — no protocol, result, bank, digest or claim was modified — and
   **issue #112 remains open and unchanged**. No gate advances. See D055 and
   `docs/BLIND_BANK_GENERATION.md`.

@@ -19,6 +19,15 @@
 - Issue #112: unchanged and open. Recommendation recorded in
   [`ISSUE_112_DECISION.md`](ISSUE_112_DECISION.md); no status change made.
 - Gate advance: none.
+- 150 focused tests. Exact instrument commit `7002e4a` passed run `31618867270`, attempt 1:
+  **1,949 passed / 11 skipped** on Python 3.11 and 3.13, plus repository integrity and the new
+  decisive sealed-bank boundary job; attribution run `31618864163` passed. No workflow was rerun.
+- A first CI run, `31618681563`, **failed** and is preserved: the leak scanner's
+  `BANK_PAYLOAD*.json` path pattern matched `docs/schemas/blind_bank_payload.schema.json`. The
+  local run had missed it because the file was still untracked when the checker was first
+  exercised, and the scan reads the Git index. The path patterns now skip `.schema.json`; the
+  content check still reads those files, and a test pins a payload hidden under that suffix as a
+  leak.
 
 ## What is enforced in code rather than promised
 
