@@ -1,29 +1,33 @@
-# Private R&D operating procedure
+# Selective private R&D operating procedure
 
-**Effective from 12 August 2026 for prospective M086+ core work.**
+**Effective from 12 August 2026 for assets explicitly classified as temporarily private.**
 
-This procedure operationalises [`IP_PUBLICATION_POLICY.md`](IP_PUBLICATION_POLICY.md). It is meant
-to reduce accidental disclosure while keeping the historical public scientific record intact. It is
-not a legal opinion and does not guarantee patentability or trade-secret status.
+Mira Genesis is public-research-first. This procedure applies only when the pre-publication review in
+[`IP_PUBLICATION_POLICY.md`](IP_PUBLICATION_POLICY.md) records a concrete private disposition such as
+`PATENT_FIRST`, `TRADE_SECRET_PRIVATE`, `CONFIDENTIAL_THIRD_PARTY`, `CONTRACTUAL_EMBARGO`,
+`COMMERCIAL_PRIVATE`, or a security-sensitive hold.
 
-## 1. Separate repository/workspace
+It is not the default workflow for M086+ and is not required merely to preserve alternative
+commercial licensing.
 
-Do not develop materially new M086+ enabling core mechanisms on a branch of the public
+## 1. Separate repository/workspace when confidentiality is active
+
+Do not develop an asset that is currently classified private on a branch of the public
 `mjodheim/mira-genesis` repository. A branch of a public repository is public.
 
-Use a genuinely private repository or a non-public local workspace for private R&D. A practical
-layout is:
+Use a genuinely private repository or non-public local workspace for the duration of the hold. A
+practical layout is:
 
-- `mjodheim/mira-genesis` — public historical/scientific repository through M085 and later
-  deliberately published material;
-- a separately created private repository such as `mjodheim/mira-genesis-rnd` — unpublished core
-  R&D, private invention/disclosure ledger and private experimental branches.
+- `mjodheim/mira-genesis` — public scientific/research repository;
+- a separately created private workspace — only for assets whose recorded disposition currently
+  requires confidentiality.
 
-The private repository name should not itself disclose a confidential mechanism.
+Do not move ordinary public research into the private workspace just because it may later be
+commercially licensed.
 
 ## 2. Safe bootstrap from the public baseline
 
-When a private GitHub repository has been created, a local bootstrap can start from the current
+When a private GitHub repository is actually needed, a local bootstrap may start from the current
 public baseline while disabling accidental pushes back to the public remote:
 
 ```sh
@@ -37,150 +41,97 @@ git config remote.pushDefault private
 git push -u private main
 ```
 
-The `DISABLED` push URL is a guard against an accidental `git push public`; it is not a security
-boundary by itself. Confirm the target repository is private before pushing unpublished work.
-
-After bootstrapping, replace the public-repository agent instructions with private-workspace
-instructions that preserve scientific/provenance rules but permit approved private M086+ work. Do not
-merge those private instructions back to the public repository unless they reveal nothing enabling.
+Confirm the target repository is private before pushing unpublished material.
 
 ## 3. Access control
 
-For unpublished R&D:
+For selectively private R&D:
 
-- keep repository visibility private;
-- grant access only to the project owner and services/tools actually needed for development;
-- review GitHub App/OAuth access before granting a coding service access to the private repository;
-- do not create public forks, public Actions artifacts, public gists or public paste links from private
+- grant access only to the owner and services/tools actually required;
+- review GitHub App/OAuth access before exposing the private repository to a coding service;
+- do not create public forks, public Actions artifacts, public gists or paste links from private
   source;
-- do not copy unpublished task banks or confidential external-maintainer material into the public
-  repository;
-- keep credentials out of Git and use the repository/service secret store where needed;
+- never copy confidential external-maintainer/customer material into the public repository;
+- keep credentials out of Git and use appropriate secret stores;
 - retain enough access/provenance history to support later diligence.
 
-If secrecy is intended to carry commercial value, access-control evidence should be preserved rather
-than relying only on a file saying `confidential`.
+If trade-secret value is claimed, preserve evidence of actual confidentiality measures rather than
+relying only on a `confidential` label.
 
 ## 4. AI-provider data controls
 
-Private Git hosting does not make prompts sent to an AI service private by itself. Before sending
-material unpublished R&D to Codex, ChatGPT or Claude, check the data controls and contract for the
+Private Git hosting does not by itself control what is sent to an AI service. Before sending
+selectively private R&D to Codex, ChatGPT or Claude, check the data controls and contract for the
 actual product/account in use.
 
-### OpenAI / Codex
+For material relying on confidentiality, use the strictest available non-training/data-sharing
+settings appropriate to the account, avoid feedback workflows that intentionally submit confidential
+sessions for provider improvement, and preserve the account/product terms relevant to material R&D.
 
-At the 12 August 2026 snapshot, OpenAI states that content from individual services such as ChatGPT
-and Codex may be used to train models unless the user opts out. OpenAI documents a ChatGPT account
-control named **Improve the model for everyone** and states that opting out applies to new ChatGPT
-conversations; OpenAI also documents separate Codex controls for allowing training on full
-environments.
-
-For unpublished M086+ R&D on a personal account:
-
-- turn off **Improve the model for everyone** before starting the private work;
-- review Codex Settings and disable any separate full-environment training/data-sharing option for the
-  private workspace;
-- avoid submitting feedback on confidential sessions unless the implications have been reviewed,
-  because provider feedback can carry the associated conversation into improvement workflows;
-- re-check these controls after material product/account changes.
-
-OpenAI states that its Business, Enterprise, Edu and API offerings are not used for model training by
-default. If private R&D becomes commercially significant, a business/API arrangement may therefore
-provide a clearer contractual/data-handling boundary than relying only on consumer controls, subject
-to the exact agreement actually purchased.
-
-References checked at this snapshot:
-
-- <https://help.openai.com/en/articles/5722486-api-data-usage-policies>
-- <https://help.openai.com/en/articles/7730893-data-controls-faq>
-- <https://openai.com/business-data/>
-
-### Anthropic / Claude / Claude Code
-
-At the 12 August 2026 snapshot, Anthropic states for consumer Claude Free/Pro/Max products, including
-Claude Code used with those accounts, that chats/coding sessions can be used to improve Claude when
-the user chooses to allow it, with separate safety-review and explicit-feedback/opt-in cases.
-Anthropic states that its commercial offerings do not use inputs/outputs for model training by
-default unless the customer explicitly opts in or provides covered feedback/material.
-
-For unpublished M086+ R&D:
-
-- do not enable consumer chat/coding-session model-improvement sharing for the private work;
-- avoid feedback submissions that would intentionally send a confidential coding session for
-  provider improvement;
-- if using Claude Code with an API/commercial organisation, preserve the exact organisation/product
-  terms and data-retention configuration used for the material work;
-- re-check settings and terms when changing Claude plan, organisation or authentication method.
-
-References checked at this snapshot:
-
-- <https://privacy.anthropic.com/en/articles/10023580-is-my-data-used-for-model-training>
-- <https://privacy.anthropic.com/en/articles/7996868-is-my-data-used-for-model-training>
-
-These provider settings reduce disclosure/training risk but do not by themselves establish legal
-trade-secret status, patent novelty, copyrightability or freedom to operate.
+Provider settings reduce disclosure risk but do not themselves establish trade-secret status, patent
+novelty, copyrightability or freedom to operate.
 
 ## 5. Private scientific record
 
-Private does not mean scientifically ungoverned. For each material private experiment:
+Private does not mean scientifically ungoverned. For each private experiment:
 
-- freeze the protocol/thresholds before observing the result when the claim requires precommitment;
+- freeze the protocol/thresholds before observing the result where required;
 - keep append-only result/failure records;
 - preserve Track A / Track B attribution;
-- preserve exact source commit, environment/runtime identity and dependency lock evidence;
-- record negative and inconclusive results rather than silently deleting them;
-- checkpoint/rollback claims must remain non-tautological and independently evaluable;
+- preserve exact source commit, environment/runtime identity and dependency evidence;
+- record negative and inconclusive results;
+- keep checkpoint/rollback claims non-tautological and independently evaluable;
 - do not call project-authored or project-controlled AI material "independent" evidence.
 
-A private scientific record may later be published, but publication must not rewrite its chronology.
+Publication later must not rewrite the chronology.
 
 ## 6. Private invention/disclosure ledger
 
-Before materially implementing or externally sharing a new enabling mechanism, create a private
-entry derived from the public `IP_ASSET_REGISTER.md` with at least:
+For the duration of a confidentiality hold, record at least:
 
-- asset ID and short non-enabling description;
+- asset ID and non-enabling description;
+- reason for private classification;
 - date/commit of first material conception/implementation;
-- human problem formulation and conception notes;
+- human formulation/conception notes;
 - AI tools/products/accounts materially involved;
 - third-party code/data/model dependencies;
 - people/services with access;
-- any external disclosure and date;
-- intended disposition: patent-first, trade-secret/private, commercial-private, restricted
-  publication or public research;
-- publication/filing decision and supporting evidence.
+- external disclosures and dates;
+- intended end state: publish, file patent, retain trade secret, keep product-private, or abandon;
+- decision/filing/release evidence.
 
-Do not put the enabling private ledger entry into the public repository before the publication
-classification permits it.
+## 7. Return to the public repository
 
-## 7. Public hand-back rule
-
-Nothing from private M086+ work returns to `mjodheim/mira-genesis` merely because it works.
+A selectively private research asset may return to `mjodheim/mira-genesis` when the hold is resolved.
 Before a public push/PR:
 
-1. identify exactly what code, protocol, result or description would be disclosed;
-2. update the private invention/disclosure record;
+1. identify exactly what will be disclosed;
+2. update the invention/disclosure record;
 3. review third-party and AI-assisted provenance;
-4. decide patent/trade-secret/commercial/public treatment;
-5. record an explicit publication decision;
-6. only then prepare a clean public branch containing the authorised disclosure.
+4. confirm patent/trade-secret/confidential obligations are resolved for the disclosed material;
+5. record the public disposition, normally `PUBLIC_AGPL_COMMERCIAL_OPTION` for project-controlled
+   software;
+6. only then prepare the public branch.
 
-Never merge the private repository wholesale into the public one.
+Do not merge a private repository wholesale into the public one.
 
-## 8. Commercial/acquisition snapshot
+## 8. Commercial licensing does not require secrecy
 
-For a future investor, licensee or acquirer, preserve a data-room snapshot containing at least:
+Once project-controlled software is intentionally public under AGPL, Anthony Mets may still offer an
+alternative commercial licence for rights he controls. Do not keep research private solely because a
+future customer may want a proprietary commercial agreement.
+
+See [`DUAL_LICENSING_STRATEGY.md`](DUAL_LICENSING_STRATEGY.md).
+
+## 9. Acquisition/data-room evidence
+
+For any private assets that still exist at the time of a transaction, preserve:
 
 - public/private commit boundaries;
 - contributor and AI-assistance provenance;
 - private repository access history;
 - invention/disclosure ledger;
-- exact provider terms/account class used for material AI-assisted R&D;
 - release-specific SBOM/licence reports;
 - trademark/patent filings or documented decisions;
-- commercial licences/contracts and encumbrances, if any;
+- commercial licences/contracts and encumbrances;
 - reproducible scientific evidence and its relationship to proprietary implementation.
-
-This procedure is deliberately stricter than normal hobby-project practice because a future buyer
-values a clean explanation of **what is public, what is controlled, who had access, and why the
-controlled asset was not accidentally disclosed**.

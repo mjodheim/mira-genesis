@@ -12,10 +12,11 @@ separate written contributor-rights agreement has first been approved for that c
 This includes substantive external code, tests, executable specifications, documentation, diagrams
 and other copyrightable project material.
 
-The reason is chain-of-title clarity. Mira Genesis is preserving the ability to make future licensing,
-commercialisation, assignment and acquisition decisions for material whose necessary rights are
-controlled by the project. A Developer Certificate of Origin is useful provenance, but it is not a
-copyright assignment and by itself does not provide that commercial/relicensing flexibility.
+The reason is chain-of-title clarity. Mira Genesis intends to keep its research software public under
+AGPL while preserving the project owner's ability to grant separate commercial permissions for
+controlled material and to assign/acquire those rights later. A Developer Certificate of Origin is
+useful provenance, but it is not a copyright assignment and by itself does not preserve that
+commercial-relicensing flexibility.
 
 Do not open a copyrightable pull request expecting DCO sign-off alone to make it mergeable while this
 boundary is in force.
@@ -24,18 +25,18 @@ Issues, reproducibility reports, bug reports and non-confidential technical sugg
 welcome. Do not disclose trade secrets, credentials, private task banks or other confidential or
 proprietary information in a public issue, discussion or pull request.
 
-A future contributor agreement intended to permit external authored contributions will be reviewed
+A future contributor agreement intended to permit externally authored contributions will be reviewed
 before adoption. This file deliberately does not improvise that legal agreement.
 
-## Licence of already accepted / project-owned contributions
+## Licence of already accepted / project-controlled contributions
 
-Material already published in the repository remains governed by the licence applicable to that
-material, as described by `LICENSE_POLICY.md`.
+Material published in the repository remains governed by the licence applicable to that material, as
+described by `LICENSE_POLICY.md`.
 
 Nothing in this contribution policy revokes or narrows rights already granted under those licences.
 
-If and when an external contributor-rights agreement is adopted, that agreement must state the rights
-needed for contribution, public licensing, alternative commercial licensing and potential assignment
+If and when an external contributor-rights agreement is adopted, it must address the rights needed
+for contribution, public AGPL licensing, alternative commercial licensing and potential assignment
 or acquisition. The exact legal form will be determined separately rather than inferred from DCO
 sign-off.
 
@@ -60,7 +61,7 @@ assignment and does not override the external-contribution boundary above.**
   analysis or prose.
 - Confirm that submitted AI-assisted material can be used under the applicable project terms.
 - Do not present a fork or derivative as the official Mira Genesis project.
-- Record human design, selection, review, editing and integration decisions when they are material to
+- Record human design, selection, review, editing and integration decisions when material to
   provenance or later rights diligence.
 
 ## Prospective IP publication boundary
@@ -68,12 +69,19 @@ assignment and does not override the external-contribution boundary above.**
 Read [`docs/IP_PUBLICATION_POLICY.md`](docs/IP_PUBLICATION_POLICY.md) before working on materially new
 core R&D.
 
-Starting with M086 and other materially new core mechanisms created after that policy's effective
-date, private-before-publication-review is the default. Do not expose enabling private R&D through a
-public PR, issue or CI log merely because earlier research milestones were public.
+Starting with M086, **public research is the normal path after a short pre-publication review**.
+Commercial value alone is not a reason to move the work to a private repository. Project-controlled
+software that is intentionally published remains under AGPL, while alternative commercial
+permissions may be negotiated separately where the project controls the necessary rights.
 
-The publication boundary must never be used to weaken scientific controls or to hide an already
-materialised public/frozen negative result.
+Use a private workspace only when a specific temporary disposition has been recorded, such as
+patent-first review, intentional trade-secret treatment, confidential third-party material,
+contractual embargo, security-sensitive material or deliberately proprietary product code.
+
+The publication/licensing boundary must never be used to weaken scientific controls or to hide an
+already materialised frozen negative result.
+
+See [`docs/DUAL_LICENSING_STRATEGY.md`](docs/DUAL_LICENSING_STRATEGY.md).
 
 ## Scientific changes
 

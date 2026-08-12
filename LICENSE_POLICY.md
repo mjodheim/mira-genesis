@@ -21,9 +21,26 @@ Recipients must comply with the AGPL, including preservation of copyright and li
 prominent identification of modifications, distribution of corresponding source when required, and
 the remote-network source offer required for modified network services.
 
-The AGPL permits commercial use subject to its terms. Nothing in the prospective IP policy or in a
-future licensing decision revokes or narrows rights already granted for an AGPL-covered published
-copy.
+The AGPL permits commercial use subject to its terms. A person or company that is willing to comply
+with the AGPL does not need a separate licence merely because its activity is commercial.
+
+## Alternative commercial licensing
+
+For software for which **Anthony Mets controls the rights necessary to grant additional permissions**,
+an alternative commercial licence may be available under a separate written agreement.
+
+That commercial agreement can grant rights beyond the public AGPL grant, for example proprietary or
+closed-source integration, redistribution, OEM/embedded rights, support or other negotiated terms.
+The exact scope is defined only by the signed agreement.
+
+This repository does **not** grant those alternative commercial terms automatically. Third-party
+components remain governed by their own licences and cannot be relicensed beyond the rights actually
+controlled by the project.
+
+See:
+
+- [`COMMERCIAL_LICENSING.md`](COMMERCIAL_LICENSING.md);
+- [`docs/DUAL_LICENSING_STRATEGY.md`](docs/DUAL_LICENSING_STRATEGY.md).
 
 ## Documentation and research records
 
@@ -46,39 +63,32 @@ expression are offered under `CC-BY-4.0`.
 Material explicitly identified as originating from a third party remains under its stated licence.
 Nothing in this policy relicenses third-party work beyond the permissions granted by its owner.
 
-## Prospective unpublished R&D
+## Prospective R&D and publication review
 
-This file licenses material that is actually published under it. It does **not** grant rights in
-unpublished or private Mira Genesis R&D merely because that work belongs to the same project or uses
-the same name.
+Mira Genesis remains **public-research-first**. Starting with M086, a materially new research
+mechanism is not private merely because it is new or commercially valuable.
 
-Starting with M086 and other materially new core mechanisms first created after 12 August 2026, the
-project's operational default is private before publication review. See
-[`docs/IP_PUBLICATION_POLICY.md`](docs/IP_PUBLICATION_POLICY.md) and
-[`IP_ASSET_REGISTER.md`](IP_ASSET_REGISTER.md).
+Before enabling public disclosure of a materially new core mechanism, perform the short review in
+[`docs/IP_PUBLICATION_POLICY.md`](docs/IP_PUBLICATION_POLICY.md). If no specific temporary
+confidentiality reason applies, the normal disposition is public research under the licences above,
+while preserving the owner's ability to offer separate commercial permissions.
 
-Future material may, where the necessary rights are controlled and after an explicit publication
-decision, be:
-
-- published under the licences above;
-- published under separately reviewed terms;
-- commercially licensed under separate terms;
-- retained as confidential/private R&D;
-- considered for patent filing before enabling public disclosure.
+Temporary private treatment is reserved for a recorded reason such as patent-first review,
+intentional trade-secret treatment, confidential third-party material, contractual embargo,
+security-sensitive material or deliberately proprietary product implementation.
 
 A future decision for new material does not retrospectively change the licence of historical public
 copies.
 
 ## Identity and provenance
 
-The licences applicable to existing public material permit forks and derivative works, including
-commercial use where the licence permits it, but do not transfer authorship of the original work.
-Existing notices must not be removed where the applicable licence requires their preservation, and
-changes must not be misrepresented as part of the original project. The licences do not grant
-trademark rights in the Mira Genesis name or visual identity; see [`TRADEMARKS.md`](TRADEMARKS.md).
+The licences applicable to public material permit forks and derivative works, including commercial
+use where the licence permits it, but do not transfer authorship of the original work. Existing
+notices must not be removed where the applicable licence requires their preservation, and changes
+must not be misrepresented as part of the original project. The licences do not grant trademark
+rights in the Mira Genesis name or visual identity; see [`TRADEMARKS.md`](TRADEMARKS.md).
 
 The official provenance record is [`PROVENANCE.md`](PROVENANCE.md), together with the signed or
 hash-addressed Git history and canonical evidence artifacts.
 
-For prospective commercial licensing and acquisition context, see
-[`COMMERCIAL_LICENSING.md`](COMMERCIAL_LICENSING.md).
+Nothing in this file revokes or narrows permissions already granted for published copies.
