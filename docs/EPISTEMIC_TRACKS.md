@@ -122,7 +122,9 @@ four substrates replays an action list computed by the bank generator; it percei
 nothing and detects no failure. Those are interface results, and "one unchanged agent across four
 real environments" must not be read as agent competence.
 
-## Meta-level transformation inside Track A — M086
+## Meta-level transformation inside Track A — M086-A, disqualified
+
+**The M086-A attempt is post-hoc disqualified and supplies no qualified evidence.** Its attribution properties were nonetheless sound — no model was called at any point — and the section below states the boundaries the successor M086-B inherits.
 
 M086 belongs entirely to Track A. It calls no model, opens no network and selects no external task.
 The mechanism it makes mutable is Mira's own, the modification is constructed from declared bounded

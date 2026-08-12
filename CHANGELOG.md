@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+- **Reclassified M086 as M086-A, post-hoc disqualified development evidence.** Review of PR #130
+  found four defects: the recorded protocol digest binds the CRLF working-tree copy rather than the
+  committed blob (the M064 class recurring), P8 was never implemented and P7–P10 never entered
+  `evaluate()`, the holdout existed before the meta-search, and the replay covered 3 of 14 fields
+  per arm. H32 returns to untested; no gate moves.
+- Preserved every M086-A artifact, digest, CI record and history entry unchanged. Only the claim was
+  withdrawn, and `experiments/M086/DISQUALIFICATION.md` states why.
+- Recorded D053 and a FAILURE_LOG entry. The four defects share a shape: each makes part of the
+  frozen contract unenforceable while leaving every visible signal green.
+
 - Added M086, which makes the mechanism that turns evidence into candidate transformations a mutable
   artifact. M047 froze it in one line — `ModuleDiagnosis.sufficient` is `self.module is not None` —
   and against evidence naming two stages at once it emits **zero** candidates.

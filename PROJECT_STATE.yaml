@@ -1566,12 +1566,27 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
-  M086:
+  M086-A:
     title: the improvement mechanism itself made an object of endogenous transformation
     epistemic_track: endogenous_bounded_lineage
     target_generality_gate: none_claimed
     parent_results: [M046, M047, M084]
-    status: positive_qualified_development
+    status: post_hoc_disqualified_development
+    qualification_withdrawn: true
+    hypothesis_status: untested_neither_confirmed_nor_refuted
+    disqualification_record: experiments/M086/DISQUALIFICATION.md
+    disqualification_decision: D053
+    defect_1_protocol_digest_binds_worktree_not_committed_blob: true
+    defect_1_class: m064_checkout_dependent_hash
+    defect_2_p8_never_implemented: true
+    defect_2_conditions_absent_from_evaluate: [P7, P8, P9, P10]
+    defect_2_conditions_actually_decisive: 6
+    defect_3_holdout_existed_before_meta_search: true
+    defect_4_arm_fields_replayed: 3
+    defect_4_arm_fields_preserved: 14
+    artifacts_preserved_unchanged: true
+    bank_reusable_as_scientific_evidence: false
+    successor: M086-B
     hypothesis: H32
     decision: D052
     protocol: experiments/M086/PROTOCOL.json

@@ -1090,3 +1090,41 @@ a separately unroutable operation, so a repair cannot reveal a new fault. Record
 before the bank was bound. The lesson is the one M080, M082, M083 and the M085 wiring control each
 recorded in their own way: the run completed, nothing raised, and the number meant something other
 than what it appeared to mean.
+
+## M086-A — a threshold that could not fail, and a digest bound to bytes that are not in the repository
+
+Four defects, found by review after CI was green and after the registers had recorded a qualified
+positive result. All four are confirmed at the exact head.
+
+**The verdict tested six of ten conditions.** The frozen protocol lists P1 through P10. `evaluate()`
+computes P1 through P6. P7 (causal chain), P8 (rollback), P9 (leak boundary) and P10 (differential
+equivalence) never enter it. P9 and P10 are checked by the independent checker, so a reviewer running
+it would see them pass — but nothing they could report would turn the verdict negative. P7 and P8 are
+checked nowhere.
+
+**P8 has no implementation.** The protocol requires a forced fault during meta-adoption and a
+byte-identical restore compared against an independently recorded digest. No fault is injected, no
+pre-adoption checkpoint is taken, no rollback runs. The condition was written into the protocol,
+counted among the ten, and never built.
+
+**The recorded protocol digest binds bytes that do not exist in git.** `RESULT.json` records
+`c0eeeffe…`, which matches the CRLF working-tree copy of `PROTOCOL.json`. The committed blob hashes
+to `49583ae9…`. This is M064's disqualifying defect returning verbatim — "the frozen hash was
+checkout-dependent" — in a repository where a fix for exactly this class has been sitting on an
+unmerged branch since M085.
+
+**The holdout predated the search that must not have seen it.** `HOLDOUT_PUBLIC` and `HOLDOUT_HIDDEN`
+are module-level constants in the same module and process as the meta-search, and the runner
+enumerates over the holdout before any arm executes. The structural check verified that one function
+does not name them, which is an argument about source text where the protocol promised an ordering.
+
+**The replay covered 3 of 14 fields per arm.** The mechanism digests, the adopted and rejected
+primitives, the adopted labels, the candidate and cycle counts and the entire causal journal were
+preserved and never re-derived.
+
+The common thread is not carelessness about the science but about the *instrument*: each defect makes
+some part of the frozen contract unenforceable while leaving every visible signal green. CI passed
+because the checker is not in the test suite and no regression asserted the binding, the threshold
+coverage or the chronology. M086-B makes each of P1–P10 computed and decisive, implements P8 with a
+real fault, separates holdout materialization into its own process and commit, and digests the whole
+arm record so an omission cannot hide.

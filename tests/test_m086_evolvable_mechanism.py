@@ -288,3 +288,70 @@ def test_the_amendments_were_recorded_before_materialization() -> None:
     for amendment in amendments:
         assert amendment["applied_before_bank_materialization"] is True
     assert any(a.get("thresholds_relaxed") is False for a in amendments)
+
+
+# -- the disqualification, locked ------------------------------------------------------------------
+
+def test_m086_a_is_recorded_as_disqualified_everywhere_it_is_claimed() -> None:
+    """A withdrawn qualification must not drift back into a positive one."""
+
+    record = BASE / "DISQUALIFICATION.md"
+    assert record.exists(), "the disqualification record is missing"
+    text = record.read_text(encoding="utf-8")
+    assert "POST-HOC DISQUALIFIED" in text
+    assert "confirmed nor refuted" in text
+
+    result = (BASE / "RESULT.md").read_text(encoding="utf-8")
+    assert "POST-HOC DISQUALIFIED" in result
+    assert "withdrawn" in result.lower()
+
+    for path, marker in (
+        (ROOT / "README.md", "M086-A"),
+        (ROOT / "ROADMAP.md", "Post-hoc disqualified development"),
+        (ROOT / "SCIENTIFIC_HYPOTHESES.md", "**Status:** **UNTESTED.**"),
+        (ROOT / "DECISIONS.md", "D053"),
+    ):
+        assert marker in path.read_text(encoding="utf-8"), path.name
+
+
+def test_the_four_defects_are_each_named_in_the_record() -> None:
+    text = (BASE / "DISQUALIFICATION.md").read_text(encoding="utf-8")
+    for defect in (
+        "do not exist in the repository",
+        "P8 was never implemented",
+        "existed before the meta-search",
+        "compares a fraction",
+    ):
+        assert defect in text, defect
+
+
+def test_the_disqualified_verdict_function_really_did_omit_four_conditions() -> None:
+    """The defect itself, asserted so the record cannot drift from the code it describes."""
+
+    import inspect
+
+    from metamorphosis.m086_meta_lineage import evaluate as disqualified_evaluate
+
+    source = inspect.getsource(disqualified_evaluate)
+    for present in ("P1:", "P2:", "P3:", "P4:", "P5:", "P6:"):
+        assert present in source
+    for absent in ("P7:", "P8:", "P9:", "P10:"):
+        assert absent not in source, f"{absent} is present, so the recorded defect is misstated"
+
+
+def test_the_recorded_protocol_digest_does_not_match_the_committed_blob() -> None:
+    """The M064 class, asserted rather than described, so the record stays true."""
+
+    import hashlib
+    import subprocess
+
+    preserved = _preserved()
+    blob = subprocess.run(
+        ["git", "show", "HEAD:experiments/M086/PROTOCOL.json"],
+        capture_output=True, cwd=ROOT,
+    ).stdout
+    if not blob:
+        pytest.skip("git object unavailable in this checkout")
+    assert hashlib.sha256(blob).hexdigest() != preserved["protocol_commitment"], (
+        "the committed blob now matches, so the disqualification record must be revisited"
+    )

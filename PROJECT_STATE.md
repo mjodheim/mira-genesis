@@ -93,7 +93,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
-- **M086 makes the improvement mechanism itself mutable, and advances no gate.** Protocol frozen
+- **M086-A is post-hoc disqualified; its qualification is withdrawn and H32 is untested.** Four defects, set out in `experiments/M086/DISQUALIFICATION.md`: `RESULT.json` binds a protocol digest matching only the CRLF working-tree copy and not the committed blob, which is the M064 checkout-dependent-hash class recurring; **P8 was never implemented** and `evaluate()` computes P1–P6 only, so P7–P10 could not make the verdict negative and the positive verdict rested on six of ten frozen conditions; the holdout existed as module constants before the meta-search and was enumerated before any arm ran, so the promised chronology was replaced by a source-text absence check; and the checker re-derived 3 of 14 preserved fields per arm, never verifying the mechanism digests or the causal journal that P7 exists to guarantee. Every artifact, digest, CI record and history entry is preserved unchanged. The observations remain diagnostic and motivate the successor. **No gate moves.** The original entry follows, preserved for the record:
+- **M086-A originally claimed the following, and it is withdrawn:** Protocol frozen
   before the harness at `8a8a6e7`; bank `fa647e27…c2a5`; first result `a0569361…93bd`, attempt 1, no
   retry, no model, no network. M047's mechanism refuses to act unless exactly one module is at fault —
   `ModuleDiagnosis.sufficient` is `self.module is not None` — and against evidence naming two stages it

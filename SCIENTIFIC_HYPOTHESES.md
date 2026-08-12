@@ -662,7 +662,9 @@ modification of it; and on a later independently frozen problem the modified mec
 corrective transformation lying outside the **constructive image** of the original mechanism,
 producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.
 
-**Status:** supported by the M086 qualified development result. Against evidence naming two stages at
+**Status:** **UNTESTED.** The M086-A attempt is post-hoc disqualified and neither confirms nor refutes this hypothesis; see D053 and `experiments/M086/DISQUALIFICATION.md`. The paragraph below records what that attempt observed, as motivation for M086-B, not as support.
+
+**M086-A observations, diagnostic only:** Against evidence naming two stages at
 once, the mechanism M047 froze emits **zero** candidates — enumerated, not inferred. The lineage
 searched four meta-primitives on disposable descendants, rejected seven combinations, adopted
 `widen_hypothesis`, and then solved a frozen holdout on hidden cases. `fixed_meta`, `task_only_mutable`

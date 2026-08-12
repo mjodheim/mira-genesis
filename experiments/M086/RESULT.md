@@ -1,6 +1,17 @@
-# M086 result — the improvement mechanism became an object of transformation
+# M086-A result — POST-HOC DISQUALIFIED DEVELOPMENT
 
-**POSITIVE QUALIFIED DEVELOPMENT RESULT — TRACK A, MODEL-FREE. NO GATE ADVANCES.**
+> **This result is withdrawn as a scientific qualification. H32 is neither confirmed nor refuted by
+> it.** The observations below are preserved exactly as recorded and remain diagnostic; the claim
+> attached to them does not stand. Four defects are set out in
+> [`DISQUALIFICATION.md`](DISQUALIFICATION.md): the recorded protocol commitment binds bytes absent
+> from the repository, P8 was never implemented and P7–P10 never reached the verdict, the holdout
+> existed before the meta-search, and the replay compared 3 of 14 preserved fields per arm.
+>
+> Nothing here may be cited as positive qualification, gate evidence or reproduction. The successor
+> is **M086-B**, with its own protocol, salt, bank and holdout.
+
+**Original header, preserved:** POSITIVE QUALIFIED DEVELOPMENT RESULT — TRACK A, MODEL-FREE. NO GATE
+ADVANCES.
 
 Protocol `8a8a6e7` frozen before any harness. Bank `fa647e27…c2a5` bound before the run. First result
 `a0569361…93bd`, attempt 1, no retry, no external model, no network.
@@ -87,18 +98,22 @@ fifth. The human assumption moved up one level; it did not disappear, and the pr
 the second possible negative precisely so it cannot be quietly forgotten now that the result is
 positive.
 
-## Qualification
+## CI record (not a qualification)
 
-First CI run `31568691093`, attempt 1, no rerun: **1,703 passed, 9 skipped** on Python 3.11 in
+The suite was green; it did not test any of the four defects. First CI run `31568691093`, attempt 1, no rerun: **1,703 passed, 9 skipped** on Python 3.11 in
 1,210.84 s and on Python 3.13 in 1,276.50 s, plus repository integrity. Attribution run
 `31568691081` passed. Local suite 1,702 passed / 10 skipped; 29 M086 regressions; checker
 `failures: []`.
 
 ## Claim boundary
 
-In one bounded, project-authored construction, the mechanism producing future transformations became
-itself an object of endogenous transformation, and that meta acquisition was causally necessary to a
-later capability.
+**Withdrawn.** The sentence below is what the attempt claimed; it is not supported, because the
+verdict that produced it tested six of the ten frozen conditions and bound a protocol digest no
+checkout can reproduce.
+
+> ~~In one bounded, project-authored construction, the mechanism producing future transformations
+> became itself an object of endogenous transformation, and that meta acquisition was causally
+> necessary to a later capability.~~
 
 Not AGI, not open-ended evolution, not arbitrary self-improvement, not general autonomy. No gate
 advances — not G4, G6 or G7. It does not replace M085, does not touch M085's fail-closed boundary and
