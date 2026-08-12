@@ -1,0 +1,189 @@
+{
+  "arms": [
+    "evolvable_selection_evidence",
+    "fixed_selection_evidence",
+    "selection_acquisition_ablated",
+    "more_budget_same_evidence",
+    "fresh_agent"
+  ],
+  "budget_multiple_for_more_budget_same_evidence": 10,
+  "claim_boundary": {
+    "agi": false,
+    "general_autonomy": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "genesis_gate_4": false,
+    "independent_reproduction": false,
+    "meta_primitives_are_authored": true,
+    "open_ended_evolution": false,
+    "release_or_repository_authority": false
+  },
+  "conditions": [
+    "P1_ambiguity_represented",
+    "P2_meta_transformation_adopted_after_rejections",
+    "P3_evolvable_correct_on_every_situation",
+    "P4_capability_discordance_against_fixed",
+    "P5_more_budget_same_evidence_cannot_close_it",
+    "P6_acquisition_ablation_loses_the_capability",
+    "P7_cross_family_reuse",
+    "P8_policy_persisted_and_restored_byte_identically",
+    "P9_no_evidence_leak",
+    "P10_chronology_holds"
+  ],
+  "date_frozen": "2026-08-12",
+  "development_family": "tool_semantics",
+  "evidence_boundary": {
+    "E_acquired": "observations of the authorized reference source on requests drawn from the frozen per-family experiment space",
+    "E_hidden": "qualification cases held by the evaluator",
+    "acquisition_budget_per_situation": 4,
+    "domains_disjoint": true,
+    "policy_receives_no_evaluator_callable": true,
+    "reference_source_is_evaluator": false
+  },
+  "external_model_permitted_during_scientific_run": false,
+  "falsifiers": [
+    "more_budget_same_evidence closes any discordant situation",
+    "the fixed mechanism acquires the same information",
+    "a meta-primitive names a family, a probe, a candidate or a truth",
+    "an acquisition targets a hidden-domain request",
+    "an acquisition occurs after hidden evaluation is sealed",
+    "the adopted policy is not persisted or not restorable byte-identically",
+    "the improvement must be re-acquired per family",
+    "every arm reaches the same correctness",
+    "the gain is only cost or latency",
+    "the meta-language offers only one viable transformation",
+    "qualification cases are materialized before the adopted policy is digested",
+    "an external model is called during the scientific run"
+  ],
+  "families": [
+    {
+      "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+      "experiment_space_size": 8,
+      "family_id": "tool_semantics",
+      "hidden_case_count": 2,
+      "module": "selection",
+      "public_case_ids": [
+        "tool_public_progression"
+      ],
+      "starting_body_digest": "4c784d2b58b769b6880dc30733e4c1f3f61f8ae8cee41058ea9f54841796a545"
+    },
+    {
+      "experiment_space_digest": "672b55a7af3c0fb95d65bfad2d2489ffb9b32294ab897ab94ccc85a49413195f",
+      "experiment_space_size": 8,
+      "family_id": "interpretation_routing",
+      "hidden_case_count": 2,
+      "module": "interpretation",
+      "public_case_ids": [
+        "routing_public_fixpoint"
+      ],
+      "starting_body_digest": "fdfbe82115745b09046d0bd312b889b4a28bb00356efd9c32d0c8c14e741baca"
+    },
+    {
+      "experiment_space_digest": "78f49792a2018672679f6b172929bcf685aa5ffe6a11e4494f45e56775215d6b",
+      "experiment_space_size": 8,
+      "family_id": "planning_structure",
+      "hidden_case_count": 2,
+      "module": "planning",
+      "public_case_ids": [
+        "planning_public_depth_two"
+      ],
+      "starting_body_digest": "178c5df70298a2a56924a92be3caca068073000597e50c3af47bff185018e360"
+    }
+  ],
+  "fixed_components": {
+    "candidate_generation": "metamorphosis.m086_evolvable_mechanism.generate with m0_mechanism()",
+    "diagnosis": "metamorphosis.m086_evolvable_mechanism.diagnose with m0_mechanism()",
+    "evaluator": "hidden cases, run outside the mutable body, never passed to a policy",
+    "instruction_set": [
+      "SCORE_PUBLIC",
+      "KEEP_TOP_SCORING",
+      "ARGMAX_FIRST",
+      "PROJECT_PREDICTIONS",
+      "PARTITION_SURVIVORS",
+      "GUARD_AMBIGUOUS",
+      "ENUMERATE_EXPERIMENTS",
+      "SCORE_EXPERIMENTS",
+      "ACQUIRE_BEST",
+      "FILTER_BY_ACQUIRED",
+      "LOOP_ACQUISITION",
+      "ADOPT_UNIQUE",
+      "DEFER_INSUFFICIENT"
+    ],
+    "interpreter": "metamorphosis.m087_selection_policy.execute_policy",
+    "meta_primitive_language": [
+      "add_prediction_projection",
+      "add_equivalence_partition",
+      "add_ambiguity_guard",
+      "add_experiment_enumerator",
+      "add_scoring_rule",
+      "add_acquisition_transition",
+      "add_survivor_filter",
+      "add_defer_condition",
+      "set_acquisition_budget"
+    ],
+    "sandbox": "metamorphosis.m047_runtime_sandbox"
+  },
+  "hypothesis": "H33",
+  "meta_search": {
+    "order": "shortest first, then as listed; an ordering and not a ranking",
+    "self_validation_permitted": false,
+    "space_size": 11,
+    "validation": "each candidate policy runs on a disposable descendant and must reach a correct terminal decision on cases it never saw"
+  },
+  "milestone": "M087",
+  "mutable_component": {
+    "m0_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+    "m0_justification": "differentially equal to m086_meta_lineage.run_cycle selection: strict-greater argmax over public passed-case count in emission order",
+    "m0_program": [
+      {
+        "argument": null,
+        "opcode": "SCORE_PUBLIC"
+      },
+      {
+        "argument": null,
+        "opcode": "ARGMAX_FIRST"
+      }
+    ],
+    "object": "metamorphosis.m087_selection_policy.SelectionPolicy",
+    "representation": "ordered instruction program plus acquisition budget, serialized and digested"
+  },
+  "qualification_draw": "sha256(m087-qualification-v1||family||salt||index) ordering, first 2 of 6 per family",
+  "qualification_families": [
+    "tool_semantics",
+    "interpretation_routing",
+    "planning_structure"
+  ],
+  "qualification_pool_digest": "15cebf39ae856dd4b1462bf59906ff7c2234436cc595209bcb72f768bb57c2a3",
+  "retry_policy": {
+    "attempts": 1,
+    "negative_result_preserved": true,
+    "new_bank_under_this_protocol_permitted": false,
+    "new_salt_permitted": false,
+    "reroll_permitted": false,
+    "successor_requires_new_milestone_and_protocol": true
+  },
+  "salt_released_after": "T6_policy_adopted_and_serialized",
+  "schema": "m087-protocol-v1",
+  "scoring_rules": {
+    "available": [
+      "partition_size",
+      "expected_information_gain",
+      "disagreement_count",
+      "first_index",
+      "constant"
+    ],
+    "decoys": [
+      "first_index",
+      "constant"
+    ],
+    "sound": [
+      "partition_size",
+      "expected_information_gain",
+      "disagreement_count"
+    ]
+  },
+  "status": "frozen_before_qualification_materialization",
+  "title": "Evolvable Evidence Acquisition and Candidate Selection",
+  "track": "A",
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail"
+}

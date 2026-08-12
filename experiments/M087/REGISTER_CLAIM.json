@@ -1,0 +1,19 @@
+{
+  "amendment_a1_changed_the_result": false,
+  "attempt": 1,
+  "discordant_families": [
+    "planning_structure",
+    "tool_semantics"
+  ],
+  "gate_advanced": false,
+  "hypothesis": "H33",
+  "independent_reproduction": false,
+  "meta_primitives_authored": true,
+  "milestone": "M087",
+  "model_calls": 0,
+  "protocol_raw_sha256": "4183bae2ea17f12b90e5130ae3312bc193860efc7aec002495d80d6f31f22605",
+  "result_digest": "cb06bd7a0abd84aebcdccfc5bfe7278281be4891cb4a0655fde855554754d132",
+  "retry_used": false,
+  "schema": "m087-register-claim-v1",
+  "verdict": "positive"
+}

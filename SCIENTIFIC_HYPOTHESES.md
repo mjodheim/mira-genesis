@@ -717,3 +717,43 @@ change was found by experiment, with three of four primitives individually rejec
 we wrote and did not invent a fifth, so the human assumption moved up one level rather than
 disappearing. No gate advances, no archive, no population, no transfer, and no foundation model was
 called. See D052.
+
+
+## H33 — A lineage can improve how it decides which improvement is justified
+
+When several internally generated transformations are **observationally equivalent** under the
+evidence it has already acquired, a persistent Track-A lineage can represent that insufficiency
+rather than break the tie arbitrarily; diagnose it as a limitation of its own
+selection-and-evidence-acquisition mechanism; construct and adopt a validated modification of that
+mechanism from a bounded meta-transformation language; **persist** the modification as serialized
+state; and on later situations materialized after the adoption, use it to choose an experiment,
+acquire a discriminating observation from an authorized environmental source, and select a
+correctness-critical transformation that the pre-modification mechanism cannot identify **under
+any amount of additional computation over the same acquired evidence** — including on a problem
+family other than the one that provoked the acquisition.
+
+**Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
+Protocol frozen at `db609a0` before any qualification data existed; result `cb06bd7a...4d132`,
+attempt 1. All ten frozen conditions passed. The lineage rejected six meta-transformations on
+disposable descendants before adopting one; the evolved mechanism reached a correct terminal
+decision on 3/3 situations against 1/3 for the frozen rule, and the two discordant families are
+`tool_semantics` and `planning_structure`. The `more_budget_same_evidence` arm evaluated ten times
+as many candidates over an identical, empty `E_acquired` and closed neither. The acquisition
+ablation deferred on all three situations.
+
+**What makes it a capability rather than a cost result:** the difference is correctness on
+evaluator-owned hidden cases, and the frozen mechanism does not lack computation — it lacks an
+informational action. Its program has no instruction that could query the environment. Ten times
+the search over the same evidence changes nothing, which is the falsifier the protocol named
+first.
+
+**Required implication:** the mechanism under test must be the one the repository actually froze.
+A differential regression drives M0 against `m086_meta_lineage.run_cycle`'s strict-greater argmax
+over emission order on every tie pattern, not only the one M086-C drew.
+
+**What it does not establish:** the meta-primitives, the instruction set and the three families
+remain authored, so a human ceiling moved up one level rather than disappearing. No generality
+gate advances, there is no independent reproduction, and `interpretation_routing` is a
+preregistered no-harm situation in which the frozen tie-break lands correctly by luck — kept
+rather than tuned away, as a standing reminder that one correct adoption is not evidence about
+selection. See D057.

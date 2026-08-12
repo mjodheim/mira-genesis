@@ -124,6 +124,9 @@ jobs:
             exit 1
           fi
 
+      - name: The M087 result must reproduce from its own preserved arms
+        run: python scripts/check_m087_result.py --require-result
+
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
           if python scripts/check_m085_readiness.py --require-ready; then
