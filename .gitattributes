@@ -8,6 +8,17 @@ experiments/M074/SCIENTIFIC_RESULT.json -text
 experiments/M075/DEVELOPMENT_DRYRUN.json -text
 experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json -text
 experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
+
+# Conventional digest-bearing experiment artifacts are protected by naming convention rather than
+# only by individual path. This prevents later milestones from silently reintroducing the
+# checkout-dependent hash defect already observed on Windows checkouts.
+experiments/M0*/PROTOCOL.json -text
+experiments/M0*/RESULT.json -text
+experiments/M0*/BANK_COMMITMENT.json -text
+experiments/M0*/EPISODE_COMMITMENT.json -text
+experiments/M0*/SCHEDULE_COMMITMENT.json -text
+experiments/M0*/*-image/Dockerfile -text
+
 experiments/M084/PROTOCOL.json -text
 experiments/M084/BANK_COMMITMENT.json -text
 experiments/M084/RESULT.json -text
