@@ -1627,6 +1627,12 @@ phase_eight:
     genesis_gate_3_evidence: false
     agi_evidence: false
     local_regressions_passed: 29
+    first_ci_run: '31568691093'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1703
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31568691081'
 
   M085:
     title: cross-domain transfer of an acquired policy into an externally maintained held-out domain
