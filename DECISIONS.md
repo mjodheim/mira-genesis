@@ -1791,3 +1791,74 @@ that removes a binding and requires the self-test to notice.
 The architecture, the ordered chain, the evidence ladder and the claim boundary. M075 remains
 untouched, issue #112 remains open, no generator is chosen, no bank exists and `phase` is `draft`.
 See D055.
+
+## D057 — M087 supports H33; the ceiling moves from selection to the meta-language itself
+
+M086-C ended by naming what was never mutable: the greedy first-past-the-post over public score.
+M087 made exactly that object plastic and nothing else. Diagnosis and candidate generation stayed
+at M047's frozen pair.
+
+### The decision
+
+M087 is accepted as a **positive qualified development result**. H33 moves to supported by one
+attempt with no retry. Protocol frozen at `db609a0` before any qualification data existed; result
+`cb06bd7a...4d132`, attempt 1. All ten conditions passed, and every one was computed.
+
+**No generality gate advances.** G4 is untouched: the families are project-authored, there is no
+independent reproduction, and the meta-primitives are ours.
+
+### What the result actually says
+
+The frozen selection rule does not fail for want of computation. `more_budget_same_evidence`
+evaluated 110 candidates against the fixed arm's 11 over an identical and empty `E_acquired`, and
+closed neither discordant situation. The deficit is **informational**: M0's program has no
+instruction that could ask the environment anything. The evolved policy has one, uses it three
+times, and reaches a correct terminal decision on all three situations against one for the frozen
+rule.
+
+The acquisition ablation is the cleanest control in the milestone. It keeps the ambiguity
+detector, so it *sees* that two candidates are indistinguishable, and it defers on all three
+situations because it cannot resolve what it can now perceive. Detecting insufficiency and
+repairing it are separate capabilities, and the ablation separates them.
+
+### Why this is not "active learning works"
+
+M0 has no version space, no experiment enumerator, no scoring rule and no query. Six
+meta-transformations were rejected on disposable descendants first, including plausible ones: an
+ambiguity guard alone defers forever; an enumerator with an acquisition transition but no survivor
+filter acquires and cannot use what it acquired. Two of the five scoring rules are decoys that
+pick a non-discriminating experiment. Angluin's membership queries and Lindley's information gain
+justified the *shape of the instruction set*; neither was installed as a finished algorithm.
+
+### The honest weakness, kept rather than tuned away
+
+`interpretation_routing` is a preregistered no-harm situation. `ALIAS_TARGETS` begins with `add`,
+which happens to be the truth, so the frozen tie-break lands correctly there by luck. Reordering
+that list, or choosing a different truth, would have produced a cleaner 3-versus-0 table and would
+have been tuning the bank to the result. The capability claim rests on the two families where the
+arbitrary tie-break lands wrong, and the third stands as a reminder that a single correct adoption
+says nothing about selection.
+
+### Amendment A1, disclosed
+
+After the qualifying run, an adversarial test found that `LOOP_ACQUISITION` re-enters while budget
+remains even when every experiment has been consumed, and never terminates. The interpreter is a
+frozen component, so the fix is recorded as amendment A1 and the run was repeated. The qualifying
+run never took that path — its spaces hold eight experiments against a budget of four, so it always
+terminated on budget — and the re-run produced a **byte-identical result digest**,
+`cb06bd7a...4d132`. The amendment is disclosed rather than absorbed, and the identity of the two
+digests is the evidence that it changed nothing.
+
+### The next causal ceiling
+
+Not the selection rule any more. The lineage chose among nine authored meta-primitives and eleven
+authored compositions, and invented no tenth primitive. It also did not choose its own experiment
+space: the bounded set of requests per family is ours. So the ceiling has two named parts, and
+M088 must attack one of them rather than add a fourth family.
+
+### Claim boundary
+
+Not AGI, not open-ended evolution, not general autonomy, no gate, no independent reproduction, no
+release or repository authority, and no contact with M075's or M085's fail-closed boundaries. One
+bounded construction in which the rule that selects improvements became an object of improvement,
+and the acquisition it gained was causally necessary to a later correctness difference.

@@ -93,6 +93,30 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M087 makes the rule that selects improvements an object of improvement, and H33 is supported.**
+  Protocol frozen at `db609a0` before any qualification data existed; result `cb06bd7a...4d132`,
+  attempt 1, no retry; all ten conditions computed and passed. D054 ended M086 by naming what was
+  never mutable — `run_cycle`'s strict-greater argmax over emission order, which silently keeps the
+  first of a tie and never records that there was one. M087 makes exactly that object plastic and
+  leaves M047's diagnosis and generation frozen. M0 reproduced M086-C's failure precisely: two
+  candidates pass every public case, it adopted `midpoint`, recorded no ambiguity and scored 0/2.
+  The lineage rejected **six** meta-transformations on disposable descendants — an ambiguity guard
+  alone defers forever, an enumerator without a survivor filter acquires and cannot use what it
+  acquired — then adopted one, serialized it and restored it byte-identically after a forced fault.
+  On three situations materialized from a salt released only after that adoption, the evolved
+  policy chose an experiment, acquired a discriminating observation from an authorized reference
+  source and was correct **3/3** against **1/3** for the frozen rule, discordant on `tool_semantics`
+  and `planning_structure`. The decisive control is `more_budget_same_evidence`: **110** candidates
+  evaluated against 11, over an identical and empty `E_acquired`, closing neither — the deficit is
+  informational, not computational, because M0's program has no instruction that could ask the
+  environment anything. The acquisition ablation keeps the detector, *sees* the ambiguity and
+  defers on all three, which separates perceiving insufficiency from repairing it. Acquisition is
+  not an evaluator leak: the experiment space is disjoint from the hidden domain by construction and
+  no evaluator callable is ever passed to a policy. **No gate advances** — the meta-primitives, the
+  instruction set and the three families are authored, and `interpretation_routing` is a
+  preregistered no-harm situation where the frozen tie-break lands correctly by luck, kept rather
+  than tuned away. Amendment A1, a non-termination fix in the interpreter found after the run by an
+  adversarial test, is disclosed; the re-run produced a byte-identical digest. See D057 and H33.
 - **M075-B is a built instrument with nothing frozen, and it deliberately cannot replace M075.** It
   asks how much of M075's blocked boundary is scientific and how much is the custody mechanism
   chosen at the time. The answer: withholding, opacity, structural impossibility, terminal-state

@@ -1,0 +1,1590 @@
+{
+  "arms": {
+    "evolvable_selection_evidence": {
+      "acquisition_logs": [
+        {
+          "budget": 4,
+          "count": 1,
+          "entries": [
+            {
+              "observation": {
+                "error": null,
+                "key": "value:3",
+                "ok": true,
+                "output": 3.0,
+                "request": "mean 1 2 6"
+              },
+              "sequence": 0
+            }
+          ],
+          "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 4,
+          "count": 1,
+          "entries": [
+            {
+              "observation": {
+                "error": null,
+                "key": "value:2",
+                "ok": true,
+                "output": 2,
+                "request": "combine 1 1"
+              },
+              "sequence": 0
+            }
+          ],
+          "experiment_space_digest": "b52de39f8fe53e23e85c26221fa5419228cea8e319698a90981b618f6650540d",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 4,
+          "count": 1,
+          "entries": [
+            {
+              "observation": {
+                "error": null,
+                "key": "value:26",
+                "ok": true,
+                "output": 26,
+                "request": "add 5 add 6 add 7 8"
+              },
+              "sequence": 0
+            }
+          ],
+          "experiment_space_digest": "d479f32231f7051b56868ddfc89f8abb4ee6e530b81a9552b2d170a2d14c0814",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        }
+      ],
+      "arm": "evolvable_selection_evidence",
+      "budget_multiple": 1,
+      "can_acquire": true,
+      "correct_terminal_decisions": 3,
+      "families_with_correct_decision": [
+        "interpretation_routing",
+        "planning_structure",
+        "tool_semantics"
+      ],
+      "policy": {
+        "acquisition_budget": 4,
+        "program": [
+          {
+            "argument": null,
+            "opcode": "SCORE_PUBLIC"
+          },
+          {
+            "argument": null,
+            "opcode": "KEEP_TOP_SCORING"
+          },
+          {
+            "argument": null,
+            "opcode": "GUARD_AMBIGUOUS"
+          },
+          {
+            "argument": null,
+            "opcode": "PROJECT_PREDICTIONS"
+          },
+          {
+            "argument": null,
+            "opcode": "PARTITION_SURVIVORS"
+          },
+          {
+            "argument": null,
+            "opcode": "ENUMERATE_EXPERIMENTS"
+          },
+          {
+            "argument": "partition_size",
+            "opcode": "SCORE_EXPERIMENTS"
+          },
+          {
+            "argument": null,
+            "opcode": "ACQUIRE_BEST"
+          },
+          {
+            "argument": null,
+            "opcode": "FILTER_BY_ACQUIRED"
+          },
+          {
+            "argument": 4,
+            "opcode": "LOOP_ACQUISITION"
+          },
+          {
+            "argument": null,
+            "opcode": "ADOPT_UNIQUE"
+          },
+          {
+            "argument": null,
+            "opcode": "DEFER_INSUFFICIENT"
+          }
+        ],
+        "provenance": [
+          "add_ambiguity_guard",
+          "add_prediction_projection",
+          "add_equivalence_partition",
+          "add_experiment_enumerator",
+          "add_scoring_rule:partition_size",
+          "add_acquisition_transition",
+          "add_survivor_filter",
+          "set_acquisition_budget:4",
+          "add_defer_condition"
+        ],
+        "schema": "m087-selection-acquisition-policy-v1",
+        "version": 9
+      },
+      "policy_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+      "situation_count": 3,
+      "situations": [
+        {
+          "acquisitions": 1,
+          "adopted_label": "synthesize_tool:mean:mean",
+          "candidates": [
+            "synthesize_tool:mean:midpoint",
+            "synthesize_tool:mean:mean",
+            "synthesize_tool:mean:sum",
+            "synthesize_tool:mean:maximum",
+            "synthesize_tool:mean:minimum"
+          ],
+          "candidates_evaluated": 5,
+          "correct_terminal_decision": true,
+          "cycles": 1,
+          "family_id": "tool_semantics",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "synthesize_tool:mean:maximum": 0,
+            "synthesize_tool:mean:mean": 1,
+            "synthesize_tool:mean:midpoint": 1,
+            "synthesize_tool:mean:minimum": 0,
+            "synthesize_tool:mean:sum": 0
+          },
+          "selection": {
+            "acquisitions": 1,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "synthesize_tool:mean:mean"
+              ]
+            ],
+            "experiments_scored": 8,
+            "selected": "synthesize_tool:mean:mean",
+            "survivors": [
+              "synthesize_tool:mean:mean"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "enumerated 8 available experiments",
+              "scored 8 experiments by partition_size",
+              "acquired 'mean 1 2 6' -> value:3",
+              "acquired evidence eliminated 1 candidates",
+              "acquisition loop finished",
+              "adopted the unique surviving candidate 'synthesize_tool:mean:mean'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 1,
+          "adopted_label": "interpreter_add_alias:combine:add",
+          "candidates": [
+            "interpreter_add_alias:combine:add",
+            "interpreter_add_alias:combine:max",
+            "interpreter_add_alias:combine:mean",
+            "interpreter_add_alias:combine:mul"
+          ],
+          "candidates_evaluated": 4,
+          "correct_terminal_decision": true,
+          "cycles": 1,
+          "family_id": "interpretation_routing",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "interpreter_add_alias:combine:add": 1,
+            "interpreter_add_alias:combine:max": 0,
+            "interpreter_add_alias:combine:mean": 0,
+            "interpreter_add_alias:combine:mul": 1
+          },
+          "selection": {
+            "acquisitions": 1,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "interpreter_add_alias:combine:add"
+              ]
+            ],
+            "experiments_scored": 8,
+            "selected": "interpreter_add_alias:combine:add",
+            "survivors": [
+              "interpreter_add_alias:combine:add"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "enumerated 8 available experiments",
+              "scored 8 experiments by partition_size",
+              "acquired 'combine 1 1' -> value:2",
+              "acquired evidence eliminated 1 candidates",
+              "acquisition loop finished",
+              "adopted the unique surviving candidate 'interpreter_add_alias:combine:add'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 1,
+          "adopted_label": "planner:recursive_postorder",
+          "candidates": [
+            "planner:one_level",
+            "planner:recursive_postorder"
+          ],
+          "candidates_evaluated": 2,
+          "correct_terminal_decision": true,
+          "cycles": 1,
+          "family_id": "planning_structure",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "planner:one_level": 1,
+            "planner:recursive_postorder": 1
+          },
+          "selection": {
+            "acquisitions": 1,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "planner:recursive_postorder"
+              ]
+            ],
+            "experiments_scored": 8,
+            "selected": "planner:recursive_postorder",
+            "survivors": [
+              "planner:recursive_postorder"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "enumerated 8 available experiments",
+              "scored 8 experiments by partition_size",
+              "acquired 'add 5 add 6 add 7 8' -> value:26",
+              "acquired evidence eliminated 1 candidates",
+              "acquisition loop finished",
+              "adopted the unique surviving candidate 'planner:recursive_postorder'"
+            ]
+          }
+        }
+      ],
+      "total_acquisitions": 3,
+      "total_candidates_evaluated": 11,
+      "total_cycles": 3
+    },
+    "fixed_selection_evidence": {
+      "acquisition_logs": [
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "b52de39f8fe53e23e85c26221fa5419228cea8e319698a90981b618f6650540d",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "d479f32231f7051b56868ddfc89f8abb4ee6e530b81a9552b2d170a2d14c0814",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        }
+      ],
+      "arm": "fixed_selection_evidence",
+      "budget_multiple": 1,
+      "can_acquire": false,
+      "correct_terminal_decisions": 1,
+      "families_with_correct_decision": [
+        "interpretation_routing"
+      ],
+      "policy": {
+        "acquisition_budget": 0,
+        "program": [
+          {
+            "argument": null,
+            "opcode": "SCORE_PUBLIC"
+          },
+          {
+            "argument": null,
+            "opcode": "ARGMAX_FIRST"
+          }
+        ],
+        "provenance": [],
+        "schema": "m087-selection-acquisition-policy-v1",
+        "version": 0
+      },
+      "policy_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+      "situation_count": 3,
+      "situations": [
+        {
+          "acquisitions": 0,
+          "adopted_label": "synthesize_tool:mean:midpoint",
+          "candidates": [
+            "synthesize_tool:mean:midpoint",
+            "synthesize_tool:mean:mean",
+            "synthesize_tool:mean:sum",
+            "synthesize_tool:mean:maximum",
+            "synthesize_tool:mean:minimum"
+          ],
+          "candidates_evaluated": 5,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "tool_semantics",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "synthesize_tool:mean:maximum": 0,
+            "synthesize_tool:mean:mean": 1,
+            "synthesize_tool:mean:midpoint": 1,
+            "synthesize_tool:mean:minimum": 0,
+            "synthesize_tool:mean:sum": 0
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "synthesize_tool:mean:midpoint"
+              ],
+              [
+                "synthesize_tool:mean:mean"
+              ],
+              [
+                "synthesize_tool:mean:sum"
+              ],
+              [
+                "synthesize_tool:mean:maximum"
+              ],
+              [
+                "synthesize_tool:mean:minimum"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "synthesize_tool:mean:midpoint",
+            "survivors": [
+              "synthesize_tool:mean:midpoint",
+              "synthesize_tool:mean:mean",
+              "synthesize_tool:mean:sum",
+              "synthesize_tool:mean:maximum",
+              "synthesize_tool:mean:minimum"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'synthesize_tool:mean:midpoint'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "interpreter_add_alias:combine:add",
+          "candidates": [
+            "interpreter_add_alias:combine:add",
+            "interpreter_add_alias:combine:max",
+            "interpreter_add_alias:combine:mean",
+            "interpreter_add_alias:combine:mul"
+          ],
+          "candidates_evaluated": 4,
+          "correct_terminal_decision": true,
+          "cycles": 1,
+          "family_id": "interpretation_routing",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "interpreter_add_alias:combine:add": 1,
+            "interpreter_add_alias:combine:max": 0,
+            "interpreter_add_alias:combine:mean": 0,
+            "interpreter_add_alias:combine:mul": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "interpreter_add_alias:combine:add"
+              ],
+              [
+                "interpreter_add_alias:combine:max"
+              ],
+              [
+                "interpreter_add_alias:combine:mean"
+              ],
+              [
+                "interpreter_add_alias:combine:mul"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "interpreter_add_alias:combine:add",
+            "survivors": [
+              "interpreter_add_alias:combine:add",
+              "interpreter_add_alias:combine:max",
+              "interpreter_add_alias:combine:mean",
+              "interpreter_add_alias:combine:mul"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'interpreter_add_alias:combine:add'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "planner:one_level",
+          "candidates": [
+            "planner:one_level",
+            "planner:recursive_postorder"
+          ],
+          "candidates_evaluated": 2,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "planning_structure",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "planner:one_level": 1,
+            "planner:recursive_postorder": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "planner:one_level"
+              ],
+              [
+                "planner:recursive_postorder"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "planner:one_level",
+            "survivors": [
+              "planner:one_level",
+              "planner:recursive_postorder"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'planner:one_level'"
+            ]
+          }
+        }
+      ],
+      "total_acquisitions": 0,
+      "total_candidates_evaluated": 11,
+      "total_cycles": 3
+    },
+    "fresh_agent": {
+      "acquisition_logs": [
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "b52de39f8fe53e23e85c26221fa5419228cea8e319698a90981b618f6650540d",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "d479f32231f7051b56868ddfc89f8abb4ee6e530b81a9552b2d170a2d14c0814",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        }
+      ],
+      "arm": "fresh_agent",
+      "budget_multiple": 1,
+      "can_acquire": false,
+      "correct_terminal_decisions": 1,
+      "families_with_correct_decision": [
+        "interpretation_routing"
+      ],
+      "policy": {
+        "acquisition_budget": 0,
+        "program": [
+          {
+            "argument": null,
+            "opcode": "SCORE_PUBLIC"
+          },
+          {
+            "argument": null,
+            "opcode": "ARGMAX_FIRST"
+          }
+        ],
+        "provenance": [],
+        "schema": "m087-selection-acquisition-policy-v1",
+        "version": 0
+      },
+      "policy_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+      "situation_count": 3,
+      "situations": [
+        {
+          "acquisitions": 0,
+          "adopted_label": "synthesize_tool:mean:midpoint",
+          "candidates": [
+            "synthesize_tool:mean:midpoint",
+            "synthesize_tool:mean:mean",
+            "synthesize_tool:mean:sum",
+            "synthesize_tool:mean:maximum",
+            "synthesize_tool:mean:minimum"
+          ],
+          "candidates_evaluated": 5,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "tool_semantics",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "synthesize_tool:mean:maximum": 0,
+            "synthesize_tool:mean:mean": 1,
+            "synthesize_tool:mean:midpoint": 1,
+            "synthesize_tool:mean:minimum": 0,
+            "synthesize_tool:mean:sum": 0
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "synthesize_tool:mean:midpoint"
+              ],
+              [
+                "synthesize_tool:mean:mean"
+              ],
+              [
+                "synthesize_tool:mean:sum"
+              ],
+              [
+                "synthesize_tool:mean:maximum"
+              ],
+              [
+                "synthesize_tool:mean:minimum"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "synthesize_tool:mean:midpoint",
+            "survivors": [
+              "synthesize_tool:mean:midpoint",
+              "synthesize_tool:mean:mean",
+              "synthesize_tool:mean:sum",
+              "synthesize_tool:mean:maximum",
+              "synthesize_tool:mean:minimum"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'synthesize_tool:mean:midpoint'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "interpreter_add_alias:combine:add",
+          "candidates": [
+            "interpreter_add_alias:combine:add",
+            "interpreter_add_alias:combine:max",
+            "interpreter_add_alias:combine:mean",
+            "interpreter_add_alias:combine:mul"
+          ],
+          "candidates_evaluated": 4,
+          "correct_terminal_decision": true,
+          "cycles": 1,
+          "family_id": "interpretation_routing",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "interpreter_add_alias:combine:add": 1,
+            "interpreter_add_alias:combine:max": 0,
+            "interpreter_add_alias:combine:mean": 0,
+            "interpreter_add_alias:combine:mul": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "interpreter_add_alias:combine:add"
+              ],
+              [
+                "interpreter_add_alias:combine:max"
+              ],
+              [
+                "interpreter_add_alias:combine:mean"
+              ],
+              [
+                "interpreter_add_alias:combine:mul"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "interpreter_add_alias:combine:add",
+            "survivors": [
+              "interpreter_add_alias:combine:add",
+              "interpreter_add_alias:combine:max",
+              "interpreter_add_alias:combine:mean",
+              "interpreter_add_alias:combine:mul"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'interpreter_add_alias:combine:add'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "planner:one_level",
+          "candidates": [
+            "planner:one_level",
+            "planner:recursive_postorder"
+          ],
+          "candidates_evaluated": 2,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "planning_structure",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "planner:one_level": 1,
+            "planner:recursive_postorder": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "planner:one_level"
+              ],
+              [
+                "planner:recursive_postorder"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "planner:one_level",
+            "survivors": [
+              "planner:one_level",
+              "planner:recursive_postorder"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'planner:one_level'"
+            ]
+          }
+        }
+      ],
+      "total_acquisitions": 0,
+      "total_candidates_evaluated": 11,
+      "total_cycles": 3
+    },
+    "more_budget_same_evidence": {
+      "acquisition_logs": [
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "b52de39f8fe53e23e85c26221fa5419228cea8e319698a90981b618f6650540d",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "d479f32231f7051b56868ddfc89f8abb4ee6e530b81a9552b2d170a2d14c0814",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        }
+      ],
+      "arm": "more_budget_same_evidence",
+      "budget_multiple": 10,
+      "can_acquire": false,
+      "correct_terminal_decisions": 1,
+      "families_with_correct_decision": [
+        "interpretation_routing"
+      ],
+      "policy": {
+        "acquisition_budget": 0,
+        "program": [
+          {
+            "argument": null,
+            "opcode": "SCORE_PUBLIC"
+          },
+          {
+            "argument": null,
+            "opcode": "ARGMAX_FIRST"
+          }
+        ],
+        "provenance": [],
+        "schema": "m087-selection-acquisition-policy-v1",
+        "version": 0
+      },
+      "policy_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+      "situation_count": 3,
+      "situations": [
+        {
+          "acquisitions": 0,
+          "adopted_label": "synthesize_tool:mean:midpoint",
+          "candidates": [
+            "synthesize_tool:mean:midpoint",
+            "synthesize_tool:mean:mean",
+            "synthesize_tool:mean:sum",
+            "synthesize_tool:mean:maximum",
+            "synthesize_tool:mean:minimum"
+          ],
+          "candidates_evaluated": 50,
+          "correct_terminal_decision": false,
+          "cycles": 10,
+          "family_id": "tool_semantics",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "synthesize_tool:mean:maximum": 0,
+            "synthesize_tool:mean:mean": 1,
+            "synthesize_tool:mean:midpoint": 1,
+            "synthesize_tool:mean:minimum": 0,
+            "synthesize_tool:mean:sum": 0
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "synthesize_tool:mean:midpoint"
+              ],
+              [
+                "synthesize_tool:mean:mean"
+              ],
+              [
+                "synthesize_tool:mean:sum"
+              ],
+              [
+                "synthesize_tool:mean:maximum"
+              ],
+              [
+                "synthesize_tool:mean:minimum"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "synthesize_tool:mean:midpoint",
+            "survivors": [
+              "synthesize_tool:mean:midpoint",
+              "synthesize_tool:mean:mean",
+              "synthesize_tool:mean:sum",
+              "synthesize_tool:mean:maximum",
+              "synthesize_tool:mean:minimum"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'synthesize_tool:mean:midpoint'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "interpreter_add_alias:combine:add",
+          "candidates": [
+            "interpreter_add_alias:combine:add",
+            "interpreter_add_alias:combine:max",
+            "interpreter_add_alias:combine:mean",
+            "interpreter_add_alias:combine:mul"
+          ],
+          "candidates_evaluated": 40,
+          "correct_terminal_decision": true,
+          "cycles": 10,
+          "family_id": "interpretation_routing",
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "public_scores": {
+            "interpreter_add_alias:combine:add": 1,
+            "interpreter_add_alias:combine:max": 0,
+            "interpreter_add_alias:combine:mean": 0,
+            "interpreter_add_alias:combine:mul": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "interpreter_add_alias:combine:add"
+              ],
+              [
+                "interpreter_add_alias:combine:max"
+              ],
+              [
+                "interpreter_add_alias:combine:mean"
+              ],
+              [
+                "interpreter_add_alias:combine:mul"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "interpreter_add_alias:combine:add",
+            "survivors": [
+              "interpreter_add_alias:combine:add",
+              "interpreter_add_alias:combine:max",
+              "interpreter_add_alias:combine:mean",
+              "interpreter_add_alias:combine:mul"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'interpreter_add_alias:combine:add'"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": "planner:one_level",
+          "candidates": [
+            "planner:one_level",
+            "planner:recursive_postorder"
+          ],
+          "candidates_evaluated": 20,
+          "correct_terminal_decision": false,
+          "cycles": 10,
+          "family_id": "planning_structure",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "planner:one_level": 1,
+            "planner:recursive_postorder": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": false,
+            "classes": [
+              [
+                "planner:one_level"
+              ],
+              [
+                "planner:recursive_postorder"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": "planner:one_level",
+            "survivors": [
+              "planner:one_level",
+              "planner:recursive_postorder"
+            ],
+            "terminal_state": "adopted",
+            "trace": [
+              "scored public cases",
+              "argmax kept the first maximum 'planner:one_level'"
+            ]
+          }
+        }
+      ],
+      "total_acquisitions": 0,
+      "total_candidates_evaluated": 110,
+      "total_cycles": 30
+    },
+    "selection_acquisition_ablated": {
+      "acquisition_logs": [
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "8badf4f5b909b68de61135f70ab166bffbaee3ec57eccf2ae038f842c299e8b4",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "b52de39f8fe53e23e85c26221fa5419228cea8e319698a90981b618f6650540d",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        },
+        {
+          "budget": 1,
+          "count": 0,
+          "entries": [],
+          "experiment_space_digest": "d479f32231f7051b56868ddfc89f8abb4ee6e530b81a9552b2d170a2d14c0814",
+          "hidden_evaluation_sealed": true,
+          "schema": "m087-acquisition-log-v1"
+        }
+      ],
+      "arm": "selection_acquisition_ablated",
+      "budget_multiple": 1,
+      "can_acquire": false,
+      "correct_terminal_decisions": 0,
+      "families_with_correct_decision": [],
+      "policy": {
+        "acquisition_budget": 0,
+        "program": [
+          {
+            "argument": null,
+            "opcode": "SCORE_PUBLIC"
+          },
+          {
+            "argument": null,
+            "opcode": "KEEP_TOP_SCORING"
+          },
+          {
+            "argument": null,
+            "opcode": "GUARD_AMBIGUOUS"
+          },
+          {
+            "argument": null,
+            "opcode": "PROJECT_PREDICTIONS"
+          },
+          {
+            "argument": null,
+            "opcode": "PARTITION_SURVIVORS"
+          },
+          {
+            "argument": null,
+            "opcode": "ADOPT_UNIQUE"
+          },
+          {
+            "argument": null,
+            "opcode": "DEFER_INSUFFICIENT"
+          }
+        ],
+        "provenance": [
+          "add_ambiguity_guard",
+          "add_prediction_projection",
+          "add_equivalence_partition",
+          "add_experiment_enumerator",
+          "add_scoring_rule:partition_size",
+          "add_acquisition_transition",
+          "add_survivor_filter",
+          "set_acquisition_budget:4",
+          "add_defer_condition",
+          "acquisition_ablated"
+        ],
+        "schema": "m087-selection-acquisition-policy-v1",
+        "version": 10
+      },
+      "policy_digest": "57acb89d863e16114d0dc04c1441b6676f7d2be2a278082caae4c5803802b9f4",
+      "situation_count": 3,
+      "situations": [
+        {
+          "acquisitions": 0,
+          "adopted_label": null,
+          "candidates": [
+            "synthesize_tool:mean:midpoint",
+            "synthesize_tool:mean:mean",
+            "synthesize_tool:mean:sum",
+            "synthesize_tool:mean:maximum",
+            "synthesize_tool:mean:minimum"
+          ],
+          "candidates_evaluated": 5,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "tool_semantics",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "synthesize_tool:mean:maximum": 0,
+            "synthesize_tool:mean:mean": 1,
+            "synthesize_tool:mean:midpoint": 1,
+            "synthesize_tool:mean:minimum": 0,
+            "synthesize_tool:mean:sum": 0
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "synthesize_tool:mean:mean"
+              ],
+              [
+                "synthesize_tool:mean:midpoint"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": null,
+            "survivors": [
+              "synthesize_tool:mean:midpoint",
+              "synthesize_tool:mean:mean"
+            ],
+            "terminal_state": "deferred_insufficient_evidence",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "2 candidates remain indistinguishable",
+              "deferred: evidence does not justify a choice"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": null,
+          "candidates": [
+            "interpreter_add_alias:combine:add",
+            "interpreter_add_alias:combine:max",
+            "interpreter_add_alias:combine:mean",
+            "interpreter_add_alias:combine:mul"
+          ],
+          "candidates_evaluated": 4,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "interpretation_routing",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "interpreter_add_alias:combine:add": 1,
+            "interpreter_add_alias:combine:max": 0,
+            "interpreter_add_alias:combine:mean": 0,
+            "interpreter_add_alias:combine:mul": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "interpreter_add_alias:combine:mul"
+              ],
+              [
+                "interpreter_add_alias:combine:add"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": null,
+            "survivors": [
+              "interpreter_add_alias:combine:add",
+              "interpreter_add_alias:combine:mul"
+            ],
+            "terminal_state": "deferred_insufficient_evidence",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "2 candidates remain indistinguishable",
+              "deferred: evidence does not justify a choice"
+            ]
+          }
+        },
+        {
+          "acquisitions": 0,
+          "adopted_label": null,
+          "candidates": [
+            "planner:one_level",
+            "planner:recursive_postorder"
+          ],
+          "candidates_evaluated": 2,
+          "correct_terminal_decision": false,
+          "cycles": 1,
+          "family_id": "planning_structure",
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "public_scores": {
+            "planner:one_level": 1,
+            "planner:recursive_postorder": 1
+          },
+          "selection": {
+            "acquisitions": 0,
+            "ambiguity_detected": true,
+            "classes": [
+              [
+                "planner:one_level"
+              ],
+              [
+                "planner:recursive_postorder"
+              ]
+            ],
+            "experiments_scored": 0,
+            "selected": null,
+            "survivors": [
+              "planner:one_level",
+              "planner:recursive_postorder"
+            ],
+            "terminal_state": "deferred_insufficient_evidence",
+            "trace": [
+              "scored public cases",
+              "kept 2 candidates at public score 1",
+              "ambiguity detected over 2 survivors",
+              "projected 2 candidates over 8 experiments",
+              "partitioned into 2 prediction classes",
+              "2 candidates remain indistinguishable",
+              "deferred: evidence does not justify a choice"
+            ]
+          }
+        }
+      ],
+      "total_acquisitions": 0,
+      "total_candidates_evaluated": 11,
+      "total_cycles": 3
+    }
+  },
+  "attempt": 1,
+  "chronology": {
+    "adoption_precedes_qualification": true,
+    "order": [
+      "T0_protocol_frozen",
+      "T1_m0_policy_recorded",
+      "T2_development_materialized",
+      "T3_limitation_observed",
+      "T4_meta_transformations_rejected",
+      "T5_disposable_descendant_validated",
+      "T6_policy_adopted_and_serialized",
+      "T7_qualification_materialized",
+      "T8_arms_executed",
+      "T9_hidden_evaluation_sealed",
+      "T10_rollback_proved",
+      "T11_leak_checked"
+    ],
+    "ordered": true,
+    "steps": [
+      {
+        "index": 0,
+        "protocol_digest": "9ea1150a99ceab4844e63200c2f94a69654e05c1e161a5d909e0e1c0fb1e3203",
+        "step": "T0_protocol_frozen"
+      },
+      {
+        "index": 1,
+        "policy_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+        "step": "T1_m0_policy_recorded"
+      },
+      {
+        "family": "tool_semantics",
+        "index": 2,
+        "public_digest": "e1603b5b8d8c09466381cedcf36241310bfe29c7f143031c0a431a8127e1fe9e",
+        "step": "T2_development_materialized"
+      },
+      {
+        "equivalent_candidates": 2,
+        "index": 3,
+        "m0_adopted": "synthesize_tool:mean:midpoint",
+        "m0_correct": false,
+        "step": "T3_limitation_observed"
+      },
+      {
+        "index": 4,
+        "rejected": 6,
+        "step": "T4_meta_transformations_rejected"
+      },
+      {
+        "index": 5,
+        "step": "T5_disposable_descendant_validated",
+        "steps": 9
+      },
+      {
+        "index": 6,
+        "policy_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+        "step": "T6_policy_adopted_and_serialized"
+      },
+      {
+        "draws": {
+          "interpretation_routing": [
+            {
+              "case_id": "interpretation_routing_qual_0",
+              "expected": 9,
+              "origin": "hidden",
+              "request": "combine 9 0"
+            },
+            {
+              "case_id": "interpretation_routing_qual_1",
+              "expected": 11,
+              "origin": "hidden",
+              "request": "combine 2 9"
+            }
+          ],
+          "planning_structure": [
+            {
+              "case_id": "planning_structure_qual_0",
+              "expected": 30,
+              "origin": "hidden",
+              "request": "add 9 add 8 add 7 6"
+            },
+            {
+              "case_id": "planning_structure_qual_1",
+              "expected": 16,
+              "origin": "hidden",
+              "request": "mul 2 mul 2 mul 2 2"
+            }
+          ],
+          "tool_semantics": [
+            {
+              "case_id": "tool_semantics_qual_0",
+              "expected": 5.0,
+              "origin": "hidden",
+              "request": "mean 2 3 10"
+            },
+            {
+              "case_id": "tool_semantics_qual_1",
+              "expected": 6.0,
+              "origin": "hidden",
+              "request": "mean 4 4 10"
+            }
+          ]
+        },
+        "index": 7,
+        "salt_digest": "2ea85b3166dd8a49b24dba28a19fc50165748a38a08859b6bf7906e7e1b41614",
+        "step": "T7_qualification_materialized"
+      },
+      {
+        "arms": [
+          "evolvable_selection_evidence",
+          "fixed_selection_evidence",
+          "selection_acquisition_ablated",
+          "more_budget_same_evidence",
+          "fresh_agent"
+        ],
+        "index": 8,
+        "step": "T8_arms_executed"
+      },
+      {
+        "index": 9,
+        "step": "T9_hidden_evaluation_sealed"
+      },
+      {
+        "byte_identical": true,
+        "index": 10,
+        "step": "T10_rollback_proved"
+      },
+      {
+        "findings": 0,
+        "index": 11,
+        "step": "T11_leak_checked"
+      }
+    ]
+  },
+  "conditions_declared": [
+    "P1_ambiguity_represented",
+    "P2_meta_transformation_adopted_after_rejections",
+    "P3_evolvable_correct_on_every_situation",
+    "P4_capability_discordance_against_fixed",
+    "P5_more_budget_same_evidence_cannot_close_it",
+    "P6_acquisition_ablation_loses_the_capability",
+    "P7_cross_family_reuse",
+    "P8_policy_persisted_and_restored_byte_identically",
+    "P9_no_evidence_leak",
+    "P10_chronology_holds"
+  ],
+  "development": {
+    "adopted_policy": {
+      "acquisition_budget": 4,
+      "program": [
+        {
+          "argument": null,
+          "opcode": "SCORE_PUBLIC"
+        },
+        {
+          "argument": null,
+          "opcode": "KEEP_TOP_SCORING"
+        },
+        {
+          "argument": null,
+          "opcode": "GUARD_AMBIGUOUS"
+        },
+        {
+          "argument": null,
+          "opcode": "PROJECT_PREDICTIONS"
+        },
+        {
+          "argument": null,
+          "opcode": "PARTITION_SURVIVORS"
+        },
+        {
+          "argument": null,
+          "opcode": "ENUMERATE_EXPERIMENTS"
+        },
+        {
+          "argument": "partition_size",
+          "opcode": "SCORE_EXPERIMENTS"
+        },
+        {
+          "argument": null,
+          "opcode": "ACQUIRE_BEST"
+        },
+        {
+          "argument": null,
+          "opcode": "FILTER_BY_ACQUIRED"
+        },
+        {
+          "argument": 4,
+          "opcode": "LOOP_ACQUISITION"
+        },
+        {
+          "argument": null,
+          "opcode": "ADOPT_UNIQUE"
+        },
+        {
+          "argument": null,
+          "opcode": "DEFER_INSUFFICIENT"
+        }
+      ],
+      "provenance": [
+        "add_ambiguity_guard",
+        "add_prediction_projection",
+        "add_equivalence_partition",
+        "add_experiment_enumerator",
+        "add_scoring_rule:partition_size",
+        "add_acquisition_transition",
+        "add_survivor_filter",
+        "set_acquisition_budget:4",
+        "add_defer_condition"
+      ],
+      "schema": "m087-selection-acquisition-policy-v1",
+      "version": 9
+    },
+    "adopted_policy_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+    "adopted_steps": [
+      [
+        "add_ambiguity_guard",
+        null
+      ],
+      [
+        "add_prediction_projection",
+        null
+      ],
+      [
+        "add_equivalence_partition",
+        null
+      ],
+      [
+        "add_experiment_enumerator",
+        null
+      ],
+      [
+        "add_scoring_rule",
+        "partition_size"
+      ],
+      [
+        "add_acquisition_transition",
+        null
+      ],
+      [
+        "add_survivor_filter",
+        null
+      ],
+      [
+        "set_acquisition_budget",
+        4
+      ],
+      [
+        "add_defer_condition",
+        null
+      ]
+    ],
+    "limitation": {
+      "candidates": [
+        "synthesize_tool:mean:midpoint",
+        "synthesize_tool:mean:mean",
+        "synthesize_tool:mean:sum",
+        "synthesize_tool:mean:maximum",
+        "synthesize_tool:mean:minimum"
+      ],
+      "family_id": "tool_semantics",
+      "m0_acquisitions": 0,
+      "m0_adopted_label": "synthesize_tool:mean:midpoint",
+      "m0_ambiguity_detected": false,
+      "m0_correct": false,
+      "m0_hidden_passed": 0,
+      "m0_hidden_total": 2,
+      "m0_terminal_state": "adopted",
+      "observationally_equivalent_count": 2,
+      "top_scoring_candidates": [
+        "synthesize_tool:mean:mean",
+        "synthesize_tool:mean:midpoint"
+      ]
+    },
+    "pre_adoption_policy_digest": "ca9ae25b0686db8db426685d1d2fbfedb2daf06f9b4ef6cd4d3b882e9ea8c74c",
+    "rejected_count": 6,
+    "rejected_meta_transformations": [
+      {
+        "acquisitions": 0,
+        "adopted_label": null,
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_ambiguity_guard",
+            null
+          ]
+        ],
+        "terminal_state": "deferred_insufficient_evidence"
+      },
+      {
+        "acquisitions": 0,
+        "adopted_label": "synthesize_tool:mean:midpoint",
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_defer_condition",
+            null
+          ]
+        ],
+        "terminal_state": "adopted"
+      },
+      {
+        "acquisitions": 0,
+        "adopted_label": "synthesize_tool:mean:midpoint",
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_prediction_projection",
+            null
+          ]
+        ],
+        "terminal_state": "adopted"
+      },
+      {
+        "acquisitions": 0,
+        "adopted_label": null,
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_ambiguity_guard",
+            null
+          ],
+          [
+            "add_defer_condition",
+            null
+          ]
+        ],
+        "terminal_state": "deferred_insufficient_evidence"
+      },
+      {
+        "acquisitions": 1,
+        "adopted_label": null,
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_ambiguity_guard",
+            null
+          ],
+          [
+            "add_experiment_enumerator",
+            null
+          ],
+          [
+            "add_acquisition_transition",
+            null
+          ]
+        ],
+        "terminal_state": "deferred_insufficient_evidence"
+      },
+      {
+        "acquisitions": 0,
+        "adopted_label": null,
+        "hidden_passed": 0,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_ambiguity_guard",
+            null
+          ],
+          [
+            "add_prediction_projection",
+            null
+          ],
+          [
+            "add_equivalence_partition",
+            null
+          ]
+        ],
+        "terminal_state": "deferred_insufficient_evidence"
+      }
+    ],
+    "validation_family": "tool_semantics"
+  },
+  "evaluation": {
+    "conditions": {
+      "P10_chronology_holds": true,
+      "P1_ambiguity_represented": true,
+      "P2_meta_transformation_adopted_after_rejections": true,
+      "P3_evolvable_correct_on_every_situation": true,
+      "P4_capability_discordance_against_fixed": true,
+      "P5_more_budget_same_evidence_cannot_close_it": true,
+      "P6_acquisition_ablation_loses_the_capability": true,
+      "P7_cross_family_reuse": true,
+      "P8_policy_persisted_and_restored_byte_identically": true,
+      "P9_no_evidence_leak": true
+    },
+    "discordant_families": [
+      "planning_structure",
+      "tool_semantics"
+    ],
+    "evolvable_correct_families": [
+      "interpretation_routing",
+      "planning_structure",
+      "tool_semantics"
+    ],
+    "failed_conditions": [],
+    "fixed_correct_families": [
+      "interpretation_routing"
+    ],
+    "hypothesis_supported": true,
+    "verdict": "positive"
+  },
+  "hypothesis": "H33",
+  "leak_findings": [],
+  "milestone": "M087",
+  "model_calls": 0,
+  "network_calls": 0,
+  "protocol_digest": "9ea1150a99ceab4844e63200c2f94a69654e05c1e161a5d909e0e1c0fb1e3203",
+  "protocol_raw_sha256": "4183bae2ea17f12b90e5130ae3312bc193860efc7aec002495d80d6f31f22605",
+  "result_digest": "cb06bd7a0abd84aebcdccfc5bfe7278281be4891cb4a0655fde855554754d132",
+  "retry_used": false,
+  "rollback": {
+    "byte_identical_restore": true,
+    "checkpoint_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+    "corrupted_digest": "617a53a943ece5fe2aa8aac2e0cb818c910f17f63d13f0864339541f4b59e9ee",
+    "corruption_detected": true,
+    "digest_matches": true,
+    "policy_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+    "restored_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816",
+    "restored_policy_digest": "3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816"
+  },
+  "salt_digest": "2ea85b3166dd8a49b24dba28a19fc50165748a38a08859b6bf7906e7e1b41614",
+  "schema": "m087-result-v1"
+}

@@ -413,7 +413,19 @@ def execute_policy(
 
         if opcode == "LOOP_ACQUISITION":
             bound = int(instruction.argument or 1)
-            if len(survivors) > 1 and acquisitions < min(bound, policy.acquisition_budget):
+            remaining = [
+                request for request in experiment_space if request not in consumed
+            ]
+            # Amendment A1. Without the `remaining` term the loop re-enters while budget is left
+            # even when every experiment has been consumed, and never terminates. The qualifying
+            # run did not take this path -- its spaces hold eight experiments against a budget of
+            # four, so it always terminated on budget -- but a non-terminating interpreter is a
+            # defect in a frozen component and is fixed rather than left in place.
+            if (
+                remaining
+                and len(survivors) > 1
+                and acquisitions < min(bound, policy.acquisition_budget)
+            ):
                 # Re-enter the acquisition block. The block is the contiguous run of instructions
                 # from the first ENUMERATE_EXPERIMENTS preceding this loop.
                 target = _loop_target(policy, index - 1)

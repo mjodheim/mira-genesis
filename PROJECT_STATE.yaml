@@ -1516,6 +1516,55 @@ phase_eight:
     successor_protocol: M075-B
     superseded_by_successor: false
     independent_human_maintainer_requirement_still_unmet: true
+  M087:
+    status: positive_qualified_development_h33_supported
+    canonical: false
+    hypothesis: H33
+    predecessor: M086-C
+    protocol: experiments/M087/PROTOCOL.md
+    protocol_json: experiments/M087/PROTOCOL.json
+    protocol_frozen_commit: db609a0355bd602e8ff9640a718c228a36e381a5
+    protocol_raw_sha256: 4183bae2ea17f12b90e5130ae3312bc193860efc7aec002495d80d6f31f22605
+    result: experiments/M087/RESULT.json
+    result_digest: cb06bd7a0abd84aebcdccfc5bfe7278281be4891cb4a0655fde855554754d132
+    salt_digest: 2ea85b3166dd8a49b24dba28a19fc50165748a38a08859b6bf7906e7e1b41614
+    attempt: 1
+    retry_used: false
+    conditions_total: 10
+    conditions_passed: 10
+    verdict: positive
+    hypothesis_supported: true
+    mutable_component: selection_and_evidence_acquisition_policy
+    fixed_components: [m047_diagnosis, m047_candidate_generation, interpreter, evaluator, sandbox]
+    m0_equals_m086_selection_rule: true
+    meta_transformations_rejected: 6
+    adopted_policy_digest: 3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816
+    evolvable_correct: 3
+    fixed_correct: 1
+    ablated_correct: 0
+    more_budget_same_evidence_correct: 1
+    more_budget_candidates_evaluated: 110
+    fixed_candidates_evaluated: 11
+    discordant_families: ['planning_structure', 'tool_semantics']
+    cross_family_reuse: true
+    acquisitions_total: 3
+    non_evolvable_acquisitions: 0
+    evidence_domains_disjoint: true
+    evaluator_callable_reachable_by_policy: false
+    leak_findings: 0
+    rollback_byte_identical: true
+    chronology_adoption_precedes_qualification: true
+    model_calls: 0
+    network_calls: 0
+    track: A
+    amendment_a1_non_termination_fix_disclosed: true
+    amendment_a1_changed_result: false
+    meta_primitives_authored: true
+    experiment_space_authored: true
+    families_authored: true
+    independent_reproduction: false
+    generality_gate_advanced: false
+    agi_evidence: false
   M075-B:
     status: instrument_built_nothing_frozen_no_bank_no_reveal
     canonical: false
