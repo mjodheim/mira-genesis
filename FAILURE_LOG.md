@@ -1041,3 +1041,162 @@ This is the fourth entry in this series where a green result would have been hol
 tautological rollback check, M082's harness-held browser state and M083's assumed window origin. It
 is the first where the hollow thing was a *control* rather than an experiment, which is worse in one
 respect: a control is what the project points at when asked whether the instrument works.
+
+## M047 — a synthesized tool named `max` shadows the builtin its own expression needs
+
+Found while building M086, in a module qualified since M047 and unchanged here.
+
+`render_tool_module(tool_name, expression_id)` emits a function named after the operation and a body
+using the matching Python builtin. For `tool_name='max'` and `expression_id='maximum'` it produces:
+
+```python
+def max(arguments):
+    if not arguments:
+        raise ValueError('tool_requires_arguments')
+    return max(arguments)
+```
+
+The module-level `def max` shadows the builtin, so the call recurses into itself until the sandbox
+kills it. The same shape would apply to a tool named `sum` with the `sum` expression, and to `min`
+with `minimum`; none of those canonical operations exists today, so `max` is the only reachable case.
+
+M047 never hit it: its synthesized tool was `tool_mean`, whose expression uses `sum` and `len` rather
+than `mean`, and no accepted cycle ever routed `max`.
+
+**It is not repaired.** Changing that renderer would change the source bytes of every synthesized
+tool, and therefore M047's accepted body digests and its preserved result. M086 avoided the collision
+instead: its routeless operation is `mean` in both limitations and never `max`, which is recorded as
+amendment A2 before the bank was bound.
+
+A successor that needs a `max` tool must fix the renderer in an experiment that re-derives M047's
+digests, not in passing.
+
+## M086 construction — a bank whose repair revealed a new fault, and a greedy tie-break that locked it in
+
+The first M086 development limitation aliased an unknown token onto an operation that had no route.
+Repairing the alias therefore moved the failure rather than removing it: the token now parsed, and
+immediately failed at execution with a missing route it had previously hidden.
+
+Worse, several candidates passed the same single case, and the cycle's tie-break took the first of
+them. It chose an alias onto the wrong canonical operation — arithmetically wrong but passing the one
+public case it was scored on — and the next cycle could diagnose nothing, because a wrong answer that
+executes produces no error stage at all.
+
+The arm reported no adopted meta-transformation and no solved limitation, which looked like a clean
+negative for H32. It was a property of the bank.
+
+Both limitations now pair an unparseable token whose canonical operation **already has a route** with
+a separately unroutable operation, so a repair cannot reveal a new fault. Recorded as amendment A2
+before the bank was bound. The lesson is the one M080, M082, M083 and the M085 wiring control each
+recorded in their own way: the run completed, nothing raised, and the number meant something other
+than what it appeared to mean.
+
+## M086-A — a threshold that could not fail, and a digest bound to bytes that are not in the repository
+
+Four defects, found by review after CI was green and after the registers had recorded a qualified
+positive result. All four are confirmed at the exact head.
+
+**The verdict tested six of ten conditions.** The frozen protocol lists P1 through P10. `evaluate()`
+computes P1 through P6. P7 (causal chain), P8 (rollback), P9 (leak boundary) and P10 (differential
+equivalence) never enter it. P9 and P10 are checked by the independent checker, so a reviewer running
+it would see them pass — but nothing they could report would turn the verdict negative. P7 and P8 are
+checked nowhere.
+
+**P8 has no implementation.** The protocol requires a forced fault during meta-adoption and a
+byte-identical restore compared against an independently recorded digest. No fault is injected, no
+pre-adoption checkpoint is taken, no rollback runs. The condition was written into the protocol,
+counted among the ten, and never built.
+
+**The recorded protocol digest binds bytes that do not exist in git.** `RESULT.json` records
+`c0eeeffe…`, which matches the CRLF working-tree copy of `PROTOCOL.json`. The committed blob hashes
+to `49583ae9…`. This is M064's disqualifying defect returning verbatim — "the frozen hash was
+checkout-dependent" — in a repository where a fix for exactly this class has been sitting on an
+unmerged branch since M085.
+
+**The holdout predated the search that must not have seen it.** `HOLDOUT_PUBLIC` and `HOLDOUT_HIDDEN`
+are module-level constants in the same module and process as the meta-search, and the runner
+enumerates over the holdout before any arm executes. The structural check verified that one function
+does not name them, which is an argument about source text where the protocol promised an ordering.
+
+**The replay covered 3 of 14 fields per arm.** The mechanism digests, the adopted and rejected
+primitives, the adopted labels, the candidate and cycle counts and the entire causal journal were
+preserved and never re-derived.
+
+The common thread is not carelessness about the science but about the *instrument*: each defect makes
+some part of the frozen contract unenforceable while leaving every visible signal green. CI passed
+because the checker is not in the test suite and no regression asserted the binding, the threshold
+coverage or the chronology. M086-B makes each of P1–P10 computed and decisive, implements P8 with a
+real fault, separates holdout materialization into its own process and commit, and digests the whole
+arm record so an omission cannot hide.
+
+## M086-B — the bank drew a limitation no mechanism could repair
+
+M086-B's first and only scientific attempt is negative, and the negative says nothing about H32.
+
+The salt drew a development limitation whose routeless operation is `add`. The mechanism behaved
+exactly as designed: widening the hypothesis schema diagnosed both implicated modules and generated
+nine candidates, and adding composition generated twenty, including precisely the right one. Every
+candidate that routes `add` is then refused by the sandbox before it executes:
+
+```
+RuntimeError: duplicate tool registration: add
+```
+
+`tool_core` already registers `add`. A synthesized `tool_add` registers it a second time and the body
+is rejected. No mechanism — starting, widened, composed, or any of the ten combinations — could have
+repaired that limitation, so the meta-search returned empty and five of the ten conditions failed for
+one reason: there was nothing to adopt.
+
+The defect is in the grammar. `ROUTELESS_CANDIDATES` was chosen by asking whether M047's tool
+renderer had a correct *expression* for each operation — `sum` does compute `a + b` — and not whether
+the tool *name* was already taken. `mean` is repairable; `add` is not; the salt chose `add`.
+
+The bank is materialized and the result is preserved rather than redrawn. Fixing the grammar and
+drawing again on the same protocol would be the result-saving retry that disqualified nothing here
+only because nothing positive was claimed; it remains forbidden. A corrected grammar needs a new
+protocol, a new salt and a new experiment.
+
+Two things are worth separating. This is the **third** consecutive attempt at the meta-mechanism
+question to fail for an instrument reason rather than a scientific one — M086-A's threshold could not
+fail, M086-B's bank could not be repaired. But the failure modes are not equivalent: M086-A reported
+*positive* while four of ten conditions sat outside the verdict, and M086-B reported *negative* with
+all ten computed and a table naming exactly which failed. The corrections the disqualification
+mandated did their job; they simply revealed a different defect one layer down.
+
+There is also a smaller lesson about reasoning from availability. Both M086 banks were built by
+checking that a repair *existed in principle* — an expression that computes the right value, an alias
+that parses — without checking that the repair could be *installed*. The sandbox's registration rule
+is not in the renderer's signature, and neither bank consulted it.
+
+## M086-C — the mechanism generated the right candidate and then chose the wrong one
+
+M086-C is the first attempt in this line to put H32 at genuine risk, and the hypothesis came out
+unsupported. Nine of the ten
+conditions passed. P2 failed.
+
+The lineage met a limitation its mechanism could not express, rejected seven meta-transformations,
+adopted `widen_hypothesis`, survived a forced fault with a byte-identical restore, and on the holdout
+emitted a patch the starting mechanism could never have produced. The patch was
+`synthesize_tool:mean:midpoint`, and it is wrong.
+
+The holdout drew `mean 1 2 3` as its public case. That is an arithmetic sequence, so the midpoint and
+the mean coincide at 2.0 and two candidate expressions pass the public evidence. The cycle takes the
+first in the frozen expression order, which is `midpoint`. The evaluator's hidden cases —
+`mean 3 4 6` and `mean 2 3 8`, where midpoint gives 4.5 and 5.0 against a true mean of 4.33 — reject
+it.
+
+The protocol named this before the run: it stated the arithmetic condition under which both
+expressions pass, named `midpoint` as the one the frozen order would take, and said P2 could
+therefore fail on a bank where everything else succeeded. The predicted falsifier fired.
+
+What it exposes is not the limitation the experiment was designed around. Every meta-primitive acts
+on the hypothesis schema or the rule set; none acts on the **selection rule**, the greedy
+first-past-the-post over public score that decides which generated candidate is adopted. That rule is
+frozen and human-authored, and it is what failed. Three attempts have now treated "the mechanism that
+produces transformations" as diagnosis plus generation; this result says the pair is incomplete,
+because a mechanism that generates a correct candidate and then picks a wrong one is not helped by
+generating more.
+
+Making selection mutable is a candidate successor and is not added here. It would immediately meet
+the harder version of the same problem: choosing well among candidates that all fit the public
+evidence requires evidence the lineage does not have, which is where M078's refusal work already sits.

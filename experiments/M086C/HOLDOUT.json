@@ -1,0 +1,72 @@
+{
+  "adopted_artifact_commitment": "ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443",
+  "generated_after_adopted_mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+  "hidden": [
+    {
+      "case_id": "hidden_0",
+      "expected": 10,
+      "origin": "holdout_hidden",
+      "request": "sum2 5 2"
+    },
+    {
+      "case_id": "hidden_1",
+      "expected": 4.333333333333333,
+      "origin": "holdout_hidden",
+      "request": "mean 3 4 6"
+    },
+    {
+      "case_id": "hidden_2",
+      "expected": 4,
+      "origin": "holdout_hidden",
+      "request": "sum2 1 4"
+    },
+    {
+      "case_id": "hidden_3",
+      "expected": 4.333333333333333,
+      "origin": "holdout_hidden",
+      "request": "mean 2 3 8"
+    }
+  ],
+  "holdout_digest": "d1fff1923d41b7fae847c5e9135819fbd072d01c8d3ea312ba7da33257a9bcbb",
+  "lineage_module_imported": false,
+  "public": [
+    {
+      "case_id": "holdout_unknown_token",
+      "expected": 24,
+      "origin": "holdout",
+      "request": "sum2 6 4"
+    },
+    {
+      "case_id": "holdout_missing_route",
+      "expected": 2.0,
+      "origin": "holdout",
+      "request": "mean 1 2 3"
+    }
+  ],
+  "schema": "m086b-holdout-v1",
+  "shape": {
+    "aliases": {
+      "add": "add",
+      "max": "max",
+      "mean": "mean",
+      "mul": "mul"
+    },
+    "routeless_operands": [
+      1,
+      2,
+      3
+    ],
+    "routeless_operation": "mean",
+    "routes": {
+      "add": "add",
+      "mul": "mul"
+    },
+    "unknown_canonical": "mul",
+    "unknown_operands": [
+      6,
+      4
+    ],
+    "unknown_token": "sum2"
+  },
+  "starting_body": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d"
+}

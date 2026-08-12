@@ -93,6 +93,56 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M086-C leaves H32 not supported, and is the first attempt in this line that could have.** Protocol
+  frozen at `09ed0d3`, harness `5056a56`, bank and holdout materialized at `5948f9a`, result
+  `67786012…30d14`, attempt 1, no rerun. **Nine of ten conditions passed.** The lineage met a
+  limitation its mechanism could not express, rejected seven meta-transformations on disposable
+  descendants, adopted `widen_hypothesis`, survived a forced fault during the adoption transaction
+  with a byte-identical restore against an independently recorded digest, and emitted a holdout patch
+  outside the starting mechanism's constructive image, which was enumerated and empty. Every control
+  failed, including `task_only_mutable` at triple budget. **P2 failed**: the patch was
+  `synthesize_tool:mean:midpoint`, which passes the public case `mean 1 2 3 -> 2.0` because an
+  arithmetic sequence makes midpoint and mean coincide, and fails the evaluator's hidden cases. The
+  frozen protocol named that falsifier before the run — the arithmetic condition, the expression the
+  frozen order would take, and the consequence for P2 — so this is a predicted negative rather than a
+  defect found afterwards. What it exposes is that **the selection rule was never mutable**: every
+  meta-primitive acts on the hypothesis schema or the rule set, and the greedy first-past-the-post
+  over public score that picks the adopted candidate is frozen and human-authored. Capability to
+  generate a transformation the frozen mechanism could not is not capability to solve. The bank is
+  materialized and is not redrawn. **H32 is not supported by this attempt**, which is a result
+  about one bounded construction and not a finding that meta-plasticity is impossible. See D054
+  and H32.
+- **M086-B is a preserved negative and does not refute H32.** Protocol frozen at `95a5022` before
+  any harness, harness at `96f4fcb`, bank and holdout materialized at `3d30168`, result
+  `8b7f80d4…d31c32`, attempt 1, no rerun. All four corrections the disqualification mandated held:
+  every artifact is byte-identical to its committed blob, all ten conditions were computed with a
+  single false making the result negative, the forced fault is implemented, and the holdout was
+  materialized by a separate process after the adopted mechanism was committed — P9 proves the
+  chronology from recorded digests. The attempt still failed to test the hypothesis: the salt drew a
+  limitation whose routeless operation is `add`, and every candidate that routes it is refused by the
+  sandbox with `duplicate tool registration` because `tool_core` already registers that name. No
+  mechanism could have repaired it, the meta-search returned empty across all ten combinations, and
+  P1, P2, P6, P7 and P8 failed for that one cause while P3, P4, P5, P9 and P10 passed. The bank is
+  materialized and is not redrawn. **This attempt never put H32 at risk**, and the two failures
+  differ: M086-A reported positive against a threshold that could not fail, M086-B reported negative
+  against a threshold that could and named exactly what broke.
+- **M086-A is post-hoc disqualified; its qualification is withdrawn and H32 is untested.** Four defects, set out in `experiments/M086/DISQUALIFICATION.md`: `RESULT.json` binds a protocol digest matching only the CRLF working-tree copy and not the committed blob, which is the M064 checkout-dependent-hash class recurring; **P8 was never implemented** and `evaluate()` computes P1–P6 only, so P7–P10 could not make the verdict negative and the positive verdict rested on six of ten frozen conditions; the holdout existed as module constants before the meta-search and was enumerated before any arm ran, so the promised chronology was replaced by a source-text absence check; and the checker re-derived 3 of 14 preserved fields per arm, never verifying the mechanism digests or the causal journal that P7 exists to guarantee. Every artifact, digest, CI record and history entry is preserved unchanged. The observations remain diagnostic and motivate the successor. **No gate moves.** The original entry follows, preserved for the record:
+- **M086-A originally claimed the following, and it is withdrawn:** Protocol frozen
+  before the harness at `8a8a6e7`; bank `fa647e27…c2a5`; first result `a0569361…93bd`, attempt 1, no
+  retry, no model, no network. M047's mechanism refuses to act unless exactly one module is at fault —
+  `ModuleDiagnosis.sufficient` is `self.module is not None` — and against evidence naming two stages it
+  emits **zero** candidates. M086 expresses that mechanism as a serialized schema and rule set executed
+  by a fixed interpreter, proves the expression faithful over **10 differential probes on two bodies**,
+  and lets the lineage modify it. It rejected **seven** meta-transformations on disposable descendants,
+  adopted `widen_hypothesis`, and then solved an independently frozen holdout on four hidden cases.
+  `fixed_meta` failed, `task_only_mutable` failed at **triple** the ordinary patching budget, and
+  `meta_acquisition_ablated` — which acquired the same modification and had it stripped before the
+  holdout — failed too, which is what separates the acquisition from mere lineage continuity. The
+  control's failure is **structural**: the starting mechanism's complete constructive image for the
+  holdout is enumerated and empty, so no budget could help. Composition, which the protocol expected to
+  be necessary, was not: the lock was the hypothesis schema. The meta-primitives remain project-authored
+  and the lineage invented no fifth one, so the human assumption moved up a level rather than
+  disappearing. See D052, H32 and `docs/HYPERAGENTS_COMPARISON.md`.
 - **M085 is prepared and blocked on an independent maintainer.** It attacks G4 directly: does a
   policy acquired in some domains improve **correct terminal decisions** in a materially different,
   externally maintained held-out domain, against a fresh organism with identical code and budget?

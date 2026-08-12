@@ -1566,6 +1566,183 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M086-C:
+    title: third attempt at the evolvable improvement mechanism, on a corrected grammar
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: not_supported_refuted_on_this_bank
+    predecessors: [M086-A, M086-B]
+    protocol_frozen_commit: 09ed0d3
+    harness_commit: 5056a56
+    materialization_commit: 5948f9a
+    salt_hex: f509b6e5898ff7f0acb7fe594f4db081b4b9bdb775382383c73d5796926dfe3b
+    bank_commitment: 898c724ca91caff91b085f1e0b50fe99ef17ef2ff880a44a36059b594c134faa
+    adopted_commitment: ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443
+    holdout_digest: d1fff1923d41b7fae847c5e9135819fbd072d01c8d3ea312ba7da33257a9bcbb
+    result_sha256: 67786012cccd688251ed0914d353bae90bfe46aeb6afca9d758f621725530d14
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P1, P3, P4, P5, P6, P7, P8, P9, P10]
+    conditions_failed: [P2]
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    meta_transformations_rejected: 7
+    forced_fault_detected: true
+    forced_fault_restore_byte_identical: true
+    holdout_patch: synthesize_tool:mean:midpoint
+    holdout_public_solved: true
+    holdout_hidden_solved: false
+    failure_was_named_in_the_frozen_protocol: true
+    cause: the_public_case_did_not_discriminate_midpoint_from_mean_and_the_selection_rule_took_the_first
+    selection_rule_mutable: false
+    selection_rule_is_what_failed: true
+    routeless_operation_forced_to_mean_by_m047_templates: true
+    bank_redrawn: false
+    ci_run: '31582950744'
+    ci_tests_passed_each_python: 1797
+    ci_tests_skipped_each_python: 11
+    attribution_run: '31582949069'
+    ci_rerun_after_a_stale_test_assertion: true
+    experiment_rerun: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M086-B:
+    title: second attempt at the evolvable improvement mechanism, with an enforceable instrument
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: untested_not_refuted_by_this_attempt
+    predecessor: M086-A
+    predecessor_status: post_hoc_disqualified
+    is_a_repair_of_the_predecessor: false
+    reuses_predecessor_bank_or_result: false
+    protocol: experiments/M086B/PROTOCOL.json
+    protocol_frozen_commit: 95a5022
+    harness_commit: 96f4fcb
+    materialization_commit: 3d30168
+    salt_hex: f24bea192055b851ac9945aa9c3dece3b20aa63bbda03872c28baa327b092646
+    bank_commitment: d4b42d4579297a8bf0c3c97033b8dd6f0460a0acc7f5216a78843bf9b5ab0098
+    phase1_commitment: daaf5de592a79355a1548b6d9a1ccfa6c71185d453d57ad83f523e153a5831b5
+    adopted_commitment: 29b691bb2c0b4b79a6469ef12bbe9aff916b1e2e0901c214b19d5747aad0650e
+    holdout_digest: 1113c8857c3d983c71dfff0e71717770090a7a8319919cfdd86b82562313ddba
+    result_sha256: 8b7f80d458eeb02035fada6f3b3a7888c00968f526145ed2348129c768d31c32
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P3, P4, P5, P9, P10]
+    conditions_failed: [P1, P2, P6, P7, P8]
+    single_false_makes_negative: true
+    meta_transformations_adopted: 0
+    meta_transformations_rejected: 10
+    cause_of_failure: sandbox_refuses_duplicate_tool_registration_for_the_drawn_routeless_operation
+    cause_is_the_bank_grammar_not_the_mechanism: true
+    hypothesis_put_at_risk: false
+    artifacts_byte_identical_to_committed_blobs: true
+    holdout_materialized_after_adopted_mechanism_committed: true
+    holdout_generated_by_a_separate_process: true
+    phase1_imported_the_holdout_module: false
+    forced_fault_implemented: true
+    forced_fault_reached: false
+    bank_redrawn: false
+    ci_run: '31577302582'
+    ci_tests_passed_each_python: 1752
+    ci_tests_skipped_each_python: 10
+    attribution_run: '31577301158'
+    earlier_ci_run_failed_on_a_stale_test_assertion: '31575612491'
+    ci_rerun_after_test_fix: true
+    experiment_rerun: false
+    bank_redrawn_after_materialization: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M086-A:
+    title: the improvement mechanism itself made an object of endogenous transformation
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: none_claimed
+    parent_results: [M046, M047, M084]
+    status: post_hoc_disqualified_development
+    qualification_withdrawn: true
+    hypothesis_status: untested_neither_confirmed_nor_refuted
+    disqualification_record: experiments/M086/DISQUALIFICATION.md
+    disqualification_decision: D053
+    defect_1_protocol_digest_binds_worktree_not_committed_blob: true
+    defect_1_class: m064_checkout_dependent_hash
+    defect_2_p8_never_implemented: true
+    defect_2_conditions_absent_from_evaluate: [P7, P8, P9, P10]
+    defect_2_conditions_actually_decisive: 6
+    defect_3_holdout_existed_before_meta_search: true
+    defect_4_arm_fields_replayed: 3
+    defect_4_arm_fields_preserved: 14
+    artifacts_preserved_unchanged: true
+    bank_reusable_as_scientific_evidence: false
+    successor: M086-B
+    hypothesis: H32
+    decision: D052
+    protocol: experiments/M086/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 8a8a6e7
+    bank_commitment: fa647e2733d68514ced22ecfcb9df67d5bef29b6c6cff12f0236bb2a595ec2a5
+    result_sha256: a05693615edb5c69d5d96742d9b77ac10aa2fde7b0e7fb9f431995b4ab0393bd
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_opened: false
+    frozen_thing_attacked: m047_ModuleDiagnosis_sufficient_returns_module_is_not_none
+    mutable_artifact: hypothesis_schema_plus_rule_set
+    interpreter_mutable: false
+    evaluator_mutable: false
+    m0_differentially_equivalent_to_m047: true
+    differential_probes: 10
+    differential_probe_bodies: 2
+    m0_candidates_for_the_holdout: 0
+    control_failure_is_structural_not_budgetary: true
+    meta_primitives: [widen_hypothesis, compose_expansions, parameterize_constant, relax_guard]
+    meta_transformations_rejected: 7
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    composition_required: false
+    composition_was_predicted_to_be_required: true
+    evolvable_meta_solves_holdout: true
+    fixed_meta_solves_holdout: false
+    meta_acquisition_ablated_solves_holdout: false
+    task_only_mutable_solves_holdout: false
+    task_only_mutable_budget_multiplier: 3
+    holdout_scored_from: executed_hidden_cases
+    holdout_scored_from_self_report: false
+    hidden_cases: 4
+    leak_checker: scripts/check_m086_result.py
+    independent_checker: scripts/check_m086_result.py
+    amendments_before_materialization: [A1, A2]
+    amendment_a1_reason: p6_tested_as_outside_m0_constructive_image_because_the_lock_was_the_schema_not_the_rule_inventory
+    amendment_a2_reason: bank_avoided_a_cascading_repair_and_the_m047_max_tool_builtin_shadowing_defect
+    m047_renderer_modified: false
+    meta_primitives_remain_project_authored: true
+    lineage_invented_a_new_primitive: false
+    archive_or_population_used: false
+    foundation_model_used: false
+    hyperagents_comparison: docs/HYPERAGENTS_COMPARISON.md
+    generality_gate_advanced: false
+    open_ended_evolution: false
+    arbitrary_self_improvement: false
+    general_autonomy: false
+    replaces_m085: false
+    touches_m085_fail_closed_boundary: false
+    is_an_independent_reproduction: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    local_regressions_passed: 29
+    first_ci_run: '31568691093'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1703
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31568691081'
+
   M085:
     title: cross-domain transfer of an acquired policy into an externally maintained held-out domain
     epistemic_track: endogenous_bounded_lineage

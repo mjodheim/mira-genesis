@@ -1,0 +1,223 @@
+{
+  "schema": "m086-evolvable-improvement-mechanism-protocol-v1",
+  "status": "frozen_before_harness_implementation",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "none_claimed",
+  "parent_results": [
+    "M046",
+    "M047",
+    "M084"
+  ],
+  "hypothesis": "H32",
+  "falsifiable_hypothesis": "A lineage permitted to modify the mechanism that turns evidence into candidate transformations will, after meeting a limitation that mechanism cannot express, construct and adopt a validated modification of it; and on a later independently frozen problem the modified mechanism will generate a corrective transformation lying outside the constructive image of the original mechanism, producing a correct outcome that the same lineage with a frozen mechanism does not reach under any budget.",
+  "scientific_result_exists": false,
+  "external_model_called": false,
+  "network_opened": false,
+  "external_task_selected": false,
+  "the_frozen_thing_being_attacked": {
+    "module": "metamorphosis/m047_search_diagnostic_model.py",
+    "line": "ModuleDiagnosis.sufficient returns self.module is not None",
+    "meaning": "a diagnosis is usable only when exactly one module is at fault",
+    "consequence": "multi-module evidence yields ModuleDiagnosis(None, ...), the engine returns INSUFFICIENT_DIAGNOSIS, and no candidate is generated at all",
+    "generator": "metamorphosis/m047_search_templates.py::_candidate_sources dispatches on that single module through an authored if/elif chain over five module names",
+    "already_recorded_by_m047": "faced a compound maximum task requiring simultaneous interpreter, selection and new-tool changes beyond the one-boundary proposal surface, and terminated for insufficient evidence",
+    "is_a_budget_limit": false,
+    "is_a_representation_limit": true
+  },
+  "mutable_artifact": {
+    "name": "improvement_mechanism",
+    "parts": [
+      "hypothesis_schema",
+      "rule_set"
+    ],
+    "executed_by": "a fixed interpreter",
+    "interpreter_is_mutable": false,
+    "why_the_interpreter_is_not_mutable": "it stands to the rule set as a CPU stands to a program; what the lineage rewrites is the schema and the rules, and the next cycle really executes the rewritten version",
+    "m0_is_differentially_equivalent_to_m047_frozen_mechanism": true,
+    "differential_equivalence_is_regression_tested": true,
+    "why": "without it, making the mechanism mutable would be a claim about a new mechanism we wrote rather than about the one the repository froze"
+  },
+  "not_mutable": [
+    "the evaluator, its hidden cases and its threshold",
+    "the sandbox and the disposability rules",
+    "the transaction, checkpoint and rollback machinery",
+    "the task bank and the holdout",
+    "the mechanism interpreter"
+  ],
+  "evolvable_evaluator_is_a_separate_milestone": true,
+  "meta_primitives": {
+    "declared": [
+      "widen_hypothesis",
+      "compose_expansions",
+      "parameterize_constant",
+      "relax_guard"
+    ],
+    "authored": true,
+    "authored_like": "M046's transformation language and M047's templates",
+    "enumerated_meta_transformations": false,
+    "rule_mapping_evidence_pattern_to_a_named_primitive_exists": false,
+    "selection_is_by_experiment_on_a_disposable_descendant": true,
+    "alternatives_are_individually_plausible_and_individually_insufficient": true
+  },
+  "information_boundary": {
+    "available_before_the_limitation": [
+      "the body",
+      "the public cases",
+      "the mechanism",
+      "the causal memory"
+    ],
+    "not_available_to_the_meta_search": [
+      "the holdout",
+      "the hidden cases",
+      "which primitive works",
+      "the evaluator outcome"
+    ],
+    "holdout_materialized_after_the_meta_transformation_is_committed": true,
+    "m069_is_the_recorded_precedent": true,
+    "structural_leak_checker_required": true
+  },
+  "problems": {
+    "development_limitation": "a task whose public failure evidence implicates two modules, for which M0 returns no diagnosis and generates nothing",
+    "holdout": "the compound maximum family requiring simultaneous interpretation, selection and new-tool change",
+    "holdout_frozen_independently": true,
+    "required_patch_provably_outside_m0_constructive_image": true,
+    "harness_must_enumerate_m0_complete_candidate_image_for_the_holdout": true
+  },
+  "arms": {
+    "evolvable_meta": {
+      "removes": "nothing"
+    },
+    "fixed_meta": {
+      "removes": "the ability to modify the mechanism",
+      "role": "primary control; the same ablation HyperAgents runs against itself"
+    },
+    "meta_acquisition_ablated": {
+      "removes": "the adopted mechanism change, before the holdout",
+      "keeps": [
+        "identity",
+        "body",
+        "memory",
+        "journal"
+      ],
+      "role": "separates lineage continuity from the meta acquisition"
+    },
+    "task_only_mutable": {
+      "removes": "mechanism mutability but not body mutability",
+      "role": "shows the holdout is not solved by more ordinary patching"
+    }
+  },
+  "matched_across_arms": [
+    "identity",
+    "starting body",
+    "observations",
+    "budget",
+    "primitives"
+  ],
+  "primary_outcome": {
+    "measure": "the holdout is solved: the adopted body passes the evaluator's hidden cases in a disposable sandbox",
+    "scored_from": "executed behaviour",
+    "scored_from_self_report": false,
+    "cost_metrics_recorded": true,
+    "cost_metrics_decisive": false,
+    "why": "M084's ablation cost efficiency and not capability, and its status file says a claim resting on that would be weak"
+  },
+  "positive_threshold": {
+    "P1_evolvable_adopts_exactly_one_validated_mechanism_modification": 1,
+    "P1_rejected_alternatives_recorded": true,
+    "P2_evolvable_solves_the_holdout": true,
+    "P3_fixed_meta_solves_the_holdout": false,
+    "P3_m0_image_enumeration_contains_a_passing_candidate": false,
+    "P4_meta_acquisition_ablated_solves_the_holdout": false,
+    "P5_task_only_mutable_solves_the_holdout": false,
+    "P6_successful_holdout_patch_comes_from_a_rule_absent_in_m0": true,
+    "P7_causal_chain_serialized_and_audited": true,
+    "P8_forced_fault_restores_a_byte_identical_prior_mechanism": true,
+    "P9_no_path_from_evaluator_or_holdout_into_the_meta_search": true,
+    "P10_m0_differentially_equivalent_to_m047": true
+  },
+  "failure_classification": {
+    "negative": "any of P1 to P10 false; fixed_meta solving the holdout would refute the capability claim outright and is the most informative outcome available",
+    "inconclusive": "the sandbox cannot run; not runnable is not negative",
+    "positive": "every one of P1 to P10 true on the first materialized bank, with no retry"
+  },
+  "named_negative_outcomes": [
+    "the limitation was expressible after all, so our reading of sufficient was wrong",
+    "the meta-primitives are the new frozen ceiling: nothing reachable from them validates, moving the human assumption up one level rather than removing it",
+    "the adopted change is inert: adopted, but the later success does not use it",
+    "the ablation leaks: meta_acquisition_ablated solves it too, so the body or memory carried what we attributed to the mechanism",
+    "selection was ours: the primitive that works is the only one that could ever have worked, making the search a disguised lookup"
+  ],
+  "hyperagents": {
+    "comparison_document": "docs/HYPERAGENTS_COMPARISON.md",
+    "question_taken": "whether the improvement mechanism can itself be improved",
+    "method_refused": "a frontier model proposes the modification, which under this repository's attribution rule makes the competence the composed system's",
+    "single_editable_program_idea_adopted_structurally": true,
+    "archive_population_parent_selection_transfer_adopted": false,
+    "why_not": "introducing them together would make a positive result causally unattributable"
+  },
+  "claim_boundary": {
+    "establishes_endogenous_transformation_of_the_improvement_mechanism_in_a_bounded_construction": true,
+    "establishes_meta_acquisition_causally_necessary_to_a_later_capability": true,
+    "agi_evidence": false,
+    "open_ended_evolution": false,
+    "arbitrary_self_improvement": false,
+    "general_autonomy": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "advances_any_generality_gate": false,
+    "replaces_m085": false,
+    "touches_m085_fail_closed_boundary": false,
+    "is_an_independent_reproduction": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "remaining_frozen_parts_must_be_enumerated_in_the_result": true
+  },
+  "authority_envelope": {
+    "improved_mechanism_gains_additional_authority": false,
+    "repository_write_authority_granted": false,
+    "credential_authority_granted": false,
+    "network_authority_granted": false,
+    "deployment_authority_granted": false,
+    "may_modify_the_independent_evaluator": false,
+    "may_modify_the_scientific_gates": false
+  },
+  "episode_generation": {
+    "salt_hex": "d5cdc15c49c47a110cd4a38b4808d8391103e4732f75b700af84427009e23fde",
+    "generator_version": 1,
+    "bank_materialized": false
+  },
+  "prohibited_adaptation": [
+    "let a foundation model write, choose or rank the mechanism modification and still call it Track A",
+    "let the mutable mechanism reach the evaluator, the hidden cases, the threshold or the holdout",
+    "enumerate finished meta-transformations in the primitive set",
+    "add a rule mapping an evidence pattern directly to the primitive that works",
+    "materialize the holdout before the meta-transformation is committed",
+    "make a cost metric decisive after seeing that correctness did not separate",
+    "add an archive, a population or parent selection after observing the result",
+    "claim any generality gate, open-ended evolution or arbitrary self-improvement",
+    "change the hypothesis, thresholds, salt, primitives or task grammar after bank materialization",
+    "retry the first materialized bank"
+  ],
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "construction runs on the unbound bank",
+      "change": "P6 is tested as 'the adopted holdout patch is not in M0's constructive image for the holdout evidence' rather than 'is emitted by a rule absent from M0's rule list'",
+      "reason": "the lock turned out to be the hypothesis schema, not the rule inventory. Widening the schema alone lets an existing rule fire on evidence M0 refuses to speak about, so the successful patch uses a rule M0 lists but could never have produced. The clause the protocol states in the same sentence \u2014 lying outside the constructive image \u2014 is unchanged, still decisive and still provable by enumeration.",
+      "claim_tested_changed": false,
+      "thresholds_relaxed": false,
+      "note": "that composition proved unnecessary is a finding and is reported as one: three of the four meta-primitives were rejected and the minimal sufficient change was adopted."
+    },
+    {
+      "id": "A2",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "construction runs on the unbound bank",
+      "change": "each limitation pairs an unparseable token whose canonical operation already has a route, and the routeless operation is never `max`",
+      "reason": "an earlier bank aliased tokens onto routeless operations, so repairing the alias revealed a new missing route and the greedy tie-break locked in a wrong alias no later cycle could diagnose; and M047's render_tool_module emits a self-recursive `def max` for a tool named `max`, shadowing the builtin its expression needs. Both are properties of the bank and of a qualified renderer, not of the hypothesis under test.",
+      "m047_renderer_modified": false,
+      "recorded_in_failure_log": true
+    }
+  ]
+}

@@ -2,6 +2,55 @@
 
 ## Unreleased
 
+- Added M086-C, the third attempt at H32 and the first that could have failed for a scientific
+  reason. **Nine of ten conditions passed; P2 failed.** H32 moves from untested to **not supported**
+  by the two attempts with a qualified instrument, M086-B and M086-C — a statement about those
+  attempts, not a finding that meta-plasticity is impossible.
+- Corrected the bank grammar after M086-B by probing what M047's templates can actually repair:
+  `add` and `mul` collide with `tool_core`, `mul` has no product expression, and a tool named
+  `max` shadows its own builtin. **`mean` is the only repairable missing-route operation**, so the
+  routeless operation cannot vary and the protocol says so rather than pretending to a choice.
+- Recorded, before the run, the falsifier that then fired: a `mean a b c` case is passed by both
+  the `mean` and `midpoint` expressions whenever the operands are arithmetic, the frozen order
+  takes `midpoint`, and the hidden cases decide. The salt drew `1 2 3`, and the adopted patch was
+  `synthesize_tool:mean:midpoint`.
+- Recorded D054 and a FAILURE_LOG entry naming what was never mutable: every meta-primitive acts on
+  the hypothesis schema or the rule set, and the greedy selection rule that picks the adopted
+  candidate is frozen and human-authored. Capability to generate is not capability to solve.
+
+- **Reclassified M086 as M086-A, post-hoc disqualified development evidence.** Review of PR #130
+  found four defects: the recorded protocol digest binds the CRLF working-tree copy rather than the
+  committed blob (the M064 class recurring), P8 was never implemented and P7–P10 never entered
+  `evaluate()`, the holdout existed before the meta-search, and the replay covered 3 of 14 fields
+  per arm. H32 returns to untested; no gate moves.
+- Preserved every M086-A artifact, digest, CI record and history entry unchanged. Only the claim was
+  withdrawn, and `experiments/M086/DISQUALIFICATION.md` states why.
+- Recorded D053 and a FAILURE_LOG entry. The four defects share a shape: each makes part of the
+  frozen contract unenforceable while leaving every visible signal green.
+
+- Added M086, which makes the mechanism that turns evidence into candidate transformations a mutable
+  artifact. M047 froze it in one line — `ModuleDiagnosis.sufficient` is `self.module is not None` —
+  and against evidence naming two stages at once it emits **zero** candidates.
+- Proved the expression faithful before using it: over 10 differential probes on two bodies, M0
+  returns the same diagnoses and the same candidate sets as M047's own functions.
+- Enumerated the starting mechanism's complete constructive image for the holdout and found it empty,
+  so the control's failure is structural rather than budgetary — a capability difference, which is
+  what M084's efficiency-only result said the next milestone had to produce.
+- Recorded that the lineage rejected seven meta-transformations on disposable descendants before
+  adopting one, and that the adopted one was **not** the composition the protocol predicted: widening
+  the hypothesis schema alone sufficed.
+- Kept the evaluator outside the mutable body, enforced by a checker: the mechanism cannot name the
+  hidden cases, cannot reach the sandbox, and the meta-search is only ever handed the development
+  limitation. M069 is the recorded precedent.
+- Studied HyperAgents (arXiv 2603.19461) from the paper and the official repository and recorded
+  `docs/HYPERAGENTS_COMPARISON.md`: their question was taken, their method refused, and the archive,
+  population and parent selection deliberately postponed.
+- Recorded H32, D052, and two FAILURE_LOG entries: a latent defect in M047's `render_tool_module`,
+  which emits a self-recursive `def max` for a tool named `max` and is deliberately **not** repaired
+  because it would change M047's preserved digests; and an M086 bank whose repair revealed a new
+  fault while a greedy tie-break locked in a wrong alias, which looked like a clean negative and was
+  a property of the bank.
+
 - Prepared M085, the first experiment here aimed directly at G4, and left it **blocked**. Its design
   protocol, domain adapter contract, intake kit, maintainer brief, fail-closed gate and 32
   regressions are committed; no scientific protocol is frozen, no bank exists, no payload has been

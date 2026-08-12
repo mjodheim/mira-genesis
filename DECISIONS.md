@@ -1467,3 +1467,176 @@ No gate advance is available from M085 without independent reproduction from a s
 separate maintainer. Even then it would establish bounded cross-domain transfer of one acquired
 policy. No AGI, no general autonomy, no open-ended evolution, no Genesis Gate 2 or 3, and no general
 competence in any domain involved.
+
+## D052 — M086 makes the improvement mechanism mutable and advances no gate
+
+Every earlier result improves a body or a policy through a procedure we froze. M086 asks whether the
+lineage can change that procedure, and answers yes inside one bounded construction.
+
+### The decision
+
+M086 is accepted as positive bounded evidence for endogenous transformation of the improvement
+mechanism. **No generality gate advances.** It is not a competence result about any domain; it is a
+result about where the ceiling of a bounded lineage comes from.
+
+### Why the target was chosen
+
+`ModuleDiagnosis.sufficient` returns `self.module is not None`. One line, and it means the whole
+mechanism refuses to act whenever evidence implicates more than one module. M047 recorded the
+consequence honestly at the time — it met a compound task and terminated for insufficient evidence —
+and that termination was correct behaviour and a standing admission that the ceiling was our
+assumption rather than its evidence.
+
+Making *that* mutable is a smaller and more legible change than building a mutable meta-agent, and it
+has a property no model-written mechanism can offer: its constructive image is finite and can be
+**enumerated**. The harness therefore proves the control's failure rather than observing it. Zero
+candidates for the holdout means no budget could have helped, which is the capability-versus-cost
+distinction M084's status file said the next milestone had to make.
+
+### What HyperAgents contributed, and what was refused
+
+The question, and the `fixed_meta` ablation, which is their own control against themselves. Refused:
+the method. Their meta-agent asks a frontier model to rewrite the codebase, so under this
+repository's attribution rule the competence belongs to the composed system. Also refused, for now:
+the archive, the population and stochastic parent selection, because introducing them together with a
+mutable mechanism would make a positive result causally unattributable. `docs/HYPERAGENTS_COMPARISON.md`
+records the full comparison, including what they demonstrate better than we do.
+
+### The evaluator is not part of the mutable body
+
+Stated in the protocol and enforced by a checker: the mechanism cannot name the hidden cases, cannot
+reach `solves` or the sandbox, and the meta-search is only ever handed the development limitation.
+Mira may propose a better way to improve itself; it may not edit the test that decides whether the
+improvement worked, during the experiment that decides it. An evolvable evaluator is a separate
+milestone with its own external authority.
+
+### The prediction that was wrong
+
+The protocol expected the lock to be the single-module *dispatch* and therefore expected the winning
+patch to be a composed one. It was not. Widening the hypothesis schema alone sufficed. Amendment A1,
+recorded before the bank was bound, re-states P6 as the protocol's own sentence already did — outside
+the constructive image — and the fact that the search found the minimal sufficient change, rejecting
+three of four primitives individually, is evidence against the disguised-lookup failure mode rather
+than for it.
+
+### Claim boundary
+
+In one bounded project-authored construction, the mechanism producing future transformations became
+an object of endogenous transformation and that acquisition was causally necessary to a later
+capability. Nothing more. Not AGI, not open-ended evolution, not arbitrary self-improvement, not
+general autonomy, no gate, no independent reproduction, and no replacement for M085 or its
+fail-closed boundary.
+
+The meta-primitives are still ours. The lineage chose among four operations we wrote and invented no
+fifth. If a successor shows an archive is the next real limitation, that is M087 and it may not be
+added retroactively to enlarge this result.
+
+## D053 — M086-A is post-hoc disqualified; H32 returns to untested
+
+M086-A recorded a positive verdict, passed CI on the first run and was described in the registers as
+a qualified development result. An independent review of PR #130 found four defects, all confirmed
+against the exact head. The qualification is withdrawn.
+
+### The decision
+
+M086-A becomes **post-hoc disqualified development evidence**, alongside M069. Every artifact,
+digest, CI record and history entry is preserved unchanged; only the claim attached to them is
+removed. **H32 is neither confirmed nor refuted.** No gate moves — none moved before, and none moves
+now.
+
+The four defects are set out in `experiments/M086/DISQUALIFICATION.md`. In summary: the recorded
+`protocol_commitment` matches only the CRLF working-tree copy and not the committed blob, which is
+the M064 checkout-dependent-hash class recurring; **P8 was never implemented at all** and
+`evaluate()` computes P1–P6 only, so P7 through P10 could never make the verdict negative and the
+positive verdict rested on six of ten frozen conditions; the holdout existed as module constants
+before the meta-search and was enumerated before any arm ran, so the promised chronology was replaced
+by a source-text absence check; and the replay compared 3 of 14 preserved fields per arm, never
+verifying the mechanism digests or the causal journal that P7 exists to guarantee.
+
+### Why this is disqualification rather than repair
+
+The four defects could be fixed in an afternoon and the same bank replayed. That is precisely what
+must not happen. `fa647e27…c2a5` has been observed; replaying it after learning why the first verdict
+was unsound would be a result-saving retry, and the verdict it produced would carry the knowledge of
+its own correction. The repository has refused that move before — M041 was not rerun, M064 was not
+patched into M065's result, M074 was not retried — and the successor is a separately numbered
+experiment with its own protocol, salt, bank and holdout.
+
+### What the review actually caught
+
+Not a wrong number. Every observation M086-A recorded is reproducible and, as far as anyone can tell,
+correct. What it caught is that the **threshold could not fail**: four of ten conditions were absent
+from the verdict function, and one of those four had no implementation anywhere. A positive result
+against a threshold that cannot fail is not evidence, however sound the underlying observations.
+
+This is the same shape as M069 — where the recorded outcomes were also exact, and the interface
+nevertheless made hidden evidence reachable — and it is the fourth entry in a run of green-but-hollow
+findings that began with M080's tautological rollback check.
+
+### What survives as motivation
+
+The technique of enumerating a mechanism's complete constructive image, to show a control's failure
+is structural rather than budgetary, is real and is carried into M086-B. So are the observations that
+M047's mechanism emits zero candidates against two-stage evidence, that `widen_hypothesis` alone
+sufficed against the protocol's own prediction, and that the acquisition-ablated arm failed where the
+full arm succeeded. None of that is qualified evidence.
+
+### Consequence for PR #130
+
+It may be merged only as historical, post-hoc disqualified development evidence, never as a positive
+qualification. Its title and description must say so.
+
+## D054 — M086-C leaves H32 unsupported, and names the part of the mechanism that was never mutable
+
+M086-A was disqualified for a threshold that could not fail. M086-B drew a bank no mechanism could
+repair. M086-C is the first attempt in this line where the hypothesis was genuinely at risk.
+
+### The decision
+
+M086-C is accepted as a **valid negative scientific result**. H32 moves from untested to **not
+supported** by the two attempts that had a qualified instrument, M086-B and M086-C. That is a
+statement about two bounded attempts. It is **not** a finding that meta-plasticity is impossible,
+and nothing here licenses that claim. No gate moves; none was ever in play.
+
+Nine of ten frozen conditions passed. The lineage adopted a validated modification of its own
+improvement mechanism after rejecting seven alternatives on disposable descendants, survived a forced
+fault during the adoption transaction with a byte-identical restore against an independently recorded
+digest, and produced a holdout patch lying outside the starting mechanism's constructive image, which
+was enumerated and empty. Every control failed, including one at triple budget.
+
+P2 failed. The patch was `synthesize_tool:mean:midpoint`, which passes the public evidence and fails
+the evaluator's hidden cases.
+
+### Why this counts where the predecessors did not
+
+The protocol named this falsifier before the run: it stated the arithmetic condition under which two
+expressions both pass a `mean` case, identified `midpoint` as the one the frozen expression order
+would take, and said P2 could therefore fail while everything else succeeded. The draw produced that
+condition and the prediction held. A negative that a frozen protocol anticipated is evidence; a
+negative discovered by reading the code afterwards is a defect.
+
+### What the result actually says
+
+Widening what the mechanism can **hypothesise** gave it the ability to emit transformations the frozen
+mechanism could not. It did not give it the ability to **choose** among them. H32 asks for a correct
+outcome the frozen lineage does not reach; the evolvable lineage reached an incorrect outcome the
+frozen lineage could not reach, which is a different and weaker thing.
+
+### The part that was never mutable
+
+Every meta-primitive acts on the hypothesis schema or the rule set. None acts on the selection rule —
+the greedy first-past-the-post over public score. That rule is frozen and human-authored, and it is
+what failed. Three attempts have treated the improvement mechanism as diagnosis plus generation; this
+one shows the pair is incomplete.
+
+A successor making selection mutable is a candidate and is **not** added here to rescue this result.
+It would meet the harder form of the same problem immediately: choosing among candidates that all fit
+the public evidence requires evidence the lineage does not have, which is where M078's refusal work
+already sits.
+
+### Claim boundary
+
+Not AGI, not open-ended evolution, not arbitrary self-improvement, not general autonomy, not a
+reproduction, no contact with M085's fail-closed boundary, no foundation model. The bank is
+materialized and is not redrawn: a different salt would very likely have drawn a discriminating public
+case and produced a positive, which is exactly why it may not be drawn now.

@@ -1,0 +1,81 @@
+{
+  "bank_commitment": "fa647e2733d68514ced22ecfcb9df67d5bef29b6c6cff12f0236bb2a595ec2a5",
+  "bank_digest": "4ca8ad8e5cfd62b847628a0f5cc31de5e84b6dde070bb2308284a5e420cdb47d",
+  "development_public": [
+    {
+      "case_id": "dev_unknown_token",
+      "expected": 9,
+      "origin": "development",
+      "request": "plus 4 5"
+    },
+    {
+      "case_id": "dev_missing_route",
+      "expected": 2.0,
+      "origin": "development",
+      "request": "mean 1 2 3"
+    }
+  ],
+  "generator_version": 1,
+  "holdout_hidden_digest": "d1e77a86921c5a05a355c3a9bd5ee4910d9e9ef4b1ab7ad9d47629334e211a04",
+  "holdout_public": [
+    {
+      "case_id": "holdout_unknown_token",
+      "expected": 12,
+      "origin": "holdout",
+      "request": "times 3 4"
+    },
+    {
+      "case_id": "holdout_missing_route",
+      "expected": 5.0,
+      "origin": "holdout",
+      "request": "mean 2 4 9"
+    }
+  ],
+  "m0_mechanism_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+  "meta_primitives": [
+    "widen_hypothesis",
+    "compose_expansions",
+    "parameterize_constant",
+    "relax_guard"
+  ],
+  "meta_transformation_search_space": [
+    [
+      "compose_expansions"
+    ],
+    [
+      "parameterize_constant"
+    ],
+    [
+      "relax_guard"
+    ],
+    [
+      "widen_hypothesis"
+    ],
+    [
+      "compose_expansions",
+      "parameterize_constant"
+    ],
+    [
+      "compose_expansions",
+      "relax_guard"
+    ],
+    [
+      "compose_expansions",
+      "widen_hypothesis"
+    ],
+    [
+      "parameterize_constant",
+      "relax_guard"
+    ],
+    [
+      "parameterize_constant",
+      "widen_hypothesis"
+    ],
+    [
+      "relax_guard",
+      "widen_hypothesis"
+    ]
+  ],
+  "schema": "m086-bank-commitment-v1",
+  "starting_body_digest": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d"
+}

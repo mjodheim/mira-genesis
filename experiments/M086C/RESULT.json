@@ -1,0 +1,1159 @@
+{
+  "adopted_commitment": "ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443",
+  "attempt": 1,
+  "bank_commitment": "898c724ca91caff91b085f1e0b50fe99ef17ef2ff880a44a36059b594c134faa",
+  "chronology": {
+    "checks": {
+      "holdout_generator_did_not_import_the_lineage": true,
+      "holdout_records_the_adopted_artifact": true,
+      "holdout_records_the_adopted_mechanism": true,
+      "phase1_binds_the_same_adopted_artifact": true,
+      "phase1_did_not_import_the_holdout_module": true,
+      "phase1_saw_no_holdout": true
+    },
+    "detail": "phase1_saw_no_holdout=True, phase1_did_not_import_the_holdout_module=True, holdout_records_the_adopted_mechanism=True, holdout_records_the_adopted_artifact=True, holdout_generator_did_not_import_the_lineage=True, phase1_binds_the_same_adopted_artifact=True",
+    "ordered": true
+  },
+  "claim_boundary": {
+    "advances_any_generality_gate": false,
+    "agi_evidence": false,
+    "arbitrary_self_improvement": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "establishes_endogenous_transformation_of_the_improvement_mechanism_in_a_bounded_construction": true,
+    "establishes_meta_acquisition_causally_necessary_to_a_later_capability": true,
+    "general_autonomy": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "is_an_independent_reproduction": false,
+    "open_ended_evolution": false,
+    "replaces_m085": false,
+    "touches_m085_fail_closed_boundary": false
+  },
+  "complete_record_digest": "3f92d347c0f741aa9ed0a292a7a51e47afbc13e36adb2cbc742ef6b386961b8b",
+  "differential_equivalence": {
+    "equivalent": true,
+    "probes": 6
+  },
+  "external_model_called": false,
+  "holdout_arms": {
+    "evolvable_meta": {
+      "arm": "evolvable_meta",
+      "cycles": [
+        {
+          "adopted_label": "interpreter_add_alias:sum2:mul",
+          "candidates_generated": 9,
+          "diagnosed": true,
+          "modules": [
+            "interpretation",
+            "selection"
+          ],
+          "passed": 1,
+          "total": 2
+        },
+        {
+          "adopted_label": "synthesize_tool:mean:midpoint",
+          "candidates_generated": 5,
+          "diagnosed": true,
+          "modules": [
+            "selection"
+          ],
+          "passed": 2,
+          "total": 2
+        }
+      ],
+      "cycles_used": 2,
+      "holdout_adopted_label": "synthesize_tool:mean:midpoint",
+      "holdout_candidates_generated": 14,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": true,
+      "mechanism_at_holdout_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "record_digest": "2fd6347ef567324476612082be667b243fe86bf35805a87deea82878e6c79a87"
+    },
+    "fixed_meta": {
+      "arm": "fixed_meta",
+      "cycles": [
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "modules": [],
+          "passed": 0,
+          "total": 2
+        }
+      ],
+      "cycles_used": 1,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "record_digest": "3e825a7ccc8f8bffe417d31373e5240dcf6b99c015bbb7d22a020a7b7140ee68"
+    },
+    "meta_acquisition_ablated": {
+      "arm": "meta_acquisition_ablated",
+      "cycles": [
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "modules": [],
+          "passed": 0,
+          "total": 2
+        }
+      ],
+      "cycles_used": 1,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "record_digest": "d91834d46967893d16c70f33ddcea6e10c57c9a426db09eb7f7bb0d8a80c627e"
+    },
+    "task_only_mutable": {
+      "arm": "task_only_mutable",
+      "cycles": [
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "modules": [],
+          "passed": 0,
+          "total": 2
+        }
+      ],
+      "cycles_used": 1,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "record_digest": "ca1c9a00cc1e49a7b09af5064b2ea99299052313560e37d0b6bceab0884de275"
+    }
+  },
+  "holdout_digest": "d1fff1923d41b7fae847c5e9135819fbd072d01c8d3ea312ba7da33257a9bcbb",
+  "network_opened": false,
+  "phase1_arms": {
+    "evolvable_meta": {
+      "adopted_primitives": [
+        "widen_hypothesis"
+      ],
+      "arm": "evolvable_meta",
+      "development_solved": true,
+      "journal": [
+        {
+          "arm": "evolvable_meta",
+          "body": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d",
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public": [
+            "development_unknown_token",
+            "development_missing_route"
+          ],
+          "step": "phase1_entered"
+        },
+        {
+          "cycles": [
+            {
+              "adopted_label": null,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "modules": [],
+              "passed": 0,
+              "total": 2
+            }
+          ],
+          "solved": false,
+          "step": "attempt_with_starting_mechanism"
+        },
+        {
+          "limitation": "the starting mechanism produced no hypothesis for two-stage evidence",
+          "step": "meta_search",
+          "trials": [
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+              "primitives": [
+                "compose_expansions"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+              "primitives": [
+                "parameterize_constant"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+              "primitives": [
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "candidates_generated": 14,
+              "diagnosed": true,
+              "mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+              "primitives": [
+                "widen_hypothesis"
+              ],
+              "solved": true
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+              "primitives": [
+                "compose_expansions",
+                "parameterize_constant"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+              "primitives": [
+                "compose_expansions",
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 20,
+              "diagnosed": true,
+              "mechanism_digest": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+              "primitives": [
+                "compose_expansions",
+                "widen_hypothesis"
+              ],
+              "solved": true
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+              "primitives": [
+                "parameterize_constant",
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 3,
+              "diagnosed": true,
+              "mechanism_digest": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+              "primitives": [
+                "parameterize_constant",
+                "widen_hypothesis"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 14,
+              "diagnosed": true,
+              "mechanism_digest": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+              "primitives": [
+                "relax_guard",
+                "widen_hypothesis"
+              ],
+              "solved": true
+            }
+          ]
+        },
+        {
+          "mechanism_after": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "rollback": {
+            "corrupted_digest": "a3912bc5fcb664034c70ac2cb912ec7963eb2495951466d120a1c9db2eafb324",
+            "fault_detected": true,
+            "independent_pre_adoption_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+            "provisional_adopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+            "readopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+            "restored_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+            "restored_equals_independent_record": true
+          },
+          "step": "meta_adoption_under_forced_fault"
+        }
+      ],
+      "mechanism_after_development_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_carried_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_carried_to_holdout": {
+        "composes": false,
+        "provenance": [
+          "widen_hypothesis"
+        ],
+        "rules": [
+          {
+            "module": "interpretation",
+            "options": [
+              "add",
+              "max",
+              "mean",
+              "mul"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "unknown_token",
+            "rule_id": "interpreter_add_alias"
+          },
+          {
+            "module": "planning",
+            "options": [
+              "one_level",
+              "recursive_postorder"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "planner"
+          },
+          {
+            "module": "selection",
+            "options": [
+              "midpoint",
+              "mean",
+              "sum",
+              "maximum",
+              "minimum"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "missing_operation",
+            "rule_id": "synthesize_tool"
+          },
+          {
+            "module": "critique",
+            "options": [
+              "round_one",
+              "round_two",
+              "round_three"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "critic"
+          },
+          {
+            "module": "allocation",
+            "options": [
+              "fixed_five",
+              "plan_length",
+              "double_plan_length"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "allocator"
+          }
+        ],
+        "schema": "multi_module"
+      },
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 1,
+      "meta_trials": [
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+          "primitives": [
+            "compose_expansions"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+          "primitives": [
+            "parameterize_constant"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+          "primitives": [
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": true,
+          "candidates_generated": 14,
+          "diagnosed": true,
+          "mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "solved": true
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+          "primitives": [
+            "compose_expansions",
+            "parameterize_constant"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+          "primitives": [
+            "compose_expansions",
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 20,
+          "diagnosed": true,
+          "mechanism_digest": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+          "primitives": [
+            "compose_expansions",
+            "widen_hypothesis"
+          ],
+          "solved": true
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+          "primitives": [
+            "parameterize_constant",
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 3,
+          "diagnosed": true,
+          "mechanism_digest": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+          "primitives": [
+            "parameterize_constant",
+            "widen_hypothesis"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 14,
+          "diagnosed": true,
+          "mechanism_digest": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+          "primitives": [
+            "relax_guard",
+            "widen_hypothesis"
+          ],
+          "solved": true
+        }
+      ],
+      "record_digest": "90613a066ef9f944326fa2c9816b03c8af755a2226c13c165ef6a4f46aa9cb70",
+      "rejected_primitives": [
+        [
+          "compose_expansions"
+        ],
+        [
+          "parameterize_constant"
+        ],
+        [
+          "relax_guard"
+        ],
+        [
+          "compose_expansions",
+          "parameterize_constant"
+        ],
+        [
+          "compose_expansions",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "widen_hypothesis"
+        ]
+      ],
+      "rollback": {
+        "corrupted_digest": "a3912bc5fcb664034c70ac2cb912ec7963eb2495951466d120a1c9db2eafb324",
+        "fault_detected": true,
+        "independent_pre_adoption_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+        "provisional_adopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+        "readopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+        "restored_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+        "restored_equals_independent_record": true
+      }
+    },
+    "fixed_meta": {
+      "adopted_primitives": [],
+      "arm": "fixed_meta",
+      "development_solved": false,
+      "journal": [
+        {
+          "arm": "fixed_meta",
+          "body": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d",
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public": [
+            "development_unknown_token",
+            "development_missing_route"
+          ],
+          "step": "phase1_entered"
+        },
+        {
+          "cycles": [
+            {
+              "adopted_label": null,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "modules": [],
+              "passed": 0,
+              "total": 2
+            }
+          ],
+          "solved": false,
+          "step": "attempt_with_starting_mechanism"
+        }
+      ],
+      "mechanism_after_development_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_carried_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_carried_to_holdout": {
+        "composes": false,
+        "provenance": [],
+        "rules": [
+          {
+            "module": "interpretation",
+            "options": [
+              "add",
+              "max",
+              "mean",
+              "mul"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "unknown_token",
+            "rule_id": "interpreter_add_alias"
+          },
+          {
+            "module": "planning",
+            "options": [
+              "one_level",
+              "recursive_postorder"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "planner"
+          },
+          {
+            "module": "selection",
+            "options": [
+              "midpoint",
+              "mean",
+              "sum",
+              "maximum",
+              "minimum"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "missing_operation",
+            "rule_id": "synthesize_tool"
+          },
+          {
+            "module": "critique",
+            "options": [
+              "round_one",
+              "round_two",
+              "round_three"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "critic"
+          },
+          {
+            "module": "allocation",
+            "options": [
+              "fixed_five",
+              "plan_length",
+              "double_plan_length"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "allocator"
+          }
+        ],
+        "schema": "single_module"
+      },
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 0,
+      "meta_trials": [],
+      "record_digest": "af674b06ca58b9b22387a236c5dc1e5569065ba9ac529cf172ab98b0af1af35b",
+      "rejected_primitives": [],
+      "rollback": null
+    },
+    "meta_acquisition_ablated": {
+      "adopted_primitives": [
+        "widen_hypothesis"
+      ],
+      "arm": "meta_acquisition_ablated",
+      "development_solved": true,
+      "journal": [
+        {
+          "arm": "meta_acquisition_ablated",
+          "body": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d",
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public": [
+            "development_unknown_token",
+            "development_missing_route"
+          ],
+          "step": "phase1_entered"
+        },
+        {
+          "cycles": [
+            {
+              "adopted_label": null,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "modules": [],
+              "passed": 0,
+              "total": 2
+            }
+          ],
+          "solved": false,
+          "step": "attempt_with_starting_mechanism"
+        },
+        {
+          "limitation": "the starting mechanism produced no hypothesis for two-stage evidence",
+          "step": "meta_search",
+          "trials": [
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+              "primitives": [
+                "compose_expansions"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+              "primitives": [
+                "parameterize_constant"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+              "primitives": [
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": true,
+              "candidates_generated": 14,
+              "diagnosed": true,
+              "mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+              "primitives": [
+                "widen_hypothesis"
+              ],
+              "solved": true
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+              "primitives": [
+                "compose_expansions",
+                "parameterize_constant"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+              "primitives": [
+                "compose_expansions",
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 20,
+              "diagnosed": true,
+              "mechanism_digest": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+              "primitives": [
+                "compose_expansions",
+                "widen_hypothesis"
+              ],
+              "solved": true
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "mechanism_digest": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+              "primitives": [
+                "parameterize_constant",
+                "relax_guard"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 3,
+              "diagnosed": true,
+              "mechanism_digest": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+              "primitives": [
+                "parameterize_constant",
+                "widen_hypothesis"
+              ],
+              "solved": false
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 14,
+              "diagnosed": true,
+              "mechanism_digest": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+              "primitives": [
+                "relax_guard",
+                "widen_hypothesis"
+              ],
+              "solved": true
+            }
+          ]
+        },
+        {
+          "mechanism_after": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "rollback": {
+            "corrupted_digest": "a3912bc5fcb664034c70ac2cb912ec7963eb2495951466d120a1c9db2eafb324",
+            "fault_detected": true,
+            "independent_pre_adoption_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+            "provisional_adopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+            "readopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+            "restored_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+            "restored_equals_independent_record": true
+          },
+          "step": "meta_adoption_under_forced_fault"
+        },
+        {
+          "mechanism_restored_to": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "step": "meta_acquisition_stripped"
+        }
+      ],
+      "mechanism_after_development_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_carried_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_carried_to_holdout": {
+        "composes": false,
+        "provenance": [],
+        "rules": [
+          {
+            "module": "interpretation",
+            "options": [
+              "add",
+              "max",
+              "mean",
+              "mul"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "unknown_token",
+            "rule_id": "interpreter_add_alias"
+          },
+          {
+            "module": "planning",
+            "options": [
+              "one_level",
+              "recursive_postorder"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "planner"
+          },
+          {
+            "module": "selection",
+            "options": [
+              "midpoint",
+              "mean",
+              "sum",
+              "maximum",
+              "minimum"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "missing_operation",
+            "rule_id": "synthesize_tool"
+          },
+          {
+            "module": "critique",
+            "options": [
+              "round_one",
+              "round_two",
+              "round_three"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "critic"
+          },
+          {
+            "module": "allocation",
+            "options": [
+              "fixed_five",
+              "plan_length",
+              "double_plan_length"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "allocator"
+          }
+        ],
+        "schema": "single_module"
+      },
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 1,
+      "meta_trials": [
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+          "primitives": [
+            "compose_expansions"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+          "primitives": [
+            "parameterize_constant"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+          "primitives": [
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": true,
+          "candidates_generated": 14,
+          "diagnosed": true,
+          "mechanism_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "solved": true
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+          "primitives": [
+            "compose_expansions",
+            "parameterize_constant"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+          "primitives": [
+            "compose_expansions",
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 20,
+          "diagnosed": true,
+          "mechanism_digest": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+          "primitives": [
+            "compose_expansions",
+            "widen_hypothesis"
+          ],
+          "solved": true
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "mechanism_digest": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+          "primitives": [
+            "parameterize_constant",
+            "relax_guard"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 3,
+          "diagnosed": true,
+          "mechanism_digest": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+          "primitives": [
+            "parameterize_constant",
+            "widen_hypothesis"
+          ],
+          "solved": false
+        },
+        {
+          "accepted": false,
+          "candidates_generated": 14,
+          "diagnosed": true,
+          "mechanism_digest": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+          "primitives": [
+            "relax_guard",
+            "widen_hypothesis"
+          ],
+          "solved": true
+        }
+      ],
+      "record_digest": "591a7de4fa31994def6ec5109657ccf3c585e7ccbd37dcb6eeb6b08cffdc7d17",
+      "rejected_primitives": [
+        [
+          "compose_expansions"
+        ],
+        [
+          "parameterize_constant"
+        ],
+        [
+          "relax_guard"
+        ],
+        [
+          "compose_expansions",
+          "parameterize_constant"
+        ],
+        [
+          "compose_expansions",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "widen_hypothesis"
+        ]
+      ],
+      "rollback": {
+        "corrupted_digest": "a3912bc5fcb664034c70ac2cb912ec7963eb2495951466d120a1c9db2eafb324",
+        "fault_detected": true,
+        "independent_pre_adoption_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+        "provisional_adopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+        "readopted_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+        "restored_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+        "restored_equals_independent_record": true
+      }
+    },
+    "task_only_mutable": {
+      "adopted_primitives": [],
+      "arm": "task_only_mutable",
+      "development_solved": false,
+      "journal": [
+        {
+          "arm": "task_only_mutable",
+          "body": "d308bd73ff2ffb9376b1dfc07c53804f384314236acbd70bb87eaf60a2cc192d",
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public": [
+            "development_unknown_token",
+            "development_missing_route"
+          ],
+          "step": "phase1_entered"
+        },
+        {
+          "cycles": [
+            {
+              "adopted_label": null,
+              "candidates_generated": 0,
+              "diagnosed": false,
+              "modules": [],
+              "passed": 0,
+              "total": 2
+            }
+          ],
+          "solved": false,
+          "step": "attempt_with_starting_mechanism"
+        }
+      ],
+      "mechanism_after_development_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_carried_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_carried_to_holdout": {
+        "composes": false,
+        "provenance": [],
+        "rules": [
+          {
+            "module": "interpretation",
+            "options": [
+              "add",
+              "max",
+              "mean",
+              "mul"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "unknown_token",
+            "rule_id": "interpreter_add_alias"
+          },
+          {
+            "module": "planning",
+            "options": [
+              "one_level",
+              "recursive_postorder"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "planner"
+          },
+          {
+            "module": "selection",
+            "options": [
+              "midpoint",
+              "mean",
+              "sum",
+              "maximum",
+              "minimum"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "missing_operation",
+            "rule_id": "synthesize_tool"
+          },
+          {
+            "module": "critique",
+            "options": [
+              "round_one",
+              "round_two",
+              "round_three"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "critic"
+          },
+          {
+            "module": "allocation",
+            "options": [
+              "fixed_five",
+              "plan_length",
+              "double_plan_length"
+            ],
+            "parameterized": false,
+            "relaxed": false,
+            "requires": "none",
+            "rule_id": "allocator"
+          }
+        ],
+        "schema": "single_module"
+      },
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 0,
+      "meta_trials": [],
+      "record_digest": "763370f3181e4d46dea0e9730b160dc575b608a0a49943b0edbdeba649959dae",
+      "rejected_primitives": [],
+      "rollback": null
+    }
+  },
+  "phase1_commitment": "84880c94e40a1204f51c2666b82b2f5091d977fab1a35130a07febf7970ad734",
+  "protocol_commitment": "28a94339397f5a30dfa31654a7bb614c5b2bc4382c1b13c0ace34f97b8a262aa",
+  "python": "3.14.6",
+  "result_sha256": "67786012cccd688251ed0914d353bae90bfe46aeb6afca9d758f621725530d14",
+  "retried": false,
+  "schema": "m086c-result-v1",
+  "starting_mechanism_image_on_holdout": {
+    "candidate_count": 0,
+    "candidate_labels": [],
+    "diagnosed": false,
+    "modules": []
+  },
+  "verdict": "negative",
+  "verdict_table": {
+    "conditions": {
+      "P1": true,
+      "P10": true,
+      "P2": false,
+      "P3": true,
+      "P4": true,
+      "P5": true,
+      "P6": true,
+      "P7": true,
+      "P8": true,
+      "P9": true
+    },
+    "positive": false,
+    "reasons": {
+      "P1": "adopted=1, rejected=7",
+      "P10": "6 differential probes against M047",
+      "P2": "evolvable_meta hidden-case success = False",
+      "P3": "fixed_meta solved=False, starting image=0 candidates",
+      "P4": "meta_acquisition_ablated solved=False",
+      "P5": "task_only_mutable solved=False",
+      "P6": "adopted label 'synthesize_tool:mean:midpoint' against a starting image of 0 labels",
+      "P7": "journal steps ['phase1_entered', 'attempt_with_starting_mechanism', 'meta_search', 'meta_adoption_under_forced_fault']",
+      "P8": "detected=True, restored=2762e65f3497, independent=2762e65f3497",
+      "P9": "phase1_saw_no_holdout=True, phase1_did_not_import_the_holdout_module=True, holdout_records_the_adopted_mechanism=True, holdout_records_the_adopted_artifact=True, holdout_generator_did_not_import_the_lineage=True, phase1_binds_the_same_adopted_artifact=True"
+    }
+  }
+}

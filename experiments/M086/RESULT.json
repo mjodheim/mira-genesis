@@ -1,0 +1,522 @@
+{
+  "arms": {
+    "evolvable_meta": {
+      "adopted_primitives": [
+        "widen_hypothesis"
+      ],
+      "arm": "evolvable_meta",
+      "cycles_used": 2,
+      "development_solved": true,
+      "holdout_adopted_label": "synthesize_tool:mean:mean",
+      "holdout_candidates_generated": 14,
+      "holdout_hidden_solved": true,
+      "holdout_public_solved": true,
+      "journal": [
+        {
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hypothesis": {
+            "evidence_case_ids": [
+              "dev_unknown_token",
+              "dev_missing_route"
+            ],
+            "missing_operations": [],
+            "modules": [],
+            "reason": "public evidence does not isolate one safely patchable module",
+            "sufficient": false,
+            "unknown_tokens": []
+          },
+          "solved": false,
+          "step": "development_attempt_with_starting_mechanism"
+        },
+        {
+          "limitation": "the starting mechanism produced no hypothesis for two-stage evidence",
+          "step": "meta_search",
+          "trials": [
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+              "primitives": [
+                "compose_expansions"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+              "primitives": [
+                "parameterize_constant"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+              "primitives": [
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": true,
+              "candidates_generated": 14,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+              "primitives": [
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+              "primitives": [
+                "compose_expansions",
+                "parameterize_constant"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+              "primitives": [
+                "compose_expansions",
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 20,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+              "primitives": [
+                "compose_expansions",
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+              "primitives": [
+                "parameterize_constant",
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 3,
+              "development_solved": false,
+              "diagnosed": true,
+              "mechanism": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+              "primitives": [
+                "parameterize_constant",
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 14,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+              "primitives": [
+                "relax_guard",
+                "widen_hypothesis"
+              ]
+            }
+          ]
+        },
+        {
+          "mechanism_after": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "mechanism_before": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "step": "meta_transformation_adopted"
+        },
+        {
+          "adopted_label": "synthesize_tool:mean:mean",
+          "candidates_generated": 14,
+          "diagnosed": true,
+          "hidden_solved": true,
+          "mechanism": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "public_solved": true,
+          "step": "holdout"
+        }
+      ],
+      "mechanism_after_development_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_at_holdout_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 1,
+      "rejected_primitives": [
+        [
+          "compose_expansions"
+        ],
+        [
+          "parameterize_constant"
+        ],
+        [
+          "relax_guard"
+        ],
+        [
+          "compose_expansions",
+          "parameterize_constant"
+        ],
+        [
+          "compose_expansions",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "widen_hypothesis"
+        ]
+      ]
+    },
+    "fixed_meta": {
+      "adopted_primitives": [],
+      "arm": "fixed_meta",
+      "cycles_used": 1,
+      "development_solved": false,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "journal": [
+        {
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hypothesis": {
+            "evidence_case_ids": [
+              "dev_unknown_token",
+              "dev_missing_route"
+            ],
+            "missing_operations": [],
+            "modules": [],
+            "reason": "public evidence does not isolate one safely patchable module",
+            "sufficient": false,
+            "unknown_tokens": []
+          },
+          "solved": false,
+          "step": "development_attempt_with_starting_mechanism"
+        },
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hidden_solved": false,
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public_solved": false,
+          "step": "holdout"
+        }
+      ],
+      "mechanism_after_development_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 0,
+      "rejected_primitives": []
+    },
+    "meta_acquisition_ablated": {
+      "adopted_primitives": [
+        "widen_hypothesis"
+      ],
+      "arm": "meta_acquisition_ablated",
+      "cycles_used": 1,
+      "development_solved": true,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "journal": [
+        {
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hypothesis": {
+            "evidence_case_ids": [
+              "dev_unknown_token",
+              "dev_missing_route"
+            ],
+            "missing_operations": [],
+            "modules": [],
+            "reason": "public evidence does not isolate one safely patchable module",
+            "sufficient": false,
+            "unknown_tokens": []
+          },
+          "solved": false,
+          "step": "development_attempt_with_starting_mechanism"
+        },
+        {
+          "limitation": "the starting mechanism produced no hypothesis for two-stage evidence",
+          "step": "meta_search",
+          "trials": [
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "cb205298c491eeff7c76e99f32a2f4c15e6abfd128af525e62b3b277f4737c06",
+              "primitives": [
+                "compose_expansions"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "30a234f69c6f81a30c783f2bd2ef5bd2e3aa9e299128c2b239fb7356643e7bd3",
+              "primitives": [
+                "parameterize_constant"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "255fa8b29353972214c438446abfd62312d81d9dc354fcffb58a86715839ddbf",
+              "primitives": [
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": true,
+              "candidates_generated": 14,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+              "primitives": [
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "896415e132904b1afaeeb21da794a8ab145fd4128ab99f4c40d137cfd7b32fb0",
+              "primitives": [
+                "compose_expansions",
+                "parameterize_constant"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "d068ea92e54111a3168028b272a380e594e5233b64059731e9df66aea12d911d",
+              "primitives": [
+                "compose_expansions",
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 20,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "1d0a2cadcc91b51638d058737bc0a5f3606e2061434da62bab9e3674b2423914",
+              "primitives": [
+                "compose_expansions",
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 0,
+              "development_solved": false,
+              "diagnosed": false,
+              "mechanism": "c41fca987aa798a30ea408f436060e3ffa307268d81dc137e404f602fbb0e04a",
+              "primitives": [
+                "parameterize_constant",
+                "relax_guard"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 3,
+              "development_solved": false,
+              "diagnosed": true,
+              "mechanism": "f94c7b8db91ddf4fe69be30266d7da26f8b5861a6d7120da62a865032009af26",
+              "primitives": [
+                "parameterize_constant",
+                "widen_hypothesis"
+              ]
+            },
+            {
+              "accepted": false,
+              "candidates_generated": 14,
+              "development_solved": true,
+              "diagnosed": true,
+              "mechanism": "786192fced0c53779f4c085f8eae637e833e234649b4a61d980698ce3c5e481b",
+              "primitives": [
+                "relax_guard",
+                "widen_hypothesis"
+              ]
+            }
+          ]
+        },
+        {
+          "mechanism_after": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+          "mechanism_before": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "primitives": [
+            "widen_hypothesis"
+          ],
+          "step": "meta_transformation_adopted"
+        },
+        {
+          "mechanism_restored_to": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "step": "meta_acquisition_stripped_before_holdout"
+        },
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hidden_solved": false,
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public_solved": false,
+          "step": "holdout"
+        }
+      ],
+      "mechanism_after_development_digest": "3bdde34eee3628791623c3bae69cea5ef268240afb32765da439ff9bde5567e3",
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 1,
+      "rejected_primitives": [
+        [
+          "compose_expansions"
+        ],
+        [
+          "parameterize_constant"
+        ],
+        [
+          "relax_guard"
+        ],
+        [
+          "compose_expansions",
+          "parameterize_constant"
+        ],
+        [
+          "compose_expansions",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "relax_guard"
+        ],
+        [
+          "parameterize_constant",
+          "widen_hypothesis"
+        ]
+      ]
+    },
+    "task_only_mutable": {
+      "adopted_primitives": [],
+      "arm": "task_only_mutable",
+      "cycles_used": 1,
+      "development_solved": false,
+      "holdout_adopted_label": null,
+      "holdout_candidates_generated": 0,
+      "holdout_hidden_solved": false,
+      "holdout_public_solved": false,
+      "journal": [
+        {
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hypothesis": {
+            "evidence_case_ids": [
+              "dev_unknown_token",
+              "dev_missing_route"
+            ],
+            "missing_operations": [],
+            "modules": [],
+            "reason": "public evidence does not isolate one safely patchable module",
+            "sufficient": false,
+            "unknown_tokens": []
+          },
+          "solved": false,
+          "step": "development_attempt_with_starting_mechanism"
+        },
+        {
+          "adopted_label": null,
+          "candidates_generated": 0,
+          "diagnosed": false,
+          "hidden_solved": false,
+          "mechanism": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+          "public_solved": false,
+          "step": "holdout"
+        }
+      ],
+      "mechanism_after_development_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_at_holdout_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "mechanism_start_digest": "2762e65f3497b61a13c866449ef7fcc02d83194f53c1d62d2d0d529098cd78b4",
+      "meta_transformations_adopted": 0,
+      "rejected_primitives": []
+    }
+  },
+  "attempt": 1,
+  "bank_commitment": "fa647e2733d68514ced22ecfcb9df67d5bef29b6c6cff12f0236bb2a595ec2a5",
+  "claim_boundary": {
+    "advances_any_generality_gate": false,
+    "agi_evidence": false,
+    "arbitrary_self_improvement": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "establishes_endogenous_transformation_of_the_improvement_mechanism_in_a_bounded_construction": true,
+    "establishes_meta_acquisition_causally_necessary_to_a_later_capability": true,
+    "general_autonomy": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "is_an_independent_reproduction": false,
+    "open_ended_evolution": false,
+    "remaining_frozen_parts_must_be_enumerated_in_the_result": true,
+    "replaces_m085": false,
+    "touches_m085_fail_closed_boundary": false
+  },
+  "external_model_called": false,
+  "failed_conditions": [],
+  "m0_constructive_image_on_holdout": {
+    "candidate_count": 0,
+    "candidate_labels": [],
+    "contains_a_passing_candidate": false,
+    "diagnosed": false,
+    "hypothesis": {
+      "evidence_case_ids": [
+        "holdout_unknown_token",
+        "holdout_missing_route"
+      ],
+      "missing_operations": [],
+      "modules": [],
+      "reason": "public evidence does not isolate one safely patchable module",
+      "sufficient": false,
+      "unknown_tokens": []
+    }
+  },
+  "network_opened": false,
+  "protocol_commitment": "c0eeeffe17d4fb9c4e6df846f6a63bc231381948cf56ead8df8ea7999d8b7c5b",
+  "python": "3.14.6",
+  "result_sha256": "a05693615edb5c69d5d96742d9b77ac10aa2fde7b0e7fb9f431995b4ab0393bd",
+  "retried": false,
+  "schema": "m086-evolvable-improvement-mechanism-result-v1",
+  "verdict": "positive"
+}

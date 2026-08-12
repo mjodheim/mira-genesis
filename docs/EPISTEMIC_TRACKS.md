@@ -121,3 +121,25 @@ M084 also corrects the record on its own inputs. The agent M081, M082 and M083 c
 four substrates replays an action list computed by the bank generator; it perceives nothing, plans
 nothing and detects no failure. Those are interface results, and "one unchanged agent across four
 real environments" must not be read as agent competence.
+
+## Meta-level transformation inside Track A — M086-A, disqualified
+
+**The M086-A attempt is post-hoc disqualified and supplies no qualified evidence.** Its attribution properties were nonetheless sound — no model was called at any point — and the section below states the boundaries the successor M086-B inherits.
+
+M086 belongs entirely to Track A. It calls no model, opens no network and selects no external task.
+The mechanism it makes mutable is Mira's own, the modification is constructed from declared bounded
+primitives, and the choice among candidates is made by running each on a disposable descendant
+against an independent evaluator.
+
+This matters because the milestone takes its question from HyperAgents, whose meta-agent asks a
+frontier model to rewrite the codebase. Under the attribution rule above, a model-written improvement
+mechanism belongs to the composed system, not to the lineage — so the question could be imported and
+the method could not. `docs/HYPERAGENTS_COMPARISON.md` records the full comparison, including the
+several respects in which their work demonstrates more than ours.
+
+Two boundaries are worth restating because a self-referential experiment invites blurring them. The
+**evaluator is not part of the mutable body**: Mira may propose a better way to improve itself, but
+may not edit the test deciding whether the improvement worked during the experiment that decides it.
+And the **meta-primitives remain project-authored**: M086 moved the human assumption up one level
+rather than removing it, which is a limitation of the result and not a caveat attached to it.
+

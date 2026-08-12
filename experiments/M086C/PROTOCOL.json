@@ -1,0 +1,99 @@
+{
+  "schema": "m086c-evolvable-improvement-mechanism-protocol-v1",
+  "status": "frozen_before_harness_bank_and_holdout",
+  "commit_position": "1 of 4",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "hypothesis": "H32",
+  "hypothesis_status_before_this_attempt": "untested",
+  "predecessors": {
+    "M086-A": "post_hoc_disqualified",
+    "M086-B": "negative_did_not_refute_h32_because_the_bank_was_unrepairable"
+  },
+  "reuses_predecessor_bank_or_result_as_evidence": false,
+  "scientific_result_exists": false,
+  "bank_materialized": false,
+  "holdout_materialized": false,
+  "external_model_called": false,
+  "network_opened": false,
+  "the_correction": {
+    "m086b_defect": "the salt drew a routeless operation whose tool name tool_core already registers, so the sandbox refused every repair with duplicate tool registration",
+    "probe_of_m047_templates": {
+      "add": "already registered by tool_core, so a synthesized module collides",
+      "mul": "already registered, and no frozen expression computes a product",
+      "max": "the synthesized tool shadows the builtin its expression needs",
+      "mean": "repairable"
+    },
+    "routeless_candidates": ["mean"],
+    "routeless_operation_can_vary": false,
+    "why": "only one canonical is repairable under M047's frozen templates; this is forced by the inherited machinery and is a finding about the narrowness of that surface"
+  },
+  "forced_by_construction": [
+    "the premise: public evidence naming two stages at once",
+    "the routeless operation is mean"
+  ],
+  "at_risk_and_not_arranged": [
+    "the unknown token and which canonical it means",
+    "every operand of both public cases and of the hidden cases",
+    "whether the public holdout case discriminates the mean expression from midpoint, which decides whether the adopted repair generalizes to the hidden cases"
+  ],
+  "salt_drawn_before_the_protocol_text": true,
+  "outcome_for_this_salt_observed_before_freeze": false,
+  "bank_generation": {
+    "salt_hex": "f509b6e5898ff7f0acb7fe594f4db081b4b9bdb775382383c73d5796926dfe3b",
+    "generator_version": 1,
+    "grammar": "metamorphosis/m086c_bank.py, identical to M086-B's except that the routeless candidate set is corrected",
+    "hand_authored": false
+  },
+  "inherited_unchanged_from_m086b": [
+    "the four corrections mandated by the M086-A disqualification",
+    "P1 through P10 and the verdict rule",
+    "the arms, budgets and meta-primitive set",
+    "the generic lineage: cycle, meta-search, faulted adoption, holdout arm and verdict"
+  ],
+  "execution_plan": [
+    {"step": 1, "process": "development, meta-search and adoption", "commit": 3},
+    {"step": 2, "process": "holdout materialization", "commit": 3},
+    {"step": 3, "process": "holdout execution and hidden evaluation", "commit": 4}
+  ],
+  "verdict_rule": "positive if and only if every one of P1 through P10 is true; a single false makes the result negative",
+  "failure_classification": {
+    "negative": "any of P1 through P10 false; a holdout repair that does not generalize, a control success, or an empty meta-search are each informative and preserved",
+    "inconclusive": "the sandbox cannot run",
+    "positive": "all ten true on the first materialized bank, with no rerun"
+  },
+  "claim_boundary": {
+    "establishes_endogenous_transformation_of_the_improvement_mechanism_in_a_bounded_construction": true,
+    "establishes_meta_acquisition_causally_necessary_to_a_later_capability": true,
+    "agi_evidence": false,
+    "open_ended_evolution": false,
+    "arbitrary_self_improvement": false,
+    "general_autonomy": false,
+    "advances_any_generality_gate": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "replaces_m085": false,
+    "touches_m085_fail_closed_boundary": false,
+    "is_an_independent_reproduction": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false
+  },
+  "authority_envelope": {
+    "improved_mechanism_gains_additional_authority": false,
+    "repository_write_authority_granted": false,
+    "credential_authority_granted": false,
+    "network_authority_granted": false,
+    "deployment_authority_granted": false,
+    "may_modify_the_independent_evaluator": false,
+    "may_modify_the_scientific_gates": false
+  },
+  "prohibited_adaptation": [
+    "reuse a predecessor's bank or result as evidence",
+    "amend this protocol after the bank is materialized",
+    "rerun a materialized bank",
+    "materialize the holdout before the adopted mechanism is committed",
+    "leave any condition documentary rather than computed",
+    "compare a restored mechanism against its own checkpoint record",
+    "draw a second salt after seeing this one's outcome"
+  ]
+}
