@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mjodheim.github.io/mira-genesis/schemas/blind_bank_payload.schema.json",
+  "title": "mira-blind-bank-payload-v1",
+  "description": "The confidential payload a blind generator emits. This document describes the shape; it never contains one. A file conforming to this schema may never be committed to a public repository.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "bank_id", "spec_commitment_sha256", "bank_nonce", "domains"],
+  "properties": {
+    "schema": {"const": "mira-blind-bank-payload-v1"},
+    "bank_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
+    "spec_commitment_sha256": {"$ref": "#/$defs/sha256"},
+    "bank_nonce": {
+      "$ref": "#/$defs/sha256",
+      "description": "Random per-bank value. Opaque domain identifiers derive from it and the domain index, never from the domain's subject matter, so the public commitment cannot be dictionary-attacked before reveal."
+    },
+    "domains": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/domain"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "capability": {"type": "string", "minLength": 1},
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_index", "opaque_domain_id", "pairs"],
+      "properties": {
+        "domain_index": {"type": "integer", "minimum": 0},
+        "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
+        "pairs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/pair"}}
+      }
+    },
+    "pair": {
+      "description": "A matched pair is ONE object, not two tasks sharing an identifier. The goal, instruction, environment, initial state, permitted interfaces, required capabilities, terminal predicate and evaluator are stored once and therefore cannot differ between the twins. The single preregistered difference is whether the environment supplies `absent_capability.capability`, and it is derived rather than authored: the feasible twin's environment provides it, the capability-absent twin's does not. A twin carries only its identifier and its emission provenance, neither of which can affect whether the task can be completed.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pair_id", "opaque_domain_id", "instruction", "base_environment",
+        "permitted_interfaces", "required_capabilities", "terminal_success_predicate",
+        "absent_capability", "evaluator", "twins"
+      ],
+      "properties": {
+        "pair_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
+        "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One goal, shared by both twins. The capability-absent twin is not a different request; it is the same request in an environment that withholds one capability."
+        },
+        "base_environment": {"$ref": "#/$defs/environment"},
+        "permitted_interfaces": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/capability"},
+          "description": "Shared. Must not contain the certified-absent capability, or the impossible twin would have a route to it."
+        },
+        "required_capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/capability"},
+          "description": "Shared: what completing the one goal needs. Must contain the certified-absent capability, and must contain nothing else that the base environment and permitted interfaces do not already supply — so supplying the withheld capability is exactly what makes the goal reachable."
+        },
+        "terminal_success_predicate": {"$ref": "#/$defs/predicate"},
+        "absent_capability": {
+          "description": "The machine-checkable certificate that makes impossibility structural rather than rhetorical. Required on every pair: it names the one capability the shared environment withholds.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capability", "reason"],
+          "properties": {
+            "capability": {"$ref": "#/$defs/capability"},
+            "reason": {"type": "string", "minLength": 1}
+          }
+        },
+        "evaluator": {
+          "description": "Shared. One evaluation for both twins, so a difference in outcome cannot come from a difference in how the two were scored.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "owner", "reads_agent_self_report", "spec"],
+          "properties": {
+            "kind": {"$ref": "#/$defs/evaluatorKind"},
+            "owner": {"const": "bank"},
+            "reads_agent_self_report": {"const": false},
+            "spec": {"type": "object"}
+          }
+        },
+        "twins": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feasible", "capability_absent"],
+          "properties": {
+            "feasible": {"$ref": "#/$defs/twin"},
+            "capability_absent": {"$ref": "#/$defs/twin"}
+          }
+        }
+      }
+    },
+    "twin": {
+      "description": "Everything a twin carries of its own. Identity and provenance only: no instruction, no environment, no evaluator, no capability list, because none of those may differ between the two.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "provenance"],
+      "properties": {
+        "task_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["emitted_at_index", "raw_response_sha256"],
+          "properties": {
+            "emitted_at_index": {"type": "integer", "minimum": 0},
+            "raw_response_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "environment": {
+      "description": "The shared base. `provides_capabilities` is the floor present in BOTH twins; the feasible twin's materialized environment is this set plus the certified-absent capability.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image_reference", "image_digest_sha256", "initial_state", "provides_capabilities",
+        "network", "reproducible"
+      ],
+      "properties": {
+        "image_reference": {"type": "string", "minLength": 1},
+        "image_digest_sha256": {"$ref": "#/$defs/sha256"},
+        "initial_state": {"type": "object"},
+        "provides_capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "network": {"const": "none"},
+        "reproducible": {"const": true}
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "expression"],
+      "properties": {
+        "kind": {"$ref": "#/$defs/evaluatorKind"},
+        "expression": {"type": "string", "minLength": 1}
+      }
+    },
+    "evaluatorKind": {
+      "description": "Terminal environment state only. Nothing decided by a reader's opinion, a rubric or another model.",
+      "enum": [
+        "terminal-file-content",
+        "terminal-file-absence",
+        "terminal-process-exit-status",
+        "terminal-service-state",
+        "terminal-stdout-exact-match"
+      ]
+    }
+  }
+}

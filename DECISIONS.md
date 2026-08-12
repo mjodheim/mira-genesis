@@ -1640,3 +1640,154 @@ Not AGI, not open-ended evolution, not arbitrary self-improvement, not general a
 reproduction, no contact with M085's fail-closed boundary, no foundation model. The bank is
 materialized and is not redrawn: a different salt would very likely have drawn a discriminating public
 case and produced a positive, which is exactly why it may not be drawn now.
+
+## D055 — Blind external bank generation is a successor to M075, not a substitute for its maintainer
+
+M075 has been blocked on a person since its public comparison closed. Issue #112 is still open.
+Before building a way around that, the requirement was decomposed rather than assumed to be
+indivisible.
+
+### The decision
+
+`mira-blind-bank-v1` is adopted as the project's standard instrument for obtaining a held-out task
+bank from a process outside the project, and **M075-B** is its first user. The instrument is
+accepted at the `blind_generated_sealed_bank` tier and is **refused** at the human-maintained tier.
+M075's protocol, result, bank metadata, digests and validator are unmodified. Issue #112 stays
+open, and its status is not changed by this decision.
+
+No generator is chosen, no prompt is written, no bank exists and no reveal is authorized. Nothing
+here is a scientific result.
+
+### What the decomposition found
+
+Six things M075 requires of an independent maintainer are mechanism, and all six transfer: the
+payload is withheld until the tested system's protocol is frozen; only opaque metadata is
+disclosed; the bank spans four materially different domains with eight matched pairs; success is
+decided from terminal environment state rather than the agent's report; impossibility is caused by
+an absent capability; the bank is materialized once and the first result stands. Encryption plus a
+signed reveal gate holds a payload at least as reliably as a person's discretion, and leaves an
+auditable record where discretion leaves none.
+
+One thing does not transfer: **a mind outside the project choosing the subject matter, and a
+person willing to attest independence and sign for it.** A model prompted by the project is the
+project's instrument, not a second party. That is the whole reason #112 stays open, and it is why
+option B — closing #112 as superseded — is rejected outright rather than deferred.
+
+### Five kinds of independence, kept apart
+
+Procedural independence and generator context blindness are claimed and provable. Training-data
+independence is **not provable** and is never claimed: the strongest available argument is that a
+checkpoint published before this line became public cannot have memorized these specific tasks,
+which bounds memorization of one corpus and says nothing about the concepts involved. Human
+independence and external reproduction are not obtained at all.
+
+The sentence this repository may never write is "the generator does not know about this project".
+The sentence it may write is "the generator was supplied no context about this project".
+`validate_generator_descriptor` refuses any descriptor recording the first as proven, and
+`BLIND_CLAIM_BOUNDARY` is a frozen constant both the analysis plan and the system protocol must
+carry byte-for-byte.
+
+### One ordering was changed from the brief, deliberately
+
+The brief placed the tested-system freeze after sealing, which is right, and implied the scoring
+rule travelled with it, which is not. Bank size determines which p values are reachable at all, so
+a threshold chosen after the bank existed would be fitted to it without a single task being read.
+The analysis plan therefore freezes at F1, alongside the generator spec and before generation, and
+the system protocol must bind its digest unchanged.
+
+`validate_analysis_plan` then re-derives the attainable exact McNemar p at the frozen threshold and
+rejects a plan that could never pass, as firmly as one that could never fail. That is the M086-A
+defect inverted, and it is checked rather than promised.
+
+### What is enforced rather than asserted
+
+Impossibility is a machine-checkable certificate: the named capability must be required, absent
+from the environment, the only absent one, and the pair's only difference from its feasible twin.
+The isolation audit resolves mount sources against the repository root in both directions instead
+of matching strings, and re-audits the recorded argv rather than trusting the attestation's own
+`repository_mounted: false`. One frozen spec admits exactly one materialized bank; a second is a
+hard failure, because a silent second draw is precisely what the contract exists to expose. The
+validator's import graph contains no path to the tested system, asserted by parsing the module.
+
+Both new checkers are decisive CI steps, and the M075 and M085 boundaries are now asserted
+fail-closed in CI as well. M086-A recorded a positive verdict partly because a scientific checker
+existed without being decisive there; a green CI must guarantee what the registers say it does.
+
+### Claim boundary
+
+Not AGI, not Genesis Gate 2 or 3, not mathematical impossibility, not general safety, not a
+reproduction, no support for H21, no contact with M085's fail-closed boundary, and no satisfaction
+of M075's independent-maintainer requirement. `AGENTS.md` §4 forbids replacing M085's external
+maintainer with evidence from a project-controlled AI agent; the same reasoning applies to M075,
+and this milestone is built to comply with that rule rather than around it.
+
+## D056 — M075-B's matched pair becomes structural, and its artifacts are bound to one run
+
+External review of PR #134 found four P1 defects on `3d718d0`. All four were confirmed against the
+exact head, and all four are corrected before merge. None was answered by narrowing a claim. No
+bank existed, no generator was chosen and no reveal was authorized, so every correction is
+prospective.
+
+### The decision
+
+The blind-bank payload representation changes, and the readiness gate gains a cross-artifact
+binding. `mira-blind-bank-v1` keeps its name and version because nothing has been frozen under it:
+there is no bank, no commitment and no result to be inconsistent with.
+
+### The defect that mattered most
+
+The matched-pair contract was **declarative**. Two independent task objects shared a `pair_id`, and
+the validator compared their environment image digest and their `required_capabilities` sets. That
+left the instruction, the initial state, the provided capabilities, the permitted interfaces, the
+terminal predicate and the evaluator free to differ. A pair could therefore succeed or fail for a
+reason having nothing to do with the absent capability, while being counted as evidence about it —
+which is the entire quantity this milestone claims to measure.
+
+A comparison could have been extended field by field. That is the wrong repair: it has to enumerate
+every field that must stay equal, and missing one silently readmits the defect. So the
+representation changed instead. A pair is now **one object** holding one goal, one instruction, one
+base environment with its initial state, one list of permitted interfaces, one required-capability
+list, one terminal predicate and one evaluator. The twins carry an identifier and an emission
+provenance and nothing else. `materialize_twin` derives each runnable task, and the sole difference
+between its two outputs is whether the environment supplies the certified-absent capability.
+
+Impossibility is then structural in three parts: the capability is **required** by the shared goal,
+**absent** from the environment and from every permitted interface, and **sufficient**, because
+nothing else the goal needs may be missing. `assert_matched_pair_delta` states the conclusion
+rather than assuming it, and is retained even though it cannot fail for a well-formed pair, so a
+future change reintroducing a per-twin field is caught the moment it is made.
+
+### Documents that are individually valid can still describe different runs
+
+The gate validated the isolation attestation, the public commitment and the generation ledger
+separately and never required them to describe one run. An attestation from one generator run could
+be combined with a payload from another, the commitment made to name a third generator identity,
+and the ledger written to agree with whichever payload was chosen — every document passing its own
+validator while the set described nothing that happened.
+
+`sealed_run_binding_problems` now compares each identity that must causally survive from the frozen
+spec, through the container run, into the commitment and the ledger: attested output against sealed
+payload, frozen generator identity against the commitment, pinned image reference, image digest,
+runtime name and runtime version against what actually ran, and the ledger entry against all three.
+
+### A ledger is one milestone's record, not a shared log
+
+A ledger holding exactly one `materialized` entry belonging to a **different** frozen spec
+satisfied this milestone's generation stage, because the check asked only whether the current spec
+had materialized more than once, and zero is not more than one. When a frozen spec commitment is
+supplied, every entry must now bind it and exactly one must be a materialization. The single-spec
+form removes the class of mix-up rather than filtering around it.
+
+### CI
+
+`check_blind_bank_readiness.py --self-test` constructs the three violations on fixtures and fails
+if any is accepted. A gate reporting `phase: draft` on a repository with no artifacts proves
+nothing about what it would refuse once artifacts exist, and the M086-A lesson is that a scientific
+checker which is not decisive in CI is not a guarantee. The self-test is itself covered by a test
+that removes a binding and requires the self-test to notice.
+
+### What did not change
+
+The architecture, the ordered chain, the evidence ladder and the claim boundary. M075 remains
+untouched, issue #112 remains open, no generator is chosen, no bank exists and `phase` is `draft`.
+See D055.

@@ -40,3 +40,15 @@ experiments/M086C/PHASE1.json -text
 experiments/M086C/HOLDOUT.json -text
 experiments/M086C/PRE_ADOPTION_MECHANISM.json -text
 experiments/M086C/RESULT.json -text
+
+# M075-B registers every digest-bearing artifact it will ever write before any of them exists.
+# M064 recorded a commitment matching only its CRLF working-tree copy; declaring the paths in
+# advance means no later commit can introduce that defect by forgetting one.
+experiments/M075B/GENERATOR_SPEC.json -text
+experiments/M075B/ANALYSIS_PLAN.json -text
+experiments/M075B/GENERATION_LEDGER.json -text
+experiments/M075B/ISOLATION_ATTESTATION.json -text
+experiments/M075B/PUBLIC_BANK_COMMITMENT.json -text
+experiments/M075B/SYSTEM_PROTOCOL.json -text
+experiments/M075B/REVEAL_AUTHORIZATION.json -text
+experiments/M075B/RESULT.json -text
