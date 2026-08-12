@@ -1,0 +1,167 @@
+{
+  "schema": "m086b-evolvable-improvement-mechanism-protocol-v1",
+  "status": "frozen_before_harness_bank_and_holdout",
+  "commit_position": "1 of 4",
+  "epistemic_track": "endogenous-bounded-lineage",
+  "target_generality_gate": "none_claimed",
+  "hypothesis": "H32",
+  "predecessor": "M086-A",
+  "predecessor_status": "post_hoc_disqualified",
+  "predecessor_record": "experiments/M086/DISQUALIFICATION.md",
+  "predecessor_decision": "D053",
+  "is_a_repair_of_the_predecessor": false,
+  "reuses_predecessor_bank_or_result_as_evidence": false,
+  "predecessor_observations_count_toward_this_result": false,
+  "falsifiable_hypothesis": "A lineage permitted to modify the mechanism that turns evidence into candidate transformations will, after meeting a limitation that mechanism cannot express, construct and adopt a validated modification of it; and on a later, independently materialized problem the modified mechanism will generate a corrective transformation lying outside the constructive image of the original mechanism, producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.",
+  "scientific_result_exists": false,
+  "bank_materialized": false,
+  "holdout_materialized": false,
+  "external_model_called": false,
+  "network_opened": false,
+  "corrections_mandated_by_the_predecessor_disqualification": {
+    "artifacts_bound_to_committed_bytes": {
+      "gitattributes_text_declared_in_this_commit": true,
+      "checker_verifies_working_tree_and_git_blob_agree": true,
+      "predecessor_defect": "the recorded protocol digest matched only the CRLF working-tree copy, which is the M064 checkout-dependent-hash class"
+    },
+    "all_ten_conditions_computed_and_decisive": {
+      "evaluate_returns_a_per_condition_table": true,
+      "table_length": 10,
+      "positive_is_the_conjunction": true,
+      "documentary_conditions_permitted": false,
+      "predecessor_defect": "evaluate() computed P1-P6 only; P7, P8, P9 and P10 could not make the verdict negative"
+    },
+    "p8_implemented_with_a_real_fault": {
+      "independent_pre_adoption_record_written_outside_the_adoption_path": true,
+      "fault_injected_during_adoption": true,
+      "restoration_required": true,
+      "comparison_against_the_independent_record_not_the_checkpoint": true,
+      "predecessor_defect": "no fault, no checkpoint, no rollback existed anywhere in the harness"
+    },
+    "holdout_physically_separated": {
+      "processes": 3,
+      "commits": 4,
+      "phase1_outputs_committed_before_holdout_generation_is_invoked": true,
+      "holdout_generator_imports_no_lineage_module": true,
+      "chronology_proved_from_recorded_digests_and_git_order": true,
+      "chronology_proved_from_absence_of_source_references": false,
+      "predecessor_defect": "the holdout was a module-level constant in the meta-search's own process and was enumerated before any arm ran"
+    },
+    "replay_is_total": {
+      "compares_canonical_digest_of_the_complete_arm_record": true,
+      "includes": [
+        "mechanism start, after-development and holdout digests",
+        "adopted_primitives",
+        "all rejected transformations",
+        "candidate counts",
+        "cycle counts",
+        "adopted labels",
+        "every boolean",
+        "the complete causal journal",
+        "P1-P10",
+        "the constructive image",
+        "the rollback evidence"
+      ],
+      "predecessor_defect": "3 of 14 preserved fields per arm were re-derived"
+    }
+  },
+  "execution_plan": [
+    {"step": 1, "process": "development, meta-search and adoption", "commit": 3, "produces": ["ADOPTED_MECHANISM.json", "PHASE1.json"]},
+    {"step": 2, "process": "holdout materialization", "commit": 3, "produces": ["HOLDOUT.json"]},
+    {"step": 3, "process": "holdout execution and hidden evaluation", "commit": 4, "produces": ["RESULT.json"]}
+  ],
+  "commit_chronology": [
+    "1: this frozen protocol, before any harness",
+    "2: harness and checker, with development-only tests and no materialized bank",
+    "3: bank and holdout materialization per this protocol",
+    "4: the first and only scientific result"
+  ],
+  "protocol_amendment_after_bank_materialization_permitted": false,
+  "bank_generation": {
+    "salt_hex": "f24bea192055b851ac9945aa9c3dece3b20aa63bbda03872c28baa327b092646",
+    "generator_version": 1,
+    "authored_by_hand": false,
+    "generated_from_the_salt_by_a_declared_grammar": true,
+    "grammar": {
+      "starting_body": "M047 renderers, with the alias table and route table drawn from the salt",
+      "limitation": "a pair of public cases: one naming a token absent from the alias table, one naming an operation present in the alias table and absent from the route table",
+      "unknown_token_canonical_must_already_have_a_route": true,
+      "why": "so that repairing the alias cannot reveal a new fault, which is the cascade the predecessor had to remove from a hand-written bank",
+      "hidden_cases": "same operations, different operands, never shown to the mechanism"
+    },
+    "guarantees_that_widen_hypothesis_wins": false,
+    "guarantees_that_any_meta_primitive_helps": false,
+    "guarantees_that_fixed_meta_fails": false,
+    "a_control_success_or_an_empty_search_is_a_valid_result_and_is_preserved": true
+  },
+  "arms": {
+    "evolvable_meta": {"removes": "nothing"},
+    "fixed_meta": {"removes": "the ability to modify the mechanism", "role": "primary control"},
+    "meta_acquisition_ablated": {"removes": "the adopted modification before the holdout", "keeps": ["identity", "body", "memory", "journal"]},
+    "task_only_mutable": {"removes": "mechanism mutability only", "budget_multiplier": 3}
+  },
+  "matched_across_arms": ["identity", "starting body", "public evidence", "budget", "primitives", "evaluator"],
+  "conditions": {
+    "P1": "evolvable_meta adopts exactly one validated mechanism modification, with rejected alternatives recorded",
+    "P2": "evolvable_meta solves the holdout on the evaluator's hidden cases",
+    "P3": "fixed_meta does not solve the holdout, and the enumerated constructive image of the starting mechanism contains no passing candidate",
+    "P4": "meta_acquisition_ablated does not solve the holdout",
+    "P5": "task_only_mutable does not solve the holdout",
+    "P6": "the adopted holdout patch is outside the starting mechanism's constructive image",
+    "P7": "the causal chain is serialized and audited end to end",
+    "P8": "a forced fault during meta-adoption is detected and restored byte-identically against an independently recorded digest",
+    "P9": "the chronology is proved from recorded digests and git order",
+    "P10": "the starting mechanism is differentially equivalent to M047's frozen pair"
+  },
+  "verdict_rule": "positive if and only if every one of P1 through P10 is true; a single false makes the result negative",
+  "failure_classification": {
+    "negative": "any of P1 through P10 false; a control success or an empty meta-search is informative and preserved",
+    "inconclusive": "the sandbox cannot run; not runnable is not negative",
+    "positive": "all ten true on the first materialized bank, with no rerun"
+  },
+  "attribution": {
+    "track": "A",
+    "foundation_model_generates_selects_or_ranks_the_meta_transformation": false,
+    "infrastructure_authored_before_this_freeze": true,
+    "scientific_execution_is_deterministic_and_model_free": true,
+    "evaluator_sandbox_and_science_gates_outside_the_mutable_body": true
+  },
+  "claim_boundary": {
+    "establishes_endogenous_transformation_of_the_improvement_mechanism_in_a_bounded_construction": true,
+    "establishes_meta_acquisition_causally_necessary_to_a_later_capability": true,
+    "agi_evidence": false,
+    "open_ended_evolution": false,
+    "arbitrary_self_improvement": false,
+    "general_autonomy": false,
+    "advances_any_generality_gate": false,
+    "closes_generality_gate_g4": false,
+    "closes_generality_gate_g6": false,
+    "closes_generality_gate_g7": false,
+    "replaces_m085": false,
+    "touches_m085_fail_closed_boundary": false,
+    "is_an_independent_reproduction": false,
+    "genesis_gate_2_evidence": false,
+    "genesis_gate_3_evidence": false,
+    "remaining_frozen_parts_must_be_enumerated_in_the_result": true
+  },
+  "authority_envelope": {
+    "improved_mechanism_gains_additional_authority": false,
+    "repository_write_authority_granted": false,
+    "credential_authority_granted": false,
+    "network_authority_granted": false,
+    "deployment_authority_granted": false,
+    "may_modify_the_independent_evaluator": false,
+    "may_modify_the_scientific_gates": false
+  },
+  "prohibited_adaptation": [
+    "reuse the predecessor's bank, holdout or result as evidence",
+    "amend this protocol after the bank is materialized",
+    "rerun a materialized bank for any reason",
+    "materialize the holdout before the adopted mechanism is committed",
+    "leave any condition documentary rather than computed",
+    "compare a restored mechanism against its own checkpoint record",
+    "shape the grammar so that a particular meta-primitive must win",
+    "let a foundation model generate, select or rank the meta-transformation",
+    "claim any generality gate, open-ended evolution or arbitrary self-improvement"
+  ]
+}

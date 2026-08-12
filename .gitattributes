@@ -11,3 +11,14 @@ experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
 experiments/M084/PROTOCOL.json -text
 experiments/M084/BANK_COMMITMENT.json -text
 experiments/M084/RESULT.json -text
+
+# M086-B binds every recorded digest to committed bytes. These entries exist in the same commit as
+# the frozen protocol, before any digest is computed, because M086-A recorded a commitment matching
+# only its CRLF working-tree copy and was disqualified for it.
+experiments/M086B/PROTOCOL.json -text
+experiments/M086B/BANK_COMMITMENT.json -text
+experiments/M086B/ADOPTED_MECHANISM.json -text
+experiments/M086B/PHASE1.json -text
+experiments/M086B/HOLDOUT.json -text
+experiments/M086B/PRE_ADOPTION_MECHANISM.json -text
+experiments/M086B/RESULT.json -text
