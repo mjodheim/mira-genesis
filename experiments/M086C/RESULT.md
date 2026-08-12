@@ -90,6 +90,16 @@ have, which is the same wall from a different side.
 
 That is a candidate M087 and may not be added to this result.
 
+## CI
+
+Run 31582950744: **1,797 passed, 11 skipped** on Python 3.11 and 3.13, plus repository integrity;
+attribution run 31582949069 passed.
+
+An earlier run failed on a disqualification regression that asserted the H32 status line still began
+UNTESTED — a line this refutation had just changed. The check is now anchored to the sentence
+recording M086-A as disqualified, which is what it was actually protecting. **The experiment was not
+rerun**: 67786012 is attempt 1 and the bank was never redrawn.
+
 ## Claim boundary
 
 No gate moves. This is not evidence for endogenous transformation of an improvement mechanism being

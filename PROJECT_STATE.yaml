@@ -1601,6 +1601,12 @@ phase_eight:
     selection_rule_is_what_failed: true
     routeless_operation_forced_to_mean_by_m047_templates: true
     bank_redrawn: false
+    ci_run: '31582950744'
+    ci_tests_passed_each_python: 1797
+    ci_tests_skipped_each_python: 11
+    attribution_run: '31582949069'
+    ci_rerun_after_a_stale_test_assertion: true
+    experiment_rerun: false
     generality_gate_advanced: false
     agi_evidence: false
 
