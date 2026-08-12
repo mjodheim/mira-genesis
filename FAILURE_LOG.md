@@ -1167,3 +1167,35 @@ There is also a smaller lesson about reasoning from availability. Both M086 bank
 checking that a repair *existed in principle* — an expression that computes the right value, an alias
 that parses — without checking that the repair could be *installed*. The sandbox's registration rule
 is not in the renderer's signature, and neither bank consulted it.
+
+## M086-C — the mechanism generated the right candidate and then chose the wrong one
+
+M086-C is the first attempt in this line to put H32 at genuine risk, and H32 lost. Nine of the ten
+conditions passed. P2 failed.
+
+The lineage met a limitation its mechanism could not express, rejected seven meta-transformations,
+adopted `widen_hypothesis`, survived a forced fault with a byte-identical restore, and on the holdout
+emitted a patch the starting mechanism could never have produced. The patch was
+`synthesize_tool:mean:midpoint`, and it is wrong.
+
+The holdout drew `mean 1 2 3` as its public case. That is an arithmetic sequence, so the midpoint and
+the mean coincide at 2.0 and two candidate expressions pass the public evidence. The cycle takes the
+first in the frozen expression order, which is `midpoint`. The evaluator's hidden cases —
+`mean 3 4 6` and `mean 2 3 8`, where midpoint gives 4.5 and 5.0 against a true mean of 4.33 — reject
+it.
+
+The protocol named this before the run: it stated the arithmetic condition under which both
+expressions pass, named `midpoint` as the one the frozen order would take, and said P2 could
+therefore fail on a bank where everything else succeeded. The predicted falsifier fired.
+
+What it exposes is not the limitation the experiment was designed around. Every meta-primitive acts
+on the hypothesis schema or the rule set; none acts on the **selection rule**, the greedy
+first-past-the-post over public score that decides which generated candidate is adopted. That rule is
+frozen and human-authored, and it is what failed. Three attempts have now treated "the mechanism that
+produces transformations" as diagnosis plus generation; this result says the pair is incomplete,
+because a mechanism that generates a correct candidate and then picks a wrong one is not helped by
+generating more.
+
+Making selection mutable is a candidate successor and is not added here. It would immediately meet
+the harder version of the same problem: choosing well among candidates that all fit the public
+evidence requires evidence the lineage does not have, which is where M078's refusal work already sits.

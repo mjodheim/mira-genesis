@@ -93,6 +93,23 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M086-C refutes H32 on its bank, and is the first attempt in this line that could have.** Protocol
+  frozen at `09ed0d3`, harness `5056a56`, bank and holdout materialized at `5948f9a`, result
+  `67786012…30d14`, attempt 1, no rerun. **Nine of ten conditions passed.** The lineage met a
+  limitation its mechanism could not express, rejected seven meta-transformations on disposable
+  descendants, adopted `widen_hypothesis`, survived a forced fault during the adoption transaction
+  with a byte-identical restore against an independently recorded digest, and emitted a holdout patch
+  outside the starting mechanism's constructive image, which was enumerated and empty. Every control
+  failed, including `task_only_mutable` at triple budget. **P2 failed**: the patch was
+  `synthesize_tool:mean:midpoint`, which passes the public case `mean 1 2 3 -> 2.0` because an
+  arithmetic sequence makes midpoint and mean coincide, and fails the evaluator's hidden cases. The
+  frozen protocol named that falsifier before the run — the arithmetic condition, the expression the
+  frozen order would take, and the consequence for P2 — so this is a predicted negative rather than a
+  defect found afterwards. What it exposes is that **the selection rule was never mutable**: every
+  meta-primitive acts on the hypothesis schema or the rule set, and the greedy first-past-the-post
+  over public score that picks the adopted candidate is frozen and human-authored. Capability to
+  generate a transformation the frozen mechanism could not is not capability to solve. The bank is
+  materialized and is not redrawn. See D054 and H32.
 - **M086-B is a preserved negative and does not refute H32.** Protocol frozen at `95a5022` before
   any harness, harness at `96f4fcb`, bank and holdout materialized at `3d30168`, result
   `8b7f80d4…d31c32`, attempt 1, no rerun. All four corrections the disqualification mandated held:

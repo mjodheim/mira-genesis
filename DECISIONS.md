@@ -1585,3 +1585,56 @@ full arm succeeded. None of that is qualified evidence.
 
 It may be merged only as historical, post-hoc disqualified development evidence, never as a positive
 qualification. Its title and description must say so.
+
+## D054 — M086-C refutes H32 on its bank, and names the part of the mechanism that was never mutable
+
+M086-A was disqualified for a threshold that could not fail. M086-B drew a bank no mechanism could
+repair. M086-C is the first attempt in this line where the hypothesis was genuinely at risk.
+
+### The decision
+
+M086-C is accepted as a **valid negative scientific result**. H32 moves from untested to **not
+supported**, refuted on this bank and not in general. No gate moves; none was ever in play.
+
+Nine of ten frozen conditions passed. The lineage adopted a validated modification of its own
+improvement mechanism after rejecting seven alternatives on disposable descendants, survived a forced
+fault during the adoption transaction with a byte-identical restore against an independently recorded
+digest, and produced a holdout patch lying outside the starting mechanism's constructive image, which
+was enumerated and empty. Every control failed, including one at triple budget.
+
+P2 failed. The patch was `synthesize_tool:mean:midpoint`, which passes the public evidence and fails
+the evaluator's hidden cases.
+
+### Why this counts where the predecessors did not
+
+The protocol named this falsifier before the run: it stated the arithmetic condition under which two
+expressions both pass a `mean` case, identified `midpoint` as the one the frozen expression order
+would take, and said P2 could therefore fail while everything else succeeded. The draw produced that
+condition and the prediction held. A negative that a frozen protocol anticipated is evidence; a
+negative discovered by reading the code afterwards is a defect.
+
+### What the result actually says
+
+Widening what the mechanism can **hypothesise** gave it the ability to emit transformations the frozen
+mechanism could not. It did not give it the ability to **choose** among them. H32 asks for a correct
+outcome the frozen lineage does not reach; the evolvable lineage reached an incorrect outcome the
+frozen lineage could not reach, which is a different and weaker thing.
+
+### The part that was never mutable
+
+Every meta-primitive acts on the hypothesis schema or the rule set. None acts on the selection rule —
+the greedy first-past-the-post over public score. That rule is frozen and human-authored, and it is
+what failed. Three attempts have treated the improvement mechanism as diagnosis plus generation; this
+one shows the pair is incomplete.
+
+A successor making selection mutable is a candidate and is **not** added here to rescue this result.
+It would meet the harder form of the same problem immediately: choosing among candidates that all fit
+the public evidence requires evidence the lineage does not have, which is where M078's refusal work
+already sits.
+
+### Claim boundary
+
+Not AGI, not open-ended evolution, not arbitrary self-improvement, not general autonomy, not a
+reproduction, no contact with M085's fail-closed boundary, no foundation model. The bank is
+materialized and is not redrawn: a different salt would very likely have drawn a discriminating public
+case and produced a positive, which is exactly why it may not be drawn now.

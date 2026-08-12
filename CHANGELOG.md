@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Added M086-C, the third attempt at H32 and the first that could have failed for a scientific
+  reason. **Nine of ten conditions passed; P2 failed.** H32 moves from untested to **not supported**,
+  refuted on this bank.
+- Corrected the bank grammar after M086-B by probing what M047 templates can actually repair: 
+  and  collide with ,  has no product expression, and a tool named  shadows
+  its own builtin. ** is the only repairable missing-route operation**, so the routeless
+  operation cannot vary and the protocol says so rather than pretending to a choice.
+- Recorded, before the run, the falsifier that then fired: a  case is passed by both the
+   and  expressions whenever the operands are arithmetic, the frozen order takes
+  , and the hidden cases decide. The salt drew .
+- Recorded D054 and a FAILURE_LOG entry naming what was never mutable: every meta-primitive acts on
+  the hypothesis schema or the rule set, and the greedy selection rule that picks the adopted
+  candidate is frozen and human-authored. Capability to generate is not capability to solve.
+
 - **Reclassified M086 as M086-A, post-hoc disqualified development evidence.** Review of PR #130
   found four defects: the recorded protocol digest binds the CRLF working-tree copy rather than the
   committed blob (the M064 class recurring), P8 was never implemented and P7–P10 never entered

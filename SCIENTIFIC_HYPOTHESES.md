@@ -662,7 +662,14 @@ modification of it; and on a later independently frozen problem the modified mec
 corrective transformation lying outside the **constructive image** of the original mechanism,
 producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.
 
-**Status:** **UNTESTED after two attempts.** M086-B's single attempt is a preserved negative that
+**Status:** **NOT SUPPORTED; refuted on M086-C's bank.** The third attempt put the hypothesis at
+genuine risk and it failed. Nine of ten conditions passed: the lineage adopted a validated mechanism
+modification, survived a forced fault byte-identically, and emitted a holdout patch outside the
+starting mechanism's constructive image, while every control failed. P2 failed because that patch —
+`synthesize_tool:mean:midpoint` — passed the public evidence and not the evaluator's hidden cases.
+Capability to generate a transformation the frozen mechanism could not is not capability to solve.
+The frozen protocol named this falsifier before the run. Refuted on one bank, not in general; see
+`experiments/M086C/RESULT.md` and D054. The two earlier attempts remain: **UNTESTED after two attempts.** M086-B's single attempt is a preserved negative that
 does not refute this hypothesis: the salt drew a limitation whose routeless operation is `add`, whose
 repair the sandbox rejects with `duplicate tool registration`, so no mechanism could have repaired it
 and the hypothesis was never put at risk. All ten conditions were computed and the table names the

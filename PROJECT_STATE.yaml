@@ -1566,6 +1566,44 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M086-C:
+    title: third attempt at the evolvable improvement mechanism, on a corrected grammar
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: not_supported_refuted_on_this_bank
+    predecessors: [M086-A, M086-B]
+    protocol_frozen_commit: 09ed0d3
+    harness_commit: 5056a56
+    materialization_commit: 5948f9a
+    salt_hex: f509b6e5898ff7f0acb7fe594f4db081b4b9bdb775382383c73d5796926dfe3b
+    bank_commitment: 898c724ca91caff91b085f1e0b50fe99ef17ef2ff880a44a36059b594c134faa
+    adopted_commitment: ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443
+    holdout_digest: d1fff1923d41b7fae847c5e9135819fbd072d01c8d3ea312ba7da33257a9bcbb
+    result_sha256: 67786012cccd688251ed0914d353bae90bfe46aeb6afca9d758f621725530d14
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P1, P3, P4, P5, P6, P7, P8, P9, P10]
+    conditions_failed: [P2]
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    meta_transformations_rejected: 7
+    forced_fault_detected: true
+    forced_fault_restore_byte_identical: true
+    holdout_patch: synthesize_tool:mean:midpoint
+    holdout_public_solved: true
+    holdout_hidden_solved: false
+    failure_was_named_in_the_frozen_protocol: true
+    cause: the_public_case_did_not_discriminate_midpoint_from_mean_and_the_selection_rule_took_the_first
+    selection_rule_mutable: false
+    selection_rule_is_what_failed: true
+    routeless_operation_forced_to_mean_by_m047_templates: true
+    bank_redrawn: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
   M086-B:
     title: second attempt at the evolvable improvement mechanism, with an enforceable instrument
     epistemic_track: endogenous_bounded_lineage
