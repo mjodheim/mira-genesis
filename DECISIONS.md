@@ -1467,3 +1467,66 @@ No gate advance is available from M085 without independent reproduction from a s
 separate maintainer. Even then it would establish bounded cross-domain transfer of one acquired
 policy. No AGI, no general autonomy, no open-ended evolution, no Genesis Gate 2 or 3, and no general
 competence in any domain involved.
+
+## D052 — M086 makes the improvement mechanism mutable and advances no gate
+
+Every earlier result improves a body or a policy through a procedure we froze. M086 asks whether the
+lineage can change that procedure, and answers yes inside one bounded construction.
+
+### The decision
+
+M086 is accepted as positive bounded evidence for endogenous transformation of the improvement
+mechanism. **No generality gate advances.** It is not a competence result about any domain; it is a
+result about where the ceiling of a bounded lineage comes from.
+
+### Why the target was chosen
+
+`ModuleDiagnosis.sufficient` returns `self.module is not None`. One line, and it means the whole
+mechanism refuses to act whenever evidence implicates more than one module. M047 recorded the
+consequence honestly at the time — it met a compound task and terminated for insufficient evidence —
+and that termination was correct behaviour and a standing admission that the ceiling was our
+assumption rather than its evidence.
+
+Making *that* mutable is a smaller and more legible change than building a mutable meta-agent, and it
+has a property no model-written mechanism can offer: its constructive image is finite and can be
+**enumerated**. The harness therefore proves the control's failure rather than observing it. Zero
+candidates for the holdout means no budget could have helped, which is the capability-versus-cost
+distinction M084's status file said the next milestone had to make.
+
+### What HyperAgents contributed, and what was refused
+
+The question, and the `fixed_meta` ablation, which is their own control against themselves. Refused:
+the method. Their meta-agent asks a frontier model to rewrite the codebase, so under this
+repository's attribution rule the competence belongs to the composed system. Also refused, for now:
+the archive, the population and stochastic parent selection, because introducing them together with a
+mutable mechanism would make a positive result causally unattributable. `docs/HYPERAGENTS_COMPARISON.md`
+records the full comparison, including what they demonstrate better than we do.
+
+### The evaluator is not part of the mutable body
+
+Stated in the protocol and enforced by a checker: the mechanism cannot name the hidden cases, cannot
+reach `solves` or the sandbox, and the meta-search is only ever handed the development limitation.
+Mira may propose a better way to improve itself; it may not edit the test that decides whether the
+improvement worked, during the experiment that decides it. An evolvable evaluator is a separate
+milestone with its own external authority.
+
+### The prediction that was wrong
+
+The protocol expected the lock to be the single-module *dispatch* and therefore expected the winning
+patch to be a composed one. It was not. Widening the hypothesis schema alone sufficed. Amendment A1,
+recorded before the bank was bound, re-states P6 as the protocol's own sentence already did — outside
+the constructive image — and the fact that the search found the minimal sufficient change, rejecting
+three of four primitives individually, is evidence against the disguised-lookup failure mode rather
+than for it.
+
+### Claim boundary
+
+In one bounded project-authored construction, the mechanism producing future transformations became
+an object of endogenous transformation and that acquisition was causally necessary to a later
+capability. Nothing more. Not AGI, not open-ended evolution, not arbitrary self-improvement, not
+general autonomy, no gate, no independent reproduction, and no replacement for M085 or its
+fail-closed boundary.
+
+The meta-primitives are still ours. The lineage chose among four operations we wrote and invented no
+fifth. If a successor shows an archive is the next real limitation, that is M087 and it may not be
+added retroactively to enlarge this result.

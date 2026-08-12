@@ -118,6 +118,14 @@ is drawn from a salt that maintainer withholds until after the protocol is froze
 outcome is the correct terminal decision rather than the step count, which is the correction M084
 asks for. Until a bank exists, G4 stays exactly where M071 left it.
 
+M086 advances no gate and is recorded here because it is the kind of result most likely to be
+misread as one. It is not competence in any domain: it shows that the procedure turning evidence into
+candidate transformations, frozen by us since M047, can itself be changed by the lineage, and that the
+change was causally necessary to a later correct outcome. The control's failure is proved by
+enumerating the starting mechanism's complete constructive image rather than inferred from a score,
+which is the capability-versus-cost distinction M084 could not make. The meta-primitives are still
+ours: the lineage chose among four operations we wrote and invented no fifth.
+
 ## Model-mediated attribution rule
 
 M070–M071 use a named external model to propose actions. Task reward therefore measures the composed

@@ -653,3 +653,33 @@ later analysis could repair that.
 from a separate bank and a separate maintainer, which the protocol makes a precondition. It would
 establish bounded cross-domain transfer of one acquired policy, not general competence in any domain
 involved. See D051.
+
+## H32 — A lineage can change the mechanism that changes it, and be more capable for it
+
+A lineage permitted to modify the mechanism that turns evidence into candidate transformations will,
+after meeting a limitation that mechanism cannot express, construct and adopt a validated
+modification of it; and on a later independently frozen problem the modified mechanism will generate a
+corrective transformation lying outside the **constructive image** of the original mechanism,
+producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.
+
+**Status:** supported by the M086 qualified development result. Against evidence naming two stages at
+once, the mechanism M047 froze emits **zero** candidates — enumerated, not inferred. The lineage
+searched four meta-primitives on disposable descendants, rejected seven combinations, adopted
+`widen_hypothesis`, and then solved a frozen holdout on hidden cases. `fixed_meta`, `task_only_mutable`
+at triple budget, and `meta_acquisition_ablated` all failed. Bank `fa647e27…c2a5`; result
+`a0569361…93bd`, attempt 1.
+
+**Required implication:** the mechanism under test must be the one the repository actually froze.
+Ten differential probes on two bodies show M0 and M047's own `diagnose_limiting_module` and
+`_candidate_sources` returning identical diagnoses and identical candidate sets. Without that, the
+experiment would be about a mechanism written for the occasion.
+
+**What the design got wrong, and it matters:** composition was expected to be necessary and was not.
+The lock was the hypothesis *schema* — `sufficient` meaning "exactly one module" — and once the
+mechanism could name two modules it repaired them over two ordinary cycles. The minimal sufficient
+change was found by experiment, with three of four primitives individually rejected.
+
+**What it does not support:** the meta-primitives remain ours. The lineage chose among four operations
+we wrote and did not invent a fifth, so the human assumption moved up one level rather than
+disappearing. No gate advances, no archive, no population, no transfer, and no foundation model was
+called. See D052.

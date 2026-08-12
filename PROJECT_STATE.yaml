@@ -1566,6 +1566,68 @@ phase_eight:
     agi_evidence: false
     independent_reproduction_required: true
 
+  M086:
+    title: the improvement mechanism itself made an object of endogenous transformation
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: none_claimed
+    parent_results: [M046, M047, M084]
+    status: positive_qualified_development
+    hypothesis: H32
+    decision: D052
+    protocol: experiments/M086/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 8a8a6e7
+    bank_commitment: fa647e2733d68514ced22ecfcb9df67d5bef29b6c6cff12f0236bb2a595ec2a5
+    result_sha256: a05693615edb5c69d5d96742d9b77ac10aa2fde7b0e7fb9f431995b4ab0393bd
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_opened: false
+    frozen_thing_attacked: m047_ModuleDiagnosis_sufficient_returns_module_is_not_none
+    mutable_artifact: hypothesis_schema_plus_rule_set
+    interpreter_mutable: false
+    evaluator_mutable: false
+    m0_differentially_equivalent_to_m047: true
+    differential_probes: 10
+    differential_probe_bodies: 2
+    m0_candidates_for_the_holdout: 0
+    control_failure_is_structural_not_budgetary: true
+    meta_primitives: [widen_hypothesis, compose_expansions, parameterize_constant, relax_guard]
+    meta_transformations_rejected: 7
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    composition_required: false
+    composition_was_predicted_to_be_required: true
+    evolvable_meta_solves_holdout: true
+    fixed_meta_solves_holdout: false
+    meta_acquisition_ablated_solves_holdout: false
+    task_only_mutable_solves_holdout: false
+    task_only_mutable_budget_multiplier: 3
+    holdout_scored_from: executed_hidden_cases
+    holdout_scored_from_self_report: false
+    hidden_cases: 4
+    leak_checker: scripts/check_m086_result.py
+    independent_checker: scripts/check_m086_result.py
+    amendments_before_materialization: [A1, A2]
+    amendment_a1_reason: p6_tested_as_outside_m0_constructive_image_because_the_lock_was_the_schema_not_the_rule_inventory
+    amendment_a2_reason: bank_avoided_a_cascading_repair_and_the_m047_max_tool_builtin_shadowing_defect
+    m047_renderer_modified: false
+    meta_primitives_remain_project_authored: true
+    lineage_invented_a_new_primitive: false
+    archive_or_population_used: false
+    foundation_model_used: false
+    hyperagents_comparison: docs/HYPERAGENTS_COMPARISON.md
+    generality_gate_advanced: false
+    open_ended_evolution: false
+    arbitrary_self_improvement: false
+    general_autonomy: false
+    replaces_m085: false
+    touches_m085_fail_closed_boundary: false
+    is_an_independent_reproduction: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    local_regressions_passed: 29
+
   M085:
     title: cross-domain transfer of an acquired policy into an externally maintained held-out domain
     epistemic_track: endogenous_bounded_lineage

@@ -1041,3 +1041,52 @@ This is the fourth entry in this series where a green result would have been hol
 tautological rollback check, M082's harness-held browser state and M083's assumed window origin. It
 is the first where the hollow thing was a *control* rather than an experiment, which is worse in one
 respect: a control is what the project points at when asked whether the instrument works.
+
+## M047 — a synthesized tool named `max` shadows the builtin its own expression needs
+
+Found while building M086, in a module qualified since M047 and unchanged here.
+
+`render_tool_module(tool_name, expression_id)` emits a function named after the operation and a body
+using the matching Python builtin. For `tool_name='max'` and `expression_id='maximum'` it produces:
+
+```python
+def max(arguments):
+    if not arguments:
+        raise ValueError('tool_requires_arguments')
+    return max(arguments)
+```
+
+The module-level `def max` shadows the builtin, so the call recurses into itself until the sandbox
+kills it. The same shape would apply to a tool named `sum` with the `sum` expression, and to `min`
+with `minimum`; none of those canonical operations exists today, so `max` is the only reachable case.
+
+M047 never hit it: its synthesized tool was `tool_mean`, whose expression uses `sum` and `len` rather
+than `mean`, and no accepted cycle ever routed `max`.
+
+**It is not repaired.** Changing that renderer would change the source bytes of every synthesized
+tool, and therefore M047's accepted body digests and its preserved result. M086 avoided the collision
+instead: its routeless operation is `mean` in both limitations and never `max`, which is recorded as
+amendment A2 before the bank was bound.
+
+A successor that needs a `max` tool must fix the renderer in an experiment that re-derives M047's
+digests, not in passing.
+
+## M086 construction — a bank whose repair revealed a new fault, and a greedy tie-break that locked it in
+
+The first M086 development limitation aliased an unknown token onto an operation that had no route.
+Repairing the alias therefore moved the failure rather than removing it: the token now parsed, and
+immediately failed at execution with a missing route it had previously hidden.
+
+Worse, several candidates passed the same single case, and the cycle's tie-break took the first of
+them. It chose an alias onto the wrong canonical operation — arithmetically wrong but passing the one
+public case it was scored on — and the next cycle could diagnose nothing, because a wrong answer that
+executes produces no error stage at all.
+
+The arm reported no adopted meta-transformation and no solved limitation, which looked like a clean
+negative for H32. It was a property of the bank.
+
+Both limitations now pair an unparseable token whose canonical operation **already has a route** with
+a separately unroutable operation, so a repair cannot reveal a new fault. Recorded as amendment A2
+before the bank was bound. The lesson is the one M080, M082, M083 and the M085 wiring control each
+recorded in their own way: the run completed, nothing raised, and the number meant something other
+than what it appeared to mean.

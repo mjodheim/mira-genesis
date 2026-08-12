@@ -93,6 +93,22 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M086 makes the improvement mechanism itself mutable, and advances no gate.** Protocol frozen
+  before the harness at `8a8a6e7`; bank `fa647e27…c2a5`; first result `a0569361…93bd`, attempt 1, no
+  retry, no model, no network. M047's mechanism refuses to act unless exactly one module is at fault —
+  `ModuleDiagnosis.sufficient` is `self.module is not None` — and against evidence naming two stages it
+  emits **zero** candidates. M086 expresses that mechanism as a serialized schema and rule set executed
+  by a fixed interpreter, proves the expression faithful over **10 differential probes on two bodies**,
+  and lets the lineage modify it. It rejected **seven** meta-transformations on disposable descendants,
+  adopted `widen_hypothesis`, and then solved an independently frozen holdout on four hidden cases.
+  `fixed_meta` failed, `task_only_mutable` failed at **triple** the ordinary patching budget, and
+  `meta_acquisition_ablated` — which acquired the same modification and had it stripped before the
+  holdout — failed too, which is what separates the acquisition from mere lineage continuity. The
+  control's failure is **structural**: the starting mechanism's complete constructive image for the
+  holdout is enumerated and empty, so no budget could help. Composition, which the protocol expected to
+  be necessary, was not: the lock was the hypothesis schema. The meta-primitives remain project-authored
+  and the lineage invented no fifth one, so the human assumption moved up a level rather than
+  disappearing. See D052, H32 and `docs/HYPERAGENTS_COMPARISON.md`.
 - **M085 is prepared and blocked on an independent maintainer.** It attacks G4 directly: does a
   policy acquired in some domains improve **correct terminal decisions** in a materially different,
   externally maintained held-out domain, against a fresh organism with identical code and budget?

@@ -3,7 +3,11 @@
   "status": "frozen_before_harness_implementation",
   "epistemic_track": "endogenous-bounded-lineage",
   "target_generality_gate": "none_claimed",
-  "parent_results": ["M046", "M047", "M084"],
+  "parent_results": [
+    "M046",
+    "M047",
+    "M084"
+  ],
   "hypothesis": "H32",
   "falsifiable_hypothesis": "A lineage permitted to modify the mechanism that turns evidence into candidate transformations will, after meeting a limitation that mechanism cannot express, construct and adopt a validated modification of it; and on a later independently frozen problem the modified mechanism will generate a corrective transformation lying outside the constructive image of the original mechanism, producing a correct outcome that the same lineage with a frozen mechanism does not reach under any budget.",
   "scientific_result_exists": false,
@@ -22,7 +26,10 @@
   },
   "mutable_artifact": {
     "name": "improvement_mechanism",
-    "parts": ["hypothesis_schema", "rule_set"],
+    "parts": [
+      "hypothesis_schema",
+      "rule_set"
+    ],
     "executed_by": "a fixed interpreter",
     "interpreter_is_mutable": false,
     "why_the_interpreter_is_not_mutable": "it stands to the rule set as a CPU stands to a program; what the lineage rewrites is the schema and the rules, and the next cycle really executes the rewritten version",
@@ -39,7 +46,12 @@
   ],
   "evolvable_evaluator_is_a_separate_milestone": true,
   "meta_primitives": {
-    "declared": ["widen_hypothesis", "compose_expansions", "parameterize_constant", "relax_guard"],
+    "declared": [
+      "widen_hypothesis",
+      "compose_expansions",
+      "parameterize_constant",
+      "relax_guard"
+    ],
     "authored": true,
     "authored_like": "M046's transformation language and M047's templates",
     "enumerated_meta_transformations": false,
@@ -48,8 +60,18 @@
     "alternatives_are_individually_plausible_and_individually_insufficient": true
   },
   "information_boundary": {
-    "available_before_the_limitation": ["the body", "the public cases", "the mechanism", "the causal memory"],
-    "not_available_to_the_meta_search": ["the holdout", "the hidden cases", "which primitive works", "the evaluator outcome"],
+    "available_before_the_limitation": [
+      "the body",
+      "the public cases",
+      "the mechanism",
+      "the causal memory"
+    ],
+    "not_available_to_the_meta_search": [
+      "the holdout",
+      "the hidden cases",
+      "which primitive works",
+      "the evaluator outcome"
+    ],
     "holdout_materialized_after_the_meta_transformation_is_committed": true,
     "m069_is_the_recorded_precedent": true,
     "structural_leak_checker_required": true
@@ -62,12 +84,35 @@
     "harness_must_enumerate_m0_complete_candidate_image_for_the_holdout": true
   },
   "arms": {
-    "evolvable_meta": {"removes": "nothing"},
-    "fixed_meta": {"removes": "the ability to modify the mechanism", "role": "primary control; the same ablation HyperAgents runs against itself"},
-    "meta_acquisition_ablated": {"removes": "the adopted mechanism change, before the holdout", "keeps": ["identity", "body", "memory", "journal"], "role": "separates lineage continuity from the meta acquisition"},
-    "task_only_mutable": {"removes": "mechanism mutability but not body mutability", "role": "shows the holdout is not solved by more ordinary patching"}
+    "evolvable_meta": {
+      "removes": "nothing"
+    },
+    "fixed_meta": {
+      "removes": "the ability to modify the mechanism",
+      "role": "primary control; the same ablation HyperAgents runs against itself"
+    },
+    "meta_acquisition_ablated": {
+      "removes": "the adopted mechanism change, before the holdout",
+      "keeps": [
+        "identity",
+        "body",
+        "memory",
+        "journal"
+      ],
+      "role": "separates lineage continuity from the meta acquisition"
+    },
+    "task_only_mutable": {
+      "removes": "mechanism mutability but not body mutability",
+      "role": "shows the holdout is not solved by more ordinary patching"
+    }
   },
-  "matched_across_arms": ["identity", "starting body", "observations", "budget", "primitives"],
+  "matched_across_arms": [
+    "identity",
+    "starting body",
+    "observations",
+    "budget",
+    "primitives"
+  ],
   "primary_outcome": {
     "measure": "the holdout is solved: the adopted body passes the evaluator's hidden cases in a disposable sandbox",
     "scored_from": "executed behaviour",
@@ -153,5 +198,26 @@
     "claim any generality gate, open-ended evolution or arbitrary self-improvement",
     "change the hypothesis, thresholds, salt, primitives or task grammar after bank materialization",
     "retry the first materialized bank"
+  ],
+  "amendments": [
+    {
+      "id": "A1",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "construction runs on the unbound bank",
+      "change": "P6 is tested as 'the adopted holdout patch is not in M0's constructive image for the holdout evidence' rather than 'is emitted by a rule absent from M0's rule list'",
+      "reason": "the lock turned out to be the hypothesis schema, not the rule inventory. Widening the schema alone lets an existing rule fire on evidence M0 refuses to speak about, so the successful patch uses a rule M0 lists but could never have produced. The clause the protocol states in the same sentence \u2014 lying outside the constructive image \u2014 is unchanged, still decisive and still provable by enumeration.",
+      "claim_tested_changed": false,
+      "thresholds_relaxed": false,
+      "note": "that composition proved unnecessary is a finding and is reported as one: three of the four meta-primitives were rejected and the minimal sufficient change was adopted."
+    },
+    {
+      "id": "A2",
+      "applied_before_bank_materialization": true,
+      "discovered_by": "construction runs on the unbound bank",
+      "change": "each limitation pairs an unparseable token whose canonical operation already has a route, and the routeless operation is never `max`",
+      "reason": "an earlier bank aliased tokens onto routeless operations, so repairing the alias revealed a new missing route and the greedy tie-break locked in a wrong alias no later cycle could diagnose; and M047's render_tool_module emits a self-recursive `def max` for a tool named `max`, shadowing the builtin its expression needs. Both are properties of the bank and of a qualified renderer, not of the hypothesis under test.",
+      "m047_renderer_modified": false,
+      "recorded_in_failure_log": true
+    }
   ]
 }
