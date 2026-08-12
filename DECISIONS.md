@@ -1849,6 +1849,23 @@ terminated on budget — and the re-run produced a **byte-identical result diges
 `cb06bd7a...4d132`. The amendment is disclosed rather than absorbed, and the identity of the two
 digests is the evidence that it changed nothing.
 
+### Two P1 findings from external review, corrected before merge
+
+**The tenfold-budget arm did not spend tenfold computation.** `run_arm` called `encounter` once and
+multiplied the reported candidate and cycle counters by ten, so the number backing P5 -- the
+milestone's central falsifier -- was bookkeeping rather than work. That is the M086-A shape: a
+condition that could not fail in the intended way. The arm now **performs** ten encounters per
+family, each re-diagnosing, re-generating and re-executing every candidate body in the sandbox, and
+a determinism check refuses the arm if repetitions disagree. The run was repeated and produced a
+**byte-identical result** file, because the arithmetic had always been right and only the execution
+was missing. The correction is disclosed rather than absorbed, and the identity of the two files is
+the evidence that the science did not move.
+
+**The publication disposition was unrecorded.** M087 is the enabling implementation of a materially
+new mechanism, and `IP_ASSET_REGISTER.md` carried no entry for it. P-003 records
+`PUBLIC_AGPL_COMMERCIAL_OPTION`, matching P-001's disposition for M086, before the implementation
+merges.
+
 ### The next causal ceiling
 
 Not the selection rule any more. The lineage chose among nine authored meta-primitives and eleven

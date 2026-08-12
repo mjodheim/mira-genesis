@@ -161,8 +161,7 @@ def _public_scores(
 
 
 def encounter(
-    fam: Family, policy: SelectionPolicy, *, budget_multiple: int = 1,
-    log: AcquisitionLog | None = None,
+    fam: Family, policy: SelectionPolicy, *, log: AcquisitionLog | None = None,
 ) -> Situation:
     """One ambiguous situation, resolved by whatever the policy can do about it."""
 
@@ -209,8 +208,12 @@ def encounter(
         hidden_passed=hidden_passed,
         hidden_total=hidden_total,
         acquisitions=outcome.acquisitions,
-        candidates_evaluated=len(labels) * budget_multiple,
-        cycles=budget_multiple,
+        # The real count of candidate bodies executed in this encounter. An earlier draft
+        # multiplied this by the budget multiple without performing the work, so the tenfold
+        # control's central number was bookkeeping rather than computation. External review of
+        # PR #135 caught it; the arm now repeats the encounter and this stays a real count.
+        candidates_evaluated=len(labels),
+        cycles=1,
     )
 
 
@@ -374,11 +377,26 @@ def run_arm(arm: str, development: Development, salt: str) -> dict[str, object]:
         # The qualifying hidden cases are drawn from a salt released only after the adopted
         # policy was committed by digest, so no arm can have been shaped by them.
         fam = qualified_family(family_id, salt)
-        log = AcquisitionLog(fam.spaces, budget=max(policy.acquisition_budget, 1))
-        situation = encounter(fam, policy, budget_multiple=multiple, log=log)
-        log.seal()
+        # `multiple` encounters are actually PERFORMED, not multiplied into a counter. Every
+        # repetition re-diagnoses, re-generates and re-executes every candidate body in the
+        # sandbox, so `more_budget_same_evidence` really does spend ten times the computation
+        # over an identical and empty E_acquired. If the arm could close a discordant situation
+        # by doing so, the deficit was never informational and P5 fails.
+        performed: list[Situation] = []
+        for repetition in range(multiple):
+            log = AcquisitionLog(fam.spaces, budget=max(policy.acquisition_budget, 1))
+            performed.append(encounter(fam, policy, log=log))
+            log.seal()
+            if repetition == multiple - 1:
+                logs.append(log.to_dict())
+        situation = performed[-1]
+        situation.candidates_evaluated = sum(item.candidates_evaluated for item in performed)
+        situation.cycles = len(performed)
+        if any(item.correct != situation.correct for item in performed):
+            raise LineageError(
+                f"{arm}/{family_id}: repeated encounters disagreed, so the arm is not deterministic"
+            )
         situations.append(situation)
-        logs.append(log.to_dict())
 
     correct = [situation for situation in situations if situation.correct]
     families_correct = sorted({situation.family_id for situation in correct})

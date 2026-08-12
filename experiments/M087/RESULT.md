@@ -79,6 +79,16 @@ run never took that path — eight experiments against a budget of four, so it a
 budget — and the re-run produced a **byte-identical** result digest. The amendment is disclosed
 rather than absorbed, and the identity of the digests is the evidence that it changed nothing.
 
+## Correction after external review, disclosed
+
+Review of PR #135 found that `more_budget_same_evidence` multiplied its reported candidate and
+cycle counters by ten without performing the additional work, so the number backing P5 was
+bookkeeping rather than computation. The arm now performs ten encounters per family -- 110 real
+candidate executions, `cycles = [10, 10, 10]` -- with a determinism check that refuses the arm if
+repetitions disagree. The run was repeated and produced a **byte-identical result file**: the
+arithmetic had always been right and only the execution was missing. Recorded here because a
+falsifier that is merely reported is not a falsifier.
+
 ## What this does not establish
 
 Not AGI, not open-ended evolution, not general autonomy, no generality gate, no independent
