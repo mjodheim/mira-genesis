@@ -662,13 +662,21 @@ modification of it; and on a later independently frozen problem the modified mec
 corrective transformation lying outside the **constructive image** of the original mechanism,
 producing a correct outcome the same lineage with a frozen mechanism does not reach under any budget.
 
-**Status:** **NOT SUPPORTED; refuted on M086-C's bank.** The third attempt put the hypothesis at
+**Status:** **NOT SUPPORTED** by the two attempts that had a qualified instrument, M086-B and
+M086-C. That is a statement about those attempts and not a finding that meta-plasticity is
+impossible: one construction, one grammar, one salt each. The third attempt put the hypothesis at
 genuine risk and it failed. Nine of ten conditions passed: the lineage adopted a validated mechanism
 modification, survived a forced fault byte-identically, and emitted a holdout patch outside the
 starting mechanism's constructive image, while every control failed. P2 failed because that patch —
 `synthesize_tool:mean:midpoint` — passed the public evidence and not the evaluator's hidden cases.
 Capability to generate a transformation the frozen mechanism could not is not capability to solve.
-The frozen protocol named this falsifier before the run. Refuted on one bank, not in general; see
+The frozen protocol named this falsifier before the run.
+
+**Scope.** M086-B is a valid negative that never put the hypothesis at risk, because its bank was
+unrepairable by any mechanism. M086-C is a valid negative that did. Together they leave H32
+unsupported and leave open whether a lineage with a mutable *selection* rule, or a different
+bank, would support it. Neither result licenses a claim that the improvement mechanism cannot
+usefully be made mutable. See
 `experiments/M086C/RESULT.md` and D054. The two earlier attempts remain: **UNTESTED after two attempts.** M086-B's single attempt is a preserved negative that
 does not refute this hypothesis: the salt drew a limitation whose routeless operation is `add`, whose
 repair the sandbox rejects with `duplicate tool registration`, so no mechanism could have repaired it

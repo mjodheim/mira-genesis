@@ -3,8 +3,9 @@
 ## Unreleased
 
 - Added M086-C, the third attempt at H32 and the first that could have failed for a scientific
-  reason. **Nine of ten conditions passed; P2 failed.** H32 moves from untested to **not supported**,
-  refuted on this bank.
+  reason. **Nine of ten conditions passed; P2 failed.** H32 moves from untested to **not supported**
+  by the two attempts with a qualified instrument, M086-B and M086-C — a statement about those
+  attempts, not a finding that meta-plasticity is impossible.
 - Corrected the bank grammar after M086-B by probing what M047's templates can actually repair:
   `add` and `mul` collide with `tool_core`, `mul` has no product expression, and a tool named
   `max` shadows its own builtin. **`mean` is the only repairable missing-route operation**, so the

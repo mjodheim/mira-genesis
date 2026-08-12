@@ -1586,7 +1586,7 @@ full arm succeeded. None of that is qualified evidence.
 It may be merged only as historical, post-hoc disqualified development evidence, never as a positive
 qualification. Its title and description must say so.
 
-## D054 — M086-C refutes H32 on its bank, and names the part of the mechanism that was never mutable
+## D054 — M086-C leaves H32 unsupported, and names the part of the mechanism that was never mutable
 
 M086-A was disqualified for a threshold that could not fail. M086-B drew a bank no mechanism could
 repair. M086-C is the first attempt in this line where the hypothesis was genuinely at risk.
@@ -1594,7 +1594,9 @@ repair. M086-C is the first attempt in this line where the hypothesis was genuin
 ### The decision
 
 M086-C is accepted as a **valid negative scientific result**. H32 moves from untested to **not
-supported**, refuted on this bank and not in general. No gate moves; none was ever in play.
+supported** by the two attempts that had a qualified instrument, M086-B and M086-C. That is a
+statement about two bounded attempts. It is **not** a finding that meta-plasticity is impossible,
+and nothing here licenses that claim. No gate moves; none was ever in play.
 
 Nine of ten frozen conditions passed. The lineage adopted a validated modification of its own
 improvement mechanism after rejecting seven alternatives on disposable descendants, survived a forced

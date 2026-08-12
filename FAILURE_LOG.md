@@ -1170,7 +1170,8 @@ is not in the renderer's signature, and neither bank consulted it.
 
 ## M086-C — the mechanism generated the right candidate and then chose the wrong one
 
-M086-C is the first attempt in this line to put H32 at genuine risk, and H32 lost. Nine of the ten
+M086-C is the first attempt in this line to put H32 at genuine risk, and the hypothesis came out
+unsupported. Nine of the ten
 conditions passed. P2 failed.
 
 The lineage met a limitation its mechanism could not express, rejected seven meta-transformations,

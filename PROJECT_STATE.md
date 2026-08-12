@@ -93,7 +93,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
-- **M086-C refutes H32 on its bank, and is the first attempt in this line that could have.** Protocol
+- **M086-C leaves H32 not supported, and is the first attempt in this line that could have.** Protocol
   frozen at `09ed0d3`, harness `5056a56`, bank and holdout materialized at `5948f9a`, result
   `67786012…30d14`, attempt 1, no rerun. **Nine of ten conditions passed.** The lineage met a
   limitation its mechanism could not express, rejected seven meta-transformations on disposable
@@ -109,7 +109,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   meta-primitive acts on the hypothesis schema or the rule set, and the greedy first-past-the-post
   over public score that picks the adopted candidate is frozen and human-authored. Capability to
   generate a transformation the frozen mechanism could not is not capability to solve. The bank is
-  materialized and is not redrawn. See D054 and H32.
+  materialized and is not redrawn. **H32 is not supported by this attempt**, which is a result
+  about one bounded construction and not a finding that meta-plasticity is impossible. See D054
+  and H32.
 - **M086-B is a preserved negative and does not refute H32.** Protocol frozen at `95a5022` before
   any harness, harness at `96f4fcb`, bank and holdout materialized at `3d30168`, result
   `8b7f80d4…d31c32`, attempt 1, no rerun. All four corrections the disqualification mandated held:
@@ -121,7 +123,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   sandbox with `duplicate tool registration` because `tool_core` already registers that name. No
   mechanism could have repaired it, the meta-search returned empty across all ten combinations, and
   P1, P2, P6, P7 and P8 failed for that one cause while P3, P4, P5, P9 and P10 passed. The bank is
-  materialized and is not redrawn. **H32 remains untested after two attempts**, and the two failures
+  materialized and is not redrawn. **This attempt never put H32 at risk**, and the two failures
   differ: M086-A reported positive against a threshold that could not fail, M086-B reported negative
   against a threshold that could and named exactly what broke.
 - **M086-A is post-hoc disqualified; its qualification is withdrawn and H32 is untested.** Four defects, set out in `experiments/M086/DISQUALIFICATION.md`: `RESULT.json` binds a protocol digest matching only the CRLF working-tree copy and not the committed blob, which is the M064 checkout-dependent-hash class recurring; **P8 was never implemented** and `evaluate()` computes P1–P6 only, so P7–P10 could not make the verdict negative and the positive verdict rested on six of ten frozen conditions; the holdout existed as module constants before the meta-search and was enumerated before any arm ran, so the promised chronology was replaced by a source-text absence check; and the checker re-derived 3 of 14 preserved fields per arm, never verifying the mechanism digests or the causal journal that P7 exists to guarantee. Every artifact, digest, CI record and history entry is preserved unchanged. The observations remain diagnostic and motivate the successor. **No gate moves.** The original entry follows, preserved for the record:
