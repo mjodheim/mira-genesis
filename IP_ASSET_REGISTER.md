@@ -71,7 +71,7 @@ mechanism.
 
 | ID | Mechanism / asset | Publication posture | Human provenance | Third-party review | Disposition | Decision date | Evidence / notes |
 |---|---|---|---|---|---|---|---|
-| P-001 | M086 / evolvable improvement mechanism (prospective) | Public research intended after review | Sole-human/AI-assisted framework established; mechanism-specific record required | Initial repository inventory complete; milestone-specific scan pending | **REVIEW → expected `PUBLIC_AGPL_COMMERCIAL_OPTION` unless concrete hold reason appears** | 2026-08-12 | Do not make it private merely to preserve commercial licensing. Patent/trade-secret screening still precedes enabling disclosure. |
+| P-001 | M086 / evolvable improvement mechanism | **Protocol publicly disclosed on `research/m086-evolvable-improvement-mechanism`**; implementation not yet recorded as publicly disclosed at this snapshot | Sole-human/AI-assisted framework established; mechanism-specific provenance remains required as implementation lands | Initial repository inventory complete; milestone-specific scan pending | **`PUBLIC_AGPL_COMMERCIAL_OPTION` for the disclosed protocol/research design** | 2026-08-12 | `experiments/M086/PROTOCOL.md`, `PROTOCOL.json` and `docs/HYPERAGENTS_COMPARISON.md` were pushed publicly before this ledger update. Do not claim those disclosed design details remain secret. Any materially new implementation-specific invention not already disclosed may receive a separate pre-disclosure review before first public push. |
 
 Allowed dispositions:
 
