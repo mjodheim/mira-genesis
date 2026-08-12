@@ -1513,6 +1513,85 @@ phase_eight:
     supported_claim: public_authored_development_association_between_epistemic_context_and_better_stopping
     generality_gate_advanced: false
     agi_evidence: false
+    successor_protocol: M075-B
+    superseded_by_successor: false
+    independent_human_maintainer_requirement_still_unmet: true
+  M075-B:
+    status: instrument_built_nothing_frozen_no_bank_no_reveal
+    canonical: false
+    hypothesis: H21
+    predecessor: M075
+    supersedes_m075: false
+    amends_m075: false
+    protocol: experiments/M075B/PROTOCOL.md
+    protocol_frozen: false
+    claim_boundary_record: experiments/M075B/CLAIM_BOUNDARY.md
+    prompt_contract: experiments/M075B/GENERATOR_PROMPT_CONTRACT.md
+    generator_candidates: experiments/M075B/GENERATOR_CANDIDATES.md
+    issue_112_decision_record: experiments/M075B/ISSUE_112_DECISION.md
+    instrument_documentation: docs/BLIND_BANK_GENERATION.md
+    contract_version: mira-blind-bank-v1
+    contract_reusable_across_milestones: true
+    payload_schema_document: docs/schemas/blind_bank_payload.schema.json
+    modules:
+      - metamorphosis/blind_bank_protocol.py
+      - metamorphosis/blind_bank_isolation.py
+      - metamorphosis/blind_bank_sealing.py
+      - metamorphosis/blind_bank_devkit.py
+      - metamorphosis/m075b_blind_readiness.py
+    entry_points:
+      - scripts/check_blind_bank_readiness.py
+      - scripts/check_blind_bank_leakage.py
+      - scripts/run_blind_bank_devkit.py
+    phase: draft
+    generator_chosen: false
+    generator_prompt_written: false
+    generator_spec_frozen: false
+    analysis_plan_frozen: false
+    analysis_plan_frozen_before_generation_required: true
+    bank_materialized: false
+    bank_sealed: false
+    system_protocol_frozen: false
+    ready_for_reveal: false
+    reveal_authorized: false
+    bank_payload_accessed: false
+    scientific_result_exists: false
+    minimum_domains: 4
+    minimum_pairs_per_domain: 2
+    minimum_task_instances: 16
+    maximum_two_sided_exact_mcnemar_p: 0.05
+    generation_attempts_permitted: 1
+    reroll_permitted: false
+    validator_executes_tested_system: false
+    evaluator_reads_agent_self_report: false
+    capability_absence_certificate_machine_checkable: true
+    matched_pair_differs_by_exactly_one_capability: true
+    isolation_runner: container
+    isolation_network: none
+    isolation_repository_mount_permitted: false
+    isolation_argv_audited_independently_of_attestation_booleans: true
+    sealing_cipher_implemented_in_repository: false
+    sealing_delegated_to: [age, gpg]
+    plaintext_permitted_in_repository: false
+    reveal_requires_human_openssh_signature: true
+    reveal_signature_namespace: mira-blind-bank-reveal-v1
+    ci_leakage_check_decisive: true
+    ci_reveal_assertion_decisive: true
+    evidence_tier_reachable: blind_generated_sealed_bank
+    evidence_tier_required_for_h21_support: independently_reproduced_human_maintained_sealed_bank
+    procedural_independence_claimed: true
+    generator_context_blindness_claimed: true
+    training_data_independence_claimed: false
+    human_independence_claimed: false
+    external_reproduction_claimed: false
+    satisfies_m075_independent_human_maintainer_requirement: false
+    supports_h21: false
+    issue_112_open: true
+    issue_112_status_changed: false
+    issue_112_recommendation: keep_open_as_the_stronger_human_reproduction_path
+    m075_artifacts_modified: false
+    generality_gate_advanced: false
+    agi_evidence: false
   successor_by_larger_same_grammar_permitted: false
   distinct_structural_question_required_for_successor: true
   next_required_boundary: preprivate_causal_control_and_sealed_bank_review_then_frozen_cross_domain_transfer_and_independent_reproduction

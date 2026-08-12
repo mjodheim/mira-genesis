@@ -402,6 +402,19 @@ feasible external successes, an eight-step wasted-work advantage, six context-on
 baseline-only correct terminal decisions, exact two-sided McNemar `p <= 0.05` and zero faults.
 Separate-bank, separate-maintainer reproduction is required before H21 can become supported.
 
+**Second, weaker instrument — M075-B, built and unfrozen.** A successor protocol obtains the
+held-out bank from a context-isolated external generator instead of an independent human
+maintainer. It preserves every mechanism the human requirement buys — withholding until the
+tested system is frozen, opaque metadata, four domains and eight matched pairs, terminal-state
+scoring, structural impossibility, one materialization and no retry — and it supplies **none** of
+the outside human judgement. A positive M075-B would be evidence at the
+`blind_generated_sealed_bank` tier: procedurally independent and context-blind, provably; not
+training-data independent, which is not provable; not human-independent and not an external
+reproduction, which it does not attempt. **It cannot support H21**, whose own frozen protocol
+requires a human-maintained bank reproduced by a second maintainer. It does not close issue #112.
+No generator is chosen, no prompt is written, no bank exists and no reveal is authorized. See D055,
+`experiments/M075B/PROTOCOL.md` and `experiments/M075B/CLAIM_BOUNDARY.md`.
+
 **Scope:** even a positive H21 would be bounded refusal-transfer evidence for the named composed
 system. It would not establish mathematical impossibility, broad safety, lineage ownership,
 Genesis Gate 2/3 or AGI.

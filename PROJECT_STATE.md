@@ -93,6 +93,28 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M075-B is a built instrument with nothing frozen, and it deliberately cannot replace M075.** It
+  asks how much of M075's blocked boundary is scientific and how much is the custody mechanism
+  chosen at the time. The answer: withholding, opacity, structural impossibility, terminal-state
+  scoring, minimum bank shape and single-attempt discipline are all mechanism and all transfer to a
+  sealed bank materialized by a context-isolated external generator; **a mind outside the project
+  choosing the subject matter does not transfer**, and no number of models becomes one. So M075-B
+  can reach the `blind_generated_sealed_bank` tier and can never reach the human-maintained tier
+  H21's own protocol requires. The reusable `mira-blind-bank-v1` contract freezes the generator
+  spec, the literal prompt and the **analysis plan before generation** — the plan moves earlier than
+  the tested-system freeze because bank size determines which p values are reachable, and a
+  threshold chosen afterwards would be fitted without a task being read. `validate_analysis_plan`
+  rejects a threshold no draw could meet as firmly as one no draw could miss, which is the M086-A
+  defect inverted. Impossibility is a machine-checkable certificate rather than prose: the named
+  capability must be required, absent from the environment, the only absent one, and the pair's
+  only difference from its feasible twin. The isolation audit resolves mount paths against the
+  repository root rather than matching strings, and re-audits the recorded argv instead of trusting
+  the attestation's own booleans. One frozen spec admits exactly one materialized bank, and a
+  second is a hard failure rather than a warning. No generator is chosen, no prompt is written, no
+  bank exists, no reveal is authorized; `check_blind_bank_readiness.py` reports `phase: draft`.
+  **M075 is untouched** — no protocol, result, bank, digest or claim was modified — and
+  **issue #112 remains open and unchanged**. No gate advances. See D055 and
+  `docs/BLIND_BANK_GENERATION.md`.
 - **M086-C leaves H32 not supported, and is the first attempt in this line that could have.** Protocol
   frozen at `09ed0d3`, harness `5056a56`, bank and holdout materialized at `5948f9a`, result
   `67786012…30d14`, attempt 1, no rerun. **Nine of ten conditions passed.** The lineage met a

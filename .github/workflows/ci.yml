@@ -80,3 +80,46 @@ jobs:
 
       - name: Declared dependencies must match real imports
         run: python scripts/check_repository_integrity.py --dependencies
+
+  sealed-bank-boundary:
+    name: Sealed task-bank boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    # M086-A recorded a positive verdict partly because a scientific checker existed without
+    # being decisive in CI. These steps are decisive: a sealed-bank plaintext, a decryption key,
+    # an unprotected digest-bearing artifact, an unsigned reveal or a committed result each turn
+    # this job red on the pull request that introduced it.
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install the package and its development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: No sealed-bank plaintext, key or unprotected digest may be tracked
+        run: python scripts/check_blind_bank_leakage.py
+
+      - name: No blind sealed bank may be revealed and no result may exist
+        run: python scripts/check_blind_bank_readiness.py --assert-not-revealed
+
+      - name: M075's independent-maintainer boundary must remain fail-closed
+        run: |
+          python scripts/check_m075_private_readiness.py
+          if python scripts/check_m075_private_readiness.py --require-ready; then
+            echo "M075 reports itself ready for private payload reveal." >&2
+            echo "That is a deliberate scientific act and may not pass CI unreviewed." >&2
+            exit 1
+          fi
+
+      - name: M085's external-maintainer boundary must remain fail-closed
+        run: |
+          if python scripts/check_m085_readiness.py --require-ready; then
+            echo "M085 reports itself ready for payload reveal." >&2
+            echo "That is a deliberate scientific act and may not pass CI unreviewed." >&2
+            exit 1
+          fi

@@ -17,3 +17,9 @@
 - Readiness: correctly blocked on missing external envelope, SSH signature, signer allowlist and
   frozen private protocol; no private payload was accessed.
 - Gate advance: none.
+
+Forward reference only; no value above is changed by it. A separate, weaker successor protocol
+**M075-B** now exists at `experiments/M075B/`. It obtains a held-out bank from a context-isolated
+external generator rather than an independent human maintainer, and reaches the
+`blind_generated_sealed_bank` evidence tier. It does **not** satisfy the requirement recorded
+above, does not support H21, and does not close issue #112, which remains open. See D055.

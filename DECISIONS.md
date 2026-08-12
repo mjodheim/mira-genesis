@@ -1640,3 +1640,83 @@ Not AGI, not open-ended evolution, not arbitrary self-improvement, not general a
 reproduction, no contact with M085's fail-closed boundary, no foundation model. The bank is
 materialized and is not redrawn: a different salt would very likely have drawn a discriminating public
 case and produced a positive, which is exactly why it may not be drawn now.
+
+## D055 — Blind external bank generation is a successor to M075, not a substitute for its maintainer
+
+M075 has been blocked on a person since its public comparison closed. Issue #112 is still open.
+Before building a way around that, the requirement was decomposed rather than assumed to be
+indivisible.
+
+### The decision
+
+`mira-blind-bank-v1` is adopted as the project's standard instrument for obtaining a held-out task
+bank from a process outside the project, and **M075-B** is its first user. The instrument is
+accepted at the `blind_generated_sealed_bank` tier and is **refused** at the human-maintained tier.
+M075's protocol, result, bank metadata, digests and validator are unmodified. Issue #112 stays
+open, and its status is not changed by this decision.
+
+No generator is chosen, no prompt is written, no bank exists and no reveal is authorized. Nothing
+here is a scientific result.
+
+### What the decomposition found
+
+Six things M075 requires of an independent maintainer are mechanism, and all six transfer: the
+payload is withheld until the tested system's protocol is frozen; only opaque metadata is
+disclosed; the bank spans four materially different domains with eight matched pairs; success is
+decided from terminal environment state rather than the agent's report; impossibility is caused by
+an absent capability; the bank is materialized once and the first result stands. Encryption plus a
+signed reveal gate holds a payload at least as reliably as a person's discretion, and leaves an
+auditable record where discretion leaves none.
+
+One thing does not transfer: **a mind outside the project choosing the subject matter, and a
+person willing to attest independence and sign for it.** A model prompted by the project is the
+project's instrument, not a second party. That is the whole reason #112 stays open, and it is why
+option B — closing #112 as superseded — is rejected outright rather than deferred.
+
+### Five kinds of independence, kept apart
+
+Procedural independence and generator context blindness are claimed and provable. Training-data
+independence is **not provable** and is never claimed: the strongest available argument is that a
+checkpoint published before this line became public cannot have memorized these specific tasks,
+which bounds memorization of one corpus and says nothing about the concepts involved. Human
+independence and external reproduction are not obtained at all.
+
+The sentence this repository may never write is "the generator does not know about this project".
+The sentence it may write is "the generator was supplied no context about this project".
+`validate_generator_descriptor` refuses any descriptor recording the first as proven, and
+`BLIND_CLAIM_BOUNDARY` is a frozen constant both the analysis plan and the system protocol must
+carry byte-for-byte.
+
+### One ordering was changed from the brief, deliberately
+
+The brief placed the tested-system freeze after sealing, which is right, and implied the scoring
+rule travelled with it, which is not. Bank size determines which p values are reachable at all, so
+a threshold chosen after the bank existed would be fitted to it without a single task being read.
+The analysis plan therefore freezes at F1, alongside the generator spec and before generation, and
+the system protocol must bind its digest unchanged.
+
+`validate_analysis_plan` then re-derives the attainable exact McNemar p at the frozen threshold and
+rejects a plan that could never pass, as firmly as one that could never fail. That is the M086-A
+defect inverted, and it is checked rather than promised.
+
+### What is enforced rather than asserted
+
+Impossibility is a machine-checkable certificate: the named capability must be required, absent
+from the environment, the only absent one, and the pair's only difference from its feasible twin.
+The isolation audit resolves mount sources against the repository root in both directions instead
+of matching strings, and re-audits the recorded argv rather than trusting the attestation's own
+`repository_mounted: false`. One frozen spec admits exactly one materialized bank; a second is a
+hard failure, because a silent second draw is precisely what the contract exists to expose. The
+validator's import graph contains no path to the tested system, asserted by parsing the module.
+
+Both new checkers are decisive CI steps, and the M075 and M085 boundaries are now asserted
+fail-closed in CI as well. M086-A recorded a positive verdict partly because a scientific checker
+existed without being decisive there; a green CI must guarantee what the registers say it does.
+
+### Claim boundary
+
+Not AGI, not Genesis Gate 2 or 3, not mathematical impossibility, not general safety, not a
+reproduction, no support for H21, no contact with M085's fail-closed boundary, and no satisfaction
+of M075's independent-maintainer requirement. `AGENTS.md` §4 forbids replacing M085's external
+maintainer with evidence from a project-controlled AI agent; the same reasoning applies to M075,
+and this milestone is built to comply with that rule rather than around it.

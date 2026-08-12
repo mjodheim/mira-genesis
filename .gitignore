@@ -13,3 +13,12 @@ results/local/
 # Development outputs are reproducible through `scripts/run_*_development.py` and
 # published as CI artifacts. Only canonical results are versioned.
 results/*_development.json
+
+# Sealed blind-bank material. A payload, its plaintext or a decryption key in this public
+# repository would destroy the experiment it belongs to; `check_blind_bank_leakage.py` enforces
+# that these entries exist rather than trusting them.
+*.blind-bank-payload.json
+*.blind-bank-plaintext
+*.blind-bank.key
+*.blind-bank.age
+blind-bank-workspace/

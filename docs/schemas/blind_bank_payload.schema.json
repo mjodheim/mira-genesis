@@ -1,0 +1,132 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mjodheim.github.io/mira-genesis/schemas/blind_bank_payload.schema.json",
+  "title": "mira-blind-bank-payload-v1",
+  "description": "The confidential payload a blind generator emits. This document describes the shape; it never contains one. A file conforming to this schema may never be committed to a public repository.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "bank_id", "spec_commitment_sha256", "bank_nonce", "domains"],
+  "properties": {
+    "schema": {"const": "mira-blind-bank-payload-v1"},
+    "bank_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
+    "spec_commitment_sha256": {"$ref": "#/$defs/sha256"},
+    "bank_nonce": {
+      "$ref": "#/$defs/sha256",
+      "description": "Random per-bank value. Opaque domain identifiers derive from it and the domain index, never from the domain's subject matter, so the public commitment cannot be dictionary-attacked before reveal."
+    },
+    "domains": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/domain"}}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "capability": {"type": "string", "minLength": 1},
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_index", "opaque_domain_id", "tasks"],
+      "properties": {
+        "domain_index": {"type": "integer", "minimum": 0},
+        "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
+        "tasks": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/task"}}
+      }
+    },
+    "task": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "task_id", "pair_id", "opaque_domain_id", "feasibility_class", "instruction",
+        "environment", "permitted_interfaces", "required_capabilities",
+        "terminal_success_predicate", "absent_capability", "evaluator", "provenance"
+      ],
+      "properties": {
+        "task_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
+        "pair_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$",
+          "description": "Exactly two tasks share a pair_id: one feasible and one capability_absent, over one environment image, differing by exactly the absent capability."
+        },
+        "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
+        "feasibility_class": {"enum": ["feasible", "capability_absent"]},
+        "instruction": {"type": "string", "minLength": 1},
+        "environment": {"$ref": "#/$defs/environment"},
+        "permitted_interfaces": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "required_capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/capability"},
+          "description": "What completing the task needs. For a feasible task every entry must be available; for an impossible one exactly one entry must be unavailable, and it must be the one the certificate names."
+        },
+        "terminal_success_predicate": {"$ref": "#/$defs/predicate"},
+        "absent_capability": {
+          "description": "Null for a feasible task. For an impossible one, the machine-checkable certificate that makes impossibility structural rather than rhetorical.",
+          "oneOf": [
+            {"type": "null"},
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["capability", "reason"],
+              "properties": {
+                "capability": {"$ref": "#/$defs/capability"},
+                "reason": {"type": "string", "minLength": 1}
+              }
+            }
+          ]
+        },
+        "evaluator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "owner", "reads_agent_self_report", "spec"],
+          "properties": {
+            "kind": {"$ref": "#/$defs/evaluatorKind"},
+            "owner": {"const": "bank"},
+            "reads_agent_self_report": {"const": false},
+            "spec": {"type": "object"}
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["emitted_at_index", "raw_response_sha256"],
+          "properties": {
+            "emitted_at_index": {"type": "integer", "minimum": 0},
+            "raw_response_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "image_reference", "image_digest_sha256", "initial_state", "provides_capabilities",
+        "network", "reproducible"
+      ],
+      "properties": {
+        "image_reference": {"type": "string", "minLength": 1},
+        "image_digest_sha256": {"$ref": "#/$defs/sha256"},
+        "initial_state": {"type": "object"},
+        "provides_capabilities": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "network": {"const": "none"},
+        "reproducible": {"const": true}
+      }
+    },
+    "predicate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "expression"],
+      "properties": {
+        "kind": {"$ref": "#/$defs/evaluatorKind"},
+        "expression": {"type": "string", "minLength": 1}
+      }
+    },
+    "evaluatorKind": {
+      "description": "Terminal environment state only. Nothing decided by a reader's opinion, a rubric or another model.",
+      "enum": [
+        "terminal-file-content",
+        "terminal-file-absence",
+        "terminal-process-exit-status",
+        "terminal-service-state",
+        "terminal-stdout-exact-match"
+      ]
+    }
+  }
+}
