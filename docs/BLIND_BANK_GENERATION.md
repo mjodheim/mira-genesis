@@ -68,21 +68,67 @@ a research repository would be the least-reviewed code in the chain, guarding th
 that cannot be re-created if it is wrong. `sealing_plan` returns argv and refuses any destination
 inside the checkout; nothing in these modules starts a process.
 
-## Making impossibility structural
+**Documents that are individually valid can still describe different runs.** An attestation from
+one generator run can be paired with a payload from another, the commitment made to name a third
+generator identity, and the ledger written to agree with whichever payload was chosen — every
+document passing its own validator while the set describes nothing that happened.
+`sealed_run_binding_problems` compares each identity that must causally survive from the frozen
+spec, through the container run, into the commitment and the ledger: attested output against
+sealed payload, frozen generator identity against the commitment, pinned image reference, image
+digest, runtime name and runtime version against what actually ran.
+
+**A ledger is one milestone's record, not a shared log.** When a frozen spec commitment is
+supplied, every entry must bind it and exactly one must be a materialization. An earlier form
+filtered instead, and accepted a ledger whose single materialization belonged to another
+experiment — zero materializations for the current spec is not "more than one", so the foreign
+entry satisfied the generation stage.
+
+## Making impossibility structural, and the pair genuinely matched
 
 The weakest part of any refusal benchmark is that "impossible" usually means "phrased so that a
-careful reader gives up". This contract requires a machine-checkable certificate instead. Each
-task declares the capabilities its environment provides and the capabilities it requires. For an
-impossible task, the named absent capability must be:
+careful reader gives up". The second weakest is that a "matched pair" is often just two tasks
+filed under one identifier — and then a difference in outcome says nothing about capability,
+because the two could differ in the instruction, the starting state, the goal or the scoring.
 
-- present in `required_capabilities`;
-- absent from `provides_capabilities ∪ permitted_interfaces`;
-- **the only** required capability that is absent — otherwise a failure carries no information
-  about which absence mattered;
-- **the only** difference from its pair's feasible task, which shares the same environment image.
+A first draft of this contract stored the twins as two independent task objects and *checked*
+that they agreed. External review pointed out the obvious problem: a check has to enumerate every
+field that must stay equal, and missing one silently readmits the defect. So the representation
+changed.
 
-That last rule is what makes "matched pair" mean something. Without it, a pair is any two tasks
-filed under one identifier, and a difference in outcome says nothing about capability.
+**A matched pair is one object.** The goal, the instruction, the base environment, the initial
+state, the permitted interfaces, the required capabilities, the terminal predicate and the
+evaluator are stored **once**. The twins cannot disagree on them because there is only one copy.
+
+```
+pair
+├── instruction, base_environment, permitted_interfaces,
+│   required_capabilities, terminal_success_predicate, evaluator   ← one copy, shared
+├── absent_capability { capability, reason }
+└── twins
+    ├── feasible          { task_id, provenance }
+    └── capability_absent { task_id, provenance }
+```
+
+Each twin carries only its identifier and its emission provenance — neither can affect whether
+the task can be completed. `materialize_twin(pair, class)` derives the runnable task, and it is
+the whole causal argument in one function: every field is copied from the shared source, and the
+sole difference between the two return values is whether `provides_capabilities` contains the
+certified-absent capability.
+
+Three structural rules make impossibility real rather than declared:
+
+- the capability is **required** by the shared goal;
+- it is **absent** from `provides_capabilities` and from every permitted interface;
+- supplying it is **sufficient** — nothing else the goal requires is missing.
+
+Together these force the twins to differ by exactly one capability instead of merely recording
+that they do. `assert_matched_pair_delta` then states the conclusion rather than assuming it: it
+derives both twins, and rejects the pair unless the only differing task fields are identity,
+provenance, the class label and the derived certificate, the only differing environment field is
+`provides_capabilities`, and the capability delta is exactly the certified one, in one direction.
+
+That last guard cannot fail for a well-formed pair under this representation. It is kept because
+a future change that reintroduces a per-twin field would be caught the moment it is made.
 
 ## Reusing this for another milestone
 

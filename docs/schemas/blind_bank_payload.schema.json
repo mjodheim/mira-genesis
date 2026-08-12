@@ -22,56 +22,55 @@
     "domain": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["domain_index", "opaque_domain_id", "tasks"],
+      "required": ["domain_index", "opaque_domain_id", "pairs"],
       "properties": {
         "domain_index": {"type": "integer", "minimum": 0},
         "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
-        "tasks": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/task"}}
+        "pairs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/pair"}}
       }
     },
-    "task": {
+    "pair": {
+      "description": "A matched pair is ONE object, not two tasks sharing an identifier. The goal, instruction, environment, initial state, permitted interfaces, required capabilities, terminal predicate and evaluator are stored once and therefore cannot differ between the twins. The single preregistered difference is whether the environment supplies `absent_capability.capability`, and it is derived rather than authored: the feasible twin's environment provides it, the capability-absent twin's does not. A twin carries only its identifier and its emission provenance, neither of which can affect whether the task can be completed.",
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "task_id", "pair_id", "opaque_domain_id", "feasibility_class", "instruction",
-        "environment", "permitted_interfaces", "required_capabilities",
-        "terminal_success_predicate", "absent_capability", "evaluator", "provenance"
+        "pair_id", "opaque_domain_id", "instruction", "base_environment",
+        "permitted_interfaces", "required_capabilities", "terminal_success_predicate",
+        "absent_capability", "evaluator", "twins"
       ],
       "properties": {
-        "task_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
-        "pair_id": {
-          "type": "string",
-          "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$",
-          "description": "Exactly two tasks share a pair_id: one feasible and one capability_absent, over one environment image, differing by exactly the absent capability."
-        },
+        "pair_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
         "opaque_domain_id": {"type": "string", "pattern": "^opaque-[0-9a-f]{16}$"},
-        "feasibility_class": {"enum": ["feasible", "capability_absent"]},
-        "instruction": {"type": "string", "minLength": 1},
-        "environment": {"$ref": "#/$defs/environment"},
-        "permitted_interfaces": {"type": "array", "items": {"$ref": "#/$defs/capability"}},
+        "instruction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "One goal, shared by both twins. The capability-absent twin is not a different request; it is the same request in an environment that withholds one capability."
+        },
+        "base_environment": {"$ref": "#/$defs/environment"},
+        "permitted_interfaces": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/capability"},
+          "description": "Shared. Must not contain the certified-absent capability, or the impossible twin would have a route to it."
+        },
         "required_capabilities": {
           "type": "array",
           "minItems": 1,
           "items": {"$ref": "#/$defs/capability"},
-          "description": "What completing the task needs. For a feasible task every entry must be available; for an impossible one exactly one entry must be unavailable, and it must be the one the certificate names."
+          "description": "Shared: what completing the one goal needs. Must contain the certified-absent capability, and must contain nothing else that the base environment and permitted interfaces do not already supply — so supplying the withheld capability is exactly what makes the goal reachable."
         },
         "terminal_success_predicate": {"$ref": "#/$defs/predicate"},
         "absent_capability": {
-          "description": "Null for a feasible task. For an impossible one, the machine-checkable certificate that makes impossibility structural rather than rhetorical.",
-          "oneOf": [
-            {"type": "null"},
-            {
-              "type": "object",
-              "additionalProperties": false,
-              "required": ["capability", "reason"],
-              "properties": {
-                "capability": {"$ref": "#/$defs/capability"},
-                "reason": {"type": "string", "minLength": 1}
-              }
-            }
-          ]
+          "description": "The machine-checkable certificate that makes impossibility structural rather than rhetorical. Required on every pair: it names the one capability the shared environment withholds.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["capability", "reason"],
+          "properties": {
+            "capability": {"$ref": "#/$defs/capability"},
+            "reason": {"type": "string", "minLength": 1}
+          }
         },
         "evaluator": {
+          "description": "Shared. One evaluation for both twins, so a difference in outcome cannot come from a difference in how the two were scored.",
           "type": "object",
           "additionalProperties": false,
           "required": ["kind", "owner", "reads_agent_self_report", "spec"],
@@ -82,6 +81,24 @@
             "spec": {"type": "object"}
           }
         },
+        "twins": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["feasible", "capability_absent"],
+          "properties": {
+            "feasible": {"$ref": "#/$defs/twin"},
+            "capability_absent": {"$ref": "#/$defs/twin"}
+          }
+        }
+      }
+    },
+    "twin": {
+      "description": "Everything a twin carries of its own. Identity and provenance only: no instruction, no environment, no evaluator, no capability list, because none of those may differ between the two.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["task_id", "provenance"],
+      "properties": {
+        "task_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]{2,63}$"},
         "provenance": {
           "type": "object",
           "additionalProperties": false,
@@ -94,6 +111,7 @@
       }
     },
     "environment": {
+      "description": "The shared base. `provides_capabilities` is the floor present in BOTH twins; the feasible twin's materialized environment is this set plus the certified-absent capability.",
       "type": "object",
       "additionalProperties": false,
       "required": [

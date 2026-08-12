@@ -36,6 +36,7 @@ from metamorphosis.blind_bank_protocol import (
     BlindBankError,
     REVEAL_SIGNATURE_NAMESPACE,
     commitment_of,
+    sealed_run_binding_problems,
     sha256_hex,
     spec_commitment,
     validate_generation_ledger,
@@ -459,23 +460,18 @@ def assess_blind_bank_readiness(
             except BlindBankError as exc:
                 blockers.append(f"bank commitment: {exc}")
                 commitment = None
-        if commitment is not None and attestation is not None:
-            if commitment.get("isolation_attestation_sha256") != attestation.get(
-                "attestation_sha256"
-            ):
-                blockers.append("bank commitment does not bind the isolation attestation")
-            if ledger is not None:
-                materialized = [
-                    entry for entry in ledger["entries"]  # type: ignore[index]
-                    if entry["outcome"] == "materialized"
-                ]
-                if len(materialized) != 1:
-                    blockers.append(
-                        f"generation ledger records {len(materialized)} materialized banks; "
-                        "exactly one is permitted"
-                    )
-                elif materialized[0]["payload_sha256"] != commitment.get("payload_sha256"):
-                    blockers.append("the ledger and the commitment disagree on the sealed payload")
+        if commitment is not None and attestation is not None and spec is not None:
+            # Each document above is valid on its own. This is the check that they describe the
+            # same run: attested output against sealed payload, frozen generator identity against
+            # the commitment, pinned image and runtime against what actually ran, and the ledger
+            # entry against all three.
+            blockers += sealed_run_binding_problems(
+                spec=spec, attestation=attestation, commitment=commitment, ledger=ledger,
+            )
+        elif commitment is not None or attestation is not None:
+            blockers.append(
+                "the sealed stage is incomplete, so its artifacts cannot be bound to one run"
+            )
         if phase == "spec_frozen" and not blockers:
             phase = "generated_sealed"
     elif spec is not None and plan is not None:

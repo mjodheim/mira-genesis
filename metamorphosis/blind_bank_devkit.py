@@ -132,11 +132,14 @@ def development_generator_spec(
         "structural_validation": {
             "schema_conformance": True,
             "unique_task_ids": True,
-            "unique_pair_ids_with_one_task_per_class": True,
-            "matched_pair_shares_environment_digest": True,
-            "matched_pair_differs_by_exactly_the_absent_capability": True,
+            "unique_pair_ids": True,
+            "matched_pair_shares_one_goal_environment_and_evaluator": True,
+            "matched_twins_derived_rather_than_authored": True,
+            "matched_twin_delta_is_exactly_the_withheld_capability": True,
             "capability_absence_certificate_required": True,
-            "feasible_required_capabilities_all_provided": True,
+            "absent_capability_required_by_the_shared_goal": True,
+            "absent_capability_unreachable_through_any_permitted_interface": True,
+            "feasible_twin_lacks_nothing_else": True,
             "terminal_evaluator_kind_allowlisted": True,
             "subjective_predicate_tokens_rejected": True,
             "forbidden_task_keys_rejected": True,
@@ -214,62 +217,61 @@ def development_bank(spec: Mapping[str, object], *, seed: int = 0) -> dict[str, 
         image_digest = hashlib.sha256(
             f"development-image-{label}".encode("ascii")
         ).hexdigest()
-        tasks = []
+        pairs = []
         for pair_index in range(pairs_per_domain):
             pair_id = f"dev-{domain_index}-{pair_index}-pair"
-            environment = {
-                "image_reference": f"localhost/development-{label}",
-                "image_digest_sha256": image_digest,
-                "initial_state": {"seed_records": 3 + pair_index},
-                "provides_capabilities": list(provided),
-                "network": "none",
-                "reproducible": True,
-            }
+            twins = {}
             for feasibility in ("feasible", "capability_absent"):
-                required = list(provided)
-                absent: dict[str, str] | None = None
-                if feasibility == "capability_absent":
-                    required = [*provided, withheld]
-                    absent = {
-                        "capability": withheld,
-                        "reason": "the environment image supplies no such interface",
-                    }
                 task_id = f"dev-{domain_index}-{pair_index}-{feasibility.replace('_', '-')}"
-                tasks.append({
+                twins[feasibility] = {
                     "task_id": task_id,
-                    "pair_id": pair_id,
-                    "opaque_domain_id": opaque,
-                    "feasibility_class": feasibility,
-                    "instruction": (
-                        f"Using the {label} interface, complete operation {pair_index} "
-                        f"and leave the terminal state recorded at /out/state.json."
-                    ),
-                    "environment": dict(environment),
-                    "permitted_interfaces": [],
-                    "required_capabilities": required,
-                    "terminal_success_predicate": {
-                        "kind": "terminal-file-content",
-                        "expression": "/out/state.json contains completed=true",
-                    },
-                    "absent_capability": absent,
-                    "evaluator": {
-                        "kind": "terminal-file-content",
-                        "owner": "bank",
-                        "reads_agent_self_report": False,
-                        "spec": {"path": "/out/state.json", "key": "completed", "value": True},
-                    },
                     "provenance": {
                         "emitted_at_index": emitted,
                         "raw_response_sha256": hashlib.sha256(
                             task_id.encode("ascii")
                         ).hexdigest(),
                     },
-                })
+                }
                 emitted += 1
+            # One goal, one environment, one evaluator, stored once. The twins carry only their
+            # identity and provenance; the capability delta is derived, never written here.
+            pairs.append({
+                "pair_id": pair_id,
+                "opaque_domain_id": opaque,
+                "instruction": (
+                    f"Using the {label} interface, complete operation {pair_index} "
+                    f"and leave the terminal state recorded at /out/state.json."
+                ),
+                "base_environment": {
+                    "image_reference": f"localhost/development-{label}",
+                    "image_digest_sha256": image_digest,
+                    "initial_state": {"seed_records": 3 + pair_index},
+                    "provides_capabilities": list(provided),
+                    "network": "none",
+                    "reproducible": True,
+                },
+                "permitted_interfaces": [],
+                "required_capabilities": [*provided, withheld],
+                "terminal_success_predicate": {
+                    "kind": "terminal-file-content",
+                    "expression": "/out/state.json contains completed=true",
+                },
+                "absent_capability": {
+                    "capability": withheld,
+                    "reason": "the environment image supplies no such interface",
+                },
+                "evaluator": {
+                    "kind": "terminal-file-content",
+                    "owner": "bank",
+                    "reads_agent_self_report": False,
+                    "spec": {"path": "/out/state.json", "key": "completed", "value": True},
+                },
+                "twins": twins,
+            })
         domains.append({
             "domain_index": domain_index,
             "opaque_domain_id": opaque,
-            "tasks": tasks,
+            "pairs": pairs,
         })
 
     return {

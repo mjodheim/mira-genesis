@@ -1565,7 +1565,17 @@ phase_eight:
     validator_executes_tested_system: false
     evaluator_reads_agent_self_report: false
     capability_absence_certificate_machine_checkable: true
-    matched_pair_differs_by_exactly_one_capability: true
+    matched_pair_shared_half_stored_once: true
+    matched_twins_derived_not_authored: true
+    matched_twin_delta_is_exactly_the_withheld_capability: true
+    absent_capability_required_by_the_shared_goal: true
+    absent_capability_unreachable_through_any_permitted_interface: true
+    feasible_twin_lacks_nothing_else: true
+    sealed_artifacts_cross_bound_to_one_run: true
+    ledger_binds_the_currently_frozen_spec: true
+    external_review_p1_defects_found: 4
+    external_review_p1_defects_corrected: 4
+    external_review_weakened_the_instrument: false
     isolation_runner: container
     isolation_network: none
     isolation_repository_mount_permitted: false
@@ -1579,6 +1589,7 @@ phase_eight:
     ci_reveal_assertion_decisive: true
     ci_asserts_m075_boundary_fail_closed: true
     ci_asserts_m085_boundary_fail_closed: true
+    ci_self_test_asserts_causal_bindings_refuse_violations: true
     instrument_evidence_commit: 7002e4a843f347d4f494946a3c8a1fbb2d07387f
     instrument_ci_run: 31618867270
     instrument_ci_attempt: 1

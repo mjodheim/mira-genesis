@@ -52,6 +52,31 @@ def test_the_ci_phase_assertion_is_decisive() -> None:
     assert _run(READINESS, "--require-phase", "draft").returncode == 0
 
 
+def test_the_ci_self_test_confirms_the_causal_bindings() -> None:
+    # The step that makes `sealed-bank-boundary` decisive about the three P1 properties rather
+    # than only about the absence of artifacts.
+    completed = _run(READINESS, "--self-test")
+    assert completed.returncode == 0, completed.stderr
+    assert "refuse their violations" in completed.stdout
+
+
+def test_the_self_test_detects_a_removed_binding() -> None:
+    """The self-test must fail when a guarantee is taken away, or it guarantees nothing."""
+
+    import importlib
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    module = importlib.import_module("check_blind_bank_readiness")
+    original = module.sealed_run_binding_problems
+    try:
+        module.sealed_run_binding_problems = lambda **_kwargs: []
+        failures = module._self_test()
+    finally:
+        module.sealed_run_binding_problems = original
+    assert failures
+    assert module._self_test() == []
+
+
 def test_the_leakage_checker_passes_on_the_current_tree() -> None:
     completed = _run(LEAKAGE)
     assert completed.returncode == 0, completed.stderr + completed.stdout

@@ -105,18 +105,30 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   the tested-system freeze because bank size determines which p values are reachable, and a
   threshold chosen afterwards would be fitted without a task being read. `validate_analysis_plan`
   rejects a threshold no draw could meet as firmly as one no draw could miss, which is the M086-A
-  defect inverted. Impossibility is a machine-checkable certificate rather than prose: the named
-  capability must be required, absent from the environment, the only absent one, and the pair's
-  only difference from its feasible twin. The isolation audit resolves mount paths against the
-  repository root rather than matching strings, and re-audits the recorded argv instead of trusting
-  the attestation's own booleans. One frozen spec admits exactly one materialized bank, and a
-  second is a hard failure rather than a warning. No generator is chosen, no prompt is written, no
+  defect inverted. **A matched pair is one object, not two tasks sharing an identifier**: the goal,
+  instruction, environment, initial state, permitted interfaces, required capabilities, terminal
+  predicate and evaluator are stored once, so the twins cannot disagree on them, and the only
+  preregistered delta — whether the environment supplies the certified-absent capability — is
+  derived rather than authored. Impossibility is structural: the capability must be required by the
+  shared goal, absent from the environment and from every permitted interface, and sufficient. The
+  isolation audit resolves mount paths against the repository root rather than matching strings,
+  and re-audits the recorded argv instead of trusting the attestation's own booleans. The sealed
+  artifacts are cross-bound so that attestation, payload, generator identity, image and runtime
+  must describe **one run** rather than each being separately well-formed. One frozen spec admits
+  exactly one materialized bank, every ledger entry must bind that spec, and a second
+  materialization is a hard failure rather than a warning. No generator is chosen, no prompt is written, no
   bank exists, no reveal is authorized; `check_blind_bank_readiness.py` reports `phase: draft`.
   Exact instrument commit `7002e4a` passed run `31618867270`, attempt 1, with 1,949 passed and 11
   skipped on Python 3.11 and 3.13, repository integrity and a new decisive sealed-bank boundary job
   that also asserts the M075 and M085 boundaries remain fail-closed; attribution `31618864163`
   passed. A first run `31618681563` failed on the leak scanner matching this contract's own payload
-  schema document, and is preserved rather than replaced.
+  schema document, and is preserved rather than replaced. **External review then found four P1
+  defects, all confirmed and corrected before merge**: that leak-scanner pattern; sealed-stage
+  artifacts validated in isolation without being bound to one run; a ledger materialization
+  belonging to another frozen spec satisfying this milestone's generation stage; and a matched-pair
+  contract that was declarative rather than structural. The fourth changed the payload
+  representation, which was possible precisely because no bank existed. None of the four was
+  answered by weakening a claim.
   **M075 is untouched** — no protocol, result, bank, digest or claim was modified — and
   **issue #112 remains open and unchanged**. No gate advances. See D055 and
   `docs/BLIND_BANK_GENERATION.md`.

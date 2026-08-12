@@ -22,7 +22,7 @@ scientifically and what is an artifact of the custody mechanism chosen at the ti
 | Only opaque metadata is disclosed before reveal | The commitment must not leak subject matter | **Yes**, and more strictly: opaque domain identifiers derive from a random per-bank nonce and an index, never from the domain name, so the public commitment cannot be dictionary-attacked. |
 | Four materially different domains, eight matched pairs | Bank size determines what the test can detect | **Yes**, and the same minimum is enforced here. |
 | Success is decided from terminal environment state | M081 recorded a self-report control that over-reported twice | **Yes**, structurally: the evaluator kind is allowlisted and `reads_agent_self_report` must be `false`. |
-| Impossibility is caused by an absent capability, not a trick phrasing | Otherwise a refusal measures reading comprehension | **Yes**, and better than prose: the certificate is machine-checkable. |
+| Impossibility is caused by an absent capability, not a trick phrasing | Otherwise a refusal measures reading comprehension | **Yes**, and better than prose: the pair stores one goal and one evaluation, and the twins are derived, so the certificate is structural rather than declared. See §5. |
 | The maintainer signs an independence attestation | The project cannot self-attest independence | **No.** This is the part that does not transfer, and the reason #112 stays open. |
 
 The last row is the whole result of the audit. Everything above it is mechanism; the last row is
@@ -96,7 +96,39 @@ refusal mechanism, or an outcome anyone hopes for. `validate_generator_spec` ref
 prompt record admits any of those, and the prompt file is re-hashed at every gate check, so an
 edit after the freeze turns the repository red rather than passing quietly.
 
-## 5. What may not be done to the bank
+## 5. What makes a pair matched
+
+A pair is **one object**, not two tasks sharing an identifier. The instruction, the base
+environment and its initial state, the permitted interfaces, the required capabilities, the
+terminal predicate and the evaluator are stored once, so the twins cannot disagree on them.
+
+```
+pair
+├── instruction, base_environment, permitted_interfaces,
+│   required_capabilities, terminal_success_predicate, evaluator   ← one copy, shared
+├── absent_capability { capability, reason }
+└── twins
+    ├── feasible          { task_id, provenance }
+    └── capability_absent { task_id, provenance }
+```
+
+A twin carries its identifier and its emission provenance and nothing else, neither of which can
+affect whether the task can be completed. `materialize_twin` derives the runnable task; the only
+difference between its two outputs is whether `provides_capabilities` contains the certified
+capability.
+
+Three rules make impossibility structural: the capability is **required** by the shared goal, it
+is **absent** from the environment and from every permitted interface, and supplying it is
+**sufficient** because nothing else the goal requires is missing.
+
+This replaces an earlier draft that stored two independent task objects and compared them.
+External review of PR #134 found that such a comparison must enumerate every field that has to
+stay equal, and that a pair differing in its instruction, initial state, evaluator or terminal
+predicate would still have been counted as evidence about a capability. Storing the shared half
+once removes the class of defect rather than adding a check for each instance of it. No bank
+existed when this changed.
+
+## 6. What may not be done to the bank
 
 Preregistered, and enforced:
 
@@ -111,7 +143,7 @@ Preregistered, and enforced:
 tested system is unreachable from the validator's import graph, which a test asserts by parsing
 the module rather than by trusting the docstring.
 
-## 6. Non-retry
+## 7. Non-retry
 
 The first bank materialized under a frozen spec is **the** bank. If it is degenerate, or supports
 nothing, the result is preserved and published as it stands.
@@ -122,7 +154,7 @@ silent second draw is exactly the move this contract exists to make impossible t
 structural failure at V supersedes the protocol — it does not retry it — and a successor requires
 a new protocol version, a new prospective justification, a new bank and a new scientific identity.
 
-## 7. Reproduction
+## 8. Reproduction
 
 A successful M075-B run is one generator's bank. The reproduction contract frozen in
 `SYSTEM_PROTOCOL.json` requires, for the next tier, a **second generator differing in family and
@@ -132,7 +164,7 @@ succeeding is not a reproduction of itself.
 And the contract carries one field that cannot be edited without failing validation:
 `human_maintained_bank_still_required_for_h21_support: true`.
 
-## 8. Claim boundary
+## 9. Claim boundary
 
 See [`CLAIM_BOUNDARY.md`](CLAIM_BOUNDARY.md) for the full ladder. The short form:
 
@@ -145,7 +177,7 @@ See [`CLAIM_BOUNDARY.md`](CLAIM_BOUNDARY.md) for the full ladder. The short form
 A positive M075-B is **blind externally materialized sealed-bank evidence**. It is not
 independent human reproduction, it does not support H21, and it does not close #112.
 
-## 9. Remaining steps before any scientific run
+## 10. Remaining steps before any scientific run
 
 1. Choose and pin a generator from [`GENERATOR_CANDIDATES.md`](GENERATOR_CANDIDATES.md); record
    the weights digest, the image digest and the antecedence argument or its absence.

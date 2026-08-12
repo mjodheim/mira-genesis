@@ -501,11 +501,17 @@ def _validate_structural_validation(rules: object) -> None:
     if rules != {
         "schema_conformance": True,
         "unique_task_ids": True,
-        "unique_pair_ids_with_one_task_per_class": True,
-        "matched_pair_shares_environment_digest": True,
-        "matched_pair_differs_by_exactly_the_absent_capability": True,
+        "unique_pair_ids": True,
+        # The pair stores its goal, instruction, evaluator, terminal predicate, initial state,
+        # permitted interfaces and required capabilities once, so the twins cannot disagree on
+        # them. These three record that the representation itself carries the guarantee.
+        "matched_pair_shares_one_goal_environment_and_evaluator": True,
+        "matched_twins_derived_rather_than_authored": True,
+        "matched_twin_delta_is_exactly_the_withheld_capability": True,
         "capability_absence_certificate_required": True,
-        "feasible_required_capabilities_all_provided": True,
+        "absent_capability_required_by_the_shared_goal": True,
+        "absent_capability_unreachable_through_any_permitted_interface": True,
+        "feasible_twin_lacks_nothing_else": True,
         "terminal_evaluator_kind_allowlisted": True,
         "subjective_predicate_tokens_rejected": True,
         "forbidden_task_keys_rejected": True,
@@ -598,9 +604,27 @@ def _validate_claim_boundary(boundary: object) -> None:
         raise BlindBankError("blind-bank claim boundary drifted")
 
 
+
 # --------------------------------------------------------------------------------------------
 # payload structure
 # --------------------------------------------------------------------------------------------
+#
+# A matched pair is stored as ONE object, not as two tasks that happen to share an identifier.
+#
+# The earlier draft kept two independent task objects and checked that they agreed. That can only
+# ever be a check, and a check has to enumerate every field that must stay equal — miss one, and a
+# pair whose instruction, initial state, evaluator or terminal predicate differs is still counted
+# as evidence about an absent capability when it could equally have failed for the unrelated
+# difference. External review caught exactly that gap.
+#
+# So the invariant half is stored once. The goal, the instruction, the evaluator, the terminal
+# predicate, the initial state, the permitted interfaces and the required capabilities have a
+# single copy and therefore cannot differ between twins. The only preregistered delta is whether
+# the environment supplies `absent_capability.capability`, and it is derived by `materialize_twin`
+# rather than written by the generator.
+#
+# What each twin carries of its own is its identifier and its emission provenance. Neither can
+# affect whether the task can be completed.
 
 
 def validate_bank_payload(
@@ -650,6 +674,7 @@ def validate_bank_payload(
         )
 
     seen_task_ids: set[str] = set()
+    seen_pair_ids: set[str] = set()
     seen_opaque: set[str] = set()
     for index, domain in enumerate(domains):
         _validate_domain(
@@ -658,16 +683,17 @@ def validate_bank_payload(
             bank_nonce=str(nonce),
             pairs_per_domain=pairs_per_domain,
             seen_task_ids=seen_task_ids,
+            seen_pair_ids=seen_pair_ids,
             seen_opaque=seen_opaque,
         )
 
 
 def _validate_domain(
     domain: object, *, domain_index: int, bank_nonce: str, pairs_per_domain: int,
-    seen_task_ids: set[str], seen_opaque: set[str],
+    seen_task_ids: set[str], seen_pair_ids: set[str], seen_opaque: set[str],
 ) -> None:
     if not isinstance(domain, Mapping) or set(domain) != {
-        "domain_index", "opaque_domain_id", "tasks",
+        "domain_index", "opaque_domain_id", "pairs",
     }:
         raise BlindBankError("bank domain fields differ from the closed schema")
     if domain.get("domain_index") != domain_index:
@@ -681,89 +707,81 @@ def _validate_domain(
         raise BlindBankError("opaque domain identifiers are not unique")
     seen_opaque.add(opaque)
 
-    tasks = domain.get("tasks")
-    if not isinstance(tasks, list) or len(tasks) != pairs_per_domain * 2:
-        raise BlindBankError("bank domain task count does not match the frozen composition")
-
-    by_pair: dict[str, dict[str, Mapping[str, object]]] = {}
-    for task in tasks:
-        _validate_task(task, opaque_domain=opaque, seen_task_ids=seen_task_ids)
-        assert isinstance(task, Mapping)
-        pair_id = str(task["pair_id"])
-        feasibility = str(task["feasibility_class"])
-        bucket = by_pair.setdefault(pair_id, {})
-        if feasibility in bucket:
-            raise BlindBankError(f"pair {pair_id!r} carries two {feasibility} tasks")
-        bucket[feasibility] = task
-
-    if len(by_pair) != pairs_per_domain:
+    pairs = domain.get("pairs")
+    if not isinstance(pairs, list) or len(pairs) != pairs_per_domain:
         raise BlindBankError("bank domain pair count does not match the frozen composition")
-    for pair_id, bucket in by_pair.items():
-        if set(bucket) != set(FEASIBILITY_CLASSES):
-            raise BlindBankError(f"pair {pair_id!r} is not one feasible and one impossible task")
-        _validate_matched_pair(bucket["feasible"], bucket["capability_absent"], pair_id=pair_id)
+    for pair in pairs:
+        _validate_pair(
+            pair, opaque_domain=opaque, seen_task_ids=seen_task_ids,
+            seen_pair_ids=seen_pair_ids,
+        )
 
 
-def _validate_task(
-    task: object, *, opaque_domain: str, seen_task_ids: set[str],
+def _validate_pair(
+    pair: object, *, opaque_domain: str, seen_task_ids: set[str], seen_pair_ids: set[str],
 ) -> None:
-    expected = {
-        "task_id", "pair_id", "opaque_domain_id", "feasibility_class", "instruction",
-        "environment", "permitted_interfaces", "required_capabilities",
-        "terminal_success_predicate", "absent_capability", "evaluator", "provenance",
-    }
-    if not isinstance(task, Mapping) or set(task) != expected:
-        raise BlindBankError("bank task fields differ from the closed schema")
-    task_id = task.get("task_id")
-    if not _is_identifier(task_id):
-        raise BlindBankError("bank task identifier is malformed")
-    if task_id in seen_task_ids:
-        raise BlindBankError(f"bank task identifier {task_id!r} is not unique")
-    seen_task_ids.add(str(task_id))
-    if not _is_identifier(task.get("pair_id")):
-        raise BlindBankError("bank pair identifier is malformed")
-    if task.get("opaque_domain_id") != opaque_domain:
-        raise BlindBankError("bank task is filed under the wrong domain")
-    feasibility = task.get("feasibility_class")
-    if feasibility not in FEASIBILITY_CLASSES:
-        raise BlindBankError("bank task feasibility class is malformed")
-    instruction = task.get("instruction")
-    if not isinstance(instruction, str) or not instruction.strip():
-        raise BlindBankError("bank task instruction is missing")
+    """Validate one matched pair: one goal, one evaluation, one preregistered delta."""
 
-    environment = task.get("environment")
+    expected = {
+        "pair_id", "opaque_domain_id", "instruction", "base_environment",
+        "permitted_interfaces", "required_capabilities", "terminal_success_predicate",
+        "absent_capability", "evaluator", "twins",
+    }
+    if not isinstance(pair, Mapping) or set(pair) != expected:
+        raise BlindBankError("bank pair fields differ from the closed schema")
+    pair_id = pair.get("pair_id")
+    if not _is_identifier(pair_id):
+        raise BlindBankError("bank pair identifier is malformed")
+    if pair_id in seen_pair_ids:
+        raise BlindBankError(f"bank pair identifier {pair_id!r} is not unique")
+    seen_pair_ids.add(str(pair_id))
+    if pair.get("opaque_domain_id") != opaque_domain:
+        raise BlindBankError("bank pair is filed under the wrong domain")
+    instruction = pair.get("instruction")
+    if not isinstance(instruction, str) or not instruction.strip():
+        raise BlindBankError("bank pair instruction is missing")
+
+    environment = pair.get("base_environment")
     if not isinstance(environment, Mapping) or set(environment) != {
         "image_reference", "image_digest_sha256", "initial_state", "provides_capabilities",
         "network", "reproducible",
     }:
-        raise BlindBankError("bank task environment fields differ from the closed schema")
+        raise BlindBankError("bank pair environment fields differ from the closed schema")
     if not _is_sha256(environment.get("image_digest_sha256")):
-        raise BlindBankError("bank task environment digest is malformed")
+        raise BlindBankError("bank pair environment digest is malformed")
+    if not isinstance(environment.get("image_reference"), str) or not str(
+        environment.get("image_reference")
+    ).strip():
+        raise BlindBankError("bank pair environment image reference is missing")
     if environment.get("network") != "none":
         raise BlindBankError("bank task environments run without network access")
     if environment.get("reproducible") is not True:
         raise BlindBankError("bank task environments must be declared reproducible")
     if not isinstance(environment.get("initial_state"), Mapping):
-        raise BlindBankError("bank task initial state is malformed")
-    provides = _capability_set(environment.get("provides_capabilities"), "provided capabilities")
-    interfaces = _capability_set(task.get("permitted_interfaces"), "permitted interfaces")
-    required = _capability_set(task.get("required_capabilities"), "required capabilities")
-    if not required:
-        raise BlindBankError("a bank task must declare at least one required capability")
-    available = provides | interfaces
+        raise BlindBankError("bank pair initial state is malformed")
 
-    predicate = task.get("terminal_success_predicate")
+    provides = _capability_set(environment.get("provides_capabilities"), "provided capabilities")
+    interfaces = _capability_set(pair.get("permitted_interfaces"), "permitted interfaces")
+    required = _capability_set(pair.get("required_capabilities"), "required capabilities")
+    if not required:
+        raise BlindBankError("a bank pair must declare at least one required capability")
+
+    predicate = pair.get("terminal_success_predicate")
     if not isinstance(predicate, Mapping) or set(predicate) != {"kind", "expression"}:
-        raise BlindBankError("bank task terminal predicate fields differ from the closed schema")
+        raise BlindBankError("bank pair terminal predicate fields differ from the closed schema")
     if predicate.get("kind") not in PERMITTED_EVALUATOR_KINDS:
         raise BlindBankError("bank task terminal predicate kind is not allowlisted")
+    if not isinstance(predicate.get("expression"), str) or not str(
+        predicate.get("expression")
+    ).strip():
+        raise BlindBankError("bank pair terminal predicate expression is missing")
     _reject_subjective(predicate)
 
-    evaluator = task.get("evaluator")
+    evaluator = pair.get("evaluator")
     if not isinstance(evaluator, Mapping) or set(evaluator) != {
         "kind", "owner", "reads_agent_self_report", "spec",
     }:
-        raise BlindBankError("bank task evaluator fields differ from the closed schema")
+        raise BlindBankError("bank pair evaluator fields differ from the closed schema")
     if evaluator.get("kind") not in PERMITTED_EVALUATOR_KINDS:
         raise BlindBankError("bank task evaluator kind is not allowlisted")
     if evaluator.get("owner") != "bank":
@@ -771,53 +789,195 @@ def _validate_task(
     if evaluator.get("reads_agent_self_report") is not False:
         raise BlindBankError("a bank evaluator may never read the agent's own report")
     if not isinstance(evaluator.get("spec"), Mapping):
-        raise BlindBankError("bank task evaluator specification is malformed")
+        raise BlindBankError("bank pair evaluator specification is malformed")
     _reject_subjective(evaluator)
 
-    absent = task.get("absent_capability")
-    if feasibility == "feasible":
-        if absent is not None:
-            raise BlindBankError("a feasible task may not carry an absent-capability certificate")
-        missing = sorted(required - available)
-        if missing:
-            raise BlindBankError(
-                f"feasible task {task_id!r} requires unavailable capabilities: {missing}"
-            )
-    else:
-        if not isinstance(absent, Mapping) or set(absent) != {"capability", "reason"}:
-            raise BlindBankError("absent-capability certificate fields differ from the schema")
-        capability = absent.get("capability")
-        if not isinstance(capability, str) or not capability.strip():
-            raise BlindBankError("absent-capability certificate names no capability")
-        if not isinstance(absent.get("reason"), str) or not str(absent.get("reason")).strip():
-            raise BlindBankError("absent-capability certificate carries no reason")
-        if capability not in required:
-            raise BlindBankError(
-                "an impossible task must require the capability its certificate declares absent"
-            )
-        if capability in available:
-            # The rule that makes impossibility structural rather than rhetorical: the missing
-            # capability must be missing from the environment, not merely awkward to phrase.
-            raise BlindBankError(
-                "the declared absent capability is present in the task environment"
-            )
-        surplus = sorted((required - available) - {capability})
-        if surplus:
-            raise BlindBankError(
-                f"impossible task {task_id!r} is unreachable for more than one reason: {surplus}"
-            )
+    absent = pair.get("absent_capability")
+    if not isinstance(absent, Mapping) or set(absent) != {"capability", "reason"}:
+        raise BlindBankError("absent-capability certificate fields differ from the schema")
+    capability = absent.get("capability")
+    if not isinstance(capability, str) or not capability.strip():
+        raise BlindBankError("absent-capability certificate names no capability")
+    if not isinstance(absent.get("reason"), str) or not str(absent.get("reason")).strip():
+        raise BlindBankError("absent-capability certificate carries no reason")
 
-    provenance = task.get("provenance")
-    if not isinstance(provenance, Mapping) or set(provenance) != {
-        "emitted_at_index", "raw_response_sha256",
-    }:
-        raise BlindBankError("bank task provenance fields differ from the closed schema")
-    if not isinstance(provenance.get("emitted_at_index"), int) or isinstance(
-        provenance.get("emitted_at_index"), bool
-    ) or int(provenance["emitted_at_index"]) < 0:
-        raise BlindBankError("bank task emission index is malformed")
-    if not _is_sha256(provenance.get("raw_response_sha256")):
-        raise BlindBankError("bank task raw-response digest is malformed")
+    # The three rules that make impossibility structural. The goal must genuinely need the
+    # capability; the shared environment must withhold it, so the impossible twin lacks it; and
+    # supplying it must be sufficient, so the feasible twin lacks nothing else. Together they
+    # force the twins to differ by exactly one capability rather than merely record that they do.
+    if capability not in required:
+        raise BlindBankError(
+            "an impossible task must require the capability its certificate declares absent"
+        )
+    if capability in provides:
+        raise BlindBankError("the declared absent capability is present in the pair environment")
+    if capability in interfaces:
+        raise BlindBankError(
+            "the declared absent capability is reachable through a permitted interface"
+        )
+    surplus = sorted(required - (provides | interfaces | {capability}))
+    if surplus:
+        raise BlindBankError(
+            f"pair {pair_id!r} is unreachable for more than one reason: {surplus}"
+        )
+
+    twins = pair.get("twins")
+    if not isinstance(twins, Mapping) or set(twins) != set(FEASIBILITY_CLASSES):
+        raise BlindBankError("a pair carries exactly one feasible and one impossible twin")
+    for _feasibility, twin in sorted(twins.items()):
+        if not isinstance(twin, Mapping) or set(twin) != {"task_id", "provenance"}:
+            raise BlindBankError("bank twin fields differ from the closed schema")
+        task_id = twin.get("task_id")
+        if not _is_identifier(task_id):
+            raise BlindBankError("bank task identifier is malformed")
+        if task_id in seen_task_ids:
+            raise BlindBankError(f"bank task identifier {task_id!r} is not unique")
+        seen_task_ids.add(str(task_id))
+        provenance = twin.get("provenance")
+        if not isinstance(provenance, Mapping) or set(provenance) != {
+            "emitted_at_index", "raw_response_sha256",
+        }:
+            raise BlindBankError("bank twin provenance fields differ from the closed schema")
+        if not isinstance(provenance.get("emitted_at_index"), int) or isinstance(
+            provenance.get("emitted_at_index"), bool
+        ) or int(provenance["emitted_at_index"]) < 0:
+            raise BlindBankError("bank task emission index is malformed")
+        if not _is_sha256(provenance.get("raw_response_sha256")):
+            raise BlindBankError("bank task raw-response digest is malformed")
+
+    # Derive both twins and state, rather than assume, that they differ in exactly the
+    # preregistered way. With the shared fields stored once this cannot fail for a well-formed
+    # pair, which is the point: the check is here so that a future change to the representation
+    # that reintroduces a per-twin field is caught the moment it is made.
+    assert_matched_pair_delta(pair)
+
+
+def materialize_twin(
+    pair: Mapping[str, object], feasibility_class: str,
+) -> dict[str, object]:
+    """Derive one runnable twin from a validated pair.
+
+    This is the only sanctioned way to turn a pair into a task, and it is the whole causal
+    argument in one function: every field is copied from the single shared source, and the sole
+    difference between the two return values is whether `provides_capabilities` contains the
+    certified-absent capability.
+    """
+
+    if feasibility_class not in FEASIBILITY_CLASSES:
+        raise BlindBankError(f"unknown feasibility class {feasibility_class!r}")
+    absent = pair["absent_capability"]
+    assert isinstance(absent, Mapping)
+    capability = str(absent["capability"])
+    environment = dict(pair["base_environment"])  # type: ignore[arg-type]
+    provided = list(environment["provides_capabilities"])
+    if feasibility_class == "feasible":
+        provided = sorted({*provided, capability})
+    environment["provides_capabilities"] = provided
+    twin = pair["twins"][feasibility_class]  # type: ignore[index]
+    return {
+        "task_id": twin["task_id"],
+        "pair_id": pair["pair_id"],
+        "opaque_domain_id": pair["opaque_domain_id"],
+        "feasibility_class": feasibility_class,
+        "instruction": pair["instruction"],
+        "environment": environment,
+        "permitted_interfaces": list(pair["permitted_interfaces"]),  # type: ignore[arg-type]
+        "required_capabilities": list(pair["required_capabilities"]),  # type: ignore[arg-type]
+        "terminal_success_predicate": dict(pair["terminal_success_predicate"]),  # type: ignore[arg-type]
+        "absent_capability": None if feasibility_class == "feasible" else dict(absent),
+        "evaluator": dict(pair["evaluator"]),  # type: ignore[arg-type]
+        "provenance": dict(twin["provenance"]),
+    }
+
+
+# Fields of a materialized twin that must be byte-identical between the two classes. Anything not
+# listed here is either the preregistered delta or an identifier with no causal role.
+MATCHED_TWIN_INVARIANT_FIELDS = (
+    "pair_id",
+    "opaque_domain_id",
+    "instruction",
+    "permitted_interfaces",
+    "required_capabilities",
+    "terminal_success_predicate",
+    "evaluator",
+)
+
+MATCHED_TWIN_PERMITTED_DELTA_FIELDS = (
+    "task_id",
+    "feasibility_class",
+    "absent_capability",
+    "provenance",
+    "environment",
+)
+
+
+def matched_pair_delta(pair: Mapping[str, object]) -> dict[str, object]:
+    """Return the difference between a pair's two materialized twins.
+
+    Used by the validator and by the tests to state, rather than assume, that the twins differ in
+    exactly the preregistered way. A pair whose twins diverge anywhere else is rejected before it
+    can be counted as evidence about a capability.
+    """
+
+    feasible = materialize_twin(pair, "feasible")
+    impossible = materialize_twin(pair, "capability_absent")
+    feasible_environment = feasible["environment"]
+    impossible_environment = impossible["environment"]
+    assert isinstance(feasible_environment, Mapping)
+    assert isinstance(impossible_environment, Mapping)
+    return {
+        "differing_task_fields": sorted(
+            key for key in set(feasible) | set(impossible)
+            if feasible.get(key) != impossible.get(key)
+        ),
+        "differing_environment_fields": sorted(
+            key for key in set(feasible_environment) | set(impossible_environment)
+            if feasible_environment.get(key) != impossible_environment.get(key)
+        ),
+        "capability_delta": sorted(
+            set(feasible_environment["provides_capabilities"])
+            - set(impossible_environment["provides_capabilities"])
+        ),
+        "reverse_capability_delta": sorted(
+            set(impossible_environment["provides_capabilities"])
+            - set(feasible_environment["provides_capabilities"])
+        ),
+    }
+
+
+def assert_matched_pair_delta(pair: Mapping[str, object]) -> None:
+    """Fail unless a pair's twins differ in exactly the preregistered way."""
+
+    delta = matched_pair_delta(pair)
+    absent = pair["absent_capability"]
+    assert isinstance(absent, Mapping)
+    capability = str(absent["capability"])
+    unexpected = sorted(
+        set(delta["differing_task_fields"]) - set(MATCHED_TWIN_PERMITTED_DELTA_FIELDS)
+    )
+    if unexpected:
+        raise BlindBankError(
+            f"matched twins differ outside the preregistered delta: {unexpected}"
+        )
+    if delta["differing_environment_fields"] != ["provides_capabilities"]:
+        raise BlindBankError(
+            "matched twins differ in the environment beyond the withheld capability: "
+            f"{delta['differing_environment_fields']}"
+        )
+    if delta["capability_delta"] != [capability]:
+        raise BlindBankError(
+            f"the twins' capability delta is {delta['capability_delta']}, not [{capability!r}]"
+        )
+    if delta["reverse_capability_delta"]:
+        raise BlindBankError(
+            "the impossible twin provides capabilities its feasible counterpart does not: "
+            f"{delta['reverse_capability_delta']}"
+        )
+    feasible = materialize_twin(pair, "feasible")
+    impossible = materialize_twin(pair, "capability_absent")
+    for field in MATCHED_TWIN_INVARIANT_FIELDS:
+        if feasible[field] != impossible[field]:
+            raise BlindBankError(f"matched twins disagree on the invariant field {field!r}")
 
 
 def _capability_set(value: object, label: str) -> set[str]:
@@ -839,32 +999,6 @@ def _reject_subjective(value: Mapping[str, object]) -> None:
                 raise BlindBankError(
                     f"terminal success may not depend on the subjective term {token!r}"
                 )
-
-
-def _validate_matched_pair(
-    feasible: Mapping[str, object], impossible: Mapping[str, object], *, pair_id: str,
-) -> None:
-    feasible_env = feasible["environment"]
-    impossible_env = impossible["environment"]
-    assert isinstance(feasible_env, Mapping) and isinstance(impossible_env, Mapping)
-    if feasible_env.get("image_digest_sha256") != impossible_env.get("image_digest_sha256"):
-        raise BlindBankError(f"pair {pair_id!r} does not share one environment image")
-    absent = impossible["absent_capability"]
-    assert isinstance(absent, Mapping)
-    capability = str(absent["capability"])
-    feasible_required = set(feasible["required_capabilities"])  # type: ignore[arg-type]
-    impossible_required = set(impossible["required_capabilities"])  # type: ignore[arg-type]
-    # Matched means: the two tasks ask for the same thing except for the one capability that is
-    # missing. Without this, "matched pair" could be any two tasks filed under one identifier, and
-    # a difference in outcome would carry no information about capability.
-    if impossible_required - feasible_required != {capability}:
-        raise BlindBankError(
-            f"pair {pair_id!r} does not differ by exactly the absent capability"
-        )
-    if feasible_required - impossible_required:
-        raise BlindBankError(
-            f"pair {pair_id!r} feasible task requires capabilities its counterpart does not"
-        )
 
 
 # --------------------------------------------------------------------------------------------
@@ -1009,6 +1143,13 @@ def validate_generation_ledger(
     One frozen spec admits exactly one materialized bank. A second one is not an error to be
     corrected quietly; it is the retry this contract exists to make impossible to hide, so a
     ledger carrying two is rejected outright and every failed attempt must remain in it.
+
+    When a frozen spec commitment is supplied, the ledger is treated as that milestone's own
+    record: **every** entry must bind that commitment, and exactly one of them must be a
+    materialization. External review found the earlier form accepted a ledger whose single
+    materialization belonged to a different experiment, which then satisfied the generation stage
+    for a spec it had nothing to do with. A single-spec ledger removes that class of mix-up
+    entirely rather than filtering around it.
     """
 
     if not isinstance(ledger, Mapping) or set(ledger) != {"schema", "entries"}:
@@ -1056,8 +1197,114 @@ def validate_generation_ledger(
             raise BlindBankError(
                 f"spec {commitment[:12]} materialized {count} banks; one frozen spec admits one"
             )
-    if spec_commitment_sha256 is not None and materialized.get(spec_commitment_sha256, 0) > 1:
-        raise BlindBankError("the frozen spec has materialized more than one bank")
+    if spec_commitment_sha256 is None:
+        return
+    foreign = sorted({
+        str(entry["spec_commitment_sha256"]) for entry in entries  # type: ignore[index]
+        if entry["spec_commitment_sha256"] != spec_commitment_sha256  # type: ignore[index]
+    })
+    if foreign:
+        raise BlindBankError(
+            "generation ledger carries entries for another frozen spec: "
+            + ", ".join(digest[:12] for digest in foreign)
+        )
+    count = materialized.get(spec_commitment_sha256, 0)
+    if count != 1:
+        raise BlindBankError(
+            f"the frozen spec has materialized {count} banks; exactly one is required"
+        )
+
+
+# --------------------------------------------------------------------------------------------
+# cross-artifact binding
+# --------------------------------------------------------------------------------------------
+
+
+def sealed_run_binding_problems(
+    *,
+    spec: Mapping[str, object],
+    attestation: Mapping[str, object],
+    commitment: Mapping[str, object],
+    ledger: Mapping[str, object] | None = None,
+) -> list[str]:
+    """Return every reason the four sealed-stage artifacts do not describe one run.
+
+    Validating each document on its own is not enough, and external review demonstrated why: an
+    attestation from one generator run can be paired with a payload from another, the commitment
+    made to name a third generator identity, and the ledger written to agree with whichever
+    payload was chosen. Every document passes; the set describes nothing that happened.
+
+    So each identity that must causally survive from the frozen spec, through the container run,
+    into the sealed commitment and the ledger is compared here. Nothing is inferred: where two
+    documents record the same fact, they must record it identically.
+    """
+
+    problems: list[str] = []
+    generator = spec.get("generator")
+    runtime = generator.get("runtime") if isinstance(generator, Mapping) else None
+
+    # The payload the container emitted must be the payload that was sealed. Without this the
+    # sealed bank need not be the one the isolated run produced at all.
+    if attestation.get("output_sha256") != commitment.get("payload_sha256"):
+        problems.append(
+            "the attested generator output is not the payload recorded in the commitment"
+        )
+    if commitment.get("isolation_attestation_sha256") != attestation.get("attestation_sha256"):
+        problems.append("bank commitment does not bind the isolation attestation")
+
+    # The generator identity frozen before generation must be the identity the commitment claims.
+    if isinstance(generator, Mapping):
+        expected_generator = generator_commitment(generator)
+        if commitment.get("generator_commitment_sha256") != expected_generator:
+            problems.append(
+                "bank commitment names a different generator from the frozen specification"
+            )
+    else:
+        problems.append("the frozen specification carries no generator descriptor")
+
+    # The image and runtime that actually ran must be the ones the spec pinned. A commitment can
+    # name the right generator while the container ran a different image entirely.
+    if isinstance(runtime, Mapping):
+        for attested, declared, label in (
+            ("image_digest_sha256", "image_digest_sha256", "image digest"),
+            ("image_reference", "image_reference", "image reference"),
+            ("runtime_name", "name", "runtime name"),
+            ("runtime_version", "version", "runtime version"),
+        ):
+            if attestation.get(attested) != runtime.get(declared):
+                problems.append(
+                    f"the attested generator {label} differs from the frozen specification"
+                )
+    else:
+        problems.append("the frozen specification carries no generator runtime")
+
+    if commitment.get("spec_commitment_sha256") != spec.get("spec_commitment_sha256"):
+        problems.append("bank commitment does not bind the frozen generator spec")
+
+    if ledger is None:
+        return problems
+    entries = ledger.get("entries")
+    if not isinstance(entries, list):
+        problems.append("generation ledger entries are malformed")
+        return problems
+    materialized = [
+        entry for entry in entries
+        if isinstance(entry, Mapping) and entry.get("outcome") == "materialized"
+    ]
+    if len(materialized) != 1:
+        problems.append(
+            f"generation ledger records {len(materialized)} materialized banks; "
+            "exactly one is permitted"
+        )
+        return problems
+    entry = materialized[0]
+    if entry.get("spec_commitment_sha256") != spec.get("spec_commitment_sha256"):
+        problems.append("the materialized ledger entry belongs to a different frozen spec")
+    if entry.get("payload_sha256") != commitment.get("payload_sha256"):
+        problems.append("the ledger and the commitment disagree on the sealed payload")
+    if entry.get("isolation_attestation_sha256") != attestation.get("attestation_sha256"):
+        problems.append("the ledger and the commitment disagree on the isolation attestation")
+    return problems
 
 
 # --------------------------------------------------------------------------------------------
@@ -1112,10 +1359,13 @@ __all__ = [
     "CONTAMINATION_TOKENS", "COMMITMENT_SCHEMA", "CONTRACT_VERSION",
     "DEVELOPMENT_PAYLOAD_SCHEMA", "EVIDENCE_TIERS", "FEASIBILITY_CLASSES",
     "FORBIDDEN_TASK_KEYS", "GENERATOR_SCHEMA", "ISOLATION_SCHEMA", "LEDGER_OUTCOMES",
-    "LEDGER_SCHEMA", "PAYLOAD_SCHEMA", "PERMITTED_EVALUATOR_KINDS", "PHASES",
+    "LEDGER_SCHEMA", "MATCHED_TWIN_INVARIANT_FIELDS", "MATCHED_TWIN_PERMITTED_DELTA_FIELDS",
+    "PAYLOAD_SCHEMA", "PERMITTED_EVALUATOR_KINDS", "PHASES",
     "REVEAL_SCHEMA", "REVEAL_SIGNATURE_NAMESPACE", "SPEC_SCHEMA",
-    "SUBJECTIVE_PREDICATE_TOKENS", "BlindBankError", "build_public_commitment",
+    "SUBJECTIVE_PREDICATE_TOKENS", "BlindBankError", "assert_matched_pair_delta",
+    "build_public_commitment",
     "canonical_bytes", "commitment_of", "contamination_hits", "generator_commitment",
+    "matched_pair_delta", "materialize_twin", "sealed_run_binding_problems",
     "opaque_domain_id", "sha256_hex", "spec_commitment", "validate_bank_payload",
     "validate_generation_ledger", "validate_generator_descriptor", "validate_generator_spec",
     "validate_public_commitment", "validate_reveal_authorization",

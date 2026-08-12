@@ -107,6 +107,14 @@ jobs:
       - name: No blind sealed bank may be revealed and no result may exist
         run: python scripts/check_blind_bank_readiness.py --assert-not-revealed
 
+      # The gate reporting `phase: draft` on a repository with no artifacts proves nothing about
+      # what it would refuse once artifacts exist. This constructs the three violations external
+      # review found -- an attestation paired with another run's payload, a ledger materialization
+      # belonging to another frozen spec, and matched twins differing beyond the withheld
+      # capability -- and fails if any of them is now accepted.
+      - name: The sealed-run, ledger and matched-pair bindings must refuse their violations
+        run: python scripts/check_blind_bank_readiness.py --self-test
+
       - name: M075's independent-maintainer boundary must remain fail-closed
         run: |
           python scripts/check_m075_private_readiness.py

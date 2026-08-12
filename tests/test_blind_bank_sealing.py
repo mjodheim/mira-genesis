@@ -171,12 +171,15 @@ def test_the_commitment_discloses_no_task_content(
     )
     serialized = canonical_bytes(commitment).decode("utf-8")
     for domain in payload["domains"]:  # type: ignore[index]
-        for task in domain["tasks"]:
-            assert task["task_id"] not in serialized
-            assert task["instruction"] not in serialized
-            assert task["environment"]["image_reference"] not in serialized
-            for capability in task["required_capabilities"]:
+        for pair in domain["pairs"]:
+            assert pair["pair_id"] not in serialized
+            assert pair["instruction"] not in serialized
+            assert pair["base_environment"]["image_reference"] not in serialized
+            assert pair["absent_capability"]["capability"] not in serialized
+            for capability in pair["required_capabilities"]:
                 assert capability not in serialized
+            for twin in pair["twins"].values():
+                assert twin["task_id"] not in serialized
 
 
 # ---------------------------------------------------------------------------------------------

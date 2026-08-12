@@ -27,6 +27,7 @@ from metamorphosis.blind_bank_protocol import (
     REVEAL_SCHEMA,
     REVEAL_SIGNATURE_NAMESPACE,
     canonical_bytes,
+    commitment_of,
     generator_commitment,
     sha256_hex,
     spec_commitment,
@@ -194,10 +195,14 @@ class Chain:
         request.write_text("{}", encoding="utf-8")
         output = self.outside / "out"
         output.mkdir()
+        # The attestation must describe the run the frozen spec pinned, so the image and runtime
+        # are taken from the spec rather than invented. A fixture that invented them was rejected
+        # by the cross-artifact binding, which is the point of that check.
+        runtime = self.spec["generator"]["runtime"]  # type: ignore[index]
         invocation = plan_invocation(
             repository_root=self.root,
-            image_reference="localhost/blind-generator",
-            image_digest_sha256="0" * 64,
+            image_reference=str(runtime["image_reference"]),
+            image_digest_sha256=str(runtime["image_digest_sha256"]),
             input_path=request,
             output_directory=output,
             environment={
@@ -212,14 +217,16 @@ class Chain:
             plan=invocation,
             repository_root=self.root,
             input_sha256=sha256_hex(request.read_bytes()),
+            # The attested output is the payload that gets sealed. Anything else would be an
+            # attestation of a run that produced a different bank.
             output_sha256=sha256_hex(canonical),
             stdout_sha256=sha256_hex(b""),
             stderr_sha256=sha256_hex(b""),
             started_at="2026-08-12T00:00:00Z",
             finished_at="2026-08-12T00:10:00Z",
             exit_status=0,
-            runtime_name="containerd",
-            runtime_version="1.7.0",
+            runtime_name=str(runtime["name"]),
+            runtime_version=str(runtime["version"]),
         )
         self.commitment = finalize_seal(
             payload=self.payload,
@@ -483,6 +490,153 @@ def test_an_isolation_attestation_mounting_the_repository_is_detected(chain: Cha
     _write(chain.root / ISOLATION_ATTESTATION_PATH, attestation)
     report = chain.assess()
     assert any("isolation attestation" in item for item in report["blockers"])
+
+
+# --- P1-1: the four sealed-stage artifacts must describe one run -------------------------------
+
+
+def test_an_attestation_from_one_run_with_a_payload_from_another_is_detected(
+    chain: Chain,
+) -> None:
+    """Attestation A + payload B, with the ledger made to agree with B.
+
+    Each document is individually well formed, so nothing but the cross-binding catches it.
+    """
+
+    chain.write_through("protocol")
+    other = development_bank(chain.spec, seed=9)
+    other_digest = sha256_hex(canonical_bytes(other))
+    commitment = finalize_seal(
+        payload=other,
+        spec=chain.spec,
+        generator_commitment_sha256=generator_commitment(chain.spec["generator"]),
+        isolation_attestation_sha256=str(chain.attestation["attestation_sha256"]),
+        ciphertext_sha256="3" * 64,
+        cipher="age-v1-x25519",
+        key_custody="external-holder",
+        sealed_at="2026-08-12T00:11:00Z",
+        milestone=MILESTONE,
+    )
+    ledger = json.loads(json.dumps(chain.ledger))
+    ledger["entries"][0]["payload_sha256"] = other_digest
+    _write(chain.root / BANK_COMMITMENT_PATH, commitment)
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any(
+        "attested generator output is not the payload" in item for item in report["blockers"]
+    )
+    assert report["ready_for_reveal"] is False
+    assert report["phase"] == "spec_frozen"
+
+
+def test_a_commitment_naming_another_generator_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    commitment = json.loads(json.dumps(chain.commitment))
+    commitment["generator_commitment_sha256"] = "9" * 64
+    commitment["commitment_sha256"] = commitment_of(commitment, omit="commitment_sha256")
+    _write(chain.root / BANK_COMMITMENT_PATH, commitment)
+    report = chain.assess()
+    assert any(
+        "different generator from the frozen" in item for item in report["blockers"]
+    )
+    assert report["ready_for_reveal"] is False
+
+
+def test_an_attestation_recording_a_different_image_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    attestation = json.loads(json.dumps(chain.attestation))
+    attestation["image_digest_sha256"] = "7" * 64
+    attestation["attestation_sha256"] = sha256_hex(canonical_bytes({
+        key: value for key, value in attestation.items() if key != "attestation_sha256"
+    }))
+    _write(chain.root / ISOLATION_ATTESTATION_PATH, attestation)
+    report = chain.assess()
+    assert any("image digest differs" in item for item in report["blockers"])
+    assert report["ready_for_reveal"] is False
+
+
+def test_an_attestation_recording_a_different_runtime_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    attestation = json.loads(json.dumps(chain.attestation))
+    attestation["runtime_name"] = "another-runtime"
+    attestation["attestation_sha256"] = sha256_hex(canonical_bytes({
+        key: value for key, value in attestation.items() if key != "attestation_sha256"
+    }))
+    _write(chain.root / ISOLATION_ATTESTATION_PATH, attestation)
+    report = chain.assess()
+    assert any("runtime name differs" in item for item in report["blockers"])
+
+
+def test_a_payload_digest_changed_after_sealing_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    commitment = json.loads(json.dumps(chain.commitment))
+    commitment["payload_sha256"] = "8" * 64
+    commitment["commitment_sha256"] = commitment_of(commitment, omit="commitment_sha256")
+    _write(chain.root / BANK_COMMITMENT_PATH, commitment)
+    report = chain.assess()
+    assert any(
+        "attested generator output is not the payload" in item for item in report["blockers"]
+    )
+
+
+# --- P1-2: the ledger must belong to the frozen spec -------------------------------------------
+
+
+def test_a_materialization_for_another_spec_does_not_satisfy_this_milestone(
+    chain: Chain,
+) -> None:
+    """One `materialized` entry belonging to a different experiment used to pass the gate."""
+
+    chain.write_through("protocol")
+    ledger = json.loads(json.dumps(chain.ledger))
+    ledger["entries"][0]["spec_commitment_sha256"] = "b" * 64
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any("another frozen spec" in item for item in report["blockers"])
+    assert report["ready_for_reveal"] is False
+
+
+def test_a_foreign_materialization_mixed_into_the_ledger_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    ledger = json.loads(json.dumps(chain.ledger))
+    foreign = json.loads(json.dumps(ledger["entries"][0]))
+    foreign["attempt_index"] = 2
+    foreign["spec_commitment_sha256"] = "b" * 64
+    foreign["payload_sha256"] = "c" * 64
+    ledger["entries"].append(foreign)
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any("another frozen spec" in item for item in report["blockers"])
+
+
+def test_the_right_payload_under_the_wrong_spec_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    ledger = json.loads(json.dumps(chain.ledger))
+    ledger["entries"][0]["spec_commitment_sha256"] = "b" * 64  # payload digest left correct
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any("another frozen spec" in item for item in report["blockers"])
+
+
+def test_the_right_spec_with_the_wrong_payload_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    ledger = json.loads(json.dumps(chain.ledger))
+    ledger["entries"][0]["payload_sha256"] = "c" * 64
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any("disagree on the sealed payload" in item for item in report["blockers"])
+
+
+def test_a_ledger_with_no_materialization_for_this_spec_is_detected(chain: Chain) -> None:
+    chain.write_through("protocol")
+    ledger = json.loads(json.dumps(chain.ledger))
+    ledger["entries"][0]["outcome"] = "failed_structural_validation"
+    ledger["entries"][0]["payload_sha256"] = None
+    ledger["entries"][0]["isolation_attestation_sha256"] = None
+    _write(chain.root / GENERATION_LEDGER_PATH, ledger)
+    report = chain.assess()
+    assert any("materialized 0 banks" in item for item in report["blockers"])
+    assert report["ready_for_reveal"] is False
 
 
 def test_a_system_protocol_not_binding_the_analysis_plan_is_detected(chain: Chain) -> None:

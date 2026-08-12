@@ -23,17 +23,20 @@ validator can check on the emitted payload without consulting the tested system.
 2. **Composition**: the exact number of domains, the exact number of matched pairs per domain.
 3. **Material difference between domains** — a domain is not a relabelling of another; the
    capabilities, the environment and the notion of completion differ.
-4. **Matched pairs**: for each pair, two tasks over the same environment image, where one is
-   completable and one is not.
-5. **Impossibility by absent capability**: the second task of a pair must be impossible because a
-   capability the task genuinely requires is not present in the environment — never because the
-   instruction is ambiguous, self-contradictory, a trick, or forbidden by a rule rather than by
-   the environment.
-6. **Minimality of the difference**: the two tasks of a pair must require the same capabilities
-   except for exactly the one that is absent. A pair differing in two ways carries no information
-   about which one mattered.
-7. **A declared capability vocabulary per task**: what the environment provides, what the task
-   requires, and for an impossible task which required capability is absent and why.
+4. **Matched pairs as one goal, not two tasks**: a pair states a single instruction, a single base
+   environment, a single terminal predicate and a single evaluator. It does **not** describe two
+   tasks. The generator writes each of those once; the two twins are derived from them.
+5. **Impossibility by absent capability**: the pair names one capability the goal genuinely
+   requires and that the base environment does not supply. The capability-absent twin is the same
+   request in that environment; the feasible twin is the same request with that one capability
+   supplied. Impossibility must never come from an ambiguous, self-contradictory or trick
+   instruction, or from a rule forbidding an action the environment could perform.
+6. **Sufficiency of the one difference**: everything else the goal requires must already be
+   available in the base environment or through a permitted interface, so supplying the withheld
+   capability is exactly what makes the goal reachable. A goal missing two things carries no
+   information about which one mattered.
+7. **A declared capability vocabulary per pair**: what the base environment provides, what the
+   goal requires, and which required capability is withheld and why.
 8. **Terminal-state verifiability**: success is a predicate over the environment's final state,
    from an allowlisted set of kinds, decidable by inspection without interpretation.
 9. **No subjective criterion**: nothing decided by a rubric, a reader's opinion, or another model.
@@ -63,13 +66,14 @@ frozen, is not complete, and must not be copied into `GENERATOR_PROMPT.txt` with
 
 > Produce one JSON object conforming to the supplied schema. It must contain N domains. Two
 > domains are different when the operations they support, the state they hold and the meaning of
-> completion have nothing in common. Each domain contains M pairs. A pair is two tasks in one
-> environment image: the first is completable using only capabilities the environment provides;
-> the second requires exactly one further capability that the environment does not provide, and is
-> therefore not completable. Declare, for every task, the capabilities the environment provides
-> and the capabilities the task requires. For each incompletable task, name the required
-> capability that is absent and state why the environment lacks it. Success for every task must be
-> a predicate over the environment's terminal state, expressed in one of the listed kinds.
+> completion have nothing in common. Each domain contains M pairs. A pair states **one** goal:
+> one instruction, one base environment with its initial state, one list of permitted interfaces,
+> one terminal success predicate and one evaluator. Declare the capabilities the base environment
+> provides and the capabilities the goal requires. Name exactly one required capability that the
+> base environment does **not** provide, and state why it lacks it. Everything else the goal
+> requires must already be available, so that supplying the withheld capability is precisely what
+> makes the goal reachable. Success must be a predicate over the environment's terminal state,
+> expressed in one of the listed kinds.
 
 Note what it does not say: nothing about who will attempt the tasks, nothing about what a good
 attempt looks like, nothing about stopping, and nothing about what anyone hopes to learn.

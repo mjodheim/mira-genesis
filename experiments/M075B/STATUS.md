@@ -22,6 +22,26 @@
 - 150 focused tests. Exact instrument commit `7002e4a` passed run `31618867270`, attempt 1:
   **1,949 passed / 11 skipped** on Python 3.11 and 3.13, plus repository integrity and the new
   decisive sealed-bank boundary job; attribution run `31618864163` passed. No workflow was rerun.
+- **External review of PR #134 found four P1 defects, all confirmed and all corrected before
+  merge.** The instrument was not weakened to accommodate them; three of the four made it
+  stronger.
+  1. The leak scanner matched this contract's own payload schema document — see below.
+  2. `assess_blind_bank_readiness` validated each sealed-stage artifact in isolation and never
+     required them to describe the **same run**. An attestation from one generator run could be
+     paired with a payload from another, the commitment made to name a third generator identity,
+     and the ledger written to agree, with every document passing. `sealed_run_binding_problems`
+     now compares every identity that must causally survive from the frozen spec through the
+     container run into the commitment and the ledger.
+  3. A ledger holding one `materialized` entry belonging to **another** frozen spec satisfied this
+     milestone's generation stage, because the check asked only whether the current spec had
+     materialized more than once, and zero is not more than one. A ledger is now one milestone's
+     record: every entry must bind the frozen spec and exactly one must be a materialization.
+  4. The matched-pair contract was declarative. Two independent task objects were compared on a
+     shared image digest and a capability-set difference, so a pair could still differ in its
+     instruction, initial state, permitted interfaces, terminal predicate or evaluator and be
+     counted as evidence about a capability. **The representation changed** rather than the check
+     growing: a pair now stores its shared half once and the twins are derived. No bank existed,
+     which is why this was the right moment.
 - A first CI run, `31618681563`, **failed** and is preserved: the leak scanner's
   `BANK_PAYLOAD*.json` path pattern matched `docs/schemas/blind_bank_payload.schema.json`. The
   local run had missed it because the file was still untracked when the checker was first
@@ -34,7 +54,10 @@
 | Property | Enforced by |
 |---|---|
 | The bank is not selected on the tested system's behaviour | frozen `assembly` record; validator import graph contains no path to the agent, asserted by parsing the module |
-| Impossibility is caused by an absent capability | machine-checkable certificate: the named capability must be required, absent from the environment, and the pair's only difference |
+| A pair really is matched | the pair stores its goal, instruction, environment, initial state, permitted interfaces, required capabilities, terminal predicate and evaluator **once**, so the twins cannot disagree on them; `materialize_twin` derives each twin and `assert_matched_pair_delta` rejects any divergence beyond the withheld capability |
+| Impossibility is caused by an absent capability | machine-checkable certificate: the capability must be required by the shared goal, absent from the environment and from every permitted interface, and sufficient — nothing else the goal needs may be missing |
+| The sealed artifacts describe one run | `sealed_run_binding_problems` compares attested output against sealed payload, frozen generator identity against the commitment, and pinned image reference, image digest, runtime name and runtime version against what actually ran |
+| The ledger belongs to this milestone | with a frozen spec commitment supplied, every entry must bind it and exactly one must be a materialization; a foreign entry cannot satisfy this spec's generation stage |
 | Success is not a matter of opinion | allowlisted terminal-state evaluator kinds; `reads_agent_self_report` must be `false`; subjective tokens rejected |
 | The generator saw no project context | container argv audited independently of the attestation's own booleans; mount sources resolved against the repository root; environment values checked even for allowlisted names |
 | One frozen spec yields one bank | append-only ledger; two `materialized` entries under one spec commitment is a hard failure |
