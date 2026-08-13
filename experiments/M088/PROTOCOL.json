@@ -1,0 +1,256 @@
+{
+  "arms": [
+    "evolvable_experiment_constructor",
+    "fixed_experiment_constructor",
+    "constructor_acquisition_ablated",
+    "more_budget_same_experiment_space",
+    "fresh_agent",
+    "authored_full_experiment_space"
+  ],
+  "budget_arm_semantics": "each repetition is a COMPLETE independent exhaustive search over the same constructive image; counters are never multiplied",
+  "budget_multiple": 10,
+  "ceiling_arm_is_not_evidence_about_the_lineage": true,
+  "ceiling_arms": [
+    "authored_full_experiment_space"
+  ],
+  "claim_boundary": {
+    "agi": false,
+    "general_autonomy": false,
+    "general_experiment_invention": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "genesis_gate_4": false,
+    "independent_reproduction": false,
+    "interaction_vocabulary_is_authored": true,
+    "meta_primitives_are_authored": true,
+    "open_ended_evolution": false,
+    "release_or_repository_authority": false
+  },
+  "conditions": [
+    "P1_prior_constructor_cannot_resolve_exhaustively",
+    "P2_meta_transformation_adopted_after_rejections",
+    "P3_constructed_experiment_outside_prior_image",
+    "P4_observation_used_causally",
+    "P5_evolvable_correct_in_every_qualification_world",
+    "P6_capability_discordance_against_fixed",
+    "P7_more_budget_same_space_cannot_close_it",
+    "P8_ablation_loses_the_capability",
+    "P9_cross_environment_reuse_without_new_meta_transformation",
+    "P10_constructor_persisted_and_restored_byte_identically"
+  ],
+  "date_frozen": "2026-08-13",
+  "development_world": "stateful_protocol",
+  "development_world_excluded_from_qualification": true,
+  "evidence_boundary": {
+    "E_acquired": "observations of experiment programs actually executed against the world state machine",
+    "E_hidden": "qualifying programs held by the evaluator",
+    "acquisition_budget_per_world": 4,
+    "structural_no_leak": "every hidden program uses three actions; the adopted constructor composes at most two, so no hidden program lies inside its constructive image and none can be built, let alone run",
+    "world_is_evaluator": false
+  },
+  "external_model_permitted_during_scientific_run": false,
+  "falsifiers": [
+    "M0 could construct the same experiment",
+    "more search inside M0's constructive image succeeds",
+    "a meta-primitive names a world, a candidate, a truth or a program",
+    "the world supplies an enumerated probe list",
+    "E_hidden contributes to construction",
+    "the evaluator supplies an observation",
+    "the experiment is constructed but not used causally",
+    "the correct candidate would have been selected before any observation",
+    "an acquired observation eliminates nothing",
+    "the transfer world needs a new meta-transformation",
+    "the ablation retains the constructor",
+    "fresh_agent receives the learned constructor",
+    "the ceiling arm is reported as evidence about the lineage",
+    "the difference is only cost",
+    "rollback does not include the constructor",
+    "qualification materialized before the constructor is digested",
+    "an external model is called during the scientific run",
+    "a second run replaces the first"
+  ],
+  "fixed_components": {
+    "constructive_image_enumerator": "metamorphosis.m088_experiment.constructive_image",
+    "constructor_interpreter": "metamorphosis.m088_experiment.construct",
+    "constructor_rule_vocabulary": [
+      "PREFIX_RESET",
+      "EMIT_SINGLE_ACTION",
+      "EMIT_ACTION_SEQUENCE",
+      "PERMUTE_ORDER",
+      "ALLOW_REPETITION",
+      "SUFFIX_OBSERVE",
+      "DEDUPLICATE",
+      "REQUIRE_OBSERVATION"
+    ],
+    "evaluator": "hidden programs, run outside the mutable body",
+    "max_supported_depth": 4,
+    "meta_primitive_language": [
+      "add_sequence_constructor",
+      "increase_composition_depth",
+      "add_order_sensitivity",
+      "allow_action_repetition",
+      "add_candidate_deduplication",
+      "add_experiment_validity_rule",
+      "add_reset_prefix_rule"
+    ],
+    "worlds": "metamorphosis.m088_worlds"
+  },
+  "hypothesis": "H34",
+  "meta_search": {
+    "order": "shortest first then lexicographic; an ordering and not a ranking",
+    "self_validation_permitted": false,
+    "space_size": 14,
+    "validation": "each candidate constructor runs on a disposable descendant and must reach a correct terminal decision on programs it never ran"
+  },
+  "milestone": "M088",
+  "mutable_component": {
+    "m0": {
+      "max_depth": 1,
+      "provenance": [],
+      "rules": [
+        "PREFIX_RESET",
+        "EMIT_SINGLE_ACTION",
+        "SUFFIX_OBSERVE",
+        "REQUIRE_OBSERVATION"
+      ],
+      "schema": "m088-experiment-constructor-v1",
+      "version": 0
+    },
+    "m0_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+    "m0_justification": "one action between a reset and an observation, which is exactly the single-interaction depth at which M087's request/value probes lived",
+    "object": "metamorphosis.m088_experiment.ExperimentConstructor",
+    "representation": "serialized rule set plus composition depth, executed by a fixed constructor"
+  },
+  "predecessor": {
+    "ceiling_attacked": "the experiment space was handed in as a literal tuple; the lineage filtered and ranked it and never built one",
+    "milestone": "M087"
+  },
+  "qualification_draw": "sha256(m088-qualification-v1|world|salt|index) ordering, first 2 of 4 per world",
+  "qualification_pool_digest": "c5e4fbbea7ffad38101f6e3b2aff8e81c6f0972e39f701140b79f2897ffa6fd9",
+  "qualification_worlds": [
+    "path_graph",
+    "durable_service"
+  ],
+  "retry_policy": {
+    "attempts": 1,
+    "negative_result_preserved": true,
+    "new_salt_permitted": false,
+    "reroll_permitted": false,
+    "successor_requires_new_milestone_and_protocol": true
+  },
+  "salt_released_after": "T8_constructor_serialized",
+  "schema": "m088-protocol-v1",
+  "status": "frozen_before_qualification_materialization",
+  "title": "Endogenous Experiment-Space Construction and Transfer",
+  "track": "A",
+  "two_capabilities_both_required": [
+    "construct an experiment outside the prior constructive image",
+    "use its observation causally to reach a correct adaptation"
+  ],
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail",
+  "worlds": [
+    {
+      "candidate_ids": [
+        "always_ack",
+        "count_based",
+        "memoryless",
+        "order_sensitive"
+      ],
+      "hidden_program_count": 2,
+      "primitives": [
+        {
+          "name": "reset",
+          "observing": false
+        },
+        {
+          "name": "send_a",
+          "observing": false
+        },
+        {
+          "name": "send_b",
+          "observing": false
+        },
+        {
+          "name": "observe",
+          "observing": true
+        }
+      ],
+      "public_program": [
+        "reset",
+        "send_a",
+        "observe"
+      ],
+      "world_id": "stateful_protocol"
+    },
+    {
+      "candidate_ids": [
+        "depth_blind",
+        "first_edge_only",
+        "path_sensitive",
+        "symmetric_depth"
+      ],
+      "hidden_program_count": 2,
+      "primitives": [
+        {
+          "name": "reset",
+          "observing": false
+        },
+        {
+          "name": "follow_x",
+          "observing": false
+        },
+        {
+          "name": "follow_y",
+          "observing": false
+        },
+        {
+          "name": "observe",
+          "observing": true
+        }
+      ],
+      "public_program": [
+        "reset",
+        "follow_x",
+        "observe"
+      ],
+      "world_id": "path_graph"
+    },
+    {
+      "candidate_ids": [
+        "buffered_until_flush",
+        "flush_only",
+        "never_durable",
+        "write_through"
+      ],
+      "hidden_program_count": 2,
+      "primitives": [
+        {
+          "name": "reset",
+          "observing": false
+        },
+        {
+          "name": "write",
+          "observing": false
+        },
+        {
+          "name": "flush",
+          "observing": false
+        },
+        {
+          "name": "crash",
+          "observing": false
+        },
+        {
+          "name": "observe",
+          "observing": true
+        }
+      ],
+      "public_program": [
+        "reset",
+        "write",
+        "observe"
+      ],
+      "world_id": "durable_service"
+    }
+  ]
+}
