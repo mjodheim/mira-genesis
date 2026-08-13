@@ -839,6 +839,55 @@ demonstrated that the *base* language was ever state in the same sense. Registra
 thing being extended was, in part, a constant. The extension claim cannot be qualified until both
 halves of the language are executable state. See D059.
 
+## H37 — A lineage can add an operation to the language it actually owns, and be more capable for it
+
+A persistent Track-A lineage whose executable meta-language is entirely serialized state can, when
+a correctness-critical transformation lies outside the constructive image of that language:
+**diagnose** the expressive limitation by an invariant its language is closed under, with a finite
+certificate that refutes the whole class rather than a sample and therefore holds at any program
+length and any budget; **assemble** — rather than select — a new executable primitive from a lower,
+bounded extension substrate; have it **independently validated** as safe, semantics-preserving for
+everything already reachable, targeted at the diagnosed limitation rather than at some other one,
+and **not reducible to any composition** of the language it already had; **register** it into the
+serialized language so that version, digest and provenance change and deleting it deletes the
+capability; use the enlarged language to **construct and adopt** a transformation that was
+previously inexpressible and that makes a correctness difference on held-out instances; **preserve**
+the extension across serialization, exact rollback on both sides, and a fresh process holding no
+development code; and **reuse** the same primitive later on a materially different problem
+structure — while every same-language control fails at any permitted budget, and while a macro-only
+extension that demonstrably buys a cheaper search buys no reach.
+
+**Status:** **SUPPORTED**, at development-qualification standard, by a **first attempt with no
+retry**. Protocol frozen at `15eb129`; result `d83b836d...4c07af`. All fourteen frozen conditions
+passed. `attempt: 1` and `retry_used: false` are derived from the preserved artifacts rather than
+declared, and no superseded run exists.
+
+**Why the gap is not M089's.** M089 attacked fan-in: no inherited operation reads two values. That
+gap is spent and M090's authored probe extension occupies it. H37's required transformation reads
+**exactly one** input position, so M089's invariant is untouched and its primitive does not help —
+this validator refuses that primitive as overbroad. The gap here is *bending*: every inherited
+operation moves values affinely, and affine maps compose to affine maps.
+
+**What was measured.** The closure lemma holds over 22,500 abstract states with zero escapes, and
+the abstraction was re-checked against the concrete interpreter on 452 slot functions with zero
+violations. 3,248 candidates were assembled from the frozen substrate and 3,247 rejected across five
+reasons; the adopted body matches none of the 87 distinct behaviours reachable by compositions of
+the inherited language, and its bend is witnessed by three non-collinear points. Two qualifying
+worlds drawn after the language was frozen were solved 5/5 on held-out instances in two materially
+different families, the second by conjugating the new operation with the inherited sign flip to
+reach the dual clamp. Every control scored 0/2, including a budget arm that examined 7,072,128
+programs and 418,704 distinct behaviours at depth six, and a macro-only arm that really did memoize
+a composition and cut its own search from 38,848 programs to 5,477 — the M055 contrast, in one
+table.
+
+**What it does not establish.** Not H35, which remains **not supported**; M089's qualification is
+neither replayed nor modified. Not AGI, not open-ended evolution, not arbitrary self-modification,
+not general programming-language invention, not unrestricted recursive self-improvement, not a
+self-hosting interpreter, no gate, no independent reproduction. **The assembly substrate remains
+authored** — the micro-operations, the operator set including `max`, the signatures and the
+capability list bound what any new primitive can be — and so does the interpreter substrate beneath
+it. That is the next ceiling. See D061.
+
 ## H36 — The language a lineage stores is the language its interpreter executes
 
 A persistent Track-A lineage can represent its **complete** executable meta-language — inherited

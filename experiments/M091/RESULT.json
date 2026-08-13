@@ -1,0 +1,2945 @@
+{
+  "acquisition": {
+    "adopted_implementation_digest": "03d1d5edfa642bc8c4729ed9a3d4c7267fcea86d178f4def0e9f37a07940d057",
+    "adopted_primitive": {
+      "body": [
+        [
+          "PUSH_SLOT",
+          "$0"
+        ],
+        [
+          "PUSH_CONST",
+          0
+        ],
+        [
+          "BINOP",
+          "max"
+        ],
+        [
+          "STORE_SLOT",
+          "$0"
+        ]
+      ],
+      "capabilities": [
+        "pure_slot_write"
+      ],
+      "origin": "acquired",
+      "parameter_kinds": [
+        "slot"
+      ],
+      "primitive_id": "acquired_operation_1",
+      "provenance": [
+        "assembled from the frozen extension substrate"
+      ]
+    },
+    "adopted_semantics_digest": "294e794b2bd2fed9818f2517068a680b6ca970792c9d1fb05e777839ecc00da1",
+    "adopted_substrate_fingerprint": "03c5276958051fb781f1587384279e51ea1b6376655803c3b503f6b0657887c4",
+    "candidates_assembled": 3248,
+    "candidates_validated": 3248,
+    "candidates_well_formed": 65,
+    "development_program": [
+      [
+        "COPY_INPUT",
+        [
+          0,
+          0
+        ]
+      ],
+      [
+        "acquired_operation_1",
+        [
+          0
+        ]
+      ]
+    ],
+    "diagnosis": {
+      "abstraction_soundness": {
+        "abstraction_agrees_with_the_interpreter": true,
+        "programs_checked": 113,
+        "slot_functions_checked": 452,
+        "violation_count": 0,
+        "violations": []
+      },
+      "closure_lemma": {
+        "abstract_states_checked": 22500,
+        "closed_under_every_primitive": true,
+        "escape_count": 0,
+        "escapes": [],
+        "invariant": "affine_single_source",
+        "primitives": [
+          "APPLY_UNARY",
+          "COPY_INPUT",
+          "SET_CONST"
+        ],
+        "statement": "after any program over the inherited language, every slot holds either a constant or a*inputs[i] + b for a single input position i"
+      },
+      "exhaustive_search_distinct_behaviours": 10008,
+      "exhaustive_search_found_a_program": false,
+      "exhaustive_search_programs_examined": 61308,
+      "family": "signal_conditioning",
+      "invariant": "affine_single_source",
+      "outside_constructive_image": true,
+      "refutations": [
+        {
+          "behavioural_sources": [
+            0
+          ],
+          "every_rival_position_refuted": true,
+          "fan_in": 1,
+          "invariant": "affine_single_source",
+          "not_a_function_of_any_rival_position": {
+            "1": {
+              "agree_on_position": 1,
+              "points": [
+                [
+                  [
+                    -4,
+                    3,
+                    7
+                  ],
+                  0
+                ],
+                [
+                  [
+                    4,
+                    3,
+                    7
+                  ],
+                  4
+                ]
+              ]
+            },
+            "2": {
+              "agree_on_position": 2,
+              "points": [
+                [
+                  [
+                    -4,
+                    3,
+                    7
+                  ],
+                  0
+                ],
+                [
+                  [
+                    4,
+                    3,
+                    7
+                  ],
+                  4
+                ]
+              ]
+            }
+          },
+          "not_affine_in_its_source": {
+            "collinear": false,
+            "held_fixed": [
+              3,
+              7
+            ],
+            "points": [
+              [
+                -5,
+                0
+              ],
+              [
+                -2,
+                0
+              ],
+              [
+                1,
+                1
+              ]
+            ],
+            "source": 0
+          },
+          "not_constant": {
+            "points": [
+              [
+                [
+                  -4,
+                  3,
+                  7
+                ],
+                0
+              ],
+              [
+                [
+                  2,
+                  -2,
+                  1
+                ],
+                2
+              ]
+            ]
+          },
+          "outside_affine_single_source": true,
+          "single_source": true,
+          "slot": 0
+        }
+      ],
+      "requirement_fan_in": [
+        1
+      ],
+      "requirement_is_single_source": true,
+      "requirement_outside_the_invariant": true,
+      "statement": "after any program over the inherited language, every slot holds either a constant or a*inputs[i] + b for a single input position i",
+      "world_id": "dev_signal_conditioning"
+    },
+    "disposable_trials": 65,
+    "l0_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+    "l1_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+    "l1_version": 1,
+    "mode": "expressive",
+    "rejected_count": 3247,
+    "rejected_examples": [
+      {
+        "body_length": 1,
+        "implementation_digest": "1df09e8d100f9e684e6d10b92b37403ba3818df6714a0c1a65515152cdf01e0a",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "ba6f5d3b5e7017186b7321eba21b9749723ac5aeab27484bca3d2b5f6c0cef3e",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "e6abd3899507e3584967fcad1625e6daae3117119389a782fb2b64d00ff4bd58",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "3c076a7bcaf1337111a85d5ffd1931f50a5aabcc3c662773232446a1b81ee930",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "3a6987397bd40edbc7271bdaf4b0f86c1827bfca7c420bab9bbb4c6e5b618ad6",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "6d170161939123721bbed214c1a2a72d8cb181f945ef250b2f71b4de5c20533b",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "2b1811a5728d1312259072a8ca5864249c409d81be09e2b7aa9518ba16f9cf13",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "b971686d69525a8ff12ea54640fd65b420ef0d9d1487ce57a0d52ee62574e87c",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "b3cb2ce19ddd870596176d6188f5f0f62edb0eeb2df74b89d8204ebb68378e44",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "222ce9dc9e61fb0e825f4708d53160da992be687bdab69bb3839cca38bb5d8a0",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "0bbf417f74682ed84d46287a6f619faf73220942c7e14c73d7cb81672139f32a",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      },
+      {
+        "body_length": 1,
+        "implementation_digest": "512f34dc769502dddff0dd4d789c077e01104533702ee041bfd3ee195bbb9c9e",
+        "reasons": [
+          "malformed_or_partial"
+        ],
+        "signature": [
+          "slot"
+        ]
+      }
+    ],
+    "rejection_classes_observed": [
+      "abstract_bend_is_not_observable",
+      "adds_no_semantics_beyond_the_inherited_invariant",
+      "exceeds_the_resource_bound",
+      "macro_equivalent_to_an_inherited_composition",
+      "malformed_or_partial"
+    ],
+    "rejection_counts": {
+      "abstract_bend_is_not_observable": 1,
+      "adds_no_semantics_beyond_the_inherited_invariant": 62,
+      "exceeds_the_resource_bound": 1,
+      "macro_equivalent_to_an_inherited_composition": 63,
+      "malformed_or_partial": 3183
+    },
+    "search_cost": {
+      "gain_was_reach": true,
+      "gain_was_search_cost_only": false,
+      "with_extension_program_length": 2,
+      "with_extension_programs_examined": 397,
+      "without_extension_found": false,
+      "without_extension_program_length": 0,
+      "without_extension_programs_examined": 61308
+    },
+    "validation": {
+      "accepted": true,
+      "bend_witness": {
+        "arguments": [
+          0
+        ],
+        "collinear": false,
+        "inputs": [
+          -4,
+          3,
+          7
+        ],
+        "points": [
+          [
+            -5,
+            0
+          ],
+          [
+            -2,
+            0
+          ],
+          [
+            1,
+            1
+          ]
+        ],
+        "slot": 0
+      },
+      "disposable_trials": 1,
+      "reasons": [],
+      "receipt": "5c342e6b286143b76e0418084c7f55e5bec20af53ee644475cf641e5d7ec66c2",
+      "shape": {
+        "bends_the_affine_invariant": true,
+        "example_bending_binding": [
+          0
+        ],
+        "max_source_fan_in": 1,
+        "preserves_single_source": true,
+        "targeted_extension": true
+      }
+    }
+  },
+  "arms": {
+    "authored_correct_primitive": {
+      "acquired_primitive_ids": [
+        "authored_clamp"
+      ],
+      "acquisition_attempted": false,
+      "arm": "authored_correct_primitive",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": true,
+          "family": "capacity_planning",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "f64ce687c88898e97bf31dba84e49deeb41140ed070736825893bc5ee0bb42a6",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 1567,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  1,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  1,
+                  "double"
+                ]
+              ],
+              [
+                "authored_clamp",
+                [
+                  1
+                ]
+              ]
+            ],
+            "programs_examined": 6838,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        },
+        {
+          "correct": true,
+          "family": "protocol_window",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "f64ce687c88898e97bf31dba84e49deeb41140ed070736825893bc5ee0bb42a6",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 7699,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  0,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ],
+              [
+                "authored_clamp",
+                [
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ]
+            ],
+            "programs_examined": 45403,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        }
+      ],
+      "families_solved": [
+        "capacity_planning",
+        "protocol_window"
+      ],
+      "handed_an_authored_primitive": true,
+      "is_ceiling": true,
+      "language_digest": "f64ce687c88898e97bf31dba84e49deeb41140ed070736825893bc5ee0bb42a6",
+      "language_version": 1,
+      "max_search_length": 4,
+      "primitive_built": false,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST",
+        "authored_clamp"
+      ],
+      "primitive_registered": true,
+      "repetitions": 1,
+      "total_distinct_behaviours": 9266,
+      "total_programs_examined": 52241,
+      "uses_acquired_primitive": true
+    },
+    "evolvable_meta_language": {
+      "acquired_primitive_ids": [
+        "acquired_operation_1"
+      ],
+      "acquisition_attempted": true,
+      "arm": "evolvable_meta_language",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": true,
+          "family": "capacity_planning",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 1567,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  1,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  1,
+                  "double"
+                ]
+              ],
+              [
+                "acquired_operation_1",
+                [
+                  1
+                ]
+              ]
+            ],
+            "programs_examined": 6838,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        },
+        {
+          "correct": true,
+          "family": "protocol_window",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 7699,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  0,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ],
+              [
+                "acquired_operation_1",
+                [
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ]
+            ],
+            "programs_examined": 45403,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        }
+      ],
+      "families_solved": [
+        "capacity_planning",
+        "protocol_window"
+      ],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "language_version": 1,
+      "max_search_length": 4,
+      "primitive_built": true,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST",
+        "acquired_operation_1"
+      ],
+      "primitive_registered": true,
+      "repetitions": 1,
+      "total_distinct_behaviours": 9266,
+      "total_programs_examined": 52241,
+      "uses_acquired_primitive": true
+    },
+    "extension_acquisition_ablated": {
+      "acquired_primitive_ids": [],
+      "acquisition_attempted": false,
+      "arm": "extension_acquisition_ablated",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_version": 0,
+      "max_search_length": 4,
+      "primitive_built": false,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "primitive_registered": false,
+      "repetitions": 1,
+      "total_distinct_behaviours": 20016,
+      "total_programs_examined": 122616,
+      "uses_acquired_primitive": false
+    },
+    "extension_built_but_not_registered": {
+      "acquired_primitive_ids": [],
+      "acquisition_attempted": true,
+      "arm": "extension_built_but_not_registered",
+      "body_runs_on_the_substrate_directly": true,
+      "built_but_unregistered_digest": "03d1d5edfa642bc8c4729ed9a3d4c7267fcea86d178f4def0e9f37a07940d057",
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_version": 0,
+      "max_search_length": 4,
+      "primitive_built": true,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "primitive_registered": false,
+      "repetitions": 1,
+      "total_distinct_behaviours": 20016,
+      "total_programs_examined": 122616,
+      "uses_acquired_primitive": false
+    },
+    "fixed_meta_language": {
+      "acquired_primitive_ids": [],
+      "acquisition_attempted": false,
+      "arm": "fixed_meta_language",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_version": 0,
+      "max_search_length": 4,
+      "primitive_built": false,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "primitive_registered": false,
+      "repetitions": 1,
+      "total_distinct_behaviours": 20016,
+      "total_programs_examined": 122616,
+      "uses_acquired_primitive": false
+    },
+    "fresh_agent": {
+      "acquired_primitive_ids": [],
+      "acquisition_attempted": false,
+      "arm": "fresh_agent",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_version": 0,
+      "max_search_length": 4,
+      "primitive_built": false,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "primitive_registered": false,
+      "repetitions": 1,
+      "total_distinct_behaviours": 20016,
+      "total_programs_examined": 122616,
+      "uses_acquired_primitive": false
+    },
+    "macro_only_extension": {
+      "acquired_primitive_ids": [
+        "memoized_composition_1"
+      ],
+      "acquisition_attempted": true,
+      "arm": "macro_only_extension",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "fbdb450af55e913aeacda2fbd762260f445fd62f491cc0888d2193f3f441336a",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 14546,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 84440,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "fbdb450af55e913aeacda2fbd762260f445fd62f491cc0888d2193f3f441336a",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 14546,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 84440,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "fbdb450af55e913aeacda2fbd762260f445fd62f491cc0888d2193f3f441336a",
+      "language_version": 1,
+      "macro_gain_was_search_cost_only": true,
+      "macro_primitive": {
+        "body": [
+          [
+            "PUSH_SLOT",
+            "$0"
+          ],
+          [
+            "UNOP",
+            "double"
+          ],
+          [
+            "UNOP",
+            "double"
+          ],
+          [
+            "STORE_SLOT",
+            "$0"
+          ]
+        ],
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "origin": "acquired",
+        "parameter_kinds": [
+          "slot"
+        ],
+        "primitive_id": "memoized_composition_1",
+        "provenance": [
+          "assembled from the frozen extension substrate"
+        ]
+      },
+      "macro_rejected_count": 5067,
+      "macro_search_cost": {
+        "gain_was_reach": false,
+        "gain_was_search_cost_only": true,
+        "with_extension_program_length": 3,
+        "with_extension_programs_examined": 5477,
+        "without_extension_found": true,
+        "without_extension_program_length": 4,
+        "without_extension_programs_examined": 38848
+      },
+      "max_search_length": 4,
+      "primitive_built": true,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST",
+        "memoized_composition_1"
+      ],
+      "primitive_registered": true,
+      "repetitions": 1,
+      "total_distinct_behaviours": 29092,
+      "total_programs_examined": 168880,
+      "uses_acquired_primitive": false
+    },
+    "more_budget_same_meta_language": {
+      "acquired_primitive_ids": [],
+      "acquisition_attempted": false,
+      "arm": "more_budget_same_meta_language",
+      "built_but_unregistered_digest": null,
+      "correct_worlds": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 209352,
+            "found": false,
+            "max_length": 6,
+            "program": [],
+            "programs_examined": 3536064,
+            "repetitions": 2,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 209352,
+            "found": false,
+            "max_length": 6,
+            "program": [],
+            "programs_examined": 3536064,
+            "repetitions": 2,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "handed_an_authored_primitive": false,
+      "is_ceiling": false,
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_version": 0,
+      "max_search_length": 6,
+      "primitive_built": false,
+      "primitive_ids": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "primitive_registered": false,
+      "repetitions": 2,
+      "total_distinct_behaviours": 418704,
+      "total_programs_examined": 7072128,
+      "uses_acquired_primitive": false
+    }
+  },
+  "attempt": 1,
+  "chronology": {
+    "order": [
+      "T0_protocol_frozen",
+      "T1_inherited_language_frozen",
+      "T2_extension_substrate_frozen",
+      "T3_development_limitation_materialized",
+      "T4_limitation_diagnosed",
+      "T5_candidates_assembled_and_validated",
+      "T6_primitive_adopted",
+      "T7_provisional_extension_rolled_back",
+      "T8_extension_adopted_and_serialized",
+      "T9_adopted_language_rolled_back",
+      "T10_inherited_semantics_conserved",
+      "T11_qualification_materialized_separately",
+      "T12_arms_executed",
+      "T13_state_authority_probed",
+      "T14_extension_persisted_and_reused_in_a_fresh_process",
+      "T15_integrity_scanned"
+    ],
+    "steps": [
+      {
+        "index": 0,
+        "protocol_digest": "ea518f3abb7d2ed151ac71b12541c5a25ed8c4dd3fbc403204d640a71676bc71",
+        "step": "T0_protocol_frozen"
+      },
+      {
+        "digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+        "index": 1,
+        "primitives": [
+          "SET_CONST",
+          "COPY_INPUT",
+          "APPLY_UNARY"
+        ],
+        "step": "T1_inherited_language_frozen"
+      },
+      {
+        "digest": "6d17ae852bb13742f435cb9e73163fe4250238854b544a685b575bbd9dd0ed8d",
+        "index": 2,
+        "step": "T2_extension_substrate_frozen"
+      },
+      {
+        "index": 3,
+        "step": "T3_development_limitation_materialized",
+        "world_id": "dev_signal_conditioning"
+      },
+      {
+        "fan_in": [
+          1
+        ],
+        "index": 4,
+        "outside": true,
+        "step": "T4_limitation_diagnosed"
+      },
+      {
+        "assembled": 3248,
+        "classes": [
+          "abstract_bend_is_not_observable",
+          "adds_no_semantics_beyond_the_inherited_invariant",
+          "exceeds_the_resource_bound",
+          "macro_equivalent_to_an_inherited_composition",
+          "malformed_or_partial"
+        ],
+        "index": 5,
+        "rejected": 3247,
+        "step": "T5_candidates_assembled_and_validated"
+      },
+      {
+        "implementation_digest": "03d1d5edfa642bc8c4729ed9a3d4c7267fcea86d178f4def0e9f37a07940d057",
+        "index": 6,
+        "semantics_digest": "294e794b2bd2fed9818f2517068a680b6ca970792c9d1fb05e777839ecc00da1",
+        "step": "T6_primitive_adopted"
+      },
+      {
+        "digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+        "index": 7,
+        "step": "T7_provisional_extension_rolled_back"
+      },
+      {
+        "digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+        "index": 8,
+        "step": "T8_extension_adopted_and_serialized",
+        "version": 1
+      },
+      {
+        "digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+        "index": 9,
+        "step": "T9_adopted_language_rolled_back"
+      },
+      {
+        "calls": 5328,
+        "conserved": true,
+        "index": 10,
+        "step": "T10_inherited_semantics_conserved"
+      },
+      {
+        "artifact_digest": "bcf1e7e5d289506df7f0ba337775dd36e2059d3f1b4c40941e7c83b00c01f06c",
+        "bound_to_language": true,
+        "index": 11,
+        "step": "T11_qualification_materialized_separately",
+        "worlds": [
+          "q_capacity_relief_plan",
+          "q_protocol_hop_deficit"
+        ]
+      },
+      {
+        "arms": [
+          "evolvable_meta_language",
+          "fixed_meta_language",
+          "extension_acquisition_ablated",
+          "extension_built_but_not_registered",
+          "macro_only_extension",
+          "more_budget_same_meta_language",
+          "fresh_agent",
+          "authored_correct_primitive"
+        ],
+        "index": 12,
+        "step": "T12_arms_executed"
+      },
+      {
+        "index": 13,
+        "removed": true,
+        "step": "T13_state_authority_probed"
+      },
+      {
+        "families": [
+          "capacity_planning",
+          "protocol_window"
+        ],
+        "index": 14,
+        "solved": 2,
+        "step": "T14_extension_persisted_and_reused_in_a_fresh_process"
+      },
+      {
+        "findings": 0,
+        "index": 15,
+        "step": "T15_integrity_scanned"
+      }
+    ]
+  },
+  "conditions_declared": [
+    "P1_inherited_language_provably_cannot_express_the_transformation",
+    "P2_primitive_assembled_from_the_substrate_rather_than_selected",
+    "P3_primitive_is_not_reducible_to_a_composition_of_the_inherited_language",
+    "P4_an_independent_validator_accepted_it_without_seeing_the_qualification",
+    "P5_the_primitive_is_registered_in_the_state_owned_language",
+    "P6_the_transformation_is_outside_l0_and_inside_l1",
+    "P7_correctness_difference_on_worlds_the_lineage_never_searched",
+    "P8_more_budget_in_the_same_language_closes_nothing",
+    "P9_a_macro_only_extension_closes_nothing",
+    "P10_building_without_registering_closes_nothing",
+    "P11_the_inherited_semantics_are_conserved_exactly",
+    "P12_rollback_is_exact_and_behavioural_on_both_sides",
+    "P13_the_extension_persists_and_is_reused_in_a_fresh_process",
+    "P14_chronology_track_a_and_no_leaked_evidence"
+  ],
+  "conservation": {
+    "calls_checked": 5328,
+    "covered_binding_counts": {
+      "APPLY_UNARY": 16,
+      "COPY_INPUT": 12,
+      "SET_CONST": 8
+    },
+    "declared_binding_counts": {
+      "APPLY_UNARY": 16,
+      "COPY_INPUT": 12,
+      "SET_CONST": 8
+    },
+    "enlarged_primitive_ids": [
+      "APPLY_UNARY",
+      "COPY_INPUT",
+      "SET_CONST",
+      "acquired_operation_1"
+    ],
+    "inherited_definitions_identical": true,
+    "inherited_primitive_ids": [
+      "APPLY_UNARY",
+      "COPY_INPUT",
+      "SET_CONST"
+    ],
+    "max_length": 2,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "programs_checked": 1332,
+    "rejection_behaviour_conserved": true,
+    "rejection_mismatches": [],
+    "rejection_probe_count": 10,
+    "semantics_conserved": true,
+    "space_excludes_nothing": true
+  },
+  "development_world": {
+    "family": "signal_conditioning",
+    "input_names": [
+      "deviation",
+      "gain",
+      "tolerance"
+    ],
+    "invariants": [
+      {
+        "bound": 0,
+        "kind": "never_below",
+        "slot": 0
+      },
+      {
+        "kind": "matches_requirement",
+        "slot": 0
+      },
+      {
+        "input": 0,
+        "kind": "tracks_input_when",
+        "scale": 1,
+        "slot": 0,
+        "threshold": 0,
+        "when": "at_or_above"
+      },
+      {
+        "input": 0,
+        "kind": "pinned_when",
+        "slot": 0,
+        "threshold": 0,
+        "value": 0,
+        "when": "below"
+      }
+    ],
+    "narrative": "A sensor channel reports a signed deviation from its calibrated baseline. The integrator downstream accumulates excursions above the baseline only: a reading below the baseline is an absence of excursion, not a negative one, and passing it through unconditioned makes the accumulated total smaller than the excursions that actually occurred. The conditioned channel must therefore reproduce the deviation wherever it is at or above the baseline and read as no excursion wherever it is below.",
+    "public_instances": [
+      {
+        "inputs": [
+          -4,
+          3,
+          7
+        ],
+        "payload": {
+          "deviation": -4,
+          "gain": 3,
+          "tolerance": 7
+        }
+      },
+      {
+        "inputs": [
+          -1,
+          0,
+          2
+        ],
+        "payload": {
+          "deviation": -1,
+          "gain": 0,
+          "tolerance": 2
+        }
+      },
+      {
+        "inputs": [
+          0,
+          5,
+          -3
+        ],
+        "payload": {
+          "deviation": 0,
+          "gain": 5,
+          "tolerance": -3
+        }
+      },
+      {
+        "inputs": [
+          3,
+          -2,
+          4
+        ],
+        "payload": {
+          "deviation": 3,
+          "gain": -2,
+          "tolerance": 4
+        }
+      },
+      {
+        "inputs": [
+          6,
+          1,
+          0
+        ],
+        "payload": {
+          "deviation": 6,
+          "gain": 1,
+          "tolerance": 0
+        }
+      }
+    ],
+    "requirements": [
+      {
+        "expression": [
+          "max",
+          [
+            "input",
+            0
+          ],
+          [
+            "const",
+            0
+          ]
+        ],
+        "slot": 0
+      }
+    ],
+    "world_id": "dev_signal_conditioning"
+  },
+  "evaluation": {
+    "ceiling_arm_families_solved": [
+      "capacity_planning",
+      "protocol_window"
+    ],
+    "conditions": {
+      "P10_building_without_registering_closes_nothing": true,
+      "P11_the_inherited_semantics_are_conserved_exactly": true,
+      "P12_rollback_is_exact_and_behavioural_on_both_sides": true,
+      "P13_the_extension_persists_and_is_reused_in_a_fresh_process": true,
+      "P14_chronology_track_a_and_no_leaked_evidence": true,
+      "P1_inherited_language_provably_cannot_express_the_transformation": true,
+      "P2_primitive_assembled_from_the_substrate_rather_than_selected": true,
+      "P3_primitive_is_not_reducible_to_a_composition_of_the_inherited_language": true,
+      "P4_an_independent_validator_accepted_it_without_seeing_the_qualification": true,
+      "P5_the_primitive_is_registered_in_the_state_owned_language": true,
+      "P6_the_transformation_is_outside_l0_and_inside_l1": true,
+      "P7_correctness_difference_on_worlds_the_lineage_never_searched": true,
+      "P8_more_budget_in_the_same_language_closes_nothing": true,
+      "P9_a_macro_only_extension_closes_nothing": true
+    },
+    "discordant_families": [
+      "capacity_planning",
+      "protocol_window"
+    ],
+    "evolvable_families_solved": [
+      "capacity_planning",
+      "protocol_window"
+    ],
+    "failed_conditions": [],
+    "fixed_families_solved": [],
+    "hypothesis_supported": true,
+    "verdict": "positive"
+  },
+  "h35_supported": false,
+  "hypothesis": "H37",
+  "integrity": {
+    "adopted_body_is_not_a_literal_in_the_lineage": true,
+    "adopted_fingerprint_absent_from_the_inherited_closure": true,
+    "chronology_in_causal_order": true,
+    "declared_conditions_match_evaluated_conditions": true,
+    "import_graph": {
+      "modules_visited": [
+        "metamorphosis.m089_meta_language",
+        "metamorphosis.m089_substrate",
+        "metamorphosis.m090_language",
+        "metamorphosis.m090_migration",
+        "metamorphosis.m091_expressivity",
+        "metamorphosis.m091_lineage",
+        "metamorphosis.m091_search",
+        "metamorphosis.m091_substrate",
+        "metamorphosis.m091_worlds"
+      ],
+      "offending_imports": [],
+      "qualification_not_reachable_from_the_lineage": true,
+      "root": "metamorphosis.m091_lineage"
+    },
+    "lookup_scan": {
+      "acquisition_path": [
+        "metamorphosis/m091_lineage.py",
+        "metamorphosis/m091_substrate.py",
+        "metamorphosis/m091_expressivity.py",
+        "metamorphosis/m091_search.py",
+        "metamorphosis/m091_worlds.py"
+      ],
+      "findings": [],
+      "method": "ast, docstrings stripped",
+      "no_lookup_of_the_answer": true
+    },
+    "model_calls": 0,
+    "network_calls": 0,
+    "no_lookup_of_the_answer": true,
+    "qualification_materialized_after_the_language_was_frozen": true,
+    "qualification_not_reachable_from_the_lineage": true,
+    "validator_cannot_reach_the_qualification": true,
+    "validator_control": {
+      "inherited_composition_rejected": true,
+      "inherited_composition_rejection_reasons": [
+        "adds_no_semantics_beyond_the_inherited_invariant",
+        "macro_equivalent_to_an_inherited_composition"
+      ],
+      "m089_shaped_primitive_rejected": true,
+      "m089_shaped_rejected_as_overbroad": true,
+      "m089_shaped_rejection_reasons": [
+        "adds_no_semantics_beyond_the_inherited_invariant",
+        "overbroad_widens_the_source_fan_in"
+      ],
+      "the_validator_refuses_something": true
+    }
+  },
+  "l0_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+  "l0_semantics_digest": "20f3ee661bf6133c2b5f1182c37927f1717e9756ad22ba25c79eb7e36e0b70c9",
+  "l1_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+  "l1_semantics_digest": "ecfd1088e363cc6ebbf666dc44e0347825b709bebee6430ef54afc9e4db106ad",
+  "micro_operations": [
+    "PUSH_INPUT",
+    "PUSH_SLOT",
+    "PUSH_CONST",
+    "BINOP",
+    "UNOP",
+    "DUP",
+    "SWAP",
+    "STORE_SLOT"
+  ],
+  "milestone": "M091",
+  "model_calls": 0,
+  "network_calls": 0,
+  "persistence": {
+    "all_ran_intact": true,
+    "fresh_agent_process": {
+      "acquired_operations": [],
+      "acquired_semantics_digests": [],
+      "available_operations": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "correct_worlds": 0,
+      "development_modules_imported": false,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+          "language_version": 0,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "imported_modules": [],
+      "label": "fresh_agent_inherited_language_only",
+      "language_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "language_unchanged_by_this_process": true,
+      "language_version": 0
+    },
+    "fresh_agent_solved_nothing": true,
+    "fresh_process_imported_no_development_module": true,
+    "fresh_process_registered_nothing_new": true,
+    "fresh_process_reused_the_same_primitive_semantics": true,
+    "fresh_process_solves_every_world": true,
+    "intact": {
+      "acquired_operations": [
+        "acquired_operation_1"
+      ],
+      "acquired_semantics_digests": [
+        "294e794b2bd2fed9818f2517068a680b6ca970792c9d1fb05e777839ecc00da1"
+      ],
+      "available_operations": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST",
+        "acquired_operation_1"
+      ],
+      "correct_worlds": 2,
+      "development_modules_imported": false,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": true,
+          "family": "capacity_planning",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 1567,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  1,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  1,
+                  "double"
+                ]
+              ],
+              [
+                "acquired_operation_1",
+                [
+                  1
+                ]
+              ]
+            ],
+            "programs_examined": 6838,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        },
+        {
+          "correct": true,
+          "family": "protocol_window",
+          "hidden_passed": 5,
+          "hidden_total": 5,
+          "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+          "language_version": 1,
+          "search": {
+            "distinct_behaviours": 7699,
+            "found": true,
+            "max_length": 4,
+            "program": [
+              [
+                "COPY_INPUT",
+                [
+                  0,
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ],
+              [
+                "acquired_operation_1",
+                [
+                  0
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  0,
+                  "neg"
+                ]
+              ]
+            ],
+            "programs_examined": 45403,
+            "repetitions": 1,
+            "uses_acquired_primitive": true,
+            "verified_through_execute": true
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [],
+          "world_invariants_hold": true
+        }
+      ],
+      "families_solved": [
+        "capacity_planning",
+        "protocol_window"
+      ],
+      "imported_modules": [],
+      "label": "intact",
+      "language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "language_unchanged_by_this_process": true,
+      "language_version": 1
+    },
+    "removed_primitive_refused_in_fresh_process": true,
+    "removing_an_inherited_primitive_removes_it_too": true,
+    "removing_the_primitive_from_state_removes_the_transformation": true,
+    "state_authority": {
+      "all_ran_intact": true,
+      "outcomes_intact": [
+        "((0, 2, 0, 0), None)",
+        "((0, 0, 0, 0), None)"
+      ],
+      "outcomes_with_acquired_removed": [
+        "('refused', \"operation 'acquired_operation_1' is not defined in language version 2\")",
+        "('refused', \"operation 'acquired_operation_1' is not defined in language version 2\")"
+      ],
+      "outcomes_with_inherited_removed": [
+        "('refused', \"operation 'COPY_INPUT' is not defined in language version 2\")",
+        "('refused', \"operation 'COPY_INPUT' is not defined in language version 2\")"
+      ],
+      "probed_programs": [
+        [
+          [
+            "COPY_INPUT",
+            [
+              1,
+              0
+            ]
+          ],
+          [
+            "APPLY_UNARY",
+            [
+              1,
+              "double"
+            ]
+          ],
+          [
+            "acquired_operation_1",
+            [
+              1
+            ]
+          ]
+        ],
+        [
+          [
+            "COPY_INPUT",
+            [
+              0,
+              0
+            ]
+          ],
+          [
+            "APPLY_UNARY",
+            [
+              0,
+              "neg"
+            ]
+          ],
+          [
+            "acquired_operation_1",
+            [
+              0
+            ]
+          ],
+          [
+            "APPLY_UNARY",
+            [
+              0,
+              "neg"
+            ]
+          ]
+        ]
+      ],
+      "removing_an_inherited_primitive_removes_it_too": true,
+      "removing_the_primitive_from_state_removes_the_transformation": true
+    },
+    "with_primitive_removed": {
+      "acquired_operations": [],
+      "acquired_semantics_digests": [],
+      "available_operations": [
+        "APPLY_UNARY",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "correct_worlds": 0,
+      "development_modules_imported": false,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "capacity_planning",
+          "hidden_passed": 3,
+          "hidden_total": 5,
+          "language_digest": "82fc09a3db5528d1f6b2209226a63864291a037af1d254c0feed9b8e19b7e741",
+          "language_version": 2,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_capacity_relief_plan",
+          "world_invariant_violations": [
+            "h6: slot 1 does not meet the requirement",
+            "h6: slot 1 does not track input 0 where it must",
+            "h8: slot 1 does not meet the requirement",
+            "h8: slot 1 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        },
+        {
+          "correct": false,
+          "family": "protocol_window",
+          "hidden_passed": 1,
+          "hidden_total": 5,
+          "language_digest": "82fc09a3db5528d1f6b2209226a63864291a037af1d254c0feed9b8e19b7e741",
+          "language_version": 2,
+          "search": {
+            "distinct_behaviours": 10008,
+            "found": false,
+            "max_length": 4,
+            "program": [],
+            "programs_examined": 61308,
+            "repetitions": 1,
+            "uses_acquired_primitive": false,
+            "verified_through_execute": false
+          },
+          "world_id": "q_protocol_hop_deficit",
+          "world_invariant_violations": [
+            "h1: slot 0 does not meet the requirement",
+            "h1: slot 0 does not track input 0 where it must",
+            "h2: slot 0 does not meet the requirement",
+            "h2: slot 0 does not track input 0 where it must",
+            "h3: slot 0 does not meet the requirement",
+            "h3: slot 0 does not track input 0 where it must",
+            "h8: slot 0 does not meet the requirement",
+            "h8: slot 0 does not track input 0 where it must"
+          ],
+          "world_invariants_hold": false
+        }
+      ],
+      "families_solved": [],
+      "imported_modules": [],
+      "label": "primitive_removed",
+      "language_digest": "82fc09a3db5528d1f6b2209226a63864291a037af1d254c0feed9b8e19b7e741",
+      "language_unchanged_by_this_process": true,
+      "language_version": 2
+    }
+  },
+  "prior_attempts": [],
+  "probes": [
+    {
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_copy",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_const",
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_composite",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        -4,
+        3,
+        7
+      ],
+      "probe_id": "acquired_clamp",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "acquired_operation_1",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "inputs": [
+        2,
+        5,
+        -7
+      ],
+      "probe_id": "mixed_conjugate",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ],
+        [
+          "acquired_operation_1",
+          [
+            3
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    }
+  ],
+  "protocol_digest": "ea518f3abb7d2ed151ac71b12541c5a25ed8c4dd3fbc403204d640a71676bc71",
+  "protocol_raw_sha256": "2e9503986dd55253e02978366cbc1d64c4175dda3ba01ef88fc3ddbb6f6a5273",
+  "qualification": {
+    "artifact_digest": "bcf1e7e5d289506df7f0ba337775dd36e2059d3f1b4c40941e7c83b00c01f06c",
+    "extended_language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+    "families": [
+      "capacity_planning",
+      "protocol_window"
+    ],
+    "hidden_drawn_per_world": 5,
+    "materialized_by": "a separate process, after the extended language was frozen",
+    "pool_sizes": {
+      "capacity_planning": 3,
+      "protocol_window": 3
+    },
+    "salt_digest": "371806fdbc5b2b1553b0ebbfe6172af4e6b5da0cac097b77c507987920820d79",
+    "schema": "m091-qualification-v1",
+    "worlds": [
+      {
+        "family": "capacity_planning",
+        "hidden_instances": [
+          {
+            "inputs": [
+              -9,
+              1,
+              0
+            ],
+            "instance_id": "h1"
+          },
+          {
+            "inputs": [
+              -2,
+              -4,
+              6
+            ],
+            "instance_id": "h2"
+          },
+          {
+            "inputs": [
+              11,
+              -7,
+              2
+            ],
+            "instance_id": "h6"
+          },
+          {
+            "inputs": [
+              0,
+              2,
+              9
+            ],
+            "instance_id": "h7"
+          },
+          {
+            "inputs": [
+              6,
+              -3,
+              -5
+            ],
+            "instance_id": "h8"
+          }
+        ],
+        "input_names": [
+          "headroom",
+          "committed",
+          "window"
+        ],
+        "invariants": [
+          {
+            "bound": 0,
+            "kind": "never_below",
+            "slot": 1
+          },
+          {
+            "kind": "matches_requirement",
+            "slot": 1
+          },
+          {
+            "input": 0,
+            "kind": "tracks_input_when",
+            "scale": 2,
+            "slot": 1,
+            "threshold": 0,
+            "when": "at_or_above"
+          },
+          {
+            "input": 0,
+            "kind": "pinned_when",
+            "slot": 1,
+            "threshold": 0,
+            "value": 0,
+            "when": "below"
+          }
+        ],
+        "narrative": "A relief depot plans releases against a headroom figure that is negative whenever the depot is already drawing on its reserve. Drawing on the reserve releases nothing, and genuine headroom is released twice over the planning window.",
+        "public_instances": [
+          {
+            "inputs": [
+              -5,
+              3,
+              2
+            ],
+            "payload": {
+              "committed": 3,
+              "headroom": -5,
+              "window": 2
+            }
+          },
+          {
+            "inputs": [
+              -1,
+              -2,
+              4
+            ],
+            "payload": {
+              "committed": -2,
+              "headroom": -1,
+              "window": 4
+            }
+          },
+          {
+            "inputs": [
+              0,
+              0,
+              1
+            ],
+            "payload": {
+              "committed": 0,
+              "headroom": 0,
+              "window": 1
+            }
+          },
+          {
+            "inputs": [
+              2,
+              7,
+              -3
+            ],
+            "payload": {
+              "committed": 7,
+              "headroom": 2,
+              "window": -3
+            }
+          },
+          {
+            "inputs": [
+              7,
+              -6,
+              5
+            ],
+            "payload": {
+              "committed": -6,
+              "headroom": 7,
+              "window": 5
+            }
+          }
+        ],
+        "requirements": [
+          {
+            "expression": [
+              "double",
+              [
+                "max",
+                [
+                  "input",
+                  0
+                ],
+                [
+                  "const",
+                  0
+                ]
+              ]
+            ],
+            "slot": 1
+          }
+        ],
+        "world_id": "q_capacity_relief_plan"
+      },
+      {
+        "family": "protocol_window",
+        "hidden_instances": [
+          {
+            "inputs": [
+              -11,
+              0,
+              1
+            ],
+            "instance_id": "h1"
+          },
+          {
+            "inputs": [
+              -3,
+              6,
+              -4
+            ],
+            "instance_id": "h2"
+          },
+          {
+            "inputs": [
+              -1,
+              -1,
+              8
+            ],
+            "instance_id": "h3"
+          },
+          {
+            "inputs": [
+              1,
+              3,
+              0
+            ],
+            "instance_id": "h4"
+          },
+          {
+            "inputs": [
+              -8,
+              -5,
+              -3
+            ],
+            "instance_id": "h8"
+          }
+        ],
+        "input_names": [
+          "allowance",
+          "queued",
+          "priority"
+        ],
+        "invariants": [
+          {
+            "bound": 0,
+            "kind": "never_above",
+            "slot": 0
+          },
+          {
+            "kind": "matches_requirement",
+            "slot": 0
+          },
+          {
+            "input": 0,
+            "kind": "tracks_input_when",
+            "scale": 1,
+            "slot": 0,
+            "threshold": 0,
+            "when": "below"
+          },
+          {
+            "input": 0,
+            "kind": "pinned_when",
+            "slot": 0,
+            "threshold": 0,
+            "value": 0,
+            "when": "at_or_above"
+          }
+        ],
+        "narrative": "An intermediate hop keeps the same ledger against its own residual allowance. Where allowance remains the hop owes nothing; where it has been overrun the ledger carries the overrun as a non-positive entry, and may never carry a positive one.",
+        "public_instances": [
+          {
+            "inputs": [
+              -7,
+              2,
+              5
+            ],
+            "payload": {
+              "allowance": -7,
+              "priority": 5,
+              "queued": 2
+            }
+          },
+          {
+            "inputs": [
+              -2,
+              4,
+              0
+            ],
+            "payload": {
+              "allowance": -2,
+              "priority": 0,
+              "queued": 4
+            }
+          },
+          {
+            "inputs": [
+              0,
+              1,
+              3
+            ],
+            "payload": {
+              "allowance": 0,
+              "priority": 3,
+              "queued": 1
+            }
+          },
+          {
+            "inputs": [
+              4,
+              3,
+              -1
+            ],
+            "payload": {
+              "allowance": 4,
+              "priority": -1,
+              "queued": 3
+            }
+          },
+          {
+            "inputs": [
+              9,
+              5,
+              2
+            ],
+            "payload": {
+              "allowance": 9,
+              "priority": 2,
+              "queued": 5
+            }
+          }
+        ],
+        "requirements": [
+          {
+            "expression": [
+              "min",
+              [
+                "input",
+                0
+              ],
+              [
+                "const",
+                0
+              ]
+            ],
+            "slot": 0
+          }
+        ],
+        "world_id": "q_protocol_hop_deficit"
+      }
+    ]
+  },
+  "reattempts_m089": false,
+  "result_digest": "d83b836dee2b62d9211f0e4fc214e1abcd9db608e257f3105f54adf59a4c07af",
+  "retry_used": false,
+  "rollback": {
+    "after_adoption": {
+      "behaviour_restored": true,
+      "byte_identical_restore": true,
+      "checkpoint_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "checkpoint_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "acquired_clamp",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            -7
+          ],
+          "probe_id": "mixed_conjugate",
+          "refused": false
+        }
+      ],
+      "corruption_detected": true,
+      "damaged_digest": "6bdf920bb537f0c8009501d71c8e7fe49f752cbbbcb820a5d17f9446607afa8b",
+      "damaged_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 2",
+          "output": null,
+          "probe_id": "acquired_clamp",
+          "refused": true
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 2",
+          "output": null,
+          "probe_id": "mixed_conjugate",
+          "refused": true
+        }
+      ],
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "fault_class": "removal",
+      "fault_target": "acquired_operation_1",
+      "label": "the adopted extension corrupted and restored",
+      "live_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "live_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "acquired_clamp",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            -7
+          ],
+          "probe_id": "mixed_conjugate",
+          "refused": false
+        }
+      ],
+      "live_state_differed_from_the_checkpoint": false,
+      "probes_changed_by_restoring_the_checkpoint": [],
+      "probes_changed_by_the_fault": [
+        "acquired_clamp",
+        "mixed_conjugate"
+      ],
+      "restore_reversed_the_live_state": false,
+      "restored_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "restored_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "acquired_clamp",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            -7
+          ],
+          "probe_id": "mixed_conjugate",
+          "refused": false
+        }
+      ]
+    },
+    "before_adoption": {
+      "behaviour_restored": true,
+      "byte_identical_restore": true,
+      "checkpoint_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "checkpoint_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_clamp",
+          "refused": true
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_conjugate",
+          "refused": true
+        }
+      ],
+      "corruption_detected": true,
+      "damaged_digest": "27bf3fa70f0282aeb929c74a3087f3b35cca3d1ee2197fae38179476a43c80ce",
+      "damaged_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "acquired_clamp",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_conjugate",
+          "refused": false
+        }
+      ],
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "fault_class": "semantic_mutation",
+      "fault_target": "APPLY_UNARY",
+      "label": "provisional extension reverted to the inherited language",
+      "live_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+      "live_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "acquired_clamp",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            -7
+          ],
+          "probe_id": "mixed_conjugate",
+          "refused": false
+        }
+      ],
+      "live_state_differed_from_the_checkpoint": true,
+      "probes_changed_by_restoring_the_checkpoint": [
+        "acquired_clamp",
+        "mixed_conjugate"
+      ],
+      "probes_changed_by_the_fault": [
+        "inherited_composite",
+        "mixed_conjugate"
+      ],
+      "restore_reversed_the_live_state": true,
+      "restored_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "restored_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_clamp",
+          "refused": true
+        },
+        {
+          "error": "operation 'acquired_operation_1' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_conjugate",
+          "refused": true
+        }
+      ]
+    }
+  },
+  "schema": "m091-result-v1",
+  "substrate_manifest": {
+    "a_body_is_not_executable_until_it_is_registered": true,
+    "alphabet_sizes": {
+      "slot": 14,
+      "slot|input": 15,
+      "slot|input|input": 16
+    },
+    "binary_operators": [
+      "add",
+      "sub",
+      "mul",
+      "max"
+    ],
+    "body_constants": [
+      0,
+      1
+    ],
+    "body_space_size": {
+      "slot": 41370,
+      "slot|input": 54240,
+      "slot|input|input": 69904
+    },
+    "capabilities": [
+      "pure_slot_write"
+    ],
+    "contains_no_finished_operation_to_select": true,
+    "forbidden_capabilities": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
+    "interpreter_substrate": "m090-interpreter-substrate-v1",
+    "max_assembly_length": 4,
+    "micro_operations": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "schema": "m091-assembly-substrate-v1",
+    "signatures": [
+      [
+        "slot"
+      ],
+      [
+        "slot",
+        "input"
+      ],
+      [
+        "slot",
+        "input",
+        "input"
+      ]
+    ],
+    "unary_operators": [
+      "inc",
+      "dec",
+      "neg",
+      "double"
+    ]
+  }
+}

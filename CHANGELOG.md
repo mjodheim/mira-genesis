@@ -2,6 +2,31 @@
 
 ## Unreleased
 
+- Added M091, in which the lineage adds an operation to the language it actually owns. **Positive,
+  attempt 1, no retry**, fourteen frozen conditions computed and passed; H37 supported, no gate.
+  Protocol frozen at `15eb129`, result `d83b836d...4c07af`, 0 model calls.
+- Chose an expressive gap that is deliberately **not** M089's. That one was fan-in and is spent;
+  M091's requirement reads one input position and is instead **non-affine**, and the validator
+  refuses M090's fan-in probe as overbroad. The insufficiency is proved by a closure lemma over the
+  whole abstract domain — a one-step property that induction carries to any length and therefore any
+  budget — an abstraction re-checked against the concrete interpreter, and a finite certificate that
+  refutes an infinite class with three non-collinear points.
+- Answered the M055 falsifier by measurement rather than argument: the `macro_only_extension` arm
+  reproduces M055 on purpose, memoizing a composition and cutting its own search from 38,848
+  programs to 5,477 and its program from four operations to three, and solves 0/2 qualifying worlds.
+  The adopted primitive appears in the same table with the opposite entry — unreachable without it,
+  two operations with it. Cost is not reach.
+- Split the generic search into `m091_search` so the persistence check holds the interpreter, the
+  requirement schema and nothing that could rebuild a primitive. The fresh process prints its own
+  import census and it is checked.
+- Registered M091's digest-bearing artifact paths in `.gitattributes` in the same commit as the
+  frozen protocol, before any digest existed, and verified the committed blob is byte-identical to
+  the working tree. Recorded the pre-publication IP disposition as P-007 in the same commit.
+- Raised the sealed-bank CI job's timeout to 30 minutes and made `check_m091_result.py` decisive
+  there: it re-runs the acquisition, re-verifies every certificate against the requirement and the
+  body, re-materializes the qualification from a recomputed salt, replays every arm including the
+  depth-six budget arm, and recomputes the verdict.
+
 - Added M086-C, the third attempt at H32 and the first that could have failed for a scientific
   reason. **Nine of ten conditions passed; P2 failed.** H32 moves from untested to **not supported**
   by the two attempts with a qualified instrument, M086-B and M086-C — a statement about those
