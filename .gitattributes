@@ -64,3 +64,8 @@ experiments/M088/RESULT.json -text
 experiments/M088/REGISTER_CLAIM.json -text
 
 experiments/M088/QUALIFICATION.json -text
+
+experiments/M089/PROTOCOL.json -text
+experiments/M089/RESULT.json -text
+experiments/M089/QUALIFICATION.json -text
+experiments/M089/REGISTER_CLAIM.json -text
