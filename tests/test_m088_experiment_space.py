@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import ast
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -32,15 +33,10 @@ from metamorphosis.m088_lineage import (
     observe_limitation,
     rollback_proof,
 )
-from metamorphosis.m088_worlds import (
-    QUALIFICATION_POOL,
-    WORLDS,
-    WorldError,
-    all_worlds,
-    materialize_qualification,
-    qualified_world,
-    world,
-)
+from metamorphosis.m088_worlds import WORLDS, WorldError, all_worlds, qualified_world, world
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+from materialize_m088_qualification import QUALIFICATION_POOL, draw  # noqa: E402
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -164,7 +160,7 @@ def test_an_unknown_rule_or_primitive_is_refused() -> None:
 def test_no_hidden_program_lies_inside_the_adopted_constructive_image(world_id: str) -> None:
     """Structural no-leak: the lineage cannot build a hidden program, so it cannot run one."""
 
-    proof = hidden_outside_constructive_image(qualified_world(world_id, SALT), _m1())
+    proof = hidden_outside_constructive_image(qualified_world(world_id, draw(world_id, SALT)), _m1())
     assert proof["all_hidden_outside_image"] is True
     assert proof["hidden_inside_image"] == []
 
@@ -191,9 +187,12 @@ def test_an_unknown_primitive_cannot_be_executed() -> None:
 
 
 def test_no_module_can_reach_a_model_or_network() -> None:
+    """The runner may spawn a process -- that is how materialization is kept separate. Nothing
+    the lineage itself imports may reach a process, a socket or a model."""
+
     for relative in (
         "metamorphosis/m088_worlds.py", "metamorphosis/m088_experiment.py",
-        "metamorphosis/m088_lineage.py", "scripts/run_m088_experiment.py",
+        "metamorphosis/m088_lineage.py",
     ):
         tree = ast.parse((ROOT / relative).read_text(encoding="utf-8"))
         imported: set[str] = set()
@@ -203,6 +202,19 @@ def test_no_module_can_reach_a_model_or_network() -> None:
             elif isinstance(node, ast.ImportFrom) and node.module:
                 imported.add(node.module)
         assert not (imported & {"socket", "urllib", "http", "requests", "openai", "subprocess"})
+
+
+def test_the_runner_may_only_spawn_the_materialization_script() -> None:
+    source = (ROOT / "scripts/run_m088_experiment.py").read_text(encoding="utf-8")
+    assert "materialize_m088_qualification.py" in source
+    tree = ast.parse(source)
+    imported: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported.add(node.module)
+    assert not (imported & {"socket", "urllib", "http", "requests", "openai"})
 
 
 # --------------------------------------------------------------------------------------------
@@ -397,6 +409,38 @@ def test_the_qualification_draw_reproduces_from_the_recorded_salt(
         json.dumps(SALT, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest() == result["salt_digest"]
     for world_id in QUALIFICATION_WORLDS:
-        drawn = materialize_qualification(world_id, SALT)
+        drawn = draw(world_id, SALT)
         assert len(drawn) == 2
-        assert all(program in QUALIFICATION_POOL[world_id] for program in drawn)
+        assert all(tuple(program) in QUALIFICATION_POOL[world_id] for program in drawn)
+
+
+def test_the_qualification_pool_is_not_importable_by_the_lineage() -> None:
+    """The M086-A defect, made structurally impossible: the pool lives outside the lineage."""
+
+    import metamorphosis.m088_worlds as worlds_module
+    import metamorphosis.m088_lineage as lineage_module
+
+    assert not hasattr(worlds_module, "QUALIFICATION_POOL")
+    assert not hasattr(lineage_module, "QUALIFICATION_POOL")
+    source = (ROOT / "metamorphosis/m088_worlds.py").read_text(encoding="utf-8")
+    for world_id in WORLDS:
+        for program in QUALIFICATION_POOL[world_id]:
+            assert " ".join(program) not in source
+
+
+def test_rollback_corrupts_the_state_it_restores() -> None:
+    """The M064 defect, refused: a receipt comparing the saved state to itself proves nothing."""
+
+    proof = rollback_proof(_m1())
+    assert proof["corrupted_state_was_the_restored_state"] is True
+    assert proof["fault_actually_changed_behaviour"] is True
+    assert proof["corrupted_max_depth"] != proof["restored_max_depth"]
+    assert proof["corrupted_digest"] != proof["checkpoint_digest"]
+    assert proof["byte_identical_restore"] is True
+
+
+def test_every_repetition_of_the_budget_arm_keeps_its_own_log() -> None:
+    from metamorphosis.m088_lineage import encounter as _encounter
+
+    record = _encounter(world(DEVELOPMENT_WORLD), m0_constructor(), prior=m0_constructor(), repetitions=10)
+    assert len(record.repetition_logs) == 10

@@ -287,64 +287,30 @@ def durable_service_world() -> World:
     )
 
 
-# --------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------
 # qualification materialization
-# --------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------
 #
-# The hidden programs above are DEVELOPMENT ones. The qualifying set is drawn from a salt released
-# only after the adopted constructor has been committed by digest, so the chronology is a recorded
-# fact rather than a promise -- the defect that disqualified M086-A.
+# The pool of qualifying programs is deliberately NOT here. External review of PR #136 found that
+# holding it as a module constant put every possible qualification program in the development
+# process before `meta_search` ran, so the recorded T8 to T9 ordering could not establish
+# post-adoption materialization -- the M086-A defect recurring.
 #
-# Every program in every pool uses THREE actions. The adopted constructor composes at most two, so
-# no hidden program lies inside its constructive image: the lineage cannot build one, and therefore
-# cannot run one, whatever it does. That is a structural no-leak guarantee rather than a rule about
-# which requests are allowed, and `hidden_outside_constructive_image` checks it.
-
-QUALIFICATION_POOL: Mapping[str, tuple[tuple[str, ...], ...]] = {
-    "stateful_protocol": (
-        ("reset", "send_a", "send_b", "send_a", "observe"),
-        ("reset", "send_b", "send_a", "send_b", "observe"),
-        ("reset", "send_a", "send_a", "send_b", "observe"),
-        ("reset", "send_b", "send_b", "send_a", "observe"),
-    ),
-    "path_graph": (
-        ("reset", "follow_x", "follow_y", "follow_x", "observe"),
-        ("reset", "follow_y", "follow_x", "follow_y", "observe"),
-        ("reset", "follow_x", "follow_x", "follow_y", "observe"),
-        ("reset", "follow_y", "follow_y", "follow_x", "observe"),
-    ),
-    "durable_service": (
-        ("reset", "write", "flush", "crash", "observe"),
-        ("reset", "write", "crash", "flush", "observe"),
-        ("reset", "crash", "write", "flush", "observe"),
-        ("reset", "flush", "write", "crash", "observe"),
-    ),
-}
+# It now lives in `scripts/materialize_m088_qualification.py`, which the lineage never imports and
+# which is executed as a separate process after the adopted constructor has been digested. This
+# module can only accept programs someone else drew.
 
 
-def materialize_qualification(
-    world_id: str, salt: str, count: int = 2,
-) -> tuple[tuple[str, ...], ...]:
-    """Draw this world's qualifying hidden programs from a post-adoption salt."""
-
-    import hashlib as _hashlib
-
-    pool = QUALIFICATION_POOL[world_id]
-    order = sorted(
-        range(len(pool)),
-        key=lambda index: _hashlib.sha256(
-            f"m088-qualification-v1|{world_id}|{salt}|{index}".encode("utf-8")
-        ).hexdigest(),
-    )
-    return tuple(pool[index] for index in sorted(order[:count]))
-
-
-def qualified_world(world_id: str, salt: str) -> World:
-    """The world with its hidden programs replaced by the post-adoption draw."""
+def qualified_world(world_id: str, programs: Sequence[Sequence[str]]) -> World:
+    """The world with its hidden programs replaced by an externally materialized draw."""
 
     from dataclasses import replace as _replace
 
-    return _replace(world(world_id), hidden_programs=materialize_qualification(world_id, salt))
+    if not programs:
+        raise WorldError(f"{world_id}: no qualifying programs were supplied")
+    return _replace(
+        world(world_id), hidden_programs=tuple(tuple(program) for program in programs),
+    )
 
 
 def world(world_id: str) -> World:

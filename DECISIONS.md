@@ -1866,6 +1866,31 @@ new mechanism, and `IP_ASSET_REGISTER.md` carried no entry for it. P-003 records
 `PUBLIC_AGPL_COMMERCIAL_OPTION`, matching P-001's disposition for M086, before the implementation
 merges.
 
+
+### Four findings from external review, corrected before merge
+
+PR #136 raised four findings. All are corrected and the run was repeated.
+
+1. **Rollback corrupted a detached copy** and restored an untouched string, so recovery was never
+   exercised. That is the **M064 defect** -- a receipt comparing the saved state to itself --
+   recurring. The fault is now written into the live state, detection compares it against an
+   independently preserved checkpoint, restoration reads that checkpoint, and P10 additionally
+   requires the fault to have changed the constructor's behaviour.
+2. **The qualification pool was a module constant** in `m088_worlds`, so every possible qualifying
+   program existed in the development process before `meta_search` ran. That is the **M086-A
+   defect**. The pool now lives in `scripts/materialize_m088_qualification.py`, which the lineage
+   never imports, executed as a **separate process** after the adopted constructor is digested; a
+   test asserts the pool is unreachable from anything the lineage imports.
+3. **Repeated searches cleared their logs**, so the tenfold arm reported one search's acquisitions
+   and no evidence for the other nine. Each repetition now keeps its own audit trail, and the
+   checker requires ten preserved logs.
+4. **No publication disposition** was recorded for M088. P-004 now records
+   `PUBLIC_AGPL_COMMERCIAL_OPTION`.
+
+The verdict, the arm outcomes and every condition are unchanged; the result digest moved from
+`070b1cb3...` to `084111a1...` because the preserved artifacts are now richer, not because the
+science moved.
+
 ### The next causal ceiling
 
 Not the selection rule any more. The lineage chose among nine authored meta-primitives and eleven
@@ -1890,7 +1915,7 @@ filtered and ranked it. M088 attacked that one and nothing else.
 
 M088 is accepted as a **positive qualified development result**. H34 moves to supported by one
 attempt with no retry. Protocol frozen at `4d8a71a` before any qualification data existed; result
-`070b1cb3...e3a528`, attempt 1, all ten conditions computed and passed.
+`084111a1...069808`, attempt 1, all ten conditions computed and passed.
 
 **No generality gate advances.** G4 is untouched.
 

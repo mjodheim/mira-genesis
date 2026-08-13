@@ -94,7 +94,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
 - **M088 removes the handed-in experiment space, and H34 is supported.** Protocol frozen at
-  `4d8a71a` before any qualification data existed; result `070b1cb3...e3a528`, attempt 1, ten
+  `4d8a71a` before any qualification data existed; result `084111a1...069808`, attempt 1, ten
   conditions computed and passed. D057 left two ceilings; this attacked the second. M087's
   `execute_policy` took `experiment_space` as a literal tuple of eight strings a person wrote, and
   the policy only filtered and ranked it -- the lineage learned **where to look** while still being

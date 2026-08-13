@@ -28,7 +28,7 @@ from metamorphosis.m088_lineage import (  # noqa: E402
     rollback_proof,
     run_arm,
 )
-from metamorphosis.m088_worlds import materialize_qualification, qualified_world, world  # noqa: E402
+from metamorphosis.m088_worlds import qualified_world, world  # noqa: E402
 
 
 def _digest(value: object) -> str:
@@ -72,13 +72,35 @@ def main() -> int:
     mark("T7_constructor_adopted", constructor_digest=adopted_digest)
     mark("T8_constructor_serialized", constructor_digest=adopted_digest)
 
-    # Only now is the salt consumed.
-    mark("T9_qualification_materialized", salt_digest=_digest(arguments.salt), draws={
-        world_id: [list(program) for program in materialize_qualification(world_id, arguments.salt)]
-        for world_id in QUALIFICATION_WORLDS
-    })
+    # Only now is the salt consumed, and it is consumed by a SEPARATE PROCESS that owns the pool.
+    # This process has never held a qualifying program, in memory or on disk.
+    import subprocess
 
-    arms = {arm: run_arm(arm, development, arguments.salt) for arm in ARMS}
+    artifact_path = ROOT / "experiments/M088/QUALIFICATION.json"
+    subprocess.run(
+        [
+            sys.executable, str(ROOT / "scripts/materialize_m088_qualification.py"),
+            "--salt", arguments.salt,
+            "--adopted-constructor-digest", str(adopted_digest),
+            "--worlds", ",".join(QUALIFICATION_WORLDS),
+            "--output", str(artifact_path),
+        ],
+        capture_output=True, text=True, check=True,
+    )
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    if artifact["adopted_constructor_digest"] != adopted_digest:
+        raise SystemExit("the qualification artifact was drawn for a different constructor")
+    drawn = {key: [tuple(item) for item in value] for key, value in artifact["programs"].items()}
+    mark(
+        "T9_qualification_materialized",
+        salt_digest=_digest(arguments.salt),
+        materialized_by="separate process",
+        artifact_digest=artifact["artifact_digest"],
+        pool_present_in_this_process=False,
+        draws={key: [list(item) for item in value] for key, value in drawn.items()},
+    )
+
+    arms = {arm: run_arm(arm, development, drawn) for arm in ARMS}
     mark("T11_arms_executed", arms=list(ARMS))
     mark("T14_hidden_evaluation_complete")
 
@@ -89,7 +111,7 @@ def main() -> int:
 
     no_leak = [
         hidden_outside_constructive_image(
-            qualified_world(world_id, arguments.salt),
+            qualified_world(world_id, drawn[world_id]),
             development.adopted_constructor or m0_constructor(),
         )
         for world_id in QUALIFICATION_WORLDS
@@ -124,6 +146,7 @@ def main() -> int:
         "protocol_digest": _digest(protocol),
         "protocol_raw_sha256": hashlib.sha256(protocol_bytes).hexdigest(),
         "salt_digest": _digest(arguments.salt),
+        "qualification_artifact": artifact,
         "development": development.to_dict(),
         "arms": arms,
         "rollback": rollback,

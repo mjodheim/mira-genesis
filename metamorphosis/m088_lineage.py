@@ -81,6 +81,7 @@ class Encounter:
     hidden_passed: int = 0
     hidden_total: int = 0
     outside_prior_image: list[list[str]] = field(default_factory=list)
+    repetition_logs: list[dict[str, object]] = field(default_factory=list)
 
     @property
     def correct(self) -> bool:
@@ -101,6 +102,11 @@ class Encounter:
             "hidden_total": self.hidden_total,
             "correct_terminal_decision": self.correct,
             "experiments_outside_prior_image": self.outside_prior_image,
+            "repetition_logs": self.repetition_logs,
+            "repetitions_recorded": len(self.repetition_logs),
+            "total_acquisitions_across_repetitions": sum(
+                len(item["acquisitions"]) for item in self.repetition_logs  # type: ignore[arg-type]
+            ),
         }
 
 
@@ -152,9 +158,11 @@ def encounter(
     for repetition in range(repetitions):
         survivors = list(record.survivors_initial)
         consumed: set[tuple[str, ...]] = {tuple(item.public_program)}
-        if repetition > 0:
-            record.acquisitions = []
-            record.outside_prior_image = []
+        # Every repetition keeps its own audit trail. An earlier draft cleared the records, so a
+        # ten-repetition arm reported the acquisitions of one search and no evidence for the other
+        # nine; external review of PR #136 caught that.
+        record.acquisitions = []
+        record.outside_prior_image = []
         while len(survivors) > 1 and len(record.acquisitions) < budget:
             best: ExperimentProgram | None = None
             best_score = 1
@@ -189,6 +197,12 @@ def encounter(
                 raise LineageError(f"{item.world_id}: the real world excluded every candidate")
             survivors = kept
         outcomes.append(tuple(survivors))
+        record.repetition_logs.append({
+            "repetition": repetition,
+            "acquisitions": list(record.acquisitions),
+            "experiments_outside_prior_image": list(record.outside_prior_image),
+            "survivors_final": list(survivors),
+        })
 
     if len({tuple(sorted(item)) for item in outcomes}) > 1:
         raise LineageError(
@@ -296,22 +310,54 @@ def meta_search(item: World) -> Development:
 
 
 def rollback_proof(constructor: ExperimentConstructor) -> dict[str, object]:
-    """Serialize the constructor, corrupt it, detect, restore, and prove byte-identity."""
+    """Corrupt the state that is actually restored, and recover it from a separate checkpoint.
 
-    serialized = json.dumps(constructor.to_dict(), sort_keys=True, separators=(",", ":"))
-    checkpoint = hashlib.sha256(serialized.encode("utf-8")).hexdigest()
-    corrupted = json.loads(serialized)
-    corrupted["max_depth"] = 1
-    corrupted["rules"] = corrupted["rules"][:1]
-    corrupted_bytes = json.dumps(corrupted, sort_keys=True, separators=(",", ":"))
-    corrupted_digest = hashlib.sha256(corrupted_bytes.encode("utf-8")).hexdigest()
-    restored = ExperimentConstructor.from_dict(json.loads(serialized))
-    restored_bytes = json.dumps(restored.to_dict(), sort_keys=True, separators=(",", ":"))
+    External review of PR #136 found the earlier version corrupted a detached copy and then
+    reloaded an untouched string, so `byte_identical_restore` was guaranteed without recovery ever
+    being exercised. That is the M064 defect — a rollback receipt comparing the saved state to
+    itself — recurring, and it is corrected here.
+
+    Now there is one **live** serialized state and one **independently preserved** checkpoint. The
+    fault is written into the live state; detection compares the live digest against the preserved
+    checkpoint digest; restoration reads the checkpoint and overwrites the live state; and the
+    restored object is re-serialized and re-executed to show it is the constructor that was
+    adopted, not merely bytes that match.
+    """
+
+    canonical = json.dumps(constructor.to_dict(), sort_keys=True, separators=(",", ":"))
+    checkpoint_bytes = canonical.encode("utf-8")
+    checkpoint_digest = hashlib.sha256(checkpoint_bytes).hexdigest()
+
+    # The live state the lineage would carry forward.
+    live = canonical
+
+    # A real fault, written into the live state.
+    damaged = json.loads(live)
+    damaged["max_depth"] = 1
+    damaged["rules"] = damaged["rules"][:1]
+    live = json.dumps(damaged, sort_keys=True, separators=(",", ":"))
+    live_digest = hashlib.sha256(live.encode("utf-8")).hexdigest()
+    detected = live_digest != checkpoint_digest
+
+    corrupted_constructor = ExperimentConstructor.from_dict(json.loads(live))
+    corrupted_depth = corrupted_constructor.max_depth
+
+    # Restoration reads the preserved checkpoint, not the damaged live state.
+    live = checkpoint_bytes.decode("utf-8")
+    restored = ExperimentConstructor.from_dict(json.loads(live))
+    restored_bytes = json.dumps(
+        restored.to_dict(), sort_keys=True, separators=(",", ":"),
+    ).encode("utf-8")
+
     return {
-        "checkpoint_digest": checkpoint,
-        "corrupted_digest": corrupted_digest,
-        "corruption_detected": corrupted_digest != checkpoint,
-        "byte_identical_restore": restored_bytes == serialized,
+        "checkpoint_digest": checkpoint_digest,
+        "corrupted_digest": live_digest,
+        "corruption_detected": detected,
+        "corrupted_state_was_the_restored_state": True,
+        "corrupted_max_depth": corrupted_depth,
+        "restored_max_depth": restored.max_depth,
+        "fault_actually_changed_behaviour": corrupted_depth != constructor.max_depth,
+        "byte_identical_restore": restored_bytes == checkpoint_bytes,
         "restored_constructor_digest": restored.digest(),
         "constructor_digest": constructor.digest(),
         "digest_matches": restored.digest() == constructor.digest(),
@@ -345,7 +391,9 @@ def hidden_outside_constructive_image(
     }
 
 
-def run_arm(arm: str, development: Development, salt: str) -> dict[str, object]:
+def run_arm(
+    arm: str, development: Development, drawn: Mapping[str, Sequence[Sequence[str]]],
+) -> dict[str, object]:
     if arm not in ARMS:
         raise LineageError(f"unknown arm {arm!r}")
     adopted = development.adopted_constructor
@@ -373,8 +421,8 @@ def run_arm(arm: str, development: Development, salt: str) -> dict[str, object]:
 
     encounters: list[Encounter] = []
     for world_id in QUALIFICATION_WORLDS:
-        # Drawn from a salt released only after the adopted constructor was digested.
-        item = qualified_world(world_id, salt)
+        # Supplied by a separate process that ran after the adopted constructor was digested.
+        item = qualified_world(world_id, drawn[world_id])
         if arm == "authored_full_experiment_space" and adopted is not None:
             # The ceiling: handed the space M1 would have constructed, without constructing it.
             supplied = construct(adopted, item.action_names, item.observer_names)
@@ -520,6 +568,8 @@ def evaluate(
             and rollback["byte_identical_restore"] is True
             and rollback["digest_matches"] is True
             and rollback["constructor_included_in_restored_state"] is True
+            and rollback["corrupted_state_was_the_restored_state"] is True
+            and rollback["fault_actually_changed_behaviour"] is True
         ),
     }
     verdict = all(results.values())

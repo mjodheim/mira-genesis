@@ -21,10 +21,13 @@ from metamorphosis.m088_lineage import (  # noqa: E402
 )
 from metamorphosis.m088_worlds import qualified_world  # noqa: E402
 
+sys.path.insert(0, str(ROOT / "scripts"))
+
 RESULT = ROOT / "experiments/M088/RESULT.json"
 PROTOCOL = ROOT / "experiments/M088/PROTOCOL.json"
 CLAIM = ROOT / "experiments/M088/REGISTER_CLAIM.json"
 SALT = "m088-qualification-salt-2026-08-13"
+QUALIFICATION = ROOT / "experiments/M088/QUALIFICATION.json"
 
 
 def _digest(value: object) -> str:
@@ -75,9 +78,23 @@ def main() -> int:
     if limitation["resolved_by_prior_constructor"] is not False:
         problems.append("the prior constructor resolved the development world")
 
+    artifact = json.loads(QUALIFICATION.read_text(encoding="utf-8"))
+    if artifact != result["qualification_artifact"]:
+        problems.append("the committed qualification artifact differs from the recorded one")
+    if artifact["adopted_constructor_digest"] != development["adopted_constructor_digest"]:
+        problems.append("the qualification was drawn for a different constructor")
+    if artifact["materialized_by"] != "separate process":
+        problems.append("the qualification was not materialized by a separate process")
+    # The pool must not be reachable from anything the lineage imports.
+    import metamorphosis.m088_worlds as _worlds
+
+    if hasattr(_worlds, "QUALIFICATION_POOL"):
+        problems.append("the qualification pool is importable by the lineage")
+    drawn = {key: [tuple(item) for item in value] for key, value in artifact["programs"].items()}
+
     evolvable = result["arms"]["evolvable_experiment_constructor"]
     for record in evolvable["encounters"]:
-        world_item = qualified_world(record["world_id"], SALT)
+        world_item = qualified_world(record["world_id"], drawn[record["world_id"]])
         prior = constructive_image(
             m0_constructor(), world_item.action_names, world_item.observer_names,
         )
@@ -93,7 +110,7 @@ def main() -> int:
 
     for world_id in QUALIFICATION_WORLDS:
         proof = hidden_outside_constructive_image(
-            qualified_world(world_id, SALT),
+            qualified_world(world_id, drawn[world_id]),
             __import__("metamorphosis.m088_experiment", fromlist=["ExperimentConstructor"])
             .ExperimentConstructor.from_dict(development["adopted_constructor"]),
         )
@@ -112,6 +129,14 @@ def main() -> int:
         problems.append("the tenfold arm did not execute more programs than the fixed arm")
     if budgeted["experiments_outside_prior_image"]:
         problems.append("the tenfold arm gained expressiveness it should not have")
+    for record in budgeted["encounters"]:
+        if record["repetitions_recorded"] != 10:
+            problems.append(f"{record['world_id']}: the tenfold arm preserved "
+                            f"{record['repetitions_recorded']} repetition logs, not 10")
+    if not result["rollback"]["corrupted_state_was_the_restored_state"]:
+        problems.append("rollback corrupted a copy rather than the state it restored")
+    if not result["rollback"]["fault_actually_changed_behaviour"]:
+        problems.append("the injected fault did not change the constructor's behaviour")
 
     if evaluate(development, result["arms"], result["rollback"]) != result["evaluation"]:
         problems.append("the recorded verdict does not reproduce from the preserved arms")

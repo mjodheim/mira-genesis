@@ -1,0 +1,41 @@
+{
+  "adopted_constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+  "artifact_digest": "2a2c6fe2b3a35fed6ec6d117fb59d2d1e252a8bb6a63fa64a0baecdc81ae2bca",
+  "materialized_by": "separate process",
+  "programs": {
+    "durable_service": [
+      [
+        "reset",
+        "write",
+        "flush",
+        "crash",
+        "observe"
+      ],
+      [
+        "reset",
+        "flush",
+        "write",
+        "crash",
+        "observe"
+      ]
+    ],
+    "path_graph": [
+      [
+        "reset",
+        "follow_y",
+        "follow_x",
+        "follow_y",
+        "observe"
+      ],
+      [
+        "reset",
+        "follow_y",
+        "follow_y",
+        "follow_x",
+        "observe"
+      ]
+    ]
+  },
+  "salt_digest": "1a1c225d5ba64e2711de69770f50826d76fbbccad0e951fef24061fa3c4644a5",
+  "schema": "m088-qualification-v1"
+}

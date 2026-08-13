@@ -770,7 +770,7 @@ correctness-critical adaptation, persist the mechanism as serialized state, and 
 further meta-transformation in structurally different environments.
 
 **Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
-Protocol frozen at `4d8a71a` before any qualification data existed; result `070b1cb3...e3a528`,
+Protocol frozen at `4d8a71a` before any qualification data existed; result `084111a1...069808`,
 attempt 1. All ten frozen conditions passed.
 
 M0 builds every program of the form *reset, one action, observe* — the single-interaction depth at
