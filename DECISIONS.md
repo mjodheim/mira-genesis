@@ -2040,3 +2040,85 @@ is a claim about the half that was state.
 Nothing is claimed. Not AGI, not open-ended evolution, not arbitrary self-modification, not general
 programming-language invention, no gate, no independent reproduction. The extension substrate
 remains authored, and so does the base language.
+
+## D060 — M090 makes the meta-language state-owned; the ceiling moves to the interpreter substrate
+
+D059 left a precondition rather than a research question: M089's language was two objects, and only
+one of them executed. M090 attacked that and nothing else.
+
+### The decision
+
+M090 is accepted as a **positive qualified development result**. H36 moves to supported by a
+**third attempt** after two disclosed corrections. Protocol frozen at `ffe5086`; result `79876238...f8d8bd`,
+twelve conditions computed and passed. **No generality gate advances.**
+**Attempt provenance, stated plainly.** This is **attempt 3**, `retry_used: true`. Two earlier
+runs of this frozen protocol are preserved in the repository: `WITHDRAWN_RESULT_ATTEMPT_2.json` (positive, `27b9501a...`); `WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json` (negative, `daa75713...`). External review of PR #138
+was right that re-executing a frozen protocol after inspecting a completed result is another
+attempt whatever changed between them, and that recording it otherwise asserts false provenance.
+The checker now derives the attempt number from the preserved artifacts rather than accepting a
+declared one. A third-attempt positive is weaker evidence than a first-attempt positive, and is
+recorded as such.
+
+The two corrections were: **A1**, a scanner that matched raw source text and flagged the module
+docstring describing the M089 defect, which made attempt 1 negative on P11 — an instrument defect,
+confirmed by an independent AST check that no such name existed in code; and **A2**, a genuine
+conservation violation found in review — `identity` had been added to the shared unary domain, so
+migrated `APPLY_UNARY` accepted a call M089 rejects, while the conservation report excluded that
+very operator. A2 changed the system under test. The conservation space now excludes nothing.
+
+
+**H35 is untouched and remains not supported.** M089's qualification was not replayed, its result
+was not modified, and the probe extension used here is authored and labelled as such in the
+protocol, the result and the register claim. A successor wanting to re-attempt endogenous extension
+needs its own hypothesis, protocol and fresh qualification.
+
+### What changed architecturally
+
+One registry holds every primitive; `origin` is metadata. The inherited operations became
+serialized definitions over a fixed generic stack substrate, and the interpreter contains no branch
+on any primitive identifier and no table of implementations — a property checked from the AST of
+the executing module rather than asserted. The question D059 posed can now be answered: destroying
+a primitive in the serialized state really does destroy the capability.
+
+Migration conserved every inherited behaviour over 5,328 legacy programs with
+zero mismatches, so nothing was gained or lost in expressive power. The novelty is ownership,
+persistence and rollback of semantics — not capability.
+
+### Amendments A1 and A2, disclosed in full
+
+The first run was **negative** on P11, `no_host_side_base_operation_authority`, with digest
+`daa75713...3272cd`. That run is preserved in the repository as
+`experiments/M090/WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json`.
+
+The cause was a defect in the scanner, not in the architecture: it matched raw source text and so
+flagged `m090_language.py` for mentioning `L0_OPERATIONS` and `_execute_base` **in the module
+docstring that describes the M089 defect being removed**. Prose is not authority. An independent
+AST check confirmed no such name, import or function existed in code anywhere on the execution
+path. The scan now reads the AST with docstrings stripped, which is also strictly stronger.
+
+This is the opposite of the M089 situation and the distinction is the whole justification. There,
+the failing condition measured a **true** property of the system, so changing the system to pass it
+would have been a result-saving retry and the negative was preserved. Here the failing condition
+measured a **false** property because the instrument was broken. The instrument was corrected; the
+system was not touched. Both digests are recorded so that anyone can check that claim rather than
+accept it.
+
+**A2 was different, and is not defensible as an instrument fix.** Review found that `identity` had
+been added to the shared unary operator domain, so the migrated `APPLY_UNARY` accepted a call M089
+rejects — and the conservation report excluded that operator, so P1 passed while the accepted
+program semantics had widened. That is a change to the system under test, found before merge and
+corrected: `identity` is removed and the conservation space now excludes nothing.
+
+### The next causal ceiling
+
+**The interpreter substrate.** Eight micro-operations, a stack machine, the parameter kinds and the
+capability list are all authored, and the language is now honestly described as owning everything
+above them and nothing below. That boundary is stated in the protocol rather than blurred.
+
+### Claim boundary
+
+Within one bounded executable representation, the lineage's inherited and registered primitive
+semantics are serialized lineage state and are the sole authority a fixed generic interpreter
+consults. Not AGI, not open-ended evolution, not arbitrary self-modification, not general language
+invention, not a self-hosting interpreter, not support for H35, no gate, no independent
+reproduction, no production authority.

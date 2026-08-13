@@ -1,0 +1,1829 @@
+{
+  "arms": {
+    "base_state_ablated": {
+      "arm": "base_state_ablated",
+      "behaviour_changed": true,
+      "is_historical": false,
+      "language": {
+        "language_version": 2,
+        "primitives": [
+          {
+            "body": [
+              [
+                "PUSH_CONST",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "const"
+            ],
+            "primitive_id": "SET_CONST",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_SLOT",
+                "$0"
+              ],
+              [
+                "UNOP",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "unary_op"
+            ],
+            "primitive_id": "APPLY_UNARY",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "PUSH_INPUT",
+                "$2"
+              ],
+              [
+                "BINOP",
+                "add"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "acquired",
+            "parameter_kinds": [
+              "slot",
+              "input",
+              "input"
+            ],
+            "primitive_id": "COMBINE_INPUTS",
+            "provenance": [
+              "registered as an architectural probe, not as an endogenous invention"
+            ]
+          }
+        ],
+        "provenance": [
+          "inherited operations migrated into lineage state",
+          "architectural probe extension registered through the one registry",
+          "control: inherited primitive removed"
+        ],
+        "schema": "m090-executable-meta-language-v1"
+      },
+      "language_digest": "4fd5d47e352b94feb4a6ccfbf6b719b13ced059c60b7ab8869b8f10a123119e0",
+      "observations": [
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 2",
+          "output": null,
+          "probe_id": "inherited_copy",
+          "refused": true
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 2",
+          "output": null,
+          "probe_id": "inherited_composite",
+          "refused": true
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ],
+      "probes_whose_behaviour_changed": [
+        "inherited_composite",
+        "inherited_copy"
+      ]
+    },
+    "base_state_semantically_mutated": {
+      "arm": "base_state_semantically_mutated",
+      "behaviour_changed": true,
+      "is_historical": false,
+      "language": {
+        "language_version": 2,
+        "primitives": [
+          {
+            "body": [
+              [
+                "PUSH_CONST",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "const"
+            ],
+            "primitive_id": "SET_CONST",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "input"
+            ],
+            "primitive_id": "COPY_INPUT",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_SLOT",
+                "$0"
+              ],
+              [
+                "UNOP",
+                "neg"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "unary_op"
+            ],
+            "primitive_id": "APPLY_UNARY",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "PUSH_INPUT",
+                "$2"
+              ],
+              [
+                "BINOP",
+                "add"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "acquired",
+            "parameter_kinds": [
+              "slot",
+              "input",
+              "input"
+            ],
+            "primitive_id": "COMBINE_INPUTS",
+            "provenance": [
+              "registered as an architectural probe, not as an endogenous invention"
+            ]
+          }
+        ],
+        "provenance": [
+          "inherited operations migrated into lineage state",
+          "architectural probe extension registered through the one registry",
+          "control: inherited primitive rewritten"
+        ],
+        "schema": "m090-executable-meta-language-v1"
+      },
+      "language_digest": "89f514f0e39f7c08a845d258258fc6cb00517657d1d58865f28897527d85c4a4",
+      "observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            -3,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ],
+      "probes_whose_behaviour_changed": [
+        "inherited_composite"
+      ]
+    },
+    "extension_state_ablated": {
+      "arm": "extension_state_ablated",
+      "behaviour_changed": true,
+      "is_historical": false,
+      "language": {
+        "language_version": 2,
+        "primitives": [
+          {
+            "body": [
+              [
+                "PUSH_CONST",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "const"
+            ],
+            "primitive_id": "SET_CONST",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "input"
+            ],
+            "primitive_id": "COPY_INPUT",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_SLOT",
+                "$0"
+              ],
+              [
+                "UNOP",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "unary_op"
+            ],
+            "primitive_id": "APPLY_UNARY",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          }
+        ],
+        "provenance": [
+          "inherited operations migrated into lineage state",
+          "architectural probe extension registered through the one registry",
+          "control: acquired primitive removed"
+        ],
+        "schema": "m090-executable-meta-language-v1"
+      },
+      "language_digest": "cd60e14163c4baddc4d15ccdc8cf038ef4f66b09d981ebaed17df6d1fef1a84c",
+      "observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "probes_whose_behaviour_changed": [
+        "acquired_combine",
+        "mixed_const_then_combine",
+        "mixed_pipeline"
+      ]
+    },
+    "legacy_host_authority": {
+      "arm": "legacy_host_authority",
+      "behaviour_changed": false,
+      "intact_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        }
+      ],
+      "is_historical": true,
+      "language": {
+        "note": "m089 host-authoritative language"
+      },
+      "language_digest": "1da520f0bb91f56071c3344cfb0d4a66629e8a22fade7ffb9db7785d821d0fd9",
+      "observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        }
+      ],
+      "probes_whose_behaviour_changed": []
+    },
+    "state_owned_meta_language": {
+      "arm": "state_owned_meta_language",
+      "behaviour_changed": false,
+      "is_historical": false,
+      "language": {
+        "language_version": 1,
+        "primitives": [
+          {
+            "body": [
+              [
+                "PUSH_CONST",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "const"
+            ],
+            "primitive_id": "SET_CONST",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "input"
+            ],
+            "primitive_id": "COPY_INPUT",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_SLOT",
+                "$0"
+              ],
+              [
+                "UNOP",
+                "$1"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "inherited",
+            "parameter_kinds": [
+              "slot",
+              "unary_op"
+            ],
+            "primitive_id": "APPLY_UNARY",
+            "provenance": [
+              "migrated from m089 host implementation"
+            ]
+          },
+          {
+            "body": [
+              [
+                "PUSH_INPUT",
+                "$1"
+              ],
+              [
+                "PUSH_INPUT",
+                "$2"
+              ],
+              [
+                "BINOP",
+                "add"
+              ],
+              [
+                "STORE_SLOT",
+                "$0"
+              ]
+            ],
+            "capabilities": [
+              "pure_slot_write"
+            ],
+            "origin": "acquired",
+            "parameter_kinds": [
+              "slot",
+              "input",
+              "input"
+            ],
+            "primitive_id": "COMBINE_INPUTS",
+            "provenance": [
+              "registered as an architectural probe, not as an endogenous invention"
+            ]
+          }
+        ],
+        "provenance": [
+          "inherited operations migrated into lineage state",
+          "architectural probe extension registered through the one registry"
+        ],
+        "schema": "m090-executable-meta-language-v1"
+      },
+      "language_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+      "observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ],
+      "probes_whose_behaviour_changed": []
+    }
+  },
+  "attempt": 3,
+  "chronology": {
+    "order": [
+      "T0_protocol_frozen",
+      "T1_migration_conserves_inherited_semantics",
+      "T2_l0_state_owned",
+      "T3_probe_extension_registered",
+      "T4_ownership_analysed",
+      "T5_host_authority_scanned",
+      "T6_arms_executed",
+      "T7_rollback_proved",
+      "T8_fresh_process_probed"
+    ],
+    "steps": [
+      {
+        "index": 0,
+        "protocol_digest": "1462a969034c8543133c459dd7f38aec68319caef741e9cd949c74bd195a3cc3",
+        "step": "T0_protocol_frozen"
+      },
+      {
+        "conserved": true,
+        "index": 1,
+        "programs_checked": 5328,
+        "step": "T1_migration_conserves_inherited_semantics"
+      },
+      {
+        "digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+        "index": 2,
+        "primitives": [
+          "SET_CONST",
+          "COPY_INPUT",
+          "APPLY_UNARY"
+        ],
+        "step": "T2_l0_state_owned"
+      },
+      {
+        "digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+        "index": 3,
+        "step": "T3_probe_extension_registered",
+        "version": 1
+      },
+      {
+        "executed_outside_state": [],
+        "index": 4,
+        "step": "T4_ownership_analysed"
+      },
+      {
+        "findings": 0,
+        "index": 5,
+        "step": "T5_host_authority_scanned"
+      },
+      {
+        "arms": [
+          "state_owned_meta_language",
+          "base_state_ablated",
+          "base_state_semantically_mutated",
+          "extension_state_ablated",
+          "legacy_host_authority"
+        ],
+        "index": 6,
+        "step": "T6_arms_executed"
+      },
+      {
+        "index": 7,
+        "sides": [
+          "inherited_removal",
+          "inherited_mutation",
+          "acquired_removal"
+        ],
+        "step": "T7_rollback_proved"
+      },
+      {
+        "index": 8,
+        "matches": true,
+        "resurrected": 0,
+        "step": "T8_fresh_process_probed"
+      }
+    ]
+  },
+  "conditions_declared": [
+    "P1_inherited_semantics_conserved_by_migration",
+    "P2_every_executable_primitive_is_state_owned",
+    "P3_inherited_removal_changes_behaviour",
+    "P4_inherited_semantic_mutation_changes_behaviour",
+    "P5_acquired_removal_changes_behaviour",
+    "P6_inherited_and_acquired_share_one_execution_path",
+    "P7_rollback_of_inherited_language_is_exact_and_behavioural",
+    "P8_rollback_of_extended_language_is_exact_and_behavioural",
+    "P9_fresh_process_reproduces_the_serialized_language",
+    "P10_fresh_process_cannot_resurrect_a_removed_primitive",
+    "P11_no_host_side_base_operation_authority",
+    "P12_legacy_architecture_shows_the_defect_this_removes"
+  ],
+  "conservation": {
+    "max_length": 2,
+    "mismatch_count": 0,
+    "mismatches": [],
+    "programs_checked": 5328,
+    "semantics_conserved": true
+  },
+  "evaluation": {
+    "conditions": {
+      "P10_fresh_process_cannot_resurrect_a_removed_primitive": true,
+      "P11_no_host_side_base_operation_authority": true,
+      "P12_legacy_architecture_shows_the_defect_this_removes": true,
+      "P1_inherited_semantics_conserved_by_migration": true,
+      "P2_every_executable_primitive_is_state_owned": true,
+      "P3_inherited_removal_changes_behaviour": true,
+      "P4_inherited_semantic_mutation_changes_behaviour": true,
+      "P5_acquired_removal_changes_behaviour": true,
+      "P6_inherited_and_acquired_share_one_execution_path": true,
+      "P7_rollback_of_inherited_language_is_exact_and_behavioural": true,
+      "P8_rollback_of_extended_language_is_exact_and_behavioural": true,
+      "P9_fresh_process_reproduces_the_serialized_language": true
+    },
+    "failed_conditions": [],
+    "hypothesis_supported": true,
+    "verdict": "positive"
+  },
+  "fresh_process": {
+    "intact": {
+      "available_operations": [
+        "APPLY_UNARY",
+        "COMBINE_INPUTS",
+        "COPY_INPUT",
+        "SET_CONST"
+      ],
+      "label": "intact",
+      "language_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+      "language_version": 1,
+      "m089_module_imported": false,
+      "migration_module_imported": false,
+      "observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ]
+    },
+    "intact_matches_in_process": true,
+    "m089_module_imported": false,
+    "migration_module_imported": false,
+    "removed_primitive_refused_in_fresh_process": true,
+    "resurrected_probes": [],
+    "with_primitive_removed": {
+      "available_operations": [
+        "APPLY_UNARY",
+        "COMBINE_INPUTS",
+        "SET_CONST"
+      ],
+      "label": "missing_primitive",
+      "language_digest": "ad1657566d6ad206db2d569f7710ae3eecbaebca48765a9c1edab849c1159a4b",
+      "language_version": 2,
+      "m089_module_imported": false,
+      "migration_module_imported": false,
+      "observations": [
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 2",
+          "output": null,
+          "probe_id": "inherited_copy",
+          "refused": true
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 2",
+          "output": null,
+          "probe_id": "inherited_composite",
+          "refused": true
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ]
+    }
+  },
+  "host_authority_scan": {
+    "amendment": "A1: the first scan matched raw source text and flagged the module docstring that describes the M089 defect. It now reads the AST with docstrings stripped.",
+    "execution_path": [
+      "metamorphosis/m090_language.py",
+      "scripts/run_m090_fresh_process.py"
+    ],
+    "findings": [],
+    "legacy_module_reachable_from_execution_path": false,
+    "legacy_used_only_by_historical_control_and_migration_check": true,
+    "method": "ast, docstrings stripped"
+  },
+  "hypothesis": "H36",
+  "l0_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+  "l0_semantics_digest": "20f3ee661bf6133c2b5f1182c37927f1717e9756ad22ba25c79eb7e36e0b70c9",
+  "l1_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+  "l1_semantics_digest": "7381b0f05dad3456cb35320de0e5a588b7af32d2804d0e80de1c65a1416f04c5",
+  "milestone": "M090",
+  "model_calls": 0,
+  "network_calls": 0,
+  "ownership": {
+    "executable_primitives": [
+      "APPLY_UNARY",
+      "COMBINE_INPUTS",
+      "COPY_INPUT",
+      "SET_CONST"
+    ],
+    "executed_outside_state": [],
+    "micro_operations": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "origins_share_registry": true,
+    "primitive_identifiers_in_interpreter_source": [],
+    "primitives_exercised_by_probes": [
+      "APPLY_UNARY",
+      "COMBINE_INPUTS",
+      "COPY_INPUT",
+      "SET_CONST"
+    ],
+    "single_dispatch_path": true,
+    "state_primitives": [
+      "APPLY_UNARY",
+      "COMBINE_INPUTS",
+      "COPY_INPUT",
+      "SET_CONST"
+    ]
+  },
+  "prior_attempts": [
+    {
+      "artifact": "WITHDRAWN_RESULT_ATTEMPT_2.json",
+      "failed_conditions": [],
+      "result_digest": "27b9501ab9d0ea3d55f69d5e83a3ba2985147e56e39c6d090f5fcf844c027091",
+      "verdict": "positive"
+    },
+    {
+      "artifact": "WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json",
+      "failed_conditions": [
+        "P11_no_host_side_base_operation_authority"
+      ],
+      "result_digest": "daa75713300ed1732917ccb8bcd47ceb9e41ddf235b46b0e6f2fb46ef13272cd",
+      "verdict": "negative"
+    }
+  ],
+  "probes": [
+    {
+      "exercises": "inherited",
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_copy",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "exercises": "inherited",
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_const",
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "exercises": "inherited_composite",
+      "inputs": [
+        1,
+        2,
+        3
+      ],
+      "probe_id": "inherited_composite",
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "exercises": "acquired",
+      "inputs": [
+        4,
+        5,
+        6
+      ],
+      "probe_id": "acquired_combine",
+      "program": [
+        [
+          "COMBINE_INPUTS",
+          [
+            3,
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "exercises": "mixed",
+      "inputs": [
+        2,
+        3,
+        4
+      ],
+      "probe_id": "mixed_pipeline",
+      "program": [
+        [
+          "COMBINE_INPUTS",
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "exercises": "mixed",
+      "inputs": [
+        7,
+        8,
+        9
+      ],
+      "probe_id": "mixed_const_then_combine",
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            1
+          ]
+        ],
+        [
+          "COMBINE_INPUTS",
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      ]
+    }
+  ],
+  "protocol_digest": "1462a969034c8543133c459dd7f38aec68319caef741e9cd949c74bd195a3cc3",
+  "protocol_raw_sha256": "e75589ba35616eef59f8be373b9bb7efa556cce3d5f1fee02cd7754479f7c0d3",
+  "reattempts_m089": false,
+  "result_digest": "79876238c9acd9659fe456d8ca013838c47ca5823b7eca00af608d6dcef8d8bd",
+  "retry_used": true,
+  "rollback": {
+    "acquired_removal": {
+      "behaviour_restored": true,
+      "byte_identical_restore": true,
+      "checkpoint_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+      "corrupted_state_was_the_restored_state": true,
+      "corruption_detected": true,
+      "damaged_digest": "b9a76e51e6acba64e0cf12bb859a320e02015b8e351e73c4974ee4fd57e52adb",
+      "damaged_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 2",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "fault_class": "removal",
+      "fault_target": "COMBINE_INPUTS",
+      "intact_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ],
+      "label": "L1 removal",
+      "probes_whose_behaviour_changed": [
+        "acquired_combine",
+        "mixed_const_then_combine",
+        "mixed_pipeline"
+      ],
+      "restored_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+      "restored_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            9
+          ],
+          "probe_id": "acquired_combine",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            -6,
+            0,
+            0
+          ],
+          "probe_id": "mixed_pipeline",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            17,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "mixed_const_then_combine",
+          "refused": false
+        }
+      ]
+    },
+    "inherited_mutation": {
+      "behaviour_restored": true,
+      "byte_identical_restore": true,
+      "checkpoint_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "corrupted_state_was_the_restored_state": true,
+      "corruption_detected": true,
+      "damaged_digest": "e42692ec135f9fb0a228503b7165a63f671ebf4ccb14f885beba2e6725ec0266",
+      "damaged_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "fault_class": "semantic_mutation",
+      "fault_target": "APPLY_UNARY",
+      "intact_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "label": "L0 mutation",
+      "probes_whose_behaviour_changed": [
+        "inherited_composite"
+      ],
+      "restored_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "restored_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ]
+    },
+    "inherited_removal": {
+      "behaviour_restored": true,
+      "byte_identical_restore": true,
+      "checkpoint_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "corrupted_state_was_the_restored_state": true,
+      "corruption_detected": true,
+      "damaged_digest": "57fd65781f4e684091624ad4ccbe1160e61166c417abe71da54067c4d37b3d18",
+      "damaged_observations": [
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 1",
+          "output": null,
+          "probe_id": "inherited_copy",
+          "refused": true
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": "operation 'COPY_INPUT' is not defined in language version 1",
+          "output": null,
+          "probe_id": "inherited_composite",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 1",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "fault_class": "removal",
+      "fault_target": "COPY_INPUT",
+      "intact_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ],
+      "label": "L0 removal",
+      "probes_whose_behaviour_changed": [
+        "inherited_composite",
+        "inherited_copy"
+      ],
+      "restored_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+      "restored_observations": [
+        {
+          "error": null,
+          "output": [
+            2,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_copy",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "probe_id": "inherited_const",
+          "refused": false
+        },
+        {
+          "error": null,
+          "output": [
+            6,
+            0,
+            0,
+            0
+          ],
+          "probe_id": "inherited_composite",
+          "refused": false
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "acquired_combine",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_pipeline",
+          "refused": true
+        },
+        {
+          "error": "operation 'COMBINE_INPUTS' is not defined in language version 0",
+          "output": null,
+          "probe_id": "mixed_const_then_combine",
+          "refused": true
+        }
+      ]
+    }
+  },
+  "schema": "m090-result-v1"
+}

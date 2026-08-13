@@ -1,0 +1,180 @@
+{
+  "arms": [
+    "state_owned_meta_language",
+    "base_state_ablated",
+    "base_state_semantically_mutated",
+    "extension_state_ablated",
+    "legacy_host_authority"
+  ],
+  "capabilities": {
+    "forbidden": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
+    "permitted": [
+      "pure_slot_write"
+    ],
+    "state_ownership_is_not_arbitrary_code_execution": true
+  },
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_substrate_eliminated": false,
+    "general_language_invention": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "genesis_gate_4": false,
+    "h35_supported": false,
+    "independent_reproduction": false,
+    "open_ended_evolution": false,
+    "self_hosting_interpreter": false,
+    "unrestricted_code_generation": false
+  },
+  "conditions": [
+    "P1_inherited_semantics_conserved_by_migration",
+    "P2_every_executable_primitive_is_state_owned",
+    "P3_inherited_removal_changes_behaviour",
+    "P4_inherited_semantic_mutation_changes_behaviour",
+    "P5_acquired_removal_changes_behaviour",
+    "P6_inherited_and_acquired_share_one_execution_path",
+    "P7_rollback_of_inherited_language_is_exact_and_behavioural",
+    "P8_rollback_of_extended_language_is_exact_and_behavioural",
+    "P9_fresh_process_reproduces_the_serialized_language",
+    "P10_fresh_process_cannot_resurrect_a_removed_primitive",
+    "P11_no_host_side_base_operation_authority",
+    "P12_legacy_architecture_shows_the_defect_this_removes"
+  ],
+  "date_frozen": "2026-08-13",
+  "external_model_permitted_during_scientific_run": false,
+  "falsifiers": [
+    "removing an inherited primitive from state does not disable it",
+    "semantic mutation of a primitive does not alter behaviour",
+    "removing the acquired primitive does not disable it",
+    "inherited and acquired primitives use different semantic authority",
+    "any executable primitive exists outside the serialized state",
+    "the interpreter branches on a primitive identifier",
+    "a fresh process reconstitutes a primitive missing from the state",
+    "the fresh process imports the historical host language or the migration module",
+    "restore recovers bytes but not behaviour",
+    "the fault strikes a detached copy rather than the restored state",
+    "migration changes any inherited behaviour",
+    "the result relies on metadata differences rather than behaviour",
+    "the checker trusts stored flags instead of replaying",
+    "an external model is called during the scientific run",
+    "the milestone is presented as supporting H35"
+  ],
+  "fault_classes": [
+    "removal",
+    "semantic_mutation"
+  ],
+  "historical_arm_is_not_a_capability_of_the_lineage": true,
+  "historical_arms": [
+    "legacy_host_authority"
+  ],
+  "hypothesis": "H36",
+  "interpreter_substrate_I": {
+    "authored": true,
+    "boundary": "I is what the host must execute; it contains no primitive identifier and no table of implementations. L is the set of primitive definitions and is entirely lineage state. M090 claims ownership of L only; I remains authored and is the next ceiling.",
+    "generic_over_primitives": true,
+    "inputs": 3,
+    "max_body_length": 6,
+    "micro_operations": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "parameter_kinds": [
+      "slot",
+      "input",
+      "const",
+      "unary_op"
+    ],
+    "slots": 4
+  },
+  "meta_language_L": {
+    "inherited_primitives": [
+      "SET_CONST",
+      "COPY_INPUT",
+      "APPLY_UNARY"
+    ],
+    "l0_digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+    "l0_semantics_digest": "20f3ee661bf6133c2b5f1182c37927f1717e9756ad22ba25c79eb7e36e0b70c9",
+    "l1_digest": "0da139a0841757047d03470edb271b5bfb273daca82c4ae2ceff0ee75f0eb8f4",
+    "l1_semantics_digest": "7381b0f05dad3456cb35320de0e5a588b7af32d2804d0e80de1c65a1416f04c5",
+    "one_registry": true,
+    "origin_is_metadata_only": true,
+    "probe_extension": "COMBINE_INPUTS",
+    "schema": "m090-executable-meta-language-v1"
+  },
+  "migration": {
+    "conservation_space": "every legacy program of length<=2 over the full legacy alphabet, on four input tuples",
+    "legacy_reference_used_only_for_migration_check_and_historical_control": true,
+    "mapping": {
+      "APPLY_UNARY": [
+        [
+          "PUSH_SLOT",
+          "$0"
+        ],
+        [
+          "UNOP",
+          "$1"
+        ],
+        [
+          "STORE_SLOT",
+          "$0"
+        ]
+      ],
+      "COPY_INPUT": [
+        [
+          "PUSH_INPUT",
+          "$1"
+        ],
+        [
+          "STORE_SLOT",
+          "$0"
+        ]
+      ],
+      "SET_CONST": [
+        [
+          "PUSH_CONST",
+          "$1"
+        ],
+        [
+          "STORE_SLOT",
+          "$0"
+        ]
+      ]
+    }
+  },
+  "milestone": "M090",
+  "not_a_reattempt": "M090 does not re-run M089's qualification, does not modify its result, and makes no claim about H35. The probe extension here is authored and is described as such.",
+  "predecessor": {
+    "defect": "m089_meta_language.execute dispatched base operations from the module constant L0_OPERATIONS and a host function; language.base_operations was serialized, digested and rolled back but consulted by nothing, so with an empty registry no fault to the serialized state could change behaviour",
+    "milestone": "M089",
+    "verdict": "negative"
+  },
+  "reattempts_m089": false,
+  "retry_policy": {
+    "attempts": 1,
+    "m089_must_not_be_replayed": true,
+    "negative_result_preserved": true,
+    "reroll_permitted": false
+  },
+  "schema": "m090-protocol-v1",
+  "status": "frozen_before_qualification",
+  "subtitle": "The language the lineage stores is the language the interpreter actually executes",
+  "title": "Executable Meta-Language State",
+  "track": "A",
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail"
+}

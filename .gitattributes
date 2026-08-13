@@ -69,3 +69,9 @@ experiments/M089/PROTOCOL.json -text
 experiments/M089/RESULT.json -text
 experiments/M089/QUALIFICATION.json -text
 experiments/M089/REGISTER_CLAIM.json -text
+
+experiments/M090/PROTOCOL.json -text
+experiments/M090/RESULT.json -text
+experiments/M090/REGISTER_CLAIM.json -text
+experiments/M090/WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json -text
+experiments/M090/WITHDRAWN_RESULT_ATTEMPT_2.json -text
