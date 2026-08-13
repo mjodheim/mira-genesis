@@ -1,69 +1,62 @@
 # M089 result — endogenous meta-language extension
 
-**POSITIVE. H35 SUPPORTED. ATTEMPT 1, NO RETRY. NO GATE ADVANCES.**
+**NEGATIVE. H35 NOT SUPPORTED. ATTEMPT 1, NO RETRY. NO GATE ADVANCES. PRESERVED, NOT REPAIRED.**
+
+Nine of ten frozen conditions passed. **P10 failed.**
 
 - Protocol frozen at `f8ab249`, before any qualification data existed.
-- Protocol blob SHA-256 `603b762c810c71e6bd9b1c89b65fbf3332de42bc3a916b20d8e4ed9bbd33cb76`.
-- Result digest `7ec0c5bbe5dbf57832ad042014d47e67ace6b515da29cf7b2342985326ddc3a2`.
+- Protocol blob SHA-256 `fb2cf4042955b55b38371033571def2c94b62ec2d1a82bd12c16fd70bc42b27b`.
+- Result digest `20c432a39d91e03a63dc77dd245d704758efed221e18dcf8cf0a4e7bd5134f4b`.
 - Model calls **0**, network calls **0**.
 
-## L0 cannot express it — proof, not failed search
+## What failed
 
-L0 has three operations. Its invariant: **every program leaves every slot dependent on at most one
-input position**, by induction on length — `SET_CONST` clears the dependency set, `COPY_INPUT` sets
-it to one index, `APPLY_UNARY` is one-argument. No operation reads two values, so the bound holds at
-**any** length and **any** budget.
+P10 requires the language to be restorable **behaviourally** on both sides of the extension.
 
-- signatures enumerated at length ≤ 3: **175**
-- maximum sources reachable: **1**
-- sources the task requires: **2**
-- exhaustive L0 search found a program: **False**
+| Side | Probe | Intact | Damaged | Behaviour changed | Restored |
+|---|---|---|---|---|---|
+| L1 | the registered primitive | `[5, 0, 0, 0]` | refused | **true** | true |
+| L0 | `COPY_INPUT` | `[2, 0, 0, 0]` | `[2, 0, 0, 0]` | **false** | true |
 
-## The primitive was assembled, not chosen
+On L1 the fault removes the registered primitive and the probe is refused — recovery demonstrated.
+On L0 the fault removes a base operation and **nothing changes**, because `execute` dispatches base
+operations from the module constant `L0_OPERATIONS` rather than from `language.base_operations`.
 
-`PUSH_INPUT($1) PUSH_INPUT($2) BINOP(add) STORE_SLOT($0)`
+**This is structural, not a badly chosen fault.** For a language with an empty registry, no fault to
+the serialized state can change behaviour at all. The pre-extension language has nothing executable
+to roll back. **Only the registry is real state.**
 
-- candidates constructed from the substrate: **85**
-- rejected by the independent validator: **84**
-- source fanout of the adopted primitive: **2** (L0's bound is 1)
-- macro-reducible to L0: **no**
-- capabilities: `['pure_slot_write']` — no new authority
+## What the attempt did establish
 
-Of 54,240 enumerable bodies, 904 are well-formed and 8 can break the invariant.
+Motivation for a successor, not qualified evidence.
 
-## Language versioning
+| Claim | Evidence |
+|---|---|
+| L0 cannot express it | invariant holds at any length and any budget; max sources reachable **1**, required **2**; exhaustive L0 search found nothing |
+| Constructed, not selected | **85** primitives assembled from an eight-operation stack substrate, **84** rejected by an independent validator |
+| Not the M055 trap | adopted source fanout **2**; not macro-reducible to L0; `macro_only_extension` could acquire nothing at all |
+| Registration is the causal step | `extension_built_but_not_registered` builds and validates the same primitive, never registers it, scores 0/2 |
+| Not a compute deficit | **266,400** programs against **2,664** inside Closure(L0), closing nothing |
 
-`L0` digest `794ba65d3b094960` → `L1` digest `bd06dc1996fbe38c`, version 1.
+Adopted primitive: `PUSH_INPUT($1) PUSH_INPUT($2) BINOP(add) STORE_SLOT($0)`
 
 ## Arms
 
-| Arm | Correct | Programs examined | Language version | Used P* |
-|---|---:|---:|---:|---|
-| `evolvable_meta_language` | 2/2 | 7,143 | 1 | True |
-| `fixed_meta_language` | 0/2 | 2,664 | 0 | False |
-| `extension_acquisition_ablated` | 0/2 | 2,664 | 0 | False |
-| `extension_built_but_not_registered` | 0/2 | 2,664 | 0 | False |
-| `macro_only_extension` | 0/2 | 2,664 | 0 | False |
-| `more_budget_same_meta_language` | 0/2 | 266,400 | 0 | False |
-| `fresh_agent` | 0/2 | 2,664 | 0 | False |
-| `authored_correct_primitive` *(ceiling)* | 2/2 | 7,143 | 1 | True |
-
-**The arm that carries the argument** is `extension_built_but_not_registered`: it builds and
-validates the same primitive and never registers it. It scores 0/2, because the interpreter refuses
-an operation that is not in the language. That isolates **registration** as the causal step.
-
-**The M055 control**, `macro_only_extension`, could not acquire any primitive at all — restricted to
-invariant-preserving micro-operations, no assembly resolves the task.
-
-**The decisive control** ran 100 complete independent exhaustive searches inside Closure(L0) —
-266,400 programs against
-2,664 — and closed nothing.
+| Arm | Correct | Programs examined | Used P* |
+|---|---:|---:|---|
+| `evolvable_meta_language` | 2/2 | 8,445 | yes |
+| `fixed_meta_language` | 0/2 | 2,664 | no |
+| `extension_acquisition_ablated` | 0/2 | 2,664 | no |
+| `extension_built_but_not_registered` | 0/2 | 2,664 | no |
+| `macro_only_extension` | 0/2 | 2,664 | no |
+| `more_budget_same_meta_language` | 0/2 | 266,400 | no |
+| `fresh_agent` | 0/2 | 2,664 | no |
+| `authored_correct_primitive` *(ceiling)* | 2/2 | 8,445 | yes |
 
 ## Conditions
 
 | Condition | Result |
 |---|---|
-| `P10_language_persisted_and_restored_on_both_sides` | PASS |
 | `P1_l0_provably_cannot_express_the_transformation` | PASS |
 | `P2_primitive_constructed_from_substrate_after_rejections` | PASS |
 | `P3_primitive_not_macro_reducible_to_l0` | PASS |
@@ -73,31 +66,33 @@ invariant-preserving micro-operations, no assembly resolves the task.
 | `P7_capability_discordance_against_fixed` | PASS |
 | `P8_macro_only_and_unregistered_extensions_both_fail` | PASS |
 | `P9_more_budget_same_language_cannot_close_it` | PASS |
+| `P10_language_persisted_and_restored_on_both_sides` | **FAIL** |
 
-Verdict **positive**; failed conditions: none.
+## How this was found, and why it is not repaired
 
-## Rollback, both sides
+External review of PR #137 observed that the original L0 fault changed only a version number, which
+nothing executes, so `fault_actually_changed_behaviour` was true on metadata alone and P10 passed
+without demonstrating recovery. The finding was correct. Correcting the fault to remove a base
+operation exposed the deeper fact and **flipped the verdict from positive to negative**.
 
-| Side | Corruption detected | Fault changed behaviour | Byte-identical restore |
-|---|---|---|---|
-| before extension (L0) | True | True | True |
-| after extension (L1) | True | True | True |
+Making `execute` consult `language.base_operations` would very probably restore a positive. Doing
+that after seeing the verdict is exactly the result-saving retry D053 forbids — *"replaying it after
+learning why the first verdict was unsound would be a result-saving retry."* The correction belongs
+to a successor with its own protocol, not to this run.
 
-The fault is written into the live state and restoration reads an independently preserved
-checkpoint — the M064 defect refused on both sides.
+## Amendment A1, disclosed
 
-## Qualification chronology
+PR #137 also observed that `max_body_length = 5` is the bound on *executing* a body while
+construction enumerates to length 4, and that quoting both adjacently implied the counts covered
+length 5. The construction bound is now stated explicitly and every count recomputed at it: 54,240
+bodies, 904 well-formed, 8 breaking the invariant. No threshold, arm or condition changed.
 
-Drawn by a **separate process** that owns the pool, after `T12_l1_serialized`. Artifact digest
-`21670c64729c6de5`, bound to the extended language digest.
+The checker was also corrected to **reproduce** the rollback record rather than require it to have
+succeeded, so a negative result is verifiable exactly as faithfully as a positive one.
 
-## What this does not establish
+## Next causal ceiling
 
-Not AGI, not open-ended evolution, not arbitrary self-modification, not general programming-language
-invention, not recursive self-improvement, not general autonomy, no generality gate, no independent
-reproduction, no production authority.
-
-**The extension substrate remains authored.** The lineage assembled a primitive from eight
-micro-operations it did not choose, over a stack machine it did not design. The ceiling arm handed
-the finished primitive also scores 2/2 — which is why the contribution is the construction and the
-registration, not the use. See D059.
+**The base language is not executable state.** A successor must make the whole language — base
+operations included — the object the interpreter actually consults, so that extension and rollback
+are claims about one thing. Until then, "the lineage extended its language" is a claim about the
+half that was state. See D059.

@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+from dataclasses import replace
 from pathlib import Path
 import sys
 
@@ -18,8 +19,10 @@ from metamorphosis.m089_lineage import (  # noqa: E402
     evaluate,
     macro_reducible_to_l0,
     prove_l0_insufficient,
+    rollback_proof,
     search_transformation,
     task_from_spec,
+    validate_primitive,
 )
 from metamorphosis.m089_meta_language import (  # noqa: E402
     MetaLanguageState,
@@ -92,6 +95,26 @@ def main() -> int:
         if primitive.capabilities != ("pure_slot_write",):
             problems.append("the adopted primitive holds capabilities beyond a pure slot write")
 
+        # Rerun the independent validation rather than trusting the stored verdict. PR #137 found
+        # that a stale or forged `accepted` flag would otherwise satisfy P4 unchallenged.
+        from metamorphosis.m089_lineage import PUBLIC_INPUTS, Task, _spec_sum_into
+
+        retained = [Task("retained_copy", "retained", _spec_sum_into(1, 1, 1), PUBLIC_INPUTS)]
+        revalidation = validate_primitive(
+            replace(primitive, validation_receipt=""), l0_language(), retained, [(7, 3, 5)],
+        )
+        recorded_validation = development["validation"]
+        if revalidation.accepted is not True:
+            problems.append(
+                "the adopted primitive does not revalidate: " + "; ".join(revalidation.reasons)
+            )
+        if recorded_validation is None or recorded_validation["accepted"] is not True:
+            problems.append("the recorded validation does not report acceptance")
+        elif revalidation.receipt != recorded_validation["receipt"]:
+            problems.append("the recorded validation receipt does not recompute")
+        if primitive.validation_receipt != revalidation.receipt:
+            problems.append("the primitive's stored receipt does not match a fresh validation")
+
         base = l0_language()
         extended = base.register(primitive, EXTENSION_REASON)
         if extended.digest() != development["l1_digest"]:
@@ -137,12 +160,26 @@ def main() -> int:
     if unregistered["language_version"] != 0:
         problems.append("the unregistered-extension arm registered something after all")
 
-    for side in ("before_extension", "after_extension"):
-        proof = result["rollback"][side]
-        if not proof["corrupted_state_was_the_restored_state"]:
-            problems.append(f"rollback {side} corrupted a copy rather than the restored state")
-        if not proof["fault_actually_changed_behaviour"]:
-            problems.append(f"rollback {side} injected a fault that changed nothing")
+    # The checker reproduces the rollback record; it does not require the rollback to have
+    # succeeded. A negative result must be verifiable exactly as faithfully as a positive one,
+    # and P10 is where a failed rollback makes the verdict negative.
+    if development["adopted_primitive"] is not None:
+        recomputed = rollback_proof(
+            l0_language(),
+            l0_language().register(
+                PrimitiveContract.from_dict(development["adopted_primitive"]), EXTENSION_REASON,
+            ),
+        )
+        for side in ("before_extension", "after_extension"):
+            for field in (
+                "corruption_detected", "corrupted_state_was_the_restored_state",
+                "fault_actually_changed_behaviour", "byte_identical_restore",
+                "restored_behaviour_matches_intact", "damaged_refused_the_probe",
+            ):
+                if recomputed[side][field] != result["rollback"][side][field]:
+                    problems.append(f"rollback {side}/{field} does not reproduce")
+            if not result["rollback"][side]["corrupted_state_was_the_restored_state"]:
+                problems.append(f"rollback {side} corrupted a copy rather than the restored state")
 
     if evaluate(development, result["arms"], result["rollback"]) != result["evaluation"]:
         problems.append("the recorded verdict does not reproduce from the preserved arms")

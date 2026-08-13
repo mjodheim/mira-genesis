@@ -470,7 +470,7 @@
     "steps": [
       {
         "index": 0,
-        "protocol_digest": "26804756df5f4938f394ca9cd2d96aadf8a47d6b5e17c04f8d1d5140e5a15e90",
+        "protocol_digest": "3c9b32f64b1fddc7dd3e5c07ccc1583c55cc42d4a31f831170a299c47b2494a3",
         "step": "T0_protocol_frozen"
       },
       {
@@ -1165,7 +1165,7 @@
   },
   "evaluation": {
     "conditions": {
-      "P10_language_persisted_and_restored_on_both_sides": true,
+      "P10_language_persisted_and_restored_on_both_sides": false,
       "P1_l0_provably_cannot_express_the_transformation": true,
       "P2_primitive_constructed_from_substrate_after_rejections": true,
       "P3_primitive_not_macro_reducible_to_l0": true,
@@ -1184,17 +1184,19 @@
       "composed_combination",
       "repeated_combination"
     ],
-    "failed_conditions": [],
+    "failed_conditions": [
+      "P10_language_persisted_and_restored_on_both_sides"
+    ],
     "fixed_correct_families": [],
-    "hypothesis_supported": true,
-    "verdict": "positive"
+    "hypothesis_supported": false,
+    "verdict": "negative"
   },
   "hypothesis": "H35",
   "milestone": "M089",
   "model_calls": 0,
   "network_calls": 0,
-  "protocol_digest": "26804756df5f4938f394ca9cd2d96aadf8a47d6b5e17c04f8d1d5140e5a15e90",
-  "protocol_raw_sha256": "603b762c810c71e6bd9b1c89b65fbf3332de42bc3a916b20d8e4ed9bbd33cb76",
+  "protocol_digest": "3c9b32f64b1fddc7dd3e5c07ccc1583c55cc42d4a31f831170a299c47b2494a3",
+  "protocol_raw_sha256": "fb2cf4042955b55b38371033571def2c94b62ec2d1a82bd12c16fd70bc42b27b",
   "qualification_artifact": {
     "artifact_digest": "21670c64729c6de567ca294cc4021320b07a891b45b4dac61953df7de16eb230",
     "extended_language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
@@ -1245,32 +1247,86 @@
       }
     ]
   },
-  "result_digest": "7ec0c5bbe5dbf57832ad042014d47e67ace6b515da29cf7b2342985326ddc3a2",
+  "result_digest": "20c432a39d91e03a63dc77dd245d704758efed221e18dcf8cf0a4e7bd5134f4b",
   "retry_used": false,
   "rollback": {
     "after_extension": {
       "byte_identical_restore": true,
       "checkpoint_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
-      "corrupted_digest": "726dcc5fa8730f9fa1d1bf4ce116b8111096341d623ec36e597180680cbea755",
+      "corrupted_digest": "9f573a801b023ef79b5a98f191bc43bfd572f1c2bfa8a6efee2dd2967780fcfc",
       "corrupted_state_was_the_restored_state": true,
       "corruption_detected": true,
+      "damaged_output": "refused",
+      "damaged_refused_the_probe": true,
       "digest_matches": true,
       "fault_actually_changed_behaviour": true,
+      "intact_output": [
+        5,
+        0,
+        0,
+        0
+      ],
       "label": "L1",
       "primitive_count": 1,
-      "restored_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7"
+      "probe_program": [
+        [
+          "acquired_primitive_1",
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      ],
+      "restored_behaviour_matches_intact": true,
+      "restored_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+      "restored_output": [
+        5,
+        0,
+        0,
+        0
+      ]
     },
     "before_extension": {
       "byte_identical_restore": true,
       "checkpoint_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
-      "corrupted_digest": "90a583d68940868e0d3d6c415d46f9bc10d754024b9cbd5ccb2928332965bbc7",
+      "corrupted_digest": "8ab0f6d151745bc36693d7aec972acdb5606d38063bcf32253bf5ede3610bfbb",
       "corrupted_state_was_the_restored_state": true,
       "corruption_detected": true,
+      "damaged_output": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "damaged_refused_the_probe": false,
       "digest_matches": true,
-      "fault_actually_changed_behaviour": true,
+      "fault_actually_changed_behaviour": false,
+      "intact_output": [
+        2,
+        0,
+        0,
+        0
+      ],
       "label": "L0",
       "primitive_count": 0,
-      "restored_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930"
+      "probe_program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "restored_behaviour_matches_intact": true,
+      "restored_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "restored_output": [
+        2,
+        0,
+        0,
+        0
+      ]
     },
     "language_digests_differ": true
   },

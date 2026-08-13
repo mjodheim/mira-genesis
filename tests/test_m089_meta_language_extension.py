@@ -281,9 +281,34 @@ def test_rollback_corrupts_the_state_it_restores_on_both_sides() -> None:
     for side in ("before_extension", "after_extension"):
         assert proof[side]["corruption_detected"] is True
         assert proof[side]["corrupted_state_was_the_restored_state"] is True
-        assert proof[side]["fault_actually_changed_behaviour"] is True
         assert proof[side]["byte_identical_restore"] is True
+        assert proof[side]["restored_behaviour_matches_intact"] is True
     assert proof["after_extension"]["primitive_count"] == 1
+
+
+def test_only_the_registry_is_executable_state() -> None:
+    """The finding that made M089 negative, pinned so it cannot be lost.
+
+    `execute` dispatches base operations from the module constant `L0_OPERATIONS`, not from
+    `language.base_operations`. For a language with an empty registry, therefore, NO fault to the
+    serialized state can change behaviour: the pre-extension language has nothing executable to
+    roll back. Only the registry is real state.
+    """
+
+    base = l0_language()
+    damaged = MetaLanguageState.from_dict(
+        {**json.loads(json.dumps(base.to_dict())), "base_operations": []}
+    )
+    probe = (("COPY_INPUT", (0, 1)),)
+    assert damaged.digest() != base.digest()
+    assert execute(probe, (1, 2, 3), damaged) == execute(probe, (1, 2, 3), base)
+
+    extended = base.register(_primitive(), "test")
+    stripped = MetaLanguageState.from_dict(
+        {**json.loads(json.dumps(extended.to_dict())), "registry": []}
+    )
+    with pytest.raises(MetaLanguageError):
+        execute(((PRIMITIVE_ID, (0, 1, 2)),), (1, 2, 3), stripped)
 
 
 def test_a_forged_language_digest_does_not_survive_reserialization() -> None:
@@ -399,6 +424,19 @@ def test_adoption_precedes_qualification(result: dict[str, object]) -> None:
 
 def test_the_adopted_primitive_breaks_the_invariant(result: dict[str, object]) -> None:
     assert result["adopted_primitive_max_source_fanout"] >= 2
+
+
+def test_the_recorded_verdict_is_negative_on_p10_only(
+    result: dict[str, object],
+) -> None:
+    """The preserved result. P1-P9 held; P10 did not, and the negative is not repaired."""
+
+    assert result["evaluation"]["verdict"] == "negative"
+    assert result["evaluation"]["failed_conditions"] == [
+        "P10_language_persisted_and_restored_on_both_sides"
+    ]
+    assert result["rollback"]["before_extension"]["fault_actually_changed_behaviour"] is False
+    assert result["rollback"]["after_extension"]["fault_actually_changed_behaviour"] is True
 
 
 def test_the_controls_that_kill_the_false_positives_all_failed(

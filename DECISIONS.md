@@ -1974,62 +1974,69 @@ validated modification, constructed a previously inexpressible experiment, used 
 correctness-critical adaptation, persisted the mechanism and reused it in structurally distinct
 environments.
 
-## D059 — M089 supports H35; the ceiling moves to the extension substrate
 
-D058 closed M088 by naming what remained: the meta-language itself was authored. M089 attacked that
-and nothing else.
+## D059 — M089 is a preserved negative; the base language was never executable state
+
+M089 attacked the ceiling D058 named: the meta-language itself was authored. Its one qualifying
+attempt is **negative**, and it is preserved.
 
 ### The decision
 
-M089 is accepted as a **positive qualified development result**. H35 moves to supported by one
-attempt with no retry. Protocol frozen at `f8ab249` before any qualification data existed; result
-`7ec0c5bb...ddc3a2`, attempt 1, all ten conditions computed and passed. **No generality gate
-advances.**
+M089 is accepted as a **valid negative development result**. H35 is **not supported** by this
+attempt. Protocol frozen at `f8ab249` before any qualification data existed; result `20c432a3...134f4b`,
+attempt 1, no retry, no rerun, no new salt. **No gate advances**, and none was in play.
 
-### Why this is not M055 repeated
+Nine of ten conditions passed. **P10 failed.**
 
-D019 closed that line because the acquired expression was already reachable — the acquisition
-bought search cost and no new reach. The whole architecture here is shaped to make that outcome
-impossible to mistake for success. L0 carries an invariant that holds **by induction at any length
-and any budget**: no operation reads two values, so no program can make a slot depend on two input
-positions. The qualifying transformations require exactly that. Reducibility is therefore a
-decidable structural property rather than a hope, and `macro_only_extension` — restricted to
-micro-operations that preserve the invariant — could not acquire any primitive at all.
+### What failed, and why it is not a bad fault choice
 
-### Two capabilities, and the arm that separates them
+P10 requires behavioural restoration on both sides of the extension. On the L1 side it holds:
+removing the registered primitive makes a probe program refuse, and restoration from an
+independently preserved checkpoint recovers it exactly.
 
-Building a primitive is not extending a language. `extension_built_but_not_registered` constructs
-and validates the same primitive the successful arm adopted, and simply never registers it. It
-scores 0/2, because the interpreter refuses an operation that is not in the language. That arm is
-the cleanest thing in the milestone: it isolates **registration** as the causal step.
+On the L0 side it does not, structurally. `execute` dispatches base operations from the module
+constant `L0_OPERATIONS` rather than from `language.base_operations`, so for a language with an
+empty registry **no** fault to the serialized state can change behaviour. It is not that a weak
+fault was chosen; it is that there is nothing executable to damage. The pre-extension language has
+no state to roll back.
 
-### Construction rather than selection
+### How this was found
 
-85 candidate bodies constructed from an eight-operation stack substrate,
-84 rejected by an independent validator on typing, safety, macro-reducibility or
-regression. Of 54,240 enumerable bodies, 904 are well-formed and 8 can break the invariant. The
-substrate is lower level than L0, not a superset: it cannot be executed by the lineage at all
-unless a body is first registered.
+External review of PR #137 observed that the original L0 fault changed only a version number, which
+nothing executes, so `fault_actually_changed_behaviour` was true on metadata alone and P10 passed
+without demonstrating recovery. That finding was correct. Correcting the fault to remove a base
+operation exposed the deeper fact, and flipped the verdict from positive to negative.
 
-### The decisive control
+**The negative is preserved rather than repaired.** Making `execute` consult
+`language.base_operations` would very probably restore a positive, and doing so after seeing the
+verdict is precisely the result-saving retry D053 forbids: *"replaying it after learning why the
+first verdict was unsound would be a result-saving retry."* The correction belongs to a successor
+with its own protocol, not to this run.
 
-`more_budget_same_meta_language` performed 100 complete independent exhaustive searches —
+### What the attempt did establish
+
+The observations are sound and motivate the successor. L0's insufficiency is proved by an invariant
+that holds at any length and any budget. 85 primitives were assembled
+from an eight-operation substrate and 84 rejected by an independent validator.
+The adopted primitive is not macro-reducible to L0, which is the M055 trap answered structurally,
+and `macro_only_extension` could not acquire anything at all. Registration is the causal step:
+`extension_built_but_not_registered` builds and validates the same primitive, never registers it,
+and scores 0/2. `more_budget_same_meta_language` examined
 266,400 programs against
-2,664 — inside Closure(L0), and closed nothing. The
-deficit is expressive, not computational.
+2,664 inside Closure(L0) and closed nothing.
 
-### The next causal ceiling
+None of that is qualified evidence. A positive verdict required all ten conditions and got nine.
 
-**The extension substrate S.** The lineage assembled a primitive from eight micro-operations it did
-not choose, over a stack machine it did not design. It extended its working language; it did not
-extend the substrate that makes extension possible. That is the honest next question, and it is
-harder than this one.
+### The next causal ceiling, now precisely located
+
+Not the extension substrate, which is where D058 expected to arrive. **The base language is not
+executable state.** Only the registry is. A successor must make the whole language — base
+operations included — the thing the interpreter actually consults, so that extension and rollback
+are claims about one object rather than two. Until that holds, "the lineage extended its language"
+is a claim about the half that was state.
 
 ### Claim boundary
 
-Not AGI, not open-ended evolution, not arbitrary self-modification, not general programming-language
-invention, not recursive self-improvement, not general autonomy, no gate, no independent
-reproduction, no production authority. Within one frozen bounded substrate, the lineage proved a
-required self-modification lay outside its language, built and independently validated a primitive
-not reducible to a macro of it, registered it, used the enlarged language to construct a previously
-inexpressible correctness-critical transformation, and reused it.
+Nothing is claimed. Not AGI, not open-ended evolution, not arbitrary self-modification, not general
+programming-language invention, no gate, no independent reproduction. The extension substrate
+remains authored, and so does the base language.

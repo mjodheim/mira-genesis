@@ -527,30 +527,64 @@ def rollback_proof(before: MetaLanguageState, after: MetaLanguageState) -> dict[
     """Corrupt the live state on both sides of the extension and restore each exactly.
 
     D023 closed M064 because a rollback receipt compared the untouched saved state to itself, and
-    PR #136 found the same shape in M088's first draft. Here the fault is written into the live
-    serialization, detection compares it against an independently preserved checkpoint, and
-    restoration reads that checkpoint rather than the damaged state.
+    PR #136 found the same shape in M088's first draft. PR #137 then found a subtler version here:
+    the L0 fault only changed a version number, which nothing executes, so recovery was never
+    demonstrated for a fault that mattered.
+
+    The fault now removes a base operation, and the change is measured **behaviourally**: a probe
+    program that runs under the intact language must fail to run under the damaged one. Metadata
+    differing is not evidence; a language that can no longer do something is.
     """
+
+    def probe_for(state: MetaLanguageState) -> tuple[tuple[str, tuple[object, ...]], ...]:
+        if state.registry:
+            return ((state.registry[0].primitive_id, (0, 1, 2)),)
+        return (("COPY_INPUT", (0, 1)),)
 
     def one(state: MetaLanguageState, label: str) -> dict[str, object]:
         checkpoint = json.dumps(state.to_dict(), sort_keys=True, separators=(",", ":"))
         checkpoint_digest = digest_of(json.loads(checkpoint))
+        probe = probe_for(state)
+        intact_output = execute(probe, (1, 2, 3), state)
+
+        # A fault that removes capability rather than relabelling it: drop the registered
+        # primitive if there is one, otherwise drop the base operation the probe needs.
         live = json.loads(checkpoint)
-        live["registry"] = live["registry"][:-1] if live["registry"] else live["registry"]
-        live["version"] = -1
+        if live["registry"]:
+            live["registry"] = live["registry"][:-1]
+        else:
+            live["base_operations"] = [
+                item for item in live["base_operations"] if item != "COPY_INPUT"
+            ]
         damaged = json.dumps(live, sort_keys=True, separators=(",", ":"))
+        damaged_state = MetaLanguageState.from_dict(json.loads(damaged))
         detected = digest_of(json.loads(damaged)) != checkpoint_digest
-        behaviour_changed = (
-            len(live["registry"]) != len(state.registry) or live["version"] != state.version
-        )
+
+        # Behavioural evidence: the probe no longer runs, or produces something different.
+        try:
+            damaged_output: object = execute(probe, (1, 2, 3), damaged_state)
+            behaviour_changed = damaged_output != intact_output
+            damaged_refused = False
+        except MetaLanguageError:
+            damaged_output = "refused"
+            behaviour_changed = True
+            damaged_refused = True
+
         restored = MetaLanguageState.from_dict(json.loads(checkpoint))
+        restored_output = execute(probe, (1, 2, 3), restored)
         return {
             "label": label,
             "checkpoint_digest": checkpoint_digest,
             "corrupted_digest": digest_of(json.loads(damaged)),
             "corruption_detected": detected,
             "corrupted_state_was_the_restored_state": True,
+            "probe_program": [[name, list(arguments)] for name, arguments in probe],
+            "intact_output": list(intact_output),
+            "damaged_output": damaged_output if damaged_refused else list(damaged_output),
+            "damaged_refused_the_probe": damaged_refused,
             "fault_actually_changed_behaviour": behaviour_changed,
+            "restored_output": list(restored_output),
+            "restored_behaviour_matches_intact": restored_output == intact_output,
             "restored_digest": restored.digest(),
             "byte_identical_restore": json.dumps(
                 restored.to_dict(), sort_keys=True, separators=(",", ":"),
@@ -743,6 +777,7 @@ def evaluate(
             and rollback[side]["byte_identical_restore"] is True
             and rollback[side]["digest_matches"] is True
             and rollback[side]["fault_actually_changed_behaviour"] is True
+            and rollback[side]["restored_behaviour_matches_intact"] is True
             for side in ("before_extension", "after_extension")
         ),
     }

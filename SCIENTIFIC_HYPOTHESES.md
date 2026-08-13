@@ -797,46 +797,44 @@ there is no independent reproduction. The `authored_full_experiment_space` ceili
 2/2, which is the point: once a space exists the M087 selector already knows what to do, so what
 M088 adds is the construction. See D058.
 
+
 ## H35 — A lineage can extend the language it uses to improve itself
 
 When a persistent Track-A lineage needs a correctness-critical self-modification that lies outside
 the **constructive image of its current meta-language** — shown by an invariant that no composition
 of that language's operations can break, not by a search that failed — it can diagnose the
 expressive limitation, **assemble** a new executable primitive from a lower-level bounded extension
-substrate rather than select one from a catalogue, have that primitive independently validated for
-typing, safety, non-macro-reducibility and non-regression, **register** it into its own serialized
-transformation language, use the enlarged language to construct and adopt a transformation that was
-previously inexpressible, restore the language exactly on **both** sides of the extension, and
-reuse the primitive afterwards in structurally different situations without rebuilding it.
+substrate rather than select one from a catalogue, have that primitive independently validated,
+**register** it into its own serialized transformation language, use the enlarged language to
+construct and adopt a previously inexpressible transformation, restore the language exactly on
+**both** sides of the extension, and reuse the primitive afterwards.
 
-**Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
-Protocol frozen at `f8ab249` before any qualification data existed; result
-`7ec0c5bb...ddc3a2`, attempt 1. All ten frozen conditions passed.
+**Status:** **NOT SUPPORTED** by its one qualifying attempt. Protocol frozen at `f8ab249` before
+any qualification data existed; result `20c432a3...134f4b`, attempt 1, no retry. **Nine of ten frozen
+conditions passed. P10 failed**, and the result is preserved rather than repaired.
 
-**The M055 trap, and why this is not it.** D019 closed M053–M055 because the acquisition was
-already inside the grammar closure: *737 candidates without it against 48 with it, making the
-search cheaper and nothing newly reachable.* Here L0 carries an invariant — every program leaves
-every slot dependent on **at most one** input position — which holds by induction at any length and
-any budget, because no L0 operation reads two values. The qualifying transformations require two.
-A primitive that cannot exceed a fanout of one is therefore macro-reducible by construction, and
-the `macro_only_extension` arm, restricted to invariant-preserving micro-operations, could not
-acquire anything at all.
-
-**Construction, not selection.** Of 1 language
-version steps, the adopted primitive was assembled from the substrate as `PUSH_INPUT($1) PUSH_INPUT($2) BINOP(add) STORE_SLOT($0)`;
-85 candidates were constructed and 84 rejected by an
-independent validator before one was adopted. Of 54,240 enumerable bodies only 904 are well-formed
-and 8 can break the invariant.
-
-**Registration is what matters.** `extension_built_but_not_registered` builds and validates the same
-primitive and never enters it into the language: it scores 0/2, as do `fixed_meta_language`,
-`macro_only_extension`, `extension_acquisition_ablated` and `fresh_agent`.
-`more_budget_same_meta_language` performed **100 complete independent exhaustive searches** —
+**What the attempt did establish, and it is not nothing.** L0's insufficiency is proved by an
+invariant holding at any length and any budget: no operation reads two values, so no program can
+make a slot depend on two input positions, while the qualifying transformations require two. The
+lineage assembled 85 candidate primitives from an eight-operation stack
+substrate and an independent validator rejected 84; the adopted primitive has a
+source fanout of 2 and is not macro-reducible to L0.
+Registering it made both qualifying transformations constructible, and the evolvable arm scored
+**2/2** where `fixed_meta_language`, `macro_only_extension`,
+`extension_built_but_not_registered`, `extension_acquisition_ablated`, `fresh_agent` and
+`more_budget_same_meta_language` — the last across
 266,400 programs against
-2,664 — and closed nothing. The evolvable arm is
-**2/2** across two structurally different families using one serialized language.
+2,664 — all scored **0/2**.
 
-**What it does not establish:** not AGI, not open-ended evolution, not arbitrary self-modification,
-not general programming-language invention, not recursive self-improvement, no generality gate, no
-independent reproduction. **The extension substrate S remains authored**, and that is the next
-ceiling rather than a caveat. See D059.
+**Why it still fails.** P10 requires the language to be restorable, behaviourally, on both sides of
+the extension. On the L1 side it is: removing the registered primitive makes the probe refuse.
+On the **L0** side it is not, and the cause is structural rather than a badly chosen fault.
+`execute` dispatches base operations from the module constant `L0_OPERATIONS`, not from
+`language.base_operations`. For a language with an empty registry, therefore, **no** fault to the
+serialized state can change behaviour — the pre-extension language has nothing executable to roll
+back. Only the registry is real state.
+
+**What that means for the claim.** The milestone demonstrated language *extension* without having
+demonstrated that the *base* language was ever state in the same sense. Registration is real; the
+thing being extended was, in part, a constant. The extension claim cannot be qualified until both
+halves of the language are executable state. See D059.

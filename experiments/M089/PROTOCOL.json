@@ -90,14 +90,18 @@
     "task_id": "development_pairwise"
   },
   "extension_substrate_S": {
+    "amendment": "A1: PR #137 observed that max_body_length=5 is the bound on EXECUTING a body while construction enumerates to length 4, and that quoting both adjacently implied the counts covered length 5. The construction bound is now stated explicitly and every count is recomputed at it. No threshold, arm or condition changed.",
     "binary_operators": [
       "add",
       "sub",
       "mul",
       "max"
     ],
+    "bodies_breaking_the_l0_invariant": 8,
     "candidate_bodies_enumerable": 54240,
+    "construction_enumeration_bound": 4,
     "max_body_length": 5,
+    "max_body_length_is_execution_bound_not_construction_bound": true,
     "max_stack_depth": 8,
     "micro_operations": [
       "PUSH_INPUT",
@@ -114,6 +118,7 @@
       "input",
       "input"
     ],
+    "well_formed_bodies_at_construction_bound": 904,
     "why_S_is_not_the_answer": "S is lower level than L0, not a superset: it has no notion of a program over an input record, no sequencing against a task, and cannot be executed by the lineage at all unless a body is first registered as an L0 primitive. No micro-operation is a finished primitive, and a body must be assembled from several before it does anything."
   },
   "external_model_permitted_during_scientific_run": false,
