@@ -1973,3 +1973,63 @@ that its experiment constructor could not express a discriminating observation p
 validated modification, constructed a previously inexpressible experiment, used its result for a
 correctness-critical adaptation, persisted the mechanism and reused it in structurally distinct
 environments.
+
+## D059 — M089 supports H35; the ceiling moves to the extension substrate
+
+D058 closed M088 by naming what remained: the meta-language itself was authored. M089 attacked that
+and nothing else.
+
+### The decision
+
+M089 is accepted as a **positive qualified development result**. H35 moves to supported by one
+attempt with no retry. Protocol frozen at `f8ab249` before any qualification data existed; result
+`7ec0c5bb...ddc3a2`, attempt 1, all ten conditions computed and passed. **No generality gate
+advances.**
+
+### Why this is not M055 repeated
+
+D019 closed that line because the acquired expression was already reachable — the acquisition
+bought search cost and no new reach. The whole architecture here is shaped to make that outcome
+impossible to mistake for success. L0 carries an invariant that holds **by induction at any length
+and any budget**: no operation reads two values, so no program can make a slot depend on two input
+positions. The qualifying transformations require exactly that. Reducibility is therefore a
+decidable structural property rather than a hope, and `macro_only_extension` — restricted to
+micro-operations that preserve the invariant — could not acquire any primitive at all.
+
+### Two capabilities, and the arm that separates them
+
+Building a primitive is not extending a language. `extension_built_but_not_registered` constructs
+and validates the same primitive the successful arm adopted, and simply never registers it. It
+scores 0/2, because the interpreter refuses an operation that is not in the language. That arm is
+the cleanest thing in the milestone: it isolates **registration** as the causal step.
+
+### Construction rather than selection
+
+85 candidate bodies constructed from an eight-operation stack substrate,
+84 rejected by an independent validator on typing, safety, macro-reducibility or
+regression. Of 54,240 enumerable bodies, 904 are well-formed and 8 can break the invariant. The
+substrate is lower level than L0, not a superset: it cannot be executed by the lineage at all
+unless a body is first registered.
+
+### The decisive control
+
+`more_budget_same_meta_language` performed 100 complete independent exhaustive searches —
+266,400 programs against
+2,664 — inside Closure(L0), and closed nothing. The
+deficit is expressive, not computational.
+
+### The next causal ceiling
+
+**The extension substrate S.** The lineage assembled a primitive from eight micro-operations it did
+not choose, over a stack machine it did not design. It extended its working language; it did not
+extend the substrate that makes extension possible. That is the honest next question, and it is
+harder than this one.
+
+### Claim boundary
+
+Not AGI, not open-ended evolution, not arbitrary self-modification, not general programming-language
+invention, not recursive self-improvement, not general autonomy, no gate, no independent
+reproduction, no production authority. Within one frozen bounded substrate, the lineage proved a
+required self-modification lay outside its language, built and independently validated a primitive
+not reducible to a macro of it, registered it, used the enlarged language to construct a previously
+inexpressible correctness-critical transformation, and reused it.

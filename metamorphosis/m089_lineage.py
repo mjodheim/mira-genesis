@@ -64,6 +64,10 @@ CEILING_ARMS = ("authored_correct_primitive",)
 PARAMETER_KINDS = ("slot", "input", "input")
 PRIMITIVE_ID = "acquired_primitive_1"
 
+# The provenance string recorded when the primitive enters the language. A constant so that the
+# checker can re-derive the L1 digest independently instead of guessing the wording.
+EXTENSION_REASON = "L0 cannot express a two-source dependency"
+
 SEARCH_LENGTH = 2
 BUDGET_MULTIPLE = 100
 
@@ -398,7 +402,7 @@ __all__ = [
     "evaluate_program", "macro_reducible_to_l0", "operation_alphabet", "prove_l0_insufficient",
     "search_transformation", "validate_primitive", "_spec_sum_into", "_spec_sum_then_unary",
     "_spec_two_sums", "CONDITIONS", "Development", "acquire_primitive", "evaluate",
-    "replace_receipt", "rollback_proof", "run_arm", "task_from_spec",
+    "replace_receipt", "rollback_proof", "run_arm", "task_from_spec", "EXTENSION_REASON",
 ]
 
 
@@ -498,7 +502,7 @@ def acquire_primitive(
                 "reasons": validation.reasons,
             })
             continue
-        extended = base.register(primitive, "L0 cannot express a two-source dependency")
+        extended = base.register(primitive, EXTENSION_REASON)
         found = search_transformation(task, extended)
         if not found.found:
             development.rejected.append({
@@ -508,9 +512,7 @@ def acquire_primitive(
             continue
         development.adopted = replace_receipt(primitive, validation.receipt)
         development.validation = validation
-        development.l1 = base.register(
-            development.adopted, "L0 cannot express a two-source dependency",
-        )
+        development.l1 = base.register(development.adopted, EXTENSION_REASON)
         development.development_program = found.program
         return development
     return development

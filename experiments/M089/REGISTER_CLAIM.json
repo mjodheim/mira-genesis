@@ -1,0 +1,21 @@
+{
+  "attempt": 1,
+  "discordant_families": [
+    "composed_combination",
+    "repeated_combination"
+  ],
+  "gate_advanced": false,
+  "hypothesis": "H35",
+  "independent_reproduction": false,
+  "milestone": "M089",
+  "model_calls": 0,
+  "new_primitive_constructed_not_selected": true,
+  "primitive_macro_reducible_to_l0": false,
+  "protocol_raw_sha256": "603b762c810c71e6bd9b1c89b65fbf3332de42bc3a916b20d8e4ed9bbd33cb76",
+  "qualification_materialized_by_separate_process": true,
+  "result_digest": "7ec0c5bbe5dbf57832ad042014d47e67ace6b515da29cf7b2342985326ddc3a2",
+  "retry_used": false,
+  "schema": "m089-register-claim-v1",
+  "substrate_authored": true,
+  "verdict": "positive"
+}

@@ -1,0 +1,50 @@
+{
+  "artifact_digest": "21670c64729c6de567ca294cc4021320b07a891b45b4dac61953df7de16eb230",
+  "extended_language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+  "hidden_inputs": [
+    [
+      7,
+      3,
+      5
+    ],
+    [
+      6,
+      6,
+      1
+    ],
+    [
+      -3,
+      2,
+      11
+    ]
+  ],
+  "materialized_by": "separate process",
+  "salt_digest": "9dca1ec6158af7a97304be6dcf8953abded8f4628cd58cc338c09dd083d999a0",
+  "schema": "m089-qualification-v1",
+  "specifications": [
+    {
+      "family": "composed_combination",
+      "function": "neg",
+      "kind": "sum_then_unary",
+      "left": 1,
+      "right": 2,
+      "slot": 2,
+      "task_id": "q_composed_neg_21"
+    },
+    {
+      "family": "repeated_combination",
+      "first": [
+        0,
+        0,
+        1
+      ],
+      "kind": "two_sums",
+      "second": [
+        2,
+        1,
+        2
+      ],
+      "task_id": "q_repeated_a"
+    }
+  ]
+}
