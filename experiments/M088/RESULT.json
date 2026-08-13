@@ -1,0 +1,2926 @@
+{
+  "arms": {
+    "authored_full_experiment_space": {
+      "arm": "authored_full_experiment_space",
+      "constructor": {
+        "max_depth": 1,
+        "provenance": [],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 0
+      },
+      "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+      "correct_terminal_decisions": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 2,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "depth_blind",
+                "symmetric_depth"
+              ],
+              "observation": "node_trap",
+              "outside_prior_constructive_image": true,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_ACTION_SEQUENCE:2",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 2,
+                "program_id": "c4f2f1559799bdb9",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "follow_x",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "first_edge_only",
+                "path_sensitive"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "path_sensitive"
+              ],
+              "survivors_before": [
+                "first_edge_only",
+                "path_sensitive"
+              ]
+            }
+          ],
+          "adopted": "path_sensitive",
+          "constructive_image_size": 4,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": true,
+          "experiments_outside_prior_image": [
+            [
+              "reset",
+              "follow_y",
+              "follow_x",
+              "observe"
+            ]
+          ],
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "programs_executed": 5,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "depth_blind",
+                    "symmetric_depth"
+                  ],
+                  "observation": "node_trap",
+                  "outside_prior_constructive_image": true,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_ACTION_SEQUENCE:2",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 2,
+                    "program_id": "c4f2f1559799bdb9",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "follow_x",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "first_edge_only",
+                    "path_sensitive"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                },
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "path_sensitive"
+                  ],
+                  "survivors_before": [
+                    "first_edge_only",
+                    "path_sensitive"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [
+                [
+                  "reset",
+                  "follow_y",
+                  "follow_x",
+                  "observe"
+                ]
+              ],
+              "repetition": 0,
+              "survivors_final": [
+                "path_sensitive"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "path_sensitive"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 2,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 2,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            },
+            {
+              "eliminated": [
+                "never_durable"
+              ],
+              "observation": "durable",
+              "outside_prior_constructive_image": true,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_ACTION_SEQUENCE:2",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 2,
+                "program_id": "1c8c0c7f68fe71b0",
+                "steps": [
+                  "reset",
+                  "write",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": "buffered_until_flush",
+          "constructive_image_size": 9,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": true,
+          "experiments_outside_prior_image": [
+            [
+              "reset",
+              "write",
+              "flush",
+              "observe"
+            ]
+          ],
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "programs_executed": 15,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                },
+                {
+                  "eliminated": [
+                    "never_durable"
+                  ],
+                  "observation": "durable",
+                  "outside_prior_constructive_image": true,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_ACTION_SEQUENCE:2",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 2,
+                    "program_id": "1c8c0c7f68fe71b0",
+                    "steps": [
+                      "reset",
+                      "write",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [
+                [
+                  "reset",
+                  "write",
+                  "flush",
+                  "observe"
+                ]
+              ],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "buffered_until_flush"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 2,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 2,
+      "is_ceiling": true,
+      "repetitions": 1,
+      "supplied_experiment_space": true,
+      "total_acquisitions": 4,
+      "total_programs_executed": 20,
+      "worlds_with_correct_decision": [
+        "durable_service",
+        "path_graph"
+      ]
+    },
+    "constructor_acquisition_ablated": {
+      "arm": "constructor_acquisition_ablated",
+      "constructor": {
+        "max_depth": 1,
+        "provenance": [
+          "add_sequence_constructor",
+          "add_order_sensitivity",
+          "constructor_ablated"
+        ],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 3
+      },
+      "constructor_digest": "ca4608f8b4800879e28f6aa837b66c43f6501e72b132120cbe320908f91d71dc",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 2,
+          "constructor_digest": "ca4608f8b4800879e28f6aa837b66c43f6501e72b132120cbe320908f91d71dc",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 1,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "depth_blind",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 3,
+          "constructor_digest": "ca4608f8b4800879e28f6aa837b66c43f6501e72b132120cbe320908f91d71dc",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 3,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "buffered_until_flush",
+            "never_durable"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 0,
+      "is_ceiling": false,
+      "repetitions": 1,
+      "supplied_experiment_space": false,
+      "total_acquisitions": 2,
+      "total_programs_executed": 4,
+      "worlds_with_correct_decision": []
+    },
+    "evolvable_experiment_constructor": {
+      "arm": "evolvable_experiment_constructor",
+      "constructor": {
+        "max_depth": 2,
+        "provenance": [
+          "add_sequence_constructor",
+          "add_order_sensitivity"
+        ],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION",
+          "EMIT_ACTION_SEQUENCE",
+          "PERMUTE_ORDER"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 2
+      },
+      "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+      "correct_terminal_decisions": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 2,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "depth_blind",
+                "symmetric_depth"
+              ],
+              "observation": "node_trap",
+              "outside_prior_constructive_image": true,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_ACTION_SEQUENCE:2",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 2,
+                "program_id": "c4f2f1559799bdb9",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "follow_x",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "first_edge_only",
+                "path_sensitive"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "path_sensitive"
+              ],
+              "survivors_before": [
+                "first_edge_only",
+                "path_sensitive"
+              ]
+            }
+          ],
+          "adopted": "path_sensitive",
+          "constructive_image_size": 4,
+          "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+          "correct_terminal_decision": true,
+          "experiments_outside_prior_image": [
+            [
+              "reset",
+              "follow_y",
+              "follow_x",
+              "observe"
+            ]
+          ],
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "programs_executed": 5,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "depth_blind",
+                    "symmetric_depth"
+                  ],
+                  "observation": "node_trap",
+                  "outside_prior_constructive_image": true,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_ACTION_SEQUENCE:2",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 2,
+                    "program_id": "c4f2f1559799bdb9",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "follow_x",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "first_edge_only",
+                    "path_sensitive"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                },
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "path_sensitive"
+                  ],
+                  "survivors_before": [
+                    "first_edge_only",
+                    "path_sensitive"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [
+                [
+                  "reset",
+                  "follow_y",
+                  "follow_x",
+                  "observe"
+                ]
+              ],
+              "repetition": 0,
+              "survivors_final": [
+                "path_sensitive"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "path_sensitive"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 2,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 2,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            },
+            {
+              "eliminated": [
+                "never_durable"
+              ],
+              "observation": "durable",
+              "outside_prior_constructive_image": true,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_ACTION_SEQUENCE:2",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 2,
+                "program_id": "1c8c0c7f68fe71b0",
+                "steps": [
+                  "reset",
+                  "write",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": "buffered_until_flush",
+          "constructive_image_size": 9,
+          "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+          "correct_terminal_decision": true,
+          "experiments_outside_prior_image": [
+            [
+              "reset",
+              "write",
+              "flush",
+              "observe"
+            ]
+          ],
+          "hidden_passed": 2,
+          "hidden_total": 2,
+          "programs_executed": 15,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                },
+                {
+                  "eliminated": [
+                    "never_durable"
+                  ],
+                  "observation": "durable",
+                  "outside_prior_constructive_image": true,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_ACTION_SEQUENCE:2",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 2,
+                    "program_id": "1c8c0c7f68fe71b0",
+                    "steps": [
+                      "reset",
+                      "write",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [
+                [
+                  "reset",
+                  "write",
+                  "flush",
+                  "observe"
+                ]
+              ],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "buffered_until_flush"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 2,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 2,
+      "is_ceiling": false,
+      "repetitions": 1,
+      "supplied_experiment_space": false,
+      "total_acquisitions": 4,
+      "total_programs_executed": 20,
+      "worlds_with_correct_decision": [
+        "durable_service",
+        "path_graph"
+      ]
+    },
+    "fixed_experiment_constructor": {
+      "arm": "fixed_experiment_constructor",
+      "constructor": {
+        "max_depth": 1,
+        "provenance": [],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 0
+      },
+      "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 2,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 1,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "depth_blind",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 3,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 3,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "buffered_until_flush",
+            "never_durable"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 0,
+      "is_ceiling": false,
+      "repetitions": 1,
+      "supplied_experiment_space": false,
+      "total_acquisitions": 2,
+      "total_programs_executed": 4,
+      "worlds_with_correct_decision": []
+    },
+    "fresh_agent": {
+      "arm": "fresh_agent",
+      "constructor": {
+        "max_depth": 1,
+        "provenance": [],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 0
+      },
+      "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 2,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 1,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "depth_blind",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 3,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 3,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "repetitions_recorded": 1,
+          "survivors_final": [
+            "buffered_until_flush",
+            "never_durable"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 1,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 0,
+      "is_ceiling": false,
+      "repetitions": 1,
+      "supplied_experiment_space": false,
+      "total_acquisitions": 2,
+      "total_programs_executed": 4,
+      "worlds_with_correct_decision": []
+    },
+    "more_budget_same_experiment_space": {
+      "arm": "more_budget_same_experiment_space",
+      "constructor": {
+        "max_depth": 1,
+        "provenance": [],
+        "rules": [
+          "PREFIX_RESET",
+          "EMIT_SINGLE_ACTION",
+          "SUFFIX_OBSERVE",
+          "REQUIRE_OBSERVATION"
+        ],
+        "schema": "m088-experiment-constructor-v1",
+        "version": 0
+      },
+      "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "first_edge_only"
+              ],
+              "observation": "node_mid",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "3a5bbe8ad7bd7dff",
+                "steps": [
+                  "reset",
+                  "follow_y",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ],
+              "survivors_before": [
+                "depth_blind",
+                "first_edge_only",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 2,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 10,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 1,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 2,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 3,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 4,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 5,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 6,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 7,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 8,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "first_edge_only"
+                  ],
+                  "observation": "node_mid",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "3a5bbe8ad7bd7dff",
+                    "steps": [
+                      "reset",
+                      "follow_y",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "depth_blind",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ],
+                  "survivors_before": [
+                    "depth_blind",
+                    "first_edge_only",
+                    "path_sensitive",
+                    "symmetric_depth"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 9,
+              "survivors_final": [
+                "depth_blind",
+                "path_sensitive",
+                "symmetric_depth"
+              ]
+            }
+          ],
+          "repetitions_recorded": 10,
+          "survivors_final": [
+            "depth_blind",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "survivors_initial": [
+            "depth_blind",
+            "first_edge_only",
+            "path_sensitive",
+            "symmetric_depth"
+          ],
+          "total_acquisitions_across_repetitions": 10,
+          "world_id": "path_graph"
+        },
+        {
+          "acquisition_count": 1,
+          "acquisitions": [
+            {
+              "eliminated": [
+                "flush_only"
+              ],
+              "observation": "empty",
+              "outside_prior_constructive_image": false,
+              "program": {
+                "construction_trace": [
+                  "PREFIX_RESET",
+                  "EMIT_SINGLE_ACTION",
+                  "SUFFIX_OBSERVE"
+                ],
+                "depth": 1,
+                "program_id": "9b91514a64548f4a",
+                "steps": [
+                  "reset",
+                  "flush",
+                  "observe"
+                ]
+              },
+              "survivors_after": [
+                "buffered_until_flush",
+                "never_durable"
+              ],
+              "survivors_before": [
+                "buffered_until_flush",
+                "flush_only",
+                "never_durable"
+              ]
+            }
+          ],
+          "adopted": null,
+          "constructive_image_size": 3,
+          "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+          "correct_terminal_decision": false,
+          "experiments_outside_prior_image": [],
+          "hidden_passed": 0,
+          "hidden_total": 2,
+          "programs_executed": 30,
+          "repetition_logs": [
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 0,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 1,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 2,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 3,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 4,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 5,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 6,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 7,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 8,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            },
+            {
+              "acquisitions": [
+                {
+                  "eliminated": [
+                    "flush_only"
+                  ],
+                  "observation": "empty",
+                  "outside_prior_constructive_image": false,
+                  "program": {
+                    "construction_trace": [
+                      "PREFIX_RESET",
+                      "EMIT_SINGLE_ACTION",
+                      "SUFFIX_OBSERVE"
+                    ],
+                    "depth": 1,
+                    "program_id": "9b91514a64548f4a",
+                    "steps": [
+                      "reset",
+                      "flush",
+                      "observe"
+                    ]
+                  },
+                  "survivors_after": [
+                    "buffered_until_flush",
+                    "never_durable"
+                  ],
+                  "survivors_before": [
+                    "buffered_until_flush",
+                    "flush_only",
+                    "never_durable"
+                  ]
+                }
+              ],
+              "experiments_outside_prior_image": [],
+              "repetition": 9,
+              "survivors_final": [
+                "buffered_until_flush",
+                "never_durable"
+              ]
+            }
+          ],
+          "repetitions_recorded": 10,
+          "survivors_final": [
+            "buffered_until_flush",
+            "never_durable"
+          ],
+          "survivors_initial": [
+            "buffered_until_flush",
+            "flush_only",
+            "never_durable"
+          ],
+          "total_acquisitions_across_repetitions": 10,
+          "world_id": "durable_service"
+        }
+      ],
+      "experiments_outside_prior_image": 0,
+      "is_ceiling": false,
+      "repetitions": 10,
+      "supplied_experiment_space": false,
+      "total_acquisitions": 2,
+      "total_programs_executed": 40,
+      "worlds_with_correct_decision": []
+    }
+  },
+  "attempt": 1,
+  "chronology": {
+    "adoption_precedes_qualification": true,
+    "order": [
+      "T0_protocol_frozen",
+      "T1_m0_constructor_committed",
+      "T2_development_world_materialized",
+      "T4_prior_image_enumerated_and_exhausted",
+      "T5_meta_candidates_rejected",
+      "T7_constructor_adopted",
+      "T8_constructor_serialized",
+      "T9_qualification_materialized",
+      "T11_arms_executed",
+      "T14_hidden_evaluation_complete",
+      "T15_rollback_proved"
+    ],
+    "ordered": true,
+    "steps": [
+      {
+        "index": 0,
+        "protocol_digest": "fc3b0818d0f0705a65b27c39ad53b4bd3bb04cae69c18166b7af0c4f48d822b8",
+        "step": "T0_protocol_frozen"
+      },
+      {
+        "constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+        "index": 1,
+        "step": "T1_m0_constructor_committed"
+      },
+      {
+        "index": 2,
+        "step": "T2_development_world_materialized",
+        "world": "stateful_protocol"
+      },
+      {
+        "discriminating_in_image": 0,
+        "image_size": 2,
+        "index": 3,
+        "resolved": false,
+        "step": "T4_prior_image_enumerated_and_exhausted"
+      },
+      {
+        "index": 4,
+        "rejected": 10,
+        "step": "T5_meta_candidates_rejected"
+      },
+      {
+        "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+        "index": 5,
+        "step": "T7_constructor_adopted"
+      },
+      {
+        "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+        "index": 6,
+        "step": "T8_constructor_serialized"
+      },
+      {
+        "artifact_digest": "2a2c6fe2b3a35fed6ec6d117fb59d2d1e252a8bb6a63fa64a0baecdc81ae2bca",
+        "draws": {
+          "durable_service": [
+            [
+              "reset",
+              "write",
+              "flush",
+              "crash",
+              "observe"
+            ],
+            [
+              "reset",
+              "flush",
+              "write",
+              "crash",
+              "observe"
+            ]
+          ],
+          "path_graph": [
+            [
+              "reset",
+              "follow_y",
+              "follow_x",
+              "follow_y",
+              "observe"
+            ],
+            [
+              "reset",
+              "follow_y",
+              "follow_y",
+              "follow_x",
+              "observe"
+            ]
+          ]
+        },
+        "index": 7,
+        "materialized_by": "separate process",
+        "pool_present_in_this_process": false,
+        "salt_digest": "1a1c225d5ba64e2711de69770f50826d76fbbccad0e951fef24061fa3c4644a5",
+        "step": "T9_qualification_materialized"
+      },
+      {
+        "arms": [
+          "evolvable_experiment_constructor",
+          "fixed_experiment_constructor",
+          "constructor_acquisition_ablated",
+          "more_budget_same_experiment_space",
+          "fresh_agent",
+          "authored_full_experiment_space"
+        ],
+        "index": 8,
+        "step": "T11_arms_executed"
+      },
+      {
+        "index": 9,
+        "step": "T14_hidden_evaluation_complete"
+      },
+      {
+        "byte_identical": true,
+        "index": 10,
+        "step": "T15_rollback_proved"
+      }
+    ]
+  },
+  "conditions_declared": [
+    "P1_prior_constructor_cannot_resolve_exhaustively",
+    "P2_meta_transformation_adopted_after_rejections",
+    "P3_constructed_experiment_outside_prior_image",
+    "P4_observation_used_causally",
+    "P5_evolvable_correct_in_every_qualification_world",
+    "P6_capability_discordance_against_fixed",
+    "P7_more_budget_same_space_cannot_close_it",
+    "P8_ablation_loses_the_capability",
+    "P9_cross_environment_reuse_without_new_meta_transformation",
+    "P10_constructor_persisted_and_restored_byte_identically"
+  ],
+  "development": {
+    "adopted_constructor": {
+      "max_depth": 2,
+      "provenance": [
+        "add_sequence_constructor",
+        "add_order_sensitivity"
+      ],
+      "rules": [
+        "PREFIX_RESET",
+        "EMIT_SINGLE_ACTION",
+        "SUFFIX_OBSERVE",
+        "REQUIRE_OBSERVATION",
+        "EMIT_ACTION_SEQUENCE",
+        "PERMUTE_ORDER"
+      ],
+      "schema": "m088-experiment-constructor-v1",
+      "version": 2
+    },
+    "adopted_constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+    "adopted_steps": [
+      [
+        "add_sequence_constructor",
+        null
+      ],
+      [
+        "add_order_sensitivity",
+        null
+      ]
+    ],
+    "limitation": {
+      "constructive_image": [
+        [
+          "reset",
+          "send_a",
+          "observe"
+        ],
+        [
+          "reset",
+          "send_b",
+          "observe"
+        ]
+      ],
+      "constructive_image_size": 2,
+      "discriminating_programs_in_prior_image": [],
+      "exhaustive_survivors": [
+        "always_ack",
+        "count_based",
+        "memoryless",
+        "order_sensitive"
+      ],
+      "initial_survivors": [
+        "always_ack",
+        "count_based",
+        "memoryless",
+        "order_sensitive"
+      ],
+      "prior_adopted": null,
+      "prior_constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+      "prior_correct": false,
+      "resolved_by_prior_constructor": false,
+      "world_id": "stateful_protocol"
+    },
+    "prior_constructor_digest": "abde6ec6902ab84113c0bd43729ca86753c2464836a3e58b18071be7039edf17",
+    "rejected_count": 10,
+    "rejected_meta_transformations": [
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_candidate_deduplication",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_experiment_validity_rule",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_order_sensitivity",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_reset_prefix_rule",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 1,
+        "constructive_image_size": 3,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_sequence_constructor",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "count_based",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "allow_action_repetition",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "increase_composition_depth",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_candidate_deduplication",
+            null
+          ],
+          [
+            "allow_action_repetition",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 0,
+        "constructive_image_size": 2,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_experiment_validity_rule",
+            null
+          ],
+          [
+            "add_reset_prefix_rule",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "always_ack",
+          "count_based",
+          "memoryless",
+          "order_sensitive"
+        ]
+      },
+      {
+        "acquisitions": 1,
+        "constructive_image_size": 3,
+        "reason": "descendant did not reach a correct terminal decision",
+        "steps": [
+          [
+            "add_sequence_constructor",
+            null
+          ],
+          [
+            "add_candidate_deduplication",
+            null
+          ]
+        ],
+        "survivors_final": [
+          "count_based",
+          "order_sensitive"
+        ]
+      }
+    ],
+    "world_id": "stateful_protocol"
+  },
+  "evaluation": {
+    "conditions": {
+      "P10_constructor_persisted_and_restored_byte_identically": true,
+      "P1_prior_constructor_cannot_resolve_exhaustively": true,
+      "P2_meta_transformation_adopted_after_rejections": true,
+      "P3_constructed_experiment_outside_prior_image": true,
+      "P4_observation_used_causally": true,
+      "P5_evolvable_correct_in_every_qualification_world": true,
+      "P6_capability_discordance_against_fixed": true,
+      "P7_more_budget_same_space_cannot_close_it": true,
+      "P8_ablation_loses_the_capability": true,
+      "P9_cross_environment_reuse_without_new_meta_transformation": true
+    },
+    "discordant_worlds": [
+      "durable_service",
+      "path_graph"
+    ],
+    "evolvable_correct_worlds": [
+      "durable_service",
+      "path_graph"
+    ],
+    "failed_conditions": [],
+    "fixed_correct_worlds": [],
+    "hypothesis_supported": true,
+    "verdict": "positive"
+  },
+  "hypothesis": "H34",
+  "leak_findings": [],
+  "milestone": "M088",
+  "model_calls": 0,
+  "network_calls": 0,
+  "no_leak": [
+    {
+      "all_hidden_outside_image": true,
+      "constructive_image_size": 4,
+      "hidden_inside_image": [],
+      "hidden_programs": [
+        [
+          "reset",
+          "follow_y",
+          "follow_x",
+          "follow_y",
+          "observe"
+        ],
+        [
+          "reset",
+          "follow_y",
+          "follow_y",
+          "follow_x",
+          "observe"
+        ]
+      ],
+      "world_id": "path_graph"
+    },
+    {
+      "all_hidden_outside_image": true,
+      "constructive_image_size": 9,
+      "hidden_inside_image": [],
+      "hidden_programs": [
+        [
+          "reset",
+          "write",
+          "flush",
+          "crash",
+          "observe"
+        ],
+        [
+          "reset",
+          "flush",
+          "write",
+          "crash",
+          "observe"
+        ]
+      ],
+      "world_id": "durable_service"
+    }
+  ],
+  "protocol_digest": "fc3b0818d0f0705a65b27c39ad53b4bd3bb04cae69c18166b7af0c4f48d822b8",
+  "protocol_raw_sha256": "26bb572d9a9308c39335d62833102df4ac796ec07dea00f155450522e6e23607",
+  "qualification_artifact": {
+    "adopted_constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+    "artifact_digest": "2a2c6fe2b3a35fed6ec6d117fb59d2d1e252a8bb6a63fa64a0baecdc81ae2bca",
+    "materialized_by": "separate process",
+    "programs": {
+      "durable_service": [
+        [
+          "reset",
+          "write",
+          "flush",
+          "crash",
+          "observe"
+        ],
+        [
+          "reset",
+          "flush",
+          "write",
+          "crash",
+          "observe"
+        ]
+      ],
+      "path_graph": [
+        [
+          "reset",
+          "follow_y",
+          "follow_x",
+          "follow_y",
+          "observe"
+        ],
+        [
+          "reset",
+          "follow_y",
+          "follow_y",
+          "follow_x",
+          "observe"
+        ]
+      ]
+    },
+    "salt_digest": "1a1c225d5ba64e2711de69770f50826d76fbbccad0e951fef24061fa3c4644a5",
+    "schema": "m088-qualification-v1"
+  },
+  "result_digest": "084111a1a10f14309dcf7ec768592325795ab9cf5de7382baf18efe097069808",
+  "retry_used": false,
+  "rollback": {
+    "byte_identical_restore": true,
+    "checkpoint_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+    "constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+    "constructor_included_in_restored_state": true,
+    "corrupted_digest": "455ba5b27a8e7e0d6c6788a9c0b966766d2b3df11ecc4dc7bdbd5d22d8904528",
+    "corrupted_max_depth": 1,
+    "corrupted_state_was_the_restored_state": true,
+    "corruption_detected": true,
+    "digest_matches": true,
+    "fault_actually_changed_behaviour": true,
+    "restored_constructor_digest": "053e2f106cf13a2ecc459ab116c8d431b7e15133e6977f0243dbad61ceefcff6",
+    "restored_max_depth": 2
+  },
+  "salt_digest": "1a1c225d5ba64e2711de69770f50826d76fbbccad0e951fef24061fa3c4644a5",
+  "schema": "m088-result-v1"
+}

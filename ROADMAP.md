@@ -352,6 +352,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
+| M088 | Remove the handed-in experiment space: make the lineage construct the programs it uses to resolve its own ambiguity | **Positive qualified development; H34 supported; no gate** | Protocol frozen at `4d8a71a` before any qualification data existed; result `084111a1...069808`, attempt 1, ten conditions computed and passed. M0's complete constructive image is enumerated: two programs, none discriminating, and exhausting both leaves all four candidate models alive. Ten of fourteen meta-transformations rejected; the adopted composition adds sequencing and order sensitivity. The lineage constructed `reset send_a send_b observe`, verified outside the prior image, and used it causally. Evolvable 2/2 against fixed 0/2 in two worlds that both differ structurally from the development world, with one serialized constructor and no new meta-transformation. `more_budget_same_experiment_space` ran ten complete independent searches, 40 programs against 4, gained no expressiveness and closed nothing. No new primitive was invented. |
 | M087 | Make the rule that selects improvements an object of improvement, and test whether the lineage can acquire the evidence its own selection lacks | **Positive qualified development; H33 supported; no gate** | Protocol frozen at `db609a0` before any qualification data existed; result `cb06bd7a...4d132`, attempt 1, no retry, all ten conditions computed and passed. M0 is M086's strict-greater argmax over emission order, proven by differential regression. Six meta-transformations rejected on disposable descendants, one adopted, serialized and restored byte-identically. Evolvable 3/3 correct against fixed 1/3; discordant on `tool_semantics` and `planning_structure`. `more_budget_same_evidence` evaluated 110 candidates against 11 over an identical empty `E_acquired` and closed neither, so the deficit is informational rather than computational. The acquisition ablation sees the ambiguity and defers on all three. Meta-primitives, instruction set and families remain authored. |
 | M086-C | Put H32 at genuine risk on a corrected grammar | **Valid negative; H32 not supported** | Nine of ten conditions passed. The lineage adopted `widen_hypothesis` after rejecting seven alternatives, survived a forced fault byte-identically, and emitted a holdout patch the frozen mechanism could not. That patch fit the public evidence and failed the hidden cases, so P2 failed — the falsifier the protocol had named in advance. Widening what the mechanism can hypothesise did nothing about how it chooses, and the selection rule was never mutable. H32 is not supported by this attempt, which is not a finding that meta-plasticity is impossible. |
 | M086-B | Re-attempt the meta-mechanism question with an enforceable instrument | **Valid negative; H32 not put at risk** | Ten conditions computed and decisive, a real forced fault, the holdout materialized by a separate process after the adopted mechanism was committed, and every artifact byte-identical to its committed blob. The salt drew a limitation whose repair the sandbox refuses as a duplicate tool registration, so the meta-search returned empty and five conditions failed for one cause. The instrument reported its own inadequacy instead of hiding it, which M086-A did not. |
@@ -413,6 +414,19 @@ a richer organism.
 All scientific autonomy remains inside explicit finite or resource-limited sandboxes.
 Repository writes, network access, credentials, deployment and production changes remain
 human-controlled, even after a scientific result passes.
+
+### After M088
+
+The ceiling is no longer the experiment space. The lineage composed two meta-primitives it was
+given and invented no new one, and the interaction vocabulary is still ours.
+
+- **M089 -- transport of this capacity across a runtime or substrate migration**, in the sense M048
+  and M060 established for bodies: constructor, acquisition policy and causal memory preserved
+  through a change of execution substrate, then a new experiment constructed after the migration.
+- **Then: endogenous extension of the meta-language itself** -- the lineage adding an operation to
+  its own self-modification vocabulary rather than composing ours.
+
+These are directions, not presupposed results.
 
 ### After M087
 

@@ -1866,6 +1866,31 @@ new mechanism, and `IP_ASSET_REGISTER.md` carried no entry for it. P-003 records
 `PUBLIC_AGPL_COMMERCIAL_OPTION`, matching P-001's disposition for M086, before the implementation
 merges.
 
+
+### Four findings from external review, corrected before merge
+
+PR #136 raised four findings. All are corrected and the run was repeated.
+
+1. **Rollback corrupted a detached copy** and restored an untouched string, so recovery was never
+   exercised. That is the **M064 defect** -- a receipt comparing the saved state to itself --
+   recurring. The fault is now written into the live state, detection compares it against an
+   independently preserved checkpoint, restoration reads that checkpoint, and P10 additionally
+   requires the fault to have changed the constructor's behaviour.
+2. **The qualification pool was a module constant** in `m088_worlds`, so every possible qualifying
+   program existed in the development process before `meta_search` ran. That is the **M086-A
+   defect**. The pool now lives in `scripts/materialize_m088_qualification.py`, which the lineage
+   never imports, executed as a **separate process** after the adopted constructor is digested; a
+   test asserts the pool is unreachable from anything the lineage imports.
+3. **Repeated searches cleared their logs**, so the tenfold arm reported one search's acquisitions
+   and no evidence for the other nine. Each repetition now keeps its own audit trail, and the
+   checker requires ten preserved logs.
+4. **No publication disposition** was recorded for M088. P-004 now records
+   `PUBLIC_AGPL_COMMERCIAL_OPTION`.
+
+The verdict, the arm outcomes and every condition are unchanged; the result digest moved from
+`070b1cb3...` to `084111a1...` because the preserved artifacts are now richer, not because the
+science moved.
+
 ### The next causal ceiling
 
 Not the selection rule any more. The lineage chose among nine authored meta-primitives and eleven
@@ -1879,3 +1904,72 @@ Not AGI, not open-ended evolution, not general autonomy, no gate, no independent
 release or repository authority, and no contact with M075's or M085's fail-closed boundaries. One
 bounded construction in which the rule that selects improvements became an object of improvement,
 and the acquisition it gained was causally necessary to a later correctness difference.
+
+## D058 — M088 supports H34; the ceiling moves to the meta-language itself
+
+D057 named two ceilings left by M087. The second was that the experiment space was handed in:
+`execute_policy` took `experiment_space` as a literal tuple of eight strings, and the policy only
+filtered and ranked it. M088 attacked that one and nothing else.
+
+### The decision
+
+M088 is accepted as a **positive qualified development result**. H34 moves to supported by one
+attempt with no retry. Protocol frozen at `4d8a71a` before any qualification data existed; result
+`084111a1...069808`, attempt 1, all ten conditions computed and passed.
+
+**No generality gate advances.** G4 is untouched.
+
+### What makes the claim constructive rather than statistical
+
+The inexpressibility is proved by exhaustion, not by search failure. M0's complete constructive
+image in the development world holds two programs, neither discriminating, and running both leaves
+all four candidate models alive. The adopted constructor builds `reset, send_a, send_b, observe`,
+verified absent from that enumerated image. The claim is *M1 built what M0 cannot build*, not *M1
+was luckier*.
+
+### Two capabilities, separated on purpose
+
+Constructing a previously inexpressible experiment, and using its observation causally. Both are
+required and both are checked: every acquisition must eliminate at least one candidate, and a test
+flips the world's truth and requires the adopted candidate to change with it.
+
+The `authored_full_experiment_space` ceiling arm also scores 2/2. That is the point rather than an
+embarrassment: once a space exists, the M087 selector already knows what to do. What M088 adds is
+the construction, which is why the ceiling arm is flagged, excluded from the verdict, and checked
+by CI to be excluded.
+
+### The decisive control
+
+`more_budget_same_experiment_space` performed ten **complete independent** exhaustive searches --
+40 programs against the fixed arm's 4 -- with the survivor and consumed sets reset each time. It
+gained no expressiveness and closed nothing. The deficit is expressive, not computational.
+
+### Transfer, without a caveat
+
+Both qualification worlds differ structurally from the development world, so every qualification
+result is a transfer result. One serialized constructor digest was used in both, with no further
+meta-transformation and no world-specific helper.
+
+### Amendment A1, disclosed
+
+An adversarial test found that P4, P5 and P8 could pass vacuously on an arm with no encounters --
+the M086-A failure mode of a condition that cannot fail. All three now require the evidence to
+exist, the run was repeated, and the result digest is byte-identical. That identity is the evidence
+the hardening changed nothing.
+
+### The next causal ceiling
+
+Not the experiment space any longer. The lineage composed **two meta-primitives it was given** and
+invented no new one; ten of fourteen candidate compositions were rejected. The interaction
+vocabulary is also ours. So the ceiling is now squarely the **meta-language itself**: endogenous
+extension of the set of operations available for self-modification.
+
+### Claim boundary
+
+Not AGI, not open-ended evolution, not general autonomy, no gate, no independent reproduction, no
+release or repository authority, and emphatically **not** that the lineage invents its own
+experiments in general. Within one frozen meta-language and interaction vocabulary, it diagnosed
+that its experiment constructor could not express a discriminating observation program, adopted a
+validated modification, constructed a previously inexpressible experiment, used its result for a
+correctness-critical adaptation, persisted the mechanism and reused it in structurally distinct
+environments.

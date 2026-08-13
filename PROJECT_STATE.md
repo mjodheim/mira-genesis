@@ -93,6 +93,31 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M088 removes the handed-in experiment space, and H34 is supported.** Protocol frozen at
+  `4d8a71a` before any qualification data existed; result `084111a1...069808`, attempt 1, ten
+  conditions computed and passed. D057 left two ceilings; this attacked the second. M087's
+  `execute_policy` took `experiment_space` as a literal tuple of eight strings a person wrote, and
+  the policy only filtered and ranked it -- the lineage learned **where to look** while still being
+  shown where looking was possible. Here the environment offers a vocabulary (`reset`, `send_a`,
+  `observe`) and an experiment is an executable **interaction program** the lineage builds. The
+  limitation is proved by exhaustion rather than by search failure: M0's complete constructive
+  image holds **two** programs, **none** discriminating, and running both leaves all four candidate
+  models alive. Ten of fourteen meta-transformations were rejected on disposable descendants; the
+  adopted composition adds sequencing and order sensitivity, and the lineage then constructed
+  `reset send_a send_b observe` -- **verified absent from the enumerated prior image** -- executed
+  it against real world state and used the result to eliminate candidates. Both qualification
+  worlds differ structurally from the development world, so every qualification result is also a
+  transfer: **2/2** correct against **0/2** for the frozen constructor, with one serialized
+  constructor digest and no further meta-transformation. `more_budget_same_experiment_space` ran ten
+  complete independent exhaustive searches -- 40 programs against 4 -- gained no expressiveness and
+  closed nothing, so the deficit is expressive rather than computational. The no-leak guarantee is
+  structural: every hidden program uses three actions and the adopted constructor composes at most
+  two, so no hidden program is even constructible. **No gate advances**, and the honest limit is
+  sharp -- the interaction vocabulary, constructor rules, meta-primitives and worlds are authored,
+  **no new primitive was invented**, and the `authored_full_experiment_space` ceiling arm also
+  scores 2/2, which is precisely why the contribution is the construction rather than the
+  selection. Amendment A1, a hardening of three conditions that could pass vacuously, is disclosed;
+  the re-run digest is byte-identical. See D058 and H34.
 - **M087 makes the rule that selects improvements an object of improvement, and H33 is supported.**
   Protocol frozen at `db609a0` before any qualification data existed; result `cb06bd7a...4d132`,
   attempt 1, no retry; all ten conditions computed and passed. D054 ended M086 by naming what was

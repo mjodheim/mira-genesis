@@ -1,0 +1,22 @@
+{
+  "attempt": 1,
+  "discordant_worlds": [
+    "durable_service",
+    "path_graph"
+  ],
+  "gate_advanced": false,
+  "hypothesis": "H34",
+  "independent_reproduction": false,
+  "interaction_vocabulary_authored": true,
+  "meta_primitives_authored": true,
+  "milestone": "M088",
+  "model_calls": 0,
+  "new_primitive_invented": false,
+  "protocol_raw_sha256": "26bb572d9a9308c39335d62833102df4ac796ec07dea00f155450522e6e23607",
+  "qualification_materialized_by_separate_process": true,
+  "result_digest": "084111a1a10f14309dcf7ec768592325795ab9cf5de7382baf18efe097069808",
+  "retry_used": false,
+  "rollback_corrupts_the_restored_state": true,
+  "schema": "m088-register-claim-v1",
+  "verdict": "positive"
+}
