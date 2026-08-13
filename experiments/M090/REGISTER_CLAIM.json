@@ -1,0 +1,20 @@
+{
+  "amendment_a1_flipped_the_verdict": true,
+  "attempt": 1,
+  "gate_advanced": false,
+  "h35_supported": false,
+  "hypothesis": "H36",
+  "independent_reproduction": false,
+  "interpreter_substrate_authored": true,
+  "milestone": "M090",
+  "model_calls": 0,
+  "probe_extension_authored": true,
+  "protocol_raw_sha256": "e75589ba35616eef59f8be373b9bb7efa556cce3d5f1fee02cd7754479f7c0d3",
+  "reattempts_m089": false,
+  "result_digest": "27b9501ab9d0ea3d55f69d5e83a3ba2985147e56e39c6d090f5fcf844c027091",
+  "retry_used": false,
+  "schema": "m090-register-claim-v1",
+  "verdict": "positive",
+  "withdrawn_pre_amendment_digest": "daa75713300ed1732917ccb8bcd47ceb9e41ddf235b46b0e6f2fb46ef13272cd",
+  "withdrawn_pre_amendment_verdict": "negative"
+}

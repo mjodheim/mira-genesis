@@ -838,3 +838,35 @@ back. Only the registry is real state.
 demonstrated that the *base* language was ever state in the same sense. Registration is real; the
 thing being extended was, in part, a constant. The extension claim cannot be qualified until both
 halves of the language are executable state. See D059.
+
+## H36 — The language a lineage stores is the language its interpreter executes
+
+A persistent Track-A lineage can represent its **complete** executable meta-language — inherited
+base operations and later registered extensions alike — as serialized lineage state that is the
+**sole semantic authority** consulted by a fixed generic interpreter, such that removing a
+primitive from that state removes the capability, mutating a primitive's definition changes
+observable behaviour, exact rollback restores both the bytes and the behaviour on either side of an
+extension, and a fresh process given only the serialized state reproduces the language without
+resurrecting anything from host-side constants.
+
+**Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
+Protocol frozen at `ffe5086`; result `27b9501a...027091`, attempt 1. All twelve frozen conditions passed.
+
+**Why it was needed.** D059 recorded that M089's interpreter dispatched base operations from the
+module constant `L0_OPERATIONS`, so `language.base_operations` was serialized, digested and rolled
+back while being consulted by nothing. With an empty registry, no fault to the serialized state
+could change behaviour. H36 is the architectural precondition that finding demanded.
+
+**What was measured.** Migration conserved every inherited behaviour over
+5,328 legacy programs with zero mismatches. Removing an inherited primitive
+disables it; mutating one changes behaviour; removing the acquired primitive does the same through
+the same registry. Rollback is exact and behavioural on both L0 and L1 — the fault strikes the live
+state and restoration reads a separate checkpoint. A fresh process reproduces the language and
+**cannot** resurrect a removed primitive. The historical control reproduces M089's defect:
+stripping its serialized base operations changes nothing.
+
+**What it does not establish.** Not H35, which remains **not supported** — the probe extension here
+is authored and is described as such throughout, and M089's qualification is neither replayed nor
+modified. Not AGI, not open-ended evolution, not arbitrary self-modification, not general language
+invention, not a self-hosting interpreter. **The interpreter substrate remains authored**, and is
+now the next ceiling. See D060.

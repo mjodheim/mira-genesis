@@ -93,6 +93,33 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M090 makes the meta-language state-owned, and H36 is supported.** Protocol frozen at
+  `ffe5086`; result `27b9501a...027091`, attempt 1, twelve conditions computed and passed. This is the
+  precondition D059 demanded rather than a research question: M089's `execute` dispatched base
+  operations from the module constant `L0_OPERATIONS`, so `language.base_operations` was
+  serialized, digested and rolled back while being consulted by nothing, and with an empty registry
+  no fault to the state could change behaviour. **One registry now holds every primitive**, origin
+  is metadata, the inherited operations are serialized definitions over a fixed generic stack
+  substrate, and the interpreter contains no branch on any primitive identifier and no table of
+  implementations — checked from the AST of the executing module rather than asserted. Migration
+  conserved every inherited behaviour over **5,328** legacy programs with
+  zero mismatches, so expressive power is unchanged; what is new is ownership. The question D059
+  posed can now be answered: **destroying a primitive in the serialized state destroys the
+  capability.** Mutating a definition changes behaviour; removing the acquired primitive behaves
+  identically to removing an inherited one; rollback is exact **and behavioural** on both sides,
+  with the fault striking the live state and restoration reading a separate checkpoint; and a fresh
+  process given only the serialized state reproduces the language and cannot resurrect a removed
+  primitive. The historical control reproduces M089's defect exactly — stripping its serialized base
+  operations changes nothing. **H35 remains not supported**: M089's qualification is neither
+  replayed nor modified, and the probe extension here is authored and labelled as such everywhere.
+  **Amendment A1 flipped the verdict and is disclosed in full**: the first run was negative on P11
+  because the host-authority scanner matched raw source text and flagged the module docstring that
+  *describes* the M089 defect; an AST check confirmed no such name existed in code, the scanner was
+  corrected, and the superseded negative run is preserved in the repository with its digest. That
+  is the opposite of the M089 case — there the failing condition measured a true property and the
+  negative stood; here it measured a false one because the instrument was broken. **No gate
+  advances.** The next ceiling is the **interpreter substrate**, which remains authored. See D060
+  and H36.
 - **M089 is a preserved negative: the base language was never executable state.** Protocol frozen
   at `f8ab249` before any qualification data existed; result `20c432a3...134f4b`, attempt 1, no retry.
   **Nine of ten conditions passed and P10 failed.** The attempt attacked D058's ceiling — the

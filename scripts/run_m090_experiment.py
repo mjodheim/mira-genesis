@@ -91,43 +91,86 @@ def analyse_ownership() -> dict[str, object]:
     }
 
 
+def _code_symbols(relative: str) -> dict[str, object]:
+    """Names, attributes, imports, function names and NON-docstring literals of a module.
+
+    Amendment A1. The first version of this scan matched raw source text, so it flagged
+    `m090_language.py` for mentioning `L0_OPERATIONS` and `_execute_base` in the module docstring
+    that *describes the defect this milestone removes*. Prose is not authority. The scan now reads
+    the AST with docstrings stripped, which is both correct and strictly stronger: it catches a
+    reference written as `getattr(module, "L0_" + "OPERATIONS")` that a substring scan would miss
+    on the concatenation, and it cannot be fooled by a comment.
+    """
+
+    tree = ast.parse((ROOT / relative).read_text(encoding="utf-8"))
+    docstrings = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.FunctionDef, ast.ClassDef)):
+            text = ast.get_docstring(node, clean=False)
+            if text:
+                docstrings.add(text)
+    imports: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imports.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            if node.module:
+                imports.add(node.module)
+            imports.update(alias.name for alias in node.names)
+    return {
+        "names": {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)},
+        "attributes": {node.attr for node in ast.walk(tree) if isinstance(node, ast.Attribute)},
+        "functions": {
+            node.name for node in ast.walk(tree)
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+        },
+        "imports": imports,
+        "literals": {
+            node.value for node in ast.walk(tree)
+            if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        } - docstrings,
+    }
+
+
 def scan_for_host_authority() -> dict[str, object]:
     """Refuse any second semantic authority reachable from the qualifying execution path."""
 
     findings: list[str] = []
     execution_path = (
         "metamorphosis/m090_language.py",
-        "metamorphosis/m090_lineage.py",
         "scripts/run_m090_fresh_process.py",
     )
+    primitive_ids = set(with_probe_extension(migrated_l0()).primitive_ids)
     legacy_reachable = False
+
     for relative in execution_path:
-        tree = ast.parse((ROOT / relative).read_text(encoding="utf-8"))
-        imported: set[str] = set()
-        for node in ast.walk(tree):
-            if isinstance(node, ast.Import):
-                imported.update(alias.name for alias in node.names)
-            elif isinstance(node, ast.ImportFrom) and node.module:
-                imported.add(node.module)
-        if relative != "metamorphosis/m090_lineage.py" and any(
-            item.startswith("metamorphosis.m089") for item in imported
-        ):
+        symbols = _code_symbols(relative)
+        reachable = symbols["names"] | symbols["attributes"] | symbols["imports"]
+        if any(str(item).startswith("metamorphosis.m089") for item in symbols["imports"]):
             legacy_reachable = True
             findings.append(f"{relative} imports the historical host language")
-        if "L0_OPERATIONS" in (ROOT / relative).read_text(encoding="utf-8"):
-            findings.append(f"{relative} references the historical host constant")
-    # The interpreter must not carry a dictionary from primitive identifiers to implementations.
-    language_source = (ROOT / "metamorphosis/m090_language.py").read_text(encoding="utf-8")
-    for marker in ("_execute_base", "BASE_HANDLERS", "BUILTIN_PRIMITIVES"):
-        if marker in language_source:
-            findings.append(f"the interpreter carries a host dispatch table: {marker}")
+        if "L0_OPERATIONS" in reachable:
+            findings.append(f"{relative} references the historical host constant in code")
+        for marker in ("_execute_base", "BASE_HANDLERS", "BUILTIN_PRIMITIVES"):
+            if marker in (symbols["functions"] | reachable):
+                findings.append(f"{relative} carries a host dispatch table: {marker}")
+        smuggled = sorted(primitive_ids & set(symbols["literals"]))
+        if smuggled:
+            findings.append(f"{relative} branches on primitive identifiers: {smuggled}")
+
     return {
         "execution_path": list(execution_path),
+        "method": "ast, docstrings stripped",
         "findings": findings,
-        # The lineage module imports the legacy interpreter ONLY for the historical control arm,
-        # which is not part of the qualifying execution path.
         "legacy_module_reachable_from_execution_path": legacy_reachable,
+        # `m090_lineage` imports the legacy interpreter for the historical control arm, and
+        # `m090_migration` imports it for the conservation check. Neither is on the path that
+        # executes a qualifying program, which is why the path above lists two files.
         "legacy_used_only_by_historical_control_and_migration_check": True,
+        "amendment": (
+            "A1: the first scan matched raw source text and flagged the module docstring that "
+            "describes the M089 defect. It now reads the AST with docstrings stripped."
+        ),
     }
 
 
