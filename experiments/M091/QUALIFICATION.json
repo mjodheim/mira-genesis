@@ -1,0 +1,335 @@
+{
+  "artifact_digest": "bcf1e7e5d289506df7f0ba337775dd36e2059d3f1b4c40941e7c83b00c01f06c",
+  "extended_language_digest": "790c4dea178e3e7ac6ddff1249849bd3519ec5387f3ddd785ad6381d02701298",
+  "families": [
+    "capacity_planning",
+    "protocol_window"
+  ],
+  "hidden_drawn_per_world": 5,
+  "materialized_by": "a separate process, after the extended language was frozen",
+  "pool_sizes": {
+    "capacity_planning": 3,
+    "protocol_window": 3
+  },
+  "salt_digest": "371806fdbc5b2b1553b0ebbfe6172af4e6b5da0cac097b77c507987920820d79",
+  "schema": "m091-qualification-v1",
+  "worlds": [
+    {
+      "family": "capacity_planning",
+      "hidden_instances": [
+        {
+          "inputs": [
+            -9,
+            1,
+            0
+          ],
+          "instance_id": "h1"
+        },
+        {
+          "inputs": [
+            -2,
+            -4,
+            6
+          ],
+          "instance_id": "h2"
+        },
+        {
+          "inputs": [
+            11,
+            -7,
+            2
+          ],
+          "instance_id": "h6"
+        },
+        {
+          "inputs": [
+            0,
+            2,
+            9
+          ],
+          "instance_id": "h7"
+        },
+        {
+          "inputs": [
+            6,
+            -3,
+            -5
+          ],
+          "instance_id": "h8"
+        }
+      ],
+      "input_names": [
+        "headroom",
+        "committed",
+        "window"
+      ],
+      "invariants": [
+        {
+          "bound": 0,
+          "kind": "never_below",
+          "slot": 1
+        },
+        {
+          "kind": "matches_requirement",
+          "slot": 1
+        },
+        {
+          "input": 0,
+          "kind": "tracks_input_when",
+          "scale": 2,
+          "slot": 1,
+          "threshold": 0,
+          "when": "at_or_above"
+        },
+        {
+          "input": 0,
+          "kind": "pinned_when",
+          "slot": 1,
+          "threshold": 0,
+          "value": 0,
+          "when": "below"
+        }
+      ],
+      "narrative": "A relief depot plans releases against a headroom figure that is negative whenever the depot is already drawing on its reserve. Drawing on the reserve releases nothing, and genuine headroom is released twice over the planning window.",
+      "public_instances": [
+        {
+          "inputs": [
+            -5,
+            3,
+            2
+          ],
+          "payload": {
+            "committed": 3,
+            "headroom": -5,
+            "window": 2
+          }
+        },
+        {
+          "inputs": [
+            -1,
+            -2,
+            4
+          ],
+          "payload": {
+            "committed": -2,
+            "headroom": -1,
+            "window": 4
+          }
+        },
+        {
+          "inputs": [
+            0,
+            0,
+            1
+          ],
+          "payload": {
+            "committed": 0,
+            "headroom": 0,
+            "window": 1
+          }
+        },
+        {
+          "inputs": [
+            2,
+            7,
+            -3
+          ],
+          "payload": {
+            "committed": 7,
+            "headroom": 2,
+            "window": -3
+          }
+        },
+        {
+          "inputs": [
+            7,
+            -6,
+            5
+          ],
+          "payload": {
+            "committed": -6,
+            "headroom": 7,
+            "window": 5
+          }
+        }
+      ],
+      "requirements": [
+        {
+          "expression": [
+            "double",
+            [
+              "max",
+              [
+                "input",
+                0
+              ],
+              [
+                "const",
+                0
+              ]
+            ]
+          ],
+          "slot": 1
+        }
+      ],
+      "world_id": "q_capacity_relief_plan"
+    },
+    {
+      "family": "protocol_window",
+      "hidden_instances": [
+        {
+          "inputs": [
+            -11,
+            0,
+            1
+          ],
+          "instance_id": "h1"
+        },
+        {
+          "inputs": [
+            -3,
+            6,
+            -4
+          ],
+          "instance_id": "h2"
+        },
+        {
+          "inputs": [
+            -1,
+            -1,
+            8
+          ],
+          "instance_id": "h3"
+        },
+        {
+          "inputs": [
+            1,
+            3,
+            0
+          ],
+          "instance_id": "h4"
+        },
+        {
+          "inputs": [
+            -8,
+            -5,
+            -3
+          ],
+          "instance_id": "h8"
+        }
+      ],
+      "input_names": [
+        "allowance",
+        "queued",
+        "priority"
+      ],
+      "invariants": [
+        {
+          "bound": 0,
+          "kind": "never_above",
+          "slot": 0
+        },
+        {
+          "kind": "matches_requirement",
+          "slot": 0
+        },
+        {
+          "input": 0,
+          "kind": "tracks_input_when",
+          "scale": 1,
+          "slot": 0,
+          "threshold": 0,
+          "when": "below"
+        },
+        {
+          "input": 0,
+          "kind": "pinned_when",
+          "slot": 0,
+          "threshold": 0,
+          "value": 0,
+          "when": "at_or_above"
+        }
+      ],
+      "narrative": "An intermediate hop keeps the same ledger against its own residual allowance. Where allowance remains the hop owes nothing; where it has been overrun the ledger carries the overrun as a non-positive entry, and may never carry a positive one.",
+      "public_instances": [
+        {
+          "inputs": [
+            -7,
+            2,
+            5
+          ],
+          "payload": {
+            "allowance": -7,
+            "priority": 5,
+            "queued": 2
+          }
+        },
+        {
+          "inputs": [
+            -2,
+            4,
+            0
+          ],
+          "payload": {
+            "allowance": -2,
+            "priority": 0,
+            "queued": 4
+          }
+        },
+        {
+          "inputs": [
+            0,
+            1,
+            3
+          ],
+          "payload": {
+            "allowance": 0,
+            "priority": 3,
+            "queued": 1
+          }
+        },
+        {
+          "inputs": [
+            4,
+            3,
+            -1
+          ],
+          "payload": {
+            "allowance": 4,
+            "priority": -1,
+            "queued": 3
+          }
+        },
+        {
+          "inputs": [
+            9,
+            5,
+            2
+          ],
+          "payload": {
+            "allowance": 9,
+            "priority": 2,
+            "queued": 5
+          }
+        }
+      ],
+      "requirements": [
+        {
+          "expression": [
+            "min",
+            [
+              "input",
+              0
+            ],
+            [
+              "const",
+              0
+            ]
+          ],
+          "slot": 0
+        }
+      ],
+      "world_id": "q_protocol_hop_deficit"
+    }
+  ]
+}

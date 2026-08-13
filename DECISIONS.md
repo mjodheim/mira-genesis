@@ -2041,6 +2041,108 @@ Nothing is claimed. Not AGI, not open-ended evolution, not arbitrary self-modifi
 programming-language invention, no gate, no independent reproduction. The extension substrate
 remains authored, and so does the base language.
 
+## D061 — M091 extends the state-owned language endogenously; the ceiling moves to the assembly substrate
+
+D060 left a question rather than a precondition. The language was finally state; nothing showed the
+lineage could add to it. M091 attacked that and nothing else.
+
+### The decision
+
+M091 is accepted as a **positive qualified development result**. H37 moves to supported by a
+**first attempt with no retry**. Protocol frozen at `5e4a0fe`, blob SHA-256 `2e950398...a5273`;
+result `d83b836d...4c07af`, fourteen conditions computed and passed. **No generality gate
+advances**, and none was in play. `attempt` and `retry_used` are derived from the preserved
+artifacts; no superseded run exists.
+
+**H35 is untouched and remains not supported.** M089's protocol, salt, qualification and result were
+not replayed and not modified. M091 carries its own hypothesis, expressive gap, substrate signature
+space, worlds, qualification, checker and result, and its register claim records `h35_supported:
+false`.
+
+### The gap is deliberately not M089's
+
+M089 attacked fan-in — no inherited operation reads two values. That gap is spent, and M090's
+authored probe extension occupies it. Repeating it would have been M089 warmed over on better
+architecture.
+
+M091's requirement reads **exactly one** input position, so M089's invariant is not violated and its
+primitive would not help. The gap is *bending*: `inc`, `dec`, `neg` and `double` are affine, affine
+maps compose to affine maps, and so after any program over the inherited language every slot holds a
+constant or `a*inputs[i] + b`. The separation is enforced rather than asserted — the validator is
+handed M090's `COMBINE_INPUTS` and refuses it as **overbroad**, because widening the source fan-in
+is a different extension from the one that was diagnosed.
+
+### Why the insufficiency claim survives any budget
+
+The load-bearing argument is a **closure lemma**, checked one primitive at a time over the whole
+abstract domain: 22,500 abstract states, zero escapes. It is a statement about one step, the initial
+state is in the domain, and induction does the rest. A budget cannot defeat a closure property.
+
+Two things stop that from being a comfortable abstraction. The abstraction is re-checked against the
+concrete interpreter — 452 slot functions of real programs, zero violations — so it cannot be
+quietly wrong in the safe direction. And the requirement is refuted by a **finite certificate over
+an infinite class**: three non-collinear points eliminate every integer `a` and `b` at once, two
+points eliminate the constants, and one pair per rival position eliminates any function of another
+input alone. A reviewer re-derives it rather than believing it.
+
+### The M055 falsifier, answered by measurement rather than hope
+
+D019 recorded M055's failure precisely: acquisition cut the candidate count from 737 to 48 and
+nothing became reachable that had not been. M091 reproduces that situation **on purpose** in the
+`macro_only_extension` arm, which memoized two doublings into one operation, registered it into its
+own language, and cut its search from 38,848 programs to 5,477 and its program from four operations
+to three. It solved 0/2 qualifying worlds.
+
+The adopted primitive sits in the same table with the opposite entry: not reachable without it at
+any tested depth, 61,308 programs examined and nothing found, two operations with it. One arm bought
+cost; the other bought reach. The distinction is the whole point, and it is now a number rather than
+an argument.
+
+### Registration is the causal step, and the state is the authority
+
+`extension_built_but_not_registered` holds the same validated bytes and runs them directly on the
+substrate. Through the language it does nothing, and scores 0/2. Deleting the acquired operation
+from the serialized state removes the transformation; deleting an inherited one removes that too;
+neither reappears in a fresh process. That is D059's question asked of an operation the lineage made
+itself, and answered yes.
+
+The fresh process imports the interpreter, the requirement schema and a generic search, and neither
+the assembler, the enumerator, the validator nor the lineage — its own import census is printed and
+checked. So the extension **survives** as state rather than being rebuilt from development code.
+
+### Reuse, and why the second world matters
+
+The two qualifying worlds were drawn after the language was frozen, by a separate process, using a
+salt derived from the extended language's digest. The second requires the **dual** clamp — a ceiling
+where the first needed a floor — and the lineage reached it by conjugating its new operation with
+the inherited sign flip, a construction it had never built. Same primitive, same semantics digest,
+no new registration.
+
+### What is claimed, exactly
+
+Within one bounded executable representation and one frozen assembly substrate, the lineage proved
+a required transformation lay outside the constructive image of its inherited language, assembled
+and independently validated a new primitive not reducible to any composition of that language,
+registered it into its serialized language state, used the enlarged language to construct a
+correctness-critical transformation that was previously inexpressible, preserved the extension
+through exact rollback on both sides and a fresh process, and reused it on a materially different
+problem structure.
+
+Not AGI, not open-ended evolution, not arbitrary self-modification, not general programming-language
+invention, not unrestricted recursive self-improvement, not a self-hosting interpreter, no gate, no
+independent reproduction, no production authority. The acquired operation gained expressive power
+inside the language and **no** authority against the system. Experimenter blindness to the world
+pool is explicitly **not** claimed; what is claimed is that the lineage could not reach it.
+
+### The next causal ceiling
+
+**The assembly substrate.** The micro-operations, the binary operator set — `max` among them — the
+two body constants, the three signatures, the length bound and the capability list are all authored,
+and they bound what any new primitive can possibly be. M090 moved the ceiling from the language to
+the interpreter beneath it; M091 shows the language above that boundary can genuinely grow, and
+moves the ceiling to the substrate a primitive is made of. A successor should make **that** plastic,
+with its own hypothesis and protocol, before anything is said about self-hosting.
+
 ## D060 — M090 makes the meta-language state-owned; the ceiling moves to the interpreter substrate
 
 D059 left a precondition rather than a research question: M089's language was two objects, and only

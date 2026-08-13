@@ -93,6 +93,22 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
+  `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
+  passed. The lineage proved a required transformation lay outside the constructive image of its
+  inherited language — by a closure lemma over 22,500 abstract states with zero escapes, an
+  abstraction re-checked against the concrete interpreter on 452 slot functions, and a finite
+  certificate refuting an infinite class — then assembled 3,248 candidates from the frozen
+  substrate, had 3,247 refused across five reasons, and adopted one whose behaviour matches none of
+  the 87 reachable compositions of the inherited language. Registering it made two worlds drawn
+  afterwards constructible, 5/5 on held-out instances in two materially different families, the
+  second by conjugating the new operation with the inherited sign flip. Every control scored 0/2,
+  including a depth-six budget arm at 7,072,128 programs and a macro-only arm that really did
+  memoize a composition and cut its own search from 38,848 programs to 5,477 — cost, not reach.
+  **The gap attacked is not M089's**: the requirement reads one input position, and the validator
+  refuses M090's fan-in probe as overbroad. **H35 remains not supported** and is not re-attempted.
+  The assembly substrate and the interpreter beneath it remain authored, and are the next ceiling.
+
 - **M090 makes the meta-language state-owned, and H36 is supported.** Protocol frozen at
   `ffe5086`; result `79876238...f8d8bd`, **attempt 3 after two disclosed corrections**, twelve conditions
   computed and passed. This is the

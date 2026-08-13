@@ -1,0 +1,187 @@
+{
+  "arms": [
+    "evolvable_meta_language",
+    "fixed_meta_language",
+    "extension_acquisition_ablated",
+    "extension_built_but_not_registered",
+    "macro_only_extension",
+    "more_budget_same_meta_language",
+    "fresh_agent",
+    "authored_correct_primitive"
+  ],
+  "capabilities": {
+    "forbidden": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
+    "permitted": [
+      "pure_slot_write"
+    ],
+    "extension_adds_expressive_power_and_no_authority": true,
+    "resource_bound": 10000
+  },
+  "ceiling_arms": [
+    "authored_correct_primitive"
+  ],
+  "ceiling_arm_is_excluded_from_the_verdict": true,
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_substrate_eliminated": false,
+    "general_language_invention": false,
+    "generality_gate": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "genesis_gate_4": false,
+    "h35_supported": false,
+    "independent_reproduction": false,
+    "open_ended_evolution": false,
+    "recursive_self_improvement": false,
+    "self_hosting_interpreter": false,
+    "unrestricted_code_generation": false
+  },
+  "conditions": [
+    "P1_inherited_language_provably_cannot_express_the_transformation",
+    "P2_primitive_assembled_from_the_substrate_rather_than_selected",
+    "P3_primitive_is_not_reducible_to_a_composition_of_the_inherited_language",
+    "P4_an_independent_validator_accepted_it_without_seeing_the_qualification",
+    "P5_the_primitive_is_registered_in_the_state_owned_language",
+    "P6_the_transformation_is_outside_l0_and_inside_l1",
+    "P7_correctness_difference_on_worlds_the_lineage_never_searched",
+    "P8_more_budget_in_the_same_language_closes_nothing",
+    "P9_a_macro_only_extension_closes_nothing",
+    "P10_building_without_registering_closes_nothing",
+    "P11_the_inherited_semantics_are_conserved_exactly",
+    "P12_rollback_is_exact_and_behavioural_on_both_sides",
+    "P13_the_extension_persists_and_is_reused_in_a_fresh_process",
+    "P14_chronology_track_a_and_no_leaked_evidence"
+  ],
+  "date_frozen": "2026-08-13",
+  "expressive_gap": {
+    "differs_from_m089": "M089's gap was fan-in: no inherited operation reads two values, so no slot could depend on two input positions. That gap is spent and M090's authored probe extension occupies it. M091's required transformation reads exactly ONE input position, so M089's invariant is not violated and its primitive does not help. The gap here is bending: every inherited operation moves values affinely.",
+    "inherited_invariant": "affine_single_source",
+    "invariant_statement": "after any program over the inherited language, every slot holds either a constant or a*inputs[i] + b for a single input position i",
+    "proof_method": [
+      "a closure lemma checked one primitive at a time over the whole abstract domain, so induction carries it to any program length and therefore to any budget",
+      "a soundness report re-checking the abstraction against the concrete interpreter on real programs",
+      "a finite refutation certificate: three non-collinear points refuting every affine map of the position the requirement varies with, two points refuting the constants, and one pair per rival input position",
+      "a redundant exhaustive search, reported but not relied upon"
+    ],
+    "required_fan_in": 1
+  },
+  "extension_substrate_S": {
+    "assembly_is_not_selection": "S contains no finished operation. A candidate is a sequence of micro-operations plus a signature; most are ill-formed, inert, or compute what the inherited language already computes.",
+    "authored": true,
+    "body_constants": [0, 1],
+    "interpreter_substrate": "m090-interpreter-substrate-v1",
+    "max_assembly_length": 4,
+    "micro_operations": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "not_executable_until_registered": "A body cannot be run by the lineage. The lineage runs programs, and a program is a sequence of calls to primitives held in the language state.",
+    "signatures": [
+      ["slot"],
+      ["slot", "input"],
+      ["slot", "input", "input"]
+    ],
+    "the_substrate_remains_authored_and_is_the_expected_next_ceiling": true
+  },
+  "falsifiers": [
+    "the adopted primitive is a macro of the inherited language",
+    "the adopted primitive was authored as a finished function and merely selected",
+    "the required transformation is already inside the inherited language's constructive image",
+    "more budget in the same language reaches it",
+    "a macro-only extension reaches it",
+    "an extension that is built and validated but never registered reaches it",
+    "a fresh agent holding only the inherited language reaches it",
+    "the adopted primitive is never used by any constructed transformation",
+    "the transformation would have been selectable without the primitive",
+    "any qualifying world exists in a module the lineage imports before adoption",
+    "the primitive builder or the validator sees a qualifying world",
+    "the validator encodes the expected solution",
+    "the substrate contains the adopted primitive as a finished operation",
+    "an inherited primitive's accepted or refused argument domain changes",
+    "the conservation space excludes any part of a declared domain",
+    "the rollback fault strikes a detached copy rather than the live state",
+    "the rollback restore is a checkpoint compared with itself",
+    "a fresh process rebuilds the primitive from the development modules",
+    "an external model is called during the scientific run",
+    "the recorded attempt provenance disagrees with the preserved artifacts",
+    "a real defect in the system is corrected after the verdict in order to save the result"
+  ],
+  "fault_classes": [
+    "removal",
+    "semantic_mutation"
+  ],
+  "hypothesis": "H37",
+  "inherited_language_L0": {
+    "digest": "755dd8fa7a16967a48d6bcf315544b915c2f5367a80553110d692e83fd2394e9",
+    "primitives": [
+      "SET_CONST",
+      "COPY_INPUT",
+      "APPLY_UNARY"
+    ],
+    "provenance": "M090's migrated, entirely state-owned inherited language, without its authored architectural probe extension",
+    "schema": "m090-executable-meta-language-v1",
+    "state_owned": true
+  },
+  "milestone": "M091",
+  "not_a_reattempt_of_m089": "M091 does not re-run M089's protocol, salt, qualification or result, does not modify them, and makes no claim about H35, which remains not supported. M091 has its own hypothesis, protocol, expressive gap, substrate signature space, worlds, qualification, checker and result.",
+  "predecessors": {
+    "M055": "acquisition reduced the candidate count from 737 to 48 while everything remained reachable, so the gain was search cost rather than reach. Answered here by a non-macro certificate and by the macro-only arm.",
+    "M089": "negative; the base language was not executable state, so no fault to it could change behaviour. H35 not supported and not re-attempted.",
+    "M090": "positive at attempt 3; the whole meta-language became state-owned and the probe extension was authored and labelled as such."
+  },
+  "qualification": {
+    "cross_family": "development rectifies a data-flow channel; capacity_planning is a dispatch plan with a floor at no allocation and a per-shift multiplier; protocol_window is deficit accounting whose requirement is the dual clamp, a ceiling reached only by conjugating the new operation with the inherited sign flip",
+    "drawn_by": "a separate process, with a salt derived from the extended language's own digest, which does not exist until adoption",
+    "experimenter_blindness_is_not_claimed": "The pool of candidate worlds is authored and committed at this freeze, and the draw is a deterministic function of the extended language's digest, so it is reproducible by anyone. What is claimed is that the lineage cannot import, read or reach any of it before adoption, and that the drawn worlds could not have been known before the primitive existed. No claim is made that the experimenter was blind to the pool.",
+    "families": [
+      "capacity_planning",
+      "protocol_window"
+    ],
+    "hidden_drawn_per_world": 5,
+    "no_new_primitive_may_be_registered_during_qualification": true,
+    "not_importable_by_the_lineage": true,
+    "reuse_requires_the_same_primitive_semantics_digest": true
+  },
+  "reattempts_m089": false,
+  "retry_policy": {
+    "attempt_provenance_is_derived_from_preserved_artifacts": true,
+    "m089_must_not_be_replayed": true,
+    "reroll_permitted": false,
+    "result_saving_correction_after_a_verdict_is_forbidden": true,
+    "superseded_runs_are_preserved_and_disclosed": true
+  },
+  "schema": "m091-protocol-v1",
+  "search_budget": {
+    "arms": 4,
+    "budget_arm_length": 6,
+    "budget_arm_repetitions": 2,
+    "deduplication": "programs whose observable effect on every public instance is already reached are not expanded again; both the examined count and the distinct-behaviour count are reported",
+    "every_repetition_is_a_complete_independent_search": true
+  },
+  "status": "frozen_before_any_qualification_data_existed",
+  "subtitle": "The lineage creates a new operation in the language it actually owns",
+  "title": "Endogenous Meta-Language Extension on a State-Owned Language",
+  "track": "A",
+  "two_capabilities_required": {
+    "A": "a new operation: assembled from the substrate and provably not reducible to any composition of the inherited language",
+    "B": "a larger language: registering it makes a previously inexpressible transformation constructible, and that transformation produces the correctness difference",
+    "either_alone_is_a_failure": true
+  },
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail"
+}
