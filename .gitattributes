@@ -75,3 +75,13 @@ experiments/M090/RESULT.json -text
 experiments/M090/REGISTER_CLAIM.json -text
 experiments/M090/WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json -text
 experiments/M090/WITHDRAWN_RESULT_ATTEMPT_2.json -text
+
+# M091 registers every digest-bearing artifact it may ever write in the same commit as its frozen
+# protocol, before any of them exists. The wildcards above already cover PROTOCOL and RESULT; the
+# qualification draw, the register claim and any superseded run are named here so that no later
+# commit reintroduces the checkout-dependent hash defect by forgetting one.
+experiments/M091/PROTOCOL.json -text
+experiments/M091/RESULT.json -text
+experiments/M091/QUALIFICATION.json -text
+experiments/M091/REGISTER_CLAIM.json -text
+experiments/M091/WITHDRAWN_RESULT_*.json -text
