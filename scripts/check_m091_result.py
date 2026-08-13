@@ -68,10 +68,9 @@ CLAIM = EXPERIMENT / "REGISTER_CLAIM.json"
 def main() -> int:  # noqa: C901 - a checker is a long list of independent checks
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--require-result", action="store_true")
-    parser.add_argument(
-        "--skip-budget-arm", action="store_true",
-        help="skip replaying the depth-six budget arm; never use when deciding the record",
-    )
+    # There is deliberately no flag for skipping the depth-six budget arm. A checker with an
+    # escape hatch reports "verified" while having skipped the most expensive falsifier, which is
+    # the shape D053 disqualified M086-A over: an instrument that exists without being decisive.
     arguments = parser.parse_args()
     if not RESULT.exists():
         print("no M091 result is present", file=sys.stderr)
@@ -266,9 +265,6 @@ def main() -> int:  # noqa: C901 - a checker is a long list of independent check
 
     replayed_arms: dict[str, dict[str, object]] = {}
     for arm in ARMS:
-        if arm == "more_budget_same_meta_language" and arguments.skip_budget_arm:
-            replayed_arms[arm] = dict(result["arms"][arm])
-            continue
         replayed_arms[arm] = run_arm(arm, replayed_acquisition, worlds, ceiling_primitive())
         recorded_arm = result["arms"][arm]
         for field in (

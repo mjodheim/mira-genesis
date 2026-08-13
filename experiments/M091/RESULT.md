@@ -229,6 +229,43 @@ The honest limits, stated rather than implied:
   reproducible by anyone. What is claimed is that the lineage cannot reach any of it before
   adoption, and that the drawn worlds could not have been known before the primitive existed.
 
+## Review findings, and what was deliberately not repaired
+
+A review of this branch produced five findings. One was in the instrument and is fixed; four are
+recorded and left alone, because repairing them would change the frozen artifacts and force a
+second attempt for no scientific gain. **The single-attempt provenance is worth more than the
+cosmetics.**
+
+**Fixed.** `check_m091_result.py` carried a `--skip-budget-arm` flag that copied the recorded
+budget-arm numbers instead of replaying them, so the checker could have printed *verified* while
+skipping the most expensive falsifier. That is the M086-A shape — an instrument that exists without
+being decisive — and the flag is gone. The change makes verification strictly harder and cannot
+save a result; the result and its digest are untouched.
+
+**Recorded, not repaired.**
+
+- `refute_affine_single_source` builds its rival-position witness by perturbing only the *first*
+  other input position rather than trying each. For a requirement varying with input 1, the witness
+  for position 2 would not be found. The failure direction is conservative — a spurious negative,
+  never a spurious positive — and this requirement varies with input 0, so the certificate produced
+  here is complete and was re-verified against the requirement itself.
+- `state_authority_report` computes its booleans with `all()` over the programs it is given, so an
+  empty list would make them vacuously true. P6 independently requires the evolvable arm to solve
+  2/2, and the checker refuses a result with fewer than two constructed transformations, so the
+  hole is closed at the decisive layer rather than left open.
+- `evaluate()` would raise rather than return a negative if it were called on an acquisition that
+  adopted nothing. The runner stops before that point, so it is unreachable here.
+- A validator control is bound to a variable named `unsafe` while actually testing an inherited
+  composition. Capability refusal is exercised by the test suite, not by that control, and the
+  returned keys say so; only the variable name misleads.
+
+Two independent demonstrations that the instruments can fail were run rather than asserted. The
+anti-lookup scanner was handed a body that really does appear as a literal in
+`m091_lineage.py` and flagged it, and was handed a string that really does appear in
+`m091_expressivity.py` and flagged that too — while the actual adopted body is absent from both.
+And one recorded field of the result was flipped and the checker refused it with three independent
+blocking findings before the artifact was restored byte-identical.
+
 ## The next causal ceiling
 
 **The substrate from which a primitive is assembled is authored.** M090 moved the ceiling from the
