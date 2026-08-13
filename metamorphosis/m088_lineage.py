@@ -458,7 +458,10 @@ def evaluate(
 
     # Causal use: every acquisition the evolvable arm made must have eliminated at least one
     # candidate, and the final survivor must be one the observations selected.
-    causal = True
+    # Amendment A1. Each of P4, P5 and P8 could pass vacuously on an arm with no encounters at
+    # all, which is the M086-A failure mode -- a condition that cannot fail. An adversarial test
+    # found it before merge. Every one now requires the evidence to exist.
+    causal = bool(evolvable["encounters"])  # type: ignore[arg-type]
     for record in evolvable["encounters"]:  # type: ignore[index]
         if not record["acquisitions"]:
             causal = False
@@ -485,7 +488,8 @@ def evaluate(
         ),
         "P4_observation_used_causally": causal,
         "P5_evolvable_correct_in_every_qualification_world": (
-            evolvable["correct_terminal_decisions"] == evolvable["encounter_count"]
+            int(evolvable["encounter_count"]) == len(QUALIFICATION_WORLDS)  # type: ignore[arg-type]
+            and evolvable["correct_terminal_decisions"] == evolvable["encounter_count"]
         ),
         "P6_capability_discordance_against_fixed": (
             len(discordant) >= 1 and not sorted(fixed_correct - evolvable_correct)
@@ -497,7 +501,8 @@ def evaluate(
             and not (worlds_correct(budgeted) & set(discordant))
         ),
         "P8_ablation_loses_the_capability": (
-            not (worlds_correct(ablated) & set(discordant))
+            bool(discordant)
+            and not (worlds_correct(ablated) & set(discordant))
             and int(ablated["experiments_outside_prior_image"]) == 0  # type: ignore[arg-type]
         ),
         # Both qualification worlds differ structurally from the development world, and the same

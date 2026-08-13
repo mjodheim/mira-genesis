@@ -1,0 +1,20 @@
+{
+  "amendment_a1_changed_the_result": false,
+  "attempt": 1,
+  "discordant_worlds": [
+    "durable_service",
+    "path_graph"
+  ],
+  "gate_advanced": false,
+  "hypothesis": "H34",
+  "independent_reproduction": false,
+  "interaction_vocabulary_authored": true,
+  "meta_primitives_authored": true,
+  "milestone": "M088",
+  "model_calls": 0,
+  "protocol_raw_sha256": "26bb572d9a9308c39335d62833102df4ac796ec07dea00f155450522e6e23607",
+  "result_digest": "070b1cb35f0458109bad4a8e84f7f377cba151288e1c688fc4a8c64049e3a528",
+  "retry_used": false,
+  "schema": "m088-register-claim-v1",
+  "verdict": "positive"
+}

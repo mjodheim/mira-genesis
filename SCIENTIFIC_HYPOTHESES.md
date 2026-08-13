@@ -757,3 +757,42 @@ gate advances, there is no independent reproduction, and `interpretation_routing
 preregistered no-harm situation in which the frozen tie-break lands correctly by luck — kept
 rather than tuned away, as a standing reminder that one correct adoption is not evidence about
 selection. See D057.
+
+## H34 — A lineage can build part of the space in which it looks for what it needs
+
+When a persistent Track-A lineage meets observational ambiguity that **no experiment constructible
+under its current experiment-generation mechanism can resolve** — shown by enumerating that
+mechanism's complete constructive image and exhausting it, not by failing to search — it can
+diagnose the constructive limitation, adopt a validated modification of the experiment-generation
+mechanism, construct an interaction program lying **outside the prior mechanism's image**, execute
+it against the environment, use the observation causally to eliminate candidate models, reach a
+correctness-critical adaptation, persist the mechanism as serialized state, and reuse it without
+further meta-transformation in structurally different environments.
+
+**Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
+Protocol frozen at `4d8a71a` before any qualification data existed; result `070b1cb3...e3a528`,
+attempt 1. All ten frozen conditions passed.
+
+M0 builds every program of the form *reset, one action, observe* — the single-interaction depth at
+which M087's probes lived. In the development world its complete image holds **two** programs,
+**none** discriminating, and exhausting it leaves all four candidate models alive. Ten
+meta-transformations were rejected on disposable descendants; the adopted composition adds
+sequencing and order sensitivity. The lineage then constructed
+`reset, send_a, send_b, observe` — verified outside the enumerated prior image — and used it.
+
+Both qualification worlds differ structurally from the development world, so **every** qualification
+result is a transfer result: 2/2 correct for the evolved constructor, 0/2 for the frozen one, with
+one serialized constructor and no further meta-transformation. `more_budget_same_experiment_space`
+performed ten complete independent exhaustive searches — 40 programs against the fixed arm's 4 —
+gained no expressiveness and closed nothing.
+
+**What separates it from M087:** M087 chose an experiment from a space a person enumerated. Here
+the space is constructed from an interaction vocabulary, and the discriminating program is proved
+inexpressible for the prior mechanism rather than merely unfound.
+
+**What it does not establish:** not that the lineage invents experiments in general. The interaction
+vocabulary, the constructor rule set, the meta-primitives and the three worlds are authored, and no
+new primitive was invented — the lineage composed two it was given. No generality gate advances and
+there is no independent reproduction. The `authored_full_experiment_space` ceiling arm also scores
+2/2, which is the point: once a space exists the M087 selector already knows what to do, so what
+M088 adds is the construction. See D058.
