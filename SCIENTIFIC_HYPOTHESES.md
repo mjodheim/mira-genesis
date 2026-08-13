@@ -858,7 +858,7 @@ structure — while every same-language control fails at any permitted budget, a
 extension that demonstrably buys a cheaper search buys no reach.
 
 **Status:** **SUPPORTED**, at development-qualification standard, by a **first attempt with no
-retry**. Protocol frozen at `15eb129`; result `d83b836d...4c07af`. All fourteen frozen conditions
+retry**. Protocol frozen at `5e4a0fe`; result `d83b836d...4c07af`. All fourteen frozen conditions
 passed. `attempt: 1` and `retry_used: false` are derived from the preserved artifacts rather than
 declared, and no superseded run exists.
 

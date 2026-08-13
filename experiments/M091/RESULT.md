@@ -3,12 +3,20 @@
 **POSITIVE. H37 SUPPORTED. ATTEMPT 1, NO RETRY. NO GATE ADVANCES.**
 **H35 REMAINS NOT SUPPORTED — M089 IS NEITHER REPLAYED NOR MODIFIED.**
 
-- Protocol frozen at `15eb129`; blob SHA-256 `2e9503986dd55253e02978366cbc1d64c4175dda3ba01ef88fc3ddbb6f6a5273`.
+- Protocol frozen at `5e4a0fe`; blob SHA-256 `2e9503986dd55253e02978366cbc1d64c4175dda3ba01ef88fc3ddbb6f6a5273`.
 - Result digest `d83b836dee2b62d9211f0e4fc214e1abcd9db608e257f3105f54adf59a4c07af`.
 - Attempt **1**, `retry_used: false`, no superseded runs. Both numbers are derived from the
   preserved artifacts, not declared.
 - Model calls **0**, network calls **0**.
 - `L0` digest `755dd8fa7a16967a` → `L1` digest `790c4dea178e3e7a`, language version 0 → 1.
+
+**The freeze commit was renumbered, and nothing frozen changed.** It was first recorded as
+`15eb129`. CI's human-only attribution policy rejected a non-human co-author trailer in this
+branch's commit messages; the trailer was removed and the three commits were rewritten, which
+moved their identities. The trees are identical, the protocol blob is byte-for-byte the same —
+SHA-256 `2e950398…a5273`, which is what the result actually binds — and no artifact under
+`experiments/M091/` changed. The result digest is unaffected because it covers content, not commit
+identity. This is recorded rather than quietly corrected.
 
 ## The question M090 made askable
 

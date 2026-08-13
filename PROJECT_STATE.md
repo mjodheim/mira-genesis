@@ -94,7 +94,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
-  `15eb129`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
+  `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its
   inherited language — by a closure lemma over 22,500 abstract states with zero escapes, an
   abstraction re-checked against the concrete interpreter on 452 slot functions, and a finite

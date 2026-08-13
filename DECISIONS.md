@@ -2049,7 +2049,7 @@ lineage could add to it. M091 attacked that and nothing else.
 ### The decision
 
 M091 is accepted as a **positive qualified development result**. H37 moves to supported by a
-**first attempt with no retry**. Protocol frozen at `15eb129`, blob SHA-256 `2e950398...a5273`;
+**first attempt with no retry**. Protocol frozen at `5e4a0fe`, blob SHA-256 `2e950398...a5273`;
 result `d83b836d...4c07af`, fourteen conditions computed and passed. **No generality gate
 advances**, and none was in play. `attempt` and `retry_used` are derived from the preserved
 artifacts; no superseded run exists.

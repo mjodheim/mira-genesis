@@ -23,7 +23,7 @@
   "network_calls": 0,
   "open_ended_evolution": false,
   "prior_attempts": [],
-  "protocol_frozen_at": "15eb129455b2e1e8d929352fed2a516fbe731193",
+  "protocol_frozen_at": "5e4a0feebbb44aa73309d40eca1e88e0833e6756",
   "protocol_raw_sha256": "2e9503986dd55253e02978366cbc1d64c4175dda3ba01ef88fc3ddbb6f6a5273",
   "qualification_artifact_digest": "bcf1e7e5d289506df7f0ba337775dd36e2059d3f1b4c40941e7c83b00c01f06c",
   "reattempts_m089": false,

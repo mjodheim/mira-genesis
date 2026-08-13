@@ -4,7 +4,7 @@
 
 - Added M091, in which the lineage adds an operation to the language it actually owns. **Positive,
   attempt 1, no retry**, fourteen frozen conditions computed and passed; H37 supported, no gate.
-  Protocol frozen at `15eb129`, result `d83b836d...4c07af`, 0 model calls.
+  Protocol frozen at `5e4a0fe`, result `d83b836d...4c07af`, 0 model calls.
 - Chose an expressive gap that is deliberately **not** M089's. That one was fan-in and is spent;
   M091's requirement reads one input position and is instead **non-affine**, and the validator
   refuses M090's fan-in probe as overbroad. The insufficiency is proved by a closure lemma over the
