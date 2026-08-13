@@ -849,8 +849,24 @@ observable behaviour, exact rollback restores both the bytes and the behaviour o
 extension, and a fresh process given only the serialized state reproduces the language without
 resurrecting anything from host-side constants.
 
-**Status:** **SUPPORTED**, at development-qualification standard, by one attempt with no retry.
-Protocol frozen at `ffe5086`; result `27b9501a...027091`, attempt 1. All twelve frozen conditions passed.
+**Status:** **SUPPORTED**, at development-qualification standard, by a **third attempt** after two
+disclosed corrections. Protocol frozen at `ffe5086`; result `79876238...f8d8bd`. All twelve frozen conditions
+passed.
+**Attempt provenance, stated plainly.** This is **attempt 3**, `retry_used: true`. Two earlier
+runs of this frozen protocol are preserved in the repository: `WITHDRAWN_RESULT_ATTEMPT_2.json` (positive, `27b9501a...`); `WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json` (negative, `daa75713...`). External review of PR #138
+was right that re-executing a frozen protocol after inspecting a completed result is another
+attempt whatever changed between them, and that recording it otherwise asserts false provenance.
+The checker now derives the attempt number from the preserved artifacts rather than accepting a
+declared one. A third-attempt positive is weaker evidence than a first-attempt positive, and is
+recorded as such.
+
+The two corrections were: **A1**, a scanner that matched raw source text and flagged the module
+docstring describing the M089 defect, which made attempt 1 negative on P11 — an instrument defect,
+confirmed by an independent AST check that no such name existed in code; and **A2**, a genuine
+conservation violation found in review — `identity` had been added to the shared unary domain, so
+migrated `APPLY_UNARY` accepted a call M089 rejects, while the conservation report excluded that
+very operator. A2 changed the system under test. The conservation space now excludes nothing.
+
 
 **Why it was needed.** D059 recorded that M089's interpreter dispatched base operations from the
 module constant `L0_OPERATIONS`, so `language.base_operations` was serialized, digested and rolled

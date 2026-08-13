@@ -58,14 +58,44 @@ def main() -> int:
 
     if result["protocol_raw_sha256"] != hashlib.sha256(PROTOCOL.read_bytes()).hexdigest():
         problems.append("the result does not bind the committed protocol blob")
-    if result["attempt"] != 1 or result["retry_used"] is not False:
-        problems.append("the result is not a single unretried attempt")
+    # Attempt provenance must be truthful and must match the preserved artifacts. PR #138 found
+    # the amended run recorded as "attempt 1, no retry" while a completed superseded run existed.
+    preserved = sorted(
+        path.name for path in (ROOT / "experiments/M090").glob("WITHDRAWN_RESULT_*.json")
+    )
+    recorded = sorted(str(item["artifact"]) for item in result.get("prior_attempts", []))
+    if recorded != preserved:
+        problems.append("the recorded prior attempts do not match the preserved artifacts")
+    if result["attempt"] != len(preserved) + 1:
+        problems.append("the recorded attempt number does not match the preserved history")
+    if result["retry_used"] is not bool(preserved):
+        problems.append("retry_used does not match the preserved history")
+    for item in result.get("prior_attempts", []):
+        path = ROOT / "experiments/M090" / str(item["artifact"])
+        if not path.is_file():
+            problems.append(f"a recorded prior attempt is missing: {item['artifact']}")
+            continue
+        superseded = json.loads(path.read_text(encoding="utf-8"))
+        if superseded["result_digest"] != item["result_digest"]:
+            problems.append(f"prior attempt digest does not match: {item['artifact']}")
     if result["model_calls"] != 0 or result["network_calls"] != 0:
         problems.append("the scientific run recorded a model or network call")
     if result["reattempts_m089"] is not False:
         problems.append("the result claims to re-attempt M089")
     if set(result["conditions_declared"]) != set(CONDITIONS):
         problems.append("the declared conditions differ from the frozen list")
+
+    # The conservation space must exclude nothing: an excluded operator is one whose conservation
+    # is unproved, which is how a widened argument domain hid in the first draft.
+    from metamorphosis.m090_language import UNARY_OPERATORS
+    from metamorphosis.m090_migration import legacy_alphabet
+    import metamorphosis.m089_meta_language as legacy
+
+    if set(UNARY_OPERATORS) != set(legacy.UNARY_FUNCTIONS):
+        problems.append("the migrated unary domain differs from the inherited one")
+    covered = {argument for name, (_slot, argument) in legacy_alphabet() if name == "APPLY_UNARY"}
+    if covered != set(UNARY_OPERATORS):
+        problems.append("the conservation space excludes part of the unary domain")
 
     conservation = conservation_report(2)
     if conservation["semantics_conserved"] != result["conservation"]["semantics_conserved"]:

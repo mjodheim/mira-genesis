@@ -49,7 +49,10 @@ MICRO_OPERATIONS = (
     "PUSH_INPUT", "PUSH_SLOT", "PUSH_CONST", "BINOP", "UNOP", "DUP", "SWAP", "STORE_SLOT",
 )
 
-UNARY_OPERATORS = ("inc", "dec", "neg", "double", "identity")
+# Exactly M089's unary set. `identity` was present in a first draft and widened the accepted
+# argument domain of the migrated APPLY_UNARY beyond what M089 accepted, which is a conservation
+# violation however harmless the operator looks. External review of PR #138 caught it.
+UNARY_OPERATORS = ("inc", "dec", "neg", "double")
 BINARY_OPERATORS = ("add", "sub", "mul", "max")
 
 # Parameter kinds a primitive may declare. `const` and `unary_op` exist so that an inherited
@@ -108,8 +111,6 @@ def _unary(name: str, value: int) -> int:
         return -value
     if name == "double":
         return value * 2
-    if name == "identity":
-        return value
     raise LanguageError(f"unknown unary operator {name!r}")
 
 

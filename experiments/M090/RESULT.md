@@ -1,10 +1,11 @@
 # M090 result — executable meta-language state
 
-**POSITIVE. H36 SUPPORTED. ATTEMPT 1, NO RETRY. NO GATE ADVANCES.**
+**POSITIVE. H36 SUPPORTED. ATTEMPT 3, AFTER TWO DISCLOSED CORRECTIONS. NO GATE ADVANCES.**
 **H35 REMAINS NOT SUPPORTED — M089 IS NEITHER REPLAYED NOR MODIFIED.**
 
 - Protocol frozen at `ffe5086`; blob SHA-256 `e75589ba35616eef59f8be373b9bb7efa556cce3d5f1fee02cd7754479f7c0d3`.
-- Result digest `27b9501ab9d0ea3d55f69d5e83a3ba2985147e56e39c6d090f5fcf844c027091`.
+- Result digest `79876238c9acd9659fe456d8ca013838c47ca5823b7eca00af608d6dcef8d8bd`.
+- Attempt **3**, `retry_used: true`; superseded runs preserved: `WITHDRAWN_RESULT_ATTEMPT_2.json` (positive, `27b9501a...`); `WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json` (negative, `daa75713...`).
 - Model calls **0**, network calls **0**.
 
 ## The question D059 asked
@@ -70,7 +71,23 @@ using it are **refused** — resurrected probes: `[]`.
 
 Verdict **positive**; failed: none.
 
-## Amendment A1 — it flipped the verdict, and both runs are preserved
+## Amendments A1 and A2 — attempt provenance
+**Attempt provenance, stated plainly.** This is **attempt 3**, `retry_used: true`. Two earlier
+runs of this frozen protocol are preserved in the repository: `WITHDRAWN_RESULT_ATTEMPT_2.json` (positive, `27b9501a...`); `WITHDRAWN_RESULT_PRE_AMENDMENT_A1.json` (negative, `daa75713...`). External review of PR #138
+was right that re-executing a frozen protocol after inspecting a completed result is another
+attempt whatever changed between them, and that recording it otherwise asserts false provenance.
+The checker now derives the attempt number from the preserved artifacts rather than accepting a
+declared one. A third-attempt positive is weaker evidence than a first-attempt positive, and is
+recorded as such.
+
+The two corrections were: **A1**, a scanner that matched raw source text and flagged the module
+docstring describing the M089 defect, which made attempt 1 negative on P11 — an instrument defect,
+confirmed by an independent AST check that no such name existed in code; and **A2**, a genuine
+conservation violation found in review — `identity` had been added to the shared unary domain, so
+migrated `APPLY_UNARY` accepted a call M089 rejects, while the conservation report excluded that
+very operator. A2 changed the system under test. The conservation space now excludes nothing.
+
+### A1 — it flipped the verdict, and both runs are preserved
 
 The first run was **negative** on `P11_no_host_side_base_operation_authority`, digest
 `daa75713300ed1732917ccb8bcd47ceb9e41ddf235b46b0e6f2fb46ef13272cd`, kept at
@@ -88,6 +105,14 @@ the system, so changing the system would have been a result-saving retry and the
 preserved. Here it measured a **false** property because the instrument was broken. The instrument
 was corrected and the system was untouched. Both digests are recorded so the claim can be checked
 rather than believed.
+
+### A2 — a real conservation violation, not an instrument fix
+
+Review found that `identity` had been added to the shared unary operator domain, so the migrated
+`APPLY_UNARY` accepted a call M089 rejects, while `conservation_report` excluded that very
+operator. Conservation therefore passed without being proved over the full domain. `identity` is
+removed, the conservation space now excludes nothing, and the checker fails if the migrated unary
+domain differs from the inherited one or if the conservation space omits any of it.
 
 ## What this does not establish
 

@@ -200,6 +200,16 @@ def main() -> int:
     parser.add_argument("--output", default="experiments/M090/RESULT.json")
     arguments = parser.parse_args()
 
+    prior_attempts = []
+    for path in sorted((ROOT / "experiments/M090").glob("WITHDRAWN_RESULT_*.json")):
+        superseded = json.loads(path.read_text(encoding="utf-8"))
+        prior_attempts.append({
+            "artifact": path.name,
+            "result_digest": superseded["result_digest"],
+            "verdict": superseded["evaluation"]["verdict"],
+            "failed_conditions": superseded["evaluation"]["failed_conditions"],
+        })
+
     protocol_bytes = (ROOT / arguments.protocol).read_bytes()
     protocol = json.loads(protocol_bytes.decode("utf-8"))
     chronology: list[dict[str, object]] = []
@@ -289,8 +299,12 @@ def main() -> int:
         "evaluation": verdict,
         "model_calls": 0,
         "network_calls": 0,
-        "attempt": 1,
-        "retry_used": False,
+        # Attempt provenance is read from the preserved superseded runs rather than asserted.
+        # External review of PR #138 was right that a re-execution of a frozen protocol after
+        # inspecting a completed result is another attempt, whatever changed between them.
+        "attempt": len(prior_attempts) + 1,
+        "retry_used": bool(prior_attempts),
+        "prior_attempts": prior_attempts,
         "reattempts_m089": False,
     }
     result["result_digest"] = digest_of(

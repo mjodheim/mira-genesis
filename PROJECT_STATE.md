@@ -94,7 +94,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
 - **M090 makes the meta-language state-owned, and H36 is supported.** Protocol frozen at
-  `ffe5086`; result `27b9501a...027091`, attempt 1, twelve conditions computed and passed. This is the
+  `ffe5086`; result `79876238...f8d8bd`, **attempt 3 after two disclosed corrections**, twelve conditions
+  computed and passed. This is the
   precondition D059 demanded rather than a research question: M089's `execute` dispatched base
   operations from the module constant `L0_OPERATIONS`, so `language.base_operations` was
   serialized, digested and rolled back while being consulted by nothing, and with an empty registry
@@ -112,12 +113,16 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   primitive. The historical control reproduces M089's defect exactly — stripping its serialized base
   operations changes nothing. **H35 remains not supported**: M089's qualification is neither
   replayed nor modified, and the probe extension here is authored and labelled as such everywhere.
-  **Amendment A1 flipped the verdict and is disclosed in full**: the first run was negative on P11
+  **Two amendments are disclosed in full. A1 flipped the verdict**: the first run was negative on P11
   because the host-authority scanner matched raw source text and flagged the module docstring that
   *describes* the M089 defect; an AST check confirmed no such name existed in code, the scanner was
   corrected, and the superseded negative run is preserved in the repository with its digest. That
   is the opposite of the M089 case — there the failing condition measured a true property and the
-  negative stood; here it measured a false one because the instrument was broken. **No gate
+  negative stood; here it measured a false one because the instrument was broken. **A2 was a real
+  defect in the system under test**: `identity` had widened the migrated unary domain beyond M089's
+  while the conservation report excluded that very operator, so conservation passed unproved. Both
+  superseded runs are preserved with their digests, and the checker now derives the attempt number
+  from them rather than accepting a declared one. **No gate
   advances.** The next ceiling is the **interpreter substrate**, which remains authored. See D060
   and H36.
 - **M089 is a preserved negative: the base language was never executable state.** Protocol frozen

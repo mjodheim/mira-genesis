@@ -97,8 +97,8 @@ def legacy_alphabet() -> list[tuple[str, tuple[object, ...]]]:
         for index in range(INPUT_COUNT):
             alphabet.append(("COPY_INPUT", (slot, index)))
         for operator in UNARY_OPERATORS:
-            if operator == "identity":
-                continue  # M089's unary set had no identity; excluded from the conservation space
+            # No exclusions. An operator excluded from the conservation space is an operator whose
+            # conservation is not proved, which is exactly how the first draft hid a widened domain.
             alphabet.append(("APPLY_UNARY", (slot, operator)))
     return alphabet
 

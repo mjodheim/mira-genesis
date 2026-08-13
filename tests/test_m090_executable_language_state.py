@@ -376,10 +376,40 @@ def result() -> dict[str, object]:
     return json.loads(RESULT_PATH.read_text(encoding="utf-8"))
 
 
-def test_the_result_is_a_single_unretried_attempt(result: dict[str, object]) -> None:
-    assert result["attempt"] == 1 and result["retry_used"] is False
+def test_the_result_records_truthful_attempt_provenance(result: dict[str, object]) -> None:
+    """PR #138: re-running a frozen protocol after inspecting a result is another attempt.
+
+    The attempt number is derived from the preserved superseded artifacts, so a positive cannot be
+    dressed as a first-run result while earlier runs sit in the directory.
+    """
+
+    preserved = sorted(
+        path.name for path in (ROOT / "experiments/M090").glob("WITHDRAWN_RESULT_*.json")
+    )
+    assert preserved, "a re-run must preserve what it superseded"
+    assert result["attempt"] == len(preserved) + 1
+    assert result["retry_used"] is bool(preserved)
+    assert sorted(item["artifact"] for item in result["prior_attempts"]) == preserved
+    for item in result["prior_attempts"]:
+        superseded = json.loads(
+            (ROOT / "experiments/M090" / item["artifact"]).read_text(encoding="utf-8")
+        )
+        assert superseded["result_digest"] == item["result_digest"]
     assert result["model_calls"] == 0 and result["network_calls"] == 0
     assert result["reattempts_m089"] is False
+
+
+def test_the_migrated_unary_domain_equals_the_inherited_one(result: dict[str, object]) -> None:
+    """PR #138: `identity` had widened the accepted domain while conservation excluded it."""
+
+    from metamorphosis.m089_meta_language import UNARY_FUNCTIONS
+    from metamorphosis.m090_language import UNARY_OPERATORS
+
+    assert set(UNARY_OPERATORS) == set(UNARY_FUNCTIONS)
+    covered = {arg for name, (_slot, arg) in legacy_alphabet() if name == "APPLY_UNARY"}
+    assert covered == set(UNARY_OPERATORS), "the conservation space excludes part of the domain"
+    with pytest.raises(LanguageError):
+        execute((("APPLY_UNARY", (0, "identity")),), (1, 2, 3), migrated_l0())
 
 
 def test_the_result_makes_no_claim_about_h35(result: dict[str, object]) -> None:
