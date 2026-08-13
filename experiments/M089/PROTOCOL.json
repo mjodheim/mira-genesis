@@ -1,0 +1,221 @@
+{
+  "L0": {
+    "constants": [
+      0,
+      1
+    ],
+    "digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+    "enumerated_signatures_at_length_3": 175,
+    "inputs": 3,
+    "invariant": "every L0 program leaves every slot dependent on at most one input position",
+    "invariant_proof": "induction over program length: SET_CONST clears the dependency set, COPY_INPUT sets it to one index, APPLY_UNARY is one-argument and leaves it unchanged; no operation reads two values, so the bound holds at any length and any budget",
+    "max_sources_reachable": 1,
+    "operations": [
+      "SET_CONST",
+      "COPY_INPUT",
+      "APPLY_UNARY"
+    ],
+    "slots": 4,
+    "unary_functions": [
+      "dec",
+      "double",
+      "inc",
+      "neg"
+    ]
+  },
+  "arms": [
+    "evolvable_meta_language",
+    "fixed_meta_language",
+    "extension_acquisition_ablated",
+    "extension_built_but_not_registered",
+    "macro_only_extension",
+    "more_budget_same_meta_language",
+    "fresh_agent",
+    "authored_correct_primitive"
+  ],
+  "budget_arm_semantics": "each repetition is a COMPLETE independent exhaustive search over Closure(L0); counters are never multiplied",
+  "budget_multiple": 100,
+  "ceiling_arm_is_not_evidence_about_the_lineage": true,
+  "ceiling_arms": [
+    "authored_correct_primitive"
+  ],
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "general_autonomy": false,
+    "general_programming_language_invention": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "genesis_gate_4": false,
+    "human_ceiling_removed": false,
+    "independent_reproduction": false,
+    "open_ended_evolution": false,
+    "production_authority": false,
+    "recursive_self_improvement": false,
+    "substrate_S_is_authored": true
+  },
+  "conditions": [
+    "P1_l0_provably_cannot_express_the_transformation",
+    "P2_primitive_constructed_from_substrate_after_rejections",
+    "P3_primitive_not_macro_reducible_to_l0",
+    "P4_primitive_independently_validated",
+    "P5_language_extended_and_versioned",
+    "P6_transformation_constructible_only_under_l1",
+    "P7_capability_discordance_against_fixed",
+    "P8_macro_only_and_unregistered_extensions_both_fail",
+    "P9_more_budget_same_language_cannot_close_it",
+    "P10_language_persisted_and_restored_on_both_sides"
+  ],
+  "date_frozen": "2026-08-13",
+  "development_task": {
+    "family": "pairwise_combination",
+    "public_inputs": [
+      [
+        1,
+        2,
+        3
+      ],
+      [
+        0,
+        4,
+        1
+      ],
+      [
+        2,
+        2,
+        5
+      ]
+    ],
+    "stated_as": "target behaviour only; no operation, primitive or program is named",
+    "task_id": "development_pairwise"
+  },
+  "extension_substrate_S": {
+    "amendment": "A1: PR #137 observed that max_body_length=5 is the bound on EXECUTING a body while construction enumerates to length 4, and that quoting both adjacently implied the counts covered length 5. The construction bound is now stated explicitly and every count is recomputed at it. No threshold, arm or condition changed.",
+    "binary_operators": [
+      "add",
+      "sub",
+      "mul",
+      "max"
+    ],
+    "bodies_breaking_the_l0_invariant": 8,
+    "candidate_bodies_enumerable": 54240,
+    "construction_enumeration_bound": 4,
+    "max_body_length": 5,
+    "max_body_length_is_execution_bound_not_construction_bound": true,
+    "max_stack_depth": 8,
+    "micro_operations": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "parameter_kinds": [
+      "slot",
+      "input",
+      "input"
+    ],
+    "well_formed_bodies_at_construction_bound": 904,
+    "why_S_is_not_the_answer": "S is lower level than L0, not a superset: it has no notion of a program over an input record, no sequencing against a task, and cannot be executed by the lineage at all unless a body is first registered as an L0 primitive. No micro-operation is a finished primitive, and a body must be assembled from several before it does anything."
+  },
+  "external_model_permitted_during_scientific_run": false,
+  "falsifiers": [
+    "the adopted primitive is a macro of L0",
+    "the primitive came from an authored catalogue of finished functions",
+    "the transformation is constructible under L0",
+    "more budget inside Closure(L0) succeeds",
+    "the macro-only arm succeeds",
+    "the built-but-not-registered arm succeeds",
+    "the primitive is never used",
+    "the primitive receives authority L0 did not have",
+    "the validator encodes the solution",
+    "the substrate contains the finished primitive",
+    "the gain is only search cost, code size or latency",
+    "fresh_agent receives the extension",
+    "cross-family reuse rebuilds the primitive",
+    "rollback does not restore the language on both sides",
+    "qualification existed before adoption",
+    "an external model contributes",
+    "a second run replaces the first"
+  ],
+  "hypothesis": "H35",
+  "m055_falsifier": {
+    "control_arm": "macro_only_extension",
+    "name": "no_m055_style_compositional_false_positive",
+    "statement": "D019 closed M055 because the acquired expression was already inside the grammar closure: 737 candidates without the acquisition against 48 with it, making the search cheaper and nothing newly reachable",
+    "test": "a primitive whose maximum source fanout is at most one cannot break L0's invariant and is therefore macro-reducible; the adopted primitive must exceed it"
+  },
+  "milestone": "M089",
+  "predecessor": {
+    "ceiling_attacked": "the meta-language itself remained authored; the lineage composed operations we wrote and invented none",
+    "milestone": "M088"
+  },
+  "primitive_contract_fields": [
+    "primitive_id",
+    "arity",
+    "parameter_kinds",
+    "body",
+    "semantics_digest",
+    "implementation_digest",
+    "provenance",
+    "validation_receipt",
+    "capabilities",
+    "introduced_in_version"
+  ],
+  "qualification": {
+    "drawn_after": "T12_language_serialized",
+    "families": 2,
+    "materialized_by": "separate process",
+    "pool_importable_by_lineage": false,
+    "pool_location": "scripts/materialize_m089_qualification.py"
+  },
+  "retry_policy": {
+    "attempts": 1,
+    "negative_result_preserved": true,
+    "new_salt_permitted": false,
+    "reroll_permitted": false,
+    "successor_requires_new_milestone_and_protocol": true
+  },
+  "schema": "m089-protocol-v1",
+  "search": {
+    "exhaustive": true,
+    "max_length": 2
+  },
+  "semantics_over_names": "validation compares an extensional semantics digest computed over every legal parameter binding; a primitive with the expected name and different behaviour is refused, and two extensionally equal implementations are recognised as equal",
+  "status": "frozen_before_qualification_materialization",
+  "subtitle": "The lineage extends the language it uses to improve itself",
+  "title": "Endogenous Meta-Language Extension",
+  "track": "A",
+  "two_capabilities_both_required": [
+    "construct a primitive not macro-reducible to L0",
+    "registering it makes a previously inexpressible transformation constructible and correctness-critical"
+  ],
+  "validator": {
+    "checks": [
+      "typing and termination on every legal binding",
+      "authority: capabilities must be within the permitted set",
+      "declared semantics match the implementation",
+      "not macro-reducible to L0",
+      "no regression on retained behaviours"
+    ],
+    "forbidden_capabilities": [
+      "filesystem",
+      "network",
+      "credentials",
+      "repository_write",
+      "merge",
+      "production",
+      "evaluator",
+      "science_gate"
+    ],
+    "independent_of_builder": true,
+    "permitted_capabilities": [
+      "pure_slot_write"
+    ],
+    "sees_qualification": false
+  },
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail"
+}

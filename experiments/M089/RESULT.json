@@ -1,0 +1,1335 @@
+{
+  "adopted_primitive_max_source_fanout": 2,
+  "arms": {
+    "authored_correct_primitive": {
+      "arm": "authored_correct_primitive",
+      "correct_terminal_decisions": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": true,
+          "family": "composed_combination",
+          "hidden_passed": 3,
+          "hidden_total": 3,
+          "language_digest": "6c2c3512349ec9a32ef4d565c841eba9270b5f40808f3b3ae982b453c0736f08",
+          "language_version": 1,
+          "search": {
+            "found": true,
+            "program": [
+              [
+                "acquired_primitive_1",
+                [
+                  2,
+                  1,
+                  2
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  2,
+                  "neg"
+                ]
+              ]
+            ],
+            "programs_examined": 4347,
+            "uses_registered_primitive": true
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": true,
+          "family": "repeated_combination",
+          "hidden_passed": 3,
+          "hidden_total": 3,
+          "language_digest": "6c2c3512349ec9a32ef4d565c841eba9270b5f40808f3b3ae982b453c0736f08",
+          "language_version": 1,
+          "search": {
+            "found": true,
+            "program": [
+              [
+                "acquired_primitive_1",
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              [
+                "acquired_primitive_1",
+                [
+                  2,
+                  1,
+                  2
+                ]
+              ]
+            ],
+            "programs_examined": 2796,
+            "uses_registered_primitive": true
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [
+        "composed_combination",
+        "repeated_combination"
+      ],
+      "is_ceiling": true,
+      "language_digest": "6c2c3512349ec9a32ef4d565c841eba9270b5f40808f3b3ae982b453c0736f08",
+      "language_version": 1,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [
+        "acquired_primitive_1"
+      ],
+      "repetitions": 1,
+      "total_programs_examined": 7143,
+      "uses_registered_primitive": true
+    },
+    "evolvable_meta_language": {
+      "arm": "evolvable_meta_language",
+      "correct_terminal_decisions": 2,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": true,
+          "family": "composed_combination",
+          "hidden_passed": 3,
+          "hidden_total": 3,
+          "language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+          "language_version": 1,
+          "search": {
+            "found": true,
+            "program": [
+              [
+                "acquired_primitive_1",
+                [
+                  2,
+                  1,
+                  2
+                ]
+              ],
+              [
+                "APPLY_UNARY",
+                [
+                  2,
+                  "neg"
+                ]
+              ]
+            ],
+            "programs_examined": 4347,
+            "uses_registered_primitive": true
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": true,
+          "family": "repeated_combination",
+          "hidden_passed": 3,
+          "hidden_total": 3,
+          "language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+          "language_version": 1,
+          "search": {
+            "found": true,
+            "program": [
+              [
+                "acquired_primitive_1",
+                [
+                  0,
+                  0,
+                  1
+                ]
+              ],
+              [
+                "acquired_primitive_1",
+                [
+                  2,
+                  1,
+                  2
+                ]
+              ]
+            ],
+            "programs_examined": 2796,
+            "uses_registered_primitive": true
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [
+        "composed_combination",
+        "repeated_combination"
+      ],
+      "is_ceiling": false,
+      "language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+      "language_version": 1,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [
+        "acquired_primitive_1"
+      ],
+      "repetitions": 1,
+      "total_programs_examined": 7143,
+      "uses_registered_primitive": true
+    },
+    "extension_acquisition_ablated": {
+      "arm": "extension_acquisition_ablated",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [],
+      "repetitions": 1,
+      "total_programs_examined": 2664,
+      "uses_registered_primitive": false
+    },
+    "extension_built_but_not_registered": {
+      "arm": "extension_built_but_not_registered",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": "e499ebbc9764ad5d830aaa393402000bb9c189ebf1f7e247c8ff72f03ca63d44",
+      "registered_primitive_ids": [],
+      "repetitions": 1,
+      "total_programs_examined": 2664,
+      "uses_registered_primitive": false
+    },
+    "fixed_meta_language": {
+      "arm": "fixed_meta_language",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [],
+      "repetitions": 1,
+      "total_programs_examined": 2664,
+      "uses_registered_primitive": false
+    },
+    "fresh_agent": {
+      "arm": "fresh_agent",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [],
+      "repetitions": 1,
+      "total_programs_examined": 2664,
+      "uses_registered_primitive": false
+    },
+    "macro_only_extension": {
+      "arm": "macro_only_extension",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 1332,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [],
+      "repetitions": 1,
+      "total_programs_examined": 2664,
+      "uses_registered_primitive": false
+    },
+    "more_budget_same_meta_language": {
+      "arm": "more_budget_same_meta_language",
+      "correct_terminal_decisions": 0,
+      "encounter_count": 2,
+      "encounters": [
+        {
+          "correct": false,
+          "family": "composed_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 133200,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_composed_neg_21"
+        },
+        {
+          "correct": false,
+          "family": "repeated_combination",
+          "hidden_passed": 0,
+          "hidden_total": 3,
+          "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+          "language_version": 0,
+          "search": {
+            "found": false,
+            "program": [],
+            "programs_examined": 133200,
+            "uses_registered_primitive": false
+          },
+          "task_id": "q_repeated_a"
+        }
+      ],
+      "families_with_correct_decision": [],
+      "is_ceiling": false,
+      "language_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "language_version": 0,
+      "primitive_built_but_not_registered": null,
+      "registered_primitive_ids": [],
+      "repetitions": 100,
+      "total_programs_examined": 266400,
+      "uses_registered_primitive": false
+    }
+  },
+  "attempt": 1,
+  "chronology": {
+    "adoption_precedes_qualification": true,
+    "order": [
+      "T0_protocol_frozen",
+      "T2_l0_digest_frozen",
+      "T3_substrate_frozen",
+      "T4_development_materialized",
+      "T5_l0_proved_insufficient",
+      "T6_primitive_candidates_constructed",
+      "T7_disposable_validation",
+      "T8_primitive_selected",
+      "T10_rollback_before_extension",
+      "T11_l1_adopted",
+      "T12_l1_serialized",
+      "T13_qualification_materialized",
+      "T14_arms_executed",
+      "T15_hidden_evaluation_complete",
+      "T17_rollback_after_extension"
+    ],
+    "ordered": true,
+    "steps": [
+      {
+        "index": 0,
+        "protocol_digest": "3c9b32f64b1fddc7dd3e5c07ccc1583c55cc42d4a31f831170a299c47b2494a3",
+        "step": "T0_protocol_frozen"
+      },
+      {
+        "index": 1,
+        "l0_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+        "step": "T2_l0_digest_frozen"
+      },
+      {
+        "index": 2,
+        "step": "T3_substrate_frozen",
+        "substrate": [
+          "PUSH_INPUT",
+          "PUSH_SLOT",
+          "PUSH_CONST",
+          "BINOP",
+          "UNOP",
+          "DUP",
+          "SWAP",
+          "STORE_SLOT"
+        ]
+      },
+      {
+        "index": 3,
+        "step": "T4_development_materialized",
+        "task_id": "development_pairwise"
+      },
+      {
+        "exhaustive_search_found": false,
+        "index": 4,
+        "max_sources_reachable": 1,
+        "required_sources": 2,
+        "step": "T5_l0_proved_insufficient"
+      },
+      {
+        "constructed": 85,
+        "index": 5,
+        "step": "T6_primitive_candidates_constructed",
+        "validated": 85
+      },
+      {
+        "index": 6,
+        "rejected": 84,
+        "step": "T7_disposable_validation"
+      },
+      {
+        "implementation_digest": "e499ebbc9764ad5d830aaa393402000bb9c189ebf1f7e247c8ff72f03ca63d44",
+        "index": 7,
+        "max_source_fanout": 2,
+        "semantics_digest": "8948ef622fe0566aee2be9555fd7e8949f4ab7c7aafdddaf7b283565038e84d2",
+        "step": "T8_primitive_selected"
+      },
+      {
+        "index": 8,
+        "ok": true,
+        "step": "T10_rollback_before_extension"
+      },
+      {
+        "index": 9,
+        "l1_version": 1,
+        "step": "T11_l1_adopted"
+      },
+      {
+        "index": 10,
+        "l1_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+        "step": "T12_l1_serialized"
+      },
+      {
+        "artifact_digest": "21670c64729c6de567ca294cc4021320b07a891b45b4dac61953df7de16eb230",
+        "index": 11,
+        "materialized_by": "separate process",
+        "pool_present_in_this_process": false,
+        "salt_digest": "9dca1ec6158af7a97304be6dcf8953abded8f4628cd58cc338c09dd083d999a0",
+        "step": "T13_qualification_materialized",
+        "task_ids": [
+          "q_composed_neg_21",
+          "q_repeated_a"
+        ]
+      },
+      {
+        "arms": [
+          "evolvable_meta_language",
+          "fixed_meta_language",
+          "extension_acquisition_ablated",
+          "extension_built_but_not_registered",
+          "macro_only_extension",
+          "more_budget_same_meta_language",
+          "fresh_agent",
+          "authored_correct_primitive"
+        ],
+        "index": 12,
+        "step": "T14_arms_executed"
+      },
+      {
+        "index": 13,
+        "step": "T15_hidden_evaluation_complete"
+      },
+      {
+        "index": 14,
+        "ok": true,
+        "step": "T17_rollback_after_extension"
+      }
+    ]
+  },
+  "conditions_declared": [
+    "P1_l0_provably_cannot_express_the_transformation",
+    "P2_primitive_constructed_from_substrate_after_rejections",
+    "P3_primitive_not_macro_reducible_to_l0",
+    "P4_primitive_independently_validated",
+    "P5_language_extended_and_versioned",
+    "P6_transformation_constructible_only_under_l1",
+    "P7_capability_discordance_against_fixed",
+    "P8_macro_only_and_unregistered_extensions_both_fail",
+    "P9_more_budget_same_language_cannot_close_it",
+    "P10_language_persisted_and_restored_on_both_sides"
+  ],
+  "development": {
+    "adopted_primitive": {
+      "arity": 3,
+      "body": [
+        [
+          "PUSH_INPUT",
+          "$1"
+        ],
+        [
+          "PUSH_INPUT",
+          "$2"
+        ],
+        [
+          "BINOP",
+          "add"
+        ],
+        [
+          "STORE_SLOT",
+          "$0"
+        ]
+      ],
+      "capabilities": [
+        "pure_slot_write"
+      ],
+      "implementation_digest": "e499ebbc9764ad5d830aaa393402000bb9c189ebf1f7e247c8ff72f03ca63d44",
+      "introduced_in_version": 1,
+      "parameter_kinds": [
+        "slot",
+        "input",
+        "input"
+      ],
+      "primitive_id": "acquired_primitive_1",
+      "provenance": [
+        "substrate"
+      ],
+      "semantics_digest": "8948ef622fe0566aee2be9555fd7e8949f4ab7c7aafdddaf7b283565038e84d2",
+      "validation_receipt": "c4dd1ca1fd5a1c365b54ba7b7499488385c11fed1c9ac46e4c7bc84e89f3ed7d"
+    },
+    "candidates_constructed": 85,
+    "candidates_validated": 85,
+    "development_program": [
+      [
+        "acquired_primitive_1",
+        [
+          0,
+          1,
+          2
+        ]
+      ]
+    ],
+    "insufficiency_proof": {
+      "invariant": "every L0 program leaves every slot dependent on at most one input position",
+      "invariant_holds_for_l0": true,
+      "l0_exhaustive_search_found_program": false,
+      "l0_max_sources_reachable": 1,
+      "l0_programs_examined": 1332,
+      "l0_signatures_enumerated": 175,
+      "task_id": "development_pairwise",
+      "task_outside_l0_constructive_image": true,
+      "task_required_sources": 2
+    },
+    "l0_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+    "l1_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+    "l1_version": 1,
+    "rejected": [
+      {
+        "implementation_digest": "2702405c80e863e67afdfb3f47b2622d9f1ed39517a04c940bfb9a8463b686bf",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "a3ab90c61c18de92596ba3f443c7af4f23a8b1a864022a8184eb1a5ba1ff488a",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "c7aa2abac5697ab4ffe3d3cb20dafe355753006a1fb77defe88d4e8eeafda359",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "6d35063b94d06fc9bbe07fdb994767eda8dc195e3c26c7bc49e7b73bd906fabd",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "0bcfae6baf8704ba5de5a7fda486205abb2ed3dec7f312e18b7f349a764380f1",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ec4307c22256d8d85c164761c1d7de2fdc54735f6ccb132ffe0fcbf216714874",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "8d261d0ec0117e8a617edd6d4444c72f6a35124a98428667f00bde2183221368",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "d2bc51f34aea96ecedfc20a42538751bf97577f9b698511a4c992ff7ba47db9d",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "548284e1ceb566a6c336bb401a5e652c6496c997f1e1c558ca1d193dedfa72ad",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "69fd2c05a773f2e479c0c0771f26a9c45fba0e40385d0c95a1e512d5015f7fcb",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "a8da1581c161b793b93c4964e40d32537f2a69b28784e9654cf0e2482b820691",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "424e44f1dec7ee3d244d4d0ec8e4ef9e4953365b27d88a505b8c441a8c06f407",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "98680d142f45a80887ba4f09a76c0d1c191ebd7a1d50106685fb384798037d25",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "671900eb2123fe47e9233c85f3f6e8df40a1e4173b7582b94f26563a63172607",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "70f1af049a7e0d35669baeb492616e43680f85a68e761af81c4536fb984adb59",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "646f8b9b62e85917ded490dadda903d8c5876114df44a49eac72ef50a24da4ca",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "639fb5d402f0f0c24427b01dcce6632f53465cbf4501fbf5c2dabe2854d51748",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "42223d90dfff5f2e5598676ef2ec24f05f4411078b3f65adb381fb0bd2b21fcb",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "5981121438f1c0c0e164dba2de251d05b2b72d22e8bffbd3a87635e103c44893",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "848e15e78aa4936c07bc9e51fb17436a3c1a2f202bdb95f65cec923b2e7dbead",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "deb0ac342c13a14212da379f7b79a8484339dfa55ca1eddf20d6bdb5bf3d4512",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "471d596557cedfb28f3f4321b1c28cfb1a27e41c55c87fe27a30762c0e6ba196",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "11a91078506f17465c7be50c6db6cd8cd7e7360945f2f072e6818787dd5ea379",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "de429d950a372f24d6d8626549b87020939ff2e496a57894ad3d0c5160b20ebf",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "54da8579543bc61be5d4eb45530a1fd7315abbc77273b031d1efdfd42bc43467",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "8f5a775646f2d13fe423e193a09c460025c90d27c7fbb29746d7806c4c28bce1",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ce4440ce89c493ab82489e73a4db3965604d8a869a4f4588e5b17df1dabb0555",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "64b56afc7d0759809d83fe7f70e97e49ed1bf757a3dc260ae7a9575d213801d4",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "10d85f7f70ba26634f7f1754c05bd0742044d958759614796ff74b8db5b625c2",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "903898dd10331fc3c457c6d6fbeab85ad268b643b590532a320e319b32678437",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "cc95e349887bc06c9aefdccd898bda0c891e07a0b51ca169ca05409e7529d7fe",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "02f752b81ef48c2b6972dce854a3b07ece41911fd35b71c403f3a240914bbd08",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "c4ef0ee7ec28a6da890710c09ba72e3d28ee536cf4ef29d0f515668c61ee8307",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "177db8c6c0d24f3b7934c3d5fcb2db127be2a29e8681ef77d770bf214e9d021d",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "c9328670a6bc8c0f6780c544e020677410f1cddd80db2045e7bca46cb4334066",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "5f5d7b6b68284eeecb46625847fbab025ac7cf1460f01cfed09cd8c36435699c",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ab80753b706c3b1413b78dc26bcfdb453d60b1f71f434307d4c201a1322a97d2",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "4d8ea678b6686e3e69376d5491194152019c0565d93405d3f58b3b4a57294770",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "e0c0d3898d9320688bf49a4b6612bc06827d036367038d33607b3c3983ad2579",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "f8b08dab44d9ee54cdf6d9cc4b32aa998507a470ba720798735660ae0c5f4e82",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "787726cd9f4e4dc22c0f8efce6e1165bd79d63b94e1cd6f37bcaf431d9947ba7",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "b3c722e8c4c427671ec8e5ee56e99ac2aa9677abe170b7275f8ad8bbd668ad26",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "51174f5616fed91b3e10f635fa8c05087327dfb3aa910b5df46424817cd21cb9",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "4374f20f0757b0814ffede1abf624924553804587e195147e347f3b02803205c",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "b58cbdf5f606b8f190d1a5be9a4d10f65e36124258806754bb58f6fadb3dab4f",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ca48368109b1742aad16cb7502bd5dac5bfe290df68cffa11919ddb5618bf17e",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "e0ebd4221aa04f685533dc8ecda97b7c6ae4cb25b0aa46f56eeefe60b1896237",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "43a2363706c71e4afe137a26437f4b1c44ba711814c5c562ac2e6bdb86cda9f9",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "bf418f02c77c921f0caa361c8f939e6ce0a69a091e9190b612a444eeebced68b",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "4e580ef5bce17aacaa5ef9bcecc8311496d1aed817b89e9cea1266bee0e1050f",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "94643fabd819432d1ae375868863c2906699aecd30db2917cb6736612b3244cd",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "cd460c480121471f9d20a3959cccf6b6859705086bd7d4c9b8d98835bdd483a7",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "d7f57a0f46a168ff2b961a4bdc3b955af511a44aa78d8a05f7d9258fd76f2bc2",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "a67b6134dd1bb87341a03c838ed830216e7eeac24218cbbb2f2d27c329fdc1ce",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "f2eb36540a6c2c070b4c42c0b5f8a2490de9b591f91342b8be3e8f9b5afee533",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "13359d9d40e5505c3babd5f67d09e5bd640b333e684e8ec67c76da930048b00a",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "78fded02a7b7ea43f0cb40445da1df1d1e79e103ef464e1cbb46b1fde39c9ebf",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "0956e3e803bb62dbfebd88cdfee5e1d3438585be67eb95edd84da4568621e653",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "824a55df8833661db7e6528c942ab410420d0580c7790dc1eabebca0377b9f3d",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "74caafd329517140245a891026542d9b1f3e290a4dd65b9a6edb6436df00ee4b",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "474cc59882c2f546b6476542221382653b27cfa17880d9b29abe24fd508e6994",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "cd8049817e6cb5bcaf9615cd61014a6020cc6af48740d4058a32d05437045903",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "50e3d4f0b3d5a145f75f8b1fcd52cac68f927a5d536cb81400adc867e3374baf",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "5e6028669e16327ed5f6bb0803c1d7d3df00c52de544895c79b950c6a1d8e4ae",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "5111dab50b3bf8673997bc8157e78eb8b30a8f698aec90d280d5331bf58a4c4b",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ca16006303abea6fa219fc98352d8b709ae69da0bd7ab7c005bb93e68b5a4306",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "2a60fe381b8dc226be30f150c9ed0136090f96c21adbe605a12e01a0be46ee16",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "1bca65d52254baa2736c42cd4bc3781dd3f214bf6ba28cf3d2cda0c1a519e7fd",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "b970da02844100053ff58ecbf425a44d4a0366a0788f0f4ba7eb05cd024a0c70",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "38754f375d14799045b80f9fc8dee184cc6e265781d784a68487c40572d14f6e",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "548c77860f2a9de5496ae80d8613ace20441faf6b229aad2c305b13c298b0869",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "7aa6af5aa536366c953d34ffa04ebcc331db202d54f339235a82378de7fdc053",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "180cb9c2c557b95df2e1899346238120bb25f88c2c04837f99342ca90e8a2366",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "5a7a22fcfc033ba1affc2a7fd60a8b4dd147da60442cbfba49a95d0b14e522d8",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "a7b53d013188293a7ad089fde56a5e92a9dd3caa95320fef4ba9384572d44323",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "cc64d0021c1bd611f13962716aecdd7aa6b0026e5b4dd7d88cbb972f44ce84aa",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "207745498cc6d4b3627b25a35c2f6d70c1b11a7eb9e0a79a32741513916abd07",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "c28be838a3726a975d61c10c1b41d6436886768ea3b36e3363bd0198782662ed",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "9ac23b2c89d52fe6d49909fb88c9a7715ae065acd399bad64798eb7913b07d8e",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "3d33d26bfb5f9b6bbf51880d1e6abbaa2ea1d48713f77a740397276b063887db",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "cf87eb91481303eb6655153bcdc4074497559a08c94e3b66630a6cdd19047f40",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "0cb4f12e0099871322ec62e24d8dff7fd4f02921bf581ff10a9b6ae7ba062294",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "c206d35c749f170cf82ca97de5b39d019874e26039f36a755decc67c2beafe78",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      },
+      {
+        "implementation_digest": "ac34005f1567ebb42a915d6010825c452247c6c23189cbd53ac75e0a8232a30f",
+        "reasons": [
+          "primitive is macro-equivalent to an L0 composition"
+        ]
+      }
+    ],
+    "rejected_count": 84,
+    "validation": {
+      "accepted": true,
+      "reasons": [],
+      "receipt": "c4dd1ca1fd5a1c365b54ba7b7499488385c11fed1c9ac46e4c7bc84e89f3ed7d"
+    }
+  },
+  "evaluation": {
+    "conditions": {
+      "P10_language_persisted_and_restored_on_both_sides": false,
+      "P1_l0_provably_cannot_express_the_transformation": true,
+      "P2_primitive_constructed_from_substrate_after_rejections": true,
+      "P3_primitive_not_macro_reducible_to_l0": true,
+      "P4_primitive_independently_validated": true,
+      "P5_language_extended_and_versioned": true,
+      "P6_transformation_constructible_only_under_l1": true,
+      "P7_capability_discordance_against_fixed": true,
+      "P8_macro_only_and_unregistered_extensions_both_fail": true,
+      "P9_more_budget_same_language_cannot_close_it": true
+    },
+    "discordant_families": [
+      "composed_combination",
+      "repeated_combination"
+    ],
+    "evolvable_correct_families": [
+      "composed_combination",
+      "repeated_combination"
+    ],
+    "failed_conditions": [
+      "P10_language_persisted_and_restored_on_both_sides"
+    ],
+    "fixed_correct_families": [],
+    "hypothesis_supported": false,
+    "verdict": "negative"
+  },
+  "hypothesis": "H35",
+  "milestone": "M089",
+  "model_calls": 0,
+  "network_calls": 0,
+  "protocol_digest": "3c9b32f64b1fddc7dd3e5c07ccc1583c55cc42d4a31f831170a299c47b2494a3",
+  "protocol_raw_sha256": "fb2cf4042955b55b38371033571def2c94b62ec2d1a82bd12c16fd70bc42b27b",
+  "qualification_artifact": {
+    "artifact_digest": "21670c64729c6de567ca294cc4021320b07a891b45b4dac61953df7de16eb230",
+    "extended_language_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+    "hidden_inputs": [
+      [
+        7,
+        3,
+        5
+      ],
+      [
+        6,
+        6,
+        1
+      ],
+      [
+        -3,
+        2,
+        11
+      ]
+    ],
+    "materialized_by": "separate process",
+    "salt_digest": "9dca1ec6158af7a97304be6dcf8953abded8f4628cd58cc338c09dd083d999a0",
+    "schema": "m089-qualification-v1",
+    "specifications": [
+      {
+        "family": "composed_combination",
+        "function": "neg",
+        "kind": "sum_then_unary",
+        "left": 1,
+        "right": 2,
+        "slot": 2,
+        "task_id": "q_composed_neg_21"
+      },
+      {
+        "family": "repeated_combination",
+        "first": [
+          0,
+          0,
+          1
+        ],
+        "kind": "two_sums",
+        "second": [
+          2,
+          1,
+          2
+        ],
+        "task_id": "q_repeated_a"
+      }
+    ]
+  },
+  "result_digest": "20c432a39d91e03a63dc77dd245d704758efed221e18dcf8cf0a4e7bd5134f4b",
+  "retry_used": false,
+  "rollback": {
+    "after_extension": {
+      "byte_identical_restore": true,
+      "checkpoint_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+      "corrupted_digest": "9f573a801b023ef79b5a98f191bc43bfd572f1c2bfa8a6efee2dd2967780fcfc",
+      "corrupted_state_was_the_restored_state": true,
+      "corruption_detected": true,
+      "damaged_output": "refused",
+      "damaged_refused_the_probe": true,
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": true,
+      "intact_output": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "label": "L1",
+      "primitive_count": 1,
+      "probe_program": [
+        [
+          "acquired_primitive_1",
+          [
+            0,
+            1,
+            2
+          ]
+        ]
+      ],
+      "restored_behaviour_matches_intact": true,
+      "restored_digest": "bd06dc1996fbe38cfd582223879178df7c35114b572c03d9f1d69bdc3cd7aac7",
+      "restored_output": [
+        5,
+        0,
+        0,
+        0
+      ]
+    },
+    "before_extension": {
+      "byte_identical_restore": true,
+      "checkpoint_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "corrupted_digest": "8ab0f6d151745bc36693d7aec972acdb5606d38063bcf32253bf5ede3610bfbb",
+      "corrupted_state_was_the_restored_state": true,
+      "corruption_detected": true,
+      "damaged_output": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "damaged_refused_the_probe": false,
+      "digest_matches": true,
+      "fault_actually_changed_behaviour": false,
+      "intact_output": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "label": "L0",
+      "primitive_count": 0,
+      "probe_program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "restored_behaviour_matches_intact": true,
+      "restored_digest": "794ba65d3b094960c9cc5bf8409107d69bcc61f97c983fa75c6af5acd5c2f930",
+      "restored_output": [
+        2,
+        0,
+        0,
+        0
+      ]
+    },
+    "language_digests_differ": true
+  },
+  "salt_digest": "9dca1ec6158af7a97304be6dcf8953abded8f4628cd58cc338c09dd083d999a0",
+  "schema": "m089-result-v1"
+}

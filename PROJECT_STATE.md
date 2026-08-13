@@ -93,6 +93,31 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
 
+- **M089 is a preserved negative: the base language was never executable state.** Protocol frozen
+  at `f8ab249` before any qualification data existed; result `20c432a3...134f4b`, attempt 1, no retry.
+  **Nine of ten conditions passed and P10 failed.** The attempt attacked D058's ceiling — the
+  meta-language itself was authored — and the parts that worked worked well: L0's insufficiency is
+  proved by an invariant holding at **any** length and **any** budget, since no operation reads two
+  values while the qualifying transformations require two; 85 candidate
+  primitives were assembled from an eight-operation stack substrate and an independent validator
+  rejected 84; the adopted primitive is **not macro-reducible to L0**, which is
+  the M055 trap answered structurally rather than hopefully, and `macro_only_extension` could not
+  acquire anything at all. Registration is the causal step: `extension_built_but_not_registered`
+  builds and validates the same primitive, never registers it and scores **0/2**, while
+  `more_budget_same_meta_language` examined
+  266,400 programs against
+  2,664 inside Closure(L0) and closed nothing.
+  **P10 failed** because rollback must be behavioural on both sides of the extension: on L1 it is —
+  removing the primitive makes a probe refuse — but on **L0** `execute` dispatches base operations
+  from the module constant `L0_OPERATIONS` rather than from `language.base_operations`, so with an
+  empty registry **no** fault to the serialized state can change behaviour. There is nothing
+  executable to roll back. External review of PR #137 found the original fault changed only a
+  version number; correcting it exposed this and flipped the verdict, and **the negative is
+  preserved rather than repaired** — making `execute` read the language now would be the
+  result-saving retry D053 forbids. The milestone therefore demonstrated extension of the half of
+  the language that was state. No gate advances. The next ceiling is precisely located: make the
+  whole language, base operations included, the object the interpreter actually consults. See D059
+  and H35.
 - **M088 removes the handed-in experiment space, and H34 is supported.** Protocol frozen at
   `4d8a71a` before any qualification data existed; result `084111a1...069808`, attempt 1, ten
   conditions computed and passed. D057 left two ceilings; this attacked the second. M087's

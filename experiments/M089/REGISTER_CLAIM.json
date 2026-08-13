@@ -1,0 +1,26 @@
+{
+  "attempt": 1,
+  "cause": "L0 base operations are not executable state, so no fault to the pre-extension language can change behaviour",
+  "discordant_families": [
+    "composed_combination",
+    "repeated_combination"
+  ],
+  "failed_conditions": [
+    "P10_language_persisted_and_restored_on_both_sides"
+  ],
+  "gate_advanced": false,
+  "hypothesis": "H35",
+  "hypothesis_supported": false,
+  "independent_reproduction": false,
+  "milestone": "M089",
+  "model_calls": 0,
+  "new_primitive_constructed_not_selected": true,
+  "primitive_macro_reducible_to_l0": false,
+  "protocol_raw_sha256": "fb2cf4042955b55b38371033571def2c94b62ec2d1a82bd12c16fd70bc42b27b",
+  "qualification_materialized_by_separate_process": true,
+  "result_digest": "20c432a39d91e03a63dc77dd245d704758efed221e18dcf8cf0a4e7bd5134f4b",
+  "retry_used": false,
+  "schema": "m089-register-claim-v1",
+  "substrate_authored": true,
+  "verdict": "negative"
+}

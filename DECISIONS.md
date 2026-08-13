@@ -1973,3 +1973,70 @@ that its experiment constructor could not express a discriminating observation p
 validated modification, constructed a previously inexpressible experiment, used its result for a
 correctness-critical adaptation, persisted the mechanism and reused it in structurally distinct
 environments.
+
+
+## D059 — M089 is a preserved negative; the base language was never executable state
+
+M089 attacked the ceiling D058 named: the meta-language itself was authored. Its one qualifying
+attempt is **negative**, and it is preserved.
+
+### The decision
+
+M089 is accepted as a **valid negative development result**. H35 is **not supported** by this
+attempt. Protocol frozen at `f8ab249` before any qualification data existed; result `20c432a3...134f4b`,
+attempt 1, no retry, no rerun, no new salt. **No gate advances**, and none was in play.
+
+Nine of ten conditions passed. **P10 failed.**
+
+### What failed, and why it is not a bad fault choice
+
+P10 requires behavioural restoration on both sides of the extension. On the L1 side it holds:
+removing the registered primitive makes a probe program refuse, and restoration from an
+independently preserved checkpoint recovers it exactly.
+
+On the L0 side it does not, structurally. `execute` dispatches base operations from the module
+constant `L0_OPERATIONS` rather than from `language.base_operations`, so for a language with an
+empty registry **no** fault to the serialized state can change behaviour. It is not that a weak
+fault was chosen; it is that there is nothing executable to damage. The pre-extension language has
+no state to roll back.
+
+### How this was found
+
+External review of PR #137 observed that the original L0 fault changed only a version number, which
+nothing executes, so `fault_actually_changed_behaviour` was true on metadata alone and P10 passed
+without demonstrating recovery. That finding was correct. Correcting the fault to remove a base
+operation exposed the deeper fact, and flipped the verdict from positive to negative.
+
+**The negative is preserved rather than repaired.** Making `execute` consult
+`language.base_operations` would very probably restore a positive, and doing so after seeing the
+verdict is precisely the result-saving retry D053 forbids: *"replaying it after learning why the
+first verdict was unsound would be a result-saving retry."* The correction belongs to a successor
+with its own protocol, not to this run.
+
+### What the attempt did establish
+
+The observations are sound and motivate the successor. L0's insufficiency is proved by an invariant
+that holds at any length and any budget. 85 primitives were assembled
+from an eight-operation substrate and 84 rejected by an independent validator.
+The adopted primitive is not macro-reducible to L0, which is the M055 trap answered structurally,
+and `macro_only_extension` could not acquire anything at all. Registration is the causal step:
+`extension_built_but_not_registered` builds and validates the same primitive, never registers it,
+and scores 0/2. `more_budget_same_meta_language` examined
+266,400 programs against
+2,664 inside Closure(L0) and closed nothing.
+
+None of that is qualified evidence. A positive verdict required all ten conditions and got nine.
+
+### The next causal ceiling, now precisely located
+
+Not the extension substrate, which is where D058 expected to arrive. **The base language is not
+executable state.** Only the registry is. A successor must make the whole language — base
+operations included — the thing the interpreter actually consults, so that extension and rollback
+are claims about one object rather than two. Until that holds, "the lineage extended its language"
+is a claim about the half that was state.
+
+### Claim boundary
+
+Nothing is claimed. Not AGI, not open-ended evolution, not arbitrary self-modification, not general
+programming-language invention, no gate, no independent reproduction. The extension substrate
+remains authored, and so does the base language.
