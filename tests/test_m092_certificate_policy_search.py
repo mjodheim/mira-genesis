@@ -22,6 +22,15 @@ COUNTDOWN_PROGRAM: Program = (
     ("SPUSH", 0),
     ("HALT",),
 )
+COUNTDOWN_WITH_STEP_WITNESS = {
+    "schema": "m092-affine-postcondition-v1",
+    "witnesses": ["steps"],
+    "constraints": [
+        {"relation": "eq", "coefficients": {"steps": -1, "x": 1}, "constant": 0},
+        {"relation": "eq", "coefficients": {"y": 1}, "constant": 0},
+        {"relation": "ge", "coefficients": {"steps": 1}, "constant": 0},
+    ],
+}
 
 
 def test_policy_vectors_are_path_major_deterministic_and_include_zero_policy() -> None:
@@ -71,6 +80,34 @@ def test_pathwise_generator_still_builds_a_neutral_certificate_accepted_independ
     assert accepted["status"] == "accepted"
     assert accepted["global_domain"] == "every integer x >= 0"
     assert accepted["finite_execution_used"] is False
+
+
+def test_pathwise_search_can_certify_a_neutral_explicit_step_witness() -> None:
+    selected = None
+    for record in policies.enumerate_certificate_policy_records(
+        COUNTDOWN_PROGRAM,
+        COUNTDOWN_WITH_STEP_WITNESS,
+    ):
+        if record.certificate is None:
+            continue
+        try:
+            receipt = verify_global_certificate(
+                COUNTDOWN_PROGRAM,
+                record.certificate,
+                expected_postcondition=COUNTDOWN_WITH_STEP_WITNESS,
+            )
+        except CertificateError:
+            continue
+        selected = (record, receipt)
+        break
+
+    assert selected is not None
+    record, receipt = selected
+    assert record.ghost_count >= 1
+    assert any(any(values) for _, values in record.increments)
+    assert receipt["status"] == "accepted"
+    assert receipt["ghost_counters"] >= 1
+    assert receipt["finite_execution_used"] is False
 
 
 def test_policy_search_cannot_import_verifier_or_qualification_material() -> None:
