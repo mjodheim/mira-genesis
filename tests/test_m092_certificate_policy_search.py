@@ -110,6 +110,36 @@ def test_pathwise_search_can_certify_a_neutral_explicit_step_witness() -> None:
     assert receipt["finite_execution_used"] is False
 
 
+def test_step_witness_uses_a_conjunctive_input_register_ghost_invariant() -> None:
+    record = next(
+        item
+        for item in policies.enumerate_certificate_policy_records(
+            COUNTDOWN_PROGRAM,
+            COUNTDOWN_WITH_STEP_WITNESS,
+        )
+        if item.certificate is not None
+    )
+    assert record.certificate is not None
+    loop_invariants = record.certificate["loop_invariants"]
+    assert isinstance(loop_invariants, list) and len(loop_invariants) == 1
+    constraints = loop_invariants[0]["constraints"]
+    assert isinstance(constraints, list)
+
+    # Normalisation makes g0 + r0 - x = 0 the canonical sign.  The relation is not
+    # symbolically self-preserving unless the companion invariant r1 = 1 is available;
+    # this is the regression that conjunctive induction must retain.
+    assert {
+        "relation": "eq",
+        "coefficients": {"g0": 1, "r0": 1, "x": -1},
+        "constant": 0,
+    } in constraints
+    assert {
+        "relation": "eq",
+        "coefficients": {"r1": 1},
+        "constant": -1,
+    } in constraints
+
+
 def test_policy_search_cannot_import_verifier_or_qualification_material() -> None:
     tree = ast.parse(Path(policies.__file__).read_text(encoding="utf-8"))
     project_imports: set[str] = set()
