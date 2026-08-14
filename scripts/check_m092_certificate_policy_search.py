@@ -8,6 +8,7 @@ import edge.
 from __future__ import annotations
 
 import ast
+from collections import Counter
 import hashlib
 import json
 from pathlib import Path
@@ -72,14 +73,25 @@ def main() -> int:
     if [item["ordinal"] for item in first] != list(range(1, len(first) + 1)):
         raise SystemExit("certificate policy attempt ordinals are not contiguous")
 
+    refusal_counts = Counter(
+        record.refusal or "constructed" for record in first_records
+    )
     constructed_records = [record for record in first_records if record.constructed]
     if not constructed_records:
-        raise SystemExit("neutral witness rehearsal did not construct any complete certificate")
+        diagnostic = json.dumps(dict(sorted(refusal_counts.items())), sort_keys=True)
+        raise SystemExit(
+            "neutral witness rehearsal did not construct any complete certificate; "
+            f"refusals={diagnostic}"
+        )
     if not any(
         record.ghost_count >= 1 and any(any(values) for _, values in record.increments)
         for record in constructed_records
     ):
-        raise SystemExit("neutral witness rehearsal never exercised an incrementing ghost policy")
+        diagnostic = json.dumps(dict(sorted(refusal_counts.items())), sort_keys=True)
+        raise SystemExit(
+            "neutral witness rehearsal never exercised an incrementing ghost policy; "
+            f"refusals={diagnostic}"
+        )
 
     constructed = len(constructed_records)
     refused = len(first) - constructed
@@ -93,6 +105,10 @@ def main() -> int:
         "attempts": len(first),
         "constructed": constructed,
         "refused": refused,
+        "refusals_by_reason": dict(sorted(
+            (reason, count) for reason, count in refusal_counts.items()
+            if reason != "constructed"
+        )),
         "incrementing_ghost_policy_constructed": True,
         "ordinals_contiguous": True,
         "deterministic": True,
