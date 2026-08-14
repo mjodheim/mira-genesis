@@ -34,11 +34,10 @@ get confused: `can execute` is not `has registered`.
 from __future__ import annotations
 
 import hashlib
-import json
 from dataclasses import dataclass, field
 from typing import Mapping, Sequence
 
-from metamorphosis.m090_language import LanguageError
+from metamorphosis.m092_runtime import RefusalCode, SubstrateError, canonical_bytes
 
 KERNEL_SCHEMA = "m092-k1-lower-kernel-v1"
 
@@ -52,12 +51,11 @@ FUEL_BASE = 256
 FUEL_SLOPE = 4
 
 
-class KernelError(LanguageError):
+class KernelError(SubstrateError):
     """Raised when a K1 program refuses, faults or exhausts its resources.
 
-    It subclasses `LanguageError` so that a refusal from state-owned execution is the same kind of
-    event as a refusal from the frozen reference interpreter. Conservation compares refusals, and
-    two different exception hierarchies would have made that comparison meaningless.
+    It carries a `RefusalCode` rather than a message, so conservation can compare *why* two
+    implementations refused instead of merely observing that both did.
     """
 
 
@@ -94,12 +92,6 @@ Instruction = tuple[object, ...]
 Program = tuple[Instruction, ...]
 
 
-def canonical_bytes(value: object) -> bytes:
-    return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), ensure_ascii=False,
-    ).encode("utf-8")
-
-
 def program_to_list(program: Sequence[Instruction]) -> list[list[object]]:
     return [[str(step[0]), *[int(operand) for operand in step[1:]]] for step in program]
 
@@ -123,26 +115,26 @@ def validate_program(program: Sequence[Instruction]) -> None:
     """
 
     if not program:
-        raise KernelError("a K1 program may not be empty")
+        raise KernelError(RefusalCode.MALFORMED_PROGRAM, "empty program")
     if len(program) > MAX_PROGRAM_LENGTH:
-        raise KernelError("K1 program exceeds the frozen length bound")
+        raise KernelError(RefusalCode.MALFORMED_PROGRAM, "program exceeds the length bound")
     for index, step in enumerate(program):
         if not step:
-            raise KernelError(f"instruction {index} is empty")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"instruction {index} is empty")
         opcode = step[0]
         roles = INSTRUCTION_SET.get(str(opcode))
         if roles is None:
-            raise KernelError(f"unknown K1 opcode {opcode!r}")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"unknown opcode {opcode!r}")
         operands = step[1:]
         if len(operands) != len(roles):
-            raise KernelError(f"{opcode} expects {len(roles)} operands, received {len(operands)}")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"{opcode} operand count")
         for operand, role in zip(operands, roles, strict=True):
             if not isinstance(operand, int) or isinstance(operand, bool):
-                raise KernelError(f"{opcode} operand {operand!r} is not an integer")
+                raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"{opcode} operand is not an integer")
             if role == "r" and not 0 <= operand < REGISTER_COUNT:
-                raise KernelError(f"{opcode} register operand {operand} is out of range")
+                raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"{opcode} register operand out of range")
             if role == "t" and not 0 <= operand < len(program):
-                raise KernelError(f"{opcode} jump target {operand} is outside the program")
+                raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"{opcode} jump target outside the program")
 
 
 def has_backward_jump(program: Sequence[Instruction]) -> bool:
@@ -209,9 +201,9 @@ def execute_program(
     counter = 0
     while True:
         if machine.steps >= fuel:
-            raise KernelError("K1 program exhausted its fuel")
+            raise KernelError(RefusalCode.RESOURCE_EXHAUSTED, "fuel exhausted")
         if not 0 <= counter < len(program):
-            raise KernelError("K1 program ran off the end without halting")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, "ran off the end without halting")
         machine.steps += 1
         step = program[counter]
         opcode = str(step[0])
@@ -221,7 +213,7 @@ def execute_program(
         if opcode == "HALT":
             return machine
         if opcode == "FAIL":
-            raise KernelError("K1 program executed FAIL")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, "explicit FAIL")
         if opcode == "LOADI":
             registers[operands[0]] = operands[1]
         elif opcode == "MOV":
@@ -253,35 +245,75 @@ def execute_program(
             registers[operands[0]] = len(machine.stack)
         elif opcode == "SPUSH":
             if len(machine.stack) >= MAX_KERNEL_STACK:
-                raise KernelError("K1 stack guard exceeded")
+                raise KernelError(RefusalCode.RESOURCE_EXHAUSTED, "kernel stack guard exceeded")
             machine.stack.append(registers[operands[0]])
         elif opcode == "SPOP":
             if not machine.stack:
-                raise KernelError("SPOP on an empty stack")
+                raise KernelError(RefusalCode.STACK_UNDERFLOW, "SPOP on an empty stack")
             registers[operands[0]] = machine.stack.pop()
         elif opcode == "SPEEK":
             offset = registers[operands[1]]
             if not 0 <= offset < len(machine.stack):
-                raise KernelError("SPEEK offset outside the stack")
+                raise KernelError(RefusalCode.STACK_UNDERFLOW, "SPEEK offset outside the stack")
             registers[operands[0]] = machine.stack[-1 - offset]
         elif opcode == "GETSLOT":
             index = registers[operands[1]]
             if not 0 <= index < len(machine.slots):
-                raise KernelError("slot index out of range")
+                raise KernelError(RefusalCode.INVALID_SLOT_INDEX, "slot index out of range")
             registers[operands[0]] = machine.slots[index]
         elif opcode == "SETSLOT":
             index = registers[operands[0]]
             if not 0 <= index < len(machine.slots):
-                raise KernelError("slot index out of range")
+                raise KernelError(RefusalCode.INVALID_SLOT_INDEX, "slot index out of range")
             machine.slots[index] = registers[operands[1]]
         elif opcode == "GETINPUT":
             index = registers[operands[1]]
             if not 0 <= index < len(machine.inputs):
-                raise KernelError("input index out of range")
+                raise KernelError(RefusalCode.INVALID_INPUT_INDEX, "input index out of range")
             registers[operands[0]] = machine.inputs[index]
         else:  # pragma: no cover - validate_program has already rejected this
-            raise KernelError(f"unknown K1 opcode {opcode!r}")
+            raise KernelError(RefusalCode.MALFORMED_PROGRAM, f"unknown opcode {opcode!r}")
         counter += 1
+
+
+def fuel_policy_provenance() -> dict[str, object]:
+    """Where the fuel constants came from, recorded before any candidate exists.
+
+    The design gate asked for this because a fuel policy fitted to an eventual implementation would
+    move authored expressive power into the resource bound. Both constants are derived from the
+    kernel's own declared limits and from nothing else:
+
+    * `FUEL_BASE = 256` is `4 x MAX_PROGRAM_LENGTH`. A loop-free program cannot execute more steps
+      than it has instructions, so any straight-line program completes within `MAX_PROGRAM_LENGTH`
+      steps and the base carries a four-fold margin. The number is a round power of two above that
+      requirement, not a measured threshold.
+
+    * `FUEL_SLOPE = 4` is the smallest power of two above one. It grants headroom linear in operand
+      magnitude, which is the generic shape for any iteration whose step count is proportional to
+      the value it consumes. It is not proportional to, derived from, or tuned against any
+      particular function.
+
+    Neither constant was chosen by running a candidate. `fuel_insensitivity` in the M092-A runner
+    demonstrates that: the entire conservation result is identical across two orders of magnitude of
+    both constants, so no result here depends on their values.
+
+    They are authored, like the rest of K1, and are part of the ceiling this milestone leaves behind.
+    """
+
+    return {
+        "fuel_base": FUEL_BASE,
+        "fuel_base_origin": "4 * MAX_PROGRAM_LENGTH, rounded to a power of two",
+        "fuel_base_requirement": MAX_PROGRAM_LENGTH,
+        "fuel_base_margin": FUEL_BASE / MAX_PROGRAM_LENGTH,
+        "fuel_slope": FUEL_SLOPE,
+        "fuel_slope_origin": "smallest power of two above one; generic linear headroom",
+        "scales_with": "operand magnitude only",
+        "derived_from_a_target_value": False,
+        "derived_from_a_qualifying_world": False,
+        "fitted_to_any_candidate_implementation": False,
+        "binding_for_m092a": False,
+        "why_not_binding": "every registered M092-A program is loop-free and halts in a few steps",
+    }
 
 
 def kernel_manifest() -> dict[str, object]:
@@ -315,5 +347,6 @@ __all__ = [
     "FUEL_BASE", "FUEL_SLOPE", "INSTRUCTION_SET", "JUMP_OPCODES", "KERNEL_SCHEMA",
     "MAX_KERNEL_STACK", "MAX_PROGRAM_LENGTH", "REGISTER_COUNT", "Instruction", "KernelError",
     "Machine", "Program", "canonical_bytes", "default_fuel", "execute_program", "has_backward_jump",
-    "kernel_manifest", "program_digest", "program_from_list", "program_to_list", "validate_program",
+    "fuel_policy_provenance", "kernel_manifest", "program_digest", "program_from_list",
+    "program_to_list", "validate_program",
 ]

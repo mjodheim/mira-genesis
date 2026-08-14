@@ -1,0 +1,1804 @@
+{
+  "exit_code": 0,
+  "findings": [],
+  "isolated_root_contents": [
+    "__pycache__",
+    "driver.py",
+    "m092_kernel.py",
+    "m092_runtime.py",
+    "m092_substrate_state.py",
+    "state.json"
+  ],
+  "loaded_project_modules": [
+    "__main__",
+    "m092_kernel",
+    "m092_runtime",
+    "m092_substrate_state"
+  ],
+  "m090_language_present_in_root": false,
+  "meta_path_after": [
+    "BuiltinImporter",
+    "FrozenImporter",
+    "PathFinder"
+  ],
+  "modules_outside_the_isolated_root_or_stdlib": [],
+  "outcomes": [
+    {
+      "id": "p0",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p1",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p2",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p3",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p4",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p5",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p6",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p7",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p8",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p9",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p10",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p11",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p12",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p13",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p14",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p15",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p16",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p17",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p18",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p19",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p20",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p21",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p22",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p23",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p24",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p25",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p26",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p27",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p28",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p29",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p30",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p31",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p32",
+      "slots": [
+        3,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p33",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p34",
+      "slots": [
+        -5,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p35",
+      "slots": [
+        9,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p36",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p37",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p38",
+      "slots": [
+        4,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p39",
+      "slots": [
+        -9,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p40",
+      "slots": [
+        -2,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p41",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p42",
+      "slots": [
+        7,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p43",
+      "slots": [
+        2,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p44",
+      "slots": [
+        0,
+        3,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p45",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p46",
+      "slots": [
+        0,
+        -5,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p47",
+      "slots": [
+        0,
+        9,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p48",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p49",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p50",
+      "slots": [
+        0,
+        4,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p51",
+      "slots": [
+        0,
+        -9,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p52",
+      "slots": [
+        0,
+        -2,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p53",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p54",
+      "slots": [
+        0,
+        7,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p55",
+      "slots": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p56",
+      "slots": [
+        0,
+        0,
+        3,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p57",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p58",
+      "slots": [
+        0,
+        0,
+        -5,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p59",
+      "slots": [
+        0,
+        0,
+        9,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p60",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p61",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p62",
+      "slots": [
+        0,
+        0,
+        4,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p63",
+      "slots": [
+        0,
+        0,
+        -9,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p64",
+      "slots": [
+        0,
+        0,
+        -2,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p65",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p66",
+      "slots": [
+        0,
+        0,
+        7,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p67",
+      "slots": [
+        0,
+        0,
+        2,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p68",
+      "slots": [
+        0,
+        0,
+        0,
+        3
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p69",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p70",
+      "slots": [
+        0,
+        0,
+        0,
+        -5
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p71",
+      "slots": [
+        0,
+        0,
+        0,
+        9
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p72",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p73",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p74",
+      "slots": [
+        0,
+        0,
+        0,
+        4
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p75",
+      "slots": [
+        0,
+        0,
+        0,
+        -9
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p76",
+      "slots": [
+        0,
+        0,
+        0,
+        -2
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p77",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p78",
+      "slots": [
+        0,
+        0,
+        0,
+        7
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p79",
+      "slots": [
+        0,
+        0,
+        0,
+        2
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p80",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p81",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p82",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p83",
+      "slots": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p84",
+      "slots": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p85",
+      "slots": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p86",
+      "slots": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p87",
+      "slots": [
+        -1,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p88",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p89",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p90",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p91",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p92",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p93",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p94",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p95",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p96",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p97",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p98",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p99",
+      "slots": [
+        0,
+        1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p100",
+      "slots": [
+        0,
+        -1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p101",
+      "slots": [
+        0,
+        -1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p102",
+      "slots": [
+        0,
+        -1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p103",
+      "slots": [
+        0,
+        -1,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p104",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p105",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p106",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p107",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p108",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p109",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p110",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p111",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p112",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p113",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p114",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p115",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p116",
+      "slots": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p117",
+      "slots": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p118",
+      "slots": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p119",
+      "slots": [
+        0,
+        0,
+        -1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p120",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p121",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p122",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p123",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p124",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p125",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p126",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p127",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p128",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p129",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p130",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p131",
+      "slots": [
+        0,
+        0,
+        0,
+        1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p132",
+      "slots": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p133",
+      "slots": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p134",
+      "slots": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p135",
+      "slots": [
+        0,
+        0,
+        0,
+        -1
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p136",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p137",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p138",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p139",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p140",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p141",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p142",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p143",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p144",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p145",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p146",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p147",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p148",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p149",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p150",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p151",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p152",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p153",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p154",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p155",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p156",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p157",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p158",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p159",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p160",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p161",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p162",
+      "slots": [
+        5,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p163",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p164",
+      "slots": [
+        0,
+        2,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p165",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p166",
+      "slots": [
+        0,
+        8,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p167",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p168",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p169",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p170",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p171",
+      "slots": [
+        0,
+        0,
+        1,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p172",
+      "slots": [
+        0,
+        0,
+        0,
+        -2
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p173",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p174",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    },
+    {
+      "id": "p175",
+      "slots": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "status": "value"
+    }
+  ],
+  "permitted_runtime_modules": [
+    "m092_runtime.py",
+    "m092_kernel.py",
+    "m092_substrate_state.py"
+  ],
+  "registered_operations": 14,
+  "removed_meta_path_finders": [
+    "_EditableFinder <- C:\\Users\\antho\\Dev\\Github\\Mjodheim\\Mira Genesis\\.venv\\Lib\\site-packages\\__editable___mira_genesis_0_43_0_finder.py"
+  ],
+  "status": "ok",
+  "substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717",
+  "sys_path": [
+    "C:\\Users\\antho\\AppData\\Local\\Temp\\m092a-isolated-cguyep72",
+    "C:\\Python314\\Lib",
+    "C:\\Users\\antho\\Dev\\Github\\Mjodheim\\Mira Genesis\\.venv\\Lib",
+    "C:\\Python314\\python314.zip"
+  ]
+}

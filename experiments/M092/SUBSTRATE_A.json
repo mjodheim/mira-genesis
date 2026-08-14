@@ -1,5 +1,5 @@
 {
-  "expected_substrate_digest": "ddeb103b64365b93b5c43a6ea83d1b7e7fde22b6efe65dd9e249a3d5820b6e41",
+  "expected_substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717",
   "language": {
     "language_version": 1,
     "primitives": [
@@ -114,7 +114,7 @@
     "provenance": [
       "m091 extended language"
     ],
-    "schema": "m090-executable-meta-language-v1"
+    "schema": "m092-runtime-v1"
   },
   "probes": [
     {
@@ -3359,6 +3359,16 @@
     }
   ],
   "substrate": {
+    "forbidden_capabilities": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
     "input_count": 3,
     "literal_values": [
       0,
@@ -3373,6 +3383,7 @@
           "pure_slot_write"
         ],
         "key": "PUSH_INPUT",
+        "minimum_stack_depth": 0,
         "origin": "inherited",
         "program": [
           [
@@ -3402,6 +3413,7 @@
           "pure_slot_write"
         ],
         "key": "PUSH_SLOT",
+        "minimum_stack_depth": 0,
         "origin": "inherited",
         "program": [
           [
@@ -3431,6 +3443,7 @@
           "pure_slot_write"
         ],
         "key": "PUSH_CONST",
+        "minimum_stack_depth": 0,
         "origin": "inherited",
         "program": [
           [
@@ -3455,6 +3468,7 @@
           "pure_slot_write"
         ],
         "key": "DUP",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3485,6 +3499,7 @@
           "pure_slot_write"
         ],
         "key": "SWAP",
+        "minimum_stack_depth": 2,
         "origin": "inherited",
         "program": [
           [
@@ -3517,6 +3532,7 @@
           "pure_slot_write"
         ],
         "key": "STORE_SLOT",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3546,6 +3562,7 @@
           "pure_slot_write"
         ],
         "key": "BINOP:add",
+        "minimum_stack_depth": 2,
         "origin": "inherited",
         "program": [
           [
@@ -3580,6 +3597,7 @@
           "pure_slot_write"
         ],
         "key": "BINOP:sub",
+        "minimum_stack_depth": 2,
         "origin": "inherited",
         "program": [
           [
@@ -3614,6 +3632,7 @@
           "pure_slot_write"
         ],
         "key": "BINOP:mul",
+        "minimum_stack_depth": 2,
         "origin": "inherited",
         "program": [
           [
@@ -3648,6 +3667,7 @@
           "pure_slot_write"
         ],
         "key": "BINOP:max",
+        "minimum_stack_depth": 2,
         "origin": "inherited",
         "program": [
           [
@@ -3689,6 +3709,7 @@
           "pure_slot_write"
         ],
         "key": "UNOP:inc",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3724,6 +3745,7 @@
           "pure_slot_write"
         ],
         "key": "UNOP:dec",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3759,6 +3781,7 @@
           "pure_slot_write"
         ],
         "key": "UNOP:neg",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3794,6 +3817,7 @@
           "pure_slot_write"
         ],
         "key": "UNOP:double",
+        "minimum_stack_depth": 1,
         "origin": "inherited",
         "program": [
           [
@@ -3824,10 +3848,35 @@
         ]
       }
     ],
+    "parameter_domains": [
+      {
+        "kind": "slot",
+        "reference": "",
+        "rule": "slot_index"
+      },
+      {
+        "kind": "input",
+        "reference": "",
+        "rule": "input_index"
+      },
+      {
+        "kind": "const",
+        "reference": "",
+        "rule": "literal_set"
+      },
+      {
+        "kind": "unary_op",
+        "reference": "UNOP",
+        "rule": "selector_of"
+      }
+    ],
+    "permitted_capabilities": [
+      "pure_slot_write"
+    ],
     "provenance": [
       "m091 micro-operations migrated into substrate state, semantics unchanged"
     ],
-    "schema": "m092a-state-owned-substrate-v1",
+    "schema": "m092a-state-owned-substrate-v2",
     "slot_count": 4,
     "substrate_version": 0
   }

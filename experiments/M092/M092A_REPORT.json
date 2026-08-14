@@ -1,23 +1,30 @@
 {
   "adversarial_conservation": {
     "body_lengths": [
-      4,
+      5,
       6
     ],
     "exhaustive": false,
     "first_mismatch": null,
     "includes_parameterised_operands": true,
     "mismatches": 0,
-    "note": "randomised corroboration beyond the exhaustive space, not a proof",
-    "reference_refusals": 188182,
-    "reference_values": 11818,
+    "note": "adversarial corroboration above the exhausted bound, not a proof",
+    "reference_refusals": 190402,
+    "reference_values": 9598,
+    "refusals_by_code": {
+      "invalid_argument_role": 13774,
+      "invalid_input_index": 10066,
+      "invalid_selector": 9494,
+      "invalid_slot_index": 15768,
+      "stack_underflow": 141300
+    },
     "trials": 200000
   },
   "authority_falsifiers": {
     "all_behaved_as_required": true,
     "falsifiers": [
       {
-        "after": "refused: LanguageError",
+        "after": "refused: SubstrateError",
         "baseline": [
           0,
           0,
@@ -72,17 +79,6 @@
       }
     ]
   },
-  "body_conservation": {
-    "agreeing_refusals": 156408,
-    "agreeing_values": 25704,
-    "alphabet_size": 28,
-    "comparisons": 182112,
-    "exhaustive": true,
-    "first_mismatch": null,
-    "max_body_length_enumerated": 3,
-    "mismatches": 0,
-    "states": 8
-  },
   "capability_conservation": {
     "capabilities_held": [
       "pure_slot_write"
@@ -102,7 +98,58 @@
     "holds_only_permitted": true,
     "permitted": [
       "pure_slot_write"
-    ]
+    ],
+    "reference_forbidden": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
+    "reference_permitted": [
+      "pure_slot_write"
+    ],
+    "vocabulary_matches_reference": true
+  },
+  "exhaustive_legal_conservation": {
+    "agreeing_refusals": 1818696,
+    "agreeing_values": 521784,
+    "alphabet_size": 23,
+    "comparisons": 2340480,
+    "exhaustive": true,
+    "first_mismatch": null,
+    "label": "legal bodies, exhaustive to the assembly bound",
+    "legal_bodies_enumerated": 292560,
+    "max_body_length_enumerated": 4,
+    "max_observed_push_count": 4,
+    "mismatches": 0,
+    "refusals_by_code": {
+      "stack_underflow": 1818696
+    },
+    "states": 8
+  },
+  "exhaustive_representation_conservation": {
+    "agreeing_refusals": 156408,
+    "agreeing_values": 25704,
+    "alphabet_size": 28,
+    "bodies_enumerated": 22764,
+    "comparisons": 182112,
+    "exhaustive": true,
+    "first_mismatch": null,
+    "label": "legal and out-of-representation bodies, exhaustive",
+    "max_body_length_enumerated": 3,
+    "max_observed_push_count": 3,
+    "mismatches": 0,
+    "refusals_by_code": {
+      "invalid_input_index": 9888,
+      "invalid_selector": 3816,
+      "invalid_slot_index": 12984,
+      "stack_underflow": 129720
+    },
+    "states": 8
   },
   "fresh_process": {
     "corrupted_unop_neg": {
@@ -116,6 +163,7 @@
       "import_census": [
         "metamorphosis.m090_language",
         "metamorphosis.m092_kernel",
+        "metamorphosis.m092_runtime",
         "metamorphosis.m092_substrate_state"
       ],
       "import_census_clean": true,
@@ -134,6 +182,27 @@
       "probes_that_changed": 32,
       "refusals": 32
     },
+    "physically_isolated": {
+      "exit_code": 0,
+      "findings": [],
+      "loaded_project_modules": [
+        "__main__",
+        "m092_kernel",
+        "m092_runtime",
+        "m092_substrate_state"
+      ],
+      "m090_language_present_in_root": false,
+      "matches_expected": true,
+      "modules_outside_the_isolated_root_or_stdlib": [],
+      "permitted_runtime_modules": [
+        "m092_runtime.py",
+        "m092_kernel.py",
+        "m092_substrate_state.py"
+      ],
+      "removed_meta_path_finders": [
+        "_EditableFinder <- C:\\Users\\antho\\Dev\\Github\\Mjodheim\\Mira Genesis\\.venv\\Lib\\site-packages\\__editable___mira_genesis_0_43_0_finder.py"
+      ]
+    },
     "stale_digest": {
       "exit_code": 2,
       "failed_closed": true,
@@ -141,6 +210,73 @@
     }
   },
   "frozen": false,
+  "fuel_insensitivity": {
+    "distinct_result_signatures": 1,
+    "restored_base": 256,
+    "restored_slope": 4,
+    "result_is_independent_of_the_fuel_policy": true,
+    "settings_tried": [
+      {
+        "comparisons": 6496,
+        "fuel_base": 16,
+        "fuel_slope": 0,
+        "mismatches": 0
+      },
+      {
+        "comparisons": 6496,
+        "fuel_base": 64,
+        "fuel_slope": 1,
+        "mismatches": 0
+      },
+      {
+        "comparisons": 6496,
+        "fuel_base": 256,
+        "fuel_slope": 4,
+        "mismatches": 0
+      },
+      {
+        "comparisons": 6496,
+        "fuel_base": 1024,
+        "fuel_slope": 16,
+        "mismatches": 0
+      },
+      {
+        "comparisons": 6496,
+        "fuel_base": 4096,
+        "fuel_slope": 64,
+        "mismatches": 0
+      }
+    ]
+  },
+  "fuel_policy_provenance": {
+    "binding_for_m092a": false,
+    "derived_from_a_qualifying_world": false,
+    "derived_from_a_target_value": false,
+    "fitted_to_any_candidate_implementation": false,
+    "fuel_base": 256,
+    "fuel_base_margin": 4.0,
+    "fuel_base_origin": "4 * MAX_PROGRAM_LENGTH, rounded to a power of two",
+    "fuel_base_requirement": 64,
+    "fuel_slope": 4,
+    "fuel_slope_origin": "smallest power of two above one; generic linear headroom",
+    "scales_with": "operand magnitude only",
+    "why_not_binding": "every registered M092-A program is loop-free and halts in a few steps"
+  },
+  "intractable_dimension": {
+    "exhausted_to": 4,
+    "explosion_dimension": "alphabet_size ** body_length",
+    "full_alphabet_size": 28,
+    "legal_alphabet_size": 23,
+    "legal_space_by_length": {
+      "1": 23,
+      "2": 529,
+      "3": 12167,
+      "4": 279841,
+      "5": 6436343,
+      "6": 148035889
+    },
+    "why": "the assembly bound is M091's own limit on constructible bodies, so the legal space is exhausted at that bound; the interpreter accepts up to MAX_BODY_LENGTH, where the legal space reaches tens of millions of bodies per state and is sampled instead"
+  },
   "invariant": {
     "abstraction_is_a_widening": false,
     "abstraction_is_exact": true,
@@ -299,103 +435,285 @@
       {
         "agree": true,
         "case": "binop_on_empty_stack",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "binop_on_one_operand",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "unop_on_empty_stack",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "dup_on_empty_stack",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "swap_on_empty_stack",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "swap_on_one_operand",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "store_on_empty_stack",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "stack_underflow",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "stack_underflow"
+        ],
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
       },
       {
         "agree": true,
         "case": "slot_index_out_of_range",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "invalid_slot_index",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "invalid_slot_index"
+        ],
+        "state_owned": [
+          "refused",
+          "invalid_slot_index"
+        ]
       },
       {
         "agree": true,
         "case": "input_index_out_of_range",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "invalid_input_index",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "invalid_input_index"
+        ],
+        "state_owned": [
+          "refused",
+          "invalid_input_index"
+        ]
       },
       {
         "agree": true,
         "case": "store_slot_out_of_range",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "invalid_slot_index",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "invalid_slot_index"
+        ],
+        "state_owned": [
+          "refused",
+          "invalid_slot_index"
+        ]
       },
       {
         "agree": true,
         "case": "unknown_binary_operator",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "invalid_selector",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "invalid_selector"
+        ],
+        "state_owned": [
+          "refused",
+          "invalid_selector"
+        ]
       },
       {
         "agree": true,
         "case": "unknown_unary_operator",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "invalid_selector",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "invalid_selector"
+        ],
+        "state_owned": [
+          "refused",
+          "invalid_selector"
+        ]
       },
       {
         "agree": true,
         "case": "unknown_micro_operation",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "unknown_operation",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "unknown_operation"
+        ],
+        "state_owned": [
+          "refused",
+          "unknown_operation"
+        ]
       },
       {
         "agree": true,
         "case": "body_exceeds_length_bound",
-        "reference": "refused",
-        "state_owned": "refused"
+        "expected_code": "body_length_exceeded",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "body_length_exceeded"
+        ],
+        "state_owned": [
+          "refused",
+          "body_length_exceeded"
+        ]
       },
       {
         "agree": true,
-        "case": "maximal_legal_push_body",
-        "reference": "value",
-        "state_owned": "value"
+        "case": "unresolved_parameter",
+        "expected_code": "unresolved_parameter",
+        "matches_declared_code": true,
+        "reference": [
+          "refused",
+          "unresolved_parameter"
+        ],
+        "state_owned": [
+          "refused",
+          "unresolved_parameter"
+        ]
       }
     ],
+    "codes_observed": [
+      "body_length_exceeded",
+      "invalid_input_index",
+      "invalid_selector",
+      "invalid_slot_index",
+      "stack_underflow",
+      "unknown_operation",
+      "unresolved_parameter"
+    ],
     "count": 15,
-    "disagreements": 0,
-    "refusals_on_both_sides": 14
+    "disagreements": 0
+  },
+  "refusal_taxonomy_can_fail": {
+    "all_detected": true,
+    "cases": [
+      {
+        "both_refused": true,
+        "case": "selector_vs_unknown_operation",
+        "mismatch_detected": true,
+        "reference": [
+          "refused",
+          "invalid_selector"
+        ],
+        "refused_for_different_reasons": true,
+        "state_owned": [
+          "refused",
+          "unknown_operation"
+        ]
+      },
+      {
+        "both_refused": false,
+        "case": "value_vs_stack_underflow",
+        "mismatch_detected": true,
+        "reference": [
+          "value",
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "refused_for_different_reasons": false,
+        "state_owned": [
+          "refused",
+          "stack_underflow"
+        ]
+      },
+      {
+        "both_refused": true,
+        "case": "slot_index_vs_resource_exhausted",
+        "mismatch_detected": true,
+        "reference": [
+          "refused",
+          "invalid_slot_index"
+        ],
+        "refused_for_different_reasons": true,
+        "state_owned": [
+          "refused",
+          "resource_exhausted"
+        ]
+      }
+    ],
+    "cases_where_both_refused_differently": 2,
+    "detected": 3
   },
   "registered_reach": {
     "acquired_operations": [],
     "every_registered_program_is_loop_free": true,
-    "kernel_can_express_loops": true,
-    "note": "the kernel can iterate and the registered substrate cannot; 'can execute' is not 'has registered', and M092-A registers no acquired operation",
+    "kernel_potential_expressivity_is_larger": true,
+    "loop_freedom_is_corroboration_not_definition": true,
     "operation_names": [
       "BINOP",
       "DUP",
@@ -408,6 +726,7 @@
     ],
     "operations": 14,
     "programs_with_a_backward_jump": [],
+    "registered_expressivity_claim": "the effective semantics reachable through the registered state are exactly those reachable through the inherited M091 substrate; established by conservation over the complete registered state, not by loop-freedom",
     "selector_names": [
       "BINOP",
       "UNOP"
@@ -432,7 +751,7 @@
     "behavioural_comparisons": 2436,
     "behavioural_mismatches": 0,
     "byte_identical": true,
-    "digest": "ddeb103b64365b93b5c43a6ea83d1b7e7fde22b6efe65dd9e249a3d5820b6e41",
+    "digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717",
     "digest_identical": true
   },
   "signature_conservation": {
@@ -461,15 +780,27 @@
     ],
     "names_identical": true,
     "nothing_acquired": true,
-    "reference_binary": [
-      "add",
-      "max",
-      "mul",
-      "sub"
-    ],
-    "reference_literals": [
-      0,
-      1
+    "parameter_domains": [
+      {
+        "kind": "slot",
+        "reference": "",
+        "rule": "slot_index"
+      },
+      {
+        "kind": "input",
+        "reference": "",
+        "rule": "input_index"
+      },
+      {
+        "kind": "const",
+        "reference": "",
+        "rule": "literal_set"
+      },
+      {
+        "kind": "unary_op",
+        "reference": "UNOP",
+        "rule": "selector_of"
+      }
     ],
     "reference_names": [
       "BINOP",
@@ -481,12 +812,6 @@
       "SWAP",
       "UNOP"
     ],
-    "reference_unary": [
-      "dec",
-      "double",
-      "inc",
-      "neg"
-    ],
     "unary_identical": true,
     "unary_selectors": [
       "dec",
@@ -495,12 +820,16 @@
       "neg"
     ]
   },
-  "stack_bound_finding": {
+  "stack_depth_certificate": {
     "bound_is_reachable": false,
-    "conserved_vacuously_on_both_sides": true,
+    "declared_effects_verified_against_the_reference": 41,
+    "declared_stack_bound": 8,
+    "effect_disagreements": [],
+    "every_operation_increases_depth_by_at_most": 1,
     "max_body_length": 6,
-    "max_stack_depth": 8,
-    "maximum_reachable_stack_depth": 6
+    "max_reachable_stack_depth": 6,
+    "note": "stack overflow is NOT an exercised conservation case; it is excluded from the inherited semantic conservation claim and can only be provoked by programs outside the legal representation",
+    "status": "unreachable by construction under the inherited legal representation"
   },
-  "substrate_digest": "ddeb103b64365b93b5c43a6ea83d1b7e7fde22b6efe65dd9e249a3d5820b6e41"
+  "substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717"
 }

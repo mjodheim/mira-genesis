@@ -34,7 +34,7 @@ def _install_tripwire(sabotage: bool) -> None:
 
     from metamorphosis import m090_language
 
-    def _tripwire(*_args: object, **_kwargs: object):
+    def _tripwire(*_args: object, **_kwargs: object):  # noqa: ANN202
         raise AssertionError(
             "run_body was called: state-owned execution fell back to legacy host authority"
         )
@@ -71,13 +71,13 @@ def main() -> int:
 
     _install_tripwire(arguments.sabotage_legacy)
 
-    from metamorphosis.m090_language import LanguageError, MetaLanguageState
+    from metamorphosis.m092_runtime import RuntimeLanguage, SubstrateError
     from metamorphosis.m092_substrate_state import SubstrateState, execute_from_state
 
     with open(arguments.state, encoding="utf-8") as handle:
         payload = json.load(handle)
 
-    language = MetaLanguageState.from_dict(payload["language"])
+    language = RuntimeLanguage.from_dict(payload["language"])
     substrate = SubstrateState.from_dict(payload["substrate"])
 
     if payload.get("expected_substrate_digest") not in (None, substrate.digest()):
@@ -93,8 +93,8 @@ def main() -> int:
             slots = execute_from_state(program, probe["inputs"], language, substrate)
             outcomes.append({"id": probe["id"], "status": "value", "slots": list(slots)})
             solved += 1
-        except (LanguageError, AssertionError) as error:
-            outcomes.append({"id": probe["id"], "status": "refused", "error": type(error).__name__})
+        except SubstrateError as error:
+            outcomes.append({"id": probe["id"], "status": "refused", "code": error.code.value})
             refused += 1
 
     census = sorted(
