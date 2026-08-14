@@ -10,11 +10,17 @@ premises may be multiplied by signed integers. Inequality premises may only rece
 non-negative multipliers, and may not participate in equality goals. This is the same
 mathematical proof language consumed by the independent verifier, but the implementation
 below is candidate-side and mechanically target-neutral.
+
+The search is sparse-support first, exactly as before, but it prunes a partial assignment
+when the remaining bounded premises cannot possibly close one of the affine coordinates.
+Slack is solved exactly at a leaf instead of being brute-forced. These are completeness-
+preserving optimisations inside the declared multiplier/support bounds; they do not change
+which witnesses are legal and they use no verifier feedback.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-from itertools import combinations, product
+from itertools import combinations
 from typing import Mapping, Sequence
 
 PROOF_SEARCH_SCHEMA = "m092-affine-proof-search-v1"
@@ -38,14 +44,6 @@ class _Affine:
             tuple(sorted((str(name), int(value)) for name, value in coefficients.items() if value)),
             int(constant),
         )
-
-    def add_scaled(self, other: "_Affine", multiplier: int) -> "_Affine":
-        values = dict(self.terms)
-        for name, coefficient in other.terms:
-            values[name] = values.get(name, 0) + coefficient * multiplier
-            if values[name] == 0:
-                del values[name]
-        return _Affine.make(values, self.constant + other.constant * multiplier)
 
 
 @dataclass(frozen=True)
@@ -90,21 +88,6 @@ def _candidate_values(relation: str, goal_relation: str, bound: int) -> tuple[in
     return tuple(values)
 
 
-def _slack_values(goal: _Constraint, bound: int) -> tuple[int, ...]:
-    if goal.relation == "eq":
-        return (0,)
-    return tuple(range(0, bound + 1))
-
-
-def _combine(
-    premises: Sequence[_Constraint], multipliers: Sequence[int], slack: int,
-) -> _Affine:
-    result = _Affine.make({}, slack)
-    for premise, multiplier in zip(premises, multipliers, strict=True):
-        result = result.add_scaled(premise.expression, multiplier)
-    return result
-
-
 def _support_order(count: int, support_bound: int) -> tuple[tuple[int, ...], ...]:
     maximum = min(count, support_bound)
     return tuple(
@@ -112,6 +95,42 @@ def _support_order(count: int, support_bound: int) -> tuple[tuple[int, ...], ...
         for size in range(maximum + 1)
         for support in combinations(range(count), size)
     )
+
+
+def _coordinates(premises: Sequence[_Constraint], goal: _Constraint) -> tuple[str, ...]:
+    names = {name for premise in premises for name, _ in premise.expression.terms}
+    names.update(name for name, _ in goal.expression.terms)
+    return tuple(sorted(names))
+
+
+def _vector(expression: _Affine, coordinates: Sequence[str]) -> tuple[int, ...]:
+    values = dict(expression.terms)
+    return tuple(values.get(name, 0) for name in coordinates) + (expression.constant,)
+
+
+def _add_scaled(vector: Sequence[int], other: Sequence[int], multiplier: int) -> tuple[int, ...]:
+    return tuple(left + multiplier * right for left, right in zip(vector, other, strict=True))
+
+
+def _within_remaining_reach(
+    current: Sequence[int],
+    target: Sequence[int],
+    suffix_reach: Sequence[int],
+    *,
+    slack_bound: int,
+) -> bool:
+    # Every non-constant coordinate must be closable by the unassigned premises. For the constant
+    # coordinate the verifier also permits a non-negative slack, so the conservative reachable
+    # interval receives that additional positive allowance.
+    last = len(current) - 1
+    for index, (value, wanted, reach) in enumerate(zip(current, target, suffix_reach, strict=True)):
+        residual = wanted - value
+        if index == last:
+            if residual < -reach or residual > reach + slack_bound:
+                return False
+        elif abs(residual) > reach:
+            return False
+    return True
 
 
 def find_affine_proof(
@@ -124,10 +143,9 @@ def find_affine_proof(
 ) -> dict[str, object] | None:
     """Return the first exact bounded witness, or ``None`` if this search space has none.
 
-    The function never weakens a goal, changes a premise, or asks the verifier how a failed proof
-    should be repaired. Enumeration is fixed by premise order, support size, multiplier magnitude,
-    and slack. A returned witness therefore remains a candidate claim until the independent M092
-    verifier accepts it.
+    Enumeration is deterministic and sparse-support first. A support is searched by depth-first
+    multiplier order, with exact coordinate reachability pruning. The independent verifier remains
+    the sole authority that decides whether a returned candidate proof is valid.
     """
 
     if not 0 <= multiplier_bound <= 256:
@@ -141,33 +159,78 @@ def find_affine_proof(
         _parse_constraint(item, f"premise[{index}]") for index, item in enumerate(premises)
     )
     parsed_goal = _parse_constraint(goal, "goal")
-    values = tuple(
+    coordinates = _coordinates(parsed_premises, parsed_goal)
+    premise_vectors = tuple(_vector(item.expression, coordinates) for item in parsed_premises)
+    target = _vector(parsed_goal.expression, coordinates)
+    value_sets = tuple(
         _candidate_values(item.relation, parsed_goal.relation, multiplier_bound)
         for item in parsed_premises
     )
-    slacks = _slack_values(parsed_goal, multiplier_bound)
-
+    slack_bound = 0 if parsed_goal.relation == "eq" else multiplier_bound
+    zero = (0,) * len(target)
     attempts = 0
-    seen: set[tuple[int, ...]] = set()
+
     for support in _support_order(len(parsed_premises), support_bound):
-        active_ranges = [values[index][1:] for index in support]
-        if any(not choices for choices in active_ranges):
+        active_values = tuple(value_sets[index][1:] for index in support)
+        if any(not values for values in active_values):
             continue
-        assignments = product(*active_ranges) if active_ranges else ((),)
-        for active in assignments:
-            multipliers = [0] * len(parsed_premises)
-            for index, multiplier in zip(support, active, strict=True):
-                multipliers[index] = multiplier
-            key = tuple(multipliers)
-            if key in seen:
-                continue
-            seen.add(key)
-            for slack in slacks:
+
+        # suffix_reach[position][coordinate] is a conservative maximum absolute contribution from
+        # every still-unassigned active premise. It makes pruning exact-safe without consulting the
+        # verifier or any target observations.
+        suffix_reach: list[tuple[int, ...]] = [zero for _ in range(len(support) + 1)]
+        running = [0] * len(target)
+        for position in range(len(support) - 1, -1, -1):
+            premise_index = support[position]
+            max_multiplier = max(abs(value) for value in active_values[position])
+            vector = premise_vectors[premise_index]
+            running = [
+                reach + max_multiplier * abs(coefficient)
+                for reach, coefficient in zip(running, vector, strict=True)
+            ]
+            suffix_reach[position] = tuple(running)
+
+        chosen = [0] * len(parsed_premises)
+
+        def search(position: int, current: tuple[int, ...]) -> dict[str, object] | None:
+            nonlocal attempts
+            if not _within_remaining_reach(
+                current,
+                target,
+                suffix_reach[position],
+                slack_bound=slack_bound,
+            ):
+                return None
+
+            if position == len(support):
                 attempts += 1
                 if attempts > attempt_cap:
                     return None
-                if _combine(parsed_premises, multipliers, slack) == parsed_goal.expression:
-                    return {"multipliers": multipliers, "slack": slack}
+                if current[:-1] != target[:-1]:
+                    return None
+                slack = target[-1] - current[-1]
+                if not 0 <= slack <= slack_bound:
+                    return None
+                return {"multipliers": list(chosen), "slack": slack}
+
+            premise_index = support[position]
+            vector = premise_vectors[premise_index]
+            for multiplier in active_values[position]:
+                chosen[premise_index] = multiplier
+                result = search(position + 1, _add_scaled(current, vector, multiplier))
+                if result is not None:
+                    return result
+                if attempts > attempt_cap:
+                    break
+            chosen[premise_index] = 0
+            return None
+
+        result = search(0, zero)
+        if result is not None:
+            return result
+        if attempts > attempt_cap:
+            return None
+
     return None
 
 
