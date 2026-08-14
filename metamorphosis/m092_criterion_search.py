@@ -18,7 +18,7 @@ from collections import Counter
 from dataclasses import dataclass
 import hashlib
 from pathlib import Path
-from typing import Mapping
+from typing import Mapping, Sequence
 
 import metamorphosis.m092_candidate_validation as scanner
 import metamorphosis.m092_certificate_generator as generator
@@ -118,6 +118,69 @@ def _selected_payload(
         "scanner_report": dict(scan_report),
         "verification_report": dict(verification_report),
     }
+
+
+def _validate_selected_payload(
+    selected: Mapping[str, object],
+    audit: enumerator.EnumerationAudit,
+) -> None:
+    """Fail closed if a serialized selection is detached from the terminal enumerator record."""
+
+    expected_fields = {
+        "schema", "program_ordinal", "program", "program_digest", "program_length",
+        "program_cursor", "certificate_policy", "certificate", "certificate_digest",
+        "scanner_report", "verification_report",
+    }
+    if set(selected) != expected_fields or selected.get("schema") != SELECTED_SCHEMA:
+        raise CriterionSearchError("selected candidate schema or fields differ")
+    if audit.last_cursor is None or audit.last_program_digest is None:
+        raise CriterionSearchError("selected candidate lacks a terminal enumeration record")
+
+    ordinal = selected.get("program_ordinal")
+    program_length = selected.get("program_length")
+    program_value = selected.get("program")
+    program_digest_value = selected.get("program_digest")
+    cursor_value = selected.get("program_cursor")
+    certificate = selected.get("certificate")
+    certificate_digest = selected.get("certificate_digest")
+    policy = selected.get("certificate_policy")
+    scan_report = selected.get("scanner_report")
+    verification_report = selected.get("verification_report")
+
+    if not isinstance(ordinal, int) or isinstance(ordinal, bool) or ordinal != audit.generated_programs:
+        raise CriterionSearchError("selected candidate ordinal differs from the terminal audit")
+    if not isinstance(program_value, Sequence) or isinstance(program_value, (str, bytes, bytearray)):
+        raise CriterionSearchError("selected candidate program is malformed")
+    try:
+        program = kernel.program_from_list(program_value)  # type: ignore[arg-type]
+        kernel.validate_program(program)
+    except (TypeError, ValueError, runtime.SubstrateError) as error:
+        raise CriterionSearchError("selected candidate program is malformed") from error
+    if (
+        not isinstance(program_length, int)
+        or isinstance(program_length, bool)
+        or program_length != len(program)
+    ):
+        raise CriterionSearchError("selected candidate program length differs")
+    recomputed_program_digest = kernel.program_digest(program)
+    if (
+        program_digest_value != recomputed_program_digest
+        or program_digest_value != audit.last_program_digest
+    ):
+        raise CriterionSearchError("selected candidate program digest differs from terminal audit")
+    if not isinstance(cursor_value, Mapping) or dict(cursor_value) != audit.last_cursor.to_dict():
+        raise CriterionSearchError("selected candidate cursor differs from terminal audit")
+
+    if not isinstance(certificate, Mapping) or certificate_digest != _sha256(certificate):
+        raise CriterionSearchError("selected candidate certificate digest differs")
+    if certificate.get("program_digest") != recomputed_program_digest:
+        raise CriterionSearchError("selected certificate is bound to a different program")
+    if not isinstance(policy, Mapping) or policy.get("constructed") is not True or policy.get("refusal") is not None:
+        raise CriterionSearchError("selected certificate policy is not a constructed attempt")
+    if not isinstance(scan_report, Mapping) or scan_report.get("accepted") is not True:
+        raise CriterionSearchError("selected candidate scanner report is not accepted")
+    if not isinstance(verification_report, Mapping) or verification_report.get("status") != "accepted":
+        raise CriterionSearchError("selected candidate verification report is not accepted")
 
 
 @dataclass(frozen=True)
@@ -249,6 +312,7 @@ class CriterionSearchState:
             and integers["generated_programs"] <= PROGRAM_CAP
         ):
             raise CriterionSearchError("criterion search counters are inconsistent")
+
         status = value.get("status")
         if status not in (
             "searching", "candidate_selected", "program_budget_exhausted",
@@ -260,6 +324,27 @@ class CriterionSearchState:
             raise CriterionSearchError("criterion selected-candidate state is inconsistent")
         if (status == "candidate_selected") != (integers["surviving_candidates"] == 1):
             raise CriterionSearchError("criterion survivor count differs from selection status")
+
+        if status == "searching" and (
+            integers["generated_programs"] >= PROGRAM_CAP
+            or integers["certificate_policy_attempts"] >= CERTIFICATE_CAP
+        ):
+            raise CriterionSearchError("searching state has already exhausted a frozen budget")
+        if status == "program_budget_exhausted" and not (
+            integers["generated_programs"] == PROGRAM_CAP
+            and integers["certificate_policy_attempts"] < CERTIFICATE_CAP
+            and integers["surviving_candidates"] == 0
+        ):
+            raise CriterionSearchError("program-budget terminal status differs from counters")
+        if status == "certificate_budget_exhausted" and not (
+            integers["certificate_policy_attempts"] == CERTIFICATE_CAP
+            and integers["surviving_candidates"] == 0
+        ):
+            raise CriterionSearchError("certificate-budget terminal status differs from counters")
+        if status == "candidate_selected":
+            assert isinstance(selected, Mapping)
+            _validate_selected_payload(selected, audit)
+
         theorem_digest = value.get("theorem_digest")
         chain = value.get("criterion_event_chain_digest")
         if not isinstance(theorem_digest, str) or len(theorem_digest) != 64:
