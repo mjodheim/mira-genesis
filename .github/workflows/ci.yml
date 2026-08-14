@@ -160,6 +160,9 @@ jobs:
       - name: The M092-B candidate scanner must refuse all frozen anti-cheating fixtures
         run: python -m scripts.check_m092b_candidate_scanner
 
+      - name: The M092-B proposal stream must resume byte-identically
+        run: python -m scripts.check_m092b_search_enumerator
+
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
           if python scripts/check_m085_readiness.py --require-ready; then

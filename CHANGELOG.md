@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Added M092-B's deterministic, resumable typed program enumerator without running target search.
+  It visits structured one-loop programs breadth-first under the frozen seed, cap, opcode, register,
+  literal, jump and loop bounds; alpha-normalises register-renaming duplicates; derives a
+  target-neutral quota that reaches every length 6–14 despite multi-billion raw layers; statically
+  checks reachability and the stack frame; and commits every raw proposal to an authenticated cursor
+  and ordered event chain. A 512-proposal replay is byte-identical across a serialized resume at
+  ordinal 137.
+  The enumerator has no target postcondition, executes no program and produces no certificate,
+  qualification, extended state, receipt or result; raw proposals are not protocol candidates.
 - Added M092-B's post-freeze structural and anti-cheating candidate gate without starting search.
   It binds certificates to exact K1 bytes, enforces the frozen 14-instruction/opcode/literal/loop
   surface and scans generated support for tables, masks, equality chains, callbacks/imports,
