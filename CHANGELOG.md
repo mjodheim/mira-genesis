@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Froze the separate M092-A checkpoint before any substrate-extension search or qualification.
+  Checkpoint `d8bacb1c...6ce8` binds seventeen exact blobs from source commit `5adfaa6`, proves the
+  six M092-B artifact paths absent there, preserves zero acquired substrate operations and seals the
+  `296230ae...c84717` state digest after 2,340,480 exhaustive legal comparisons with zero mismatch.
+- Continued the pre-checkpoint review after Claude's handoff and corrected two defects while M092-A
+  was still unfrozen: fuel now scales with stack and slot operands as well as inputs and call
+  arguments, and ambiguous serialized contracts (negative dimensions/arity, duplicate domains or
+  primitive identifiers, inconsistent dispatch and unavailable capabilities) fail closed. The
+  substrate digest and every conservation outcome are unchanged. Recorded public disposition P-008
+  before the branch's first remote push. H38 and D062 remain unclaimed; M092-B has not started.
+
 - Added M091, in which the lineage adds an operation to the language it actually owns. **Positive,
   attempt 1, no retry**, fourteen frozen conditions computed and passed; H37 supported, no gate.
   Protocol frozen at `5e4a0fe`, result `d83b836d...4c07af`, 0 model calls.

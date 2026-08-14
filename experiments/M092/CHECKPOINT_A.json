@@ -1,0 +1,164 @@
+{
+  "absent_at_source_commit": [
+    "experiments/M092/PROTOCOL.json",
+    "experiments/M092/QUALIFICATION.json",
+    "experiments/M092/SUBSTRATE_B.json",
+    "experiments/M092/VALIDATION_RECEIPT.json",
+    "experiments/M092/RESULT.json",
+    "experiments/M092/REGISTER_CLAIM.json"
+  ],
+  "artifacts": {
+    "experiments/M092/DESIGN_AUDIT.json": {
+      "bytes": 5172,
+      "git_blob_sha1": "5f913472a3183c0a4ae4b529d0a9f2ef1a898d84",
+      "immutable": true,
+      "role": "machine-readable design audit",
+      "sha256": "cc2b1f0911484ebc4ba57e0c4e959cf70908a3d6cd176cfe158c043802c4b72d"
+    },
+    "experiments/M092/DESIGN_AUDIT.md": {
+      "bytes": 19459,
+      "git_blob_sha1": "480655da39cabdb6b9a0976fb742826502d4be9e",
+      "immutable": true,
+      "role": "pre-freeze design decisions",
+      "sha256": "d7d5f5be6432016daa596750efb1b575b2066564f2e0c313e281075dd7fb66e0"
+    },
+    "experiments/M092/ISOLATION.json": {
+      "bytes": 23285,
+      "git_blob_sha1": "09371295f446112fcfd305c02f1885bae0e9e7c0",
+      "immutable": true,
+      "role": "physical-isolation evidence",
+      "sha256": "86aeb9fcbd6a0e492292dbcbb6b0a49588bde7d1f84f73158b29f1d798b23dac"
+    },
+    "experiments/M092/M092A.md": {
+      "bytes": 16026,
+      "git_blob_sha1": "4cfb4773d954eee10ff51924e9cef3a50ec34d41",
+      "immutable": false,
+      "role": "pre-checkpoint human record",
+      "sha256": "e9c62e4771fc2cee433bcf195ba152998c755f2b92b1d14646d14e020f0f9e78"
+    },
+    "experiments/M092/M092A_REPORT.json": {
+      "bytes": 20787,
+      "git_blob_sha1": "05c6baa95fe4034e8d4feba7e6786dff35e3a0a8",
+      "immutable": true,
+      "role": "migration, conservation and authority evidence",
+      "sha256": "a7c05c8c20be34b23c54df25b82668ff82f294dccd134bc19acd3ec8d4adff31"
+    },
+    "experiments/M092/SUBSTRATE_A.json": {
+      "bytes": 54320,
+      "git_blob_sha1": "291cdc8b77cc4fd1ded42909b3185192d3d21fdc",
+      "immutable": true,
+      "role": "serialized language and substrate bundle",
+      "sha256": "c1afdf4c4e16700b0419215434ace9c0d28bd7550b8b1979f13c32fad4293198"
+    },
+    "metamorphosis/m092_invariant.py": {
+      "bytes": 21333,
+      "git_blob_sha1": "a950008e83963fb8ae9e96b1fe864228a9988997",
+      "immutable": true,
+      "role": "eventual-polynomial proof machinery",
+      "sha256": "71af82251826dad94c9949b299c5fb3d1e91965ec86a42a5a58b3a7132a00b10"
+    },
+    "metamorphosis/m092_kernel.py": {
+      "bytes": 16747,
+      "git_blob_sha1": "fd01d65c25a5237be240ae304ec48ff96979f6e8",
+      "immutable": true,
+      "role": "authored K1 lower kernel",
+      "sha256": "fc548287fcd1c5f63c51c1de9c582943f78d5e281771da74069d0140a234a0f6"
+    },
+    "metamorphosis/m092_migration.py": {
+      "bytes": 35376,
+      "git_blob_sha1": "c4a5d079cd630f53eb256e2f4a83583cae021b91",
+      "immutable": true,
+      "role": "migration and conservation tooling",
+      "sha256": "cc06fb268e07f2a4a5f15ee6f40d6b51b8b7406634a55eb3e61b7ed7bae138d0"
+    },
+    "metamorphosis/m092_runtime.py": {
+      "bytes": 8963,
+      "git_blob_sha1": "d8190910813414b26e98d6b7399a8634ae9f7fc1",
+      "immutable": true,
+      "role": "neutral runtime vocabulary",
+      "sha256": "d193d8882f91cdb11dcac5b30de9d1c95149bfdacc4cf50b39ee912caa772975"
+    },
+    "metamorphosis/m092_substrate_state.py": {
+      "bytes": 26828,
+      "git_blob_sha1": "eb13de7f02d36215fba5374a9f57f47bcbb4cba1",
+      "immutable": true,
+      "role": "state loader and dispatcher",
+      "sha256": "59b2ac89cfbb76f391ee73a7c1128943d2880dd16e697792f35f659f3d38582d"
+    },
+    "scripts/audit_m092_design.py": {
+      "bytes": 14998,
+      "git_blob_sha1": "a98f0bd213e77a37c042263df802cedbadbd8027",
+      "immutable": true,
+      "role": "design-audit runner",
+      "sha256": "88bf7b82b3a4a0bdbb897f03208365715957ef02436ba1a1ac717a37c4edc1bc"
+    },
+    "scripts/run_m092a_fresh_process.py": {
+      "bytes": 5439,
+      "git_blob_sha1": "9d74c33b2f9b84041d7767fd5f879978e54010f7",
+      "immutable": true,
+      "role": "fresh-process runner",
+      "sha256": "8c6ff9cfbaeef333fab67f963c426f8413b56ba05ddd5c112311132d96310af1"
+    },
+    "scripts/run_m092a_isolation.py": {
+      "bytes": 8653,
+      "git_blob_sha1": "fccfdbe4dbfa6f9c0a3b23f65c3d879663f7af81",
+      "immutable": true,
+      "role": "physical-isolation runner",
+      "sha256": "ae6708f73a694944d41e2271cafdad770ad0641168b55d9169e8a0142be13937"
+    },
+    "scripts/run_m092a_migration.py": {
+      "bytes": 27181,
+      "git_blob_sha1": "b9b008d83e823e284cbec827e050837806453056",
+      "immutable": true,
+      "role": "M092-A reproduction runner",
+      "sha256": "a97fab2eb43368b9ea46a0b808da0ea6197f2b9249a4084f48e85aa91fb5baf0"
+    },
+    "tests/test_m092_invariant.py": {
+      "bytes": 9987,
+      "git_blob_sha1": "862ed25d77b81f5026eea789acc25e14d4134365",
+      "immutable": true,
+      "role": "invariant regression suite",
+      "sha256": "ec0b868ecaa58f1c76065b309fcd570ba230ac9047a7048d429e66300e673e9c"
+    },
+    "tests/test_m092a_substrate_migration.py": {
+      "bytes": 24268,
+      "git_blob_sha1": "f37aa004eb855f6ba090b84a06b381bbbc14537a",
+      "immutable": true,
+      "role": "migration and authority regression suite",
+      "sha256": "cdeaa699bd0c7b22bdec79db680b464fb808922e5ce82bea0ee4dea20279779a"
+    }
+  },
+  "checkpoint_digest": "d8bacb1c94dd06da8ceb5ddf2c9a94f8d2bc8c598b307ea1171e3dc7dfc86ce8",
+  "chronology": {
+    "extension_search_executed_before_checkpoint": false,
+    "model_calls": 0,
+    "network_calls": 0,
+    "qualification_existed_at_source_commit": false
+  },
+  "claim_boundary": {
+    "d062_recorded": false,
+    "generality_gate": false,
+    "h38_supported": false,
+    "self_hosting": false,
+    "substrate_independence": false
+  },
+  "date_frozen": "2026-08-14",
+  "milestone": "M092",
+  "schema": "m092a-checkpoint-v1",
+  "semantic_commitments": {
+    "acquired_operations": 0,
+    "exhaustive_legal_comparisons": 2340480,
+    "exhaustive_representation_comparisons": 182112,
+    "invariant_digest": "2b7aa8c08741a778b158577ed161cd381460d1ef52d6618a5b90bc505ac804d1",
+    "kernel_manifest_digest": "1173724ba4b52e1f9ce63cf58e1a3ec5187548c573b7403bb62a2948d132841d",
+    "language_digest": "589b520d516faacd9a76426ede209a9f0d3869f562f9ac871904aef9690b334b",
+    "language_l0_comparisons": 10656,
+    "language_l1_comparisons": 13120,
+    "registered_operations": 14,
+    "substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717"
+  },
+  "source_commit": "5adfaa671d242d1589d85985014dbd1c6f4bf2c8",
+  "source_tree": "da0fcea3ca32c803d2ac6d3d88a69fa6d1d846ba",
+  "stage": "A",
+  "status": "frozen_before_any_extension_search_or_qualification"
+}
