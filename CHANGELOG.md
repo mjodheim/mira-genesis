@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Implemented the post-freeze M092-B exact certificate verifier without starting extension search.
+  It recomputes each candidate CFG, symbolically covers integer branch paths, checks normalized
+  affine induction and postcondition obligations from candidate-supplied integer witnesses, proves
+  a well-founded variant and linear K1 fuel bound, and establishes the stack/slot/input frame
+  structurally. The only positive development fixture is the frozen neutral countdown-to-zero
+  rehearsal; wrong binding, false proof, non-decreasing variant, wrong postcondition, false frame
+  and finite-vector certificates all refuse. No qualifying candidate or result exists; H38 and
+  D062 remain unclaimed.
 - Froze the M092-B pre-search protocol against the exact M092-A checkpoint: eleven causal/control
   arms, six dependency ablations and fifteen conjunctive conditions. Global correctness is an exact
   program-bound affine certificate over every `x >= 0`; execution over `0..2999` is explicitly
