@@ -1,0 +1,132 @@
+{
+  "composition": {
+    "closed_under_composition": true,
+    "longest_program": 200,
+    "mismatches": 0,
+    "programs": 1500
+  },
+  "insufficiency_axes": [
+    {
+      "axis": "A1 parity, x mod 2",
+      "blocked_by_the_same_invariant": true,
+      "why": "germ would be a bounded polynomial, hence constant"
+    },
+    {
+      "axis": "A2 any non-constant periodic function",
+      "blocked_by_the_same_invariant": true,
+      "why": "same argument; boundedness forces a constant"
+    },
+    {
+      "axis": "A3 floor division, floor(x/k)",
+      "blocked_by_the_same_invariant": true,
+      "why": "differs from any polynomial on unboundedly many x"
+    },
+    {
+      "axis": "A4 bit or digit extraction",
+      "blocked_by_the_same_invariant": true,
+      "why": "periodic in x, so A2 applies"
+    },
+    {
+      "axis": "A5 super-polynomial growth, 2**x",
+      "blocked_by_the_same_invariant": true,
+      "why": "outgrows every polynomial, so no germ matches"
+    },
+    {
+      "axis": "A6 gcd(x, k) for fixed k",
+      "blocked_by_the_same_invariant": true,
+      "why": "periodic in x, so A2 applies"
+    }
+  ],
+  "invariant": {
+    "abstraction_is_a_widening": false,
+    "abstraction_is_exact": true,
+    "corollary": "M092-P",
+    "corollary_statement": "no such program computes x mod 2 on an unbounded domain",
+    "counts_alternations": false,
+    "degree_bound_formula": "2 ** (body_length * program_length)",
+    "digest": "2b7aa8c08741a778b158577ed161cd381460d1ef52d6618a5b90bc505ac804d1",
+    "domain": "unbounded: all integers at or above a computed threshold",
+    "length_independent": true,
+    "max_body_length": 6,
+    "micro_operations_covered": [
+      "PUSH_INPUT",
+      "PUSH_SLOT",
+      "PUSH_CONST",
+      "BINOP",
+      "UNOP",
+      "DUP",
+      "SWAP",
+      "STORE_SLOT"
+    ],
+    "proposition": "M092-I",
+    "schema": "m092-eventual-polynomiality-v1",
+    "statement": "for every program over the inherited substrate, every slot agrees with a polynomial in the distinguished input for all sufficiently large values of it",
+    "uses_the_word_monotone": false
+  },
+  "kernel_audit": {
+    "candidates": [
+      {
+        "candidate": "K1 fuel-bounded conditional-jump register machine",
+        "contains_the_answer_or_its_shape": false,
+        "escapes_the_invariant": true,
+        "note": "escapes using decrement, subtract and a conditional jump; no modulo, no target predicate"
+      },
+      {
+        "candidate": "K2 counted LOOP n { body }",
+        "contains_the_answer_or_its_shape": true,
+        "escapes_the_invariant": true,
+        "note": "escapes, but 'repeat x times' hands the induction on x over directly"
+      },
+      {
+        "candidate": "K3 primitive-recursion combinator fold(n, init, step)",
+        "contains_the_answer_or_its_shape": true,
+        "escapes_the_invariant": true,
+        "note": "same objection as K2; the recursion schema is the answer's shape"
+      },
+      {
+        "candidate": "K4 comparison plus conditional SELECT, no iteration",
+        "contains_the_answer_or_its_shape": false,
+        "escapes_the_invariant": false,
+        "note": "eventually one branch wins, so the germ is closed; INSUFFICIENT"
+      },
+      {
+        "candidate": "K5 more registers, wider constants, min/abs, longer bodies",
+        "contains_the_answer_or_its_shape": false,
+        "escapes_the_invariant": false,
+        "note": "all ring or lattice operations; the germ is closed; INSUFFICIENT"
+      },
+      {
+        "candidate": "K6 indirect addressing, address wraps modulo register count",
+        "contains_the_answer_or_its_shape": true,
+        "escapes_the_invariant": true,
+        "note": "escapes only because wraparound IS modulo; contains the answer"
+      },
+      {
+        "candidate": "K7 floor division by a constant",
+        "contains_the_answer_or_its_shape": true,
+        "escapes_the_invariant": true,
+        "note": "escapes, but floor(x/2) and x mod 2 are interdefinable; contains the answer"
+      }
+    ],
+    "k1_escape_demonstrated_without_a_parity_operation": true,
+    "non_iterative_candidates_all_trapped": true,
+    "selected": "K1",
+    "selection_reason": "iteration is forced: every audited non-iterative extension stays inside the invariant. Among iterative designs K1 is the most target-neutral -- K2 and K3 supply the induction on x directly, and K6 and K7 escape only by containing modulo."
+  },
+  "parity_enumeration": {
+    "germs_checked": 485400,
+    "note": "corroboration; the impossibility is Corollary M092-P, not this enumeration",
+    "parity_matches": 0
+  },
+  "soundness": {
+    "bodies_enumerated": 165514,
+    "exact_agreements": 1941600,
+    "max_body_length": 4,
+    "max_observed_degree": 2,
+    "max_observed_threshold": 7,
+    "mismatches": 0,
+    "refusal_disagreements": 0,
+    "refusals_agreed_on": 2847504,
+    "sound": true
+  }
+}
