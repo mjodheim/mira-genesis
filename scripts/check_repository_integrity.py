@@ -150,7 +150,12 @@ def check_dependencies() -> list[str]:
     for extra in project.get("optional-dependencies", {}).values():
         declared |= distributions(extra)
 
-    local = set(PACKAGES) | {module_name(path) for path in source_files()}
+    # ``scripts`` is an intentional repository-local namespace even though it is not an
+    # installable distribution package.  Tests and cross-checkers may use an explicit
+    # ``scripts.foo`` import when they need the package-qualified identity; pyproject's pytest
+    # path also supports the historical bare ``foo`` entry-point imports.  Neither spelling is a
+    # third-party dependency.
+    local = set(PACKAGES) | {"scripts"} | {module_name(path) for path in source_files()}
     used: set[str] = set()
     for path in source_files():
         for name in imported_names(path):
