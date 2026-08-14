@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+- Implemented the post-freeze M092-B exact certificate verifier without starting extension search.
+  It recomputes each candidate CFG, symbolically covers integer branch paths, checks normalized
+  affine induction and postcondition obligations from candidate-supplied integer witnesses, proves
+  a well-founded variant and linear K1 fuel bound, and establishes the stack/slot/input frame
+  structurally. The only positive development fixture is the frozen neutral countdown-to-zero
+  rehearsal; wrong binding, false proof, non-decreasing variant, wrong postcondition, false frame
+  and finite-vector certificates all refuse. No qualifying candidate or result exists; H38 and
+  D062 remain unclaimed.
+- Froze the M092-B pre-search protocol against the exact M092-A checkpoint: eleven causal/control
+  arms, six dependency ablations and fifteen conjunctive conditions. Global correctness is an exact
+  program-bound affine certificate over every `x >= 0`; execution over `0..2999` is explicitly
+  separate corroboration. The candidate/program/certificate searches, isolated validation receipt,
+  content-addressed registration, downstream language dependency, two-family hidden draw, three
+  rollback boundaries and anti-table scanner are all bounded before search. No M092-B candidate,
+  qualification, extended substrate, receipt or result exists at this freeze; H38 and D062 remain
+  unclaimed.
+- Froze the separate M092-A checkpoint before any substrate-extension search or qualification.
+  Checkpoint `d8bacb1c...6ce8` binds seventeen exact blobs from source commit `5adfaa6`, proves the
+  six M092-B artifact paths absent there, preserves zero acquired substrate operations and seals the
+  `296230ae...c84717` state digest after 2,340,480 exhaustive legal comparisons with zero mismatch.
+- Continued the pre-checkpoint review after Claude's handoff and corrected two defects while M092-A
+  was still unfrozen: fuel now scales with stack and slot operands as well as inputs and call
+  arguments, and ambiguous serialized contracts (negative dimensions/arity, duplicate domains or
+  primitive identifiers, inconsistent dispatch and unavailable capabilities) fail closed. The
+  substrate digest and every conservation outcome are unchanged. Recorded public disposition P-008
+  before the branch's first remote push. H38 and D062 remain unclaimed; M092-B has not started.
+
 - Added M091, in which the lineage adds an operation to the language it actually owns. **Positive,
   attempt 1, no retry**, fourteen frozen conditions computed and passed; H37 supported, no gate.
   Protocol frozen at `5e4a0fe`, result `d83b836d...4c07af`, 0 model calls.

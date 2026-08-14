@@ -85,3 +85,20 @@ experiments/M091/RESULT.json -text
 experiments/M091/QUALIFICATION.json -text
 experiments/M091/REGISTER_CLAIM.json -text
 experiments/M091/WITHDRAWN_RESULT_*.json -text
+
+# M092 freezes the state-owned substrate separately before any extension or qualification. Register
+# every digest-bearing path at the checkpoint boundary and force canonical LF bytes so later M092-B
+# artifacts cannot repeat the checkout-dependent commitment defect seen in M064/M086-A.
+experiments/M092/DESIGN_AUDIT.json text eol=lf
+experiments/M092/ISOLATION.json text eol=lf
+experiments/M092/M092A_REPORT.json text eol=lf
+experiments/M092/SUBSTRATE_A.json text eol=lf
+experiments/M092/CHECKPOINT_A.json text eol=lf
+experiments/M092/PROTOCOL.json text eol=lf
+metamorphosis/m092_certificate_verifier.py text eol=lf
+experiments/M092/QUALIFICATION.json text eol=lf
+experiments/M092/SUBSTRATE_B.json text eol=lf
+experiments/M092/VALIDATION_RECEIPT.json text eol=lf
+experiments/M092/RESULT.json text eol=lf
+experiments/M092/REGISTER_CLAIM.json text eol=lf
+experiments/M092/WITHDRAWN_RESULT_*.json text eol=lf

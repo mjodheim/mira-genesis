@@ -1,0 +1,416 @@
+{
+  "anti_cheating": {
+    "candidate_and_generated_artifact_scan": [
+      "embedded target-output vectors",
+      "ordered lists whose length matches a verification or qualification domain",
+      "large literal sets correlated with target outputs",
+      "chains of equality tests over verification or qualification inputs",
+      "domain-indexed lookup tables",
+      "encoded bit masks or packed output tables",
+      "candidate-specific fixtures",
+      "callbacks, imports or host functions providing equivalent semantics"
+    ],
+    "clean_state_restored_and_redigested_after_fixtures": true,
+    "deliberate_rejection_fixtures": [
+      "direct output table",
+      "encoded bit mask",
+      "equality-chain lookup",
+      "host callback",
+      "wrong-program-digest certificate"
+    ],
+    "executable_scanner_positive_controls_required": true,
+    "protocol_and_prose_may_name_the_target_but_executable_candidate_paths_may_not_contain_an_authored_solution": true,
+    "truth_table_is_not_semantic_acquisition": true
+  },
+  "arm_requirements": {
+    "evolvable_substrate": "the complete causal chain is enabled; it is the only arm allowed to score a qualifying world",
+    "extension_built_but_not_registered": "the same accepted K1 program and receipt exist, but SUBSTRATE_A remains the executing state",
+    "fixed_substrate": "the exact M092-A checkpoint executes and no substrate operation may be added",
+    "fresh_agent": "a fresh process receives only the frozen checkpoint language and substrate",
+    "macro_only_substrate_extension": "a certified operation equivalent to registered M091 semantics may be added; a search-cost gain is recorded but no new reach may count",
+    "more_budget_same_substrate": "ten complete independent searches run over the frozen registered substrate, with state reset between repetitions; M092-P, not search failure, remains the impossibility proof",
+    "proof_certificate_ablated": "a generated program without a valid exact-program global certificate cannot receive a validation receipt or be registered",
+    "qualification_use_ablated": "the acquired operation and downstream primitive exist, but the qualifying program is forbidden to call the downstream primitive",
+    "registered_but_dependency_ablated": "the acquired substrate operation is registered, but the downstream language builder is forbidden to reference it",
+    "substrate_acquisition_ablated": "candidate generation and certification are disabled",
+    "substrate_registered_downstream_not_registered": "the acquired substrate operation is executable state and the downstream primitive is built, but the primitive is not registered in the language"
+  },
+  "arms": [
+    "evolvable_substrate",
+    "fixed_substrate",
+    "substrate_acquisition_ablated",
+    "proof_certificate_ablated",
+    "extension_built_but_not_registered",
+    "substrate_registered_downstream_not_registered",
+    "registered_but_dependency_ablated",
+    "qualification_use_ablated",
+    "more_budget_same_substrate",
+    "macro_only_substrate_extension",
+    "fresh_agent"
+  ],
+  "certificate_contract": {
+    "accepted_logic": "normalized exact integer affine equalities and inequalities over the original top-of-stack value, K1 registers and explicit ghost counters; no floating point, sampling or solver oracle",
+    "binding": "program_digest is the SHA-256 of the exact serialized K1 program; a mismatch is a decisive refusal",
+    "candidate_supplies_certificate": true,
+    "empirical_execution_is_separate_corroboration": true,
+    "independent_verifier_rechecks_against_program": true,
+    "postcondition": "the output y and a non-negative integer witness q satisfy original_x = 2*q + y and 0 <= y < 2, with the rest of the stack, all slots and all inputs unchanged",
+    "precondition": "the stack is non-empty and its top original_x is an arbitrary integer >= 0",
+    "required_fields": [
+      "schema",
+      "program_digest",
+      "precondition",
+      "control_flow_graph",
+      "loop_invariants",
+      "well_founded_variants",
+      "inductive_steps",
+      "termination_argument",
+      "linear_step_bound",
+      "postcondition",
+      "frame_condition"
+    ],
+    "required_proofs": [
+      "precondition establishes every loop invariant",
+      "every control-flow edge preserves its destination invariant",
+      "each loop variant is a non-negative integer on entry and strictly decreases on every back edge",
+      "the variants imply termination and the declared linear step bound",
+      "invariant and exit guard imply the postcondition",
+      "the proof applies to every original_x >= 0 rather than to a finite execution domain",
+      "the frame condition proves no hidden stack entry, slot or input is modified"
+    ],
+    "schema": "m092-global-k1-certificate-v1",
+    "target_uses_a_presburger_remainder_characterization_not_a_kernel_modulo_opcode": true,
+    "verifier_must_refuse_if_outside_the_accepted_logic": true
+  },
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_lower_kernel_eliminated": false,
+    "generality_gate": false,
+    "general_program_synthesis": false,
+    "h35_retried": false,
+    "h38_supported_before_result": false,
+    "independent_reproduction": false,
+    "open_ended_evolution": false,
+    "recursive_self_improvement": false,
+    "self_hosting": false,
+    "substrate_independence": false,
+    "unrestricted_code_generation": false
+  },
+  "conditions": [
+    "P1_m092a_checkpoint_is_exact_and_predates_extension_search_and_qualification",
+    "P2_inherited_registered_substrate_is_proved_unable_to_express_the_global_target",
+    "P3_candidate_k1_program_is_generated_by_the_frozen_search_and_not_selected_from_authored_solutions",
+    "P4_candidate_passes_structural_capability_and_anti_cheating_validation",
+    "P5_candidate_carries_a_valid_global_correctness_termination_and_frame_certificate_bound_to_its_exact_program",
+    "P6_independent_validation_receipt_is_recomputed_without_qualification_access",
+    "P7_validated_operation_is_registered_as_executable_serialized_substrate_state",
+    "P8_downstream_language_primitive_is_assembled_registered_and_depends_on_the_acquired_operation",
+    "P9_required_transformation_is_outside_checkpoint_reach_and_inside_extended_reach",
+    "P10_post_registration_qualification_shows_the_correctness_difference_with_certificate_and_empiricism_kept_distinct",
+    "P11_every_fixed_budget_macro_registration_and_dependency_ablation_control_closes_nothing",
+    "P12_one_acquired_operation_is_reused_by_composition_across_both_families_without_a_second_target_operation",
+    "P13_rollback_is_byte_exact_and_behavioural_at_all_three_frozen_boundaries",
+    "P14_extension_persists_in_a_fresh_isolated_process_with_track_a_chronology_and_zero_model_or_network_calls",
+    "P15_attempt_provenance_artifact_bindings_and_the_conjunctive_verdict_are_recomputed_without_skip_paths"
+  ],
+  "date_frozen": "2026-08-14",
+  "decision_slot": "D062",
+  "dependency_matrix": [
+    {
+      "ablation": "substrate_acquisition_ablated",
+      "arrow": "checkpoint -> generated substrate-operation program",
+      "required_break": "no candidate and no downstream acquisition"
+    },
+    {
+      "ablation": "proof_certificate_ablated",
+      "arrow": "generated program -> independent validation",
+      "required_break": "no receipt and no registration"
+    },
+    {
+      "ablation": "extension_built_but_not_registered",
+      "arrow": "validation -> substrate registration",
+      "required_break": "execution remains byte-identical to SUBSTRATE_A"
+    },
+    {
+      "ablation": "substrate_registered_downstream_not_registered",
+      "arrow": "substrate registration -> downstream language registration",
+      "required_break": "the qualifying transformation is not callable by the lineage"
+    },
+    {
+      "ablation": "registered_but_dependency_ablated",
+      "arrow": "acquired operation -> downstream primitive",
+      "required_break": "the inherited-only builder cannot construct the qualifying transformation"
+    },
+    {
+      "ablation": "qualification_use_ablated",
+      "arrow": "downstream primitive -> correctness-critical behaviour",
+      "required_break": "no qualifying world is scored as solved"
+    }
+  ],
+  "development_rehearsal": {
+    "may_not_generate_a_target_semantics_candidate": true,
+    "purpose": "exercise program binding, loop invariants, variants, termination, frame checks, receipts, registration and rollback without rehearsing the qualifying target",
+    "target": "a neutral certified countdown that maps any non-negative stack operand to zero",
+    "uses_qualification_generator": false,
+    "uses_qualification_values": false
+  },
+  "downstream_language_contract": {
+    "acquired_primitive_count": 1,
+    "body_max_length": 4,
+    "body_must_reference_the_acquired_substrate_key": true,
+    "builder_input": "the extended serialized substrate and the declared downstream requirement only",
+    "builder_may_not_execute_k1_directly": true,
+    "key": "content-addressed from the exact primitive body and signature",
+    "origin": "acquired",
+    "parameter_kinds": [
+      "slot",
+      "input"
+    ],
+    "registration_changes_the_serialized_language_digest": true,
+    "semantics": "write the acquired non-negative phase result for the selected input into the selected slot"
+  },
+  "falsifiers": [
+    "the M092-A checkpoint or any immutable blob drifts",
+    "extension search or qualification predates the checkpoint or protocol freeze",
+    "the candidate is authored as a finished program or selected from a catalogue",
+    "the candidate or its support artifacts contain a truth table, bit mask, equality chain or callback",
+    "the certificate is finite testing presented as a global proof",
+    "the certificate is not bound to the exact candidate program",
+    "the verifier accepts a false invariant, non-decreasing variant, wrong postcondition or frame violation",
+    "the validation process imports or observes qualification material",
+    "registration is a host function, metadata flag or detached copy rather than executing state",
+    "the downstream primitive does not depend on the acquired operation",
+    "the fixed or more-budget arm passes an entire qualifying family",
+    "a macro-only operation buys reach rather than only search cost",
+    "a second target-specific substrate operation is used for the second family",
+    "any rollback compares a checkpoint with itself or faults a detached copy",
+    "a fresh process reconstructs the extension from development modules",
+    "the checker has a skip flag for a decisive arm or proof",
+    "a model or network call occurs during qualification",
+    "a system defect is repaired after a verdict to save the result"
+  ],
+  "hypothesis": {
+    "id": "H38",
+    "statement": "Starting from the frozen state-owned M092-A substrate, one lineage can generate and independently certify a previously unavailable substrate-operation program, register it as executable serialized state, then assemble and register a downstream language primitive whose dependency on that operation creates correctness reach absent from every inherited, fixed-budget, macro-only and non-registration control, with the same acquired operation reused by composition in two families."
+  },
+  "integrity": {
+    "artifact_attempt_provenance_derived_not_declared": true,
+    "checker_must_recompute_every_condition": true,
+    "checker_must_replay_every_decisive_arm": true,
+    "checker_skip_flags_forbidden": true,
+    "human_contributor_identity": "Anthony Mets",
+    "m089_and_m091_artifacts_read_only": true,
+    "m093_not_implemented": true,
+    "model_calls_during_qualification": 0,
+    "network_calls_during_qualification": 0,
+    "provider_or_ai_coauthor_trailers_forbidden": true,
+    "qualification_track": "A"
+  },
+  "k1_frozen": {
+    "candidate_allowed_opcodes": [
+      "HALT",
+      "LOADI",
+      "MOV",
+      "ADD",
+      "SUB",
+      "MUL",
+      "JMP",
+      "JZ",
+      "JNZ",
+      "JLT",
+      "SPOP",
+      "SPUSH"
+    ],
+    "candidate_forbidden_opcodes": [
+      "FAIL",
+      "ARG",
+      "SLEN",
+      "SPEEK",
+      "GETSLOT",
+      "SETSLOT",
+      "GETINPUT"
+    ],
+    "candidate_stack_contract": "consume exactly the original top stack value and push exactly one result; preserve the rest of the stack byte-for-byte",
+    "kernel_manifest_digest": "1173724ba4b52e1f9ce63cf58e1a3ec5187548c573b7403bb62a2948d132841d",
+    "lower_kernel_is_authored_and_the_next_ceiling": true,
+    "runtime_files_may_not_change_after_m092a": [
+      "metamorphosis/m092_runtime.py",
+      "metamorphosis/m092_kernel.py",
+      "metamorphosis/m092_substrate_state.py"
+    ]
+  },
+  "m092a_checkpoint": {
+    "checkpoint_blob_sha256": "9dabc86b43299f791c55bf0ebae1880344aed3f8a8c0c6223b7cfb3063919436",
+    "checkpoint_digest": "d8bacb1c94dd06da8ceb5ddf2c9a94f8d2bc8c598b307ea1171e3dc7dfc86ce8",
+    "checkpoint_git_blob_sha1": "fa41639b18160090289e8233e99a48c0fda7c5ce",
+    "checkpoint_commit": "aa18d15b9a628e2f24fb963efd1d17b6e31cff61",
+    "checkpoint_verifier_blob_sha256": "f71f7eaf968ba56b05201af04a2802eb1e0d2dd4e16675edc468728b4382764e",
+    "checkpoint_verifier_git_blob_sha1": "1371f873b283fe51d0719eed88ccc7d034dd8f13",
+    "source_commit": "5adfaa671d242d1589d85985014dbd1c6f4bf2c8",
+    "substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717",
+    "verified_before_protocol_freeze": true
+  },
+  "milestone": "M092",
+  "predecessors": {
+    "M055": "showed that a registered macro may reduce search cost without adding reach; reproduced here by the macro-only substrate arm",
+    "M089": "preserved negative and not retried; its base language was not wholly executable state",
+    "M090": "made the complete language state-owned but left the substrate authored",
+    "M091": "endogenously extended the state-owned language and located the authored assembly substrate as the next ceiling",
+    "M092-A": "migrated that substrate into executable serialized state with exact registered-reach conservation, then froze it separately"
+  },
+  "qualification": {
+    "cross_family_reuse": "family B must use the same downstream parity primitive plus inherited negation and increment to obtain the complementary phase; no second acquired substrate operation is permitted",
+    "empirical_corroboration_domain": {
+      "inclusive_maximum": 2999,
+      "inclusive_minimum": 0,
+      "role": "finite adversarial corroboration only; never the global correctness proof"
+    },
+    "family_schemas": {
+      "alternating_allocation": "write the parity phase of a non-negative demand index",
+      "complementary_protocol_phase": "write the complementary phase by composition with inherited language operations"
+    },
+    "fixed_arm_passing_is_a_falsification_not_an_explanation": true,
+    "draw_algorithm": "counter-mode SHA-256 rejection sampling without replacement, domain-separated by family name; candidates are consumed in digest order",
+    "hidden_instances_per_family": 6,
+    "hidden_value_domain": {
+      "inclusive_maximum": 9999,
+      "inclusive_minimum": 3000,
+      "stratification": "three even and three odd values per family, with stratum order derived from the family-domain-separated digest"
+    },
+    "materialized_after_protocol_freeze_and_after_extended_state_exists": true,
+    "no_new_operation_may_be_registered_during_qualification": true,
+    "salt_derivation": "SHA-256 of the protocol blob, extended substrate digest and extended language digest",
+    "success": "the evolvable arm passes 6/6 hidden instances in both families; every control passes 0/2 complete families",
+    "theorem_certificate_and_empirical_fields_are_separate": true,
+    "world_generator_not_importable_by_candidate_builder_or_validator": true
+  },
+  "retry_policy": {
+    "attempt_number_derived_from_preserved_result_artifacts": true,
+    "clean_negative_is_accepted": true,
+    "reroll_permitted": false,
+    "result_saving_correction_after_verdict_forbidden": true,
+    "superseded_runs_preserved_and_disclosed": true
+  },
+  "registration_contract": {
+    "built_but_not_registered_executes_substrate_a": true,
+    "extended_state_artifact": "experiments/M092/SUBSTRATE_B.json",
+    "forbidden_capability_vocabulary_unchanged": true,
+    "host_function_or_side_registry_forbidden": true,
+    "operation_key_is_content_addressed": true,
+    "permitted_capability_vocabulary_unchanged": true,
+    "program_bytes_live_inside_the_registered_operation": true,
+    "substrate_version_increment": 1,
+    "validated_program_digest_must_equal_registered_program_digest": true
+  },
+  "rollback": {
+    "boundaries": [
+      "frozen M092-A substrate before any acquired operation",
+      "extended substrate after acquired-operation registration",
+      "extended language after downstream primitive registration"
+    ],
+    "comparison": "serialized bytes and semantic digest against an independently preserved checkpoint, never against the damaged object itself",
+    "fault_classes": [
+      "operation removal",
+      "program semantic mutation"
+    ],
+    "fault_must_change_live_behaviour_before_restore": true,
+    "fresh_process_replay_after_restore": true
+  },
+  "schema": "m092-endogenous-substrate-extension-protocol-v1",
+  "search": {
+    "behaviour_deduplication_is_only_an_optimization": true,
+    "candidate_cap": 2000000,
+    "candidate_unit": "an exact K1 program paired with a candidate-supplied certificate; a bare program is incomplete",
+    "certificate_search_bounds": {
+      "affine_coefficient_inclusive_maximum": 4,
+      "affine_coefficient_inclusive_minimum": -4,
+      "certificates_examined_per_program_maximum": 4096,
+      "constraints_per_loop_maximum": 8,
+      "ghost_counters_maximum": 2,
+      "loop_headers_maximum": 1,
+      "total_certificates_examined_maximum": 2000000
+    },
+    "candidate_literal_set": [
+      -1,
+      0,
+      1
+    ],
+    "candidate_program_max_length": 14,
+    "deterministic_seed": 9202,
+    "generator": "typed breadth-first enumeration over the frozen allowed K1 opcodes, register operands, literal set and in-program jump targets",
+    "generic_certificate_generation": "the lineage enumerates normalized invariant, variant and affine-bound templates from each generated control-flow graph; the independent verifier never supplies or repairs a certificate",
+    "no_finished_candidate_catalogue": true,
+    "recorded_fields": [
+      "generated programs",
+      "structurally invalid programs",
+      "deduplicated programs",
+      "validator refusals by semantic reason",
+      "surviving candidates",
+      "adopted exact program bytes and AST",
+      "program and semantics digests",
+      "search order",
+      "deterministic seed"
+    ],
+    "sampled_observation_inputs_for_deduplication": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      7,
+      8,
+      15,
+      16,
+      31,
+      32,
+      63,
+      64,
+      127,
+      128
+    ],
+    "search_failure_is_not_an_impossibility_proof": true
+  },
+  "status": "frozen_before_any_m092b_extension_search_or_qualification",
+  "target_contract": {
+    "domain": "all integers x >= 0",
+    "global_semantics": "replace the top stack value x with x mod 2",
+    "operation_argument_role": "none",
+    "operation_capabilities": [],
+    "operation_key": "content-addressed from the accepted exact program digest; no authored target name",
+    "operation_origin": "acquired",
+    "stack_effect": "one value consumed, one value produced, remaining stack preserved",
+    "system_authority_added": false
+  },
+  "title": "Endogenous Extension of a State-Owned Assembly Substrate",
+  "track": "A",
+  "validation_contract": {
+    "allowed_project_imports": [
+      "metamorphosis.m092_kernel",
+      "metamorphosis.m092_runtime"
+    ],
+    "candidate_builder_import_forbidden": true,
+    "fresh_process_required": true,
+    "qualification_modules_and_artifacts_forbidden": true,
+    "receipt_artifact": "experiments/M092/VALIDATION_RECEIPT.json",
+    "receipt_digest": "SHA-256 over every receipt field except receipt_digest",
+    "receipt_required_fields": [
+      "schema",
+      "checkpoint_digest",
+      "program_digest",
+      "certificate_digest",
+      "validator_blob_sha256",
+      "structural_findings",
+      "anti_cheating_findings",
+      "global_proof_findings",
+      "frame_findings",
+      "accepted",
+      "qualification_imported",
+      "receipt_digest"
+    ],
+    "receipt_schema": "m092-independent-validation-receipt-v1",
+    "result_checker_recomputes_receipt_from_exact_program_and_certificate": true,
+    "verifier_may_not_repair_or_complete_a_certificate": true
+  },
+  "verdict_rule": "positive iff all fifteen conditions are recomputed true; any failed condition yields a preserved negative or inconclusive result, never a repaired positive"
+}

@@ -1,0 +1,3883 @@
+{
+  "expected_substrate_digest": "296230ae97384d12b2371c3ff572ae38d87d771ad195ed8f97a6761eb2c84717",
+  "language": {
+    "language_version": 1,
+    "primitives": [
+      {
+        "body": [
+          [
+            "PUSH_CONST",
+            "$1"
+          ],
+          [
+            "STORE_SLOT",
+            "$0"
+          ]
+        ],
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "origin": "inherited",
+        "parameter_kinds": [
+          "slot",
+          "const"
+        ],
+        "primitive_id": "SET_CONST",
+        "provenance": [
+          "migrated from m089 host implementation"
+        ]
+      },
+      {
+        "body": [
+          [
+            "PUSH_INPUT",
+            "$1"
+          ],
+          [
+            "STORE_SLOT",
+            "$0"
+          ]
+        ],
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "origin": "inherited",
+        "parameter_kinds": [
+          "slot",
+          "input"
+        ],
+        "primitive_id": "COPY_INPUT",
+        "provenance": [
+          "migrated from m089 host implementation"
+        ]
+      },
+      {
+        "body": [
+          [
+            "PUSH_SLOT",
+            "$0"
+          ],
+          [
+            "UNOP",
+            "$1"
+          ],
+          [
+            "STORE_SLOT",
+            "$0"
+          ]
+        ],
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "origin": "inherited",
+        "parameter_kinds": [
+          "slot",
+          "unary_op"
+        ],
+        "primitive_id": "APPLY_UNARY",
+        "provenance": [
+          "migrated from m089 host implementation"
+        ]
+      },
+      {
+        "body": [
+          [
+            "PUSH_SLOT",
+            "$0"
+          ],
+          [
+            "PUSH_CONST",
+            0
+          ],
+          [
+            "BINOP",
+            "max"
+          ],
+          [
+            "STORE_SLOT",
+            "$0"
+          ]
+        ],
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "origin": "acquired",
+        "parameter_kinds": [
+          "slot"
+        ],
+        "primitive_id": "CLAMP_FLOOR",
+        "provenance": [
+          "m091 adopted primitive"
+        ]
+      }
+    ],
+    "provenance": [
+      "m091 extended language"
+    ],
+    "schema": "m092-runtime-v1"
+  },
+  "probes": [
+    {
+      "id": "p0",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p1",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p2",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p3",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p4",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p5",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p6",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p7",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p8",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p9",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p10",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p11",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p12",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p13",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p14",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p15",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p16",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p17",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p18",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p19",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p20",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p21",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p22",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p23",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p24",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p25",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p26",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p27",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p28",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p29",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p30",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p31",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p32",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p33",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p34",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p35",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p36",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p37",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p38",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p39",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p40",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p41",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p42",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p43",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p44",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p45",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p46",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p47",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p48",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p49",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p50",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p51",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p52",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p53",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p54",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p55",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p56",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p57",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p58",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p59",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p60",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p61",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p62",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p63",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p64",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p65",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p66",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p67",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            2,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p68",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p69",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p70",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p71",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p72",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p73",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p74",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p75",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p76",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p77",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p78",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p79",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p80",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p81",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p82",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p83",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p84",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p85",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p86",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p87",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p88",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p89",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p90",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p91",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p92",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p93",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p94",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p95",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p96",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p97",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p98",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p99",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p100",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p101",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p102",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p103",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p104",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p105",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p106",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p107",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p108",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p109",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p110",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p111",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p112",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p113",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p114",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p115",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p116",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p117",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p118",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p119",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p120",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p121",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p122",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p123",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p124",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p125",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p126",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p127",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p128",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p129",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p130",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p131",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p132",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p133",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p134",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p135",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "dec"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p136",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p137",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p138",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p139",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p140",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p141",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p142",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p143",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "double"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p144",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p145",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p146",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p147",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p148",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p149",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p150",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p151",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p152",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p153",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p154",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p155",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p156",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p157",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p158",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p159",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p160",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p161",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p162",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p163",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            0,
+            0
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            0,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            0
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p164",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p165",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p166",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p167",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            1,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            1,
+            "double"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            1
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p168",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p169",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p170",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p171",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "SET_CONST",
+          [
+            2,
+            1
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "dec"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            2,
+            "inc"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p172",
+      "inputs": [
+        3,
+        1,
+        -2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p173",
+      "inputs": [
+        0,
+        0,
+        0
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p174",
+      "inputs": [
+        -5,
+        4,
+        7
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "p175",
+      "inputs": [
+        9,
+        -9,
+        2
+      ],
+      "program": [
+        [
+          "COPY_INPUT",
+          [
+            3,
+            2
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ],
+        [
+          "CLAMP_FLOOR",
+          [
+            3
+          ]
+        ],
+        [
+          "APPLY_UNARY",
+          [
+            3,
+            "neg"
+          ]
+        ]
+      ]
+    }
+  ],
+  "substrate": {
+    "forbidden_capabilities": [
+      "filesystem",
+      "network",
+      "subprocess",
+      "credentials",
+      "repository_write",
+      "evaluator",
+      "science_gate",
+      "production"
+    ],
+    "input_count": 3,
+    "literal_values": [
+      0,
+      1
+    ],
+    "max_body_length": 6,
+    "max_stack_depth": 8,
+    "operations": [
+      {
+        "argument_role": "index",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "PUSH_INPUT",
+        "minimum_stack_depth": 0,
+        "origin": "inherited",
+        "program": [
+          [
+            "ARG",
+            0
+          ],
+          [
+            "GETINPUT",
+            1,
+            0
+          ],
+          [
+            "SPUSH",
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "index",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "PUSH_SLOT",
+        "minimum_stack_depth": 0,
+        "origin": "inherited",
+        "program": [
+          [
+            "ARG",
+            0
+          ],
+          [
+            "GETSLOT",
+            1,
+            0
+          ],
+          [
+            "SPUSH",
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "literal",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "PUSH_CONST",
+        "minimum_stack_depth": 0,
+        "origin": "inherited",
+        "program": [
+          [
+            "ARG",
+            0
+          ],
+          [
+            "SPUSH",
+            0
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "none",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "DUP",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "LOADI",
+            0,
+            0
+          ],
+          [
+            "SPEEK",
+            1,
+            0
+          ],
+          [
+            "SPUSH",
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "none",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "SWAP",
+        "minimum_stack_depth": 2,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SPUSH",
+            0
+          ],
+          [
+            "SPUSH",
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "index",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "STORE_SLOT",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "ARG",
+            0
+          ],
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SETSLOT",
+            0,
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "BINOP:add",
+        "minimum_stack_depth": 2,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "ADD",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "BINOP:sub",
+        "minimum_stack_depth": 2,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "SUB",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "BINOP:mul",
+        "minimum_stack_depth": 2,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "MUL",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "BINOP:max",
+        "minimum_stack_depth": 2,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            1
+          ],
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "JLT",
+            0,
+            1,
+            5
+          ],
+          [
+            "SPUSH",
+            0
+          ],
+          [
+            "HALT"
+          ],
+          [
+            "SPUSH",
+            1
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "UNOP:inc",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "LOADI",
+            1,
+            1
+          ],
+          [
+            "ADD",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "UNOP:dec",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "LOADI",
+            1,
+            1
+          ],
+          [
+            "SUB",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "UNOP:neg",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "LOADI",
+            1,
+            0
+          ],
+          [
+            "SUB",
+            2,
+            1,
+            0
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      },
+      {
+        "argument_role": "selector",
+        "capabilities": [
+          "pure_slot_write"
+        ],
+        "key": "UNOP:double",
+        "minimum_stack_depth": 1,
+        "origin": "inherited",
+        "program": [
+          [
+            "SPOP",
+            0
+          ],
+          [
+            "LOADI",
+            1,
+            2
+          ],
+          [
+            "MUL",
+            2,
+            0,
+            1
+          ],
+          [
+            "SPUSH",
+            2
+          ],
+          [
+            "HALT"
+          ]
+        ],
+        "provenance": [
+          "migrated from the m090 host interpreter arm of the same name"
+        ]
+      }
+    ],
+    "parameter_domains": [
+      {
+        "kind": "slot",
+        "reference": "",
+        "rule": "slot_index"
+      },
+      {
+        "kind": "input",
+        "reference": "",
+        "rule": "input_index"
+      },
+      {
+        "kind": "const",
+        "reference": "",
+        "rule": "literal_set"
+      },
+      {
+        "kind": "unary_op",
+        "reference": "UNOP",
+        "rule": "selector_of"
+      }
+    ],
+    "permitted_capabilities": [
+      "pure_slot_write"
+    ],
+    "provenance": [
+      "m091 micro-operations migrated into substrate state, semantics unchanged"
+    ],
+    "schema": "m092a-state-owned-substrate-v2",
+    "slot_count": 4,
+    "substrate_version": 0
+  }
+}
