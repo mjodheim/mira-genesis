@@ -7,9 +7,9 @@
     {
       "relation": "eq",
       "coefficients": {
-        "q": -2,
-        "x": 1,
-        "y": -1
+        "q": 2,
+        "x": -1,
+        "y": 1
       },
       "constant": 0
     },
