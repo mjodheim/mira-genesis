@@ -6,7 +6,7 @@
   It visits structured one-loop programs breadth-first under the frozen seed, cap, opcode, register,
   literal, jump and loop bounds; alpha-normalises register-renaming duplicates; derives a
   target-neutral quota that reaches every length 6–14 despite multi-billion raw layers; statically
-  checks reachability and the stack frame; and commits every raw proposal to an authenticated cursor
+  checks reachability and the stack frame; and commits every raw proposal to a digest-bound cursor
   and ordered event chain. A 512-proposal replay is byte-identical across a serialized resume at
   ordinal 137.
   The enumerator has no target postcondition, executes no program and produces no certificate,

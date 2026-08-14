@@ -113,7 +113,7 @@ def _cursor_payload(
 
 @dataclass(frozen=True)
 class EnumerationCursor:
-    """Authenticated location immediately after one emitted raw proposal."""
+    """Digest-bound location immediately after one emitted raw proposal."""
 
     seed: int
     program_length: int

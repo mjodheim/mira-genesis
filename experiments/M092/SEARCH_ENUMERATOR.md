@@ -48,7 +48,7 @@ Every raw emitted proposal receives:
 - a one-based ordinal counted against the frozen cap;
 - exact canonical program bytes and SHA-256 digest;
 - the recomputed loop headers and structural refusal reasons;
-- an authenticated cursor containing the program length and typed decision path;
+- a digest-bound cursor containing the program length and typed decision path;
 - an order-sensitive event-chain commitment linked to the previous proposal.
 
 The cursor resumes directly inside the current length instead of replaying earlier sibling
