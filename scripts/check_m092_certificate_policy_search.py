@@ -1,8 +1,9 @@
 """Check the M092 path-wise certificate-policy layer without loading target qualification.
 
-This is a pre-search readiness check.  It exercises only the neutral countdown theorem and proves
-that policy enumeration is deterministic, that failed construction attempts remain countable, and
-that the candidate-side policy module has no verifier/qualification import edge.
+This is a pre-search readiness check. It exercises a neutral countdown theorem with an explicit
+step-count witness and proves that policy enumeration is deterministic, that failed construction
+attempts remain countable, and that the candidate-side policy module has no verifier/qualification
+import edge.
 """
 from __future__ import annotations
 
@@ -28,9 +29,11 @@ COUNTDOWN_PROGRAM: Program = (
 )
 COUNTDOWN_REQUIREMENT = {
     "schema": POSTCONDITION_SCHEMA,
-    "witnesses": [],
+    "witnesses": ["steps"],
     "constraints": [
+        {"relation": "eq", "coefficients": {"steps": -1, "x": 1}, "constant": 0},
         {"relation": "eq", "coefficients": {"y": 1}, "constant": 0},
+        {"relation": "ge", "coefficients": {"steps": 1}, "constant": 0},
     ],
 }
 
@@ -56,34 +59,41 @@ def main() -> int:
     if imports != expected_imports:
         raise SystemExit(f"candidate policy import boundary differs: {sorted(imports)}")
 
-    first = [
-        record.to_dict(include_certificate=False)
-        for record in policies.enumerate_certificate_policy_records(
-            COUNTDOWN_PROGRAM, COUNTDOWN_REQUIREMENT, limit=16,
-        )
-    ]
-    second = [
-        record.to_dict(include_certificate=False)
-        for record in policies.enumerate_certificate_policy_records(
-            COUNTDOWN_PROGRAM, COUNTDOWN_REQUIREMENT, limit=16,
-        )
-    ]
+    first_records = list(policies.enumerate_certificate_policy_records(
+        COUNTDOWN_PROGRAM, COUNTDOWN_REQUIREMENT, limit=32,
+    ))
+    second_records = list(policies.enumerate_certificate_policy_records(
+        COUNTDOWN_PROGRAM, COUNTDOWN_REQUIREMENT, limit=32,
+    ))
+    first = [record.to_dict(include_certificate=False) for record in first_records]
+    second = [record.to_dict(include_certificate=False) for record in second_records]
     if first != second or not first:
         raise SystemExit("neutral path-wise certificate policy search is not deterministic")
     if [item["ordinal"] for item in first] != list(range(1, len(first) + 1)):
         raise SystemExit("certificate policy attempt ordinals are not contiguous")
 
-    constructed = sum(bool(item["constructed"]) for item in first)
+    constructed_records = [record for record in first_records if record.constructed]
+    if not constructed_records:
+        raise SystemExit("neutral witness rehearsal did not construct any complete certificate")
+    if not any(
+        record.ghost_count >= 1 and any(any(values) for _, values in record.increments)
+        for record in constructed_records
+    ):
+        raise SystemExit("neutral witness rehearsal never exercised an incrementing ghost policy")
+
+    constructed = len(constructed_records)
     refused = len(first) - constructed
     report = {
         "schema": "m092-certificate-policy-readiness-v1",
         "neutral_theorem_only": True,
+        "neutral_witness": "steps",
         "qualification_loaded": False,
         "target_theorem_loaded": False,
         "module_imports": sorted(imports),
         "attempts": len(first),
         "constructed": constructed,
         "refused": refused,
+        "incrementing_ghost_policy_constructed": True,
         "ordinals_contiguous": True,
         "deterministic": True,
         "policy_prefix_digest": hashlib.sha256(canonical_bytes(first)).hexdigest(),
