@@ -1,13 +1,13 @@
 """Generic candidate-side certificate construction for the frozen M092 search.
 
-The independent verifier is deliberately not imported here.  This module reconstructs the
-small affine proof language on the candidate side, symbolically follows a generated K1 control
-flow graph, derives bounded affine invariants from the loop transition, searches a well-founded
-variant, and emits complete proof records through :mod:`m092_proof_search`.
+This module intentionally does not import the independent M092 certificate verifier. It rebuilds
+only the small affine machinery needed by the lineage to *propose* certificates: syntactic CFG
+construction, symbolic execution of the frozen candidate opcode surface, bounded invariant and
+variant enumeration, and exact affine proof-witness search.
 
-No qualification artifact, finite target table, or result artifact is an input.  The required
-postcondition is a theorem statement, not an example set.  Every emitted certificate remains only
-a candidate claim until ``m092_certificate_verifier`` accepts it independently.
+No qualification artifact, hidden value, finite target table, or result artifact is an input. The
+required postcondition is a theorem statement. Every emitted certificate remains a candidate claim
+until the independent verifier recomputes and accepts it.
 """
 from __future__ import annotations
 
@@ -17,12 +17,12 @@ import itertools
 import math
 from dataclasses import dataclass
 from fractions import Fraction
-from typing import Iterable, Iterator, Mapping, Sequence
+from typing import Iterator, Mapping, Sequence
 
 from metamorphosis.m092_kernel import (
     FUEL_BASE,
     FUEL_SLOPE,
-    JUMP_OPCODES,
+    INSTRUCTION_SET,
     REGISTER_COUNT,
     Instruction,
     Program,
@@ -45,6 +45,7 @@ MAX_CONSTRAINTS_PER_LOOP = 8
 MAX_GHOST_COUNTERS = 2
 MAX_PATHS = 4096
 MAX_EQUALITY_SUPPORT = 3
+MAX_INITIAL_BOUND_CONSTANT = 8
 PROOF_MULTIPLIER_BOUND = 8
 PROOF_SUPPORT_BOUND = 6
 
@@ -54,7 +55,7 @@ FORBIDDEN_OPCODES = (
 
 
 class CertificateGenerationError(ValueError):
-    """A program has no certificate in this deterministic candidate-side template family."""
+    """The exact program has no certificate in this deterministic template family."""
 
 
 @dataclass(frozen=True)
@@ -64,9 +65,10 @@ class Affine:
 
     @classmethod
     def make(cls, terms: Mapping[str, int] | None = None, constant: int = 0) -> "Affine":
-        cleaned = tuple(sorted((name, coefficient) for name, coefficient in (terms or {}).items()
-                               if coefficient))
-        return cls(cleaned, constant)
+        return cls(
+            tuple(sorted((str(name), int(value)) for name, value in (terms or {}).items() if value)),
+            int(constant),
+        )
 
     @classmethod
     def variable(cls, name: str) -> "Affine":
@@ -76,12 +78,12 @@ class Affine:
         return dict(self.terms)
 
     def __add__(self, other: "Affine") -> "Affine":
-        terms = self.coefficients()
+        values = self.coefficients()
         for name, coefficient in other.terms:
-            terms[name] = terms.get(name, 0) + coefficient
-            if terms[name] == 0:
-                del terms[name]
-        return Affine.make(terms, self.constant + other.constant)
+            values[name] = values.get(name, 0) + coefficient
+            if values[name] == 0:
+                del values[name]
+        return Affine.make(values, self.constant + other.constant)
 
     def __sub__(self, other: "Affine") -> "Affine":
         return self + other.scale(-1)
@@ -96,7 +98,7 @@ class Affine:
         result = Affine.make(constant=self.constant)
         for name, coefficient in self.terms:
             if name not in values:
-                raise CertificateGenerationError(f"no substitution for {name!r}")
+                raise CertificateGenerationError(f"missing affine substitution for {name!r}")
             result = result + values[name].scale(coefficient)
         return result
 
@@ -121,7 +123,7 @@ class Constraint:
         }
 
 
-def _normalize(constraint: Constraint) -> Constraint:
+def _normalise(constraint: Constraint) -> Constraint:
     values = [abs(value) for _, value in constraint.expression.terms]
     values.append(abs(constraint.expression.constant))
     divisor = math.gcd(*values) if values else 1
@@ -140,7 +142,9 @@ def _normalize(constraint: Constraint) -> Constraint:
 
 
 def _constraint(relation: str, expression: Affine) -> Constraint:
-    return _normalize(Constraint(relation, expression))
+    if relation not in ("eq", "ge"):
+        raise CertificateGenerationError("unsupported affine relation")
+    return _normalise(Constraint(relation, expression))
 
 
 def _false_constraint() -> Constraint:
@@ -148,6 +152,8 @@ def _false_constraint() -> Constraint:
 
 
 def control_flow_graph(program: Sequence[Instruction]) -> dict[str, object]:
+    """Recompute the same closed syntactic CFG that a submitted certificate must carry."""
+
     validate_program(program)
     edges: list[dict[str, object]] = []
     for pc, step in enumerate(program):
@@ -177,10 +183,31 @@ def control_flow_graph(program: Sequence[Instruction]) -> dict[str, object]:
                 changed = True
     if reachable != set(range(len(program))):
         raise CertificateGenerationError("program contains unreachable instructions")
+
     back_edges = [edge for edge in edges if int(edge["target"]) <= int(edge["source"])]
     headers = sorted({int(edge["target"]) for edge in back_edges})
     if len(headers) != 1:
-        raise CertificateGenerationError("candidate template requires exactly one loop header")
+        raise CertificateGenerationError("certificate template requires exactly one loop header")
+
+    forward = [edge for edge in edges if edge not in back_edges]
+    adjacency: dict[int, list[int]] = {pc: [] for pc in range(len(program))}
+    for edge in forward:
+        adjacency[int(edge["source"])].append(int(edge["target"]))
+    visiting: set[int] = set()
+    visited: set[int] = set()
+
+    def visit(node: int) -> None:
+        if node in visiting:
+            raise CertificateGenerationError("cycle remains after removing the declared back edge")
+        if node in visited:
+            return
+        visiting.add(node)
+        for target in adjacency[node]:
+            visit(target)
+        visiting.remove(node)
+        visited.add(node)
+
+    visit(0)
     return {
         "entry": 0,
         "nodes": list(range(len(program))),
@@ -223,8 +250,13 @@ class SymbolicPath:
     state: SymbolicState
 
 
-def _path_id(source: str, outcome: str, target: int, pcs: Sequence[int],
-             decisions: Sequence[tuple[int, str]]) -> str:
+def _path_id(
+    source: str,
+    outcome: str,
+    target: int,
+    pcs: Sequence[int],
+    decisions: Sequence[tuple[int, str]],
+) -> str:
     payload = {
         "source": source,
         "outcome": outcome,
@@ -251,15 +283,26 @@ def _initial_header_state(ghosts: Sequence[str]) -> SymbolicState:
     )
 
 
-def _symbolic_paths(program: Sequence[Instruction], *, source: str, start: int,
-                    stop_headers: set[int], initial_state: SymbolicState) -> list[SymbolicPath]:
+def _symbolic_paths(
+    program: Sequence[Instruction],
+    *,
+    source: str,
+    start: int,
+    stop_headers: set[int],
+    initial_state: SymbolicState,
+) -> list[SymbolicPath]:
     paths: list[SymbolicPath] = []
 
-    def walk(pc: int, state: SymbolicState, pcs: tuple[int, ...],
-             decisions: tuple[tuple[int, str], ...], guards: tuple[Constraint, ...],
-             seen: frozenset[int]) -> None:
+    def walk(
+        pc: int,
+        state: SymbolicState,
+        pcs: tuple[int, ...],
+        decisions: tuple[tuple[int, str], ...],
+        guards: tuple[Constraint, ...],
+        seen: frozenset[int],
+    ) -> None:
         if len(paths) >= MAX_PATHS:
-            raise CertificateGenerationError("symbolic path count exceeds bound")
+            raise CertificateGenerationError("symbolic path count exceeds the frozen bound")
         if pcs and pc in stop_headers:
             paths.append(SymbolicPath(
                 _path_id(source, "header", pc, pcs, decisions), source, "header", pc,
@@ -267,7 +310,8 @@ def _symbolic_paths(program: Sequence[Instruction], *, source: str, start: int,
             ))
             return
         if pc in seen or not 0 <= pc < len(program):
-            raise CertificateGenerationError("unexpected cycle or falloff during symbolic execution")
+            raise CertificateGenerationError("unexpected symbolic cycle or program falloff")
+
         step = program[pc]
         opcode = str(step[0])
         operands = [int(value) for value in step[1:]]
@@ -281,9 +325,11 @@ def _symbolic_paths(program: Sequence[Instruction], *, source: str, start: int,
                 next_pcs, decisions, guards, state,
             ))
             return
+        if opcode == "FAIL":
+            raise CertificateGenerationError("FAIL is outside the candidate surface")
         if opcode == "LOADI":
-            walk(pc + 1, state.with_register(operands[0], Affine.make(constant=operands[1])),
-                 next_pcs, decisions, guards, next_seen)
+            updated = state.with_register(operands[0], Affine.make(constant=operands[1]))
+            walk(pc + 1, updated, next_pcs, decisions, guards, next_seen)
             return
         if opcode == "MOV":
             walk(pc + 1, state.with_register(operands[0], registers[operands[1]]),
@@ -295,24 +341,25 @@ def _symbolic_paths(program: Sequence[Instruction], *, source: str, start: int,
             walk(pc + 1, state.with_register(operands[0], value), next_pcs, decisions, guards, next_seen)
             return
         if opcode == "MUL":
-            left, right = registers[operands[1]], registers[operands[2]]
+            left = registers[operands[1]]
+            right = registers[operands[2]]
             if left.is_constant:
                 value = right.scale(left.constant)
             elif right.is_constant:
                 value = left.scale(right.constant)
             else:
-                raise CertificateGenerationError("multiplication leaves affine certificate logic")
+                raise CertificateGenerationError("symbolic multiplication leaves affine logic")
             walk(pc + 1, state.with_register(operands[0], value), next_pcs, decisions, guards, next_seen)
             return
         if opcode == "SPOP":
             if not state.stack:
-                raise CertificateGenerationError("candidate pops the opaque frame")
+                raise CertificateGenerationError("candidate may pop an opaque frame entry")
             updated = state.with_register(operands[0], state.stack[-1]).with_stack(state.stack[:-1])
             walk(pc + 1, updated, next_pcs, decisions, guards, next_seen)
             return
         if opcode == "SPUSH":
             if state.stack:
-                raise CertificateGenerationError("candidate exceeds the restored frame depth")
+                raise CertificateGenerationError("candidate can exceed the entry stack depth")
             walk(pc + 1, state.with_stack((registers[operands[0]],)),
                  next_pcs, decisions, guards, next_seen)
             return
@@ -331,14 +378,18 @@ def _symbolic_paths(program: Sequence[Instruction], *, source: str, start: int,
                 cases = ((operands[1], "negative", negative), (operands[1], "positive", positive),
                          (pc + 1, "zero", zero))
             for target, decision, guard in cases:
-                walk(target, state, next_pcs, decisions + ((pc, decision),), guards + (guard,), next_seen)
+                walk(target, state, next_pcs, decisions + ((pc, decision),),
+                     guards + (guard,), next_seen)
             return
         if opcode == "JLT":
-            left, right = registers[operands[0]], registers[operands[1]]
+            left = registers[operands[0]]
+            right = registers[operands[1]]
             taken = _constraint("ge", right - left + Affine.make(constant=-1))
             fallthrough = _constraint("ge", left - right)
-            walk(operands[2], state, next_pcs, decisions + ((pc, "taken"),), guards + (taken,), next_seen)
-            walk(pc + 1, state, next_pcs, decisions + ((pc, "fallthrough"),), guards + (fallthrough,), next_seen)
+            walk(operands[2], state, next_pcs, decisions + ((pc, "taken"),),
+                 guards + (taken,), next_seen)
+            walk(pc + 1, state, next_pcs, decisions + ((pc, "fallthrough"),),
+                 guards + (fallthrough,), next_seen)
             return
         raise CertificateGenerationError(f"opcode {opcode!r} is outside the candidate surface")
 
@@ -353,38 +404,43 @@ def _source_values(state: SymbolicState) -> dict[str, Affine]:
     return values
 
 
-def _ghost_update(path: SymbolicPath, ghosts: Sequence[str], increments: tuple[int, ...]) -> dict[str, Affine]:
+def _ghost_update(
+    path: SymbolicPath,
+    ghosts: Sequence[str],
+    increments: tuple[int, ...],
+) -> dict[str, Affine]:
     back_edge = path.outcome == "header" and path.source.startswith("header:")
     return {
-        name: Affine.variable(name) + Affine.make(constant=(increments[index] if back_edge else 0))
+        name: Affine.variable(name) + Affine.make(
+            constant=increments[index] if back_edge else 0,
+        )
         for index, name in enumerate(ghosts)
     }
 
 
 def _apply_update(state: SymbolicState, update: Mapping[str, Affine]) -> SymbolicState:
     values = _source_values(state)
-    return state.with_ghosts({name: expression.substitute(values) for name, expression in update.items()})
+    return state.with_ghosts({
+        name: expression.substitute(values) for name, expression in update.items()
+    })
+
+
+def _active_registers(program: Sequence[Instruction]) -> tuple[int, ...]:
+    registers: set[int] = set()
+    for step in program:
+        roles = INSTRUCTION_SET[str(step[0])]
+        for operand, role in zip(step[1:], roles, strict=True):
+            if role == "r":
+                registers.add(int(operand))
+    return tuple(sorted(registers))
 
 
 def _active_variables(program: Sequence[Instruction], ghosts: Sequence[str]) -> tuple[str, ...]:
-    registers = sorted({
-        int(operand)
-        for step in program
-        for operand in step[1:]
-        if isinstance(operand, int) and not isinstance(operand, bool)
-        for _ in ((),)
-    })
-    # Operand roles are not available here without reintroducing jump targets as registers.  Keep
-    # the bounded register surface instead; support-size enumeration controls the combinatorics.
-    del registers
-    return ("x", *[f"r{index}" for index in range(REGISTER_COUNT)], *ghosts)
-
-
-def _entry_substitutions(paths: Sequence[SymbolicPath], updates: Mapping[str, Mapping[str, Affine]]) -> list[dict[str, Affine]]:
-    return [
-        _source_values(_apply_update(path.state, updates[path.path_id]))
-        for path in paths if path.source == "entry" and path.outcome == "header"
-    ]
+    return (
+        "x",
+        *[f"r{index}" for index in _active_registers(program)],
+        *ghosts,
+    )
 
 
 def _rank(rows: Sequence[Sequence[int]]) -> int:
@@ -403,19 +459,40 @@ def _rank(rows: Sequence[Sequence[int]]) -> int:
             if row == pivot_row or not matrix[row][column]:
                 continue
             factor = matrix[row][column]
-            matrix[row] = [left - factor * right for left, right in zip(matrix[row], matrix[pivot_row], strict=True)]
+            matrix[row] = [
+                left - factor * right
+                for left, right in zip(matrix[row], matrix[pivot_row], strict=True)
+            ]
         pivot_row += 1
         if pivot_row == len(matrix):
             break
     return pivot_row
 
 
-def _derive_equalities(program: Sequence[Instruction], paths: Sequence[SymbolicPath], ghosts: Sequence[str],
-                       updates: Mapping[str, Mapping[str, Affine]]) -> list[Constraint]:
-    entry_values = _entry_substitutions(paths, updates)
-    if not entry_values:
+def _entry_header_values(
+    paths: Sequence[SymbolicPath],
+    updates: Mapping[str, Mapping[str, Affine]],
+) -> list[dict[str, Affine]]:
+    return [
+        _source_values(_apply_update(path.state, updates[path.path_id]))
+        for path in paths
+        if path.source == "entry" and path.outcome == "header"
+    ]
+
+
+def _derive_equalities(
+    program: Sequence[Instruction],
+    paths: Sequence[SymbolicPath],
+    ghosts: Sequence[str],
+    updates: Mapping[str, Mapping[str, Affine]],
+) -> list[Constraint]:
+    entries = _entry_header_values(paths, updates)
+    if not entries:
         return []
-    back_paths = [path for path in paths if path.source.startswith("header:") and path.outcome == "header"]
+    back_paths = [
+        path for path in paths
+        if path.source.startswith("header:") and path.outcome == "header"
+    ]
     variables = _active_variables(program, ghosts)
     coefficient_values = (-1, 1, -2, 2, -3, 3, -4, 4)
     candidates: list[Constraint] = []
@@ -424,7 +501,7 @@ def _derive_equalities(program: Sequence[Instruction], paths: Sequence[SymbolicP
         for support in itertools.combinations(variables, support_size):
             for coefficients in itertools.product(coefficient_values, repeat=support_size):
                 expression = Affine.make(dict(zip(support, coefficients, strict=True)))
-                entry_forms = [expression.substitute(values) for values in entry_values]
+                entry_forms = [expression.substitute(values) for values in entries]
                 if any(form.terms for form in entry_forms):
                     continue
                 constants = {form.constant for form in entry_forms}
@@ -434,29 +511,25 @@ def _derive_equalities(program: Sequence[Instruction], paths: Sequence[SymbolicP
                 if abs(constant) > MAX_AFFINE_COEFFICIENT:
                     continue
                 expression = expression + Affine.make(constant=constant)
-                preserved = True
-                for path in back_paths:
-                    final = _apply_update(path.state, updates[path.path_id])
-                    difference = expression.substitute(_source_values(final)) - expression
-                    if difference != Affine.make():
-                        preserved = False
-                        break
-                if preserved:
-                    candidate = _constraint("eq", expression)
-                    if candidate not in candidates:
-                        candidates.append(candidate)
+                if any(
+                    expression.substitute(
+                        _source_values(_apply_update(path.state, updates[path.path_id]))
+                    ) - expression != Affine.make()
+                    for path in back_paths
+                ):
+                    continue
+                candidate = _constraint("eq", expression)
+                if candidate not in candidates:
+                    candidates.append(candidate)
 
-    # Keep only linearly independent equalities in deterministic discovery order.  This avoids
-    # exhausting the eight-constraint certificate budget with algebraic recombinations.
     basis: list[Constraint] = []
-    basis_rows: list[list[int]] = []
-    columns = (*variables, "#constant")
+    rows: list[list[int]] = []
     for candidate in candidates:
         row = [candidate.expression.coefficients().get(name, 0) for name in variables]
         row.append(candidate.expression.constant)
-        if _rank([*basis_rows, row]) > _rank(basis_rows):
+        if _rank([*rows, row]) > _rank(rows):
             basis.append(candidate)
-            basis_rows.append(row)
+            rows.append(row)
         if len(basis) >= MAX_CONSTRAINTS_PER_LOOP - 1:
             break
     return basis
@@ -464,14 +537,18 @@ def _derive_equalities(program: Sequence[Instruction], paths: Sequence[SymbolicP
 
 def _proof(premises: Sequence[Constraint], goal: Constraint) -> dict[str, object] | None:
     return find_affine_proof(
-        [item.to_dict() for item in premises], goal.to_dict(),
+        [item.to_dict() for item in premises],
+        goal.to_dict(),
         multiplier_bound=PROOF_MULTIPLIER_BOUND,
         support_bound=PROOF_SUPPORT_BOUND,
     )
 
 
-def _path_premises(path: SymbolicPath, precondition: Sequence[Constraint],
-                   invariants: Sequence[Constraint]) -> tuple[Constraint, ...]:
+def _path_premises(
+    path: SymbolicPath,
+    precondition: Sequence[Constraint],
+    invariants: Sequence[Constraint],
+) -> tuple[Constraint, ...]:
     source = tuple(precondition) if path.source == "entry" else tuple(invariants)
     return (*source, *path.guards)
 
@@ -480,98 +557,141 @@ def _is_infeasible(premises: Sequence[Constraint]) -> bool:
     return _proof(premises, _false_constraint()) is not None
 
 
-def _derive_inequalities(paths: Sequence[SymbolicPath], equalities: Sequence[Constraint],
-                         precondition: Sequence[Constraint], updates: Mapping[str, Mapping[str, Affine]],
-                         ghosts: Sequence[str]) -> list[Constraint]:
-    variables = ("r0", *ghosts, *[f"r{index}" for index in range(1, REGISTER_COUNT)])
+def _derive_inequalities(
+    program: Sequence[Instruction],
+    paths: Sequence[SymbolicPath],
+    equalities: Sequence[Constraint],
+    precondition: Sequence[Constraint],
+    updates: Mapping[str, Mapping[str, Affine]],
+    ghosts: Sequence[str],
+) -> list[Constraint]:
+    active = _active_registers(program)
+    names = (
+        *(["r0"] if 0 in active else []),
+        *ghosts,
+        *[f"r{index}" for index in active if index != 0],
+        "x",
+    )
     accepted: list[Constraint] = []
-    candidates = [
-        _constraint("ge", Affine.make({name: sign}, constant))
-        for name in variables
-        for sign in (1, -1)
-        for constant in range(-MAX_AFFINE_COEFFICIENT, MAX_AFFINE_COEFFICIENT + 1)
-    ]
-    for candidate in candidates:
-        if candidate in equalities or candidate in accepted:
-            continue
-        if len(equalities) + len(accepted) >= MAX_CONSTRAINTS_PER_LOOP:
-            break
-        establishes = True
-        for path in paths:
-            if path.source != "entry" or path.outcome != "header":
+    for name in names:
+        for sign in (1, -1):
+            candidate = _constraint("ge", Affine.make({name: sign}))
+            if _proof([*equalities, *accepted], candidate) is not None:
                 continue
-            premises = _path_premises(path, precondition, ())
-            final = _apply_update(path.state, updates[path.path_id])
-            goal = _constraint(candidate.relation, candidate.expression.substitute(_source_values(final)))
-            if _proof(premises, goal) is None:
-                establishes = False
-                break
-        if not establishes:
-            continue
-        trial = [*equalities, *accepted, candidate]
-        preserves = True
-        for path in paths:
-            if not path.source.startswith("header:") or path.outcome != "header":
+            if len(equalities) + len(accepted) >= MAX_CONSTRAINTS_PER_LOOP:
+                return accepted
+
+            establishes = True
+            for path in paths:
+                if path.source != "entry" or path.outcome != "header":
+                    continue
+                premises = _path_premises(path, precondition, ())
+                final = _apply_update(path.state, updates[path.path_id])
+                goal = _constraint(
+                    "ge", candidate.expression.substitute(_source_values(final)),
+                )
+                if _proof(premises, goal) is None:
+                    establishes = False
+                    break
+            if not establishes:
                 continue
-            premises = _path_premises(path, precondition, trial)
-            if _is_infeasible(premises):
-                continue
-            final = _apply_update(path.state, updates[path.path_id])
-            goal = _constraint(candidate.relation, candidate.expression.substitute(_source_values(final)))
-            if _proof(premises, goal) is None:
-                preserves = False
-                break
-        if preserves:
-            accepted.append(candidate)
+
+            trial = [*equalities, *accepted, candidate]
+            preserves = True
+            for path in paths:
+                if not path.source.startswith("header:") or path.outcome != "header":
+                    continue
+                premises = _path_premises(path, precondition, trial)
+                if _is_infeasible(premises):
+                    continue
+                final = _apply_update(path.state, updates[path.path_id])
+                goal = _constraint(
+                    "ge", candidate.expression.substitute(_source_values(final)),
+                )
+                if _proof(premises, goal) is None:
+                    preserves = False
+                    break
+            if preserves:
+                accepted.append(candidate)
     return accepted
 
 
-def _statuses(paths: Sequence[SymbolicPath], precondition: Sequence[Constraint],
-              invariants: Sequence[Constraint]) -> dict[str, str]:
+def _path_statuses(
+    paths: Sequence[SymbolicPath],
+    precondition: Sequence[Constraint],
+    invariants: Sequence[Constraint],
+) -> dict[str, str]:
     return {
         path.path_id: (
-            "infeasible" if _is_infeasible(_path_premises(path, precondition, invariants)) else "feasible"
+            "infeasible"
+            if _is_infeasible(_path_premises(path, precondition, invariants))
+            else "feasible"
         )
         for path in paths
     }
 
 
-def _variant_candidates(ghosts: Sequence[str]) -> Iterator[Affine]:
-    variables = ("r0", *[f"r{index}" for index in range(1, REGISTER_COUNT)], *ghosts)
-    for name in variables:
+def _variant_candidates(program: Sequence[Instruction], ghosts: Sequence[str]) -> Iterator[Affine]:
+    active = _active_registers(program)
+    names = (
+        *(["r0"] if 0 in active else []),
+        *[f"r{index}" for index in active if index != 0],
+        *ghosts,
+    )
+    for name in names:
         for coefficient in (1, -1, 2, -2, 3, -3, 4, -4):
             yield Affine.make({name: coefficient})
 
 
-def _find_variant(paths: Sequence[SymbolicPath], statuses: Mapping[str, str],
-                  precondition: Sequence[Constraint], invariants: Sequence[Constraint],
-                  updates: Mapping[str, Mapping[str, Affine]], header: int,
-                  ghosts: Sequence[str]) -> tuple[Affine, int, int, int] | None:
-    for variant in _variant_candidates(ghosts):
+def _find_variant(
+    program: Sequence[Instruction],
+    paths: Sequence[SymbolicPath],
+    statuses: Mapping[str, str],
+    precondition: Sequence[Constraint],
+    invariants: Sequence[Constraint],
+    updates: Mapping[str, Mapping[str, Affine]],
+    header: int,
+    ghosts: Sequence[str],
+) -> tuple[Affine, int, int, int] | None:
+    for variant in _variant_candidates(program, ghosts):
         if _proof(invariants, _constraint("ge", variant)) is None:
             continue
         for decrease in range(1, MAX_AFFINE_COEFFICIENT + 1):
-            decreasing = True
-            for path in paths:
-                if statuses[path.path_id] != "feasible" or path.source != f"header:{header}" or path.outcome != "header":
-                    continue
-                final = _apply_update(path.state, updates[path.path_id])
-                next_variant = variant.substitute(_source_values(final))
-                goal = _constraint("ge", variant - next_variant + Affine.make(constant=-decrease))
-                if _proof(_path_premises(path, precondition, invariants), goal) is None:
-                    decreasing = False
-                    break
-            if not decreasing:
+            if any(
+                _proof(
+                    _path_premises(path, precondition, invariants),
+                    _constraint(
+                        "ge",
+                        variant
+                        - variant.substitute(
+                            _source_values(_apply_update(path.state, updates[path.path_id]))
+                        )
+                        + Affine.make(constant=-decrease),
+                    ),
+                ) is None
+                for path in paths
+                if statuses[path.path_id] == "feasible"
+                and path.source == f"header:{header}"
+                and path.outcome == "header"
+            ):
                 continue
-            for coefficient in range(0, FUEL_SLOPE + 1):
-                for constant in range(0, FUEL_BASE + 1):
+
+            for coefficient in range(FUEL_SLOPE + 1):
+                for constant in range(MAX_INITIAL_BOUND_CONSTANT + 1):
                     bounded = True
                     for path in paths:
-                        if statuses[path.path_id] != "feasible" or path.source != "entry" or path.outcome != "header":
+                        if (
+                            statuses[path.path_id] != "feasible"
+                            or path.source != "entry"
+                            or path.outcome != "header"
+                        ):
                             continue
-                        final = _apply_update(path.state, updates[path.path_id])
-                        initial = variant.substitute(_source_values(final))
-                        upper = Affine.make({"x": coefficient} if coefficient else {}, constant)
+                        initial = variant.substitute(
+                            _source_values(_apply_update(path.state, updates[path.path_id]))
+                        )
+                        upper = Affine.make(
+                            {"x": coefficient} if coefficient else {}, constant,
+                        )
                         goal = _constraint("ge", upper - initial)
                         if _proof(_path_premises(path, precondition, invariants), goal) is None:
                             bounded = False
@@ -581,8 +701,13 @@ def _find_variant(paths: Sequence[SymbolicPath], statuses: Mapping[str, str],
     return None
 
 
-def _obligation_record(kind: str, path: SymbolicPath, index: int,
-                       premises: Sequence[Constraint], goal: Constraint) -> dict[str, object] | None:
+def _obligation_record(
+    kind: str,
+    path: SymbolicPath,
+    index: int,
+    premises: Sequence[Constraint],
+    goal: Constraint,
+) -> dict[str, object] | None:
     goal = _constraint(goal.relation, goal.expression)
     proof = _proof(premises, goal)
     if proof is None:
@@ -611,9 +736,13 @@ def _frame(headers: Sequence[int]) -> dict[str, object]:
     }
 
 
-def _requirement(value: Mapping[str, object]) -> tuple[tuple[str, ...], tuple[Constraint, ...]]:
-    if set(value) != {"schema", "witnesses", "constraints"} or value.get("schema") != POSTCONDITION_SCHEMA:
-        raise CertificateGenerationError("expected postcondition has an unsupported schema")
+def _requirement(
+    value: Mapping[str, object],
+) -> tuple[tuple[str, ...], tuple[Constraint, ...]]:
+    if set(value) != {"schema", "witnesses", "constraints"}:
+        raise CertificateGenerationError("expected postcondition uses an open schema")
+    if value.get("schema") != POSTCONDITION_SCHEMA:
+        raise CertificateGenerationError("unexpected postcondition schema")
     witnesses_value = value.get("witnesses")
     constraints_value = value.get("constraints")
     if not isinstance(witnesses_value, Sequence) or isinstance(witnesses_value, (str, bytes)):
@@ -621,6 +750,9 @@ def _requirement(value: Mapping[str, object]) -> tuple[tuple[str, ...], tuple[Co
     if not isinstance(constraints_value, Sequence) or isinstance(constraints_value, (str, bytes)):
         raise CertificateGenerationError("expected constraints are malformed")
     witnesses = tuple(str(item) for item in witnesses_value)
+    if len(witnesses) != len(set(witnesses)):
+        raise CertificateGenerationError("expected witness names are not unique")
+
     constraints: list[Constraint] = []
     for raw in constraints_value:
         if not isinstance(raw, Mapping) or set(raw) != {"relation", "coefficients", "constant"}:
@@ -630,13 +762,22 @@ def _requirement(value: Mapping[str, object]) -> tuple[tuple[str, ...], tuple[Co
             raise CertificateGenerationError("expected affine coefficients are malformed")
         constraints.append(_constraint(
             str(raw["relation"]),
-            Affine.make({str(name): int(coefficient) for name, coefficient in coefficients.items()}, int(raw["constant"])),
+            Affine.make(
+                {str(name): int(coefficient) for name, coefficient in coefficients.items()},
+                int(raw["constant"]),
+            ),
         ))
+    if not constraints:
+        raise CertificateGenerationError("expected theorem has no constraints")
     return witnesses, tuple(constraints)
 
 
-def build_candidate_certificate(program: Program, expected_postcondition: Mapping[str, object],
-                                *, ghost_increments: tuple[int, ...]) -> dict[str, object]:
+def build_candidate_certificate(
+    program: Program,
+    expected_postcondition: Mapping[str, object],
+    *,
+    ghost_increments: tuple[int, ...],
+) -> dict[str, object]:
     """Construct one complete generic certificate candidate for an exact K1 program."""
 
     cfg = control_flow_graph(program)
@@ -650,109 +791,175 @@ def build_candidate_certificate(program: Program, expected_postcondition: Mappin
     ghosts = tuple(f"g{index}" for index in range(ghost_count))
 
     paths = _symbolic_paths(
-        program, source="entry", start=0, stop_headers={header}, initial_state=_initial_entry_state(ghosts),
+        program,
+        source="entry",
+        start=0,
+        stop_headers={header},
+        initial_state=_initial_entry_state(ghosts),
     )
     paths.extend(_symbolic_paths(
-        program, source=f"header:{header}", start=header, stop_headers={header},
+        program,
+        source=f"header:{header}",
+        start=header,
+        stop_headers={header},
         initial_state=_initial_header_state(ghosts),
     ))
     paths.sort(key=lambda item: item.path_id)
-    updates = {path.path_id: _ghost_update(path, ghosts, ghost_increments) for path in paths}
+
+    updates = {
+        path.path_id: _ghost_update(path, ghosts, ghost_increments) for path in paths
+    }
     precondition = (_constraint("ge", Affine.variable("x")),)
     equalities = _derive_equalities(program, paths, ghosts, updates)
-    inequalities = _derive_inequalities(paths, equalities, precondition, updates, ghosts)
+    inequalities = _derive_inequalities(
+        program, paths, equalities, precondition, updates, ghosts,
+    )
     invariants = tuple([*equalities, *inequalities][:MAX_CONSTRAINTS_PER_LOOP])
     if not invariants:
-        raise CertificateGenerationError("no inductive invariant template survived")
-    statuses = _statuses(paths, precondition, invariants)
-    if not any(statuses[path.path_id] == "feasible" and path.source == "entry" for path in paths):
-        raise CertificateGenerationError("all entry paths became infeasible")
-    if not any(statuses[path.path_id] == "feasible" and path.source.startswith("header:") and path.outcome == "halt" for path in paths):
-        raise CertificateGenerationError("no feasible loop exit survived")
+        raise CertificateGenerationError("no inductive invariant survived the bounded templates")
 
-    variant_data = _find_variant(paths, statuses, precondition, invariants, updates, header, ghosts)
+    statuses = _path_statuses(paths, precondition, invariants)
+    if not any(
+        statuses[path.path_id] == "feasible" and path.source == "entry"
+        for path in paths
+    ):
+        raise CertificateGenerationError("certificate declares every entry path infeasible")
+    if not any(
+        statuses[path.path_id] == "feasible"
+        and path.source.startswith("header:")
+        and path.outcome == "halt"
+        for path in paths
+    ):
+        raise CertificateGenerationError("certificate has no feasible loop exit")
+
+    variant_data = _find_variant(
+        program, paths, statuses, precondition, invariants, updates, header, ghosts,
+    )
     if variant_data is None:
         raise CertificateGenerationError("no bounded affine variant survived")
     variant, decrease, initial_constant, initial_coefficient = variant_data
 
-    induction_obligations: list[dict[str, object]] = []
     witness_bindings = {name: ghosts[index] for index, name in enumerate(witnesses)}
+    induction: list[dict[str, object]] = []
     for path in paths:
         premises = _path_premises(path, precondition, invariants)
         if statuses[path.path_id] == "infeasible":
             record = _obligation_record("infeasible", path, 0, premises, _false_constraint())
             if record is None:
                 raise CertificateGenerationError("infeasible-path proof search failed")
-            induction_obligations.append(record)
+            induction.append(record)
             continue
-        final = _apply_update(path.state, updates[path.path_id])
-        values = _source_values(final)
+
+        final_state = _apply_update(path.state, updates[path.path_id])
+        final_values = _source_values(final_state)
         if path.outcome == "header":
-            if final.stack:
-                raise CertificateGenerationError("loop path does not preserve stack frame")
+            if final_state.stack:
+                raise CertificateGenerationError("loop path does not preserve the opaque frame")
             for index, invariant in enumerate(invariants):
-                goal = _constraint(invariant.relation, invariant.expression.substitute(values))
+                goal = _constraint(
+                    invariant.relation, invariant.expression.substitute(final_values),
+                )
                 kind = "establish" if path.source == "entry" else "preserve"
                 record = _obligation_record(kind, path, index, premises, goal)
                 if record is None:
                     raise CertificateGenerationError("inductive proof search failed")
-                induction_obligations.append(record)
+                induction.append(record)
         else:
-            if len(final.stack) != 1:
-                raise CertificateGenerationError("halt path does not leave one output")
-            post_values = {"x": Affine.variable("x"), "y": final.stack[0]}
-            final_ghosts = final.ghost_map()
-            post_values.update({name: final_ghosts[counter] for name, counter in witness_bindings.items()})
+            if len(final_state.stack) != 1:
+                raise CertificateGenerationError("halt path does not leave exactly one output")
+            post_values = {"x": Affine.variable("x"), "y": final_state.stack[0]}
+            final_ghosts = final_state.ghost_map()
+            post_values.update({
+                name: final_ghosts[counter] for name, counter in witness_bindings.items()
+            })
             for index, condition in enumerate(postcondition):
-                goal = _constraint(condition.relation, condition.expression.substitute(post_values))
+                goal = _constraint(
+                    condition.relation, condition.expression.substitute(post_values),
+                )
                 record = _obligation_record("postcondition", path, index, premises, goal)
                 if record is None:
                     raise CertificateGenerationError("postcondition proof search failed")
-                induction_obligations.append(record)
+                induction.append(record)
 
     termination: list[dict[str, object]] = []
     synthetic = SymbolicPath(
-        f"header-{header}", f"header:{header}", "header", header, (), (), (), _initial_header_state(ghosts),
+        f"header-{header}", f"header:{header}", "header", header,
+        (), (), (), _initial_header_state(ghosts),
     )
-    record = _obligation_record("variant_nonnegative", synthetic, 0, invariants, _constraint("ge", variant))
+    record = _obligation_record(
+        "variant_nonnegative", synthetic, 0, invariants, _constraint("ge", variant),
+    )
     if record is None:
         raise CertificateGenerationError("variant non-negativity proof failed")
     termination.append(record)
+
     for path in paths:
-        if statuses[path.path_id] != "feasible" or path.source != f"header:{header}" or path.outcome != "header":
+        if (
+            statuses[path.path_id] != "feasible"
+            or path.source != f"header:{header}"
+            or path.outcome != "header"
+        ):
             continue
-        final = _apply_update(path.state, updates[path.path_id])
-        next_variant = variant.substitute(_source_values(final))
-        goal = _constraint("ge", variant - next_variant + Affine.make(constant=-decrease))
-        record = _obligation_record("variant_decrease", path, 0,
-                                    _path_premises(path, precondition, invariants), goal)
+        final_state = _apply_update(path.state, updates[path.path_id])
+        next_variant = variant.substitute(_source_values(final_state))
+        goal = _constraint(
+            "ge", variant - next_variant + Affine.make(constant=-decrease),
+        )
+        record = _obligation_record(
+            "variant_decrease", path, 0,
+            _path_premises(path, precondition, invariants), goal,
+        )
         if record is None:
             raise CertificateGenerationError("variant decrease proof failed")
         termination.append(record)
+
     for path in paths:
-        if statuses[path.path_id] != "feasible" or path.source != "entry" or path.outcome != "header":
+        if (
+            statuses[path.path_id] != "feasible"
+            or path.source != "entry"
+            or path.outcome != "header"
+        ):
             continue
-        final = _apply_update(path.state, updates[path.path_id])
-        initial_variant = variant.substitute(_source_values(final))
-        upper = Affine.make({"x": initial_coefficient} if initial_coefficient else {}, initial_constant)
-        goal = _constraint("ge", upper - initial_variant)
-        record = _obligation_record("variant_initial_upper_bound", path, 0,
-                                    _path_premises(path, precondition, invariants), goal)
+        final_state = _apply_update(path.state, updates[path.path_id])
+        initial_variant = variant.substitute(_source_values(final_state))
+        upper = Affine.make(
+            {"x": initial_coefficient} if initial_coefficient else {}, initial_constant,
+        )
+        record = _obligation_record(
+            "variant_initial_upper_bound", path, 0,
+            _path_premises(path, precondition, invariants),
+            _constraint("ge", upper - initial_variant),
+        )
         if record is None:
             raise CertificateGenerationError("variant initial-bound proof failed")
         termination.append(record)
 
     feasible = [path for path in paths if statuses[path.path_id] == "feasible"]
-    max_entry = max((len(path.pcs) for path in feasible if path.source == "entry" and path.outcome == "header"), default=0)
-    direct_bound = max((len(path.pcs) for path in feasible if path.source == "entry" and path.outcome == "halt"), default=0)
-    max_back = max((len(path.pcs) for path in feasible if path.source.startswith("header:") and path.outcome == "header"), default=0)
-    max_exit = max((len(path.pcs) for path in feasible if path.source.startswith("header:") and path.outcome == "halt"), default=0)
-    constant_bound = max(direct_bound, max_entry + max_back * initial_constant + max_exit)
+    max_entry = max((
+        len(path.pcs) for path in feasible
+        if path.source == "entry" and path.outcome == "header"
+    ), default=0)
+    direct_bound = max((
+        len(path.pcs) for path in feasible
+        if path.source == "entry" and path.outcome == "halt"
+    ), default=0)
+    max_back = max((
+        len(path.pcs) for path in feasible
+        if path.source.startswith("header:") and path.outcome == "header"
+    ), default=0)
+    max_exit = max((
+        len(path.pcs) for path in feasible
+        if path.source.startswith("header:") and path.outcome == "halt"
+    ), default=0)
+    constant_bound = max(
+        direct_bound,
+        max_entry + max_back * initial_constant + max_exit,
+    )
     coefficient_bound = max_back * initial_coefficient
     if constant_bound > FUEL_BASE or coefficient_bound > FUEL_SLOPE:
-        raise CertificateGenerationError("candidate proof exceeds the frozen K1 fuel rule")
+        raise CertificateGenerationError("proved step bound exceeds the frozen K1 fuel rule")
 
-    certificate = {
+    return {
         "schema": CERTIFICATE_SCHEMA,
         "program_digest": program_digest(program),
         "precondition": {
@@ -764,7 +971,10 @@ def build_candidate_certificate(program: Program, expected_postcondition: Mappin
             "stack": "opaque_prefix_plus_x",
         },
         "control_flow_graph": cfg,
-        "loop_invariants": [{"header": header, "constraints": [item.to_dict() for item in invariants]}],
+        "loop_invariants": [{
+            "header": header,
+            "constraints": [item.to_dict() for item in invariants],
+        }],
         "well_founded_variants": [{
             "header": header,
             "expression": variant.to_dict(),
@@ -775,14 +985,18 @@ def build_candidate_certificate(program: Program, expected_postcondition: Mappin
             "ghost_updates": [
                 {
                     "path_id": path.path_id,
-                    "assignments": {name: expression.to_dict() for name, expression in updates[path.path_id].items()},
+                    "assignments": {
+                        name: expression.to_dict()
+                        for name, expression in updates[path.path_id].items()
+                    },
                 }
                 for path in paths
             ],
             "path_status": [
-                {"path_id": path.path_id, "status": statuses[path.path_id]} for path in paths
+                {"path_id": path.path_id, "status": statuses[path.path_id]}
+                for path in paths
             ],
-            "obligations": induction_obligations,
+            "obligations": induction,
         },
         "termination_argument": {
             "schema": TERMINATION_SCHEMA,
@@ -809,30 +1023,29 @@ def build_candidate_certificate(program: Program, expected_postcondition: Mappin
         },
         "frame_condition": _frame((header,)),
     }
-    return certificate
 
 
-def generate_candidate_certificates(program: Program, expected_postcondition: Mapping[str, object],
-                                    *, limit: int = 4096) -> Iterator[dict[str, object]]:
-    """Yield complete certificates in a fixed ghost-policy order.
-
-    The theorem determines only how many explicit witness counters are required.  Counter update
-    policies are enumerated mechanically and independently of qualification observations.
-    """
+def generate_candidate_certificates(
+    program: Program,
+    expected_postcondition: Mapping[str, object],
+    *,
+    limit: int = 4096,
+) -> Iterator[dict[str, object]]:
+    """Yield complete certificate candidates in a fixed target-neutral ghost-policy order."""
 
     witnesses, _ = _requirement(expected_postcondition)
-    minimum = len(witnesses)
+    if limit <= 0:
+        return
     emitted = 0
-    for ghost_count in range(minimum, MAX_GHOST_COUNTERS + 1):
+    for ghost_count in range(len(witnesses), MAX_GHOST_COUNTERS + 1):
         for increments in itertools.product((0, 1), repeat=ghost_count):
-            if ghost_count and not any(increments):
-                # The all-static policy is still a legitimate first candidate when a theorem has no
-                # witness.  Required witnesses need at least one changing counter to add information.
-                if witnesses:
-                    continue
+            if witnesses and ghost_count and not any(increments):
+                continue
             try:
                 certificate = build_candidate_certificate(
-                    program, expected_postcondition, ghost_increments=tuple(increments),
+                    program,
+                    expected_postcondition,
+                    ghost_increments=tuple(increments),
                 )
             except CertificateGenerationError:
                 continue
