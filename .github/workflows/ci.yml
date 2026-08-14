@@ -93,6 +93,9 @@ jobs:
     # this job red on the pull request that introduced it.
     steps:
       - uses: actions/checkout@v6
+        with:
+          # M092-A verifies the recorded source commit and its exact tree identity.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -145,6 +148,17 @@ jobs:
       # readily as a positive.
       - name: The M091 result must replay from its own preserved artifacts
         run: python scripts/check_m091_result.py --require-result
+
+      # M092 is deliberately pre-result. These checks preserve the sealed M092-A source, the exact
+      # pre-search protocol and the scanner's five positive controls without inventing a result.
+      - name: The M092-A substrate checkpoint must remain byte-exact
+        run: python -m scripts.check_m092a_checkpoint
+
+      - name: The M092-B protocol must remain frozen before search and qualification
+        run: python -m scripts.check_m092b_protocol
+
+      - name: The M092-B candidate scanner must refuse all frozen anti-cheating fixtures
+        run: python -m scripts.check_m092b_candidate_scanner
 
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
