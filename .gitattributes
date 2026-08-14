@@ -97,6 +97,7 @@ experiments/M092/CHECKPOINT_A.json text eol=lf
 experiments/M092/PROTOCOL.json text eol=lf
 metamorphosis/m092_certificate_verifier.py text eol=lf
 metamorphosis/m092_candidate_validation.py text eol=lf
+metamorphosis/m092_search_enumerator.py text eol=lf
 experiments/M092/QUALIFICATION.json text eol=lf
 experiments/M092/SUBSTRATE_B.json text eol=lf
 experiments/M092/VALIDATION_RECEIPT.json text eol=lf
