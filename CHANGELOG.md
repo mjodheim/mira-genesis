@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added M092-B's post-freeze structural and anti-cheating candidate gate without starting search.
+  It binds certificates to exact K1 bytes, enforces the frozen 14-instruction/opcode/literal/loop
+  surface and scans generated support for tables, masks, equality chains, callbacks/imports,
+  fixtures, target names and domain-sized output carriers without executing the candidate. All five
+  frozen rejection fixtures fail for their exact expected codes, a hostile callback is never
+  called, and the neutral baseline redigests byte-identically after restoration. The self-test also
+  passes in a read-only `python:3.13-slim` container with no network. No search, qualification,
+  extended state, receipt or result exists; H38 and D062 remain unclaimed.
 - Implemented the post-freeze M092-B exact certificate verifier without starting extension search.
   It recomputes each candidate CFG, symbolically covers integer branch paths, checks normalized
   affine induction and postcondition obligations from candidate-supplied integer witnesses, proves
