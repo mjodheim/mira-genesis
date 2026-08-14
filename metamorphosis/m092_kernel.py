@@ -18,7 +18,8 @@ Three properties are deliberate, and the design audit fixed all three before thi
   around any target, and it is not claimed that iteration is universally forced.
 
 * **Resource-bounded, by a rule fixed before any qualification exists.** Fuel is
-  `FUEL_BASE + FUEL_SLOPE * magnitude`, a declared function of operand magnitude only. It is never
+  `FUEL_BASE + FUEL_SLOPE * magnitude`, where magnitude covers every integer already present in the
+  machine state at operation entry: stack, slots, inputs and the resolved call argument. It is never
   derived from a target value or a qualifying world. For M092-A it is never binding, because every
   migrated program is loop-free — which `has_backward_jump` checks rather than assumes.
 
@@ -152,11 +153,30 @@ def has_backward_jump(program: Sequence[Instruction]) -> bool:
     return False
 
 
-def default_fuel(inputs: Sequence[int], argument: int) -> int:
-    """Fuel from operand magnitude alone. Never from a target value or a qualifying world."""
+def default_fuel(
+    inputs: Sequence[int],
+    argument: int,
+    stack: Sequence[int] = (),
+    slots: Sequence[int] = (),
+) -> int:
+    """Fuel from entry-state magnitude alone. Never from a target or qualifying world.
 
-    magnitude = max((abs(int(value)) for value in inputs), default=0)
-    return FUEL_BASE + FUEL_SLOPE * max(magnitude, abs(int(argument)))
+    A substrate operation receives its semantic operand through the stack just as often as through
+    the call argument. Ignoring stack and slots would make a large computed operand receive the same
+    budget as zero, contradicting the declared ``fuel(x)`` rule before M092-B even began. Every
+    integer already available to the program at entry is therefore covered; registers are omitted
+    because they are freshly zeroed by :class:`Machine`.
+    """
+
+    magnitude = max(
+        (
+            abs(int(value))
+            for values in (inputs, stack, slots, (argument,))
+            for value in values
+        ),
+        default=0,
+    )
+    return FUEL_BASE + FUEL_SLOPE * magnitude
 
 
 # ---------------------------------------------------------------------------------------------
@@ -196,7 +216,7 @@ def execute_program(
     if validate:
         validate_program(program)
     if fuel is None:
-        fuel = default_fuel(machine.inputs, machine.argument)
+        fuel = default_fuel(machine.inputs, machine.argument, machine.stack, machine.slots)
 
     counter = 0
     while True:
@@ -307,7 +327,7 @@ def fuel_policy_provenance() -> dict[str, object]:
         "fuel_base_margin": FUEL_BASE / MAX_PROGRAM_LENGTH,
         "fuel_slope": FUEL_SLOPE,
         "fuel_slope_origin": "smallest power of two above one; generic linear headroom",
-        "scales_with": "operand magnitude only",
+        "scales_with": "entry-state magnitude: stack, slots, inputs and resolved argument",
         "derived_from_a_target_value": False,
         "derived_from_a_qualifying_world": False,
         "fitted_to_any_candidate_implementation": False,
@@ -324,7 +344,7 @@ def kernel_manifest() -> dict[str, object]:
         "register_count": REGISTER_COUNT,
         "max_kernel_stack": MAX_KERNEL_STACK,
         "max_program_length": MAX_PROGRAM_LENGTH,
-        "fuel_rule": "FUEL_BASE + FUEL_SLOPE * max(|inputs|, |argument|)",
+        "fuel_rule": "FUEL_BASE + FUEL_SLOPE * max(|stack|, |slots|, |inputs|, |argument|)",
         "fuel_base": FUEL_BASE,
         "fuel_slope": FUEL_SLOPE,
         "instruction_set": {name: list(roles) for name, roles in INSTRUCTION_SET.items()},

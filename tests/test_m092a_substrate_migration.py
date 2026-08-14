@@ -15,6 +15,7 @@ import itertools
 import json
 import subprocess
 import sys
+from dataclasses import replace
 
 import pytest
 
@@ -37,7 +38,9 @@ from metamorphosis.m092_migration import (
     serialization_conservation, signature_conservation, stack_depth_certificate,
     to_runtime_language,
 )
-from metamorphosis.m092_runtime import RefusalCode, RuntimeLanguage, SubstrateError
+from metamorphosis.m092_runtime import (
+    RefusalCode, RuntimeLanguage, RuntimePrimitive, SubstrateError,
+)
 from metamorphosis.m092_substrate_state import (
     ParameterDomain, SubstrateOperation, SubstrateState, execute_from_state,
     registered_reach_report, run_body_from_state,
@@ -177,6 +180,22 @@ def test_fuel_policy_provenance_is_recorded_and_target_free() -> None:
     assert default_fuel([100], 0) > default_fuel([1], 0)
 
 
+def test_fuel_tracks_values_received_through_stack_and_slots() -> None:
+    """The future substrate operand is machine state, not necessarily a call argument or input."""
+
+    baseline = default_fuel([0], 0, [1], [0])
+    assert default_fuel([0], 0, [10_000], [0]) > baseline
+    assert default_fuel([0], 0, [], [10_000]) > baseline
+
+    # The executor must use the same complete entry-state rule, not the old inputs-only shortcut.
+    countdown = (
+        ("SPOP", 0), ("LOADI", 1, 1), ("JZ", 0, 5),
+        ("SUB", 0, 0, 1), ("JMP", 2), ("SPUSH", 0), ("HALT",),
+    )
+    machine = execute_program(countdown, Machine(stack=[1_000], inputs=[0], slots=[0]))
+    assert machine.stack == [0]
+
+
 def test_program_serialization_round_trips() -> None:
     for operation in INHERITED_SUBSTRATE_OPERATIONS:
         restored = program_from_list(program_to_list(operation.program))
@@ -257,6 +276,59 @@ def test_state_rejects_forbidden_capability_and_mixed_dispatch() -> None:
             slot_count=4, input_count=3, max_body_length=6, max_stack_depth=8,
             literal_values=(0, 1),
         )
+
+
+def test_state_rejects_ambiguous_or_impossible_serialized_contracts(
+    substrate: SubstrateState,
+) -> None:
+    mutations = [
+        lambda: replace(substrate, slot_count=-1),
+        lambda: replace(substrate, max_body_length=-1),
+        lambda: replace(
+            substrate,
+            operations=(
+                replace(substrate.operations[0], minimum_stack_depth=-1),
+                *substrate.operations[1:],
+            ),
+        ),
+        lambda: replace(
+            substrate,
+            parameter_domains=substrate.parameter_domains
+            + (ParameterDomain("slot", "slot_index"),),
+        ),
+    ]
+    for mutate in mutations:
+        with pytest.raises(SubstrateError) as caught:
+            mutate()
+        assert caught.value.code is RefusalCode.MALFORMED_STATE
+
+
+def test_runtime_language_rejects_duplicate_ids_and_unavailable_capabilities(
+    substrate: SubstrateState, language: RuntimeLanguage,
+) -> None:
+    with pytest.raises(SubstrateError) as duplicate:
+        RuntimeLanguage(primitives=(language.primitives[0], language.primitives[0]))
+    assert duplicate.value.code is RefusalCode.MALFORMED_STATE
+
+    base = language.primitives[0]
+    forbidden = RuntimePrimitive(
+        primitive_id=base.primitive_id,
+        parameter_kinds=base.parameter_kinds,
+        body=base.body,
+        origin=base.origin,
+        provenance=base.provenance,
+        capabilities=("network",),
+    )
+    bad_language = RuntimeLanguage(
+        primitives=(forbidden, *language.primitives[1:]),
+        language_version=language.language_version,
+        provenance=language.provenance,
+    )
+    with pytest.raises(SubstrateError) as unavailable:
+        execute_from_state(
+            [(forbidden.primitive_id, (0, 0))], (1, 2, 3), bad_language, substrate,
+        )
+    assert unavailable.value.code is RefusalCode.MALFORMED_STATE
 
 
 def test_editing_a_program_preserves_declared_arity(substrate: SubstrateState) -> None:

@@ -62,6 +62,8 @@ class ParameterDomain:
     reference: str = ""
 
     def __post_init__(self) -> None:
+        if not self.kind:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "empty parameter kind")
         if self.rule not in DOMAIN_RULES:
             raise SubstrateError(RefusalCode.MALFORMED_STATE, f"unknown domain rule {self.rule!r}")
         if (self.rule == "selector_of") != bool(self.reference):
@@ -97,12 +99,27 @@ class SubstrateOperation:
     minimum_stack_depth: int = 0
 
     def __post_init__(self) -> None:
+        if not self.key or self.key.startswith(":") or self.key.endswith(":"):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, f"invalid operation key {self.key!r}")
         if self.argument_role not in ARGUMENT_ROLES:
             raise SubstrateError(
                 RefusalCode.MALFORMED_STATE, f"unknown argument role {self.argument_role!r}",
             )
         if self.origin not in ORIGINS:
             raise SubstrateError(RefusalCode.MALFORMED_STATE, f"unknown origin {self.origin!r}")
+        if (self.selector is not None) != (self.argument_role == "selector"):
+            raise SubstrateError(
+                RefusalCode.MALFORMED_STATE,
+                f"{self.key!r} dispatch shape disagrees with its argument role",
+            )
+        if (
+            not isinstance(self.minimum_stack_depth, int)
+            or isinstance(self.minimum_stack_depth, bool)
+            or self.minimum_stack_depth < 0
+        ):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "invalid minimum stack depth")
+        if len(self.capabilities) != len(set(self.capabilities)):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate operation capability")
         validate_program(self.program)
 
     @property
@@ -162,11 +179,37 @@ class SubstrateState:
     provenance: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
+        dimensions = {
+            "slot_count": self.slot_count,
+            "input_count": self.input_count,
+            "max_body_length": self.max_body_length,
+            "max_stack_depth": self.max_stack_depth,
+            "substrate_version": self.substrate_version,
+        }
+        for name, value in dimensions.items():
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                raise SubstrateError(RefusalCode.MALFORMED_STATE, f"invalid {name}")
+        if self.max_body_length == 0:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "body length bound must be positive")
+        if len(self.literal_values) != len(set(self.literal_values)):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate literal value")
+
         keys = [operation.key for operation in self.operations]
         if len(keys) != len(set(keys)):
             raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate operation key")
         permitted, forbidden = set(self.permitted_capabilities), set(self.forbidden_capabilities)
+        if len(permitted) != len(self.permitted_capabilities):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate permitted capability")
+        if len(forbidden) != len(self.forbidden_capabilities):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate forbidden capability")
+        if permitted & forbidden:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "capability vocabularies overlap")
         for operation in self.operations:
+            if operation.minimum_stack_depth > self.max_stack_depth:
+                raise SubstrateError(
+                    RefusalCode.MALFORMED_STATE,
+                    f"{operation.key} requires a stack deeper than the declared bound",
+                )
             held = set(operation.capabilities)
             if held & forbidden or not held <= permitted:
                 raise SubstrateError(
@@ -183,6 +226,9 @@ class SubstrateState:
                         RefusalCode.MALFORMED_STATE,
                         f"{operation.base_name!r} mixes selector and plain dispatch",
                     )
+        domain_kinds = [domain.kind for domain in self.parameter_domains]
+        if len(domain_kinds) != len(set(domain_kinds)):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate parameter domain")
         for domain in self.parameter_domains:
             if domain.rule == "selector_of" and domain.reference not in self.selector_names:
                 raise SubstrateError(
@@ -465,6 +511,14 @@ def execute_from_state(
         definition = language.definition(name)
         if definition is None:
             raise SubstrateError(RefusalCode.UNDEFINED_PRIMITIVE, f"{name!r}")
+        held = set(definition.capabilities)
+        if held & set(substrate.forbidden_capabilities) or not held <= set(
+            substrate.permitted_capabilities
+        ):
+            raise SubstrateError(
+                RefusalCode.MALFORMED_STATE,
+                f"{name!r} holds a capability outside the substrate vocabulary",
+            )
         if len(arguments) != definition.arity:
             raise SubstrateError(
                 RefusalCode.SIGNATURE_MISMATCH,

@@ -259,7 +259,7 @@
     "fuel_base_requirement": 64,
     "fuel_slope": 4,
     "fuel_slope_origin": "smallest power of two above one; generic linear headroom",
-    "scales_with": "operand magnitude only",
+    "scales_with": "entry-state magnitude: stack, slots, inputs and resolved argument",
     "why_not_binding": "every registered M092-A program is loop-free and halts in a few steps"
   },
   "intractable_dimension": {
@@ -318,9 +318,9 @@
     "contains_modulo_or_division": false,
     "contains_parity_operation": false,
     "contains_target_predicate": false,
-    "digest": "7be0715230fe24f40a117965d9a4c0f14baf6cb311bfb678ef1e29caccbce99f",
+    "digest": "1173724ba4b52e1f9ce63cf58e1a3ec5187548c573b7403bb62a2948d132841d",
     "fuel_base": 256,
-    "fuel_rule": "FUEL_BASE + FUEL_SLOPE * max(|inputs|, |argument|)",
+    "fuel_rule": "FUEL_BASE + FUEL_SLOPE * max(|stack|, |slots|, |inputs|, |argument|)",
     "fuel_slope": 4,
     "instruction_set": {
       "ADD": [

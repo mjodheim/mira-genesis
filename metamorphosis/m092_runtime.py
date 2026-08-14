@@ -33,6 +33,7 @@ from enum import Enum
 from typing import Mapping, Sequence
 
 RUNTIME_SCHEMA = "m092-runtime-v1"
+RUNTIME_ORIGINS = ("inherited", "acquired")
 
 
 class RefusalCode(str, Enum):
@@ -96,6 +97,25 @@ class RuntimePrimitive:
     provenance: tuple[str, ...] = ()
     capabilities: tuple[str, ...] = ()
 
+    def __post_init__(self) -> None:
+        if not self.primitive_id:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "empty primitive identifier")
+        if self.origin not in RUNTIME_ORIGINS:
+            raise SubstrateError(
+                RefusalCode.MALFORMED_STATE, f"unknown primitive origin {self.origin!r}",
+            )
+        if not self.body:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "a primitive needs a body")
+        if any(not kind for kind in self.parameter_kinds):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "empty parameter kind")
+        for step in self.body:
+            if len(step) != 2 or not step[0]:
+                raise SubstrateError(
+                    RefusalCode.MALFORMED_STATE, "invalid operation step in primitive body",
+                )
+        if len(self.capabilities) != len(set(self.capabilities)):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate primitive capability")
+
     @property
     def arity(self) -> int:
         return len(self.parameter_kinds)
@@ -140,6 +160,15 @@ class RuntimeLanguage:
     provenance: tuple[str, ...] = ()
     schema: str = RUNTIME_SCHEMA
 
+    def __post_init__(self) -> None:
+        if self.schema != RUNTIME_SCHEMA:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "runtime language schema mismatch")
+        if self.language_version < 0:
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "negative language version")
+        identifiers = [item.primitive_id for item in self.primitives]
+        if len(identifiers) != len(set(identifiers)):
+            raise SubstrateError(RefusalCode.MALFORMED_STATE, "duplicate primitive identifier")
+
     def definition(self, primitive_id: str) -> RuntimePrimitive | None:
         return next(
             (item for item in self.primitives if item.primitive_id == primitive_id), None
@@ -178,6 +207,6 @@ class RuntimeLanguage:
 
 
 __all__ = [
-    "RUNTIME_SCHEMA", "RefusalCode", "RuntimeLanguage", "RuntimePrimitive", "SubstrateError",
-    "canonical_bytes", "digest_of",
+    "RUNTIME_ORIGINS", "RUNTIME_SCHEMA", "RefusalCode", "RuntimeLanguage", "RuntimePrimitive",
+    "SubstrateError", "canonical_bytes", "digest_of",
 ]
