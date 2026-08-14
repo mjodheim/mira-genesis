@@ -263,10 +263,18 @@ def kernel_audit() -> dict[str, object]:
             not escapes for name, escapes, _, _ in KERNEL_CANDIDATES if name.startswith(("K4", "K5"))
         ),
         "selected": "K1",
+        "claim": (
+            "all audited target-neutral non-iterative extensions preserve the eventual-polynomial "
+            "invariant; K1 is the smallest audited escape from that closure"
+        ),
+        "not_claimed": (
+            "that iteration is universally forced by mathematics -- that would need a formal "
+            "definition of the non-iterative extension class and a closure proof for all of it, "
+            "which this audit has not done"
+        ),
         "selection_reason": (
-            "iteration is forced: every audited non-iterative extension stays inside the invariant. "
-            "Among iterative designs K1 is the most target-neutral -- K2 and K3 supply the "
-            "induction on x directly, and K6 and K7 escape only by containing modulo."
+            "among iterative designs K1 is the most target-neutral: K2 and K3 supply the induction "
+            "on x directly, and K6 and K7 escape only by containing modulo."
         ),
     }
 

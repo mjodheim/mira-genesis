@@ -173,12 +173,23 @@ property reverse-engineered from parity.
 ### Why this answers the tailoring objection
 
 The concern was that `LOOP` would be introduced *because parity needs iteration*, moving authored
-expressive power one layer down. The audit answers it in the stronger direction available:
+expressive power one layer down.
 
-**Iteration is forced, not chosen.** K4 and K5 are genuine expressive additions — branching,
-comparison, more registers, wider arithmetic, longer programs — and *every one of them stays inside
-the invariant*. No non-iterative extension escapes. So iteration is not a convenience selected with
-the target in view; it is the mathematically identified boundary.
+**The claim this audit is entitled to make, and no more:**
+
+> All audited target-neutral non-iterative extensions preserve the eventual-polynomial invariant;
+> K1 is the smallest audited escape from that closure.
+
+K4 and K5 are genuine expressive additions — branching, comparison, more registers, wider
+arithmetic, longer programs — and every one of them stays inside the invariant. That is evidence
+against tailoring, and it is evidence over an **audited list**, not over a proved class.
+
+**What is deliberately *not* claimed.** It is not stated that iteration is universally "forced by
+mathematics". That would require formally defining the class of non-iterative extensions and proving
+eventual-polynomial closure for the entire class, which this audit has not done. The stronger
+statement becomes available only if such a theorem is derived and machine-checked; until then the
+narrower statement above is the one that appears in the record, and any result text repeating the
+stronger form is a defect.
 
 **Among iterative designs, K1 is the most target-neutral.** K2 and K3 supply induction on `x`
 directly, which is the shape of the answer. K6 and K7 escape only by containing modulo outright. K1
@@ -251,6 +262,34 @@ variant — a property of the *program* — and never from a target value or a q
 **Honest limit, recorded now.** The empirical arms are judged on a finite declared domain while the
 theorem is unbounded. A fixed-substrate arm that passed the finite test would be a genuine
 falsification of the design and will be **reported as such**, not explained away.
+
+### Global correctness is a proof obligation, not an execution count — binding on M092-B
+
+Executing an acquired candidate over `0..2999` is **not** evidence of correctness for all `x ≥ 0`,
+and may not be used as one. M092-P is an unbounded impossibility result, so a positive M092
+acquisition must be met by an unbounded correctness result on the same side, or the two halves are
+again describing different claims — the same mismatch this gate already caught once.
+
+Any positive acquisition must therefore carry an **independently checkable global correctness and
+termination certificate**, supplied by the candidate and re-checked by the verifier against the
+actual generated program:
+
+| Component | Requirement |
+|---|---|
+| Precondition / domain | the declared input domain the claim is made over |
+| Loop invariant | a predicate holding on entry and preserved by every iteration |
+| Well-founded variant | a non-negative quantity strictly decreasing each iteration |
+| Preservation / inductive step | invariant ∧ guard ⇒ invariant after one iteration |
+| Termination argument | variant well-foundedness ⇒ halting, with the step bound it implies |
+| Postcondition | invariant ∧ ¬guard ⇒ the requested semantics |
+| Binding | the digest of the exact generated K1 program the proof is about |
+
+The verifier must re-check the proof **against the candidate program itself**, not against a
+restatement of it, and must refuse when the bound digest does not match the program it was handed.
+Empirical execution over a finite domain remains as **adversarial corroboration only** and is
+recorded in a separate field from the certificate, so the two can never be confused in the record.
+
+Theorem, certificate and empirical corroboration are kept distinct throughout the scientific record.
 
 ---
 

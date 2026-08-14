@@ -169,7 +169,95 @@ def germ_constant(value: int) -> Germ:
 GERM_VARIABLE = Germ(VARIABLE)
 
 
-def germ_binary(operator: str, left: Germ, right: Germ) -> Germ:
+@dataclass(frozen=True)
+class MaxCertificate:
+    """Why one branch of a `max` eventually wins. Emitted so it can be re-checked, not trusted."""
+
+    left: Poly
+    right: Poly
+    difference: Poly
+    threshold: int
+    chosen: Poly
+    identically_equal: bool
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "left": list(self.left), "right": list(self.right),
+            "difference": list(self.difference), "threshold": self.threshold,
+            "chosen": list(self.chosen), "identically_equal": self.identically_equal,
+        }
+
+
+def verify_max_certificate(certificate: MaxCertificate, samples: int = 64) -> dict[str, object]:
+    """Independently re-check a branch selection. Nothing here trusts `sign_threshold`.
+
+    The algebraic check is exact and is the load-bearing half. For `d(x) = a_k x^k + ... + a_0` with
+    `a_k != 0` and every `x >= T >= 2`,
+
+        sum_{i<k} |a_i| x^i  <=  M * (x^k - 1) / (x - 1)   where M = max_{i<k} |a_i|,
+
+    so `|a_k| * (T - 1) >= M` is sufficient for the leading term to dominate, hence for
+    `sign(d(x))` to equal `sign(a_k)` throughout `[T, inf)`. That inequality is checked in integer
+    arithmetic below, so no floating point and no root-finding is involved.
+
+    The sampled check is corroboration and is reported separately, never as the proof.
+    """
+
+    difference = poly_subtract(certificate.left, certificate.right)
+    findings: list[str] = []
+
+    if difference != certificate.difference:
+        findings.append("difference does not equal left - right")
+
+    if not difference:
+        if not certificate.identically_equal:
+            findings.append("difference is zero but the certificate does not say so")
+        if certificate.chosen != certificate.left:
+            findings.append("equal germs must choose either branch consistently")
+        return {
+            "algebraically_verified": not findings,
+            "identically_equal": True,
+            "dominance_inequality_holds": True,
+            "sampled_signs_constant": True,
+            "findings": findings,
+        }
+
+    if certificate.identically_equal:
+        findings.append("certificate claims equality but the difference is non-zero")
+
+    leading = abs(difference[-1])
+    largest = max((abs(c) for c in difference[:-1]), default=0)
+    threshold = certificate.threshold
+    dominance = threshold >= 2 and leading * (threshold - 1) >= largest
+    if not dominance:
+        findings.append("the leading term does not provably dominate above the threshold")
+
+    expected = certificate.left if difference[-1] > 0 else certificate.right
+    if certificate.chosen != expected:
+        findings.append("the chosen branch is not the one the leading coefficient selects")
+
+    sign = 1 if difference[-1] > 0 else -1
+    constant = True
+    for step in range(samples):
+        value = poly_evaluate(difference, threshold + step * step)
+        if value == 0 or (1 if value > 0 else -1) != sign:
+            constant = False
+            break
+    if not constant:
+        findings.append("a sampled point above the threshold contradicts the fixed sign")
+
+    return {
+        "algebraically_verified": not findings,
+        "identically_equal": False,
+        "dominance_inequality_holds": dominance,
+        "sampled_signs_constant": constant,
+        "findings": findings,
+    }
+
+
+def germ_binary(
+    operator: str, left: Germ, right: Germ, certificates: list[MaxCertificate] | None = None,
+) -> Germ:
     """`add`, `sub`, `mul` are ring operations. `max` is a decision, and it is exact."""
 
     threshold = max(left.threshold, right.threshold)
@@ -182,9 +270,18 @@ def germ_binary(operator: str, left: Germ, right: Germ) -> Germ:
     if operator == "max":
         difference = poly_subtract(left.polynomial, right.polynomial)
         if not difference:
+            if certificates is not None:
+                certificates.append(MaxCertificate(
+                    left.polynomial, right.polynomial, difference, threshold,
+                    left.polynomial, True,
+                ))
             return Germ(left.polynomial, threshold)
         threshold = max(threshold, sign_threshold(difference))
         winner = left.polynomial if difference[-1] > 0 else right.polynomial
+        if certificates is not None:
+            certificates.append(MaxCertificate(
+                left.polynomial, right.polynomial, difference, threshold, winner, False,
+            ))
         return Germ(winner, threshold)
     raise LanguageError(f"unknown binary operator {operator!r}")
 
@@ -215,6 +312,7 @@ def germ_of_body(
     arguments: Sequence[object],
     slots: Sequence[Germ],
     inputs: Sequence[Germ],
+    certificates: list[MaxCertificate] | None = None,
 ) -> list[Germ]:
     """The germ interpreter. Deliberately step-for-step identical to `m090_language.run_body`.
 
@@ -249,7 +347,7 @@ def germ_of_body(
             if len(stack) < 2:
                 raise LanguageError("BINOP needs two operands")
             right, left = stack.pop(), stack.pop()
-            stack.append(germ_binary(str(_resolve(argument, arguments)), left, right))
+            stack.append(germ_binary(str(_resolve(argument, arguments)), left, right, certificates))
         elif name == "UNOP":
             if not stack:
                 raise LanguageError("UNOP needs one operand")
@@ -278,6 +376,7 @@ def germ_of_program(
     variable_input: int = 0,
     other_inputs: Mapping[int, int] | None = None,
     initial_slots: Sequence[int] | None = None,
+    certificates: list[MaxCertificate] | None = None,
 ) -> list[Germ]:
     """Germs of every slot after a whole program. This is the composition half of M092-I.
 
@@ -296,7 +395,7 @@ def germ_of_program(
         definition = language.definition(name)
         if definition is None:
             raise LanguageError(f"operation {name!r} is not defined")
-        slots = germ_of_body(definition.body, arguments, slots, inputs)
+        slots = germ_of_body(definition.body, arguments, slots, inputs, certificates)
     return slots
 
 
@@ -414,7 +513,8 @@ def invariant_manifest() -> dict[str, object]:
 
 
 __all__ = [
-    "GERM_VARIABLE", "INVARIANT_SCHEMA", "VARIABLE", "ZERO", "Germ", "ParityRefutation", "Poly",
+    "GERM_VARIABLE", "INVARIANT_SCHEMA", "VARIABLE", "ZERO", "Germ", "MaxCertificate",
+    "ParityRefutation", "Poly", "verify_max_certificate",
     "canonical_bytes", "constant_poly", "degree_bound", "germ_binary", "germ_constant",
     "germ_matches_parity", "germ_of_body", "germ_of_program", "germ_unary", "invariant_manifest",
     "poly_add", "poly_degree", "poly_evaluate", "poly_multiply", "poly_negate", "poly_subtract",
