@@ -1,13 +1,13 @@
 """Deterministic candidate-side affine proof search for M092.
 
-This module is intentionally independent from ``m092_certificate_verifier``.  It does not
-import the verifier, qualification data, target fixtures, or any result artifact.  Its only
+This module is intentionally independent from ``m092_certificate_verifier``. It does not
+import the verifier, qualification data, target fixtures, or any result artifact. Its only
 job is to search for exact bounded Farkas-style witnesses over the closed affine record
 format used by M092 certificates.
 
-A proof is a vector of integer multipliers plus a non-negative constant slack.  Equality
-premises may be multiplied by signed integers.  Inequality premises may only receive
-non-negative multipliers, and may not participate in equality goals.  This is the same
+A proof is a vector of integer multipliers plus a non-negative constant slack. Equality
+premises may be multiplied by signed integers. Inequality premises may only receive
+non-negative multipliers, and may not participate in equality goals. This is the same
 mathematical proof language consumed by the independent verifier, but the implementation
 below is candidate-side and mechanically target-neutral.
 """
@@ -15,7 +15,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from itertools import combinations, product
-from math import gcd
 from typing import Mapping, Sequence
 
 PROOF_SEARCH_SCHEMA = "m092-affine-proof-search-v1"
@@ -85,8 +84,6 @@ def _candidate_values(relation: str, goal_relation: str, bound: int) -> tuple[in
         if goal_relation == "eq":
             return (0,)
         return tuple(range(0, bound + 1))
-    # Signed equality multipliers are enumerated by increasing absolute magnitude, with the
-    # negative value first.  This is deterministic and independent of the target semantics.
     values = [0]
     for magnitude in range(1, bound + 1):
         values.extend((-magnitude, magnitude))
@@ -109,13 +106,6 @@ def _combine(
 
 
 def _support_order(count: int, support_bound: int) -> tuple[tuple[int, ...], ...]:
-    """Enumerate premise supports by size then lexicographically.
-
-    Exact proofs in this closed fragment are normally sparse.  Searching sparse supports first is
-    only a deterministic proof-search optimization: every returned witness is independently
-    checkable and no verifier feedback changes this order.
-    """
-
     maximum = min(count, support_bound)
     return tuple(
         support
@@ -135,15 +125,15 @@ def find_affine_proof(
     """Return the first exact bounded witness, or ``None`` if this search space has none.
 
     The function never weakens a goal, changes a premise, or asks the verifier how a failed proof
-    should be repaired.  Enumeration is fixed by premise order, support size, multiplier magnitude,
-    and slack.  A returned witness therefore remains a candidate claim until the independent M092
+    should be repaired. Enumeration is fixed by premise order, support size, multiplier magnitude,
+    and slack. A returned witness therefore remains a candidate claim until the independent M092
     verifier accepts it.
     """
 
     if not 0 <= multiplier_bound <= 256:
         raise ProofSearchError("multiplier_bound must be between zero and 256")
-    if not 0 <= support_bound <= len(premises):
-        raise ProofSearchError("support_bound is outside the premise count")
+    if support_bound < 0:
+        raise ProofSearchError("support_bound must be non-negative")
     if attempt_cap <= 0:
         raise ProofSearchError("attempt_cap must be positive")
 
@@ -160,10 +150,7 @@ def find_affine_proof(
     attempts = 0
     seen: set[tuple[int, ...]] = set()
     for support in _support_order(len(parsed_premises), support_bound):
-        support_set = set(support)
         active_ranges = [values[index][1:] for index in support]
-        # Equality value order begins with zero and inequality order begins with zero.  A selected
-        # support means every selected multiplier must be non-zero; zero-support is handled once.
         if any(not choices for choices in active_ranges):
             continue
         assignments = product(*active_ranges) if active_ranges else ((),)
@@ -180,10 +167,7 @@ def find_affine_proof(
                 if attempts > attempt_cap:
                     return None
                 if _combine(parsed_premises, multipliers, slack) == parsed_goal.expression:
-                    return {
-                        "multipliers": multipliers,
-                        "slack": slack,
-                    }
+                    return {"multipliers": multipliers, "slack": slack}
     return None
 
 
