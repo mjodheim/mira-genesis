@@ -93,6 +93,9 @@ jobs:
     # this job red on the pull request that introduced it.
     steps:
       - uses: actions/checkout@v6
+        with:
+          # M092-A verifies the recorded source commit and its exact tree identity.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
