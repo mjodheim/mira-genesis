@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 
+import metamorphosis.m092_certificate_generator as candidate_generator
 import metamorphosis.m092_certificate_policy_search as policy_search
 import metamorphosis.m092_certificate_verifier as verifier
 import metamorphosis.m092_criterion_search as criterion
@@ -76,6 +77,21 @@ def main() -> int:
         raise SystemExit("criterion per-program certificate cap differs from the frozen protocol")
     if certificate_bounds.get("total_certificates_examined_maximum") != criterion.CERTIFICATE_CAP:
         raise SystemExit("criterion global certificate cap differs from the frozen protocol")
+
+    implementation_bounds = {
+        "affine_coefficient_inclusive_maximum": candidate_generator.MAX_AFFINE_COEFFICIENT,
+        "affine_coefficient_inclusive_minimum": -candidate_generator.MAX_AFFINE_COEFFICIENT,
+        "constraints_per_loop_maximum": candidate_generator.MAX_CONSTRAINTS_PER_LOOP,
+        "ghost_counters_maximum": candidate_generator.MAX_GHOST_COUNTERS,
+        "loop_headers_maximum": 1,
+    }
+    for field, expected in implementation_bounds.items():
+        if certificate_bounds.get(field) != expected:
+            raise SystemExit(
+                f"criterion certificate bound {field} differs from implementation: "
+                f"protocol={certificate_bounds.get(field)!r}, implementation={expected!r}"
+            )
+
     if protocol.get("status") != "frozen_before_any_m092b_extension_search_or_qualification":
         raise SystemExit("M092 protocol is not at the frozen pre-search status")
 
@@ -109,6 +125,7 @@ def main() -> int:
         "program_cap": criterion.PROGRAM_CAP,
         "certificate_cap": criterion.CERTIFICATE_CAP,
         "certificates_per_program": criterion.CERTIFICATES_PER_PROGRAM,
+        "certificate_bounds": implementation_bounds,
         "behaviour_deduplication_enabled": False,
         "policy_imports": sorted(policy_imports),
         "criterion_imports": sorted(criterion_imports),
