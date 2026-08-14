@@ -131,6 +131,84 @@ def _updates_for_policy(
     return updates
 
 
+def _derive_conjunctive_equalities(
+    program: Program,
+    paths: Sequence[base.SymbolicPath],
+    ghosts: Sequence[str],
+    updates: Mapping[str, Mapping[str, base.Affine]],
+) -> list[base.Constraint]:
+    """Derive sparse equalities by deterministic conjunctive induction.
+
+    The base generator originally required every equality to preserve itself by literal symbolic
+    identity.  That is sound but unnecessarily incomplete: a normal inductive invariant is a
+    conjunction, so preserving one equality may legitimately use equalities already established in
+    the same invariant set.  This search keeps the frozen sparse template order and coefficient
+    bounds, but accepts a new independent equality when every symbolic back edge proves its next
+    form from the candidate plus the already-accepted equalities and that path's guards.
+
+    No verifier result, target observation or qualification value enters this construction.
+    """
+
+    entries = base._entry_header_values(paths, updates)
+    if not entries:
+        return []
+    back_paths = [
+        path for path in paths
+        if path.source.startswith("header:") and path.outcome == "header"
+    ]
+    variables = base._active_variables(program, ghosts)
+    coefficient_values = (-1, 1, -2, 2, -3, 3, -4, 4)
+    basis: list[base.Constraint] = []
+    rows: list[list[int]] = []
+    seen: list[base.Constraint] = []
+
+    for support_size in range(1, min(base.MAX_EQUALITY_SUPPORT, len(variables)) + 1):
+        for support in itertools.combinations(variables, support_size):
+            for coefficients in itertools.product(coefficient_values, repeat=support_size):
+                expression = base.Affine.make(dict(zip(support, coefficients, strict=True)))
+                entry_forms = [expression.substitute(values) for values in entries]
+                if any(form.terms for form in entry_forms):
+                    continue
+                constants = {form.constant for form in entry_forms}
+                if len(constants) != 1:
+                    continue
+                constant = -next(iter(constants))
+                if abs(constant) > base.MAX_AFFINE_COEFFICIENT:
+                    continue
+                candidate = base._constraint(
+                    "eq", expression + base.Affine.make(constant=constant),
+                )
+                if candidate in seen:
+                    continue
+                seen.append(candidate)
+
+                row = [candidate.expression.coefficients().get(name, 0) for name in variables]
+                row.append(candidate.expression.constant)
+                if base._rank([*rows, row]) <= base._rank(rows):
+                    continue
+
+                trial = [*basis, candidate]
+                preserves = True
+                for path in back_paths:
+                    final_state = base._apply_update(path.state, updates[path.path_id])
+                    goal = base._constraint(
+                        "eq",
+                        candidate.expression.substitute(base._source_values(final_state)),
+                    )
+                    premises = [*trial, *path.guards]
+                    if base._proof(premises, goal) is None:
+                        preserves = False
+                        break
+                if not preserves:
+                    continue
+
+                basis.append(candidate)
+                rows.append(row)
+                if len(basis) >= base.MAX_CONSTRAINTS_PER_LOOP - 1:
+                    return basis
+    return basis
+
+
 def build_pathwise_candidate_certificate(
     program: Program,
     expected_postcondition: Mapping[str, object],
@@ -151,7 +229,7 @@ def build_pathwise_candidate_certificate(
     updates = _updates_for_policy(paths, ghosts, path_increments)
 
     precondition = (base._constraint("ge", base.Affine.variable("x")),)
-    equalities = base._derive_equalities(program, paths, ghosts, updates)
+    equalities = _derive_conjunctive_equalities(program, paths, ghosts, updates)
     inequalities = base._derive_inequalities(
         program, paths, equalities, precondition, updates, ghosts,
     )
