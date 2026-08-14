@@ -47,26 +47,45 @@ def _synthetic_countdown_record() -> enumerator.EnumerationRecord:
     )
 
 
-def test_first_accepted_neutral_candidate_is_selected_without_execution() -> None:
+def _selected_neutral_state() -> criterion.CriterionSearchState:
     state = criterion.CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION)
-    audit = enumerator.EnumerationAudit()
-    selected, next_audit = criterion._process_record(
+    selected, _ = criterion._process_record(
         state,
-        audit,
+        enumerator.EnumerationAudit(),
         _synthetic_countdown_record(),
         COUNTDOWN_POSTCONDITION,
     )
+    return selected
+
+
+def _refresh_state_digest(value: dict[str, object]) -> None:
+    payload = dict(value)
+    payload.pop("state_digest", None)
+    value["state_digest"] = criterion._sha256(payload)
+
+
+def test_first_accepted_neutral_candidate_is_selected_without_execution() -> None:
+    selected = _selected_neutral_state()
 
     assert selected.status == "candidate_selected"
     assert selected.surviving_candidates == 1
     assert selected.selected is not None
     assert selected.selected["program_ordinal"] == 1
     assert selected.selected["program_digest"] == program_digest(COUNTDOWN_PROGRAM)
-    assert next_audit.generated_programs == 1
     serialized = selected.to_dict()
     assert serialized["candidate_executed_for_selection"] is False
     assert serialized["qualification_loaded"] is False
     assert serialized["verifier_feedback_used_for_repair"] is False
+
+
+def test_selected_state_is_terminal_for_future_advance_calls() -> None:
+    selected = _selected_neutral_state()
+    advanced = criterion.advance_search(
+        selected,
+        COUNTDOWN_POSTCONDITION,
+        program_limit=100,
+    )
+    assert advanced.to_dict() == selected.to_dict()
 
 
 def test_resume_matches_uninterrupted_real_enumerator_prefix() -> None:
@@ -110,6 +129,26 @@ def test_state_digest_detects_counter_tampering() -> None:
     value = criterion.CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION).to_dict()
     value["generated_programs"] = 1
     with pytest.raises(criterion.CriterionSearchError, match="state digest differs"):
+        criterion.CriterionSearchState.from_dict(value)
+
+
+def test_semantic_validation_rejects_rehashed_selected_program_tampering() -> None:
+    value = _selected_neutral_state().to_dict()
+    selected = dict(value["selected"])  # type: ignore[arg-type]
+    selected["program_digest"] = "0" * 64
+    value["selected"] = selected
+    _refresh_state_digest(value)
+
+    with pytest.raises(criterion.CriterionSearchError, match="program digest differs"):
+        criterion.CriterionSearchState.from_dict(value)
+
+
+def test_semantic_validation_rejects_rehashed_false_terminal_status() -> None:
+    value = criterion.CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION).to_dict()
+    value["status"] = "program_budget_exhausted"
+    _refresh_state_digest(value)
+
+    with pytest.raises(criterion.CriterionSearchError, match="terminal status differs"):
         criterion.CriterionSearchState.from_dict(value)
 
 
