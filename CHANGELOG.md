@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Froze the M092-B pre-search protocol against the exact M092-A checkpoint: eleven causal/control
+  arms, six dependency ablations and fifteen conjunctive conditions. Global correctness is an exact
+  program-bound affine certificate over every `x >= 0`; execution over `0..2999` is explicitly
+  separate corroboration. The candidate/program/certificate searches, isolated validation receipt,
+  content-addressed registration, downstream language dependency, two-family hidden draw, three
+  rollback boundaries and anti-table scanner are all bounded before search. No M092-B candidate,
+  qualification, extended substrate, receipt or result exists at this freeze; H38 and D062 remain
+  unclaimed.
 - Froze the separate M092-A checkpoint before any substrate-extension search or qualification.
   Checkpoint `d8bacb1c...6ce8` binds seventeen exact blobs from source commit `5adfaa6`, proves the
   six M092-B artifact paths absent there, preserves zero acquired substrate operations and seals the
