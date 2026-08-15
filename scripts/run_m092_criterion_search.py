@@ -1,15 +1,17 @@
 """Advance the frozen M092 criterion search without qualification or candidate execution.
 
 The command has no reset, skip, repair or reroll flag. A new search starts only when no input state
-is supplied. A canonical resume is stronger than a self-digest check: after schema, theorem, source
-binding and state-integrity validation, the complete saved prefix is deterministically replayed from
-genesis and must reproduce the supplied state byte-for-byte before any new proposal is consumed.
+is supplied. Plain resumes retain the strongest M092-D rule: the complete saved prefix is replayed
+from genesis and must reproduce the supplied state byte-for-byte before any new proposal is consumed.
 
-This makes the saved state an integrity-checked cache of an independently reproducible prefix rather
-than an authority that can be re-authored and re-hashed to skip proposals. Every checkpoint is
-written atomically. Chunking is transport-only: each chunk calls the frozen ``advance_search`` on the
-current immutable state, so changing checkpoint frequency cannot change proposal order, certificate
-order, selection semantics or frozen budgets.
+Long-running canonical GitHub transport may instead provide the immutable predecessor segment
+receipt plus the exact arming head/parent and predecessor index. In that narrow mode the workflow has
+already authenticated the immutable Actions artifact id and SHA-256; the receipt is then validated
+against the exact criterion checkpoint before continuation. The scientific trajectory is unchanged.
+
+Every checkpoint is written atomically. Chunking is transport-only: each chunk calls the frozen
+``advance_search`` on the current immutable state, so changing checkpoint frequency cannot change
+proposal order, certificate order, selection semantics or frozen budgets.
 """
 from __future__ import annotations
 
@@ -21,14 +23,12 @@ import tempfile
 from typing import Mapping
 
 from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
-from metamorphosis.m092_resume_validation import ResumeValidationError, verified_resume_state
-
-
-TERMINAL_STATUSES = frozenset({
-    "candidate_selected",
-    "program_budget_exhausted",
-    "certificate_budget_exhausted",
-})
+from metamorphosis.m092_resume_validation import (
+    ResumeValidationError,
+    TERMINAL_STATUSES,
+    verified_resume_state,
+    verified_segment_resume_state,
+)
 
 
 def _read_json(path: Path) -> object:
@@ -67,8 +67,7 @@ def advance_with_checkpoints(
     """Advance the exact frozen trajectory while persisting only completed program boundaries.
 
     The initial state is written before any new program is consumed. If execution is interrupted
-    during a chunk, the output therefore remains the last fully validated checkpoint. Replaying that
-    state through the canonical resume validator reconstructs its complete prefix from genesis.
+    during a chunk, the output therefore remains the last fully validated checkpoint.
     """
 
     if not isinstance(program_limit, int) or isinstance(program_limit, bool) or program_limit < 0:
@@ -105,6 +104,10 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--requirement", type=Path, required=True)
     parser.add_argument("--state", type=Path)
+    parser.add_argument("--canonical-segment-record", type=Path)
+    parser.add_argument("--arming-head-sha")
+    parser.add_argument("--arming-parent-sha")
+    parser.add_argument("--previous-segment-index", type=int)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--program-limit", type=int, required=True)
     parser.add_argument(
@@ -131,6 +134,19 @@ def main() -> int:
     if checkpoint_programs <= 0:
         raise SystemExit("--checkpoint-programs must be positive")
 
+    segment_fields = (
+        arguments.canonical_segment_record,
+        arguments.arming_head_sha,
+        arguments.arming_parent_sha,
+        arguments.previous_segment_index,
+    )
+    segment_mode = any(value is not None for value in segment_fields)
+    if segment_mode and not all(value is not None for value in segment_fields):
+        raise SystemExit("canonical segment resume requires record, arming SHAs and predecessor index")
+    if segment_mode and arguments.state is None:
+        raise SystemExit("canonical segment resume requires --state")
+
+    resume_mode = "genesis"
     if arguments.state is None:
         state = CriterionSearchState.fresh(requirement)
     else:
@@ -140,7 +156,28 @@ def main() -> int:
         if not isinstance(raw_state, dict):
             raise SystemExit("resume state must be a JSON object")
         try:
-            state = verified_resume_state(raw_state, requirement)
+            if segment_mode:
+                assert arguments.canonical_segment_record is not None
+                assert arguments.arming_head_sha is not None
+                assert arguments.arming_parent_sha is not None
+                assert arguments.previous_segment_index is not None
+                if not arguments.canonical_segment_record.is_file():
+                    raise SystemExit("canonical predecessor segment record path does not exist")
+                raw_segment = _read_json(arguments.canonical_segment_record)
+                if not isinstance(raw_segment, dict):
+                    raise SystemExit("canonical predecessor segment record must be a JSON object")
+                state = verified_segment_resume_state(
+                    raw_state,
+                    raw_segment,
+                    requirement,
+                    arming_head_sha=arguments.arming_head_sha,
+                    arming_parent_sha=arguments.arming_parent_sha,
+                    expected_segment_index=arguments.previous_segment_index,
+                )
+                resume_mode = "immutable_segment_chain"
+            else:
+                state = verified_resume_state(raw_state, requirement)
+                resume_mode = "full_replay_from_genesis"
         except ResumeValidationError as error:
             raise SystemExit(str(error)) from error
 
@@ -161,7 +198,7 @@ def main() -> int:
         "state_digest": payload["state_digest"],
         "candidate_executed_for_selection": payload["candidate_executed_for_selection"],
         "qualification_loaded": payload["qualification_loaded"],
-        "resume_prefix_replayed_from_genesis": arguments.state is not None,
+        "resume_mode": resume_mode,
         "checkpoint_programs": checkpoint_programs,
         "checkpoints_written": checkpoints_written,
         "terminal": payload["status"] in TERMINAL_STATUSES,
