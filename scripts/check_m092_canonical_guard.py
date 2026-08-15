@@ -1,9 +1,9 @@
 """Guard the unique M092 canonical criterion-search arming commit.
 
 The canonical target search stays closed unless the pull-request head *adds* exactly the arming
-marker, carries the exact arming message, names its real parent commit and binds every decisive
-pre-search transport artifact by SHA-256. Ordinary development commits return ``armed=false``;
-a marker-only malformed claim fails loudly.
+marker as the sole commit above the pull-request base, carries the exact arming message, names its
+real parent commit and binds every decisive pre-search transport artifact by SHA-256. Ordinary
+development commits return ``armed=false``; a marker-only malformed claim fails loudly.
 """
 from __future__ import annotations
 
@@ -69,12 +69,13 @@ def inspect_arm(
     *,
     head_sha: str,
     parent_sha: str,
+    base_sha: str,
     commit_message: str,
     changed_files: tuple[str, ...],
     changed_statuses: tuple[str, ...] = (),
     root: Path = ROOT,
 ) -> dict[str, object] | None:
-    """Return the validated marker only for the unique newly-added marker-only arming shape."""
+    """Return the marker only for a one-commit, newly-added, marker-only arming PR."""
 
     canonical_files = tuple(sorted(_posix(path) for path in changed_files if path))
     if canonical_files != (_posix(ARM_RELATIVE),):
@@ -86,10 +87,11 @@ def inspect_arm(
         raise GuardError("the canonical arming marker must be newly added, not modified or renamed")
     if commit_message.strip() != ARM_MESSAGE:
         raise GuardError("the marker-only commit does not carry the exact arming message")
-    if not _SHA.fullmatch(head_sha):
-        raise GuardError("head SHA must be full lowercase 40-hex")
-    if not _SHA.fullmatch(parent_sha):
-        raise GuardError("parent SHA must be full lowercase 40-hex")
+    for label, value in (("head", head_sha), ("parent", parent_sha), ("base", base_sha)):
+        if not _SHA.fullmatch(value):
+            raise GuardError(f"{label} SHA must be full lowercase 40-hex")
+    if parent_sha != base_sha:
+        raise GuardError("the arming commit parent must equal the pull-request base SHA")
 
     marker_path = root / ARM_RELATIVE
     if not marker_path.is_file():
@@ -139,6 +141,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--head-sha", required=True)
     parser.add_argument("--parent-sha", required=True)
+    parser.add_argument("--base-sha", required=True)
     parser.add_argument("--commit-message", required=True)
     parser.add_argument("--changed-file", action="append", default=[])
     parser.add_argument("--changed-status", action="append", default=[])
@@ -149,6 +152,7 @@ def main() -> int:
         marker = inspect_arm(
             head_sha=args.head_sha,
             parent_sha=args.parent_sha,
+            base_sha=args.base_sha,
             commit_message=args.commit_message,
             changed_files=tuple(args.changed_file),
             changed_statuses=tuple(args.changed_status),
