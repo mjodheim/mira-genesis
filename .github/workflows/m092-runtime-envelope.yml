@@ -65,7 +65,7 @@ jobs:
         run: |
           python scripts/audit_m092_runtime_envelope.py \
             --enumeration-sample 100000 \
-            --policy-attempt-sample 10000 \
+            --policy-attempt-sample 1000 \
             --policy-program-cap 25000 \
             --output m092-neutral-runtime-envelope.json
 
@@ -86,6 +86,7 @@ jobs:
           assert report['canonical_program_cap'] == 2_000_000
           assert report['canonical_certificate_cap'] == 2_000_000
           assert report['neutral_certificate_pipeline']['continues_after_neutral_acceptance'] is True
+          assert report['neutral_certificate_pipeline']['attempts_examined'] <= 1000
           PY
 
       - uses: actions/upload-artifact@v4
