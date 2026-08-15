@@ -1,0 +1,56 @@
+{
+  "arms": [
+    "evolvable_substrate",
+    "fixed_substrate",
+    "substrate_acquisition_ablated",
+    "proof_certificate_ablated",
+    "extension_built_but_not_registered",
+    "substrate_registered_downstream_not_registered",
+    "registered_but_dependency_ablated",
+    "qualification_use_ablated",
+    "more_budget_same_substrate",
+    "macro_only_substrate_extension",
+    "fresh_agent"
+  ],
+  "candidate_result_or_hidden_values_embedded": false,
+  "draw_order_interpretation": "counter-mode digest-stream acceptance order; no post-hoc reordering",
+  "each_control_maximum_complete_families": 0,
+  "evolvable_required_complete_families": 2,
+  "families": [
+    "alternating_allocation",
+    "complementary_protocol_phase"
+  ],
+  "family_programs": {
+    "alternating_allocation": [
+      [
+        "$DOWNSTREAM_PARITY_PRIMITIVE",
+        [0, 0]
+      ]
+    ],
+    "complementary_protocol_phase": [
+      [
+        "$DOWNSTREAM_PARITY_PRIMITIVE",
+        [0, 0]
+      ],
+      [
+        "APPLY_UNARY",
+        [0, "neg"]
+      ],
+      [
+        "APPLY_UNARY",
+        [0, "inc"]
+      ]
+    ]
+  },
+  "hidden_instances_per_family": 6,
+  "model_calls_during_qualification": 0,
+  "more_budget_same_substrate_complete_search_repetitions": 10,
+  "more_budget_state_reset_between_repetitions": true,
+  "network_calls_during_qualification": 0,
+  "new_operation_registration_during_qualification_forbidden": true,
+  "only_arm_allowed_to_score_a_qualifying_world": "evolvable_substrate",
+  "same_acquired_operation_reused_across_families": true,
+  "schema": "m092-qualification-execution-contract/1",
+  "second_target_specific_operation_forbidden": true,
+  "theorem_certificate_empiricism_kept_separate": true
+}
