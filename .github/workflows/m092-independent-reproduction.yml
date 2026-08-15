@@ -336,6 +336,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ steps.invocation.outputs.previous_run_id }}
           path: previous-reproduction
+          merge-multiple: true
 
       - name: Assert canonical result content is unavailable to reproduction trajectory
         run: |
@@ -453,6 +454,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ steps.invocation.outputs.source_canonical_run_id }}
           path: canonical-reference
+          merge-multiple: true
 
       - name: Compare terminal reproduction with independently validated canonical result
         id: compare
