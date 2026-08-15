@@ -8,8 +8,10 @@ on:
       - 'metamorphosis/m092_adoption.py'
       - 'metamorphosis/m092_adoption_checkpoint.py'
       - 'metamorphosis/m092_qualification.py'
+      - 'scripts/run_m092_adoption.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
       - 'tests/test_m092_adoption.py'
+      - 'tests/test_m092_adoption_checkpoint.py'
       - 'tests/test_m092_qualification.py'
       - 'scripts/check_m092_canonical_guard.py'
       - '.github/workflows/m092-adoption-qualification-rehearsal.yml'
@@ -19,6 +21,7 @@ on:
       - 'metamorphosis/m092_adoption.py'
       - 'metamorphosis/m092_adoption_checkpoint.py'
       - 'metamorphosis/m092_qualification.py'
+      - 'scripts/run_m092_adoption.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
       - 'scripts/check_m092_canonical_guard.py'
       - '.github/workflows/m092-adoption-qualification-rehearsal.yml'
@@ -53,7 +56,7 @@ jobs:
           test ! -e experiments/M092/QUALIFICATION.json
           test ! -e experiments/M092/RESULT.json
 
-      - name: Enforce H target and qualification import boundary
+      - name: Enforce neutral H import boundary
         run: |
           python - <<'PY'
           import ast
@@ -84,9 +87,35 @@ jobs:
                   raise SystemExit(f'{path} crosses the pre-arm boundary: {sorted(overlap)}')
           PY
 
+      - name: Enforce production adoption has no qualification generator path
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+          path = Path('scripts/run_m092_adoption.py')
+          tree = ast.parse(path.read_text(encoding='utf-8'), filename=str(path))
+          imported = set()
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Import):
+                  imported.update(alias.name for alias in node.names)
+              elif isinstance(node, ast.ImportFrom) and node.module:
+                  imported.add(node.module)
+          forbidden = {
+              'metamorphosis.m092_target',
+              'metamorphosis.m092_qualification_generator',
+              'metamorphosis.m092_independent_reproduction',
+          }
+          overlap = imported & forbidden
+          if overlap:
+              raise SystemExit(f'production adoption crosses the post-reproduction boundary: {sorted(overlap)}')
+          PY
+
       - name: Run focused falsification suite
         run: |
-          pytest -q tests/test_m092_adoption.py tests/test_m092_qualification.py
+          pytest -q \
+            tests/test_m092_adoption.py \
+            tests/test_m092_adoption_checkpoint.py \
+            tests/test_m092_qualification.py
 
       - name: Run neutral transaction fresh-process qualification rollback rehearsal
         run: |
