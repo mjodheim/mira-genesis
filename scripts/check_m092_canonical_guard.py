@@ -1,8 +1,8 @@
 """Guard the unique M092 canonical criterion-search arming commit.
 
-The canonical target search stays closed unless the pull-request head changes exactly the arming
+The canonical target search stays closed unless the pull-request head *adds* exactly the arming
 marker, carries the exact arming message, names its real parent commit and binds every decisive
-pre-search transport artifact by SHA-256.  Ordinary development commits return ``armed=false``;
+pre-search transport artifact by SHA-256. Ordinary development commits return ``armed=false``;
 a marker-only malformed claim fails loudly.
 """
 from __future__ import annotations
@@ -44,6 +44,13 @@ def _posix(path: str | Path) -> str:
     return str(path).replace("\\", "/")
 
 
+def _canonical_status(entry: str) -> str:
+    parts = entry.split("\t")
+    if len(parts) != 2:
+        return entry.replace("\\", "/")
+    return f"{parts[0]}\t{_posix(parts[1])}"
+
+
 def _sha256_file(path: Path) -> str:
     if not path.is_file():
         raise GuardError(f"bound file is absent: {_posix(path)}")
@@ -64,14 +71,19 @@ def inspect_arm(
     parent_sha: str,
     commit_message: str,
     changed_files: tuple[str, ...],
+    changed_statuses: tuple[str, ...] = (),
     root: Path = ROOT,
 ) -> dict[str, object] | None:
-    """Return the validated marker only for the unique marker-only arming shape."""
+    """Return the validated marker only for the unique newly-added marker-only arming shape."""
 
     canonical_files = tuple(sorted(_posix(path) for path in changed_files if path))
     if canonical_files != (_posix(ARM_RELATIVE),):
         return None
 
+    canonical_statuses = tuple(sorted(_canonical_status(item) for item in changed_statuses if item))
+    expected_addition = (f"A\t{_posix(ARM_RELATIVE)}",)
+    if canonical_statuses != expected_addition:
+        raise GuardError("the canonical arming marker must be newly added, not modified or renamed")
     if commit_message.strip() != ARM_MESSAGE:
         raise GuardError("the marker-only commit does not carry the exact arming message")
     if not _SHA.fullmatch(head_sha):
@@ -129,6 +141,7 @@ def main() -> int:
     parser.add_argument("--parent-sha", required=True)
     parser.add_argument("--commit-message", required=True)
     parser.add_argument("--changed-file", action="append", default=[])
+    parser.add_argument("--changed-status", action="append", default=[])
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
 
@@ -138,6 +151,7 @@ def main() -> int:
             parent_sha=args.parent_sha,
             commit_message=args.commit_message,
             changed_files=tuple(args.changed_file),
+            changed_statuses=tuple(args.changed_status),
         )
     except GuardError as error:
         _write_output(args.github_output, armed=False, reason="invalid-arm")
