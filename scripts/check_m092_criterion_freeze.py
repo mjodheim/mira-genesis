@@ -11,13 +11,14 @@ import metamorphosis.m092_certificate_generator as candidate_generator
 import metamorphosis.m092_certificate_policy_search as policy_search
 import metamorphosis.m092_certificate_verifier as verifier
 import metamorphosis.m092_criterion_search as criterion
+import metamorphosis.m092_resume_validation as resume_validation
 from metamorphosis.m092_runtime import canonical_bytes
-import scripts.run_m092_criterion_search as canonical_runner
 
 ROOT = Path(__file__).resolve().parents[1]
 M092 = ROOT / "experiments" / "M092"
 PROTOCOL = M092 / "PROTOCOL.json"
 TARGET_THEOREM = M092 / "TARGET_THEOREM.json"
+CANONICAL_RUNNER = ROOT / "scripts" / "run_m092_criterion_search.py"
 PRE_SEARCH_FORBIDDEN = (
     M092 / "SEARCH_STATE.json",
     M092 / "SELECTED_CANDIDATE.json",
@@ -55,12 +56,12 @@ def _forbidden_import(imports: set[str]) -> str | None:
     return None
 
 
-def _runner_digest() -> str:
-    return hashlib.sha256(Path(canonical_runner.__file__).read_bytes()).hexdigest()
+def _file_digest(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def _assert_rehashed_resume_is_refused(neutral: dict[str, object]) -> None:
-    """Prove the canonical runner does not confuse a self-hash with provenance."""
+    """Prove the canonical resume validator does not confuse a self-hash with provenance."""
 
     forged = criterion.CriterionSearchState.fresh(neutral).to_dict()
     forged["certificate_policy_attempts"] = 1
@@ -69,12 +70,12 @@ def _assert_rehashed_resume_is_refused(neutral: dict[str, object]) -> None:
     payload.pop("state_digest", None)
     forged["state_digest"] = criterion._sha256(payload)
 
-    # This is an intentional positive control: the generic state loader checks internal integrity and
-    # should accept the re-authored checksum. Canonical provenance is established by full replay.
+    # Intentional positive control: the generic state loader checks internal integrity and accepts a
+    # re-authored checksum. Canonical provenance is established by deterministic full-prefix replay.
     criterion.CriterionSearchState.from_dict(forged)
     try:
-        canonical_runner._verified_resume_state(forged, neutral)
-    except SystemExit as error:
+        resume_validation.verified_resume_state(forged, neutral)
+    except resume_validation.ResumeValidationError as error:
         if "deterministic replay" not in str(error):
             raise SystemExit(
                 "canonical resume rejected the forged state for an unexpected reason"
@@ -131,7 +132,14 @@ def main() -> int:
     forbidden = _forbidden_import(criterion_imports)
     if forbidden is not None:
         raise SystemExit(f"criterion selection imports forbidden qualification material: {forbidden}")
-    runner_imports = _project_imports(Path(canonical_runner.__file__).resolve())
+    resume_imports = _project_imports(Path(resume_validation.__file__).resolve())
+    forbidden_resume_import = _forbidden_import(resume_imports)
+    if forbidden_resume_import is not None:
+        raise SystemExit(
+            "canonical resume validator imports forbidden qualification material: "
+            + forbidden_resume_import
+        )
+    runner_imports = _project_imports(CANONICAL_RUNNER)
     forbidden_runner_import = _forbidden_import(runner_imports)
     if forbidden_runner_import is not None:
         raise SystemExit(
@@ -166,8 +174,12 @@ def main() -> int:
         "behaviour_deduplication_enabled": False,
         "policy_imports": sorted(policy_imports),
         "criterion_imports": sorted(criterion_imports),
+        "canonical_resume_validator_imports": sorted(resume_imports),
         "canonical_runner_imports": sorted(runner_imports),
-        "canonical_runner_blob_sha256": _runner_digest(),
+        "canonical_resume_validator_blob_sha256": _file_digest(
+            Path(resume_validation.__file__).resolve()
+        ),
+        "canonical_runner_blob_sha256": _file_digest(CANONICAL_RUNNER),
         "canonical_resume_replay_verified": True,
         "rehashed_resume_positive_control_refused": True,
         "qualification_loaded": False,
