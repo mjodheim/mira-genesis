@@ -11,10 +11,12 @@ The unique first target search may run only from a later commit whose sole chang
 
 `m092(canonical): arm first immutable criterion search`
 
-The marker must bind its actual parent commit and the exact SHA-256 digests of the frozen protocol,
-target theorem, criterion runner, criterion freeze checker, criterion engine, resume validator,
-canonical guard, canonical workflow and result packager.  The full program limit remains 2,000,000.
-No reset, reroll, alternate seed or post-result repair path is provided.
+The marker must bind its actual parent commit and the exact SHA-256 digests of every decisive
+selection artifact: the frozen protocol and target theorem; criterion runner, freeze checker and
+engine; resume validator; program enumerator; certificate-policy search; certificate generator;
+proof search; candidate scanner; independent certificate verifier; K1 kernel; runtime; canonical
+guard and workflow; and result packager.  The full program limit remains 2,000,000.  No reset,
+reroll, alternate seed or post-result repair path is provided.
 
 ## Why transport and arming are separate
 
@@ -43,12 +45,36 @@ target feedback.  If the frozen computation cannot be made to fit the available 
 without changing its scientific meaning, that limitation must be recorded before any first-run
 claim is consumed.
 
+## Checkpoint and interruption semantics
+
+Checkpointing is transport-only.  The criterion engine is unchanged: every chunk invokes the same
+frozen `advance_search` function on the exact state produced by the previous chunk.  Tests require a
+neutral one-chunk execution and a multi-chunk execution over the same program budget to end in the
+same complete serialized state and state digest.
+
+Before consuming any new program, the runner atomically writes the authenticated initial/resumed
+state.  It then advances at most 1,000 programs at a time and atomically replaces the checkpoint only
+after a fully validated chunk completes.  The canonical execution step has a 330-minute ceiling
+inside a 360-minute job, leaving time for preservation after a normal search-step timeout.
+
+Every armed workflow that actually reaches the target-search execution step receives a separate
+attempt artifact containing the latest completed checkpoint, arming head/parent, GitHub run identity,
+execution-step outcome, counters and state digest.  This attempt is preserved whether the execution
+finishes or fails.  An interrupted attempt does not authorize a changed seed, changed implementation
+or alternate search path: any retry is an exact deterministic reproduction on the same arming head.
+A runner loss that prevents artifact upload must still be disclosed as infrastructure interruption;
+the deterministic prefix remains reconstructible from the frozen arming head.
+
+Only a completed terminal search creates the uniquely named `m092-first-canonical-search` artifact.
+That completed artifact blocks any later purported first search.  Attempt artifacts do not silently
+become scientific results and do not permit an undesirable partial outcome to be discarded.
+
 ## Canonical artifact
 
-When eventually armed, the workflow preserves both the raw terminal criterion state and a packaged
-first-run artifact.  The package records the arming head, frozen parent, marker, terminal status,
-program/certificate counts and exact search state.  Packaging does not execute or qualify the
-selected candidate.  `candidate_selected`, `program_budget_exhausted` and
+When eventually armed and completed, the workflow preserves both the raw terminal criterion state
+and a packaged first-run artifact.  The package records the arming head, frozen parent, marker,
+terminal status, program/certificate counts and exact search state.  Packaging does not execute or
+qualify the selected candidate.  `candidate_selected`, `program_budget_exhausted` and
 `certificate_budget_exhausted` are all legitimate terminal search outcomes; none by itself is an
 M092 scientific verdict.
 
