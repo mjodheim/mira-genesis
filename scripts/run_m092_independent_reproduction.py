@@ -30,8 +30,7 @@ def _install_target_neutral_path_cache() -> None:
     The reproduction runner uses the exact same bounded target-neutral cache as the canonical
     runner.  Only repeated symbolic-path preparation is removed; every caller receives a fresh list
     containing the same immutable paths, so proposal order, policy order, records, budgets and
-    verifier inputs are unchanged.  The cache cannot read canonical-result content or qualification
-    material.
+    verifier inputs are unchanged.  The cache cannot read result content or qualification material.
     """
 
     original = policy_search._paths_for_policy
