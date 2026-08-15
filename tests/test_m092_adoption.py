@@ -11,6 +11,7 @@ from metamorphosis.m092_adoption import (
     build_extended_bundle,
     commit_adoption_transaction,
     dependency_ablation,
+    downstream_body,
     downstream_primitive_id,
     execute_downstream,
     load_committed_bundle,
@@ -69,10 +70,13 @@ def _adopted_bundle() -> tuple[dict[str, object], dict[str, object], RuntimeLang
     return bundle, receipt, language, substrate
 
 
-def test_content_addressed_key_is_full_program_digest() -> None:
+def test_operation_and_downstream_ids_are_content_addressed_by_their_own_contracts() -> None:
     digest = program_digest(NEUTRAL_PROGRAM)
     assert operation_key(NEUTRAL_PROGRAM) == f"ACQUIRED_{digest}"
-    assert downstream_primitive_id(NEUTRAL_PROGRAM) == f"M092_USE_{digest}"
+    primitive_id = downstream_primitive_id(NEUTRAL_PROGRAM)
+    assert primitive_id.startswith("M092_USE_")
+    assert len(primitive_id.removeprefix("M092_USE_")) == 64
+    assert primitive_id != f"M092_USE_{digest}"
 
 
 def test_adoption_recomputes_scanner_and_global_certificate() -> None:
@@ -127,6 +131,7 @@ def test_extended_state_and_language_are_real_and_dependency_bound() -> None:
     assert substrate.forbidden_capabilities == base_substrate.forbidden_capabilities
     primitive = language.definition(primitive_id)
     assert primitive is not None
+    assert primitive.body == downstream_body(NEUTRAL_PROGRAM)
     assert any(step[0] == key for step in primitive.body)
     assert execute_downstream(language, substrate, primitive_id, 0)[0] == 0
     assert execute_downstream(language, substrate, primitive_id, 7)[0] == 0
@@ -142,7 +147,6 @@ def test_transaction_fresh_reload_and_journal_is_not_execution_authority(tmp_pat
     language, substrate = load_committed_bundle(bundle_path, journal_path)
     assert execute_downstream(language, substrate, str(bundle["primitive_id"]), 4)[0] == 0
 
-    # A journal cannot substitute for the runtime bundle.
     bundle_path.write_text(journal_path.read_text(encoding="utf-8"), encoding="utf-8")
     with pytest.raises(AdoptionError):
         load_committed_bundle(bundle_path, journal_path)
@@ -169,13 +173,10 @@ def test_fault_changes_live_behaviour_then_rollback_restores_exact_bytes(tmp_pat
     before = execute_downstream(language, substrate, primitive_id, 0)
     assert before[0] == 0
 
-    # Inject the frozen program-level fault into persisted state.  The strict bundle loader must
-    # reject it because the original acquisition digest no longer matches the operation bytes.
     corrupted = substrate.replacing(str(bundle["operation_key"]), BEHAVIOUR_FAULT_PROGRAM)
     faulty = dict(bundle)
     faulty["substrate"] = corrupted.to_dict()
     faulty["substrate_digest"] = corrupted.digest()
-    # Execute the live corrupted state directly to prove this is not a metadata-only fault.
     after_fault = execute_downstream(language, corrupted, primitive_id, 0)
     assert after_fault[0] == 1
     assert after_fault != before
