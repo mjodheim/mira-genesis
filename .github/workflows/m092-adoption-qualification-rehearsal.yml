@@ -7,11 +7,13 @@ on:
     paths:
       - 'metamorphosis/m092_adoption.py'
       - 'metamorphosis/m092_adoption_checkpoint.py'
+      - 'metamorphosis/m092_validation_receipt.py'
       - 'metamorphosis/m092_qualification.py'
       - 'scripts/run_m092_adoption.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
       - 'tests/test_m092_adoption.py'
       - 'tests/test_m092_adoption_checkpoint.py'
+      - 'tests/test_m092_validation_receipt.py'
       - 'tests/test_m092_qualification.py'
       - 'scripts/check_m092_canonical_guard.py'
       - '.github/workflows/m092-adoption-qualification-rehearsal.yml'
@@ -20,6 +22,7 @@ on:
     paths:
       - 'metamorphosis/m092_adoption.py'
       - 'metamorphosis/m092_adoption_checkpoint.py'
+      - 'metamorphosis/m092_validation_receipt.py'
       - 'metamorphosis/m092_qualification.py'
       - 'scripts/run_m092_adoption.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
@@ -52,6 +55,7 @@ jobs:
       - name: Assert canonical search and real adoption remain closed
         run: |
           test ! -e experiments/M092/CANONICAL_SEARCH_ARMED.json
+          test ! -e experiments/M092/VALIDATION_RECEIPT.json
           test ! -e experiments/M092/SUBSTRATE_B.json
           test ! -e experiments/M092/QUALIFICATION.json
           test ! -e experiments/M092/RESULT.json
@@ -65,6 +69,7 @@ jobs:
           paths = [
               Path('metamorphosis/m092_adoption.py'),
               Path('metamorphosis/m092_adoption_checkpoint.py'),
+              Path('metamorphosis/m092_validation_receipt.py'),
               Path('metamorphosis/m092_qualification.py'),
               Path('scripts/run_m092_adoption_rehearsal.py'),
           ]
@@ -115,6 +120,7 @@ jobs:
           pytest -q \
             tests/test_m092_adoption.py \
             tests/test_m092_adoption_checkpoint.py \
+            tests/test_m092_validation_receipt.py \
             tests/test_m092_qualification.py
 
       - name: Run neutral transaction fresh-process qualification rollback rehearsal
