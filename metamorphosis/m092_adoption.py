@@ -7,8 +7,8 @@ acceptance fields are not trusted.
 
 The persisted execution authority is one closed bundle containing the extended substrate and the
 downstream language.  The transaction journal is evidence only and is never consulted by runtime
-execution.  The acquired operation key is fixed before result reveal as ``ACQUIRED_<full sha256>``;
-there is no post-result naming choice.
+execution.  Both the acquired operation and the downstream primitive have deterministic
+content-addressed identities fixed before result reveal.
 """
 from __future__ import annotations
 
@@ -31,8 +31,11 @@ from metamorphosis.m092_substrate_state import (
 EXTENDED_BUNDLE_SCHEMA = "m092-extended-runtime-bundle/1"
 ADOPTION_RECEIPT_SCHEMA = "m092-adoption-receipt/1"
 TRANSACTION_SCHEMA = "m092-adoption-transaction/1"
+DOWNSTREAM_KEY_SCHEMA = "m092-downstream-primitive-key/1"
 ACQUIRED_KEY_PREFIX = "ACQUIRED_"
 DOWNSTREAM_PRIMITIVE_PREFIX = "M092_USE_"
+DOWNSTREAM_PARAMETER_KINDS = ("slot", "input")
+DOWNSTREAM_CAPABILITIES = ("pure_slot_write",)
 
 # Fixed pre-result fault.  For x=0 it returns 1, whereas both the neutral countdown rehearsal and
 # the frozen M092 target postcondition require y=0.  It changes executable behaviour, not metadata.
@@ -57,13 +60,25 @@ def _digest(value: object) -> str:
 
 
 def operation_key(program: Program) -> str:
-    """Return the frozen, full-content-addressed operation key."""
+    """Return the frozen, full-content-addressed substrate-operation key."""
 
     return ACQUIRED_KEY_PREFIX + program_digest(program)
 
 
+def downstream_body(program: Program) -> tuple[tuple[str, object], ...]:
+    return (("PUSH_INPUT", "$1"), (operation_key(program), 0), ("STORE_SLOT", "$0"))
+
+
 def downstream_primitive_id(program: Program) -> str:
-    return DOWNSTREAM_PRIMITIVE_PREFIX + program_digest(program)
+    """Content-address the exact downstream body and signature, not the K1 digest alone."""
+
+    payload = {
+        "schema": DOWNSTREAM_KEY_SCHEMA,
+        "parameter_kinds": list(DOWNSTREAM_PARAMETER_KINDS),
+        "body": [[name, argument] for name, argument in downstream_body(program)],
+        "capabilities": list(DOWNSTREAM_CAPABILITIES),
+    }
+    return DOWNSTREAM_PRIMITIVE_PREFIX + _digest(payload)
 
 
 def validate_candidate_for_adoption(
@@ -166,13 +181,16 @@ def extend_language(
     if base.definition(primitive_id) is not None:
         raise AdoptionError("downstream primitive is already registered")
 
+    capabilities = _require_pure_slot_write(substrate)
+    if capabilities != DOWNSTREAM_CAPABILITIES:
+        raise AdoptionError("downstream capability signature differs from the frozen contract")
     primitive = RuntimePrimitive(
         primitive_id=primitive_id,
-        parameter_kinds=("slot", "input"),
-        body=(("PUSH_INPUT", "$1"), (key, 0), ("STORE_SLOT", "$0")),
+        parameter_kinds=DOWNSTREAM_PARAMETER_KINDS,
+        body=downstream_body(program),
         origin="acquired",
         provenance=("M092 downstream primitive", receipt["program_digest"]),
-        capabilities=_require_pure_slot_write(substrate),
+        capabilities=capabilities,
     )
     return RuntimeLanguage(
         primitives=base.primitives + (primitive,),
@@ -230,9 +248,20 @@ def parse_extended_bundle(bundle: Mapping[str, object]) -> tuple[RuntimeLanguage
     operation = substrate.operation(key)
     if operation is None or program_digest(operation.program) != bundle["program_digest"]:
         raise AdoptionError("persisted acquired operation does not match its bound program digest")
-    primitive = language.definition(str(bundle["primitive_id"]))
-    if primitive is None or not any(step[0] == key for step in primitive.body):
-        raise AdoptionError("persisted downstream primitive does not depend on the acquired operation")
+    if key != operation_key(operation.program):
+        raise AdoptionError("persisted acquired operation key is not content-addressed")
+    expected_primitive_id = downstream_primitive_id(operation.program)
+    if bundle["primitive_id"] != expected_primitive_id:
+        raise AdoptionError("persisted downstream primitive id is not content-addressed from body/signature")
+    primitive = language.definition(expected_primitive_id)
+    if primitive is None:
+        raise AdoptionError("persisted downstream primitive is absent")
+    if primitive.parameter_kinds != DOWNSTREAM_PARAMETER_KINDS:
+        raise AdoptionError("persisted downstream signature differs")
+    if primitive.body != downstream_body(operation.program):
+        raise AdoptionError("persisted downstream body differs from its content-addressed identity")
+    if primitive.capabilities != DOWNSTREAM_CAPABILITIES:
+        raise AdoptionError("persisted downstream capabilities differ")
     return language, substrate
 
 
@@ -251,7 +280,6 @@ def commit_adoption_transaction(
 ) -> dict[str, object]:
     """Persist PREPARED -> STAGED -> COMMITTED; the journal never becomes execution authority."""
 
-    # Validate before any durable state is changed.
     parse_extended_bundle(bundle)
     base: dict[str, object] = {
         "schema": TRANSACTION_SCHEMA,
@@ -317,10 +345,8 @@ def behaviour_fault(bundle: Mapping[str, object]) -> dict[str, object]:
     result = dict(bundle)
     result["substrate"] = corrupted.to_dict()
     result["substrate_digest"] = corrupted.digest()
-    # bundle_digest excludes itself.
     result_without_digest = {key: result[key] for key in result if key != "bundle_digest"}
     result["bundle_digest"] = _digest(result_without_digest)
-    # Ensure the language still resolves, but the operation bytes no longer match the adoption digest.
     if language.definition(str(bundle["primitive_id"])) is None:
         raise AdoptionError("fault construction lost the downstream primitive")
     return result
@@ -340,10 +366,11 @@ def restore_exact(path: Path, preserved_bytes: bytes) -> str:
 
 __all__ = [
     "ACQUIRED_KEY_PREFIX", "ADOPTION_RECEIPT_SCHEMA", "AdoptionError",
-    "BEHAVIOUR_FAULT_PROGRAM", "DOWNSTREAM_PRIMITIVE_PREFIX", "EXTENDED_BUNDLE_SCHEMA",
+    "BEHAVIOUR_FAULT_PROGRAM", "DOWNSTREAM_CAPABILITIES", "DOWNSTREAM_KEY_SCHEMA",
+    "DOWNSTREAM_PARAMETER_KINDS", "DOWNSTREAM_PRIMITIVE_PREFIX", "EXTENDED_BUNDLE_SCHEMA",
     "TRANSACTION_SCHEMA", "behaviour_fault", "build_extended_bundle",
-    "commit_adoption_transaction", "dependency_ablation", "downstream_primitive_id",
-    "execute_downstream", "extend_language", "extend_substrate", "load_committed_bundle",
-    "operation_key", "parse_extended_bundle", "restore_exact", "sha256_bytes",
-    "validate_candidate_for_adoption",
+    "commit_adoption_transaction", "dependency_ablation", "downstream_body",
+    "downstream_primitive_id", "execute_downstream", "extend_language", "extend_substrate",
+    "load_committed_bundle", "operation_key", "parse_extended_bundle", "restore_exact",
+    "sha256_bytes", "validate_candidate_for_adoption",
 ]
