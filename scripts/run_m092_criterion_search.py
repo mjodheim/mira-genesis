@@ -17,9 +17,9 @@ import json
 import os
 from pathlib import Path
 import tempfile
-from typing import Mapping
 
 from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
+from metamorphosis.m092_resume_validation import ResumeValidationError, verified_resume_state
 
 
 def _read_json(path: Path) -> object:
@@ -47,32 +47,6 @@ def _write_json_atomic(path: Path, value: object) -> None:
             os.unlink(temporary_name)
 
 
-def _verified_resume_state(
-    raw_state: Mapping[str, object],
-    requirement: Mapping[str, object],
-) -> CriterionSearchState:
-    """Return a resume state only if the frozen computation reproduces its entire prefix.
-
-    CriterionSearchState.from_dict deliberately treats its SHA-256 as an integrity check, not as an
-    external signature. A person able to rewrite JSON can also recompute that digest. The canonical
-    runner therefore reconstructs the state from genesis under the currently bound implementation
-    and compares the complete serialized value. A changed cursor, counter, refusal tally, selected
-    payload or event-chain value is rejected even when all embedded self-digests were recomputed.
-    """
-
-    supplied = CriterionSearchState.from_dict(raw_state)
-    replayed = advance_search(
-        CriterionSearchState.fresh(requirement),
-        requirement,
-        program_limit=supplied.generated_programs,
-    )
-    if replayed.to_dict() != supplied.to_dict():
-        raise SystemExit(
-            "resume state does not match deterministic replay from the frozen M092 criterion genesis"
-        )
-    return supplied
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--requirement", type=Path, required=True)
@@ -95,7 +69,10 @@ def main() -> int:
         raw_state = _read_json(arguments.state)
         if not isinstance(raw_state, dict):
             raise SystemExit("resume state must be a JSON object")
-        state = _verified_resume_state(raw_state, requirement)
+        try:
+            state = verified_resume_state(raw_state, requirement)
+        except ResumeValidationError as error:
+            raise SystemExit(str(error)) from error
 
     advanced = advance_search(
         state,
