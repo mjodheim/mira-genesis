@@ -65,6 +65,11 @@ or alternate search path: any retry is an exact deterministic reproduction on th
 A runner loss that prevents artifact upload must still be disclosed as infrastructure interruption;
 the deterministic prefix remains reconstructible from the frozen arming head.
 
+Completed-result packaging and upload are evaluated independently of the secondary attempt-artifact
+upload.  Therefore an infrastructure failure while publishing the diagnostic attempt artifact cannot
+suppress an otherwise valid terminal first-run artifact.  Conversely, a failed/non-terminal search
+can never be packaged as a completed result.
+
 Only a completed terminal search creates the uniquely named `m092-first-canonical-search` artifact.
 That completed artifact blocks any later purported first search.  Attempt artifacts do not silently
 become scientific results and do not permit an undesirable partial outcome to be discarded.
