@@ -20,6 +20,7 @@ from metamorphosis.m092_runtime import canonical_bytes
 
 RESULT_SCHEMA = "m092-canonical-criterion-search-result/1"
 ARM_SCHEMA = "m092-canonical-search-arm/1"
+PROGRAM_LIMIT = 2_000_000
 TERMINAL_STATUSES = {
     "candidate_selected",
     "program_budget_exhausted",
@@ -80,6 +81,8 @@ def package_result(
         raise PackageError("canonical marker schema differs")
     if marker.get("frozen_parent_sha") != parent_sha:
         raise PackageError("canonical marker parent differs from the executed parent")
+    if marker.get("program_limit") != PROGRAM_LIMIT or isinstance(marker.get("program_limit"), bool):
+        raise PackageError("canonical marker program limit differs from the frozen full search budget")
     for field in ("first_run_only", "reruns_are_reproductions_only", "qualification_forbidden"):
         if marker.get(field) is not True:
             raise PackageError(f"canonical marker {field} must be true")
@@ -119,7 +122,7 @@ def package_result(
         "target_search_executed": True,
         "qualification_loaded": False,
         "candidate_executed_for_selection": False,
-        "program_limit_requested": marker.get("program_limit"),
+        "program_limit_requested": PROGRAM_LIMIT,
         "terminal_search_status": state.status,
         "candidate_selected": state.status == "candidate_selected",
         "generated_programs": state.generated_programs,
