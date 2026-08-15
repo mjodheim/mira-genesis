@@ -12,6 +12,7 @@ import metamorphosis.m092_certificate_policy_search as policy_search
 import metamorphosis.m092_certificate_verifier as verifier
 import metamorphosis.m092_criterion_search as criterion
 from metamorphosis.m092_runtime import canonical_bytes
+import scripts.run_m092_criterion_search as canonical_runner
 
 ROOT = Path(__file__).resolve().parents[1]
 M092 = ROOT / "experiments" / "M092"
@@ -52,6 +53,34 @@ def _forbidden_import(imports: set[str]) -> str | None:
         if any(token in lowered for token in ("qualification", "world_generator", "materialize")):
             return name
     return None
+
+
+def _runner_digest() -> str:
+    return hashlib.sha256(Path(canonical_runner.__file__).read_bytes()).hexdigest()
+
+
+def _assert_rehashed_resume_is_refused(neutral: dict[str, object]) -> None:
+    """Prove the canonical runner does not confuse a self-hash with provenance."""
+
+    forged = criterion.CriterionSearchState.fresh(neutral).to_dict()
+    forged["certificate_policy_attempts"] = 1
+    forged["criterion_event_chain_digest"] = "1" * 64
+    payload = dict(forged)
+    payload.pop("state_digest", None)
+    forged["state_digest"] = criterion._sha256(payload)
+
+    # This is an intentional positive control: the generic state loader checks internal integrity and
+    # should accept the re-authored checksum. Canonical provenance is established by full replay.
+    criterion.CriterionSearchState.from_dict(forged)
+    try:
+        canonical_runner._verified_resume_state(forged, neutral)
+    except SystemExit as error:
+        if "deterministic replay" not in str(error):
+            raise SystemExit(
+                "canonical resume rejected the forged state for an unexpected reason"
+            ) from error
+    else:
+        raise SystemExit("canonical resume accepted a re-authored and re-hashed search state")
 
 
 def main() -> int:
@@ -102,6 +131,12 @@ def main() -> int:
     forbidden = _forbidden_import(criterion_imports)
     if forbidden is not None:
         raise SystemExit(f"criterion selection imports forbidden qualification material: {forbidden}")
+    runner_imports = _project_imports(Path(canonical_runner.__file__).resolve())
+    forbidden_runner_import = _forbidden_import(runner_imports)
+    if forbidden_runner_import is not None:
+        raise SystemExit(
+            "canonical runner imports forbidden qualification material: " + forbidden_runner_import
+        )
 
     missing_pre_search = [str(path.relative_to(ROOT)) for path in PRE_SEARCH_FORBIDDEN if path.exists()]
     if arguments.assert_pre_search and missing_pre_search:
@@ -118,6 +153,8 @@ def main() -> int:
     if round_trip.to_dict() != state.to_dict():
         raise SystemExit("criterion search genesis state is not byte-logically round-trippable")
 
+    _assert_rehashed_resume_is_refused(neutral)
+
     report = {
         "schema": "m092-criterion-freeze-readiness-v1",
         "protocol_status": protocol["status"],
@@ -129,6 +166,10 @@ def main() -> int:
         "behaviour_deduplication_enabled": False,
         "policy_imports": sorted(policy_imports),
         "criterion_imports": sorted(criterion_imports),
+        "canonical_runner_imports": sorted(runner_imports),
+        "canonical_runner_blob_sha256": _runner_digest(),
+        "canonical_resume_replay_verified": True,
+        "rehashed_resume_positive_control_refused": True,
         "qualification_loaded": False,
         "candidate_executed": False,
         "canonical_target_search_executed": False,
