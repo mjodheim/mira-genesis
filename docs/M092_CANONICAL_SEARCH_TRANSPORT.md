@@ -91,6 +91,23 @@ progress. If a 320-minute segment cannot complete even one program, the artifact
 automatic continuation stops fail-closed rather than retrying forever. Such a case must be reviewed
 as an infrastructure/atomicity limitation before any changed apparatus is considered.
 
+## Required post-merge neutral rehearsal
+
+Merging this transport is not sufficient to authorize the arming marker. Before any target arming PR
+is created, `.github/workflows/m092-canonical-transport-rehearsal.yml` must complete both of its
+neutral phases on `main`.
+
+The first phase uses only `COUNTDOWN_POSTCONDITION`, advances two neutral programs, packages and
+uploads a segment-zero artifact, then dispatches a second GitHub Actions run with that exact artifact
+id and digest. The second phase verifies the predecessor artifact metadata, downloads that exact
+cross-run artifact, resumes through `verified_segment_resume_state`, advances two more neutral
+programs and compares the complete resulting state against an independently computed one-shot
+four-program neutral trajectory.
+
+The required observation is `cross_run_state_byte_identical = true`. The rehearsal may not load the
+M092 target theorem, create the canonical arming marker or touch qualification material. A failed or
+missing rehearsal blocks arming and must be corrected while the target remains unconsumed.
+
 ## Interruption and retry semantics
 
 Checkpoint frequency is transport-only. Tests require neutral one-chunk and multi-chunk execution
@@ -124,6 +141,11 @@ candidate. Before qualification, a separate deterministic reproduction must star
 the same frozen arming head and reproduce the terminal state/result. That reproduction may itself
 need segmented transport, but it must be logically separate from the first canonical run and may not
 repair or replace an undesirable first result.
+
+The reproduction apparatus must itself be frozen **before the first target search is armed**. It may
+not be invented or modified after seeing the canonical target outcome in order to rescue that
+outcome. Freezing that reproduction transport is the next pre-arm milestone after this transport and
+its neutral cross-run rehearsal are accepted.
 
 Only after that independent reproduction matches may the protocol proceed to candidate validation,
 registration, downstream language construction, causal ablations, qualification, rollback,
