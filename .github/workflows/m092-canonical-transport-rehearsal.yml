@@ -226,6 +226,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.previous_run_id }}
           path: previous-neutral-segment
+          merge-multiple: true
 
       - name: Prove cross-run resume equals one-shot neutral trajectory
         if: steps.identity.outputs.phase == '1'
