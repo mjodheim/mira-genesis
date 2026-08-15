@@ -6,6 +6,14 @@ on:
   pull_request:
     paths:
       - 'scripts/audit_m092_runtime_envelope.py'
+      - 'metamorphosis/m092_search_enumerator.py'
+      - 'metamorphosis/m092_certificate_policy_search.py'
+      - 'metamorphosis/m092_certificate_generator.py'
+      - 'metamorphosis/m092_proof_search.py'
+      - 'metamorphosis/m092_candidate_validation.py'
+      - 'metamorphosis/m092_certificate_verifier.py'
+      - 'metamorphosis/m092_kernel.py'
+      - 'metamorphosis/m092_runtime.py'
       - '.github/workflows/m092-runtime-envelope.yml'
 
 permissions:
