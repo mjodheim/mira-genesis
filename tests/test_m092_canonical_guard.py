@@ -43,12 +43,14 @@ def _write_marker(root: Path, marker: dict[str, object]) -> None:
 def _inspect(
     root: Path,
     *,
+    base_sha: str = PARENT,
     changed_files: tuple[str, ...] | None = None,
     changed_statuses: tuple[str, ...] | None = None,
 ) -> dict[str, object] | None:
     return guard.inspect_arm(
         head_sha=HEAD,
         parent_sha=PARENT,
+        base_sha=base_sha,
         commit_message=guard.ARM_MESSAGE,
         changed_files=changed_files or (guard.ARM_RELATIVE.as_posix(),),
         changed_statuses=changed_statuses or (f"A\t{guard.ARM_RELATIVE.as_posix()}",),
@@ -56,7 +58,7 @@ def _inspect(
     )
 
 
-def test_exact_new_marker_only_arm_is_accepted(tmp_path: Path) -> None:
+def test_exact_one_commit_new_marker_arm_is_accepted(tmp_path: Path) -> None:
     _install_bound_files(tmp_path)
     expected = _marker(tmp_path)
     _write_marker(tmp_path, expected)
@@ -92,6 +94,14 @@ def test_existing_marker_cannot_be_modified_to_rearm(tmp_path: Path) -> None:
         )
 
 
+def test_arming_parent_must_equal_pull_request_base(tmp_path: Path) -> None:
+    _install_bound_files(tmp_path)
+    _write_marker(tmp_path, _marker(tmp_path))
+
+    with pytest.raises(guard.GuardError, match="parent must equal the pull-request base"):
+        _inspect(tmp_path, base_sha="c" * 40)
+
+
 def test_marker_plus_any_other_file_cannot_arm(tmp_path: Path) -> None:
     _install_bound_files(tmp_path)
     _write_marker(tmp_path, _marker(tmp_path))
@@ -114,6 +124,7 @@ def test_marker_only_commit_requires_exact_message(tmp_path: Path) -> None:
         guard.inspect_arm(
             head_sha=HEAD,
             parent_sha=PARENT,
+            base_sha=PARENT,
             commit_message=guard.ARM_MESSAGE + " amended",
             changed_files=(guard.ARM_RELATIVE.as_posix(),),
             changed_statuses=(f"A\t{guard.ARM_RELATIVE.as_posix()}",),
