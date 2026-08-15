@@ -2,8 +2,8 @@
 
 The canonical target search stays closed unless the pull-request head *adds* exactly the arming
 marker as the sole commit above the pull-request base, carries the exact arming message, names its
-real parent commit and binds every decisive pre-search transport artifact by SHA-256. Ordinary
-development commits return ``armed=false``; a marker-only malformed claim fails loudly.
+real parent commit and binds every decisive pre-search transport and selection artifact by SHA-256.
+Ordinary development commits return ``armed=false``; a marker-only malformed claim fails loudly.
 """
 from __future__ import annotations
 
@@ -27,6 +27,14 @@ BOUND_FILES: Mapping[str, Path] = {
     "criterion_freeze_sha256": Path("scripts/check_m092_criterion_freeze.py"),
     "criterion_engine_sha256": Path("metamorphosis/m092_criterion_search.py"),
     "resume_validator_sha256": Path("metamorphosis/m092_resume_validation.py"),
+    "search_enumerator_sha256": Path("metamorphosis/m092_search_enumerator.py"),
+    "certificate_policy_search_sha256": Path("metamorphosis/m092_certificate_policy_search.py"),
+    "certificate_generator_sha256": Path("metamorphosis/m092_certificate_generator.py"),
+    "proof_search_sha256": Path("metamorphosis/m092_proof_search.py"),
+    "candidate_validation_sha256": Path("metamorphosis/m092_candidate_validation.py"),
+    "certificate_verifier_sha256": Path("metamorphosis/m092_certificate_verifier.py"),
+    "kernel_sha256": Path("metamorphosis/m092_kernel.py"),
+    "runtime_sha256": Path("metamorphosis/m092_runtime.py"),
     "canonical_guard_sha256": Path("scripts/check_m092_canonical_guard.py"),
     "canonical_workflow_sha256": Path(".github/workflows/m092-canonical-search.yml"),
     "canonical_packager_sha256": Path("scripts/package_m092_canonical_search.py"),
