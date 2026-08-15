@@ -1,14 +1,15 @@
 name: M092 neutral runtime envelope
 
 # Performance-only pre-search audit. It never loads the M092 target theorem and cannot select or
-# qualify a target candidate. Results are planning evidence, not a scientific verdict.  Expensive
-# measurement is repeated only when the current HEAD commit changes a measured implementation file;
-# transport/docs-only commits keep the already-recorded neutral evidence without burning another
-# forty-minute runner sample.
+# qualify a target candidate. Results are planning evidence, not a scientific verdict. Expensive
+# measurement is repeated only when the current HEAD commit changes measured implementation or the
+# runner-local cache transport being evaluated.
 on:
   pull_request:
     paths:
       - 'scripts/audit_m092_runtime_envelope.py'
+      - 'scripts/run_m092_criterion_search.py'
+      - 'scripts/run_m092_independent_reproduction.py'
       - 'metamorphosis/m092_search_enumerator.py'
       - 'metamorphosis/m092_certificate_policy_search.py'
       - 'metamorphosis/m092_certificate_generator.py'
@@ -43,6 +44,8 @@ jobs:
 
           measured = {
               'scripts/audit_m092_runtime_envelope.py',
+              'scripts/run_m092_criterion_search.py',
+              'scripts/run_m092_independent_reproduction.py',
               'metamorphosis/m092_search_enumerator.py',
               'metamorphosis/m092_certificate_policy_search.py',
               'metamorphosis/m092_certificate_generator.py',
@@ -51,6 +54,7 @@ jobs:
               'metamorphosis/m092_certificate_verifier.py',
               'metamorphosis/m092_kernel.py',
               'metamorphosis/m092_runtime.py',
+              '.github/workflows/m092-runtime-envelope.yml',
           }
           changed = set(subprocess.check_output(
               ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD^', 'HEAD'],
@@ -97,14 +101,34 @@ jobs:
           assert 'experiments/M092/TARGET_THEOREM' not in source
           PY
 
-      - name: Measure neutral proposal and certificate throughput
+      - name: Measure neutral proposal and cached certificate throughput
         if: steps.gate.outputs.measure == 'true'
         run: |
-          python scripts/audit_m092_runtime_envelope.py \
-            --enumeration-sample 100000 \
-            --policy-attempt-sample 1000 \
-            --policy-program-cap 25000 \
-            --output m092-neutral-runtime-envelope.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from scripts import audit_m092_runtime_envelope as audit
+          from scripts import run_m092_criterion_search as runner
+
+          runner._install_target_neutral_path_cache()
+          report = audit.build_report(
+              enumeration_sample=100000,
+              policy_attempt_sample=1000,
+              policy_program_cap=25000,
+          )
+          report['runner_local_path_cache_installed'] = True
+          # The appended planning flag is outside the audit's scientific surface. Recompute the
+          # report digest so the uploaded JSON remains self-consistent after adding it.
+          payload = dict(report)
+          payload.pop('report_digest', None)
+          report['report_digest'] = audit._sha256(payload)
+          Path('m092-neutral-runtime-envelope.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
 
       - name: Validate the report boundary
         if: steps.gate.outputs.measure == 'true'
@@ -121,6 +145,7 @@ jobs:
           assert report['candidate_selection_executed'] is False
           assert report['scientific_verdict'] is None
           assert report['projection_is_not_a_bound'] is True
+          assert report['runner_local_path_cache_installed'] is True
           assert report['canonical_program_cap'] == 2_000_000
           assert report['canonical_certificate_cap'] == 2_000_000
           pipeline = report['neutral_certificate_pipeline']
