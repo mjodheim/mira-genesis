@@ -1,0 +1,120 @@
+name: M092 neutral adoption qualification rehearsal
+
+# Pre-arm rehearsal only.  It uses COUNTDOWN_POSTCONDITION and synthetic inputs; it never runs the
+# canonical target search and never materializes the sealed qualification bank.
+on:
+  pull_request:
+    paths:
+      - 'metamorphosis/m092_adoption.py'
+      - 'metamorphosis/m092_qualification.py'
+      - 'scripts/run_m092_adoption_rehearsal.py'
+      - 'tests/test_m092_adoption.py'
+      - 'tests/test_m092_qualification.py'
+      - 'scripts/check_m092_canonical_guard.py'
+      - '.github/workflows/m092-adoption-qualification-rehearsal.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'metamorphosis/m092_adoption.py'
+      - 'metamorphosis/m092_qualification.py'
+      - 'scripts/run_m092_adoption_rehearsal.py'
+      - 'scripts/check_m092_canonical_guard.py'
+      - '.github/workflows/m092-adoption-qualification-rehearsal.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: m092-neutral-adoption-qualification-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  neutral-adoption-qualification:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Assert canonical search and real adoption remain closed
+        run: |
+          test ! -e experiments/M092/CANONICAL_SEARCH_ARMED.json
+          test ! -e experiments/M092/SUBSTRATE_B.json
+          test ! -e experiments/M092/QUALIFICATION.json
+          test ! -e experiments/M092/RESULT.json
+
+      - name: Enforce H target and qualification import boundary
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          paths = [
+              Path('metamorphosis/m092_adoption.py'),
+              Path('metamorphosis/m092_qualification.py'),
+              Path('scripts/run_m092_adoption_rehearsal.py'),
+          ]
+          forbidden = {
+              'metamorphosis.m092_target',
+              'metamorphosis.m092_qualification_generator',
+              'metamorphosis.m092_criterion_search',
+              'metamorphosis.m092_independent_reproduction',
+          }
+          for path in paths:
+              tree = ast.parse(path.read_text(encoding='utf-8'), filename=str(path))
+              imported = set()
+              for node in ast.walk(tree):
+                  if isinstance(node, ast.Import):
+                      imported.update(alias.name for alias in node.names)
+                  elif isinstance(node, ast.ImportFrom) and node.module:
+                      imported.add(node.module)
+              overlap = imported & forbidden
+              if overlap:
+                  raise SystemExit(f'{path} crosses the pre-arm boundary: {sorted(overlap)}')
+          PY
+
+      - name: Run focused falsification suite
+        run: |
+          pytest -q tests/test_m092_adoption.py tests/test_m092_qualification.py
+
+      - name: Run neutral transaction fresh-process qualification rollback rehearsal
+        run: |
+          python scripts/run_m092_adoption_rehearsal.py | tee /tmp/m092-h-neutral.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          value = json.loads(Path('/tmp/m092-h-neutral.json').read_text(encoding='utf-8'))
+          required_true = (
+              'neutral_only',
+              'adoption_validation_recomputed',
+              'fresh_process_loaded',
+              'downstream_dependency_real',
+              'qualification_after_fresh_process',
+              'fault_changed_live_behaviour',
+              'faulted_persistence_rejected',
+              'rollback_byte_identical',
+              'rollback_behaviour_restored',
+          )
+          if not all(value.get(field) is True for field in required_true):
+              raise SystemExit(f'M092-H neutral rehearsal failed: {value}')
+          if value.get('canonical_search_armed') is not False:
+              raise SystemExit('neutral rehearsal observed an armed canonical search')
+          if value.get('real_extended_state_materialized') is not False:
+              raise SystemExit('neutral rehearsal materialized the real extended state')
+          if value.get('sealed_target_loaded') is not False:
+              raise SystemExit('neutral rehearsal loaded the sealed target')
+          if value.get('hidden_qualification_materialized') is not False:
+              raise SystemExit('neutral rehearsal materialized hidden qualification')
+          if value.get('task_family_count', 0) < 2:
+              raise SystemExit('neutral rehearsal did not execute two task families')
+          if value.get('control_attempts_executed') != value.get('extended_attempts_executed') * 10:
+              raise SystemExit('control budget was not genuinely executed at 10x')
+          PY
