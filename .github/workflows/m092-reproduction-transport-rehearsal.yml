@@ -1,0 +1,458 @@
+name: M092 neutral independent reproduction rehearsal
+
+# Pre-arm infrastructure rehearsal only. It never loads TARGET_THEOREM.json, the arming marker,
+# qualification material or a canonical target result. Three hosted runs prove that a neutral source
+# prefix can be reproduced from genesis across an immutable artifact boundary without exposing the
+# source content until the reproduced prefix is already complete.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/m092-independent-reproduction.yml'
+      - '.github/workflows/m092-reproduction-transport-rehearsal.yml'
+      - 'metamorphosis/m092_independent_reproduction.py'
+      - 'scripts/run_m092_independent_reproduction.py'
+      - 'scripts/package_m092_reproduction_segment.py'
+  workflow_dispatch:
+    inputs:
+      phase:
+        required: true
+        type: string
+      rehearsal_head_sha:
+        required: true
+        type: string
+      rehearsal_parent_sha:
+        required: true
+        type: string
+      source_run_id:
+        required: true
+        type: string
+      source_artifact_id:
+        required: true
+        type: string
+      source_artifact_digest:
+        required: true
+        type: string
+      previous_run_id:
+        required: false
+        default: ''
+        type: string
+      previous_artifact_id:
+        required: false
+        default: ''
+        type: string
+      previous_artifact_digest:
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: m092-neutral-independent-reproduction-rehearsal
+  cancel-in-progress: false
+
+jobs:
+  neutral-reproduction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Resolve rehearsal phase and immutable identity
+        id: identity
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_HEAD: ${{ github.sha }}
+          PUSH_PARENT: ${{ github.event.before }}
+          INPUT_PHASE: ${{ inputs.phase }}
+          INPUT_HEAD: ${{ inputs.rehearsal_head_sha }}
+          INPUT_PARENT: ${{ inputs.rehearsal_parent_sha }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          if os.environ['EVENT_NAME'] == 'push':
+              values = {
+                  'phase': '0',
+                  'head': os.environ['PUSH_HEAD'],
+                  'parent': os.environ['PUSH_PARENT'],
+              }
+          else:
+              phase = os.environ['INPUT_PHASE']
+              if phase not in {'1', '2'}:
+                  raise SystemExit('neutral reproduction continuation phase must be 1 or 2')
+              values = {
+                  'phase': phase,
+                  'head': os.environ['INPUT_HEAD'],
+                  'parent': os.environ['INPUT_PARENT'],
+              }
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              for key, value in values.items():
+                  handle.write(f'{key}={value}\n')
+          PY
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.identity.outputs.head }}
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Assert target, marker and qualification remain unavailable
+        run: |
+          test ! -e experiments/M092/CANONICAL_SEARCH_ARMED.json
+          test ! -e experiments/M092/VALIDATION_RECEIPT.json
+          test ! -e experiments/M092/QUALIFICATION.json
+          test ! -e experiments/M092/RESULT.json
+          python - <<'PY'
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          assert COUNTDOWN_POSTCONDITION['schema'] == 'm092-affine-postcondition-v1'
+          PY
+
+      - name: Build neutral four-program source prefix
+        if: steps.identity.outputs.phase == '0'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
+
+          source = advance_search(
+              CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION),
+              COUNTDOWN_POSTCONDITION,
+              program_limit=4,
+          )
+          assert source.generated_programs == 4
+          assert source.status == 'searching'
+          Path('m092-neutral-reproduction-source.json').write_text(
+              json.dumps(source.to_dict(), indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload neutral source artifact
+        id: source_upload
+        if: steps.identity.outputs.phase == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m092-neutral-reproduction-source-${{ steps.identity.outputs.head }}
+          path: m092-neutral-reproduction-source.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Dispatch blind reproduction phase one
+        if: steps.identity.outputs.phase == '0' && steps.source_upload.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+          SOURCE_ARTIFACT_ID: ${{ steps.source_upload.outputs.artifact-id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ steps.source_upload.outputs.artifact-digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/m092-reproduction-transport-rehearsal.yml/dispatches"
+          payload = {
+              'ref': 'main',
+              'inputs': {
+                  'phase': '1',
+                  'rehearsal_head_sha': os.environ['HEAD_SHA'],
+                  'rehearsal_parent_sha': os.environ['PARENT_SHA'],
+                  'source_run_id': os.environ['GITHUB_RUN_ID'],
+                  'source_artifact_id': os.environ['SOURCE_ARTIFACT_ID'],
+                  'source_artifact_digest': os.environ['SOURCE_ARTIFACT_DIGEST'],
+                  'previous_run_id': '',
+                  'previous_artifact_id': '',
+                  'previous_artifact_digest': '',
+              },
+          }
+          request = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode('utf-8'),
+              method='POST',
+              headers={
+                  'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json',
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              assert response.status == 204
+          PY
+
+      - name: Validate source artifact metadata without downloading source content
+        if: steps.identity.outputs.phase == '1'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          headers = {
+              'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          run_id = int(os.environ['SOURCE_RUN_ID'])
+          artifact_id = int(os.environ['SOURCE_ARTIFACT_ID'])
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run_id}/artifacts?per_page=100"
+          with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
+              artifacts = json.load(response).get('artifacts', [])
+          matches = [item for item in artifacts if item.get('id') == artifact_id]
+          assert len(matches) == 1
+          artifact = matches[0]
+          assert artifact['name'] == f"m092-neutral-reproduction-source-{os.environ['HEAD_SHA']}"
+          workflow_run = artifact.get('workflow_run') or {}
+          if workflow_run.get('head_sha') is not None:
+              assert workflow_run['head_sha'] == os.environ['HEAD_SHA']
+          api_digest = str(artifact.get('digest') or '').removeprefix('sha256:')
+          supplied = os.environ['SOURCE_ARTIFACT_DIGEST'].removeprefix('sha256:')
+          assert api_digest and api_digest == supplied
+          PY
+          test ! -e neutral-source
+
+      - name: Build blind neutral reproduction prefix
+        if: steps.identity.outputs.phase == '1'
+        env:
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from scripts import package_m092_reproduction_segment as segment_packager
+          from scripts import run_m092_independent_reproduction as runner
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          from metamorphosis.m092_criterion_search import CriterionSearchState
+
+          state, _ = runner.advance_reproduction_with_checkpoints(
+              CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION),
+              COUNTDOWN_POSTCONDITION,
+              program_limit=2,
+              checkpoint_programs=1,
+              output=Path('m092-neutral-independent-state.json'),
+          )
+          assert state.generated_programs == 2 and state.status == 'searching'
+          receipt = segment_packager.package_reproduction_segment(
+              output_state_payload=state.to_dict(),
+              requirement=COUNTDOWN_POSTCONDITION,
+              arming_head_sha=os.environ['HEAD_SHA'],
+              arming_parent_sha=os.environ['PARENT_SHA'],
+              source_canonical_run_id=int(os.environ['SOURCE_RUN_ID']),
+              source_canonical_artifact_id=int(os.environ['SOURCE_ARTIFACT_ID']),
+              source_canonical_artifact_digest=os.environ['SOURCE_ARTIFACT_DIGEST'],
+              segment_index=0,
+              reproduction_step_outcome='failure',
+              github_run_id=int(os.environ['GITHUB_RUN_ID']),
+              github_run_attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
+          )
+          Path('m092-neutral-independent-segment.json').write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload blind reproduction predecessor
+        id: reproduction_upload
+        if: steps.identity.outputs.phase == '1'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m092-neutral-independent-segment-${{ steps.identity.outputs.head }}-000000
+          path: |
+            m092-neutral-independent-state.json
+            m092-neutral-independent-segment.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Dispatch cross-run reproduction continuation
+        if: steps.identity.outputs.phase == '1' && steps.reproduction_upload.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+          PREVIOUS_ARTIFACT_ID: ${{ steps.reproduction_upload.outputs.artifact-id }}
+          PREVIOUS_ARTIFACT_DIGEST: ${{ steps.reproduction_upload.outputs.artifact-digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/m092-reproduction-transport-rehearsal.yml/dispatches"
+          payload = {
+              'ref': 'main',
+              'inputs': {
+                  'phase': '2',
+                  'rehearsal_head_sha': os.environ['HEAD_SHA'],
+                  'rehearsal_parent_sha': os.environ['PARENT_SHA'],
+                  'source_run_id': os.environ['SOURCE_RUN_ID'],
+                  'source_artifact_id': os.environ['SOURCE_ARTIFACT_ID'],
+                  'source_artifact_digest': os.environ['SOURCE_ARTIFACT_DIGEST'],
+                  'previous_run_id': os.environ['GITHUB_RUN_ID'],
+                  'previous_artifact_id': os.environ['PREVIOUS_ARTIFACT_ID'],
+                  'previous_artifact_digest': os.environ['PREVIOUS_ARTIFACT_DIGEST'],
+              },
+          }
+          request = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode('utf-8'),
+              method='POST',
+              headers={
+                  'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json',
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              assert response.status == 204
+          PY
+
+      - name: Validate both immutable predecessor artifacts
+        if: steps.identity.outputs.phase == '2'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+          PREVIOUS_RUN_ID: ${{ inputs.previous_run_id }}
+          PREVIOUS_ARTIFACT_ID: ${{ inputs.previous_artifact_id }}
+          PREVIOUS_ARTIFACT_DIGEST: ${{ inputs.previous_artifact_digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          headers = {
+              'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          checks = (
+              (int(os.environ['SOURCE_RUN_ID']), int(os.environ['SOURCE_ARTIFACT_ID']), os.environ['SOURCE_ARTIFACT_DIGEST'], f"m092-neutral-reproduction-source-{os.environ['HEAD_SHA']}"),
+              (int(os.environ['PREVIOUS_RUN_ID']), int(os.environ['PREVIOUS_ARTIFACT_ID']), os.environ['PREVIOUS_ARTIFACT_DIGEST'], f"m092-neutral-independent-segment-{os.environ['HEAD_SHA']}-000000"),
+          )
+          for run_id, artifact_id, supplied_digest, expected_name in checks:
+              url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run_id}/artifacts?per_page=100"
+              with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
+                  artifacts = json.load(response).get('artifacts', [])
+              matches = [item for item in artifacts if item.get('id') == artifact_id]
+              assert len(matches) == 1
+              artifact = matches[0]
+              assert not artifact.get('expired')
+              assert artifact['name'] == expected_name
+              workflow_run = artifact.get('workflow_run') or {}
+              if workflow_run.get('head_sha') is not None:
+                  assert workflow_run['head_sha'] == os.environ['HEAD_SHA']
+              api_digest = str(artifact.get('digest') or '').removeprefix('sha256:')
+              assert api_digest and api_digest == supplied_digest.removeprefix('sha256:')
+          PY
+
+      - name: Download reproduction predecessor only
+        if: steps.identity.outputs.phase == '2'
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ inputs.previous_artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.previous_run_id }}
+          path: previous-reproduction
+
+      - name: Complete reproduced prefix before source content is exposed
+        if: steps.identity.outputs.phase == '2'
+        env:
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          SOURCE_ARTIFACT_ID: ${{ inputs.source_artifact_id }}
+          SOURCE_ARTIFACT_DIGEST: ${{ inputs.source_artifact_digest }}
+        run: |
+          test ! -e neutral-source
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          from scripts import run_m092_independent_reproduction as runner
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          from metamorphosis.m092_independent_reproduction import verified_reproduction_resume_state
+
+          state_payload = json.loads(Path('previous-reproduction/m092-neutral-independent-state.json').read_text())
+          receipt = json.loads(Path('previous-reproduction/m092-neutral-independent-segment.json').read_text())
+          resumed = verified_reproduction_resume_state(
+              state_payload,
+              receipt,
+              COUNTDOWN_POSTCONDITION,
+              arming_head_sha=os.environ['HEAD_SHA'],
+              arming_parent_sha=os.environ['PARENT_SHA'],
+              source_canonical_run_id=int(os.environ['SOURCE_RUN_ID']),
+              source_canonical_artifact_id=int(os.environ['SOURCE_ARTIFACT_ID']),
+              source_canonical_artifact_digest=os.environ['SOURCE_ARTIFACT_DIGEST'],
+              expected_segment_index=0,
+          )
+          completed, _ = runner.advance_reproduction_with_checkpoints(
+              resumed,
+              COUNTDOWN_POSTCONDITION,
+              program_limit=2,
+              checkpoint_programs=1,
+              output=Path('m092-neutral-independent-final.json'),
+          )
+          assert completed.generated_programs == 4
+          Path('m092-neutral-independent-complete.flag').write_text('complete\n', encoding='utf-8')
+          PY
+
+      - name: Download neutral source only after reproduced prefix is complete
+        if: steps.identity.outputs.phase == '2'
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ inputs.source_artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.source_run_id }}
+          path: neutral-source
+
+      - name: Prove independent cross-run reproduction is byte-identical
+        if: steps.identity.outputs.phase == '2'
+        run: |
+          test -e m092-neutral-independent-complete.flag
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from metamorphosis.m092_criterion_search import CriterionSearchState
+
+          source_payload = json.loads(Path('neutral-source/m092-neutral-reproduction-source.json').read_text())
+          reproduced_payload = json.loads(Path('m092-neutral-independent-final.json').read_text())
+          source = CriterionSearchState.from_dict(source_payload)
+          reproduced = CriterionSearchState.from_dict(reproduced_payload)
+          assert source.to_dict() == reproduced.to_dict()
+          print(json.dumps({
+              'neutral_only': True,
+              'target_theorem_loaded': False,
+              'qualification_loaded': False,
+              'source_content_loaded_after_reproduction_prefix_complete': True,
+              'cross_run_reproduction_state_byte_identical': True,
+              'generated_programs': reproduced.generated_programs,
+              'state_digest': reproduced.to_dict()['state_digest'],
+          }, indent=2, sort_keys=True))
+          PY
