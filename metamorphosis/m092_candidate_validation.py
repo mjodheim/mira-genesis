@@ -123,6 +123,11 @@ IMPORT_OR_CALLBACK_TEXT = re.compile(
     r"(?:\bimport\s+[A-Za-z_]|\bfrom\s+[A-Za-z_].*\bimport\b|\blambda\b|\bcallback\b|\bhost[_ -]?function\b)",
     re.IGNORECASE,
 )
+CERTIFICATE_PATH_ID = re.compile(r"path-[0-9a-f]{64}")
+CERTIFICATE_OBLIGATION_ID = re.compile(
+    r"(?:establish|preserve|postcondition|infeasible|variant_nonnegative|variant_decrease|variant_initial_upper_bound):"
+    r"(?:path-[0-9a-f]{64}|header-\d+):\d+"
+)
 
 
 class CandidateValidationError(ValueError):
@@ -186,6 +191,25 @@ def _json_safe(value: object, *, depth: int = 0, counter: list[int] | None = Non
 
 def _finding(code: str, path: str, detail: str) -> dict[str, str]:
     return {"code": code, "path": path, "detail": detail}
+
+
+def _closed_certificate_identifier(key: str, value: object) -> bool:
+    """Recognise closed cryptographic identifiers that the verifier recomputes exactly.
+
+    SHA-256 path identifiers and obligation identifiers are required proof metadata, not packed
+    candidate outputs.  The exemption is deliberately limited to their exact closed grammars and
+    applies only while scanning the certificate itself; executable support receives no exemption.
+    """
+
+    if not isinstance(value, str):
+        return False
+    if key == "program_digest":
+        return re.fullmatch(r"[0-9a-f]{64}", value) is not None
+    if key == "path_id":
+        return CERTIFICATE_PATH_ID.fullmatch(value) is not None
+    if key == "id":
+        return CERTIFICATE_OBLIGATION_ID.fullmatch(value) is not None
+    return False
 
 
 def _scan_value(
@@ -271,14 +295,9 @@ def _scan_value(
                             "large_literal_output_set", item_path,
                             "large integer literal set can encode target outputs",
                         ))
-            # A global certificate is required to carry this exact SHA-256 binding.  Hex-looking
-            # data is suspicious in executable support, but the closed certificate field is the
-            # control that prevents substitution and must not be mistaken for a packed table.
             if (
                 not executable_support
-                and normalized == "program_digest"
-                and isinstance(item, str)
-                and re.fullmatch(r"[0-9a-f]{64}", item)
+                and _closed_certificate_identifier(normalized, item)
             ):
                 continue
             _scan_value(
