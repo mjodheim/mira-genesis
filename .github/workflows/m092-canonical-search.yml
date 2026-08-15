@@ -312,6 +312,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ steps.invocation.outputs.previous_run_id }}
           path: previous-segment
+          merge-multiple: true
 
       - name: Execute the next deterministic canonical segment
         id: search

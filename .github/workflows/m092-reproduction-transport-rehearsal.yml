@@ -379,6 +379,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.previous_run_id }}
           path: previous-reproduction
+          merge-multiple: true
 
       - name: Complete reproduced prefix before source content is exposed
         if: steps.identity.outputs.phase == '2'
@@ -431,6 +432,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.source_run_id }}
           path: neutral-source
+          merge-multiple: true
 
       - name: Prove independent cross-run reproduction is byte-identical
         if: steps.identity.outputs.phase == '2'
