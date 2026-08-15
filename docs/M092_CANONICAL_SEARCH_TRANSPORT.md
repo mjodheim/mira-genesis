@@ -50,7 +50,9 @@ claim is consumed.
 Checkpointing is transport-only.  The criterion engine is unchanged: every chunk invokes the same
 frozen `advance_search` function on the exact state produced by the previous chunk.  Tests require a
 neutral one-chunk execution and a multi-chunk execution over the same program budget to end in the
-same complete serialized state and state digest.
+same complete serialized state and state digest.  Checkpoint frequency therefore has no scientific
+role and cannot alter proposal order, certificate order, accepted-candidate priority or any frozen
+budget.
 
 Before consuming any new program, the runner atomically writes the authenticated initial/resumed
 state.  It then advances at most 1,000 programs at a time and atomically replaces the checkpoint only
