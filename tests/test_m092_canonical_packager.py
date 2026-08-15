@@ -7,7 +7,7 @@ import metamorphosis.m092_criterion_search as criterion
 import metamorphosis.m092_search_enumerator as enumerator
 from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
 from metamorphosis.m092_kernel import Program, program_digest
-from scripts import package_m092_canonical_search as packager
+import package_m092_canonical_search as packager
 
 HEAD = "a" * 40
 PARENT = "b" * 40
