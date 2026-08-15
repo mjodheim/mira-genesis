@@ -21,13 +21,11 @@ from metamorphosis.m092_adoption import (
     sha256_bytes,
     validate_candidate_for_adoption,
 )
+from metamorphosis.m092_adoption_checkpoint import load_frozen_base
 from metamorphosis.m092_certificate_generator import generate_candidate_certificates
 from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
 from metamorphosis.m092_qualification import QualificationTask, run_qualification_ledger
-from metamorphosis.m092_runtime import RuntimeLanguage
-from metamorphosis.m092_substrate_state import SubstrateState
 
-BASE = Path("experiments/M092/SUBSTRATE_A.json")
 ARM_MARKER = Path("experiments/M092/CANONICAL_SEARCH_ARMED.json")
 REAL_EXTENDED = Path("experiments/M092/SUBSTRATE_B.json")
 NEUTRAL_PROGRAM = (
@@ -67,13 +65,7 @@ def run() -> dict[str, object]:
     if ARM_MARKER.exists() or REAL_EXTENDED.exists():
         raise AdoptionError("neutral rehearsal refuses an armed or already-adopted repository")
 
-    raw = BASE.read_bytes()
-    base = json.loads(raw)
-    base_language = RuntimeLanguage.from_dict(base["language"])
-    base_substrate = SubstrateState.from_dict(base["substrate"])
-    if base_substrate.digest() != base["expected_substrate_digest"]:
-        raise AdoptionError("SUBSTRATE_A internal digest mismatch")
-
+    base_language, base_substrate, base_sha, _ = load_frozen_base()
     certificate = next(
         generate_candidate_certificates(NEUTRAL_PROGRAM, COUNTDOWN_POSTCONDITION, limit=64)
     )
@@ -87,7 +79,7 @@ def run() -> dict[str, object]:
         base_substrate,
         NEUTRAL_PROGRAM,
         receipt=receipt,
-        source_bundle_sha256=sha256_bytes(raw),
+        source_bundle_sha256=base_sha,
     )
     primitive_id = downstream_primitive_id(NEUTRAL_PROGRAM)
 
@@ -135,8 +127,6 @@ def run() -> dict[str, object]:
         if normal == faulted:
             raise AdoptionError("frozen rollback fault failed to change live behaviour")
 
-        # Persist a real program-level corruption.  The committed loader must reject it because the
-        # exact adopted program digest no longer matches, then rollback restores independent bytes.
         faulty = dict(extended)
         faulty["substrate"] = corrupted.to_dict()
         faulty["substrate_digest"] = corrupted.digest()
@@ -162,6 +152,7 @@ def run() -> dict[str, object]:
         "real_extended_state_materialized": False,
         "sealed_target_loaded": False,
         "hidden_qualification_materialized": False,
+        "checkpoint_a_verified": True,
         "adoption_validation_recomputed": True,
         "fresh_process_loaded": True,
         "downstream_dependency_real": True,
