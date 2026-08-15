@@ -452,15 +452,37 @@ def enumerate_certificate_policy_records(
     *,
     limit: int = 4096,
 ) -> Iterator[CertificatePolicyRecord]:
-    """Yield every attempted policy record up to the frozen per-program bound."""
+    """Yield every attempted policy record up to the frozen per-program bound.
+
+    Symbolic-path preparation is part of certificate construction, not candidate execution. Some
+    structurally legal K1 programs leave the accepted affine proof language before a path-wise ghost
+    vector can even be materialised (for example a multiplication of two symbolic values). Such a
+    program now produces one explicit, countable preparation refusal instead of aborting the whole
+    canonical search. The empty path/vector fields state precisely that no ghost policy was reached.
+    """
 
     if not isinstance(limit, int) or isinstance(limit, bool) or limit < 0:
         raise base.CertificateGenerationError("certificate policy limit must be non-negative")
+    if limit == 0:
+        return
     witnesses, _ = base._requirement(expected_postcondition)
     ordinal = 0
     for ghost_count in range(len(witnesses), base.MAX_GHOST_COUNTERS + 1):
         ghosts = tuple(f"g{index}" for index in range(ghost_count))
-        _, paths = _paths_for_policy(program, ghosts)
+        try:
+            _, paths = _paths_for_policy(program, ghosts)
+        except base.CertificateGenerationError as error:
+            ordinal += 1
+            yield CertificatePolicyRecord(
+                ordinal=ordinal,
+                ghost_count=ghost_count,
+                ghost_names=ghosts,
+                back_edge_path_ids=(),
+                increments=(),
+                certificate=None,
+                refusal=f"path_preparation: {error}",
+            )
+            return
         back_edges = _back_edge_paths(paths)
         for vector in enumerate_policy_vectors(back_edges, ghost_count):
             if ordinal >= limit:
