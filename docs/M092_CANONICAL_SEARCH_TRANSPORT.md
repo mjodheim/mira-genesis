@@ -157,3 +157,11 @@ fresh-process persistence and any H38/D062 decision.
 `candidate_selected`, program-budget exhaustion and certificate-budget exhaustion are all legitimate
 first-run outcomes. None by itself is an M092 scientific verdict, and no negative or inconvenient
 outcome may be hidden by abandoning the arming PR or starting another search.
+
+## Acceptance gate for this transport
+
+Before this PR may merge: Python 3.11 and 3.13 suites, repository integrity, sealed-task boundary,
+attribution policy, neutral runtime-envelope workflow and the closed canonical-search workflow must
+all be green on the same final HEAD. After merge, the neutral cross-run rehearsal above must pass on
+`main`. Only then may the separate pre-arm reproduction transport be frozen. Target arming remains
+forbidden until both that reproduction apparatus and all of its own pre-arm gates are accepted.
