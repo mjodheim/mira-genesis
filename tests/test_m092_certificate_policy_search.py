@@ -4,6 +4,7 @@ from __future__ import annotations
 import ast
 from pathlib import Path
 
+import metamorphosis.m092_candidate_validation as scanner
 import metamorphosis.m092_certificate_policy_search as policies
 from metamorphosis.m092_certificate_verifier import (
     COUNTDOWN_POSTCONDITION,
@@ -26,7 +27,7 @@ COUNTDOWN_WITH_STEP_WITNESS = {
     "schema": "m092-affine-postcondition-v1",
     "witnesses": ["steps"],
     "constraints": [
-        {"relation": "eq", "coefficients": {"steps": -1, "x": 1}, "constant": 0},
+        {"relation": "eq", "coefficients": {"steps": 1, "x": -1}, "constant": 0},
         {"relation": "eq", "coefficients": {"y": 1}, "constant": 0},
         {"relation": "ge", "coefficients": {"steps": 1}, "constant": 0},
     ],
@@ -65,6 +66,9 @@ def test_pathwise_generator_still_builds_a_neutral_certificate_accepted_independ
         examined += 1
         if record.certificate is None:
             continue
+        scan_report = scanner.validate_candidate_artifacts(COUNTDOWN_PROGRAM, record.certificate)
+        if scan_report["accepted"] is not True:
+            continue
         try:
             accepted = verify_global_certificate(
                 COUNTDOWN_PROGRAM,
@@ -89,6 +93,9 @@ def test_pathwise_search_can_certify_a_neutral_explicit_step_witness() -> None:
         COUNTDOWN_WITH_STEP_WITNESS,
     ):
         if record.certificate is None:
+            continue
+        scan_report = scanner.validate_candidate_artifacts(COUNTDOWN_PROGRAM, record.certificate)
+        if scan_report["accepted"] is not True:
             continue
         try:
             receipt = verify_global_certificate(
