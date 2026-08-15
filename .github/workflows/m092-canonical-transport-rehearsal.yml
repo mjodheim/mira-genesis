@@ -3,7 +3,9 @@ name: M092 neutral multi-run transport rehearsal
 # Post-merge infrastructure rehearsal only. It uses the neutral countdown requirement, never
 # TARGET_THEOREM.json or qualification material. A push run creates segment zero, uploads it, and
 # dispatches one continuation run. The continuation must reproduce the exact state of a one-shot
-# four-program neutral trajectory.
+# four-program neutral trajectory. The first neutral receipt intentionally records the synthetic
+# step outcome as "failure": canonical receipts reserve "success" for a terminal full-budget step,
+# while this rehearsal deliberately stops after two programs to exercise interruption-style resume.
 on:
   push:
     branches: [main]
@@ -90,8 +92,7 @@ jobs:
           assert COUNTDOWN_POSTCONDITION['schema'] == 'm092-affine-postcondition-v1'
           PY
 
-      - name: Build neutral first segment and one-shot reference
-        id: first
+      - name: Build neutral first segment
         if: steps.identity.outputs.phase == '0'
         env:
           HEAD_SHA: ${{ steps.identity.outputs.head }}
