@@ -6,6 +6,7 @@ on:
   pull_request:
     paths:
       - 'metamorphosis/m092_adoption.py'
+      - 'metamorphosis/m092_adoption_checkpoint.py'
       - 'metamorphosis/m092_qualification.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
       - 'tests/test_m092_adoption.py'
@@ -16,6 +17,7 @@ on:
     branches: [main]
     paths:
       - 'metamorphosis/m092_adoption.py'
+      - 'metamorphosis/m092_adoption_checkpoint.py'
       - 'metamorphosis/m092_qualification.py'
       - 'scripts/run_m092_adoption_rehearsal.py'
       - 'scripts/check_m092_canonical_guard.py'
@@ -59,6 +61,7 @@ jobs:
 
           paths = [
               Path('metamorphosis/m092_adoption.py'),
+              Path('metamorphosis/m092_adoption_checkpoint.py'),
               Path('metamorphosis/m092_qualification.py'),
               Path('scripts/run_m092_adoption_rehearsal.py'),
           ]
@@ -94,6 +97,7 @@ jobs:
           value = json.loads(Path('/tmp/m092-h-neutral.json').read_text(encoding='utf-8'))
           required_true = (
               'neutral_only',
+              'checkpoint_a_verified',
               'adoption_validation_recomputed',
               'fresh_process_loaded',
               'downstream_dependency_real',
