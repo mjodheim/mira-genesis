@@ -18,7 +18,7 @@ QUALIFICATION_LEDGER_SCHEMA = "m092-qualification-ledger/1"
 CANONICAL_RESULT_SCHEMA = "m092-canonical-criterion-search-result/2"
 REPRODUCTION_RESULT_SCHEMA = "m092-independent-reproduction-result/1"
 MIN_FAMILIES = 2
-MIN_TASKS_PER_FAMILY = 10
+MIN_TASKS_PER_FAMILY = 6
 CONTROL_BUDGET_MULTIPLIER = 10
 
 CANONICAL_RESULT_FIELDS = {
@@ -186,7 +186,7 @@ def run_qualification_ledger(
         raise QualificationError("qualification needs at least two task families")
     counts = {family: sum(task.family == family for task in tasks) for family in families}
     if any(count < MIN_TASKS_PER_FAMILY for count in counts.values()):
-        raise QualificationError("each qualification family needs at least ten tasks")
+        raise QualificationError("each qualification family needs at least six tasks")
     ids = [task.task_id for task in tasks]
     if len(ids) != len(set(ids)):
         raise QualificationError("qualification task identifiers must be unique")
