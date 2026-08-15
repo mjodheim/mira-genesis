@@ -16,12 +16,14 @@ proposal order, certificate order, selection semantics or frozen budgets.
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import json
 import os
 from pathlib import Path
 import tempfile
 from typing import Mapping
 
+import metamorphosis.m092_certificate_policy_search as policy_search
 from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
 from metamorphosis.m092_resume_validation import (
     ResumeValidationError,
@@ -29,6 +31,34 @@ from metamorphosis.m092_resume_validation import (
     verified_resume_state,
     verified_segment_resume_state,
 )
+
+
+def _install_target_neutral_path_cache() -> None:
+    """Memoise deterministic symbolic paths without changing the scientific search surface.
+
+    The policy enumerator prepares the same immutable symbolic paths once to enumerate policy
+    vectors and again while constructing every certificate.  The runner may safely reuse those
+    target-neutral paths within one process because programs, ghost names, symbolic states and paths
+    are immutable values.  A fresh list is returned on every lookup so callers retain the historical
+    container semantics.  The bounded cache affects only repeated computation, never ordering,
+    budgets, theorem data, verifier feedback or qualification material.
+    """
+
+    original = policy_search._paths_for_policy
+    if getattr(original, "_m092_target_neutral_cache", False):
+        return
+
+    @lru_cache(maxsize=8)
+    def cached(program: tuple[tuple[object, ...], ...], ghosts: tuple[str, ...]):
+        header, paths = original(program, ghosts)
+        return header, tuple(paths)
+
+    def wrapped(program, ghosts):
+        header, paths = cached(program, tuple(ghosts))
+        return header, list(paths)
+
+    setattr(wrapped, "_m092_target_neutral_cache", True)
+    policy_search._paths_for_policy = wrapped
 
 
 def _read_json(path: Path) -> object:
@@ -120,6 +150,7 @@ def main() -> int:
         ),
     )
     arguments = parser.parse_args()
+    _install_target_neutral_path_cache()
 
     requirement = _read_json(arguments.requirement)
     if not isinstance(requirement, dict):
