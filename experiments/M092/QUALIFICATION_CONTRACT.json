@@ -13,6 +13,7 @@
     "fresh_agent"
   ],
   "candidate_result_or_hidden_values_embedded": false,
+  "contract_digest": "7092dce90a64d6161768788862925fe49b1538ff25e682daa8ccb809bf9720c0",
   "draw_order_interpretation": "counter-mode digest-stream acceptance order; no post-hoc reordering",
   "each_control_maximum_complete_families": 0,
   "evolvable_required_complete_families": 2,
