@@ -1,0 +1,88 @@
+name: M092 neutral runtime envelope
+
+# Performance-only pre-search audit. It never loads the M092 target theorem and cannot select or
+# qualify a target candidate. Results are planning evidence, not a scientific verdict.
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit_m092_runtime_envelope.py'
+      - '.github/workflows/m092-runtime-envelope.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  neutral-runtime-envelope:
+    name: Neutral M092 runtime envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install the frozen package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Assert the runtime audit has no target or qualification import edge
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          path = Path('scripts/audit_m092_runtime_envelope.py')
+          tree = ast.parse(path.read_text(encoding='utf-8'))
+          imported = []
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Import):
+                  imported.extend(alias.name for alias in node.names)
+              elif isinstance(node, ast.ImportFrom) and node.module:
+                  imported.append(node.module)
+          lowered = '\n'.join(imported).lower()
+          assert 'qualification' not in lowered
+          assert 'world' not in lowered
+          assert 'criterion_search' not in lowered
+          source = path.read_text(encoding='utf-8')
+          assert 'TARGET_THEOREM.json' not in source
+          assert 'experiments/M092/TARGET_THEOREM' not in source
+          PY
+
+      - name: Measure neutral proposal and certificate throughput
+        run: |
+          python scripts/audit_m092_runtime_envelope.py \
+            --enumeration-sample 100000 \
+            --policy-attempt-sample 10000 \
+            --policy-program-cap 25000 \
+            --output m092-neutral-runtime-envelope.json
+
+      - name: Validate the report boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('m092-neutral-runtime-envelope.json').read_text())
+          assert report['schema'] == 'm092-neutral-runtime-envelope-v1'
+          assert report['neutral_only'] is True
+          assert report['target_theorem_loaded'] is False
+          assert report['qualification_loaded'] is False
+          assert report['candidate_selection_executed'] is False
+          assert report['scientific_verdict'] is None
+          assert report['projection_is_not_a_bound'] is True
+          assert report['canonical_program_cap'] == 2_000_000
+          assert report['canonical_certificate_cap'] == 2_000_000
+          assert report['neutral_certificate_pipeline']['continues_after_neutral_acceptance'] is True
+          PY
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: m092-neutral-runtime-envelope-${{ github.event.pull_request.head.sha }}
+          path: m092-neutral-runtime-envelope.json
+          if-no-files-found: error
+          retention-days: 30
