@@ -6,6 +6,7 @@ from pathlib import Path
 
 import metamorphosis.m092_candidate_validation as scanner
 import metamorphosis.m092_certificate_policy_search as policies
+import metamorphosis.m092_search_enumerator as enumerator
 from metamorphosis.m092_certificate_verifier import (
     COUNTDOWN_POSTCONDITION,
     CertificateError,
@@ -20,6 +21,14 @@ COUNTDOWN_PROGRAM: Program = (
     ("JZ", 0, 5),
     ("SUB", 0, 0, 1),
     ("JMP", 2),
+    ("SPUSH", 0),
+    ("HALT",),
+)
+SYMBOLIC_MULTIPLICATION_PROGRAM: Program = (
+    ("SPOP", 0),
+    ("JZ", 0, 4),
+    ("MUL", 0, 0, 0),
+    ("JMP", 1),
     ("SPUSH", 0),
     ("HALT",),
 )
@@ -54,6 +63,35 @@ def test_every_policy_attempt_receives_a_real_contiguous_ordinal() -> None:
     assert [record.ordinal for record in records] == list(range(1, len(records) + 1))
     assert len(records) <= 3
     assert all(record.refusal is not None or record.certificate is not None for record in records)
+
+
+def test_affine_domain_escape_is_a_counted_refusal_not_a_search_crash() -> None:
+    headers, structural_refusals = enumerator._classify(SYMBOLIC_MULTIPLICATION_PROGRAM)
+    assert headers == (1,)
+    assert structural_refusals == ()
+
+    records = list(policies.enumerate_certificate_policy_records(
+        SYMBOLIC_MULTIPLICATION_PROGRAM,
+        COUNTDOWN_WITH_STEP_WITNESS,
+        limit=16,
+    ))
+
+    assert len(records) == 1
+    record = records[0]
+    assert record.ordinal == 1
+    assert record.ghost_count == 1
+    assert record.back_edge_path_ids == ()
+    assert record.increments == ()
+    assert record.certificate is None
+    assert record.refusal == "path_preparation: symbolic multiplication leaves affine logic"
+
+
+def test_zero_policy_budget_does_not_attempt_path_preparation() -> None:
+    assert list(policies.enumerate_certificate_policy_records(
+        SYMBOLIC_MULTIPLICATION_PROGRAM,
+        COUNTDOWN_WITH_STEP_WITNESS,
+        limit=0,
+    )) == []
 
 
 def test_pathwise_generator_still_builds_a_neutral_certificate_accepted_independently() -> None:
