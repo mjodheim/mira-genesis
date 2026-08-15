@@ -8,6 +8,7 @@ import metamorphosis.m092_search_enumerator as enumerator
 from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
 from metamorphosis.m092_kernel import Program, program_digest
 import package_m092_canonical_search as packager
+import package_m092_canonical_segment as segment_packager
 
 HEAD = "a" * 40
 PARENT = "b" * 40
@@ -64,10 +65,29 @@ def _selected_neutral_state() -> criterion.CriterionSearchState:
     return state
 
 
-def _package(state: criterion.CriterionSearchState, *, theorem: dict[str, object] | None = None,
-             marker: dict[str, object] | None = None) -> dict[str, object]:
+def _terminal_segment(state: criterion.CriterionSearchState) -> dict[str, object]:
+    return segment_packager.package_segment(
+        output_state_payload=state.to_dict(),
+        requirement=COUNTDOWN_POSTCONDITION,
+        arming_head_sha=HEAD,
+        arming_parent_sha=PARENT,
+        segment_index=0,
+        search_step_outcome="success",
+        github_run_id=100,
+        github_run_attempt=1,
+    )
+
+
+def _package(
+    state: criterion.CriterionSearchState,
+    *,
+    theorem: dict[str, object] | None = None,
+    marker: dict[str, object] | None = None,
+    terminal_segment: dict[str, object] | None = None,
+) -> dict[str, object]:
     return packager.package_result(
         state_payload=state.to_dict(),
+        terminal_segment=terminal_segment or _terminal_segment(state),
         marker=marker or _marker(),
         target_theorem=theorem or COUNTDOWN_POSTCONDITION,
         head_sha=HEAD,
@@ -78,6 +98,7 @@ def _package(state: criterion.CriterionSearchState, *, theorem: dict[str, object
 def test_terminal_selected_state_is_packaged_without_qualification() -> None:
     result = _package(_selected_neutral_state())
 
+    assert result["schema"] == packager.RESULT_SCHEMA
     assert result["status"] == "first-canonical-criterion-search-result"
     assert result["terminal_search_status"] == "candidate_selected"
     assert result["candidate_selected"] is True
@@ -86,13 +107,22 @@ def test_terminal_selected_state_is_packaged_without_qualification() -> None:
     assert result["candidate_executed_for_selection"] is False
     assert result["program_limit_requested"] == packager.PROGRAM_LIMIT
     assert result["canonical_search_attempt"] == 1
+    assert result["canonical_transport_mode"] == "immutable-artifact-segment-chain"
+    assert result["transport_segments"] == 1
+    assert result["independent_reproduction_required"] is True
+    assert result["qualification_may_begin_before_reproduction"] is False
+    assert isinstance(result["terminal_segment_digest"], str)
     assert isinstance(result["result_digest"], str) and len(result["result_digest"]) == 64
 
 
 def test_nonterminal_state_cannot_be_preserved_as_first_result() -> None:
     state = criterion.CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION)
+    fake_segment = {
+        "schema": "m092-canonical-search-segment/1",
+        "segment_index": 0,
+    }
     with pytest.raises(packager.PackageError, match="did not terminate"):
-        _package(state)
+        _package(state, terminal_segment=fake_segment)
 
 
 def test_result_must_match_the_exact_target_theorem() -> None:
@@ -106,7 +136,8 @@ def test_result_must_match_the_exact_target_theorem() -> None:
 
 
 def test_result_must_bind_current_selection_implementation() -> None:
-    value = _selected_neutral_state().to_dict()
+    state = _selected_neutral_state()
+    value = state.to_dict()
     bindings = dict(value["implementation_bindings"])  # type: ignore[arg-type]
     bindings["criterion_search"] = "0" * 64
     value["implementation_bindings"] = bindings
@@ -117,11 +148,20 @@ def test_result_must_bind_current_selection_implementation() -> None:
     with pytest.raises(packager.PackageError, match="different selection code"):
         packager.package_result(
             state_payload=value,
+            terminal_segment=_terminal_segment(state),
             marker=_marker(),
             target_theorem=COUNTDOWN_POSTCONDITION,
             head_sha=HEAD,
             parent_sha=PARENT,
         )
+
+
+def test_terminal_segment_must_bind_exact_state() -> None:
+    state = _selected_neutral_state()
+    terminal = _terminal_segment(state)
+    terminal["output_state_digest"] = "0" * 64
+    with pytest.raises(packager.PackageError, match="segment digest differs"):
+        _package(state, terminal_segment=terminal)
 
 
 def test_marker_cannot_change_full_search_budget() -> None:
