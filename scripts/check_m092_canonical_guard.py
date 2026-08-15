@@ -46,6 +46,7 @@ BOUND_FILES: Mapping[str, Path] = {
     "independent_reproduction_packager_sha256": Path("scripts/package_m092_independent_reproduction.py"),
     "independent_reproduction_workflow_sha256": Path(".github/workflows/m092-independent-reproduction.yml"),
     "adoption_core_sha256": Path("metamorphosis/m092_adoption.py"),
+    "adoption_checkpoint_loader_sha256": Path("metamorphosis/m092_adoption_checkpoint.py"),
     "qualification_core_sha256": Path("metamorphosis/m092_qualification.py"),
     "adoption_rehearsal_runner_sha256": Path("scripts/run_m092_adoption_rehearsal.py"),
     "adoption_rehearsal_workflow_sha256": Path(".github/workflows/m092-adoption-qualification-rehearsal.yml"),
