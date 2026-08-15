@@ -8,18 +8,47 @@ mixing reproduction chains; its content is not available to the search trajector
 from __future__ import annotations
 
 import argparse
+from functools import lru_cache
 import json
 import os
 from pathlib import Path
 import tempfile
 from typing import Mapping
 
+import metamorphosis.m092_criterion_search as criterion_search
 from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
 from metamorphosis.m092_independent_reproduction import (
     ReproductionError,
     TERMINAL_STATUSES,
     verified_reproduction_resume_state,
 )
+
+
+def _install_target_neutral_path_cache() -> None:
+    """Memoise deterministic symbolic paths without changing the scientific search surface.
+
+    The reproduction runner uses the exact same bounded target-neutral cache as the canonical
+    runner.  Only repeated symbolic-path preparation is removed; every caller receives a fresh list
+    containing the same immutable paths, so proposal order, policy order, records, budgets and
+    verifier inputs are unchanged.  The cache cannot read result content or qualification material.
+    """
+
+    policy_search = criterion_search.policy_search
+    original = policy_search._paths_for_policy
+    if getattr(original, "_m092_target_neutral_cache", False):
+        return
+
+    @lru_cache(maxsize=8)
+    def cached(program: tuple[tuple[object, ...], ...], ghosts: tuple[str, ...]):
+        header, paths = original(program, ghosts)
+        return header, tuple(paths)
+
+    def wrapped(program, ghosts):
+        header, paths = cached(program, tuple(ghosts))
+        return header, list(paths)
+
+    setattr(wrapped, "_m092_target_neutral_cache", True)
+    policy_search._paths_for_policy = wrapped
 
 
 def _read_object(path: Path, label: str) -> dict[str, object]:
@@ -105,6 +134,7 @@ def main() -> int:
     parser.add_argument("--program-limit", type=int, required=True)
     parser.add_argument("--checkpoint-programs", type=int, default=1)
     args = parser.parse_args()
+    _install_target_neutral_path_cache()
 
     requirement = _read_object(args.requirement, "reproduction requirement")
     if args.program_limit < 0 or args.checkpoint_programs <= 0:
