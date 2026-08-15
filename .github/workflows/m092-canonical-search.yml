@@ -1,7 +1,8 @@
 name: M092 first canonical criterion search
 
 # One marker-only PR commit arms one logical search. The search may span multiple hosted jobs, but
-# every continuation consumes only the immutable predecessor artifact from the same arming head.
+# every continuation consumes only the immutable predecessor artifact from the same arming head and
+# dispatches the workflow from the exact still-open arming branch rather than mutable main.
 on:
   pull_request:
     paths:
@@ -18,12 +19,17 @@ on:
       - 'metamorphosis/m092_certificate_verifier.py'
       - 'metamorphosis/m092_kernel.py'
       - 'metamorphosis/m092_runtime.py'
+      - 'metamorphosis/m092_independent_reproduction.py'
       - 'scripts/run_m092_criterion_search.py'
+      - 'scripts/run_m092_independent_reproduction.py'
       - 'scripts/check_m092_criterion_freeze.py'
       - 'scripts/check_m092_canonical_guard.py'
       - 'scripts/package_m092_canonical_search.py'
       - 'scripts/package_m092_canonical_segment.py'
+      - 'scripts/package_m092_reproduction_segment.py'
+      - 'scripts/package_m092_independent_reproduction.py'
       - '.github/workflows/m092-canonical-search.yml'
+      - '.github/workflows/m092-independent-reproduction.yml'
   workflow_dispatch:
     inputs:
       arming_pr_number:
@@ -137,13 +143,15 @@ jobs:
         run: |
           actual_parent="$(git rev-parse HEAD^)"
           test "$(git rev-parse HEAD)" = "$ARM_HEAD_SHA"
-
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
             test "$actual_parent" = "$ARM_PARENT_SHA"
-            python - <<'PY'
+          fi
+
+          python - <<'PY'
           import json
           import os
           import urllib.request
+          from pathlib import Path
 
           url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/pulls/{os.environ['ARMING_PR_NUMBER']}"
           request = urllib.request.Request(url, headers={
@@ -159,8 +167,12 @@ jobs:
               raise SystemExit('canonical arming PR head moved')
           if pr.get('base', {}).get('sha') != os.environ['ARM_PARENT_SHA']:
               raise SystemExit('canonical arming PR base moved')
+          branch_ref = pr.get('head', {}).get('ref')
+          if not isinstance(branch_ref, str) or not branch_ref or '\n' in branch_ref:
+              raise SystemExit('canonical arming PR branch ref is malformed')
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              handle.write(f'arming_branch_ref={branch_ref}\n')
           PY
-          fi
 
           mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r HEAD^ HEAD)
           mapfile -t statuses < <(git diff-tree --no-commit-id --name-status -r HEAD^ HEAD)
@@ -262,6 +274,11 @@ jobs:
           else:
               run_id = int(os.environ['PREVIOUS_RUN_ID'])
               artifact_id = int(os.environ['PREVIOUS_ARTIFACT_ID'])
+              run_url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run_id}"
+              with urllib.request.urlopen(urllib.request.Request(run_url, headers=headers), timeout=30) as response:
+                  run = json.load(response)
+              if run.get('head_sha') != head or run.get('path') != '.github/workflows/m092-canonical-search.yml':
+                  raise SystemExit('predecessor canonical run identity differs')
               url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run_id}/artifacts?per_page=100"
               with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
                   artifacts = json.load(response).get('artifacts', [])
@@ -423,6 +440,7 @@ jobs:
           test ! -e experiments/M092/RESULT.json
 
       - name: Upload immutable completed canonical search artifact
+        id: completed_upload
         if: always() && steps.package.outcome == 'success' && steps.separation.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
@@ -434,13 +452,74 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Dispatch exact next canonical segment
+      - name: Dispatch independent reproduction from immutable arming branch
+        if: always() && steps.completed_upload.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          ARMING_PR_NUMBER: ${{ steps.invocation.outputs.arming_pr_number }}
+          ARM_HEAD_SHA: ${{ steps.invocation.outputs.arming_head_sha }}
+          ARM_PARENT_SHA: ${{ steps.invocation.outputs.arming_parent_sha }}
+          ARMING_BRANCH_REF: ${{ steps.guard.outputs.arming_branch_ref }}
+          CANONICAL_ARTIFACT_ID: ${{ steps.completed_upload.outputs.artifact-id }}
+          CANONICAL_ARTIFACT_DIGEST: ${{ steps.completed_upload.outputs.artifact-digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          headers = {
+              'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          pr_url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/pulls/{os.environ['ARMING_PR_NUMBER']}"
+          with urllib.request.urlopen(urllib.request.Request(pr_url, headers=headers), timeout=30) as response:
+              pr = json.load(response)
+          branch_ref = pr.get('head', {}).get('ref')
+          if (
+              pr.get('state') != 'open'
+              or pr.get('head', {}).get('sha') != os.environ['ARM_HEAD_SHA']
+              or pr.get('base', {}).get('sha') != os.environ['ARM_PARENT_SHA']
+              or branch_ref != os.environ['ARMING_BRANCH_REF']
+          ):
+              raise SystemExit('canonical arming PR moved before reproduction dispatch')
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/m092-independent-reproduction.yml/dispatches"
+          payload = {
+              'ref': branch_ref,
+              'inputs': {
+                  'arming_pr_number': os.environ['ARMING_PR_NUMBER'],
+                  'arming_head_sha': os.environ['ARM_HEAD_SHA'],
+                  'arming_parent_sha': os.environ['ARM_PARENT_SHA'],
+                  'segment_index': '0',
+                  'source_canonical_run_id': os.environ['GITHUB_RUN_ID'],
+                  'source_canonical_artifact_id': os.environ['CANONICAL_ARTIFACT_ID'],
+                  'source_canonical_artifact_digest': os.environ['CANONICAL_ARTIFACT_DIGEST'],
+                  'previous_run_id': '',
+                  'previous_artifact_id': '',
+                  'previous_artifact_digest': '',
+              },
+          }
+          request = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode('utf-8'),
+              method='POST',
+              headers={**headers, 'Content-Type': 'application/json'},
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              if response.status != 204:
+                  raise SystemExit(f'independent reproduction dispatch returned HTTP {response.status}')
+          print('Dispatched independent reproduction segment 0 from the frozen arming branch.')
+          PY
+
+      - name: Dispatch exact next canonical segment from immutable arming branch
         if: always() && steps.segment_upload.outcome == 'success' && steps.segment_record.outputs.terminal == 'false' && steps.segment_record.outputs.progressed == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           ARMING_PR_NUMBER: ${{ steps.invocation.outputs.arming_pr_number }}
           ARM_HEAD_SHA: ${{ steps.invocation.outputs.arming_head_sha }}
           ARM_PARENT_SHA: ${{ steps.invocation.outputs.arming_parent_sha }}
+          ARMING_BRANCH_REF: ${{ steps.guard.outputs.arming_branch_ref }}
           SEGMENT_INDEX: ${{ steps.invocation.outputs.segment_index }}
           ARTIFACT_ID: ${{ steps.segment_upload.outputs.artifact-id }}
           ARTIFACT_DIGEST: ${{ steps.segment_upload.outputs.artifact-digest }}
@@ -450,10 +529,27 @@ jobs:
           import os
           import urllib.request
 
+          headers = {
+              'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          pr_url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/pulls/{os.environ['ARMING_PR_NUMBER']}"
+          with urllib.request.urlopen(urllib.request.Request(pr_url, headers=headers), timeout=30) as response:
+              pr = json.load(response)
+          branch_ref = pr.get('head', {}).get('ref')
+          if (
+              pr.get('state') != 'open'
+              or pr.get('head', {}).get('sha') != os.environ['ARM_HEAD_SHA']
+              or pr.get('base', {}).get('sha') != os.environ['ARM_PARENT_SHA']
+              or branch_ref != os.environ['ARMING_BRANCH_REF']
+          ):
+              raise SystemExit('canonical arming PR moved before continuation dispatch')
+
           next_index = int(os.environ['SEGMENT_INDEX']) + 1
           url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/m092-canonical-search.yml/dispatches"
           payload = {
-              'ref': 'main',
+              'ref': branch_ref,
               'inputs': {
                   'arming_pr_number': os.environ['ARMING_PR_NUMBER'],
                   'arming_head_sha': os.environ['ARM_HEAD_SHA'],
@@ -468,17 +564,12 @@ jobs:
               url,
               data=json.dumps(payload).encode('utf-8'),
               method='POST',
-              headers={
-                  'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
-                  'Accept': 'application/vnd.github+json',
-                  'X-GitHub-Api-Version': '2022-11-28',
-                  'Content-Type': 'application/json',
-              },
+              headers={**headers, 'Content-Type': 'application/json'},
           )
           with urllib.request.urlopen(request, timeout=30) as response:
               if response.status != 204:
                   raise SystemExit(f'continuation dispatch returned HTTP {response.status}')
-          print(f'Dispatched canonical segment {next_index}.')
+          print(f'Dispatched canonical segment {next_index} from the frozen arming branch.')
           PY
 
       - name: Refuse an automatic retry loop with zero checkpoint progress
