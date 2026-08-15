@@ -99,10 +99,13 @@ neutral phases on `main`.
 
 The first phase uses only `COUNTDOWN_POSTCONDITION`, advances two neutral programs, packages and
 uploads a segment-zero artifact, then dispatches a second GitHub Actions run with that exact artifact
-id and digest. The second phase verifies the predecessor artifact metadata, downloads that exact
-cross-run artifact, resumes through `verified_segment_resume_state`, advances two more neutral
-programs and compares the complete resulting state against an independently computed one-shot
-four-program neutral trajectory.
+id and digest. Because canonical segment receipts reserve a successful search-step outcome for a
+terminal full-budget step, this deliberately short first neutral phase is recorded as a synthetic
+`failure` outcome to exercise the same interruption-style continuation path without weakening the
+canonical packager. The second phase verifies the predecessor artifact metadata and head when
+available, downloads that exact cross-run artifact, resumes through `verified_segment_resume_state`,
+advances two more neutral programs and compares the complete resulting state against an independently
+computed one-shot four-program neutral trajectory.
 
 The required observation is `cross_run_state_byte_identical = true`. The rehearsal may not load the
 M092 target theorem, create the canonical arming marker or touch qualification material. A failed or
