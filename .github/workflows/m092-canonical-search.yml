@@ -11,6 +11,14 @@ on:
       - 'experiments/M092/TARGET_THEOREM.json'
       - 'metamorphosis/m092_criterion_search.py'
       - 'metamorphosis/m092_resume_validation.py'
+      - 'metamorphosis/m092_search_enumerator.py'
+      - 'metamorphosis/m092_certificate_policy_search.py'
+      - 'metamorphosis/m092_certificate_generator.py'
+      - 'metamorphosis/m092_proof_search.py'
+      - 'metamorphosis/m092_candidate_validation.py'
+      - 'metamorphosis/m092_certificate_verifier.py'
+      - 'metamorphosis/m092_kernel.py'
+      - 'metamorphosis/m092_runtime.py'
       - 'scripts/run_m092_criterion_search.py'
       - 'scripts/check_m092_criterion_freeze.py'
       - 'scripts/check_m092_canonical_guard.py'
@@ -73,7 +81,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
 
-      - name: Refuse a second first-run artifact
+      - name: Refuse a second completed first-run artifact
         if: steps.guard.outputs.armed == 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
@@ -98,8 +106,8 @@ jobs:
           with urllib.request.urlopen(request, timeout=30) as response:
               payload = json.load(response)
           if payload.get("total_count", 0) != 0:
-              raise SystemExit("an M092 first canonical search artifact already exists")
-          print("No prior M092 first canonical search artifact exists.")
+              raise SystemExit("a completed M092 first canonical search artifact already exists")
+          print("No completed M092 first canonical search artifact exists.")
           PY
 
       - name: Recheck every decisive M092 pre-search boundary
@@ -112,16 +120,91 @@ jobs:
           python -m scripts.check_m092_certificate_policy_search
           python -m scripts.check_m092_criterion_freeze --assert-pre-search
 
+      # The job retains thirty minutes after this step's deadline. The runner writes genesis before
+      # consuming a proposal and then atomically checkpoints only at completed program boundaries.
+      # A normal timeout therefore leaves a reproducible prefix for the always-run preservation step.
       - name: Execute the unique frozen target search
+        id: search
         if: steps.guard.outputs.armed == 'true'
+        timeout-minutes: 330
         run: |
           python scripts/run_m092_criterion_search.py \
             --requirement experiments/M092/TARGET_THEOREM.json \
             --output m092-canonical-search-state.json \
-            --program-limit 2000000
+            --program-limit 2000000 \
+            --checkpoint-programs 1000
+
+      - name: Record every reached canonical execution attempt
+        if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome != 'skipped'
+        env:
+          SEARCH_OUTCOME: ${{ steps.search.outcome }}
+          ARM_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          ARM_PARENT_SHA: ${{ github.event.pull_request.base.sha }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          state_path = Path('m092-canonical-search-state.json')
+          state = None
+          if state_path.is_file():
+              candidate = json.loads(state_path.read_text(encoding='utf-8'))
+              if not isinstance(candidate, dict):
+                  raise SystemExit('canonical checkpoint is not a JSON object')
+              state = candidate
+
+          terminal_statuses = {
+              'candidate_selected',
+              'program_budget_exhausted',
+              'certificate_budget_exhausted',
+          }
+          payload = {
+              'schema': 'm092-canonical-search-attempt/1',
+              'arming_head_sha': os.environ['ARM_HEAD_SHA'],
+              'arming_parent_sha': os.environ['ARM_PARENT_SHA'],
+              'github_run_id': int(os.environ['RUN_ID']),
+              'github_run_attempt': int(os.environ['RUN_ATTEMPT']),
+              'execution_step_outcome': os.environ['SEARCH_OUTCOME'],
+              'target_search_execution_step_reached': True,
+              'checkpoint_present': state is not None,
+              'checkpoint_status': None if state is None else state.get('status'),
+              'checkpoint_generated_programs': None if state is None else state.get('generated_programs'),
+              'checkpoint_certificate_policy_attempts': (
+                  None if state is None else state.get('certificate_policy_attempts')
+              ),
+              'checkpoint_state_digest': None if state is None else state.get('state_digest'),
+              'checkpoint_terminal': (
+                  False if state is None else state.get('status') in terminal_statuses
+              ),
+              'candidate_executed_for_selection': (
+                  False if state is None else state.get('candidate_executed_for_selection')
+              ),
+              'qualification_loaded': False if state is None else state.get('qualification_loaded'),
+              'retry_rule': 'exact_same_arming_head_deterministic_reproduction_only',
+          }
+          Path('m092-canonical-search-attempt.json').write_text(
+              json.dumps(payload, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+
+      - name: Preserve every reached canonical execution attempt
+        if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome != 'skipped'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m092-canonical-search-attempt-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            m092-canonical-search-attempt.json
+            m092-canonical-search-state.json
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Package immutable first-run provenance
-        if: steps.guard.outputs.armed == 'true'
+        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
         run: |
           python scripts/package_m092_canonical_search.py \
             --state m092-canonical-search-state.json \
@@ -132,7 +215,7 @@ jobs:
             --output m092-first-canonical-search-result.json
 
       - name: Confirm selection remained separate from qualification
-        if: steps.guard.outputs.armed == 'true'
+        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
         shell: bash
         run: |
           python - <<'PY'
@@ -157,8 +240,8 @@ jobs:
           test ! -e experiments/M092/QUALIFICATION.json
           test ! -e experiments/M092/RESULT.json
 
-      - name: Upload the immutable canonical search artifact
-        if: steps.guard.outputs.armed == 'true'
+      - name: Upload the immutable completed canonical search artifact
+        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: m092-first-canonical-search
