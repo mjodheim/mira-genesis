@@ -209,6 +209,9 @@ jobs:
           assert len(matches) == 1
           artifact = matches[0]
           assert artifact['name'] == f"m092-neutral-transport-rehearsal-{os.environ['HEAD_SHA']}-000000"
+          workflow_run = artifact.get('workflow_run') or {}
+          if workflow_run.get('head_sha') is not None:
+              assert workflow_run['head_sha'] == os.environ['HEAD_SHA']
           api_digest = str(artifact.get('digest') or '').removeprefix('sha256:')
           supplied = os.environ['PREVIOUS_ARTIFACT_DIGEST'].removeprefix('sha256:')
           assert api_digest and api_digest == supplied
