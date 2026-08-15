@@ -1,0 +1,38 @@
+{
+  "schema": "m092-affine-postcondition-v1",
+  "witnesses": [
+    "q"
+  ],
+  "constraints": [
+    {
+      "relation": "eq",
+      "coefficients": {
+        "q": 2,
+        "x": -1,
+        "y": 1
+      },
+      "constant": 0
+    },
+    {
+      "relation": "ge",
+      "coefficients": {
+        "y": 1
+      },
+      "constant": 0
+    },
+    {
+      "relation": "ge",
+      "coefficients": {
+        "y": -1
+      },
+      "constant": 1
+    },
+    {
+      "relation": "ge",
+      "coefficients": {
+        "q": 1
+      },
+      "constant": 0
+    }
+  ]
+}
