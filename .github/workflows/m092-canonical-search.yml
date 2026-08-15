@@ -122,7 +122,7 @@ jobs:
 
       # The job retains thirty minutes after this step's deadline. The runner writes genesis before
       # consuming a proposal and then atomically checkpoints only at completed program boundaries.
-      # A normal timeout therefore leaves a reproducible prefix for the always-run preservation step.
+      # A normal timeout therefore leaves a reproducible prefix for the preservation steps.
       - name: Execute the unique frozen target search
         id: search
         if: steps.guard.outputs.armed == 'true'
@@ -135,6 +135,7 @@ jobs:
             --checkpoint-programs 1000
 
       - name: Record every reached canonical execution attempt
+        id: attempt_record
         if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome != 'skipped'
         env:
           SEARCH_OUTCOME: ${{ steps.search.outcome }}
@@ -192,19 +193,11 @@ jobs:
           print(json.dumps(payload, indent=2, sort_keys=True))
           PY
 
-      - name: Preserve every reached canonical execution attempt
-        if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome != 'skipped'
-        uses: actions/upload-artifact@v4
-        with:
-          name: m092-canonical-search-attempt-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
-          path: |
-            m092-canonical-search-attempt.json
-            m092-canonical-search-state.json
-          if-no-files-found: error
-          retention-days: 90
-
+      # Completed-result preservation is deliberately evaluated before the secondary attempt upload.
+      # A failure of that secondary upload must not suppress an otherwise valid terminal artifact.
       - name: Package immutable first-run provenance
-        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
+        id: package
+        if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
         run: |
           python scripts/package_m092_canonical_search.py \
             --state m092-canonical-search-state.json \
@@ -215,7 +208,8 @@ jobs:
             --output m092-first-canonical-search-result.json
 
       - name: Confirm selection remained separate from qualification
-        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
+        id: separation
+        if: always() && steps.package.outcome == 'success'
         shell: bash
         run: |
           python - <<'PY'
@@ -241,13 +235,24 @@ jobs:
           test ! -e experiments/M092/RESULT.json
 
       - name: Upload the immutable completed canonical search artifact
-        if: steps.guard.outputs.armed == 'true' && steps.search.outcome == 'success'
+        if: always() && steps.package.outcome == 'success' && steps.separation.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: m092-first-canonical-search
           path: |
             m092-canonical-search-state.json
             m092-first-canonical-search-result.json
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Preserve every reached canonical execution attempt
+        if: always() && steps.guard.outputs.armed == 'true' && steps.search.outcome != 'skipped' && steps.attempt_record.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m092-canonical-search-attempt-${{ github.event.pull_request.head.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            m092-canonical-search-attempt.json
+            m092-canonical-search-state.json
           if-no-files-found: error
           retention-days: 90
 
