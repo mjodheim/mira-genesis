@@ -1,0 +1,158 @@
+"""Guard the unique M092 canonical criterion-search arming commit.
+
+The canonical target search stays closed unless the pull-request head changes exactly the arming
+marker, carries the exact arming message, names its real parent commit and binds every decisive
+pre-search transport artifact by SHA-256.  Ordinary development commits return ``armed=false``;
+a marker-only malformed claim fails loudly.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+import re
+from typing import Mapping
+
+ROOT = Path(__file__).resolve().parents[1]
+ARM_RELATIVE = Path("experiments/M092/CANONICAL_SEARCH_ARMED.json")
+ARM_MESSAGE = "m092(canonical): arm first immutable criterion search"
+ARM_SCHEMA = "m092-canonical-search-arm/1"
+PROGRAM_LIMIT = 2_000_000
+
+BOUND_FILES: Mapping[str, Path] = {
+    "protocol_sha256": Path("experiments/M092/PROTOCOL.json"),
+    "target_theorem_sha256": Path("experiments/M092/TARGET_THEOREM.json"),
+    "criterion_runner_sha256": Path("scripts/run_m092_criterion_search.py"),
+    "criterion_freeze_sha256": Path("scripts/check_m092_criterion_freeze.py"),
+    "criterion_engine_sha256": Path("metamorphosis/m092_criterion_search.py"),
+    "resume_validator_sha256": Path("metamorphosis/m092_resume_validation.py"),
+    "canonical_guard_sha256": Path("scripts/check_m092_canonical_guard.py"),
+    "canonical_workflow_sha256": Path(".github/workflows/m092-canonical-search.yml"),
+    "canonical_packager_sha256": Path("scripts/package_m092_canonical_search.py"),
+}
+
+_SHA = re.compile(r"\A[0-9a-f]{40}\Z")
+_DIGEST = re.compile(r"\A[0-9a-f]{64}\Z")
+
+
+class GuardError(ValueError):
+    """The head resembles an arming commit but violates the frozen arming contract."""
+
+
+def _posix(path: str | Path) -> str:
+    return str(path).replace("\\", "/")
+
+
+def _sha256_file(path: Path) -> str:
+    if not path.is_file():
+        raise GuardError(f"bound file is absent: {_posix(path)}")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _write_output(path: Path | None, *, armed: bool, reason: str) -> None:
+    if path is None:
+        return
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(f"armed={'true' if armed else 'false'}\n")
+        handle.write(f"reason={reason}\n")
+
+
+def inspect_arm(
+    *,
+    head_sha: str,
+    parent_sha: str,
+    commit_message: str,
+    changed_files: tuple[str, ...],
+    root: Path = ROOT,
+) -> dict[str, object] | None:
+    """Return the validated marker only for the unique marker-only arming shape."""
+
+    canonical_files = tuple(sorted(_posix(path) for path in changed_files if path))
+    if canonical_files != (_posix(ARM_RELATIVE),):
+        return None
+
+    if commit_message.strip() != ARM_MESSAGE:
+        raise GuardError("the marker-only commit does not carry the exact arming message")
+    if not _SHA.fullmatch(head_sha):
+        raise GuardError("head SHA must be full lowercase 40-hex")
+    if not _SHA.fullmatch(parent_sha):
+        raise GuardError("parent SHA must be full lowercase 40-hex")
+
+    marker_path = root / ARM_RELATIVE
+    if not marker_path.is_file():
+        raise GuardError("the canonical arming marker is absent")
+    try:
+        marker = json.loads(marker_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as error:
+        raise GuardError("the canonical arming marker is not valid JSON") from error
+    if not isinstance(marker, dict):
+        raise GuardError("the canonical arming marker must be a JSON object")
+
+    expected_fields = {
+        "schema",
+        "frozen_parent_sha",
+        *BOUND_FILES.keys(),
+        "program_limit",
+        "first_run_only",
+        "reruns_are_reproductions_only",
+        "qualification_forbidden",
+    }
+    if set(marker) != expected_fields:
+        raise GuardError("the canonical arming marker fields differ from the closed schema")
+    if marker.get("schema") != ARM_SCHEMA:
+        raise GuardError("unknown M092 canonical arming marker schema")
+    if marker.get("frozen_parent_sha") != parent_sha:
+        raise GuardError("the marker does not name the actual parent commit")
+    if marker.get("program_limit") != PROGRAM_LIMIT or isinstance(marker.get("program_limit"), bool):
+        raise GuardError("the marker changes the frozen canonical program limit")
+    for field in ("first_run_only", "reruns_are_reproductions_only", "qualification_forbidden"):
+        if marker.get(field) is not True:
+            raise GuardError(f"{field} must be true")
+
+    for field, relative_path in BOUND_FILES.items():
+        supplied = marker.get(field)
+        if not isinstance(supplied, str) or _DIGEST.fullmatch(supplied) is None:
+            raise GuardError(f"{field} is not canonical lowercase SHA-256")
+        actual = _sha256_file(root / relative_path)
+        if supplied != actual:
+            raise GuardError(
+                f"{field} differs from {_posix(relative_path)}: supplied={supplied}, actual={actual}"
+            )
+
+    return marker
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--head-sha", required=True)
+    parser.add_argument("--parent-sha", required=True)
+    parser.add_argument("--commit-message", required=True)
+    parser.add_argument("--changed-file", action="append", default=[])
+    parser.add_argument("--github-output", type=Path)
+    args = parser.parse_args()
+
+    try:
+        marker = inspect_arm(
+            head_sha=args.head_sha,
+            parent_sha=args.parent_sha,
+            commit_message=args.commit_message,
+            changed_files=tuple(args.changed_file),
+        )
+    except GuardError as error:
+        _write_output(args.github_output, armed=False, reason="invalid-arm")
+        print(f"M092 canonical guard failure: {error}")
+        return 1
+
+    if marker is None:
+        _write_output(args.github_output, armed=False, reason="not-arm-commit")
+        print("M092 canonical search remains closed: the head is not the marker-only arming commit")
+        return 0
+
+    _write_output(args.github_output, armed=True, reason="valid-first-arm")
+    print(json.dumps(marker, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
