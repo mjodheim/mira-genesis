@@ -102,8 +102,8 @@ jobs:
           import json
           import os
           from pathlib import Path
-          import package_m092_canonical_segment as segment_packager
-          import run_m092_criterion_search as runner
+          from scripts import package_m092_canonical_segment as segment_packager
+          from scripts import run_m092_criterion_search as runner
           from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
           from metamorphosis.m092_criterion_search import CriterionSearchState
 
@@ -237,7 +237,7 @@ jobs:
           import json
           import os
           from pathlib import Path
-          import run_m092_criterion_search as runner
+          from scripts import run_m092_criterion_search as runner
           from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
           from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
           from metamorphosis.m092_resume_validation import verified_segment_resume_state
