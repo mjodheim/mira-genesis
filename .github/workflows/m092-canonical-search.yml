@@ -56,6 +56,7 @@ jobs:
           python scripts/check_m092_canonical_guard.py \
             --head-sha "$(git rev-parse HEAD)" \
             --parent-sha "$(git rev-parse HEAD^)" \
+            --base-sha "${{ github.event.pull_request.base.sha }}" \
             --commit-message "$(git log -1 --pretty=%B)" \
             --github-output "$GITHUB_OUTPUT" \
             "${args[@]}" \
