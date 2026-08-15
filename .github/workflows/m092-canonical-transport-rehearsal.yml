@@ -1,0 +1,271 @@
+name: M092 neutral multi-run transport rehearsal
+
+# Post-merge infrastructure rehearsal only. It uses the neutral countdown requirement, never
+# TARGET_THEOREM.json or qualification material. A push run creates segment zero, uploads it, and
+# dispatches one continuation run. The continuation must reproduce the exact state of a one-shot
+# four-program neutral trajectory.
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/m092-canonical-search.yml'
+      - '.github/workflows/m092-canonical-transport-rehearsal.yml'
+      - 'metamorphosis/m092_resume_validation.py'
+      - 'scripts/run_m092_criterion_search.py'
+      - 'scripts/package_m092_canonical_segment.py'
+  workflow_dispatch:
+    inputs:
+      rehearsal_head_sha:
+        required: true
+        type: string
+      rehearsal_parent_sha:
+        required: true
+        type: string
+      previous_run_id:
+        required: true
+        type: string
+      previous_artifact_id:
+        required: true
+        type: string
+      previous_artifact_digest:
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: m092-neutral-multi-run-transport-rehearsal
+  cancel-in-progress: false
+
+jobs:
+  neutral-transport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Resolve rehearsal identity
+        id: identity
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_HEAD: ${{ github.sha }}
+          PUSH_PARENT: ${{ github.event.before }}
+          INPUT_HEAD: ${{ inputs.rehearsal_head_sha }}
+          INPUT_PARENT: ${{ inputs.rehearsal_parent_sha }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          if os.environ['EVENT_NAME'] == 'push':
+              head = os.environ['PUSH_HEAD']
+              parent = os.environ['PUSH_PARENT']
+              phase = '0'
+          else:
+              head = os.environ['INPUT_HEAD']
+              parent = os.environ['INPUT_PARENT']
+              phase = '1'
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              handle.write(f'head={head}\nparent={parent}\nphase={phase}\n')
+          PY
+
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.identity.outputs.head }}
+          fetch-depth: 2
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Assert rehearsal cannot load target or qualification artifacts
+        run: |
+          test ! -e experiments/M092/CANONICAL_SEARCH_ARMED.json
+          python - <<'PY'
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          assert COUNTDOWN_POSTCONDITION['schema'] == 'm092-affine-postcondition-v1'
+          PY
+
+      - name: Build neutral first segment and one-shot reference
+        id: first
+        if: steps.identity.outputs.phase == '0'
+        env:
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import package_m092_canonical_segment as segment_packager
+          import run_m092_criterion_search as runner
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          from metamorphosis.m092_criterion_search import CriterionSearchState
+
+          requirement = COUNTDOWN_POSTCONDITION
+          state, _ = runner.advance_with_checkpoints(
+              CriterionSearchState.fresh(requirement),
+              requirement,
+              program_limit=2,
+              checkpoint_programs=1,
+              output=Path('m092-neutral-rehearsal-state.json'),
+          )
+          assert state.status == 'searching'
+          receipt = segment_packager.package_segment(
+              output_state_payload=state.to_dict(),
+              requirement=requirement,
+              arming_head_sha=os.environ['HEAD_SHA'],
+              arming_parent_sha=os.environ['PARENT_SHA'],
+              segment_index=0,
+              search_step_outcome='failure',
+              github_run_id=int(os.environ['GITHUB_RUN_ID']),
+              github_run_attempt=int(os.environ['GITHUB_RUN_ATTEMPT']),
+          )
+          Path('m092-neutral-rehearsal-segment.json').write_text(
+              json.dumps(receipt, indent=2, sort_keys=True) + '\n', encoding='utf-8'
+          )
+          PY
+
+      - name: Upload neutral predecessor artifact
+        id: first_upload
+        if: steps.identity.outputs.phase == '0'
+        uses: actions/upload-artifact@v4
+        with:
+          name: m092-neutral-transport-rehearsal-${{ steps.identity.outputs.head }}-000000
+          path: |
+            m092-neutral-rehearsal-state.json
+            m092-neutral-rehearsal-segment.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Dispatch neutral continuation rehearsal
+        if: steps.identity.outputs.phase == '0' && steps.first_upload.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+          ARTIFACT_ID: ${{ steps.first_upload.outputs.artifact-id }}
+          ARTIFACT_DIGEST: ${{ steps.first_upload.outputs.artifact-digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/workflows/m092-canonical-transport-rehearsal.yml/dispatches"
+          payload = {
+              'ref': 'main',
+              'inputs': {
+                  'rehearsal_head_sha': os.environ['HEAD_SHA'],
+                  'rehearsal_parent_sha': os.environ['PARENT_SHA'],
+                  'previous_run_id': os.environ['GITHUB_RUN_ID'],
+                  'previous_artifact_id': os.environ['ARTIFACT_ID'],
+                  'previous_artifact_digest': os.environ['ARTIFACT_DIGEST'],
+              },
+          }
+          request = urllib.request.Request(
+              url,
+              data=json.dumps(payload).encode(),
+              method='POST',
+              headers={
+                  'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+                  'Content-Type': 'application/json',
+              },
+          )
+          with urllib.request.urlopen(request, timeout=30) as response:
+              assert response.status == 204
+          PY
+
+      - name: Validate predecessor artifact metadata
+        if: steps.identity.outputs.phase == '1'
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PREVIOUS_RUN_ID: ${{ inputs.previous_run_id }}
+          PREVIOUS_ARTIFACT_ID: ${{ inputs.previous_artifact_id }}
+          PREVIOUS_ARTIFACT_DIGEST: ${{ inputs.previous_artifact_digest }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+          run_id = int(os.environ['PREVIOUS_RUN_ID'])
+          artifact_id = int(os.environ['PREVIOUS_ARTIFACT_ID'])
+          headers = {
+              'Authorization': f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          url = f"{os.environ['GITHUB_API_URL']}/repos/{os.environ['GITHUB_REPOSITORY']}/actions/runs/{run_id}/artifacts?per_page=100"
+          with urllib.request.urlopen(urllib.request.Request(url, headers=headers), timeout=30) as response:
+              artifacts = json.load(response).get('artifacts', [])
+          matches = [item for item in artifacts if item.get('id') == artifact_id]
+          assert len(matches) == 1
+          artifact = matches[0]
+          assert artifact['name'] == f"m092-neutral-transport-rehearsal-{os.environ['HEAD_SHA']}-000000"
+          api_digest = str(artifact.get('digest') or '').removeprefix('sha256:')
+          supplied = os.environ['PREVIOUS_ARTIFACT_DIGEST'].removeprefix('sha256:')
+          assert api_digest and api_digest == supplied
+          PY
+
+      - name: Download neutral predecessor artifact
+        if: steps.identity.outputs.phase == '1'
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ inputs.previous_artifact_id }}
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.previous_run_id }}
+          path: previous-neutral-segment
+
+      - name: Prove cross-run resume equals one-shot neutral trajectory
+        if: steps.identity.outputs.phase == '1'
+        env:
+          HEAD_SHA: ${{ steps.identity.outputs.head }}
+          PARENT_SHA: ${{ steps.identity.outputs.parent }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import run_m092_criterion_search as runner
+          from metamorphosis.m092_certificate_verifier import COUNTDOWN_POSTCONDITION
+          from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
+          from metamorphosis.m092_resume_validation import verified_segment_resume_state
+
+          state_payload = json.loads(Path('previous-neutral-segment/m092-neutral-rehearsal-state.json').read_text())
+          receipt = json.loads(Path('previous-neutral-segment/m092-neutral-rehearsal-segment.json').read_text())
+          resumed = verified_segment_resume_state(
+              state_payload,
+              receipt,
+              COUNTDOWN_POSTCONDITION,
+              arming_head_sha=os.environ['HEAD_SHA'],
+              arming_parent_sha=os.environ['PARENT_SHA'],
+              expected_segment_index=0,
+          )
+          continued, _ = runner.advance_with_checkpoints(
+              resumed,
+              COUNTDOWN_POSTCONDITION,
+              program_limit=2,
+              checkpoint_programs=1,
+              output=Path('m092-neutral-rehearsal-final.json'),
+          )
+          one_shot = advance_search(
+              CriterionSearchState.fresh(COUNTDOWN_POSTCONDITION),
+              COUNTDOWN_POSTCONDITION,
+              program_limit=4,
+          )
+          assert continued.to_dict() == one_shot.to_dict()
+          print(json.dumps({
+              'neutral_only': True,
+              'target_theorem_loaded': False,
+              'cross_run_state_byte_identical': True,
+              'generated_programs': continued.generated_programs,
+              'state_digest': continued.to_dict()['state_digest'],
+          }, indent=2, sort_keys=True))
+          PY
