@@ -15,7 +15,7 @@ from pathlib import Path
 import tempfile
 from typing import Mapping
 
-import metamorphosis.m092_certificate_policy_search as policy_search
+import metamorphosis.m092_criterion_search as criterion_search
 from metamorphosis.m092_criterion_search import CriterionSearchState, advance_search
 from metamorphosis.m092_independent_reproduction import (
     ReproductionError,
@@ -33,6 +33,7 @@ def _install_target_neutral_path_cache() -> None:
     verifier inputs are unchanged.  The cache cannot read result content or qualification material.
     """
 
+    policy_search = criterion_search.policy_search
     original = policy_search._paths_for_policy
     if getattr(original, "_m092_target_neutral_cache", False):
         return
