@@ -2,8 +2,9 @@
 
 The canonical target search stays closed unless the pull-request head *adds* exactly the arming
 marker as the sole commit above the pull-request base, carries the exact arming message, names its
-real parent commit and binds every decisive pre-search transport and selection artifact by SHA-256.
-Ordinary development commits return ``armed=false``; a marker-only malformed claim fails loudly.
+real parent commit and binds every decisive pre-search transport, reproduction and selection artifact
+by SHA-256. Ordinary development commits return ``armed=false``; a marker-only malformed claim fails
+loudly.
 """
 from __future__ import annotations
 
@@ -39,6 +40,11 @@ BOUND_FILES: Mapping[str, Path] = {
     "canonical_workflow_sha256": Path(".github/workflows/m092-canonical-search.yml"),
     "canonical_packager_sha256": Path("scripts/package_m092_canonical_search.py"),
     "canonical_segment_packager_sha256": Path("scripts/package_m092_canonical_segment.py"),
+    "independent_reproduction_core_sha256": Path("metamorphosis/m092_independent_reproduction.py"),
+    "independent_reproduction_runner_sha256": Path("scripts/run_m092_independent_reproduction.py"),
+    "independent_reproduction_segment_packager_sha256": Path("scripts/package_m092_reproduction_segment.py"),
+    "independent_reproduction_packager_sha256": Path("scripts/package_m092_independent_reproduction.py"),
+    "independent_reproduction_workflow_sha256": Path(".github/workflows/m092-independent-reproduction.yml"),
 }
 
 _SHA = re.compile(r"\A[0-9a-f]{40}\Z")
