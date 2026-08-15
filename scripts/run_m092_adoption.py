@@ -4,7 +4,8 @@
 This file is frozen pre-arm but must not be executed until the canonical result is candidate_selected
 and the independent reproduction result opens the qualification gate.  It creates the real persisted
 extended runtime only after revalidating the exact selected program and certificate from raw bytes.
-It does not materialize qualification tasks.
+The protocol-exact independent validation receipt is persisted before registration.  Qualification
+material is never loaded or materialized here.
 """
 from __future__ import annotations
 
@@ -27,8 +28,10 @@ from metamorphosis.m092_adoption_checkpoint import load_frozen_base
 from metamorphosis.m092_criterion_search import CriterionSearchState
 from metamorphosis.m092_kernel import program_from_list
 from metamorphosis.m092_qualification import validate_reproduction_gate
+from metamorphosis.m092_validation_receipt import recompute_validation_receipt, validate_receipt_shape
 
 DEFAULT_TARGET_THEOREM = Path("experiments/M092/TARGET_THEOREM.json")
+DEFAULT_VALIDATION_RECEIPT = Path("experiments/M092/VALIDATION_RECEIPT.json")
 DEFAULT_OUTPUT = Path("experiments/M092/SUBSTRATE_B.json")
 DEFAULT_JOURNAL = Path("experiments/M092/ADOPTION_TRANSACTION.json")
 DEFAULT_FRESH_RECEIPT = Path("experiments/M092/FRESH_PROCESS_RECEIPT.json")
@@ -72,12 +75,14 @@ def adopt(
     canonical_result_path: Path,
     reproduction_result_path: Path,
     target_theorem_path: Path,
+    validation_receipt_path: Path,
     output_path: Path,
     journal_path: Path,
     fresh_receipt_path: Path,
 ) -> dict[str, object]:
-    if output_path.exists() or journal_path.exists() or fresh_receipt_path.exists():
-        raise AdoptionError("real adoption artifacts already exist; adoption is single-shot")
+    for path in (validation_receipt_path, output_path, journal_path, fresh_receipt_path):
+        if path.exists():
+            raise AdoptionError("real adoption artifacts already exist; adoption is single-shot")
 
     canonical = _read(canonical_result_path, "canonical result")
     reproduction = _read(reproduction_result_path, "independent reproduction result")
@@ -100,17 +105,42 @@ def adopt(
         raise AdoptionError("selected candidate program/certificate is malformed")
     program = program_from_list(program_raw)
 
+    base_language, base_substrate, base_sha, checkpoint = load_frozen_base()
+    checkpoint_digest = checkpoint.get("checkpoint_digest")
+    if not isinstance(checkpoint_digest, str) or len(checkpoint_digest) != 64:
+        raise AdoptionError("CHECKPOINT_A does not expose its exact checkpoint digest")
+
+    validation_receipt = recompute_validation_receipt(
+        program,
+        certificate,
+        expected_postcondition=theorem,
+        checkpoint_digest=checkpoint_digest,
+    )
+    validate_receipt_shape(validation_receipt)
+    if validation_receipt["program_digest"] != selected.get("program_digest"):
+        raise AdoptionError("protocol validation digest differs from selected candidate")
+    if validation_receipt["certificate_digest"] != selected.get("certificate_digest"):
+        raise AdoptionError("protocol validation certificate digest differs from selected candidate")
+
+    # The adoption helper independently reruns the same scanner/global-verifier boundary.  Its
+    # receipt is internal construction metadata; the persisted protocol authority is the closed
+    # VALIDATION_RECEIPT written immediately below, before S1/L1 registration begins.
     adoption_receipt = validate_candidate_for_adoption(
         program,
         certificate,
         expected_postcondition=theorem,
     )
-    if adoption_receipt["program_digest"] != selected.get("program_digest"):
-        raise AdoptionError("revalidated adoption digest differs from selected candidate")
-    if adoption_receipt["certificate_digest"] != selected.get("certificate_digest"):
-        raise AdoptionError("revalidated certificate digest differs from selected candidate")
+    if adoption_receipt["program_digest"] != validation_receipt["program_digest"]:
+        raise AdoptionError("adoption and protocol validation program digests differ")
+    if adoption_receipt["certificate_digest"] != validation_receipt["certificate_digest"]:
+        raise AdoptionError("adoption and protocol validation certificate digests differ")
 
-    base_language, base_substrate, base_sha, _ = load_frozen_base()
+    _write(validation_receipt_path, validation_receipt)
+    persisted_validation = _read(validation_receipt_path, "persisted validation receipt")
+    validate_receipt_shape(persisted_validation)
+    if persisted_validation != validation_receipt:
+        raise AdoptionError("persisted validation receipt differs before registration")
+
     bundle = build_extended_bundle(
         base_language,
         base_substrate,
@@ -144,7 +174,8 @@ def adopt(
         "reproduction_result_digest": gate["reproduction_result_digest"],
         "reproduced_state_digest": gate["state_digest"],
         "qualification_gate_was_open_before_adoption": True,
-        "adoption_receipt_digest": adoption_receipt["receipt_digest"],
+        "validation_receipt_digest": validation_receipt["receipt_digest"],
+        "internal_adoption_receipt_digest": adoption_receipt["receipt_digest"],
         "program_digest": bundle["program_digest"],
         "operation_key": bundle["operation_key"],
         "primitive_id": bundle["primitive_id"],
@@ -161,6 +192,7 @@ def main() -> int:
     parser.add_argument("--canonical-result", type=Path)
     parser.add_argument("--reproduction-result", type=Path)
     parser.add_argument("--target-theorem", type=Path, default=DEFAULT_TARGET_THEOREM)
+    parser.add_argument("--validation-receipt", type=Path, default=DEFAULT_VALIDATION_RECEIPT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--journal", type=Path, default=DEFAULT_JOURNAL)
     parser.add_argument("--fresh-receipt", type=Path, default=DEFAULT_FRESH_RECEIPT)
@@ -180,6 +212,7 @@ def main() -> int:
         canonical_result_path=args.canonical_result,
         reproduction_result_path=args.reproduction_result,
         target_theorem_path=args.target_theorem,
+        validation_receipt_path=args.validation_receipt,
         output_path=args.output,
         journal_path=args.journal,
         fresh_receipt_path=args.fresh_receipt,
