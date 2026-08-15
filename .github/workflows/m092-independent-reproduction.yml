@@ -122,7 +122,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: ${{ steps.invocation.outputs.arming_head_sha }}
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Verify frozen arming PR and resolve immutable workflow ref
         id: guard
