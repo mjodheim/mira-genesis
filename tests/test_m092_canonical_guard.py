@@ -40,17 +40,23 @@ def _write_marker(root: Path, marker: dict[str, object]) -> None:
     path.write_text(json.dumps(marker, sort_keys=True), encoding="utf-8")
 
 
-def _inspect(root: Path, *, changed_files: tuple[str, ...] | None = None) -> dict[str, object] | None:
+def _inspect(
+    root: Path,
+    *,
+    changed_files: tuple[str, ...] | None = None,
+    changed_statuses: tuple[str, ...] | None = None,
+) -> dict[str, object] | None:
     return guard.inspect_arm(
         head_sha=HEAD,
         parent_sha=PARENT,
         commit_message=guard.ARM_MESSAGE,
         changed_files=changed_files or (guard.ARM_RELATIVE.as_posix(),),
+        changed_statuses=changed_statuses or (f"A\t{guard.ARM_RELATIVE.as_posix()}",),
         root=root,
     )
 
 
-def test_exact_marker_only_arm_is_accepted(tmp_path: Path) -> None:
+def test_exact_new_marker_only_arm_is_accepted(tmp_path: Path) -> None:
     _install_bound_files(tmp_path)
     expected = _marker(tmp_path)
     _write_marker(tmp_path, expected)
@@ -59,16 +65,31 @@ def test_exact_marker_only_arm_is_accepted(tmp_path: Path) -> None:
 
 
 def test_non_marker_commit_keeps_search_closed_without_reading_marker(tmp_path: Path) -> None:
-    assert _inspect(tmp_path, changed_files=("README.md",)) is None
+    assert _inspect(tmp_path, changed_files=("README.md",), changed_statuses=("M\tREADME.md",)) is None
 
 
-def test_cross_platform_changed_path_is_normalized(tmp_path: Path) -> None:
+def test_cross_platform_changed_path_and_status_are_normalized(tmp_path: Path) -> None:
     _install_bound_files(tmp_path)
     expected = _marker(tmp_path)
     _write_marker(tmp_path, expected)
 
     windows_path = guard.ARM_RELATIVE.as_posix().replace("/", "\\")
-    assert _inspect(tmp_path, changed_files=(windows_path,)) == expected
+    assert _inspect(
+        tmp_path,
+        changed_files=(windows_path,),
+        changed_statuses=(f"A\t{windows_path}",),
+    ) == expected
+
+
+def test_existing_marker_cannot_be_modified_to_rearm(tmp_path: Path) -> None:
+    _install_bound_files(tmp_path)
+    _write_marker(tmp_path, _marker(tmp_path))
+
+    with pytest.raises(guard.GuardError, match="newly added"):
+        _inspect(
+            tmp_path,
+            changed_statuses=(f"M\t{guard.ARM_RELATIVE.as_posix()}",),
+        )
 
 
 def test_marker_plus_any_other_file_cannot_arm(tmp_path: Path) -> None:
@@ -78,6 +99,10 @@ def test_marker_plus_any_other_file_cannot_arm(tmp_path: Path) -> None:
     assert _inspect(
         tmp_path,
         changed_files=(guard.ARM_RELATIVE.as_posix(), "scripts/run_m092_criterion_search.py"),
+        changed_statuses=(
+            f"A\t{guard.ARM_RELATIVE.as_posix()}",
+            "M\tscripts/run_m092_criterion_search.py",
+        ),
     ) is None
 
 
@@ -91,6 +116,7 @@ def test_marker_only_commit_requires_exact_message(tmp_path: Path) -> None:
             parent_sha=PARENT,
             commit_message=guard.ARM_MESSAGE + " amended",
             changed_files=(guard.ARM_RELATIVE.as_posix(),),
+            changed_statuses=(f"A\t{guard.ARM_RELATIVE.as_posix()}",),
             root=tmp_path,
         )
 
