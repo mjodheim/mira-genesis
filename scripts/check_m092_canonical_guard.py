@@ -38,6 +38,7 @@ BOUND_FILES: Mapping[str, Path] = {
     "canonical_guard_sha256": Path("scripts/check_m092_canonical_guard.py"),
     "canonical_workflow_sha256": Path(".github/workflows/m092-canonical-search.yml"),
     "canonical_packager_sha256": Path("scripts/package_m092_canonical_search.py"),
+    "canonical_segment_packager_sha256": Path("scripts/package_m092_canonical_segment.py"),
 }
 
 _SHA = re.compile(r"\A[0-9a-f]{40}\Z")
