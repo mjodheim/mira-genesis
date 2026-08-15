@@ -10,7 +10,9 @@ Selection never executes a candidate on target examples and never imports qualif
 Verifier refusals are recorded as terminal facts about that certificate; they are not fed back to
 repair or complete it.  Search state binds the theorem, implementation files, enumerator cursor,
 ordered proposal audit, real certificate-policy attempts and an additional criterion-event digest
-chain, so resuming in another process cannot silently change the search trajectory.
+chain.  Those bindings provide deterministic replay inputs and internal integrity; canonical resume
+provenance is established only by the separate replay validator, which reconstructs the complete
+claimed prefix from genesis before any new proposal is consumed.
 """
 from __future__ import annotations
 
