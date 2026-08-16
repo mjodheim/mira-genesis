@@ -40,4 +40,4 @@ def test_persisted_contract_contains_no_dynamic_result_identity() -> None:
         "hidden_values",
     }
     assert not (forbidden_keys & _all_mapping_keys(stored))
-    assert stored["result_or_hidden_values_embedded"] is False
+    assert stored["candidate_result_or_hidden_values_embedded"] is False
