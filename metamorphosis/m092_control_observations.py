@@ -1,18 +1,16 @@
 """Executable, result-neutral observations for the M092 adoption controls.
 
 This module turns real runtime/adoption behaviour into the narrow causal facts accepted by
-``m092_control_runner``.  Candidate-dependent observations are gated on an already completed,
-independent reproduction.  The caller supplies the accepted program/certificate dynamically; no
+``m092_control_runner``. Candidate-dependent observations are gated on an already completed,
+independent reproduction. The caller supplies the accepted program/certificate dynamically; no
 canonical candidate, hidden qualification value, or post-result configuration is embedded here.
 """
 from __future__ import annotations
 
 from collections.abc import Mapping
 from pathlib import Path
-from typing import object as _object  # type: ignore[attr-defined]
 
 from metamorphosis.m092_adoption import (
-    AdoptionError,
     build_extended_bundle,
     commit_adoption_transaction,
     downstream_body,
