@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import object as _object
 
 from metamorphosis.m092_qualification_contract import execution_contract, validate_contract
 
