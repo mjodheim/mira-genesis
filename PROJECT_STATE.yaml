@@ -1,5 +1,5 @@
 project: Mira Genesis
-updated_at: 2026-08-11
+updated_at: 2026-08-17
 status: phase_eight_m084_mechanisms_integrated_into_one_persistent_lineage_no_gate_advanced
 
 active_research_question: >-
@@ -2424,6 +2424,55 @@ phase_eight:
     agi_evidence: false
     successor_must_supply_quiescent_corruption: true
     successor_may_reuse_this_schedule: false
+
+  M092:
+    title: canonical search voluntarily interrupted before qualification
+    epistemic_track: endogenous_bounded_lineage
+    status: aborted_without_verdict
+    protocol_a_frozen_commit: aa18d15
+    protocol_b_frozen_commit: 4903300
+    protocol_b_conditions: 15
+    condition_labels: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15]
+    canonical_search_armed_commit: 7190ff8
+    voluntary_interruption_reason: user_decision
+    interruption_reference: PR_167
+    last_published_canonical_segment: 3
+    terminal_candidate_claimed: false
+    independent_reproduction_performed: false
+    qualification_materialised: false
+    h38_resolved: false
+    d062_filled: false
+    a_checkpoint_infrastructure_valid: true
+    external_model_called: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M093:
+    title: engineering rehearsal — non-qualifying transformation infrastructure demonstration
+    epistemic_track: endogenous_bounded_lineage
+    status: engineering_rehearsal
+    target_file: mira_core/memory.py
+    target_component: MemoryLedger
+    target_lines_added: 17
+    demonstrates:
+      - transformation_infrastructure
+      - subprocess_sandbox
+      - a_b_comparison
+      - held_out_validation
+      - transactional_adoption
+      - persistence
+      - exact_rollback
+    does_not_demonstrate:
+      - autonomous_diagnosis
+      - component_selection
+      - non_predefined_repair_generation
+    original_tests_passed: [6, 6]
+    candidate_tests_passed: [7, 7]
+    held_out_tests_passed: [4, 4]
+    all_test_assertions_pass: true
+    external_model_called: false
+    generality_gate_advanced: false
+    agi_evidence: false
 
 measurement_track:
   reserved_experiment: M045

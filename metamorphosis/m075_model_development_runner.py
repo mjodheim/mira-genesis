@@ -15,7 +15,8 @@ from metamorphosis.m074_ablation_arms import ArmSpec, run_arm_episode
 from metamorphosis.m074_calibration_bridge import calibrate_run
 from metamorphosis.m074_docker_environment import DockerTaskEnvironment
 from metamorphosis.m074_scientific_runner import (
-    EvidenceBackend, portable_file_sha256, protocol_commitment,
+    EvidenceBackend, _SYNTHETIC_COMMIT_MARKER, _resolve_validation_mode,
+    file_sha256_from_history, portable_file_sha256, protocol_commitment,
 )
 from metamorphosis.m075_development_bank import TASKS, BankTask, task_by_id, validate_development_bank
 from metamorphosis.m075_epistemic_context import EpistemicContextBackend
@@ -58,10 +59,40 @@ class M075ModelDevelopmentError(RuntimeError):
     """Raised when a public model-development run differs from its committed contract."""
 
 
+def _git_available(root: Path) -> bool:
+    dotgit = root / ".git"
+    return dotgit.is_dir() or dotgit.is_file()
+
+
+def _commit_exists(root: Path, commit: str) -> bool:
+    import subprocess
+    try:
+        r = subprocess.run(
+            ["git", "cat-file", "-t", commit],
+            capture_output=True, cwd=root if _git_available(root) else None,
+        )
+        return r.returncode == 0 and r.stdout.strip() == b"commit"
+    except Exception:
+        return False
+
+
 def _validate_code_bindings(protocol: Mapping[str, object], root: Path) -> None:
     raw = protocol.get("code_sha256")
     if not isinstance(raw, Mapping) or set(raw) != set(REQUIRED_CODE_PATHS):
         raise M075ModelDevelopmentError("M075 development code bindings lack exact coverage")
+    apparatus_commit: str | None = protocol.get("apparatus_commit")  # type: ignore[assignment]
+    validation_mode = _resolve_validation_mode(apparatus_commit, root)
+    if validation_mode == "historical":
+        _validate_historical_m075(root, raw, apparatus_commit)  # type: ignore[arg-type]
+    elif validation_mode == "live":
+        _validate_live_m075(root, raw)
+    else:
+        raise M075ModelDevelopmentError(
+            f"cannot validate code bindings: unknown validation mode {validation_mode}"
+        )
+
+
+def _validate_live_m075(root: Path, raw: Mapping[str, str]) -> None:
     for relative, expected in raw.items():
         if not isinstance(relative, str) or not isinstance(expected, str) or len(expected) != 64:
             raise M075ModelDevelopmentError("M075 development code binding is malformed")
@@ -69,9 +100,23 @@ def _validate_code_bindings(protocol: Mapping[str, object], root: Path) -> None:
         try:
             path.relative_to(root.resolve())
         except ValueError as exc:
-            raise M075ModelDevelopmentError("M075 development code binding escaped the repository") from exc
+            raise M075ModelDevelopmentError(
+                "M075 development code binding escaped the repository"
+            ) from exc
         if not path.is_file() or portable_file_sha256(path) != expected:
             raise M075ModelDevelopmentError(f"M075 development code drifted: {relative}")
+
+
+def _validate_historical_m075(root: Path, raw: Mapping[str, str], commit: str) -> None:
+    for relative, expected in raw.items():
+        if not isinstance(relative, str) or not isinstance(expected, str) or len(expected) != 64:
+            raise M075ModelDevelopmentError("M075 development code binding is malformed")
+        computed = file_sha256_from_history(relative, commit, root)
+        if computed != expected:
+            raise M075ModelDevelopmentError(
+                f"M075 development code drifted: {relative} "
+                f"(expected {expected[:16]}, got {computed[:16]} from commit {commit[:12]})"
+            )
 
 
 def _request_scope_defects(

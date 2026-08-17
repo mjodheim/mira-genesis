@@ -103,5 +103,23 @@ class MemoryLedger:
                 raise ValueError("memory event digest mismatch")
             previous = event.digest
 
+
+    def events_by_kind(self, kind: str) -> tuple[MemoryEvent, ...]:
+        """Return every event whose kind matches *kind*, preserving insertion order.
+
+        Parameters
+        ----------
+        kind : str
+            Event kind to filter on (must be non-empty).
+
+        Returns
+        -------
+        tuple[MemoryEvent, ...]
+            Zero or more matching events in chronological order.
+        """
+        if not kind:
+            raise ValueError("memory event kind cannot be empty")
+        return tuple(event for event in self._events if event.kind == kind)
+
     def history(self) -> tuple[Mapping[str, JsonValue], ...]:
         return tuple(event.to_dict() for event in self._events)

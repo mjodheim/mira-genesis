@@ -11,7 +11,10 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+import os
 from pathlib import Path
+import re
+import subprocess
 from typing import Callable, Mapping, Sequence
 
 from metamorphosis.m074_ablation_arms import ABLATION_ARMS, arm_by_id, run_arm_episode
@@ -45,6 +48,8 @@ REQUIRED_CODE_PATHS: tuple[str, ...] = (
     "scripts/run_m074_scientific.py",
 )
 
+_SYNTHETIC_COMMIT_MARKER = "0000000000000000000000000000000000000000"
+
 
 class ScientificRunnerError(RuntimeError):
     """Raised before model execution when a protocol cannot support the declared campaign."""
@@ -70,12 +75,146 @@ def portable_file_sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes().replace(b"\r\n", b"\n")).hexdigest()
 
 
+def file_sha256_from_history(path: str, commit: str, root: Path = ROOT) -> str:
+    """Hash a tracked file as it existed at *commit*, normalising line endings.
+
+    This is the *historical* equivalent of ``portable_file_sha256``: it does
+    *not* read the live working tree, so an experiment frozen at one commit
+    can verify its source binding even after ``path`` evolved in later commits.
+    """
+    import subprocess
+    # Resolve the actual gitdir: a worktree's ``.git`` is a ``gitdir: <path>``
+    # pointer file, and ``git show`` from the worktree cwd may not resolve it.
+    dotgit = root / ".git"
+    if dotgit.is_file():
+        gitdir_line = dotgit.read_text("utf-8").strip()
+        if gitdir_line.startswith("gitdir:"):
+            raw = gitdir_line[len("gitdir:"):].strip()
+            # Handle WSL path (/mnt/c/...) → Windows path (C:\...) when
+            # running under Windows Python.
+            if os.name == "nt" and raw.startswith("/mnt/"):
+                parts = raw[5:].split("/", 1)
+                drive = parts[0].upper() + ":\\"
+                rest = parts[1].replace("/", "\\") if len(parts) > 1 else ""
+                gitdir = Path(drive + rest)
+            else:
+                gitdir = Path(raw).resolve()
+            env = dict(os.environ, GIT_DIR=str(gitdir))
+            cwd_arg: str | Path = root
+        else:
+            env = {}
+            cwd_arg = root
+            gitdir = root
+    elif dotgit.is_dir():
+        gitdir = dotgit
+        env = {}
+        cwd_arg = root
+    else:
+        raise ScientificRunnerError(f"cannot find git repository at {root}")
+    try:
+        blob = subprocess.run(
+            ["git", "show", f"{commit}:{path}"],
+            capture_output=True, check=True, cwd=cwd_arg, env=env,
+        ).stdout
+    except subprocess.CalledProcessError as exc:
+        raise ScientificRunnerError(
+            f"cannot read {path} from history at {commit}: "
+            f"{exc.stderr.decode(errors='replace')[:200]}"
+        ) from exc
+    return hashlib.sha256(blob.replace(b"\r\n", b"\n")).hexdigest()
+
+
 def protocol_commitment(protocol: Mapping[str, object]) -> str:
     """Commit a protocol without creating a self-referential digest."""
 
     payload = dict(protocol)
     payload.pop("protocol_commitment_sha256", None)
     return _sha256(payload)
+
+
+def _git_available(root: Path) -> bool:
+    """Check whether *root* is part of a git repository (normal or worktree).
+
+    A worktree has ``.git`` as a *file* (pointer to the main gitdir), not
+    a directory, so ``Path.is_dir()`` alone would miss it.
+    """
+    dotgit = root / ".git"
+    return dotgit.is_dir() or dotgit.is_file()
+
+
+def _commit_exists(root: Path, commit: str) -> bool:
+    """Check whether *commit* is a known git object in the repository at *root*."""
+    import subprocess
+    try:
+        dotgit = root / ".git"
+        if dotgit.is_file():
+            gitdir_line = dotgit.read_text("utf-8").strip()
+            if gitdir_line.startswith("gitdir:"):
+                raw = gitdir_line[len("gitdir:"):].strip()
+                if os.name == "nt" and raw.startswith("/mnt/"):
+                    parts = raw[5:].split("/", 1)
+                    drive = parts[0].upper() + ":\\"
+                    rest = parts[1].replace("/", "\\") if len(parts) > 1 else ""
+                    gitdir = Path(drive + rest)
+                else:
+                    gitdir = Path(raw).resolve()
+                env = dict(os.environ, GIT_DIR=str(gitdir))
+                cwd_dir: str | Path = root
+            else:
+                env = {}
+                cwd_dir = root
+        elif dotgit.is_dir():
+            env = {}
+            cwd_dir = root
+        else:
+            return False
+        r = subprocess.run(
+            ["git", "cat-file", "-t", commit],
+            capture_output=True, env=env, cwd=cwd_dir,
+        )
+        return r.returncode == 0 and r.stdout.strip() == b"commit"
+    except Exception:
+        return False
+
+
+def _resolve_validation_mode(apparatus_commit: str | None, root: Path, /) -> str:
+    """Determine whether to validate code bindings historically or live.
+
+    Returns ``"historical"`` when *apparatus_commit* is a 40-hex-char SHA
+    that exists in the git repository at *root*.
+
+    Returns ``"live"`` when *apparatus_commit* equals
+    ``_SYNTHETIC_COMMIT_MARKER`` (explicit test / fixture path).
+
+    Raises ``ValueError`` for every other case:
+    - ``None`` (commit is mandatory for scientific protocols)
+    - not a 40-hex-char string
+    - 40-hex-char but does not exist in the repo
+    - git is inaccessible
+    """
+    if apparatus_commit is None:
+        raise ValueError(
+            "apparatus_commit is mandatory for scientific protocol validation"
+        )
+    if not isinstance(apparatus_commit, str) or not re.fullmatch(
+        r"[0-9a-f]{40}", apparatus_commit
+    ):
+        raise ValueError(
+            f"apparatus_commit must be a 40-character hex SHA, "
+            f"got {apparatus_commit!r}"
+        )
+    if apparatus_commit == _SYNTHETIC_COMMIT_MARKER:
+        return "live"
+    if not _git_available(root):
+        raise ValueError(
+            f"cannot validate: git repository at {root} is inaccessible"
+        )
+    if not _commit_exists(root, apparatus_commit):
+        raise ValueError(
+            f"apparatus_commit {apparatus_commit[:12]} does not exist "
+            f"in the repository at {root}"
+        )
+    return "historical"
 
 
 def _request_payload(request: ModelRequest) -> dict[str, object]:
@@ -226,11 +365,21 @@ def _verify_code_files(
         raise ScientificRunnerError(
             f"protocol code bindings lack exact coverage; missing={missing}, extra={extra}"
         )
+    apparatus_commit: str | None = protocol.get("apparatus_commit")  # type: ignore[assignment]
+    validation_mode = _resolve_validation_mode(apparatus_commit, root)
+    if validation_mode == "historical":
+        _validate_historical(root, raw, apparatus_commit)  # type: ignore[arg-type]
+    elif validation_mode == "live":
+        _validate_live(root, raw)
+    else:
+        raise ScientificRunnerError(
+            f"cannot validate code bindings: unknown validation mode {validation_mode}"
+        )
+
+
+def _validate_live(root: Path, raw: Mapping[str, str]) -> None:
     for relative, expected in raw.items():
-        if (
-            not isinstance(relative, str) or not isinstance(expected, str)
-            or len(expected) != 64
-        ):
+        if not isinstance(relative, str) or not isinstance(expected, str) or len(expected) != 64:
             raise ScientificRunnerError("protocol code bindings are malformed")
         path = (root / relative).resolve()
         try:
@@ -239,6 +388,18 @@ def _verify_code_files(
             raise ScientificRunnerError("a protocol code binding escaped the repository") from exc
         if not path.is_file() or portable_file_sha256(path) != expected:
             raise ScientificRunnerError(f"protocol-bound code drifted: {relative}")
+
+
+def _validate_historical(root: Path, raw: Mapping[str, str], commit: str) -> None:
+    for relative, expected in raw.items():
+        if not isinstance(relative, str) or not isinstance(expected, str) or len(expected) != 64:
+            raise ScientificRunnerError("protocol code bindings are malformed")
+        computed = file_sha256_from_history(relative, commit, root)
+        if computed != expected:
+            raise ScientificRunnerError(
+                f"protocol-bound code drifted: {relative} "
+                f"(expected {expected[:16]}, got {computed[:16]} from commit {commit[:12]})"
+            )
 
 
 def validate_protocol(
@@ -611,5 +772,6 @@ async def execute_campaign(
 __all__ = [
     "EvidenceBackend", "PairedReplayError", "PROTOCOL_SCHEMA", "RESULT_SCHEMA",
     "REQUIRED_CODE_PATHS", "ScientificRunnerError", "execute_campaign",
-    "portable_file_sha256", "protocol_commitment", "validate_protocol",
+    "file_sha256_from_history", "portable_file_sha256", "protocol_commitment",
+    "validate_protocol",
 ]

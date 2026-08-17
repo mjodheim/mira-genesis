@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 11 August 2026**
+**Updated: 17 August 2026**
 
 ## Authoritative summary
 
@@ -108,6 +108,22 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   **The gap attacked is not M089's**: the requirement reads one input position, and the validator
   refuses M090's fan-in probe as overbroad. **H35 remains not supported** and is not re-attempted.
   The assembly substrate and the interpreter beneath it remain authored, and are the next ceiling.
+
+- **M092 is ABORTED WITHOUT VERDICT — the canonical search was voluntarily interrupted.** Protocol frozen
+  at `aa18d15` (M092-A checkpoint), M092-B protocol frozen at `4903300` (15 conditions P1–P15), canonical
+  search armed at `7190ff8`. The search was voluntarily interrupted per user decision (see PR #167).
+  The last published canonical segment is segment 3. **No terminal candidate was claimed, no independent
+  reproduction was performed, and no qualification materialised.** H38 remains unresolved, D062 unfilled.
+  The M092-A checkpoint infrastructure (state-owned substrate) remains valid.
+
+- **M093 is an engineering rehearsal / non-qualifying development result demonstrating transformation
+  infrastructure on a real repository component.** Target: `mira_core/memory.py` (`MemoryLedger`, +17 lines).
+  **Authored elements**: TARGET_FILE, diagnostic, capability choice, patch code, sandbox suites,
+  held-out validator, comparison criterion, end-of-experiment re-adoption. **Demonstrates**:
+  transformation infrastructure, subprocess sandbox, A/B comparison, held-out validation, transactional
+  adoption, persistence, exact rollback. **Does NOT demonstrate**: autonomous diagnosis, component
+  selection, non-predefined repair generation. All test assertions pass (original 6/6, candidate 7/7,
+  held-out 4/4).
 
 - **M090 makes the meta-language state-owned, and H36 is supported.** Protocol frozen at
   `ffe5086`; result `79876238...f8d8bd`, **attempt 3 after two disclosed corrections**, twelve conditions
@@ -1044,6 +1060,8 @@ question remains open but is not a missing completion gate.
 | M073 | **POSITIVE QUALIFIED DEVELOPMENT RESULT** | Four external demonstrations induce one committed capsule; model-free execution passes 12/12 held-out programs and 84/84 cases while no-capsule and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | Frozen paired execution passed 6/6 feasible arm tasks and 0/6 impossible tasks, but emitted no refusal: true-refusal rate 0/3, margin 0.0, zero saved steps, zero defect and no retry. Result `75e84682`. |
 | M075 | **PUBLIC MODEL DEVELOPMENT COMPLETE — NON-SCIENTIFIC** | One committed 12-container run preserved 43 decisions: context 2/3 true refusals, no false refusal, 3/3 feasible submission; independent baseline 0/3 and no submission. H21/private transfer remain untested. |
+| M092 | **ABORTED WITHOUT VERDICT** | The canonical search was voluntarily interrupted (PR #167). Protocol frozen at `aa18d15` (M092-A) and `4903300` (M092-B, 15 conditions), search armed at `7190ff8`. Last published canonical segment: segment 3. No terminal candidate, no independent reproduction, no qualification. H38 unresolved, D062 unfilled; the A checkpoint infrastructure remains valid. |
+| M093 | **ENGINEERING REHEARSAL — NON-QUALIFYING DEVELOPMENT RESULT** | First real persistent component transformation on `mira_core/memory.py` (`MemoryLedger`, +17 lines). Demonstrates transformation infrastructure, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Does NOT demonstrate autonomous diagnosis, component selection or non-predefined repair generation. All test assertions pass (original 6/6, candidate 7/7, held-out 4/4). |
 
 ## Parallel measurement track — M045
 

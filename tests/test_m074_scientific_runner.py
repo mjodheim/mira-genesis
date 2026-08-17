@@ -181,6 +181,7 @@ def protocol(tmp_path: Path | None = None) -> dict[str, object]:
             "paired_replay_metadata_visible_to_model": False,
         },
         "code_sha256": {"placeholder": "0" * 64},
+        "apparatus_commit": "0000000000000000000000000000000000000000",
     }
     if tmp_path is not None:
         bound = tmp_path / "bound.py"
