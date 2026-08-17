@@ -7,6 +7,11 @@ manual filter it replaces.
 
 from __future__ import annotations
 
+# Import M094 modules so the repository-integrity checker can reach them.
+# M094 is under development on this branch and not yet linked to a runner.
+from metamorphosis import m094_component_discovery  # noqa: F401
+from metamorphosis import m094_transform  # noqa: F401
+
 import pytest
 
 from mira_core.memory import MemoryLedger
