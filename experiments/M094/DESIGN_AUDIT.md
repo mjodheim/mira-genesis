@@ -125,6 +125,58 @@ implementation fails them:
 any candidate implementation. A implementation that cannot turn these four red is not a
 successor to M093; it is M093 with more indirection.
 
+---
+
+## The corrected measure, and what it currently reports
+
+`metamorphosis/m094_diagnosis.py` replaces the substring detector with a structural one. It rests
+on a single separation, which is what makes it a measurement rather than a name lookup:
+
+> demand is counted **outside** the component; supply is checked **inside** it.
+
+A component is insufficient for a capability when callers that can actually reach it repeatedly
+perform by hand an operation it could expose, and it does not expose one. Because the component's
+own source is excluded from the demand count, implementing the capability can only ever *lower*
+insufficiency — Defect 2 is structurally impossible rather than merely fixed. Demand is attributed
+only to files that import the module or a name it defines through a package re-export, so an
+unrelated class exposing a collection of the same name contributes nothing.
+
+`tests/test_m094_diagnosis.py` drives this against synthetic repositories, so the properties do not
+depend on what `mira_core` happens to contain on a given day.
+
+**Run against the real repository, the corrected measure selects nothing.**
+
+| component | capability | demand | supplied | unmet |
+|---|---|---|---|---|
+| `mira_core/memory.py` | `MemoryLedger.events` filtered by `kind` | 2 | yes | **no** |
+| `mira_core/safety.py` | — | — | — | — |
+| `mira_core/contracts.py` | — | — | — | — |
+
+Two consequences, both honest and both material to whether M094 can run at all.
+
+First, the one capability the old detector "diagnosed" is **already supplied** — M093 added
+`events_by_kind`, and the corrected measure correctly reports it as met. The inherited
+implementation was not merely rigged toward `mira_core/memory.py`; it was rigged toward a
+capability that no longer needs building.
+
+Second, `mira_core/safety.py` and `mira_core/contracts.py` expose no collection, so the single
+capability shape implemented so far cannot reach them. Their unreachability under the *old*
+indicator set was Defect 3; under the corrected measure it is a narrower and more honest fact —
+there is one capability shape, and it does not apply to them.
+
+M094 therefore cannot presently be frozen against this eligible set, because the protocol's own
+P1 and P4 would fail: with one shape and one already-met capability there is nothing to diagnose,
+and two of three components remain unreachable. Two admissible ways forward, neither presupposed:
+
+- **widen the capability shapes**, so that insufficiencies other than collection-filtering are
+  measurable and components without collections become reachable;
+- **widen the eligible set** to components with genuine unmet demand, chosen by the measure rather
+  than by hand — which is itself the thing under test, and so must be done before any freeze.
+
+Recording this now is the point of a pre-freeze audit. Discovering after a freeze that the
+diagnosis has nothing to find would be an invitation to adjust the eligible set until it did, and
+that is the retry the project forbids.
+
 ## What is not in question
 
 The transformation *infrastructure* M093 rehearsed — subprocess sandbox, A/B comparison,
