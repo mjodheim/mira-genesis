@@ -13,6 +13,8 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
+import subprocess
 from typing import Callable, Mapping, Sequence
 
 from metamorphosis.m074_ablation_arms import ABLATION_ARMS, arm_by_id, run_arm_episode
@@ -45,6 +47,8 @@ REQUIRED_CODE_PATHS: tuple[str, ...] = (
     "mira_core/safety.py",
     "scripts/run_m074_scientific.py",
 )
+
+_SYNTHETIC_COMMIT_MARKER = "0000000000000000000000000000000000000000"
 
 
 class ScientificRunnerError(RuntimeError):
@@ -171,6 +175,46 @@ def _commit_exists(root: Path, commit: str) -> bool:
         return r.returncode == 0 and r.stdout.strip() == b"commit"
     except Exception:
         return False
+
+
+def _resolve_validation_mode(apparatus_commit: str | None, root: Path, /) -> str:
+    """Determine whether to validate code bindings historically or live.
+
+    Returns ``"historical"`` when *apparatus_commit* is a 40-hex-char SHA
+    that exists in the git repository at *root*.
+
+    Returns ``"live"`` when *apparatus_commit* equals
+    ``_SYNTHETIC_COMMIT_MARKER`` (explicit test / fixture path).
+
+    Raises ``ValueError`` for every other case:
+    - ``None`` (commit is mandatory for scientific protocols)
+    - not a 40-hex-char string
+    - 40-hex-char but does not exist in the repo
+    - git is inaccessible
+    """
+    if apparatus_commit is None:
+        raise ValueError(
+            "apparatus_commit is mandatory for scientific protocol validation"
+        )
+    if not isinstance(apparatus_commit, str) or not re.fullmatch(
+        r"[0-9a-f]{40}", apparatus_commit
+    ):
+        raise ValueError(
+            f"apparatus_commit must be a 40-character hex SHA, "
+            f"got {apparatus_commit!r}"
+        )
+    if apparatus_commit == _SYNTHETIC_COMMIT_MARKER:
+        return "live"
+    if not _git_available(root):
+        raise ValueError(
+            f"cannot validate: git repository at {root} is inaccessible"
+        )
+    if not _commit_exists(root, apparatus_commit):
+        raise ValueError(
+            f"apparatus_commit {apparatus_commit[:12]} does not exist "
+            f"in the repository at {root}"
+        )
+    return "historical"
 
 
 def _request_payload(request: ModelRequest) -> dict[str, object]:
@@ -322,22 +366,15 @@ def _verify_code_files(
             f"protocol code bindings lack exact coverage; missing={missing}, extra={extra}"
         )
     apparatus_commit: str | None = protocol.get("apparatus_commit")  # type: ignore[assignment]
-    # When the caller controls the repository, apparatus_commit is the
-    # historical snapshot the protocol was frozen against.  Files are then
-    # read from that commit, not from the live working tree, so later
-    # evolution of the same file doesn't break the historical binding.
-    # When apparatus_commit is absent or synthetic (tests), fall back to
-    # the live-file behaviour so old checks keep working.
-    use_live = (
-        apparatus_commit is None
-        or len(apparatus_commit) != 40
-        or not _git_available(root)
-        or not _commit_exists(root, apparatus_commit)
-    )
-    if not use_live:
-        _validate_historical(root, raw, apparatus_commit)
-    else:
+    validation_mode = _resolve_validation_mode(apparatus_commit, root)
+    if validation_mode == "historical":
+        _validate_historical(root, raw, apparatus_commit)  # type: ignore[arg-type]
+    elif validation_mode == "live":
         _validate_live(root, raw)
+    else:
+        raise ScientificRunnerError(
+            f"cannot validate code bindings: unknown validation mode {validation_mode}"
+        )
 
 
 def _validate_live(root: Path, raw: Mapping[str, str]) -> None:
@@ -735,5 +772,6 @@ async def execute_campaign(
 __all__ = [
     "EvidenceBackend", "PairedReplayError", "PROTOCOL_SCHEMA", "RESULT_SCHEMA",
     "REQUIRED_CODE_PATHS", "ScientificRunnerError", "execute_campaign",
-    "portable_file_sha256", "protocol_commitment", "validate_protocol",
+    "file_sha256_from_history", "portable_file_sha256", "protocol_commitment",
+    "validate_protocol",
 ]

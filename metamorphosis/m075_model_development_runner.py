@@ -15,7 +15,8 @@ from metamorphosis.m074_ablation_arms import ArmSpec, run_arm_episode
 from metamorphosis.m074_calibration_bridge import calibrate_run
 from metamorphosis.m074_docker_environment import DockerTaskEnvironment
 from metamorphosis.m074_scientific_runner import (
-    EvidenceBackend, file_sha256_from_history, portable_file_sha256, protocol_commitment,
+    EvidenceBackend, _SYNTHETIC_COMMIT_MARKER, _resolve_validation_mode,
+    file_sha256_from_history, portable_file_sha256, protocol_commitment,
 )
 from metamorphosis.m075_development_bank import TASKS, BankTask, task_by_id, validate_development_bank
 from metamorphosis.m075_epistemic_context import EpistemicContextBackend
@@ -80,16 +81,15 @@ def _validate_code_bindings(protocol: Mapping[str, object], root: Path) -> None:
     if not isinstance(raw, Mapping) or set(raw) != set(REQUIRED_CODE_PATHS):
         raise M075ModelDevelopmentError("M075 development code bindings lack exact coverage")
     apparatus_commit: str | None = protocol.get("apparatus_commit")  # type: ignore[assignment]
-    use_live = (
-        apparatus_commit is None
-        or len(apparatus_commit) != 40
-        or not _git_available(root)
-        or not _commit_exists(root, apparatus_commit)
-    )
-    if use_live:
+    validation_mode = _resolve_validation_mode(apparatus_commit, root)
+    if validation_mode == "historical":
+        _validate_historical_m075(root, raw, apparatus_commit)  # type: ignore[arg-type]
+    elif validation_mode == "live":
         _validate_live_m075(root, raw)
     else:
-        _validate_historical_m075(root, raw, apparatus_commit)
+        raise M075ModelDevelopmentError(
+            f"cannot validate code bindings: unknown validation mode {validation_mode}"
+        )
 
 
 def _validate_live_m075(root: Path, raw: Mapping[str, str]) -> None:
