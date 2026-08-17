@@ -223,6 +223,105 @@ def test_the_measure_names_no_component_path_or_class() -> None:
     assert leaked == set(), f"the measure names the component it should measure: {leaked}"
 
 
+# ── The second shape: rendering a value object as a mapping ──────────
+
+
+DECISION_WITHOUT_RENDERER = '''
+from dataclasses import dataclass
+
+@dataclass(frozen=True)
+class Decision:
+    allowed: bool
+    reason: str
+    missing: tuple = ()
+'''
+
+DECISION_WITH_RENDERER = DECISION_WITHOUT_RENDERER + '''
+    def to_dict(self):
+        return {"allowed": self.allowed, "reason": self.reason, "missing": list(self.missing)}
+'''
+
+CALLER_DESTRUCTURES = '''
+from pkg.decision import Decision
+
+def record(step, d):
+    return {"step": step, "allowed": d.allowed, "reason": d.reason, "missing": list(d.missing)}
+'''
+
+
+def _decision_repo(tmp_path: Path, source: str, callers: int = 1) -> Path:
+    _write(tmp_path, "pkg/__init__.py", "")
+    _write(tmp_path, "pkg/decision.py", source)
+    for index in range(callers):
+        _write(tmp_path, f"consumers/rec_{index}.py", CALLER_DESTRUCTURES)
+    return tmp_path
+
+
+def test_hand_destructuring_is_demand_and_a_renderer_supplies_it(tmp_path: Path) -> None:
+    without = _decision_repo(tmp_path / "without", DECISION_WITHOUT_RENDERER)
+    with_it = _decision_repo(tmp_path / "with", DECISION_WITH_RENDERER)
+
+    before = measure_component(without, "pkg/decision.py")
+    after = measure_component(with_it, "pkg/decision.py")
+
+    assert [i.is_unmet for i in before] == [True]
+    assert [i.is_unmet for i in after] == [False]
+    assert before[0].demand == after[0].demand, "supply must not change demand"
+
+
+def test_reading_too_few_fields_is_not_attributed(tmp_path: Path) -> None:
+    """Below the threshold, a coincidence of field names is not evidence."""
+
+    repo = _decision_repo(tmp_path, DECISION_WITHOUT_RENDERER, callers=0)
+    _write(tmp_path, "consumers/thin.py", '''
+from pkg.decision import Decision
+
+def record(d):
+    return {"allowed": d.allowed, "reason": d.reason}
+''')
+    assert all(m.demand == 0 for m in measure_component(repo, "pkg/decision.py"))
+
+
+def test_reading_a_field_the_class_does_not_declare_is_not_attributed(
+    tmp_path: Path,
+) -> None:
+    repo = _decision_repo(tmp_path, DECISION_WITHOUT_RENDERER, callers=0)
+    _write(tmp_path, "consumers/foreign.py", '''
+from pkg.decision import Decision
+
+def record(other):
+    return {"a": other.allowed, "b": other.reason, "c": other.elapsed_ms}
+''')
+    assert all(m.demand == 0 for m in measure_component(repo, "pkg/decision.py"))
+
+
+def test_callers_reading_different_subsets_pool_into_one_requirement(
+    tmp_path: Path,
+) -> None:
+    """One renderer covering the union would satisfy every caller."""
+
+    repo = _decision_repo(tmp_path, DECISION_WITHOUT_RENDERER, callers=0)
+    _write(tmp_path, "consumers/a.py", CALLER_DESTRUCTURES)
+    _write(tmp_path, "consumers/b.py", '''
+from pkg.decision import Decision
+
+def record(d):
+    return {"allowed": d.allowed, "reason": d.reason, "missing": d.missing, "x": 1}
+''')
+    measurements = measure_component(repo, "pkg/decision.py")
+    assert len(measurements) == 1
+    assert measurements[0].demand == 2
+    assert set(measurements[0].detail.split(",")) == {"allowed", "reason", "missing"}
+
+
+def test_both_shapes_are_registered() -> None:
+    names = {shape.name for shape in CAPABILITY_SHAPES}
+    assert names == {
+        "filter_collection_by_attribute",
+        "render_value_object_as_mapping",
+    }
+
+
 def test_capability_shapes_carry_no_collection_or_attribute_names() -> None:
     """The shape is generic; the names come from the source being measured."""
 

@@ -144,38 +144,49 @@ unrelated class exposing a collection of the same name contributes nothing.
 `tests/test_m094_diagnosis.py` drives this against synthetic repositories, so the properties do not
 depend on what `mira_core` happens to contain on a given day.
 
-**Run against the real repository, the corrected measure selects nothing.**
+Two capability shapes are implemented, both generic:
 
-| component | capability | demand | supplied | unmet |
-|---|---|---|---|---|
-| `mira_core/memory.py` | `MemoryLedger.events` filtered by `kind` | 2 | yes | **no** |
-| `mira_core/safety.py` | — | — | — | — |
-| `mira_core/contracts.py` | — | — | — | — |
+- **`filter_collection_by_attribute`** — callers filter a collection the component exposes,
+  by hand, and the component exposes no method doing it;
+- **`render_value_object_as_mapping`** — several callers each write the same fields of the same
+  value object into a dict literal, and the object cannot render itself. A caller is attributed to
+  a class only when the attributes it reads are a subset of that class's declared fields, and only
+  above a three-field threshold, below which name coincidence would make the attribution guesswork.
 
-Two consequences, both honest and both material to whether M094 can run at all.
+### First result: one shape, and nothing to find
 
-First, the one capability the old detector "diagnosed" is **already supplied** — M093 added
-`events_by_kind`, and the corrected measure correctly reports it as met. The inherited
-implementation was not merely rigged toward `mira_core/memory.py`; it was rigged toward a
-capability that no longer needs building.
+With only the collection shape implemented, the measure **selected nothing**. The capability the
+old detector "diagnosed" is already supplied — M093 added `events_by_kind`, and the corrected
+measure correctly reports it met — while the other two components expose no collection at all.
+P1 and P4 would both have failed. That is recorded here rather than tuned away, because
+discovering after a freeze that the diagnosis has nothing to find is an invitation to adjust the
+eligible set until it does, and that is the retry D053 forbids.
 
-Second, `mira_core/safety.py` and `mira_core/contracts.py` expose no collection, so the single
-capability shape implemented so far cannot reach them. Their unreachability under the *old*
-indicator set was Defect 3; under the corrected measure it is a narrower and more honest fact —
-there is one capability shape, and it does not apply to them.
+### Second result: the measure selects a component nobody chose
 
-M094 therefore cannot presently be frozen against this eligible set, because the protocol's own
-P1 and P4 would fail: with one shape and one already-met capability there is nothing to diagnose,
-and two of three components remain unreachable. Two admissible ways forward, neither presupposed:
+Adding the second shape makes every eligible component reachable, and the selection changes:
 
-- **widen the capability shapes**, so that insufficiencies other than collection-filtering are
-  measurable and components without collections become reachable;
-- **widen the eligible set** to components with genuine unmet demand, chosen by the measure rather
-  than by hand — which is itself the thing under test, and so must be done before any freeze.
+| component | class | capability | demand | supplied | unmet |
+|---|---|---|---|---|---|
+| **`mira_core/safety.py`** | `SafetyDecision` | render as mapping | **3** | no | **yes — selected** |
+| `mira_core/contracts.py` | `Observation` | render as mapping | 2 | no | yes |
+| `mira_core/contracts.py` | `Goal` | render as mapping | 1 | no | yes |
+| `mira_core/memory.py` | `MemoryLedger` | filter by attribute | 2 | **yes** | no |
 
-Recording this now is the point of a pre-freeze audit. Discovering after a freeze that the
-diagnosis has nothing to find would be an invitation to adjust the eligible set until it did, and
-that is the retry the project forbids.
+The selected insufficiency is real and was not authored. `SafetyDecision` carries `allowed`,
+`reason`, `missing_authorities` and `human_release_required`, and three independent
+callers — `mira_core/agent.py`, `mira_core/harbor.py` and `metamorphosis/m074_ablation_arms.py` —
+each unpack those fields into the same `action_admission` record by hand. The codebase's own idiom
+confirms the gap: `MemoryEvent` already defines `to_dict`, and `SafetyDecision` does not.
+
+Two things follow. The measure selected `mira_core/safety.py`, which is **not** M093's authored
+target and not the component the inherited detector was keyed to; and it correctly declined to
+re-diagnose `mira_core/memory.py`, whose capability is now met. Both are properties of the
+repository rather than of a constant, which is what P2 asks for.
+
+This satisfies P1 and P4 as far as diagnosis goes. **It does not make M094 freezable**, because
+P6 remains open: the synthesis half is still the single authored template of Defect 4. A milestone
+that diagnoses honestly and then applies a handed-in patch has answered half its own question.
 
 ## What is not in question
 

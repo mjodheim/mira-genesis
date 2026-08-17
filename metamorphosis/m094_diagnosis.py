@@ -55,12 +55,23 @@ class FilterByAttribute:
 
     name: str = "filter_collection_by_attribute"
 
-    def demand_sites(self, tree: ast.AST, collections: frozenset[str]) -> list[tuple[str, str]]:
-        """Find hand-written filters over one of *collections*.
+    #: Filtering by one attribute and filtering by another are different
+    #: capabilities, so their demand is counted separately.
+    merges_details: bool = False
+
+    def applies_to(self, class_node: ast.ClassDef) -> bool:
+        return bool(_exposed_collections(class_node))
+
+    def demand_sites(self, tree: ast.AST, class_node: ast.ClassDef) -> list[tuple[str, str]]:
+        """Find hand-written filters over a collection this class exposes.
 
         Returns (collection_name, attribute_name) for each site, e.g. a
         comprehension of the form ``x for x in obj.events if x.kind == k``.
         """
+
+        collections = _exposed_collections(class_node)
+        if not collections:
+            return []
 
         found: list[tuple[str, str]] = []
         for node in ast.walk(tree):
@@ -107,7 +118,72 @@ class FilterByAttribute:
         return False
 
 
-CAPABILITY_SHAPES: tuple[FilterByAttribute, ...] = (FilterByAttribute(),)
+@dataclass(frozen=True)
+class RenderAsMapping:
+    """Rebuilding a value object's fields into a mapping, at the call site.
+
+    When several callers each write out the same fields of the same value object
+    into a dict literal, the object could render itself and they do not. The
+    shape mentions no class, field or method name: the field set is recovered
+    from the class under measurement, and a caller is attributed to that class
+    only when the attributes it reads are a subset of the class's own fields.
+    """
+
+    name: str = "render_value_object_as_mapping"
+
+    #: Callers reading different subsets of the same object want one method, not
+    #: several: a renderer covering the union satisfies every subset. Their
+    #: demand is therefore pooled rather than split.
+    merges_details: bool = True
+
+    #: How many of the class's fields a dict literal must read before it counts.
+    #: Below three, unrelated objects coincide often enough that the attribution
+    #: would be guesswork rather than measurement.
+    min_fields: int = 3
+
+    def applies_to(self, class_node: ast.ClassDef) -> bool:
+        return len(_declared_fields(class_node)) >= self.min_fields
+
+    def demand_sites(self, tree: ast.AST, class_node: ast.ClassDef) -> list[tuple[str, str]]:
+        fields = _declared_fields(class_node)
+        if len(fields) < self.min_fields:
+            return []
+
+        found: list[tuple[str, str]] = []
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Dict):
+                continue
+            read: dict[str, set[str]] = {}
+            for value in node.values:
+                base, attribute = _attribute_read(value)
+                if base is not None and attribute is not None:
+                    read.setdefault(base, set()).add(attribute)
+            for attributes in read.values():
+                if len(attributes) >= self.min_fields and attributes <= fields:
+                    found.append((class_node.name, ",".join(sorted(attributes))))
+        return found
+
+    def is_supplied_by(
+        self, class_node: ast.ClassDef, target: str, detail: str
+    ) -> bool:
+        """Does the class already define a method returning those fields as a mapping?"""
+
+        wanted = set(detail.split(","))
+        for node in class_node.body:
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if node.name.startswith("_"):
+                continue
+            for inner in ast.walk(node):
+                if not isinstance(inner, ast.Return) or inner.value is None:
+                    continue
+                rendered = _mapping_keys(inner.value)
+                if rendered is not None and wanted <= rendered:
+                    return True
+        return False
+
+
+CAPABILITY_SHAPES: tuple[object, ...] = (FilterByAttribute(), RenderAsMapping())
 
 
 # ── AST helpers ──────────────────────────────────────────────────────
@@ -136,6 +212,67 @@ def _compared_attribute_of(condition: ast.expr, bound_name: str) -> str | None:
     ):
         return left.attr
     return None
+
+
+def _attribute_read(node: ast.expr) -> tuple[str | None, str | None]:
+    """For ``d.allowed`` return ``("d", "allowed")``.
+
+    ``list(d.missing)`` and ``tuple(d.missing)`` unwrap to the same pair, since
+    wrapping a field in a container is still reading that field.
+    """
+
+    if (
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id in {"list", "tuple", "set", "dict", "sorted"}
+        and len(node.args) == 1
+    ):
+        node = node.args[0]
+    if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
+        return node.value.id, node.attr
+    return None, None
+
+
+def _mapping_keys(node: ast.expr) -> frozenset[str] | None:
+    """String keys of a returned dict literal or ``dict(a=..., b=...)`` call."""
+
+    if isinstance(node, ast.Dict):
+        keys = {
+            key.value for key in node.keys
+            if isinstance(key, ast.Constant) and isinstance(key.value, str)
+        }
+        return frozenset(keys)
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "dict":
+        return frozenset(kw.arg for kw in node.keywords if kw.arg)
+    return None
+
+
+def _declared_fields(class_node: ast.ClassDef) -> frozenset[str]:
+    """Field names a class declares, whether as annotations or in ``__init__``."""
+
+    names: set[str] = set()
+    for node in class_node.body:
+        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            names.add(node.target.id)
+        elif isinstance(node, ast.Assign):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    names.add(target.id)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if node.name == "__init__":
+                for inner in ast.walk(node):
+                    if isinstance(inner, ast.Assign):
+                        for target in inner.targets:
+                            if isinstance(target, ast.Attribute):
+                                names.add(target.attr)
+            elif not node.name.startswith("_"):
+                # A read-only property is a field as far as callers are concerned.
+                if any(
+                    isinstance(decorator, ast.Name) and decorator.id == "property"
+                    for decorator in node.decorator_list
+                ):
+                    names.add(node.name)
+    return frozenset(name for name in names if not name.startswith("_"))
 
 
 def _module_name(repo_root: Path, component_path: str) -> str:
@@ -227,9 +364,9 @@ class Insufficiency:
     component_path: str
     class_name: str
     capability: str
-    collection: str
-    attribute: str
-    demand_sites: tuple[str, ...]   # files outside the component that filter by hand
+    target: str      # what the shape keys on, e.g. a collection or a class
+    detail: str      # the specific of that shape, e.g. an attribute or field set
+    demand_sites: tuple[str, ...]   # files outside the component doing it by hand
     supplied: bool
 
     @property
@@ -245,8 +382,8 @@ class Insufficiency:
             "component": self.component_path,
             "class": self.class_name,
             "capability": self.capability,
-            "collection": self.collection,
-            "attribute": self.attribute,
+            "target": self.target,
+            "detail": self.detail,
             "demand": self.demand,
             "demand_sites": sorted(self.demand_sites),
             "supplied": self.supplied,
@@ -289,6 +426,27 @@ def _python_sources(repo_root: Path, exclude: Path) -> Iterator[tuple[Path, ast.
                 continue
 
 
+def _pool_by_target(
+    sites: dict[tuple[str, str], set[str]]
+) -> dict[tuple[str, str], set[str]]:
+    """Collapse per-subset demand onto one entry per target.
+
+    The detail becomes the union of the subsets observed, which is what a single
+    renderer would have to cover.
+    """
+
+    details: dict[str, set[str]] = {}
+    files: dict[str, set[str]] = {}
+    for (target, detail), paths in sites.items():
+        details.setdefault(target, set()).update(detail.split(","))
+        files.setdefault(target, set()).update(paths)
+
+    return {
+        (target, ",".join(sorted(details[target]))): files[target]
+        for target in sorted(details)
+    }
+
+
 def measure_component(repo_root: Path, component_path: str) -> tuple[Insufficiency, ...]:
     """Measure every unmet capability shape on one component."""
 
@@ -297,34 +455,39 @@ def measure_component(repo_root: Path, component_path: str) -> tuple[Insufficien
 
     results: list[Insufficiency] = []
 
-    for class_node in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-        collections = _exposed_collections(class_node)
-        if not collections:
-            continue
+    module = _module_name(repo_root, component_path)
+    exported = _top_level_names(tree)
 
+    # Parse the reaching sources once, rather than once per class and shape.
+    reaching: list[tuple[str, ast.AST]] = [
+        (path.relative_to(repo_root).as_posix(), other_tree)
+        for path, other_tree in _python_sources(repo_root, source_path)
+        if _reaches_component(other_tree, module, exported)
+    ]
+
+    for class_node in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
         for shape in CAPABILITY_SHAPES:
+            if not shape.applies_to(class_node):
+                continue
+
             # Demand is counted strictly outside the component.
             sites: dict[tuple[str, str], set[str]] = {}
-            module = _module_name(repo_root, component_path)
-            exported = _top_level_names(tree)
-            for path, other_tree in _python_sources(repo_root, source_path):
-                if not _reaches_component(other_tree, module, exported):
-                    continue
-                for collection, attribute in shape.demand_sites(other_tree, collections):
-                    key = (collection, attribute)
-                    sites.setdefault(key, set()).add(
-                        path.relative_to(repo_root).as_posix()
-                    )
+            for relative, other_tree in reaching:
+                for target, detail in shape.demand_sites(other_tree, class_node):
+                    sites.setdefault((target, detail), set()).add(relative)
 
-            for (collection, attribute), files in sorted(sites.items()):
+            if getattr(shape, "merges_details", False):
+                sites = _pool_by_target(sites)
+
+            for (target, detail), files in sorted(sites.items()):
                 results.append(Insufficiency(
                     component_path=component_path,
                     class_name=class_node.name,
                     capability=shape.name,
-                    collection=collection,
-                    attribute=attribute,
+                    target=target,
+                    detail=detail,
                     demand_sites=tuple(sorted(files)),
-                    supplied=shape.is_supplied_by(class_node, collection, attribute),
+                    supplied=shape.is_supplied_by(class_node, target, detail),
                 ))
 
     return tuple(results)
@@ -364,7 +527,7 @@ def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
 
     unmet = tuple(sorted(
         (i for i in considered if i.is_unmet),
-        key=lambda i: (-i.demand, i.component_path, i.collection, i.attribute),
+        key=lambda i: (-i.demand, i.component_path, i.capability, i.target, i.detail),
     ))
 
     return Diagnosis(
