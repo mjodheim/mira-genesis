@@ -1,0 +1,168 @@
+name: M092 neutral runtime envelope
+
+# Performance-only pre-search audit. It never loads the M092 target theorem and cannot select or
+# qualify a target candidate. Results are planning evidence, not a scientific verdict. Expensive
+# measurement is repeated only when the current HEAD commit changes measured implementation or the
+# runner-local cache transport being evaluated.
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit_m092_runtime_envelope.py'
+      - 'scripts/run_m092_criterion_search.py'
+      - 'scripts/run_m092_independent_reproduction.py'
+      - 'metamorphosis/m092_search_enumerator.py'
+      - 'metamorphosis/m092_certificate_policy_search.py'
+      - 'metamorphosis/m092_certificate_generator.py'
+      - 'metamorphosis/m092_proof_search.py'
+      - 'metamorphosis/m092_candidate_validation.py'
+      - 'metamorphosis/m092_certificate_verifier.py'
+      - 'metamorphosis/m092_kernel.py'
+      - 'metamorphosis/m092_runtime.py'
+      - '.github/workflows/m092-runtime-envelope.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  neutral-runtime-envelope:
+    name: Neutral M092 runtime envelope
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 2
+
+      - name: Decide whether this HEAD changed measured code
+        id: gate
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          from pathlib import Path
+
+          measured = {
+              'scripts/audit_m092_runtime_envelope.py',
+              'scripts/run_m092_criterion_search.py',
+              'scripts/run_m092_independent_reproduction.py',
+              'metamorphosis/m092_search_enumerator.py',
+              'metamorphosis/m092_certificate_policy_search.py',
+              'metamorphosis/m092_certificate_generator.py',
+              'metamorphosis/m092_proof_search.py',
+              'metamorphosis/m092_candidate_validation.py',
+              'metamorphosis/m092_certificate_verifier.py',
+              'metamorphosis/m092_kernel.py',
+              'metamorphosis/m092_runtime.py',
+              '.github/workflows/m092-runtime-envelope.yml',
+          }
+          changed = set(subprocess.check_output(
+              ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', 'HEAD^', 'HEAD'],
+              text=True,
+          ).splitlines())
+          should_measure = bool(changed & measured)
+          with Path(os.environ['GITHUB_OUTPUT']).open('a', encoding='utf-8') as handle:
+              handle.write(f"measure={'true' if should_measure else 'false'}\n")
+          print('Measured-code changes:', sorted(changed & measured))
+          PY
+
+      - uses: actions/setup-python@v6
+        if: steps.gate.outputs.measure == 'true'
+        with:
+          python-version: '3.11'
+
+      - name: Install the frozen package
+        if: steps.gate.outputs.measure == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Assert the runtime audit has no target or qualification import edge
+        if: steps.gate.outputs.measure == 'true'
+        run: |
+          python - <<'PY'
+          import ast
+          from pathlib import Path
+
+          path = Path('scripts/audit_m092_runtime_envelope.py')
+          tree = ast.parse(path.read_text(encoding='utf-8'))
+          imported = []
+          for node in ast.walk(tree):
+              if isinstance(node, ast.Import):
+                  imported.extend(alias.name for alias in node.names)
+              elif isinstance(node, ast.ImportFrom) and node.module:
+                  imported.append(node.module)
+          lowered = '\n'.join(imported).lower()
+          assert 'qualification' not in lowered
+          assert 'world' not in lowered
+          assert 'criterion_search' not in lowered
+          source = path.read_text(encoding='utf-8')
+          assert 'TARGET_THEOREM.json' not in source
+          assert 'experiments/M092/TARGET_THEOREM' not in source
+          PY
+
+      - name: Measure neutral proposal and cached certificate throughput
+        if: steps.gate.outputs.measure == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          from scripts import audit_m092_runtime_envelope as audit
+          from scripts import run_m092_criterion_search as runner
+
+          runner._install_target_neutral_path_cache()
+          report = audit.build_report(
+              enumeration_sample=100000,
+              policy_attempt_sample=1000,
+              policy_program_cap=25000,
+          )
+          report['runner_local_path_cache_installed'] = True
+          # The appended planning flag is outside the audit's scientific surface. Recompute the
+          # report digest so the uploaded JSON remains self-consistent after adding it.
+          payload = dict(report)
+          payload.pop('report_digest', None)
+          report['report_digest'] = audit._sha256(payload)
+          Path('m092-neutral-runtime-envelope.json').write_text(
+              json.dumps(report, indent=2, sort_keys=True) + '\n',
+              encoding='utf-8',
+          )
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
+
+      - name: Validate the report boundary
+        if: steps.gate.outputs.measure == 'true'
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('m092-neutral-runtime-envelope.json').read_text())
+          assert report['schema'] == 'm092-neutral-runtime-envelope-v1'
+          assert report['neutral_only'] is True
+          assert report['target_theorem_loaded'] is False
+          assert report['qualification_loaded'] is False
+          assert report['candidate_selection_executed'] is False
+          assert report['scientific_verdict'] is None
+          assert report['projection_is_not_a_bound'] is True
+          assert report['runner_local_path_cache_installed'] is True
+          assert report['canonical_program_cap'] == 2_000_000
+          assert report['canonical_certificate_cap'] == 2_000_000
+          pipeline = report['neutral_certificate_pipeline']
+          assert pipeline['continues_after_neutral_acceptance'] is True
+          assert pipeline['requested_policy_attempts'] == 1000
+          assert pipeline['sample_reached'] is True
+          assert pipeline['sample_units'] == 1000
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: steps.gate.outputs.measure == 'true'
+        with:
+          name: m092-neutral-runtime-envelope-${{ github.event.pull_request.head.sha }}
+          path: m092-neutral-runtime-envelope.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Reuse the preserved neutral runtime evidence
+        if: steps.gate.outputs.measure != 'true'
+        run: echo "No measured M092 implementation changed in this HEAD commit; runtime audit not repeated."

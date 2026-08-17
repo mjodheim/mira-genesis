@@ -163,6 +163,17 @@ jobs:
       - name: The M092-B proposal stream must resume byte-identically
         run: python -m scripts.check_m092b_search_enumerator
 
+      # M092-C/D freeze the candidate-side global certificate construction and the criterion
+      # selector before the first target search exists.  These gates are intentionally pre-search:
+      # they use only the neutral countdown rehearsal and fail if result/registration artifacts
+      # appear prematurely.  Once the canonical run is preserved they must be replaced by the
+      # decisive M092 result checker rather than weakened or skipped.
+      - name: M092 path-wise certificate policy search must remain target-neutral
+        run: python -m scripts.check_m092_certificate_policy_search
+
+      - name: The complete M092 criterion instrument must remain frozen before target search
+        run: python -m scripts.check_m092_criterion_freeze --assert-pre-search
+
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
           if python scripts/check_m085_readiness.py --require-ready; then
