@@ -22,3 +22,7 @@ results/*_development.json
 *.blind-bank.key
 *.blind-bank.age
 blind-bank-workspace/
+
+# M093 transformation experiment runtime state (regenerated on each run).
+.m093-state.json
+.m093-backup-*
