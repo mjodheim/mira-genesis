@@ -935,3 +935,45 @@ is authored and is described as such throughout, and M089's qualification is nei
 modified. Not AGI, not open-ended evolution, not arbitrary self-modification, not general language
 invention, not a self-hosting interpreter. **The interpreter substrate remains authored**, and is
 now the next ceiling. See D060.
+
+## H39 — A lineage can locate what limits it, and build the repair
+
+A persistent Track-A lineage, given a bounded set of real repository components and a bounded set
+of admissible observations over them, can: **diagnose** which component limits it by measuring a
+property of that component rather than by matching a string keyed to its identity, such that a
+rival component would have been selected had the measurement differed and no eligible component is
+unreachable; **synthesise** a repair by composing operations none of which contains that repair,
+rather than by parameterising an authored patch; have it **independently validated** by a validator
+that does not encode the expected repair; **adopt** it through the transactional body mechanism
+M047 established, with exact behavioural rollback; and **satisfy a requirement drawn after the
+mechanism was fixed**, on a component other than the one used during development — while a
+random-selection arm, a single-template arm and a larger budget over the same operation set each
+close nothing.
+
+**Status:** **PROPOSED — not registered for freeze, no protocol frozen, no qualification data
+exists and none may be generated.** A draft protocol is recorded at
+`experiments/M094/PROTOCOL.json` with status `DRAFT_NOT_FROZEN_AWAITING_OWNER_SIGNATURE`. Nothing
+here may be cited as precommitted until the project owner freezes it and records the freeze commit.
+
+**Why it is asked.** M093 is an engineering rehearsal and says so: its `TARGET_FILE`, its
+diagnostic, its capability choice and its patch body were all authored. The transformation
+infrastructure beneath it — subprocess sandbox, A/B comparison, transactional adoption,
+digest-verified persistence, exact rollback — is sound and is not re-litigated. H39 is the question
+one level upstream: who chooses the target, and who writes the repair.
+
+**What the inherited implementation does not yet do.** The M094 code committed at `df88d24`, ahead
+of any protocol, claims in its docstrings to diagnose autonomously and to let "the winning patch
+emerge from the search". A pre-freeze audit measured four defects, recorded with re-runnable
+numbers in `experiments/M094/DESIGN_AUDIT.md` (digest `6ebcafa4…`): the deciding indicator is a
+substring occurring in exactly one eligible component; the detector is inverted, firing *more* when
+the capability it claims is missing is present, and reporting `missing_query_method` on a component
+that already defines `events_by_kind`; one eligible component can never be selected under any
+weighting; and the transformation set holds a single template carrying the finished method body and
+a branch on `MemoryLedger`. The draft protocol's P2, P3, P4 and P6 are written so that this
+implementation fails them.
+
+**What it would not establish.** Not AGI, not open-ended evolution, not arbitrary
+self-modification, not general program repair, not unrestricted code generation, no generality
+gate, no Genesis gate, no independent reproduction. **The eligible component set, the admissible
+observation set and the repair operation set would all remain authored**, and are the expected next
+ceiling.
