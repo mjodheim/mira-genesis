@@ -176,6 +176,51 @@ def template_authorship() -> dict:
     }
 
 
+def corrected_measure_threshold_sensitivity() -> dict:
+    """Does the corrected measure's own authored constant decide the winner?
+
+    `RenderAsMapping.min_fields` is authored. Defect 3 was diagnosed partly by
+    showing that flattening the inherited severities changed nothing, so the
+    same question must be put to the replacement: if the selected component
+    moves when the threshold moves, then the constant is what selects, and the
+    measure has reproduced the defect it was written to remove.
+    """
+
+    import metamorphosis.m094_diagnosis as diagnosis
+
+    components = [
+        "mira_core/memory.py",
+        "mira_core/safety.py",
+        "mira_core/contracts.py",
+    ]
+    original = diagnosis.CAPABILITY_SHAPES
+    sweep: dict[str, object] = {}
+    try:
+        for threshold in (2, 3, 4, 5, 6):
+            diagnosis.CAPABILITY_SHAPES = (
+                diagnosis.FilterByAttribute(),
+                diagnosis.RenderAsMapping(min_fields=threshold),
+            )
+            result = diagnosis.diagnose(REPO_ROOT, components)
+            sweep[str(threshold)] = {
+                "selected": result.selected,
+                "unmet": [
+                    {"class": i.class_name, "demand": i.demand} for i in result.unmet
+                ],
+            }
+    finally:
+        diagnosis.CAPABILITY_SHAPES = original
+
+    selections = {row["selected"] for row in sweep.values()}  # type: ignore[index]
+    return {
+        "declared_threshold": diagnosis.RenderAsMapping().min_fields,
+        "sweep": sweep,
+        "distinct_selections": sorted(s for s in selections if s),
+        "selection_is_stable_across_thresholds": len(selections) == 1,
+        "authored_constant_decides_the_winner": len(selections) > 1,
+    }
+
+
 def main() -> int:
     report = {
         "schema": "m094-design-audit-v1",
@@ -189,6 +234,7 @@ def main() -> int:
         "capability_presence_blindness": capability_presence_blindness(),
         "selection_determinism": selection_determinism(),
         "template_authorship": template_authorship(),
+        "corrected_measure_threshold_sensitivity": corrected_measure_threshold_sensitivity(),
     }
     report["digest"] = _digest(
         {k: v for k, v in report.items() if k != "digest"}
@@ -224,6 +270,14 @@ def main() -> int:
     print()
     print(f"  transformation templates: {tpl['template_count']}")
     print(f"  single template means no search: {tpl['a_single_template_means_no_search']}")
+
+    sens = report["corrected_measure_threshold_sensitivity"]
+    print()
+    print("  corrected measure, threshold sweep:")
+    for threshold, row in sens["sweep"].items():
+        print(f"    min_fields={threshold}: {row['selected']}")
+    if sens["authored_constant_decides_the_winner"]:
+        print("    UNSTABLE — the authored threshold decides the winner")
 
     return 0
 

@@ -19,6 +19,7 @@ import pytest
 
 from audit_m094_design import (
     capability_presence_blindness,
+    corrected_measure_threshold_sensitivity,
     indicator_discrimination,
     selection_determinism,
     template_authorship,
@@ -153,6 +154,37 @@ def test_selection_does_not_depend_on_the_authored_weights() -> None:
 
     selection = selection_determinism()
     assert selection["selection_is_unanimous_across_weightings"] is True
+
+
+def test_the_corrected_measure_is_audited_against_its_own_constant() -> None:
+    """Defect 5: the replacement must face the test the original failed.
+
+    `RenderAsMapping.min_fields` is authored. If the selected component moves
+    when it moves, the constant is what selects. That is currently the case, and
+    this check exists so the instability is reported rather than forgotten — not
+    to bless it. It fails if the sweep stops being computed.
+    """
+
+    sensitivity = corrected_measure_threshold_sensitivity()
+
+    assert set(sensitivity["sweep"]) == {"2", "3", "4", "5", "6"}
+    assert sensitivity["declared_threshold"] == 3
+
+    # The instability is a disclosed finding, not a passing property.
+    assert sensitivity["authored_constant_decides_the_winner"] is True
+    assert sensitivity["selection_is_stable_across_thresholds"] is False
+    assert len(sensitivity["distinct_selections"]) > 1
+
+    # At the declared threshold the selection is safety.py, and the audit
+    # document reports exactly that.
+    assert sensitivity["sweep"]["3"]["selected"] == "mira_core/safety.py"
+
+
+def test_defect_five_is_disclosed_in_the_audit_document() -> None:
+    document = (PROTOCOL.parent / "DESIGN_AUDIT.md").read_text(encoding="utf-8")
+    assert "Defect 5" in document
+    assert "the authored constant is what selects" in document
+    assert "currently fails on the corrected measure too" in document
 
 
 def test_the_transformation_set_has_no_search_space() -> None:

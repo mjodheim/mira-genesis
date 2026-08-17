@@ -964,7 +964,7 @@ one level upstream: who chooses the target, and who writes the repair.
 **What the inherited implementation does not yet do.** The M094 code committed at `df88d24`, ahead
 of any protocol, claims in its docstrings to diagnose autonomously and to let "the winning patch
 emerge from the search". A pre-freeze audit measured four defects, recorded with re-runnable
-numbers in `experiments/M094/DESIGN_AUDIT.md` (digest `6ebcafa4…`): the deciding indicator is a
+numbers in `experiments/M094/DESIGN_AUDIT.md` (digest `d41ea1ea…`): the deciding indicator is a
 substring occurring in exactly one eligible component; the detector is inverted, firing *more* when
 the capability it claims is missing is present, and reporting `missing_query_method` on a component
 that already defines `events_by_kind`; one eligible component can never be selected under any

@@ -1,13 +1,14 @@
 # M094 design audit — resolved before any freeze
 
-**Status: audit complete, four defects found, nothing is frozen. H39 is unregistered and
-unclaimed. No qualification exists and none may be generated until a protocol is frozen.**
+**Status: audit complete, five defects found — four in the inherited implementation and one in the
+replacement written here. Nothing is frozen. H39 is registered as an open question only. No
+qualification exists and none may be generated until a protocol is frozen.**
 
 This document exists because M094's implementation was committed *ahead* of its protocol, in
 `df88d24` (PR #170), while carrying docstrings that claim more than the code does. The audit
 below measures those claims against the real repository. Numbers come from
 `scripts/audit_m094_design.py`, are re-runnable, and are stored in `DESIGN_AUDIT.json`
-(digest `6ebcafa4…`).
+(digest `d41ea1ea…`).
 
 Starting point: clean `main` at `df88d24851c018836a35e8102ff0aa7dbf81167c`. M093 is historical
 evidence from here on; its record is read, never edited.
@@ -110,20 +111,23 @@ positive: a lineage "diagnosing" a component chosen for it by a substring, and "
 repair it was handed whole. That is the failure M088's `authored_full_experiment_space` ceiling
 arm and M089's P10 exist to catch, arriving one level up.
 
-The protocol drafted in `PROTOCOL.json` therefore treats all four defects as **falsifiers rather
-than implementation details**, and the corresponding conditions are written so that the current
-implementation fails them:
+The protocol drafted in `PROTOCOL.json` therefore treats every defect as a **falsifier rather
+than an implementation detail**, and the corresponding conditions are written so that the code
+under audit fails them:
 
-| defect | condition that must fail on the current code |
-|---|---|
-| 1 | `P2_the_insufficiency_is_a_measured_property_not_a_component_specific_string` |
-| 2 | `P3_the_diagnostic_verdict_inverts_when_the_capability_is_supplied` |
-| 3 | `P4_every_eligible_component_is_reachable_under_some_admissible_observation` |
-| 4 | `P6_the_repair_is_assembled_from_composable_operations_and_is_not_a_template_body` |
+| defect | in | condition it must fail |
+|---|---|---|
+| 1 | inherited | `P2_the_insufficiency_is_a_measured_property_not_a_component_specific_string` |
+| 2 | inherited | `P3_the_diagnostic_verdict_inverts_when_the_capability_is_supplied` |
+| 3 | inherited | `P4_every_eligible_component_is_reachable_under_some_admissible_observation` |
+| 4 | inherited | `P6_the_repair_is_assembled_from_composable_operations_and_is_not_a_template_body` |
+| 5 | **the replacement** | `P5_..._is_stable_under_a_sweep_of_the_measure_s_own_constants` |
 
-`scripts/audit_m094_design.py` is the instrument for P2, P3 and P4 and is re-runnable against
-any candidate implementation. A implementation that cannot turn these four red is not a
-successor to M093; it is M093 with more indirection.
+`scripts/audit_m094_design.py` is the instrument for all five and is re-runnable against any
+candidate implementation. An implementation that cannot turn these red is not a successor to
+M093; it is M093 with more indirection.
+
+Defect 5 is documented below, after the measure it applies to.
 
 ---
 
@@ -187,6 +191,44 @@ repository rather than of a constant, which is what P2 asks for.
 This satisfies P1 and P4 as far as diagnosis goes. **It does not make M094 freezable**, because
 P6 remains open: the synthesis half is still the single authored template of Defect 4. A milestone
 that diagnoses honestly and then applies a handed-in patch has answered half its own question.
+
+### Defect 5 — the replacement reproduces Defect 3 in a new place
+
+Defect 3 was established partly by showing that flattening the inherited severities changed
+nothing, so the same question must be put to the replacement. `RenderAsMapping.min_fields` is an
+authored constant. Sweeping it:
+
+| `min_fields` | selected | why |
+|---|---|---|
+| 2 | `mira_core/contracts.py` | `Action` reaches demand 3, ties `SafetyDecision`, and wins on path order |
+| **3** | **`mira_core/safety.py`** | the declared value |
+| 4 | `mira_core/contracts.py` | `SafetyDecision` falls to demand 1; not every caller reads four fields |
+| 5 | `mira_core/contracts.py` | only `Observation` survives |
+| 6 | *nothing* | no caller reads six fields of one object |
+
+**The selection is not stable, so the authored constant is what selects.** Three of the five
+thresholds pick a different component than the declared one, and the value that makes
+`mira_core/safety.py` win is the value that was written down. This is Defect 3 in a new place: the
+measure removed an authored *severity* and introduced an authored *threshold*.
+
+The result reported above therefore stands only relative to `min_fields = 3`, and P5 —
+"the selection is justified against rivals by measurement rather than by authored weight" —
+**currently fails on the corrected measure too**. It is recorded rather than repaired by choosing
+whichever threshold gives the tidiest answer, which is the move the sweep exists to make visible.
+
+`scripts/audit_m094_design.py` computes this sweep on every run, so the instability cannot be
+silently forgotten, and `tests/test_m094_design_audit.py` fails if the sweep stops being reported.
+
+Two admissible directions, neither presupposed:
+
+- **make demand threshold-free** — for instance by scoring the number of *callers* that would be
+  simplified rather than fixing a minimum field count, so no constant sits between the evidence
+  and the verdict;
+- **require stability as a condition** — treat a selection that moves under a sweep of its own
+  constants as a failed diagnosis, which is a stronger and more honest reading of P5.
+
+The second is the more conservative and is the recommended one, because it turns the sweep from a
+disclosure into a gate.
 
 ## What is not in question
 
