@@ -9,8 +9,8 @@ from __future__ import annotations
 
 # Import M094 modules so the repository-integrity checker can reach them.
 # M094 is under development on this branch and not yet linked to a runner.
-from metamorphosis import m094_component_discovery  # noqa: F401
-from metamorphosis import m094_transform  # noqa: F401
+import metamorphosis.m094_component_discovery as _m094_disc  # noqa: F401
+import metamorphosis.m094_transform as _m094_xform  # noqa: F401
 
 import pytest
 
