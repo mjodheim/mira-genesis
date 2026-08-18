@@ -1,0 +1,146 @@
+{
+  "arms": [
+    "endogenous_diagnosis_and_synthesis",
+    "random_component_selection",
+    "template_only_repair",
+    "more_budget_same_operations",
+    "diagnosis_without_adoption",
+    "fresh_agent",
+    "authored_target_component"
+  ],
+  "ceiling_arm_is_excluded_from_the_verdict": true,
+  "ceiling_arms": [
+    "authored_target_component"
+  ],
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_eligible_set_eliminated": false,
+    "authored_operation_set_eliminated": false,
+    "general_program_repair": false,
+    "generality_gate": false,
+    "genesis_gate_1": false,
+    "genesis_gate_2": false,
+    "genesis_gate_3": false,
+    "h39_supported": false,
+    "independent_reproduction": false,
+    "open_ended_evolution": false,
+    "recursive_self_improvement": false,
+    "unrestricted_code_generation": false
+  },
+  "conditions": [
+    "P1_the_eligible_component_set_is_enumerated_and_no_component_is_privileged_by_the_protocol",
+    "P2_the_insufficiency_is_a_measured_property_not_a_component_specific_string",
+    "P3_the_diagnostic_verdict_inverts_when_the_capability_is_supplied",
+    "P4_every_eligible_component_is_reachable_under_some_admissible_observation",
+    "P5_the_selection_is_justified_against_rivals_by_measurement_and_is_stable_under_a_sweep_of_the_measure_s_own_constants",
+    "P6_the_repair_is_assembled_from_composable_operations_and_is_not_a_template_body",
+    "P7_the_adopted_repair_satisfies_a_requirement_drawn_after_the_mechanism_was_fixed",
+    "P8_an_independent_validator_accepted_it_without_seeing_the_qualification",
+    "P9_more_budget_over_the_same_operation_set_closes_nothing",
+    "P10_a_random_component_selection_closes_nothing",
+    "P11_rollback_is_exact_and_behavioural",
+    "P12_chronology_track_a_and_no_leaked_evidence"
+  ],
+  "decision_slot": "D063",
+  "design_audit": {
+    "audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9",
+    "corrected_measure_also_fails_p5": "RenderAsMapping.min_fields is authored, and sweeping it over 2-6 moves the selected component on three of five values. The declared value 3 is what makes mira_core/safety.py win. The measure removed an authored severity and introduced an authored threshold, which is Defect 3 in a new place. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold.",
+    "defects_found_before_freeze": 5,
+    "document": "experiments/M094/DESIGN_AUDIT.md",
+    "instrument": "scripts/audit_m094_design.py",
+    "inherited_implementation_fails_p2_p3_p4_and_p6": true,
+    "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c"
+  },
+  "diagnostic_substrate": {
+    "admissible_observations": [
+      "the abstract syntax tree of the component",
+      "the public names the component defines",
+      "the call sites of the component elsewhere in the repository",
+      "the exceptions the component raises",
+      "the results of executing the component against its own existing tests"
+    ],
+    "authored": true,
+    "forbidden_observations": [
+      "any string keyed to a single component path",
+      "any authored per-component weight, rank or ordering",
+      "any qualification requirement",
+      "any held-out suite"
+    ],
+    "measurement_must_be_a_function_of_the_component_not_of_its_name": true,
+    "the_substrate_remains_authored_and_is_the_expected_next_ceiling": true
+  },
+  "eligible_components": {
+    "drawn_from": "mira_core, enumerated at freeze",
+    "no_component_may_be_unreachable": "for every eligible component there must exist an admissible observation under which it is selected; an eligible component that no observation can select is excluded from the set rather than left as a decorative alternative",
+    "selection_is_the_lineage_s": true
+  },
+  "falsifiers": [
+    "an insufficiency indicator matches exactly one eligible component",
+    "an insufficiency indicator is a substring of the repair it motivates",
+    "the diagnostic reports a capability missing from a component that defines it",
+    "supplying the capability does not change the diagnostic verdict",
+    "an eligible component cannot be selected under any admissible observation",
+    "the selected component is determined by an authored severity constant rather than a measured property",
+    "the selected component moves when an authored constant of the measure is swept over its admissible range",
+    "the transformation set contains the adopted repair as a finished body",
+    "the transformation set contains a branch on a component name or path",
+    "the transformation set holds one element, so no search occurs",
+    "the repair is obtained by parameterising an authored patch rather than by composing operations",
+    "the qualification requirement is reachable by the development component's repair unchanged",
+    "a qualifying requirement exists in a module the lineage imports before adoption",
+    "the validator encodes the expected repair",
+    "the validator and the generator share authorship of the acceptance criterion",
+    "more budget over the same operation set reaches the requirement",
+    "a random component selection reaches the requirement",
+    "the rollback fault strikes a detached copy rather than the live file",
+    "an external model is called during the scientific run",
+    "the recorded attempt provenance disagrees with the preserved artifacts",
+    "a real defect in the system is corrected after the verdict in order to save the result"
+  ],
+  "hypothesis": {
+    "id": "H39",
+    "registered": true,
+    "registered_status": "PROPOSED — registered as an open question in SCIENTIFIC_HYPOTHESES.md; not frozen, no qualification data exists",
+    "statement": "A lineage can locate the component that limits it and construct the repair, without being told which component to change or what the change is."
+  },
+  "milestone": "M094",
+  "not_a_reattempt_of_m092": "M094 does not re-run, modify or claim anything about M092's protocol, search, salt or partial segments. H38 and D062 remain unresolved and are not touched. M094 has its own hypothesis, protocol, substrate, qualification, checker and result.",
+  "predecessors": {
+    "M047": "the transformation, sandbox and adoption machinery reused here; not re-litigated",
+    "M093": "engineering rehearsal. Its TARGET_FILE, diagnostic, capability choice and patch body were authored, and it says so. M094 attacks exactly those four and nothing else."
+  },
+  "qualification": {
+    "cross_component": "the requirement must be satisfied on a component other than the one used during development, so that a repair mechanism specialised to the development component fails",
+    "drawn_by": "a separate process, with a salt derived from the adopted mechanism's own digest, which does not exist until adoption",
+    "experimenter_blindness_is_not_claimed": "The pool of candidate requirements is authored and committed at this freeze, and the draw is a deterministic function of the adopted mechanism's digest, so it is reproducible by anyone. What is claimed is that the lineage cannot import, read or reach any of it before adoption. No claim is made that the experimenter was blind to the pool.",
+    "hidden_cases_per_requirement": 5,
+    "no_new_operation_may_be_added_during_qualification": true,
+    "not_importable_by_the_lineage": true
+  },
+  "reattempts_m092": false,
+  "repair_substrate": {
+    "assembly_is_not_selection": "the set contains no finished repair. A candidate is a composition of operations plus a target region; most compositions are ill-formed, inert, or compute what the component already computes.",
+    "authored": true,
+    "operations_must_not_branch_on_component_identity": true,
+    "the_substrate_remains_authored_and_is_the_expected_next_ceiling": true
+  },
+  "retry_policy": {
+    "attempt_provenance_is_derived_from_preserved_artifacts": true,
+    "reroll_permitted": false,
+    "result_saving_correction_after_a_verdict_is_forbidden": true,
+    "superseded_runs_are_preserved_and_disclosed": true
+  },
+  "schema": "m094-protocol-v1",
+  "status": "DRAFT_NOT_FROZEN_AWAITING_OWNER_SIGNATURE",
+  "status_note": "This document is a draft. It is not frozen, no hypothesis is registered, no qualification data exists and none may be generated. Freezing is an act of the project owner and requires replacing this status, recording the freeze commit, and registering H39 in SCIENTIFIC_HYPOTHESES.md. Nothing in this file may be cited as precommitted until that happens.",
+  "subtitle": "The lineage chooses what to repair, and builds the repair",
+  "title": "Autonomous Component Diagnosis and Repair Synthesis",
+  "track": "A",
+  "two_capabilities_required": {
+    "A": "diagnosis: the limited component is located by measurement over admissible observations, and a rival component would have been selected had the measurement differed",
+    "B": "synthesis: the repair is composed from operations none of which contains it, and it satisfies a requirement drawn after the mechanism was fixed",
+    "either_alone_is_a_failure": true
+  },
+  "verdict_rule": "positive iff every condition is true; each is computed and each can fail"
+}
