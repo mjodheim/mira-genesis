@@ -13,6 +13,7 @@ experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
 # only by individual path. This prevents later milestones from silently reintroducing the
 # checkout-dependent hash defect already observed on Windows checkouts.
 experiments/M0*/PROTOCOL.json -text
+experiments/M0*/QUALIFICATION_POOL.json -text
 experiments/M0*/RESULT.json -text
 experiments/M0*/BANK_COMMITMENT.json -text
 experiments/M0*/EPISODE_COMMITMENT.json -text
