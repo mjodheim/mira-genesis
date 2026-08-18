@@ -184,15 +184,6 @@ def record(step, d):
 '''
 
 
-def _qualification_exists() -> bool:
-    """Has a qualification run produced artifacts this checker could read?"""
-
-    return any(
-        (EXPERIMENT / name).exists()
-        for name in ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
-    )
-
-
 def _operations_carrying_a_literal_body(directory: Path | None = None) -> set[str]:
     """String constants in the synthesis module that are themselves method bodies.
 
