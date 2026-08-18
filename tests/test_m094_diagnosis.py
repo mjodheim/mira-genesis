@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+import metamorphosis.m094_synthesis as _m094_syn  # noqa: F401
 from metamorphosis.m094_diagnosis import (
     CAPABILITY_SHAPES,
     diagnose,
