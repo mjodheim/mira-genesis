@@ -197,68 +197,6 @@ def _field_value_expr(field_name: str, annotation: ast.expr | None) -> str:
     return f"self.{field_name}"
 
 
-def _render_as_mapping_operation(
-    class_node: ast.ClassDef,
-) -> str | None:
-    """Generate a ``to_dict()`` method body from the class's declared fields.
-
-    The method body is a dict literal keyed by each field name, with
-    ``self.<field>`` as the corresponding value and JSON-safe handling
-    for container types.
-
-    Everything here is driven by the AST-discovered field list. No field
-    name, class name, or component path appears in the generation logic
-    as an authored constant — the AST provides every string.
-    """
-    fields = _declared_field_names(class_node)
-    if not fields:
-        return None
-
-    # Build a field → annotation map from the class AST
-    annotations: dict[str, ast.expr | None] = {}
-    for node in class_node.body:
-        if isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
-            annotations[node.target.id] = node.annotation
-        elif isinstance(node, ast.Assign):
-            for target in node.targets:
-                if isinstance(target, ast.Name):
-                    annotations.setdefault(target.id, None)
-
-    items: list[str] = []
-    for f in fields:
-        expr = _field_value_expr(f, annotations.get(f))
-        items.append(f'        "{f}": {expr},')
-
-    body = "\n".join(items)
-    return f"""def to_dict(self) -> dict:
-    \"\"\"Return this object's fields as a JSON-safe mapping.\"\"\"
-    return {{
-{body}
-    }}"""
-
-
-def _filter_by_attribute_operation(
-    class_node: ast.ClassDef,
-    collection: str,
-    attribute: str,
-) -> str | None:
-    """Generate a ``filter_by_{attribute}()`` method body.
-
-    The collection name and attribute come from the diagnosis, but the
-    method body is structurally derived (not authored per component).
-    """
-    if collection not in _exposed_collection_names(class_node):
-        return None
-
-    singular = collection.rstrip("s")
-    return f"""def filter_by_{attribute}(self, value: str) -> tuple:
-    \"\"\"Return every {singular} whose {attribute} matches *value*.\"\"\"
-    return tuple(
-        {singular} for {singular} in self._{collection}
-        if {singular}.{attribute} == value
-    )"""
-
-
 # ── Public types ──────────────────────────────────────────────────────
 
 
@@ -349,68 +287,63 @@ def suggest_operations(
     if class_node is None:
         return []
 
-    operations: list[SynthesisOperation] = []
+    from metamorphosis import m094_composition as composition
+    from metamorphosis.m094_diagnosis import CAPABILITY_SHAPES
 
-    if capability == "render_value_object_as_mapping":
-        # Read fields from the AST, NOT from the detail string.
-        # The detail is what callers read; we generate a method that
-        # returns everything the class actually declares.
-        fields = _declared_field_names(class_node)
-        if not fields:
-            return []
+    shape = next((s for s in CAPABILITY_SHAPES if s.name == capability), None)
+    if shape is None:
+        return []
 
-        method_source = _render_as_mapping_operation(class_node)
-        if method_source is None:
-            return []
+    fields = _declared_field_names(class_node)
+    collections = sorted(_exposed_collection_names(class_node))
 
-        def _apply(src: str, _ms=method_source, _cn=class_name) -> str:
-            return _insert_method_into_source(src, _ms, _cn)
+    def accepts(modified: str) -> bool:
+        """Judge a candidate by the requirement, not against a written-down answer.
 
-        op_digest = _digest({
-            "op": "add_to_dict",
-            "class": class_name,
-            "fields": fields,
-            "file": component_path,
-        })
+        This is the same predicate the diagnosis uses to decide whether a
+        component supplies a capability. A candidate is accepted when the
+        insufficiency stops being unmet, so nothing here knows what the winning
+        method looks like.
+        """
 
-        operations.append(SynthesisOperation(
-            file=component_path,
-            class_name=class_name,
-            description=f"Add to_dict() to {class_name} returning {len(fields)} fields",
-            apply=_apply,
-            digest=op_digest,
-        ))
+        try:
+            modified_tree = ast.parse(modified)
+        except SyntaxError:
+            return False
+        node = _find_class_node(modified_tree, class_name)
+        return node is not None and shape.is_supplied_by(node, target, detail)
 
-    elif capability == "filter_collection_by_attribute":
-        collection = target
-        attribute = detail
+    report = composition.search(
+        source=source,
+        class_name=class_name,
+        capability=capability,
+        fields=fields,
+        detail=detail,
+        collections=collections,
+        accepts=accepts,
+    )
 
-        method_source = _filter_by_attribute_operation(
-            class_node, collection, attribute,
-        )
-        if method_source is None:
-            return []
+    if report.adopted is None:
+        return []
 
-        def _apply(src: str, _ms=method_source, _cn=class_name) -> str:
-            return _insert_method_into_source(src, _ms, _cn)
+    adopted = report.adopted
 
-        op_digest = _digest({
-            "op": "add_filter_method",
-            "class": class_name,
-            "collection": collection,
-            "attribute": attribute,
-            "file": component_path,
-        })
+    def _apply(src: str, _ms=adopted.source, _cn=class_name) -> str:
+        placed = composition.insert_into_class(src, _cn, _ms)
+        if placed is None:
+            raise ValueError("the adopted method could not be placed in " + _cn)
+        return placed
 
-        operations.append(SynthesisOperation(
-            file=component_path,
-            class_name=class_name,
-            description=(
-                f"Add filter_by_{attribute}() to {class_name} "
-                f"for collection {collection}"
-            ),
-            apply=_apply,
-            digest=op_digest,
-        ))
+    operations = [SynthesisOperation(
+        file=component_path,
+        class_name=class_name,
+        description=(
+            "assembled " + str(len(adopted.composition)) + " operations for "
+            + class_name + "; " + str(report.examined) + " examined, "
+            + str(report.refused_total()) + " refused"
+        ),
+        apply=_apply,
+        digest=adopted.digest(),
+    )]
 
     return operations

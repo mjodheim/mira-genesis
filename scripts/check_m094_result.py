@@ -193,7 +193,7 @@ def _qualification_exists() -> bool:
     )
 
 
-def _operations_carrying_a_literal_body() -> set[str]:
+def _operations_carrying_a_literal_body(directory: Path | None = None) -> set[str]:
     """String constants in the synthesis module that are themselves method bodies.
 
     A repair assembled from composable operations does not appear anywhere as a
@@ -201,34 +201,40 @@ def _operations_carrying_a_literal_body() -> set[str]:
     does, and that is the difference P6 exists to measure.
     """
 
-    import metamorphosis.m094_synthesis as synthesis
-
-    source = Path(synthesis.__file__).read_text(encoding="utf-8")
-    tree = ast.parse(source)
-
-    docstrings = set()
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-            doc = ast.get_docstring(node, clean=False)
-            if doc is not None:
-                docstrings.add(doc)
+    # Every M094 module, not just the one that happened to hold the template.
+    # Scanning a single file would let the defect pass by being moved, which is
+    # the failure mode this whole audit keeps finding.
+    directory = directory or (ROOT / "metamorphosis")
+    modules = sorted(directory.glob("m094_*.py"))
+    assert modules, "no M094 modules found to scan in " + str(directory)
 
     found: set[str] = set()
-    for node in ast.walk(tree):
-        pieces: list[str] = []
-        if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            pieces = [node.value]
-        elif isinstance(node, ast.JoinedStr):
-            pieces = [
-                v.value for v in node.values
-                if isinstance(v, ast.Constant) and isinstance(v.value, str)
-            ]
-        for piece in pieces:
-            if piece in docstrings:
-                continue
-            stripped = piece.strip()
-            if stripped.startswith("def ") and "(" in stripped:
-                found.add(stripped.splitlines()[0].strip())
+
+    for module_path in modules:
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+
+        docstrings = set()
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node, clean=False)
+                if doc is not None:
+                    docstrings.add(doc)
+
+        for node in ast.walk(tree):
+            pieces: list[str] = []
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                pieces = [node.value]
+            elif isinstance(node, ast.JoinedStr):
+                pieces = [
+                    v.value for v in node.values
+                    if isinstance(v, ast.Constant) and isinstance(v.value, str)
+                ]
+            for piece in pieces:
+                if piece in docstrings:
+                    continue
+                stripped = piece.strip()
+                if stripped.startswith("def ") and "(" in stripped:
+                    found.add(module_path.name + ": " + stripped.splitlines()[0].strip())
     return found
 
 

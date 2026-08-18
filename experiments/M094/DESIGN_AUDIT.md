@@ -363,6 +363,79 @@ Defect 4 with generic names, and it is recorded as a failing condition rather th
 `tests/test_m094_synthesis.py::test_the_repair_shape_is_still_an_authored_template` pins the honest
 position, and must be inverted deliberately if synthesis ever becomes compositional.
 
+## Defect 4 and Defect 11, repaired — the repair is now assembled
+
+`metamorphosis/m094_composition.py` replaces the f-string. Nothing in it emits source. Each
+operation contributes **one decision** to a method under construction — a name, a field, a
+container, a guard, the shape of the return — and the method is the abstract syntax tree those
+decisions produce, unparsed only at the last moment. No operation is a method.
+
+The adopted repair for the diagnosed insufficiency is a **five-operation composition**:
+
+```
+name=as_dict
+return=mapping
+include=success_criteria:list
+include=goal_id
+include=instruction
+```
+
+Acceptance is the diagnosis itself: a candidate is kept when the insufficiency stops being unmet.
+Nothing in the search knows what the winning method looks like.
+
+### The numbers, without flattery
+
+| | count |
+|---|---|
+| compositions examined | 2,711 |
+| — incomplete drafts (prefixes, **not** wrong answers) | 2,036 |
+| complete methods built | 675 |
+| — refused: requirement not satisfied | 189 |
+| — accepted | **486** |
+| distinct behaviours | 225 |
+
+Two things must be said plainly rather than left to the totals.
+
+**"2,225 refused" would be a misleading headline.** 2,036 of those are partial compositions that are
+not yet methods — the search pruning its own frontier. The honest refusal count is **189**: complete
+methods that were built, applied, and rejected because they did not satisfy the requirement.
+
+**486 survivors is a loose result, and that is a property of the acceptance predicate.** `is_supplied_by`
+accepts any public method returning a mapping that covers the required keys, so the method's name,
+the container wrapping of each field, and the presence of extra fields are all unconstrained. Many
+compositions therefore satisfy it, and the tie is broken by content address rather than by
+preference. Contrast M091, where 3,247 of 3,248 candidates were refused because its requirement was
+behavioural equivalence on drawn worlds. **M094's requirement is structural, and structural
+requirements are cheap to satisfy.** A tighter predicate — behavioural agreement with the call sites
+the demand came from — is the obvious next step and is not claimed here.
+
+So P6 passes, and what it certifies is exactly this: the repair shape is no longer written down. It
+does **not** certify that the search is discriminating.
+
+### What remains authored
+
+The operation set and the composition-length bound, exactly as M091's assembly substrate was
+authored and was named the next ceiling. `MAX_COMPOSITION_LENGTH` is 12 and is disclosed. What is
+not authored is which composition survives.
+
+`scripts/check_m094_result.py` scans **every** `m094_*.py` module for method-body literals rather
+than the one that happened to hold the template, since a template moved to a new module would
+otherwise pass unnoticed — the failure mode this audit keeps finding. The detector is exercised
+against a synthetic module that does carry one, so P6 cannot pass by the instrument going blind.
+
+### Checker state
+
+| | conditions |
+|---|---|
+| pass | P1, P2, P3, P4, P5, **P6**, P12 |
+| fail | *none* |
+| uncomputed | P7, P8, P9, P10, P11 — no qualification run exists |
+
+Verdict: **incomplete**. Every statically decidable condition now passes, and that is deliberately
+not a result. A milestone cannot become positive by having nothing left that anyone checked; P7
+through P11 concern what a qualification run would show, and no run exists. **M094 is still not
+freezable, and the reason has moved from a defect to a missing run.**
+
 ## What is not in question
 
 The transformation *infrastructure* M093 rehearsed — subprocess sandbox, A/B comparison,

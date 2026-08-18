@@ -137,16 +137,32 @@ def test_p3_passes_now_that_its_fixture_imports_what_it_measures(report: dict) -
 # ── P6 asserts what its docstring promises ───────────────────────────
 
 
-def test_p6_detects_a_literal_method_body() -> None:
-    bodies = _operations_carrying_a_literal_body()
-    assert bodies, "the literal-body detector found nothing; P6 would pass vacuously"
+def test_p6_detector_still_catches_a_literal_method_body(tmp_path: Path) -> None:
+    """P6 must not pass merely because the detector stopped detecting.
+
+    The templates are gone from the real modules, so the instrument is exercised
+    against a synthetic one that has one. It also scans every `m094_*.py` module
+    rather than a single file, since a template moved to a new module would
+    otherwise slip past — the failure mode this audit keeps finding.
+    """
+
+    template = "def to_dict(self) -> dict:\n    return {}"
+    (tmp_path / "m094_pretend.py").write_text(
+        "TEMPLATE = " + repr(template) + "\n", encoding="utf-8"
+    )
+    assert _operations_carrying_a_literal_body(tmp_path) != set()
 
 
-def test_p6_fails_while_the_repair_shape_is_authored(report: dict) -> None:
+def test_no_m094_module_carries_a_literal_method_body() -> None:
+    assert _operations_carrying_a_literal_body() == set()
+
+
+def test_p6_passes_now_that_the_repair_is_assembled(report: dict) -> None:
+    """The repair is composed from operations, none of which is a method."""
+
     condition = _condition(report, "P6")
     assert condition["computed"] is True
-    assert condition["passed"] is False
-    assert "finished method body" in condition["evidence"]
+    assert condition["passed"] is True, condition["evidence"]
 
 
 # ── P5 keeps reporting the disclosed instability ─────────────────────
@@ -169,12 +185,20 @@ def test_p5_passes_now_that_no_constant_can_decide(report: dict) -> None:
 # ── The verdict rule ─────────────────────────────────────────────────
 
 
-def test_verdict_is_negative_for_real_failures_only(report: dict) -> None:
+def test_verdict_is_incomplete_rather_than_positive(report: dict) -> None:
+    """Every statically decidable condition passes, and that is not a result.
+
+    P1 to P6 and P12 are computed and true. P7 to P11 concern what a
+    qualification run would show, and no run exists. The verdict rule must
+    therefore say `incomplete` — a milestone cannot become positive by having
+    nothing left that anyone checked.
+    """
+
     assert report["schema"] == "m094-checker-v2"
-    assert report["verdict"] == "negative"
-    # P6 alone now: the repair shape is still an authored template.
-    assert set(report["failed_conditions"]) == {"P6"}
+    assert report["verdict"] == "incomplete"
+    assert report["failed_conditions"] == []
     assert set(report["uncomputed_conditions"]) == {"P7", "P8", "P9", "P10", "P11"}
+    assert report["passed"] == 7
     assert report["passed"] + report["failed"] + report["uncomputed"] == 12
 
 
