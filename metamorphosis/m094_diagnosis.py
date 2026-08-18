@@ -751,9 +751,19 @@ class Diagnosis:
 def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
     """Select the component with the greatest unmet demand.
 
-    Ties break on (demand, component path) so the rule is total and reproducible.
-    A component with no unmet capability is never selected; if none has one, the
-    diagnosis is empty rather than arbitrary.
+    The ordering key is ``(-demand, component_path, capability, target, detail)``, so
+    the rule is total and reproducible. A component with no unmet capability is never
+    selected; if none has one, the diagnosis is empty rather than arbitrary.
+
+    An earlier version of this docstring said ties break on "(demand, component path)",
+    which omitted the terms that actually decide. ``target`` is the class name, so when
+    two classes tie on demand -- as ``Goal`` and ``Observation`` currently do in
+    ``mira_core/contracts.py`` -- the class that gets repaired is chosen by alphabetical
+    order on its identifier, not by measurement. The component-level selection is
+    invariant under renaming; the class-level selection is not. This is disclosed in
+    ``docs/REPOSITORY_AUDIT_2026_08_18.md`` and is left unchanged here: altering the key
+    would move the adopted mechanism digest, and with it the qualification draw, which is
+    a decision for the project owner to record before the run rather than a cleanup.
     """
 
     candidates = candidate_classes(repo_root, components)

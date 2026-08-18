@@ -494,6 +494,11 @@ def search(
                 break
             draft = grown
         if draft is None:
+            # Unreachable on any input `_compositions` can produce: it only yields chains
+            # it has already grown successfully from an empty draft, and re-applying the
+            # same chain to the same initial draft cannot fail. Kept as a guard because
+            # `search` is a public entry point and a caller may pass compositions from
+            # elsewhere; measured never to fire on the M094 target at any budget.
             report.examined += 1
             report.refuse("composition_does_not_apply")
             continue
