@@ -82,6 +82,11 @@ class Condition:
     passed: bool
     evidence: str = ""
     detail: dict | None = None
+    #: False when the condition cannot be decided from the evidence that exists.
+    #: A condition requiring a qualification run is not satisfied by the absence
+    #: of one, and it is not refuted by it either. Forcing such a condition into
+    #: pass/fail is how a checker reports a verdict it has not earned.
+    computed: bool = True
 
     def to_dict(self) -> dict:
         return {
@@ -90,7 +95,21 @@ class Condition:
             "passed": self.passed,
             "evidence": self.evidence,
             "detail": self.detail or {},
+            "computed": self.computed,
         }
+
+
+def not_computed(condition_id: str, name: str, reason: str, detail: dict | None = None) -> Condition:
+    """A condition that no evidence in the repository can currently decide."""
+
+    return Condition(
+        id=condition_id,
+        name=name,
+        passed=False,
+        evidence=f"not computable before a qualification run: {reason}",
+        detail=detail,
+        computed=False,
+    )
 
 
 # ── Synthetic repositories for Defect-2 verification ──────────────────────
@@ -163,6 +182,54 @@ from pkg.decision import Decision
 def record(step, d):
     return {"step": step, "allowed": d.allowed, "reason": d.reason, "missing": list(d.missing)}
 '''
+
+
+def _qualification_exists() -> bool:
+    """Has a qualification run produced artifacts this checker could read?"""
+
+    return any(
+        (EXPERIMENT / name).exists()
+        for name in ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
+    )
+
+
+def _operations_carrying_a_literal_body() -> set[str]:
+    """String constants in the synthesis module that are themselves method bodies.
+
+    A repair assembled from composable operations does not appear anywhere as a
+    block of source text. One that is written out as an f-string and filled in
+    does, and that is the difference P6 exists to measure.
+    """
+
+    import metamorphosis.m094_synthesis as synthesis
+
+    source = Path(synthesis.__file__).read_text(encoding="utf-8")
+    tree = ast.parse(source)
+
+    docstrings = set()
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            doc = ast.get_docstring(node, clean=False)
+            if doc is not None:
+                docstrings.add(doc)
+
+    found: set[str] = set()
+    for node in ast.walk(tree):
+        pieces: list[str] = []
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            pieces = [node.value]
+        elif isinstance(node, ast.JoinedStr):
+            pieces = [
+                v.value for v in node.values
+                if isinstance(v, ast.Constant) and isinstance(v.value, str)
+            ]
+        for piece in pieces:
+            if piece in docstrings:
+                continue
+            stripped = piece.strip()
+            if stripped.startswith("def ") and "(" in stripped:
+                found.add(stripped.splitlines()[0].strip())
+    return found
 
 
 # ── P1: Eligible component set ────────────────────────────────────────────
@@ -364,9 +431,14 @@ def check_p3(protocol: dict) -> Condition:
                 )
 
         # --- RenderAsMapping shape ---
+        # The caller must import the module actually under measurement. An
+        # earlier revision wrote the component to `pkg2` while the caller
+        # imported `pkg.decision`, so the import-reach gate correctly reported
+        # zero demand and the checker misread that as a diagnosis failure.
         _write(root, "pkg2/__init__.py", "")
         _write(root, "pkg2/decision.py", DECISION_WITHOUT_RENDERER)
-        _write(root, "consumers2/rec.py", CALLER_DESTRUCTURES)
+        _write(root, "consumers2/rec.py", CALLER_DESTRUCTURES.replace(
+            "from pkg.decision import", "from pkg2.decision import"))
 
         mapping_before = measure_component(root, "pkg2/decision.py")
         unmet_map_before = [i for i in mapping_before if i.is_unmet]
@@ -573,6 +645,18 @@ def check_p6(protocol: dict) -> Condition:
                 failures.append(f"operation description contains a component path: {desc}")
                 break
 
+    # The assertion the docstring promised and the original omitted: an operation
+    # may not carry a finished method body. Identifiers may be substituted from
+    # the AST, but the *shape* of the repair must be composed rather than written
+    # down, or this is Defect 4 with generic names.
+    templated = _operations_carrying_a_literal_body()
+    if templated:
+        failures.append(
+            "the synthesis emits a finished method body as a source template, so the "
+            "repair shape is authored rather than assembled: "
+            + ", ".join(sorted(templated))
+        )
+
     passed = not failures
     return Condition(
         id="P6",
@@ -597,37 +681,36 @@ def check_p6(protocol: dict) -> Condition:
 def check_p7(protocol: dict) -> Condition:
     """The adopted repair satisfies a requirement drawn after the mechanism was fixed.
 
-    Since M094 is a draft, no qualification data may exist. Verify that no
-    RESULT.json, QUALIFICATION.json, or REGISTER_CLAIM.json exists in the
-    experiment directory.
+    This claim needs a qualification run: a requirement drawn from the adopted
+    mechanism's digest, and a repair measured against it. No such run exists.
+
+    An earlier revision implemented this as "no RESULT.json exists and the
+    protocol is a draft", so it passed precisely *because* nothing had been
+    qualified, and would have flipped to FAIL the moment M094 produced a real
+    result. The polarity was inverted and the pass was vacuous.
     """
-    failures: list[str] = []
     forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
+    present = [n for n in forbidden if (EXPERIMENT / n).exists()]
 
-    for name in forbidden:
-        path = EXPERIMENT / name
-        if path.exists():
-            failures.append(f"forbidden artifact exists: {name}")
+    name = "the_adopted_repair_satisfies_a_requirement_drawn_after_the_mechanism_was_fixed"
 
-    if protocol.get("status") != "DRAFT_NOT_FROZEN_AWAITING_OWNER_SIGNATURE":
-        failures.append("protocol is not in draft status")
+    if present:
+        return Condition(
+            id="P7",
+            name=name,
+            passed=False,
+            evidence=(
+                "qualification artifacts exist while the protocol is still a draft: "
+                + ", ".join(present)
+            ),
+            detail={"forbidden_artifacts_present": present},
+        )
 
-    passed = not failures
-    return Condition(
-        id="P7",
-        name="the_adopted_repair_satisfies_a_requirement_drawn_after_the_mechanism_was_fixed",
-        passed=passed,
-        evidence=(
-            "no qualification artifacts exist; protocol is a draft"
-            if passed
-            else "; ".join(failures)
-        ),
-        detail={
-            "status": protocol.get("status"),
-            "forbidden_artifacts_present": [
-                n for n in forbidden if (EXPERIMENT / n).exists()
-            ],
-        },
+    return not_computed(
+        "P7",
+        name,
+        "no qualification run exists, so no drawn requirement has been satisfied or missed",
+        detail={"status": protocol.get("status"), "qualification_exists": False},
     )
 
 
@@ -647,29 +730,38 @@ def check_p8(protocol: dict) -> Condition:
     qualification = protocol.get("qualification", {})
     if qualification.get("not_importable_by_the_lineage") is not True:
         failures.append("protocol does not assert qualification is not importable")
-    if qualification.get("experimenter_blindness_is_not_claimed") is not True:
-        failures.append("protocol does not disclaim experimenter blindness")
+    # This field is a disclosure, not a flag. M091 records it as prose stating
+    # exactly what is and is not claimed about blindness; an earlier revision
+    # tested it for `is True` and so failed every protocol that actually made
+    # the disclosure.
+    blindness = qualification.get("experimenter_blindness_is_not_claimed")
+    if not isinstance(blindness, str) or not blindness.strip():
+        failures.append(
+            "protocol carries no experimenter-blindness disclosure "
+            f"(found {type(blindness).__name__})"
+        )
 
     # Check that no qualification module exists in the codebase (structural)
     qual_path = ROOT / "metamorphosis" / "m094_qualification.py"
     if qual_path.exists():
         failures.append("qualification module exists: metamorphosis/m094_qualification.py")
 
-    passed = not failures
-    return Condition(
-        id="P8",
-        name="an_independent_validator_accepted_it_without_seeing_the_qualification",
-        passed=passed,
-        evidence=(
-            "no qualification exists; validator is structurally independent"
-            if passed
-            else "; ".join(failures)
-        ),
-        detail={
-            "qualification_not_importable": qualification.get("not_importable_by_the_lineage"),
-            "experimenter_blindness_disclaimed": qualification.get("experimenter_blindness_is_not_claimed"),
-            "qualification_module_exists": qual_path.exists(),
-        },
+    if failures:
+        return Condition(
+            id="P8",
+            name="an_independent_validator_accepted_it_without_seeing_the_qualification",
+            passed=False,
+            evidence="; ".join(failures),
+            detail={"protocol_precondition_failures": failures},
+        )
+
+    # The protocol preconditions hold. The condition itself is about what a
+    # run would show, and no run exists.
+    return not_computed(
+        "P8",
+        "an_independent_validator_accepted_it_without_seeing_the_qualification",
+        "no validator has accepted anything, because no candidate has been qualified",
+        detail={"protocol_preconditions": "satisfied"},
     )
 
 
@@ -728,25 +820,34 @@ def check_p9(protocol: dict) -> Condition:
         failures.append("suggest_operations is not deterministic: same input → different output")
 
     # The synthesis always returns the same operations; there is no budget parameter.
-    # Verify the protocol does not claim a budget sweep matters.
+    # A control arm must be declared and must NOT be a ceiling arm. Ceiling arms
+    # are excluded from the verdict; control arms must be able to fail it. An
+    # earlier revision required this arm to be a ceiling arm, which also made the
+    # checker unsatisfiable, since P1 requires the ceiling set to be exactly
+    # {authored_target_component}.
+    arms = set(protocol.get("arms", []))
     ceiling_arms = set(protocol.get("ceiling_arms", []))
-    if "more_budget_same_operations" not in ceiling_arms:
-        failures.append("more_budget_same_operations is not in ceiling arms (protocol expects it)")
+    if "more_budget_same_operations" not in arms:
+        failures.append("more_budget_same_operations is not declared as an arm")
+    if "more_budget_same_operations" in ceiling_arms:
+        failures.append("more_budget_same_operations is a ceiling arm; it must be a control")
 
-    passed = not failures
-    return Condition(
-        id="P9",
-        name="more_budget_over_the_same_operation_set_closes_nothing",
-        passed=passed,
-        evidence=(
-            "deterministic synthesis: same operations every time"
-            if passed
-            else "; ".join(failures)
-        ),
-        detail={
-            "deterministic": digests_first == digests_second,
-            "operation_count": len(ops_first),
-        },
+    if failures:
+        return Condition(
+            id="P9",
+            name="more_budget_over_the_same_operation_set_closes_nothing",
+            passed=False,
+            evidence="; ".join(failures),
+            detail={"protocol_precondition_failures": failures},
+        )
+
+    # The protocol preconditions hold. The condition itself is about what a
+    # run would show, and no run exists.
+    return not_computed(
+        "P9",
+        "more_budget_over_the_same_operation_set_closes_nothing",
+        "the budget arm has not been run, so nothing is known about what it closes",
+        detail={"protocol_preconditions": "satisfied"},
     )
 
 
@@ -771,9 +872,12 @@ def check_p10(protocol: dict) -> Condition:
             passed=False, evidence=str(exc), detail={"error": str(exc)},
         )
 
+    arms = set(protocol.get("arms", []))
     ceiling_arms = set(protocol.get("ceiling_arms", []))
-    if "random_component_selection" not in ceiling_arms:
-        failures.append("random_component_selection is not in the ceiling arms")
+    if "random_component_selection" not in arms:
+        failures.append("random_component_selection is not declared as an arm")
+    if "random_component_selection" in ceiling_arms:
+        failures.append("random_component_selection is a ceiling arm; it must be a control")
 
     if result.unmet:
         top = result.unmet[0]
@@ -799,21 +903,22 @@ def check_p10(protocol: dict) -> Condition:
                                f"than selected {top.component_path} ({top.demand}) "
                                "- random selection could pick a stronger candidate")
 
-    passed = not failures
-    return Condition(
-        id="P10",
-        name="a_random_component_selection_closes_nothing",
-        passed=passed,
-        evidence=(
-            "diagnosis is deterministic; random selection would not resolve the diagnosed insufficiency"
-            if passed
-            else "; ".join(failures)
-        ),
-        detail={
-            "selected": result.selected if result.unmet else None,
-            "random_component_in_ceiling": "random_component_selection" in ceiling_arms,
-            "eligible_count": len(COMPONENT_PATHS),
-        },
+    if failures:
+        return Condition(
+            id="P10",
+            name="a_random_component_selection_closes_nothing",
+            passed=False,
+            evidence="; ".join(failures),
+            detail={"protocol_precondition_failures": failures},
+        )
+
+    # The protocol preconditions hold. The condition itself is about what a
+    # run would show, and no run exists.
+    return not_computed(
+        "P10",
+        "a_random_component_selection_closes_nothing",
+        "the random-selection arm has not been run, so nothing is known about what it closes",
+        detail={"protocol_preconditions": "satisfied"},
     )
 
 
@@ -828,9 +933,18 @@ def check_p11(protocol: dict) -> Condition:
     failures: list[str] = []
 
     retry = protocol.get("retry_policy", {})
-    for key in ("reroll_permitted", "result_saving_correction_after_a_verdict_is_forbidden"):
-        if retry.get(key) is not True:
-            failures.append(f"retry_policy.{key} is not true: {retry.get(key)}")
+    # `reroll_permitted` must be False and the correction ban True. An earlier
+    # revision required both to be True, so it failed the protocol for forbidding
+    # rerolls — demanding the very violation the discipline exists to prevent.
+    if retry.get("reroll_permitted") is not False:
+        failures.append(
+            f"retry_policy.reroll_permitted must be false, got {retry.get('reroll_permitted')}"
+        )
+    if retry.get("result_saving_correction_after_a_verdict_is_forbidden") is not True:
+        failures.append(
+            "retry_policy.result_saving_correction_after_a_verdict_is_forbidden must be true, "
+            f"got {retry.get('result_saving_correction_after_a_verdict_is_forbidden')}"
+        )
 
     falsifiers = protocol.get("falsifiers", [])
     has_rollback_falsifier = any(
@@ -842,21 +956,22 @@ def check_p11(protocol: dict) -> Condition:
         if not rollback_falsifiers:
             failures.append("no rollback-related falsifier in the protocol")
 
-    passed = not failures
-    return Condition(
-        id="P11",
-        name="rollback_is_exact_and_behavioural",
-        passed=passed,
-        evidence=(
-            "protocol specifies exact rollback and retry discipline"
-            if passed
-            else "; ".join(failures)
-        ),
-        detail={
-            "reroll_permitted": retry.get("reroll_permitted"),
-            "correction_forbidden": retry.get("result_saving_correction_after_a_verdict_is_forbidden"),
-            "rollback_falsifiers": [f for f in falsifiers if "rollback" in f.lower()],
-        },
+    if failures:
+        return Condition(
+            id="P11",
+            name="rollback_is_exact_and_behavioural",
+            passed=False,
+            evidence="; ".join(failures),
+            detail={"protocol_precondition_failures": failures},
+        )
+
+    # The protocol preconditions hold. The condition itself is about what a
+    # run would show, and no run exists.
+    return not_computed(
+        "P11",
+        "rollback_is_exact_and_behavioural",
+        "no adoption has occurred, so no rollback has been performed or measured",
+        detail={"protocol_preconditions": "satisfied"},
     )
 
 
@@ -928,19 +1043,36 @@ def compute_report(protocol: dict) -> dict:
         ("P12", check_p12(protocol)),
     ]
 
-    passed = sum(1 for _, c in conditions if c.passed)
-    failed = sum(1 for _, c in conditions if not c.passed)
-    verdict = "positive" if failed == 0 else "negative"
+    # The protocol's verdict rule is "positive iff every condition is true; each
+    # is computed and each can fail". A condition that could not be computed is
+    # therefore neither a pass nor a refutation, and a verdict may not be
+    # declared while any remain outstanding.
+    passed = sum(1 for _, c in conditions if c.computed and c.passed)
+    failed = sum(1 for _, c in conditions if c.computed and not c.passed)
+    uncomputed = sum(1 for _, c in conditions if not c.computed)
+
+    if failed:
+        verdict = "negative"
+    elif uncomputed:
+        verdict = "incomplete"
+    else:
+        verdict = "positive"
 
     report = {
-        "schema": "m094-checker-v1",
+        "schema": "m094-checker-v2",
         "milestone": "M094",
         "verdict": verdict,
+        "verdict_rule": (
+            "negative if any computed condition fails; incomplete while any condition "
+            "remains uncomputed; positive only when every condition is computed and true"
+        ),
         "total_conditions": len(conditions),
         "passed": passed,
         "failed": failed,
+        "uncomputed": uncomputed,
         "conditions": {pid: c.to_dict() for pid, c in conditions},
-        "failed_conditions": [pid for pid, c in conditions if not c.passed],
+        "failed_conditions": [pid for pid, c in conditions if c.computed and not c.passed],
+        "uncomputed_conditions": [pid for pid, c in conditions if not c.computed],
     }
     report["report_digest"] = _digest(
         {k: v for k, v in report.items() if k != "report_digest"}
@@ -965,6 +1097,13 @@ def main() -> int:
 
     if report["failed"] > 0:
         print(f"\nFAILED CONDITIONS: {report['failed_conditions']}", file=sys.stderr)
+    if report["uncomputed"] > 0:
+        print(
+            "UNCOMPUTED CONDITIONS: "
+            + str(report["uncomputed_conditions"])
+            + " (no qualification run exists)",
+            file=sys.stderr,
+        )
 
     # Return 0 for success (we always report, even failures)
     return 0

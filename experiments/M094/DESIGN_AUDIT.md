@@ -1,8 +1,9 @@
 # M094 design audit — resolved before any freeze
 
-**Status: audit complete, five defects found — four in the inherited implementation and one in the
-replacement written here. Nothing is frozen. H39 is registered as an open question only. No
-qualification exists and none may be generated until a protocol is frozen.**
+**Status: audit complete, twelve defects found — four in the inherited diagnostic, one in the
+replacement written here, and seven in the result checker. Nothing is frozen. H39 is registered
+as an open question only. No qualification exists and none may be generated until a protocol is
+frozen.**
 
 This document exists because M094's implementation was committed *ahead* of its protocol, in
 `df88d24` (PR #170), while carrying docstrings that claim more than the code does. The audit
@@ -229,6 +230,84 @@ Two admissible directions, neither presupposed:
 
 The second is the more conservative and is the recommended one, because it turns the sweep from a
 disclosure into a gate.
+
+## Defects 6-12 — the result checker decided what it could not see
+
+`scripts/check_m094_result.py` and `metamorphosis/m094_synthesis.py` arrived together, 1,390 lines
+with **zero test assertions**. The repository's orphan-module check was satisfied by adding a bare
+`import metamorphosis.m094_synthesis as _m094_syn  # noqa: F401` to the diagnosis test file, so CI
+was green because nothing exercised either module. The checker's first report read
+`"verdict": "negative"`, which was correct by accident: two of its six failures were real and four
+were its own defects.
+
+**Defect 6 — the checker was unsatisfiable by construction.** `check_p1` fails unless
+`ceiling_arms == {authored_target_component}`; `check_p9` fails unless
+`more_budget_same_operations ∈ ceiling_arms`; `check_p10` fails unless
+`random_component_selection ∈ ceiling_arms`. P1 and {P9, P10} cannot both hold for any protocol.
+The underlying error is a category confusion: those two are **control** arms, which must be able to
+fail the verdict, not ceiling arms, which are excluded from it.
+
+**Defect 7 — P11 demanded a violation of the discipline.** It failed unless
+`retry_policy.reroll_permitted` was `True`. `false` is the correct value; permitting rerolls is
+what D053 forbids. The check also performed no rollback — it read protocol fields.
+
+**Defect 8 — P7 was inverted and passed vacuously.** Named "the adopted repair satisfies a
+requirement drawn after the mechanism was fixed", it was implemented as "no `RESULT.json` exists and
+the status is draft". It passed *because* nothing had been qualified, and would have flipped to FAIL
+the moment M094 produced a real result.
+
+**Defect 9 — P3's failure was its own fixture.** It wrote the component to `pkg2/decision.py` while
+its caller imported `pkg.decision`, so the import-reach gate correctly reported zero demand and the
+checker read that as a broken diagnosis. Reproduced directly: with the package corrected, the same
+fixture yields `unmet=True, demand=1`. **The diagnosis was never at fault**, and P3 passes now.
+
+**Defect 10 — P8 tested a prose disclosure for `is True`.** The
+`experimenter_blindness_is_not_claimed` field is a statement of what is and is not claimed, as in
+M091. Testing it for a boolean failed every protocol that actually made the disclosure.
+
+**Defect 11 — P6 omitted the assertion its docstring promised.** The docstring lists "No operation
+contains a finished body as a literal"; the implementation checked digest length and path
+substrings. So the one condition written to catch Defect 4 passed on a synthesis that emits
+`def to_dict(self) -> dict: ... return {` as an f-string template.
+
+**Defect 12 — a verdict was declared over conditions that could not be computed.** P7 through P11
+make claims about what a qualification run would show. No run exists. Forcing them into pass/fail is
+what produced both the vacuous pass and the meaningless failures.
+
+### What was changed
+
+Each defect above is repaired, and `Condition` now carries a `computed` flag. The verdict rule
+follows the protocol's own wording — "positive iff every condition is true; each is computed and
+each can fail" — and reads: **negative** if any computed condition fails, **incomplete** while any
+condition remains uncomputed, **positive** only when every condition is computed and true. A
+condition that cannot be decided is no longer a pass.
+
+The report now says:
+
+| | conditions |
+|---|---|
+| pass | P1, P2, P3, P4, P12 |
+| **fail** | **P5** (threshold instability, Defect 5), **P6** (authored repair shape, Defect 4 in milder form) |
+| uncomputed | P7, P8, P9, P10, P11 — no qualification run exists |
+
+Verdict: **negative**, now for two real reasons rather than six mixed ones.
+
+`tests/test_m094_checker.py` and `tests/test_m094_synthesis.py` cover both modules, including a
+mutated-protocol case for P11 and a `RESULT.json`-under-draft case for P7, so each repaired defect
+fails a test if it returns.
+
+### On the synthesis itself
+
+The progress is real and should not be understated: Defect 4's `if class_name == "MemoryLedger"`
+branch is gone, every identifier is derived from the AST, and applying the generated repair makes
+the diagnosed insufficiency measure as met — the loop closes. A different class yields a different
+repair with no shared identifiers.
+
+But P6 asks for a repair **assembled from composable operations**, and an f-string of a method is
+not one. There are two templates, no composition and no search; only the identifiers vary. That is
+Defect 4 with generic names, and it is recorded as a failing condition rather than an omission.
+`tests/test_m094_synthesis.py::test_the_repair_shape_is_still_an_authored_template` pins the honest
+position, and must be inverted deliberately if synthesis ever becomes compositional.
 
 ## What is not in question
 
