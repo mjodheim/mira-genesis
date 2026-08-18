@@ -502,6 +502,67 @@ Verdict: **incomplete**. P6 now certifies something worth certifying — the rep
 written down *and* the requirement that selects it is discriminating. It still does not certify a
 qualification, because there has not been one.
 
+## The freeze
+
+Frozen at commit `dd79665` on 18 August 2026, before any qualification data existed.
+
+Two gaps were closed first, because a freeze whose own text is untrue is worse than no freeze.
+
+**The protocol promised a pool that did not exist.** It asserted that "the pool of candidate
+requirements is authored and committed at this freeze", and `experiments/M094/` held no such file.
+Authoring one afterwards would have made it a document written by someone who already knew the
+mechanism selects `contracts.py`/`Goal` and emits a `to_dict`-shaped repair. Precommitment is
+precisely what that destroys.
+
+`experiments/M094/QUALIFICATION_POOL.json` now holds **nine candidate requirements**, digest
+`44f46e6b…`, produced **by measurement rather than by invention**: the structural diagnosis was run
+over the ten `mira_core` modules outside the development set and what it found was recorded, so no
+requirement was chosen by hand.
+
+| component | class | keys required |
+|---|---|---|
+| `mira_core/agent.py` | `AgentResult` | `memory_digest, status, steps, succeeded` |
+| `mira_core/calibration.py` | `EpisodeOutcome` | four outcome keys |
+| `mira_core/container.py` | `ContainerLimits` | `memory_bytes, pids_limit` |
+| `mira_core/container.py` | `ContainerSpec` | `destination` (key differs from field) |
+| `mira_core/harbor.py` | `HarborEpisodeLimits` | `max_steps` |
+| `mira_core/model.py` | `ModelRequest` | `input_json, system_instruction` |
+| `mira_core/model.py` | `StructuredModelPolicy` | `policy_id` |
+| `mira_core/skills.py` | `SkillDemonstration` | `task_id` |
+| `mira_core/skills.py` | `TeacherCallTrap` | `teacher_calls` |
+
+Every entry is **cross-component by construction**, so a mechanism specialised to the component it
+grew on fails. Two are more than routine: `AgentResult` requires rendering a computed `@property`
+alongside declared fields, and `ContainerSpec` requires binding a key whose name differs from the
+field behind it.
+
+Each entry carries five hidden cases generated from a fixed, disclosed seed, so anyone can
+regenerate them from the committed pool.
+
+**The draw cannot be known now.** It is a deterministic function of the adopted mechanism's digest,
+which does not exist until adoption. Experimenter blindness is **not** claimed — the pool was
+authored by someone who has seen the development result, exactly as M091 disclosed for its pool of
+worlds. What is claimed is *reachability*, and that is tested rather than promised: no `m094_*`
+module names the pool, imports it, or references the experiments directory.
+
+**The eligible set was a description, not a list.** It read "mira_core, enumerated at freeze". It is
+now enumerated: `contracts.py`, `memory.py`, `safety.py`.
+
+`QUALIFICATION_POOL.json` was added to `.gitattributes` so it is stored byte-exact. It is
+digest-bearing and would otherwise have acquired CRLF on a Windows checkout — the defect this
+repository already fixed once for protocols and results, and which this session found live in 34
+artifacts on the first day.
+
+### What the freeze does and does not mean
+
+From here the protocol may not be repaired to save a result. A correction after a verdict is
+forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the
+preserved artifacts rather than declared.
+
+H39 is **frozen and open**: precommitted, and neither supported nor refuted. Seven conditions are
+computed and true; P7 through P11 concern what a qualification run would show and remain uncomputed.
+The checker's verdict is `incomplete`, not positive. **No run has been armed.**
+
 ## What is not in question
 
 The transformation *infrastructure* M093 rehearsed — subprocess sandbox, A/B comparison,

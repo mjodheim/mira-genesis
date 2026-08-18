@@ -951,7 +951,7 @@ random-selection arm, a single-template arm and a larger budget over the same op
 close nothing.
 
 **Status:** **FROZEN AND OPEN — the protocol is precommitted, the hypothesis is not supported.**
-The protocol was frozen by the project owner on 18 August 2026 at
+The protocol was frozen by the project owner on 18 August 2026 at commit `dd79665`,
 `experiments/M094/PROTOCOL.json`, before any qualification data existed, together with a
 qualification pool of nine candidate requirements at
 `experiments/M094/QUALIFICATION_POOL.json` (digest `44f46e6b…`), every one of them drawn from a
