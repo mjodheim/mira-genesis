@@ -388,14 +388,18 @@ transformations, at least one of which causally increases its ability to produce
 
 ### The human dependencies, and where each one dies
 
-| Dependency | Removed by |
+| Human dependency | Removed by |
 |---|---|
 | Which component to change | **M094** (frozen, unrun) |
 | What the change is | **M094** |
-| When to stop / what to fix next | **M095** |
-| Whether the search *can* reach the next repair | **M096** |
-| The repair language itself | **M097** |
-| Context reconstruction across restarts | **M098** |
+| What to fix *next*, with no human between repairs | **M095** |
+| Whether the search *can* reach the next repair at all | **M095** (the causal control) |
+| The repair language itself | **M096** |
+| Context reconstruction across restarts | **M097** |
+
+This is three milestones after M094, not four. The brief sketched sequential repair and
+improvement-enabling-improvement as separate milestones (M095 and M096); §H.2 argues for merging
+them, which shifts the two after it down by one.
 
 ### Step 0 — the Genesis Experiment Engine (prerequisite, not a milestone)
 
@@ -456,8 +460,11 @@ repair language.
 only from persisted state, with no human reconstruction of context. M093's `TransformationStore` and
 M084's persistent lineage are the substrate.
 
-Four milestones, not five. M096 and M097 as originally sketched collapse into one protocol each only
-if the causal control survives the merge; if it does not, split them rather than weaken the control.
+**On the merge.** Sequential repair and improvement-enabling-improvement share a state chain, an
+arm set and a qualification generator; run separately, the second rebuilds almost all of the first.
+The merge is only worth it if the causal control survives it. If the counterfactual arm turns out to
+need its own protocol to stay honest, split them again — a weakened control is worth less than an
+extra milestone.
 
 ### The rule to apply at every decision
 
