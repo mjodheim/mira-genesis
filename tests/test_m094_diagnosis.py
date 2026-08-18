@@ -16,6 +16,7 @@ import pytest
 
 from metamorphosis.m094_diagnosis import (
     CAPABILITY_SHAPES,
+    candidate_classes,
     diagnose,
     measure_component,
 )
@@ -269,17 +270,67 @@ def test_hand_destructuring_is_demand_and_a_renderer_supplies_it(tmp_path: Path)
     assert before[0].demand == after[0].demand, "supply must not change demand"
 
 
-def test_reading_too_few_fields_is_not_attributed(tmp_path: Path) -> None:
-    """Below the threshold, a coincidence of field names is not evidence."""
+def test_a_site_two_classes_could_explain_is_credited_to_neither(tmp_path: Path) -> None:
+    """Ambiguity is not evidence, and this is what replaced the field threshold.
 
-    repo = _decision_repo(tmp_path, DECISION_WITHOUT_RENDERER, callers=0)
+    An earlier revision required a site to read at least three of the class's
+    fields, so that a coincidence of names would not be counted. That constant
+    was authored, and sweeping it moved which component the diagnosis selected.
+    The rule now asks the repository instead: if more than one reachable class
+    could have produced the site, the site does not say which, so it counts for
+    none.
+    """
+
+    _write(tmp_path, "pkg/__init__.py", "")
+    _write(tmp_path, "pkg/decision.py", DECISION_WITHOUT_RENDERER)
+    # A second class with the same field names is an equally good explanation.
+    _write(tmp_path, "pkg/verdict.py", DECISION_WITHOUT_RENDERER.replace("Decision", "Verdict"))
+    _write(tmp_path, "consumers/ambiguous.py", '''
+from pkg.decision import Decision
+from pkg.verdict import Verdict
+
+def record(x):
+    return {"allowed": x.allowed, "reason": x.reason, "missing": list(x.missing)}
+''')
+
+    candidates = candidate_classes(tmp_path, ["pkg/decision.py", "pkg/verdict.py"])
+    for component in ("pkg/decision.py", "pkg/verdict.py"):
+        measurements = measure_component(tmp_path, component, candidates)
+        assert all(m.demand == 0 for m in measurements), component
+
+
+def test_an_unambiguous_site_counts_however_few_fields_it_reads(tmp_path: Path) -> None:
+    """No count decides attribution, so a distinctive single field is evidence."""
+
+    _write(tmp_path, "pkg/__init__.py", "")
+    _write(tmp_path, "pkg/decision.py", DECISION_WITHOUT_RENDERER)
     _write(tmp_path, "consumers/thin.py", '''
 from pkg.decision import Decision
 
 def record(d):
     return {"allowed": d.allowed, "reason": d.reason}
 ''')
-    assert all(m.demand == 0 for m in measure_component(repo, "pkg/decision.py"))
+
+    measurements = [m for m in measure_component(tmp_path, "pkg/decision.py") if m.demand]
+    assert len(measurements) == 1
+    assert measurements[0].demand == 1
+    assert set(measurements[0].detail.split(",")) == {"allowed", "reason"}
+
+
+def test_no_numeric_constant_governs_attribution() -> None:
+    """The defect being repaired was an authored number deciding the winner.
+
+    `RenderAsMapping` must carry no field-count knob at all: a sweep is only
+    needed where something is sweepable.
+    """
+
+    shape = next(s for s in CAPABILITY_SHAPES if s.name == "render_value_object_as_mapping")
+    numeric = {
+        name: value
+        for name, value in vars(shape).items()
+        if isinstance(value, int) and not isinstance(value, bool)
+    }
+    assert numeric == {}, f"an authored number can still decide the selection: {numeric}"
 
 
 def test_reading_a_field_the_class_does_not_declare_is_not_attributed(

@@ -97,14 +97,26 @@ def test_the_generated_repair_is_valid_python_and_applies(repo: Path) -> None:
     ast.parse(after)
     assert len(after) > len(before)
 
-    methods = {
+    # The method's name is not fixed any more: it is one of several the search
+    # may adopt, and the requirement does not constrain it. Assert that a public
+    # method was added, not what it is called.
+    before_names = {
+        node.name
+        for parent in ast.walk(ast.parse(before))
+        if isinstance(parent, ast.ClassDef) and parent.name == "Decision"
+        for node in parent.body
+        if isinstance(node, ast.FunctionDef)
+    }
+    after_names = {
         node.name
         for parent in ast.walk(ast.parse(after))
         if isinstance(parent, ast.ClassDef) and parent.name == "Decision"
         for node in parent.body
         if isinstance(node, ast.FunctionDef)
     }
-    assert "to_dict" in methods
+    added = after_names - before_names
+    assert len(added) == 1
+    assert not added.pop().startswith("_")
 
 
 def test_applying_the_repair_satisfies_the_diagnosis(repo: Path) -> None:
@@ -186,44 +198,46 @@ def test_the_module_names_no_component_identity() -> None:
 # ── What it does not do, recorded as a failure rather than omitted ───
 
 
-def test_the_repair_shape_is_still_an_authored_template() -> None:
-    """P6 is not satisfied, and this test exists so that stays visible.
+def test_the_repair_shape_is_no_longer_an_authored_template() -> None:
+    """P6, satisfied. This test is the deliberate inversion of its predecessor.
 
-    Identifiers are derived from the AST, but the method itself is written out
-    as an f-string and filled in. That is Defect 4 with generic names: a repair
-    assembled from composable operations does not appear anywhere as a block of
-    source text.
+    It previously asserted that `m094_synthesis` *did* carry a method body as an
+    f-string, so that Defect 4's milder form stayed visible rather than being
+    quietly forgotten. Its docstring said it must be inverted deliberately if
+    synthesis ever became compositional. That has happened: the two templates are
+    removed, and a repair is now assembled from operations in
+    `m094_composition`, rendered as a syntax tree and unparsed at the last
+    moment.
 
-    When synthesis becomes genuinely compositional this test must be inverted,
-    deliberately, rather than quietly deleted.
+    A repair assembled from composable operations does not appear anywhere as a
+    block of source text, so no string constant in either module may parse as a
+    function definition.
     """
 
-    tree = ast.parse(MODULE.read_text(encoding="utf-8"))
-    docstrings = set()
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-            doc = ast.get_docstring(node, clean=False)
-            if doc is not None:
-                docstrings.add(doc)
+    for module_path in (MODULE, Path("metamorphosis/m094_composition.py").resolve()):
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+        docstrings = set()
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node, clean=False)
+                if doc is not None:
+                    docstrings.add(doc)
 
-    bodies: set[str] = set()
-    for node in ast.walk(tree):
-        pieces: list[str] = []
-        if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            pieces = [node.value]
-        elif isinstance(node, ast.JoinedStr):
-            pieces = [
-                v.value for v in node.values
-                if isinstance(v, ast.Constant) and isinstance(v.value, str)
-            ]
-        for piece in pieces:
-            if piece in docstrings:
-                continue
-            stripped = piece.strip()
-            if stripped.startswith("def ") and "(" in stripped:
-                bodies.add(stripped.splitlines()[0].strip())
+        bodies: set[str] = set()
+        for node in ast.walk(tree):
+            pieces: list[str] = []
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                pieces = [node.value]
+            elif isinstance(node, ast.JoinedStr):
+                pieces = [
+                    v.value for v in node.values
+                    if isinstance(v, ast.Constant) and isinstance(v.value, str)
+                ]
+            for piece in pieces:
+                if piece in docstrings:
+                    continue
+                stripped = piece.strip()
+                if stripped.startswith("def ") and "(" in stripped:
+                    bodies.add(stripped.splitlines()[0].strip())
 
-    assert bodies, (
-        "the synthesis no longer emits a literal method body — if that is "
-        "intentional, invert this test and re-examine P6"
-    )
+        assert bodies == set(), f"{module_path.name} still carries a method body: {bodies}"

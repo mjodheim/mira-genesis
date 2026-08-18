@@ -156,35 +156,45 @@ def test_selection_does_not_depend_on_the_authored_weights() -> None:
     assert selection["selection_is_unanimous_across_weightings"] is True
 
 
-def test_the_corrected_measure_is_audited_against_its_own_constant() -> None:
-    """Defect 5: the replacement must face the test the original failed.
+def test_no_authored_constant_can_decide_the_selection() -> None:
+    """Defect 5, repaired: the replacement no longer has a knob to sweep.
 
-    `RenderAsMapping.min_fields` is authored. If the selected component moves
-    when it moves, the constant is what selects. That is currently the case, and
-    this check exists so the instability is reported rather than forgotten — not
-    to bless it. It fails if the sweep stops being computed.
+    `RenderAsMapping.min_fields` was authored, and sweeping it over 2..6 moved
+    the selection on three of five values — the constant was deciding, which is
+    the defect it was meant to avoid, one level up. Attribution now asks how many
+    reachable classes could explain a call site instead. Reintroducing any
+    numeric knob into a capability shape turns this red.
     """
 
     sensitivity = corrected_measure_threshold_sensitivity()
 
-    assert set(sensitivity["sweep"]) == {"2", "3", "4", "5", "6"}
-    assert sensitivity["declared_threshold"] == 3
+    assert sensitivity["numeric_constants_in_capability_shapes"] == {}
+    assert sensitivity["a_constant_can_still_decide_the_winner"] is False
+    assert sensitivity["selected"] == "mira_core/contracts.py"
 
-    # The instability is a disclosed finding, not a passing property.
-    assert sensitivity["authored_constant_decides_the_winner"] is True
-    assert sensitivity["selection_is_stable_across_thresholds"] is False
-    assert len(sensitivity["distinct_selections"]) > 1
 
-    # At the declared threshold the selection is safety.py, and the audit
-    # document reports exactly that.
-    assert sensitivity["sweep"]["3"]["selected"] == "mira_core/safety.py"
+def test_the_superseded_sweep_is_preserved_with_its_outlier() -> None:
+    """The earlier selection was an artifact, and the record has to say so.
+
+    `min_fields = 3` chose `mira_core/safety.py`; 2, 4 and 5 all chose
+    `mira_core/contracts.py`, which is what the threshold-free rule also
+    chooses. The declared value was the outlier, so the earlier headline was a
+    property of that constant rather than a finding about the repository.
+    """
+
+    superseded = corrected_measure_threshold_sensitivity()["superseded_sweep"]
+
+    assert superseded["constant"] == "RenderAsMapping.min_fields"
+    assert superseded["observed"]["3"] == "mira_core/safety.py"
+    assert {superseded["observed"][k] for k in ("2", "4", "5")} == {"mira_core/contracts.py"}
 
 
 def test_defect_five_is_disclosed_in_the_audit_document() -> None:
     document = (PROTOCOL.parent / "DESIGN_AUDIT.md").read_text(encoding="utf-8")
     assert "Defect 5" in document
     assert "the authored constant is what selects" in document
-    assert "currently fails on the corrected measure too" in document
+    # The repair, and the correction it forces to the earlier headline.
+    assert "the outlier" in document
 
 
 def test_the_transformation_set_has_no_search_space() -> None:

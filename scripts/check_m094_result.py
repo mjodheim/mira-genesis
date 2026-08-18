@@ -193,7 +193,7 @@ def _qualification_exists() -> bool:
     )
 
 
-def _operations_carrying_a_literal_body() -> set[str]:
+def _operations_carrying_a_literal_body(directory: Path | None = None) -> set[str]:
     """String constants in the synthesis module that are themselves method bodies.
 
     A repair assembled from composable operations does not appear anywhere as a
@@ -201,34 +201,40 @@ def _operations_carrying_a_literal_body() -> set[str]:
     does, and that is the difference P6 exists to measure.
     """
 
-    import metamorphosis.m094_synthesis as synthesis
-
-    source = Path(synthesis.__file__).read_text(encoding="utf-8")
-    tree = ast.parse(source)
-
-    docstrings = set()
-    for node in ast.walk(tree):
-        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
-            doc = ast.get_docstring(node, clean=False)
-            if doc is not None:
-                docstrings.add(doc)
+    # Every M094 module, not just the one that happened to hold the template.
+    # Scanning a single file would let the defect pass by being moved, which is
+    # the failure mode this whole audit keeps finding.
+    directory = directory or (ROOT / "metamorphosis")
+    modules = sorted(directory.glob("m094_*.py"))
+    assert modules, "no M094 modules found to scan in " + str(directory)
 
     found: set[str] = set()
-    for node in ast.walk(tree):
-        pieces: list[str] = []
-        if isinstance(node, ast.Constant) and isinstance(node.value, str):
-            pieces = [node.value]
-        elif isinstance(node, ast.JoinedStr):
-            pieces = [
-                v.value for v in node.values
-                if isinstance(v, ast.Constant) and isinstance(v.value, str)
-            ]
-        for piece in pieces:
-            if piece in docstrings:
-                continue
-            stripped = piece.strip()
-            if stripped.startswith("def ") and "(" in stripped:
-                found.add(stripped.splitlines()[0].strip())
+
+    for module_path in modules:
+        tree = ast.parse(module_path.read_text(encoding="utf-8"))
+
+        docstrings = set()
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node, clean=False)
+                if doc is not None:
+                    docstrings.add(doc)
+
+        for node in ast.walk(tree):
+            pieces: list[str] = []
+            if isinstance(node, ast.Constant) and isinstance(node.value, str):
+                pieces = [node.value]
+            elif isinstance(node, ast.JoinedStr):
+                pieces = [
+                    v.value for v in node.values
+                    if isinstance(v, ast.Constant) and isinstance(v.value, str)
+                ]
+            for piece in pieces:
+                if piece in docstrings:
+                    continue
+                stripped = piece.strip()
+                if stripped.startswith("def ") and "(" in stripped:
+                    found.add(module_path.name + ": " + stripped.splitlines()[0].strip())
     return found
 
 
@@ -521,46 +527,43 @@ def check_p4(protocol: dict) -> Condition:
 # ── P5: Stability under sweep of measure constants ──────────────────────
 
 def check_p5(protocol: dict) -> Condition:
-    """The selection is stable under a sweep of the measure's own constants.
+    """The selection is justified by measurement and stable under a sweep of constants.
 
-    RenderAsMapping.min_fields is authored. Sweep it over 2-6 and verify whether
-    the selected component is stable. If it moves, the defect is disclosed rather
-    than hidden — the checker reports the instability so P5 is documented, even
-    if it currently fails.
+    The defect this condition was written for was `RenderAsMapping.min_fields`:
+    authored, and sweeping it over 2..6 moved the selected component on three of
+    five values. The declared value 3 was in fact the outlier — 2, 4 and 5 all
+    chose `mira_core/contracts.py`, which is what the threshold-free rule chooses
+    too, so the earlier selection of `mira_core/safety.py` was a property of that
+    constant rather than a finding.
+
+    The knob is gone. Attribution now asks how many reachable classes could
+    explain a call site: exactly one is evidence about that class, several is
+    evidence about none. There is nothing left to sweep, so the check is that
+    nothing sweepable exists — reintroducing a numeric knob fails this again.
     """
     import metamorphosis.m094_diagnosis as _diag
 
     failures: list[str] = []
-    saved_shapes = _diag.CAPABILITY_SHAPES
-    sweep: dict[str, dict] = {}
 
-    try:
-        for threshold in (2, 3, 4, 5, 6):
-            _diag.CAPABILITY_SHAPES = (
-                FilterByAttribute(),
-                RenderAsMapping(min_fields=threshold),
-            )
-            result = structural_diagnose(ROOT, COMPONENT_PATHS)
-            sweep[str(threshold)] = {
-                "selected": result.selected,
-                "unmet": [{"class": i.class_name, "demand": i.demand} for i in result.unmet],
-            }
-    finally:
-        _diag.CAPABILITY_SHAPES = saved_shapes
+    knobs: dict[str, dict[str, int]] = {}
+    for shape in _diag.CAPABILITY_SHAPES:
+        numeric = {
+            name: value
+            for name, value in vars(shape).items()
+            if isinstance(value, int) and not isinstance(value, bool)
+        }
+        if numeric:
+            knobs[shape.name] = numeric
 
-    selections = {row["selected"] for row in sweep.values() if row["selected"] is not None}
-    is_stable = len(selections) <= 1
-
-    if not is_stable:
+    if knobs:
         failures.append(
-            f"selection is not stable across min_fields sweep: "
-            f"{len(selections)} distinct selections: {sorted(selections)}"
+            "a capability shape carries an authored numeric constant that can decide "
+            f"the selection: {knobs}"
         )
-        for thresh, row in sweep.items():
-            if thresh == "3":  # the declared value
-                failures.append(f"  min_fields={thresh} selects {row['selected']} (declared)")
-            else:
-                failures.append(f"  min_fields={thresh} selects {row['selected']}")
+
+    result = structural_diagnose(ROOT, COMPONENT_PATHS)
+    if result.selected is None:
+        failures.append("no component is selected, so no selection is justified")
 
     passed = not failures
     return Condition(
@@ -568,15 +571,21 @@ def check_p5(protocol: dict) -> Condition:
         name="the_selection_is_justified_against_rivals_by_measurement_and_is_stable_under_a_sweep_of_the_measure_s_own_constants",
         passed=passed,
         evidence=(
-            f"stable across min_fields=2..6: selected={list(selections)}"
-            if is_stable
-            else "; ".join(failures[:5])
+            f"no numeric constant governs attribution; selected {result.selected}"
+            if passed
+            else "; ".join(failures)
         ),
         detail={
-            "declared_min_fields": 3,
-            "is_stable": is_stable,
-            "distinct_selections": sorted(selections),
-            "sweep": sweep,
+            "selected": result.selected,
+            "numeric_constants_in_capability_shapes": knobs,
+            "attribution_rule": (
+                "a call site counts for a class when exactly one reachable class could "
+                "explain it; ambiguous sites count for none"
+            ),
+            "unmet": [
+                {"component": i.component_path, "class": i.class_name, "demand": i.demand}
+                for i in result.unmet
+            ],
         },
     )
 

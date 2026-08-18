@@ -1,9 +1,9 @@
 # M094 design audit — resolved before any freeze
 
 **Status: audit complete, twelve defects found — four in the inherited diagnostic, one in the
-replacement written here, and seven in the result checker. Nothing is frozen. H39 is registered
-as an open question only. No qualification exists and none may be generated until a protocol is
-frozen.**
+replacement written here (repaired), and seven in the result checker (repaired). Nothing is
+frozen. H39 is registered as an open question only. No qualification exists and none may be
+generated until a protocol is frozen.**
 
 This document exists because M094's implementation was committed *ahead* of its protocol, in
 `df88d24` (PR #170), while carrying docstrings that claim more than the code does. The audit
@@ -231,6 +231,60 @@ Two admissible directions, neither presupposed:
 The second is the more conservative and is the recommended one, because it turns the sweep from a
 disclosure into a gate.
 
+## Defect 5, repaired — and a correction to what this document previously reported
+
+The threshold is gone. Attribution no longer asks *how many* fields a site reads; it asks a
+question the repository answers:
+
+> Of the classes this file can actually reach, how many could have produced this site?
+
+Exactly one is evidence about that class. Several is evidence about none, because the site does not
+say which. Zero is not evidence at all. No number appears anywhere in that rule, so there is nothing
+left to sweep — and `scripts/audit_m094_design.py` now verifies that no capability shape carries a
+numeric constant, rather than sweeping one.
+
+**The earlier headline was wrong, and this is the correction.** The superseded sweep read:
+
+| `min_fields` | selected |
+|---|---|
+| 2 | `mira_core/contracts.py` |
+| **3** (declared) | **`mira_core/safety.py`** |
+| 4 | `mira_core/contracts.py` |
+| 5 | `mira_core/contracts.py` |
+
+The declared value was **the outlier**. Three of the four live values chose
+`mira_core/contracts.py`, and the threshold-free rule chooses it too. So the previously reported
+result — "the measure selects `mira_core/safety.py`, a component nobody chose" — was a property of
+the one authored constant rather than a finding about the repository. The robust answer is
+`mira_core/contracts.py`.
+
+What the measure reports now, with no constant in it:
+
+| component | class | demand | fields read | unmet |
+|---|---|---|---|---|
+| **`mira_core/contracts.py`** | `Goal` | **4** | 3 | **yes — selected** |
+| `mira_core/contracts.py` | `Observation` | 4 | 5 | yes |
+| `mira_core/contracts.py` | `Action` | 3 | 2 | yes |
+| `mira_core/safety.py` | `SafetyDecision` | 3 | 4 | yes |
+| `mira_core/contracts.py` | `Policy` | 2 | 1 | yes |
+| `mira_core/memory.py` | `MemoryLedger` | 2 | — | no — supplied |
+| `mira_core/memory.py` | `MemoryEvent` | 2 | 2 | no — supplied |
+
+The selection is robust to the one modelling choice left: excluding single-field attributions
+entirely still selects `mira_core/contracts.py`, because `Goal` and `Observation` lead on multi-field
+sites alone. `SafetyDecision` remains a genuine unmet insufficiency; it is simply not the largest.
+
+**One limitation, stated rather than hidden.** Dropping the threshold means a site reading a single
+distinctive field — `Policy.policy_id` — now counts, and a `to_dict()` would not obviously help such
+a caller. The shape is named *render as mapping*, and one field is not a mapping worth a method. Any
+minimum that excluded it would be a new authored constant and would reintroduce Defect 5, so the
+over-attribution is accepted and disclosed instead. It ranks last and changes no selection today;
+if it ever changes one, that is a defect to be reported, not tuned away.
+
+P5 now passes. **P6 does not**, and M094 remains unfreezable for that reason alone.
+
+---
+
 ## Defects 6-12 — the result checker decided what it could not see
 
 `scripts/check_m094_result.py` and `metamorphosis/m094_synthesis.py` arrived together, 1,390 lines
@@ -308,6 +362,79 @@ not one. There are two templates, no composition and no search; only the identif
 Defect 4 with generic names, and it is recorded as a failing condition rather than an omission.
 `tests/test_m094_synthesis.py::test_the_repair_shape_is_still_an_authored_template` pins the honest
 position, and must be inverted deliberately if synthesis ever becomes compositional.
+
+## Defect 4 and Defect 11, repaired — the repair is now assembled
+
+`metamorphosis/m094_composition.py` replaces the f-string. Nothing in it emits source. Each
+operation contributes **one decision** to a method under construction — a name, a field, a
+container, a guard, the shape of the return — and the method is the abstract syntax tree those
+decisions produce, unparsed only at the last moment. No operation is a method.
+
+The adopted repair for the diagnosed insufficiency is a **five-operation composition**:
+
+```
+name=as_dict
+return=mapping
+include=success_criteria:list
+include=goal_id
+include=instruction
+```
+
+Acceptance is the diagnosis itself: a candidate is kept when the insufficiency stops being unmet.
+Nothing in the search knows what the winning method looks like.
+
+### The numbers, without flattery
+
+| | count |
+|---|---|
+| compositions examined | 2,711 |
+| — incomplete drafts (prefixes, **not** wrong answers) | 2,036 |
+| complete methods built | 675 |
+| — refused: requirement not satisfied | 189 |
+| — accepted | **486** |
+| distinct behaviours | 225 |
+
+Two things must be said plainly rather than left to the totals.
+
+**"2,225 refused" would be a misleading headline.** 2,036 of those are partial compositions that are
+not yet methods — the search pruning its own frontier. The honest refusal count is **189**: complete
+methods that were built, applied, and rejected because they did not satisfy the requirement.
+
+**486 survivors is a loose result, and that is a property of the acceptance predicate.** `is_supplied_by`
+accepts any public method returning a mapping that covers the required keys, so the method's name,
+the container wrapping of each field, and the presence of extra fields are all unconstrained. Many
+compositions therefore satisfy it, and the tie is broken by content address rather than by
+preference. Contrast M091, where 3,247 of 3,248 candidates were refused because its requirement was
+behavioural equivalence on drawn worlds. **M094's requirement is structural, and structural
+requirements are cheap to satisfy.** A tighter predicate — behavioural agreement with the call sites
+the demand came from — is the obvious next step and is not claimed here.
+
+So P6 passes, and what it certifies is exactly this: the repair shape is no longer written down. It
+does **not** certify that the search is discriminating.
+
+### What remains authored
+
+The operation set and the composition-length bound, exactly as M091's assembly substrate was
+authored and was named the next ceiling. `MAX_COMPOSITION_LENGTH` is 12 and is disclosed. What is
+not authored is which composition survives.
+
+`scripts/check_m094_result.py` scans **every** `m094_*.py` module for method-body literals rather
+than the one that happened to hold the template, since a template moved to a new module would
+otherwise pass unnoticed — the failure mode this audit keeps finding. The detector is exercised
+against a synthetic module that does carry one, so P6 cannot pass by the instrument going blind.
+
+### Checker state
+
+| | conditions |
+|---|---|
+| pass | P1, P2, P3, P4, P5, **P6**, P12 |
+| fail | *none* |
+| uncomputed | P7, P8, P9, P10, P11 — no qualification run exists |
+
+Verdict: **incomplete**. Every statically decidable condition now passes, and that is deliberately
+not a result. A milestone cannot become positive by having nothing left that anyone checked; P7
+through P11 concern what a qualification run would show, and no run exists. **M094 is still not
+freezable, and the reason has moved from a defect to a missing run.**
 
 ## What is not in question
 

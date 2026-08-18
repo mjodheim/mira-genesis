@@ -42,6 +42,30 @@ def _digest(value: object) -> str:
     return hashlib.sha256(_canonical_json(value).encode("ascii")).hexdigest()
 
 
+# ── Candidate classes ─────────────────────────────────────────
+
+
+@dataclass(frozen=True)
+class CandidateClass:
+    """One class a call site might be talking about.
+
+    Attribution asks which classes could explain a site, not how many fields it
+    reads. That replaces an authored threshold with a property of the
+    repository: a site explained by exactly one reachable class is evidence
+    about that class, and a site explained by several is evidence about none.
+    """
+
+    component_path: str
+    module: str
+    exported: frozenset[str]
+    class_name: str
+    fields: frozenset[str]
+
+    @property
+    def identity(self) -> tuple[str, str]:
+        return (self.component_path, self.class_name)
+
+
 # ── Capability shapes ────────────────────────────────────────────────
 
 
@@ -62,8 +86,16 @@ class FilterByAttribute:
     def applies_to(self, class_node: ast.ClassDef) -> bool:
         return bool(_exposed_collections(class_node))
 
-    def demand_sites(self, tree: ast.AST, class_node: ast.ClassDef) -> list[tuple[str, str]]:
+    def demand_sites(
+        self,
+        tree: ast.AST,
+        class_node: ast.ClassDef,
+        rivals: Sequence[CandidateClass] = (),
+    ) -> list[tuple[str, str]]:
         """Find hand-written filters over a collection this class exposes.
+
+        ``rivals`` is unused here: a filter names the collection it iterates, so
+        the site already identifies what it is talking about.
 
         Returns (collection_name, attribute_name) for each site, e.g. a
         comprehension of the form ``x for x in obj.events if x.kind == k``.
@@ -126,7 +158,7 @@ class RenderAsMapping:
     into a dict literal, the object could render itself and they do not. The
     shape mentions no class, field or method name: the field set is recovered
     from the class under measurement, and a caller is attributed to that class
-    only when the attributes it reads are a subset of the class's own fields.
+    only when it is the single reachable class that could explain the site.
     """
 
     name: str = "render_value_object_as_mapping"
@@ -136,20 +168,37 @@ class RenderAsMapping:
     #: demand is therefore pooled rather than split.
     merges_details: bool = True
 
-    #: How many of the class's fields a dict literal must read before it counts.
-    #: Below three, unrelated objects coincide often enough that the attribution
-    #: would be guesswork rather than measurement.
-    min_fields: int = 3
-
     def applies_to(self, class_node: ast.ClassDef) -> bool:
-        return len(_declared_fields(class_node)) >= self.min_fields
+        return bool(_declared_fields(class_node))
 
-    def demand_sites(self, tree: ast.AST, class_node: ast.ClassDef) -> list[tuple[str, str]]:
+    def demand_sites(
+        self,
+        tree: ast.AST,
+        class_node: ast.ClassDef,
+        rivals: Sequence[CandidateClass] = (),
+    ) -> list[tuple[str, str]]:
+        """Attribute a hand-written mapping to this class only when nothing else explains it.
+
+        An earlier revision required the site to read at least three of the
+        class's fields, so that name coincidence would not be mistaken for
+        evidence. That threshold was authored, and sweeping it moved which
+        component the diagnosis selected — the constant was deciding, which is
+        the defect it was meant to avoid, one level up.
+
+        The rule here asks a question the repository answers instead: of the
+        classes this file can actually reach, how many could have produced this
+        site? Exactly one is evidence about that class. Several is evidence
+        about none, because the site does not say which. Zero is not evidence at
+        all. No number appears anywhere in that.
+        """
+
         fields = _declared_fields(class_node)
-        if len(fields) < self.min_fields:
+        if not fields:
             return []
 
+        identity = (class_node.name,)
         found: list[tuple[str, str]] = []
+
         for node in ast.walk(tree):
             if not isinstance(node, ast.Dict):
                 continue
@@ -158,9 +207,20 @@ class RenderAsMapping:
                 base, attribute = _attribute_read(value)
                 if base is not None and attribute is not None:
                     read.setdefault(base, set()).add(attribute)
+
             for attributes in read.values():
-                if len(attributes) >= self.min_fields and attributes <= fields:
-                    found.append((class_node.name, ",".join(sorted(attributes))))
+                if not attributes or not attributes <= fields:
+                    continue
+                explainers = {
+                    rival.identity for rival in rivals if attributes <= rival.fields
+                }
+                # `rivals` carries every eligible class this file can reach,
+                # including the one under measurement.
+                if len(explainers) != 1:
+                    continue
+                if not any(name == class_node.name for _, name in explainers):
+                    continue
+                found.append((class_node.name, ",".join(sorted(attributes))))
         return found
 
     def is_supplied_by(
@@ -447,8 +507,44 @@ def _pool_by_target(
     }
 
 
-def measure_component(repo_root: Path, component_path: str) -> tuple[Insufficiency, ...]:
-    """Measure every unmet capability shape on one component."""
+def candidate_classes(
+    repo_root: Path, components: Sequence[str]
+) -> tuple[CandidateClass, ...]:
+    """Every class that could explain a call site, across all eligible components.
+
+    Attribution is decided by how many of these a site fits, so the set has to be
+    assembled before any one component is measured.
+    """
+
+    candidates: list[CandidateClass] = []
+    for component_path in components:
+        tree = ast.parse((repo_root / component_path).read_text(encoding="utf-8"))
+        module = _module_name(repo_root, component_path)
+        exported = _top_level_names(tree)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                candidates.append(CandidateClass(
+                    component_path=component_path,
+                    module=module,
+                    exported=exported,
+                    class_name=node.name,
+                    fields=_declared_fields(node),
+                ))
+    return tuple(candidates)
+
+
+def measure_component(
+    repo_root: Path,
+    component_path: str,
+    candidates: Sequence[CandidateClass] | None = None,
+) -> tuple[Insufficiency, ...]:
+    """Measure every unmet capability shape on one component.
+
+    ``candidates`` is the set of classes a call site might otherwise be talking
+    about. It defaults to this component's own classes, which is right when a
+    component is measured alone; `diagnose` supplies the whole eligible set so
+    that a site two components could equally explain is credited to neither.
+    """
 
     source_path = repo_root / component_path
     tree = ast.parse(source_path.read_text(encoding="utf-8"))
@@ -458,12 +554,25 @@ def measure_component(repo_root: Path, component_path: str) -> tuple[Insufficien
     module = _module_name(repo_root, component_path)
     exported = _top_level_names(tree)
 
+    if candidates is None:
+        candidates = candidate_classes(repo_root, [component_path])
+
     # Parse the reaching sources once, rather than once per class and shape.
     reaching: list[tuple[str, ast.AST]] = [
         (path.relative_to(repo_root).as_posix(), other_tree)
         for path, other_tree in _python_sources(repo_root, source_path)
         if _reaches_component(other_tree, module, exported)
     ]
+
+    # Which rival classes each reaching file can also see. A class it cannot
+    # reach is not an alternative explanation for anything written there.
+    rivals_by_file: dict[str, tuple[CandidateClass, ...]] = {
+        relative: tuple(
+            candidate for candidate in candidates
+            if _reaches_component(other_tree, candidate.module, candidate.exported)
+        )
+        for relative, other_tree in reaching
+    }
 
     for class_node in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
         for shape in CAPABILITY_SHAPES:
@@ -473,7 +582,9 @@ def measure_component(repo_root: Path, component_path: str) -> tuple[Insufficien
             # Demand is counted strictly outside the component.
             sites: dict[tuple[str, str], set[str]] = {}
             for relative, other_tree in reaching:
-                for target, detail in shape.demand_sites(other_tree, class_node):
+                for target, detail in shape.demand_sites(
+                    other_tree, class_node, rivals_by_file[relative]
+                ):
                     sites.setdefault((target, detail), set()).add(relative)
 
             if getattr(shape, "merges_details", False):
@@ -521,9 +632,11 @@ def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
     diagnosis is empty rather than arbitrary.
     """
 
+    candidates = candidate_classes(repo_root, components)
+
     considered: list[Insufficiency] = []
     for path in components:
-        considered.extend(measure_component(repo_root, path))
+        considered.extend(measure_component(repo_root, path, candidates))
 
     unmet = tuple(sorted(
         (i for i in considered if i.is_unmet),
