@@ -1,8 +1,15 @@
 # Repository audit — 18 August 2026
 
-Audit performed at `2dc997b` (branch `research/m094-protocol-freeze`, open as PR #175). Scope: the
-whole repository, not only M093/M094. Every number below was measured on this checkout with
-`.venv-win` (CPython 3.11.16, Windows) and can be re-measured with the commands quoted.
+Audit performed at `2dc997b` (branch `research/m094-protocol-freeze`, open as PR #175); the audit's
+own changes live on `research/repository-audit-and-acceleration` so the freeze PR stays untouched.
+Scope: the whole repository, not only M093/M094. Every number below was measured on this checkout
+with `.venv-win` (CPython 3.11.16, Windows) and can be re-measured with the commands quoted.
+
+**Verification state after the changes in §E:** full suite 2529 passed / 2 failed / 12 skipped in
+36 m 49 s (both failures the known Windows-only pair, both green on Linux CI); repository integrity
+imports/orphans/dependencies all pass; the diagnosis digest is unchanged at `48cd5e9c2354a365…` and
+`CHECK_REPORT.json` still digests to `cbd3ff14caf18051…` with verdict `incomplete` (7 passed, 0
+failed, 5 uncomputed).
 
 This document reports what is true. It repairs nothing scientific: where a claim is too strong the
 correction is to the claim, never to the record behind it.
@@ -258,7 +265,7 @@ Measured on this machine.
 | Full `run_m094_experiment.py` | 8.5 s | 76 % diagnosis |
 | M094 unit tests (diagnosis+composition+synthesis) | 1.7 s | Good inner loop |
 | M094 checker + design-audit + pool tests | **57.8 s** | Dominated by repeated `diagnose()` calls |
-| Full suite (2208 tests, 200 files) | ~40 min | See §F.4 |
+| Full suite (2543 tests, 200 files) | **36 min 49 s** | 2529 passed, 2 failed, 12 skipped |
 
 ### F.1 Measured, output-identical acceleration
 
@@ -300,7 +307,34 @@ Docker earns its place at exactly two points, both later:
 
 The Dockerfile must be fixed first (§E) — as committed it cannot run the suite it advertises.
 
-### F.4 Validation pyramid
+### F.4 Where the 37 minutes actually go
+
+The suite run for this audit (`pytest -q -p no:randomly --durations=25`) finished in **36 m 49 s**
+with **2529 passed, 2 failed, 12 skipped**. Both failures are the two known Windows-only ones —
+`test_blind_bank_sealing.py::test_the_repository_itself_carries_no_leak` (stats a WSL symlink inside
+`.venv`) and `test_m092a_substrate_migration.py::test_physical_isolation_without_the_legacy_module`
+(rebuilds `sys.path` from the POSIX `lib-dynload` layout). Both pass on Linux CI. **No regression.**
+
+The cost is extremely concentrated. Eight fixtures account for roughly **18 of the 37 minutes**:
+
+| duration | test |
+|---|---|
+| 204 s | `test_m064_real_substrate_completion.py` (setup) |
+| 129 s | `test_m063_control_transfer.py` (setup) |
+| 129 s | `test_m062_synthesized_control.py` (setup) |
+| 110 s ×3 | `test_m061_discovered_structure.py` (setup ×2, call ×1) |
+| 88 s | `test_m066_canonical_governance.py` (setup) |
+| 87 s | `test_m065_qualified_completion.py` (setup) |
+
+These are all **setup**, all in the frozen M061–M066 band, and all recomputing deterministic
+substrate material. They are the single largest acceleration lever in the repository — larger than
+anything in M094 — and they are safe to attack, because caching a deterministic fixture changes no
+result as long as the digest is asserted. Session-scoped fixtures with a digest-keyed cache should
+take the suite under 20 minutes without touching a single assertion.
+
+Third on the list at 52 s is `test_m094_checker.py` setup, which the §F.1 memoisation addresses.
+
+### F.5 Validation pyramid
 
 The current habit of running 40 minutes for a five-line change is the largest avoidable cost.
 
@@ -308,7 +342,7 @@ The current habit of running 40 minutes for a five-line change is the largest av
 2. **Milestone (58 s → ~10 s with F.1)** — add `tests/test_m094_{checker,design_audit,qualification_pool}.py`
 3. **Infrastructure (~1 min)** — `python scripts/check_repository_integrity.py --imports --orphans --dependencies`
 4. **Integration** — the touched milestone's `check_m0*_result.py`
-5. **Full suite (~40 min)** — before merge or freeze only.
+5. **Full suite (37 min)** — before merge or freeze only.
 
 ---
 
