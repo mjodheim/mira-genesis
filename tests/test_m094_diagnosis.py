@@ -18,7 +18,9 @@ from metamorphosis.m094_diagnosis import (
     CAPABILITY_SHAPES,
     candidate_classes,
     diagnose,
+    decode_rendering,
     measure_component,
+    rendering_fields,
 )
 
 MODULE_SOURCE = Path(
@@ -314,7 +316,7 @@ def record(d):
     measurements = [m for m in measure_component(tmp_path, "pkg/decision.py") if m.demand]
     assert len(measurements) == 1
     assert measurements[0].demand == 1
-    assert set(measurements[0].detail.split(",")) == {"allowed", "reason"}
+    assert rendering_fields(measurements[0].detail) == {"allowed", "reason"}
 
 
 def test_no_numeric_constant_governs_attribution() -> None:
@@ -357,12 +359,44 @@ def test_callers_reading_different_subsets_pool_into_one_requirement(
 from pkg.decision import Decision
 
 def record(d):
-    return {"allowed": d.allowed, "reason": d.reason, "missing": d.missing, "x": 1}
+    return {"allowed": d.allowed, "reason": d.reason, "missing": list(d.missing), "x": 1}
 ''')
     measurements = measure_component(repo, "pkg/decision.py")
     assert len(measurements) == 1
     assert measurements[0].demand == 2
-    assert set(measurements[0].detail.split(",")) == {"allowed", "reason", "missing"}
+    assert rendering_fields(measurements[0].detail) == {"allowed", "reason", "missing"}
+
+
+def test_callers_that_disagree_do_not_pool_into_an_impossible_requirement(
+    tmp_path: Path,
+) -> None:
+    """Two callers binding one key differently want two different methods.
+
+    One writes ``list(d.missing)`` and the other writes ``d.missing``. No single
+    method reproduces both. Unioning them would manufacture a requirement
+    nothing can satisfy, and the component would read as permanently
+    insufficient for a reason no repair could address.
+    """
+
+    repo = _decision_repo(tmp_path, DECISION_WITHOUT_RENDERER, callers=0)
+    _write(tmp_path, "consumers/a.py", CALLER_DESTRUCTURES)      # wraps in list()
+    _write(tmp_path, "consumers/b.py", '''
+from pkg.decision import Decision
+
+def record(d):
+    return {"allowed": d.allowed, "reason": d.reason, "missing": d.missing}
+''')
+    measurements = measure_component(repo, "pkg/decision.py")
+
+    assert len(measurements) == 2, "contradictory renderings must stay separate"
+    assert sorted(m.demand for m in measurements) == [1, 1]
+
+    wrappers = set()
+    for measurement in measurements:
+        for key, _field, wrapper in decode_rendering(measurement.detail):
+            if key == "missing":
+                wrappers.add(wrapper)
+    assert wrappers == {None, "list"}, "each requirement keeps the wrapper its caller wrote"
 
 
 def test_both_shapes_are_registered() -> None:
@@ -379,3 +413,51 @@ def test_capability_shapes_carry_no_collection_or_attribute_names() -> None:
     for shape in CAPABILITY_SHAPES:
         assert "kind" not in shape.name
         assert "event" not in shape.name
+
+
+# ── Acceptance is agreement, not key coverage ────────────────────────
+
+
+def test_a_renderer_that_drops_the_wrapper_does_not_supply_the_capability(
+    tmp_path: Path,
+) -> None:
+    """The tightening that made the search discriminating.
+
+    An earlier revision asked only whether some public method returned a mapping
+    whose *keys* covered the required ones, so the field each key bound and any
+    container the caller wrapped it in were both free. Hundreds of different
+    methods passed. Acceptance now requires agreement: same key, same field,
+    same wrapper.
+    """
+
+    _write(tmp_path, "pkg/__init__.py", "")
+    _write(tmp_path, "consumers/rec.py", '''
+from pkg.decision import Decision
+
+def record(d):
+    return {"allowed": d.allowed, "reason": d.reason, "missing": list(d.missing)}
+''')
+
+    def measure(renderer: str) -> bool:
+        _write(tmp_path, "pkg/decision.py", DECISION_WITHOUT_RENDERER + renderer)
+        found = [m for m in measure_component(tmp_path, "pkg/decision.py") if m.demand]
+        assert len(found) == 1
+        return found[0].supplied
+
+    # Covers every key, but returns `missing` bare where the caller wrapped it.
+    assert measure('''
+    def to_dict(self):
+        return {"allowed": self.allowed, "reason": self.reason, "missing": self.missing}
+''') is False
+
+    # Binds a required key to the wrong field.
+    assert measure('''
+    def to_dict(self):
+        return {"allowed": self.reason, "reason": self.reason, "missing": list(self.missing)}
+''') is False
+
+    # Agrees on key, field and wrapper.
+    assert measure('''
+    def to_dict(self):
+        return {"allowed": self.allowed, "reason": self.reason, "missing": list(self.missing)}
+''') is True

@@ -84,7 +84,10 @@ class MethodDraft:
 
         return _digest({
             "parameters": list(self.parameters),
-            "items": [[i.key, i.field, i.wrapper] for i in self.items],
+            # Key order does not change the mapping a method returns, so two
+            # drafts differing only in the order they bind keys compute the same
+            # thing and must not be counted as separate discoveries.
+            "items": sorted([i.key, i.field, i.wrapper or ""] for i in self.items),
             "filtered": (
                 [self.filtered.collection, self.filtered.attribute, self.filtered.parameter]
                 if self.filtered else None
@@ -122,20 +125,24 @@ class NameMethod(Operation):
 
 @dataclass(frozen=True)
 class IncludeField(Operation):
-    """Read one field of the object into the value under construction."""
+    """Bind one key to one field of the object, optionally wrapped."""
 
     field: str
     wrapper: str | None = None
+    key: str | None = None
 
     def apply(self, draft: MethodDraft) -> MethodDraft | None:
-        if any(item.field == self.field for item in draft.items):
+        key = self.key or self.field
+        if any(item.key == key for item in draft.items):
             return None
-        item = MappingItem(key=self.field, field=self.field, wrapper=self.wrapper)
+        item = MappingItem(key=key, field=self.field, wrapper=self.wrapper)
         return replace(draft, items=draft.items + (item,))
 
     def describe(self) -> str:
         suffix = ":" + self.wrapper if self.wrapper else ""
-        return "include=" + self.field + suffix
+        key = self.key or self.field
+        prefix = key + "<-" if key != self.field else ""
+        return "include=" + prefix + self.field + suffix
 
 
 @dataclass(frozen=True)
@@ -360,6 +367,9 @@ class SearchReport:
     refused: dict[str, int] = field(default_factory=dict)
     adopted: Candidate | None = None
     survivors: int = 0
+    #: Survivors that actually differ in what they compute. Several spellings of
+    #: one behaviour is one discovery, not several.
+    surviving_behaviours: int = 0
 
     def refuse(self, reason: str) -> None:
         self.refused[reason] = self.refused.get(reason, 0) + 1
@@ -375,6 +385,7 @@ class SearchReport:
             "refused": dict(sorted(self.refused.items())),
             "refused_total": sum(self.refused.values()),
             "survivors": self.survivors,
+            "surviving_behaviours": self.surviving_behaviours,
             "adopted": (
                 {
                     "composition": list(self.adopted.composition),
@@ -523,6 +534,7 @@ def search(
 
     report.distinct_behaviours = len(behaviours)
     report.survivors = len(survivors)
+    report.surviving_behaviours = len({c.draft.fingerprint() for c in survivors})
 
     if survivors:
         # The requirement does not constrain which survivor is taken, so the tie

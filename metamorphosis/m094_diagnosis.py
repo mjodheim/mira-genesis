@@ -66,6 +66,42 @@ class CandidateClass:
         return (self.component_path, self.class_name)
 
 
+# ── How callers render an object ───────────────────────────────
+
+
+def _encode_rendering(entries: Sequence[tuple[str, str, str | None]]) -> str:
+    """Serialise (key, field, wrapper) triples into a comparable string.
+
+    The wrapper is part of the observation. A caller that wrote
+    ``list(goal.success_criteria)`` did not write ``goal.success_criteria``, and
+    a repair that returns the second does not reproduce the first.
+    """
+
+    return ",".join(sorted(
+        key + "=" + attribute + "|" + (wrapper or "")
+        for key, attribute, wrapper in entries
+    ))
+
+
+def decode_rendering(detail: str) -> tuple[tuple[str, str, str | None], ...]:
+    """Recover the (key, field, wrapper) triples encoded by `_encode_rendering`."""
+
+    triples: list[tuple[str, str, str | None]] = []
+    for piece in detail.split(","):
+        if not piece:
+            continue
+        key, _, rest = piece.partition("=")
+        attribute, _, wrapper = rest.partition("|")
+        triples.append((key, attribute, wrapper or None))
+    return tuple(triples)
+
+
+def rendering_fields(detail: str) -> frozenset[str]:
+    """The set of fields a rendering reads, ignoring keys and wrappers."""
+
+    return frozenset(attribute for _, attribute, _ in decode_rendering(detail))
+
+
 # ── Capability shapes ────────────────────────────────────────────────
 
 
@@ -196,21 +232,34 @@ class RenderAsMapping:
         if not fields:
             return []
 
-        identity = (class_node.name,)
         found: list[tuple[str, str]] = []
 
         for node in ast.walk(tree):
             if not isinstance(node, ast.Dict):
                 continue
-            read: dict[str, set[str]] = {}
-            for value in node.values:
-                base, attribute = _attribute_read(value)
-                if base is not None and attribute is not None:
-                    read.setdefault(base, set()).add(attribute)
 
-            for attributes in read.values():
+            # (key, field, wrapper) for every value that reads an object.
+            read: dict[str, list[tuple[str, str, str | None]]] = {}
+            for key, value in zip(node.keys, node.values):
+                base, attribute, wrapper = _attribute_read(value)
+                if base is None or attribute is None:
+                    continue
+                name = key.value if isinstance(key, ast.Constant) and isinstance(key.value, str) else attribute
+                read.setdefault(base, []).append((name, attribute, wrapper))
+
+            # A dict that reads several objects is evidence about each of them.
+            # An earlier revision required the dict to read exactly one object,
+            # on the reasoning that a mixed record is not a rendering of either.
+            # That was too strong and it was wrong: the `action_admission` record
+            # reads four fields of one decision alongside two of one action, and
+            # it is precisely the evidence that neither can render itself. What
+            # each object is asked for is its own slice, so each slice is judged
+            # on its own.
+            for entries in read.values():
+                attributes = {attribute for _, attribute, _ in entries}
                 if not attributes or not attributes <= fields:
                     continue
+
                 explainers = {
                     rival.identity for rival in rivals if attributes <= rival.fields
                 }
@@ -220,15 +269,33 @@ class RenderAsMapping:
                     continue
                 if not any(name == class_node.name for _, name in explainers):
                     continue
-                found.append((class_node.name, ",".join(sorted(attributes))))
+
+                found.append((class_node.name, _encode_rendering(entries)))
         return found
 
     def is_supplied_by(
         self, class_node: ast.ClassDef, target: str, detail: str
     ) -> bool:
-        """Does the class already define a method returning those fields as a mapping?"""
+        """Does the class define a method that reproduces what the callers wrote?
 
-        wanted = set(detail.split(","))
+        An earlier revision asked only whether some public method returned a
+        mapping whose *keys* covered the required ones. That is cheap to
+        satisfy: the field each key was bound to, and any container the caller
+        wrapped it in, were both unconstrained, so hundreds of different methods
+        passed and the search that produced them was not discriminating.
+
+        The requirement here is agreement. For every ``key -> field`` the callers
+        were writing by hand, the method must bind that same key to that same
+        field, wrapped exactly as the callers wrapped it. A method that returns
+        ``success_criteria`` bare where every caller wrote
+        ``list(success_criteria)`` does not let those callers delete their line,
+        so it does not supply the capability.
+        """
+
+        wanted = decode_rendering(detail)
+        if not wanted:
+            return False
+
         for node in class_node.body:
             if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
@@ -237,8 +304,11 @@ class RenderAsMapping:
             for inner in ast.walk(node):
                 if not isinstance(inner, ast.Return) or inner.value is None:
                     continue
-                rendered = _mapping_keys(inner.value)
-                if rendered is not None and wanted <= rendered:
+                produced = _mapping_bindings(inner.value)
+                if produced is None:
+                    continue
+                if all(produced.get(key) == (attribute, wrapper)
+                       for key, attribute, wrapper in wanted):
                     return True
         return False
 
@@ -274,23 +344,56 @@ def _compared_attribute_of(condition: ast.expr, bound_name: str) -> str | None:
     return None
 
 
-def _attribute_read(node: ast.expr) -> tuple[str | None, str | None]:
-    """For ``d.allowed`` return ``("d", "allowed")``.
+def _attribute_read(node: ast.expr) -> tuple[str | None, str | None, str | None]:
+    """For ``d.allowed`` return ``("d", "allowed", None)``.
 
-    ``list(d.missing)`` and ``tuple(d.missing)`` unwrap to the same pair, since
-    wrapping a field in a container is still reading that field.
+    ``list(d.missing)`` returns ``("d", "missing", "list")``. The wrapper is kept
+    rather than discarded because a candidate repair that returns the field bare
+    where the caller wrapped it does not reproduce what the caller wrote, and
+    acceptance has to be able to tell those apart.
     """
 
+    wrapper: str | None = None
     if (
         isinstance(node, ast.Call)
         and isinstance(node.func, ast.Name)
         and node.func.id in {"list", "tuple", "set", "dict", "sorted"}
         and len(node.args) == 1
     ):
+        wrapper = node.func.id
         node = node.args[0]
     if isinstance(node, ast.Attribute) and isinstance(node.value, ast.Name):
-        return node.value.id, node.attr
-    return None, None
+        return node.value.id, node.attr, wrapper
+    return None, None, None
+
+
+def _mapping_bindings(node: ast.expr) -> dict[str, tuple[str, str | None]] | None:
+    """For a returned dict literal, map each key to the (field, wrapper) it binds.
+
+    ``{"a": self.x, "b": list(self.y)}`` gives ``{"a": ("x", None), "b": ("y", "list")}``.
+    Returns None when the expression is not a dict literal at all.
+    """
+
+    if not isinstance(node, ast.Dict):
+        return None
+
+    bindings: dict[str, tuple[str, str | None]] = {}
+    for key, value in zip(node.keys, node.values):
+        if not (isinstance(key, ast.Constant) and isinstance(key.value, str)):
+            continue
+        wrapper: str | None = None
+        expr = value
+        if (
+            isinstance(expr, ast.Call)
+            and isinstance(expr.func, ast.Name)
+            and expr.func.id in {"list", "tuple", "set", "dict", "sorted"}
+            and len(expr.args) == 1
+        ):
+            wrapper = expr.func.id
+            expr = expr.args[0]
+        if isinstance(expr, ast.Attribute) and isinstance(expr.value, ast.Name):
+            bindings[key.value] = (expr.attr, wrapper)
+    return bindings
 
 
 def _mapping_keys(node: ast.expr) -> frozenset[str] | None:
@@ -489,22 +592,43 @@ def _python_sources(repo_root: Path, exclude: Path) -> Iterator[tuple[Path, ast.
 def _pool_by_target(
     sites: dict[tuple[str, str], set[str]]
 ) -> dict[tuple[str, str], set[str]]:
-    """Collapse per-subset demand onto one entry per target.
+    """Pool demand for one target, but only across renderings that agree.
 
-    The detail becomes the union of the subsets observed, which is what a single
-    renderer would have to cover.
+    Callers reading different subsets of the same object want one method, and a
+    renderer covering the union satisfies all of them -- so those pool.
+
+    Callers that bind the *same key differently* do not. If one writes
+    ``list(x.missing)`` and another writes ``x.missing``, no single method
+    reproduces both, and unioning them would manufacture a requirement nothing
+    can satisfy: the component would read as permanently insufficient for a
+    reason no repair could ever address. Those stay separate requirements, each
+    with its own demand, and the larger one is simply the more demanded.
     """
 
-    details: dict[str, set[str]] = {}
-    files: dict[str, set[str]] = {}
-    for (target, detail), paths in sites.items():
-        details.setdefault(target, set()).update(detail.split(","))
-        files.setdefault(target, set()).update(paths)
+    pooled: dict[str, list[tuple[dict[str, tuple[str, str | None]], set[str]]]] = {}
 
-    return {
-        (target, ",".join(sorted(details[target]))): files[target]
-        for target in sorted(details)
-    }
+    for (target, detail), paths in sorted(sites.items()):
+        rendering = {key: (attribute, wrapper)
+                     for key, attribute, wrapper in decode_rendering(detail)}
+        groups = pooled.setdefault(target, [])
+        for existing, existing_paths in groups:
+            if all(existing.get(key, binding) == binding
+                   for key, binding in rendering.items()):
+                existing.update(rendering)
+                existing_paths.update(paths)
+                break
+        else:
+            groups.append((dict(rendering), set(paths)))
+
+    result: dict[tuple[str, str], set[str]] = {}
+    for target in sorted(pooled):
+        for rendering, paths in pooled[target]:
+            detail = _encode_rendering(
+                [(key, attribute, wrapper)
+                 for key, (attribute, wrapper) in rendering.items()]
+            )
+            result[(target, detail)] = paths
+    return result
 
 
 def candidate_classes(
