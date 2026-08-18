@@ -42,14 +42,15 @@
     "P11_rollback_is_exact_and_behavioural",
     "P12_chronology_track_a_and_no_leaked_evidence"
   ],
+  "date_frozen": "2026-08-18",
   "decision_slot": "D063",
   "design_audit": {
     "audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9",
     "corrected_measure_p5_defect_and_repair": "RenderAsMapping.min_fields was authored, and sweeping it over 2-6 moved the selected component on three of five values. The declared value 3 was the outlier: 2, 4 and 5 all selected mira_core/contracts.py. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold, then repaired properly by removing the constant. Attribution now asks how many reachable classes could explain a call site: exactly one is evidence about that class, several is evidence about none. Nothing is sweepable, P5 passes, and the earlier selection of mira_core/safety.py is withdrawn as an artifact of the constant rather than a finding.",
     "defects_found_before_freeze": 12,
     "document": "experiments/M094/DESIGN_AUDIT.md",
-    "instrument": "scripts/audit_m094_design.py",
     "inherited_implementation_fails_p2_p3_p4_and_p6": true,
+    "instrument": "scripts/audit_m094_design.py",
     "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c"
   },
   "diagnostic_substrate": {
@@ -71,7 +72,12 @@
     "the_substrate_remains_authored_and_is_the_expected_next_ceiling": true
   },
   "eligible_components": {
-    "drawn_from": "mira_core, enumerated at freeze",
+    "drawn_from": "mira_core",
+    "enumerated": [
+      "mira_core/contracts.py",
+      "mira_core/memory.py",
+      "mira_core/safety.py"
+    ],
     "no_component_may_be_unreachable": "for every eligible component there must exist an admissible observation under which it is selected; an eligible component that no observation can select is excluded from the set rather than left as a decorative alternative",
     "selection_is_the_lineage_s": true
   },
@@ -98,10 +104,11 @@
     "the recorded attempt provenance disagrees with the preserved artifacts",
     "a real defect in the system is corrected after the verdict in order to save the result"
   ],
+  "frozen_before_any_qualification_data_existed": true,
   "hypothesis": {
     "id": "H39",
     "registered": true,
-    "registered_status": "PROPOSED — registered as an open question in SCIENTIFIC_HYPOTHESES.md; not frozen, no qualification data exists",
+    "registered_status": "REGISTERED and FROZEN as an open question in SCIENTIFIC_HYPOTHESES.md. Not supported: no qualification run has been performed.",
     "statement": "A lineage can locate the component that limits it and construct the repair, without being told which component to change or what the change is."
   },
   "milestone": "M094",
@@ -112,11 +119,24 @@
   },
   "qualification": {
     "cross_component": "the requirement must be satisfied on a component other than the one used during development, so that a repair mechanism specialised to the development component fails",
+    "draw_rule": "Order entries by sha256(entry_digest + adopted mechanism digest) and take the first two whose components differ. The mechanism digest does not exist until adoption, so the draw cannot be known at this freeze.",
     "drawn_by": "a separate process, with a salt derived from the adopted mechanism's own digest, which does not exist until adoption",
+    "entries_drawn_per_qualification": 2,
     "experimenter_blindness_is_not_claimed": "The pool of candidate requirements is authored and committed at this freeze, and the draw is a deterministic function of the adopted mechanism's digest, so it is reproducible by anyone. What is claimed is that the lineage cannot import, read or reach any of it before adoption. No claim is made that the experimenter was blind to the pool.",
     "hidden_cases_per_requirement": 5,
     "no_new_operation_may_be_added_during_qualification": true,
-    "not_importable_by_the_lineage": true
+    "not_importable_by_the_lineage": true,
+    "pool": "experiments/M094/QUALIFICATION_POOL.json",
+    "pool_components": [
+      "mira_core/agent.py",
+      "mira_core/calibration.py",
+      "mira_core/container.py",
+      "mira_core/harbor.py",
+      "mira_core/model.py",
+      "mira_core/skills.py"
+    ],
+    "pool_digest": "44f46e6b92996e14385d5ff713b18676ea59bfa3cfca32493f0fd98d9cc0a9db",
+    "pool_entries": 9
   },
   "reattempts_m092": false,
   "repair_substrate": {
@@ -132,8 +152,8 @@
     "superseded_runs_are_preserved_and_disclosed": true
   },
   "schema": "m094-protocol-v1",
-  "status": "DRAFT_NOT_FROZEN_AWAITING_OWNER_SIGNATURE",
-  "status_note": "This document is a draft. It is not frozen, no hypothesis is registered, no qualification data exists and none may be generated. Freezing is an act of the project owner and requires replacing this status, recording the freeze commit, and registering H39 in SCIENTIFIC_HYPOTHESES.md. Nothing in this file may be cited as precommitted until that happens.",
+  "status": "FROZEN",
+  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared.",
   "subtitle": "The lineage chooses what to repair, and builds the repair",
   "title": "Autonomous Component Diagnosis and Repair Synthesis",
   "track": "A",

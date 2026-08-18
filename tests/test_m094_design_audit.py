@@ -38,10 +38,43 @@ def protocol() -> dict[str, object]:
 # ── The draft must stay a draft ──────────────────────────────────────
 
 
-def test_protocol_is_not_frozen(protocol: dict[str, object]) -> None:
-    assert protocol["status"] == "DRAFT_NOT_FROZEN_AWAITING_OWNER_SIGNATURE"
-    assert "not frozen" in protocol["status_note"]
-    assert "requires replacing this status" in protocol["status_note"]
+def test_protocol_is_frozen_and_says_what_that_binds(protocol: dict[str, object]) -> None:
+    """Frozen by the owner, before any qualification data existed.
+
+    A freeze is only worth anything if what it binds is written down. The
+    eligible set must be enumerated rather than described, the qualification pool
+    must exist and be bound by digest, and the retry discipline must be explicit.
+    """
+
+    assert protocol["status"] == "FROZEN"
+    assert protocol["frozen_before_any_qualification_data_existed"] is True
+    assert protocol["date_frozen"] == "2026-08-18"
+
+    eligible = protocol["eligible_components"]["enumerated"]
+    assert eligible == [
+        "mira_core/contracts.py",
+        "mira_core/memory.py",
+        "mira_core/safety.py",
+    ], "the eligible set must be enumerated, not described"
+
+    qualification = protocol["qualification"]
+    pool = REPO_ROOT / qualification["pool"]
+    assert pool.exists(), "the protocol binds a pool that must exist at the freeze"
+
+    committed = json.loads(pool.read_text(encoding="utf-8"))
+    assert committed["pool_digest"] == qualification["pool_digest"]
+    assert len(committed["entries"]) == qualification["pool_entries"]
+
+    note = protocol["status_note"]
+    assert "may not be repaired to save a result" in note
+
+
+def test_the_freeze_did_not_smuggle_in_a_result() -> None:
+    """A protocol frozen after a result is not a precommitment."""
+
+    forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
+    present = [name for name in forbidden if (PROTOCOL.parent / name).exists()]
+    assert present == [], f"qualification artefacts exist at the freeze: {present}"
 
 
 def test_no_qualification_data_exists_before_the_freeze() -> None:
@@ -50,19 +83,25 @@ def test_no_qualification_data_exists_before_the_freeze() -> None:
     assert present == [], f"qualification artefacts exist before any freeze: {present}"
 
 
-def test_hypothesis_is_registered_as_open_and_claims_nothing(
+def test_hypothesis_is_frozen_but_still_claims_nothing(
     protocol: dict[str, object],
 ) -> None:
+    """A frozen protocol is a precommitment, not a result."""
+
     hypothesis = protocol["hypothesis"]
     assert hypothesis["id"] == "H39"
-    assert "PROPOSED" in hypothesis["registered_status"]
+    assert "REGISTERED and FROZEN" in hypothesis["registered_status"]
+    assert "Not supported" in hypothesis["registered_status"]
 
     register = (REPO_ROOT / "SCIENTIFIC_HYPOTHESES.md").read_text(encoding="utf-8")
-    assert "## H39" in register, "H39 must be registered as an open question"
+    assert "## H39" in register
 
     section = register.split("## H39", 1)[1]
-    assert "**PROPOSED" in section
-    assert "SUPPORTED" not in section.split("**What it would not establish", 1)[0]
+    assert "FROZEN AND OPEN" in section
+    assert "No qualification run has been performed" in section
+    # The register must not read as support anywhere before the boundary section.
+    before = section.split("**What it would not establish", 1)[0]
+    assert "**SUPPORTED" not in before
 
 
 def test_every_claim_boundary_flag_is_false(protocol: dict[str, object]) -> None:
