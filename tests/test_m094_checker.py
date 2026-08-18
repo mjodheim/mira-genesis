@@ -152,10 +152,18 @@ def test_p6_fails_while_the_repair_shape_is_authored(report: dict) -> None:
 # ── P5 keeps reporting the disclosed instability ─────────────────────
 
 
-def test_p5_still_fails_on_the_threshold_sweep(report: dict) -> None:
+def test_p5_passes_now_that_no_constant_can_decide(report: dict) -> None:
+    """Defect 5 is repaired: there is no sweepable knob left.
+
+    `RenderAsMapping.min_fields` was authored and its declared value 3 was the
+    outlier that selected `mira_core/safety.py`; 2, 4 and 5 all selected
+    `mira_core/contracts.py`, which is what the threshold-free rule selects too.
+    """
+
     condition = _condition(report, "P5")
-    assert condition["computed"] is True and condition["passed"] is False
-    assert "not stable" in condition["evidence"]
+    assert condition["computed"] is True and condition["passed"] is True, condition["evidence"]
+    assert condition["detail"]["numeric_constants_in_capability_shapes"] == {}
+    assert condition["detail"]["selected"] == "mira_core/contracts.py"
 
 
 # ── The verdict rule ─────────────────────────────────────────────────
@@ -164,7 +172,8 @@ def test_p5_still_fails_on_the_threshold_sweep(report: dict) -> None:
 def test_verdict_is_negative_for_real_failures_only(report: dict) -> None:
     assert report["schema"] == "m094-checker-v2"
     assert report["verdict"] == "negative"
-    assert set(report["failed_conditions"]) == {"P5", "P6"}
+    # P6 alone now: the repair shape is still an authored template.
+    assert set(report["failed_conditions"]) == {"P6"}
     assert set(report["uncomputed_conditions"]) == {"P7", "P8", "P9", "P10", "P11"}
     assert report["passed"] + report["failed"] + report["uncomputed"] == 12
 

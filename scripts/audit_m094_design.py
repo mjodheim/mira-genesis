@@ -177,13 +177,19 @@ def template_authorship() -> dict:
 
 
 def corrected_measure_threshold_sensitivity() -> dict:
-    """Does the corrected measure's own authored constant decide the winner?
+    """Is any authored constant still able to decide which component is selected?
 
-    `RenderAsMapping.min_fields` is authored. Defect 3 was diagnosed partly by
-    showing that flattening the inherited severities changed nothing, so the
-    same question must be put to the replacement: if the selected component
-    moves when the threshold moves, then the constant is what selects, and the
-    measure has reproduced the defect it was written to remove.
+    Defect 5 was exactly that: `RenderAsMapping.min_fields` was authored, and
+    sweeping it over 2..6 moved the selection on three of five values. The value
+    that made `mira_core/safety.py` win was the one written down.
+
+    The knob is gone. Attribution now asks how many reachable classes could
+    explain a call site: exactly one is evidence about that class, several is
+    evidence about none. That is a property of the repository, and there is
+    nothing left to sweep.
+
+    This function no longer sweeps; it verifies there is no sweepable constant,
+    so that reintroducing one turns the audit red instead of passing quietly.
     """
 
     import metamorphosis.m094_diagnosis as diagnosis
@@ -193,31 +199,45 @@ def corrected_measure_threshold_sensitivity() -> dict:
         "mira_core/safety.py",
         "mira_core/contracts.py",
     ]
-    original = diagnosis.CAPABILITY_SHAPES
-    sweep: dict[str, object] = {}
-    try:
-        for threshold in (2, 3, 4, 5, 6):
-            diagnosis.CAPABILITY_SHAPES = (
-                diagnosis.FilterByAttribute(),
-                diagnosis.RenderAsMapping(min_fields=threshold),
-            )
-            result = diagnosis.diagnose(REPO_ROOT, components)
-            sweep[str(threshold)] = {
-                "selected": result.selected,
-                "unmet": [
-                    {"class": i.class_name, "demand": i.demand} for i in result.unmet
-                ],
-            }
-    finally:
-        diagnosis.CAPABILITY_SHAPES = original
 
-    selections = {row["selected"] for row in sweep.values()}  # type: ignore[index]
+    numeric_knobs: dict[str, dict[str, int]] = {}
+    for shape in diagnosis.CAPABILITY_SHAPES:
+        knobs = {
+            name: value
+            for name, value in vars(shape).items()
+            if isinstance(value, int) and not isinstance(value, bool)
+        }
+        if knobs:
+            numeric_knobs[shape.name] = knobs
+
+    result = diagnosis.diagnose(REPO_ROOT, components)
+
     return {
-        "declared_threshold": diagnosis.RenderAsMapping().min_fields,
-        "sweep": sweep,
-        "distinct_selections": sorted(s for s in selections if s),
-        "selection_is_stable_across_thresholds": len(selections) == 1,
-        "authored_constant_decides_the_winner": len(selections) > 1,
+        "selected": result.selected,
+        "numeric_constants_in_capability_shapes": numeric_knobs,
+        "a_constant_can_still_decide_the_winner": bool(numeric_knobs),
+        "selection_is_stable_across_thresholds": not numeric_knobs,
+        "authored_constant_decides_the_winner": bool(numeric_knobs),
+        "attribution_rule": (
+            "a call site counts for a class when exactly one reachable class could "
+            "explain it; ambiguous sites count for none"
+        ),
+        "superseded_sweep": {
+            "constant": "RenderAsMapping.min_fields",
+            "observed": {"2": "mira_core/contracts.py", "3": "mira_core/safety.py",
+                         "4": "mira_core/contracts.py", "5": "mira_core/contracts.py",
+                         "6": None},
+            "note": (
+                "3 was the outlier. The threshold-free rule agrees with the other "
+                "values, so the earlier selection of mira_core/safety.py was an "
+                "artifact of the one authored value rather than a finding."
+            ),
+        },
+        "unmet": [
+            {"component": i.component_path, "class": i.class_name, "demand": i.demand,
+             "fields_read": len(i.detail.split(","))}
+            for i in result.unmet
+        ],
     }
 
 
@@ -273,11 +293,12 @@ def main() -> int:
 
     sens = report["corrected_measure_threshold_sensitivity"]
     print()
-    print("  corrected measure, threshold sweep:")
-    for threshold, row in sens["sweep"].items():
-        print(f"    min_fields={threshold}: {row['selected']}")
-    if sens["authored_constant_decides_the_winner"]:
-        print("    UNSTABLE — the authored threshold decides the winner")
+    print("  corrected measure:")
+    print(f"    selected: {sens['selected']}")
+    if sens["a_constant_can_still_decide_the_winner"]:
+        print(f"    UNSTABLE — authored constants remain: {sens['numeric_constants_in_capability_shapes']}")
+    else:
+        print("    no numeric constant governs attribution; nothing left to sweep")
 
     return 0
 

@@ -45,8 +45,8 @@
   "decision_slot": "D063",
   "design_audit": {
     "audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9",
-    "corrected_measure_also_fails_p5": "RenderAsMapping.min_fields is authored, and sweeping it over 2-6 moves the selected component on three of five values. The declared value 3 is what makes mira_core/safety.py win. The measure removed an authored severity and introduced an authored threshold, which is Defect 3 in a new place. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold.",
-    "defects_found_before_freeze": 5,
+    "corrected_measure_p5_defect_and_repair": "RenderAsMapping.min_fields was authored, and sweeping it over 2-6 moved the selected component on three of five values. The declared value 3 was the outlier: 2, 4 and 5 all selected mira_core/contracts.py. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold, then repaired properly by removing the constant. Attribution now asks how many reachable classes could explain a call site: exactly one is evidence about that class, several is evidence about none. Nothing is sweepable, P5 passes, and the earlier selection of mira_core/safety.py is withdrawn as an artifact of the constant rather than a finding.",
+    "defects_found_before_freeze": 12,
     "document": "experiments/M094/DESIGN_AUDIT.md",
     "instrument": "scripts/audit_m094_design.py",
     "inherited_implementation_fails_p2_p3_p4_and_p6": true,
