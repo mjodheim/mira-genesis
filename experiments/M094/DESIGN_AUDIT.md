@@ -436,6 +436,72 @@ not a result. A milestone cannot become positive by having nothing left that any
 through P11 concern what a qualification run would show, and no run exists. **M094 is still not
 freezable, and the reason has moved from a defect to a missing run.**
 
+## The acceptance predicate, tightened
+
+P6 passed while certifying very little: 486 of 675 complete candidates were accepted, because
+`is_supplied_by` asked only whether *some* public method returned a mapping whose **keys** covered
+the required ones. The field each key was bound to, and any container the caller had wrapped it in,
+were both free. That is cheap to satisfy, and a search whose requirement is cheap is not a search.
+
+Acceptance now requires **agreement**. For every `key -> field` the callers were writing by hand,
+the method must bind that same key to that same field, wrapped exactly as they wrapped it. A method
+returning `success_criteria` bare where every caller wrote `list(success_criteria)` does not let
+those callers delete their line, so it does not supply the capability. The wrapper is therefore part
+of the observation and is carried through the diagnosis rather than discarded.
+
+Two further corrections fell out of doing this.
+
+**Key order is not behaviour.** Drafts differing only in the order they bind keys return the same
+mapping, so the search now deduplicates by an order-insensitive fingerprint and reports *surviving
+behaviours* alongside surviving spellings. Several spellings of one behaviour is one discovery.
+
+**Contradictory renderings must not be pooled.** If one caller writes `list(x.missing)` and another
+writes `x.missing`, no single method reproduces both. Unioning them manufactures a requirement
+nothing can satisfy, and the component would read as permanently insufficient for a reason no repair
+could address. Those now stay separate requirements, each with its own demand.
+
+### What it did to the search
+
+| | before | after |
+|---|---|---|
+| complete methods built | 675 | 189 |
+| refused | 189 | **186** |
+| accepted | **486** | **3** |
+| surviving behaviours | not measured | **1** |
+
+98.4% of complete candidates are now refused, and the three that survive differ only in the method's
+name — one behaviour. This is the shape M091 reported, arrived at by making the requirement
+behavioural rather than by making the search cleverer.
+
+### A rule that was tried and withdrawn
+
+While doing this, demand was briefly restricted to dict literals reading **exactly one** object, on
+the reasoning that a mixed record is not a rendering of either. That was too strong and it was
+**wrong**: `mira_core/agent.py` builds an `action_admission` record reading four fields of one
+`SafetyDecision` alongside two of one `Action`, and that is precisely the evidence that neither can
+render itself.
+
+The rule was withdrawn on that reasoning. It is worth recording that it *also* made
+`mira_core/safety.py` unreachable and failed P4 — but the rule was reverted because it misdescribed
+the evidence, not because a condition went red. Each object's slice of a mixed record is now judged
+on its own.
+
+The over-attribution disclosed earlier stands unchanged: a site reading a single distinctive field
+still counts, and a renderer would not obviously help such a caller. Any minimum excluding it would
+reintroduce Defect 5.
+
+### Checker state
+
+| | conditions |
+|---|---|
+| pass | P1, P2, P3, P4, P5, P6, P12 |
+| fail | *none* |
+| uncomputed | P7, P8, P9, P10, P11 — no qualification run exists |
+
+Verdict: **incomplete**. P6 now certifies something worth certifying — the repair shape is not
+written down *and* the requirement that selects it is discriminating. It still does not certify a
+qualification, because there has not been one.
+
 ## What is not in question
 
 The transformation *infrastructure* M093 rehearsed — subprocess sandbox, A/B comparison,
