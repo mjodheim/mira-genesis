@@ -110,17 +110,48 @@ def test_p7_does_not_pass_because_nothing_was_qualified(report: dict) -> None:
     assert not (condition["computed"] and condition["passed"])
 
 
-def test_p7_fails_loudly_if_a_result_appears_under_a_draft(
+def test_p7_fails_loudly_if_a_result_has_nothing_behind_it(
     protocol: dict, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    """A result artifact with no qualification in it must fail, loudly and computed.
+
+    This test previously asserted that P7 fails *because* a RESULT.json exists at all, and
+    checked for the string "RESULT.json" in the evidence. That polarity is the blocker
+    `docs/REPOSITORY_AUDIT_2026_08_18.md` recorded: it made a positive verdict unreachable,
+    because performing the experiment failed the condition named for the experiment
+    succeeding. The property worth keeping is the one asserted here -- a result the checker
+    cannot substantiate is a computed failure and not an `uncomputed` shrug -- and it is now
+    checked by what the condition concludes rather than by how it words it.
+    """
+
     import check_m094_result as checker
 
     monkeypatch.setattr(checker, "EXPERIMENT", tmp_path)
     (tmp_path / "RESULT.json").write_text("{}", encoding="utf-8")
 
     result = checker.check_p7(protocol)
+    assert result.computed is True, "an unsubstantiated result must not read as uncomputed"
+    assert result.passed is False
+    assert result.evidence
+
+
+def test_p7_fails_when_qualification_data_exists_with_no_run(
+    protocol: dict, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The leak the old polarity was reaching for, stated precisely.
+
+    Qualification data appearing *without* a run that produced it is the real violation: it
+    means the held-out material exists ahead of the thing that was supposed to draw it.
+    """
+
+    import check_m094_result as checker
+
+    monkeypatch.setattr(checker, "EXPERIMENT", tmp_path)
+    (tmp_path / "QUALIFICATION.json").write_text("{}", encoding="utf-8")
+
+    result = checker.check_p7(protocol)
     assert result.computed is True and result.passed is False
-    assert "RESULT.json" in result.evidence
+    assert "QUALIFICATION.json" in result.evidence
 
 
 # ── P3 measures the diagnosis, not its own fixture ───────────────────

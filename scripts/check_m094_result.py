@@ -53,6 +53,22 @@ RESULT_PATH = EXPERIMENT / "RESULT.json"
 QUALIFICATION_PATH = EXPERIMENT / "QUALIFICATION.json"
 
 
+def _result_path() -> Path:
+    """Resolved at call time, not at import.
+
+    Both constants above are computed from `EXPERIMENT` when the module loads, so a test that
+    redirects `EXPERIMENT` alone would leave the run loader reading the real experiment
+    directory -- and would silently observe the pre-run branch while believing it had staged a
+    run. Deriving the path per call means redirecting `EXPERIMENT` is enough.
+    """
+
+    return EXPERIMENT / "RESULT.json"
+
+
+def _qualification_path() -> Path:
+    return EXPERIMENT / "QUALIFICATION.json"
+
+
 def load_run() -> dict | None:
     """The preserved run, or ``None`` if none exists.
 
@@ -64,12 +80,14 @@ def load_run() -> dict | None:
     construction.
     """
 
-    if not RESULT_PATH.exists():
+    result_path = _result_path()
+    if not result_path.exists():
         return None
-    run = json.loads(RESULT_PATH.read_text(encoding="utf-8"))
-    if QUALIFICATION_PATH.exists():
+    run = json.loads(result_path.read_text(encoding="utf-8"))
+    qualification_path = _qualification_path()
+    if qualification_path.exists():
         run.setdefault(
-            "qualification", json.loads(QUALIFICATION_PATH.read_text(encoding="utf-8"))
+            "qualification", json.loads(qualification_path.read_text(encoding="utf-8"))
         )
     return run
 
