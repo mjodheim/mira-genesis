@@ -5,11 +5,13 @@ own changes live on `research/repository-audit-and-acceleration` so the freeze P
 Scope: the whole repository, not only M093/M094. Every number below was measured on this checkout
 with `.venv-win` (CPython 3.11.16, Windows) and can be re-measured with the commands quoted.
 
-**Verification state of the final branch:** full suite **2531 passed, 0 failed, 12 skipped in
-15 m 11 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
-dependencies all pass; the diagnosis digest is unchanged at `48cd5e9c2354a365…` and
-`CHECK_REPORT.json` still digests to `cbd3ff14caf18051…` with verdict `incomplete` (7 passed, 0
-failed, 5 uncomputed). Every digest this audit touched is byte-identical to what it found.
+**Verification state of the final branch:** full suite **2580 passed, 0 failed, 12 skipped in
+14 m 31 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
+dependencies all pass. The diagnosis digest is unchanged at `48cd5e9c2354a365…` and the adopted
+mechanism digest at `3cd1314f4ed0fea0…` — including across the operation-set repair in §B, which
+is why the qualification draw did not move. `CHECK_REPORT.json` still reports `incomplete`
+(7 passed, 0 failed, 5 uncomputed); its own digest changed because condition detail payloads did,
+and the committed report is regenerated from the checker rather than pinned.
 
 **Toolchain note (19 August).** An application-control policy on this machine now blocks every
 executable under `%APPDATA%`, which includes the uv-managed CPython 3.11.16 the earlier measurements
