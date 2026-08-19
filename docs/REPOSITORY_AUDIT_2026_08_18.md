@@ -5,9 +5,17 @@ own changes live on `research/repository-audit-and-acceleration` so the freeze P
 Scope: the whole repository, not only M093/M094. Every number below was measured on this checkout
 with `.venv-win` (CPython 3.11.16, Windows) and can be re-measured with the commands quoted.
 
-**The canonical run was performed on 19 August 2026.** Verdict `positive`, 12 of 12 conditions
-computed and true, with one defect in P11's evidence found *after* the verdict and deliberately
-not repaired — see `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
+**M094 has been run and returned a positive qualified scientific result.** Attempt 1 (19 August
+2026) returned `positive` and was then **withdrawn** over a defect found after its verdict: P11's
+`restoration_is_byte_exact` was measured over decoded text and could not see the rollback normalise
+a component's line endings. Rather than repair a defect after a verdict — a falsifier the protocol
+names — the attempt was preserved and disclosed, `TransformationStore` was corrected to work in
+bytes, and **attempt 2** was run on the same mechanism and the same draw: `positive`, 12 of 12
+conditions computed and true, qualification 2/2 cross-component, and the target component restored
+byte-for-byte. See `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
+
+Everything below this line was written before the run and is kept as the audit that produced it.
+Where a section says a blocker is open, read it against the status markers in §G.
 
 **Verification state of the final branch:** full suite **2620 passed, 0 failed, 12 skipped in
 10 m 17 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
@@ -743,8 +751,10 @@ true"*. Trace what happens the moment a run produces artifacts:
 
 So: before a run the verdict is `incomplete`; after a run it becomes `negative`. **`positive` is
 unreachable by construction.** The checker is a pre-run *protocol validator* wearing the name of a
-result checker — which is what its own header admits ("Because M094 has never been run, there is no
-RESULT.json to validate against"), but the protocol's `verdict_rule` does not know that.
+result checker — which is what its own header admitted at the time of this audit ("Because M094 has
+never been run, there is no RESULT.json to validate against"), but the protocol's `verdict_rule` did
+not know that. *(That header was rewritten when blocker 1 was closed; the quotation is kept because
+it is the evidence for the finding.)*
 
 *Fix:* give each of P7–P12 the branch it lacks — read the preserved artifacts and recompute — using
 `scripts/check_m091_result.py` as the model. Not a rewrite: the pre-run behaviour stays as the

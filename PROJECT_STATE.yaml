@@ -2474,6 +2474,75 @@ phase_eight:
     generality_gate_advanced: false
     agi_evidence: false
 
+  M094:
+    title: autonomous component diagnosis and repair synthesis
+    epistemic_track: endogenous_bounded_lineage
+    status: positive_qualified_scientific_result
+    hypothesis: H39
+    decision_slot: D063
+    decision_slot_filled: false
+    protocol_frozen: '9b69d7f'
+    run_commit: '43ef9d30'
+    attempt: 2
+    prior_attempts:
+      - WITHDRAWN_RESULT_ATTEMPT_1.json
+    selected_component: mira_core/contracts.py
+    repaired_classes: [Goal, Observation]
+    adopted_mechanism_digest: 259e12f5cbf86ec75c7c03c89deded86804a0aad170bb9407936fb338f413381
+    conditions_computed: 12
+    conditions_true: 12
+    verdict: positive
+    qualification:
+      drawn_after_adoption: true
+      entries: 2
+      satisfied: 2
+      cross_component: true
+      components: [mira_core/agent.py, mira_core/container.py]
+    controls_closed_nothing:
+      - random_component_selection
+      - template_only_repair
+    budget_arm_reached_same_mechanism: true
+    amendments:
+      - id: A1
+        summary: the qualification pool's hidden cases were never executed
+      - id: A2
+        summary: acceptance read a candidate where it had to run it
+      - id: A3
+        summary: the protocol's design-audit digest identified nothing
+      - id: A4
+        summary: the repair target was decided by alphabetical order on a class name
+    withdrawn_attempt_1:
+      verdict_was: positive
+      withdrawn_for: >-
+        P11 reported restoration_is_byte_exact from a digest over decoded text, which could not
+        see the rollback normalise the component's line endings from CRLF to LF
+      preserved_at: experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json
+      disclosed_at: experiments/M094/POST_VERDICT_DISCLOSURE.md
+    demonstrates:
+      - autonomous_component_selection_by_measurement
+      - repair_assembled_from_composable_operations
+      - acceptance_by_execution
+      - independent_behavioural_validation
+      - transactional_adoption
+      - byte_exact_rollback
+      - persistence_across_process_death
+      - cross_component_qualification_drawn_after_adoption
+    does_not_demonstrate:
+      - endogenous_choice_of_the_eligible_component_set
+      - endogenous_choice_of_the_admissible_observations
+      - endogenous_extension_of_the_operation_set
+      - sequential_or_cumulative_repair
+      - recursive_self_improvement
+    still_authored_next_ceiling:
+      - eligible_component_set
+      - admissible_observations
+      - operation_set
+      - composition_bound
+    external_model_called: false
+    network_calls: 0
+    generality_gate_advanced: false
+    agi_evidence: false
+
 measurement_track:
   reserved_experiment: M045
   status: open_and_separate

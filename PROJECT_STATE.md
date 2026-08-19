@@ -1061,7 +1061,26 @@ question remains open but is not a missing completion gate.
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | Frozen paired execution passed 6/6 feasible arm tasks and 0/6 impossible tasks, but emitted no refusal: true-refusal rate 0/3, margin 0.0, zero saved steps, zero defect and no retry. Result `75e84682`. |
 | M075 | **PUBLIC MODEL DEVELOPMENT COMPLETE — NON-SCIENTIFIC** | One committed 12-container run preserved 43 decisions: context 2/3 true refusals, no false refusal, 3/3 feasible submission; independent baseline 0/3 and no submission. H21/private transfer remain untested. |
 | M092 | **ABORTED WITHOUT VERDICT** | The canonical search was voluntarily interrupted (PR #167). Protocol frozen at `aa18d15` (M092-A) and `4903300` (M092-B, 15 conditions), search armed at `7190ff8`. Last published canonical segment: segment 3. No terminal candidate, no independent reproduction, no qualification. H38 unresolved, D062 unfilled; the A checkpoint infrastructure remains valid. |
+| M094 | **POSITIVE QUALIFIED SCIENTIFIC RESULT** | The lineage located the component limiting it and built the repair, without being told either. Run at `43ef9d30` as attempt 2; mechanism `259e12f5` repairs `Goal` and `Observation` in `mira_core/contracts.py`. Qualification 2/2 cross-component (`AgentResult`, `ContainerSpec`), all twelve conditions computed and true. Amendments A1–A4 before arming; attempt 1 withdrawn and preserved over a P11 byte-exactness defect. Eligible set, observations, operation set and bound remain authored. D063 unfilled. |
 | M093 | **ENGINEERING REHEARSAL — NON-QUALIFYING DEVELOPMENT RESULT** | First real persistent component transformation on `mira_core/memory.py` (`MemoryLedger`, +17 lines). Demonstrates transformation infrastructure, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Does NOT demonstrate autonomous diagnosis, component selection or non-predefined repair generation. All test assertions pass (original 6/6, candidate 7/7, held-out 4/4). |
+
+- **M094 is a POSITIVE QUALIFIED SCIENTIFIC RESULT — the lineage chose what to repair and built the
+  repair.** Protocol frozen 18 August 2026 (reached `main` as `9b69d7f`), run at `43ef9d30` on
+  19 August 2026 as **attempt 2**. The diagnosis selected `mira_core/contracts.py` by measurement
+  and repaired both classes tied at demand 4, `Goal` and `Observation`; the adopted mechanism is
+  `259e12f5`. Qualification **2/2 satisfied, cross-component** on entries drawn after adoption from
+  the mechanism's own digest: `AgentResult` (a computed `@property`) and `ContainerSpec` (a re-keyed
+  binding). All twelve conditions computed and true. Controls: random selection and template-only
+  each closed nothing; more budget reached the same mechanism.
+  **Four amendments, all before arming and all recorded permanently in the protocol**: A1 the pool's
+  hidden cases were never executed (7 of 9 entries unbuildable); A2 acceptance read a candidate
+  where it had to run it; A3 the protocol's design-audit digest identified nothing; A4 the repair
+  target was decided by alphabetical order when two classes tie.
+  **Attempt 1 is withdrawn and preserved**, with its positive verdict and the P11 defect that
+  withdrew it — `restoration_is_byte_exact` was measured over decoded text and did not see the
+  rollback normalise CRLF to LF. See `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
+  **Still authored, and the next ceiling**: the eligible component set, the admissible observations,
+  the operation set and the composition bound. D063 is unfilled.
 
 ## Parallel measurement track — M045
 

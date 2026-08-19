@@ -8,6 +8,15 @@
 > original, with `git status` showing the file unmodified.
 >
 > The account below is attempt 1's, unaltered. It is the reason attempt 2 exists.
+>
+> **On reading `PROTOCOL.json` after the run.** Its `hypothesis.registered_status` still says
+> "Not supported: no qualification run has been performed", and its `status_note` still describes
+> a milestone awaiting one. Those are freeze-time statements and are left exactly as frozen: the
+> result records `protocol_raw_sha256`, so the protocol is byte-bound to the run that cites it and
+> cannot be edited without breaking the binding. A first attempt to add a run record *inside* the
+> protocol was reverted for precisely that reason — the binding test caught it. The run is recorded
+> in `RESULT.json`, `QUALIFICATION.json`, `CHECK_REPORT.json`, `PROJECT_STATE.md`,
+> `PROJECT_STATE.yaml`, `CHANGELOG.md` and H39.
 
 ---
 
