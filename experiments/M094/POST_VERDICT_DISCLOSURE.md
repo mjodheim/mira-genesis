@@ -1,4 +1,17 @@
-# M094 — post-verdict disclosure
+# M094 — post-verdict disclosure, and the attempt it withdrew
+
+> **Resolved on 19 August 2026 by withdrawal and re-run.** Attempt 1 is preserved at
+> `WITHDRAWN_RESULT_ATTEMPT_1.json` and `WITHDRAWN_QUALIFICATION_ATTEMPT_1.json`. The store was
+> corrected to adopt and restore in bytes, and **attempt 2** was run at commit `43ef9d30`:
+> verdict `positive`, 12 of 12 conditions computed and true, qualification 2/2 satisfied on the
+> same draw, and `mira_core/contracts.py` restored to sha `de1034e5…` — the byte-identical CRLF
+> original, with `git status` showing the file unmodified.
+>
+> The account below is attempt 1's, unaltered. It is the reason attempt 2 exists.
+
+---
+
+# The disclosure as written against attempt 1
 
 **Status: the canonical run is complete and the checker's verdict is `positive`, 12 of 12
 conditions computed and true. This document records a defect found *after* that verdict, in the
