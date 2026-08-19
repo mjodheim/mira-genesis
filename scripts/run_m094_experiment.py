@@ -36,6 +36,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import subprocess
 import sys
@@ -111,10 +112,31 @@ def main() -> int:
     print(f"mode: {'rehearsal on a throwaway copy' if rehearsal else 'against ' + str(root)}")
     print(f"eligible: {list(components)}")
 
+    # Provenance: a result that cannot be bound to the protocol it ran under, and to the tree
+    # it ran against, is weaker than one that can -- and after a verdict it is too late to add.
+    protocol_bytes = PROTOCOL_PATH.read_bytes()
+    protocol = json.loads(protocol_bytes.decode("utf-8"))
+    try:
+        source_commit = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        tree_dirty = bool(subprocess.run(
+            ["git", "status", "--porcelain"], cwd=REPO_ROOT,
+            capture_output=True, text=True, check=True,
+        ).stdout.strip())
+    except Exception:  # noqa: BLE001 - a run outside a checkout still records what it can
+        source_commit, tree_dirty = None, None
+
     result: dict[str, object] = {
         "schema": RESULT_SCHEMA,
         "milestone": "M094",
         "track": "A",
+        "protocol_raw_sha256": hashlib.sha256(protocol_bytes).hexdigest(),
+        "protocol_status": protocol.get("status"),
+        "amendments_in_force": [item["id"] for item in protocol.get("amendments", [])],
+        "source_commit": source_commit,
+        "working_tree_was_dirty_at_start": tree_dirty,
         # Track A forbids both. Recorded so P12 can check rather than assume.
         "model_calls": 0,
         "network_calls": 0,
