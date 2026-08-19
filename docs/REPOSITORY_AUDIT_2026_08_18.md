@@ -344,10 +344,44 @@ protocol. It cannot change a conclusion (the digest is provably unchanged), but 
 part of the run-harness work with the evidence in the commit message, not as a drive-by edit to an
 open freeze PR.
 
-### F.2 Search does not need accelerating
+### F.2 Search — a correction: it does not scale
 
-767 candidates in 0.4 s. This is already the architecture the brief asks for — measurement →
-candidate generation → structured search with pruning → evaluation. Do not spend effort here.
+**This section originally said "search does not need accelerating", on the strength of 767
+candidates in 0.4 s. That was one measurement of one target, generalised. It is wrong.**
+
+Measuring the search on every unmet insufficiency in the eligible set, rather than only on the
+one the diagnosis happens to rank first:
+
+| class | fields | requirement keys | candidates examined | survivors | distinct behaviours | time |
+|---|---|---|---|---|---|---|
+| `Policy` | 1 | 1 | 47 | 3 | 1 | 0.0 s |
+| **`Goal`** | **3** | **3** | **767** | **3** | **1** | **0.3 s** |
+| `SafetyDecision` | 4 | 4 | 3 071 | 3 | 1 | 1.2 s |
+| `Action` | 4 | 2 | 12 287 | 192 | **64** | 6.0 s |
+| `Observation` | 5 | 7 | **196 607** | 3 | 1 | **101 s** |
+
+Two things follow, and both matter more than the timing.
+
+**The cost is exponential in field count, and the development target is the cheapest case in
+the set.** `Goal` at 767 candidates is not representative; it is the minimum. The *next*
+insufficiency the diagnosis would select after `Goal` is repaired is `Observation`, at 196 607
+candidates and 101 seconds — 336× the development target. So M095's second repair is not
+"another repair like the first"; it is the first thing that makes this search architecture hurt,
+and a seven-field class would be in the millions.
+
+**The adoption tie-break is arbitrary when the requirement is a strict subset of the fields.**
+`Action` has four fields and a two-key requirement, so 192 survivors span **64 behaviourally
+distinct** methods — any method binding those two keys correctly passes, whatever else it does.
+For `Goal` the accepted behaviour was unique and the digest tie-break only chose a spelling
+(§A.4). For `Action` the mechanism would pick one of 64 genuinely different methods by content
+address, with no principled reason. That is not a defect in the frozen protocol — P6 asks the
+repair to be assembled rather than templated, and it is — but a milestone claiming the lineage
+*constructs the repair* is weaker when 64 constructions qualify and the choice among them is a
+hash.
+
+Both findings are properties of the operation set and the bound, which the protocol already
+names as the expected next ceiling. Neither is a reason to delay M094's run; both are reasons
+not to plan M095 around the assumption that repair #2 resembles repair #1.
 
 ### F.3 Docker
 

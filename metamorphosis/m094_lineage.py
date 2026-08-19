@@ -46,6 +46,7 @@ from metamorphosis.m094_diagnosis import (
     CAPABILITY_SHAPES,
     Diagnosis,
     Insufficiency,
+    clear_caches,
     decode_rendering,
     diagnose,
 )
@@ -857,6 +858,10 @@ class TransformationStore:
         # these two writes is recoverable rather than silent.
         backup.write_text(original_source, encoding="utf-8", newline="")
         target.write_text(modified_source, encoding="utf-8", newline="")
+        # The diagnosis caches parsed sources by (path, size, mtime). A rewrite normally
+        # changes the mtime, but relying on filesystem timestamp resolution to keep a
+        # measurement honest is not a thing to rely on.
+        clear_caches()
 
         previous = self._state.journal[-1].digest() if self._state.journal else None
         entry = JournalEntry(
@@ -893,6 +898,7 @@ class TransformationStore:
 
         target = self._root / component
         target.write_text(original, encoding="utf-8", newline="")
+        clear_caches()
         written = target.read_text(encoding="utf-8")
         if _source_digest(written) != entry.original_source_digest:
             raise LineageError("restoration is not byte-exact")
