@@ -973,6 +973,13 @@ integer field in `list()` passed and raised when executed. A candidate is now ac
 executing it. The mechanism digest is unchanged at `3cd1314f…` — all three of the development
 target's survivors execute and confirm — so the draw is unchanged and A2 is measured against the
 entry that refuted it. Both amendments are recorded in full and permanently in `PROTOCOL.json`.
+A fourth, **A4**, removed the last arbitrary choice: when two classes tie on demand the class
+repaired was decided by alphabetical order on its name, and `Goal` and `Observation` tie at demand
+4 from four sites each. A measured secondary term would have tied too, so the correction is to
+repair every class the measure ranks equal first rather than to invent a discriminator. This is
+the only amendment that moves the mechanism digest — `3cd1314f…` → `259e12f5…` — because what is
+adopted changed; the draw moved with it and was taken as it came.
+
 **No qualification, result or register claim exists; nothing has been armed.** **No qualification run has been performed**, so H39 is
 neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
 concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`

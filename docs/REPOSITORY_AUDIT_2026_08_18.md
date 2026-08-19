@@ -724,7 +724,30 @@ qualification draw must stay in a separate process that the lineage cannot impor
 `tests/test_m094_qualification_pool.py::no_module_the_lineage_runs_reads_the_pool` already guards
 this and must keep passing.
 
-### Blocker 3 — the repair target is decided by alphabetical order
+### Blocker 3 — the repair target is decided by alphabetical order — **AMENDED (A4)**
+
+> **Resolved 19 August by amendment A4**, and the choice among the three options below was made
+> by measurement rather than preference. Option 2 — a measured secondary term — is *empirically
+> unavailable*: `Goal` and `Observation` are equal on demand **and** on site count, so any such
+> rule falls back to the name again. Option 3 was taken: every class the measure ranks equal
+> first is repaired, so no tie-break is needed at all.
+>
+> Scoped to the class level. The component choice is a measurement, is rename-invariant, and is
+> what P5 claims — untouched. The sort order is also unchanged and pinned by a test, since
+> altering it would move the mechanism and the draw and is a different act.
+>
+> **This is the only amendment that moves the mechanism digest** (`3cd1314f…` → `259e12f5…`),
+> because what is adopted changed: two repairs instead of one. The draw moved with it and was
+> taken as it came. The new draw selects `AgentResult` and `ContainerSpec` — the two entries the
+> design audit itself called "more than routine", one requiring a computed `@property` and one a
+> re-keyed binding. Harder than the draw it replaced, and not chosen.
+>
+> It also exposed a real defect in A2's machinery: `constructible_cases` treated one unbuildable
+> draw as proof the class could not be built, and `Observation` enforces `success ⇒ terminal`, so
+> it became unrepairable and blocked A4 outright. The generator now overdraws and keeps what
+> builds.
+
+
 
 `Goal` and `Observation` tie at demand 4; `i.target` in the sort key breaks it by name (§A.1). The
 choice determines the adopted mechanism digest, which seeds the qualification draw. It is
