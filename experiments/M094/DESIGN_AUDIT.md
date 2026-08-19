@@ -506,6 +506,13 @@ qualification, because there has not been one.
 
 Frozen at commit `dd79665` on 18 August 2026, before any qualification data existed.
 
+That hash is the one the freeze was authored at, and it is kept here because it is what the freeze
+recorded at the time. It is **not reachable from `main`**: the branch was rebased before merging, so
+the freeze reached `main` as `9b69d7f` (and the commit recording it as `312bbb1`). Nothing moved —
+`dd79665` and `9b69d7f` carry the identical tree `e2ab1c1b`, as do `2dc997b` and `312bbb1` — but
+anyone verifying the freeze from a fresh clone must look for `9b69d7f`. Recorded rather than
+overwritten, so the chronology stays legible.
+
 Two gaps were closed first, because a freeze whose own text is untrue is worse than no freeze.
 
 **The protocol promised a pool that did not exist.** It asserted that "the pool of candidate
