@@ -48,6 +48,83 @@ PROTOCOL_PATH = EXPERIMENT / "PROTOCOL.json"
 DESIGN_AUDIT_PATH = EXPERIMENT / "DESIGN_AUDIT.json"
 DESIGN_AUDIT_MD = EXPERIMENT / "DESIGN_AUDIT.md"
 
+#: Sub-reports of the design audit that measure the *inherited* implementation -- the
+#: superseded substring diagnostic and the authored template, both preserved as evidence.
+#: They are pure functions of frozen sources and must reproduce exactly, forever. If one
+#: stops reproducing, the evidence for a recorded defect has moved and the record is no
+#: longer supported by anything.
+REPLAYABLE_AUDIT_SECTIONS = (
+    "indicator_discrimination",
+    "capability_presence_blindness",
+    "selection_determinism",
+    "template_authorship",
+)
+
+#: The sub-report that measures the *current* measure rather than the inherited one. It moves
+#: whenever the diagnosis legitimately changes, so it is preserved rather than replayed.
+#: Amendment A3 records why, and what it was when the audit was last written.
+SNAPSHOT_AUDIT_SECTIONS = ("corrected_measure_threshold_sensitivity",)
+
+
+def check_design_audit_binding(protocol: dict) -> list[str]:
+    """Is the design audit the protocol names actually the design audit that exists?
+
+    Amendment A3. `design_audit.audit_digest` recorded a value from two commits before the
+    freeze and matched no committed artifact. Nothing noticed, because nothing compared them:
+    `DESIGN_AUDIT_MD` was declared here and never used, and no condition read the audit at
+    all. A binding that is never checked is a claim, not a binding.
+
+    Three things are verified, and each can fail:
+
+    * the committed audit is self-consistent -- its recorded digest is the digest of its own
+      contents;
+    * the protocol's `audit_digest` is that digest;
+    * every sub-report measuring the inherited implementation still reproduces when re-run.
+    """
+
+    failures: list[str] = []
+    if not DESIGN_AUDIT_PATH.exists():
+        return ["the design audit the protocol names does not exist"]
+
+    audit = json.loads(DESIGN_AUDIT_PATH.read_text(encoding="utf-8"))
+    recomputed = _digest({k: v for k, v in audit.items() if k != "digest"})
+    if audit.get("digest") != recomputed:
+        failures.append(
+            "the committed design audit does not digest to its own recorded value: "
+            f"records {str(audit.get('digest'))[:16]}, contents give {recomputed[:16]}"
+        )
+
+    declared = protocol.get("design_audit", {}).get("audit_digest")
+    if declared != audit.get("digest"):
+        failures.append(
+            "the protocol's audit_digest is not the committed audit's digest: "
+            f"protocol {str(declared)[:16]}, audit {str(audit.get('digest'))[:16]}"
+        )
+
+    try:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import audit_m094_design as instrument  # noqa: PLC0415
+
+        replays = {
+            "indicator_discrimination": instrument.indicator_discrimination,
+            "capability_presence_blindness": instrument.capability_presence_blindness,
+            "selection_determinism": instrument.selection_determinism,
+            "template_authorship": instrument.template_authorship,
+        }
+        for section in REPLAYABLE_AUDIT_SECTIONS:
+            if section not in audit:
+                failures.append(f"the audit carries no {section}")
+                continue
+            if _digest(audit[section]) != _digest(replays[section]()):
+                failures.append(
+                    f"{section} no longer reproduces: the evidence for a recorded defect "
+                    "has moved"
+                )
+    except Exception as exc:  # noqa: BLE001 - an unrunnable instrument is itself a failure
+        failures.append(f"the audit instrument could not be replayed: {type(exc).__name__}: {exc}")
+
+    return failures
+
 DIAGNOSIS_MODULE = ROOT / "metamorphosis" / "m094_diagnosis.py"
 RESULT_PATH = EXPERIMENT / "RESULT.json"
 QUALIFICATION_PATH = EXPERIMENT / "QUALIFICATION.json"
@@ -1302,6 +1379,12 @@ def check_p12(protocol: dict) -> Condition:
                 f"attempt {run.get('attempt')} disagrees with {len(withdrawn)} preserved "
                 "withdrawn run(s); the attempt number must be derived from the artifacts"
             )
+
+    # A protocol whose own design-audit binding does not resolve cannot substantiate its
+    # design record, whatever else it gets right. Folded into the chronology condition
+    # because that is what it is: evidence the record points at must exist and still say
+    # what it said.
+    failures.extend(check_design_audit_binding(protocol))
 
     # The protocol must not claim to rerun M092
     if protocol.get("reattempts_m092") is not False:

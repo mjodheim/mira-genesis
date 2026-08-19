@@ -48,6 +48,38 @@
       "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the qualification pool, the draw rule, the diagnosis, the operation set and the composition bound. Only how a survivor is accepted.",
       "why_the_development_target_did_not_show_it": "mira_core/contracts.py::Goal has a requirement covering every one of its fields, so no key was left unconstrained and no candidate could carry a raising extra. The defect is only reachable when the requirement is a strict subset of the fields, which is exactly the situation a cross-component qualification creates.",
       "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim exists, and none existed when the defect was found: the run that exposed it was performed against a throwaway copy of the repository and nothing was armed or written into experiments/M094/. The correction is recorded here permanently rather than absorbed, with the reproduction and the arithmetic, as D-M076 requires. The falsifier this must not become -- 'a real defect in the system is corrected after the verdict in order to save the result' -- turns on a verdict existing. None does."
+    },
+    {
+      "a_second_staleness_found_while_fixing_the_first": "The committed report is itself a snapshot taken at f516bc7, and the diagnosis's detail encoding changed afterwards at 96c8a3a -- 'make acceptance agreement, not key coverage' -- which the freeze at 9b69d7f then included. The report was never re-derived in between. Concretely, its corrected_measure_threshold_sensitivity section records Observation with fields_read 5, and the measure at the freeze gives 7, because the detail became one entry per (key, field, wrapper) triple rather than one per field. The measurement it reports is correct for the code at f516bc7 and is not a description of the code that was frozen.",
+      "correction": "audit_digest is corrected to the committed report's own digest, 37eee413397f9907, and the superseded value is recorded here rather than overwritten. The report is not regenerated: re-running the instrument today would measure the post-A2 code, which describes neither the inherited implementation the audit is evidence about nor the state at the freeze, and would replace a disclosed staleness with an undisclosed one. The binding is now enforced: check_design_audit_binding verifies that the report digests to its own recorded value, that the protocol names that digest, and that every sub-report measuring the inherited implementation still reproduces when re-run. Its failures fail P12.",
+      "date": "2026-08-19",
+      "defect": "design_audit.audit_digest recorded d41ea1ea84e0767c, which matches no committed artifact: not the audit document's bytes, not the audit report's bytes, and not the report's own recorded digest. It is the digest the report carried at commit 0d23bfd. The next commit, f516bc7, changed the audit and moved its digest to 37eee413397f9907, and the freeze carried the older value forward while the same design_audit block describes the newer report's contents -- twelve defects, and the whole Defect 5 narrative. So the block paired a stale digest with current prose, and 'the audit is bound by digest' was not true.",
+      "effect": {
+        "audit_digest": "37eee413397f99079c2f5f30da6f3827b93709a642767ab37efd5b1423262d2e",
+        "audit_document": "experiments/M094/DESIGN_AUDIT.md",
+        "audit_report": "experiments/M094/DESIGN_AUDIT.json",
+        "document_is_not_byte_pinned": "The document is prose and carries the amendment disclosures; the report is the measurement and is what the digest binds.",
+        "superseded_audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9"
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "id": "A3",
+      "title": "the protocol's design-audit digest identified nothing",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the qualification pool, the draw rule, the mechanism and its digest. Only which artifact the protocol's audit digest names, and whether anything checks it.",
+      "what_is_replayable_and_what_is_a_snapshot": {
+        "preserved_because": "it measures the current measure, so it moves whenever the diagnosis legitimately changes. Binding a digest over a live measurement and a historical one together is what made this drift silent, and separating them is the actual repair.",
+        "preserved_not_replayed": [
+          "corrected_measure_threshold_sensitivity"
+        ],
+        "replayable_because": "they measure the inherited implementation -- m094_component_discovery.py and m094_transform.py -- which is preserved as evidence and does not change. All four reproduce exactly today.",
+        "replayed_and_checked": [
+          "indicator_discrimination",
+          "capability_presence_blindness",
+          "selection_determinism",
+          "template_authorship"
+        ]
+      },
+      "why_it_was_not_caught": "Nothing compared them. scripts/check_m094_result.py declared DESIGN_AUDIT_MD and never used it, and no condition read the audit at all. A binding that is never checked is a claim rather than a binding.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim exists. The correction makes a recorded digest resolve to the artifact it was always meant to name, and adds the check whose absence let it drift; it changes no measurement and no verdict. Recorded permanently with the arithmetic, as D-M076 requires."
     }
   ],
   "arms": [
@@ -96,13 +128,17 @@
   "date_frozen": "2026-08-18",
   "decision_slot": "D063",
   "design_audit": {
-    "audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9",
+    "amended_by": "A3",
+    "audit_digest": "37eee413397f99079c2f5f30da6f3827b93709a642767ab37efd5b1423262d2e",
+    "audit_digest_binds": "the digest recorded inside experiments/M094/DESIGN_AUDIT.json, which is the digest of that report's own contents",
     "corrected_measure_p5_defect_and_repair": "RenderAsMapping.min_fields was authored, and sweeping it over 2-6 moved the selected component on three of five values. The declared value 3 was the outlier: 2, 4 and 5 all selected mira_core/contracts.py. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold, then repaired properly by removing the constant. Attribution now asks how many reachable classes could explain a call site: exactly one is evidence about that class, several is evidence about none. Nothing is sweepable, P5 passes, and the earlier selection of mira_core/safety.py is withdrawn as an artifact of the constant rather than a finding.",
     "defects_found_before_freeze": 12,
     "document": "experiments/M094/DESIGN_AUDIT.md",
     "inherited_implementation_fails_p2_p3_p4_and_p6": true,
     "instrument": "scripts/audit_m094_design.py",
-    "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c"
+    "report": "experiments/M094/DESIGN_AUDIT.json",
+    "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c",
+    "superseded_audit_digest_see_amendment_a3": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9"
   },
   "diagnostic_substrate": {
     "admissible_observations": [
@@ -205,7 +241,7 @@
   },
   "schema": "m094-protocol-v1",
   "status": "FROZEN",
-  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared. Amended on 19 August 2026 by amendment A1, recorded in full above and permanently: the qualification pool's hidden cases were synthesised and never executed, and seven of nine entries raised on construction. The pool was regenerated with every case verified by construction and the superseded pool preserved. No qualification, result or register claim existed before, during or after the amendment, and the adopted mechanism is unchanged. Amended again on 19 August 2026 by amendment A2: acceptance inspected a candidate's syntax where it needed to execute it, so a repair that read correctly and raised when run could be adopted. Corrected before arming, with the mechanism digest unchanged and therefore the draw unchanged.",
+  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared. Amended on 19 August 2026 by amendment A1, recorded in full above and permanently: the qualification pool's hidden cases were synthesised and never executed, and seven of nine entries raised on construction. The pool was regenerated with every case verified by construction and the superseded pool preserved. No qualification, result or register claim existed before, during or after the amendment, and the adopted mechanism is unchanged. Amended again on 19 August 2026 by amendment A2: acceptance inspected a candidate's syntax where it needed to execute it, so a repair that read correctly and raised when run could be adopted. Corrected before arming, with the mechanism digest unchanged and therefore the draw unchanged. Amended a third time on 19 August 2026 by amendment A3: the protocol's design-audit digest named no committed artifact, and nothing checked it. Corrected to the committed report's own digest, with the superseded value preserved, the report's own staleness relative to the freeze disclosed, and the binding now enforced by the checker.",
   "subtitle": "The lineage chooses what to repair, and builds the repair",
   "title": "Autonomous Component Diagnosis and Repair Synthesis",
   "track": "A",
