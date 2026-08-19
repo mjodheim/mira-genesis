@@ -145,6 +145,42 @@ exactly what a cross-component qualification exists to catch: the development ta
 requirement covering *all* its fields, so nothing was left unconstrained and the defect could not
 appear there.
 
+### A.7 Amendment A4, and the pattern a reviewer should scrutinise
+
+A4 moves the mechanism digest — `3cd1314f…` → `259e12f5…` — because what is adopted changed:
+`Goal` **and** `Observation`, not whichever name sorted first. The draw moved with it, to
+`AgentResult` and `ContainerSpec`: the two entries the design audit itself called "more than
+routine", one needing a computed `@property` rendered alongside declared fields, the other a
+re-keyed binding. A harder draw than the one it replaced, and not chosen.
+
+**Final qualification: `positive` — 2 satisfied, 0 refuted, 0 unrunnable, cross-component.**
+`AgentResult` 10/10 via `as_dict`, `ContainerSpec` 10/10 via `to_dict`, both validator-accepted.
+
+**The pattern worth scrutinising.** Reaching that took three instrument fixes, each made after
+watching a refutation:
+
+| # | refutation | cause | fix |
+|---|---|---|---|
+| 1 | `Observation` unrepairable, blocking A4 | one unbuildable draw treated as "class cannot be built"; `Observation` requires `success ⇒ terminal` | overdraw, keep what builds |
+| 2 | `ContainerSpec` — "no candidate" | execution generator tried only uniform value shapes; `ContainerSpec` needs a content-addressed `image` *and* an absolute path | search per-field combinations, as the pool generator already did |
+| 3 | `ContainerSpec` — validator refused a working repair | the validator used a *third* generator: 8 cases, 0 constructible | one generator, used everywhere |
+
+That sequence has the shape of result-saving, so what separates it from result-saving should be
+stated rather than assumed:
+
+- every fix was in **case generation** — never in the diagnosis, the operation set, the search or
+  the acceptance rule;
+- **the mechanism digest is unchanged at `259e12f5…` across all three**, so the draw never moved
+  and each fix re-tested the entry that produced the refutation rather than a different one;
+- each defect is independently demonstrable on a synthetic fixture with no reference to the pool,
+  and each has a test that fails without the fix;
+- the root cause of all three is one thing — three case generators with three capabilities, which
+  is the duplication §B flagged — and it is now removed.
+
+**A reviewer should still treat a fourth instrument fix as suspect.** The honest position is that
+the mechanism has never been altered in response to a refutation, and that the instrument has been,
+three times.
+
 ### A.6 Amendment A2, and what the qualification says now
 
 A2 was made **before arming**, at the owner's direction, and recorded permanently in the protocol.
