@@ -319,7 +319,7 @@ Measured on this machine.
 | Full `run_m094_experiment.py` | 8.5 s | 76 % diagnosis |
 | M094 unit tests (diagnosis+composition+synthesis) | 1.7 s | Good inner loop |
 | M094 checker + design-audit + pool tests | **57.8 s** | Dominated by repeated `diagnose()` calls |
-| Full suite (2543 tests, 200 files) | **36 min 49 s** | 2529 passed, 2 failed, 12 skipped |
+| Full suite (2543 tests, 200 files) | **37 min** (3.11) / **46 min** (3.14) | 0 failures on 3.14 |
 
 ### F.1 Measured, output-identical acceleration
 
@@ -363,13 +363,33 @@ The Dockerfile must be fixed first (§E) — as committed it cannot run the suit
 
 ### F.4 Where the 37 minutes actually go
 
-The suite run for this audit (`pytest -q -p no:randomly --durations=25`) finished in **36 m 49 s**
-with **2529 passed, 2 failed, 12 skipped**. Both failures are the two known Windows-only ones —
+Two full runs, on the two interpreters the toolchain change forced:
+
+| interpreter | result | wall clock |
+|---|---|---|
+| CPython 3.11.16 (uv, now blocked) | 2529 passed, **2 failed**, 12 skipped | **36 m 49 s** |
+| CPython 3.14.6 (system) | **2531 passed, 0 failed**, 12 skipped | **46 m 19 s** |
+
+The two failures under 3.11 were the pair this project had recorded as expected on Windows —
 `test_blind_bank_sealing.py::test_the_repository_itself_carries_no_leak` (stats a WSL symlink inside
 `.venv`) and `test_m092a_substrate_migration.py::test_physical_isolation_without_the_legacy_module`
-(rebuilds `sys.path` from the POSIX `lib-dynload` layout). Both pass on Linux CI. **No regression.**
+(rebuilds `sys.path` from the POSIX `lib-dynload` layout). **Under 3.14 both pass**, and the same
+collection count means nothing was skipped instead.
 
-The cost is extremely concentrated. Eight fixtures account for roughly **18 of the 37 minutes**:
+I cannot attribute that cleanly, and will not pretend otherwise. Two things changed together: the
+interpreter (3.11.16 → 3.14.6) and the venv's provenance (uv-built → `C:\Python314`-built). The
+broken `.venv/lib64 → lib` symlink is still on disk, so the blind-bank case is more likely the
+interpreter; the `lib-dynload` case is more likely the venv layout. With 3.11 now blocked I have no
+way to A/B it. What is established is narrower and still useful: **the "two expected Windows
+failures" note is no longer true of this environment**, so a future green run must not be explained
+away by it.
+
+3.14 is also **26 % slower** on this workload (46 m 19 s vs 36 m 49 s), consistently across the
+per-fixture durations. Neither 3.14 nor this Windows host is in the CI matrix (3.11 and 3.13), so
+this is a local datum, not a CI regression.
+
+The cost is extremely concentrated. Eight fixtures account for roughly **18 of the 37 minutes** on
+3.11 (**22 of the 46** on 3.14):
 
 | duration | test |
 |---|---|
@@ -382,9 +402,23 @@ The cost is extremely concentrated. Eight fixtures account for roughly **18 of t
 
 These are all **setup**, all in the frozen M061–M066 band, and all recomputing deterministic
 substrate material. They are the single largest acceleration lever in the repository — larger than
-anything in M094 — and they are safe to attack, because caching a deterministic fixture changes no
-result as long as the digest is asserted. Session-scoped fixtures with a digest-keyed cache should
-take the suite under 20 minutes without touching a single assertion.
+anything in M094.
+
+**Do not cache them.** My first instinct was a digest-keyed fixture cache, and it is the wrong
+answer: the recomputation *is* the evidence. A cached fixture makes the test pass without
+re-deriving the frozen result, which is the "checker passes in the absence of evidence" failure
+this repository already guards against elsewhere. A stale or wrongly-keyed cache would turn a
+reproduction proof into a tautology, and the saving is not worth that.
+
+**Parallelise instead.** Everything still recomputes; it just recomputes concurrently. The machine
+has 12 logical cores, the eight expensive fixtures are in different modules, and the tests are
+already order-independent (`-p no:randomly` is a convenience, not a requirement). `pytest-xdist`
+with `--dist loadscope` keeps each module-scoped fixture on one worker, so no fixture runs twice.
+
+That means a new third-party dev dependency, which in this repository means a `pyproject.toml`
+entry, a row in `docs/THIRD_PARTY_DEPENDENCIES.md`, and an addition to `COMMAND_LINE_TOOLS` in
+`check_repository_integrity.py` (which otherwise reports it as declared-but-never-imported). That is
+the owner's call, so the sequence is measure first, declare second — see §F.6.
 
 Third on the list at 52 s is `test_m094_checker.py` setup, which the §F.1 memoisation addresses.
 
