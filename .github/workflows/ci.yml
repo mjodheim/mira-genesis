@@ -175,17 +175,18 @@ jobs:
         run: python -m scripts.check_m092_criterion_freeze --assert-pre-search
 
       # M093 adopted a patch into mira_core/memory.py and is an engineering rehearsal that says
-      # so; M094 is frozen and unrun. Neither had a gate here, so nothing in CI ran the M094
-      # checker and the freeze was enforced only by unit tests. --strict turns a failing
-      # computed condition red without inventing a verdict: with no run the report is
-      # `incomplete`, and that is not a failure.
-      - name: The M094 protocol must remain frozen and no computed condition may fail
-        run: python scripts/check_m094_result.py --strict --no-write
-
-      # Once M094 is armed and a RESULT.json is preserved, replace the step above with
-      # `--require-result`, which demands that a run exists and that every one of the twelve
-      # conditions is computed and true. It is deliberately not enabled now: it would fail on a
-      # repository where the experiment has correctly not been performed.
+      # so. M094 was frozen on 18 August 2026 and run on 19 August 2026; neither had a gate here
+      # before that, so nothing in CI ran the M094 checker and the freeze was enforced only by
+      # unit tests.
+      #
+      # --require-result is the armed form, and it is now the right one: it demands that a run
+      # exists and that every one of the twelve conditions is computed and true. It replaces the
+      # --strict form used while the milestone was unrun, which could only say that nothing had
+      # failed yet. The checker recomputes rather than reads: it re-derives the qualification
+      # draw from the recorded mechanism digest, replays the independent validator against the
+      # preserved candidate, and replays the design audit's inherited-implementation sections.
+      - name: The M094 result must reproduce from its own preserved artifacts
+        run: python scripts/check_m094_result.py --require-result --no-write
 
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
