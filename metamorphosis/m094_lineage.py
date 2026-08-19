@@ -432,6 +432,10 @@ class Development:
     arm: str
     diagnosis: Diagnosis | None = None
     insufficiency: Insufficiency | None = None
+    #: Amendment A4. Every insufficiency the measurement ranks equal first, not just the one
+    #: whose class name sorts earliest. `insufficiency` remains the first of these so the
+    #: single-target reporting shape is unchanged, but the pipeline works over `targets`.
+    targets: tuple[Insufficiency, ...] = ()
     operations: tuple[object, ...] = ()
     modified_source: str | None = None
     mechanism_digest: str | None = None
@@ -444,6 +448,13 @@ class Development:
             return ()
         return decode_rendering(self.insufficiency.detail)
 
+    def requirements(self) -> tuple[tuple[str, tuple[tuple[str, str, str | None], ...]], ...]:
+        """(class, requirement) for every tied target, in the order they were repaired."""
+
+        return tuple(
+            (item.target, decode_rendering(item.detail)) for item in self.targets
+        )
+
     def to_dict(self) -> dict[str, object]:
         return {
             "arm": self.arm,
@@ -452,6 +463,11 @@ class Development:
             "capability": self.insufficiency.capability if self.insufficiency else None,
             "demand": self.insufficiency.demand if self.insufficiency else None,
             "requirement": [list(item) for item in self.requirement],
+            "tied_classes": [item.target for item in self.targets],
+            "requirements": [
+                {"class": name, "requirement": [list(triple) for triple in requirement]}
+                for name, requirement in self.requirements()
+            ],
             "operation_count": len(self.operations),
             "mechanism_digest": self.mechanism_digest,
             "produced_a_candidate": self.modified_source is not None,
@@ -483,8 +499,10 @@ def develop(
         development.notes["stopped"] = "no unmet insufficiency"
         return development
 
-    target = development.diagnosis.unmet[0]
+    tied = development.diagnosis.tied_selection()
+    target = tied[0]
     development.insufficiency = target
+    development.targets = tied
 
     if component_override is not None and component_override != target.component_path:
         # The requirement stays the diagnosed one. Repairing a different component cannot
@@ -514,21 +532,49 @@ def develop(
         development.mechanism_digest = _digest({"template": True, "source": modified})
         return development
 
-    operations = suggest_operations(
-        root, target.component_path, target.target,
-        target.capability, target.target, target.detail,
-        max_length=max_length,
-    )
-    development.operations = tuple(operations)
-    if not operations:
-        development.notes["stopped"] = "synthesis produced no operation"
-        return development
+    # Amendment A4. Every class the measurement ranks equal first is repaired, because the
+    # measurement is saying it cannot separate them and picking one by name is not a finding.
+    # They share a component, so the repairs compose onto one source in the order the
+    # diagnosis produced -- an order that decides nothing, since all of them are applied.
+    built: list[object] = []
+    modified = source
+    descriptions: list[str] = []
+    for item in tied:
+        produced = suggest_operations(
+            root, item.component_path, item.target,
+            item.capability, item.target, item.detail,
+            max_length=max_length,
+        )
+        if not produced:
+            development.notes["stopped"] = (
+                f"synthesis produced no operation for {item.target}"
+            )
+            development.notes["repaired_before_stopping"] = [
+                str(op.class_name) for op in built  # type: ignore[attr-defined]
+            ]
+            return development
+        try:
+            modified = produced[0].apply(modified)
+        except Exception as exc:  # noqa: BLE001 - a repair that will not compose is a finding
+            development.notes["stopped"] = (
+                f"the repair for {item.target} could not be applied: {str(exc)[:120]}"
+            )
+            return development
+        built.append(produced[0])
+        descriptions.append(produced[0].description)
 
-    development.modified_source = operations[0].apply(source)
-    development.mechanism_digest = operations[0].digest
+    development.operations = tuple(built)
+    development.modified_source = modified
+    # The digest covers every adopted repair, so a lineage that repaired two things is not
+    # confusable with one that repaired the first and stopped.
+    development.mechanism_digest = _digest({
+        "repairs": [op.digest for op in built],  # type: ignore[attr-defined]
+        "classes": [item.target for item in tied],
+    }) if len(built) > 1 else built[0].digest  # type: ignore[attr-defined]
     development.search = {
-        "description": operations[0].description,
+        "description": "; ".join(descriptions),
         "max_length": max_length or MAX_COMPOSITION_LENGTH,
+        "tied_classes_repaired": len(built),
     }
     return development
 
@@ -962,35 +1008,58 @@ def run_arm(
         ))
         return record
 
-    cases = behavioural_cases(root, target.component_path, target.target)
-    requirement = development.requirement
     original = (root / target.component_path).read_text(encoding="utf-8")
-    before = sandbox_component(
-        root, target.component_path, original, target.target, requirement, cases,
-        variant="original",
-    )
-    after = sandbox_component(
-        root, target.component_path, development.modified_source, target.target,
-        requirement, cases, variant=arm,
-    )
-    comparison = compare(before, after)
-    validation = validate_independently(
-        root, target.component_path, development.modified_source, target.target, requirement,
-    )
 
-    record["comparison"] = comparison
-    record["validation"] = validation.to_dict()
-    record["closed"] = bool(comparison["null_rejected"] and validation.accepted)
+    # Amendment A4. Every tied class the arm repaired must close, and be validated. Checking
+    # only the first would let a lineage that repaired one of two report the same thing as one
+    # that repaired both -- which is the arbitrary choice this amendment removed, reappearing
+    # in the measurement of it.
+    per_target = []
+    for item in development.targets or (target,):
+        requirement = decode_rendering(item.detail)
+        cases = behavioural_cases(root, item.component_path, item.target)
+        before = sandbox_component(
+            root, item.component_path, original, item.target, requirement, cases,
+            variant="original:" + item.target,
+        )
+        after = sandbox_component(
+            root, item.component_path, development.modified_source, item.target,
+            requirement, cases, variant=arm + ":" + item.target,
+        )
+        comparison = compare(before, after)
+        validation = validate_independently(
+            root, item.component_path, development.modified_source, item.target, requirement,
+        )
+        per_target.append({
+            "class": item.target,
+            "comparison": comparison,
+            "validation": validation.to_dict(),
+            "closed": bool(comparison["null_rejected"] and validation.accepted),
+        })
+
+    # The first target's records stay at the top level so the result shape and the checker's
+    # P8 reader are unchanged; the per-class detail sits beside them.
+    record["comparison"] = per_target[0]["comparison"]
+    record["validation"] = per_target[0]["validation"]
+    record["per_target"] = per_target
+    record["closed"] = all(item["closed"] for item in per_target)
+    record["tied_classes_closed"] = sum(1 for item in per_target if item["closed"])
+    record["tied_classes"] = len(per_target)
 
     if arm == "diagnosis_without_adoption":
         # It closed in the sandbox and is deliberately never written. The live component
         # must still lack the capability afterwards, and that is what the arm reports.
-        live = sandbox_component(
-            root, target.component_path,
-            (root / target.component_path).read_text(encoding="utf-8"),
-            target.target, requirement, cases, variant="live_after_arm",
-        )
-        record["live_still_lacks_the_capability"] = not live.supplies_the_capability
+        live_source = (root / target.component_path).read_text(encoding="utf-8")
+        still_lacking = []
+        for item in development.targets or (target,):
+            live = sandbox_component(
+                root, item.component_path, live_source, item.target,
+                decode_rendering(item.detail),
+                behavioural_cases(root, item.component_path, item.target),
+                variant="live_after_arm:" + item.target,
+            )
+            still_lacking.append(not live.supplies_the_capability)
+        record["live_still_lacks_the_capability"] = all(still_lacking)
         record["adopted"] = False
 
     return record

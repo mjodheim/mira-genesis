@@ -821,6 +821,33 @@ class Diagnosis:
     def digest(self) -> str:
         return _digest(self.to_dict())
 
+    def tied_selection(self) -> tuple[Insufficiency, ...]:
+        """Every insufficiency the measurement ranks equal first, not just the first of them.
+
+        Amendment A4. `unmet[0]` is the head of a total order whose last terms are the
+        capability, the class name and the encoded detail -- so when two classes tie on
+        demand, which one gets repaired is decided by alphabetical order on an identifier.
+        In this repository that tie is live: `Goal` and `Observation` both measure demand 4
+        from four sites each, and `Goal` wins because G sorts before O.
+
+        A measured secondary term would not have helped. The two are equal on demand *and*
+        on site count, so any such rule falls back to the name again. What the measure is
+        actually saying is that it cannot separate them, and the faithful response to that
+        is to repair both rather than to invent a discriminator.
+
+        Scoped to the selected component: the component-level choice is a measurement and is
+        invariant under renaming, which is the property P5 claims. Only the class-level
+        choice was arbitrary, and only that is removed.
+        """
+
+        if not self.unmet:
+            return ()
+        top = self.unmet[0].demand
+        return tuple(
+            item for item in self.unmet
+            if item.demand == top and item.component_path == self.selected
+        )
+
 
 def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
     """Select the component with the greatest unmet demand.

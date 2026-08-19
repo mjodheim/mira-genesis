@@ -49,6 +49,11 @@ STRING_SHAPES = ("{token}", "/{token}", "{token}@sha256:{digest}")
 #: stopped looking is a different experiment from one that found nothing.
 MAX_CONFIRMATIONS = 256
 
+#: How many draws to attempt per case wanted. A class may enforce an invariant between fields,
+#: so independently drawn values sometimes violate it; overdrawing lets the generator keep the
+#: combinations that build instead of concluding the class cannot be built at all.
+CASE_OVERDRAW = 8
+
 
 def _digest(value: object) -> str:
     return hashlib.sha256(
@@ -152,24 +157,31 @@ def constructible_cases(
         name for name in wanted if _scalar(annotations.get(name, "str"), name, 0, seed) is None
     ]
 
+    # Draw more candidates than are needed and keep the ones that build. A class can enforce
+    # an invariant *between* fields -- `mira_core.contracts.Observation` refuses `success`
+    # without `terminal` -- and values drawn independently will sometimes violate it. Treating
+    # that as "this class cannot be constructed" was wrong twice over: it discarded the many
+    # combinations that are fine, and it made a class unrepairable because of an unlucky draw.
+    # A case that does not construct is simply not a case, which is what this module already
+    # says everywhere else.
     for shape_index in range(len(STRING_SHAPES)):
         cases: list[dict[str, Any]] = []
-        try:
-            for index in range(count):
-                fields: dict[str, Any] = {}
-                for name in wanted:
-                    value = _scalar(annotations.get(name, "str"), name, index, seed)
-                    if value is None:
-                        value = _string(STRING_SHAPES[shape_index], name, index, seed)
-                    fields[name] = value
+        for index in range(count * CASE_OVERDRAW):
+            fields: dict[str, Any] = {}
+            for name in wanted:
+                value = _scalar(annotations.get(name, "str"), name, index, seed)
+                if value is None:
+                    value = _string(STRING_SHAPES[shape_index], name, index, seed)
+                fields[name] = value
+            try:
                 instance = cls(**fields)
                 for _key, field, _wrapper in requirement:
                     getattr(instance, field)
-                cases.append(fields)
-        except Exception:  # noqa: BLE001 - try the next shape
-            continue
-        if len(cases) == count:
-            return tuple(cases)
+            except Exception:  # noqa: BLE001 - not a case; try the next draw
+                continue
+            cases.append(fields)
+            if len(cases) == count:
+                return tuple(cases)
         if not strings:
             break
     return ()
