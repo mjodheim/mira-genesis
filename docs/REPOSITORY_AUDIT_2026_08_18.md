@@ -623,7 +623,11 @@ is running while the protocol's own audit binding is unverifiable.
 
 ### Also worth closing before the run
 
-- Add the M094 gate to `ci.yml`'s `sealed-bank-boundary` job. Nothing in CI runs the M094 checker.
+- ~~Add the M094 gate to `ci.yml`'s `sealed-bank-boundary` job.~~ **Done.**
+  `check_m094_result.py --strict --no-write` now runs there, and the checker has exit codes so it
+  can actually gate: `--strict` fails on a failing computed condition, `--require-result` also
+  demands a run and a positive verdict. The latter is deliberately not enabled yet — it would fail
+  on a repository where the experiment has correctly not been performed.
 - State the search closure at 5 rather than the inert bound of 12, and state that the three
   survivors are one behaviour under three names (§A.4).
 

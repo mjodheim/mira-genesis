@@ -174,6 +174,19 @@ jobs:
       - name: The complete M092 criterion instrument must remain frozen before target search
         run: python -m scripts.check_m092_criterion_freeze --assert-pre-search
 
+      # M093 adopted a patch into mira_core/memory.py and is an engineering rehearsal that says
+      # so; M094 is frozen and unrun. Neither had a gate here, so nothing in CI ran the M094
+      # checker and the freeze was enforced only by unit tests. --strict turns a failing
+      # computed condition red without inventing a verdict: with no run the report is
+      # `incomplete`, and that is not a failure.
+      - name: The M094 protocol must remain frozen and no computed condition may fail
+        run: python scripts/check_m094_result.py --strict --no-write
+
+      # Once M094 is armed and a RESULT.json is preserved, replace the step above with
+      # `--require-result`, which demands that a run exists and that every one of the twelve
+      # conditions is computed and true. It is deliberately not enabled now: it would fail on a
+      # repository where the experiment has correctly not been performed.
+
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
           if python scripts/check_m085_readiness.py --require-ready; then

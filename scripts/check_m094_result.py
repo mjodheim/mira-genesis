@@ -15,6 +15,7 @@ are verified rather than a recorded run. Every condition is fully recomputed.
 """
 from __future__ import annotations
 
+import argparse
 import ast
 import hashlib
 import json
@@ -1368,12 +1369,35 @@ def compute_report(protocol: dict) -> dict:
 
 
 def main() -> int:
-    """Run the checker and print a JSON report."""
+    """Run the checker and print a JSON report.
+
+    Exit codes matter, because a checker CI cannot fail on is not a gate. ``--strict`` turns a
+    failing computed condition into a non-zero exit; ``--require-result`` additionally demands
+    that a run exists and that the verdict is positive, which is the form to use once M094 has
+    been armed. Neither invents a verdict: without a run the report is `incomplete`, and
+    ``--strict`` is satisfied by that because nothing has failed.
+    """
+
+    parser = argparse.ArgumentParser(description="Recompute M094's twelve conditions.")
+    parser.add_argument(
+        "--strict", action="store_true",
+        help="exit non-zero if any computed condition failed",
+    )
+    parser.add_argument(
+        "--require-result", action="store_true",
+        help="also require that a run exists and every condition is computed and true",
+    )
+    parser.add_argument(
+        "--no-write", action="store_true",
+        help="do not rewrite CHECK_REPORT.json",
+    )
+    args = parser.parse_args()
+
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
     report = compute_report(protocol)
 
     # Always write the report to the experiment directory if it exists
-    if EXPERIMENT.is_dir():
+    if EXPERIMENT.is_dir() and not args.no_write:
         report_path = EXPERIMENT / "CHECK_REPORT.json"
         report_path.write_text(
             _canonical_json(report) + "\n", encoding="utf-8", newline="\n"
@@ -1392,7 +1416,19 @@ def main() -> int:
             file=sys.stderr,
         )
 
-    # Return 0 for success (we always report, even failures)
+    if args.require_result:
+        if load_run() is None:
+            print(
+                "\nNo RESULT.json exists: M094 has not been run.", file=sys.stderr,
+            )
+            return 1
+        if report["verdict"] != "positive":
+            print(
+                f"\nVerdict is {report['verdict']!r}, not 'positive'.", file=sys.stderr,
+            )
+            return 1
+    if args.strict and report["failed"] > 0:
+        return 1
     return 0
 
 
