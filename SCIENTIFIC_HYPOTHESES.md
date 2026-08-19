@@ -963,7 +963,17 @@ of its nine entries raised on construction, so the qualification could not have 
 mechanism. It now holds eight entries at digest `0016300c…`, every case verified by constructing
 its class; the superseded pool is preserved at
 `experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json` at digest `44f46e6b…`. The hypothesis,
-conditions, falsifiers, arms, eligible set and draw rule are unchanged, as is the mechanism. **No qualification run has been performed**, so H39 is
+conditions, falsifiers, arms, eligible set and draw rule are unchanged, as is the mechanism.
+
+A second amendment, **A2**, followed on the same day and for a reason the first one uncovered.
+With the pool repaired, the qualification ran and **refuted the mechanism** on
+`mira_core/container.py::ContainerLimits`: acceptance inspected a candidate's syntax where it
+needed to run it, so a repair binding the required keys correctly while wrapping an unrelated
+integer field in `list()` passed and raised when executed. A candidate is now accepted by
+executing it. The mechanism digest is unchanged at `3cd1314f…` — all three of the development
+target's survivors execute and confirm — so the draw is unchanged and A2 is measured against the
+entry that refuted it. Both amendments are recorded in full and permanently in `PROTOCOL.json`.
+**No qualification, result or register claim exists; nothing has been armed.** **No qualification run has been performed**, so H39 is
 neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
 concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`
 rather than positive.
