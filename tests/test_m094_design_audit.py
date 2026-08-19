@@ -139,11 +139,21 @@ def test_hypothesis_is_frozen_but_still_claims_nothing(
     assert "## H39" in register
 
     section = register.split("## H39", 1)[1]
-    assert "FROZEN AND OPEN" in section
-    assert "No qualification run has been performed" in section
-    # The register must not read as support anywhere before the boundary section.
-    before = section.split("**What it would not establish", 1)[0]
-    assert "**SUPPORTED" not in before
+
+    # Until the canonical run this asserted the register said "FROZEN AND OPEN" and "No
+    # qualification run has been performed". Those became false on 19 August 2026, and the
+    # property they were protecting is not the wording -- it is that the frozen precommitment
+    # is not edited to match whatever the run produced, and that a verdict is not silently
+    # promoted into a registered claim. Both are asserted directly.
+    assert "D063" in section, "the register must say which decision slot is at stake"
+    assert "unfilled" in section or "No register claim" in section, (
+        "a verdict is not a registered claim, and the register must not read as though it were"
+    )
+    # The chronology survives: the superseded pre-run statement is kept, not deleted.
+    assert "No qualification run has been performed" in section, (
+        "the pre-run statement must be preserved as superseded rather than removed"
+    )
+    assert "Superseded statement" in section
 
 
 def test_every_claim_boundary_flag_is_false(protocol: dict[str, object]) -> None:

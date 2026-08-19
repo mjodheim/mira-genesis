@@ -950,7 +950,10 @@ mechanism was fixed**, on a component other than the one used during development
 random-selection arm, a single-template arm and a larger budget over the same operation set each
 close nothing.
 
-**Status:** **FROZEN AND OPEN — the protocol is precommitted, the hypothesis is not supported.**
+**Status:** **RUN, WITH ATTEMPT 1 CARRYING A DISCLOSED DEFECT.** The protocol was precommitted,
+the canonical run of 19 August 2026 returned a positive verdict, and a defect in the evidence for
+P11 was found after that verdict. See the run record and the disclosure below before reading the
+verdict as support.
 The protocol was frozen by the project owner on 18 August 2026 at commit `dd79665`, which reached
 `main` as `9b69d7f` when the freeze branch was rebased before merging; the two commits carry the
 identical tree `e2ab1c1b`, and `9b69d7f` is the one a fresh clone can resolve.
@@ -997,10 +1000,16 @@ protocol names. Recorded in full at `experiments/M094/POST_VERDICT_DISCLOSURE.md
 options — accept with the disclosure, withdraw and re-run, or narrow P11's wording — left to the
 project owner.
 
-**No register claim is made here.** Decision slot D063 is unfilled and remains the owner's act. **No qualification run has been performed**, so H39 is
-neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
-concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`
-rather than positive.
+**No register claim is made here.** Decision slot D063 is unfilled and remains the owner's act.
+
+*Superseded statement, kept for chronology.* Until the canonical run this section read:
+
+> **No qualification run has been performed**, so H39 is neither supported nor refuted. Seven of
+> the twelve conditions are computed and true; P7 through P11 concern what a run would show and
+> remain uncomputed, and the checker's verdict is `incomplete` rather than positive.
+
+That was true from the freeze on 18 August 2026 until the run on 19 August 2026. It is false now,
+and is preserved rather than deleted so the chronology is legible.
 
 **Why it is asked.** M093 is an engineering rehearsal and says so: its `TARGET_FILE`, its
 diagnostic, its capability choice and its patch body were all authored. The transformation

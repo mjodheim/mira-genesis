@@ -581,6 +581,12 @@ H39 is **frozen and open**: precommitted, and neither supported nor refuted. Sev
 computed and true; P7 through P11 concern what a qualification run would show and remain uncomputed.
 The checker's verdict is `incomplete`, not positive. **No run has been armed.**
 
+> **Superseded on 19 August 2026 by the canonical run.** The paragraph above describes the state
+> between the freeze and the run, and is kept because it is what the freeze committed to. The run
+> was performed at commit `210e8f04` under amendments A1–A4: all twelve conditions are computed and
+> true and the verdict is `positive`. A defect in the evidence for P11 was found *after* that
+> verdict and is recorded, unrepaired, in `POST_VERDICT_DISCLOSURE.md`.
+
 ## What is not in question
 
 The transformation *infrastructure* M093 rehearsed — subprocess sandbox, A/B comparison,

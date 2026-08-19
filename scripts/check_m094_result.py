@@ -9,7 +9,10 @@ A conjunctive verdict is computed: positive iff all 12 conditions are true.
 The report is returned as JSON, written to stdout, and also written to
 experiments/M094/CHECK_REPORT.json (if the directory exists).
 
-Because M094 has never been run, there is no RESULT.json to validate against.
+Written before M094 was run, when there was no RESULT.json to validate against. The run
+happened on 19 August 2026, so every condition now has a branch that reads the preserved
+artifacts; the pre-run branches remain because a checker that cannot describe an unrun
+milestone cannot certify one either.
 Conditions P7-P12 are therefore checked structurally: the protocol's guarantees
 are verified rather than a recorded run. Every condition is fully recomputed.
 """
