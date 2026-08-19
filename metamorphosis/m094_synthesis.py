@@ -244,6 +244,7 @@ def suggest_operations(
     capability: str,
     target: str,
     detail: str,
+    max_length: int | None = None,
 ) -> list[SynthesisOperation]:
     """Given a diagnostic result, generate candidate operations.
 
@@ -271,6 +272,11 @@ def suggest_operations(
         Shape-specific detail. For ``RenderAsMapping`` this is the
         attribute subset read by callers; for ``FilterByAttribute`` this
         is the attribute name.
+    max_length:
+        Composition bound. ``None`` uses the declared
+        ``m094_composition.MAX_COMPOSITION_LENGTH``. It exists so the protocol's
+        ``more_budget_same_operations`` arm can raise the bound over the same
+        operation set; a control that cannot be run cannot fail.
 
     Returns
     -------
@@ -313,6 +319,7 @@ def suggest_operations(
         node = _find_class_node(modified_tree, class_name)
         return node is not None and shape.is_supplied_by(node, target, detail)
 
+    search_kwargs = {} if max_length is None else {"max_length": max_length}
     report = composition.search(
         source=source,
         class_name=class_name,
@@ -321,6 +328,7 @@ def suggest_operations(
         detail=detail,
         collections=collections,
         accepts=accepts,
+        **search_kwargs,
     )
 
     if report.adopted is None:
