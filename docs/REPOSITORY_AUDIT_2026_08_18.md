@@ -11,6 +11,20 @@ imports/orphans/dependencies all pass; the diagnosis digest is unchanged at `48c
 `CHECK_REPORT.json` still digests to `cbd3ff14caf18051…` with verdict `incomplete` (7 passed, 0
 failed, 5 uncomputed).
 
+**Toolchain note (19 August).** An application-control policy on this machine now blocks every
+executable under `%APPDATA%`, which includes the uv-managed CPython 3.11.16 the earlier measurements
+used and `uv` itself ("Une stratégie de contrôle d'application a bloqué ce fichier"). The only usable
+interpreter is the system CPython **3.14.6** at `C:\Python314`, and a venv built from it runs
+normally — the policy discriminates by publisher, not by path. Measurements taken before that change
+are marked 3.11; anything after is 3.14.
+
+This forced a check worth having: **the M094 mechanism is digest-stable across the two
+interpreters.** Under 3.14.6 the diagnosis still digests to `48cd5e9c2354a365…`, the search still
+examines 767 and refuses 764, and the adopted mechanism still digests to `3cd1314f4ed0fea0…` — the
+same values recorded under 3.11.16. `ast.unparse`, which the mechanism digest ultimately depends on,
+did not change its output. Reproducibility across 3.11/3.13 was assumed; across 3.11/3.14 it is now
+measured.
+
 This document reports what is true. It repairs nothing scientific: where a claim is too strong the
 correction is to the claim, never to the record behind it.
 
@@ -143,6 +157,46 @@ historical copies left alone. See §C.
    `mira_core/`, `metamorphosis/`, `scripts/`, `tests/`. **56 test files read `experiments/` or
    `results/`**, neither of which is copied. The declared command cannot pass. Added in the same
    commit as the M094 runner (`a9cdaaf`) and, on this evidence, never built.
+
+### The frozen protocol carries an audit digest that matches nothing
+
+`experiments/M094/PROTOCOL.json` records `design_audit.audit_digest = d41ea1ea84e0767c…`. That value
+matches **no committed artifact**:
+
+| candidate | digest |
+|---|---|
+| `sha256(DESIGN_AUDIT.md)` | `236c438dcc9547cd…` |
+| `sha256(DESIGN_AUDIT.json)` | `8ddb92267591665a…` |
+| `DESIGN_AUDIT.json`'s own `digest` field | `37eee413397f9907…` |
+| **what the protocol records** | **`d41ea1ea84e0767c…`** |
+
+Tracing the file's history explains it without excusing it: `d41ea1ea…` was the audit's internal
+digest at commit `0d23bfd`. The next commit, `f516bc7` ("remove the constant that was deciding"),
+changed the audit and moved its digest to `37eee413…`. The protocol, frozen later, carried the older
+value forward. The same `design_audit` block then describes content that only exists in the *newer*
+audit — `defects_found_before_freeze: 12`, and the whole Defect 5 narrative. So the block pairs a
+stale digest with current prose.
+
+Nothing catches this. `scripts/check_m094_result.py:48` binds `DESIGN_AUDIT_MD` and **never uses
+it** — the check that would have caught the drift was named and not written. (I left that binding in
+place rather than deleting it as dead code: unlike `_qualification_exists`, it marks a missing check
+rather than a duplicated one.)
+
+**Not repaired here, deliberately.** The protocol is frozen and says it may not be repaired. A frozen
+artifact carrying an unverifiable digest is a disclosure item and possibly a withdrawal item, and
+that is the owner's call, not an auditor's edit. Nothing scientific turns on it *yet* — no result
+exists — but "the audit is bound by digest" is not currently true, and the run should not proceed
+while it isn't.
+
+### The freeze commit is not reachable from `main`
+
+PR #175 was rebased before merging. `dd79665`, cited as the freeze commit by both
+`SCIENTIFIC_HYPOTHESES.md` H39 and `experiments/M094/DESIGN_AUDIT.md`, is **not an ancestor of
+`main`**; the freeze landed as `9b69d7f`, and the commit recording it as `312bbb1`. The trees are
+byte-identical (`e2ab1c1b` and `73eab62b` respectively), so no content moved — but a verifier
+starting from a fresh clone could not resolve the hash the record names. Both hashes are now recorded
+in those two documents rather than the old one overwritten. `source_commit_audited` (`df88d24`) is
+unaffected and still reachable.
 
 ### Unprotected digest-bearing artifacts
 
@@ -348,9 +402,10 @@ The current habit of running 40 minutes for a five-line change is the largest av
 
 ## G. Is M094 ready to freeze?
 
-**It is already frozen** (commit `dd79665`, 18 August 2026, PR #175 open). The correct question is
-whether it is **ready to run**, and the answer is **no**. Three blockers. This is a minimal list, not
-a wishlist — each one is something without which the run cannot produce a verdict.
+**It is already frozen and now merged to `main`** (authored at `dd79665`, landed as `9b69d7f`; PR
+#175 closed). The correct question is whether it is **ready to run**, and the answer is **no**. Four
+blockers. This is a minimal list, not a wishlist — each one is something without which the run cannot
+produce a verdict, or cannot produce a verifiable one.
 
 ### Blocker 1 — the checker can never return `positive`
 
@@ -406,6 +461,17 @@ will find this in ten minutes.
 
 Option 1 is defensible and immediate. Option 3 is the one that makes the milestone say what it wants
 to say.
+
+### Blocker 4 — the frozen protocol's audit digest identifies nothing
+
+`design_audit.audit_digest = d41ea1ea…` in the frozen `PROTOCOL.json` matches no committed artifact;
+it is the audit's digest from two commits before the freeze (§B). The binding that would have caught
+it, `DESIGN_AUDIT_MD` in the checker, was declared and never used.
+
+This is the only blocker I cannot propose a fix for, because fixing it means editing a frozen
+protocol. The options are the owner's: record an erratum alongside the protocol without touching it,
+or withdraw and re-freeze. Either is legitimate; silently correcting the digest is not, and neither
+is running while the protocol's own audit binding is unverifiable.
 
 ### Also worth closing before the run
 
