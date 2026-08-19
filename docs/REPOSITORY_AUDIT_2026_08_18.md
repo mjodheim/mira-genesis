@@ -312,7 +312,29 @@ re-freeze the pool (changes `44f46e6b…`); or narrow the pool to the entries th
 constructed, disclosing which were dropped and why; or keep the pool and accept that the
 qualification is partly unrunnable, which means H39 cannot be settled on it.
 
-### The frozen protocol carries an audit digest that matches nothing
+### The frozen protocol carries an audit digest that matches nothing — **AMENDED (A3)**
+
+> **Resolved 19 August by amendment A3.** Corrected to the committed report's own digest
+> (`37eee413…`), superseded value preserved beside it, and — the part that matters — the check
+> whose absence caused the drift now exists. `check_design_audit_binding` verifies that the report
+> digests to its own recorded value, that the protocol names that digest, and that every
+> sub-report measuring the inherited implementation still reproduces. Its failures fail P12; with
+> the stale digest in place the checker reported `negative`, which is what it should have been
+> saying since the freeze.
+>
+> **Fixing it surfaced a second staleness.** The committed report is a snapshot taken at
+> `f516bc7`, and the diagnosis's detail encoding changed afterwards at `96c8a3a` — included in the
+> freeze — without the report being re-derived. Its `corrected_measure_threshold_sensitivity`
+> records `Observation` with `fields_read` 5 where the measure at the freeze gives 7.
+>
+> The report is **not** regenerated. Re-running the instrument today measures post-A2 code, which
+> describes neither the inherited implementation the audit is evidence about nor the state at the
+> freeze — it would swap a disclosed staleness for an undisclosed one. Instead the two kinds of
+> measurement are separated, which is the real repair: four sub-reports measure preserved sources,
+> reproduce exactly, and are replayed on every check; one measures the live measure and is
+> preserved with that disclosure. A digest over both together is what made the drift silent.
+
+
 
 `experiments/M094/PROTOCOL.json` records `design_audit.audit_digest = d41ea1ea84e0767c…`. That value
 matches **no committed artifact**:
