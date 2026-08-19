@@ -730,6 +730,7 @@ def measure_component(
     repo_root: Path,
     component_path: str,
     candidates: Sequence[CandidateClass] | None = None,
+    shapes: Sequence[object] | None = None,
 ) -> tuple[Insufficiency, ...]:
     """Measure every unmet capability shape on one component.
 
@@ -773,7 +774,7 @@ def measure_component(
     }
 
     for class_node in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-        for shape in CAPABILITY_SHAPES:
+        for shape in (CAPABILITY_SHAPES if shapes is None else shapes):
             if not shape.applies_to(class_node):
                 continue
 
@@ -849,7 +850,11 @@ class Diagnosis:
         )
 
 
-def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
+def diagnose(
+    repo_root: Path,
+    components: Sequence[str],
+    shapes: Sequence[object] | None = None,
+) -> Diagnosis:
     """Select the component with the greatest unmet demand.
 
     The ordering key is ``(-demand, component_path, capability, target, detail)``, so
@@ -871,7 +876,7 @@ def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
 
     considered: list[Insufficiency] = []
     for path in components:
-        considered.extend(measure_component(repo_root, path, candidates))
+        considered.extend(measure_component(repo_root, path, candidates, shapes))
 
     unmet = tuple(sorted(
         (i for i in considered if i.is_unmet),

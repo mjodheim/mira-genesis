@@ -181,3 +181,115 @@ def unreachable_operations(
     """Which of them the current state cannot use. The census S0's control reports."""
 
     return tuple(op.describe() for op in operations if not op.is_reachable())
+
+
+# ── seeing the nested demand ──────────────────────────────────────────
+
+
+def _attribute_chain(node: ast.expr) -> tuple[str, str] | None:
+    """For `obj.field.sub`, return `(field, sub)`. Anything else gives None."""
+
+    if (isinstance(node, ast.Attribute)
+            and isinstance(node.value, ast.Attribute)
+            and isinstance(node.value.value, ast.Name)):
+        return node.value.attr, node.attr
+    return None
+
+
+def nested_bindings(node: ast.expr) -> dict[str, str]:
+    """Keys of a dict literal whose value is itself a rendering of one nested field.
+
+    `{"reading": {"reading_id": s.reading.reading_id, "unit": s.reading.unit}}` gives
+    `{"reading": "reading"}`: the key `reading` holds a mapping built entirely out of
+    attributes of `s.reading`, so the caller is rendering that field by hand and the field is
+    what a renderer would have to render.
+
+    A nested literal drawing on more than one field, or on anything that is not an attribute
+    chain, binds nothing -- it is not a rendering of a single value object.
+    """
+
+    if not isinstance(node, ast.Dict):
+        return {}
+
+    found: dict[str, str] = {}
+    for key, value in zip(node.keys, node.values):
+        if not (isinstance(key, ast.Constant) and isinstance(key.value, str)):
+            continue
+        if not isinstance(value, ast.Dict) or not value.values:
+            continue
+        fields = {_attribute_chain(item) for item in value.values}
+        if None in fields:
+            continue
+        sources = {pair[0] for pair in fields if pair}
+        if len(sources) == 1:
+            found[key.value] = sources.pop()
+    return found
+
+
+@dataclass(frozen=True)
+class RenderNestedValueObject:
+    """Rebuilding a *nested* value object's fields into a mapping, at the call site.
+
+    M094's `RenderAsMapping` sees `{"k": obj.field}` and cannot see
+    `{"k": {"a": obj.field.a, "b": obj.field.b}}`, which is what a caller writes when the field
+    is itself a value object that renders nothing. This shape sees the second, and the whole of
+    M095's chain depends on it being visible: without it the outer class's demand is invisible
+    and there is no second repair to reach for.
+
+    Defined here, in M095's namespace, and passed to the diagnosis explicitly. M094 measured
+    with `CAPABILITY_SHAPES` and its result depends on that measurement; adding a shape to the
+    shared tuple would have changed it.
+    """
+
+    name: str = "render_nested_value_object_as_mapping"
+    merges_details: bool = True
+
+    def applies_to(self, class_node: ast.ClassDef) -> bool:
+        return any(
+            isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name)
+            for item in class_node.body
+        )
+
+    def demand_sites(self, tree, class_node, rivals=()):
+        """Call sites that render a nested field of this class by hand."""
+
+        declared = {
+            item.target.id for item in class_node.body
+            if isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name)
+        }
+        sites: list[tuple[str, str]] = []
+        for node in ast.walk(tree):
+            for key, field in nested_bindings(node).items():
+                if field in declared:
+                    sites.append((class_node.name, _encode_one(key, field)))
+        return sites
+
+    def is_supplied_by(self, class_node: ast.ClassDef, target: str, detail: str) -> bool:
+        """Does the class define a method rendering that field through a renderer?"""
+
+        wanted = decode_rendering(detail)
+        for node in class_node.body:
+            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                continue
+            if node.name.startswith("_"):
+                continue
+            for inner in ast.walk(node):
+                if not isinstance(inner, ast.Return) or not isinstance(inner.value, ast.Dict):
+                    continue
+                produced: dict[str, str] = {}
+                for key, value in zip(inner.value.keys, inner.value.values):
+                    if not (isinstance(key, ast.Constant) and isinstance(key.value, str)):
+                        continue
+                    # `self.field.method()` -- a renderer called on the field.
+                    if (isinstance(value, ast.Call)
+                            and isinstance(value.func, ast.Attribute)
+                            and isinstance(value.func.value, ast.Attribute)
+                            and not value.args):
+                        produced[key.value] = value.func.value.attr
+                if all(produced.get(key) == field for key, field, _w in wanted):
+                    return True
+        return False
+
+
+def _encode_one(key: str, field: str) -> str:
+    return key + "=" + field + "|"
