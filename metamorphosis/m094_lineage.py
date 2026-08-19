@@ -33,17 +33,15 @@ import hashlib
 import json
 import os
 import random
-import shutil
 import subprocess
 import sys
-import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+from metamorphosis import m094_execution as execution
 from metamorphosis.m094_composition import MAX_COMPOSITION_LENGTH
 from metamorphosis.m094_diagnosis import (
-    CAPABILITY_SHAPES,
     Diagnosis,
     Insufficiency,
     clear_caches,
@@ -195,52 +193,6 @@ def behavioural_cases(
 # ── the sandbox ──────────────────────────────────────────────────────
 
 
-def _repo_dependencies(root: Path, component_path: str, source: str) -> tuple[str, ...]:
-    """Which repository modules the variant imports, transitively.
-
-    A sandbox that copies the whole package pulls in `mira_core/__init__.py`, which imports
-    every module and therefore numpy. Copying only what the variant reaches keeps the
-    sandbox a test of the component.
-
-    The component's own imports are read from *source* rather than from disk, because the
-    variant being sandboxed is frequently not what is on disk -- and in `rollback_proof` the
-    live file is deliberately damaged, so reading it would crash the very step that proves
-    the damage. An unparsable source contributes no edges, which is the right answer: a
-    broken variant has no discoverable imports and the sandbox should report that it does
-    not import rather than fail to be built.
-    """
-
-    seen: set[str] = {component_path}
-    queue: list[str] = []
-
-    def edges(text: str) -> list[str]:
-        try:
-            tree = ast.parse(text)
-        except SyntaxError:
-            return []
-        found: list[str] = []
-        for item in ast.walk(tree):
-            modules: list[str] = []
-            if isinstance(item, ast.Import):
-                modules = [alias.name for alias in item.names]
-            elif isinstance(item, ast.ImportFrom) and item.module:
-                modules = [item.module]
-            for module in modules:
-                candidate = module.replace(".", "/") + ".py"
-                if (root / candidate).exists():
-                    found.append(candidate)
-        return found
-
-    queue.extend(edges(source))
-    while queue:
-        current = queue.pop()
-        if current in seen:
-            continue
-        seen.add(current)
-        queue.extend(edges((root / current).read_text(encoding="utf-8")))
-    return tuple(sorted(seen - {component_path}))
-
-
 @dataclass(frozen=True)
 class SandboxOutcome:
     """What one variant of a component did when it was actually executed.
@@ -285,93 +237,6 @@ class SandboxOutcome:
         }
 
 
-#: Executed inside the disposable subprocess. It receives the class name, the requirement
-#: and the cases on stdin, and it is told nothing about which method should satisfy them:
-#: it tries every public zero-argument method and reports which ones agree.
-_PROBE_SCRIPT = r'''
-import ast, importlib, json, sys, traceback
-
-payload = json.loads(sys.stdin.read())
-sys.path.insert(0, ".")
-
-def wrap(value, wrapper):
-    if wrapper == "list":
-        return list(value)
-    if wrapper == "tuple":
-        return tuple(value)
-    return value
-
-result = {"imported": False, "cases_total": 0, "cases_constructible": 0,
-          "cases_satisfied": 0, "satisfying_methods": [], "error": None}
-try:
-    module = importlib.import_module(payload["module"])
-    cls = getattr(module, payload["class"])
-    result["imported"] = True
-
-    requirement = [tuple(item) for item in payload["requirement"]]
-    cases = payload["cases"]
-    result["cases_total"] = len(cases)
-
-    # Every public zero-argument method is a candidate. The probe does not know the name
-    # of the method it is looking for, so it cannot be satisfied by the right name alone.
-    names = sorted(
-        name for name in dir(cls)
-        if not name.startswith("_") and callable(getattr(cls, name, None))
-    )
-
-    # Constructibility is measured before agreement and reported separately. A case that
-    # cannot build the object measures nothing about the candidate, and counting it as a
-    # failure would let a broken case read as a refuted requirement.
-    constructible = 0
-    for case in cases:
-        try:
-            cls(**case)
-            constructible += 1
-        except Exception:
-            pass
-    result["cases_constructible"] = constructible
-
-    agreeing = []
-    for name in names:
-        satisfied = 0
-        for case in cases:
-            try:
-                instance = cls(**case)
-            except Exception:
-                continue
-            try:
-                produced = getattr(instance, name)()
-            except Exception:
-                break
-            if not isinstance(produced, dict):
-                break
-            ok = True
-            for key, attribute, wrapper in requirement:
-                try:
-                    expected = wrap(getattr(instance, attribute), wrapper)
-                except Exception:
-                    ok = False
-                    break
-                if key not in produced or produced[key] != expected:
-                    ok = False
-                    break
-            if not ok:
-                break
-            satisfied += 1
-        # Agreement is judged over the cases that could be constructed, not over all of them.
-        if constructible and satisfied == constructible:
-            agreeing.append(name)
-
-    result["satisfying_methods"] = agreeing
-    if agreeing:
-        result["cases_satisfied"] = constructible
-except Exception:
-    result["error"] = traceback.format_exc(limit=4)
-
-print("M094_PROBE:" + json.dumps(result, sort_keys=True))
-'''
-
-
 def sandbox_component(
     root: Path,
     component_path: str,
@@ -381,74 +246,31 @@ def sandbox_component(
     cases: Sequence[Mapping[str, Any]],
     *,
     variant: str,
-    timeout_seconds: int = 60,
+    timeout_seconds: int = 300,
 ) -> SandboxOutcome:
     """Execute one source variant in a disposable directory, in a fresh interpreter.
 
-    The variant never touches the live tree. Its repository dependencies are copied
-    unmodified so an import failure means the variant is broken rather than lonely.
+    Amendment A2 moved the probe itself into `m094_execution`, so the acceptance rule inside
+    the search and the sandbox around the pipeline run the same code and cannot disagree
+    about what a candidate does. This wraps it in the outcome shape the arms record.
     """
 
-    module = component_path.replace("/", ".").removesuffix(".py")
-    with tempfile.TemporaryDirectory(prefix="m094-sandbox-") as tmp:
-        sandbox = Path(tmp)
-        target = sandbox / component_path
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(source, encoding="utf-8")
-        # An empty package marker, not the real __init__, which imports the whole platform.
-        for parent in Path(component_path).parents:
-            if str(parent) not in {".", ""}:
-                (sandbox / parent / "__init__.py").write_text("", encoding="utf-8")
-        for dependency in _repo_dependencies(root, component_path, source):
-            destination = sandbox / dependency
-            destination.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copyfile(root / dependency, destination)
-            for parent in Path(dependency).parents:
-                if str(parent) not in {".", ""}:
-                    marker = sandbox / parent / "__init__.py"
-                    if not marker.exists():
-                        marker.write_text("", encoding="utf-8")
-
-        script = sandbox / "_m094_probe.py"
-        script.write_text(_PROBE_SCRIPT, encoding="utf-8")
-        payload = _canonical_json({
-            "module": module,
-            "class": class_name,
-            "requirement": [list(item) for item in requirement],
-            "cases": [dict(case) for case in cases],
-        })
-
-        try:
-            completed = subprocess.run(
-                [sys.executable, str(script)],
-                cwd=sandbox,
-                input=payload,
-                capture_output=True,
-                text=True,
-                timeout=timeout_seconds,
-                env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
-            )
-        except subprocess.TimeoutExpired:
-            return SandboxOutcome(variant, False, len(cases), 0, (), "TIMEOUT", 0)
-
-        line = next(
-            (l for l in completed.stdout.splitlines() if l.startswith("M094_PROBE:")), None
-        )
-        if line is None:
-            return SandboxOutcome(
-                variant, False, len(cases), 0, (),
-                (completed.stderr or "no probe output")[-800:], 0,
-            )
-        parsed = json.loads(line[len("M094_PROBE:"):])
-        return SandboxOutcome(
-            variant=variant,
-            imported=bool(parsed["imported"]),
-            cases_total=int(parsed["cases_total"]),
-            cases_satisfied=int(parsed["cases_satisfied"]),
-            satisfying_methods=tuple(parsed["satisfying_methods"]),
-            error=parsed["error"],
-            cases_constructible=int(parsed.get("cases_constructible", 0)),
-        )
+    records = execution.probe_variants(
+        root, component_path, [(variant, source)], class_name, requirement, cases,
+        timeout_seconds=timeout_seconds,
+    )
+    if not records:
+        return SandboxOutcome(variant, False, len(cases), 0, (), "no probe result", 0)
+    record = records[0]
+    return SandboxOutcome(
+        variant=variant,
+        imported=bool(record.get("imported")),
+        cases_total=int(record.get("cases_total", len(cases))),
+        cases_satisfied=int(record.get("cases_satisfied", 0)),
+        satisfying_methods=tuple(record.get("satisfying_methods", ())),
+        error=record.get("error"),
+        cases_constructible=int(record.get("cases_constructible", 0)),
+    )
 
 
 # ── compare ──────────────────────────────────────────────────────────

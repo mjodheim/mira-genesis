@@ -388,6 +388,13 @@ class SearchReport:
     #: Survivors that actually differ in what they compute. Several spellings of
     #: one behaviour is one discovery, not several.
     surviving_behaviours: int = 0
+    #: Amendment A2. Survivors passed the structural filter and were then executed. A
+    #: candidate that reproduces the requirement when read and raises when run is refused
+    #: here rather than adopted, which is what the frozen acceptance rule could not do.
+    confirmed_by_execution: int = 0
+    executed: int = 0
+    refused_after_execution: int = 0
+    execution_budget_reached: bool = False
 
     def refuse(self, reason: str) -> None:
         self.refused[reason] = self.refused.get(reason, 0) + 1
@@ -404,6 +411,10 @@ class SearchReport:
             "refused_total": sum(self.refused.values()),
             "survivors": self.survivors,
             "surviving_behaviours": self.surviving_behaviours,
+            "executed": self.executed,
+            "confirmed_by_execution": self.confirmed_by_execution,
+            "refused_after_execution": self.refused_after_execution,
+            "execution_budget_reached": self.execution_budget_reached,
             "adopted": (
                 {
                     "composition": list(self.adopted.composition),
@@ -489,13 +500,22 @@ def search(
     collections: Sequence[str],
     accepts,
     max_length: int = MAX_COMPOSITION_LENGTH,
+    confirms=None,
 ) -> SearchReport:
-    """Assemble candidates and keep the ones the requirement accepts.
+    """Assemble candidates, filter them by the requirement, and adopt one that runs.
 
-    `accepts` is supplied by the caller and receives the *modified source*. It is
-    the diagnosis re-run against the candidate, so acceptance means "the
-    insufficiency is now met" rather than "the output matches something written
+    `accepts` receives the *modified source* and re-runs the diagnosis against it, so it
+    means "the insufficiency is now met" rather than "the output matches something written
     down". Nothing here knows what the winning method looks like.
+
+    `confirms` is amendment A2. It receives the surviving candidates in adoption order and
+    returns those that reproduce the requirement **when executed**. Without it, adoption
+    falls back to the content-address tie-break the amendment replaced -- retained so the
+    superseded behaviour stays reproducible, and never used by the lineage.
+
+    Why the split rather than executing everything: the structural filter is what makes the
+    search finite. `ContainerLimits` reaches over 400,000 states, and running each would cost
+    more than the milestone. The filter narrows; execution decides.
     """
 
     operations = operations_for(capability, fields, detail, collections)
@@ -559,9 +579,28 @@ def search(
     report.survivors = len(survivors)
     report.surviving_behaviours = len({c.draft.fingerprint() for c in survivors})
 
-    if survivors:
-        # The requirement does not constrain which survivor is taken, so the tie
-        # is broken by content address rather than by preference.
-        report.adopted = min(survivors, key=lambda c: c.digest())
+    if not survivors:
+        return report
+
+    # Content address orders the candidates; execution decides among them. The order is
+    # still not a preference -- it is a hash -- but the first one taken is now the first
+    # that works rather than the first that parses.
+    ordered = sorted(survivors, key=lambda candidate: candidate.digest())
+
+    if confirms is None:
+        report.adopted = ordered[0]
+        return report
+
+    accepted, examined, budget_reached = confirms(ordered)
+    report.executed = examined
+    report.confirmed_by_execution = len(accepted)
+    report.refused_after_execution = examined - len(accepted)
+    report.execution_budget_reached = budget_reached
+    if accepted:
+        report.adopted = accepted[0]
+    else:
+        # Every survivor raised or disagreed when run. That is a finding, not a fallback:
+        # adopting one anyway is precisely what A2 exists to stop.
+        report.refuse("no_survivor_reproduced_the_requirement_when_executed")
 
     return report
