@@ -27,3 +27,9 @@ blind-bank-workspace/
 # M093 transformation experiment runtime state (regenerated on each run).
 .m093-state.json
 .m093-backup-*
+
+# M094 adoption state and the preserved original the rollback restores from. Written into the
+# repository root by a canonical run, which also writes a digest-bearing result: without this
+# they would sit untracked beside it and could be committed into the same change.
+.m094-state.json
+.m094-backup-*
