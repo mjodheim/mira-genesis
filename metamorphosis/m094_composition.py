@@ -206,8 +206,25 @@ def _self_attribute(field: str) -> ast.expr:
 
 
 def _wrapped(expr: ast.expr, wrapper: str | None) -> ast.expr:
+    """Apply a wrapper to a field expression.
+
+    `None` reads the field; `list`/`tuple` construct around it. A wrapper of the form
+    `render:<method>` calls that method *on* the field instead of a function around it, which
+    is how M095 renders a value object nested inside another one. The method name travels in
+    the wrapper because it is discovered from the inner class rather than written down; see
+    `metamorphosis/m095_reach.py`.
+
+    Additive: no M094 composition produces a `render:` wrapper, and the adopted mechanism
+    digest `259e12f5…` is unchanged by this branch.
+    """
+
     if wrapper is None:
         return expr
+    if wrapper.startswith("render:"):
+        method = wrapper[len("render:"):]
+        return ast.Call(
+            func=ast.Attribute(value=expr, attr=method, ctx=ast.Load()), args=[], keywords=[]
+        )
     return ast.Call(func=ast.Name(id=wrapper, ctx=ast.Load()), args=[expr], keywords=[])
 
 
