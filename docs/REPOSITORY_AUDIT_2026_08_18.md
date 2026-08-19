@@ -158,6 +158,49 @@ historical copies left alone. See §C.
    `results/`**, neither of which is copied. The declared command cannot pass. Added in the same
    commit as the M094 runner (`a9cdaaf`) and, on this evidence, never built.
 
+### Blocker 5 — seven of nine frozen qualification entries cannot be executed
+
+Found by building the pipeline and running the qualification, which is the first time anyone
+executed the pool's hidden cases rather than regenerating them.
+
+The pool's *requirements* were produced by measurement, as the design audit says. Its **hidden
+case values were synthesised from a seed and never run**. Constructing each entry's class from
+its own five committed cases:
+
+| entry | cases that construct | first error |
+|---|---|---|
+| `container.py::ContainerLimits` | 5/5 | — |
+| `harbor.py::HarborEpisodeLimits` | 5/5 | — |
+| `agent.py::AgentResult` | **0/5** | unexpected keyword `succeeded` (it is a computed property) |
+| `calibration.py::EpisodeOutcome` | **0/5** | enum member passed as a keyword |
+| `skills.py::SkillDemonstration` | **0/5** | missing required argument `source` |
+| `container.py::ContainerSpec` | **0/5** | missing required argument `image` |
+| `model.py::StructuredModelPolicy` | **0/5** | missing required argument `backend` |
+| `model.py::ModelRequest` | **0/5** | missing required argument `output_schema` |
+| `skills.py::TeacherCallTrap` | **0/5** | unexpected keyword `calls` (set in `__init__`, not declared) |
+
+**7 of 9.** The cases carry only the fields the requirement mentions, not the fields the
+constructor requires, and nothing checked that the class would accept them.
+
+Why this is the most serious of the five: the draw with the current mechanism digest selects
+`skills.py::TeacherCallTrap` and `container.py::ContainerSpec` — **both broken**. A run would
+report that the adopted mechanism failed its qualification, and that would be false. The
+mechanism does satisfy `TeacherCallTrap` when given cases that construct; `ContainerSpec` cannot
+be constructed by any generic case builder, because `__post_init__` demands a sha256-pinned image
+and an absolute path. The pool would refute H39 on its own account.
+
+**Not repaired here.** `QUALIFICATION_POOL.json` is frozen, digest-bearing (`44f46e6b…`),
+byte-exact protected, and pinned by tests. Editing it is the owner's decision. What is repaired
+is the instrument's ability to lie about it: the harness now reports `unrunnable` as a third
+outcome distinct from `refuted`, the qualification verdict is `incomplete` rather than `negative`
+when any drawn entry is unrunnable, and P7 reports `uncomputed` in that case. A pool defect can
+no longer present itself as evidence.
+
+The options, in increasing cost: regenerate the hidden cases against the real constructors and
+re-freeze the pool (changes `44f46e6b…`); or narrow the pool to the entries that can be
+constructed, disclosing which were dropped and why; or keep the pool and accept that the
+qualification is partly unrunnable, which means H39 cannot be settled on it.
+
 ### The frozen protocol carries an audit digest that matches nothing
 
 `experiments/M094/PROTOCOL.json` records `design_audit.audit_digest = d41ea1ea84e0767c…`. That value
@@ -339,10 +382,17 @@ diagnosis digest `48cd5e9c2354a365…`:
 per file on Windows eats the saving — so both caches are needed. This matters far more than 6 s
 suggests: a qualification run re-diagnoses once per control arm, and there are six arms.
 
-**This change is prepared and measured but not applied**, because it touches a module inside a frozen
-protocol. It cannot change a conclusion (the digest is provably unchanged), but it should land as
-part of the run-harness work with the evidence in the commit message, not as a drive-by edit to an
-open freeze PR.
+**Applied**, with the run-harness work, as this section said it should be. Two caches in
+`m094_diagnosis`: parsed sources keyed by `(path, size, mtime_ns)`, and the reachability
+predicate keyed by the same plus the module and its exported names. Both are pure functions of
+file bytes, both self-invalidate when a file changes, and `TransformationStore` calls
+`clear_caches()` on every write rather than trusting filesystem timestamp resolution to keep a
+measurement honest.
+
+Measured after the change: **5.4 s cold, 0.70 s warm**, diagnosis digest still
+`48cd5e9c2354a365…`. It stopped being an optimisation and became a prerequisite:
+`tests/test_m094_checker_replay.py` calls `compute_report` twenty times, and without the caches
+that file exceeded a ten-minute timeout.
 
 ### F.2 Search — a correction: it does not scale
 
@@ -495,12 +545,17 @@ The current habit of running 40 minutes for a five-line change is the largest av
 
 ## G. Is M094 ready to freeze?
 
+> **Status as of 19 August.** Blockers 1 and 2 are closed — the pipeline exists and the checker
+> can reach `positive`. Blockers 3 and 4 remain open and both need an owner decision. Building
+> the pipeline surfaced a fifth, described in §B, which is the most serious of the five.
+
+
 **It is already frozen and now merged to `main`** (authored at `dd79665`, landed as `9b69d7f`; PR
 #175 closed). The correct question is whether it is **ready to run**, and the answer is **no**. Four
 blockers. This is a minimal list, not a wishlist — each one is something without which the run cannot
 produce a verdict, or cannot produce a verifiable one.
 
-### Blocker 1 — the checker can never return `positive`
+### Blocker 1 — the checker can never return `positive` — **CLOSED**
 
 This is the serious one. `verdict_rule` is *"positive only when every condition is computed and
 true"*. Trace what happens the moment a run produces artifacts:
@@ -522,7 +577,7 @@ RESULT.json to validate against"), but the protocol's `verdict_rule` does not kn
 `scripts/check_m091_result.py` as the model. Not a rewrite: the pre-run behaviour stays as the
 `else` branch.
 
-### Blocker 2 — the pipeline the protocol assumes does not exist
+### Blocker 2 — the pipeline the protocol assumes does not exist — **CLOSED**
 
 The protocol commits to adoption (P7), independent validation (P8), a budget arm (P9), a
 random-selection arm (P10), exact behavioural rollback (P11), and seven declared arms. What exists
