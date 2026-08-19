@@ -111,7 +111,29 @@ def _digest(value: object) -> str:
 
 
 def _source_digest(source: str) -> str:
+    """Digest of a component's *text*.
+
+    Retained because the adoption journal records it and attempt 1's artifacts carry it. It is
+    no longer what certifies a rollback: see `_byte_digest`.
+    """
+
     return hashlib.sha256(b"m094-source-v1\0" + source.encode("utf-8")).hexdigest()
+
+
+def _byte_digest(data: bytes) -> str:
+    """Digest of a component's bytes, exactly as they sit on disk.
+
+    Attempt 1's rollback reported `restoration_is_byte_exact: True` while the file's bytes had
+    changed. `Path.read_text` decodes with universal newlines, turning CRLF into LF, and
+    `write_text(newline="")` writes back untranslated -- so the roundtrip normalised line
+    endings, and a digest taken over decoded text could not see it. The component was restored
+    to identical content and to different bytes, and the condition that certifies rollback
+    asserted the stronger of the two.
+
+    Everything that certifies exactness now reads and writes bytes.
+    """
+
+    return hashlib.sha256(b"m094-bytes-v1\0" + data).hexdigest()
 
 
 # ── observe ──────────────────────────────────────────────────────────
@@ -569,6 +591,10 @@ class JournalEntry:
     validation_receipt: str
     comparison: str
     previous_entry_digest: str | None
+    #: Byte digests of the same two states. The text digests above cannot distinguish a file
+    #: whose line endings changed; these can, and these are what the rollback checks.
+    original_bytes_digest: str = ""
+    modified_bytes_digest: str = ""
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -578,6 +604,8 @@ class JournalEntry:
             "mechanism_digest": self.mechanism_digest,
             "original_source_digest": self.original_source_digest,
             "modified_source_digest": self.modified_source_digest,
+            "original_bytes_digest": self.original_bytes_digest,
+            "modified_bytes_digest": self.modified_bytes_digest,
             "validation_receipt": self.validation_receipt,
             "comparison": self.comparison,
             "previous_entry_digest": self.previous_entry_digest,
@@ -655,6 +683,21 @@ class TransformationStore:
     def _backup_path(self, component: str) -> Path:
         return self._work_dir / f".m094-backup-{Path(component).name}"
 
+    @staticmethod
+    def _encode_like(original: bytes, text: str) -> bytes:
+        """Encode *text* using the line endings *original* already used.
+
+        A repair is produced as text, and writing it back with `LF` on a file the checkout
+        gave `CRLF` rewrites every line in the file. That is how attempt 1 changed 2356 bytes
+        into 2280 while believing it had changed one method: the adoption's own write
+        normalised the file, and the rollback then restored the normalised form.
+        """
+
+        body = text.replace("\r\n", "\n").encode("utf-8")
+        if b"\r\n" in original:
+            return body.replace(b"\n", b"\r\n")
+        return body
+
     def _persist(self) -> None:
         self.state_path(self._work_dir).write_bytes(self._state.to_bytes())
 
@@ -696,10 +739,13 @@ class TransformationStore:
 
         target = self._root / component
         backup = self._backup_path(component)
-        # The original is preserved before the live file is touched, so a crash between
-        # these two writes is recoverable rather than silent.
-        backup.write_text(original_source, encoding="utf-8", newline="")
-        target.write_text(modified_source, encoding="utf-8", newline="")
+        # Bytes, not text. The original is read from disk as it actually is rather than taken
+        # from the caller's decoded copy, so what is preserved is what was there -- line
+        # endings included. A crash between these two writes is recoverable rather than silent.
+        original_bytes = target.read_bytes()
+        modified_bytes = self._encode_like(original_bytes, modified_source)
+        backup.write_bytes(original_bytes)
+        target.write_bytes(modified_bytes)
         # The diagnosis caches parsed sources by (path, size, mtime). A rewrite normally
         # changes the mtime, but relying on filesystem timestamp resolution to keep a
         # measurement honest is not a thing to rely on.
@@ -713,6 +759,8 @@ class TransformationStore:
             mechanism_digest=mechanism_digest,
             original_source_digest=_source_digest(original_source),
             modified_source_digest=_source_digest(modified_source),
+            original_bytes_digest=_byte_digest(original_bytes),
+            modified_bytes_digest=_byte_digest(modified_bytes),
             validation_receipt=validation.receipt,
             comparison=str(comparison.get("reason", "")),
             previous_entry_digest=previous,
@@ -734,16 +782,19 @@ class TransformationStore:
         backup = self._backup_path(component)
         if not backup.exists():
             raise LineageError(f"the preserved original is missing: {backup}")
-        original = backup.read_text(encoding="utf-8")
-        if _source_digest(original) != entry.original_source_digest:
-            raise LineageError("the preserved original does not match its recorded digest")
+        original_bytes = backup.read_bytes()
+        if entry.original_bytes_digest and _byte_digest(original_bytes) != entry.original_bytes_digest:
+            raise LineageError("the preserved original does not match its recorded byte digest")
 
         target = self._root / component
-        target.write_text(original, encoding="utf-8", newline="")
+        target.write_bytes(original_bytes)
         clear_caches()
-        written = target.read_text(encoding="utf-8")
-        if _source_digest(written) != entry.original_source_digest:
+        written_bytes = target.read_bytes()
+        if written_bytes != original_bytes:
             raise LineageError("restoration is not byte-exact")
+        if entry.original_bytes_digest and _byte_digest(written_bytes) != entry.original_bytes_digest:
+            raise LineageError("restoration is not byte-exact")
+        original = original_bytes.decode("utf-8")
 
         previous_journal = self._state.journal[:-1]
         self._state = StoreState(
@@ -752,7 +803,7 @@ class TransformationStore:
             journal=previous_journal,
         )
         self._persist()
-        return written
+        return original
 
 
 # ── rollback ─────────────────────────────────────────────────────────
@@ -777,40 +828,54 @@ def rollback_proof(
     """
 
     target = root / component
-    adopted_source = target.read_text(encoding="utf-8")
-    adopted_digest = _source_digest(adopted_source)
+    # Every measurement below is over bytes. Attempt 1 took them over decoded text and so
+    # certified a restoration that had rewritten every line ending in the file.
+    adopted_bytes = target.read_bytes()
+    adopted_digest = _byte_digest(adopted_bytes)
+    entry = store.state.journal[-1] if store.state.journal else None
+    expected_original = entry.original_bytes_digest if entry else ""
     after_adoption = sandbox_component(
-        root, component, adopted_source, class_name, requirement, cases, variant="adopted",
+        root, component, adopted_bytes.decode("utf-8"), class_name, requirement, cases,
+        variant="adopted",
     )
 
     if fault == "truncate_the_adopted_method":
-        damaged_source = adopted_source[: int(len(adopted_source) * 0.8)]
+        damaged_bytes = adopted_bytes[: int(len(adopted_bytes) * 0.8)]
     elif fault == "revert_to_the_original":
-        damaged_source = store._backup_path(component).read_text(encoding="utf-8")
+        damaged_bytes = store._backup_path(component).read_bytes()
     else:
         raise LineageError(f"unknown fault class {fault!r}")
 
     # The live file, not a copy.
-    target.write_text(damaged_source, encoding="utf-8", newline="")
-    live_after_fault = target.read_text(encoding="utf-8")
+    target.write_bytes(damaged_bytes)
+    clear_caches()
+    live_after_fault = target.read_bytes()
     damaged_outcome = sandbox_component(
-        root, component, live_after_fault, class_name, requirement, cases, variant="damaged",
+        root, component, live_after_fault.decode("utf-8", errors="replace"), class_name,
+        requirement, cases, variant="damaged",
     )
 
     restored = store.restore_exactly(component)
+    restored_bytes = target.read_bytes()
     restored_outcome = sandbox_component(
         root, component, restored, class_name, requirement, cases, variant="restored",
     )
-    original_digest = _source_digest(restored)
+    original_digest = _byte_digest(restored_bytes)
 
     return {
         "fault": fault,
-        "fault_struck_the_live_file": _source_digest(live_after_fault) != adopted_digest,
+        "digest_domain": "bytes",
+        "fault_struck_the_live_file": _byte_digest(live_after_fault) != adopted_digest,
         "adopted_digest": adopted_digest,
-        "damaged_digest": _source_digest(damaged_source),
+        "damaged_digest": _byte_digest(damaged_bytes),
         "restored_digest": original_digest,
-        "restoration_is_byte_exact": (
-            original_digest == store.state.current_source_digest
+        "restored_byte_length": len(restored_bytes),
+        "adopted_byte_length": len(adopted_bytes),
+        "restoration_is_byte_exact": bool(
+            expected_original and original_digest == expected_original
+        ),
+        "restoration_matches_the_preserved_original_bytes": (
+            restored_bytes == store._backup_path(component).read_bytes()
         ),
         "adopted_supplied_the_capability": after_adoption.supplies_the_capability,
         "damage_was_behavioural": not damaged_outcome.supplies_the_capability,

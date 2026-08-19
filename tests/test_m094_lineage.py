@@ -454,3 +454,64 @@ def test_p11_fails_when_the_fault_missed_the_live_file() -> None:
     }, {}, {}, None)
     assert verdict["conditions"][p11]["computed"] is True
     assert verdict["conditions"][p11]["passed"] is False
+
+
+# ── the defect attempt 1 carried, as a test ───────────────────────────
+
+
+def _crlf_repo(root: Path) -> None:
+    """The same fixture, written with Windows line endings, as a checkout would give it."""
+
+    (root / "pkg").mkdir(parents=True, exist_ok=True)
+    (root / "pkg" / "__init__.py").write_bytes(b"")
+    (root / COMPONENT).write_bytes(VALUES_SOURCE.replace("\n", "\r\n").encode("utf-8"))
+    (root / "callers.py").write_bytes(CALLER_SOURCE.replace("\n", "\r\n").encode("utf-8"))
+
+
+def test_a_crlf_component_survives_adoption_and_rollback_byte_for_byte(tmp_path: Path) -> None:
+    """M094 attempt 1's disclosed defect, written down so it cannot come back.
+
+    The store read components with `read_text`, which decodes CRLF to LF, and wrote them back
+    untranslated. Adoption therefore rewrote every line ending in the file, the rollback
+    restored the rewritten form, and the digest — taken over decoded text — reported
+    `restoration_is_byte_exact: True` while 2356 bytes had become 2280.
+
+    This asserts the bytes, which is what the claim says.
+    """
+
+    _crlf_repo(tmp_path)
+    before = (tmp_path / COMPONENT).read_bytes()
+    assert b"\r\n" in before, "the fixture must actually be CRLF or this proves nothing"
+
+    development = lineage.develop(tmp_path, (COMPONENT,))
+    assert development.modified_source is not None
+    store, _ = _adopt(tmp_path, development)
+
+    adopted = (tmp_path / COMPONENT).read_bytes()
+    assert adopted != before, "adoption changed nothing"
+    assert b"\r\n" in adopted, "adoption normalised the file's line endings"
+
+    cases = lineage.behavioural_cases(tmp_path, COMPONENT, "Record", development.requirement)
+    proof = lineage.rollback_proof(
+        tmp_path, store, COMPONENT, "Record", development.requirement, cases,
+    )
+    assert proof["restoration_is_byte_exact"] is True
+    assert proof["digest_domain"] == "bytes"
+
+    after = (tmp_path / COMPONENT).read_bytes()
+    assert after == before, (
+        f"the file was not restored byte for byte: {len(before)} bytes became {len(after)}"
+    )
+
+
+def test_the_rollback_digest_is_taken_over_bytes_not_decoded_text(tmp_path: Path) -> None:
+    """Two files identical as text and different as bytes must not share a digest."""
+
+    lf = b"x = 1\ny = 2\n"
+    crlf = b"x = 1\r\ny = 2\r\n"
+    assert lf.decode() != crlf.decode() or True  # decoding is not what is being compared
+    assert lineage._byte_digest(lf) != lineage._byte_digest(crlf)
+    # And the text digest, which attempt 1 used, cannot tell them apart once decoded.
+    assert lineage._source_digest(lf.decode()) == lineage._source_digest(
+        crlf.decode().replace("\r\n", "\n")
+    )

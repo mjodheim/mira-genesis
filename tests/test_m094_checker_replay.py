@@ -92,10 +92,12 @@ def _synthetic_run(mechanism: str, entries: list[dict]) -> dict:
         },
         "rollback": {
             "fault": "truncate_the_adopted_method",
+            "digest_domain": "bytes",
             "fault_struck_the_live_file": True,
             "adopted_supplied_the_capability": True,
             "damage_was_behavioural": True,
             "restoration_is_byte_exact": True,
+            "restoration_matches_the_preserved_original_bytes": True,
             "restored_matches_the_original_behaviour": True,
             "store_version_after_restore": 0,
         },
@@ -359,10 +361,38 @@ def test_without_a_run_the_verdict_is_incomplete_not_negative(
 
 
 def test_the_preserved_run_reaches_a_positive_verdict() -> None:
-    """And the real directory, which now holds the canonical run."""
+    """And the real directory, whenever it holds a run.
+
+    Attempt 1 was withdrawn on 19 August 2026 over the P11 byte-exactness defect, so between
+    that withdrawal and attempt 2 there is legitimately no run to read. The test skips rather
+    than asserts in that window: a green run of the suite must not depend on which side of a
+    withdrawal the repository is on.
+    """
+
+    if not (REAL_EXPERIMENT / "RESULT.json").exists():
+        pytest.skip("no current attempt: the preserved one is withdrawn")
 
     protocol = json.loads((REAL_EXPERIMENT / "PROTOCOL.json").read_text(encoding="utf-8"))
     report = checker.compute_report(protocol)
     assert report["uncomputed_conditions"] == []
     assert report["failed_conditions"] == []
     assert report["verdict"] == "positive"
+
+
+def test_a_withdrawn_attempt_is_preserved_and_declared() -> None:
+    """Superseded runs are preserved and disclosed, and the attempt number derives from them."""
+
+    withdrawn = sorted(REAL_EXPERIMENT.glob("WITHDRAWN_RESULT_ATTEMPT_*.json"))
+    if not withdrawn:
+        pytest.skip("no attempt has been withdrawn")
+
+    for path in withdrawn:
+        record = json.loads(path.read_text(encoding="utf-8"))
+        assert record["is_rehearsal"] is False
+        assert record["source_commit"], f"{path.name} records no commit"
+        assert record["model_calls"] == 0 and record["network_calls"] == 0
+
+    disclosure = (REAL_EXPERIMENT / "POST_VERDICT_DISCLOSURE.md").read_text(encoding="utf-8")
+    assert "restoration_is_byte_exact" in disclosure, (
+        "a withdrawn attempt must be disclosed, not merely preserved"
+    )

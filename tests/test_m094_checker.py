@@ -137,8 +137,15 @@ def test_p7_does_not_pass_because_nothing_was_qualified(no_run_report: dict) -> 
     assert not (condition["computed"] and condition["passed"])
 
 
-def test_the_run_that_was_performed_computes_every_condition(report: dict) -> None:
-    """And the converse, against the real directory: a run that exists is read."""
+def test_a_run_that_exists_is_read_rather_than_ignored(report: dict) -> None:
+    """The converse of the no-run case, whenever the real directory holds a run.
+
+    Skipped between the withdrawal of attempt 1 and attempt 2, when there legitimately is
+    none. What must never happen is a run present and conditions still uncomputed.
+    """
+
+    if not (EXPERIMENT / "RESULT.json").exists():
+        pytest.skip("no current attempt: the preserved one is withdrawn")
 
     for pid, condition in report["conditions"].items():
         assert condition["computed"] is True, f"{pid} is uncomputed with a run preserved"

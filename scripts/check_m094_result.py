@@ -1308,10 +1308,20 @@ def check_p11(protocol: dict) -> Condition:
         "restoration_is_byte_exact": "restoration was not byte-exact",
         "restored_matches_the_original_behaviour":
             "the restored component does not behave like the original",
+        "restoration_matches_the_preserved_original_bytes":
+            "the restored file does not match the preserved original byte for byte",
     }
     for key, complaint in required.items():
         if rollback.get(key) is not True:
             failures.append(complaint)
+    # Attempt 1 recorded `restoration_is_byte_exact: True` from a digest taken over decoded
+    # text, which cannot see a line ending. A rollback record that does not say it measured
+    # bytes is not evidence for a condition worded in bytes.
+    if rollback.get("digest_domain") != "bytes":
+        failures.append(
+            "the rollback record does not state that its digests are over bytes; a text digest "
+            "cannot certify byte-exactness"
+        )
     if rollback.get("store_version_after_restore") != 0:
         failures.append(
             f"the store did not return to version 0 "
