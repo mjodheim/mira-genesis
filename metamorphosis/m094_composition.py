@@ -30,6 +30,8 @@ import json
 from dataclasses import dataclass, field, replace
 from typing import Iterator, Sequence
 
+from metamorphosis.m094_diagnosis import decode_rendering
+
 COMPOSITION_SCHEMA = "m094-repair-composition-v1"
 
 #: Container constructors a field may be wrapped in. `None` means "as it is".
@@ -334,6 +336,22 @@ def operations_for(
     for field in sorted(fields):
         for wrapper in WRAPPERS:
             operations.append(IncludeField(field, wrapper))
+
+    # Callers do not always name the key after the field behind it. A site that wrote
+    # `{"destination": spec.working_directory}` demands a method binding `destination` to
+    # `working_directory`, and `RenderAsMapping.is_supplied_by` has always required exactly
+    # that agreement -- but every operation offered above binds a key to the field of the
+    # same name, so no composition could express it and the search refused everything on
+    # such a component. Acceptance demanded a binding generation could not produce.
+    #
+    # The keys come from `detail`, which is the diagnosis's record of what the call sites
+    # wrote. They are a measurement, not a table: nothing here knows a component, and a
+    # requirement whose keys match its fields adds no operation at all.
+    for key, field, _wrapper in decode_rendering(detail):
+        if key == field or field not in set(fields):
+            continue
+        for wrapper in WRAPPERS:
+            operations.append(IncludeField(field, wrapper, key))
 
     attribute = detail.split(",")[-1]
     for collection in sorted(collections):
