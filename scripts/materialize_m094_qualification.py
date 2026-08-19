@@ -143,9 +143,28 @@ def evaluate_entry(root: Path, entry: dict) -> dict:
         "mechanism_produced_a_candidate": modified is not None,
     }
     if modified is None:
+        # Why there is no candidate decides what this measures. If no case of the class can be
+        # constructed, the search could not execute anything and refused on that basis -- an
+        # instrument limitation, and `unrunnable` by the same rule that governs an entry whose
+        # hidden cases do not build. Only a mechanism that had cases to work with and still
+        # produced nothing is a refutation.
+        from metamorphosis.m094_execution import constructible_cases  # noqa: PLC0415
+
+        probe = constructible_cases(root, entry["component"], entry["class"], requirement)
+        if not probe:
+            record["outcome"] = "unrunnable"
+            record["satisfied"] = None
+            record["reason"] = (
+                f"no case constructs {entry['class']}, so the search could execute nothing "
+                "and the entry measures nothing about the mechanism"
+            )
+            return record
         record["outcome"] = "refuted"
         record["satisfied"] = False
-        record["reason"] = "the mechanism produced no candidate for this component"
+        record["reason"] = (
+            "the mechanism produced no candidate for this component, although "
+            f"{len(probe)} cases of {entry['class']} construct"
+        )
         return record
 
     hidden = tuple(case["fields"] for case in entry["hidden_cases"])

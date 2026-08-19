@@ -26,6 +26,7 @@ import ast
 import hashlib
 import importlib
 import inspect
+import itertools
 import json
 import os
 import shutil
@@ -53,6 +54,10 @@ MAX_CONFIRMATIONS = 256
 #: so independently drawn values sometimes violate it; overdrawing lets the generator keep the
 #: combinations that build instead of concluding the class cannot be built at all.
 CASE_OVERDRAW = 8
+
+#: Ceiling on the per-field shape search, matching the qualification pool's generator so the
+#: two cannot disagree about whether a class is constructible.
+MAX_SHAPE_COMBINATIONS = 256
 
 
 def _digest(value: object) -> str:
@@ -164,14 +169,31 @@ def constructible_cases(
     # combinations that are fine, and it made a class unrepairable because of an unlucky draw.
     # A case that does not construct is simply not a case, which is what this module already
     # says everywhere else.
-    for shape_index in range(len(STRING_SHAPES)):
+    # Shape assignments to try: every field the same shape first, then per-field combinations
+    # when the space is small enough. A class can constrain two string fields differently --
+    # `mira_core/container.py::ContainerSpec` wants a content-addressed `image` and an absolute
+    # `working_directory`, and no uniform assignment satisfies both. The qualification pool's
+    # generator has always searched combinations; this one did not, so the two disagreed about
+    # whether a class could be constructed and the weaker of them gated the mechanism.
+    assignments: list[dict[str, int]] = [
+        {name: shape for name in strings} for shape in range(len(STRING_SHAPES))
+    ]
+    if strings and len(STRING_SHAPES) ** len(strings) <= MAX_SHAPE_COMBINATIONS:
+        assignments += [
+            dict(zip(strings, combination))
+            for combination in itertools.product(
+                range(len(STRING_SHAPES)), repeat=len(strings)
+            )
+        ]
+
+    for shapes in assignments or [{}]:
         cases: list[dict[str, Any]] = []
         for index in range(count * CASE_OVERDRAW):
             fields: dict[str, Any] = {}
             for name in wanted:
                 value = _scalar(annotations.get(name, "str"), name, index, seed)
                 if value is None:
-                    value = _string(STRING_SHAPES[shape_index], name, index, seed)
+                    value = _string(STRING_SHAPES[shapes.get(name, 0)], name, index, seed)
                 fields[name] = value
             try:
                 instance = cls(**fields)
