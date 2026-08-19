@@ -332,11 +332,37 @@ def test_p12_fails_when_a_withdrawn_run_is_not_declared(staged, tmp_path: Path) 
 # ── and the pre-run state must be unchanged ───────────────────────────
 
 
-def test_without_a_run_the_verdict_is_incomplete_not_negative() -> None:
-    """The real experiment directory, untouched: five conditions await a run."""
+def test_without_a_run_the_verdict_is_incomplete_not_negative(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A staged directory holding no run: five conditions await one.
 
-    protocol = json.loads((REAL_EXPERIMENT / "PROTOCOL.json").read_text(encoding="utf-8"))
+    This read the real experiment directory until the canonical run of 19 August 2026 put a
+    result in it. The property is about what the checker does with *no* run, so it is asserted
+    against a directory that has none rather than deleted for having become false.
+    """
+
+    experiment = tmp_path / "M094"
+    experiment.mkdir()
+    for name in ("PROTOCOL.json", "QUALIFICATION_POOL.json", "DESIGN_AUDIT.json",
+                 "DESIGN_AUDIT.md"):
+        (experiment / name).write_bytes((REAL_EXPERIMENT / name).read_bytes())
+    monkeypatch.setattr(checker, "EXPERIMENT", experiment)
+    monkeypatch.setattr(checker, "DESIGN_AUDIT_PATH", experiment / "DESIGN_AUDIT.json")
+    monkeypatch.setattr(checker, "DESIGN_AUDIT_MD", experiment / "DESIGN_AUDIT.md")
+
+    protocol = json.loads((experiment / "PROTOCOL.json").read_text(encoding="utf-8"))
     report = checker.compute_report(protocol)
     assert report["verdict"] == "incomplete"
     assert report["failed"] == 0
     assert report["uncomputed_conditions"] == ["P7", "P8", "P9", "P10", "P11"]
+
+
+def test_the_preserved_run_reaches_a_positive_verdict() -> None:
+    """And the real directory, which now holds the canonical run."""
+
+    protocol = json.loads((REAL_EXPERIMENT / "PROTOCOL.json").read_text(encoding="utf-8"))
+    report = checker.compute_report(protocol)
+    assert report["uncomputed_conditions"] == []
+    assert report["failed_conditions"] == []
+    assert report["verdict"] == "positive"

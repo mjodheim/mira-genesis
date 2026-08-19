@@ -5,8 +5,12 @@ own changes live on `research/repository-audit-and-acceleration` so the freeze P
 Scope: the whole repository, not only M093/M094. Every number below was measured on this checkout
 with `.venv-win` (CPython 3.11.16, Windows) and can be re-measured with the commands quoted.
 
-**Verification state of the final branch:** full suite **2617 passed, 0 failed, 12 skipped in
-10 m 46 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
+**The canonical run was performed on 19 August 2026.** Verdict `positive`, 12 of 12 conditions
+computed and true, with one defect in P11's evidence found *after* the verdict and deliberately
+not repaired — see `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
+
+**Verification state of the final branch:** full suite **2620 passed, 0 failed, 12 skipped in
+10 m 17 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
 dependencies all pass. The diagnosis digest is unchanged at `48cd5e9c2354a365…` and the adopted
 mechanism digest at `3cd1314f4ed0fea0…` — including across the operation-set repair in §B, which
 is why the qualification draw did not move. `CHECK_REPORT.json` still reports `incomplete`

@@ -93,21 +93,55 @@ def test_p11_requires_rerolls_to_be_forbidden(protocol: dict) -> None:
 # ── Conditions must not be decided without the evidence they need ────
 
 
-@pytest.mark.parametrize("pid", ["P7", "P8", "P9", "P10", "P11"])
-def test_run_dependent_conditions_are_uncomputed_without_a_run(report: dict, pid: str) -> None:
-    """No qualification exists, so these are neither satisfied nor refuted."""
+@pytest.fixture
+def no_run_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict:
+    """The checker pointed at an experiment directory that holds no run.
 
-    condition = _condition(report, pid)
+    These properties used to be asserted against the real `experiments/M094/`, which held no
+    run because M094 had not been performed. It has been performed now, so the real directory
+    is the wrong place to look for them -- but the properties themselves still matter, and a
+    staged directory is where they belong. Deleting them because the world moved on would
+    throw away the guard against the defect the audit found.
+    """
+
+    import check_m094_result as checker
+
+    experiment = tmp_path / "M094"
+    experiment.mkdir()
+    for name in ("PROTOCOL.json", "QUALIFICATION_POOL.json", "DESIGN_AUDIT.json",
+                 "DESIGN_AUDIT.md"):
+        (experiment / name).write_bytes((EXPERIMENT / name).read_bytes())
+    monkeypatch.setattr(checker, "EXPERIMENT", experiment)
+    monkeypatch.setattr(checker, "PROTOCOL_PATH", experiment / "PROTOCOL.json")
+    monkeypatch.setattr(checker, "DESIGN_AUDIT_PATH", experiment / "DESIGN_AUDIT.json")
+    monkeypatch.setattr(checker, "DESIGN_AUDIT_MD", experiment / "DESIGN_AUDIT.md")
+    protocol = json.loads((experiment / "PROTOCOL.json").read_text(encoding="utf-8"))
+    return checker.compute_report(protocol)
+
+
+@pytest.mark.parametrize("pid", ["P7", "P8", "P9", "P10", "P11"])
+def test_run_dependent_conditions_are_uncomputed_without_a_run(
+    no_run_report: dict, pid: str
+) -> None:
+    """With no run, these are neither satisfied nor refuted. Absence is not evidence."""
+
+    condition = _condition(no_run_report, pid)
     assert condition["computed"] is False, f"{pid} claims to be decided: {condition['evidence']}"
     assert condition["passed"] is False
-    assert "not computable before a qualification run" in condition["evidence"]
 
 
-def test_p7_does_not_pass_because_nothing_was_qualified(report: dict) -> None:
+def test_p7_does_not_pass_because_nothing_was_qualified(no_run_report: dict) -> None:
     """The inversion that mattered most: absence of evidence read as success."""
 
-    condition = _condition(report, "P7")
+    condition = _condition(no_run_report, "P7")
     assert not (condition["computed"] and condition["passed"])
+
+
+def test_the_run_that_was_performed_computes_every_condition(report: dict) -> None:
+    """And the converse, against the real directory: a run that exists is read."""
+
+    for pid, condition in report["conditions"].items():
+        assert condition["computed"] is True, f"{pid} is uncomputed with a run preserved"
 
 
 def test_p7_fails_loudly_if_a_result_has_nothing_behind_it(
@@ -216,25 +250,29 @@ def test_p5_passes_now_that_no_constant_can_decide(report: dict) -> None:
 # ── The verdict rule ─────────────────────────────────────────────────
 
 
-def test_verdict_is_incomplete_rather_than_positive(report: dict) -> None:
-    """Every statically decidable condition passes, and that is not a result.
+def test_the_verdict_is_incomplete_while_no_run_exists(no_run_report: dict) -> None:
+    """Preserved from before the run, and still the property that matters most.
 
-    P1 to P6 and P12 are computed and true. P7 to P11 concern what a
-    qualification run would show, and no run exists. The verdict rule must
-    therefore say `incomplete` — a milestone cannot become positive by having
-    nothing left that anyone checked.
+    A checker that reports `positive` on a milestone nobody performed is worthless. The real
+    directory now holds a run, so this is asserted where the condition it describes still
+    holds.
     """
 
-    assert report["schema"] == "m094-checker-v2"
-    assert report["verdict"] == "incomplete"
-    assert report["failed_conditions"] == []
-    assert set(report["uncomputed_conditions"]) == {"P7", "P8", "P9", "P10", "P11"}
-    assert report["passed"] == 7
-    assert report["passed"] + report["failed"] + report["uncomputed"] == 12
+    assert no_run_report["verdict"] == "incomplete"
+    assert no_run_report["failed"] == 0
+    assert no_run_report["uncomputed_conditions"] == ["P7", "P8", "P9", "P10", "P11"]
 
 
 def test_uncomputed_conditions_can_never_produce_a_positive(report: dict) -> None:
     assert not (report["uncomputed"] > 0 and report["verdict"] == "positive")
+
+
+def test_the_tallies_account_for_every_condition(report: dict) -> None:
+    """Carried over from the pre-run verdict test, which the run made obsolete."""
+
+    assert report["schema"] == "m094-checker-v2"
+    assert report["passed"] + report["failed"] + report["uncomputed"] == 12
+    assert report["total_conditions"] == 12
 
 
 def test_the_committed_report_matches_a_fresh_computation(report: dict) -> None:
