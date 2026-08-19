@@ -291,6 +291,8 @@ provably alters no measurement. Nothing scientific was repaired after the fact.
 | `metamorphosis/m094_composition.py` — dead refusal branch documented | Four of six refusal reasons cannot fire; silently deleting them would remove a defensive check, so they are labelled rather than removed |
 | `Dockerfile` — copies `experiments/` and `results/` | Its declared default command could not pass without them. **Fix is static, not build-verified**: the Docker CLI is present (29.7.2) but the Desktop Linux engine was not running on this machine, so no image was built. |
 | `.gitattributes` — `experiments/M0*/CHECK_REPORT.json` and `experiments/M0*/DESIGN_AUDIT.json` marked byte-exact | Both carry digests; both were unprotected; both are already LF, so no digest changes |
+| `SCIENTIFIC_HYPOTHESES.md` (H39) and `experiments/M094/DESIGN_AUDIT.md` — the freeze's reachable commit recorded alongside the authored one | The recorded hash does not resolve on `main` after the rebase. Both hashes kept, so the chronology survives |
+| `pyproject.toml`, `docs/THIRD_PARTY_DEPENDENCIES.md`, `COMMAND_LINE_TOOLS` — `pytest-xdist` declared | 3.0× on the full suite with identical results (§F.5). **A new third-party dependency — confirm or revert** |
 
 **Refused, and why.**
 
@@ -422,7 +424,29 @@ the owner's call, so the sequence is measure first, declare second — see §F.6
 
 Third on the list at 52 s is `test_m094_checker.py` setup, which the §F.1 memoisation addresses.
 
-### F.5 Validation pyramid
+### F.5 Parallel execution — measured, 3.0×
+
+| run | result | wall clock |
+|---|---|---|
+| serial (3.14.6) | 2531 passed, 12 skipped | 46 m 19 s |
+| `-n 10 --dist loadscope` (3.14.6) | **2531 passed, 12 skipped** | **15 m 28 s** |
+
+Identical outcomes, **3.0× faster**, on a 12-logical-core host. `loadscope` groups tests by module so
+each module-scoped fixture is computed on exactly one worker — the eight expensive M061–M066 fixtures
+run concurrently with each other instead of one after another. Nothing is cached and nothing is
+skipped: every frozen result is still recomputed.
+
+`pytest-xdist` (MIT, pulling `execnet`, MIT) is now declared in the `dev` extra, recorded in
+`docs/THIRD_PARTY_DEPENDENCIES.md`, and allowlisted in `COMMAND_LINE_TOOLS` so
+`check_repository_integrity.py --dependencies` still passes. **This is the audit's one new
+third-party dependency**, and the IP register's per-milestone wording ("no new third-party package is
+introduced") means it should be confirmed rather than assumed: it is dev-only, never imported, not
+redistributed, and reverting it is a two-line change.
+
+The suggested default for local work is `-n 10 --dist loadscope`; CI should stay serial until the
+owner decides, because a parallel CI run changes which failures are reproducible from the log.
+
+### F.6 Validation pyramid
 
 The current habit of running 40 minutes for a five-line change is the largest avoidable cost.
 
@@ -430,7 +454,8 @@ The current habit of running 40 minutes for a five-line change is the largest av
 2. **Milestone (58 s → ~10 s with F.1)** — add `tests/test_m094_{checker,design_audit,qualification_pool}.py`
 3. **Infrastructure (~1 min)** — `python scripts/check_repository_integrity.py --imports --orphans --dependencies`
 4. **Integration** — the touched milestone's `check_m0*_result.py`
-5. **Full suite (37 min)** — before merge or freeze only.
+5. **Full suite** — before merge or freeze only. 15 m 28 s with `-n 10 --dist loadscope`,
+   46 m serial.
 
 ---
 
