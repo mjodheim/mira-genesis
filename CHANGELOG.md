@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
+  whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
+  the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds
+  for `Sample` calls the method it built for `Reading`. From S0 the second repair is
+  **unreachable** — the search exhausts 191 compositions and finds none — and from S1 it is
+  reachable with 12. Two counterfactuals separate the causes: removing A leaves B unreachable, and
+  withholding the nested operation at S1 leaves B unreachable. So A is necessary and the operation
+  is the vehicle, which is a smaller claim than "A enabled B" and the one the evidence supports.
+  The operation set is identical in both states; what changes is that one member can apply, read
+  from the code. `experiments/M095/DESIGN.md`.
+
 - **M094 returned a positive qualified scientific result**: the lineage located the component
   limiting it and built the repair, without being told which component or what the change was.
   Run at `43ef9d30` as attempt 2. The diagnosis selected `mira_core/contracts.py` by measurement

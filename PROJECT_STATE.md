@@ -1082,6 +1082,16 @@ question remains open but is not a missing completion gate.
   **Still authored, and the next ceiling**: the eligible component set, the admissible observations,
   the operation set and the composition bound. D063 is unfilled.
 
+- **M095 is a MECHANISM DEMONSTRATION — nothing is frozen and no run has been armed.** It asks
+  whether an adopted repair changes what the lineage can *reach*, and the mechanism is built and
+  measured in an authored, disclosed world: `S0 →(A) S1 →(B) S2`, with the diagnosis choosing both
+  targets. **B is unreachable from S0** — 191 compositions examined, 0 survivors — and reachable
+  from S1, where the repair it builds calls the method A created. Two counterfactuals separate the
+  causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
+  unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
+  "A enabled B". No hypothesis is registered, no protocol is frozen, no qualification pool exists.
+  See `experiments/M095/DESIGN.md`.
+
 ## Parallel measurement track — M045
 
 M030 and M031 support a narrow proxy-information result. M045 remains reserved for the
