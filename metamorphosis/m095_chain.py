@@ -149,11 +149,17 @@ def _nested_operations(root: Path, tree: ast.AST, node: ast.ClassDef, requiremen
 
 
 def search(root: Path, target: Insufficiency, *, label: str,
-           max_length: int | None = None) -> Attempt:
+           max_length: int | None = None, withhold_nested: bool = False) -> Attempt:
     """Assemble a repair for one insufficiency, in whatever state the tree is in.
 
-    The same function serves the control, both chain steps and the counterfactual. Nothing in
+    The same function serves the control, both chain steps and both counterfactuals. Nothing in
     it consults which of those it is being used for.
+
+    `withhold_nested` removes the nested-rendering operations from the set while leaving the
+    state alone. It answers the question the A-removing counterfactual cannot: is the enabling
+    A's, or is it merely the operation's? Run at S1, where A *has* been adopted, a failure says
+    the operation is the vehicle through which A's repair is reachable — and a success would say
+    A was never needed, which would refute the whole chain.
     """
 
     attempt = Attempt(label=label, class_name=target.target,
@@ -168,10 +174,14 @@ def search(root: Path, target: Insufficiency, *, label: str,
 
     shape = next(s for s in SHAPES if s.name == target.capability)
     nested_ops = ()
-    if target.capability == NESTED:
+    if target.capability == NESTED and not withhold_nested:
         nested_ops = _nested_operations(root, tree, node, target.detail)
         attempt.nested_offered = tuple(op.describe() for op in nested_ops)
         attempt.nested_unreachable = reach.unreachable_operations(nested_ops)
+    elif withhold_nested:
+        # Recorded, because an arm that quietly offered less than it claimed would look
+        # exactly like an arm that failed for the reason it was built to test.
+        attempt.notes["nested_operations_withheld"] = True
 
     operations = tuple(composition.operations_for(
         "render_value_object_as_mapping",
@@ -256,6 +266,8 @@ class Chain:
     step_a: Attempt | None = None
     step_b: Attempt | None = None
     counterfactual: Attempt | None = None
+    #: S1 with the nested operation withheld. Separates "A enabled B" from "the operation did".
+    without_operation: Attempt | None = None
     selected_first: str = ""
     selected_second: str = ""
 
@@ -279,6 +291,16 @@ class Chain:
             "step_b": self.step_b.to_dict() if self.step_b else None,
             "counterfactual_b_without_a": (
                 self.counterfactual.to_dict() if self.counterfactual else None
+            ),
+            "counterfactual_b_at_s1_without_the_operation": (
+                self.without_operation.to_dict() if self.without_operation else None
+            ),
+            "a_is_necessary": (
+                self.counterfactual is not None and not self.counterfactual.reached
+            ),
+            "the_operation_is_the_vehicle_not_the_cause": (
+                self.without_operation is not None and not self.without_operation.reached
+                and self.counterfactual is not None and not self.counterfactual.reached
             ),
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
@@ -315,6 +337,11 @@ def run(root: Path, counterfactual_root: Path) -> Chain:
     if s1.unmet:
         second = s1.unmet[0]
         chain.selected_second = f"{second.target}/{second.capability}"
+        # Asked at S1, before B is adopted: with A in place but the nested operation withheld,
+        # is B reachable? A "yes" would mean A was never what enabled it.
+        chain.without_operation = search(
+            root, second, label="B from S1, operation withheld", withhold_nested=True,
+        )
         chain.step_b = search(root, second, label="B from S1")
         if chain.step_b.reached:
             adopt(root, chain.step_b)

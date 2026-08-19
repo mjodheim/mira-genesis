@@ -208,3 +208,43 @@ def test_the_world_is_what_it_says_it_is(tmp_path: Path) -> None:
     )
     assert (tmp_path / COMPONENT).exists()
     assert facts.to_dict()["authored"] is True
+
+
+# ── separating "A enabled B" from "the operation enabled B" ───────────
+
+
+def test_at_s1_without_the_operation_b_is_still_out_of_reach(executed: Chain) -> None:
+    """The arm the A-removing counterfactual cannot supply.
+
+    A is adopted and the state is S1; only the nested operation is withheld. If B were reachable
+    here, A would never have been what enabled it and the chain would be refuted. It is not.
+    """
+
+    withheld = executed.without_operation
+    assert withheld is not None
+    assert withheld.reached is False
+    assert withheld.survivors == 0
+    assert withheld.notes.get("nested_operations_withheld") is True
+    assert withheld.nested_offered == ()
+
+
+def test_neither_a_nor_the_operation_suffices_alone(executed: Chain) -> None:
+    """The claim is conjunctive, and saying so is more honest than saying "A enabled B".
+
+    A without the operation reaches nothing; the operation without A reaches nothing; together
+    they reach B. A is necessary and the operation is the vehicle.
+    """
+
+    record = executed.to_dict()
+    assert record["a_is_necessary"] is True
+    assert record["the_operation_is_the_vehicle_not_the_cause"] is True
+    # And the conjunction is what succeeds.
+    assert executed.step_b.reached is True
+
+
+def test_withholding_the_operation_does_not_shrink_the_rest_of_the_search(
+    executed: Chain,
+) -> None:
+    """It must fail for want of the operation, not for having searched less."""
+
+    assert executed.without_operation.examined == executed.control.examined
