@@ -132,62 +132,34 @@ def observe(root: Path, components: Sequence[str]) -> Diagnosis:
 # ── behavioural cases ────────────────────────────────────────────────
 
 
-def _value_for(annotation: str, name: str, rng: random.Random) -> Any:
-    """Invent a value for one field from its annotation.
-
-    Deliberately dumb and deliberately generic: it reads the annotation as text because
-    the annotation is all the lineage is allowed to know about a field it did not write.
-    A wrong guess costs a refused case, not a wrong verdict.
-    """
-
-    text = annotation.lower()
-    token = f"{name}-{rng.randrange(16 ** 8):08x}"
-    if "bool" in text:
-        return rng.choice([True, False])
-    if "int" in text or "float" in text:
-        return rng.randrange(1000)
-    if "mapping" in text or "dict" in text:
-        return {f"{name}-key": token}
-    if "tuple" in text or "sequence" in text or "iterable" in text:
-        return (token, f"{name}-{rng.randrange(16 ** 8):08x}")
-    if "list" in text or "set" in text:
-        return [token]
-    return token
-
-
 def behavioural_cases(
     root: Path,
     component_path: str,
     class_name: str,
+    requirement: Sequence[tuple[str, str, str | None]] = (),
     *,
     count: int = DEVELOPMENT_CASES,
     seed: str = DEVELOPMENT_SEED,
 ) -> tuple[dict[str, Any], ...]:
-    """Concrete constructor arguments for *class_name*, one per case.
+    """Constructor arguments for *class_name*, verified by building the object.
+
+    Delegates to `m094_execution.constructible_cases`. It used to be a third, weaker generator
+    of its own -- annotation-guessed values for declared fields only, with no knowledge of the
+    constructor and no shape ladder -- and the independent validator used it. On
+    `mira_core/container.py::ContainerSpec` it produced eight cases of which **none**
+    constructed, so the validator refused a repair that the sandbox had just watched satisfy
+    every case it could build.
+
+    Three generators for one job, with three different capabilities, and the weakest one
+    deciding whether a repair was accepted. There is now one.
 
     The cases are values, not expectations. What a correct method must return on them is
     derived from the requirement at comparison time, so nothing here contains an answer.
     """
 
-    source = (root / component_path).read_text(encoding="utf-8")
-    tree = ast.parse(source)
-    node = next(
-        (n for n in ast.walk(tree) if isinstance(n, ast.ClassDef) and n.name == class_name),
-        None,
+    return execution.constructible_cases(
+        root, component_path, class_name, requirement, count=count, seed=seed,
     )
-    if node is None:
-        raise LineageError(f"class {class_name} not found in {component_path}")
-
-    declared: list[tuple[str, str]] = []
-    for item in node.body:
-        if isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name):
-            declared.append((item.target.id, ast.unparse(item.annotation)))
-
-    rng = random.Random(_digest({"seed": seed, "component": component_path, "class": class_name}))
-    cases = []
-    for _ in range(count):
-        cases.append({name: _value_for(annotation, name, rng) for name, annotation in declared})
-    return tuple(cases)
 
 
 # ── the sandbox ──────────────────────────────────────────────────────
@@ -381,7 +353,9 @@ def validate_independently(
     except SyntaxError as exc:
         return Validation(validator_id, False, (f"does_not_parse: {exc}",), 0, 0, 0, "")
 
-    cases = behavioural_cases(root, component_path, class_name, count=count, seed=seed)
+    cases = behavioural_cases(
+        root, component_path, class_name, requirement, count=count, seed=seed,
+    )
     outcome = sandbox_component(
         root, component_path, modified_source, class_name, requirement, cases,
         variant="validator",
@@ -1017,7 +991,7 @@ def run_arm(
     per_target = []
     for item in development.targets or (target,):
         requirement = decode_rendering(item.detail)
-        cases = behavioural_cases(root, item.component_path, item.target)
+        cases = behavioural_cases(root, item.component_path, item.target, requirement)
         before = sandbox_component(
             root, item.component_path, original, item.target, requirement, cases,
             variant="original:" + item.target,
@@ -1055,7 +1029,9 @@ def run_arm(
             live = sandbox_component(
                 root, item.component_path, live_source, item.target,
                 decode_rendering(item.detail),
-                behavioural_cases(root, item.component_path, item.target),
+                behavioural_cases(
+                    root, item.component_path, item.target, decode_rendering(item.detail),
+                ),
                 variant="live_after_arm:" + item.target,
             )
             still_lacking.append(not live.supplies_the_capability)

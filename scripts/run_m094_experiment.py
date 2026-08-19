@@ -146,7 +146,9 @@ def main() -> int:
     print(f"  {development.search.get('description')}")
 
     step("3. sandbox and compare")
-    cases = behavioural_cases(root, target.component_path, target.target)
+    cases = behavioural_cases(
+        root, target.component_path, target.target, development.requirement,
+    )
     original = (root / target.component_path).read_text(encoding="utf-8")
     before = sandbox_component(
         root, target.component_path, original, target.target,
