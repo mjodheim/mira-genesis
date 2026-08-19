@@ -145,8 +145,42 @@ exactly what a cross-component qualification exists to catch: the development ta
 requirement covering *all* its fields, so nothing was left unconstrained and the defect could not
 appear there.
 
-**I have not fixed it, deliberately.** Correcting the mechanism after watching it fail a drawn
-requirement is the falsifier the protocol names — *"a real defect in the system is corrected after
+### A.6 Amendment A2, and what the qualification says now
+
+A2 was made **before arming**, at the owner's direction, and recorded permanently in the protocol.
+Acceptance stops inspecting a candidate and starts running it; the structural predicate is kept as
+a filter, because it is what makes the search finite, and execution decides among the survivors.
+
+**The mechanism digest did not move.** All three of `Goal`'s survivors execute and confirm, so the
+adopted repair is the same `3cd1314f…` and the draw — salted with that digest — still selects
+`ContainerLimits` and `ModelRequest`. A2 is therefore measured against the exact entry that
+refuted it, and cannot be accused of shifting onto something easier.
+
+| drawn entry | before A2 | after A2 |
+|---|---|---|
+| `mira_core/model.py::ModelRequest` | satisfied, 10/10 | satisfied, 10/10 |
+| `mira_core/container.py::ContainerLimits` | **refuted**, 0/10 | **satisfied, 10/10** via `as_mapping`, validator accepted |
+
+**Qualification verdict: `positive` — 2 satisfied, 0 refuted, 0 unrunnable, cross-component,
+committed pool digest matching.**
+
+Three things this does *not* mean, and none of them is pedantry:
+
+- **Nothing is armed.** This ran against a throwaway `git archive` copy. `experiments/M094/` holds
+  no `RESULT.json`, no `QUALIFICATION.json`, no `REGISTER_CLAIM.json`, and the checker still reports
+  `incomplete` with P7–P11 uncomputed. A canonical run is a separate, deliberate act.
+- **The repair is not unique.** A2 guarantees the adopted candidate runs and agrees on the
+  requirement. It does not reduce the number of survivors: a requirement that is a strict subset of
+  a class's fields still admits many behaviourally distinct methods, and which one is adopted is
+  still a content address. Disclosed in the protocol under A2's `residual_weakness_disclosed`.
+- **Two amendments before the first run is a fact about the protocol's quality**, not a detail. A1
+  found an instrument that could not measure; A2 found a mechanism that could not be trusted to
+  run. Both were found by building the pipeline the milestone had claimed to have.
+
+### A.5 (superseded by A.6) — why I did not fix it at the time
+
+**I did not fix it in the audit pass, deliberately.** Correcting the mechanism after watching it
+fail a drawn requirement is the falsifier the protocol names — *"a real defect in the system is corrected after
 the verdict in order to save the result"*. Amendment A1 was legitimate because it repaired the
 *instrument* and left the mechanism digest untouched; this would be the opposite. The options are
 the owner's:
@@ -164,6 +198,8 @@ the owner's:
 
 Option 2 is the one that makes the milestone say what it wants to say, and it is only available
 now, before arming. Option 1 becomes the only honest option the moment a canonical run exists.
+
+**The owner chose option 2.** See §A.6.
 
 **Cost note.** The qualification took **47 minutes**, almost all of it in the search for
 `ContainerLimits` — eight fields, thirty operations, over 400 000 states in 54 s of bare
