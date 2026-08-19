@@ -1,4 +1,34 @@
 {
+  "amendments": [
+    {
+      "correction": "The generator now builds each case from the class's real constructor signature, supplying every argument without a default plus every field the requirement reads, and verifies the case by constructing the object and reading each required field. String values are drawn from a fixed disclosed ladder of generic shapes -- an identifier, an absolute path, a content-addressed reference -- and the first combination the class accepts is kept. An entry no generated case can build is excluded and recorded with its reason, because an entry that measures nothing can neither qualify nor refute.",
+      "date": "2026-08-19",
+      "defect": "The pool frozen on 18 August 2026 carried hidden cases synthesised from a seed and never run. Each case assigned only the fields its requirement mentioned, not the arguments the constructor required, so seven of the nine entries raised on construction: AgentResult, EpisodeOutcome, SkillDemonstration, ContainerSpec, StructuredModelPolicy, ModelRequest and TeacherCallTrap. Only ContainerLimits and HarborEpisodeLimits could be built. The draw for the adopted mechanism selected TeacherCallTrap and ContainerSpec, both broken, so a run would have reported a failed qualification that was an artifact of the instrument rather than a fact about the mechanism.",
+      "disclosure": "The regenerated draw selects ContainerLimits and ModelRequest, whose requirements both bind keys matching their fields. The re-keyed requirements -- ContainerSpec's destination<-working_directory and TeacherCallTrap's teacher_calls<-calls -- remain in the pool but are not what this draw exercises.",
+      "effect_on_the_pool": {
+        "entries_excluded": [
+          {
+            "class": "EpisodeOutcome",
+            "component": "mira_core/calibration.py",
+            "reason": "the class is an Enum, so it has no constructor fields to render"
+          }
+        ],
+        "every_case_now_constructs": true,
+        "hidden_case_seed": "m094-qualification-hidden-cases-v2",
+        "pool_digest": "0016300c4064c0cae17465c1bf603aeeb8f9b81bf2f17c9110d0ab41026685ba",
+        "pool_entries": 8,
+        "superseded_pool_digest": "44f46e6b92996e14385d5ff713b18676ea59bfa3cfca32493f0fd98d9cc0a9db",
+        "superseded_pool_entries": 9,
+        "superseded_pool_preserved_at": "experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json"
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "id": "A1",
+      "title": "the qualification pool's hidden cases were never executed",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the draw rule, the number of entries drawn, the number of hidden cases per requirement, and the diagnosis and synthesis mechanisms. The adopted mechanism digest is unchanged at 3cd1314f4ed0fea0016d3dc9c85faec21b3fe12fbdcf26cdad896c24cc639214.",
+      "why_it_was_not_caught": "tests/test_m094_qualification_pool.py asserted that a case must assign exactly the fields its requirement reads and no others, which is the assertion that made the defect mandatory. Nothing executed a case until the qualification harness did.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim existed when the defect was found, and none exists now. The correction is to the instrument, not to a verdict, and it is recorded here permanently rather than absorbed -- the standard D-M076 set: a defect found before materialization is corrected in the open with its arithmetic. The draw moved because entry digests moved, and the generation was run once; the draw it produced was not inspected before the pool was accepted."
+    }
+  ],
   "arms": [
     "endogenous_diagnosis_and_synthesis",
     "random_component_selection",
@@ -118,10 +148,12 @@
     "M093": "engineering rehearsal. Its TARGET_FILE, diagnostic, capability choice and patch body were authored, and it says so. M094 attacks exactly those four and nothing else."
   },
   "qualification": {
+    "amended_by": "A1",
     "cross_component": "the requirement must be satisfied on a component other than the one used during development, so that a repair mechanism specialised to the development component fails",
     "draw_rule": "Order entries by sha256(entry_digest + adopted mechanism digest) and take the first two whose components differ. The mechanism digest does not exist until adoption, so the draw cannot be known at this freeze.",
     "drawn_by": "a separate process, with a salt derived from the adopted mechanism's own digest, which does not exist until adoption",
     "entries_drawn_per_qualification": 2,
+    "every_hidden_case_is_verified_by_construction": true,
     "experimenter_blindness_is_not_claimed": "The pool of candidate requirements is authored and committed at this freeze, and the draw is a deterministic function of the adopted mechanism's digest, so it is reproducible by anyone. What is claimed is that the lineage cannot import, read or reach any of it before adoption. No claim is made that the experimenter was blind to the pool.",
     "hidden_cases_per_requirement": 5,
     "no_new_operation_may_be_added_during_qualification": true,
@@ -129,14 +161,13 @@
     "pool": "experiments/M094/QUALIFICATION_POOL.json",
     "pool_components": [
       "mira_core/agent.py",
-      "mira_core/calibration.py",
       "mira_core/container.py",
       "mira_core/harbor.py",
       "mira_core/model.py",
       "mira_core/skills.py"
     ],
-    "pool_digest": "44f46e6b92996e14385d5ff713b18676ea59bfa3cfca32493f0fd98d9cc0a9db",
-    "pool_entries": 9
+    "pool_digest": "0016300c4064c0cae17465c1bf603aeeb8f9b81bf2f17c9110d0ab41026685ba",
+    "pool_entries": 8
   },
   "reattempts_m092": false,
   "repair_substrate": {
@@ -153,7 +184,7 @@
   },
   "schema": "m094-protocol-v1",
   "status": "FROZEN",
-  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared.",
+  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared. Amended on 19 August 2026 by amendment A1, recorded in full above and permanently: the qualification pool's hidden cases were synthesised and never executed, and seven of nine entries raised on construction. The pool was regenerated with every case verified by construction and the superseded pool preserved. No qualification, result or register claim existed before, during or after the amendment, and the adopted mechanism is unchanged.",
   "subtitle": "The lineage chooses what to repair, and builds the repair",
   "title": "Autonomous Component Diagnosis and Repair Synthesis",
   "track": "A",

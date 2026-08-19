@@ -546,6 +546,17 @@ field behind it.
 Each entry carries five hidden cases generated from a fixed, disclosed seed, so anyone can
 regenerate them from the committed pool.
 
+> **Amendment A1, 19 August 2026.** Regenerable was not the same as runnable. These cases were
+> never executed, and seven of the nine entries raised on construction: each case assigned only
+> the fields its requirement mentioned, not the arguments the constructor required. The draw for
+> the adopted mechanism selected two of the broken entries, so a run would have reported a failed
+> qualification that was an artifact of this table rather than a fact about the mechanism. The
+> pool was regenerated with every case verified by construction — eight entries, digest
+> `0016300c…`, `EpisodeOutcome` excluded because it is an `Enum` and has no constructor fields to
+> render, which also means the diagnosis mis-attributed that call site. The nine-entry pool above
+> is preserved at `experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json`. Recorded in full in
+> `PROTOCOL.json` under `amendments`, and permanently, as D-M076 requires.
+
 **The draw cannot be known now.** It is a deterministic function of the adopted mechanism's digest,
 which does not exist until adoption. Experimenter blindness is **not** claimed — the pool was
 authored by someone who has seen the development result, exactly as M091 disclosed for its pool of

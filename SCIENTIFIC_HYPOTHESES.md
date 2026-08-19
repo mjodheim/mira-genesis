@@ -956,8 +956,14 @@ The protocol was frozen by the project owner on 18 August 2026 at commit `dd7966
 identical tree `e2ab1c1b`, and `9b69d7f` is the one a fresh clone can resolve.
 `experiments/M094/PROTOCOL.json`, before any qualification data existed, together with a
 qualification pool of nine candidate requirements at
-`experiments/M094/QUALIFICATION_POOL.json` (digest `44f46e6b…`), every one of them drawn from a
-component outside the development set. **No qualification run has been performed**, so H39 is
+`experiments/M094/QUALIFICATION_POOL.json`, every one of them drawn from a component outside the
+development set. The pool was **amended on 19 August 2026 (amendment A1, recorded permanently in
+the protocol)**: its hidden cases had been synthesised from a seed and never executed, and seven
+of its nine entries raised on construction, so the qualification could not have measured the
+mechanism. It now holds eight entries at digest `0016300c…`, every case verified by constructing
+its class; the superseded pool is preserved at
+`experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json` at digest `44f46e6b…`. The hypothesis,
+conditions, falsifiers, arms, eligible set and draw rule are unchanged, as is the mechanism. **No qualification run has been performed**, so H39 is
 neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
 concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`
 rather than positive.
