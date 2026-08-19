@@ -17,11 +17,12 @@ byte-for-byte. See `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
 Everything below this line was written before the run and is kept as the audit that produced it.
 Where a section says a blocker is open, read it against the status markers in §G.
 
-**Verification state of the final branch:** full suite **2620 passed, 0 failed, 12 skipped in
-10 m 17 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
-dependencies all pass. The diagnosis digest is unchanged at `48cd5e9c2354a365…` and the adopted
-mechanism digest at `3cd1314f4ed0fea0…` — including across the operation-set repair in §B, which
-is why the qualification draw did not move. `CHECK_REPORT.json` still reports `incomplete`
+**Verification state of the final branch:** full suite **2623 passed, 0 failed, 12 skipped in
+10 m 12 s** (`-n 10 --dist loadscope`, CPython 3.14.6); repository integrity imports/orphans/
+dependencies all pass; `check_m094_result.py --require-result` exits 0. The diagnosis digest is
+unchanged at `48cd5e9c2354a365…` throughout. The adopted mechanism digest was `3cd1314f4ed0fea0…`
+across A1–A3 — which is why those amendments could not move the qualification draw — and moved to
+`259e12f5cbf86ec7…` at A4, where what is adopted genuinely changed. `CHECK_REPORT.json` still reports `incomplete`
 (7 passed, 0 failed, 5 uncomputed); its own digest changed because condition detail payloads did,
 and the committed report is regenerated from the checker rather than pinned.
 
