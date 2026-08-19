@@ -980,7 +980,24 @@ repair every class the measure ranks equal first rather than to invent a discrim
 the only amendment that moves the mechanism digest — `3cd1314f…` → `259e12f5…` — because what is
 adopted changed; the draw moved with it and was taken as it came.
 
-**No qualification, result or register claim exists; nothing has been armed.** **No qualification run has been performed**, so H39 is
+**The canonical run was performed on 19 August 2026** at source commit `210e8f04`, protocol
+`2d879f2f…` with amendments A1–A4 in force, against the live repository. One attempt, no reroll,
+zero model calls and zero network calls. The adopted mechanism is `259e12f5…`, repairing `Goal`
+and `Observation` — the two classes tied at demand 4. The qualification, drawn by a separate
+process from the salt the run produced, is **positive**: `AgentResult` and `ContainerSpec`, both
+satisfied on 10 of 10 constructible cases and both accepted by the independent validator,
+cross-component. The checker recomputes **all twelve conditions as true**, verdict `positive`.
+
+**H39 is supported by this run, with one disclosed defect in the evidence for P11.** The rollback's
+`restoration_is_byte_exact` is measured over decoded text, so it did not detect that the roundtrip
+normalised the component's line endings from CRLF to LF: the content is identical and git records
+no change, but the on-disk bytes were not restored exactly. Found *after* the verdict and therefore
+**not repaired**, since correcting a real defect after a verdict to save a result is a falsifier the
+protocol names. Recorded in full at `experiments/M094/POST_VERDICT_DISCLOSURE.md`, with the three
+options — accept with the disclosure, withdraw and re-run, or narrow P11's wording — left to the
+project owner.
+
+**No register claim is made here.** Decision slot D063 is unfilled and remains the owner's act. **No qualification run has been performed**, so H39 is
 neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
 concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`
 rather than positive.

@@ -22,6 +22,7 @@ experiments/M0*/QUALIFICATION_POOL_SUPERSEDED_*.json -text
 experiments/M0*/DESIGN_AUDIT.json -text
 experiments/M0*/CHECK_REPORT.json -text
 experiments/M0*/RESULT.json -text
+experiments/M0*/QUALIFICATION.json -text
 experiments/M0*/BANK_COMMITMENT.json -text
 experiments/M0*/EPISODE_COMMITMENT.json -text
 experiments/M0*/SCHEDULE_COMMITMENT.json -text
