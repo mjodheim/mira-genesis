@@ -110,6 +110,66 @@ under three names (`as_mapping`, `to_dict`, `as_dict`). The accepted behaviour i
 tie-break only chooses a spelling. Worth stating plainly, because "3 survivors" reads as more
 search than actually happened.
 
+
+### A.5 The mechanism fails its own qualification, for a precise and real reason
+
+With the amended pool the qualification is **complete** — no unrunnable entries — and the verdict
+is **negative**: 1 satisfied, 1 refuted.
+
+| drawn entry | requirement | outcome |
+|---|---|---|
+| `mira_core/model.py::ModelRequest` | `input_json`, `system_instruction` | **satisfied** — candidate 10/10 via `as_mapping`, validator accepted |
+| `mira_core/container.py::ContainerLimits` | `memory_bytes`, `pids_limit` | **refuted** — candidate 0/10, validator refused |
+
+`ContainerLimits` was not refuted by bad luck or a broken case. All 10 cases construct. The cause
+is a property of the mechanism, reproducible in six lines:
+
+```python
+draft = MethodDraft(name="as_mapping", returns="mapping", items=(
+    MappingItem("memory_bytes", "memory_bytes", None),   # required by the requirement
+    MappingItem("pids_limit",   "pids_limit",   None),   # required by the requirement
+    MappingItem("max_steps",    "max_steps",    "list"), # not required — and unconstrained
+))
+RenderAsMapping().is_supplied_by(node, "C", detail)   # True
+C().as_mapping()                                      # TypeError: 'int' object is not iterable
+```
+
+**The acceptance predicate constrains only the keys the requirement names.** Every other key a
+candidate includes is unconstrained, wrapper included. `ContainerLimits` has eight fields and a
+two-key requirement, so thousands of candidates are accepted, the tie-break picks one by content
+address, and a candidate that wraps an unrelated `int` in `list()` passes acceptance and raises
+when executed.
+
+This is the §F.2 discrimination problem arriving as a failure rather than a caveat, and it is
+exactly what a cross-component qualification exists to catch: the development target `Goal` has a
+requirement covering *all* its fields, so nothing was left unconstrained and the defect could not
+appear there.
+
+**I have not fixed it, deliberately.** Correcting the mechanism after watching it fail a drawn
+requirement is the falsifier the protocol names — *"a real defect in the system is corrected after
+the verdict in order to save the result"*. Amendment A1 was legitimate because it repaired the
+*instrument* and left the mechanism digest untouched; this would be the opposite. The options are
+the owner's:
+
+1. **Record the negative.** Run M094 canonically and report that H39 is refuted, with this as the
+   reason. It is a real, informative result: the lineage located its target and built a repair,
+   and the repair does not generalise to a component whose requirement is a strict subset of its
+   fields.
+2. **Correct the mechanism before arming, as a second amendment.** Require acceptance to execute
+   the candidate rather than inspect it — the validator already does. This changes the mechanism
+   digest and therefore the draw, and it must be recorded as A2 with the same arithmetic, in the
+   open, *before* any run.
+3. **Narrow the claim.** Restrict the capability shape to requirements covering every field, which
+   makes the milestone say something smaller but true.
+
+Option 2 is the one that makes the milestone say what it wants to say, and it is only available
+now, before arming. Option 1 becomes the only honest option the moment a canonical run exists.
+
+**Cost note.** The qualification took **47 minutes**, almost all of it in the search for
+`ContainerLimits` — eight fields, thirty operations, over 400 000 states in 54 s of bare
+enumeration before any acceptance work. The feasibility of a qualification now depends on which
+entries the salt happens to draw (§F.2).
+
 ---
 
 ## B. Repository debt
@@ -160,7 +220,20 @@ historical copies left alone. See §C.
    `results/`**, neither of which is copied. The declared command cannot pass. Added in the same
    commit as the M094 runner (`a9cdaaf`) and, on this evidence, never built.
 
-### Blocker 5 — seven of nine frozen qualification entries cannot be executed
+### Blocker 5 — seven of nine frozen qualification entries cannot be executed — **AMENDED (A1)**
+
+> **Resolved 19 August by amendment A1.** The pool was regenerated with every case verified by
+> construction: 8 entries, digest `0016300c…`, independently confirmed 8/8 constructible (from
+> 2/9). `EpisodeOutcome` excluded as an `Enum` with no constructor fields — which also means the
+> diagnosis mis-attributed that call site. Superseded pool preserved at
+> `QUALIFICATION_POOL_SUPERSEDED_A1.json`; amendment recorded permanently in `PROTOCOL.json`.
+>
+> **Running it produced a refutation of the mechanism — see §A.5.** The instrument now works, and
+> what it measured is not good news.
+
+The original finding follows, because the correction is only legible against it.
+
+
 
 Found by building the pipeline and running the qualification, which is the first time anyone
 executed the pool's hidden cases rather than regenerating them.
