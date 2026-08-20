@@ -41,6 +41,20 @@ M064 its qualification. It is also the defect the side-car branch `claude/dreamy
 opened to fix repository-wide, and which has never been merged. M086-A reproduced it in a new
 experiment while that fix sat unmerged.
 
+> **Correction, 2026-08-20 — the sentence above is preserved as written and is no longer true.**
+> The repair had not been merged when this document was committed (`92039f8`, 2026-08-12 09:33),
+> and it landed about seven hours later the same day as `531a447`, "protect digest-bearing
+> experiment artifacts from EOL conversion". The second sentence still holds: M086-A did reproduce
+> the defect while the fix was unmerged. Only the claim that it "has never been merged" has expired.
+>
+> The branch `claude/dreamy-swanson-d63fc5` has since been deleted. Its commit is preserved as the
+> annotated tag `branch/claude-dreamy-swanson-d63fc5` (`9e0bff7`), and the account of the defect it
+> carried — which never travelled with the fix — is now in `FAILURE_LOG.md` under
+> "M076-M083 — the checkout-dependent hash defect recurred on a Windows clone".
+>
+> Nothing about M086-A's disqualification changes. This corrects a statement about repository
+> history, not about the result.
+
 It was invisible to CI because the checker is not part of the test suite and no regression asserted
 the binding.
 
