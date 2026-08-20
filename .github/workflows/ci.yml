@@ -62,6 +62,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v6
+        with:
+          # The citation check establishes that every commit the registers name by SHA is still
+          # reachable. A shallow checkout cannot answer that, and reports so rather than passing.
+          fetch-depth: 0
 
       - uses: actions/setup-python@v6
         with:
@@ -80,6 +84,9 @@ jobs:
 
       - name: Declared dependencies must match real imports
         run: python scripts/check_repository_integrity.py --dependencies
+
+      - name: Every commit the record cites must still resolve
+        run: python scripts/check_repository_integrity.py --citations
 
   sealed-bank-boundary:
     name: Sealed task-bank boundary

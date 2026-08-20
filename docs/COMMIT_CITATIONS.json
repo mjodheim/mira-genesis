@@ -1,0 +1,1813 @@
+{
+  "schema": "commit-citations-v1",
+  "purpose": "Every commit the tracked scientific record cites by SHA, and the ref that keeps it reachable. Checked by scripts/check_repository_integrity.py --citations. A citation that stops resolving makes a recorded result unverifiable, so this file exists to make that failure loud instead of silent.",
+  "commits": {
+    "021d7d73d3a27d2549f45f6a6273cfa30e981647": {
+      "subject": "ci(m040): evaluate true lineage-anchor defaults on seed 400047",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_007.md"
+      ]
+    },
+    "02df1fab0bc589d7563c6d9293073751220185f3": {
+      "subject": "m039(canonical): arm first immutable run",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m039-canonical.yml",
+        "archives/workflows/m039-preserve-result.yml",
+        "results/M039.md",
+        "results/artifacts/M039_CANONICAL_RESULT.json"
+      ]
+    },
+    "0663c885346c41e310a0ae47eca122e7e2b6ed82": {
+      "subject": "feat(m039): canonical three-cycle lineage with bounded Gate 2 and Gate 9",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "06c23402e443dec699d7caf11595baebd1ae8409": {
+      "subject": "feat: add frozen M070 Harbor evaluation bridge",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M070/EXECUTION_PROTOCOL.json",
+        "experiments/M070/EXECUTION_PROTOCOL.md",
+        "experiments/M070/EXTERNAL_RESULT.json"
+      ]
+    },
+    "0820ebc3a638e8ae0e06fceed7addbdb71bafbb7": {
+      "subject": "fix: supervise model transport process trees",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M071/AGENT_DESIGN_FREEZE.json",
+        "experiments/M071/AGENT_DESIGN_FREEZE.md",
+        "experiments/M071/EXECUTION_PROTOCOL.json",
+        "experiments/M071/EXTERNAL_RESULT.md",
+        "experiments/M071/SELECTION_PROTOCOL.json",
+        "mira_core/harbor.py",
+        "tests/test_m071_agent_design_freeze.py"
+      ]
+    },
+    "0875fa72d724db2af8a7b10b33c876a0e047576d": {
+      "subject": "docs: preserve positive M071 external result",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M071/DEVELOPMENT_QUALIFICATION.md"
+      ]
+    },
+    "09ed0d3c4b7427e8f6e6ef7d17a893d14ba5e5fe": {
+      "subject": "feat: freeze the M086-C protocol before any harness, bank or holdout",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086C/RESULT.md"
+      ]
+    },
+    "0c19d6b414d0b74a5974520aed7c17d6cd592646": {
+      "subject": "test: preserve M075 public model development result",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "0c3584700ebb38928d11fdfd435250be522b1dc2": {
+      "subject": "feat: freeze M082 browser protocol and build recipe before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M082/RESULT.md",
+        "experiments/M082/STATUS.md"
+      ]
+    },
+    "0d23bfd4ee8f0745fe88fc39e7bb01e0949706a1": {
+      "subject": "audit(m094): the replacement reproduces defect 3, and the sweep says so",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/PROTOCOL.json"
+      ]
+    },
+    "0dfd822ac1c81692abe45f9499ece420a947fd0f": {
+      "subject": "fix: expose verified M048 checkpoint digest",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M048/DEVELOPMENT_RESULT.md",
+        "experiments/M048/PROTOCOL.md"
+      ]
+    },
+    "0e05ebe450b2e648ec3f935f2ffabf4860c940e3": {
+      "subject": "M057: the lineage constructs its own migration path",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "1081ed1276d5d5048ec78cb3c3348b6ba7c4ac08": {
+      "subject": "test: connect M072 materializer to integrity graph",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "12a2140ed9e37cba01fa0cb991527668c956b8e9": {
+      "subject": "ci(m038): hash the frozen protocol candidate without opening the block",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m038-freeze-candidate.yml",
+        "results/M038_FREEZE.md"
+      ]
+    },
+    "12b0c31507872f91c368480f8b30d246e6887023": {
+      "subject": "M053: force, detect and recover from a real post-adoption fault",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M053/DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "132476a5db532812a0cd223d02f8eba9ad88e346": {
+      "subject": "fix: bind Harbor bridge to M071 identity",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M071/AGENT_DESIGN_FREEZE.json",
+        "experiments/M071/AGENT_DESIGN_FREEZE.md",
+        "experiments/M071/EXECUTION_PROTOCOL.json",
+        "experiments/M071/EXTERNAL_RESULT.md",
+        "tests/test_m071_agent_design_freeze.py"
+      ]
+    },
+    "154c92af8a4e691fa1f3446768f10211cc47dec1": {
+      "subject": "M060: the whole body crosses into WebAssembly",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "18402be50eec77d099a7a6bafe1a76fe7dcf40ab": {
+      "subject": "M048: integrate genuine Node runtime migration",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "1c4e7b59c9a846d1b16d09ae47ef1c5478450832": {
+      "subject": "fix(m033): audit symbolic structural seed boundary",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M033/STATUS.md",
+        "results/M033_CONTROL_CALIBRATION.md"
+      ]
+    },
+    "1c7cceb6bd2736545c955ad7826231353f9d9554": {
+      "subject": "Merge pull request #90 from mjodheim/research/m061-structural-discovery",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
+      "subject": "test: preserve negative M074 scientific result",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M074/SCIENTIFIC_RESULT.md",
+        "experiments/M074/STATUS.md"
+      ]
+    },
+    "1ef6407275057a109a6ef0f4377d234d4f59eddf": {
+      "subject": "M041: canonical negative single-lineage completion audit",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "210e8f048e47deb9434df1e10db0e8010a2710e5": {
+      "subject": "feat(m094): bind the result to the protocol and the tree it ran against",
+      "preserved_by": "main",
+      "cited_in": [
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M094/DESIGN_AUDIT.md",
+        "experiments/M094/POST_VERDICT_DISCLOSURE.md",
+        "experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json"
+      ]
+    },
+    "2296e778d443e57b44a533b143ea126cb6be3a97": {
+      "subject": "Make M022 control evidence complete",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M022_ADAPTATION_SMOKE_RESULT.md"
+      ]
+    },
+    "243080c73d13bbe5f86a366d7cb2bab9a68df2e2": {
+      "subject": "feat(m040): evaluate true lineage-anchor transfer on seed 400047",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_007.md"
+      ]
+    },
+    "248163fa91261b517623bed218e21a562e1cc097": {
+      "subject": "M066: preserve positive canonical result and close construction",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROVENANCE.md",
+        "tests/test_repository_licensing.py"
+      ]
+    },
+    "26c86711714c7c09cd4881acb13231b146f48498": {
+      "subject": "Record M014b canonical failure",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "archives/RETIRED_CODE.md"
+      ]
+    },
+    "27a2e1fd14fae09116cec9f8f8f05a958bdbe552": {
+      "subject": "feat: qualify M074 apparatus and reclassify M069",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M074/DEVELOPMENT_QUALIFICATION.md"
+      ]
+    },
+    "28ca27b33c5ef661e01b28828bc59f8fb52369fd": {
+      "subject": "chore(m039): disable the consumed freeze-identity workflow",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M039_FREEZE.md"
+      ]
+    },
+    "28ddd8bcad931904b160c43c6f728bf8d13fcedc": {
+      "subject": "test: freeze M074 scientific protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M074/SCIENTIFIC_RESULT.md",
+        "experiments/M074/STATUS.md"
+      ]
+    },
+    "2994f86b0e5fe671e322f4b1a5a8367a913a0dc2": {
+      "subject": "Merge positive M066 canonical evidence and construction closure",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROVENANCE.md",
+        "tests/test_repository_licensing.py"
+      ]
+    },
+    "2b6ef0e545237a6bdc6aa77a8dd5281eabdbc8d1": {
+      "subject": "M061: discovering the instructions that move data and direct control",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "2cf454ca4e393a319f89ae5afbcd5e3f9250182c": {
+      "subject": "m066(canonical): arm first immutable governance-corrected whole-wasm run",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "PROVENANCE.md",
+        "README.md",
+        "experiments/M066/DEVELOPMENT_RESULT.md",
+        "experiments/M066/STATUS.md",
+        "results/M066_CANONICAL_RESULT.md",
+        "results/artifacts/M066_CANONICAL_AUDIT.json",
+        "results/artifacts/M066_CANONICAL_FIRST_RESULT_SEAL.json",
+        "scripts/check_m066_canonical_result.py",
+        "tests/test_repository_licensing.py"
+      ]
+    },
+    "2d08875240a491c167c7116303e22f6faeafbc3e": {
+      "subject": "m073: preserve frozen external teacher responses",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "2dc997ba3524aa593d15a2e602e36987d2672a12": {
+      "subject": "docs(m094): record the freeze commit",
+      "preserved_by": "provenance/2dc997b",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/DESIGN_AUDIT.md"
+      ]
+    },
+    "2dd6ccb3b2770bc1e44e222d635d4a98342bfe20": {
+      "subject": "docs: record M075 local qualification",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "2eaa5c73c00299cb8be4fc3e649d42e5de6fdec0": {
+      "subject": "docs: qualify positive M073 skill appropriation",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "312bbb145af6e11473dde5cd21bcb0602ddc41d1": {
+      "subject": "docs(m094): record the freeze commit",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/DESIGN_AUDIT.md"
+      ]
+    },
+    "31b2778473e21ab06b4efb38b4b46738fdc70224": {
+      "subject": "feat: freeze M077 long-horizon recovery protocol before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M077/RESULT.md",
+        "experiments/M077/STATUS.md"
+      ]
+    },
+    "326f71534b9bee44b0c745211c27209f22ddff36": {
+      "subject": "M021: run the four paired measures concurrently within each seed",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M021/STATUS.md",
+        "results/M021_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "334eec2fa476c6a1d3b3f1431843d8d42e5ca883": {
+      "subject": "research(m028): freeze adaptive evaluation protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "experiments/M028/STATUS.md",
+        "results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "355eeb9b7d5f1fdd311949feaf3df9231c0a6f96": {
+      "subject": "m073: preserve first skill appropriation result",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "35884c3d957f5faa12dde14a94a8e7db196e3717": {
+      "subject": "fix(m040): serialise binary evidence in development artefact",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m040-preserve-development-002.yml",
+        "results/M040_DEVELOPMENT_002.md"
+      ]
+    },
+    "35bb3692db268349d435a1d1d716026ce5f4574e": {
+      "subject": "Merge PR #153: fetch frozen M092 checkpoint history",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M092/CANONICAL_SEARCH_ARMED.json"
+      ]
+    },
+    "3ab33da7fdbcc27ba786c20e8516e83e29c76fee": {
+      "subject": "docs(m052): define bounded equivalence-pruning protocol",
+      "preserved_by": "provenance/3ab33da",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M052/DEVELOPMENT_RESULT.md",
+        "experiments/M052/PROTOCOL.md"
+      ]
+    },
+    "3bc3b50a052851d7fb8847b6eeb6c87ba8c2c320": {
+      "subject": "M050: define bounded primitive-composition protocol",
+      "preserved_by": "provenance/3bc3b50",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M050/DEVELOPMENT_RESULT.md",
+        "experiments/M050/PROTOCOL.md"
+      ]
+    },
+    "3d301683341e91e8aa92b216adf96d786d336a83": {
+      "subject": "test: materialize the M086-B bank and holdout, in that order",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086B/RESULT.md"
+      ]
+    },
+    "3d718d01e38ca9be488a0d931d362ee5c2824f87": {
+      "subject": "docs: record the M075-B instrument CI run and its preserved first failure",
+      "preserved_by": "main",
+      "cited_in": [
+        "DECISIONS.md"
+      ]
+    },
+    "3fa79d264c125be3e73f2751298cbd430109eb8a": {
+      "subject": "Add decidable metaproductivity benchmark",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "4080ccc4b9381b1a2b0f8714e904c57335330877": {
+      "subject": "Test M032 packet tamper rejection",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M032/STATUS.md",
+        "results/M032_DEVELOPMENT_BASE.md"
+      ]
+    },
+    "41ebe791605f55e7a44df8f0939d730139cf219a": {
+      "subject": "style: normalize pretarget test file",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M070/AGENT_DESIGN_FREEZE.json",
+        "experiments/M070/AGENT_DESIGN_FREEZE.md",
+        "experiments/M070/EXECUTION_PROTOCOL.json",
+        "experiments/M070/EXECUTION_PROTOCOL.md",
+        "experiments/M070/EXTERNAL_RESULT.json",
+        "experiments/M070/SELECTION_PROTOCOL.json",
+        "experiments/M070/SELECTION_PROTOCOL.md",
+        "tests/test_m070_agent_design_freeze.py"
+      ]
+    },
+    "4351fc007a95d341b017e10511de730e20651947": {
+      "subject": "feat: add neutral M073 external-teacher runner",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
+        "tests/test_m073_teacher_runner.py"
+      ]
+    },
+    "43ef9d30bc75d74477955d560cc0dbea2536a471": {
+      "subject": "fix(m094): withdraw attempt 1, and make the rollback certify bytes",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M094/POST_VERDICT_DISCLOSURE.md",
+        "experiments/M094/RESULT.json"
+      ]
+    },
+    "45886bc2652e91641bb722d9d42dc94b35bc9e91": {
+      "subject": "feat: add the M079 planning world, planner and matched ablations",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M079/RESULT.md",
+        "experiments/M079/STATUS.md"
+      ]
+    },
+    "4637acdce71b7719668a734621669e04472bfe55": {
+      "subject": "ci(m040): apply syntax-safe lineage-anchor dispatch",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_006.md"
+      ]
+    },
+    "48a4d5d0f6a25de275e646e5abb876fc912024fb": {
+      "subject": "M042: positive constructive canonical-lineage completion",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "49033001f79591bc9534e43489a9d4147edd4529": {
+      "subject": "freeze(m092-b): bind the extension protocol before search",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "49a72af03456bceae7105b5e243fd2e36c59c41d": {
+      "subject": "docs: preregister the bounded M053 protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M053/DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5": {
+      "subject": "Merge M065 negative guard record and M066 governance correction",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M066/CANONICAL_ARMED.json",
+        "experiments/M066/DEVELOPMENT_RESULT.md",
+        "experiments/M066/STATUS.md",
+        "results/M066_CANONICAL_RESULT.md",
+        "results/artifacts/M066_CANONICAL_AUDIT.json",
+        "results/artifacts/M066_CANONICAL_FIRST_RESULT_SEAL.json",
+        "results/artifacts/M066_CANONICAL_RESULT.json",
+        "results/artifacts/M066_INDEPENDENT_REPRODUCTION.json",
+        "scripts/check_m066_canonical_result.py"
+      ]
+    },
+    "4a56de6d385afc6769ac79715db8d58432d2a90a": {
+      "subject": "feat: add G2 grounding harness and record amendment A1",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M076/RESULT.md",
+        "experiments/M076/STATUS.md"
+      ]
+    },
+    "4d8a71a1038f86f59e53796ce6d6a815ff875da1": {
+      "subject": "protocol: freeze M088 before any qualification data exists",
+      "preserved_by": "main",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M088/RESULT.md"
+      ]
+    },
+    "4eb61e20418c8088487bbd5bbe806780d375d819": {
+      "subject": "research(m031): freeze structural transport protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M031/STATUS.md",
+        "results/M031_STRUCTURAL_TRANSPORT_RESULT.md"
+      ]
+    },
+    "5056a56b48c2c2e2543a077acfc46659e13925ba": {
+      "subject": "feat: add the M086-C harness, with no bank materialized",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086C/RESULT.md"
+      ]
+    },
+    "521895af33e30320c06437d4d9fbd83dee581a47": {
+      "subject": "m073: freeze teacher requests before any response",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/CAPSULE_INDUCTION.json",
+        "experiments/M073/STATUS.md",
+        "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
+        "experiments/M073/TEACHER_RESPONSES.json",
+        "scripts/induce_m073_capsule.py",
+        "scripts/run_m073_teacher.py",
+        "tests/test_m073_teacher_runner.py"
+      ]
+    },
+    "531a447b7d6a65d5819d267fe95d5747b231e466": {
+      "subject": "fix: protect digest-bearing experiment artifacts from EOL conversion",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "FAILURE_LOG.md",
+        "experiments/M086/DISQUALIFICATION.md"
+      ]
+    },
+    "54b90c5c99e3d27e7809d658f0e39beff997c309": {
+      "subject": "feat: add the M081 two-environment harness and record amendment A1",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M081/RESULT.md",
+        "experiments/M081/STATUS.md"
+      ]
+    },
+    "552ab5ec4b4e279a13e22c47418876af7f61a848": {
+      "subject": "M050: bounded composition of migration primitives",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "55a34a90bdc0033c7f1eb811a315516dea14acff": {
+      "subject": "fix: bind M074 host runtime identity",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M074/SCIENTIFIC_PROTOCOL.json",
+        "scripts/check_m074_scientific_protocol.py",
+        "tests/test_historical_code_binding.py"
+      ]
+    },
+    "571f9954533e8177412563d4f3f4de30e0a98454": {
+      "subject": "test: preserve first M072 causal governance result",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "573336198649559055fcdc71d926a12b935483b5": {
+      "subject": "test: preserve the first G2 grounding result and its checker",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "58449266787257c24e1a22a1a3b91f92dd178211": {
+      "subject": "test: add deterministic M072 scenario materializer",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "5948f9acda25fca0199b3919acd6516df8e85a74": {
+      "subject": "test: materialize the M086-C bank and holdout, in that order",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086C/RESULT.md"
+      ]
+    },
+    "59b7bdfeac75a7ab3ffa1cd87e0c6cf5050b34e8": {
+      "subject": "test: bind M072 scenario suite before evaluation",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M072/RESULT.json",
+        "experiments/M072/RESULT.md",
+        "experiments/M072/STATUS.md",
+        "scripts/check_m072_result.py"
+      ]
+    },
+    "5a0947afb96d7d59438c222028f2cabb34bc0cd5": {
+      "subject": "status(m014b): seal development phase before canonical PR",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "experiments/M014b/STATUS.md",
+        "results/M014b.md",
+        "results/M014b_raw/summary.json"
+      ]
+    },
+    "5a5c2370231806b3295e0bce3f8aa449b2a465b3": {
+      "subject": "m040(canonical): arm first immutable run",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m040-canonical.yml",
+        "archives/workflows/m040-commit-canonical-artifact.yml",
+        "archives/workflows/m040-preserve-first-canonical.yml",
+        "experiments/M040/STATUS.md",
+        "results/M040_CANONICAL_RESULT.md",
+        "results/artifacts/M040_CANONICAL_RESULT.json"
+      ]
+    },
+    "5adfaa671d242d1589d85985014dbd1c6f4bf2c8": {
+      "subject": "harden(m092-a): close the checkpoint boundary before freeze",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "experiments/M092/CHECKPOINT_A.json",
+        "experiments/M092/M092A.md",
+        "experiments/M092/PROTOCOL.json",
+        "scripts/check_m092b_protocol.py"
+      ]
+    },
+    "5bb8b14b0c4839ba0d87fe2948d56f94d8f11730": {
+      "subject": "Merge remote-tracking branch 'origin/main' into research/m023-disposable-workspace",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M023/STATUS.md"
+      ]
+    },
+    "5e4a0feebbb44aa73309d40eca1e88e0833e6756": {
+      "subject": "feat(m091): freeze the protocol, the invariant proof and the assembly substrate",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M091/REGISTER_CLAIM.json",
+        "experiments/M091/RESULT.md"
+      ]
+    },
+    "5ebf244327b1fded84d5e3e648c9a078bd89d96b": {
+      "subject": "perf(m012): vectorize and reuse hidden evaluation suites",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "experiments/M012/STATUS.md",
+        "results/M012_raw/README.md",
+        "results/M012_raw/summary.json"
+      ]
+    },
+    "5fdf7b42a7b7acf855f51bd6d0712da0dd6abc1a": {
+      "subject": "test: bind the frozen G2 episode suite before any arm result",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M076/RESULT.md",
+        "experiments/M076/STATUS.md"
+      ]
+    },
+    "616f31619e7337dd0c114fc1f09e1cefa1a8f7fd": {
+      "subject": "ci: pin and report the M048 Node runtime",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M048/DEVELOPMENT_RESULT.md",
+        "experiments/M048/PROTOCOL.md"
+      ]
+    },
+    "6189a93e49152dd0eccae375ddcdff4660bb9d9f": {
+      "subject": "M040: canonical positive cumulative post-migration plasticity",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "63d8b18d72451ffe93f905e1c733a89ddbc70fb4": {
+      "subject": "docs(m038): reconcile the protocol with the calibration, and fix four underspecifications",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M038_TRIGGER_CALIBRATION.md"
+      ]
+    },
+    "664c385d6b4f14286cbae02b3ae93b2b1420b8dd": {
+      "subject": "docs(m038): correct the calibration status, the M036 reading, and nine schema gaps",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M038_TRIGGER_CALIBRATION.md"
+      ]
+    },
+    "6662c7a4844604f9ce3d02fafce11b048156f4b9": {
+      "subject": "M049: integrate bounded migration-strategy selection",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "6928cf2abf714864c69f0571879af424ed09c741": {
+      "subject": "Harden and document M024 rewrite passports",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M024/STATUS.md"
+      ]
+    },
+    "699c162bc9b871bbb897a6c29a83d75f190b3129": {
+      "subject": "ci(m038): run the consumed integrated development cycle",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m038-development.yml",
+        "results/M038_DEVELOPMENT_CYCLE.md",
+        "results/M038_FREEZE.md"
+      ]
+    },
+    "6a7613afd2b7081824261648237ff4c24ba368f8": {
+      "subject": "chore(m040): preserve canonical artifact byte for byte",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m040-commit-canonical-artifact.yml"
+      ]
+    },
+    "6c050c77d75403016b970ef1ba3043aa2cdbd12f": {
+      "subject": "fix(m038): name the actual parent in the canonical guard error",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M038_FREEZE.md"
+      ]
+    },
+    "6c404f7fce00087048dcb7d6e346bd5c84308cf8": {
+      "subject": "m041(canonical): arm first immutable completion run",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m041-canonical.yml",
+        "experiments/M041/STATUS.md",
+        "results/M041_CANONICAL_RESULT.md",
+        "results/artifacts/M041_CANONICAL_RESULT.json"
+      ]
+    },
+    "6cc064bc07e2187ef51311a6a48fd96b445bd5b6": {
+      "subject": "test: freeze M071 external execution protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M071/EXTERNAL_RESULT.json",
+        "experiments/M071/EXTERNAL_RESULT.md"
+      ]
+    },
+    "6f4f20a118b3744fa2de08cee05b860362623fef": {
+      "subject": "M059: the lineage judges whether its substrate still suits it",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "7002e4a843f347d4f494946a3c8a1fbb2d07387f": {
+      "subject": "fix: the leak scanner flagged the payload schema document as a payload",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M075B/STATUS.md"
+      ]
+    },
+    "7190ff8fb00e13a91ffb4eb06dc948c3aa094ebf": {
+      "subject": "m092(canonical): arm first immutable criterion search",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "720bad446fbe8a72eb7990288b0c21cbbbfc74f9": {
+      "subject": "feat: add M077 shift harness and record its negative dissociation",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M077/RESULT.md",
+        "experiments/M077/STATUS.md"
+      ]
+    },
+    "74689ca456f22f563a06de9bda8b739ab4b255aa": {
+      "subject": "M055: complete the experiment and record its negative result",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "760803c4eee9c03caf25d2403c5f072343e17572": {
+      "subject": "m073: commit induced skill capsule before holdouts",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M073/HOLDOUT_TASKS.json",
+        "experiments/M073/RESULT.md",
+        "experiments/M073/STATUS.md",
+        "scripts/check_m073_result.py"
+      ]
+    },
+    "78d53d733bdf77eab773414e8d273ed70e31391d": {
+      "subject": "m073: preregister model-to-lineage skill appropriation",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M073/CAPSULE_INDUCTION.json",
+        "experiments/M073/HOLDOUT_TASKS.json",
+        "experiments/M073/RESULT.md",
+        "experiments/M073/STATUS.md",
+        "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
+        "experiments/M073/TEACHER_REQUESTS.json",
+        "experiments/M073/TRAINING_TASKS.json",
+        "scripts/check_m073_result.py",
+        "scripts/induce_m073_capsule.py",
+        "scripts/materialize_m073_holdouts.py",
+        "tests/test_m073_skill_capsule.py"
+      ]
+    },
+    "7ac5ad47325902f0da0043f312383468c507f830": {
+      "subject": "feat: freeze M081 two-real-environment protocol before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M081/RESULT.md",
+        "experiments/M081/STATUS.md"
+      ]
+    },
+    "7b80f1e6a623b1b0312b142d5ebe30f39f917a79": {
+      "subject": "ci(m041): run the public completion entry point",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M041_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "7c3eaa210936afeb1640b9cfbf67924d67e6c679": {
+      "subject": "research(m029): freeze component probe protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "experiments/M029/STATUS.md",
+        "results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "7d38ac8b35729e19d5f16843905b80654f657c5e": {
+      "subject": "feat: discover opaque body contracts in M067",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M067/DEVELOPMENT_RESULT.md",
+        "experiments/M067/PROTOCOL.md"
+      ]
+    },
+    "82e0bf9689a30de2f6f7c69fdd42af89b842d6ee": {
+      "subject": "feat: add the M083 GUI desktop environment and runner",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M083/RESULT.md",
+        "experiments/M083/STATUS.md"
+      ]
+    },
+    "839883d1c2353d47005d14fd8e42c073e049b0d8": {
+      "subject": "fix: honor the M048 native journal schema",
+      "preserved_by": "main",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M048/DEVELOPMENT_RESULT.md",
+        "experiments/M048/PROTOCOL.md"
+      ]
+    },
+    "83e2aed02b49e1439ede08d42d15a378dbd46642": {
+      "subject": "Add seeded clade guidance benchmark",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M027/STATUS.md",
+        "results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "872f90060902cea2b94be653845036340b91cde3": {
+      "subject": "M046: launch integrated development qualification",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M046/DEVELOPMENT_QUALIFICATION.md",
+        "experiments/M046/PROTOCOL.md",
+        "results/M046_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "87a5a9bc0af47231fec45cda4c0e39250bb7491a": {
+      "subject": "feat: add non-executing M072 governance causal harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/RESULT.json",
+        "experiments/M072/SCENARIO_COMMITMENT.json",
+        "experiments/M072/STATUS.md",
+        "scripts/check_m072_result.py",
+        "tests/test_m072_governance_eval.py"
+      ]
+    },
+    "898380d86aef7f67e39367c06e0ebe498395d33b": {
+      "subject": "m073: bind training tasks before teacher demonstrations",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/CAPSULE_INDUCTION.json",
+        "experiments/M073/STATUS.md",
+        "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
+        "experiments/M073/TEACHER_REQUESTS.json",
+        "scripts/induce_m073_capsule.py"
+      ]
+    },
+    "8a8a6e70415b909e91ed5d4a7d9caf125f2d6178": {
+      "subject": "feat: freeze the M086 evolvable improvement mechanism protocol before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086/RESULT.md"
+      ]
+    },
+    "8aa0086188b610cc3ba9ee4cc1549c5072fd0722": {
+      "subject": "test: enforce frozen M073 return-expression boundary",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "8ae968ee2909dcd0fcb39a77fb6dbaa76b201384": {
+      "subject": "ci(m040): evaluate equal 4096-node transfer budget on seed 400045",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_005.md"
+      ]
+    },
+    "8bcd8dccf1fd34934d452b518b2b979caa95029a": {
+      "subject": "test(m039): make evidence-rejected search history replayable",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M039_DEVELOPMENT.md",
+        "results/M039_FREEZE.md"
+      ]
+    },
+    "8d0f0c7b82b5c25ea639fcb5fe922167c3780355": {
+      "subject": "ci(m040): rerun prefix adaptation with complete audit imports",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_004.md"
+      ]
+    },
+    "8fd829269b2b18e207917ef7dcf71a963f28ef8e": {
+      "subject": "m038(canonical): arm first immutable run",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m038-canonical.yml",
+        "results/M038.md",
+        "results/artifacts/M038_CANONICAL_RESULT.json"
+      ]
+    },
+    "92039f8303fca7f070e3b1ab0dd2257eb0ca58bf": {
+      "subject": "docs: reclassify M086 as M086-A, post-hoc disqualified",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M086/DISQUALIFICATION.md"
+      ]
+    },
+    "958c52fc4e4f47dfdeacd492bb691dded2ede81d": {
+      "subject": "feat: add the M082 browser environment under M081's interface",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M082/RESULT.md",
+        "experiments/M082/STATUS.md"
+      ]
+    },
+    "95a50225e40c7ebae77f40e662c8d959afab501a": {
+      "subject": "feat: freeze the M086-B protocol before any harness, bank or holdout",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086B/RESULT.md"
+      ]
+    },
+    "9619b5d86fead0a3a2ad57446a48c568595ad5f0": {
+      "subject": "ci(m040): apply committed continuation-frontier repair",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_001.md"
+      ]
+    },
+    "96c8a3a695b37caee3aa77f8e4fb3da856948c40": {
+      "subject": "fix(m094): make acceptance agreement, not key coverage",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/PROTOCOL.json",
+        "tests/test_m094_audit_binding.py"
+      ]
+    },
+    "96f4fcbca52c7dd4a9a05bff5427b2bb2f3b687b": {
+      "subject": "feat: add the M086-B harness and checker, with no bank materialized",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M086B/RESULT.md"
+      ]
+    },
+    "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
+      "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/DESIGN_AUDIT.md",
+        "experiments/M094/PROTOCOL.json",
+        "tests/test_m094_design_audit.py"
+      ]
+    },
+    "9bb971ef9c997c55326cb8a338bb6496fc26e8e6": {
+      "subject": "chore(m041): remove the unregistered verifier alias",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m041-freeze-candidate.yml",
+        "experiments/M041/CANONICAL_ARMED.json",
+        "experiments/M041/STATUS.md",
+        "results/M041_CANONICAL_RESULT.md",
+        "results/artifacts/M041_CANONICAL_RESULT.json"
+      ]
+    },
+    "9bbec79d10d362d386ad473ea56caafb20dcbcbc": {
+      "subject": "test: freeze blind M070 task selection rule",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "experiments/M070/EXECUTION_PROTOCOL.json",
+        "experiments/M070/TASK_SELECTION.json"
+      ]
+    },
+    "9d482d21110cb258e80d02298b215cb14e6b2bcb": {
+      "subject": "research: freeze M069 governed terminal tasks",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M069/DEVELOPMENT_RESULT.md",
+        "experiments/M069/STATUS.md",
+        "metamorphosis/m069_governed_terminal_repair.py"
+      ]
+    },
+    "9d727e5621d46cb801b08ac2184e8c3d7a75a3b2": {
+      "subject": "M058: the lineage discovers which instructions exist",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "9e0bff76bb8e4dc17f1d78f257353ac9867afcf2": {
+      "subject": "fix: store the M076-M084 digest-bearing artifacts byte-exact",
+      "preserved_by": "branch/claude-dreamy-swanson-d63fc5",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "experiments/M086/DISQUALIFICATION.md"
+      ]
+    },
+    "9e4e6ba165f71eca595601a19de2bdd16dc86bf5": {
+      "subject": "M056: a second migration, and what survives it",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md"
+      ]
+    },
+    "a1409bfd56aea7216b049ff53ef9ed06d07d5f5a": {
+      "subject": "feat: freeze M083 GUI desktop protocol and image recipe before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M083/RESULT.md",
+        "experiments/M083/STATUS.md"
+      ]
+    },
+    "a2d8948246a0ceeebe88496e860695760dbe16e1": {
+      "subject": "ci(m040): run focused post-migration development integration",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_000.md"
+      ]
+    },
+    "a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57": {
+      "subject": "m065(canonical): arm first immutable corrected whole-wasm run",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M065/DEVELOPMENT_RESULT.md",
+        "experiments/M065/PROTOCOL.md",
+        "experiments/M066/FROZEN_PROTOCOL.json",
+        "experiments/M066/PROTOCOL.md",
+        "metamorphosis/m066_canonical_governance.py",
+        "results/artifacts/M066_CANONICAL_RESULT.json"
+      ]
+    },
+    "a844b10dc558a16f2609d204f886d63fd193a9d3": {
+      "subject": "m072: freeze causal governance hypothesis before implementation",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M072/RESULT.json",
+        "experiments/M072/RESULT.md",
+        "experiments/M072/SCENARIO_COMMITMENT.json",
+        "experiments/M072/STATUS.md",
+        "scripts/check_m072_result.py",
+        "tests/test_m072_governance_eval.py"
+      ]
+    },
+    "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosisâ†’synthesisâ†’adoption feat(docker): sandbox isolation Dockerfile",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md"
+      ]
+    },
+    "aa18d15b9a628e2f24fb963efd1d17b6e31cff61": {
+      "subject": "freeze(m092-a): seal the state-owned substrate checkpoint",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M092/PROTOCOL.json",
+        "scripts/check_m092b_protocol.py"
+      ]
+    },
+    "aaf86bb63d6e2d27e9965f5dcc5871c0cd79fd69": {
+      "subject": "docs(m038): freeze the protocol and integrated mechanism",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M038/CANONICAL_ARMED.json",
+        "results/M038.md",
+        "results/artifacts/M038_CANONICAL_RESULT.json",
+        "tests/test_m038_sealed.py"
+      ]
+    },
+    "ae8b4dce2cb737fc51dc0fa3a9ffcae494ef1cdb": {
+      "subject": "M042: allow frozen canonical head checkout",
+      "preserved_by": "provenance/ae8b4dc",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M042/STATUS.md",
+        "results/artifacts/M042_CANONICAL_AUDIT.json",
+        "results/artifacts/M042_CANONICAL_FIRST_RESULT_SEAL.json"
+      ]
+    },
+    "afc14a91560409f5d34bc2818da06218eaad0556": {
+      "subject": "feat: add the M078 opaque-body discoverer and incompatible bank",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M078/RESULT.md",
+        "experiments/M078/STATUS.md"
+      ]
+    },
+    "b1489d7a3a264de8a9e783eb139dafe28732b040": {
+      "subject": "Merge M064 negative qualification and M065 corrected freeze",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M065/CANONICAL_ARMED.json",
+        "experiments/M065/DEVELOPMENT_RESULT.md",
+        "experiments/M066/PROTOCOL.md"
+      ]
+    },
+    "b211826b3d21e4e2b473b4754a6341d352f7cd03": {
+      "subject": "Integrate the portable rewrite lifecycle",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M025/STATUS.md"
+      ]
+    },
+    "b2c00de4ac1bf2f6599bd6824cd361f40f60c6f9": {
+      "subject": "docs: record the M048 development qualification",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M048/PROTOCOL.md"
+      ]
+    },
+    "b3e9abaa4b4274bc8f134c8ab35e2005b29e8c4d": {
+      "subject": "feat: freeze M080 continual retention protocol before the lineage",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M080/RESULT.md",
+        "experiments/M080/STATUS.md"
+      ]
+    },
+    "b403920c4ac2fbf55b83e81b2ac309affef2d9f6": {
+      "subject": "docs: bind M071 fresh external task pair",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M071/EXECUTION_PROTOCOL.json",
+        "experiments/M071/EXECUTION_PROTOCOL.md",
+        "experiments/M071/EXTERNAL_RESULT.json",
+        "experiments/M071/EXTERNAL_RESULT.md"
+      ]
+    },
+    "b5bfdc3e6bf29939296294e77857f40bba2c9c02": {
+      "subject": "chore: initialize canonical repository",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROVENANCE.md"
+      ]
+    },
+    "b7cfd0ecaffe8a05a5e1deb17c542a6f69a67702": {
+      "subject": "m073: preserve model-free holdout observations",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "b8d8088e726fb508ea142853518d098b35e132da": {
+      "subject": "docs(m038): prior art, three ADRs, and a pre-result protocol draft",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M038_TRIGGER_CALIBRATION.md"
+      ]
+    },
+    "baba1f23986f6b0dc65b45ef126dd043baefa9c7": {
+      "subject": "test: preserve the first M084 result",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M084/STATUS.md"
+      ]
+    },
+    "bc17ce151c34eeaa68112269edc0b6ba89fb9afd": {
+      "subject": "M052: exact finite-domain behavioral-equivalence pruning (#71)",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "bc6e73c591cc9e996d5cb22ded71384b57d0c8cc": {
+      "subject": "docs(m040): correct frozen protocol wording",
+      "preserved_by": "main",
+      "cited_in": [
+        "archives/workflows/m040-preserve-first-canonical.yml",
+        "experiments/M040/CANONICAL_ARMED.json",
+        "experiments/M040/STATUS.md",
+        "results/M040_CANONICAL_RESULT.md",
+        "results/artifacts/M040_CANONICAL_RESULT.json"
+      ]
+    },
+    "c3612588343e10ed15347bc7d57470150e4d6966": {
+      "subject": "ci: install torch for full repository tests",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "results/M013b.json"
+      ]
+    },
+    "c603dd52c6484034de3a11a7c3c660335fda14b0": {
+      "subject": "research: execute M069 governed terminal repair",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M069/DEVELOPMENT_RESULT.md",
+        "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.json",
+        "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md",
+        "experiments/M069/STATUS.md"
+      ]
+    },
+    "c60ddc28e3bea8c7c71d615dace4263f5cf3d187": {
+      "subject": "docs(m012b): advance roadmap to sealed evaluation",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "experiments/M012b/STATUS.md",
+        "results/M012b.md",
+        "results/M012b_raw/REPRODUCIBILITY.md",
+        "results/M012b_raw/summary.json"
+      ]
+    },
+    "c75e57cfb23bcaccab98f449bfef0d83fe530ad4": {
+      "subject": "M042: freeze constructive canonical selection",
+      "preserved_by": "provenance/ae8b4dc",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M042/STATUS.md"
+      ]
+    },
+    "c75e9e70a48b382feeacefdca3d5b5e85d390d46": {
+      "subject": "docs(m050): preserve failed qualification and corrective boundary",
+      "preserved_by": "provenance/c75e9e7",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M050/DEVELOPMENT_RESULT.md",
+        "experiments/M050/PROTOCOL.md"
+      ]
+    },
+    "c791ad0b460faebde6625cc986f4b14cdf304ea9": {
+      "subject": "M047: launch integrated development qualification",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M047/DEVELOPMENT_QUALIFICATION.md",
+        "experiments/M047/PROTOCOL.md",
+        "results/M047_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "c8efe6b455ebba9ac42240f2b3787ded99a1732d": {
+      "subject": "ci(m040): apply explicit-indentation pre-freeze hardening v6",
+      "preserved_by": "main",
+      "cited_in": [
+        "results/M040_DEVELOPMENT_003.md"
+      ]
+    },
+    "c9d5749a6d28d3f957c18a862ad4f1303dd502fd": {
+      "subject": "feat(m038): canonical two-speed lineage with causal journal (#53)",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "cd55035119af31824fe5b0b2751c161c2acd3708": {
+      "subject": "feat: freeze G2 multimodal grounding protocol before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M076/RESULT.md",
+        "experiments/M076/STATUS.md"
+      ]
+    },
+    "ce9a25f11de091178a1f7c410b3cd4b5173d485f": {
+      "subject": "test: exercise M072 causal governance harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "cefff2f302eb1019117a8b6450a10d9daab52386": {
+      "subject": "ci: make historical experiments manual-only",
+      "preserved_by": "provenance/ae8b4dc",
+      "cited_in": [
+        "experiments/M042/FROZEN_PROTOCOL.json",
+        "experiments/M042/PROTOCOL_FROZEN.md"
+      ]
+    },
+    "cf7c5fd93662198e0ff7313eb3436da8f0867cf7": {
+      "subject": "M020: align patch target ordering and complete two-edit search",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M020/STATUS.md"
+      ]
+    },
+    "d01ac6c34f15a4885fe4ff4600ee487f135082ae": {
+      "subject": "m073: freeze external teacher execution before calls",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "d2c6308d1bf8747587ccec7457861eff43b04454": {
+      "subject": "M047: integrate modular software lineage",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "d4eb5ed981727fd1343e6e1031494771d9dec220": {
+      "subject": "M063: transfer bounded control synthesis",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M063/DEVELOPMENT_RESULT.md",
+        "experiments/M063/PROTOCOL.md"
+      ]
+    },
+    "d53cc31d011339ec909db5756916eb3dd93cf74f": {
+      "subject": "research(m030): freeze unseen-seed confirmation",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M030/STATUS.md",
+        "results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md"
+      ]
+    },
+    "d5480b77a1a0e9453b1444bb83f7521b3532539d": {
+      "subject": "feat: freeze M079 planning and clarification protocol before planner",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M079/RESULT.md",
+        "experiments/M079/STATUS.md"
+      ]
+    },
+    "d65c12aa1abfc87f9f36f8533d880742b0f90a87": {
+      "subject": "chore(m039): freeze the tested three-cycle protocol and mechanism",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M039/CANONICAL_ARMED.json",
+        "results/M039.md",
+        "results/artifacts/M039_CANONICAL_RESULT.json"
+      ]
+    },
+    "d68dfd3200e1f0d79e5f1f2b7c5f173b01dcb1fa": {
+      "subject": "feat: add the M080 shared-table lineage and matched ablations",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M080/RESULT.md",
+        "experiments/M080/STATUS.md"
+      ]
+    },
+    "db609a0355bd602e8ff9640a718c228a36e381a5": {
+      "subject": "protocol: freeze M087 before any qualification data exists",
+      "preserved_by": "main",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M087/RESULT.md"
+      ]
+    },
+    "dd74e17531e9845556bd9877c16cdbfb3a2b34ff": {
+      "subject": "test: lock M072 preregistration invariants",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "dd79665cba36e322fbc8921ac89186cafc093f13": {
+      "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
+      "preserved_by": "provenance/2dc997b",
+      "cited_in": [
+        "CHANGELOG.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/DESIGN_AUDIT.md",
+        "tests/test_repository_integrity.py"
+      ]
+    },
+    "de85e31b95520d0ff90e451d192d106cf56589a8": {
+      "subject": "docs: freeze M071 before external task selection",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M071/EXECUTION_PROTOCOL.json",
+        "experiments/M071/SELECTION_PROTOCOL.json",
+        "experiments/M071/SELECTION_PROTOCOL.md",
+        "tests/test_m071_external_task_selection.py"
+      ]
+    },
+    "de93ab7cf1533ec44617f58cd45daca3bbbf0700": {
+      "subject": "docs: explain frozen M072 causal governance protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M072/STATUS.md"
+      ]
+    },
+    "df88d24851c018836a35e8102ff0aa7dbf81167c": {
+      "subject": "Merge pull request #170 from mjodheim/agent/hati/m093-post-audit",
+      "preserved_by": "main",
+      "cited_in": [
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/DESIGN_AUDIT.md",
+        "experiments/M094/PROTOCOL.json"
+      ]
+    },
+    "dfccb44399e7fd18aff710db0437ab63a8f01d58": {
+      "subject": "M051: bounded variable-length primitive composition",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml"
+      ]
+    },
+    "e1367c6d7cbe99d59cc79321d1427024de0fc551": {
+      "subject": "test: commit M075 public model development protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "e309169b4edf8a508ec60990e68ba079fd032f2c": {
+      "subject": "docs(m013e): record M013d development failure",
+      "preserved_by": "provenance/26c8671",
+      "cited_in": [
+        "experiments/M013e/STATUS.md",
+        "results/M013e.md",
+        "results/M013e_raw/REPRODUCIBILITY.md",
+        "results/M013e_raw/summary.json"
+      ]
+    },
+    "e68b85ea43653fdeeb5ada4847a7a57f235eefc7": {
+      "subject": "Merge pull request #139 from mjodheim/research/m091-endogenous-meta-language-extension",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M092/DESIGN_AUDIT.md"
+      ]
+    },
+    "eaacf8e66b866c2d777d2caa0fe80c8a7617363f": {
+      "subject": "m073: bind holdouts after capsule boundary",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M073/STATUS.md"
+      ]
+    },
+    "ead1f464bcb4fdc584ce45cff0f1cb45965e4793": {
+      "subject": "feat: add M075 public model comparison runner",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json",
+        "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "ec92af78b57203d32c2ee504db91b4166ec83fdf": {
+      "subject": "M064: freeze whole-WebAssembly completion protocol",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M064/DEVELOPMENT_RESULT.md",
+        "experiments/M064/PROTOCOL.md",
+        "experiments/M065/FROZEN_PROTOCOL.json",
+        "experiments/M065/PROTOCOL.md",
+        "metamorphosis/m065_qualified_completion.py",
+        "results/artifacts/M066_CANONICAL_RESULT.json",
+        "tests/test_m065_qualified_completion.py"
+      ]
+    },
+    "ecb297c48ba5d613bfa570ec522c74967a33fc1c": {
+      "subject": "feat: freeze M084 integrated persistent embodiment protocol before harness",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M084/RESULT.md",
+        "experiments/M084/STATUS.md"
+      ]
+    },
+    "f033ac70628e79550e6263ac2bb60a6769bca42e": {
+      "subject": "feat: induce opaque command languages in M068",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "ROADMAP.md",
+        "experiments/M068/DEVELOPMENT_RESULT.md",
+        "experiments/M068/STATUS.md"
+      ]
+    },
+    "f19af864431692abd90851bdef1c7631a5246cbf": {
+      "subject": "feat: add the M084 persistent lineage and record amendments A1-A3",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M084/RESULT.md",
+        "experiments/M084/STATUS.md"
+      ]
+    },
+    "f336d7128377aa7f7d866f5e3c190989c79b0570": {
+      "subject": "test: bind blind M070 external task pair",
+      "preserved_by": "main",
+      "cited_in": [
+        "experiments/M070/EXECUTION_PROTOCOL.json"
+      ]
+    },
+    "f516bc7c5debdfd02e5b284a6e9567e4ce4c89af": {
+      "subject": "fix(m094): remove the constant that was deciding, and withdraw what it decided",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "experiments/M094/PROTOCOL.json"
+      ]
+    },
+    "f5cfe35c265cf83640fddc2ae80e54805776f84f": {
+      "subject": "M062: synthesize bounded control arrangement",
+      "preserved_by": "main",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "experiments/M062/DEVELOPMENT_RESULT.md",
+        "experiments/M062/PROTOCOL.md"
+      ]
+    },
+    "f8a7dc4529167c4f6e11ce13e5dbceaba76227fc": {
+      "subject": "feat: freeze M078 incompatible-body refusal protocol before discoverer",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M078/RESULT.md",
+        "experiments/M078/STATUS.md"
+      ]
+    },
+    "f8ab24931197c2d9a82c986871984c5a2e3ab1ff": {
+      "subject": "protocol: freeze M089 before any qualification data exists",
+      "preserved_by": "main",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M089/RESULT.md"
+      ]
+    },
+    "f8c67f1853743e473785d92bed5195c5621e8943": {
+      "subject": "research: freeze M068 target command languages",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "experiments/M068/DEVELOPMENT_RESULT.md",
+        "experiments/M068/STATUS.md",
+        "metamorphosis/m068_open_command_induction.py"
+      ]
+    },
+    "fa5d8962bce1659831f98938a194a226883d347c": {
+      "subject": "test: freeze M071 fresh task selection rule",
+      "preserved_by": "main",
+      "cited_in": [
+        "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
+        "PROJECT_STATE.yaml",
+        "README.md",
+        "experiments/M071/EXECUTION_PROTOCOL.json",
+        "experiments/M071/EXTERNAL_RESULT.md",
+        "experiments/M071/TASK_SELECTION.json",
+        "experiments/M071/TASK_SELECTION.md",
+        "tests/test_m071_external_task_selection.py"
+      ]
+    },
+    "fc460059650f747e866c08e55844b236b9c3aabf": {
+      "subject": "ci(m014c): scope the development workflow and record the freeze risk",
+      "preserved_by": "provenance/fc46005",
+      "cited_in": [
+        "FAILURE_LOG.md"
+      ]
+    },
+    "ff30ff1f71a11b0d2e09c8c3ab15e082725a33e6": {
+      "subject": "docs(m051): define bounded variable-length protocol",
+      "preserved_by": "provenance/ff30ff1",
+      "cited_in": [
+        "PROJECT_STATE.yaml",
+        "experiments/M051/DEVELOPMENT_RESULT.md",
+        "experiments/M051/PROTOCOL.md"
+      ]
+    },
+    "ffe508620131885762f94415a969fd582cb6cc1b": {
+      "subject": "protocol: freeze M090 before qualification",
+      "preserved_by": "main",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "ROADMAP.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M090/RESULT.md"
+      ]
+    }
+  }
+}
