@@ -107,9 +107,14 @@ def test_the_diagnosis_selects_the_first_target(executed: Chain) -> None:
 
 
 def test_the_diagnosis_selects_the_second_target_itself(executed: Chain) -> None:
-    """Nothing between the two repairs is human. This is the sequential-autonomy claim."""
+    """Nothing between the two repairs is human. This is the sequential-autonomy claim.
 
-    assert executed.selected_second == f"Sample/{NESTED}"
+    The selection is now every capability the measure ranks equal first, not the one whose name
+    sorts earliest, so it names both.
+    """
+
+    assert NESTED in executed.selected_second
+    assert "render_value_object_as_mapping" in executed.selected_second
 
 
 # ── 3. B is reachable from S1, through what A built ───────────────────
@@ -305,19 +310,19 @@ def test_a_nested_case_is_built_as_an_object_not_a_string(tmp_path: Path) -> Non
         assert case["reading"][NESTED_MARKER] == "Reading"
 
 
-def test_the_second_target_is_chosen_by_a_name_when_two_capabilities_tie(
+def test_the_capability_tie_is_real_and_no_longer_decides_anything(
     executed: Chain,
 ) -> None:
-    """A disclosed defect, pinned so it cannot be forgotten. See DESIGN.md.
+    """A4's rule, at the capability level.
 
-    At S1 two capabilities on `Sample` tie at demand 2, and the one repaired is decided by
-    alphabetical order on the capability name — `render_nested_...` sorts before
-    `render_value_...`. Had it gone the other way the lineage would have repaired the plain
-    renderer and no enabling would have been demonstrated. A4 removed exactly this defect at
-    the class level; it survives at the capability level.
+    At S1 two capabilities on `Sample` tie at demand 2, and the ordering between them is still
+    alphabetical on the capability name — `render_nested_…` sorts before `render_value_…`. That
+    used to decide which one was repaired, so had the tie fallen the other way the lineage
+    would have repaired the plain renderer and no enabling would have been demonstrated.
 
-    This test asserts the tie is real, so that a future fix has to confront it rather than
-    inherit it silently.
+    The tie is unchanged and the ordering is unchanged. What changed is that both are repaired,
+    so nothing rests on which name sorts first. The first half of this test keeps the tie
+    honest; the second keeps the remedy honest.
     """
 
     import tempfile
@@ -326,6 +331,41 @@ def test_the_second_target_is_chosen_by_a_name_when_two_capabilities_tie(
     build(root)
     chain.adopt(root, chain.search(root, measure(root).unmet[0], label="A"))
     unmet = measure(root).unmet
+
     assert len(unmet) >= 2
     assert unmet[0].demand == unmet[1].demand, "the tie this test exists for has gone"
     assert [i.capability for i in unmet[:2]] == sorted(i.capability for i in unmet[:2])
+
+    # And every one of them is repaired, so the ordering decides nothing.
+    assert len(executed.second_step) == 2
+    assert executed.every_tied_capability_repaired is True
+
+
+def test_two_repairs_on_one_class_do_not_collide_on_a_name(executed: Chain) -> None:
+    """The obstacle that made A4's remedy hard here.
+
+    Both repairs land on `Sample`, and the method-name candidates are a short shared list. A
+    second method of the same name shadows the first, which would silently undo the earlier
+    repair. A name the class already defines is therefore not available.
+    """
+
+    names = [
+        item.adopted_method.split("(")[0].removeprefix("def ").strip()
+        for item in executed.second_step
+    ]
+    assert len(names) == len(set(names)), f"two repairs share a name: {names}"
+
+
+def test_nothing_is_left_unmet_after_the_chain(executed: Chain, tmp_path: Path) -> None:
+    """The strongest statement available: the lineage repaired everything it measured.
+
+    Re-run rather than trusted, because a chain that stopped early and a chain that finished
+    look the same from the outside.
+    """
+
+    import tempfile
+
+    root = Path(tempfile.mkdtemp(prefix="m095-done-"))
+    counterfactual = Path(tempfile.mkdtemp(prefix="m095-done-cf-"))
+    chain.run(root, counterfactual)
+    assert [i.target for i in measure(root).unmet] == []

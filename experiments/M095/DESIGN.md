@@ -136,14 +136,20 @@ So neither suffices alone:
 **A is necessary; the operation is the vehicle.** That is a smaller and more accurate statement
 than "A enabled B", and it is the one the evidence supports.
 
-## The blocker before any freeze
+## The selection blocker, settled
 
-`DESIGN_AUDIT.md` found four defects. Three were in the instrument and are repaired. The fourth is
-in the *selection* and is **disclosed and unrepaired**: at S1 two capabilities on `Sample` tie at
-demand 2, and the one repaired is decided by alphabetical order on the capability name. Had the tie
-fallen the other way, the lineage would have repaired the plain renderer and **no enabling would
-have been demonstrated**.
+`DESIGN_AUDIT.md` found four defects and all four are repaired. The last was the one that mattered
+most: at S1 two capabilities on `Sample` tie at demand 2, and the one repaired was decided by
+alphabetical order on the capability name. Had the tie fallen the other way, the lineage would have
+repaired the plain renderer and **no enabling would have been demonstrated**.
 
-This is amendment A4's defect at the capability level. Settling it is the first thing an M095
-protocol needs, ahead of the arms, the pool and the checker — because it is the one that would make
-a positive result depend on an accident rather than on a measurement.
+Amendment A4's rule applies at the capability level as it does at the class level: every capability
+the measure ranks equal first is repaired. At S1 the lineage now repairs both — `as_mapping` for the
+nested requirement, `as_dict` for the plain one — and **nothing is left unmet at S2**. The tie and
+the ordering are unchanged; neither is load-bearing.
+
+A name the class already defines is no longer available, which is what makes two repairs on one
+class safe: without it the second would have been called `as_mapping` and shadowed the first.
+
+What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
+qualification pool drawn from outside this world, and a checker that recomputes rather than reads.

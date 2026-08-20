@@ -114,10 +114,22 @@ class Operation:
 
 @dataclass(frozen=True)
 class NameMethod(Operation):
+    """Give the method under construction a name.
+
+    `taken` is the set of public method names the class already defines. A name already in use
+    is not available: appending a second method of the same name shadows the first, so a
+    lineage repairing two capabilities on one class would silently undo its earlier repair.
+    Read from the class rather than tracked, so it is a property of the state like every other
+    applicability question here.
+    """
+
     identifier: str
+    taken: frozenset[str] = frozenset()
 
     def apply(self, draft: MethodDraft) -> MethodDraft | None:
         if draft.name is not None:
+            return None
+        if self.identifier in self.taken:
             return None
         return replace(draft, name=self.identifier)
 
@@ -337,6 +349,7 @@ def operations_for(
     fields: Sequence[str],
     detail: str,
     collections: Sequence[str] = (),
+    taken: frozenset[str] = frozenset(),
 ) -> tuple[Operation, ...]:
     """Every operation available for this insufficiency.
 
@@ -344,9 +357,15 @@ def operations_for(
     decides what the method returns at all; `NameMethod` only names it. A method
     exists once some sequence of them has supplied a name, a return shape, and
     whatever that shape needs.
+
+    `taken` names the public methods the class already defines, so a repair cannot be given a
+    name that would shadow an earlier one. Empty by default, which is the state M094 measured
+    in: neither of its targets defined a public method, so its adopted mechanism is unchanged.
     """
 
-    operations: list[Operation] = [NameMethod(n) for n in _name_candidates(capability, detail)]
+    operations: list[Operation] = [
+        NameMethod(n, taken) for n in _name_candidates(capability, detail)
+    ]
     operations.append(ReturnShape("mapping"))
     operations.append(ReturnShape("filter"))
 

@@ -2,8 +2,9 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it, and it found four defects — three now repaired, one
-disclosed and unrepaired.
+mechanism rather than confirming it. It found four defects, all now repaired — three in the
+instrument, one in the selection, and the selection one only after being stopped at and settled
+deliberately rather than patched in passing.
 
 The attack that mattered most was not clever. It was: *which of M094's lessons has M095 already
 forgotten?* Two of the four are regressions of amendments this project paid for one milestone ago.
@@ -54,7 +55,23 @@ subprocess behind a JSON payload, the object travels as a construction recipe an
 identically on both sides, so the parent verifies exactly what the child builds. Pinned by
 `test_a_nested_case_is_built_as_an_object_not_a_string`.
 
-## Defect 4 — the second target is chosen by a name — **NOT REPAIRED, disclosed**
+## Defect 4 — the second target is chosen by a name — **REPAIRED**
+
+> **Resolved.** Every capability the measure ranks equal first is now repaired, so the ordering
+> decides nothing. At S1 the lineage repairs both of `Sample`'s tied capabilities —
+> `as_mapping` for the nested requirement and `as_dict` for the plain one — and **nothing is
+> left unmet at S2**. The tie and the alphabetical ordering are unchanged and still asserted by
+> a test; what changed is that neither is load-bearing.
+>
+> The obstacle that made this hard is gone too. Both repairs land on the same class, and the
+> method-name candidates are a short shared list, so the second was liable to be called
+> `as_mapping` and shadow the first — silently undoing the earlier repair. A name the class
+> already defines is now unavailable, read from the class rather than tracked, which is the same
+> style of state-dependent applicability the milestone already rests on. M094's adopted
+> mechanism is unchanged at `259e12f5…`: neither of its targets defined a public method, so the
+> set of available names it saw is the same one.
+
+The finding as originally written follows.
 
 At S1 two capabilities on `Sample` tie at demand 2:
 
@@ -79,10 +96,11 @@ from a small candidate set, so both are liable to be called `as_mapping` and the
 shadow the first. Getting that right is a design decision about multi-capability repair, not a
 patch, and rushing it is how the three defects above got written in the first place.
 
-Pinned by `test_the_second_target_is_chosen_by_a_name_when_two_capabilities_tie`, which asserts
-the tie is real so a future fix must confront it rather than inherit it silently.
+Pinned by `test_the_capability_tie_is_real_and_no_longer_decides_anything`, which keeps the tie
+honest and the remedy honest at once: the tie and its alphabetical ordering are still asserted, and
+so is the fact that both capabilities get repaired.
 
-**This is the first thing to settle before an M095 protocol is frozen.**
+**This was the first thing to settle before an M095 protocol could be frozen. It is settled.**
 
 ## What the chain measures after the repairs
 
@@ -106,6 +124,11 @@ produces neither.
 ## The honest summary
 
 Three of four defects were in the *instrument*, and all three would have made a qualification
-report a false refutation. One is in the *selection*, and it is the one that would make a positive
-result depend on an accident. That asymmetry is worth stating: the instrument defects cost a run;
-the selection defect costs the claim.
+report a false refutation. The fourth was in the *selection*, and it was the one that would have
+made a positive result depend on an accident. That asymmetry is worth keeping in view: an
+instrument defect costs a run, a selection defect costs the claim — which is why the selection one
+was stopped at and settled deliberately rather than patched in passing.
+
+All four are now repaired. What remains before a protocol is the ordinary apparatus — a
+random-target arm, a more-budget arm, a qualification pool drawn from outside this world with
+every hidden case verified by construction, and a checker that recomputes rather than reads.

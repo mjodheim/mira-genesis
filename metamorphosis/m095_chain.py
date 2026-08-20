@@ -188,10 +188,16 @@ def search(root: Path, target: Insufficiency, *, label: str,
         # exactly like an arm that failed for the reason it was built to test.
         attempt.notes["nested_operations_withheld"] = True
 
+    taken = frozenset(
+        item.name for item in node.body
+        if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+        and not item.name.startswith("_")
+    )
     operations = tuple(composition.operations_for(
         "render_value_object_as_mapping",
         _declared_field_names(node), target.detail,
         sorted(_exposed_collection_names(node)),
+        taken,
     )) + tuple(nested_ops)
 
     def accepts(modified: str) -> bool:
@@ -307,8 +313,17 @@ class Chain:
     counterfactual: Attempt | None = None
     #: S1 with the nested operation withheld. Separates "A enabled B" from "the operation did".
     without_operation: Attempt | None = None
+    #: Every repair made at S1 — one per capability the measure ranked equal first. `step_b` is
+    #: the nested one, kept named because it is the one the enabling claim is about.
+    second_step: list[Attempt] = field(default_factory=list)
     selected_first: str = ""
     selected_second: str = ""
+
+    @property
+    def every_tied_capability_repaired(self) -> bool:
+        """Nothing at S1 was left to a name-based tie-break."""
+
+        return bool(self.second_step) and all(item.reached for item in self.second_step)
 
     @property
     def enabling_demonstrated(self) -> bool:
@@ -343,6 +358,8 @@ class Chain:
             ),
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
+            "second_step_repairs": [item.to_dict() for item in self.second_step],
+            "every_tied_capability_was_repaired": self.every_tied_capability_repaired,
             "second_target_was_not_supplied": True,
             "enabling_demonstrated": self.enabling_demonstrated,
         }
@@ -373,17 +390,30 @@ def run(root: Path, counterfactual_root: Path) -> Chain:
         adopt(root, chain.step_a)
 
     s1 = measure(root)
-    if s1.unmet:
-        second = s1.unmet[0]
-        chain.selected_second = f"{second.target}/{second.capability}"
-        # Asked at S1, before B is adopted: with A in place but the nested operation withheld,
-        # is B reachable? A "yes" would mean A was never what enabled it.
+    tied = s1.tied_selection()
+    if tied:
+        chain.selected_second = ", ".join(f"{i.target}/{i.capability}" for i in tied)
+        nested_target = next((i for i in tied if i.capability == NESTED), tied[0])
+
+        # Asked at S1, before anything is adopted: with A in place but the nested operation
+        # withheld, is the nested repair reachable? A "yes" would mean A was never what
+        # enabled it.
         chain.without_operation = search(
-            root, second, label="B from S1, operation withheld", withhold_nested=True,
+            root, nested_target, label="B from S1, operation withheld", withhold_nested=True,
         )
-        chain.step_b = search(root, second, label="B from S1")
-        if chain.step_b.reached:
-            adopt(root, chain.step_b)
+
+        # Amendment A4's rule, at the capability level. Two capabilities on `Sample` tie at
+        # demand 2, and taking the first would be taking the one whose name sorts earliest --
+        # and had that gone the other way, no enabling would have been demonstrated. Every
+        # tied insufficiency is repaired, so nothing rests on the ordering.
+        for target in tied:
+            label = "B from S1" if target is nested_target else f"S1 tied: {target.capability}"
+            attempt = search(root, target, label=label)
+            chain.second_step.append(attempt)
+            if attempt.reached:
+                adopt(root, attempt)
+            if target is nested_target:
+                chain.step_b = attempt
 
     # And the same question again, in a world where A never happened.
     target = next(
