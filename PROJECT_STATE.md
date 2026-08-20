@@ -1093,11 +1093,14 @@ question remains open but is not a missing completion gate.
   **A design audit run before any protocol found four defects** (`experiments/M095/DESIGN_AUDIT.md`).
   Three were in the instrument and are repaired, two of them regressions of M094 amendments: the
   search had stopped executing candidates (A2), and the nested requirement did not record what the
-  call sites wrote, so the probe refused every correct candidate. The fourth is **disclosed and
-  unrepaired**: at S1 two capabilities tie on demand and the one repaired is chosen by alphabetical
-  order on the capability name — A4's defect at the capability level. Had the tie fallen the other
-  way, no enabling would have been demonstrated. **Settling it is the blocker before any M095
-  freeze.** No hypothesis is registered, no protocol is frozen, no qualification pool exists.
+  call sites wrote, so the probe refused every correct candidate. The fourth was in the *selection*
+  and is now repaired too: at S1 two capabilities tie on demand and the one repaired was chosen by
+  alphabetical order on the capability name — A4's defect at the capability level, and the one that
+  would have made a positive result depend on an accident. **Every capability the measure ranks
+  equal first is now repaired**, so the ordering decides nothing and nothing is left unmet at S2.
+  What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
+  qualification pool drawn from outside this world, and a checker that recomputes. No hypothesis is
+  registered, no protocol is frozen, no qualification pool exists.
   See `experiments/M095/DESIGN.md`.
 
 ## Parallel measurement track — M045
