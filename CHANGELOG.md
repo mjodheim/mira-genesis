@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+- **Sixteen commits cited by SHA in the registers were reachable from no ref at all.** Among them
+  M042's frozen protocol, the M050-M052 development results, the M012/M013e status records and
+  M094's own freeze commit `dd79665`. They resolved only because one clone had not yet garbage-
+  collected them; routine branch cleanup would have made those citations unresolvable while
+  leaving the record looking intact. All sixteen are now preserved as annotated `provenance/<sha>`
+  tags pushed to the remote, and every tip that was not merged into `main` as a `branch/<slug>`
+  tag. `docs/COMMIT_CITATIONS.json` records all 189 cited commits with the ref that preserves each,
+  and `scripts/check_repository_integrity.py --citations` fails if any citation stops resolving or
+  if a new one is added without a preserving ref. A shallow clone is reported as unanswerable
+  rather than passing.
+- **A failure record for eight frozen milestones existed on no branch reachable from `main`.** The
+  account of why every independent checker from M077 through M083 failed on a fresh Windows
+  checkout was written on 2026-08-11 on a side-car branch. The repair travelled to `main` as a
+  one-line `.gitattributes` commit (`531a447`); the explanation did not, and the branch was never
+  merged. It is now in `FAILURE_LOG.md`, with its contemporaneous text unaltered and the range
+  discrepancy in its own source recorded rather than quietly resolved. Its successor-facing
+  warning matters beyond that incident: `git add --renormalize .`, the obvious repair, would have
+  staged CRLF bytes as new blob content and rewritten every frozen digest in exactly the direction
+  the fix exists to prevent.
+- **`experiments/M086/DISQUALIFICATION.md` stated that the repair "has never been merged".** True
+  when committed at 09:33 on 2026-08-12, false seven hours later. The sentence is preserved as
+  written and corrected in place beneath, because it is a claim about repository history and not
+  about M086-A's disqualification, which is unchanged.
+- Deleted the branches whose work `main` already carries, after establishing per branch — by
+  patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
+
 - **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
   whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
   the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds
