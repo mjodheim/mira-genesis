@@ -97,6 +97,67 @@ def _scalar(annotation: str, field: str, index: int, seed: str) -> Any:
     return None  # a string field: the shape ladder decides
 
 
+#: A case field that is itself a value object travels as a recipe rather than an object,
+#: because the probe runs in a subprocess and the payload is JSON. Both sides materialise it
+#: with `materialise`, so the parent verifies exactly what the child constructs.
+NESTED_MARKER = "__m094_construct__"
+
+
+def materialise(fields: Mapping[str, Any], module: Any) -> dict[str, Any]:
+    """Turn any construction recipes in *fields* into real objects."""
+
+    built: dict[str, Any] = {}
+    for name, value in fields.items():
+        if isinstance(value, dict) and NESTED_MARKER in value:
+            cls = getattr(module, value[NESTED_MARKER])
+            built[name] = cls(**value["arguments"])
+        else:
+            built[name] = value
+    return built
+
+
+def _class_names(source: str) -> set[str]:
+    """Every class the module defines, so a nested annotation can be recognised."""
+
+    return {
+        node.name for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.ClassDef)
+    }
+
+
+def _build_nested(module, class_name, annotations, siblings, source, index, seed, shapes):
+    """Construct a value object to fill a field annotated as one.
+
+    One level: a field whose own field is another value object is left to the string ladder,
+    which will fail loudly rather than silently produce something that raises deeper in.
+    """
+
+    inner = getattr(module, class_name, None)
+    if inner is None:
+        return None
+    inner_annotations = _annotations(source, class_name)
+    try:
+        signature = inspect.signature(inner)
+    except (TypeError, ValueError):
+        return None
+    arguments: dict[str, Any] = {}
+    for name, parameter in signature.parameters.items():
+        if parameter.default is not inspect.Parameter.empty:
+            continue
+        annotation = inner_annotations.get(name, "str").strip()
+        if annotation in siblings:
+            return None  # deeper nesting: not this function's business
+        value = _scalar(annotation, f"{class_name}.{name}", index, seed)
+        if value is None:
+            value = _string(STRING_SHAPES[shapes.get(name, 0)], f"{class_name}.{name}", index, seed)
+        arguments[name] = value
+    try:
+        inner(**arguments)  # verified here; transported as a recipe
+    except Exception:  # noqa: BLE001 - an unbuildable inner object yields no case
+        return None
+    return {NESTED_MARKER: class_name, "arguments": arguments}
+
+
 def _string(shape: str, field: str, index: int, seed: str) -> str:
     stem = hashlib.sha256(f"{seed}|{field}|{index}".encode("ascii")).hexdigest()
     return shape.format(token=f"{field}-{stem[:8]}", digest=stem[:64].ljust(64, "0"))
@@ -122,6 +183,12 @@ def constructible_cases(
     module_name = component_path.replace("/", ".").removesuffix(".py")
     source = (root / component_path).read_text(encoding="utf-8")
     annotations = _annotations(source, class_name)
+    # Classes the same module defines, so a field annotated as one of them can be built rather
+    # than filled with a string. Without this, a value object nested inside another is
+    # constructed as text and every method that reaches into it raises -- so a correct repair
+    # is refused and the entry reads as a refutation. The same shape of defect as the
+    # qualification pool's unbuildable cases, one level down.
+    sibling_classes = _class_names(source)
 
     # The module must be imported from *this* root, not served from a previous import of the
     # same dotted name. Without the purge a second component sharing a package name is
@@ -146,6 +213,8 @@ def constructible_cases(
             if name.split(".")[0] == package:
                 del sys.modules[name]
         sys.modules.update(stale)
+    # `module` is kept alive deliberately: nested construction needs the classes it defines,
+    # and re-importing per field would undo the purge above.
 
     wanted = [
         name for name, parameter in signature.parameters.items()
@@ -191,12 +260,25 @@ def constructible_cases(
         for index in range(count * CASE_OVERDRAW):
             fields: dict[str, Any] = {}
             for name in wanted:
-                value = _scalar(annotations.get(name, "str"), name, index, seed)
+                annotation = annotations.get(name, "str").strip()
+                if annotation in sibling_classes:
+                    built = _build_nested(
+                        module, annotation, annotations, sibling_classes,
+                        source, index, seed, shapes,
+                    )
+                    if built is None:
+                        fields = {}
+                        break
+                    fields[name] = built
+                    continue
+                value = _scalar(annotation, name, index, seed)
                 if value is None:
                     value = _string(STRING_SHAPES[shapes.get(name, 0)], name, index, seed)
                 fields[name] = value
+            if not fields and wanted:
+                continue
             try:
-                instance = cls(**fields)
+                instance = cls(**materialise(fields, module))
                 for _key, field, _wrapper in requirement:
                     getattr(instance, field)
             except Exception:  # noqa: BLE001 - not a case; try the next draw
@@ -266,11 +348,35 @@ def wrap(value, wrapper):
         return list(value)
     if wrapper == "tuple":
         return tuple(value)
+    if isinstance(wrapper, str) and wrapper.startswith("nested:"):
+        # M095. The call site wrote a mapping over the inner object's fields, so that mapping
+        # is what a correct candidate must produce -- not the object. The pairs travel in the
+        # wrapper, so nothing has to discover a renderer to know the expected value. An audit
+        # found this wrapper empty, and the probe refusing every correct candidate because it
+        # compared a mapping against a value object.
+        expected = {}
+        for piece in wrapper[len("nested:"):].split(";"):
+            if not piece:
+                continue
+            key, _, field = piece.partition(":")
+            expected[key] = getattr(value, field)
+        return expected
     return value
 
 requirement = [tuple(item) for item in payload["requirement"]]
 cases = payload["cases"]
+marker = payload["nested_marker"]
 results = []
+
+
+def materialise(fields, module):
+    built = {}
+    for name, value in fields.items():
+        if isinstance(value, dict) and marker in value:
+            built[name] = getattr(module, value[marker])(**value["arguments"])
+        else:
+            built[name] = value
+    return built
 
 for variant in payload["variants"]:
     record = {"id": variant["id"], "imported": False, "cases_total": len(cases),
@@ -288,7 +394,7 @@ for variant in payload["variants"]:
         constructible = 0
         for case in cases:
             try:
-                cls(**case)
+                cls(**materialise(case, module))
                 constructible += 1
             except Exception:
                 pass
@@ -303,7 +409,7 @@ for variant in payload["variants"]:
             satisfied = 0
             for case in cases:
                 try:
-                    instance = cls(**case)
+                    instance = cls(**materialise(case, module))
                 except Exception:
                     continue
                 try:
@@ -387,6 +493,7 @@ def probe_variants(
             "class": class_name,
             "requirement": [list(item) for item in requirement],
             "cases": [dict(case) for case in cases],
+            "nested_marker": NESTED_MARKER,
             "variants": [{"id": name, "source": source} for name, source in variants],
         }, sort_keys=True)
 

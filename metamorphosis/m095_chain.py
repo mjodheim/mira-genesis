@@ -31,6 +31,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from metamorphosis import m094_composition as composition
+from metamorphosis import m094_execution as execution
 from metamorphosis import m095_reach as reach
 from metamorphosis import m095_world as world
 from metamorphosis.m094_diagnosis import (
@@ -89,6 +90,8 @@ class Attempt:
     adopted_source: str | None = None
     nested_offered: tuple[str, ...] = ()
     nested_unreachable: tuple[str, ...] = ()
+    executed: int = 0
+    confirmed: int = 0
     notes: dict[str, object] = field(default_factory=dict)
 
     @property
@@ -103,6 +106,8 @@ class Attempt:
             "requirement": [list(item) for item in decode_rendering(self.requirement)],
             "examined": self.examined,
             "survivors": self.survivors,
+            "executed": self.executed,
+            "confirmed_by_execution": self.confirmed,
             "reached": self.reached,
             "adopted_method": self.adopted_method,
             "nested_operations_offered": list(self.nested_offered),
@@ -197,6 +202,33 @@ def search(root: Path, target: Insufficiency, *, label: str,
         found = _find_class_node(candidate, target.target)
         return found is not None and shape.is_supplied_by(found, target.target, target.detail)
 
+    def confirms(ordered: list[tuple[str, str]]) -> list[tuple[str, str]]:
+        """Run the survivors. M094's amendment A2, which this search had quietly dropped.
+
+        The structural predicate says a candidate *reads* correctly. A2 established that it
+        must also *behave* correctly, on values the class accepts, in a fresh interpreter that
+        is never told which method should work -- and an audit of this module found it had
+        gone back to reading. A repair that satisfies the shape and raises when executed is
+        exactly what M094's qualification refuted.
+        """
+
+        cases = execution.constructible_cases(
+            root, world.COMPONENT, target.target, decode_rendering(target.detail),
+        )
+        if not cases:
+            return []
+        window = ordered[: execution.MAX_CONFIRMATIONS]
+        records = execution.probe_variants(
+            root, world.COMPONENT,
+            [(str(index), modified) for index, (_method, modified) in enumerate(window)],
+            target.target, decode_rendering(target.detail), cases,
+        )
+        by_id = {record["id"]: record for record in records}
+        return [
+            pair for index, pair in enumerate(window)
+            if execution.agrees(by_id.get(str(index), {}))
+        ]
+
     bound = max_length or composition.MAX_COMPOSITION_LENGTH
     survivors: list[tuple[str, str]] = []
     for chain in composition._compositions(operations, bound):
@@ -225,8 +257,15 @@ def search(root: Path, target: Insufficiency, *, label: str,
         attempt.notes["stopped"] = "no composition reached the requirement"
         return attempt
 
-    # Content address orders them, as M094's search does.
-    method, modified = min(survivors, key=lambda pair: _digest({"m": pair[0]}))
+    # Content address orders them, as M094's search does; execution decides among them.
+    ordered = sorted(survivors, key=lambda pair: _digest({"m": pair[0]}))
+    confirmed = confirms(ordered)
+    attempt.executed = min(len(ordered), execution.MAX_CONFIRMATIONS)
+    attempt.confirmed = len(confirmed)
+    if not confirmed:
+        attempt.notes["stopped"] = "no survivor reproduced the requirement when executed"
+        return attempt
+    method, modified = confirmed[0]
     attempt.adopted_method = method
     attempt.adopted_source = modified
     return attempt

@@ -196,7 +196,7 @@ def _attribute_chain(node: ast.expr) -> tuple[str, str] | None:
     return None
 
 
-def nested_bindings(node: ast.expr) -> dict[str, str]:
+def nested_bindings(node: ast.expr) -> dict[str, tuple[str, tuple[tuple[str, str], ...]]]:
     """Keys of a dict literal whose value is itself a rendering of one nested field.
 
     `{"reading": {"reading_id": s.reading.reading_id, "unit": s.reading.unit}}` gives
@@ -211,18 +211,28 @@ def nested_bindings(node: ast.expr) -> dict[str, str]:
     if not isinstance(node, ast.Dict):
         return {}
 
-    found: dict[str, str] = {}
+    found: dict[str, tuple[str, tuple[tuple[str, str], ...]]] = {}
     for key, value in zip(node.keys, node.values):
         if not (isinstance(key, ast.Constant) and isinstance(key.value, str)):
             continue
         if not isinstance(value, ast.Dict) or not value.values:
             continue
-        fields = {_attribute_chain(item) for item in value.values}
-        if None in fields:
+        chains = [_attribute_chain(item) for item in value.values]
+        if None in chains:
             continue
-        sources = {pair[0] for pair in fields if pair}
-        if len(sources) == 1:
-            found[key.value] = sources.pop()
+        sources = {pair[0] for pair in chains if pair}
+        if len(sources) != 1:
+            continue
+        inner_keys = [
+            item.value for item in value.keys
+            if isinstance(item, ast.Constant) and isinstance(item.value, str)
+        ]
+        if len(inner_keys) != len(chains):
+            continue
+        inner = tuple(sorted(
+            (inner_key, chain[1]) for inner_key, chain in zip(inner_keys, chains) if chain
+        ))
+        found[key.value] = (sources.pop(), inner)
     return found
 
 
@@ -259,9 +269,9 @@ class RenderNestedValueObject:
         }
         sites: list[tuple[str, str]] = []
         for node in ast.walk(tree):
-            for key, field in nested_bindings(node).items():
+            for key, (field, inner) in nested_bindings(node).items():
                 if field in declared:
-                    sites.append((class_node.name, _encode_one(key, field)))
+                    sites.append((class_node.name, encode_nested(key, field, inner)))
         return sites
 
     def is_supplied_by(self, class_node: ast.ClassDef, target: str, detail: str) -> bool:
@@ -291,5 +301,35 @@ class RenderNestedValueObject:
         return False
 
 
-def _encode_one(key: str, field: str) -> str:
-    return key + "=" + field + "|"
+#: Wrapper prefix for a requirement key whose value is a nested mapping. What follows names
+#: the inner key/field pairs the call sites wrote, so anything checking the requirement can
+#: compute the expected value without discovering a method first.
+NESTED_WRAPPER = "nested:"
+
+
+def encode_nested(key: str, field: str, inner: tuple[tuple[str, str], ...]) -> str:
+    """Encode `key -> field rendered as {k: f, ...}` the way the diagnosis encodes renderings.
+
+    The inner pairs travel because the wrapper has to say *what the caller wrote*, not merely
+    that something was nested. An audit of this module found the wrapper empty, so the probe
+    expected the inner object where the call site had written a mapping and refused every
+    correct candidate.
+    """
+
+    body = ";".join(f"{k}:{f}" for k, f in inner)
+    return key + "=" + field + "|" + NESTED_WRAPPER + body
+
+
+def decode_nested(wrapper: str | None) -> tuple[tuple[str, str], ...]:
+    """Recover the inner key/field pairs from a `nested:` wrapper."""
+
+    if not isinstance(wrapper, str) or not wrapper.startswith(NESTED_WRAPPER):
+        return ()
+    body = wrapper[len(NESTED_WRAPPER):]
+    pairs = []
+    for piece in body.split(";"):
+        if not piece:
+            continue
+        key, _, field = piece.partition(":")
+        pairs.append((key, field))
+    return tuple(pairs)

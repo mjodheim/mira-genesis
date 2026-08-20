@@ -248,3 +248,84 @@ def test_withholding_the_operation_does_not_shrink_the_rest_of_the_search(
     """It must fail for want of the operation, not for having searched less."""
 
     assert executed.without_operation.examined == executed.control.examined
+
+
+# ── what the design audit found, kept as tests ────────────────────────
+
+
+def test_the_search_confirms_its_survivors_by_execution(executed: Chain) -> None:
+    """Amendment A2's rule, which this search had quietly dropped.
+
+    The audit found M095 accepting candidates on the structural predicate alone while its own
+    docstring claimed otherwise — the exact defect A2 fixed for M094, reintroduced one
+    milestone later. A repair that reads correctly and raises when run must not be adopted.
+    """
+
+    assert executed.step_a.executed > 0 and executed.step_a.confirmed > 0
+    assert executed.step_b.executed > 0 and executed.step_b.confirmed > 0
+    assert executed.step_b.confirmed <= executed.step_b.survivors
+
+
+def test_the_nested_requirement_records_what_the_call_sites_wrote(tmp_path: Path) -> None:
+    """Not merely that something was nested — which inner keys, bound to which fields.
+
+    With an empty wrapper the probe expected the inner *object* where the call site had
+    written a *mapping*, and refused every correct candidate. The chain still reported an
+    enabling relation, because the structural predicate alone was deciding.
+    """
+
+    from metamorphosis.m094_diagnosis import decode_rendering
+    from metamorphosis.m095_reach import decode_nested
+
+    build(tmp_path)
+    target = next(i for i in measure(tmp_path).unmet if i.capability == NESTED)
+    (key, field, wrapper), = decode_rendering(target.detail)
+    assert (key, field) == ("reading", "reading")
+    assert decode_nested(wrapper) == (("reading_id", "reading_id"), ("unit", "unit"))
+
+
+def test_a_nested_case_is_built_as_an_object_not_a_string(tmp_path: Path) -> None:
+    """A field annotated as a value object must be constructed, not filled with text.
+
+    Filled with text, every method reaching into it raises, every candidate is refused, and
+    the entry reads as a refutation of the mechanism rather than of the generator.
+    """
+
+    from metamorphosis.m094_execution import NESTED_MARKER, constructible_cases
+    from metamorphosis.m094_diagnosis import decode_rendering
+
+    build(tmp_path)
+    target = next(i for i in measure(tmp_path).unmet if i.capability == NESTED)
+    cases = constructible_cases(
+        tmp_path, COMPONENT, "Sample", decode_rendering(target.detail),
+    )
+    assert cases
+    for case in cases:
+        assert isinstance(case["reading"], dict)
+        assert case["reading"][NESTED_MARKER] == "Reading"
+
+
+def test_the_second_target_is_chosen_by_a_name_when_two_capabilities_tie(
+    executed: Chain,
+) -> None:
+    """A disclosed defect, pinned so it cannot be forgotten. See DESIGN.md.
+
+    At S1 two capabilities on `Sample` tie at demand 2, and the one repaired is decided by
+    alphabetical order on the capability name — `render_nested_...` sorts before
+    `render_value_...`. Had it gone the other way the lineage would have repaired the plain
+    renderer and no enabling would have been demonstrated. A4 removed exactly this defect at
+    the class level; it survives at the capability level.
+
+    This test asserts the tie is real, so that a future fix has to confront it rather than
+    inherit it silently.
+    """
+
+    import tempfile
+
+    root = Path(tempfile.mkdtemp(prefix="m095-tie-"))
+    build(root)
+    chain.adopt(root, chain.search(root, measure(root).unmet[0], label="A"))
+    unmet = measure(root).unmet
+    assert len(unmet) >= 2
+    assert unmet[0].demand == unmet[1].demand, "the tie this test exists for has gone"
+    assert [i.capability for i in unmet[:2]] == sorted(i.capability for i in unmet[:2])

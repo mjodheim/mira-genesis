@@ -29,13 +29,17 @@ counterfactual:  rebuild S0, target B again, same set, same bound           -> n
 
 Run by `metamorphosis/m095_chain.run`, pinned by `tests/test_m095_chain.py`:
 
-| | examined | survivors | reached |
-|---|---|---|---|
-| **B from S0** — the control, run first | 191 | **0** | **no** |
-| A from S0 | 191 | 3 | yes |
-| **B from S1, nested operation withheld** | 191 | **0** | **no** |
-| **B from S1** | 239 | 12 | **yes** |
-| **B without A** — the counterfactual | 191 | **0** | **no** |
+| | examined | survivors | confirmed by execution | reached |
+|---|---|---|---|---|
+| **B from S0** — the control, run first | 191 | **0** | 0 | **no** |
+| A from S0 | 191 | 3 | 3 | yes |
+| **B from S1, nested operation withheld** | 191 | **0** | 0 | **no** |
+| **B from S1** | 239 | 12 | **12** | **yes** |
+| **B without A** — the counterfactual | 191 | **0** | 0 | **no** |
+
+Every reached repair is confirmed by *running* it. `experiments/M095/DESIGN_AUDIT.md` records why
+that column exists: the search had been accepting candidates on the structural predicate alone,
+which is the defect M094's amendment A2 repaired one milestone earlier.
 
 The repairs:
 
@@ -130,6 +134,16 @@ So neither suffices alone:
 | **A absent (S0)** | B unreachable | B unreachable |
 
 **A is necessary; the operation is the vehicle.** That is a smaller and more accurate statement
-than "A enabled B", and it is the one the evidence supports. What remains for a protocol is the
-random-target and more-budget arms, a qualification pool drawn from outside this world, and a
-checker that recomputes rather than reads.
+than "A enabled B", and it is the one the evidence supports.
+
+## The blocker before any freeze
+
+`DESIGN_AUDIT.md` found four defects. Three were in the instrument and are repaired. The fourth is
+in the *selection* and is **disclosed and unrepaired**: at S1 two capabilities on `Sample` tie at
+demand 2, and the one repaired is decided by alphabetical order on the capability name. Had the tie
+fallen the other way, the lineage would have repaired the plain renderer and **no enabling would
+have been demonstrated**.
+
+This is amendment A4's defect at the capability level. Settling it is the first thing an M095
+protocol needs, ahead of the arms, the pool and the checker — because it is the one that would make
+a positive result depend on an accident rather than on a measurement.
