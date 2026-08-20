@@ -1089,7 +1089,15 @@ question remains open but is not a missing completion gate.
   from S1, where the repair it builds calls the method A created. Two counterfactuals separate the
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
-  "A enabled B". No hypothesis is registered, no protocol is frozen, no qualification pool exists.
+  "A enabled B". Every reached repair is confirmed by executing it.
+  **A design audit run before any protocol found four defects** (`experiments/M095/DESIGN_AUDIT.md`).
+  Three were in the instrument and are repaired, two of them regressions of M094 amendments: the
+  search had stopped executing candidates (A2), and the nested requirement did not record what the
+  call sites wrote, so the probe refused every correct candidate. The fourth is **disclosed and
+  unrepaired**: at S1 two capabilities tie on demand and the one repaired is chosen by alphabetical
+  order on the capability name — A4's defect at the capability level. Had the tie fallen the other
+  way, no enabling would have been demonstrated. **Settling it is the blocker before any M095
+  freeze.** No hypothesis is registered, no protocol is frozen, no qualification pool exists.
   See `experiments/M095/DESIGN.md`.
 
 ## Parallel measurement track — M045
