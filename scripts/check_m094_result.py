@@ -9,12 +9,16 @@ A conjunctive verdict is computed: positive iff all 12 conditions are true.
 The report is returned as JSON, written to stdout, and also written to
 experiments/M094/CHECK_REPORT.json (if the directory exists).
 
-Because M094 has never been run, there is no RESULT.json to validate against.
+Written before M094 was run, when there was no RESULT.json to validate against. The run
+happened on 19 August 2026, so every condition now has a branch that reads the preserved
+artifacts; the pre-run branches remain because a checker that cannot describe an unrun
+milestone cannot certify one either.
 Conditions P7-P12 are therefore checked structurally: the protocol's guarantees
 are verified rather than a recorded run. Every condition is fully recomputed.
 """
 from __future__ import annotations
 
+import argparse
 import ast
 import hashlib
 import json
@@ -47,7 +51,131 @@ PROTOCOL_PATH = EXPERIMENT / "PROTOCOL.json"
 DESIGN_AUDIT_PATH = EXPERIMENT / "DESIGN_AUDIT.json"
 DESIGN_AUDIT_MD = EXPERIMENT / "DESIGN_AUDIT.md"
 
+#: Sub-reports of the design audit that measure the *inherited* implementation -- the
+#: superseded substring diagnostic and the authored template, both preserved as evidence.
+#: They are pure functions of frozen sources and must reproduce exactly, forever. If one
+#: stops reproducing, the evidence for a recorded defect has moved and the record is no
+#: longer supported by anything.
+REPLAYABLE_AUDIT_SECTIONS = (
+    "indicator_discrimination",
+    "capability_presence_blindness",
+    "selection_determinism",
+    "template_authorship",
+)
+
+#: The sub-report that measures the *current* measure rather than the inherited one. It moves
+#: whenever the diagnosis legitimately changes, so it is preserved rather than replayed.
+#: Amendment A3 records why, and what it was when the audit was last written.
+SNAPSHOT_AUDIT_SECTIONS = ("corrected_measure_threshold_sensitivity",)
+
+
+def check_design_audit_binding(protocol: dict) -> list[str]:
+    """Is the design audit the protocol names actually the design audit that exists?
+
+    Amendment A3. `design_audit.audit_digest` recorded a value from two commits before the
+    freeze and matched no committed artifact. Nothing noticed, because nothing compared them:
+    `DESIGN_AUDIT_MD` was declared here and never used, and no condition read the audit at
+    all. A binding that is never checked is a claim, not a binding.
+
+    Three things are verified, and each can fail:
+
+    * the committed audit is self-consistent -- its recorded digest is the digest of its own
+      contents;
+    * the protocol's `audit_digest` is that digest;
+    * every sub-report measuring the inherited implementation still reproduces when re-run.
+    """
+
+    failures: list[str] = []
+    if not DESIGN_AUDIT_PATH.exists():
+        return ["the design audit the protocol names does not exist"]
+
+    audit = json.loads(DESIGN_AUDIT_PATH.read_text(encoding="utf-8"))
+    recomputed = _digest({k: v for k, v in audit.items() if k != "digest"})
+    if audit.get("digest") != recomputed:
+        failures.append(
+            "the committed design audit does not digest to its own recorded value: "
+            f"records {str(audit.get('digest'))[:16]}, contents give {recomputed[:16]}"
+        )
+
+    declared = protocol.get("design_audit", {}).get("audit_digest")
+    if declared != audit.get("digest"):
+        failures.append(
+            "the protocol's audit_digest is not the committed audit's digest: "
+            f"protocol {str(declared)[:16]}, audit {str(audit.get('digest'))[:16]}"
+        )
+
+    try:
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import audit_m094_design as instrument  # noqa: PLC0415
+
+        replays = {
+            "indicator_discrimination": instrument.indicator_discrimination,
+            "capability_presence_blindness": instrument.capability_presence_blindness,
+            "selection_determinism": instrument.selection_determinism,
+            "template_authorship": instrument.template_authorship,
+        }
+        for section in REPLAYABLE_AUDIT_SECTIONS:
+            if section not in audit:
+                failures.append(f"the audit carries no {section}")
+                continue
+            if _digest(audit[section]) != _digest(replays[section]()):
+                failures.append(
+                    f"{section} no longer reproduces: the evidence for a recorded defect "
+                    "has moved"
+                )
+    except Exception as exc:  # noqa: BLE001 - an unrunnable instrument is itself a failure
+        failures.append(f"the audit instrument could not be replayed: {type(exc).__name__}: {exc}")
+
+    return failures
+
 DIAGNOSIS_MODULE = ROOT / "metamorphosis" / "m094_diagnosis.py"
+RESULT_PATH = EXPERIMENT / "RESULT.json"
+QUALIFICATION_PATH = EXPERIMENT / "QUALIFICATION.json"
+
+
+def _result_path() -> Path:
+    """Resolved at call time, not at import.
+
+    Both constants above are computed from `EXPERIMENT` when the module loads, so a test that
+    redirects `EXPERIMENT` alone would leave the run loader reading the real experiment
+    directory -- and would silently observe the pre-run branch while believing it had staged a
+    run. Deriving the path per call means redirecting `EXPERIMENT` is enough.
+    """
+
+    return EXPERIMENT / "RESULT.json"
+
+
+def _qualification_path() -> Path:
+    return EXPERIMENT / "QUALIFICATION.json"
+
+
+def load_run() -> dict | None:
+    """The preserved run, or ``None`` if none exists.
+
+    Every run-dependent condition below branches on this. Before a run it reports
+    `uncomputed`; after one it recomputes from what the run preserved. The audit found the
+    second branch missing entirely: P7 and P12 *failed* the moment a RESULT.json appeared,
+    and P8 through P11 returned `uncomputed` unconditionally, so the protocol's
+    "positive only when every condition is computed and true" was unreachable by
+    construction.
+    """
+
+    result_path = _result_path()
+    if not result_path.exists():
+        return None
+    run = json.loads(result_path.read_text(encoding="utf-8"))
+    qualification_path = _qualification_path()
+    if qualification_path.exists():
+        run.setdefault(
+            "qualification", json.loads(qualification_path.read_text(encoding="utf-8"))
+        )
+    return run
+
+
+def _arm(run: dict, name: str) -> dict:
+    arms = run.get("arms", {})
+    value = arms.get(name) if isinstance(arms, dict) else None
+    return value if isinstance(value, dict) else {}
 
 # Components measured in the audit and by the structural diagnosis
 COMPONENT_PATHS = [
@@ -182,15 +310,6 @@ from pkg.decision import Decision
 def record(step, d):
     return {"step": step, "allowed": d.allowed, "reason": d.reason, "missing": list(d.missing)}
 '''
-
-
-def _qualification_exists() -> bool:
-    """Has a qualification run produced artifacts this checker could read?"""
-
-    return any(
-        (EXPERIMENT / name).exists()
-        for name in ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
-    )
 
 
 def _operations_carrying_a_literal_body(directory: Path | None = None) -> set[str]:
@@ -698,28 +817,103 @@ def check_p7(protocol: dict) -> Condition:
     qualified, and would have flipped to FAIL the moment M094 produced a real
     result. The polarity was inverted and the pass was vacuous.
     """
-    forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
-    present = [n for n in forbidden if (EXPERIMENT / n).exists()]
-
     name = "the_adopted_repair_satisfies_a_requirement_drawn_after_the_mechanism_was_fixed"
+    run = load_run()
 
-    if present:
-        return Condition(
-            id="P7",
-            name=name,
-            passed=False,
-            evidence=(
-                "qualification artifacts exist while the protocol is still a draft: "
-                + ", ".join(present)
-            ),
-            detail={"forbidden_artifacts_present": present},
+    if run is None:
+        # Nothing has been qualified. An artifact appearing without a RESULT.json would mean
+        # qualification data exists ahead of the run that is supposed to have produced it.
+        stray = [
+            n for n in ("QUALIFICATION.json", "REGISTER_CLAIM.json")
+            if (EXPERIMENT / n).exists()
+        ]
+        if stray:
+            return Condition(
+                id="P7", name=name, passed=False,
+                evidence="qualification artifacts exist with no run that produced them: "
+                         + ", ".join(stray),
+                detail={"stray_artifacts": stray},
+            )
+        return not_computed(
+            "P7", name,
+            "no qualification run exists, so no drawn requirement has been satisfied or missed",
+            detail={"status": protocol.get("status"), "qualification_exists": False},
         )
 
-    return not_computed(
-        "P7",
-        name,
-        "no qualification run exists, so no drawn requirement has been satisfied or missed",
-        detail={"status": protocol.get("status"), "qualification_exists": False},
+    # A run exists. Recompute the draw rather than reading its conclusion: a fabricated or
+    # re-rolled draw is exactly what the salt rule exists to prevent, and the only way to
+    # detect one is to derive it again from the recorded mechanism digest.
+    failures: list[str] = []
+    qualification = run.get("qualification")
+    if not isinstance(qualification, dict):
+        return Condition(
+            id="P7", name=name, passed=False,
+            evidence="the run preserved no qualification",
+            detail={"keys": sorted(run)},
+        )
+
+    mechanism = str(run.get("mechanism_digest") or qualification.get("mechanism_digest") or "")
+    if len(mechanism) != 64:
+        failures.append("the run records no 64-character adopted mechanism digest")
+
+    pool_path = EXPERIMENT / "QUALIFICATION_POOL.json"
+    recomputed_draw: list[str] = []
+    if mechanism and pool_path.exists():
+        sys.path.insert(0, str(ROOT / "scripts"))
+        from materialize_m094_qualification import draw as redraw  # noqa: PLC0415
+
+        pool = json.loads(pool_path.read_text(encoding="utf-8"))
+        pool_digest = _digest({k: v for k, v in pool.items() if k != "pool_digest"})
+        if pool_digest != pool.get("pool_digest"):
+            failures.append("the committed pool no longer digests to its recorded value")
+        recomputed_draw = [entry["entry_digest"] for entry in redraw(pool, mechanism)]
+        recorded_draw = [
+            str(item.get("entry_digest")) for item in qualification.get("entries", [])
+        ]
+        if recomputed_draw != recorded_draw:
+            failures.append(
+                "the recorded draw is not the draw the recorded mechanism digest produces"
+            )
+
+    entries = qualification.get("entries", [])
+    outcomes = [str(item.get("outcome")) for item in entries]
+    components = {str(item.get("component")) for item in entries}
+    if not entries:
+        failures.append("the qualification drew nothing")
+    if len(components) < 2:
+        failures.append(f"the draw is not cross-component: {sorted(components)}")
+    if qualification.get("salt_is_the_adopted_mechanism_digest") is not True:
+        failures.append("the qualification does not record the salt rule it used")
+    if qualification.get("drawn_after_adoption") is not True:
+        failures.append("the qualification does not record that it was drawn after adoption")
+
+    # An unrunnable entry measures nothing, so it can neither satisfy nor refute. The
+    # condition stays uncomputed rather than being scored either way -- seven of the nine
+    # frozen pool entries carry hidden cases that raise on construction, and letting that
+    # read as a refutation would turn an instrument defect into evidence.
+    if not failures and "unrunnable" in outcomes:
+        return not_computed(
+            "P7", name,
+            "a drawn entry is unrunnable: its cases cannot construct their class, so it "
+            "measures nothing about the mechanism",
+            detail={"outcomes": outcomes, "entries": entries},
+        )
+
+    if failures:
+        return Condition(
+            id="P7", name=name, passed=False, evidence="; ".join(failures),
+            detail={"failures": failures, "outcomes": outcomes},
+        )
+
+    passed = all(item == "satisfied" for item in outcomes)
+    return Condition(
+        id="P7", name=name, passed=passed,
+        evidence=(
+            f"{outcomes.count('satisfied')}/{len(outcomes)} drawn requirements satisfied "
+            f"across {len(components)} components; draw recomputed from the mechanism digest"
+        ),
+        detail={"outcomes": outcomes, "components": sorted(components),
+                "draw_recomputed": recomputed_draw},
     )
 
 
@@ -764,13 +958,70 @@ def check_p8(protocol: dict) -> Condition:
             detail={"protocol_precondition_failures": failures},
         )
 
-    # The protocol preconditions hold. The condition itself is about what a
-    # run would show, and no run exists.
-    return not_computed(
-        "P8",
-        "an_independent_validator_accepted_it_without_seeing_the_qualification",
-        "no validator has accepted anything, because no candidate has been qualified",
-        detail={"protocol_preconditions": "satisfied"},
+    name = "an_independent_validator_accepted_it_without_seeing_the_qualification"
+    run = load_run()
+    if run is None:
+        return not_computed(
+            "P8", name,
+            "no validator has accepted anything, because no candidate has been qualified",
+            detail={"protocol_preconditions": "satisfied"},
+        )
+
+    endogenous = _arm(run, "endogenous_diagnosis_and_synthesis")
+    validation = endogenous.get("validation")
+    if not isinstance(validation, dict):
+        return Condition(
+            id="P8", name=name, passed=False,
+            evidence="the run preserved no validation record for the endogenous arm",
+            detail={"arm_keys": sorted(endogenous)},
+        )
+
+    # Re-run the validator on the preserved candidate rather than believing its verdict.
+    replayed: dict | None = None
+    adopted_source = endogenous.get("adopted_source")
+    development = endogenous.get("development", {})
+    if isinstance(adopted_source, str) and isinstance(development, dict):
+        from metamorphosis.m094_lineage import validate_independently  # noqa: PLC0415
+
+        component = str(development.get("selected_component") or "")
+        class_name = str(development.get("class") or "")
+        requirement = [tuple(item) for item in development.get("requirement", [])]
+        if component and class_name and requirement:
+            outcome = validate_independently(
+                ROOT, component, adopted_source, class_name, requirement,
+            )
+            replayed = outcome.to_dict()
+            if outcome.accepted is not bool(validation.get("accepted")):
+                failures.append(
+                    "replaying the validator disagrees with the recorded verdict: "
+                    f"recorded={validation.get('accepted')}, replayed={outcome.accepted}"
+                )
+            if outcome.receipt != validation.get("receipt"):
+                failures.append("the replayed validator receipt does not match the recorded one")
+
+    if not validation.get("accepted"):
+        failures.append(f"the validator did not accept: {validation.get('reasons')}")
+    if not validation.get("receipt"):
+        failures.append("the validation carries no receipt")
+    if int(validation.get("cases_total", 0)) < 4:
+        failures.append(f"only {validation.get('cases_total')} cases were offered")
+    if int(validation.get("cases_satisfied", 0)) < 1:
+        failures.append("the validator satisfied no case")
+
+    if failures:
+        return Condition(
+            id="P8", name=name, passed=False, evidence="; ".join(failures),
+            detail={"failures": failures, "recorded": validation, "replayed": replayed},
+        )
+
+    return Condition(
+        id="P8", name=name, passed=True,
+        evidence=(
+            f"validator accepted {validation.get('cases_satisfied')}/"
+            f"{validation.get('cases_total')} executed cases"
+            + ("; replayed and agreed" if replayed else "")
+        ),
+        detail={"recorded": validation, "replayed": replayed},
     )
 
 
@@ -850,13 +1101,39 @@ def check_p9(protocol: dict) -> Condition:
             detail={"protocol_precondition_failures": failures},
         )
 
-    # The protocol preconditions hold. The condition itself is about what a
-    # run would show, and no run exists.
-    return not_computed(
-        "P9",
-        "more_budget_over_the_same_operation_set_closes_nothing",
-        "the budget arm has not been run, so nothing is known about what it closes",
-        detail={"protocol_preconditions": "satisfied"},
+    name = "more_budget_over_the_same_operation_set_closes_nothing"
+    run = load_run()
+    if run is None:
+        return not_computed(
+            "P9", name,
+            "the budget arm has not been run, so nothing is known about what it closes",
+            detail={"protocol_preconditions": "satisfied"},
+        )
+
+    from metamorphosis.m094_lineage import _same_mechanism  # noqa: PLC0415
+
+    endogenous = _arm(run, "endogenous_diagnosis_and_synthesis")
+    budget = _arm(run, "more_budget_same_operations")
+    if not budget:
+        return Condition(
+            id="P9", name=name, passed=False,
+            evidence="the run preserved no record for the budget arm",
+            detail={"arms_present": sorted(run.get("arms", {}))},
+        )
+
+    same = _same_mechanism(endogenous, budget)
+    # A saturated search may reach the same repair with more room -- that is what "closes
+    # nothing" means here. What it may not do is reach a different one, which would mean the
+    # declared bound was hiding something the protocol claims it is not.
+    passed = budget.get("closed") is not True or same
+    return Condition(
+        id="P9", name=name, passed=passed,
+        evidence=(
+            "the budget arm reached the same mechanism" if same
+            else f"the budget arm closed={budget.get('closed')} with a different mechanism"
+        ),
+        detail={"closed": budget.get("closed"), "same_mechanism": same,
+                "budget_bound": budget.get("development", {}).get("search", {})},
     )
 
 
@@ -921,13 +1198,44 @@ def check_p10(protocol: dict) -> Condition:
             detail={"protocol_precondition_failures": failures},
         )
 
-    # The protocol preconditions hold. The condition itself is about what a
-    # run would show, and no run exists.
-    return not_computed(
-        "P10",
-        "a_random_component_selection_closes_nothing",
-        "the random-selection arm has not been run, so nothing is known about what it closes",
-        detail={"protocol_preconditions": "satisfied"},
+    name = "a_random_component_selection_closes_nothing"
+    run = load_run()
+    if run is None:
+        return not_computed(
+            "P10", name,
+            "the random-selection arm has not been run, so nothing is known about what it closes",
+            detail={"protocol_preconditions": "satisfied"},
+        )
+
+    randomised = _arm(run, "random_component_selection")
+    if not randomised:
+        return Condition(
+            id="P10", name=name, passed=False,
+            evidence="the run preserved no record for the random-selection arm",
+            detail={"arms_present": sorted(run.get("arms", {}))},
+        )
+
+    development = randomised.get("development", {})
+    imposed = development.get("notes", {}).get("component_override") if isinstance(
+        development, dict
+    ) else None
+    if not imposed:
+        failures.append(
+            "the random-selection arm records no imposed component, so it may have run the "
+            "endogenous path under another name"
+        )
+    if randomised.get("closed") is not False:
+        failures.append(f"the random-selection arm closed={randomised.get('closed')}")
+
+    if failures:
+        return Condition(
+            id="P10", name=name, passed=False, evidence="; ".join(failures),
+            detail={"failures": failures, "arm": randomised},
+        )
+    return Condition(
+        id="P10", name=name, passed=True,
+        evidence=f"random selection imposed {imposed} and closed nothing",
+        detail={"imposed_component": imposed, "arm": randomised},
     )
 
 
@@ -974,13 +1282,64 @@ def check_p11(protocol: dict) -> Condition:
             detail={"protocol_precondition_failures": failures},
         )
 
-    # The protocol preconditions hold. The condition itself is about what a
-    # run would show, and no run exists.
-    return not_computed(
-        "P11",
-        "rollback_is_exact_and_behavioural",
-        "no adoption has occurred, so no rollback has been performed or measured",
-        detail={"protocol_preconditions": "satisfied"},
+    name = "rollback_is_exact_and_behavioural"
+    run = load_run()
+    if run is None:
+        return not_computed(
+            "P11", name,
+            "no adoption has occurred, so no rollback has been performed or measured",
+            detail={"protocol_preconditions": "satisfied"},
+        )
+
+    rollback = run.get("rollback")
+    if not isinstance(rollback, dict):
+        return Condition(
+            id="P11", name=name, passed=False,
+            evidence="the run preserved no rollback record",
+            detail={"keys": sorted(run)},
+        )
+
+    # Each of these is the negation of a falsifier the protocol names. A rollback that
+    # struck a detached copy, or that only restored a version number, fails here.
+    required = {
+        "fault_struck_the_live_file": "the fault did not strike the live file",
+        "adopted_supplied_the_capability": "the adopted state did not supply the capability",
+        "damage_was_behavioural": "the damage was not observable by executing the component",
+        "restoration_is_byte_exact": "restoration was not byte-exact",
+        "restored_matches_the_original_behaviour":
+            "the restored component does not behave like the original",
+        "restoration_matches_the_preserved_original_bytes":
+            "the restored file does not match the preserved original byte for byte",
+    }
+    for key, complaint in required.items():
+        if rollback.get(key) is not True:
+            failures.append(complaint)
+    # Attempt 1 recorded `restoration_is_byte_exact: True` from a digest taken over decoded
+    # text, which cannot see a line ending. A rollback record that does not say it measured
+    # bytes is not evidence for a condition worded in bytes.
+    if rollback.get("digest_domain") != "bytes":
+        failures.append(
+            "the rollback record does not state that its digests are over bytes; a text digest "
+            "cannot certify byte-exactness"
+        )
+    if rollback.get("store_version_after_restore") != 0:
+        failures.append(
+            f"the store did not return to version 0 "
+            f"(got {rollback.get('store_version_after_restore')})"
+        )
+
+    if failures:
+        return Condition(
+            id="P11", name=name, passed=False, evidence="; ".join(failures),
+            detail={"failures": failures, "rollback": rollback},
+        )
+    return Condition(
+        id="P11", name=name, passed=True,
+        evidence=(
+            f"fault {rollback.get('fault')} struck the live file, was behaviourally "
+            "observable, and restoration was byte-exact"
+        ),
+        detail={"rollback": rollback},
     )
 
 
@@ -998,14 +1357,47 @@ def check_p12(protocol: dict) -> Condition:
     if track != "A":
         failures.append(f"protocol track is '{track}', expected 'A'")
 
-    # Check no evidence of prior runs exists (no WITHDRAWN_RESULT_* files)
+    # A withdrawn run is disclosed, not forbidden. The protocol's retry policy says
+    # superseded runs are preserved and disclosed, so their presence is compliance; what
+    # would be a violation is a withdrawn artifact the record does not mention.
     withdrawn = sorted(str(p.name) for p in EXPERIMENT.glob("WITHDRAWN_RESULT_*.json"))
-    if withdrawn:
-        failures.append(f"withdrawn result artifacts exist: {withdrawn}")
 
-    # Check no experiment record exists
-    if (EXPERIMENT / "RESULT.json").exists():
-        failures.append("RESULT.json exists before an experiment has run")
+    run = load_run()
+    if run is None:
+        if withdrawn:
+            failures.append(
+                "withdrawn result artifacts exist with no current run that supersedes them: "
+                + ", ".join(withdrawn)
+            )
+    else:
+        # After a run, RESULT.json existing is the expected state and not a leak. An earlier
+        # revision failed this condition precisely because the experiment had been performed,
+        # which made a positive verdict unreachable by construction.
+        if run.get("track") != "A":
+            failures.append(f"the run records track {run.get('track')!r}, expected 'A'")
+        if int(run.get("model_calls", 0)) != 0:
+            failures.append(f"the run records {run.get('model_calls')} model calls")
+        if int(run.get("network_calls", 0)) != 0:
+            failures.append(f"the run records {run.get('network_calls')} network calls")
+        declared = run.get("prior_attempts")
+        if withdrawn and not declared:
+            failures.append(
+                "withdrawn artifacts exist but the run declares no prior attempts: "
+                + ", ".join(withdrawn)
+            )
+        if run.get("attempt") is None:
+            failures.append("the run declares no attempt number")
+        elif withdrawn and int(run.get("attempt", 1)) != len(withdrawn) + 1:
+            failures.append(
+                f"attempt {run.get('attempt')} disagrees with {len(withdrawn)} preserved "
+                "withdrawn run(s); the attempt number must be derived from the artifacts"
+            )
+
+    # A protocol whose own design-audit binding does not resolve cannot substantiate its
+    # design record, whatever else it gets right. Folded into the chronology condition
+    # because that is what it is: evidence the record points at must exist and still say
+    # what it said.
+    failures.extend(check_design_audit_binding(protocol))
 
     # The protocol must not claim to rerun M092
     if protocol.get("reattempts_m092") is not False:
@@ -1028,6 +1420,7 @@ def check_p12(protocol: dict) -> Condition:
             "track": track,
             "reattempts_m092": protocol.get("reattempts_m092"),
             "withdrawn_artifacts": withdrawn,
+            "run_exists": run is not None,
         },
     )
 
@@ -1090,12 +1483,35 @@ def compute_report(protocol: dict) -> dict:
 
 
 def main() -> int:
-    """Run the checker and print a JSON report."""
+    """Run the checker and print a JSON report.
+
+    Exit codes matter, because a checker CI cannot fail on is not a gate. ``--strict`` turns a
+    failing computed condition into a non-zero exit; ``--require-result`` additionally demands
+    that a run exists and that the verdict is positive, which is the form to use once M094 has
+    been armed. Neither invents a verdict: without a run the report is `incomplete`, and
+    ``--strict`` is satisfied by that because nothing has failed.
+    """
+
+    parser = argparse.ArgumentParser(description="Recompute M094's twelve conditions.")
+    parser.add_argument(
+        "--strict", action="store_true",
+        help="exit non-zero if any computed condition failed",
+    )
+    parser.add_argument(
+        "--require-result", action="store_true",
+        help="also require that a run exists and every condition is computed and true",
+    )
+    parser.add_argument(
+        "--no-write", action="store_true",
+        help="do not rewrite CHECK_REPORT.json",
+    )
+    args = parser.parse_args()
+
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="utf-8"))
     report = compute_report(protocol)
 
     # Always write the report to the experiment directory if it exists
-    if EXPERIMENT.is_dir():
+    if EXPERIMENT.is_dir() and not args.no_write:
         report_path = EXPERIMENT / "CHECK_REPORT.json"
         report_path.write_text(
             _canonical_json(report) + "\n", encoding="utf-8", newline="\n"
@@ -1114,7 +1530,19 @@ def main() -> int:
             file=sys.stderr,
         )
 
-    # Return 0 for success (we always report, even failures)
+    if args.require_result:
+        if load_run() is None:
+            print(
+                "\nNo RESULT.json exists: M094 has not been run.", file=sys.stderr,
+            )
+            return 1
+        if report["verdict"] != "positive":
+            print(
+                f"\nVerdict is {report['verdict']!r}, not 'positive'.", file=sys.stderr,
+            )
+            return 1
+    if args.strict and report["failed"] > 0:
+        return 1
     return 0
 
 

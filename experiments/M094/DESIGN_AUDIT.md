@@ -506,6 +506,13 @@ qualification, because there has not been one.
 
 Frozen at commit `dd79665` on 18 August 2026, before any qualification data existed.
 
+That hash is the one the freeze was authored at, and it is kept here because it is what the freeze
+recorded at the time. It is **not reachable from `main`**: the branch was rebased before merging, so
+the freeze reached `main` as `9b69d7f` (and the commit recording it as `312bbb1`). Nothing moved —
+`dd79665` and `9b69d7f` carry the identical tree `e2ab1c1b`, as do `2dc997b` and `312bbb1` — but
+anyone verifying the freeze from a fresh clone must look for `9b69d7f`. Recorded rather than
+overwritten, so the chronology stays legible.
+
 Two gaps were closed first, because a freeze whose own text is untrue is worse than no freeze.
 
 **The protocol promised a pool that did not exist.** It asserted that "the pool of candidate
@@ -539,6 +546,17 @@ field behind it.
 Each entry carries five hidden cases generated from a fixed, disclosed seed, so anyone can
 regenerate them from the committed pool.
 
+> **Amendment A1, 19 August 2026.** Regenerable was not the same as runnable. These cases were
+> never executed, and seven of the nine entries raised on construction: each case assigned only
+> the fields its requirement mentioned, not the arguments the constructor required. The draw for
+> the adopted mechanism selected two of the broken entries, so a run would have reported a failed
+> qualification that was an artifact of this table rather than a fact about the mechanism. The
+> pool was regenerated with every case verified by construction — eight entries, digest
+> `0016300c…`, `EpisodeOutcome` excluded because it is an `Enum` and has no constructor fields to
+> render, which also means the diagnosis mis-attributed that call site. The nine-entry pool above
+> is preserved at `experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json`. Recorded in full in
+> `PROTOCOL.json` under `amendments`, and permanently, as D-M076 requires.
+
 **The draw cannot be known now.** It is a deterministic function of the adopted mechanism's digest,
 which does not exist until adoption. Experimenter blindness is **not** claimed — the pool was
 authored by someone who has seen the development result, exactly as M091 disclosed for its pool of
@@ -562,6 +580,12 @@ preserved artifacts rather than declared.
 H39 is **frozen and open**: precommitted, and neither supported nor refuted. Seven conditions are
 computed and true; P7 through P11 concern what a qualification run would show and remain uncomputed.
 The checker's verdict is `incomplete`, not positive. **No run has been armed.**
+
+> **Superseded on 19 August 2026 by the canonical run.** The paragraph above describes the state
+> between the freeze and the run, and is kept because it is what the freeze committed to. The run
+> was performed at commit `210e8f04` under amendments A1–A4: all twelve conditions are computed and
+> true and the verdict is `positive`. A defect in the evidence for P11 was found *after* that
+> verdict and is recorded, unrepaired, in `POST_VERDICT_DISCLOSURE.md`.
 
 ## What is not in question
 

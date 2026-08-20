@@ -14,7 +14,15 @@ experiments/M075/MODEL_DEVELOPMENT_RESULT.json -text
 # checkout-dependent hash defect already observed on Windows checkouts.
 experiments/M0*/PROTOCOL.json -text
 experiments/M0*/QUALIFICATION_POOL.json -text
+# A superseded pool is digest-bearing evidence in exactly the way the live one is.
+experiments/M0*/QUALIFICATION_POOL_SUPERSEDED_*.json -text
+# A design audit and a checker report both carry their own digest and are compared
+# against a fresh computation by their milestone's tests. M092 protected its copies by
+# individual path; these two conventional names were left unguarded at M094.
+experiments/M0*/DESIGN_AUDIT.json -text
+experiments/M0*/CHECK_REPORT.json -text
 experiments/M0*/RESULT.json -text
+experiments/M0*/QUALIFICATION.json -text
 experiments/M0*/BANK_COMMITMENT.json -text
 experiments/M0*/EPISODE_COMMITMENT.json -text
 experiments/M0*/SCHEDULE_COMMITMENT.json -text

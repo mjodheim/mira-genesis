@@ -1,4 +1,112 @@
 {
+  "amendments": [
+    {
+      "correction": "The generator now builds each case from the class's real constructor signature, supplying every argument without a default plus every field the requirement reads, and verifies the case by constructing the object and reading each required field. String values are drawn from a fixed disclosed ladder of generic shapes -- an identifier, an absolute path, a content-addressed reference -- and the first combination the class accepts is kept. An entry no generated case can build is excluded and recorded with its reason, because an entry that measures nothing can neither qualify nor refute.",
+      "date": "2026-08-19",
+      "defect": "The pool frozen on 18 August 2026 carried hidden cases synthesised from a seed and never run. Each case assigned only the fields its requirement mentioned, not the arguments the constructor required, so seven of the nine entries raised on construction: AgentResult, EpisodeOutcome, SkillDemonstration, ContainerSpec, StructuredModelPolicy, ModelRequest and TeacherCallTrap. Only ContainerLimits and HarborEpisodeLimits could be built. The draw for the adopted mechanism selected TeacherCallTrap and ContainerSpec, both broken, so a run would have reported a failed qualification that was an artifact of the instrument rather than a fact about the mechanism.",
+      "disclosure": "The regenerated draw selects ContainerLimits and ModelRequest, whose requirements both bind keys matching their fields. The re-keyed requirements -- ContainerSpec's destination<-working_directory and TeacherCallTrap's teacher_calls<-calls -- remain in the pool but are not what this draw exercises.",
+      "effect_on_the_pool": {
+        "entries_excluded": [
+          {
+            "class": "EpisodeOutcome",
+            "component": "mira_core/calibration.py",
+            "reason": "the class is an Enum, so it has no constructor fields to render"
+          }
+        ],
+        "every_case_now_constructs": true,
+        "hidden_case_seed": "m094-qualification-hidden-cases-v2",
+        "pool_digest": "0016300c4064c0cae17465c1bf603aeeb8f9b81bf2f17c9110d0ab41026685ba",
+        "pool_entries": 8,
+        "superseded_pool_digest": "44f46e6b92996e14385d5ff713b18676ea59bfa3cfca32493f0fd98d9cc0a9db",
+        "superseded_pool_entries": 9,
+        "superseded_pool_preserved_at": "experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json"
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "id": "A1",
+      "title": "the qualification pool's hidden cases were never executed",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the draw rule, the number of entries drawn, the number of hidden cases per requirement, and the diagnosis and synthesis mechanisms. The adopted mechanism digest is unchanged at 3cd1314f4ed0fea0016d3dc9c85faec21b3fe12fbdcf26cdad896c24cc639214.",
+      "why_it_was_not_caught": "tests/test_m094_qualification_pool.py asserted that a case must assign exactly the fields its requirement reads and no others, which is the assertion that made the defect mandatory. Nothing executed a case until the qualification harness did.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim existed when the defect was found, and none exists now. The correction is to the instrument, not to a verdict, and it is recorded here permanently rather than absorbed -- the standard D-M076 set: a defect found before materialization is corrected in the open with its arithmetic. The draw moved because entry digests moved, and the generation was run once; the draw it produced was not inspected before the pool was accepted."
+    },
+    {
+      "correction": "A candidate is accepted when running it reproduces what the call sites wrote. The structural predicate is retained as a filter -- it is what keeps the search finite, since ContainerLimits reaches over 400,000 states -- and execution decides among the survivors. Survivors are ordered by content address as before; the one adopted is now the first that works rather than the first that parses. If every survivor raises, nothing is adopted and the search report records it. The executor is shared with the pipeline's sandbox and the independent validator, so all three run the same code.",
+      "date": "2026-08-19",
+      "defect": "RenderAsMapping.is_supplied_by constrains only the keys the requirement names. Every other key a candidate carries is unconstrained, wrapper included. ContainerLimits has eight fields and a two-key requirement, so thousands of candidates are accepted and the tie-break picks one by content address -- including candidates that wrap an unrelated int field in list(), which pass acceptance and raise when executed. Reproducible in six lines: a draft binding memory_bytes and pids_limit correctly plus MappingItem('max_steps','max_steps','list') satisfies is_supplied_by and raises TypeError: 'int' object is not iterable.",
+      "effect_on_the_mechanism": {
+        "development_search": "767 examined, 764 refused, 3 executed, 3 confirmed",
+        "execution_budget": 256,
+        "mechanism_digest_after": "3cd1314f4ed0fea0016d3dc9c85faec21b3fe12fbdcf26cdad896c24cc639214",
+        "mechanism_digest_before": "3cd1314f4ed0fea0016d3dc9c85faec21b3fe12fbdcf26cdad896c24cc639214",
+        "unchanged": true,
+        "why": "All three of Goal's survivors execute and confirm, so the adopted repair is the same one. The qualification draw is salted with this digest and therefore also unchanged, which means A2 is tested against the very entry that refuted the mechanism rather than against an easier one."
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "found_by": "The qualification amended by A1, run against a throwaway copy. It refuted the mechanism on mira_core/container.py::ContainerLimits: all ten cases constructed, the adopted candidate satisfied none of them, and the independent validator refused it.",
+      "id": "A2",
+      "residual_weakness_disclosed": "Execution decides among survivors but does not reduce their number: a requirement that is a strict subset of a class's fields still admits many behaviourally distinct methods, and which one is adopted is still a content address. A2 guarantees the adopted repair runs and agrees on the requirement; it does not claim the repair is unique or minimal.",
+      "title": "acceptance reads a candidate where it should run it",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the qualification pool, the draw rule, the diagnosis, the operation set and the composition bound. Only how a survivor is accepted.",
+      "why_the_development_target_did_not_show_it": "mira_core/contracts.py::Goal has a requirement covering every one of its fields, so no key was left unconstrained and no candidate could carry a raising extra. The defect is only reachable when the requirement is a strict subset of the fields, which is exactly the situation a cross-component qualification creates.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim exists, and none existed when the defect was found: the run that exposed it was performed against a throwaway copy of the repository and nothing was armed or written into experiments/M094/. The correction is recorded here permanently rather than absorbed, with the reproduction and the arithmetic, as D-M076 requires. The falsifier this must not become -- 'a real defect in the system is corrected after the verdict in order to save the result' -- turns on a verdict existing. None does."
+    },
+    {
+      "a_second_staleness_found_while_fixing_the_first": "The committed report is itself a snapshot taken at f516bc7, and the diagnosis's detail encoding changed afterwards at 96c8a3a -- 'make acceptance agreement, not key coverage' -- which the freeze at 9b69d7f then included. The report was never re-derived in between. Concretely, its corrected_measure_threshold_sensitivity section records Observation with fields_read 5, and the measure at the freeze gives 7, because the detail became one entry per (key, field, wrapper) triple rather than one per field. The measurement it reports is correct for the code at f516bc7 and is not a description of the code that was frozen.",
+      "correction": "audit_digest is corrected to the committed report's own digest, 37eee413397f9907, and the superseded value is recorded here rather than overwritten. The report is not regenerated: re-running the instrument today would measure the post-A2 code, which describes neither the inherited implementation the audit is evidence about nor the state at the freeze, and would replace a disclosed staleness with an undisclosed one. The binding is now enforced: check_design_audit_binding verifies that the report digests to its own recorded value, that the protocol names that digest, and that every sub-report measuring the inherited implementation still reproduces when re-run. Its failures fail P12.",
+      "date": "2026-08-19",
+      "defect": "design_audit.audit_digest recorded d41ea1ea84e0767c, which matches no committed artifact: not the audit document's bytes, not the audit report's bytes, and not the report's own recorded digest. It is the digest the report carried at commit 0d23bfd. The next commit, f516bc7, changed the audit and moved its digest to 37eee413397f9907, and the freeze carried the older value forward while the same design_audit block describes the newer report's contents -- twelve defects, and the whole Defect 5 narrative. So the block paired a stale digest with current prose, and 'the audit is bound by digest' was not true.",
+      "effect": {
+        "audit_digest": "37eee413397f99079c2f5f30da6f3827b93709a642767ab37efd5b1423262d2e",
+        "audit_document": "experiments/M094/DESIGN_AUDIT.md",
+        "audit_report": "experiments/M094/DESIGN_AUDIT.json",
+        "document_is_not_byte_pinned": "The document is prose and carries the amendment disclosures; the report is the measurement and is what the digest binds.",
+        "superseded_audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9"
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "id": "A3",
+      "title": "the protocol's design-audit digest identified nothing",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the qualification pool, the draw rule, the mechanism and its digest. Only which artifact the protocol's audit digest names, and whether anything checks it.",
+      "what_is_replayable_and_what_is_a_snapshot": {
+        "preserved_because": "it measures the current measure, so it moves whenever the diagnosis legitimately changes. Binding a digest over a live measurement and a historical one together is what made this drift silent, and separating them is the actual repair.",
+        "preserved_not_replayed": [
+          "corrected_measure_threshold_sensitivity"
+        ],
+        "replayable_because": "they measure the inherited implementation -- m094_component_discovery.py and m094_transform.py -- which is preserved as evidence and does not change. All four reproduce exactly today.",
+        "replayed_and_checked": [
+          "indicator_discrimination",
+          "capability_presence_blindness",
+          "selection_determinism",
+          "template_authorship"
+        ]
+      },
+      "why_it_was_not_caught": "Nothing compared them. scripts/check_m094_result.py declared DESIGN_AUDIT_MD and never used it, and no condition read the audit at all. A binding that is never checked is a claim rather than a binding.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim exists. The correction makes a recorded digest resolve to the artifact it was always meant to name, and adds the check whose absence let it drift; it changes no measurement and no verdict. Recorded permanently with the arithmetic, as D-M076 requires."
+    },
+    {
+      "a_defect_in_a2_that_this_exposed": "m094_execution.constructible_cases treated a single unbuildable draw as proof that the class could not be built. mira_core/contracts.py::Observation enforces an invariant between fields -- success requires terminal -- and independently drawn values violate it about a quarter of the time, so the generator returned nothing and under A2 the class became unrepairable, which blocked this amendment outright. It now overdraws and keeps the combinations that build. A case that does not construct is not a case; it is not evidence that the class has no cases.",
+      "correction": "Every class tied at the greatest unmet demand in the selected component is repaired. The tie-break is not replaced, it is no longer needed. The repairs compose onto one source, and an arm closes only when all of them close -- measuring only the first would let a lineage that repaired one of two report what a lineage that repaired both reports, which is the arbitrary choice reappearing in the measurement of it.",
+      "date": "2026-08-19",
+      "defect": "Diagnosis.unmet is a total order whose last terms are the capability, the class name and the encoded detail. When two classes tie on demand, which one is repaired is decided by alphabetical order on an identifier -- and with it the adopted mechanism's digest and the qualification draw it salts. The tie is live: mira_core/contracts.py measures Goal and Observation both at demand 4 from four sites each, and Goal won because G sorts before O. Renaming the classes moved the selection, which a measurement must not do.",
+      "effect_on_the_mechanism": {
+        "classes_repaired": [
+          "Goal",
+          "Observation"
+        ],
+        "development_cost_seconds": 130,
+        "development_search": "Goal: 767 examined, 764 refused, 3 executed, 3 confirmed. Observation: 196607 examined, 196604 refused, 3 executed, 3 confirmed.",
+        "mechanism_digest_after": "259e12f5cbf86ec75c7c03c89deded86804a0aad170bb9407936fb338f413381",
+        "mechanism_digest_before": "3cd1314f4ed0fea0016d3dc9c85faec21b3fe12fbdcf26cdad896c24cc639214",
+        "unchanged": false,
+        "why_it_must_move": "What is adopted changed: two repairs instead of one. Unlike A1, A2 and A3, the draw therefore moves too. The development was run once and the resulting draw taken as it came; it was not inspected before the amendment was accepted."
+      },
+      "found_before": "any qualification, result or register claim existed",
+      "id": "A4",
+      "scope": "Class level only. The component choice is a measurement, is invariant under renaming, and is what P5 claims; it is untouched, and the tied set is taken inside the selected component. The ordering itself is also unchanged and is pinned by a test, because altering the sort key would move the mechanism and the draw and is a different act from this one.",
+      "title": "the repair target was decided by alphabetical order on a class name",
+      "what_did_not_change": "The hypothesis, the conditions, the falsifiers, the arms, the eligible component set, the qualification pool, the draw rule, the diagnosis measure and its digest (48cd5e9c2354a365...), the operation set, the composition bound and the acceptance rule. Only how many of the classes the measure ranks equal first are repaired.",
+      "why_a_measured_tie_break_was_rejected": "The two classes are equal on demand and equal on site count, so a secondary measured term does not separate them and falls back to the name again. Any term that did separate them would be one chosen by an author with the answer already visible. What the measure is reporting is that it cannot tell them apart, and inventing a discriminator would be overriding the measurement rather than obeying it.",
+      "why_this_is_not_a_repair_after_the_fact": "No qualification, result or register claim exists. The defect was recorded in the repository audit before any amendment was made, the correction obeys the measurement rather than overriding it, and it is recorded here permanently with its arithmetic, as D-M076 requires."
+    }
+  ],
   "arms": [
     "endogenous_diagnosis_and_synthesis",
     "random_component_selection",
@@ -45,13 +153,17 @@
   "date_frozen": "2026-08-18",
   "decision_slot": "D063",
   "design_audit": {
-    "audit_digest": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9",
+    "amended_by": "A3",
+    "audit_digest": "37eee413397f99079c2f5f30da6f3827b93709a642767ab37efd5b1423262d2e",
+    "audit_digest_binds": "the digest recorded inside experiments/M094/DESIGN_AUDIT.json, which is the digest of that report's own contents",
     "corrected_measure_p5_defect_and_repair": "RenderAsMapping.min_fields was authored, and sweeping it over 2-6 moved the selected component on three of five values. The declared value 3 was the outlier: 2, 4 and 5 all selected mira_core/contracts.py. Disclosed as Defect 5 rather than repaired by choosing the tidiest threshold, then repaired properly by removing the constant. Attribution now asks how many reachable classes could explain a call site: exactly one is evidence about that class, several is evidence about none. Nothing is sweepable, P5 passes, and the earlier selection of mira_core/safety.py is withdrawn as an artifact of the constant rather than a finding.",
     "defects_found_before_freeze": 12,
     "document": "experiments/M094/DESIGN_AUDIT.md",
     "inherited_implementation_fails_p2_p3_p4_and_p6": true,
     "instrument": "scripts/audit_m094_design.py",
-    "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c"
+    "report": "experiments/M094/DESIGN_AUDIT.json",
+    "source_commit_audited": "df88d24851c018836a35e8102ff0aa7dbf81167c",
+    "superseded_audit_digest_see_amendment_a3": "d41ea1ea84e0767ceee2d9ee54fd75ef710a71bc64bd2d3767b1e5739a6007a9"
   },
   "diagnostic_substrate": {
     "admissible_observations": [
@@ -118,10 +230,12 @@
     "M093": "engineering rehearsal. Its TARGET_FILE, diagnostic, capability choice and patch body were authored, and it says so. M094 attacks exactly those four and nothing else."
   },
   "qualification": {
+    "amended_by": "A1",
     "cross_component": "the requirement must be satisfied on a component other than the one used during development, so that a repair mechanism specialised to the development component fails",
     "draw_rule": "Order entries by sha256(entry_digest + adopted mechanism digest) and take the first two whose components differ. The mechanism digest does not exist until adoption, so the draw cannot be known at this freeze.",
     "drawn_by": "a separate process, with a salt derived from the adopted mechanism's own digest, which does not exist until adoption",
     "entries_drawn_per_qualification": 2,
+    "every_hidden_case_is_verified_by_construction": true,
     "experimenter_blindness_is_not_claimed": "The pool of candidate requirements is authored and committed at this freeze, and the draw is a deterministic function of the adopted mechanism's digest, so it is reproducible by anyone. What is claimed is that the lineage cannot import, read or reach any of it before adoption. No claim is made that the experimenter was blind to the pool.",
     "hidden_cases_per_requirement": 5,
     "no_new_operation_may_be_added_during_qualification": true,
@@ -129,14 +243,13 @@
     "pool": "experiments/M094/QUALIFICATION_POOL.json",
     "pool_components": [
       "mira_core/agent.py",
-      "mira_core/calibration.py",
       "mira_core/container.py",
       "mira_core/harbor.py",
       "mira_core/model.py",
       "mira_core/skills.py"
     ],
-    "pool_digest": "44f46e6b92996e14385d5ff713b18676ea59bfa3cfca32493f0fd98d9cc0a9db",
-    "pool_entries": 9
+    "pool_digest": "0016300c4064c0cae17465c1bf603aeeb8f9b81bf2f17c9110d0ab41026685ba",
+    "pool_entries": 8
   },
   "reattempts_m092": false,
   "repair_substrate": {
@@ -153,7 +266,7 @@
   },
   "schema": "m094-protocol-v1",
   "status": "FROZEN",
-  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared.",
+  "status_note": "Frozen by the project owner on 18 August 2026, before any qualification data existed. The eligible component set is enumerated above and the qualification pool is committed at experiments/M094/QUALIFICATION_POOL.json with digest 44f46e6b92996e14. No RESULT.json, QUALIFICATION.json or REGISTER_CLAIM.json exists at this freeze. From here the protocol may not be repaired to save a result: a correction after a verdict is forbidden, superseded runs are preserved and disclosed, and the attempt number is derived from the preserved artifacts rather than declared. Amended on 19 August 2026 by amendment A1, recorded in full above and permanently: the qualification pool's hidden cases were synthesised and never executed, and seven of nine entries raised on construction. The pool was regenerated with every case verified by construction and the superseded pool preserved. No qualification, result or register claim existed before, during or after the amendment, and the adopted mechanism is unchanged. Amended again on 19 August 2026 by amendment A2: acceptance inspected a candidate's syntax where it needed to execute it, so a repair that read correctly and raised when run could be adopted. Corrected before arming, with the mechanism digest unchanged and therefore the draw unchanged. Amended a third time on 19 August 2026 by amendment A3: the protocol's design-audit digest named no committed artifact, and nothing checked it. Corrected to the committed report's own digest, with the superseded value preserved, the report's own staleness relative to the freeze disclosed, and the binding now enforced by the checker. Amended a fourth time on 19 August 2026 by amendment A4: the class repaired was decided by alphabetical order when two classes tie on demand, which Goal and Observation do. Every tied class is now repaired. This is the only amendment that moves the mechanism digest, and therefore the draw, because what is adopted changed.",
   "subtitle": "The lineage chooses what to repair, and builds the repair",
   "title": "Autonomous Component Diagnosis and Repair Synthesis",
   "track": "A",

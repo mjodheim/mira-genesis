@@ -26,7 +26,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest"]
+# `pytest-xdist` is a test *runner*, never imported by the project. It exists because the
+# suite's cost is concentrated in eight expensive module-scoped fixtures in the frozen
+# M061-M066 band: serial 46m19s, `-n 10 --dist loadscope` 15m28s, with identical results
+# (2531 passed, 12 skipped, both). `loadscope` keeps each module on one worker so no
+# module-scoped fixture is computed twice. Nothing is cached and nothing is skipped -- every
+# frozen result is still recomputed, just concurrently.
+dev = ["pytest", "pytest-xdist"]
 
 [tool.setuptools]
 # `scripts/` contains repository entry points executed from the project root rather

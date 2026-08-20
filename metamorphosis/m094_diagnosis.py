@@ -442,6 +442,28 @@ def _module_name(repo_root: Path, component_path: str) -> str:
     return component_path.replace("/", ".").removesuffix(".py")
 
 
+def _reaches_component_cached(
+    path: Path, tree: ast.AST, module: str, exported: frozenset[str]
+) -> bool:
+    """`_reaches_component`, remembered per (file identity, module, exported names).
+
+    The predicate is a pure function of the file's syntax tree and the component's module
+    name and exported names, so caching it changes no measurement. It was the dominant
+    remaining cost: 2446 calls per diagnosis, each an `ast.walk` of a whole file.
+    """
+
+    try:
+        stat = path.stat()
+        key = (str(path), stat.st_size, stat.st_mtime_ns, module, exported)
+    except OSError:
+        return _reaches_component(tree, module, exported)
+    cached = _REACH_CACHE.get(key)
+    if cached is None:
+        cached = _reaches_component(tree, module, exported)
+        _REACH_CACHE[key] = cached
+    return cached
+
+
 def _reaches_component(tree: ast.AST, module: str, exported: frozenset[str]) -> bool:
     """Can this source reach the component, directly or via a package re-export?
 
@@ -557,6 +579,54 @@ class Insufficiency:
         return _digest(self.to_dict())
 
 
+#: Parsed repository sources, keyed by tree identity rather than by path alone.
+#:
+#: `measure_component` walks every source once per eligible component, so a three-component
+#: diagnosis parsed all 644 files three times: 1935 `ast.parse` calls, and the dominant cost
+#: of the whole M094 loop. The cache key carries each file's size and modification time, so
+#: an edited file is re-parsed and a stale entry cannot be served. Caching a pure function of
+#: the file's bytes changes no measurement -- `docs/REPOSITORY_AUDIT_2026_08_18.md` records
+#: the diagnosis digest before and after, and it is the same.
+_PARSE_CACHE: dict[tuple[str, int, int], ast.AST] = {}
+
+#: Whether one source can reach one component. Called once per (reaching file, candidate
+#: class), which is where the remaining time went after the parse cache. Keyed on the file's
+#: identity and on the exported names, so a component that gains or loses a public name is
+#: measured again rather than remembered.
+_REACH_CACHE: dict[tuple[str, int, int, str, frozenset[str]], bool] = {}
+
+
+def _parse_cached(path: Path) -> ast.AST | None:
+    """Parse *path* once per (path, size, mtime). Returns None if it cannot be read."""
+
+    try:
+        stat = path.stat()
+        key = (str(path), stat.st_size, stat.st_mtime_ns)
+    except OSError:
+        return None
+    cached = _PARSE_CACHE.get(key)
+    if cached is not None:
+        return cached
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"))
+    except (SyntaxError, UnicodeDecodeError, OSError):
+        return None
+    _PARSE_CACHE[key] = tree
+    return tree
+
+
+def clear_caches() -> None:
+    """Drop the parse and reachability caches.
+
+    Only needed by a caller that rewrites a source and re-measures within the same process
+    faster than the filesystem's modification-time resolution can distinguish. The arm
+    runners do exactly that, so the entry point is public rather than an internal detail.
+    """
+
+    _PARSE_CACHE.clear()
+    _REACH_CACHE.clear()
+
+
 def _python_sources(repo_root: Path, exclude: Path) -> Iterator[tuple[Path, ast.AST]]:
     """Walk the repository's own Python sources, pruning environment trees.
 
@@ -583,10 +653,9 @@ def _python_sources(repo_root: Path, exclude: Path) -> Iterator[tuple[Path, ast.
             path = Path(parent) / filename
             if path.resolve() == exclude:
                 continue
-            try:
-                yield path, ast.parse(path.read_text(encoding="utf-8"))
-            except (SyntaxError, UnicodeDecodeError, OSError):
-                continue
+            tree = _parse_cached(path)
+            if tree is not None:
+                yield path, tree
 
 
 def _pool_by_target(
@@ -661,6 +730,7 @@ def measure_component(
     repo_root: Path,
     component_path: str,
     candidates: Sequence[CandidateClass] | None = None,
+    shapes: Sequence[object] | None = None,
 ) -> tuple[Insufficiency, ...]:
     """Measure every unmet capability shape on one component.
 
@@ -682,10 +752,13 @@ def measure_component(
         candidates = candidate_classes(repo_root, [component_path])
 
     # Parse the reaching sources once, rather than once per class and shape.
-    reaching: list[tuple[str, ast.AST]] = [
-        (path.relative_to(repo_root).as_posix(), other_tree)
+    reaching_paths: list[tuple[Path, str, ast.AST]] = [
+        (path, path.relative_to(repo_root).as_posix(), other_tree)
         for path, other_tree in _python_sources(repo_root, source_path)
-        if _reaches_component(other_tree, module, exported)
+        if _reaches_component_cached(path, other_tree, module, exported)
+    ]
+    reaching: list[tuple[str, ast.AST]] = [
+        (relative, other_tree) for _path, relative, other_tree in reaching_paths
     ]
 
     # Which rival classes each reaching file can also see. A class it cannot
@@ -693,13 +766,15 @@ def measure_component(
     rivals_by_file: dict[str, tuple[CandidateClass, ...]] = {
         relative: tuple(
             candidate for candidate in candidates
-            if _reaches_component(other_tree, candidate.module, candidate.exported)
+            if _reaches_component_cached(
+                path, other_tree, candidate.module, candidate.exported
+            )
         )
-        for relative, other_tree in reaching
+        for path, relative, other_tree in reaching_paths
     }
 
     for class_node in [n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)]:
-        for shape in CAPABILITY_SHAPES:
+        for shape in (CAPABILITY_SHAPES if shapes is None else shapes):
             if not shape.applies_to(class_node):
                 continue
 
@@ -747,20 +822,61 @@ class Diagnosis:
     def digest(self) -> str:
         return _digest(self.to_dict())
 
+    def tied_selection(self) -> tuple[Insufficiency, ...]:
+        """Every insufficiency the measurement ranks equal first, not just the first of them.
 
-def diagnose(repo_root: Path, components: Sequence[str]) -> Diagnosis:
+        Amendment A4. `unmet[0]` is the head of a total order whose last terms are the
+        capability, the class name and the encoded detail -- so when two classes tie on
+        demand, which one gets repaired is decided by alphabetical order on an identifier.
+        In this repository that tie is live: `Goal` and `Observation` both measure demand 4
+        from four sites each, and `Goal` wins because G sorts before O.
+
+        A measured secondary term would not have helped. The two are equal on demand *and*
+        on site count, so any such rule falls back to the name again. What the measure is
+        actually saying is that it cannot separate them, and the faithful response to that
+        is to repair both rather than to invent a discriminator.
+
+        Scoped to the selected component: the component-level choice is a measurement and is
+        invariant under renaming, which is the property P5 claims. Only the class-level
+        choice was arbitrary, and only that is removed.
+        """
+
+        if not self.unmet:
+            return ()
+        top = self.unmet[0].demand
+        return tuple(
+            item for item in self.unmet
+            if item.demand == top and item.component_path == self.selected
+        )
+
+
+def diagnose(
+    repo_root: Path,
+    components: Sequence[str],
+    shapes: Sequence[object] | None = None,
+) -> Diagnosis:
     """Select the component with the greatest unmet demand.
 
-    Ties break on (demand, component path) so the rule is total and reproducible.
-    A component with no unmet capability is never selected; if none has one, the
-    diagnosis is empty rather than arbitrary.
+    The ordering key is ``(-demand, component_path, capability, target, detail)``, so
+    the rule is total and reproducible. A component with no unmet capability is never
+    selected; if none has one, the diagnosis is empty rather than arbitrary.
+
+    An earlier version of this docstring said ties break on "(demand, component path)",
+    which omitted the terms that actually decide. ``target`` is the class name, so when
+    two classes tie on demand -- as ``Goal`` and ``Observation`` currently do in
+    ``mira_core/contracts.py`` -- the class that gets repaired is chosen by alphabetical
+    order on its identifier, not by measurement. The component-level selection is
+    invariant under renaming; the class-level selection is not. This is disclosed in
+    ``docs/REPOSITORY_AUDIT_2026_08_18.md`` and is left unchanged here: altering the key
+    would move the adopted mechanism digest, and with it the qualification draw, which is
+    a decision for the project owner to record before the run rather than a cleanup.
     """
 
     candidates = candidate_classes(repo_root, components)
 
     considered: list[Insufficiency] = []
     for path in components:
-        considered.extend(measure_component(repo_root, path, candidates))
+        considered.extend(measure_component(repo_root, path, candidates, shapes))
 
     unmet = tuple(sorted(
         (i for i in considered if i.is_unmet),

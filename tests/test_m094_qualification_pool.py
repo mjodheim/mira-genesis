@@ -40,7 +40,7 @@ def pool() -> dict:
 
 def test_the_pool_exists_and_is_committed(pool: dict) -> None:
     assert OUTPUT.exists(), "the protocol commits to a pool existing at the freeze"
-    assert pool["schema"] == "m094-qualification-pool-v1"
+    assert pool["schema"] == "m094-qualification-pool-v2"
     assert pool["authored_at_freeze"] is True
     assert pool["entries"], "an empty pool would qualify nothing"
 
@@ -72,12 +72,68 @@ def test_the_pool_spans_more_than_one_component(pool: dict) -> None:
 
 
 def test_every_entry_carries_a_requirement_and_hidden_cases(pool: dict) -> None:
+    """A case must cover the requirement. It may — and often must — carry more.
+
+    This assertion previously read `set(case["fields"]) == fields`: a case had to assign
+    *exactly* the fields the requirement reads and nothing else. That is the assertion that
+    locked in amendment A1's defect. Any class with another required constructor argument
+    could then never be built from its own committed cases, and seven of the nine frozen
+    entries raised on construction because of it. The property that matters is coverage plus
+    constructibility, and constructibility is asserted by execution below.
+    """
+
     for entry in pool["entries"]:
         assert entry["requirement"], entry["class"]
         assert len(entry["hidden_cases"]) == HIDDEN_CASES_PER_REQUIREMENT
-        fields = {item["field"] for item in entry["requirement"]}
+        indices = [case["index"] for case in entry["hidden_cases"]]
+        assert indices == sorted(set(indices)), entry["class"]
         for case in entry["hidden_cases"]:
-            assert set(case["fields"]) == fields, "a case must assign exactly the fields read"
+            # `fields` may legitimately be empty: a class whose constructor takes no
+            # arguments — `TeacherCallTrap` is one — is built by calling it, and the field
+            # the requirement reads is set inside `__init__`. What must hold is that the
+            # case constructs and the requirement is readable, asserted by execution below.
+            assert isinstance(case["fields"], dict)
+
+
+def test_every_hidden_case_constructs_its_class(pool: dict) -> None:
+    """The check whose absence was amendment A1.
+
+    The pool's requirements were measured; its case *values* were synthesised and never run.
+    Nothing executed them until the qualification harness did, by which point the pool was
+    frozen and its draw selected two entries that could not be built at all.
+    """
+
+    import importlib
+
+    for entry in pool["entries"]:
+        module = importlib.import_module(
+            entry["component"].replace("/", ".").removesuffix(".py")
+        )
+        cls = getattr(module, entry["class"])
+        for case in entry["hidden_cases"]:
+            instance = cls(**case["fields"])
+            for item in entry["requirement"]:
+                # And every field the requirement reads must be readable on the instance,
+                # or no method could satisfy it however well the mechanism worked.
+                getattr(instance, item["field"])
+
+
+def test_excluded_entries_are_recorded_with_a_reason(pool: dict) -> None:
+    """An entry a qualification could not include is part of what it is worth."""
+
+    excluded = pool["entries_excluded_because_they_measure_nothing"]
+    for item in excluded:
+        assert item["reason"], item["class"]
+        assert item["component"] and item["class"]
+    # The superseded pool is preserved rather than replaced.
+    superseded = OUTPUT.parent / "QUALIFICATION_POOL_SUPERSEDED_A1.json"
+    assert superseded.exists(), "the pool A1 replaced must be preserved"
+
+
+def test_the_amendment_is_recorded_permanently(pool: dict) -> None:
+    assert pool["amendment"] == "A1"
+    assert "never executed" in pool["amendment_reason"]
+    assert pool["every_case_is_verified_by_construction"] is True
 
 
 def test_entry_digests_are_unique_and_recomputable(pool: dict) -> None:

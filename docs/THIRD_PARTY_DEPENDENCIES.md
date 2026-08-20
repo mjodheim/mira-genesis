@@ -1,6 +1,7 @@
 # Third-party dependency and tooling audit
 
-**Snapshot date: 12 August 2026**
+**Snapshot date: 12 August 2026.** Amended 19 August 2026: one development dependency added
+(`pytest-xdist`, MIT, test-runner only) — see the table below. No runtime dependency changed.
 
 This is the project's initial human-readable due-diligence inventory. It distinguishes software that
 Mira Genesis directly declares as a Python dependency from tools, container images and operating
@@ -21,12 +22,14 @@ bundles third-party software.
 | setuptools | Build backend | `setuptools>=68` | MIT | Build-time dependency; not evidence that setuptools is redistributed with a Mira artefact |
 | NumPy | Runtime dependency | `numpy` | Modified BSD / BSD-style | Direct runtime dependency and therefore part of any product-specific dependency review |
 | pytest | Development/test | optional extra `dev` | MIT | Test dependency; ordinarily not a runtime component |
+| pytest-xdist | Development/test — parallel execution of the existing suite | optional extra `dev` | MIT (`License-Expression: MIT`) | Test-runner plugin added 19 August 2026. Never imported by the project; invoked as `pytest -n <N> --dist loadscope`. Pulls `execnet` (MIT) transitively. Not a runtime component and not redistributed with any Mira artefact |
 
 Primary upstream references checked for this audit:
 
 - NumPy project/licensing statement: <https://numpy.org/about/>
 - setuptools official repository: <https://github.com/pypa/setuptools>
 - pytest official repository: <https://github.com/pytest-dev/pytest>
+- pytest-xdist official repository: <https://github.com/pytest-dev/pytest-xdist>
 
 The project CI already contains an integrity check intended to keep declared Python dependencies in
 sync with imports. That is useful engineering evidence, but it is not a licence scanner.

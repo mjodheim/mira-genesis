@@ -244,6 +244,7 @@ def suggest_operations(
     capability: str,
     target: str,
     detail: str,
+    max_length: int | None = None,
 ) -> list[SynthesisOperation]:
     """Given a diagnostic result, generate candidate operations.
 
@@ -271,6 +272,11 @@ def suggest_operations(
         Shape-specific detail. For ``RenderAsMapping`` this is the
         attribute subset read by callers; for ``FilterByAttribute`` this
         is the attribute name.
+    max_length:
+        Composition bound. ``None`` uses the declared
+        ``m094_composition.MAX_COMPOSITION_LENGTH``. It exists so the protocol's
+        ``more_budget_same_operations`` arm can raise the bound over the same
+        operation set; a control that cannot be run cannot fail.
 
     Returns
     -------
@@ -288,7 +294,8 @@ def suggest_operations(
         return []
 
     from metamorphosis import m094_composition as composition
-    from metamorphosis.m094_diagnosis import CAPABILITY_SHAPES
+    from metamorphosis import m094_execution as execution
+    from metamorphosis.m094_diagnosis import CAPABILITY_SHAPES, decode_rendering
 
     shape = next((s for s in CAPABILITY_SHAPES if s.name == capability), None)
     if shape is None:
@@ -313,6 +320,43 @@ def suggest_operations(
         node = _find_class_node(modified_tree, class_name)
         return node is not None and shape.is_supplied_by(node, target, detail)
 
+    search_kwargs = {} if max_length is None else {"max_length": max_length}
+    def confirms(ordered):
+        """Amendment A2: run the survivors and keep the ones that reproduce the requirement.
+
+        The structural predicate above says a candidate *reads* correctly. This says it
+        *behaves* correctly, on values the class actually accepts, in a fresh interpreter
+        that is never told which method is supposed to work. A candidate binding the
+        required keys and wrapping an unrelated integer field in `list()` satisfied the
+        first and raises under the second; the qualification found exactly that.
+        """
+
+        cases = execution.constructible_cases(
+            repo_root, component_path, class_name, decode_rendering(detail),
+        )
+        if not cases:
+            # No value the class accepts could be invented, so nothing can be executed. The
+            # candidates are returned unconfirmed rather than silently adopted, and the
+            # report records that nothing was executed.
+            return [], 0, False
+
+        budget = execution.MAX_CONFIRMATIONS
+        window = ordered[:budget]
+        variants = [
+            (str(index), composition.insert_into_class(source, class_name, item.source) or "")
+            for index, item in enumerate(window)
+        ]
+        records = execution.probe_variants(
+            repo_root, component_path, variants, class_name,
+            decode_rendering(detail), cases,
+        )
+        by_id = {record["id"]: record for record in records}
+        accepted = [
+            item for index, item in enumerate(window)
+            if execution.agrees(by_id.get(str(index), {}))
+        ]
+        return accepted, len(window), len(ordered) > budget
+
     report = composition.search(
         source=source,
         class_name=class_name,
@@ -321,6 +365,8 @@ def suggest_operations(
         detail=detail,
         collections=collections,
         accepts=accepts,
+        confirms=confirms,
+        **search_kwargs,
     )
 
     if report.adopted is None:
@@ -340,7 +386,9 @@ def suggest_operations(
         description=(
             "assembled " + str(len(adopted.composition)) + " operations for "
             + class_name + "; " + str(report.examined) + " examined, "
-            + str(report.refused_total()) + " refused"
+            + str(report.refused_total()) + " refused, "
+            + str(report.executed) + " executed, "
+            + str(report.confirmed_by_execution) + " confirmed"
         ),
         apply=_apply,
         digest=adopted.digest(),

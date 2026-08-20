@@ -1061,7 +1061,47 @@ question remains open but is not a missing completion gate.
 | M074 | **NEGATIVE SCIENTIFIC RESULT** | Frozen paired execution passed 6/6 feasible arm tasks and 0/6 impossible tasks, but emitted no refusal: true-refusal rate 0/3, margin 0.0, zero saved steps, zero defect and no retry. Result `75e84682`. |
 | M075 | **PUBLIC MODEL DEVELOPMENT COMPLETE — NON-SCIENTIFIC** | One committed 12-container run preserved 43 decisions: context 2/3 true refusals, no false refusal, 3/3 feasible submission; independent baseline 0/3 and no submission. H21/private transfer remain untested. |
 | M092 | **ABORTED WITHOUT VERDICT** | The canonical search was voluntarily interrupted (PR #167). Protocol frozen at `aa18d15` (M092-A) and `4903300` (M092-B, 15 conditions), search armed at `7190ff8`. Last published canonical segment: segment 3. No terminal candidate, no independent reproduction, no qualification. H38 unresolved, D062 unfilled; the A checkpoint infrastructure remains valid. |
+| M094 | **POSITIVE QUALIFIED SCIENTIFIC RESULT** | The lineage located the component limiting it and built the repair, without being told either. Run at `43ef9d30` as attempt 2; mechanism `259e12f5` repairs `Goal` and `Observation` in `mira_core/contracts.py`. Qualification 2/2 cross-component (`AgentResult`, `ContainerSpec`), all twelve conditions computed and true. Amendments A1–A4 before arming; attempt 1 withdrawn and preserved over a P11 byte-exactness defect. Eligible set, observations, operation set and bound remain authored. D063 unfilled. |
 | M093 | **ENGINEERING REHEARSAL — NON-QUALIFYING DEVELOPMENT RESULT** | First real persistent component transformation on `mira_core/memory.py` (`MemoryLedger`, +17 lines). Demonstrates transformation infrastructure, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Does NOT demonstrate autonomous diagnosis, component selection or non-predefined repair generation. All test assertions pass (original 6/6, candidate 7/7, held-out 4/4). |
+
+- **M094 is a POSITIVE QUALIFIED SCIENTIFIC RESULT — the lineage chose what to repair and built the
+  repair.** Protocol frozen 18 August 2026 (reached `main` as `9b69d7f`), run at `43ef9d30` on
+  19 August 2026 as **attempt 2**. The diagnosis selected `mira_core/contracts.py` by measurement
+  and repaired both classes tied at demand 4, `Goal` and `Observation`; the adopted mechanism is
+  `259e12f5`. Qualification **2/2 satisfied, cross-component** on entries drawn after adoption from
+  the mechanism's own digest: `AgentResult` (a computed `@property`) and `ContainerSpec` (a re-keyed
+  binding). All twelve conditions computed and true. Controls: random selection and template-only
+  each closed nothing; more budget reached the same mechanism.
+  **Four amendments, all before arming and all recorded permanently in the protocol**: A1 the pool's
+  hidden cases were never executed (7 of 9 entries unbuildable); A2 acceptance read a candidate
+  where it had to run it; A3 the protocol's design-audit digest identified nothing; A4 the repair
+  target was decided by alphabetical order when two classes tie.
+  **Attempt 1 is withdrawn and preserved**, with its positive verdict and the P11 defect that
+  withdrew it — `restoration_is_byte_exact` was measured over decoded text and did not see the
+  rollback normalise CRLF to LF. See `experiments/M094/POST_VERDICT_DISCLOSURE.md`.
+  **Still authored, and the next ceiling**: the eligible component set, the admissible observations,
+  the operation set and the composition bound. D063 is unfilled.
+
+- **M095 is a MECHANISM DEMONSTRATION — nothing is frozen and no run has been armed.** It asks
+  whether an adopted repair changes what the lineage can *reach*, and the mechanism is built and
+  measured in an authored, disclosed world: `S0 →(A) S1 →(B) S2`, with the diagnosis choosing both
+  targets. **B is unreachable from S0** — 191 compositions examined, 0 survivors — and reachable
+  from S1, where the repair it builds calls the method A created. Two counterfactuals separate the
+  causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
+  unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
+  "A enabled B". Every reached repair is confirmed by executing it.
+  **A design audit run before any protocol found four defects** (`experiments/M095/DESIGN_AUDIT.md`).
+  Three were in the instrument and are repaired, two of them regressions of M094 amendments: the
+  search had stopped executing candidates (A2), and the nested requirement did not record what the
+  call sites wrote, so the probe refused every correct candidate. The fourth was in the *selection*
+  and is now repaired too: at S1 two capabilities tie on demand and the one repaired was chosen by
+  alphabetical order on the capability name — A4's defect at the capability level, and the one that
+  would have made a positive result depend on an accident. **Every capability the measure ranks
+  equal first is now repaired**, so the ordering decides nothing and nothing is left unmet at S2.
+  What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
+  qualification pool drawn from outside this world, and a checker that recomputes. No hypothesis is
+  registered, no protocol is frozen, no qualification pool exists.
+  See `experiments/M095/DESIGN.md`.
 
 ## Parallel measurement track — M045
 

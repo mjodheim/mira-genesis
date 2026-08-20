@@ -33,7 +33,9 @@ ENTRY_POINT_PREFIXES = ("run_", "audit_", "train_", "check_")
 
 # Tools invoked from the command line and never imported by source code. Declaring them
 # without importing them is legitimate.
-COMMAND_LINE_TOOLS = {"pytest"}
+# Declared in pyproject but never imported by the project, because they are invoked as
+# commands or loaded as pytest plugins rather than used as libraries.
+COMMAND_LINE_TOOLS = {"pytest", "pytest-xdist"}
 
 # A third-party import name does not always match its distribution name.
 DISTRIBUTION_ALIASES = {

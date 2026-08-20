@@ -950,15 +950,66 @@ mechanism was fixed**, on a component other than the one used during development
 random-selection arm, a single-template arm and a larger budget over the same operation set each
 close nothing.
 
-**Status:** **FROZEN AND OPEN — the protocol is precommitted, the hypothesis is not supported.**
-The protocol was frozen by the project owner on 18 August 2026 at commit `dd79665`,
+**Status:** **RUN, WITH ATTEMPT 1 CARRYING A DISCLOSED DEFECT.** The protocol was precommitted,
+the canonical run of 19 August 2026 returned a positive verdict, and a defect in the evidence for
+P11 was found after that verdict. See the run record and the disclosure below before reading the
+verdict as support.
+The protocol was frozen by the project owner on 18 August 2026 at commit `dd79665`, which reached
+`main` as `9b69d7f` when the freeze branch was rebased before merging; the two commits carry the
+identical tree `e2ab1c1b`, and `9b69d7f` is the one a fresh clone can resolve.
 `experiments/M094/PROTOCOL.json`, before any qualification data existed, together with a
 qualification pool of nine candidate requirements at
-`experiments/M094/QUALIFICATION_POOL.json` (digest `44f46e6b…`), every one of them drawn from a
-component outside the development set. **No qualification run has been performed**, so H39 is
-neither supported nor refuted. Seven of the twelve conditions are computed and true; P7 through P11
-concern what a run would show and remain uncomputed, and the checker's verdict is `incomplete`
-rather than positive.
+`experiments/M094/QUALIFICATION_POOL.json`, every one of them drawn from a component outside the
+development set. The pool was **amended on 19 August 2026 (amendment A1, recorded permanently in
+the protocol)**: its hidden cases had been synthesised from a seed and never executed, and seven
+of its nine entries raised on construction, so the qualification could not have measured the
+mechanism. It now holds eight entries at digest `0016300c…`, every case verified by constructing
+its class; the superseded pool is preserved at
+`experiments/M094/QUALIFICATION_POOL_SUPERSEDED_A1.json` at digest `44f46e6b…`. The hypothesis,
+conditions, falsifiers, arms, eligible set and draw rule are unchanged, as is the mechanism.
+
+A second amendment, **A2**, followed on the same day and for a reason the first one uncovered.
+With the pool repaired, the qualification ran and **refuted the mechanism** on
+`mira_core/container.py::ContainerLimits`: acceptance inspected a candidate's syntax where it
+needed to run it, so a repair binding the required keys correctly while wrapping an unrelated
+integer field in `list()` passed and raised when executed. A candidate is now accepted by
+executing it. The mechanism digest is unchanged at `3cd1314f…` — all three of the development
+target's survivors execute and confirm — so the draw is unchanged and A2 is measured against the
+entry that refuted it. Both amendments are recorded in full and permanently in `PROTOCOL.json`.
+A fourth, **A4**, removed the last arbitrary choice: when two classes tie on demand the class
+repaired was decided by alphabetical order on its name, and `Goal` and `Observation` tie at demand
+4 from four sites each. A measured secondary term would have tied too, so the correction is to
+repair every class the measure ranks equal first rather than to invent a discriminator. This is
+the only amendment that moves the mechanism digest — `3cd1314f…` → `259e12f5…` — because what is
+adopted changed; the draw moved with it and was taken as it came.
+
+**The canonical run was performed on 19 August 2026** at source commit `210e8f04`, protocol
+`2d879f2f…` with amendments A1–A4 in force, against the live repository. One attempt, no reroll,
+zero model calls and zero network calls. The adopted mechanism is `259e12f5…`, repairing `Goal`
+and `Observation` — the two classes tied at demand 4. The qualification, drawn by a separate
+process from the salt the run produced, is **positive**: `AgentResult` and `ContainerSpec`, both
+satisfied on 10 of 10 constructible cases and both accepted by the independent validator,
+cross-component. The checker recomputes **all twelve conditions as true**, verdict `positive`.
+
+**H39 is supported by this run, with one disclosed defect in the evidence for P11.** The rollback's
+`restoration_is_byte_exact` is measured over decoded text, so it did not detect that the roundtrip
+normalised the component's line endings from CRLF to LF: the content is identical and git records
+no change, but the on-disk bytes were not restored exactly. Found *after* the verdict and therefore
+**not repaired**, since correcting a real defect after a verdict to save a result is a falsifier the
+protocol names. Recorded in full at `experiments/M094/POST_VERDICT_DISCLOSURE.md`, with the three
+options — accept with the disclosure, withdraw and re-run, or narrow P11's wording — left to the
+project owner.
+
+**No register claim is made here.** Decision slot D063 is unfilled and remains the owner's act.
+
+*Superseded statement, kept for chronology.* Until the canonical run this section read:
+
+> **No qualification run has been performed**, so H39 is neither supported nor refuted. Seven of
+> the twelve conditions are computed and true; P7 through P11 concern what a run would show and
+> remain uncomputed, and the checker's verdict is `incomplete` rather than positive.
+
+That was true from the freeze on 18 August 2026 until the run on 19 August 2026. It is false now,
+and is preserved rather than deleted so the chronology is legible.
 
 **Why it is asked.** M093 is an engineering rehearsal and says so: its `TARGET_FILE`, its
 diagnostic, its capability choice and its patch body were all authored. The transformation

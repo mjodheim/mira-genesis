@@ -30,6 +30,8 @@ import json
 from dataclasses import dataclass, field, replace
 from typing import Iterator, Sequence
 
+from metamorphosis.m094_diagnosis import decode_rendering
+
 COMPOSITION_SCHEMA = "m094-repair-composition-v1"
 
 #: Container constructors a field may be wrapped in. `None` means "as it is".
@@ -112,10 +114,22 @@ class Operation:
 
 @dataclass(frozen=True)
 class NameMethod(Operation):
+    """Give the method under construction a name.
+
+    `taken` is the set of public method names the class already defines. A name already in use
+    is not available: appending a second method of the same name shadows the first, so a
+    lineage repairing two capabilities on one class would silently undo its earlier repair.
+    Read from the class rather than tracked, so it is a property of the state like every other
+    applicability question here.
+    """
+
     identifier: str
+    taken: frozenset[str] = frozenset()
 
     def apply(self, draft: MethodDraft) -> MethodDraft | None:
         if draft.name is not None:
+            return None
+        if self.identifier in self.taken:
             return None
         return replace(draft, name=self.identifier)
 
@@ -204,8 +218,25 @@ def _self_attribute(field: str) -> ast.expr:
 
 
 def _wrapped(expr: ast.expr, wrapper: str | None) -> ast.expr:
+    """Apply a wrapper to a field expression.
+
+    `None` reads the field; `list`/`tuple` construct around it. A wrapper of the form
+    `render:<method>` calls that method *on* the field instead of a function around it, which
+    is how M095 renders a value object nested inside another one. The method name travels in
+    the wrapper because it is discovered from the inner class rather than written down; see
+    `metamorphosis/m095_reach.py`.
+
+    Additive: no M094 composition produces a `render:` wrapper, and the adopted mechanism
+    digest `259e12f5…` is unchanged by this branch.
+    """
+
     if wrapper is None:
         return expr
+    if wrapper.startswith("render:"):
+        method = wrapper[len("render:"):]
+        return ast.Call(
+            func=ast.Attribute(value=expr, attr=method, ctx=ast.Load()), args=[], keywords=[]
+        )
     return ast.Call(func=ast.Name(id=wrapper, ctx=ast.Load()), args=[expr], keywords=[])
 
 
@@ -318,6 +349,7 @@ def operations_for(
     fields: Sequence[str],
     detail: str,
     collections: Sequence[str] = (),
+    taken: frozenset[str] = frozenset(),
 ) -> tuple[Operation, ...]:
     """Every operation available for this insufficiency.
 
@@ -325,15 +357,37 @@ def operations_for(
     decides what the method returns at all; `NameMethod` only names it. A method
     exists once some sequence of them has supplied a name, a return shape, and
     whatever that shape needs.
+
+    `taken` names the public methods the class already defines, so a repair cannot be given a
+    name that would shadow an earlier one. Empty by default, which is the state M094 measured
+    in: neither of its targets defined a public method, so its adopted mechanism is unchanged.
     """
 
-    operations: list[Operation] = [NameMethod(n) for n in _name_candidates(capability, detail)]
+    operations: list[Operation] = [
+        NameMethod(n, taken) for n in _name_candidates(capability, detail)
+    ]
     operations.append(ReturnShape("mapping"))
     operations.append(ReturnShape("filter"))
 
     for field in sorted(fields):
         for wrapper in WRAPPERS:
             operations.append(IncludeField(field, wrapper))
+
+    # Callers do not always name the key after the field behind it. A site that wrote
+    # `{"destination": spec.working_directory}` demands a method binding `destination` to
+    # `working_directory`, and `RenderAsMapping.is_supplied_by` has always required exactly
+    # that agreement -- but every operation offered above binds a key to the field of the
+    # same name, so no composition could express it and the search refused everything on
+    # such a component. Acceptance demanded a binding generation could not produce.
+    #
+    # The keys come from `detail`, which is the diagnosis's record of what the call sites
+    # wrote. They are a measurement, not a table: nothing here knows a component, and a
+    # requirement whose keys match its fields adds no operation at all.
+    for key, field, _wrapper in decode_rendering(detail):
+        if key == field or field not in set(fields):
+            continue
+        for wrapper in WRAPPERS:
+            operations.append(IncludeField(field, wrapper, key))
 
     attribute = detail.split(",")[-1]
     for collection in sorted(collections):
@@ -370,6 +424,13 @@ class SearchReport:
     #: Survivors that actually differ in what they compute. Several spellings of
     #: one behaviour is one discovery, not several.
     surviving_behaviours: int = 0
+    #: Amendment A2. Survivors passed the structural filter and were then executed. A
+    #: candidate that reproduces the requirement when read and raises when run is refused
+    #: here rather than adopted, which is what the frozen acceptance rule could not do.
+    confirmed_by_execution: int = 0
+    executed: int = 0
+    refused_after_execution: int = 0
+    execution_budget_reached: bool = False
 
     def refuse(self, reason: str) -> None:
         self.refused[reason] = self.refused.get(reason, 0) + 1
@@ -386,6 +447,10 @@ class SearchReport:
             "refused_total": sum(self.refused.values()),
             "survivors": self.survivors,
             "surviving_behaviours": self.surviving_behaviours,
+            "executed": self.executed,
+            "confirmed_by_execution": self.confirmed_by_execution,
+            "refused_after_execution": self.refused_after_execution,
+            "execution_budget_reached": self.execution_budget_reached,
             "adopted": (
                 {
                     "composition": list(self.adopted.composition),
@@ -471,13 +536,22 @@ def search(
     collections: Sequence[str],
     accepts,
     max_length: int = MAX_COMPOSITION_LENGTH,
+    confirms=None,
 ) -> SearchReport:
-    """Assemble candidates and keep the ones the requirement accepts.
+    """Assemble candidates, filter them by the requirement, and adopt one that runs.
 
-    `accepts` is supplied by the caller and receives the *modified source*. It is
-    the diagnosis re-run against the candidate, so acceptance means "the
-    insufficiency is now met" rather than "the output matches something written
+    `accepts` receives the *modified source* and re-runs the diagnosis against it, so it
+    means "the insufficiency is now met" rather than "the output matches something written
     down". Nothing here knows what the winning method looks like.
+
+    `confirms` is amendment A2. It receives the surviving candidates in adoption order and
+    returns those that reproduce the requirement **when executed**. Without it, adoption
+    falls back to the content-address tie-break the amendment replaced -- retained so the
+    superseded behaviour stays reproducible, and never used by the lineage.
+
+    Why the split rather than executing everything: the structural filter is what makes the
+    search finite. `ContainerLimits` reaches over 400,000 states, and running each would cost
+    more than the milestone. The filter narrows; execution decides.
     """
 
     operations = operations_for(capability, fields, detail, collections)
@@ -494,6 +568,11 @@ def search(
                 break
             draft = grown
         if draft is None:
+            # Unreachable on any input `_compositions` can produce: it only yields chains
+            # it has already grown successfully from an empty draft, and re-applying the
+            # same chain to the same initial draft cannot fail. Kept as a guard because
+            # `search` is a public entry point and a caller may pass compositions from
+            # elsewhere; measured never to fire on the M094 target at any budget.
             report.examined += 1
             report.refuse("composition_does_not_apply")
             continue
@@ -536,9 +615,28 @@ def search(
     report.survivors = len(survivors)
     report.surviving_behaviours = len({c.draft.fingerprint() for c in survivors})
 
-    if survivors:
-        # The requirement does not constrain which survivor is taken, so the tie
-        # is broken by content address rather than by preference.
-        report.adopted = min(survivors, key=lambda c: c.digest())
+    if not survivors:
+        return report
+
+    # Content address orders the candidates; execution decides among them. The order is
+    # still not a preference -- it is a hash -- but the first one taken is now the first
+    # that works rather than the first that parses.
+    ordered = sorted(survivors, key=lambda candidate: candidate.digest())
+
+    if confirms is None:
+        report.adopted = ordered[0]
+        return report
+
+    accepted, examined, budget_reached = confirms(ordered)
+    report.executed = examined
+    report.confirmed_by_execution = len(accepted)
+    report.refused_after_execution = examined - len(accepted)
+    report.execution_budget_reached = budget_reached
+    if accepted:
+        report.adopted = accepted[0]
+    else:
+        # Every survivor raised or disagreed when run. That is a finding, not a fallback:
+        # adopting one anyway is precisely what A2 exists to stop.
+        report.refuse("no_survivor_reproduced_the_requirement_when_executed")
 
     return report

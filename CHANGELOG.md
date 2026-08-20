@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+- **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
+  whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
+  the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds
+  for `Sample` calls the method it built for `Reading`. From S0 the second repair is
+  **unreachable** — the search exhausts 191 compositions and finds none — and from S1 it is
+  reachable with 12. Two counterfactuals separate the causes: removing A leaves B unreachable, and
+  withholding the nested operation at S1 leaves B unreachable. So A is necessary and the operation
+  is the vehicle, which is a smaller claim than "A enabled B" and the one the evidence supports.
+  The operation set is identical in both states; what changes is that one member can apply, read
+  from the code. `experiments/M095/DESIGN.md`.
+
+- **M094 returned a positive qualified scientific result**: the lineage located the component
+  limiting it and built the repair, without being told which component or what the change was.
+  Run at `43ef9d30` as attempt 2. The diagnosis selected `mira_core/contracts.py` by measurement
+  and repaired both classes tied at the top demand, `Goal` and `Observation`; the adopted mechanism
+  is `259e12f5`. The qualification, drawn after adoption from the mechanism's own digest, is 2/2
+  satisfied and cross-component — `AgentResult`, which needs a computed `@property` rendered, and
+  `ContainerSpec`, which needs a key bound to a differently-named field. All twelve conditions are
+  computed and true. The random-selection and template-only arms each closed nothing, and more
+  budget over the same operations reached the same mechanism.
+- **Four amendments preceded the run, all before arming and all recorded permanently in
+  `experiments/M094/PROTOCOL.json`.** A1: the qualification pool's hidden cases had been synthesised
+  and never executed, and seven of nine entries raised on construction, so the instrument could not
+  measure — the pool was regenerated with every case verified by construction and the superseded
+  pool preserved. A2: acceptance inspected a candidate's syntax where it needed to run it, so a
+  repair that read correctly and raised when executed could be adopted. A3: the protocol's
+  design-audit digest named no committed artifact, and nothing compared them — the check was added
+  first and the digest corrected second. A4: when two classes tie on demand the one repaired was
+  decided by alphabetical order, so every class the measure ranks equal first is now repaired.
+- **Attempt 1 is withdrawn and preserved, not deleted.** Its verdict was positive and its P11
+  evidence was not what P11 claims: `restoration_is_byte_exact` was computed over decoded text and
+  could not see the rollback normalise a component's line endings from CRLF to LF. Rather than
+  repair the defect after a verdict — a falsifier the protocol names — the attempt was withdrawn,
+  `TransformationStore` was corrected to adopt and restore in bytes, and attempt 2 was run on the
+  same mechanism and therefore the same draw. `experiments/M094/POST_VERDICT_DISCLOSURE.md` keeps
+  attempt 1's account unaltered.
+- Recorded a repository audit at `docs/REPOSITORY_AUDIT_2026_08_18.md`, which is where the M094
+  pipeline and checker defects were first measured, and ran the suite in parallel: 46m19s serial to
+  15m28s with `pytest-xdist`, identical results. `pytest-xdist` is the only new third-party
+  dependency and is declared in `docs/THIRD_PARTY_DEPENDENCIES.md`.
+
 - Added M092-B's deterministic, resumable typed program enumerator without running target search.
   It visits structured one-loop programs breadth-first under the frozen seed, cap, opcode, register,
   literal, jump and loop bounds; alpha-normalises register-renaming duplicates; derives a

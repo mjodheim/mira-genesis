@@ -12,7 +12,9 @@ known, instead of pinning the numbers it currently reports on the real repositor
 """
 from __future__ import annotations
 
+import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -70,17 +72,57 @@ def test_protocol_is_frozen_and_says_what_that_binds(protocol: dict[str, object]
 
 
 def test_the_freeze_did_not_smuggle_in_a_result() -> None:
-    """A protocol frozen after a result is not a precommitment."""
+    """A protocol frozen after a result is not a precommitment.
 
-    forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
-    present = [name for name in forbidden if (PROTOCOL.parent / name).exists()]
-    assert present == [], f"qualification artefacts exist at the freeze: {present}"
+    Asserted, until the canonical run of 19 August 2026, by the absence of the artifacts. That
+    absence is gone, so the property is asserted where it still lives: the result records the
+    commit it ran at, and that commit is a descendant of the freeze rather than the freeze
+    itself. A result cannot have been smuggled into a freeze it postdates.
+    """
+
+    result_path = PROTOCOL.parent / "RESULT.json"
+    if not result_path.exists():
+        # Before a run, absence is still the strongest available statement.
+        forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
+        present = [name for name in forbidden if (PROTOCOL.parent / name).exists()]
+        assert present == [], f"qualification artefacts exist at the freeze: {present}"
+        return
+
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    assert result["is_rehearsal"] is False
+    assert result["source_commit"], "the result records no commit, so nothing can be ordered"
+
+    freeze = subprocess.run(
+        ["git", "rev-parse", "9b69d7f^{commit}"],
+        cwd=PROTOCOL.parents[1], capture_output=True, text=True,
+    )
+    if freeze.returncode != 0:  # a shallow clone cannot order commits
+        pytest.skip("the freeze commit is not present in this clone")
+    ordered = subprocess.run(
+        ["git", "merge-base", "--is-ancestor", freeze.stdout.strip(), result["source_commit"]],
+        cwd=PROTOCOL.parents[1], capture_output=True, text=True,
+    )
+    assert ordered.returncode == 0, (
+        "the run's commit does not descend from the freeze, so the freeze is not a "
+        "precommitment with respect to it"
+    )
 
 
-def test_no_qualification_data_exists_before_the_freeze() -> None:
-    forbidden = ("RESULT.json", "QUALIFICATION.json", "REGISTER_CLAIM.json")
-    present = [name for name in forbidden if (PROTOCOL.parent / name).exists()]
-    assert present == [], f"qualification artefacts exist before any freeze: {present}"
+def test_a_result_records_the_protocol_it_ran_under() -> None:
+    """With four amendments in force, which protocol a verdict belongs to is the question."""
+
+    result_path = PROTOCOL.parent / "RESULT.json"
+    if not result_path.exists():
+        pytest.skip("no run has been performed")
+
+    result = json.loads(result_path.read_text(encoding="utf-8"))
+    assert result["protocol_raw_sha256"] == hashlib.sha256(
+        PROTOCOL.read_bytes()
+    ).hexdigest(), "the result was produced under a different protocol than the committed one"
+    assert result["amendments_in_force"] == [
+        item["id"] for item in json.loads(PROTOCOL.read_text(encoding="utf-8"))["amendments"]
+    ]
+    assert result["model_calls"] == 0 and result["network_calls"] == 0
 
 
 def test_hypothesis_is_frozen_but_still_claims_nothing(
@@ -97,11 +139,21 @@ def test_hypothesis_is_frozen_but_still_claims_nothing(
     assert "## H39" in register
 
     section = register.split("## H39", 1)[1]
-    assert "FROZEN AND OPEN" in section
-    assert "No qualification run has been performed" in section
-    # The register must not read as support anywhere before the boundary section.
-    before = section.split("**What it would not establish", 1)[0]
-    assert "**SUPPORTED" not in before
+
+    # Until the canonical run this asserted the register said "FROZEN AND OPEN" and "No
+    # qualification run has been performed". Those became false on 19 August 2026, and the
+    # property they were protecting is not the wording -- it is that the frozen precommitment
+    # is not edited to match whatever the run produced, and that a verdict is not silently
+    # promoted into a registered claim. Both are asserted directly.
+    assert "D063" in section, "the register must say which decision slot is at stake"
+    assert "unfilled" in section or "No register claim" in section, (
+        "a verdict is not a registered claim, and the register must not read as though it were"
+    )
+    # The chronology survives: the superseded pre-run statement is kept, not deleted.
+    assert "No qualification run has been performed" in section, (
+        "the pre-run statement must be preserved as superseded rather than removed"
+    )
+    assert "Superseded statement" in section
 
 
 def test_every_claim_boundary_flag_is_false(protocol: dict[str, object]) -> None:
