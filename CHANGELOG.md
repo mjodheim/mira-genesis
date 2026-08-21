@@ -28,6 +28,17 @@
 - Deleted the branches whose work `main` already carries, after establishing per branch — by
   patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
 
+- **The M095 counterfactual was the control, run a second time.** Its world was built as S0 and
+  left untouched, so it searched a byte-identical tree for the same requirement with the same
+  operation set — both digest alike, both examine 191, both find nothing — while being presented
+  as a fourth independent pillar. It now replays the S0 round skipping only the repair that made
+  the nested operation applicable, so it removes A rather than everything: unchanged in the
+  declared world, and 143 examined with B still unreachable where capabilities tie. The claim
+  becomes *A specifically*, not merely some first-round repair.
+- **A probe that never ran was recorded as candidates that ran and failed.** `executed` came from
+  the survivor count whatever happened, so an instrument that could construct no case reported
+  *N executed, 0 confirmed* — a refutation of the repair, where in fact nothing was tested.
+  Amendment A1 for the fifth time in this milestone, in the very field added to repair A2.
 - **M049's qualification commit does not exist in this repository.** `PROJECT_STATE.yaml` and
   `experiments/M049/{PROTOCOL,DEVELOPMENT_RESULT}.md` name `b8a8bb06` as the commit CI run
   31076192847 qualified for M049's positive bounded development result. The object is absent —

@@ -1090,8 +1090,8 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol has found thirteen defects across four passes**
-  (`experiments/M095/DESIGN_AUDIT.md`). Twelve are repaired; defect 7 is a boundary on the claim
+  **A design audit run before any protocol has found sixteen defects across four passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Fifteen are repaired; defect 7 is a boundary on the claim
   and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
   M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
   not record what the call sites wrote, so the probe refused every correct candidate. Three were in
@@ -1126,6 +1126,15 @@ question remains open but is not a missing completion gate.
   reports `unrunnable` in the declared world**, which is the honest verdict: B needs a renderer
   on the inner class, every repair lands in its own target's class, and the sole eligible rival
   targets the outer one — its pass was decided before it ran.
+- **Two of M095's four claimed pillars were not doing what they said.** The counterfactual left
+  its world untouched, so it was byte-identical to the state the control had already searched —
+  the control run a second time, presented as independent evidence. It now replays the S0 round
+  while skipping only the repair that flipped the operation, so it removes **A** rather than
+  everything: unchanged at 191 in the declared world, and 143 with B still unreachable where
+  several capabilities tie. That is a stronger claim than the milestone was making. And
+  `attempt.executed` was set from the survivor count whatever happened, so a probe that could
+  construct no case and ran nothing was recorded as candidates that ran and failed —
+  **amendment A1 for the fifth time in this milestone**, in the field added to repair A2.
   **Four of the eight audit defects were regressions of amendments this project had already bought
   and written down**, which says the amendment register is doing less work than it appears to.
   What remains before a freeze: a qualification pool drawn from outside this world with every
