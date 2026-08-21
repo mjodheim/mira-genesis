@@ -2,6 +2,115 @@
 
 ## Unreleased
 
+- **Sixteen commits cited by SHA in the registers were reachable from no ref at all.** Among them
+  M042's frozen protocol, the M050-M052 development results, the M012/M013e status records and
+  M094's own freeze commit `dd79665`. They resolved only because one clone had not yet garbage-
+  collected them; routine branch cleanup would have made those citations unresolvable while
+  leaving the record looking intact. All sixteen are now preserved as annotated `provenance/<sha>`
+  tags pushed to the remote, and every tip that was not merged into `main` as a `branch/<slug>`
+  tag. `docs/COMMIT_CITATIONS.json` records all 189 cited commits with the ref that preserves each,
+  and `scripts/check_repository_integrity.py --citations` fails if any citation stops resolving or
+  if a new one is added without a preserving ref. A shallow clone is reported as unanswerable
+  rather than passing.
+- **A failure record for eight frozen milestones existed on no branch reachable from `main`.** The
+  account of why every independent checker from M077 through M083 failed on a fresh Windows
+  checkout was written on 2026-08-11 on a side-car branch. The repair travelled to `main` as a
+  one-line `.gitattributes` commit (`531a447`); the explanation did not, and the branch was never
+  merged. It is now in `FAILURE_LOG.md`, with its contemporaneous text unaltered and the range
+  discrepancy in its own source recorded rather than quietly resolved. Its successor-facing
+  warning matters beyond that incident: `git add --renormalize .`, the obvious repair, would have
+  staged CRLF bytes as new blob content and rewritten every frozen digest in exactly the direction
+  the fix exists to prevent.
+- **`experiments/M086/DISQUALIFICATION.md` stated that the repair "has never been merged".** True
+  when committed at 09:33 on 2026-08-12, false seven hours later. The sentence is preserved as
+  written and corrected in place beneath, because it is a claim about repository history and not
+  about M086-A's disqualification, which is unchanged.
+- Deleted the branches whose work `main` already carries, after establishing per branch — by
+  patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
+
+- **The M095 counterfactual was the control, run a second time.** Its world was built as S0 and
+  left untouched, so it searched a byte-identical tree for the same requirement with the same
+  operation set — both digest alike, both examine 191, both find nothing — while being presented
+  as a fourth independent pillar. It now replays the S0 round skipping only the repair that made
+  the nested operation applicable, so it removes A rather than everything: unchanged in the
+  declared world, and 143 examined with B still unreachable where capabilities tie. The claim
+  becomes *A specifically*, not merely some first-round repair.
+- **A probe that never ran was recorded as candidates that ran and failed.** `executed` came from
+  the survivor count whatever happened, so an instrument that could construct no case reported
+  *N executed, 0 confirmed* — a refutation of the repair, where in fact nothing was tested.
+  Amendment A1 for the fifth time in this milestone, in the very field added to repair A2.
+- **M049's qualification commit does not exist in this repository.** `PROJECT_STATE.yaml` and
+  `experiments/M049/{PROTOCOL,DEVELOPMENT_RESULT}.md` name `b8a8bb06` as the commit CI run
+  31076192847 qualified for M049's positive bounded development result. The object is absent —
+  not dangling, absent — so it predates the provenance tags and could not have been preserved
+  by them. The result is not wrong; it is **unverifiable from the record as it stands**. Found
+  because the citation guard was extended to check values written in `*_commit` fields, which
+  is the only part of it that can see a citation lost before the manifest existed. Recorded
+  under `known_unresolvable` as a loss rather than excused.
+- **The citation guard could launder the loss it exists to catch.** Three defects in the check
+  added earlier on this branch, all found adversarially. `--record` rebuilt the manifest only
+  from what was reachable, so an unreachable citation vanished silently and the next check went
+  green — deleting nine provenance tags in a clone took 192 entries to 183 with exit 0 and no
+  output. The tag preflight could not tell a missing fetch from a deleted tag, and its early
+  return suppressed the list of what was actually gone while offering a remedy that cannot
+  work. And a citation that resolves to nothing was structurally invisible, because the scan
+  matched against reachable commits — the population it could not see was exactly the
+  population already lost. All three repaired, with `--record` now refusing to drop a recorded
+  citation.
+- **An adversarial pass found that two of M095's three arms reported `satisfied` while the
+  mechanism they measure was dead.** Five independent machine review passes were asked to break the arms
+  rather than confirm them. `more_budget` derived its verdict from an empty sweep, which is
+  exactly what a dead searcher produces — three separate kills each left it passing, one of them
+  amendment A1 running backwards, with an unconstructible case read as a confirmation.
+  `random_target`'s pass was fixed before it ran, because B needs a renderer on the inner class
+  and every eligible rival targeted the outer one; it also counted the control's own target as a
+  rival, and a test asserted the resulting miscount. It now reports **`unrunnable`** in the
+  declared world, which is what this world can honestly support.
+- **Amendment A4's defect survived a third time, inside the loop written to remove it.**
+  Reversing the tied set — legitimate, since A4's premise is that tied members are
+  indistinguishable by the measure — flipped the whole `inner==outer` regime and refuted the
+  published domain. The mechanism had worked: the nested repair was reached in the first round,
+  after its enabler, and the record only read the second round. Now recognised in either round
+  and pinned by a test that permutes every tie and requires the sweep unchanged. Two further
+  asserted booleans were removed, one of them written by the commit that removed the previous
+  three; `enabling_demonstrated` no longer accepts a run that never identified A.
+- **M095's enabling relation now holds in every world where an enabling repair exists — six of
+  six, up from two.** The milestone had recorded an ordering boundary it believed it had to carry:
+  where the repair that enables B draws less demand than B itself, the greedy rule never ranks it
+  and the chain stalled with the remedy sitting untried below it. The audit called escaping it
+  something that "needs handling this milestone does not have".
+  It needed one observation. **A failed search already names its own obstacle** — the operation it
+  could not apply, which knows which class must supply which rendering — so the lineage asks the
+  failure what would unblock it and repairs that, unranked. Nothing is added to the operation set;
+  only which target is attempted changes, which is what keeps it inside M095 rather than M096. The
+  claim loses its ordering qualifier and keeps a smaller one about existence: if the inner class is
+  never rendered directly there is no insufficiency to descend to. The arrangement arm sweeps two
+  such points so it still has arrangements that must come out negative, and the test that asserted
+  the old boundary — written so that a boundary moving outward would be loud — is what made the
+  improvement visible rather than silent.
+- **M095's enabling result held in two of six worlds, and said so nowhere.** `DESIGN.md` disclosed
+  the world's one arrangement — three inner call sites against two outer — and separately that the
+  diagnosis's selections are not authored. Both true; neither answers whether the result *depends*
+  on the arrangement. Sweeping every way the two demands can compare showed it does. A second
+  design-audit pass records four further defects (5–8): amendment A4's tie rule was applied at S1
+  and not at S0, where `run` took the head of a name-sorted list; `WorldFacts` reported the module
+  constants rather than the world on disk, so every point of the sweep would have been recorded as
+  the declared world; `A` was defined by position rather than as the repair after which the nested
+  operation can apply. Repairing the S0 rule recovers the equal-demand worlds — four of six. The
+  remaining two are a boundary, not a bug: where the outer class has more call sites the enabling
+  repair is outranked by the repair it enables, and a greedy rule cannot reach downward. The claim
+  now carries that domain and is pinned in both directions. Four of the eight audit defects were
+  regressions of amendments already bought and written down.
+- **Three M095 arms are built** in `metamorphosis/m095_arms.py`, each reporting M094's
+  three-valued outcome. World-arrangement: `satisfied` over six derived points, and able to fail in
+  both directions — a world in the excluded regime that *starts* working refutes it too. Random
+  target: every rival exhausted rather than one drawn, so no seed is needed; `satisfied`. More
+  budget: swept to a ceiling equal to the offered operation set, exhaustive by construction because
+  no operation applies twice; nothing reached at any bound and the search closes at 4.
+- Fixed a gap in `check_repository_integrity.py --orphans`: `from package import module` recorded
+  only the package, so any module imported by the idiom this codebase mostly uses looked
+  unreachable from every entry point.
+
 - **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
   whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
   the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds

@@ -1090,17 +1090,69 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol found four defects** (`experiments/M095/DESIGN_AUDIT.md`).
-  Three were in the instrument and are repaired, two of them regressions of M094 amendments: the
-  search had stopped executing candidates (A2), and the nested requirement did not record what the
-  call sites wrote, so the probe refused every correct candidate. The fourth was in the *selection*
-  and is now repaired too: at S1 two capabilities tie on demand and the one repaired was chosen by
-  alphabetical order on the capability name — A4's defect at the capability level, and the one that
-  would have made a positive result depend on an accident. **Every capability the measure ranks
-  equal first is now repaired**, so the ordering decides nothing and nothing is left unmet at S2.
-  What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
-  qualification pool drawn from outside this world, and a checker that recomputes. No hypothesis is
-  registered, no protocol is frozen, no qualification pool exists.
+  **A design audit run before any protocol has found nineteen defects across five passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Eighteen are repaired; one is disclosed rather than repaired — defect 19 is a control that cannot fail
+  and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
+  M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
+  not record what the call sites wrote, so the probe refused every correct candidate. Three were in
+  the *selection*, which is the expensive kind — an instrument defect costs a run, a selection
+  defect costs the claim. At S1 two capabilities tie on demand and the one repaired was chosen by
+  alphabetical order; at S0 the same rule was missing entirely and `run` took the head of a sorted
+  list; and `A` was defined as "the repair made first" rather than as the repair after which the
+  nested operation can apply.
+- **The M095 claim was found to have an unmeasured domain, and the domain was then widened until
+  it nearly disappeared.** `DESIGN.md` disclosed that the world arranges one thing — three inner
+  call sites against two outer — and separately that the diagnosis's selections are not authored.
+  Both true, and neither answers whether the result *depends* on the arrangement. It did: swept
+  over every way the two demands can compare, the enabling relation held in **two of six**
+  arrangements. Applying amendment A4's rule at S0 recovered the equal-demand worlds — four of six
+  — and the remaining two were recorded as a boundary the milestone had to carry, on the reasoning
+  that the enabling repair is outranked by the repair it enables and a greedy rule cannot reach
+  downward.
+- **That boundary is gone, and removing it needed one observation rather than a new milestone.**
+  A failed search already names its own obstacle: the operation it could not apply, which knows
+  which class must supply which rendering. So the lineage asks the failure what would unblock it
+  and repairs that, even though the measure does not rank it. **Nothing is added to the operation
+  set** — the same operations are offered in the same states, and only which target is attempted
+  changes, which is what keeps this inside M095 rather than M096. The enabling relation now holds
+  in **every arrangement where an enabling repair exists to be found**, six of six, and the claim
+  reads *an adopted repair changes what the lineage can reach, wherever there is an enabling
+  repair for it to find.* What remains is a boundary about **existence** rather than rank: if the
+  inner class is never rendered directly it presents no demand of its own and there is nothing to
+  descend to. The arrangement arm sweeps two such points, so it still has arrangements that must
+  come out negative.
+- **The test that pinned the old boundary as a negative is what made the improvement visible.**
+  It was written so that a boundary moving *outward* would be loud rather than silent, and that is
+  exactly what happened. The audit had said escaping the boundary "needs handling this milestone
+  does not have"; that conclusion was reached by describing the difficulty rather than by trying.
+- **Three M095 arms are built** (`metamorphosis/m095_arms.py`), each reporting M094's three-valued
+  `satisfied`/`refuted`/`unrunnable`. A fourth, adversarial audit pass — five independent
+  reviewers asked to break the arms by killing the mechanism underneath them — found that **two
+  of the three reported `satisfied` while the thing they measure was dead**, and that amendment
+  A4's defect had survived a third time inside the loop written to remove it: reversing the tied
+  set, which A4's own premise says is legitimate, flipped the entire `inner==outer` regime and
+  refuted the domain. All are repaired. The arrangement arm is now order-invariant under
+  permutation of every tie; the more-budget arm requires the same searcher to reach B at S1
+  before it will read an empty sweep at S0, so a dead operation, an unoffered operation and an
+  execution probe that constructs nothing each report `unrunnable`. **The random-target arm now
+  reports `unrunnable` in the declared world**, which is the honest verdict: B needs a renderer
+  on the inner class, every repair lands in its own target's class, and the sole eligible rival
+  targets the outer one — its pass was decided before it ran.
+- **Two of M095's four claimed pillars were not doing what they said.** The counterfactual left
+  its world untouched, so it was byte-identical to the state the control had already searched —
+  the control run a second time, presented as independent evidence. It now replays the S0 round
+  while skipping only the repair that flipped the operation, so it removes **A** rather than
+  everything: unchanged at 191 in the declared world, and 143 with B still unreachable where
+  several capabilities tie. That is a stronger claim than the milestone was making. And
+  `attempt.executed` was set from the survivor count whatever happened, so a probe that could
+  construct no case and ran nothing was recorded as candidates that ran and failed —
+  **amendment A1 for the fifth time in this milestone**, in the field added to repair A2.
+  **Four of the eight audit defects were regressions of amendments this project had already bought
+  and written down**, which says the amendment register is doing less work than it appears to.
+  What remains before a freeze: a qualification pool drawn from outside this world with every
+  hidden case verified by construction, a checker that recomputes rather than reads, a runner and a
+  protocol. No hypothesis is registered, no protocol is frozen, no qualification pool exists, and
+  freezing or arming remains the owner's act.
   See `experiments/M095/DESIGN.md`.
 
 ## Parallel measurement track — M045

@@ -9,7 +9,7 @@ Four facts carry that, and each has a test that fails if it stops holding:
 1. from S0, B is unreachable — the search exhausts and finds nothing;
 2. the diagnosis picks A first, and picks B afterwards, on its own;
 3. from S1, B is reachable, and the repair it builds calls the method A created;
-4. in a world where A never happened, B is unreachable again.
+4. in a world with every other first-round repair but *not* A, B is unreachable again.
 
 Fact 4 is what separates "B became reachable" from "B was always reachable and we got round to
 it". Without it the chain would show a sequence and prove nothing about enabling.
@@ -176,7 +176,11 @@ def test_the_enabling_relation_is_demonstrated(executed: Chain) -> None:
 
 def test_the_record_states_what_was_and_was_not_supplied(executed: Chain) -> None:
     record = executed.to_dict()
-    assert record["second_target_was_not_supplied"] is True
+    # Not a hardcoded True: the second target is whatever the diagnosis named at S1, and
+    # a record that merely asserted "it was not supplied" could not be checked.
+    assert NESTED in record["second_target_came_from"]
+    assert record["second_target_came_from"] == executed.selected_second
+    assert record["step_a_identified_by"] == "the_nested_operation_became_applicable"
     assert record["world"]["authored"] is True, "the world is authored and must say so"
     assert record["enabling_demonstrated"] is True
 
@@ -204,7 +208,7 @@ def test_the_world_is_what_it_says_it_is(tmp_path: Path) -> None:
     """The disclosed facts must match the world actually written."""
 
     build(tmp_path)
-    facts = WorldFacts()
+    facts = WorldFacts.of(tmp_path)
     assert facts.inner_call_sites == READING_CALLERS == len(
         list(tmp_path.glob("reading_caller_*.py"))
     )
@@ -213,6 +217,32 @@ def test_the_world_is_what_it_says_it_is(tmp_path: Path) -> None:
     )
     assert (tmp_path / COMPONENT).exists()
     assert facts.to_dict()["authored"] is True
+
+
+def test_the_world_facts_are_counted_not_defaulted(tmp_path: Path) -> None:
+    """A record that reports the author's constants rather than the world is not a record.
+
+    `WorldFacts()` used to default both counts to the module constants, so it answered 3 and 2
+    whatever was on disk. Every sweep over the caller counts would have been recorded as the
+    declared world, and the one relation the world arranges would have been invisible.
+    """
+
+    build(tmp_path, reading_callers=1, sample_callers=4)
+    facts = WorldFacts.of(tmp_path)
+    assert facts.inner_call_sites == 1, "the facts followed the module constant, not the world"
+    assert facts.outer_call_sites == 4
+    assert facts.ordering_regime == "inner<outer"
+    assert facts.to_dict()["inner_call_sites"] == 1
+
+
+def test_the_caller_counts_are_resolved_when_build_runs_not_when_it_is_defined(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A default bound at import time would make the parameter silently inert."""
+
+    monkeypatch.setattr(world, "READING_CALLERS", 5)
+    build(tmp_path)
+    assert len(list(tmp_path.glob("reading_caller_*.py"))) == 5
 
 
 # ── separating "A enabled B" from "the operation enabled B" ───────────
@@ -369,3 +399,249 @@ def test_nothing_is_left_unmet_after_the_chain(executed: Chain, tmp_path: Path) 
     counterfactual = Path(tempfile.mkdtemp(prefix="m095-done-cf-"))
     chain.run(root, counterfactual)
     assert [i.target for i in measure(root).unmet] == []
+
+
+# ── defect 5: the ordering pressure was load-bearing and undisclosed ──
+
+
+def _chain_for(tmp_path: Path, name: str, reading: int, sample: int) -> Chain:
+    root = tmp_path / f"{name}-root"
+    counterfactual = tmp_path / f"{name}-cf"
+    root.mkdir()
+    counterfactual.mkdir()
+    return chain.run(root, counterfactual, reading_callers=reading, sample_callers=sample)
+
+
+def test_the_s0_selection_applies_the_same_tie_rule_as_s1(tmp_path: Path) -> None:
+    """Amendment A4 at S0, where `run` used to take the head of a sorted list.
+
+    In the declared world nothing ties at S0, so the ordering decided nothing and the defect was
+    invisible. Give the two classes equal call sites and all three insufficiencies tie — and the
+    head of that list is the *nested* one, which is B. Taking it would have made the chain spend
+    its first step on the target it exists to show is unreachable.
+    """
+
+    built = _chain_for(tmp_path, "tie", 2, 2)
+    attempted = {f"{item.class_name}/{item.capability}" for item in built.first_step}
+    assert len(attempted) == 3, f"only {attempted} was attempted at S0"
+    assert built.s0_tie_was_not_broken_by_name
+    assert NESTED in built.selected_first, "the tie is real: B itself ranks equal first here"
+
+
+def test_the_enabling_repair_is_the_one_that_flipped_the_operation(tmp_path: Path) -> None:
+    """A is measured, not positional.
+
+    Where S0 ties, the first repair the loop adopts is not the enabling one. `step_a` must name
+    the repair after which the nested operation could apply, which is read from the tree.
+    """
+
+    built = _chain_for(tmp_path, "flip", 2, 2)
+    assert built.step_a is not None
+    assert built.step_a.reached
+    assert built.step_a.class_name == "Reading", (
+        f"step_a named {built.step_a.class_name}; the enabling repair is the inner renderer"
+    )
+    assert built.enabling_demonstrated
+
+
+def test_the_enabling_relation_holds_wherever_the_enabler_is_not_outranked(
+    tmp_path: Path,
+) -> None:
+    """The measured domain of the claim, on both sides of the declared point."""
+
+    for index, (reading, sample) in enumerate(((3, 2), (4, 2), (2, 2), (3, 3))):
+        built = _chain_for(tmp_path, f"holds{index}", reading, sample)
+        assert built.enabling_demonstrated, f"no enabling at reading={reading} sample={sample}"
+        assert built.facts["inner_call_sites"] == reading
+        assert built.facts["outer_call_sites"] == sample
+
+
+def test_the_enabling_relation_holds_where_the_enabler_is_outranked(tmp_path: Path) -> None:
+    """This asserted the opposite until the lineage learned to read its own obstacle.
+
+    Where the outer class has more call sites, the repair that would enable B carries *less*
+    demand than B itself, so the greedy rule never ranked it and the chain stalled with the
+    remedy sitting untried below it. That was recorded as a boundary the milestone had to carry.
+
+    It is not a boundary. A failed search already names the operation it could not apply, and
+    that operation knows which class must supply which rendering, so the obstacle identifies its
+    own remedy. Nothing is added to the operation set; only which target is attempted changes.
+    """
+
+    built = _chain_for(tmp_path, "outranked", 1, 3)
+    assert built.facts["ordering_regime"] == "inner<outer"
+    assert "Reading" not in built.selected_first, (
+        "the enabler was ranked first after all, so this is no longer the arrangement "
+        "the test is about"
+    )
+    assert built.descended_to == "Reading/render_value_object_as_mapping", (
+        "the enabling repair was reached without descending, so the descent is not what "
+        "this measures"
+    )
+    assert built.step_a is not None and built.step_a.class_name == "Reading"
+    assert built.step_b is not None and built.step_b.reached
+    assert built.enabling_demonstrated
+
+
+def test_the_descent_target_is_read_from_the_obstacle_not_from_the_ranking(
+    tmp_path: Path,
+) -> None:
+    """What makes the descent a measurement rather than a heuristic.
+
+    The class it repairs is named by the operation the search reported as unreachable, so it is
+    recovered from the failure rather than ranked, guessed, or supplied.
+    """
+
+    world.build(tmp_path, reading_callers=1, sample_callers=3)
+    chain.clear_caches()
+    diagnosis = measure(tmp_path)
+    blocked = next(item for item in diagnosis.unmet if item.capability == NESTED)
+
+    enabler = chain.enabler_for(tmp_path, blocked, diagnosis)
+    assert enabler is not None
+    assert enabler.target == "Reading"
+    assert enabler.capability == "render_value_object_as_mapping"
+    assert enabler.demand < blocked.demand, (
+        "the enabler outranks the target, so nothing needed to be descended to"
+    )
+
+    # And it is the class the blocked operation names, not merely some lower-ranked target.
+    control = control_from_s0(tmp_path)
+    assert control.nested_unreachable
+    assert enabler.target.lower() in control.nested_unreachable[0]
+
+
+def test_the_record_distinguishes_a_measured_a_from_a_fallback(tmp_path: Path) -> None:
+    """`step_a_identified_by` must take both its values, or it is a constant dressed as a fact.
+
+    A record field that is always the good case cannot be checked and cannot fail. Where the
+    enabling repair is outranked, a repair is still adopted at S0 and the nested operation does
+    not become applicable -- so the chain falls back, and the record says which happened rather
+    than asserting the flattering one.
+    """
+
+    measured = _chain_for(tmp_path, "measured", 3, 2)
+    # The inner class is never rendered directly, so it presents no demand of its own and there
+    # is no insufficiency to descend to. This is the one arrangement where A cannot be found.
+    fallback = _chain_for(tmp_path, "fallback", 0, 3)
+
+    assert measured.step_a_identified_by == "the_nested_operation_became_applicable"
+    assert fallback.step_a_identified_by == "fallback_first_repair_that_reached"
+    assert fallback.step_a is not None and fallback.step_a.reached, (
+        "the fallback must still have adopted something, or it is testing the empty case"
+    )
+    assert not fallback.enabling_demonstrated
+
+
+def test_the_counterfactual_removes_a_rather_than_everything(tmp_path: Path) -> None:
+    """It used to be the control, run a second time on a byte-identical directory.
+
+    The counterfactual root was left untouched, so it searched exactly the state the control had
+    already searched, for the same requirement, with the same operation set -- and was presented
+    as a fourth independent pillar. Where the S0 round adopts more than one repair the
+    distinction is real: removing A alone is not the same as removing everything.
+
+    In the declared world A is the sole tied repair, so nothing is replayed and the measurement
+    is unchanged. Where three capabilities tie, the other repair is kept and only A is dropped.
+    """
+
+    declared = _chain_for(tmp_path, "cf-declared", 3, 2)
+    assert declared.counterfactual_replayed == []
+    assert declared.counterfactual.examined == declared.control.examined
+
+    tied = _chain_for(tmp_path, "cf-tied", 2, 2)
+    replayed = [item for item in tied.counterfactual_replayed if item.reached]
+    assert replayed, "nothing was replayed, so this is still the control run twice"
+    assert all(item.capability != NESTED for item in replayed)
+    assert tied.step_a is not None
+    assert all(
+        item.class_name != tied.step_a.class_name or item.capability != tied.step_a.capability
+        for item in replayed
+    ), "A itself was replayed into the world that exists to be without it"
+    assert not tied.counterfactual.reached
+    assert tied.enabling_demonstrated
+
+
+def test_the_world_facts_name_the_classes_it_found_rather_than_the_ones_expected(
+    tmp_path: Path,
+) -> None:
+    """`inner_class`, `outer_class` and `nested_field` defaulted to Reading, Sample, reading.
+
+    So a world built from different classes would have been recorded as this one. They are now
+    read from the tree: the outer class is whichever has a field annotated as another class
+    present, and the inner class is what that annotation names.
+    """
+
+    build(tmp_path)
+    facts = WorldFacts.of(tmp_path)
+    assert (facts.outer_class, facts.inner_class, facts.nested_field) == (
+        "Sample",
+        "Reading",
+        "reading",
+    )
+
+    (tmp_path / COMPONENT).write_text(
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    b: str\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    other = WorldFacts.of(tmp_path)
+    assert (other.outer_class, other.inner_class, other.nested_field) == ("Outer", "Inner", "held")
+
+
+def test_whether_anything_renders_itself_is_read_from_the_tree_not_from_a_substring(
+    tmp_path: Path,
+) -> None:
+    """It was a substring search over the source, which a docstring could decide."""
+
+    build(tmp_path)
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is True
+
+    prose = '"""A docstring mentioning def followed by a space: def foo."""'
+    (tmp_path / COMPONENT).write_text(
+        prose + "\n"
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is True, (
+        "prose decided a fact about the code"
+    )
+
+    (tmp_path / COMPONENT).write_text(
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "    def as_mapping(self):\n"
+        "        return {'a': self.a}\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is False
