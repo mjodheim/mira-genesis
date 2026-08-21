@@ -5,8 +5,14 @@ remaining questions are scientific judgements rather than engineering, and leavi
 code would be deciding them by default. Each entry states the question, what has been measured, the
 options and what each costs. Freezing a protocol and arming a run remain the owner's acts.
 
-Written 2026-08-21, against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md` (nine defects, eight
-repaired, one disclosed).
+Written 2026-08-21 against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md`, and revised the same
+day after the fifth audit pass. The audit now records **nineteen defects, eighteen repaired**.
+
+**Two entries below have changed since they were written, and are marked.** Section 2 asked how to
+state a domain that no longer exists in the form it described; section 5 asked whether escaping a
+boundary was worth attempting, and it was attempted and succeeded. Both are kept with their original
+reasoning rather than rewritten, because the reasoning is what a later reader needs in order to
+judge how much the answers cost.
 
 ---
 
@@ -42,10 +48,32 @@ would choose them.
 
 ---
 
-## 2. How the domain is stated in a protocol
+## 2. How the domain is stated in a protocol — **the question changed**
 
-**What is measured.** The enabling relation holds where the inner class's call sites are at least as
-many as the outer's, and fails where they are fewer — four of six swept arrangements, with each
+> **Superseded.** The ordering boundary this section is about no longer exists. The lineage now
+> descends to the enabler its own failed search names, and the relation holds in six of eight swept
+> arrangements — every one where an enabling repair exists to be found. What remains is a boundary
+> about **existence**, not rank: an inner class that is never rendered directly presents no demand,
+> so there is nothing to descend to. `DESIGN_AUDIT.md` defect 7.
+>
+> **The live question is now a different one.** Four of the six demonstrate the relation with the
+> diagnosis's ranking finding the enabling order *unaided*; two only demonstrate it because the
+> descent selected the enabler on purpose. Both measure the same relation with the same control and
+> counterfactual, but they say different things about the ranking, and a protocol has to decide
+> whether that is:
+>
+> - **one result with a recorded sub-count** — which is what the arm does today, reporting
+>   `demonstrated: 6` and `demonstrated_without_descending: 4`; or
+> - **two conditions**, one about the relation and one about the ranking finding it unaided, each
+>   able to fail separately.
+>
+> The second is more honest and more expensive. The first risks a reader taking "six of eight" as
+> six instances of the stronger claim.
+
+The reasoning as originally written follows, and is what the answer had to overcome.
+
+**What was measured.** The enabling relation holds where the inner class's call sites are at least
+as many as the outer's, and fails where they are fewer — four of six swept arrangements, with each
 ordering regime carrying a minimal and a larger witness.
 
 **Two ways to state it.**
@@ -53,13 +81,11 @@ ordering regime carrying a minimal and a larger witness.
 - **As regimes.** "The claim holds where `inner_call_sites >= outer_call_sites`." Exactly what was
   measured, trivially checkable, and says nothing about why.
 - **As outranking.** "The claim holds in worlds where the enabling repair is not outranked by the
-  repair it enables." This is the sentence currently in `DESIGN.md`. It generalises: call-site count
-  is *one* way to produce outranking, and the sentence claims the boundary is about the ranking, not
-  about that particular cause.
+  repair it enables." It generalises: call-site count is *one* way to produce outranking, and the
+  sentence claims the boundary is about the ranking, not about that particular cause.
 
-**The risk in the second.** It has not been shown that other causes of outranking behave the same
-way, because no other cause was varied. It is the better explanation and the weaker evidence. If it
-is used in a protocol, the protocol should say which parts were measured and which are inference.
+**The risk in the second.** It had not been shown that other causes of outranking behave the same
+way, because no other cause was varied. It was the better explanation and the weaker evidence.
 
 ---
 
@@ -89,7 +115,27 @@ Registering either is a register act and is not done here.
 
 ---
 
-## 5. Should M095 try to escape the boundary?
+## 5. Should M095 try to escape the boundary? — **answered: it did**
+
+> **Resolved, and cheaply.** This section framed the escape as a choice between widening M095
+> mid-milestone and deferring to a successor, and treated it as costly either way. It was neither.
+>
+> A failed search already names its own obstacle: the operation it could not apply knows which class
+> must supply which rendering. The lineage asks the failure what would unblock it and repairs that.
+> **Nothing is added to the operation set** — the same operations are offered in the same states,
+> and only which target is attempted changes, which is what keeps it inside M095's boundary with
+> M096 rather than crossing it.
+>
+> The cost was one function and one branch. The concern below about "changing the selection rule
+> mid-milestone" was real but smaller than it reads: the rule still ranks by demand and only
+> consults the obstacle when the ranking has run out.
+>
+> **What this section got right and should be kept for:** two milestones independently arriving at
+> the selection rule as the ceiling. That observation stands, and the descent is a narrow instance
+> of it rather than a general answer. M086-C's harder version — choosing well among candidates that
+> all fit the public evidence — is untouched.
+
+The reasoning as originally written follows.
 
 Where the outer class has more call sites, the repair that would enable B carries *less* demand than
 B itself. It is never ranked first, the greedy rule never reaches it, and the search stalls with B
@@ -105,17 +151,15 @@ for an **enabler** rather than for the greatest unmet demand.
   helped by generating more.* M086-C named the selection rule as the thing that failed and recorded
   that making selection mutable was a candidate successor, not added there.
 
-Two milestones have now independently arrived at the selection rule as the ceiling. That is worth
-weighing against the M096–M098 trajectory as currently sketched.
-
 ---
 
 ## 6. Whether the narrowed claim is still worth a milestone
 
-Stated plainly, what M095 now supports is: *in an authored two-class world, where the enabling
-repair is not outranked by the repair it enables, an adopted repair changes what the lineage can
-reach* — with the control, both counterfactuals and three arms all measured, and every reached
-repair confirmed by execution.
+Stated plainly, what M095 now supports is: *in an authored two-class world, wherever an enabling
+repair exists to be found, an adopted repair changes what the lineage can reach* — with the control,
+both counterfactuals and three arms measured, and every reached repair confirmed by execution. In
+four of the eight swept arrangements the diagnosis's ranking finds the enabling order unaided; in
+two the descent has to select it.
 
 That is smaller than the milestone appeared to support before the domain was swept. It is also the
 first version of it a reader can check rather than trust. Whether it is worth freezing, worth
