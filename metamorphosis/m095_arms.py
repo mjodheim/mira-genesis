@@ -48,6 +48,11 @@ def arrangements() -> tuple[tuple[int, int], ...]:
     and still be called — and one **larger** arrangement, so a result cannot turn on smallness.
     The declared world serves as its own regime's larger witness.
 
+    Two further points give the inner class **no callers at all**. That is where the claim
+    genuinely fails now, and a sweep without a witness of it would have nothing that must come
+    out negative. Both are included because the outer demand should not matter once the inner
+    demand is absent.
+
     No number here is picked for being big enough or convenient; each is the smallest value
     satisfying a stated constraint.
     """
@@ -60,6 +65,8 @@ def arrangements() -> tuple[tuple[int, int], ...]:
         (2, 2),           # inner==outer, larger
         (1, 2),           # inner<outer, minimal
         (1, 3),           # inner<outer, larger
+        (0, 1),           # the inner class presents no demand of its own
+        (0, 3),           # the same, with the outer demand larger
     )
 
 
@@ -68,9 +75,23 @@ def domain_predicts(inner_call_sites: int, outer_call_sites: int) -> bool:
 
     Stated as a rule over the arrangement rather than as a list of expected answers, so the arm
     compares a prediction against a measurement instead of a measurement against itself.
+
+    **The rule used to be `inner_call_sites >= outer_call_sites`,** because where the enabling
+    repair carried less demand than the repair it enabled, the greedy rule never reached it
+    and the chain stalled — `DESIGN_AUDIT.md` defect 7, recorded as a boundary the milestone
+    had to carry. It no longer does: the lineage reads the obstacle its own failed search
+    names and descends to it. The claim holds in every arrangement, so the rule is that it
+    holds wherever there is an enabling repair to find.
+
+    The boundary that remains is not about rank but about **existence**: if the inner class is
+    never rendered directly it presents no demand of its own, so there is no insufficiency to
+    descend to and nothing the lineage can do. That is a smaller and more natural limitation
+    than the ordering one, and the sweep carries witnesses of it so the arm still has points
+    that must come out negative.
     """
 
-    return inner_call_sites >= outer_call_sites
+    del outer_call_sites
+    return inner_call_sites >= 1
 
 
 @dataclass
@@ -150,7 +171,7 @@ class Arrangement:
                 "does the domain recorded for the enabling claim match the domain measured by "
                 "running the chain in every way the two demands can compare?"
             ),
-            "rule": "the enabling relation is claimed where inner_call_sites >= outer_call_sites",
+            "rule": "the enabling relation is claimed wherever the inner class presents a demand of its own",
             "points": [point.to_dict() for point in self.points],
             "regimes_covered": sorted({point.regime for point in self.points if point.regime}),
             "disagreements": [point.to_dict() for point in self.disagreements],

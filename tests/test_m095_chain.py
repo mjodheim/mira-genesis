@@ -456,26 +456,59 @@ def test_the_enabling_relation_holds_wherever_the_enabler_is_not_outranked(
         assert built.facts["outer_call_sites"] == sample
 
 
-def test_the_enabling_relation_fails_where_the_enabler_is_outranked(tmp_path: Path) -> None:
-    """The boundary, pinned as a negative so it cannot quietly move.
+def test_the_enabling_relation_holds_where_the_enabler_is_outranked(tmp_path: Path) -> None:
+    """This asserted the opposite until the lineage learned to read its own obstacle.
 
-    Where the outer class has more call sites than the inner one, the repair that would enable B
-    carries *less* demand than B itself. The measure never ranks it first, so the greedy rule
-    never reaches it, the fixed point stalls with B unmet, and no enabling is demonstrated.
+    Where the outer class has more call sites, the repair that would enable B carries *less*
+    demand than B itself, so the greedy rule never ranked it and the chain stalled with the
+    remedy sitting untried below it. That was recorded as a boundary the milestone had to carry.
 
-    This is a limitation of the selection rule, not of the mechanism: the operation is the same
-    and would apply if the inner renderer existed. Escaping it means being willing to repair
-    something the measure does not rank first, which is a different milestone's question.
+    It is not a boundary. A failed search already names the operation it could not apply, and
+    that operation knows which class must supply which rendering, so the obstacle identifies its
+    own remedy. Nothing is added to the operation set; only which target is attempted changes.
     """
 
     built = _chain_for(tmp_path, "outranked", 1, 3)
-    assert not built.enabling_demonstrated
     assert built.facts["ordering_regime"] == "inner<outer"
     assert "Reading" not in built.selected_first, (
-        "the enabler was ranked first after all; the boundary has moved and the claim's "
-        "recorded domain is now wrong"
+        "the enabler was ranked first after all, so this is no longer the arrangement "
+        "the test is about"
     )
-    assert built.step_b is None or not built.step_b.reached
+    assert built.descended_to == "Reading/render_value_object_as_mapping", (
+        "the enabling repair was reached without descending, so the descent is not what "
+        "this measures"
+    )
+    assert built.step_a is not None and built.step_a.class_name == "Reading"
+    assert built.step_b is not None and built.step_b.reached
+    assert built.enabling_demonstrated
+
+
+def test_the_descent_target_is_read_from_the_obstacle_not_from_the_ranking(
+    tmp_path: Path,
+) -> None:
+    """What makes the descent a measurement rather than a heuristic.
+
+    The class it repairs is named by the operation the search reported as unreachable, so it is
+    recovered from the failure rather than ranked, guessed, or supplied.
+    """
+
+    world.build(tmp_path, reading_callers=1, sample_callers=3)
+    chain.clear_caches()
+    diagnosis = measure(tmp_path)
+    blocked = next(item for item in diagnosis.unmet if item.capability == NESTED)
+
+    enabler = chain.enabler_for(tmp_path, blocked, diagnosis)
+    assert enabler is not None
+    assert enabler.target == "Reading"
+    assert enabler.capability == "render_value_object_as_mapping"
+    assert enabler.demand < blocked.demand, (
+        "the enabler outranks the target, so nothing needed to be descended to"
+    )
+
+    # And it is the class the blocked operation names, not merely some lower-ranked target.
+    control = control_from_s0(tmp_path)
+    assert control.nested_unreachable
+    assert enabler.target.lower() in control.nested_unreachable[0]
 
 
 def test_the_record_distinguishes_a_measured_a_from_a_fallback(tmp_path: Path) -> None:
@@ -488,7 +521,9 @@ def test_the_record_distinguishes_a_measured_a_from_a_fallback(tmp_path: Path) -
     """
 
     measured = _chain_for(tmp_path, "measured", 3, 2)
-    fallback = _chain_for(tmp_path, "fallback", 1, 3)
+    # The inner class is never rendered directly, so it presents no demand of its own and there
+    # is no insufficiency to descend to. This is the one arrangement where A cannot be found.
+    fallback = _chain_for(tmp_path, "fallback", 0, 3)
 
     assert measured.step_a_identified_by == "the_nested_operation_became_applicable"
     assert fallback.step_a_identified_by == "fallback_first_repair_that_reached"

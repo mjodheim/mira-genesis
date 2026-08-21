@@ -68,10 +68,17 @@ def test_the_declared_world_is_one_of_the_points() -> None:
     assert (world.READING_CALLERS, world.SAMPLE_CALLERS) in arms.arrangements()
 
 
-def test_no_point_carries_a_caller_count_below_one() -> None:
-    """A class with no call sites presents no demand, so the comparison would be vacuous."""
+def test_the_outer_class_is_always_called_and_the_inner_one_sometimes_is_not() -> None:
+    """The outer class must be called, or there is no requirement to be about at all.
 
-    assert all(inner >= 1 and outer >= 1 for inner, outer in arms.arrangements())
+    The inner class deliberately reaches zero in two points: that is the arrangement where the
+    claim fails, and a sweep without it would have nothing that must come out negative.
+    """
+
+    points = arms.arrangements()
+    assert all(outer >= 1 for _inner, outer in points)
+    assert any(inner == 0 for inner, _outer in points)
+    assert any(inner >= 1 for inner, _outer in points)
 
 
 # ── the measurement ───────────────────────────────────────────────────
@@ -89,12 +96,34 @@ def test_the_enabling_relation_holds_in_every_supported_regime(swept: arms.Arran
     )
 
 
-def test_the_excluded_regime_really_is_excluded(swept: arms.Arrangement) -> None:
-    """Pinned as a negative. If this starts passing, the recorded domain is too narrow."""
+def test_the_ordering_no_longer_excludes_anything(swept: arms.Arrangement) -> None:
+    """This asserted the opposite, and the assertion was correct when it was written.
 
-    excluded = [p for p in swept.points if p.inner_call_sites < p.outer_call_sites]
-    assert excluded
-    assert not any(point.demonstrated for point in excluded)
+    Where the enabling repair carried less demand than the repair it enabled, the greedy rule
+    never reached it and the milestone recorded a boundary it had to carry. The lineage now reads
+    the obstacle its own failed search names and descends to it, so rank excludes nothing.
+    """
+
+    outranked = [
+        p for p in swept.points
+        if p.inner_call_sites < p.outer_call_sites and p.inner_call_sites >= 1
+    ]
+    assert outranked, "the sweep no longer contains the arrangement this is about"
+    assert all(point.demonstrated for point in outranked)
+
+
+def test_a_world_with_no_enabler_to_find_is_still_excluded(swept: arms.Arrangement) -> None:
+    """The boundary that remains, pinned as a negative so it cannot quietly move.
+
+    It is about existence rather than rank: if the inner class is never rendered directly it
+    presents no demand of its own, so there is no insufficiency to descend to. Reading the
+    obstacle does not help when the remedy is not something the diagnosis can see.
+    """
+
+    absent = [p for p in swept.points if p.inner_call_sites == 0]
+    assert absent, "the sweep has no point that must come out negative"
+    assert not any(point.demonstrated for point in absent)
+    assert all(point.predicted is False for point in absent)
 
 
 def test_the_control_never_reaches_b_from_s0_in_any_arrangement(swept: arms.Arrangement) -> None:
@@ -122,7 +151,7 @@ def _point(inner: int, outer: int, demonstrated: bool) -> arms.Point:
 def test_a_supported_world_that_stops_working_refutes_the_arm() -> None:
     """The claim would be too broad."""
 
-    arm = arms.Arrangement(points=[_point(3, 2, False), _point(1, 2, False)])
+    arm = arms.Arrangement(points=[_point(3, 2, False), _point(0, 1, False)])
     assert arm.outcome == "refuted"
     assert [p.inner_call_sites for p in arm.disagreements] == [3]
 
@@ -134,9 +163,9 @@ def test_an_excluded_world_that_starts_working_also_refutes_the_arm() -> None:
     outward while the prose still describes the old one is the same defect as one that moves in.
     """
 
-    arm = arms.Arrangement(points=[_point(3, 2, True), _point(1, 2, True)])
+    arm = arms.Arrangement(points=[_point(3, 2, True), _point(0, 1, True)])
     assert arm.outcome == "refuted"
-    assert [p.inner_call_sites for p in arm.disagreements] == [1]
+    assert [p.inner_call_sites for p in arm.disagreements] == [0]
 
 
 def test_a_point_that_could_not_run_is_unrunnable_not_refuted() -> None:
