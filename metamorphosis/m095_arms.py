@@ -1,19 +1,22 @@
 """The world-arrangement arm: does the claim's recorded domain match the measured one?
 
 `experiments/M095/DESIGN_AUDIT.md` defect 7 found that M095's central relation was measured in
-one arrangement of the authored world and read as a property of the mechanism. It is a property
-of the mechanism *and* of the arrangement: where the outer class draws more demand than the inner
-one, the repair that would enable B is never ranked first, the greedy rule never reaches it, and
-no enabling is demonstrated.
+one arrangement of the authored world and read as a property of the mechanism. It was a property
+of the mechanism *and* of the arrangement, and only sweeping the arrangement showed that.
 
-The document now states that domain. A document stating a domain is an assertion; this arm makes
-it a measurement, so that a change to the selection rule cannot silently move the boundary while
-the prose goes on describing where it used to be.
+A document stating a domain is an assertion; this arm makes it a measurement, so that a change to
+the selection rule cannot silently move the boundary while the prose goes on describing where it
+used to be.
 
-**This arm can fail in both directions**, which is the point. If a world in the supported regimes
-stops demonstrating the enabling relation, the claim is too broad. If a world in `inner<outer`
-starts demonstrating it, the claim is too narrow — and that is not a happy accident to be quietly
-absorbed, it is a finding that the recorded domain is wrong.
+**This arm can fail in both directions**, which is the point — and the second direction is the one
+that fired. The recorded domain used to exclude worlds where the enabling repair is outranked by
+the repair it enables. Then the lineage learned to descend to the obstacle its own failed search
+names, those worlds started demonstrating the relation, and the arm reported `refuted` rather than
+quietly absorbing a happier answer. A claim that is too narrow is a finding, not a bonus.
+
+What the arm now predicts is that the relation holds wherever an enabling repair exists to be
+found. The two `inner == 0` points are its negative witnesses: an inner class that is never
+rendered directly presents no demand of its own, so there is nothing to descend to.
 
 Nothing here reads or writes anything under `experiments/`.
 """
@@ -28,6 +31,7 @@ from metamorphosis import m095_chain as chain
 from metamorphosis import m095_world as world
 
 ARM_SCHEMA = "m095-arrangement-arm-v1"
+
 
 def declared() -> tuple[int, int]:
     """The declared world, read when asked rather than captured at import.
