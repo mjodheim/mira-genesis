@@ -113,6 +113,9 @@ def _point(inner: int, outer: int, demonstrated: bool) -> arms.Point:
         predicted=arms.domain_predicts(inner, outer),
         demonstrated=demonstrated,
         regime="measured",
+        # These stand for runs that repaired something; the liveness gate is about a
+        # sweep in which nothing was ever repaired, which is a separate test.
+        any_repair_reached=True,
     )
 
 
@@ -440,3 +443,35 @@ def test_a_dead_searcher_makes_the_budget_arm_unrunnable_not_satisfied(monkeypat
 
     monkeypatch.setattr(execution, "constructible_cases", lambda *a, **k: [])
     assert sweep("no-cases").outcome == "unrunnable"
+
+
+def test_a_dead_instrument_is_unrunnable_not_a_refuted_domain(monkeypatch, tmp_path) -> None:
+    """Every point reporting no enabling looks the same whether the domain is wrong or the
+    instrument is dead. Killing the execution probe made this arm say `refuted` -- a claim about
+    the mechanism -- when the honest answer is that it could not measure at all.
+    """
+
+    from metamorphosis import m094_execution as execution
+
+    def sweep(name: str) -> arms.Arrangement:
+        base = tmp_path / name
+        base.mkdir(parents=True, exist_ok=True)
+
+        def make_root(leaf: str) -> Path:
+            root = base / leaf
+            root.mkdir(parents=True, exist_ok=True)
+            return root
+
+        return arms.run(make_root)
+
+    monkeypatch.setattr(execution, "constructible_cases", lambda *a, **k: [])
+    arm = sweep("dead")
+    assert arm.outcome == "unrunnable"
+    assert not any(point.any_repair_reached for point in arm.points)
+
+
+def test_a_sweep_that_repaired_something_can_still_refute(swept: arms.Arrangement) -> None:
+    """The liveness gate must not swallow real disagreements."""
+
+    assert any(point.any_repair_reached for point in swept.points)
+    assert arms.Arrangement(points=[_point(3, 2, False)]).outcome == "refuted"
