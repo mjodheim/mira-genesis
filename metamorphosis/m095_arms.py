@@ -29,8 +29,15 @@ from metamorphosis import m095_world as world
 
 ARM_SCHEMA = "m095-arrangement-arm-v1"
 
-#: The declared world, stated once so the sweep can include it rather than assume it.
-DECLARED = (world.READING_CALLERS, world.SAMPLE_CALLERS)
+def declared() -> tuple[int, int]:
+    """The declared world, read when asked rather than captured at import.
+
+    This was a module-level tuple, which froze the constants the moment the module loaded
+    and made the sweep silently ignore any change to them -- the same inertness the
+    `build()` parameters were fixed for one defect earlier.
+    """
+
+    return (world.READING_CALLERS, world.SAMPLE_CALLERS)
 
 
 def arrangements() -> tuple[tuple[int, int], ...]:
@@ -45,7 +52,7 @@ def arrangements() -> tuple[tuple[int, int], ...]:
     satisfying a stated constraint.
     """
 
-    inner, outer = DECLARED
+    inner, outer = declared()
     return (
         (2, 1),           # inner>outer, minimal
         (inner, outer),   # inner>outer, the declared world

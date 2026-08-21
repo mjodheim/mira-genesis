@@ -475,3 +475,40 @@ def test_a_sweep_that_repaired_something_can_still_refute(swept: arms.Arrangemen
 
     assert any(point.any_repair_reached for point in swept.points)
     assert arms.Arrangement(points=[_point(3, 2, False)]).outcome == "refuted"
+
+
+def test_the_declared_point_is_read_when_asked_not_captured_at_import(monkeypatch) -> None:
+    """A module-level tuple froze the constants at import and made the sweep ignore them."""
+
+    monkeypatch.setattr(world, "READING_CALLERS", 7)
+    assert arms.declared() == (7, world.SAMPLE_CALLERS)
+    assert (7, world.SAMPLE_CALLERS) in arms.arrangements()
+
+
+def test_a_probe_that_never_ran_is_not_recorded_as_candidates_that_failed(
+    tmp_path, monkeypatch
+) -> None:
+    """Amendment A1's fifth regression in this milestone.
+
+    `executed` was set from the survivor count whatever happened, so a probe that could
+    construct no case -- and therefore ran nothing at all -- was recorded as N candidates that
+    ran and disagreed. That reads as a refutation of the repair, which is precisely the
+    confusion A1 exists to prevent.
+    """
+
+    from metamorphosis import m094_execution as execution
+
+    world.build(tmp_path)
+    target = next(
+        item for item in chain.measure(tmp_path).unmet if item.capability != chain.NESTED
+    )
+
+    alive = chain.search(tmp_path, target, label="intact")
+    assert alive.executed > 0 and alive.confirmed > 0
+
+    monkeypatch.setattr(execution, "constructible_cases", lambda *a, **k: [])
+    dead = chain.search(tmp_path, target, label="dead probe")
+    assert dead.executed == 0, "a probe that ran nothing reported candidates as executed"
+    assert dead.confirmed == 0
+    assert "instrument_could_not_run" in dead.notes
+    assert "could not run" in str(dead.notes["stopped"])

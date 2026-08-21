@@ -227,8 +227,15 @@ def search(root: Path, target: Insufficiency, *, label: str,
             root, world.COMPONENT, target.target, decode_rendering(target.detail),
         )
         if not cases:
+            # Nothing ran. Recording this as candidates that ran and disagreed is
+            # amendment A1 exactly: the instrument could not build a case, and the
+            # record would have read as a refutation of the repair.
+            attempt.notes["instrument_could_not_run"] = (
+                "no case could be constructed, so no candidate was executed"
+            )
             return []
         window = ordered[: execution.MAX_CONFIRMATIONS]
+        attempt.executed = len(window)
         records = execution.probe_variants(
             root, world.COMPONENT,
             [(str(index), modified) for index, (_method, modified) in enumerate(window)],
@@ -275,10 +282,13 @@ def search(root: Path, target: Insufficiency, *, label: str,
     # Content address orders them, as M094's search does; execution decides among them.
     ordered = sorted(survivors, key=lambda pair: _digest({"m": pair[0]}))
     confirmed = confirms(ordered)
-    attempt.executed = min(len(ordered), execution.MAX_CONFIRMATIONS)
     attempt.confirmed = len(confirmed)
     if not confirmed:
-        attempt.notes["stopped"] = "no survivor reproduced the requirement when executed"
+        attempt.notes["stopped"] = (
+            "no survivor reproduced the requirement when executed"
+            if attempt.executed
+            else "the instrument could not run, so nothing was tested"
+        )
         return attempt
     method, modified = confirmed[0]
     attempt.adopted_method = method
