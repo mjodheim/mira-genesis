@@ -102,9 +102,11 @@ Two properties keep it honest, both tested:
   greater demand and is selected first. That is the only thing the world arranges, and it arranges
   it by giving `Reading` more callers rather than by ranking anything.
 
-  **And the result depends on it.** That was disclosed as an arrangement and never measured as a
-  dependency until `DESIGN_AUDIT.md` defect 7 varied it. It is not a free parameter: it decides
-  whether the milestone demonstrates anything. See "The domain of the claim" below.
+  **The result used to depend on it.** That was disclosed as an arrangement and never measured
+  as a dependency until `DESIGN_AUDIT.md` defect 7 varied it — and it turned out to decide
+  whether the milestone demonstrated anything at all. It no longer does: the lineage descends
+  to the enabler its own failed search names, so the ordering sets which repair happens first
+  and not whether the relation holds. See "The domain of the claim" below.
 
 What is **not** authored: which target the diagnosis selects at either step, what either repair
 contains, or whether the second is reachable. All three are measured, and the third is the
@@ -178,21 +180,43 @@ property of the mechanism. It is a property of the mechanism **and** of the arra
 The `inner==outer` rows only hold because amendment A4's rule now applies at S0 as well as at S1;
 before that repair the relation held in two of six arrangements rather than four.
 
-The `inner<outer` rows are a **boundary, not a bug**. When the outer class has more call sites, the
-repair that would enable B carries less demand than B itself, so the measure never ranks it first
-and the greedy rule never reaches it. The search stalls with B unmet and an untried repair below it
-that would have unblocked it. The operation is unchanged and would apply if the inner renderer
-existed — what fails is the selection rule, not the mechanism.
+The `inner<outer` rows were recorded as a **boundary the milestone had to carry**: when the outer
+class has more call sites, the repair that would enable B carries less demand than B itself, so the
+measure never ranks it first and the greedy rule never reaches it. The search stalled with B unmet
+and an untried repair below it that would have unblocked it.
 
-So the claim carries its domain:
+**It is not a boundary.** A failed search already names its own obstacle — the operation it could
+not apply — and that operation knows which class must supply which rendering. So the lineage asks
+the failure what would unblock it and repairs that, even though the measure does not rank it.
+Nothing is added to the operation set: the same operations are offered in the same states, and only
+which target is attempted changes. That distinction is what keeps this inside M095 rather than
+M096, which is about a larger *language*.
 
-> An adopted repair changes what the lineage can reach, **in worlds where the enabling repair is
-> not outranked by the repair it enables.**
+| inner callers | outer callers | regime | before the descent | now |
+|---|---|---|---|---|
+| 2 | 1 | inner>outer | yes | yes |
+| 3 | 2 | inner>outer — the declared world | yes | yes |
+| 1 | 1 | inner==outer | yes | yes |
+| 2 | 2 | inner==outer | yes | yes |
+| 1 | 2 | inner<outer | **no** | **yes** |
+| 1 | 3 | inner<outer | **no** | **yes** |
+| 0 | 1 | the inner class is never rendered | no | no |
+| 0 | 3 | the same, larger outer demand | no | no |
 
-Escaping that boundary means being willing to repair something the measure does not rank first — to
-search for an *enabler* rather than for the greatest unmet demand. That is a different question,
-and it is close to the one M086-C's failure already posed: a mechanism that generates a correct
-candidate and then chooses a wrong one is not helped by generating more.
+So the claim keeps a domain, but a smaller and more natural one — about **existence** rather than
+rank:
+
+> An adopted repair changes what the lineage can reach, **wherever there is an enabling repair for
+> it to find.**
+
+If the inner class is never rendered directly it presents no demand of its own, so there is no
+insufficiency to descend to; reading the obstacle does not help when the remedy is not something
+the diagnosis can see. The arrangement arm sweeps two such points, so it still has arrangements
+that must come out negative.
+
+M086-C's failure named the selection rule as the thing that failed and recorded making selection
+mutable as a candidate successor. This is a narrow instance of that: the rule still ranks by
+demand, and only consults the obstacle when the ranking has run out.
 
 ## The selection blocker, and how often it came back
 

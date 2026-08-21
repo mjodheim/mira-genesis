@@ -74,6 +74,20 @@
   and pinned by a test that permutes every tie and requires the sweep unchanged. Two further
   asserted booleans were removed, one of them written by the commit that removed the previous
   three; `enabling_demonstrated` no longer accepts a run that never identified A.
+- **M095's enabling relation now holds in every world where an enabling repair exists — six of
+  six, up from two.** The milestone had recorded an ordering boundary it believed it had to carry:
+  where the repair that enables B draws less demand than B itself, the greedy rule never ranks it
+  and the chain stalled with the remedy sitting untried below it. The audit called escaping it
+  something that "needs handling this milestone does not have".
+  It needed one observation. **A failed search already names its own obstacle** — the operation it
+  could not apply, which knows which class must supply which rendering — so the lineage asks the
+  failure what would unblock it and repairs that, unranked. Nothing is added to the operation set;
+  only which target is attempted changes, which is what keeps it inside M095 rather than M096. The
+  claim loses its ordering qualifier and keeps a smaller one about existence: if the inner class is
+  never rendered directly there is no insufficiency to descend to. The arrangement arm sweeps two
+  such points so it still has arrangements that must come out negative, and the test that asserted
+  the old boundary — written so that a boundary moving outward would be loud — is what made the
+  improvement visible rather than silent.
 - **M095's enabling result held in two of six worlds, and said so nowhere.** `DESIGN.md` disclosed
   the world's one arrangement — three inner call sites against two outer — and separately that the
   diagnosis's selections are not authored. Both true; neither answers whether the result *depends*

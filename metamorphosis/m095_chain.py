@@ -356,6 +356,34 @@ def nested_inner_classes(root: Path) -> tuple[str, ...]:
     }))
 
 
+def enabler_for(root: Path, target: Insufficiency, diagnosis: Diagnosis):
+    """The insufficiency that would make this target's blocked operation applicable.
+
+    Read from the obstacle, not chosen. When a search fails, the operation it could not apply
+    already knows which class must supply which rendering — so the failure identifies its own
+    remedy, and the lineage does not need to be told or to guess.
+
+    This is what lets the lineage repair something the measure does **not** rank first. The
+    greedy top-demand rule cannot reach downward, and where the enabling repair carries less
+    demand than the repair it enables the search stalls with an untried remedy below it —
+    `experiments/M095/DESIGN_AUDIT.md` defect 7, which this removes. Nothing is added to the
+    operation set: the same operations are offered, and only which target is attempted changes.
+    """
+
+    tree = ast.parse((root / world.COMPONENT).read_text(encoding="utf-8"))
+    node = _find_class_node(tree, target.target)
+    if node is None:
+        return None
+    for operation in _nested_operations(root, tree, node, target.detail):
+        if operation.supplier() is not None or operation.inner_class is None:
+            continue
+        for item in diagnosis.unmet:
+            if (item.target == operation.inner_class.name
+                    and item.capability == "render_value_object_as_mapping"):
+                return item
+    return None
+
+
 def control_from_s0(root: Path) -> Attempt:
     """Target B directly from S0 and exhaust the operation set.
 
@@ -409,6 +437,10 @@ class Chain:
     s0_tied: list[str] = field(default_factory=list)
     #: Every S0 repair replayed into the counterfactual world -- all of them except A.
     counterfactual_replayed: list[Attempt] = field(default_factory=list)
+    #: The repair the lineage descended to after reading its own blocked search, when the
+    #: measure did not rank it first. Empty when the ranking already reached it.
+    descended_to: str = ""
+    descent: list[Attempt] = field(default_factory=list)
     s1_tied: list[str] = field(default_factory=list)
 
     @property
@@ -479,6 +511,8 @@ class Chain:
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
             "first_step_repairs": [item.to_dict() for item in self.first_step],
+            "descended_to_an_unranked_enabler": self.descended_to,
+            "descent_attempts": [item.to_dict() for item in self.descent],
             "second_step_repairs": [item.to_dict() for item in self.second_step],
             "every_tied_capability_was_repaired": self.every_tied_capability_repaired,
             "the_s0_tie_was_not_broken_by_a_name": self.s0_tie_was_not_broken_by_name,
@@ -555,6 +589,38 @@ def run(root: Path, counterfactual_root: Path, *,
 
     s1 = measure(root)
     tied = s1.tied_selection()
+
+    # If the nested requirement is still blocked, ask what blocks it and repair that
+    # first, even though the measure does not rank it. The greedy rule cannot reach
+    # downward, and where the enabling repair carries less demand than the repair it
+    # enables the chain used to stall with the remedy sitting untried below it.
+    #
+    # The target is read from the failed search's own obstacle, not chosen: the operation
+    # that could not apply names the class and the rendering it needs.
+    blocked = next((item for item in tied if item.capability == NESTED), None)
+    if blocked is not None and not _nested_is_reachable(root, blocked):
+        enabler = enabler_for(root, blocked, s1)
+        if enabler is not None:
+            attempt = search(root, enabler, label=f"enabler for {blocked.capability}")
+            chain.descent.append(attempt)
+            if attempt.reached:
+                adopt(root, attempt)
+                chain.descended_to = f"{enabler.target}/{enabler.capability}"
+                # This repair is the one that flipped the operation, so it is A. It may
+                # displace a placeholder: the S0 round sets `step_a` to the first repair
+                # that reached when nothing flipped, precisely so a run that demonstrates
+                # nothing still records what it did. Once something does flip, that
+                # placeholder is no longer the best answer to which repair enabled B.
+                placeholder = (
+                    chain.step_a_identified_by == "fallback_first_repair_that_reached"
+                )
+                if (_nested_is_reachable(root, blocked)
+                        and (chain.step_a is None or placeholder)):
+                    chain.step_a = attempt
+                    chain.step_a_identified_by = "the_nested_operation_became_applicable"
+                s1 = measure(root)
+                tied = s1.tied_selection()
+
     if tied:
         chain.s1_tied = [f"{i.target}/{i.capability}" for i in tied]
         chain.selected_second = ", ".join(chain.s1_tied)

@@ -2,16 +2,21 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **nineteen** defects across four passes: seventeen are
-repaired. Two are not: defect 7 is a boundary on the claim, and defect 19 is a control that
-cannot fail. Both are disclosed rather than quietly carried.
+mechanism rather than confirming it. It has found **nineteen** defects across five passes: eighteen are
+repaired. One is not: defect 19 is a control that cannot fail, disclosed rather than quietly
+carried.
+
+The fifth pass did not look for defects. It asked what the two disclosed ones would take to
+remove, and one of them turned out to need far less than the audit had claimed.
 
 The fourth pass was adversarial and ran against the apparatus rather than the mechanism. Five
 independent review passes, none of them shown the others' findings, were each asked to break
 the arms by killing the mechanism underneath them — machine review, under the AI-assisted
 development provenance this project records in
 `docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`, not independent human evaluation and not
-evidence of the kind M085's external-maintainer requirement is about. They did. Two of the three arms reported `satisfied` while the thing they measure was dead, and
+evidence of the kind M085's external-maintainer requirement is about.
+
+They did. Two of the three arms reported `satisfied` while the thing they measure was dead, and
 amendment A4's defect was found for the **third** time in this milestone, inside the loop
 written to remove it.
 
@@ -22,9 +27,10 @@ project paid for one milestone ago.
 The attack that mattered most in the second pass was one question the first pass never asked.
 `DESIGN.md` disclosed that the world arranges one thing — the relation between the two classes'
 call-site counts — and separately that the diagnosis's selections are not authored. Both true.
-Neither answers whether the result *depends* on the arrangement. It does: before defect 5 was
+Neither answers whether the result *depends* on the arrangement. It did: before defect 5 was
 repaired, the milestone's central relation held in two of six arrangements. Defect 7 records the
-measurement and the domain the claim now carries.
+measurement, the domain it forced the claim to carry, and — after the fifth pass — how that
+domain was widened again rather than merely disclosed.
 
 ## Defect 1 — the search had stopped executing candidates (A2, forgotten)
 
@@ -159,7 +165,54 @@ sweep run silently reported a four-caller world as a three-caller one. The count
 the body. Pinned by
 `test_the_caller_counts_are_resolved_when_build_runs_not_when_it_is_defined`.
 
-## Defect 7 — the claim's domain was never measured, and it is bounded — **DISCLOSED, NOT REPAIRED**
+## Defect 7 — the claim's domain was never measured, and it was bounded — **REPAIRED**
+
+> **Resolved.** The boundary was real and is gone. Where the enabling repair carries less demand
+> than the repair it enables, the greedy rule never ranks it and the chain stalled with the remedy
+> sitting untried below it. The audit recorded that as a limitation of the selection rule and said
+> repairing it "needs handling this milestone does not have".
+>
+> It needed less than that. **A failed search already names its own obstacle.** When the nested
+> requirement cannot be met, the search reports the operation that could not apply — and that
+> operation knows which class must supply which rendering. So the lineage asks the failure what
+> would unblock it and repairs *that*, even though the measure does not rank it.
+>
+> Nothing is added to the operation set. The same operations are offered in the same states; only
+> which target is attempted changes. That matters for the milestone's boundary with M096: this is
+> not a larger language, it is the same language used where it was previously left unused.
+>
+> | inner callers | outer callers | regime | before | after |
+> |---|---|---|---|---|
+> | 2 | 1 | inner>outer | yes | yes |
+> | 3 | 2 | inner>outer — declared | yes | yes |
+> | 1 | 1 | inner==outer | yes | yes |
+> | 2 | 2 | inner==outer | yes | yes |
+> | 1 | 2 | inner<outer | **no** | **yes** |
+> | 1 | 3 | inner<outer | **no** | **yes** |
+> | 0 | 1 | no inner demand | no | no |
+> | 0 | 3 | no inner demand | no | no |
+>
+> **The boundary that remains is about existence, not rank.** If the inner class is never rendered
+> directly it presents no demand of its own, so there is no insufficiency to descend to — reading
+> the obstacle does not help when the remedy is not something the diagnosis can see. The
+> arrangement arm now sweeps two such points, so it still has arrangements that must come out
+> negative and remains falsifiable in both directions.
+>
+> The claim loses its ordering qualifier:
+>
+> > An adopted repair changes what the lineage can reach, **wherever there is an enabling repair
+> > for it to find.**
+>
+> Pinned by `test_the_enabling_relation_holds_where_the_enabler_is_outranked` — which asserted the
+> exact opposite until this was repaired, and was written precisely so that a boundary moving
+> outward would be loud rather than silent. It was. That is the arm and the test doing the job
+> they were built for, and it is the only reason this improvement was visible at all.
+>
+> `test_the_descent_target_is_read_from_the_obstacle_not_from_the_ranking` pins the part that makes
+> it a measurement rather than a heuristic: the class repaired is the one the unreachable operation
+> names.
+
+The finding as originally written follows.
 
 `DESIGN.md` disclosed the ordering pressure as "the only thing the world arranges", and said what
 is *not* authored: "which target the diagnosis selects at either step". Both statements are true.
@@ -512,8 +565,13 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Seventeen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
-finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
+Eighteen are repaired. Defect 19 is not, and is disclosed instead.
+
+**Defect 7 was repaired after being recorded as unrepairable**, which is worth more than the
+repair. The audit said escaping it "needs handling this milestone does not have" and left it
+as a boundary on the claim. It needed one observation: a failed search already names the
+operation it could not apply, so the obstacle identifies its own remedy. The conclusion that
+it could not be fixed was reached by describing the difficulty rather than by trying. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 

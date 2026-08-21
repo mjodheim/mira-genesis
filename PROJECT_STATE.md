@@ -1090,8 +1090,8 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol has found nineteen defects across four passes**
-  (`experiments/M095/DESIGN_AUDIT.md`). Seventeen are repaired; two are disclosed rather than repaired — defect 7 is a boundary on the claim
+  **A design audit run before any protocol has found nineteen defects across five passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Eighteen are repaired; one is disclosed rather than repaired — defect 19 is a control that cannot fail
   and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
   M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
   not record what the call sites wrote, so the probe refused every correct candidate. Three were in
@@ -1100,19 +1100,31 @@ question remains open but is not a missing completion gate.
   alphabetical order; at S0 the same rule was missing entirely and `run` took the head of a sorted
   list; and `A` was defined as "the repair made first" rather than as the repair after which the
   nested operation can apply.
-- **The M095 claim now carries a measured domain, and it did not before.** `DESIGN.md` disclosed
-  that the world arranges one thing — three inner call sites against two outer — and separately
-  that the diagnosis's selections are not authored. Both true, and neither answers whether the
-  result *depends* on the arrangement. It does. Swept over every way the two demands can compare,
-  the enabling relation held in **two of six** arrangements; applying amendment A4's rule at S0
-  recovers the equal-demand worlds, giving four of six. The remaining two are a real boundary:
-  where the outer class has more call sites, the repair that would enable B carries *less* demand
-  than B itself, is never ranked first, and the greedy rule never reaches it. The claim is now
-  stated as **an adopted repair changes what the lineage can reach, in worlds where the enabling
-  repair is not outranked by the repair it enables** — narrower than before and pinned in both
-  directions, including a test asserting the negative so the boundary cannot quietly move.
-  Escaping it means searching for an *enabler* rather than for the greatest unmet demand, which is
-  a different question and close to the one M086-C's failure already posed.
+- **The M095 claim was found to have an unmeasured domain, and the domain was then widened until
+  it nearly disappeared.** `DESIGN.md` disclosed that the world arranges one thing — three inner
+  call sites against two outer — and separately that the diagnosis's selections are not authored.
+  Both true, and neither answers whether the result *depends* on the arrangement. It did: swept
+  over every way the two demands can compare, the enabling relation held in **two of six**
+  arrangements. Applying amendment A4's rule at S0 recovered the equal-demand worlds — four of six
+  — and the remaining two were recorded as a boundary the milestone had to carry, on the reasoning
+  that the enabling repair is outranked by the repair it enables and a greedy rule cannot reach
+  downward.
+- **That boundary is gone, and removing it needed one observation rather than a new milestone.**
+  A failed search already names its own obstacle: the operation it could not apply, which knows
+  which class must supply which rendering. So the lineage asks the failure what would unblock it
+  and repairs that, even though the measure does not rank it. **Nothing is added to the operation
+  set** — the same operations are offered in the same states, and only which target is attempted
+  changes, which is what keeps this inside M095 rather than M096. The enabling relation now holds
+  in **every arrangement where an enabling repair exists to be found**, six of six, and the claim
+  reads *an adopted repair changes what the lineage can reach, wherever there is an enabling
+  repair for it to find.* What remains is a boundary about **existence** rather than rank: if the
+  inner class is never rendered directly it presents no demand of its own and there is nothing to
+  descend to. The arrangement arm sweeps two such points, so it still has arrangements that must
+  come out negative.
+- **The test that pinned the old boundary as a negative is what made the improvement visible.**
+  It was written so that a boundary moving *outward* would be loud rather than silent, and that is
+  exactly what happened. The audit had said escaping the boundary "needs handling this milestone
+  does not have"; that conclusion was reached by describing the difficulty rather than by trying.
 - **Three M095 arms are built** (`metamorphosis/m095_arms.py`), each reporting M094's three-valued
   `satisfied`/`refuted`/`unrunnable`. A fourth, adversarial audit pass — five independent
   reviewers asked to break the arms by killing the mechanism underneath them — found that **two
