@@ -95,6 +95,10 @@ Two properties keep it honest, both tested:
   greater demand and is selected first. That is the only thing the world arranges, and it arranges
   it by giving `Reading` more callers rather than by ranking anything.
 
+  **And the result depends on it.** That was disclosed as an arrangement and never measured as a
+  dependency until `DESIGN_AUDIT.md` defect 7 varied it. It is not a free parameter: it decides
+  whether the milestone demonstrates anything. See "The domain of the claim" below.
+
 What is **not** authored: which target the diagnosis selects at either step, what either repair
 contains, or whether the second is reachable. All three are measured, and the third is the
 milestone.
@@ -136,6 +140,39 @@ So neither suffices alone:
 **A is necessary; the operation is the vehicle.** That is a smaller and more accurate statement
 than "A enabled B", and it is the one the evidence supports.
 
+## The domain of the claim
+
+The chain was measured in one arrangement of the authored world and the result was read as a
+property of the mechanism. It is a property of the mechanism **and** of the arrangement.
+
+| inner callers | outer callers | regime | enabling demonstrated |
+|---|---|---|---|
+| 3 | 2 | inner>outer — the declared world | yes |
+| 4 | 2 | inner>outer | yes |
+| 2 | 2 | inner==outer | yes |
+| 3 | 3 | inner==outer | yes |
+| 2 | 3 | inner<outer | **no** |
+| 1 | 3 | inner<outer | **no** |
+
+The `inner==outer` rows only hold because amendment A4's rule now applies at S0 as well as at S1;
+before that repair the relation held in two of six arrangements rather than four.
+
+The `inner<outer` rows are a **boundary, not a bug**. When the outer class has more call sites, the
+repair that would enable B carries less demand than B itself, so the measure never ranks it first
+and the greedy rule never reaches it. The search stalls with B unmet and an untried repair below it
+that would have unblocked it. The operation is unchanged and would apply if the inner renderer
+existed — what fails is the selection rule, not the mechanism.
+
+So the claim carries its domain:
+
+> An adopted repair changes what the lineage can reach, **in worlds where the enabling repair is
+> not outranked by the repair it enables.**
+
+Escaping that boundary means being willing to repair something the measure does not rank first — to
+search for an *enabler* rather than for the greatest unmet demand. That is a different question,
+and it is close to the one M086-C's failure already posed: a mechanism that generates a correct
+candidate and then chooses a wrong one is not helped by generating more.
+
 ## The selection blocker, settled
 
 `DESIGN_AUDIT.md` found four defects and all four are repaired. The last was the one that mattered
@@ -152,4 +189,12 @@ A name the class already defines is no longer available, which is what makes two
 class safe: without it the second would have been called `as_mapping` and shadowed the first.
 
 What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
-qualification pool drawn from outside this world, and a checker that recomputes rather than reads.
+qualification pool drawn from outside this world, and a checker that recomputes rather than reads —
+plus a **world-arrangement arm**, so the domain recorded above is measured by the run rather than
+asserted by this document.
+
+A second audit pass has since found four further defects (5 to 8), three repaired and one — the
+domain boundary — disclosed above. `DESIGN_AUDIT.md` carries the arithmetic. The most useful thing
+it says is not about M095: four of the eight defects were regressions of amendments this project
+had already paid for and written down, which is evidence that recording an amendment does not, by
+itself, carry it into the next milestone's code.

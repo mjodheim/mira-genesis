@@ -204,7 +204,7 @@ def test_the_world_is_what_it_says_it_is(tmp_path: Path) -> None:
     """The disclosed facts must match the world actually written."""
 
     build(tmp_path)
-    facts = WorldFacts()
+    facts = WorldFacts.of(tmp_path)
     assert facts.inner_call_sites == READING_CALLERS == len(
         list(tmp_path.glob("reading_caller_*.py"))
     )
@@ -213,6 +213,32 @@ def test_the_world_is_what_it_says_it_is(tmp_path: Path) -> None:
     )
     assert (tmp_path / COMPONENT).exists()
     assert facts.to_dict()["authored"] is True
+
+
+def test_the_world_facts_are_counted_not_defaulted(tmp_path: Path) -> None:
+    """A record that reports the author's constants rather than the world is not a record.
+
+    `WorldFacts()` used to default both counts to the module constants, so it answered 3 and 2
+    whatever was on disk. Every sweep over the caller counts would have been recorded as the
+    declared world, and the one relation the world arranges would have been invisible.
+    """
+
+    build(tmp_path, reading_callers=1, sample_callers=4)
+    facts = WorldFacts.of(tmp_path)
+    assert facts.inner_call_sites == 1, "the facts followed the module constant, not the world"
+    assert facts.outer_call_sites == 4
+    assert facts.ordering_regime == "inner<outer"
+    assert facts.to_dict()["inner_call_sites"] == 1
+
+
+def test_the_caller_counts_are_resolved_when_build_runs_not_when_it_is_defined(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A default bound at import time would make the parameter silently inert."""
+
+    monkeypatch.setattr(world, "READING_CALLERS", 5)
+    build(tmp_path)
+    assert len(list(tmp_path.glob("reading_caller_*.py"))) == 5
 
 
 # ── separating "A enabled B" from "the operation enabled B" ───────────
@@ -369,3 +395,80 @@ def test_nothing_is_left_unmet_after_the_chain(executed: Chain, tmp_path: Path) 
     counterfactual = Path(tempfile.mkdtemp(prefix="m095-done-cf-"))
     chain.run(root, counterfactual)
     assert [i.target for i in measure(root).unmet] == []
+
+
+# ── defect 5: the ordering pressure was load-bearing and undisclosed ──
+
+
+def _chain_for(tmp_path: Path, name: str, reading: int, sample: int) -> Chain:
+    root = tmp_path / f"{name}-root"
+    counterfactual = tmp_path / f"{name}-cf"
+    root.mkdir()
+    counterfactual.mkdir()
+    return chain.run(root, counterfactual, reading_callers=reading, sample_callers=sample)
+
+
+def test_the_s0_selection_applies_the_same_tie_rule_as_s1(tmp_path: Path) -> None:
+    """Amendment A4 at S0, where `run` used to take the head of a sorted list.
+
+    In the declared world nothing ties at S0, so the ordering decided nothing and the defect was
+    invisible. Give the two classes equal call sites and all three insufficiencies tie — and the
+    head of that list is the *nested* one, which is B. Taking it would have made the chain spend
+    its first step on the target it exists to show is unreachable.
+    """
+
+    built = _chain_for(tmp_path, "tie", 2, 2)
+    attempted = {f"{item.class_name}/{item.capability}" for item in built.first_step}
+    assert len(attempted) == 3, f"only {attempted} was attempted at S0"
+    assert built.s0_tie_was_not_broken_by_name
+    assert NESTED in built.selected_first, "the tie is real: B itself ranks equal first here"
+
+
+def test_the_enabling_repair_is_the_one_that_flipped_the_operation(tmp_path: Path) -> None:
+    """A is measured, not positional.
+
+    Where S0 ties, the first repair the loop adopts is not the enabling one. `step_a` must name
+    the repair after which the nested operation could apply, which is read from the tree.
+    """
+
+    built = _chain_for(tmp_path, "flip", 2, 2)
+    assert built.step_a is not None
+    assert built.step_a.reached
+    assert built.step_a.class_name == "Reading", (
+        f"step_a named {built.step_a.class_name}; the enabling repair is the inner renderer"
+    )
+    assert built.enabling_demonstrated
+
+
+def test_the_enabling_relation_holds_wherever_the_enabler_is_not_outranked(
+    tmp_path: Path,
+) -> None:
+    """The measured domain of the claim, on both sides of the declared point."""
+
+    for index, (reading, sample) in enumerate(((3, 2), (4, 2), (2, 2), (3, 3))):
+        built = _chain_for(tmp_path, f"holds{index}", reading, sample)
+        assert built.enabling_demonstrated, f"no enabling at reading={reading} sample={sample}"
+        assert built.facts["inner_call_sites"] == reading
+        assert built.facts["outer_call_sites"] == sample
+
+
+def test_the_enabling_relation_fails_where_the_enabler_is_outranked(tmp_path: Path) -> None:
+    """The boundary, pinned as a negative so it cannot quietly move.
+
+    Where the outer class has more call sites than the inner one, the repair that would enable B
+    carries *less* demand than B itself. The measure never ranks it first, so the greedy rule
+    never reaches it, the fixed point stalls with B unmet, and no enabling is demonstrated.
+
+    This is a limitation of the selection rule, not of the mechanism: the operation is the same
+    and would apply if the inner renderer existed. Escaping it means being willing to repair
+    something the measure does not rank first, which is a different milestone's question.
+    """
+
+    built = _chain_for(tmp_path, "outranked", 1, 3)
+    assert not built.enabling_demonstrated
+    assert built.facts["ordering_regime"] == "inner<outer"
+    assert "Reading" not in built.selected_first, (
+        "the enabler was ranked first after all; the boundary has moved and the claim's "
+        "recorded domain is now wrong"
+    )
+    assert built.step_b is None or not built.step_b.reached
