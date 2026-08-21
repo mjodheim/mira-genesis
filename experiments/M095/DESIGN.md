@@ -188,10 +188,23 @@ the ordering are unchanged; neither is load-bearing.
 A name the class already defines is no longer available, which is what makes two repairs on one
 class safe: without it the second would have been called `as_mapping` and shadowed the first.
 
-What remains before a freeze is ordinary apparatus: a random-target arm, a more-budget arm, a
-qualification pool drawn from outside this world, and a checker that recomputes rather than reads —
-plus a **world-arrangement arm**, so the domain recorded above is measured by the run rather than
-asserted by this document.
+Three arms are now built, in `metamorphosis/m095_arms.py`, each reporting M094's three-valued
+outcome so an instrument failure cannot be read as a refutation:
+
+| arm | asks | measured |
+|---|---|---|
+| **world arrangement** | does the recorded domain match the measured one? | `satisfied` — six points, every regime with a minimal and a larger witness |
+| **random target** | does repairing something the diagnosis *rejected* also unlock B? | `satisfied` — the one repairable rival adopts `as_dict` and leaves B blocked at 143 examined |
+| **more budget** | is B unreachable, or only deeper than the bound? | `satisfied` — nothing reached at any bound 1–13; the search closes at 4 |
+
+None of their numbers is chosen. The arrangement points are the minimal witness of each regime
+plus a larger one; the rival set is exhausted rather than sampled, so no seed is needed; and the
+budget ceiling is the size of the offered operation set, which bounds composition length by
+construction because no operation applies twice.
+
+What remains before a freeze: a qualification pool drawn from outside this world with every hidden
+case verified by construction, a checker that recomputes rather than reads, a runner, and a
+protocol. Freezing it and arming a run are the owner's acts, not an agent's.
 
 A second audit pass has since found four further defects (5 to 8), three repaired and one — the
 domain boundary — disclosed above. `DESIGN_AUDIT.md` carries the arithmetic. The most useful thing
