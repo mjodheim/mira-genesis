@@ -1090,8 +1090,8 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol has found seventeen defects across four passes**
-  (`experiments/M095/DESIGN_AUDIT.md`). Sixteen are repaired; defect 7 is a boundary on the claim
+  **A design audit run before any protocol has found eighteen defects across four passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Seventeen are repaired; defect 7 is a boundary on the claim
   and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
   M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
   not record what the call sites wrote, so the probe refused every correct candidate. Three were in

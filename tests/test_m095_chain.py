@@ -525,3 +525,88 @@ def test_the_counterfactual_removes_a_rather_than_everything(tmp_path: Path) -> 
     ), "A itself was replayed into the world that exists to be without it"
     assert not tied.counterfactual.reached
     assert tied.enabling_demonstrated
+
+
+def test_the_world_facts_name_the_classes_it_found_rather_than_the_ones_expected(
+    tmp_path: Path,
+) -> None:
+    """`inner_class`, `outer_class` and `nested_field` defaulted to Reading, Sample, reading.
+
+    So a world built from different classes would have been recorded as this one. They are now
+    read from the tree: the outer class is whichever has a field annotated as another class
+    present, and the inner class is what that annotation names.
+    """
+
+    build(tmp_path)
+    facts = WorldFacts.of(tmp_path)
+    assert (facts.outer_class, facts.inner_class, facts.nested_field) == (
+        "Sample",
+        "Reading",
+        "reading",
+    )
+
+    (tmp_path / COMPONENT).write_text(
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    b: str\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    other = WorldFacts.of(tmp_path)
+    assert (other.outer_class, other.inner_class, other.nested_field) == ("Outer", "Inner", "held")
+
+
+def test_whether_anything_renders_itself_is_read_from_the_tree_not_from_a_substring(
+    tmp_path: Path,
+) -> None:
+    """It was a substring search over the source, which a docstring could decide."""
+
+    build(tmp_path)
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is True
+
+    prose = '"""A docstring mentioning def followed by a space: def foo."""'
+    (tmp_path / COMPONENT).write_text(
+        prose + "\n"
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is True, (
+        "prose decided a fact about the code"
+    )
+
+    (tmp_path / COMPONENT).write_text(
+        "from dataclasses import dataclass\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Inner:\n"
+        "    a: str\n"
+        "\n"
+        "    def as_mapping(self):\n"
+        "        return {'a': self.a}\n"
+        "\n"
+        "\n"
+        "@dataclass(frozen=True)\n"
+        "class Outer:\n"
+        "    held: Inner\n",
+        encoding="utf-8",
+    )
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is False

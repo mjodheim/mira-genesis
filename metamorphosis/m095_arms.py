@@ -185,6 +185,17 @@ def run(make_root: Callable[[str], Path]) -> Arrangement:
             arm.points.append(point)
             continue
 
+        # What was BUILT, not what was asked for. A build that silently ignored the counts
+        # would otherwise be recorded as the arrangement it was supposed to be, and read
+        # as a refutation of the domain rather than as a broken instrument.
+        measured = (built.facts.get("inner_call_sites"), built.facts.get("outer_call_sites"))
+        if measured != (inner, outer):
+            point.error = (
+                f"asked for {inner}/{outer} call sites and the world reports "
+                f"{measured[0]}/{measured[1]}"
+            )
+            arm.points.append(point)
+            continue
         point.regime = str(built.facts.get("ordering_regime", ""))
         point.demonstrated = built.enabling_demonstrated
         point.selected_first = built.selected_first

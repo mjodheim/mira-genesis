@@ -2,7 +2,7 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **seventeen** defects across four passes: sixteen are
+mechanism rather than confirming it. It has found **eighteen** defects across four passes: seventeen are
 repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
 therefore disclosed.
 
@@ -13,7 +13,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Five of the seventeen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the eighteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -424,6 +424,31 @@ world and decided the milestone everywhere else.
 predicate and the claim are about the same thing. `run` now refuses a world that presents no
 nested requirement at all rather than silently reporting one that is never reachable.
 
+## Defect 18 — the record still described the world it expected — **REPAIRED**
+
+Defect 6 removed the defaults from `WorldFacts`'s two call-site counts and stopped there. Three
+fields kept theirs: `inner_class = "Reading"`, `outer_class = "Sample"`, `nested_field =
+"reading"`. A world built from different classes would have been recorded as this one.
+
+`nothing_renders_itself_at_s0` was worse than defaulted — it was computed by searching the
+source text for `"def "` after the first `"class "`. A docstring or a comment mentioning `def`
+would have decided a fact about the code.
+
+**Repaired.** All four are read from the syntax tree. The outer class is whichever declares a
+field annotated as another class present in the same module; the inner class is what that
+annotation names; and whether anything renders itself is whether any class defines a public
+method. Pinned by two tests, one of which builds a world of differently named classes and one
+of which puts `def` in a docstring.
+
+The arrangement arm had the same shape: each `Point` recorded the caller counts it **asked**
+`build` for, not the ones the world reported. A build that ignored its parameters would have
+been recorded as the arrangement it was meant to be and read as a refutation of the domain
+rather than as a broken instrument — which is what the inert-parameter defect under 6 actually
+did before it was caught. The arm now compares the two and records a mismatch as an error.
+
+Defect 6 was "the record described the author's intention rather than the experiment's world",
+and it was repaired in the two fields where it had been noticed. This is the rest of it.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -445,7 +470,7 @@ produces neither.
 
 ## The honest summary
 
-Seventeen defects, in four distinct families.
+Eighteen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -453,14 +478,14 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Sixteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+Seventeen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
 finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Five of seventeen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of eighteen are regressions of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
