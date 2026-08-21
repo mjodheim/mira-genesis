@@ -28,6 +28,24 @@
 - Deleted the branches whose work `main` already carries, after establishing per branch — by
   patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
 
+- **M049's qualification commit does not exist in this repository.** `PROJECT_STATE.yaml` and
+  `experiments/M049/{PROTOCOL,DEVELOPMENT_RESULT}.md` name `b8a8bb06` as the commit CI run
+  31076192847 qualified for M049's positive bounded development result. The object is absent —
+  not dangling, absent — so it predates the provenance tags and could not have been preserved
+  by them. The result is not wrong; it is **unverifiable from the record as it stands**. Found
+  because the citation guard was extended to check values written in `*_commit` fields, which
+  is the only part of it that can see a citation lost before the manifest existed. Recorded
+  under `known_unresolvable` as a loss rather than excused.
+- **The citation guard could launder the loss it exists to catch.** Three defects in the check
+  added earlier on this branch, all found adversarially. `--record` rebuilt the manifest only
+  from what was reachable, so an unreachable citation vanished silently and the next check went
+  green — deleting nine provenance tags in a clone took 192 entries to 183 with exit 0 and no
+  output. The tag preflight could not tell a missing fetch from a deleted tag, and its early
+  return suppressed the list of what was actually gone while offering a remedy that cannot
+  work. And a citation that resolves to nothing was structurally invisible, because the scan
+  matched against reachable commits — the population it could not see was exactly the
+  population already lost. All three repaired, with `--record` now refusing to drop a recorded
+  citation.
 - **An adversarial pass found that two of M095's three arms reported `satisfied` while the
   mechanism they measure was dead.** Five independent reviewers were asked to break the arms
   rather than confirm them. `more_budget` derived its verdict from an empty sweep, which is
