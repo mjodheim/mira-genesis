@@ -5,6 +5,8 @@ can diagnose limitations in their own executable body, construct and validate ch
 transactionally, preserve useful state across substrate changes, and continue adapting under strict
 measurement boundaries.
 
+The project was originated and is directed by **Anthony Mets**.
+
 The project is deliberately narrower than the phrase “self-improving AI” usually suggests. It does
 not treat a model rewriting source code as proof that a lineage owns the improvement process. The
 research question is instead whether progressively more of the machinery for diagnosis,
@@ -183,6 +185,9 @@ Its operating rules include:
 - use causal controls and ablations that can genuinely come out the other way;
 - replay from preserved artifacts and keep provenance resolvable;
 - keep release authority outside the self-modifying lineage.
+
+That rule applies to historical claims as well: **M086-A remains POST-HOC DISQUALIFIED** and is not
+restored to a positive qualification by later work.
 
 The failure history is not cleanup debt; it is part of the research record. See
 [`FAILURE_LOG.md`](FAILURE_LOG.md).
