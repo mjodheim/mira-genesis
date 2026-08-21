@@ -28,6 +28,23 @@
 - Deleted the branches whose work `main` already carries, after establishing per branch — by
   patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
 
+- **An adversarial pass found that two of M095's three arms reported `satisfied` while the
+  mechanism they measure was dead.** Five independent reviewers were asked to break the arms
+  rather than confirm them. `more_budget` derived its verdict from an empty sweep, which is
+  exactly what a dead searcher produces — three separate kills each left it passing, one of them
+  amendment A1 running backwards, with an unconstructible case read as a confirmation.
+  `random_target`'s pass was fixed before it ran, because B needs a renderer on the inner class
+  and every eligible rival targeted the outer one; it also counted the control's own target as a
+  rival, and a test asserted the resulting miscount. It now reports **`unrunnable`** in the
+  declared world, which is what this world can honestly support.
+- **Amendment A4's defect survived a third time, inside the loop written to remove it.**
+  Reversing the tied set — legitimate, since A4's premise is that tied members are
+  indistinguishable by the measure — flipped the whole `inner==outer` regime and refuted the
+  published domain. The mechanism had worked: the nested repair was reached in the first round,
+  after its enabler, and the record only read the second round. Now recognised in either round
+  and pinned by a test that permutes every tie and requires the sweep unchanged. Two further
+  asserted booleans were removed, one of them written by the commit that removed the previous
+  three; `enabling_demonstrated` no longer accepts a run that never identified A.
 - **M095's enabling result held in two of six worlds, and said so nowhere.** `DESIGN.md` disclosed
   the world's one arrangement — three inner call sites against two outer — and separately that the
   diagnosis's selections are not authored. Both true; neither answers whether the result *depends*
