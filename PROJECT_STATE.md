@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 17 August 2026**
+**Updated: 22 August 2026**
 
 ## Authoritative summary
 
@@ -92,6 +92,27 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   non-scientific; H21 remains untested. A fail-closed pre-private validator now requires a signed
   opaque external-maintainer envelope, four domains/eight matched pairs and an exact frozen causal
   protocol before payload reveal. All four active inputs are absent and no private data was read.
+- **M091 is a positive scientific result for bounded endogenous language extension.** The lineage
+  proved the inherited transformation language insufficient, acquired one extension outside its
+  inherited constructive image and used it on two held-out families; H37 is supported. The
+  assembly substrate and interpreter beneath that language remain authored.
+- **M092 was aborted without verdict.** Its canonical search was voluntarily stopped before a
+  terminal candidate, independent reproduction or qualification. H38 remains unresolved and D062
+  remains unfilled; its state-owned substrate checkpoint infrastructure remains valid.
+- **M093 is an engineering rehearsal on real repository code, not a qualifying scientific result.**
+  It demonstrates sandboxed transformation, validation, transactional adoption, persistence and
+  exact rollback while the target, diagnosis and patch remain substantially authored.
+- **M094 is the current positive qualified real-software anchor.** The lineage selected the limiting
+  real component by measurement and assembled repairs for the tied top targets from composable
+  operations, with zero model and network calls; qualification passed 2/2 cross-component and all
+  twelve conditions computed true. The eligible set, observations, operation set and composition
+  bound remain authored.
+- **M095 is the active development frontier and has no scientific verdict.** In its authored world,
+  adopting one repair changes what a later repair is constructibly reachable. The relation is now
+  demonstrated in all six demand-bearing arrangements; four find the enabling order from the
+  diagnosis ranking alone and two require the failed-search descent to the lower-ranked enabler.
+  Two zero-inner-demand arrangements remain deliberately negative because no observable enabler
+  exists. No hypothesis or protocol is frozen, no qualification pool exists and no run is armed.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
@@ -1115,12 +1136,14 @@ question remains open but is not a missing completion gate.
   and repairs that, even though the measure does not rank it. **Nothing is added to the operation
   set** — the same operations are offered in the same states, and only which target is attempted
   changes, which is what keeps this inside M095 rather than M096. The enabling relation now holds
-  in **every arrangement where an enabling repair exists to be found**, six of six, and the claim
-  reads *an adopted repair changes what the lineage can reach, wherever there is an enabling
-  repair for it to find.* What remains is a boundary about **existence** rather than rank: if the
-  inner class is never rendered directly it presents no demand of its own and there is nothing to
-  descend to. The arrangement arm sweeps two such points, so it still has arrangements that must
-  come out negative.
+  in **every arrangement where an enabling repair exists to be found**, six of six. The arm now
+  records both `demonstrated: 6` and `demonstrated_without_descending: 4`: four arrangements find
+  the enabling order from demand ranking alone, while the two `inner<outer` arrangements require
+  the failed-search descent. The wider claim is about the enabling relation; the narrower sub-count
+  preserves what the original ranking achieved unaided. What remains is a boundary about
+  **existence** rather than rank: if the inner class is never rendered directly it presents no
+  demand of its own and there is nothing to descend to. The arrangement arm sweeps two such points,
+  so it still has arrangements that must come out negative.
 - **The test that pinned the old boundary as a negative is what made the improvement visible.**
   It was written so that a boundary moving *outward* would be loud rather than silent, and that is
   exactly what happened. The audit had said escaping the boundary "needs handling this milestone
@@ -1147,13 +1170,13 @@ question remains open but is not a missing completion gate.
   `attempt.executed` was set from the survivor count whatever happened, so a probe that could
   construct no case and ran nothing was recorded as candidates that ran and failed —
   **amendment A1 for the fifth time in this milestone**, in the field added to repair A2.
-  **Four of the eight audit defects were regressions of amendments this project had already bought
-  and written down**, which says the amendment register is doing less work than it appears to.
-  What remains before a freeze: a qualification pool drawn from outside this world with every
-  hidden case verified by construction, a checker that recomputes rather than reads, a runner and a
-  protocol. No hypothesis is registered, no protocol is frozen, no qualification pool exists, and
-  freezing or arming remains the owner's act.
-  See `experiments/M095/DESIGN.md`.
+  **Five of the nineteen audit defects were regressions of amendments this project had already
+  bought and written down**, and A4 alone accounts for three, which says the amendment register is
+  doing less work than it appears to. What remains before a freeze: a qualification pool drawn from
+  outside this world with every hidden case verified by construction, a checker that recomputes
+  rather than reads, a runner and a protocol. No hypothesis is registered, no protocol is frozen,
+  no qualification pool exists, and freezing or arming remains the owner's act.
+  See `experiments/M095/DESIGN.md` and `experiments/M095/OPEN_DECISIONS.md`.
 
 ## Parallel measurement track — M045
 
