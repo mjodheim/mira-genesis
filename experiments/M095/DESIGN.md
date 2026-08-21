@@ -118,8 +118,9 @@ milestone.
 2. **A qualification pool** drawn from outside the development world, materialised after adoption
    from the adopted mechanism's digest — and, learning from M094's amendment A1, with every hidden
    case verified by construction before the pool is frozen.
-3. **Arms**: at minimum a random-target arm and a more-budget arm. The arm that adopts A and
-   searches for B with the nested operation withheld **is built** — see below.
+3. **Arms**: the withheld-operation arm is part of the chain, and the random-target,
+   more-budget and world-arrangement arms are built in `metamorphosis/m095_arms.py` — see
+   "The domain of the claim" and the arm table below. All four pass.
 4. **A decisive checker** that recomputes rather than reads, in the shape
    `scripts/check_m094_result.py` now has.
 
