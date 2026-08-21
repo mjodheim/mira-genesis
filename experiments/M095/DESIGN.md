@@ -183,12 +183,20 @@ search for an *enabler* rather than for the greatest unmet demand. That is a dif
 and it is close to the one M086-C's failure already posed: a mechanism that generates a correct
 candidate and then chooses a wrong one is not helped by generating more.
 
-## The selection blocker, settled
+## The selection blocker, and how often it came back
 
-`DESIGN_AUDIT.md` found four defects and all four are repaired. The last was the one that mattered
-most: at S1 two capabilities on `Sample` tie at demand 2, and the one repaired was decided by
-alphabetical order on the capability name. Had the tie fallen the other way, the lineage would have
-repaired the plain renderer and **no enabling would have been demonstrated**.
+The first audit pass found four defects. The last of them was the one that mattered most: at S1
+two capabilities on `Sample` tie at demand 2, and the one repaired was decided by alphabetical
+order on the capability name. Had the tie fallen the other way, the lineage would have repaired
+the plain renderer and **no enabling would have been demonstrated**.
+
+> **It was declared settled here twice before it was.** The same defect — amendment A4's, a tie
+> broken by a name — was found three times in this milestone: at S1 (defect 4), then missing
+> entirely at S0 (defect 5), then still deciding the domain through the order of the S0 loop
+> (defect 10). Each time this section was updated to say it was resolved. What finally settled
+> it is not another argument but a test that **permutes every tie and requires the whole sweep
+> unchanged**, because A4's own premise is that tied members carry no information about order.
+> `DESIGN_AUDIT.md` now records sixteen defects across four passes, fifteen repaired.
 
 Amendment A4's rule applies at the capability level as it does at the class level: every capability
 the measure ranks equal first is repaired. At S1 the lineage now repairs both — `as_mapping` for the
