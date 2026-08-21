@@ -77,6 +77,9 @@ class Point:
     demonstrated: bool = False
     selected_first: str = ""
     control_reached: bool = False
+    #: Whether this point repaired anything at all. A sweep in which nothing was ever
+    #: repaired has measured the instrument, not the domain.
+    any_repair_reached: bool = False
     error: str = ""
 
     @property
@@ -93,6 +96,7 @@ class Point:
             "agrees_with_the_recorded_domain": self.agrees,
             "first_selection": self.selected_first,
             "control_reached_b_from_s0": self.control_reached,
+            "any_repair_reached": self.any_repair_reached,
             "error": self.error,
         }
 
@@ -116,6 +120,12 @@ class Arrangement:
         # A refutation among the points that DID run is still a refutation. Testing the
         # error first let one broken point bury a three-point disagreement as
         # "unrunnable" -- A1 used as a silencer rather than as a distinction.
+        if not any(point.any_repair_reached for point in self.points):
+            # Nothing was repaired in any arrangement. Every point reports no enabling,
+            # which looks exactly like a refuted domain and is in fact a dead instrument.
+            # Killing the execution probe made this arm say `refuted` -- a claim about the
+            # mechanism -- when the honest answer is that it could not measure.
+            return "unrunnable"
         if self.disagreements:
             return "refuted"
         if any(point.error for point in self.points):
@@ -172,6 +182,9 @@ def run(make_root: Callable[[str], Path]) -> Arrangement:
         point.demonstrated = built.enabling_demonstrated
         point.selected_first = built.selected_first
         point.control_reached = bool(built.control and built.control.reached)
+        point.any_repair_reached = any(
+            item.reached for item in (*built.first_step, *built.second_step)
+        )
         arm.points.append(point)
     return arm
 

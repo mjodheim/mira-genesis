@@ -438,12 +438,18 @@ class Chain:
             "counterfactual_b_at_s1_without_the_operation": (
                 self.without_operation.to_dict() if self.without_operation else None
             ),
+            # Both of these were True in runs that demonstrated nothing: a counterfactual
+            # that reaches nothing is trivially satisfied when there was no A to remove.
+            # They are claims about an enabling relation, so they say nothing when none
+            # was shown.
             "a_is_necessary": (
                 self.counterfactual is not None and not self.counterfactual.reached
+                if self.enabling_demonstrated else None
             ),
             "the_operation_is_the_vehicle_not_the_cause": (
                 self.without_operation is not None and not self.without_operation.reached
                 and self.counterfactual is not None and not self.counterfactual.reached
+                if self.enabling_demonstrated else None
             ),
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
