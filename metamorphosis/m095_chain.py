@@ -14,9 +14,11 @@ Three properties carry that, and each is measured rather than asserted:
 * **B is unreachable from S0.** `control_from_s0` targets B directly, with the identical
   operation set and the identical bound, and exhausts it. Nothing is found — not "nothing was
   chosen", nothing exists to choose. It runs *before* the chain, so it cannot be informed by it.
-* **A is what changed that.** `counterfactual` rebuilds S0 from scratch and searches for B
-  again. It fails again, so the enabling is A and not elapsed time, budget, or the order things
-  were tried in.
+* **A is what changed that.** `counterfactual` replays the S0 round into a separate world,
+  skipping only the repair that made the nested operation applicable, and searches for B
+  again. It fails again, so the enabling is A specifically — not elapsed time, not budget,
+  not the order things were tried in, and not merely *some* repair from the first round.
+  It used to leave that world untouched, which made it the control run a second time.
 
 The operation set offered is identical in both states. What differs is that one of its members
 can apply, which is read from the code. See `m095_reach`.
@@ -299,20 +301,20 @@ def search(root: Path, target: Insufficiency, *, label: str,
 # ── the chain, the control, the counterfactual ───────────────────────
 
 
-def _nested_is_reachable(root: Path) -> bool:
+def _nested_is_reachable(root: Path, target: Insufficiency) -> bool:
     """Can the nested-rendering operation apply in the state as it stands?
 
     This is the flip the milestone is about, asked of the tree rather than of the history. It is
     what identifies A: the repair after which this turns true. Reading it from the state is what
     keeps the chain from assuming the ordering it exists to test.
+
+    The requirement is passed in rather than chosen here. It used to be taken from
+    `diagnosis.considered`, which is unsorted, while every other consumer binds to `unmet`,
+    which is ranked by demand. Where a world presents more than one nested requirement the
+    predicate watched a different one from the milestone's, and could name as A a repair the
+    enabled repair never used.
     """
 
-    diagnosis = measure(root)
-    target = next(
-        (item for item in diagnosis.considered if item.capability == NESTED), None
-    )
-    if target is None:
-        return False
     tree = ast.parse((root / world.COMPONENT).read_text(encoding="utf-8"))
     node = _find_class_node(tree, target.target)
     if node is None:
@@ -508,7 +510,10 @@ def run(root: Path, counterfactual_root: Path, *,
     tied_first = s0.tied_selection()
     chain.s0_tied = [f"{i.target}/{i.capability}" for i in tied_first]
     chain.selected_first = ", ".join(chain.s0_tied)
-    reachable_before = _nested_is_reachable(root)
+    nested_at_s0 = next((item for item in s0.unmet if item.capability == NESTED), None)
+    if nested_at_s0 is None:
+        raise ChainError("S0 presents no nested requirement for the chain to be about")
+    reachable_before = _nested_is_reachable(root, nested_at_s0)
     for target in tied_first:
         label = "A from S0" if len(tied_first) == 1 else f"S0 tied: {target.capability}"
         attempt = search(root, target, label=label)
@@ -518,7 +523,8 @@ def run(root: Path, counterfactual_root: Path, *,
         adopt(root, attempt)
         # A is not "the first repair". It is the repair after which the nested operation can
         # apply — read from the state, so the chain does not assume the order it is testing.
-        if chain.step_a is None and not reachable_before and _nested_is_reachable(root):
+        if (chain.step_a is None and not reachable_before
+                and _nested_is_reachable(root, nested_at_s0)):
             chain.step_a = attempt
             chain.step_a_identified_by = "the_nested_operation_became_applicable"
             reachable_before = True
