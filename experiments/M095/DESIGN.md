@@ -192,22 +192,36 @@ Nothing is added to the operation set: the same operations are offered in the sa
 which target is attempted changes. That distinction is what keeps this inside M095 rather than
 M096, which is about a larger *language*.
 
-| inner callers | outer callers | regime | before the descent | now |
-|---|---|---|---|---|
-| 2 | 1 | inner>outer | yes | yes |
-| 3 | 2 | inner>outer — the declared world | yes | yes |
-| 1 | 1 | inner==outer | yes | yes |
-| 2 | 2 | inner==outer | yes | yes |
-| 1 | 2 | inner<outer | **no** | **yes** |
-| 1 | 3 | inner<outer | **no** | **yes** |
-| 0 | 1 | the inner class is never rendered | no | no |
-| 0 | 3 | the same, larger outer demand | no | no |
+| inner callers | outer callers | regime | before the descent | now | ranking needed help |
+|---|---|---|---|---|---|
+| 2 | 1 | inner>outer | yes | yes | no |
+| 3 | 2 | inner>outer — the declared world | yes | yes | no |
+| 1 | 1 | inner==outer | yes | yes | no |
+| 2 | 2 | inner==outer | yes | yes | no |
+| 1 | 2 | inner<outer | **no** | **yes** | **yes** |
+| 1 | 3 | inner<outer | **no** | **yes** | **yes** |
+| 0 | 1 | the inner class is never rendered | no | no | — |
+| 0 | 3 | the same, larger outer demand | no | no | — |
+
+**The last column separates two results the count would otherwise conflate.** In four
+arrangements the diagnosis's own ranking produces the enabling order *unaided* — A is selected by
+demand and happens to enable B, and that coincidence is the interesting part. In two the descent
+selects A **because** it enables B. Both measure the same relation, with the same control and the
+same counterfactual; only the second says something weaker about the ranking. The arm records
+`demonstrated: 6` and `demonstrated_without_descending: 4` rather than one number.
 
 So the claim keeps a domain, but a smaller and more natural one — about **existence** rather than
 rank:
 
 > An adopted repair changes what the lineage can reach, **wherever there is an enabling repair for
 > it to find.**
+
+And a second, narrower claim sits inside it, which is the one the milestone originally made and
+which the descent does not widen:
+
+> Where the enabling repair also carries the greatest unmet demand, the diagnosis's **own ranking**
+> produces the enabling order without being told — four of the eight arrangements, including the
+> declared world.
 
 If the inner class is never rendered directly it presents no demand of its own, so there is no
 insufficiency to descend to; reading the obstacle does not help when the remedy is not something

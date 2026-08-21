@@ -112,6 +112,11 @@ class Point:
     #: Whether this point repaired anything at all. A sweep in which nothing was ever
     #: repaired has measured the instrument, not the domain.
     any_repair_reached: bool = False
+    #: Whether the ranking found the enabling repair on its own, or the lineage had to read its
+    #: own blocked search and descend. Both demonstrate the relation; only the first also shows
+    #: the diagnosis producing the enabling order unaided, which is the stronger statement and
+    #: the one the milestone originally made.
+    descended: bool = False
     error: str = ""
 
     @property
@@ -129,6 +134,7 @@ class Point:
             "first_selection": self.selected_first,
             "control_reached_b_from_s0": self.control_reached,
             "any_repair_reached": self.any_repair_reached,
+            "the_ranking_needed_help": self.descended,
             "error": self.error,
         }
 
@@ -178,6 +184,15 @@ class Arrangement:
             "rule": "the enabling relation is claimed wherever the inner class presents a demand of its own",
             "points": [point.to_dict() for point in self.points],
             "regimes_covered": sorted({point.regime for point in self.points if point.regime}),
+            "demonstrated": sum(1 for point in self.points if point.demonstrated),
+            "demonstrated_without_descending": sum(
+                1 for point in self.points if point.demonstrated and not point.descended
+            ),
+            "what_the_two_counts_mean": (
+                "both demonstrate the enabling relation; the second also shows the diagnosis's "
+                "own ranking producing the enabling order unaided, which is the stronger "
+                "statement and the one the milestone originally made"
+            ),
             "disagreements": [point.to_dict() for point in self.disagreements],
             "outcome": self.outcome,
         }
@@ -228,6 +243,7 @@ def run(make_root: Callable[[str], Path]) -> Arrangement:
         point.any_repair_reached = any(
             item.reached for item in (*built.first_step, *built.second_step)
         )
+        point.descended = bool(built.descended_to)
         arm.points.append(point)
     return arm
 

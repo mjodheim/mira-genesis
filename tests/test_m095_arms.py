@@ -541,3 +541,37 @@ def test_a_probe_that_never_ran_is_not_recorded_as_candidates_that_failed(
     assert dead.confirmed == 0
     assert "instrument_could_not_run" in dead.notes
     assert "could not run" in str(dead.notes["stopped"])
+
+
+def test_the_sweep_separates_a_ranking_that_needed_help_from_one_that_did_not(
+    swept: arms.Arrangement,
+) -> None:
+    """Six arrangements demonstrate the relation. Two of them had to be told.
+
+    Before the descent, A was selected by demand and *happened* to enable B — the diagnosis's own
+    ranking produced the enabling order without being told, and that coincidence was the
+    interesting part. Where the enabler is outranked the descent selects A *because* it enables B,
+    which measures the same relation but says something weaker about the ranking.
+
+    Reporting both as `demonstrated` conflates two results, so the record carries the second count
+    as well.
+    """
+
+    record = swept.to_dict()
+    demonstrated = [p for p in swept.points if p.demonstrated]
+    unaided = [p for p in demonstrated if not p.descended]
+
+    assert record["demonstrated"] == len(demonstrated)
+    assert record["demonstrated_without_descending"] == len(unaided)
+    assert unaided, "no arrangement reached the enabling order on rank alone"
+    assert len(unaided) < len(demonstrated), (
+        "no arrangement needed the descent, so this sweep cannot tell the two apart and the "
+        "distinction is untested"
+    )
+
+    # The ones that needed help are exactly the ones where the enabler is outranked.
+    assert {(p.inner_call_sites, p.outer_call_sites) for p in demonstrated if p.descended} == {
+        (p.inner_call_sites, p.outer_call_sites)
+        for p in demonstrated
+        if p.inner_call_sites < p.outer_call_sites
+    }
