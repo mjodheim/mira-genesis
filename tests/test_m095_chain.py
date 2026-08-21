@@ -496,3 +496,32 @@ def test_the_record_distinguishes_a_measured_a_from_a_fallback(tmp_path: Path) -
         "the fallback must still have adopted something, or it is testing the empty case"
     )
     assert not fallback.enabling_demonstrated
+
+
+def test_the_counterfactual_removes_a_rather_than_everything(tmp_path: Path) -> None:
+    """It used to be the control, run a second time on a byte-identical directory.
+
+    The counterfactual root was left untouched, so it searched exactly the state the control had
+    already searched, for the same requirement, with the same operation set -- and was presented
+    as a fourth independent pillar. Where the S0 round adopts more than one repair the
+    distinction is real: removing A alone is not the same as removing everything.
+
+    In the declared world A is the sole tied repair, so nothing is replayed and the measurement
+    is unchanged. Where three capabilities tie, the other repair is kept and only A is dropped.
+    """
+
+    declared = _chain_for(tmp_path, "cf-declared", 3, 2)
+    assert declared.counterfactual_replayed == []
+    assert declared.counterfactual.examined == declared.control.examined
+
+    tied = _chain_for(tmp_path, "cf-tied", 2, 2)
+    replayed = [item for item in tied.counterfactual_replayed if item.reached]
+    assert replayed, "nothing was replayed, so this is still the control run twice"
+    assert all(item.capability != NESTED for item in replayed)
+    assert tied.step_a is not None
+    assert all(
+        item.class_name != tied.step_a.class_name or item.capability != tied.step_a.capability
+        for item in replayed
+    ), "A itself was replayed into the world that exists to be without it"
+    assert not tied.counterfactual.reached
+    assert tied.enabling_demonstrated

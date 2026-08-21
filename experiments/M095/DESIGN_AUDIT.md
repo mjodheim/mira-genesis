@@ -2,7 +2,7 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **fifteen** defects across four passes: fourteen are
+mechanism rather than confirming it. It has found **sixteen** defects across four passes: fifteen are
 repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
 therefore disclosed.
 
@@ -13,7 +13,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Five of the fifteen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the sixteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -382,6 +382,27 @@ A second import-capture was fixed alongside it: `m095_arms.DECLARED` was a modul
 frozen at import, so the sweep would have ignored any change to the world constants — the same
 inertness `build()`'s parameters were repaired for under defect 6.
 
+## Defect 16 — the counterfactual was the control, run a second time — **REPAIRED**
+
+The counterfactual root was built as S0 and then left untouched until the end of the run. So the
+"world where A never happened" was **byte-identical** to the state the control had already
+searched, for the same requirement, with the same operation set. Measured: both trees digest to
+the same value, both examine 191, both find nothing.
+
+It was a determinism check presented as a fourth independent pillar. `DESIGN.md` said it showed
+"B was not always reachable and reached later" — which the control already showed.
+
+The distinction it was supposed to draw is real and was simply not being drawn. Removing **A**
+is not the same as removing **everything the first round adopted**, and once amendment A4's rule
+applies at S0 the first round can adopt several repairs.
+
+**Repaired.** The counterfactual now replays the S0 round into its own world, skipping only the
+repair that flipped the operation. In the declared world A is the sole tied repair, so nothing
+is replayed and the published measurement is unchanged at 191. Where three capabilities tie, the
+other repair is kept and only A is dropped: **143 examined, B still unreachable.** That is a
+stronger statement than the one the milestone was making — A *specifically*, not merely some
+first-round repair. Pinned by `test_the_counterfactual_removes_a_rather_than_everything`.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -403,7 +424,7 @@ produces neither.
 
 ## The honest summary
 
-Fifteen defects, in four distinct families.
+Sixteen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -411,14 +432,14 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Fourteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+Fifteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
 finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Five of fifteen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of sixteen are regressions of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that

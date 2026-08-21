@@ -397,6 +397,8 @@ class Chain:
     #: The tied sets as the measure produced them, kept so the claim that every tied
     #: capability was attempted can be checked against them rather than assumed.
     s0_tied: list[str] = field(default_factory=list)
+    #: Every S0 repair replayed into the counterfactual world -- all of them except A.
+    counterfactual_replayed: list[Attempt] = field(default_factory=list)
     s1_tied: list[str] = field(default_factory=list)
 
     @property
@@ -442,6 +444,9 @@ class Chain:
             "control_b_from_s0": self.control.to_dict() if self.control else None,
             "step_a": self.step_a.to_dict() if self.step_a else None,
             "step_b": self.step_b.to_dict() if self.step_b else None,
+            "counterfactual_repairs_replayed_without_a": [
+                item.to_dict() for item in self.counterfactual_replayed
+            ],
             "counterfactual_b_without_a": (
                 self.counterfactual.to_dict() if self.counterfactual else None
             ),
@@ -561,7 +566,31 @@ def run(root: Path, counterfactual_root: Path, *,
             if target is nested_target and chain.step_b is None:
                 chain.step_b = attempt
 
-    # And the same question again, in a world where A never happened.
+    # A world where A never happened -- which is not the same as S0, and used to be.
+    #
+    # The counterfactual root was left untouched, so it was byte-identical to the state the
+    # control had already searched, for the same requirement with the same operation set.
+    # It re-ran the control and was presented as a fourth independent pillar. Where the S0
+    # round adopts more than one repair, the distinction is real: removing A alone is not
+    # the same as removing everything.
+    #
+    # So replay the S0 round here, skipping only the repair that flipped the operation.
+    # In the declared world, where A is the sole tied repair, this changes nothing and the
+    # measurement is unchanged.
+    for candidate in tied_first:
+        if chain.step_a is not None and (
+            candidate.target == chain.step_a.class_name
+            and candidate.capability == chain.step_a.capability
+        ):
+            continue
+        replayed = search(
+            counterfactual_root, candidate,
+            label=f"counterfactual, without A: {candidate.capability}",
+        )
+        chain.counterfactual_replayed.append(replayed)
+        if replayed.reached:
+            adopt(counterfactual_root, replayed)
+
     target = next(
         (item for item in measure(counterfactual_root).unmet if item.capability == NESTED),
         None,
