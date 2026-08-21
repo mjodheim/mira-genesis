@@ -6,6 +6,7 @@
       "subject": "ci(m040): evaluate true lineage-anchor defaults on seed 400047",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_007.md"
       ]
     },
@@ -15,6 +16,7 @@
       "cited_in": [
         "archives/workflows/m039-canonical.yml",
         "archives/workflows/m039-preserve-result.yml",
+        "docs/COMMIT_CITATIONS.json",
         "results/M039.md",
         "results/artifacts/M039_CANONICAL_RESULT.json"
       ]
@@ -23,13 +25,15 @@
       "subject": "feat(m039): canonical three-cycle lineage with bounded Gate 2 and Gate 9",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "06c23402e443dec699d7caf11595baebd1ae8409": {
       "subject": "feat: add frozen M070 Harbor evaluation bridge",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M070/EXECUTION_PROTOCOL.json",
         "experiments/M070/EXECUTION_PROTOCOL.md",
         "experiments/M070/EXTERNAL_RESULT.json"
@@ -44,6 +48,7 @@
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.md",
         "experiments/M071/EXECUTION_PROTOCOL.json",
@@ -61,6 +66,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/DEVELOPMENT_QUALIFICATION.md"
       ]
     },
@@ -70,6 +76,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -79,6 +86,7 @@
       "cited_in": [
         "CHANGELOG.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -88,6 +96,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M082/RESULT.md",
         "experiments/M082/STATUS.md"
       ]
@@ -96,6 +105,7 @@
       "subject": "audit(m094): the replacement reproduces defect 3, and the sweep says so",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/PROTOCOL.json"
       ]
@@ -108,6 +118,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -118,13 +129,15 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "1081ed1276d5d5048ec78cb3c3348b6ba7c4ac08": {
       "subject": "test: connect M072 materializer to integrity graph",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -133,6 +146,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m038-freeze-candidate.yml",
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_FREEZE.md"
       ]
     },
@@ -144,6 +158,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M053/DEVELOPMENT_RESULT.md"
       ]
     },
@@ -156,6 +171,7 @@
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.md",
         "experiments/M071/EXECUTION_PROTOCOL.json",
@@ -169,20 +185,23 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "18402be50eec77d099a7a6bafe1a76fe7dcf40ab": {
       "subject": "M048: integrate genuine Node runtime migration",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "1c4e7b59c9a846d1b16d09ae47ef1c5478450832": {
       "subject": "fix(m033): audit symbolic structural seed boundary",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M033/STATUS.md",
         "results/M033_CONTROL_CALIBRATION.md"
       ]
@@ -193,7 +212,8 @@
       "cited_in": [
         "CHANGELOG.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
@@ -204,6 +224,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M074/SCIENTIFIC_RESULT.md",
         "experiments/M074/STATUS.md"
       ]
@@ -212,7 +233,8 @@
       "subject": "M041: canonical negative single-lineage completion audit",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "210e8f048e47deb9434df1e10db0e8010a2710e5": {
@@ -220,6 +242,7 @@
       "preserved_by": "main",
       "cited_in": [
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/POST_VERDICT_DISCLOSURE.md",
         "experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json"
@@ -229,6 +252,7 @@
       "subject": "Make M022 control evidence complete",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M022_ADAPTATION_SMOKE_RESULT.md"
       ]
     },
@@ -236,6 +260,7 @@
       "subject": "feat(m040): evaluate true lineage-anchor transfer on seed 400047",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_007.md"
       ]
     },
@@ -244,6 +269,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROVENANCE.md",
+        "docs/COMMIT_CITATIONS.json",
         "tests/test_repository_licensing.py"
       ]
     },
@@ -251,7 +277,8 @@
       "subject": "Record M014b canonical failure",
       "preserved_by": "provenance/26c8671",
       "cited_in": [
-        "archives/RETIRED_CODE.md"
+        "archives/RETIRED_CODE.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "27a2e1fd14fae09116cec9f8f8f05a958bdbe552": {
@@ -260,6 +287,7 @@
       "cited_in": [
         "CHANGELOG.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M074/DEVELOPMENT_QUALIFICATION.md"
       ]
     },
@@ -267,6 +295,7 @@
       "subject": "chore(m039): disable the consumed freeze-identity workflow",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M039_FREEZE.md"
       ]
     },
@@ -282,6 +311,7 @@
         "README.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M074/SCIENTIFIC_RESULT.md",
         "experiments/M074/STATUS.md"
       ]
@@ -291,6 +321,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROVENANCE.md",
+        "docs/COMMIT_CITATIONS.json",
         "tests/test_repository_licensing.py"
       ]
     },
@@ -300,7 +331,8 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "2cf454ca4e393a319f89ae5afbcd5e3f9250182c": {
@@ -312,6 +344,7 @@
         "PROJECT_STATE.yaml",
         "PROVENANCE.md",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M066/DEVELOPMENT_RESULT.md",
         "experiments/M066/STATUS.md",
         "results/M066_CANONICAL_RESULT.md",
@@ -326,6 +359,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -333,6 +367,7 @@
       "subject": "docs(m094): record the freeze commit",
       "preserved_by": "provenance/2dc997b",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md"
       ]
@@ -343,6 +378,7 @@
       "cited_in": [
         "CHANGELOG.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -355,6 +391,7 @@
         "PROJECT_STATE.yaml",
         "README.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M073/STATUS.md"
       ]
@@ -363,6 +400,7 @@
       "subject": "docs(m094): record the freeze commit",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md"
       ]
@@ -373,6 +411,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M077/RESULT.md",
         "experiments/M077/STATUS.md"
       ]
@@ -381,6 +420,7 @@
       "subject": "M021: run the four paired measures concurrently within each seed",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M021/STATUS.md",
         "results/M021_DEVELOPMENT_RESULT.md"
       ]
@@ -390,6 +430,7 @@
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M028/STATUS.md",
         "results/M028_ADAPTIVE_EVALUATION_DEVELOPMENT_RESULT.md"
       ]
@@ -399,6 +440,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M073/STATUS.md"
       ]
@@ -408,6 +450,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m040-preserve-development-002.yml",
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_002.md"
       ]
     },
@@ -415,6 +458,7 @@
       "subject": "Merge PR #153: fetch frozen M092 checkpoint history",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M092/CANONICAL_SEARCH_ARMED.json"
       ]
     },
@@ -423,6 +467,7 @@
       "preserved_by": "provenance/3ab33da",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M052/DEVELOPMENT_RESULT.md",
         "experiments/M052/PROTOCOL.md"
       ]
@@ -433,6 +478,7 @@
       "cited_in": [
         "FAILURE_LOG.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M050/DEVELOPMENT_RESULT.md",
         "experiments/M050/PROTOCOL.md"
       ]
@@ -443,6 +489,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -450,13 +497,15 @@
       "subject": "docs: record the M075-B instrument CI run and its preserved first failure",
       "preserved_by": "main",
       "cited_in": [
-        "DECISIONS.md"
+        "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "3fa79d264c125be3e73f2751298cbd430109eb8a": {
       "subject": "Add decidable metaproductivity benchmark",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -464,6 +513,7 @@
       "subject": "Test M032 packet tamper rejection",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M032/STATUS.md",
         "results/M032_DEVELOPMENT_BASE.md"
       ]
@@ -476,6 +526,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M070/AGENT_DESIGN_FREEZE.json",
         "experiments/M070/AGENT_DESIGN_FREEZE.md",
         "experiments/M070/EXECUTION_PROTOCOL.json",
@@ -490,6 +541,7 @@
       "subject": "feat: add neutral M073 external-teacher runner",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
         "tests/test_m073_teacher_runner.py"
       ]
@@ -501,6 +553,7 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M094/POST_VERDICT_DISCLOSURE.md",
         "experiments/M094/RESULT.json"
       ]
@@ -510,6 +563,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M079/RESULT.md",
         "experiments/M079/STATUS.md"
       ]
@@ -518,6 +572,7 @@
       "subject": "ci(m040): apply syntax-safe lineage-anchor dispatch",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_006.md"
       ]
     },
@@ -526,7 +581,8 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "49033001f79591bc9534e43489a9d4147edd4529": {
@@ -534,13 +590,15 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "49a72af03456bceae7105b5e243fd2e36c59c41d": {
       "subject": "docs: preregister the bounded M053 protocol",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M053/DEVELOPMENT_RESULT.md"
       ]
     },
@@ -551,6 +609,7 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M066/CANONICAL_ARMED.json",
         "experiments/M066/DEVELOPMENT_RESULT.md",
         "experiments/M066/STATUS.md",
@@ -567,6 +626,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -579,6 +639,7 @@
         "PROJECT_STATE.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M088/RESULT.md"
       ]
     },
@@ -586,6 +647,7 @@
       "subject": "research(m031): freeze structural transport protocol",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M031/STATUS.md",
         "results/M031_STRUCTURAL_TRANSPORT_RESULT.md"
       ]
@@ -596,6 +658,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -603,6 +666,7 @@
       "subject": "m073: freeze teacher requests before any response",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/CAPSULE_INDUCTION.json",
         "experiments/M073/STATUS.md",
         "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
@@ -618,6 +682,7 @@
       "cited_in": [
         "CHANGELOG.md",
         "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086/DISQUALIFICATION.md"
       ]
     },
@@ -626,6 +691,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M081/RESULT.md",
         "experiments/M081/STATUS.md"
       ]
@@ -634,13 +700,15 @@
       "subject": "M050: bounded composition of migration primitives",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "55a34a90bdc0033c7f1eb811a315516dea14acff": {
       "subject": "fix: bind M074 host runtime identity",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M074/SCIENTIFIC_PROTOCOL.json",
         "scripts/check_m074_scientific_protocol.py",
         "tests/test_historical_code_binding.py"
@@ -650,6 +718,7 @@
       "subject": "test: preserve first M072 causal governance result",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -657,13 +726,15 @@
       "subject": "test: preserve the first G2 grounding result and its checker",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "58449266787257c24e1a22a1a3b91f92dd178211": {
       "subject": "test: add deterministic M072 scenario materializer",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -673,6 +744,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -681,6 +753,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/RESULT.json",
         "experiments/M072/RESULT.md",
         "experiments/M072/STATUS.md",
@@ -692,6 +765,7 @@
       "preserved_by": "provenance/26c8671",
       "cited_in": [
         "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M014b/STATUS.md",
         "results/M014b.md",
         "results/M014b_raw/summary.json"
@@ -704,6 +778,7 @@
         "archives/workflows/m040-canonical.yml",
         "archives/workflows/m040-commit-canonical-artifact.yml",
         "archives/workflows/m040-preserve-first-canonical.yml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M040/STATUS.md",
         "results/M040_CANONICAL_RESULT.md",
         "results/artifacts/M040_CANONICAL_RESULT.json"
@@ -714,6 +789,7 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M092/CHECKPOINT_A.json",
         "experiments/M092/M092A.md",
         "experiments/M092/PROTOCOL.json",
@@ -724,6 +800,7 @@
       "subject": "Merge remote-tracking branch 'origin/main' into research/m023-disposable-workspace",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M023/STATUS.md"
       ]
     },
@@ -736,6 +813,7 @@
         "PROJECT_STATE.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M091/REGISTER_CLAIM.json",
         "experiments/M091/RESULT.md"
       ]
@@ -744,6 +822,7 @@
       "subject": "perf(m012): vectorize and reuse hidden evaluation suites",
       "preserved_by": "provenance/26c8671",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M012/STATUS.md",
         "results/M012_raw/README.md",
         "results/M012_raw/summary.json"
@@ -754,6 +833,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -766,6 +846,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -774,13 +855,15 @@
       "subject": "M040: canonical positive cumulative post-migration plasticity",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "63d8b18d72451ffe93f905e1c733a89ddbc70fb4": {
       "subject": "docs(m038): reconcile the protocol with the calibration, and fix four underspecifications",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_TRIGGER_CALIBRATION.md"
       ]
     },
@@ -788,6 +871,7 @@
       "subject": "docs(m038): correct the calibration status, the M036 reading, and nine schema gaps",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_TRIGGER_CALIBRATION.md"
       ]
     },
@@ -795,13 +879,15 @@
       "subject": "M049: integrate bounded migration-strategy selection",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "6928cf2abf714864c69f0571879af424ed09c741": {
       "subject": "Harden and document M024 rewrite passports",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M024/STATUS.md"
       ]
     },
@@ -810,6 +896,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m038-development.yml",
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_DEVELOPMENT_CYCLE.md",
         "results/M038_FREEZE.md"
       ]
@@ -818,13 +905,15 @@
       "subject": "chore(m040): preserve canonical artifact byte for byte",
       "preserved_by": "main",
       "cited_in": [
-        "archives/workflows/m040-commit-canonical-artifact.yml"
+        "archives/workflows/m040-commit-canonical-artifact.yml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "6c050c77d75403016b970ef1ba3043aa2cdbd12f": {
       "subject": "fix(m038): name the actual parent in the canonical guard error",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_FREEZE.md"
       ]
     },
@@ -833,6 +922,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m041-canonical.yml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M041/STATUS.md",
         "results/M041_CANONICAL_RESULT.md",
         "results/artifacts/M041_CANONICAL_RESULT.json"
@@ -842,6 +932,7 @@
       "subject": "test: freeze M071 external execution protocol",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXTERNAL_RESULT.json",
         "experiments/M071/EXTERNAL_RESULT.md"
       ]
@@ -852,7 +943,8 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "7002e4a843f347d4f494946a3c8a1fbb2d07387f": {
@@ -861,6 +953,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M075B/STATUS.md"
       ]
     },
@@ -869,7 +962,8 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "720bad446fbe8a72eb7990288b0c21cbbbfc74f9": {
@@ -877,6 +971,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M077/RESULT.md",
         "experiments/M077/STATUS.md"
       ]
@@ -887,7 +982,8 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "760803c4eee9c03caf25d2403c5f072343e17572": {
@@ -896,6 +992,7 @@
       "cited_in": [
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/HOLDOUT_TASKS.json",
         "experiments/M073/RESULT.md",
         "experiments/M073/STATUS.md",
@@ -907,6 +1004,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/CAPSULE_INDUCTION.json",
         "experiments/M073/HOLDOUT_TASKS.json",
         "experiments/M073/RESULT.md",
@@ -926,6 +1024,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M081/RESULT.md",
         "experiments/M081/STATUS.md"
       ]
@@ -934,6 +1033,7 @@
       "subject": "ci(m041): run the public completion entry point",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M041_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -942,6 +1042,7 @@
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M029/STATUS.md",
         "results/M029_COMPONENT_PROBE_DEVELOPMENT_RESULT.md"
       ]
@@ -956,6 +1057,7 @@
         "README.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M067/DEVELOPMENT_RESULT.md",
         "experiments/M067/PROTOCOL.md"
       ]
@@ -965,6 +1067,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M083/RESULT.md",
         "experiments/M083/STATUS.md"
       ]
@@ -977,6 +1080,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -985,6 +1089,7 @@
       "subject": "Add seeded clade guidance benchmark",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M027/STATUS.md",
         "results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md"
       ]
@@ -995,6 +1100,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M046/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M046/PROTOCOL.md",
         "results/M046_DEVELOPMENT_RESULT.md"
@@ -1004,6 +1110,7 @@
       "subject": "feat: add non-executing M072 governance causal harness",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/RESULT.json",
         "experiments/M072/SCENARIO_COMMITMENT.json",
         "experiments/M072/STATUS.md",
@@ -1015,6 +1122,7 @@
       "subject": "m073: bind training tasks before teacher demonstrations",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/CAPSULE_INDUCTION.json",
         "experiments/M073/STATUS.md",
         "experiments/M073/TEACHER_EXECUTION_PROTOCOL.json",
@@ -1028,6 +1136,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086/RESULT.md"
       ]
     },
@@ -1035,6 +1144,7 @@
       "subject": "test: enforce frozen M073 return-expression boundary",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -1042,6 +1152,7 @@
       "subject": "ci(m040): evaluate equal 4096-node transfer budget on seed 400045",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_005.md"
       ]
     },
@@ -1049,6 +1160,7 @@
       "subject": "test(m039): make evidence-rejected search history replayable",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M039_DEVELOPMENT.md",
         "results/M039_FREEZE.md"
       ]
@@ -1057,6 +1169,7 @@
       "subject": "ci(m040): rerun prefix adaptation with complete audit imports",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_004.md"
       ]
     },
@@ -1065,6 +1178,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m038-canonical.yml",
+        "docs/COMMIT_CITATIONS.json",
         "results/M038.md",
         "results/artifacts/M038_CANONICAL_RESULT.json"
       ]
@@ -1073,6 +1187,7 @@
       "subject": "docs: reclassify M086 as M086-A, post-hoc disqualified",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086/DISQUALIFICATION.md"
       ]
     },
@@ -1081,6 +1196,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M082/RESULT.md",
         "experiments/M082/STATUS.md"
       ]
@@ -1091,6 +1207,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -1098,6 +1215,7 @@
       "subject": "ci(m040): apply committed continuation-frontier repair",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_001.md"
       ]
     },
@@ -1105,6 +1223,7 @@
       "subject": "fix(m094): make acceptance agreement, not key coverage",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/PROTOCOL.json",
         "tests/test_m094_audit_binding.py"
@@ -1116,6 +1235,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -1126,6 +1246,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/PROTOCOL.json",
@@ -1137,6 +1258,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m041-freeze-candidate.yml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M041/CANONICAL_ARMED.json",
         "experiments/M041/STATUS.md",
         "results/M041_CANONICAL_RESULT.md",
@@ -1148,6 +1270,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M070/EXECUTION_PROTOCOL.json",
         "experiments/M070/TASK_SELECTION.json"
       ]
@@ -1157,6 +1280,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M069/DEVELOPMENT_RESULT.md",
         "experiments/M069/STATUS.md",
         "metamorphosis/m069_governed_terminal_repair.py"
@@ -1168,7 +1292,8 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "9e0bff76bb8e4dc17f1d78f257353ac9867afcf2": {
@@ -1176,6 +1301,7 @@
       "preserved_by": "branch/claude-dreamy-swanson-d63fc5",
       "cited_in": [
         "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M086/DISQUALIFICATION.md"
       ]
     },
@@ -1185,7 +1311,8 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md"
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "a1409bfd56aea7216b049ff53ef9ed06d07d5f5a": {
@@ -1194,6 +1321,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M083/RESULT.md",
         "experiments/M083/STATUS.md"
       ]
@@ -1202,6 +1330,7 @@
       "subject": "ci(m040): run focused post-migration development integration",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_000.md"
       ]
     },
@@ -1215,6 +1344,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M065/PROTOCOL.md",
         "experiments/M066/FROZEN_PROTOCOL.json",
@@ -1228,6 +1358,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/RESULT.json",
         "experiments/M072/RESULT.md",
         "experiments/M072/SCENARIO_COMMITMENT.json",
@@ -1240,6 +1371,7 @@
       "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosisâ†’synthesisâ†’adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md"
       ]
     },
@@ -1249,6 +1381,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M092/PROTOCOL.json",
         "scripts/check_m092b_protocol.py"
       ]
@@ -1257,6 +1390,7 @@
       "subject": "docs(m038): freeze the protocol and integrated mechanism",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M038/CANONICAL_ARMED.json",
         "results/M038.md",
         "results/artifacts/M038_CANONICAL_RESULT.json",
@@ -1269,6 +1403,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M042/STATUS.md",
         "results/artifacts/M042_CANONICAL_AUDIT.json",
         "results/artifacts/M042_CANONICAL_FIRST_RESULT_SEAL.json"
@@ -1279,6 +1414,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M078/RESULT.md",
         "experiments/M078/STATUS.md"
       ]
@@ -1292,6 +1428,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M065/CANONICAL_ARMED.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M066/PROTOCOL.md"
@@ -1301,6 +1438,7 @@
       "subject": "Integrate the portable rewrite lifecycle",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M025/STATUS.md"
       ]
     },
@@ -1308,6 +1446,7 @@
       "subject": "docs: record the M048 development qualification",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M048/PROTOCOL.md"
       ]
     },
@@ -1317,6 +1456,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
       ]
@@ -1325,6 +1465,7 @@
       "subject": "docs: bind M071 fresh external task pair",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXECUTION_PROTOCOL.json",
         "experiments/M071/EXECUTION_PROTOCOL.md",
         "experiments/M071/EXTERNAL_RESULT.json",
@@ -1335,13 +1476,15 @@
       "subject": "chore: initialize canonical repository",
       "preserved_by": "main",
       "cited_in": [
-        "PROVENANCE.md"
+        "PROVENANCE.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "b7cfd0ecaffe8a05a5e1deb17c542a6f69a67702": {
       "subject": "m073: preserve model-free holdout observations",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -1349,6 +1492,7 @@
       "subject": "docs(m038): prior art, three ADRs, and a pre-result protocol draft",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M038_TRIGGER_CALIBRATION.md"
       ]
     },
@@ -1357,6 +1501,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M084/STATUS.md"
       ]
     },
@@ -1364,7 +1509,8 @@
       "subject": "M052: exact finite-domain behavioral-equivalence pruning (#71)",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "bc6e73c591cc9e996d5cb22ded71384b57d0c8cc": {
@@ -1372,6 +1518,7 @@
       "preserved_by": "main",
       "cited_in": [
         "archives/workflows/m040-preserve-first-canonical.yml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M040/CANONICAL_ARMED.json",
         "experiments/M040/STATUS.md",
         "results/M040_CANONICAL_RESULT.md",
@@ -1382,6 +1529,7 @@
       "subject": "ci: install torch for full repository tests",
       "preserved_by": "provenance/26c8671",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M013b.json"
       ]
     },
@@ -1396,6 +1544,7 @@
         "PROJECT_STATE.yaml",
         "README.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M069/DEVELOPMENT_RESULT.md",
         "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.json",
         "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md",
@@ -1406,6 +1555,7 @@
       "subject": "docs(m012b): advance roadmap to sealed evaluation",
       "preserved_by": "provenance/26c8671",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M012b/STATUS.md",
         "results/M012b.md",
         "results/M012b_raw/REPRODUCIBILITY.md",
@@ -1418,6 +1568,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M042/STATUS.md"
       ]
     },
@@ -1427,6 +1578,7 @@
       "cited_in": [
         "FAILURE_LOG.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M050/DEVELOPMENT_RESULT.md",
         "experiments/M050/PROTOCOL.md"
       ]
@@ -1437,6 +1589,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M047/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M047/PROTOCOL.md",
         "results/M047_DEVELOPMENT_RESULT.md"
@@ -1446,6 +1599,7 @@
       "subject": "ci(m040): apply explicit-indentation pre-freeze hardening v6",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_003.md"
       ]
     },
@@ -1453,7 +1607,8 @@
       "subject": "feat(m038): canonical two-speed lineage with causal journal (#53)",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "cd55035119af31824fe5b0b2751c161c2acd3708": {
@@ -1462,6 +1617,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -1470,6 +1626,7 @@
       "subject": "test: exercise M072 causal governance harness",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -1477,6 +1634,7 @@
       "subject": "ci: make historical experiments manual-only",
       "preserved_by": "provenance/ae8b4dc",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M042/FROZEN_PROTOCOL.json",
         "experiments/M042/PROTOCOL_FROZEN.md"
       ]
@@ -1485,6 +1643,7 @@
       "subject": "M020: align patch target ordering and complete two-edit search",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M020/STATUS.md"
       ]
     },
@@ -1492,6 +1651,7 @@
       "subject": "m073: freeze external teacher execution before calls",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -1499,7 +1659,8 @@
       "subject": "M047: integrate modular software lineage",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "d4eb5ed981727fd1343e6e1031494771d9dec220": {
@@ -1510,6 +1671,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M063/DEVELOPMENT_RESULT.md",
         "experiments/M063/PROTOCOL.md"
       ]
@@ -1518,6 +1680,7 @@
       "subject": "research(m030): freeze unseen-seed confirmation",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M030/STATUS.md",
         "results/M030_UNSEEN_COMPONENT_CONFIRMATION_RESULT.md"
       ]
@@ -1528,6 +1691,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M079/RESULT.md",
         "experiments/M079/STATUS.md"
       ]
@@ -1536,6 +1700,7 @@
       "subject": "chore(m039): freeze the tested three-cycle protocol and mechanism",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M039/CANONICAL_ARMED.json",
         "results/M039.md",
         "results/artifacts/M039_CANONICAL_RESULT.json"
@@ -1546,6 +1711,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
       ]
@@ -1559,6 +1725,7 @@
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M087/RESULT.md"
       ]
     },
@@ -1566,6 +1733,7 @@
       "subject": "test: lock M072 preregistration invariants",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -1575,6 +1743,7 @@
       "cited_in": [
         "CHANGELOG.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "tests/test_repository_integrity.py"
@@ -1584,6 +1753,7 @@
       "subject": "docs: freeze M071 before external task selection",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXECUTION_PROTOCOL.json",
         "experiments/M071/SELECTION_PROTOCOL.json",
         "experiments/M071/SELECTION_PROTOCOL.md",
@@ -1594,6 +1764,7 @@
       "subject": "docs: explain frozen M072 causal governance protocol",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M072/STATUS.md"
       ]
     },
@@ -1602,6 +1773,7 @@
       "preserved_by": "main",
       "cited_in": [
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/PROTOCOL.json"
@@ -1611,7 +1783,8 @@
       "subject": "M051: bounded variable-length primitive composition",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "e1367c6d7cbe99d59cc79321d1427024de0fc551": {
@@ -1619,6 +1792,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -1626,6 +1800,7 @@
       "subject": "docs(m013e): record M013d development failure",
       "preserved_by": "provenance/26c8671",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M013e/STATUS.md",
         "results/M013e.md",
         "results/M013e_raw/REPRODUCIBILITY.md",
@@ -1636,6 +1811,7 @@
       "subject": "Merge pull request #139 from mjodheim/research/m091-endogenous-meta-language-extension",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M092/DESIGN_AUDIT.md"
       ]
     },
@@ -1644,6 +1820,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -1652,6 +1829,7 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
@@ -1665,6 +1843,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M064/DEVELOPMENT_RESULT.md",
         "experiments/M064/PROTOCOL.md",
         "experiments/M065/FROZEN_PROTOCOL.json",
@@ -1680,6 +1859,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M084/RESULT.md",
         "experiments/M084/STATUS.md"
       ]
@@ -1695,6 +1875,7 @@
         "PROJECT_STATE.yaml",
         "README.md",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M068/DEVELOPMENT_RESULT.md",
         "experiments/M068/STATUS.md"
       ]
@@ -1705,6 +1886,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M084/RESULT.md",
         "experiments/M084/STATUS.md"
       ]
@@ -1713,6 +1895,7 @@
       "subject": "test: bind blind M070 external task pair",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M070/EXECUTION_PROTOCOL.json"
       ]
     },
@@ -1720,6 +1903,7 @@
       "subject": "fix(m094): remove the constant that was deciding, and withdraw what it decided",
       "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/PROTOCOL.json"
       ]
@@ -1732,6 +1916,7 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M062/DEVELOPMENT_RESULT.md",
         "experiments/M062/PROTOCOL.md"
       ]
@@ -1742,6 +1927,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M078/RESULT.md",
         "experiments/M078/STATUS.md"
       ]
@@ -1754,6 +1940,7 @@
         "PROJECT_STATE.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M089/RESULT.md"
       ]
     },
@@ -1763,6 +1950,7 @@
       "cited_in": [
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M068/DEVELOPMENT_RESULT.md",
         "experiments/M068/STATUS.md",
         "metamorphosis/m068_open_command_induction.py"
@@ -1775,6 +1963,7 @@
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
         "PROJECT_STATE.yaml",
         "README.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXECUTION_PROTOCOL.json",
         "experiments/M071/EXTERNAL_RESULT.md",
         "experiments/M071/TASK_SELECTION.json",
@@ -1786,7 +1975,8 @@
       "subject": "ci(m014c): scope the development workflow and record the freeze risk",
       "preserved_by": "provenance/fc46005",
       "cited_in": [
-        "FAILURE_LOG.md"
+        "FAILURE_LOG.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "ff30ff1f71a11b0d2e09c8c3ab15e082725a33e6": {
@@ -1794,6 +1984,7 @@
       "preserved_by": "provenance/ff30ff1",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M051/DEVELOPMENT_RESULT.md",
         "experiments/M051/PROTOCOL.md"
       ]
@@ -1806,8 +1997,36 @@
         "PROJECT_STATE.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M090/RESULT.md"
       ]
+    }
+  },
+  "known_unresolvable": {
+    "0000000000000000000000000000000000000000": {
+      "reason": "a placeholder in a test fixture protocol, not a citation",
+      "kind": "fixture",
+      "where": "tests/test_m074_scientific_runner.py"
+    },
+    "40ac0f64a1fb9465e1c4cadf6c32c0cfde3b84dd": {
+      "reason": "deliberately dead. M013c cites its announced evaluation commit in order to record that the announcement was defective: at that commit experiments/M013c/protocol.yaml is absent, so the published reproduction command cannot reproduce the claimed protocol hash. The citation documents the revocation.",
+      "kind": "deliberately_dead",
+      "where": "results/M013c.md, results/M013c_raw/summary.json, experiments/M013c/STATUS.md"
+    },
+    "459ff6ec99417589b7f679d14ddf3b3f0ae4f1dc": {
+      "reason": "a commit in the external Harbor harness repository, not in this one",
+      "kind": "external_repository",
+      "where": "experiments/M070/EXECUTION_PROTOCOL.json (harness/peeled_commit)"
+    },
+    "f75477f2ad0b04fad199b0cb80689cc23a06c72d": {
+      "reason": "the annotated tag object of an external Harbor release, pinned by M070's selection protocol. It is a git object in Harbor's repository, not in this one.",
+      "kind": "external_repository",
+      "where": "experiments/M070/SELECTION_PROTOCOL.json, experiments/M070/HARBOR_PIN_CORRECTION.json"
+    },
+    "b8a8bb064ff456c491369bd1ca25c72ca187b545": {
+      "reason": "A GENUINE LOSS, recorded rather than excused. M049's positive bounded development result names this as the commit CI run 31076192847 qualified, and the object is not in this repository at all -- not dangling, absent. It predates the provenance tags and could not be preserved by them, because the sixteen-commit repair could only reach citations that still resolved. This is the population that check cannot see, which is why the commit-typed scan exists. M049's result is not wrong; it is unverifiable from the record as it stands.",
+      "kind": "lost",
+      "where": "PROJECT_STATE.yaml, experiments/M049/PROTOCOL.md, experiments/M049/DEVELOPMENT_RESULT.md"
     }
   }
 }

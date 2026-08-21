@@ -234,6 +234,33 @@ def _hex_tokens() -> dict[str, set[str]]:
     return found
 
 
+#: Keys whose value is a git commit rather than an artifact digest. `*_commitment` is
+#: deliberately excluded: those are sha256 bank and suite commitments, not git objects.
+COMMIT_FIELD = re.compile(r'"?([a-z_]*_commit)"?\s*:\s*"?([0-9a-f]{40})"?')
+
+
+def commit_typed_citations() -> dict[str, list[str]]:
+    """Every 40-hex value written in a position that declares itself a git commit.
+
+    The reachability check can only see citations that still resolve, so the population it
+    cannot see is precisely the population already lost. This one can: a value in a
+    `*_commit` field is asserted to be a commit, so failing to resolve is a defect in the
+    record rather than a false positive.
+    """
+
+    found: dict[str, list[str]] = {}
+    for name in _tracked_text_files():
+        try:
+            text = (ROOT / name).read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        for key, sha in COMMIT_FIELD.findall(text):
+            if key.endswith("_commitment"):
+                continue
+            found.setdefault(sha, []).append(f"{name} ({key})")
+    return found
+
+
 def record_citations() -> int:
     """Rewrite the citation manifest from the working tree and the refs that exist right now.
 
@@ -271,6 +298,27 @@ def record_citations() -> int:
             "cited_in": sorted(commits[sha]),
         }
 
+    # Refuse to forget. The manifest is rebuilt only from commits that are reachable NOW, so a
+    # citation that has become unreachable simply produces no entry -- and re-recording after
+    # a red check would turn a real loss into a green one. That is a laundering pipeline, and
+    # the docstring inviting `--record` after adding a citation makes it the natural next step.
+    previous: dict = {}
+    if CITATIONS.exists():
+        try:
+            previous = json.loads(CITATIONS.read_text(encoding="utf-8")).get("commits", {})
+        except (OSError, json.JSONDecodeError):
+            previous = {}
+    dropped = sorted(set(previous) - set(records))
+    if dropped:
+        print(f"FAIL — {len(dropped)} recorded citation(s) would be dropped, not updated")
+        for sha in dropped:
+            entry = previous[sha]
+            print(f"  {sha[:12]} {entry.get('subject', '?')[:56]}")
+            print(f"      was preserved by {entry.get('preserved_by', '?')}")
+        print("Nothing was written. Restore the missing refs, or remove these entries")
+        print("deliberately and say why.")
+        return 1
+
     CITATIONS.write_text(
         json.dumps(
             {
@@ -282,6 +330,11 @@ def record_citations() -> int:
                     "unverifiable, so this file exists to make that failure loud instead of silent."
                 ),
                 "commits": records,
+                "known_unresolvable": (
+                    json.loads(CITATIONS.read_text(encoding="utf-8"))
+                    .get("known_unresolvable", {})
+                    if CITATIONS.exists() else {}
+                ),
             },
             indent=2,
             ensure_ascii=False,
@@ -356,15 +409,26 @@ def check_citations() -> list[str]:
         for entry in recorded.values()
         if entry.get("preserved_by", "").startswith(("provenance/", "branch/"))
     }
+    problems: list[str] = []
     if wanted:
         present = set((_git("tag", "--list") or "").split())
         if not wanted & present:
-            return [
-                f"none of the {len(wanted)} preserving tags exist in this clone, so most citations "
-                "would be reported lost for the wrong reason; run `git fetch --tags` first"
-            ]
+            if not present:
+                # No tags at all: this clone never fetched them. Nothing can be concluded.
+                return [
+                    f"none of the {len(wanted)} preserving tags exist in this clone and it has "
+                    "no tags at all, so reachability cannot be established; run "
+                    "`git fetch --tags` first"
+                ]
+            # Tags exist, but not these. They were deleted, which is a real loss. Saying
+            # "run git fetch --tags" here would hand the operator a remedy that cannot work
+            # and suppress the list of what is actually gone, so name it and continue.
+            problems.append(
+                f"{len(wanted)} preserving tags are missing while {len(present)} other tags "
+                "are present: they were deleted rather than never fetched"
+            )
 
-    problems = [
+    problems += [
         f"{sha[:12]} ({entry.get('subject', '?')[:48]}) is cited in "
         f"{', '.join(entry.get('cited_in', [])[:2]) or 'the record'} but is no longer "
         f"reachable; it was preserved by {entry.get('preserved_by', 'an unrecorded ref')}"
@@ -383,6 +447,18 @@ def check_citations() -> list[str]:
         for candidate in prefixes.get(token[:7], ()):
             if candidate.startswith(token) and candidate not in recorded:
                 unrecorded.setdefault(candidate, sorted(where)[0])
+
+    # A citation in a position that declares itself a commit must resolve. This is the only
+    # part of the check that can see a citation which was lost before the manifest existed.
+    excused = manifest.get("known_unresolvable", {})
+    for sha, where in sorted(commit_typed_citations().items()):
+        if sha in excused:
+            continue
+        if _git("cat-file", "-e", sha + "^{commit}") is None:
+            problems.append(
+                f"{sha[:12]} is written as a commit in {where[0]} and does not resolve; "
+                "record it under known_unresolvable with a reason if the loss is accepted"
+            )
 
     problems += [
         f"{sha[:12]} is cited in {name} but absent from "
