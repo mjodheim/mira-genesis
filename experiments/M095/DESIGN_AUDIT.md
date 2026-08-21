@@ -2,12 +2,12 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **eight** defects across two passes: seven are
-repaired, and the eighth is a boundary on the claim that cannot be repaired at this scale and is
-therefore disclosed.
+mechanism rather than confirming it. It has found **nine** defects across three passes: eight are
+repaired, and the ninth-found — defect 7 — is a boundary on the claim that cannot be repaired at
+this scale and is therefore disclosed.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Four of the eight turned out to be regressions of amendments this
+has M095 already forgotten?* Four of the nine turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -209,6 +209,35 @@ tree after each adoption rather than by counting. In the declared world it names
 it always did. Pinned by `test_the_enabling_repair_is_the_one_that_flipped_the_operation`, which
 runs in the tied world where position and cause come apart.
 
+## Defect 9 — three fields in the record asserted what they claimed to measure — **REPAIRED**
+
+`Chain.to_dict()` carried `second_target_was_not_supplied: True` and
+`the_enabling_repair_was_identified_by_measuring_the_flip: True`. `WorldFacts.to_dict()` carried
+`selection_is_the_lineage_s: True`. All three were hardcoded literals in the evidence record.
+
+A boolean that is always `True` is not evidence. It cannot fail, it cannot be recomputed, and a
+checker reading it would report a property that nothing established — the *checker passes without
+evidence* shape, except sitting inside the record rather than inside the checker, where it is
+harder to see.
+
+**Two of the three were introduced during this same audit**, in the commit that repaired defect 8.
+The defect being repaired was a claim the record could not support, and the repair wrote another
+one. That is worth more than the fix: the failure mode is not carelessness about a known list, it
+is that asserting a property feels like establishing it, at the moment of establishing something
+else.
+
+**Repaired.** `second_target_came_from` carries what the diagnosis actually named at S1, which a
+checker can re-derive by re-measuring instead of believing a flag. `step_a_identified_by` records
+*how* A was found — either the nested operation became applicable after that adoption, or the chain
+fell back to the first repair that reached. **Both values occur**, which is what stops it becoming
+the constant it replaced: the declared and equal-demand worlds report the measured case, and a
+world where the enabling repair is outranked reports the fallback, having adopted something without
+unlocking anything. Pinned by `test_the_record_distinguishes_a_measured_a_from_a_fallback`.
+
+The world's asserted boolean is dropped rather than replaced. That the selection is the lineage's
+own is an argument the prose makes and the arms measure; as a `True` in a data record it looked
+like a finding.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -230,7 +259,7 @@ produces neither.
 
 ## The honest summary
 
-Eight defects, in two distinct families.
+Nine defects, in three distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -238,12 +267,14 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Seven are repaired. The eighth, defect 7, is not a defect that can be repaired at this scale, and
-that is the finding this audit exists for.
+Eight are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
+were written *by the commit that repaired defect 8*, which says the failure mode is not
+forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Four of eight are regressions of amendments
+was amendment A2. Defect 3 was amendment A1's family. Four of nine are regressions of amendments
 already bought and recorded. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
 the next milestone should assume it will forget them too.
