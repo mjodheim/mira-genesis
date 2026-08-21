@@ -89,3 +89,73 @@ def test_a_missing_manifest_is_reported(tmp_path, monkeypatch) -> None:
     problems = check_citations()
     assert len(problems) == 1
     assert problems[0].endswith("absent.json is missing")
+
+
+# ── the guard must not be able to launder a loss ──────────────────────
+
+
+def test_record_refuses_to_drop_a_citation_it_can_no_longer_reach(tmp_path, monkeypatch, capsys) -> None:
+    """`--record` rebuilt the manifest only from what is reachable NOW.
+
+    So a citation that had become unreachable simply produced no entry, vanished from the
+    manifest without a word, and the next `--citations` went green. With the docstring inviting
+    `--record` after adding a citation, re-recording is the natural response to a red check --
+    which makes real loss, misdiagnosis and a green check into one continuous pipeline.
+    """
+
+    vanished = "b" * 40
+    path = _manifest(
+        tmp_path,
+        {vanished: {"subject": "a result nobody can verify any more", "preserved_by": "main"}},
+    )
+    monkeypatch.setattr(integrity, "CITATIONS", path)
+
+    before = path.read_text(encoding="utf-8")
+    assert integrity.record_citations() == 1
+    assert path.read_text(encoding="utf-8") == before, "the manifest was rewritten anyway"
+
+    printed = capsys.readouterr().out
+    assert "would be dropped" in printed
+    assert vanished[:12] in printed
+
+
+def test_a_commit_typed_citation_that_does_not_resolve_is_reported(tmp_path, monkeypatch) -> None:
+    """The only part of the check that can see a citation lost before the manifest existed.
+
+    Reachability can only be asked of commits that resolve, so the population it cannot see is
+    exactly the population already gone. A value written in a `*_commit` field asserts that it
+    is a commit, so failing to resolve is a defect in the record rather than a false positive.
+    """
+
+    absent = "c" * 40
+    monkeypatch.setattr(
+        integrity,
+        "commit_typed_citations",
+        lambda: {absent: ["experiments/M999/RESULT.json (qualification_commit)"]},
+    )
+    problems = [p for p in check_citations() if "written as a commit" in p]
+    assert len(problems) == 1
+    assert absent[:12] in problems[0]
+    assert "M999" in problems[0]
+
+
+def test_a_deliberately_dead_citation_is_excused_only_with_a_recorded_reason() -> None:
+    """M013c cites a commit precisely to record that the announcement was defective.
+
+    Five citations do not resolve and four of them should not: a test fixture placeholder, a
+    revoked announcement kept as evidence of its own revocation, and two objects that live in
+    an external repository. The fifth is a real loss and is recorded as one rather than excused.
+    """
+
+    manifest = json.loads(integrity.CITATIONS.read_text(encoding="utf-8"))
+    excused = manifest["known_unresolvable"]
+    unresolvable = {
+        sha for sha in integrity.commit_typed_citations()
+        if integrity._git("cat-file", "-e", sha + "^{commit}") is None
+    }
+    assert set(excused) == unresolvable
+    assert all(entry["reason"] and entry["kind"] for entry in excused.values())
+    lost = [sha for sha, entry in excused.items() if entry["kind"] == "lost"]
+    assert lost == ["b8a8bb064ff456c491369bd1ca25c72ca187b545"], (
+        "the M049 qualification commit is a genuine loss and must stay recorded as one"
+    )
