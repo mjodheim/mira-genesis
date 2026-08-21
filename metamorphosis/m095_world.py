@@ -155,7 +155,6 @@ class WorldFacts:
             "outer_call_sites": self.outer_call_sites,
             "ordering_regime": self.ordering_regime,
             "nothing_renders_itself_at_s0": self.nothing_renders_itself_at_s0,
-            "selection_is_the_lineage_s": True,
             "why_not_mira_core": (
                 "the nested-rendering demand does not exist there: AgentResult holds an "
                 "Observation but its call sites reach through it into .state rather than "
