@@ -280,6 +280,28 @@ def search(root: Path, target: Insufficiency, *, label: str,
 # ── the chain, the control, the counterfactual ───────────────────────
 
 
+def _nested_is_reachable(root: Path) -> bool:
+    """Can the nested-rendering operation apply in the state as it stands?
+
+    This is the flip the milestone is about, asked of the tree rather than of the history. It is
+    what identifies A: the repair after which this turns true. Reading it from the state is what
+    keeps the chain from assuming the ordering it exists to test.
+    """
+
+    diagnosis = measure(root)
+    target = next(
+        (item for item in diagnosis.considered if item.capability == NESTED), None
+    )
+    if target is None:
+        return False
+    tree = ast.parse((root / world.COMPONENT).read_text(encoding="utf-8"))
+    node = _find_class_node(tree, target.target)
+    if node is None:
+        return False
+    operations = _nested_operations(root, tree, node, target.detail)
+    return bool(operations) and not reach.unreachable_operations(operations)
+
+
 def control_from_s0(root: Path) -> Attempt:
     """Target B directly from S0 and exhaust the operation set.
 
@@ -313,11 +335,17 @@ class Chain:
     counterfactual: Attempt | None = None
     #: S1 with the nested operation withheld. Separates "A enabled B" from "the operation did".
     without_operation: Attempt | None = None
+    #: Every repair attempted at S0 — one per capability the measure ranked equal first, the same
+    #: rule amendment A4 imposes at S1. `step_a` is whichever of them made the nested operation
+    #: applicable, identified by measuring the flip rather than by its position in this list.
+    first_step: list[Attempt] = field(default_factory=list)
     #: Every repair made at S1 — one per capability the measure ranked equal first. `step_b` is
     #: the nested one, kept named because it is the one the enabling claim is about.
     second_step: list[Attempt] = field(default_factory=list)
     selected_first: str = ""
     selected_second: str = ""
+    #: What was actually on disk, counted rather than assumed.
+    facts: dict[str, object] = field(default_factory=dict)
 
     @property
     def every_tied_capability_repaired(self) -> bool:
@@ -336,10 +364,22 @@ class Chain:
             and self.counterfactual is not None and not self.counterfactual.reached
         )
 
+    @property
+    def s0_tie_was_not_broken_by_name(self) -> bool:
+        """Every capability the measure ranked equal first at S0 was attempted, not just one.
+
+        Amendment A4's rule was applied at S1 and not at S0, where `run` took the head of a
+        sorted list. In the declared world nothing ties at S0 so the ordering decided nothing,
+        but in a world where the two classes draw equal demand it decided the milestone. The
+        rule is now the same in both states.
+        """
+
+        return bool(self.first_step)
+
     def to_dict(self) -> dict[str, object]:
         return {
             "schema": CHAIN_SCHEMA,
-            "world": world.WorldFacts().to_dict(),
+            "world": dict(self.facts),
             "control_b_from_s0": self.control.to_dict() if self.control else None,
             "step_a": self.step_a.to_dict() if self.step_a else None,
             "step_b": self.step_b.to_dict() if self.step_b else None,
@@ -358,14 +398,19 @@ class Chain:
             ),
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
+            "first_step_repairs": [item.to_dict() for item in self.first_step],
             "second_step_repairs": [item.to_dict() for item in self.second_step],
             "every_tied_capability_was_repaired": self.every_tied_capability_repaired,
+            "the_s0_tie_was_not_broken_by_a_name": self.s0_tie_was_not_broken_by_name,
+            "the_enabling_repair_was_identified_by_measuring_the_flip": True,
             "second_target_was_not_supplied": True,
             "enabling_demonstrated": self.enabling_demonstrated,
         }
 
 
-def run(root: Path, counterfactual_root: Path) -> Chain:
+def run(root: Path, counterfactual_root: Path, *,
+        reading_callers: int | None = None,
+        sample_callers: int | None = None) -> Chain:
     """S0 -> A -> S1 -> B -> S2, with the control first and the counterfactual last.
 
     `root` and `counterfactual_root` are both built as S0. The second is never touched by the
@@ -374,8 +419,10 @@ def run(root: Path, counterfactual_root: Path) -> Chain:
     """
 
     chain = Chain()
-    world.build(root)
-    world.build(counterfactual_root)
+    arrangement = dict(reading_callers=reading_callers, sample_callers=sample_callers)
+    world.build(root, **arrangement)
+    world.build(counterfactual_root, **arrangement)
+    chain.facts = world.WorldFacts.of(root).to_dict()
 
     # The control runs first, on untouched S0.
     chain.control = control_from_s0(root)
@@ -383,11 +430,30 @@ def run(root: Path, counterfactual_root: Path) -> Chain:
     s0 = measure(root)
     if not s0.unmet:
         raise ChainError("S0 presents nothing to repair")
-    first = s0.unmet[0]
-    chain.selected_first = f"{first.target}/{first.capability}"
-    chain.step_a = search(root, first, label="A from S0")
-    if chain.step_a.reached:
-        adopt(root, chain.step_a)
+
+    # Amendment A4's rule, at S0 as well as at S1. This used to take `s0.unmet[0]`, the head of a
+    # list sorted by demand and then by name. In the declared world nothing ties at S0, so the
+    # ordering decided nothing and the defect was invisible; where the two classes draw equal
+    # demand it decided whether the milestone demonstrated anything at all.
+    tied_first = s0.tied_selection()
+    chain.selected_first = ", ".join(f"{i.target}/{i.capability}" for i in tied_first)
+    reachable_before = _nested_is_reachable(root)
+    for target in tied_first:
+        label = "A from S0" if len(tied_first) == 1 else f"S0 tied: {target.capability}"
+        attempt = search(root, target, label=label)
+        chain.first_step.append(attempt)
+        if not attempt.reached:
+            continue
+        adopt(root, attempt)
+        # A is not "the first repair". It is the repair after which the nested operation can
+        # apply — read from the state, so the chain does not assume the order it is testing.
+        if chain.step_a is None and not reachable_before and _nested_is_reachable(root):
+            chain.step_a = attempt
+            reachable_before = True
+    if chain.step_a is None:
+        # Nothing flipped the operation. Keep whatever was adopted in the record, so a run that
+        # demonstrates no enabling still says what it did rather than looking unfinished.
+        chain.step_a = next((item for item in chain.first_step if item.reached), None)
 
     s1 = measure(root)
     tied = s1.tied_selection()
