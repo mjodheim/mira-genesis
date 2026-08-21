@@ -206,8 +206,10 @@ What remains before a freeze: a qualification pool drawn from outside this world
 case verified by construction, a checker that recomputes rather than reads, a runner, and a
 protocol. Freezing it and arming a run are the owner's acts, not an agent's.
 
-A second audit pass has since found four further defects (5 to 8), three repaired and one — the
-domain boundary — disclosed above. `DESIGN_AUDIT.md` carries the arithmetic. The most useful thing
-it says is not about M095: four of the eight defects were regressions of amendments this project
-had already paid for and written down, which is evidence that recording an amendment does not, by
-itself, carry it into the next milestone's code.
+Later audit passes have since found five further defects (5 to 9), four repaired and one — the
+domain boundary — disclosed above. `DESIGN_AUDIT.md` carries the arithmetic. Two things it says
+are not about M095. Four of the nine defects were regressions of amendments this project had
+already paid for and written down, which is evidence that recording an amendment does not, by
+itself, carry it into the next milestone's code. And two of defect 9's three literals were
+written by the commit that repaired defect 8 — asserting a property feels like establishing it,
+and it feels that way most strongly while establishing something else.
