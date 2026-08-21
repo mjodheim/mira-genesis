@@ -92,6 +92,9 @@ class Attempt:
     nested_unreachable: tuple[str, ...] = ()
     executed: int = 0
     confirmed: int = 0
+    #: How many operations the search was offered, and the longest chain it would grow.
+    operations_offered: int = 0
+    bound: int = 0
     notes: dict[str, object] = field(default_factory=dict)
 
     @property
@@ -108,6 +111,8 @@ class Attempt:
             "survivors": self.survivors,
             "executed": self.executed,
             "confirmed_by_execution": self.confirmed,
+            "operations_offered": self.operations_offered,
+            "bound": self.bound,
             "reached": self.reached,
             "adopted_method": self.adopted_method,
             "nested_operations_offered": list(self.nested_offered),
@@ -236,6 +241,10 @@ def search(root: Path, target: Insufficiency, *, label: str,
         ]
 
     bound = max_length or composition.MAX_COMPOSITION_LENGTH
+    # Recorded from the set the search is about to use, never rebuilt: an arm that
+    # certified a ceiling for a set the search never saw would certify nothing.
+    attempt.operations_offered = len(operations)
+    attempt.bound = bound
     survivors: list[tuple[str, str]] = []
     for chain in composition._compositions(operations, bound):
         draft = composition.MethodDraft()

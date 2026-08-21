@@ -97,9 +97,16 @@ def imported_names(path: Path) -> set[str]:
             found.update(alias.name for alias in node.names)
         elif isinstance(node, ast.ImportFrom):
             if node.level and package:
-                found.add(f"{package}.{node.module}" if node.module else package)
+                base = f"{package}.{node.module}" if node.module else package
             elif node.module:
-                found.add(node.module)
+                base = node.module
+            else:
+                continue
+            found.add(base)
+            # `from metamorphosis import m095_arms` imports a *module*, not a name inside one.
+            # Recording only the package made every module imported that way look unreachable,
+            # which is the idiom most of this codebase actually uses.
+            found.update(f"{base}.{alias.name}" for alias in node.names)
     return found
 
 
