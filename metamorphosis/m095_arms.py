@@ -124,15 +124,15 @@ class Arrangement:
 
         if not self.points:
             return "unrunnable"
-        # A refutation among the points that DID run is still a refutation. Testing the
-        # error first let one broken point bury a three-point disagreement as
-        # "unrunnable" -- A1 used as a silencer rather than as a distinction.
         if not any(point.any_repair_reached for point in self.points):
             # Nothing was repaired in any arrangement. Every point reports no enabling,
             # which looks exactly like a refuted domain and is in fact a dead instrument.
             # Killing the execution probe made this arm say `refuted` -- a claim about the
             # mechanism -- when the honest answer is that it could not measure.
             return "unrunnable"
+        # A refutation among the points that DID run is still a refutation. Testing the
+        # error first let one broken point bury a three-point disagreement as
+        # "unrunnable" -- A1 used as a silencer rather than as a distinction.
         if self.disagreements:
             return "refuted"
         if any(point.error for point in self.points):

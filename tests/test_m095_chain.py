@@ -9,7 +9,7 @@ Four facts carry that, and each has a test that fails if it stops holding:
 1. from S0, B is unreachable — the search exhausts and finds nothing;
 2. the diagnosis picks A first, and picks B afterwards, on its own;
 3. from S1, B is reachable, and the repair it builds calls the method A created;
-4. in a world where A never happened, B is unreachable again.
+4. in a world with every other first-round repair but *not* A, B is unreachable again.
 
 Fact 4 is what separates "B became reachable" from "B was always reachable and we got round to
 it". Without it the chain would show a sequence and prove nothing about enabling.

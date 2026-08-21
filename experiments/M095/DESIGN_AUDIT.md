@@ -2,7 +2,7 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **sixteen** defects across four passes: fifteen are
+mechanism rather than confirming it. It has found **seventeen** defects across four passes: sixteen are
 repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
 therefore disclosed.
 
@@ -13,7 +13,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Five of the sixteen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the seventeen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -403,6 +403,27 @@ other repair is kept and only A is dropped: **143 examined, B still unreachable.
 stronger statement than the one the milestone was making — A *specifically*, not merely some
 first-round repair. Pinned by `test_the_counterfactual_removes_a_rather_than_everything`.
 
+## Defect 17 — the flip predicate chose its own subject — **REPAIRED**
+
+`_nested_is_reachable` took its requirement from `diagnosis.considered`, which is unsorted.
+Every other consumer of the nested requirement binds to `unmet`, which is ranked by demand:
+`control_from_s0`, the S1 selection, and the counterfactual.
+
+In a world presenting more than one nested requirement, the predicate that identifies **A**
+would watch a different requirement from the one the milestone is about — and could name as A a
+repair that the enabled repair never calls, while the record carried
+`step_a_identified_by: the_nested_operation_became_applicable` and
+`enabling_demonstrated: true`. The counterfactual cannot catch it, because it removes A and
+asks about the *ranked* requirement.
+
+The declared world presents one nested requirement, so nothing was wrong in it. That is what
+makes it worth recording: it is the same shape as defect 5, which was also inert in the declared
+world and decided the milestone everywhere else.
+
+**Repaired.** The requirement is passed in from `run`, taken once from `unmet` at S0, so the
+predicate and the claim are about the same thing. `run` now refuses a world that presents no
+nested requirement at all rather than silently reporting one that is never reachable.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -424,7 +445,7 @@ produces neither.
 
 ## The honest summary
 
-Sixteen defects, in four distinct families.
+Seventeen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -432,14 +453,14 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Fifteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+Sixteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
 finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Five of sixteen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of seventeen are regressions of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
