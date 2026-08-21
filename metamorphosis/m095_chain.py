@@ -168,10 +168,18 @@ def search(root: Path, target: Insufficiency, *, label: str,
     it consults which of those it is being used for.
 
     `withhold_nested` removes the nested-rendering operations from the set while leaving the
-    state alone. It answers the question the A-removing counterfactual cannot: is the enabling
-    A's, or is it merely the operation's? Run at S1, where A *has* been adopted, a failure says
-    the operation is the vehicle through which A's repair is reachable — and a success would say
-    A was never needed, which would refute the whole chain.
+    state alone, to ask whether the enabling is A's or merely the operation's.
+
+    **It cannot succeed, and this docstring used to claim otherwise.** `IncludeRenderedField`
+    is the only operation in the set that can satisfy `RenderNestedValueObject`, so removing
+    it makes the shape unsatisfiable by construction rather than by measurement. Measured in
+    the most favourable state available — a world whose inner class *already* renders itself,
+    so nothing is missing but the operation — the withheld search still reaches nothing: 191
+    examined, 0 survivors, against 239 and 12 with the operation present.
+
+    So this arm reports that the operation is the vehicle, which is true and worth recording,
+    but it is not a control that could have come out the other way. See
+    `experiments/M095/DESIGN_AUDIT.md`, defect 19.
     """
 
     attempt = Attempt(label=label, class_name=target.target,

@@ -2,9 +2,9 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **eighteen** defects across four passes: seventeen are
-repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
-therefore disclosed.
+mechanism rather than confirming it. It has found **nineteen** defects across four passes: seventeen are
+repaired. Two are not: defect 7 is a boundary on the claim, and defect 19 is a control that
+cannot fail. Both are disclosed rather than quietly carried.
 
 The fourth pass was adversarial and ran against the apparatus rather than the mechanism: five
 independent reviewers were asked to break the arms by killing the mechanism underneath them.
@@ -13,7 +13,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Five of the eighteen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the nineteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -449,6 +449,37 @@ did before it was caught. The arm now compares the two and records a mismatch as
 Defect 6 was "the record described the author's intention rather than the experiment's world",
 and it was repaired in the two fields where it had been noticed. This is the rest of it.
 
+## Defect 19 — the withheld-operation arm cannot succeed in any state — **DISCLOSED, NOT REPAIRED**
+
+`search`'s docstring said that if the withheld arm ever reached B it "would say A was never
+needed, which would refute the whole chain". It cannot reach B, in any state.
+
+`IncludeRenderedField` is the **only** operation in the set that can satisfy
+`RenderNestedValueObject`. Withholding it makes the shape unsatisfiable by construction rather
+than by measurement, so the arm is testing that removing the only operation which satisfies a
+shape makes that shape unsatisfiable.
+
+Measured in the most favourable state available — a world whose **inner class already renders
+itself**, so nothing whatever is missing except the operation:
+
+| | examined | survivors | reached |
+|---|---|---|---|
+| with the operation | 239 | 12 | yes |
+| operation withheld | 191 | 0 | **no** |
+
+So the conjunctive table in `DESIGN.md` has a column that is true by construction. The arm
+records that the operation is the vehicle, which is worth recording and is true; it is **not a
+control that could have come out the other way**, and it was presented as one.
+
+**Not repaired, because repairing it is a design change rather than a fix.** The arm would only
+become falsifiable if the set contained a second, independent way to satisfy the nested shape —
+and inventing one so that a control can fail is the wrong reason to extend a language. What is
+corrected here is the claim: the docstring and the document now say what the arm can and cannot
+show.
+
+The left-hand column of that table — B reachable at S1, unreachable at S0 — remains measured,
+and it is the half the milestone rests on.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -470,7 +501,7 @@ produces neither.
 
 ## The honest summary
 
-Eighteen defects, in four distinct families.
+Nineteen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -485,7 +516,7 @@ forgetting a known list but that asserting a property feels like establishing it
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Five of eighteen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of nineteen are regressions of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
