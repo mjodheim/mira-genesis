@@ -178,22 +178,42 @@ def rivals(tmp_path_factory) -> arms.RandomTarget:
     return arms.random_target(make_root)
 
 
-def test_repairing_a_target_the_diagnosis_rejected_does_not_unlock_b(
+def test_this_world_contains_no_rival_that_could_test_the_claim(
     rivals: arms.RandomTarget,
 ) -> None:
-    """If it did, the diagnosis would be doing no work and the world would be doing all of it."""
+    """The honest verdict, and it is not `satisfied`.
 
-    assert rivals.outcome == "satisfied"
+    B becomes reachable only when the INNER class supplies a renderer. Every repair is inserted
+    into its own target's class, and the sole eligible rival targets the outer one. So
+    `b_reached` was False by construction: the arm's pass was decided before it ran, which is a
+    control that cannot fail.
+
+    It used to report `satisfied` and the milestone's documents repeated that. What it can
+    honestly say is that this world contains no rival capable of unlocking B. Making the arm
+    informative needs a second insufficiency on the inner class -- a different world, not a
+    different check.
+    """
+
+    assert rivals.outcome == "unrunnable"
+    assert rivals.inner_classes == ("Reading",)
+    assert rivals.rivals_touching_the_inner_class == 0
     assert not any(rival.b_reached for rival in rivals.rivals)
 
 
-def test_the_arm_runs_every_eligible_rival_rather_than_drawing_one(
+def test_the_controls_own_target_is_not_counted_as_a_rival(
     rivals: arms.RandomTarget,
 ) -> None:
-    """Exhausting the set removes the question of where a seed came from."""
+    """The nested capability IS B. Counting it inflated the census from one to two.
 
+    It could only ever report `unrunnable`, because B is unreachable at S0 -- which is what the
+    control already establishes. An arm padded with a re-run of the control looks like it
+    exhausted a set of two.
+    """
+
+    assert rivals.eligible_considered == 1
+    assert len(rivals.rivals) == 1
+    assert all(chain.NESTED not in rival.target for rival in rivals.rivals)
     assert rivals.to_dict()["every_eligible_rival_was_run"] is True
-    assert len(rivals.rivals) >= 2
 
 
 def test_no_rival_is_a_target_the_diagnosis_selected(rivals: arms.RandomTarget) -> None:
@@ -295,3 +315,128 @@ def test_a_sweep_that_never_closed_is_unrunnable_not_satisfied() -> None:
         rungs=[arms.Rung(1, 5, 0, False), arms.Rung(2, 9, 0, False)],
     )
     assert arm.outcome == "unrunnable"
+
+
+# ── the tie must not decide, in any order ─────────────────────────────
+
+
+def test_the_domain_survives_permuting_every_tie(tmp_path, monkeypatch) -> None:
+    """Amendment A4's premise, taken seriously: tied members are indistinguishable.
+
+    If they are indistinguishable by the measure, then the order they arrive in is not
+    information, and permuting it must change nothing. It did. Two of the four supported
+    arrangements flipped to `no` under reversal -- A4's defect a third time, relocated into the S0
+    loop, in a milestone whose two documents both declared it settled.
+
+    What made it invisible is worth keeping: under reversal the mechanism WORKED. The nested
+    repair was reached, in the first round, after its enabler. The record only read the second
+    round, so a successful run reported nothing.
+    """
+
+    from metamorphosis.m094_diagnosis import Diagnosis
+
+    original = Diagnosis.tied_selection
+
+    def sweep(name: str) -> arms.Arrangement:
+        base = tmp_path / name
+        base.mkdir(parents=True, exist_ok=True)
+
+        def make_root(leaf: str) -> Path:
+            root = base / leaf
+            root.mkdir(parents=True, exist_ok=True)
+            return root
+
+        return arms.run(make_root)
+
+    forward = sweep("forward")
+    monkeypatch.setattr(
+        Diagnosis, "tied_selection", lambda self: list(reversed(original(self)))
+    )
+    reversed_ = sweep("reversed")
+
+    assert forward.outcome == "satisfied"
+    assert reversed_.outcome == "satisfied", (
+        "the domain depends on the order tied capabilities arrive in: "
+        f"{[p.to_dict() for p in reversed_.disagreements]}"
+    )
+    assert [(p.inner_call_sites, p.outer_call_sites, p.demonstrated) for p in forward.points] == [
+        (p.inner_call_sites, p.outer_call_sites, p.demonstrated) for p in reversed_.points
+    ]
+
+
+# ── the arms must notice a dead mechanism ─────────────────────────────
+
+
+def test_a_refutation_outranks_an_instrument_error(tmp_path) -> None:
+    """One broken point must not bury a disagreement as `unrunnable`.
+
+    Error was tested before refutation, so a three-point refutation plus one exception reported
+    `unrunnable` -- amendment A1 used as a silencer rather than as a distinction. A1 says an
+    instrument failure is not evidence ABOUT THE MECHANISM; it does not say the points that ran
+    stop counting.
+    """
+
+    broken = _point(2, 1, False)
+    broken.error = "ChainError: boom"
+    arm = arms.Arrangement(points=[broken, _point(3, 2, False)])
+    assert arm.outcome == "refuted"
+
+
+def test_a_rival_that_settles_b_refutes_rather_than_erroring() -> None:
+    """A1 inverted: the strongest possible refutation was filed as an instrument failure.
+
+    `b_reached_afterwards` was recorded as False in exactly the case where a rival had reached B
+    outright -- the opposite of what happened.
+    """
+
+    settled = arms.Rival(target="X/y", repaired=True, b_reached=True,
+                         notes="the rival repair met the nested requirement outright")
+    assert settled.outcome == "refuted"
+    arm = arms.RandomTarget(rivals=[settled], eligible_considered=1,
+                            inner_classes=("Reading",), rivals_touching_the_inner_class=1)
+    assert arm.outcome == "refuted"
+
+
+def test_the_budget_arm_shows_its_searcher_alive_before_reading_an_empty_sweep(
+    budget: arms.MoreBudget,
+) -> None:
+    """An empty sweep is what a dead searcher produces, and what an unreachable target produces.
+
+    Without a rung that must come back positive, the arm cannot tell them apart -- and reported
+    `satisfied` under three independent deaths of the mechanism.
+    """
+
+    assert budget.nested_offered, "the operation the sweep blames was never offered"
+    assert any(rung.reached for rung in budget.liveness), (
+        "no bound reached B at S1, where it is reachable: the searcher is dead"
+    )
+    assert budget.outcome == "satisfied"
+
+
+def test_a_dead_searcher_makes_the_budget_arm_unrunnable_not_satisfied(monkeypatch, tmp_path) -> None:
+    """The three kills, each of which used to read as a pass."""
+
+    from metamorphosis import m094_execution as execution
+    from metamorphosis import m095_reach as reach
+
+    def sweep(name: str) -> arms.MoreBudget:
+        base = tmp_path / name
+        base.mkdir(parents=True, exist_ok=True)
+
+        def make_root(leaf: str) -> Path:
+            root = base / leaf
+            root.mkdir(parents=True, exist_ok=True)
+            return root
+
+        return arms.more_budget(make_root)
+
+    monkeypatch.setattr(reach.IncludeRenderedField, "apply", lambda self, draft: None)
+    assert sweep("no-apply").outcome == "unrunnable"
+    monkeypatch.undo()
+
+    monkeypatch.setattr(reach, "operations_for_nested", lambda nested, classes: ())
+    assert sweep("not-offered").outcome == "unrunnable"
+    monkeypatch.undo()
+
+    monkeypatch.setattr(execution, "constructible_cases", lambda *a, **k: [])
+    assert sweep("no-cases").outcome == "unrunnable"
