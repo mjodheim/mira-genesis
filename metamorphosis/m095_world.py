@@ -16,6 +16,7 @@ is the honest alternative.
 
 from __future__ import annotations
 
+import ast
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -119,21 +120,47 @@ class WorldFacts:
 
     inner_call_sites: int
     outer_call_sites: int
-    inner_class: str = "Reading"
-    outer_class: str = "Sample"
-    nested_field: str = "reading"
+    inner_class: str = ""
+    outer_class: str = ""
+    nested_field: str = ""
     nothing_renders_itself_at_s0: bool = True
 
     @classmethod
     def of(cls, root: Path) -> WorldFacts:
-        """Count what is on disk, so the record cannot disagree with the world."""
+        """Read what is on disk, so the record cannot disagree with the world."""
 
+        tree = ast.parse((root / COMPONENT).read_text(encoding="utf-8"))
+        classes = [node for node in tree.body if isinstance(node, ast.ClassDef)]
+        # The outer class is the one with a field annotated as another class here; the
+        # inner class is what that annotation names. Read rather than defaulted, so a
+        # world built differently cannot be recorded as this one.
+        names = {node.name for node in classes}
+        outer, inner, nested_field = "", "", ""
+        for node in classes:
+            for item in node.body:
+                if not (isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name)):
+                    continue
+                annotation = ast.unparse(item.annotation).strip()
+                if annotation in names:
+                    outer, inner, nested_field = node.name, annotation, item.target.id
+                    break
+            if outer:
+                break
+
+        # A substring search for "def " would find one in a docstring or a comment. Ask
+        # the tree whether any class defines a public method.
+        renders = any(
+            isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
+            and not item.name.startswith("_")
+            for node in classes for item in node.body
+        )
         return cls(
             inner_call_sites=len(list(root.glob("reading_caller_*.py"))),
             outer_call_sites=len(list(root.glob("sample_caller_*.py"))),
-            nothing_renders_itself_at_s0=(
-                "def " not in (root / COMPONENT).read_text(encoding="utf-8").split("class ", 1)[-1]
-            ),
+            inner_class=inner,
+            outer_class=outer,
+            nested_field=nested_field,
+            nothing_renders_itself_at_s0=not renders,
         )
 
     @property
