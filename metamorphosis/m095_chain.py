@@ -311,6 +311,31 @@ def _nested_is_reachable(root: Path) -> bool:
     return bool(operations) and not reach.unreachable_operations(operations)
 
 
+def nested_inner_classes(root: Path) -> tuple[str, ...]:
+    """The classes the nested requirement needs a renderer on, read from the annotations.
+
+    A control that repairs a rival target can only affect the nested requirement if it writes
+    into one of these. An arm whose rivals all target something else cannot fail, and needs to
+    know that about itself.
+    """
+
+    diagnosis = measure(root)
+    target = next(
+        (item for item in diagnosis.considered if item.capability == NESTED), None
+    )
+    if target is None:
+        return ()
+    tree = ast.parse((root / world.COMPONENT).read_text(encoding="utf-8"))
+    node = _find_class_node(tree, target.target)
+    if node is None:
+        return ()
+    return tuple(sorted({
+        operation.inner_class.name
+        for operation in _nested_operations(root, tree, node, target.detail)
+        if operation.inner_class is not None
+    }))
+
+
 def control_from_s0(root: Path) -> Attempt:
     """Target B directly from S0 and exhaust the operation set.
 
@@ -359,6 +384,10 @@ class Chain:
     #: the first repair that reached. Recorded because a record that merely asserts the
     #: good case cannot be checked, and the fallback is the case worth seeing.
     step_a_identified_by: str = "nothing_reached"
+    #: The tied sets as the measure produced them, kept so the claim that every tied
+    #: capability was attempted can be checked against them rather than assumed.
+    s0_tied: list[str] = field(default_factory=list)
+    s1_tied: list[str] = field(default_factory=list)
 
     @property
     def every_tied_capability_repaired(self) -> bool:
@@ -375,6 +404,12 @@ class Chain:
             and self.step_a is not None and self.step_a.reached
             and self.step_b is not None and self.step_b.reached
             and self.counterfactual is not None and not self.counterfactual.reached
+            # A run that fell back to a positional pick never observed the flip, so it
+            # has not shown that A enabled anything -- it has shown two repairs.
+            and self.step_a_identified_by == "the_nested_operation_became_applicable"
+            # And the second repair must be the nested one. Without this the claim can
+            # be carried by whatever else happened to be tied.
+            and self.step_b.capability == NESTED
         )
 
     @property
@@ -387,7 +422,8 @@ class Chain:
         rule is now the same in both states.
         """
 
-        return bool(self.first_step)
+        attempted = {f"{item.class_name}/{item.capability}" for item in self.first_step}
+        return bool(self.s0_tied) and attempted == set(self.s0_tied)
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -449,7 +485,8 @@ def run(root: Path, counterfactual_root: Path, *,
     # ordering decided nothing and the defect was invisible; where the two classes draw equal
     # demand it decided whether the milestone demonstrated anything at all.
     tied_first = s0.tied_selection()
-    chain.selected_first = ", ".join(f"{i.target}/{i.capability}" for i in tied_first)
+    chain.s0_tied = [f"{i.target}/{i.capability}" for i in tied_first]
+    chain.selected_first = ", ".join(chain.s0_tied)
     reachable_before = _nested_is_reachable(root)
     for target in tied_first:
         label = "A from S0" if len(tied_first) == 1 else f"S0 tied: {target.capability}"
@@ -464,6 +501,16 @@ def run(root: Path, counterfactual_root: Path, *,
             chain.step_a = attempt
             chain.step_a_identified_by = "the_nested_operation_became_applicable"
             reachable_before = True
+        elif (target.capability == NESTED and chain.step_a is not None
+              and chain.step_b is None):
+            # The nested repair can land in this round rather than the next one, when the
+            # tied set happens to present it after its enabler. Both orders are legitimate
+            # outcomes of the same rule -- A4's premise is that tied members are
+            # indistinguishable by the measure -- so the record must understand both. It
+            # used to read only the S1 round, and a run whose mechanism worked reported
+            # nothing because the success landed at a loop index nothing looked at.
+            chain.step_b = attempt
+            attempt.notes["reached_in_the_first_round_after_its_enabler"] = True
     if chain.step_a is None:
         # Nothing flipped the operation. Keep whatever was adopted in the record, so a run that
         # demonstrates no enabling still says what it did rather than looking unfinished.
@@ -474,7 +521,8 @@ def run(root: Path, counterfactual_root: Path, *,
     s1 = measure(root)
     tied = s1.tied_selection()
     if tied:
-        chain.selected_second = ", ".join(f"{i.target}/{i.capability}" for i in tied)
+        chain.s1_tied = [f"{i.target}/{i.capability}" for i in tied]
+        chain.selected_second = ", ".join(chain.s1_tied)
         nested_target = next((i for i in tied if i.capability == NESTED), tied[0])
 
         # Asked at S1, before anything is adopted: with A in place but the nested operation
@@ -494,7 +542,7 @@ def run(root: Path, counterfactual_root: Path, *,
             chain.second_step.append(attempt)
             if attempt.reached:
                 adopt(root, attempt)
-            if target is nested_target:
+            if target is nested_target and chain.step_b is None:
                 chain.step_b = attempt
 
     # And the same question again, in a world where A never happened.

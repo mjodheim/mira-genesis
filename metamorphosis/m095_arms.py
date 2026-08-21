@@ -111,9 +111,16 @@ class Arrangement:
         claim — the distinction amendment A1 was written to preserve.
         """
 
-        if not self.points or any(point.error for point in self.points):
+        if not self.points:
             return "unrunnable"
-        return "satisfied" if all(point.agrees for point in self.points) else "refuted"
+        # A refutation among the points that DID run is still a refutation. Testing the
+        # error first let one broken point bury a three-point disagreement as
+        # "unrunnable" -- A1 used as a silencer rather than as a distinction.
+        if self.disagreements:
+            return "refuted"
+        if any(point.error for point in self.points):
+            return "unrunnable"
+        return "satisfied"
 
     @property
     def disagreements(self) -> list[Point]:
@@ -182,6 +189,7 @@ class Rival:
     b_reached: bool = False
     b_examined: int = 0
     b_blocked_by: tuple[str, ...] = ()
+    notes: str = ""
     error: str = ""
 
     @property
@@ -202,6 +210,7 @@ class Rival:
             "b_reached_afterwards": self.b_reached,
             "b_examined": self.b_examined,
             "b_blocked_by": list(self.b_blocked_by),
+            "notes": self.notes,
             "outcome": self.outcome,
             "error": self.error,
         }
@@ -218,6 +227,9 @@ class RandomTarget:
     """
 
     rivals: list[Rival] = field(default_factory=list)
+    eligible_considered: int = 0
+    inner_classes: tuple[str, ...] = ()
+    rivals_touching_the_inner_class: int = 0
 
     @property
     def outcome(self) -> str:
@@ -225,6 +237,11 @@ class RandomTarget:
             return "unrunnable"
         if any(rival.outcome == "refuted" for rival in self.rivals):
             return "refuted"
+        if not self.rivals_touching_the_inner_class:
+            # No rival can write into the class the nested requirement needs a renderer
+            # on, so `b_reached` was False by construction and `satisfied` was decided
+            # before the arm ran. That is a control that cannot fail, and it says so.
+            return "unrunnable"
         if not any(rival.outcome == "satisfied" for rival in self.rivals):
             # Every rival was unrepairable, so nothing was actually tested.
             return "unrunnable"
@@ -236,8 +253,11 @@ class RandomTarget:
             "question": (
                 "does repairing a target the diagnosis did not select also make B reachable?"
             ),
-            "every_eligible_rival_was_run": True,
-            "eligible_rivals": len(self.rivals),
+            "every_eligible_rival_was_run": len(self.rivals) == self.eligible_considered,
+            "eligible_rivals": self.eligible_considered,
+            "rivals_run": len(self.rivals),
+            "inner_classes_the_requirement_needs": list(self.inner_classes),
+            "rivals_that_could_touch_them": self.rivals_touching_the_inner_class,
             "rivals": [rival.to_dict() for rival in self.rivals],
             "outcome": self.outcome,
         }
@@ -247,9 +267,21 @@ def random_target(make_root: Callable[[str], Path]) -> RandomTarget:
     """Repair each unselected target in its own fresh world, then search for B."""
 
     arm = RandomTarget()
-    probe = chain.measure(world.build(make_root("rival-census")))
+    census_root = world.build(make_root("rival-census"))
+    probe = chain.measure(census_root)
     selected = {(item.target, item.capability) for item in probe.tied_selection()}
-    eligible = [item for item in probe.unmet if (item.target, item.capability) not in selected]
+    # The nested capability is not a rival: it is the control's own target. Counting it
+    # inflated the census to two and guaranteed one `unrunnable` row that tested nothing.
+    eligible = [
+        item for item in probe.unmet
+        if (item.target, item.capability) not in selected and item.capability != chain.NESTED
+    ]
+    arm.eligible_considered = len(eligible)
+    # A rival can only move the nested requirement by writing a renderer into the inner
+    # class. If none of them targets it, `satisfied` is fixed before the arm runs.
+    inner = set(chain.nested_inner_classes(census_root))
+    arm.inner_classes = tuple(sorted(inner))
+    arm.rivals_touching_the_inner_class = sum(1 for item in eligible if item.target in inner)
 
     for index, rival in enumerate(eligible):
         row = Rival(target=f"{rival.target}/{rival.capability}")
@@ -278,7 +310,11 @@ def random_target(make_root: Callable[[str], Path]) -> RandomTarget:
                 None,
             )
             if after is None:
-                row.error = "B is no longer unmet after the rival repair"
+                # B settled by a target the diagnosis rejected is the single most
+                # decisive refutation this arm can observe. It was filed as an
+                # instrument error with b_reached recorded as False -- A1 inverted.
+                row.b_reached = True
+                row.notes = "the rival repair met the nested requirement outright"
                 arm.rivals.append(row)
                 continue
             follow = chain.search(root, after, label="B after a rival repair")
@@ -320,6 +356,11 @@ class MoreBudget:
     ceiling: int = 0
     chain_bound: int = 0
     rungs: list[Rung] = field(default_factory=list)
+    #: The same sweep at S1, where B IS reachable. Without it, every way of killing the
+    #: searcher -- a dead operation, an unoffered operation, an execution probe that can
+    #: construct no case -- produces exactly the empty result the arm reads as success.
+    liveness: list[Rung] = field(default_factory=list)
+    nested_offered: tuple[str, ...] = ()
     error: str = ""
 
     @property
@@ -338,6 +379,15 @@ class MoreBudget:
             return "unrunnable"
         if any(rung.reached for rung in self.rungs):
             return "refuted"
+        if not self.nested_offered:
+            # The operation whose absence the sweep is attributing the failure to was
+            # never in the set. Nothing was tested.
+            return "unrunnable"
+        if not any(rung.reached for rung in self.liveness):
+            # The searcher found nothing at S1 either, where B is reachable. A dead
+            # searcher produces the same empty sweep as a genuinely unreachable target,
+            # and without this the arm cannot tell them apart.
+            return "unrunnable"
         saturation = self.saturates_at
         if saturation is None or saturation >= self.ceiling:
             # The sweep never closed, so "unreachable" might still mean "not searched far enough".
@@ -355,7 +405,10 @@ class MoreBudget:
             ),
             "chain_bound": self.chain_bound,
             "saturates_at_bound": self.saturates_at,
+            "nested_operations_offered": list(self.nested_offered),
             "rungs": [rung.to_dict() for rung in self.rungs],
+            "liveness_rungs_at_s1": [rung.to_dict() for rung in self.liveness],
+            "the_searcher_was_shown_alive": any(r.reached for r in self.liveness),
             "outcome": self.outcome,
             "error": self.error,
         }
@@ -377,6 +430,7 @@ def more_budget(make_root: Callable[[str], Path]) -> MoreBudget:
         full = chain.search(root, target, label="B from S0, chain bound")
         arm.ceiling = full.operations_offered
         arm.chain_bound = full.bound
+        arm.nested_offered = full.nested_offered
         if arm.ceiling < 1:
             arm.error = "the search was offered no operations"
             return arm
@@ -386,6 +440,25 @@ def more_budget(make_root: Callable[[str], Path]) -> MoreBudget:
                                    max_length=bound)
             arm.rungs.append(Rung(bound=bound, examined=attempt.examined,
                                   survivors=attempt.survivors, reached=attempt.reached))
+
+        # The positive control. Reach S1 by the ordinary route, then sweep the same way.
+        live = world.build(make_root("more-budget-liveness"))
+        for enabler in chain.measure(live).tied_selection():
+            found = chain.search(live, enabler, label=f"enabler {enabler.capability}")
+            if found.reached:
+                chain.adopt(live, found)
+        after = next(
+            (item for item in chain.measure(live).unmet if item.capability == chain.NESTED),
+            None,
+        )
+        if after is not None:
+            for bound in range(1, arm.ceiling + 1):
+                probe = chain.search(live, after, label=f"B at S1, bound {bound}",
+                                     max_length=bound)
+                arm.liveness.append(Rung(bound=bound, examined=probe.examined,
+                                         survivors=probe.survivors, reached=probe.reached))
+                if probe.reached:
+                    break
     except Exception as error:  # noqa: BLE001 - instrument failure, not a refutation
         arm.error = f"{type(error).__name__}: {error}"
     return arm

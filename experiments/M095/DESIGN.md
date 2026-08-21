@@ -120,7 +120,9 @@ milestone.
    case verified by construction before the pool is frozen.
 3. **Arms**: the withheld-operation arm is part of the chain, and the random-target,
    more-budget and world-arrangement arms are built in `metamorphosis/m095_arms.py` — see
-   "The domain of the claim" and the arm table below. All four pass.
+   "The domain of the claim" and the arm table below. Three report `satisfied`; the
+   random-target arm reports `unrunnable`, because this world contains no rival that could
+   test it.
 4. **A decisive checker** that recomputes rather than reads, in the shape
    `scripts/check_m094_result.py` now has.
 
@@ -195,13 +197,25 @@ outcome so an instrument failure cannot be read as a refutation:
 | arm | asks | measured |
 |---|---|---|
 | **world arrangement** | does the recorded domain match the measured one? | `satisfied` — six points, every regime with a minimal and a larger witness |
-| **random target** | does repairing something the diagnosis *rejected* also unlock B? | `satisfied` — the one repairable rival adopts `as_dict` and leaves B blocked at 143 examined |
-| **more budget** | is B unreachable, or only deeper than the bound? | `satisfied` — nothing reached at any bound 1–13; the search closes at 4 |
+| **random target** | does repairing something the diagnosis *rejected* also unlock B? | **`unrunnable`** — see below |
+| **more budget** | is B unreachable, or only deeper than the bound? | `satisfied` — nothing reached at any bound 1–13, the search closes at 4, and the same searcher reaches B at S1 |
 
 None of their numbers is chosen. The arrangement points are the minimal witness of each regime
 plus a larger one; the rival set is exhausted rather than sampled, so no seed is needed; and the
 budget ceiling is the size of the offered operation set, which bounds composition length by
 construction because no operation applies twice.
+
+**The random-target arm reports `unrunnable`, and that is the honest verdict.** B becomes
+reachable only when the *inner* class supplies a renderer, every repair is inserted into its
+own target's class, and the sole eligible rival targets the outer one — so its pass was decided
+before it ran. It said `satisfied` until an adversarial pass killed the mechanism underneath it
+and watched it keep saying so. What this world can support is: it contains no rival capable of
+testing the claim. Making the arm informative needs a second insufficiency on the inner class,
+which is a different world rather than a different check. The arm does have teeth against a
+*mis-selecting* diagnosis: rank the outer class first and it reports `refuted`.
+
+The other two arms each needed a positive control before they could fail. `DESIGN_AUDIT.md`
+defects 10 to 13 carry the arithmetic.
 
 What remains before a freeze: a qualification pool drawn from outside this world with every hidden
 case verified by construction, a checker that recomputes rather than reads, a runner, and a

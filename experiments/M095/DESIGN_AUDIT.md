@@ -2,12 +2,18 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **nine** defects across three passes: eight are
-repaired, and the ninth-found — defect 7 — is a boundary on the claim that cannot be repaired at
-this scale and is therefore disclosed.
+mechanism rather than confirming it. It has found **thirteen** defects across four passes: twelve are
+repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
+therefore disclosed.
+
+The fourth pass was adversarial and ran against the apparatus rather than the mechanism: five
+independent reviewers were asked to break the arms by killing the mechanism underneath them.
+They did. Two of the three arms reported `satisfied` while the thing they measure was dead, and
+amendment A4's defect was found for the **third** time in this milestone, inside the loop
+written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Four of the nine turned out to be regressions of amendments this
+has M095 already forgotten?* Four of the thirteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -238,6 +244,104 @@ The world's asserted boolean is dropped rather than replaced. That the selection
 own is an argument the prose makes and the arms measure; as a `True` in a data record it looked
 like a finding.
 
+## Defect 10 — the tie still decided the domain, in the loop that was written to stop it — **REPAIRED**
+
+Defect 5 moved amendment A4's rule to S0 and the two documents recorded the ordering as no longer
+load-bearing. It was. `tied_first` is computed once and iterated while the tree is rewritten under
+it, and in the equal-demand worlds the tied set **contains B itself**. B survived to become
+`step_b` only because `render_nested_value_object_as_mapping` sorts before
+`render_value_object_as_mapping`, so it was attempted at index 0 — at true S0, where it correctly
+fails — rather than after its enabler had been adopted.
+
+A4's premise is that members of an equal-ranked set are indistinguishable by the measure. So
+permute them. Reversing `tied_selection` and re-running the arrangement arm:
+
+| | outcome | disagreements |
+|---|---|---|
+| as shipped | `satisfied` | none |
+| tied set reversed | **`refuted`** | (1,1) and (2,2) |
+
+Two of the four supported arrangements — the entire `inner==outer` regime, half of what defect 5's
+repair had recovered — were held up by a string comparison. This is A4's defect for the **third**
+time in one milestone, in the loop written to remove it, with both documents declaring it settled.
+
+**What made it invisible is the part worth keeping.** Under the reversal the mechanism *worked*.
+B was reached, in the first round, after its enabler, through A's method. The record only read the
+S1 round, so a run whose mechanism succeeded reported nothing. The failure was not in the search
+but in which loop index the record was willing to look at.
+
+**Repaired.** The nested repair is recognised in whichever round it lands, provided its enabler was
+already identified. Verified order-invariant: `satisfied` with no disagreements in both directions.
+Pinned by `test_the_domain_survives_permuting_every_tie`, which permutes every tie and requires the
+whole sweep to be unchanged — a stronger statement than any single tie assertion, and the one A4
+has now needed three times.
+
+## Defect 11 — two of the three arms could not fail — **REPAIRED, and one is now `unrunnable`**
+
+Both were found by killing the mechanism and watching the arms pass.
+
+**The more-budget arm had no positive rung.** Its verdict was `not any(rung.reached)` plus a
+saturation check, and an empty sweep is exactly what a *dead searcher* produces. Three independent
+kills each left it reporting `satisfied`: the enabling operation never applying, the operation never
+being offered at all, and the execution probe able to construct no case. The third is amendment A1
+running backwards — an unconstructible case read not as a refutation but as a *confirmation*.
+
+**Repaired.** The arm now records the offered nested-operation census and refuses to read an empty
+sweep unless the same searcher reaches B at S1, where it is reachable. All three kills now report
+`unrunnable`. Pinned by `test_a_dead_searcher_makes_the_budget_arm_unrunnable_not_satisfied`.
+
+**The random-target arm's `satisfied` was fixed before it ran.** B becomes reachable only when the
+*inner* class supplies a renderer; every repair is inserted into its own target's class; and both
+eligible rivals targeted the outer one. `b_reached` was False by construction. Worse, one of the two
+"rivals" *was* B — the control's own target — so the census that the module docstring justified as
+"exhausting a set of two" was one rival plus a re-run of the control, and a test asserted
+`len(rivals) >= 2`, passing only because of the miscount.
+
+**Repaired, and the verdict changed.** The nested capability is no longer counted as a rival, and
+the arm reports `unrunnable` when no eligible rival can write into the class the requirement needs.
+In the declared world that is now its verdict: **one eligible rival, targeting `Sample`, while the
+requirement needs a renderer on `Reading`.** The honest statement is that this world contains no
+rival capable of testing the claim. Making the arm informative needs a second insufficiency on the
+inner class — a different world, not a different check.
+
+The arm does have teeth against a *mis-selecting* diagnosis: ranking `Sample` first makes it report
+`refuted`. So it is a control on the selection rule, and its docstring claimed the enabling relation.
+
+## Defect 12 — a refutation was filed as an instrument failure — **REPAIRED**
+
+Two shapes, both A1 inverted. A1 exists so an instrument failure is not read as a refutation; here
+a refutation was read as an instrument failure.
+
+`if after is None: row.error = "B is no longer unmet after the rival repair"`. B settled by a target
+the diagnosis rejected is the single most decisive refutation this arm can observe. It was recorded
+as `unrunnable`, with `b_reached_afterwards: false` — the opposite of what had happened.
+
+And in every arm, `any(point.error)` was tested *before* the disagreement check, so one broken point
+buried a three-point refutation as `unrunnable`.
+
+**Repaired.** B being met is B being reached. A refutation among the points that did run outranks an
+error elsewhere: A1 says an instrument failure is not evidence about the mechanism, not that the
+points which ran stop counting. Pinned by `test_a_rival_that_settles_b_refutes_rather_than_erroring`
+and `test_a_refutation_outranks_an_instrument_error`.
+
+## Defect 13 — two more asserted booleans, and a verdict that accepted a run identifying nothing — **REPAIRED**
+
+Defect 9 removed three hardcoded `True`s. It missed two, and one of them was introduced by the same
+commit: `the_s0_tie_was_not_broken_by_a_name` was `bool(self.first_step)`, and
+`every_eligible_rival_was_run` was the literal `True`. Neither compared anything.
+
+Both now compute. The tie property checks the attempted set against the tied set the measure
+produced, which is why `Chain` now stores `s0_tied` and `s1_tied` rather than only their joined
+strings; the census property compares rivals run against rivals eligible.
+
+Separately, `enabling_demonstrated` accepted a run in which `step_a` was the positional fallback —
+the very pick defect 8 removed — and did not require the second repair to be the nested one, so the
+claim could be carried by whatever else happened to be tied. Both are now required.
+
+**The pattern across defects 9 and 13 is the finding.** Five asserted booleans have been removed in
+two passes, and the pass that removed three wrote two more. Enumerating a record's literals is not
+a fix; the habit that produces them is that asserting a property feels like establishing it.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -259,7 +363,7 @@ produces neither.
 
 ## The honest summary
 
-Nine defects, in three distinct families.
+Thirteen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -267,22 +371,23 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Eight are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+Twelve are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
 finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Four of nine are regressions of amendments
-already bought and recorded. The amendments were written down and were not carried forward into
+was amendment A2. Defect 3 was amendment A1's family. Four of thirteen are regressions of amendments already bought and recorded, and A4 alone
+accounts for three of them — defects 4, 5 and 10, each found after the previous one was
+declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
 the next milestone should assume it will forget them too.
 
 **What defect 7 changes about the milestone.** The central result was measured in one arrangement
 of the authored world and read as a property of the mechanism. It is a property of the mechanism
 *and* of the arrangement. In two of six arrangements the enabling relation does not hold at all,
-and no amount of repair to this selection rule recovers them, because the enabling repair is
+and no repair that keeps the greedy top-demand rule recovers them, because the enabling repair is
 outranked by the repair it enables and a greedy rule cannot reach downward. The claim now carries
 its domain, and the boundary is pinned by a test asserting a negative.
 
