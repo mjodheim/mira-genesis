@@ -2,7 +2,7 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **fourteen** defects across four passes: thirteen are
+mechanism rather than confirming it. It has found **fifteen** defects across four passes: fourteen are
 repaired, and defect 7 is a boundary on the claim that cannot be repaired at this scale and is
 therefore disclosed.
 
@@ -13,7 +13,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Four of the fourteen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the fifteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -362,6 +362,26 @@ demonstrated no enabling still published `a_is_necessary: true`. Same for
 `the_operation_is_the_vehicle_not_the_cause`. Both are claims about an enabling relation and now
 say `null` when none was shown.
 
+## Defect 15 — a probe that never ran was recorded as candidates that ran and failed — **REPAIRED**
+
+`attempt.executed` was set from the survivor count whatever happened. When
+`constructible_cases` returned nothing — the instrument unable to build a single case — the
+search recorded *N candidates executed, 0 confirmed* and stopped with
+`"no survivor reproduced the requirement when executed"`.
+
+Nothing had been executed. The record described a repair that had been tested and failed, where
+in fact the instrument could not test it. **This is amendment A1 for the fifth time in this
+milestone** — an instrument failure wearing a refutation's clothes, in the field whose entire
+purpose is to show that acceptance ran rather than read.
+
+**Repaired.** `executed` counts the window actually handed to the probe, so a probe that ran
+nothing reports zero, and the stop reason distinguishes "nothing agreed" from "nothing was
+tested". Pinned by `test_a_probe_that_never_ran_is_not_recorded_as_candidates_that_failed`.
+
+A second import-capture was fixed alongside it: `m095_arms.DECLARED` was a module-level tuple,
+frozen at import, so the sweep would have ignored any change to the world constants — the same
+inertness `build()`'s parameters were repaired for under defect 6.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -383,7 +403,7 @@ produces neither.
 
 ## The honest summary
 
-Fourteen defects, in four distinct families.
+Fifteen defects, in four distinct families.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -391,14 +411,14 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Thirteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
+Fourteen are repaired. Defect 7 is not one that can be repaired at this scale, and that is the
 finding this audit exists for. Defect 9 is the one worth re-reading: two of its three literals
 were written *by the commit that repaired defect 8*, which says the failure mode is not
 forgetting a known list but that asserting a property feels like establishing it.
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Four of fourteen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of fifteen are regressions of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
