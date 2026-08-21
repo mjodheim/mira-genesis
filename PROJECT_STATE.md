@@ -1090,8 +1090,8 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol has found eight defects across two passes**
-  (`experiments/M095/DESIGN_AUDIT.md`). Seven are repaired; the eighth is a boundary on the claim
+  **A design audit run before any protocol has found thirteen defects across four passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Twelve are repaired; defect 7 is a boundary on the claim
   and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
   M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
   not record what the call sites wrote, so the probe refused every correct candidate. Three were in
@@ -1113,14 +1113,19 @@ question remains open but is not a missing completion gate.
   directions, including a test asserting the negative so the boundary cannot quietly move.
   Escaping it means searching for an *enabler* rather than for the greatest unmet demand, which is
   a different question and close to the one M086-C's failure already posed.
-- **Three M095 arms are built and pass** (`metamorphosis/m095_arms.py`), each reporting M094's
-  three-valued `satisfied`/`refuted`/`unrunnable` so an instrument failure cannot read as a
-  refutation. The world-arrangement arm measures the domain the document states, and can fail in
-  both directions. The random-target arm exhausts every rival the diagnosis rejected rather than
-  drawing one — B itself is unrepairable at S0 and reports `unrunnable`, and the other rival adopts
-  `as_dict` and leaves B blocked at 143 compositions. The more-budget arm sweeps every bound to a
-  ceiling derived from the offered operation set, since no operation applies twice; nothing is
-  reached and the search closes at length 4.
+- **Three M095 arms are built** (`metamorphosis/m095_arms.py`), each reporting M094's three-valued
+  `satisfied`/`refuted`/`unrunnable`. A fourth, adversarial audit pass — five independent
+  reviewers asked to break the arms by killing the mechanism underneath them — found that **two
+  of the three reported `satisfied` while the thing they measure was dead**, and that amendment
+  A4's defect had survived a third time inside the loop written to remove it: reversing the tied
+  set, which A4's own premise says is legitimate, flipped the entire `inner==outer` regime and
+  refuted the domain. All are repaired. The arrangement arm is now order-invariant under
+  permutation of every tie; the more-budget arm requires the same searcher to reach B at S1
+  before it will read an empty sweep at S0, so a dead operation, an unoffered operation and an
+  execution probe that constructs nothing each report `unrunnable`. **The random-target arm now
+  reports `unrunnable` in the declared world**, which is the honest verdict: B needs a renderer
+  on the inner class, every repair lands in its own target's class, and the sole eligible rival
+  targets the outer one — its pass was decided before it ran.
   **Four of the eight audit defects were regressions of amendments this project had already bought
   and written down**, which says the amendment register is doing less work than it appears to.
   What remains before a freeze: a qualification pool drawn from outside this world with every
