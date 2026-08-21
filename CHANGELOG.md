@@ -58,7 +58,7 @@
   population already lost. All three repaired, with `--record` now refusing to drop a recorded
   citation.
 - **An adversarial pass found that two of M095's three arms reported `satisfied` while the
-  mechanism they measure was dead.** Five independent reviewers were asked to break the arms
+  mechanism they measure was dead.** Five independent machine review passes were asked to break the arms
   rather than confirm them. `more_budget` derived its verdict from an empty sweep, which is
   exactly what a dead searcher produces — three separate kills each left it passing, one of them
   amendment A1 running backwards, with an unconstructible case read as a confirmation.

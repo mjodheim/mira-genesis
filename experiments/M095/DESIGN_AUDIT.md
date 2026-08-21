@@ -6,9 +6,12 @@ mechanism rather than confirming it. It has found **nineteen** defects across fo
 repaired. Two are not: defect 7 is a boundary on the claim, and defect 19 is a control that
 cannot fail. Both are disclosed rather than quietly carried.
 
-The fourth pass was adversarial and ran against the apparatus rather than the mechanism: five
-independent reviewers were asked to break the arms by killing the mechanism underneath them.
-They did. Two of the three arms reported `satisfied` while the thing they measure was dead, and
+The fourth pass was adversarial and ran against the apparatus rather than the mechanism. Five
+independent review passes, none of them shown the others' findings, were each asked to break
+the arms by killing the mechanism underneath them — machine review, under the AI-assisted
+development provenance this project records in
+`docs/AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`, not independent human evaluation and not
+evidence of the kind M085's external-maintainer requirement is about. They did. Two of the three arms reported `satisfied` while the thing they measure was dead, and
 amendment A4's defect was found for the **third** time in this milestone, inside the loop
 written to remove it.
 
