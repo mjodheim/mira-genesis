@@ -355,6 +355,10 @@ class Chain:
     selected_second: str = ""
     #: What was actually on disk, counted rather than assumed.
     facts: dict[str, object] = field(default_factory=dict)
+    #: How `step_a` was identified — by the operation flipping, or by falling back to
+    #: the first repair that reached. Recorded because a record that merely asserts the
+    #: good case cannot be checked, and the fallback is the case worth seeing.
+    step_a_identified_by: str = "nothing_reached"
 
     @property
     def every_tied_capability_repaired(self) -> bool:
@@ -411,8 +415,8 @@ class Chain:
             "second_step_repairs": [item.to_dict() for item in self.second_step],
             "every_tied_capability_was_repaired": self.every_tied_capability_repaired,
             "the_s0_tie_was_not_broken_by_a_name": self.s0_tie_was_not_broken_by_name,
-            "the_enabling_repair_was_identified_by_measuring_the_flip": True,
-            "second_target_was_not_supplied": True,
+            "second_target_came_from": self.selected_second,
+            "step_a_identified_by": self.step_a_identified_by,
             "enabling_demonstrated": self.enabling_demonstrated,
         }
 
@@ -458,11 +462,14 @@ def run(root: Path, counterfactual_root: Path, *,
         # apply — read from the state, so the chain does not assume the order it is testing.
         if chain.step_a is None and not reachable_before and _nested_is_reachable(root):
             chain.step_a = attempt
+            chain.step_a_identified_by = "the_nested_operation_became_applicable"
             reachable_before = True
     if chain.step_a is None:
         # Nothing flipped the operation. Keep whatever was adopted in the record, so a run that
         # demonstrates no enabling still says what it did rather than looking unfinished.
         chain.step_a = next((item for item in chain.first_step if item.reached), None)
+        if chain.step_a is not None:
+            chain.step_a_identified_by = "fallback_first_repair_that_reached"
 
     s1 = measure(root)
     tied = s1.tied_selection()

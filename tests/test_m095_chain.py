@@ -176,7 +176,11 @@ def test_the_enabling_relation_is_demonstrated(executed: Chain) -> None:
 
 def test_the_record_states_what_was_and_was_not_supplied(executed: Chain) -> None:
     record = executed.to_dict()
-    assert record["second_target_was_not_supplied"] is True
+    # Not a hardcoded True: the second target is whatever the diagnosis named at S1, and
+    # a record that merely asserted "it was not supplied" could not be checked.
+    assert NESTED in record["second_target_came_from"]
+    assert record["second_target_came_from"] == executed.selected_second
+    assert record["step_a_identified_by"] == "the_nested_operation_became_applicable"
     assert record["world"]["authored"] is True, "the world is authored and must say so"
     assert record["enabling_demonstrated"] is True
 
@@ -472,3 +476,23 @@ def test_the_enabling_relation_fails_where_the_enabler_is_outranked(tmp_path: Pa
         "recorded domain is now wrong"
     )
     assert built.step_b is None or not built.step_b.reached
+
+
+def test_the_record_distinguishes_a_measured_a_from_a_fallback(tmp_path: Path) -> None:
+    """`step_a_identified_by` must take both its values, or it is a constant dressed as a fact.
+
+    A record field that is always the good case cannot be checked and cannot fail. Where the
+    enabling repair is outranked, a repair is still adopted at S0 and the nested operation does
+    not become applicable -- so the chain falls back, and the record says which happened rather
+    than asserting the flattering one.
+    """
+
+    measured = _chain_for(tmp_path, "measured", 3, 2)
+    fallback = _chain_for(tmp_path, "fallback", 1, 3)
+
+    assert measured.step_a_identified_by == "the_nested_operation_became_applicable"
+    assert fallback.step_a_identified_by == "fallback_first_repair_that_reached"
+    assert fallback.step_a is not None and fallback.step_a.reached, (
+        "the fallback must still have adopted something, or it is testing the empty case"
+    )
+    assert not fallback.enabling_demonstrated
