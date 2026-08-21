@@ -28,6 +28,29 @@
 - Deleted the branches whose work `main` already carries, after establishing per branch — by
   patch-id, blob identity and full tree comparison — that nothing on them was absent from `main`.
 
+- **M095's enabling result held in two of six worlds, and said so nowhere.** `DESIGN.md` disclosed
+  the world's one arrangement — three inner call sites against two outer — and separately that the
+  diagnosis's selections are not authored. Both true; neither answers whether the result *depends*
+  on the arrangement. Sweeping every way the two demands can compare showed it does. A second
+  design-audit pass records four further defects (5–8): amendment A4's tie rule was applied at S1
+  and not at S0, where `run` took the head of a name-sorted list; `WorldFacts` reported the module
+  constants rather than the world on disk, so every point of the sweep would have been recorded as
+  the declared world; `A` was defined by position rather than as the repair after which the nested
+  operation can apply. Repairing the S0 rule recovers the equal-demand worlds — four of six. The
+  remaining two are a boundary, not a bug: where the outer class has more call sites the enabling
+  repair is outranked by the repair it enables, and a greedy rule cannot reach downward. The claim
+  now carries that domain and is pinned in both directions. Four of the eight audit defects were
+  regressions of amendments already bought and written down.
+- **Three M095 arms are built** in `metamorphosis/m095_arms.py`, each reporting M094's
+  three-valued outcome. World-arrangement: `satisfied` over six derived points, and able to fail in
+  both directions — a world in the excluded regime that *starts* working refutes it too. Random
+  target: every rival exhausted rather than one drawn, so no seed is needed; `satisfied`. More
+  budget: swept to a ceiling equal to the offered operation set, exhaustive by construction because
+  no operation applies twice; nothing reached at any bound and the search closes at 4.
+- Fixed a gap in `check_repository_integrity.py --orphans`: `from package import module` recorded
+  only the package, so any module imported by the idiom this codebase mostly uses looked
+  unreachable from every entry point.
+
 - **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
   whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
   the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds
