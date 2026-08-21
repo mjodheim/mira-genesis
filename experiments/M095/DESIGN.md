@@ -22,7 +22,7 @@ in between but the adoption.
 S0 --(A, chosen by the diagnosis)--> S1 --(B, chosen by the diagnosis)--> S2
 
 control:         from S0, target B directly and exhaust the operation set   -> nothing
-counterfactual:  rebuild S0, target B again, same set, same bound           -> nothing
+counterfactual:  every S0 repair except A, target B again, same set, bound  -> nothing
 ```
 
 ## What was measured
@@ -149,6 +149,17 @@ So neither suffices alone:
 
 **A is necessary; the operation is the vehicle.** That is a smaller and more accurate statement
 than "A enabled B", and it is the one the evidence supports.
+
+> **The right-hand column is true by construction, not by measurement.**
+> `IncludeRenderedField` is the only operation in the set that can satisfy
+> `RenderNestedValueObject`, so withholding it makes the shape unsatisfiable whatever the
+> state. Measured in the most favourable case available — a world whose inner class already
+> renders itself, so nothing is missing but the operation — the withheld search still reaches
+> nothing: 191 examined against 239 with it present.
+>
+> The withheld arm therefore records that the operation is the vehicle, which is true, but it
+> is **not a control that could have come out the other way**. The left-hand column is the
+> measured half of the table. `DESIGN_AUDIT.md` defect 19.
 
 ## The domain of the claim
 
