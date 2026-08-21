@@ -56,9 +56,16 @@ B calls the method A created. The dependency is in the code, not only in the tim
 what the chain later found. It exhausts the same operation set under the same bound and reports
 *why* it failed: `include=reading<-render(reading)` is offered and cannot apply.
 
-**The counterfactual rebuilds S0 from scratch** and asks again. It examines exactly as many
-compositions as the control did — 191, the same number — and finds nothing. So B was not "always
-reachable and reached later". A is what changed it.
+**The counterfactual removes A and keeps everything else.** It replays the S0 round into a
+separate world, skipping only the repair that made the nested operation applicable, and then
+asks again. In the declared world A is the sole tied repair, so nothing is replayed and it
+examines exactly as many compositions as the control did — 191. Where several capabilities
+tie at S0 the distinction bites: the other repair is kept, only A is dropped, and B is still
+unreachable at 143 examined.
+
+It used to leave that world untouched, which made it byte-identical to the state the control
+had already searched — the control run a second time, presented as a fourth independent
+pillar. `DESIGN_AUDIT.md` defect 16.
 
 **The search space grows, 191 → 239.** At S0 the nested operation prunes every branch it touches,
 so those compositions are never grown. At S1 it applies and they are. The reach change has a
