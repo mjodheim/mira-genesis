@@ -196,6 +196,17 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "1b862ab9afaec13cf16c7fcc6da7c297956424d4": {
+      "subject": "science(m098): freeze hard process persistence",
+      "preserved_by": "experiment/m098-process-persistence-freeze",
+      "cited_in": [
+        "DECISIONS.md",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M098/POST_VERDICT_ANALYSIS.md",
+        "experiments/M098/RESULT.json"
+      ]
+    },
     "1c4e7b59c9a846d1b16d09ae47ef1c5478450832": {
       "subject": "fix(m033): audit symbolic structural seed boundary",
       "preserved_by": "main",

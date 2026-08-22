@@ -1128,3 +1128,31 @@ Python classes, fields, keys, arities and numeric types.
 generic AST interpreter and seven-instruction substrate remain authored. No hard process-death
 persistence, arbitrary operation invention, unrestricted code generation, generality gate,
 recursive self-improvement, AGI or independent human evaluation.
+
+## H43 — An acquired repair operation persists through complete process death
+
+The symbolic operation acquired by M097 can be persisted as canonical lineage state, survive the
+complete death of its producer process, and be reconstructed by fresh isolated consumers that have
+no repository, acquisition or validation modules. The reconstructed capability must execute across
+fresh post-restart worlds, disappear when the extension is removed, mutated or corrupted, and
+return after byte-exact rollback. All scientific outcomes must reproduce under a projection that
+removes process and temporary-location ephemera.
+
+**Status:** **REFUTED BY M098 ATTEMPT 1.** M098 froze at local commit `1b862ab9` and ran once with
+zero model, network and remote calls. Eleven of twelve conditions passed. The producer wrote the
+exact M097 state and died; eight isolated fresh consumers imported no project modules; the retained
+extension execution-confirmed 3/3 post-M097 worlds; all three absence/mutation/corruption controls
+failed; and a live fault followed by exact rollback removed then restored the capability.
+
+P12 nevertheless failed clean replay. The frozen stable projection removed singular `pid` fields
+but retained the aggregate `consumer_pids` list. The replay therefore differed only in eight
+ephemeral operating-system identifiers. Removing that overlooked field after verdict makes the two
+scientific records exactly equal, but that diagnostic cannot repair a frozen attempt. Result
+`3cce5155…`; checker `b04513a2…`. See `experiments/M098/POST_VERDICT_ANALYSIS.md`.
+
+**What it establishes despite the negative verdict.** Every direct process-death, isolation,
+necessity, corruption, fault and rollback observation passed. It does not establish the full H43
+claim because reproducible stable evidence was an explicit conjunct.
+
+**What follows.** A successor requires a new protocol and fresh worlds, with all concrete process
+identifiers excluded from the stable projection before freeze. M098 is not retried or relabelled.

@@ -2324,3 +2324,37 @@ M098 must remove process continuity: persist the accepted registry, terminate th
 process, start a fresh consumer that cannot import acquisition, validator or qualification-authoring
 modules, reconstruct only through a frozen generic runtime, solve a fresh post-restart requirement,
 and demonstrate exact fault rollback.
+
+## D067 — M098 is negative at replay; preserve the process evidence and use a successor
+
+### The decision
+
+M098 attempt 1 is accepted as a **negative qualified result** and H43 is refuted. The protocol and
+three-world post-M097 population were frozen at local commit `1b862ab9`. The one armed local run made
+zero model, network and remote calls. The checker computed all twelve conditions: P1 through P11
+passed and P12 failed. Result `3cce5155…`; checker `b04513a2…`.
+
+No M098 mechanism, protocol, population, runner, projection, checker or result will be edited to
+turn this attempt positive.
+
+### What passed
+
+The producer persisted the exact M097 registry and terminated before eight fresh isolated consumer
+invocations. The capsule contained only the bound generic runtime and entry point, no consumer
+imported a project module, and no repository path remained importable. The extension solved all
+three fresh worlds. Empty, semantically mutated and corrupt states failed. A live mutation removed
+the capability; restoring the exact original bytes restored it in another process.
+
+### What failed
+
+The stable replay projection excluded dictionary keys `pid`, `producer_pid` and `search_path`, but
+not the aggregate `consumer_pids` list. Canonical run and replay differed only in those eight
+ephemeral values. A disclosed post-verdict diagnostic showed byte-for-byte semantic equality after
+removing that list, with matching digest `3794831…`. The defect is in the frozen evidence
+normalisation, but fixing it after observing the verdict would still be result-saving repair.
+
+### Next ceiling
+
+M099 must freeze the complete ephemeral-field policy before execution and use an entirely fresh
+population. It must rerun every direct persistence, isolation, necessity, fault and rollback
+condition; M098's positive subconditions are evidence, not a substitute.
