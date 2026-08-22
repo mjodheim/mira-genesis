@@ -1,6 +1,6 @@
-# Reproducibility note — M094–M100 preprint
+# Reproducibility note - M094-M100 preprint
 
-This preprint summarizes evidence already preserved in the public Mira Genesis repository. It does not change any frozen protocol, result, checker, threshold, or qualification population.
+This preprint summarizes evidence already preserved in the public Mira Genesis repository. It does not change any frozen protocol, result, checker, threshold, qualification population, or scientific verdict.
 
 ## Paper anchor
 
@@ -31,19 +31,28 @@ python scripts/check_m100_result.py --strict --require-result --no-write
 
 The scientific verdict is governed by the frozen experiment-local protocol and checker. The generic repository suite is a regression/integrity check, not a replacement for the qualification protocol.
 
+## Important review clarifications
+
+- M100's search is standard bounded enumerative program synthesis; the paper does not claim a novel synthesis algorithm.
+- New M100 definitions may use static stack tokens and calls to prior registered operations, but no host binary operator.
+- B is structurally absent at S0 in that grammar. C's dependence on B is explicitly relative to the frozen length-five bound; the paper does not claim C is impossible from A at arbitrary length.
+- The nine M100 worlds are fresh authored Python-source qualification fixtures, not production repositories or a random sample from software in the wild.
+- The separately implemented checker is project-authored. It is not an independent external replication.
+- Qualification performs zero model/network/remote-execution calls, but the project and manuscript were developed with disclosed generative-AI assistance.
+
 ## Evidence map
 
-- `experiments/M094/` — real-software diagnosis and compositional repair; preserved withdrawn attempt and positive successor.
-- `experiments/M095/` — preserved negative causal-composition qualification.
-- `experiments/M096/` — exact-contract positive successor.
-- `experiments/M097/` — acquired state-owned binary-expression operation.
-- `experiments/M098/` — preserved negative hard-persistence attempt.
-- `experiments/M099/` — positive hard process-death persistence.
-- `experiments/M100/` — repeated cumulative acquisition.
-- `docs/CURRENT_RESEARCH_FRONTIER.md` — reader-facing current interpretation.
-- `PROJECT_STATE.md` / `PROJECT_STATE.yaml` — authoritative project register.
-- `FAILURE_LOG.md` — preserved failure history.
+- `experiments/M094/`: repository diagnosis and compositional repair; preserved withdrawn attempt and positive successor.
+- `experiments/M095/`: preserved negative causal-composition qualification.
+- `experiments/M096/`: exact-contract positive successor.
+- `experiments/M097/`: acquired serialized binary-expression operation.
+- `experiments/M098/`: preserved negative hard-persistence attempt.
+- `experiments/M099/`: positive hard process-death persistence.
+- `experiments/M100/`: repeated bounded cumulative acquisition.
+- `docs/CURRENT_RESEARCH_FRONTIER.md`: reader-facing current interpretation.
+- `PROJECT_STATE.md` / `PROJECT_STATE.yaml`: authoritative project register.
+- `FAILURE_LOG.md`: preserved failure history.
 
 ## Claim boundary
 
-The preprint reports bounded mechanism evidence. It does not claim AGI, consciousness, unrestricted recursive self-improvement, arbitrary self-modification, autonomous production authority, cross-domain transfer, or independent external reproduction.
+The preprint reports bounded mechanism evidence. It does not claim AGI, consciousness, unrestricted recursive self-improvement, arbitrary self-modification, autonomous production authority, cross-domain transfer, broad software-engineering competence, or independent external reproduction.
