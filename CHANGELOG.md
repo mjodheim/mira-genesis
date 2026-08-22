@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- **M095 attempt 1 is a preserved negative qualification.** H40, an eleven-condition protocol and
+  an exhaustive nine-entry structural population were frozen before any qualification chain ran.
+  From clean commit `951c7c2`, with zero model/network calls and no retry, all nine entries ran:
+  0/6 demand-bearing entries execution-confirmed B after A, while 3/3 zero-demand witnesses remained
+  negative. The checker recomputes eight passes and three failures — P3, P5 and P6 — and replays every
+  entry exactly. A was reached in all six positives, but its locally accepted renderer emitted extra
+  keys; B's exact nested mapping rejected every structural survivor. Result `bdd35111…`, checker
+  `bb24a484…`. H40 is refuted, D064 records the negative, and no post-verdict repair is made.
+
 - **Sixteen commits cited by SHA in the registers were reachable from no ref at all.** Among them
   M042's frozen protocol, the M050-M052 development results, the M012/M013e status records and
   M094's own freeze commit `dd79665`. They resolved only because one clone had not yet garbage-
@@ -111,7 +120,8 @@
   only the package, so any module imported by the idiom this codebase mostly uses looked
   unreachable from every entry point.
 
-- **M095's mechanism is built and measured; nothing is frozen and no run is armed.** It asks
+- **Historical pre-freeze M095 state:** the mechanism was built and measured while nothing was
+  frozen or armed. It asks
   whether an adopted repair changes what the lineage can reach. In an authored, disclosed world
   the diagnosis selects `Reading` first and `Sample` second on its own, and the repair it builds
   for `Sample` calls the method it built for `Reading`. From S0 the second repair is

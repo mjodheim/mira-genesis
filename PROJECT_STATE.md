@@ -107,13 +107,14 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   operations, with zero model and network calls; qualification passed 2/2 cross-component and all
   twelve conditions computed true. The eligible set, observations, operation set and composition
   bound remain authored.
-- **M095 is the active frozen-but-unrun frontier and has no scientific verdict.** In its authored world,
+- **M095 is a negative qualified result; H40 is refuted by attempt 1.** In its authored world,
   adopting one repair changes what a later repair is constructibly reachable. The relation is now
   demonstrated in all six demand-bearing arrangements; four find the enabling order from the
   diagnosis ranking alone and two require the failed-search descent to the lower-ranked enabler.
   Two zero-inner-demand arrangements remain deliberately negative because no observable enabler
-  exists. H40, its protocol and an exhaustive nine-entry structural population are frozen locally;
-  no qualification run or verdict exists.
+  exists. The frozen exhaustive population returned 0/6 positive and 3/3 negative witnesses. A is
+  reached, but its renderer emits extra keys and every B survivor is refused by execution. Eight of
+  eleven conditions pass; P3/P5/P6 fail. No retry or post-verdict repair is made.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
@@ -1104,7 +1105,7 @@ question remains open but is not a missing completion gate.
   **Still authored, and the next ceiling**: the eligible component set, the admissible observations,
   the operation set and the composition bound. D063 is unfilled.
 
-- **M095 is FROZEN AND UNRUN.** It asks
+- **M095 ATTEMPT 1 IS NEGATIVE.** It asks
   whether an adopted repair changes what the lineage can *reach*, and the mechanism is built and
   measured in an authored, disclosed world: `S0 →(A) S1 →(B) S2`, with the diagnosis choosing both
   targets. **B is unreachable from S0** — 191 compositions examined, 0 survivors — and reachable
@@ -1176,7 +1177,10 @@ question remains open but is not a missing completion gate.
   doing less work than it appears to. H40, a local-only runner, a recomputing checker and an
   exhaustive nine-entry population are now frozen. The population crosses three structures with
   unaided-ranking, failed-search-descent and zero-visible-enabler arrangements; every S0 passed its
-  construction audit without running the chain. No qualification result exists yet.
+  construction audit without running the chain. The one local run executed all nine entries from
+  clean commit `951c7c2`, with zero model and network calls. It returned 0/6 positive and 3/3
+  negative witnesses; P3, P5 and P6 fail, while the preserved evidence replays exactly. The common
+  cause is an A renderer accepted with extra keys that violates B's exact nested mapping.
   See `experiments/M095/DESIGN.md` and `experiments/M095/OPEN_DECISIONS.md`.
 
 ## Parallel measurement track — M045

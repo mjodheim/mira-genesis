@@ -1,9 +1,11 @@
 # M095 — improvement enabling improvement
 
-**Status: mechanism built and demonstrated. Nothing is frozen, no hypothesis is registered, no
-protocol exists, and no run has been armed.** Freezing a protocol and arming its evaluation are
-the project owner's acts. This document records what exists and what it measures, so the decision
-is made against evidence rather than a proposal.
+**Post-verdict status:** this is the pre-freeze development design. Its original status said that
+nothing was frozen or armed; that became historical on 22 August 2026. H40 was frozen and attempt 1
+returned a negative qualification: 0/6 positive structural entries execution-confirmed B after A,
+3/3 negative witnesses remained negative, and P3/P5/P6 failed. The development measurements below
+remain valid inside their authored world; they are not qualification support. See `RESULT.json` and
+`POST_VERDICT_ANALYSIS.md`.
 
 ## The question
 

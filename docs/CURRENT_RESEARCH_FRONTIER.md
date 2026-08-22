@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 21 August 2026**
+**Reader-facing status snapshot — 22 August 2026**
 
 This document explains where the active research line stands now and what the next milestones are
 trying to establish. It is a navigation and interpretation layer, not a replacement for frozen
@@ -29,8 +29,9 @@ valid result.
 |---|---|---|---|
 | M093 | Engineering rehearsal | Real repository transformation, sandbox validation, adoption, persistence and rollback | Target, diagnosis and patch were substantially authored |
 | M094 | **Positive qualified scientific result** | The lineage measured the limiting real component, selected the tied top targets and assembled an executable repair from composable operations; qualification passed cross-component | Eligible components, observations, operation set and composition bound remain authored |
-| M095 | **Development mechanism under adversarial audit — not frozen, not qualified** | One adopted repair can change what a later repair can reach; a failed search can identify an enabling prerequisite and descend to it even when it is not top-ranked | The world and operation language remain authored; qualification design is unresolved |
-| M096 | Planned successor boundary | Bring endogenous transformation-language extension into the current cumulative real-software line | Must show a needed operation/capability was outside the inherited language and was acquired rather than handed in |
+| M095 | **Negative qualified result — attempt 1; H40 refuted** | Development shows structural reach and failed-search descent, but 0/6 positive structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative | Local subset capability satisfaction does not compose into an exact nested contract |
+| Next | Required successor boundary | Establish contract-safe composition across structural variation under a new frozen protocol | Must prevent or safely project A's extra output keys without an authored target-specific patch |
+| M096 plan | Deferred successor boundary | Bring endogenous transformation-language extension into the current cumulative real-software line | Premature until behaviourally compositional reach is qualified |
 | M097 | Planned successor boundary | Persist an acquired transformation capability across complete process death/restart | Must reconstruct capability from lineage-owned persisted state rather than host code |
 | Later | Not yet demonstrated | Repeat the causal chain across fresh tasks/domains and measure whether acquired improvements improve the ability to find later improvements | Open-endedness, transfer and long-horizon autonomy remain open research problems |
 
@@ -104,10 +105,11 @@ the enabler is initially outranked.
 Two deliberately negative arrangements remain: if the inner class is never rendered directly, it
 presents no diagnosed insufficiency of its own, so there is no visible repair to descend to.
 
-### Why M095 is still development evidence
+### What the qualification found
 
-The current branch has undergone repeated adversarial review. At the latest snapshot, **26 defects
-have been recorded across six passes and 25 repaired**. Several were especially important:
+Before freeze the branch underwent repeated adversarial review: **31 defects were recorded across
+seven passes and 30 repaired**; defect 19 remained a disclosed non-decisive ceiling. Several were
+especially important:
 
 - search survivors were once accepted structurally without execution;
 - hidden cases could be constructed incorrectly;
@@ -125,39 +127,37 @@ have been recorded across six passes and 25 repaired**. Several were especially 
 - the withheld-operation arm is true by construction because no alternative operation can satisfy
   the nested requirement.
 
-The current result is therefore intentionally **not** called a scientific M095 result. There is no
-frozen M095 hypothesis, no frozen protocol, no qualification pool, no armed run and no verdict.
+H40, an eleven-condition protocol and an exhaustive nine-entry population were then frozen locally.
+Attempt 1 ran once from clean commit `951c7c2`, with zero model and network calls. The result is
+**negative**: all three zero-demand witnesses remained negative, but none of the six demand-bearing
+entries execution-confirmed B. The checker recomputed eight passes and three failures: P3, P5 and
+P6. Its P7 replay reproduced every entry exactly.
 
-That boundary should remain visible in every public summary.
+A was reached in all six positive worlds and made the nested operation applicable. The failure came
+later: A's local requirement allowed extra mapping keys, while B's nested value was compared as a
+complete mapping. `Coordinate`, `Vector` and `Marker` all acquired overbroad renderers, so every B
+survivor disagreed with the caller at execution. This is a qualified negative, not a broken or
+unrunnable instrument. No post-verdict repair is made.
 
-## What has to happen before M095 can become a qualified result
+Authoritative material:
 
-The remaining work is no longer “make the demo pass”. It is deciding what claim can honestly be put
-at risk.
+- `experiments/M095/RESULT.json`;
+- `experiments/M095/CHECK_REPORT.json`;
+- `experiments/M095/POST_VERDICT_ANALYSIS.md`;
+- D064 and H40.
 
-At minimum:
+## The next objective: contract-safe composition, then language
 
-1. define a falsifiable H40 hypothesis and D064 decision boundary without reusing the abandoned
-   M092 slots;
-2. decide whether M095 deserves qualification at all, rather than remaining a mechanism
-   demonstration;
-3. if qualified, predeclare a structural qualification pool whose worlds are constructible and
-   whose variation axes are frozen before a run;
-4. ensure every verdict arm can actually fail, or label it as a sensitivity/structural fact rather
-   than a causal control;
-5. build a checker that recomputes evidence instead of trusting recorded flags;
-6. freeze the protocol before qualification data exists;
-7. arm exactly the run the protocol permits and preserve the first materialized outcome.
+M095 keeps the operation set fixed. Its negative result now shows that structural applicability is
+not sufficient: a repair accepted under a partial local contract may not compose inside an exact
+nested contract.
 
-`experiments/M095/OPEN_DECISIONS.md` records the owner-level scientific choices. Some entries may lag
-behind later audit discoveries; the experiment-local design and audit remain the evidence source.
+The immediate successor must distinguish exact output contracts from subset capability
+satisfaction and qualify one of three mechanisms under a new protocol: exact acceptance, minimal
+synthesis, or a demand-derived projection of a broader renderer. It must not repair or rerun M095
+attempt 1.
 
-## The next objective: from reach to language
-
-M095 keeps the operation set fixed. A changes which operations are applicable, but it does not cause
-the lineage to invent a new transformation primitive.
-
-The next important boundary is therefore not “repair one more thing”. It is:
+Only after that prerequisite is earned does the previously planned language boundary become live:
 
 > encounter a transformation requirement that the inherited operation language cannot express,
 > establish that insufficiency rather than merely failing to search deeply enough, acquire an

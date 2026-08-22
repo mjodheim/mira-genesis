@@ -2,8 +2,8 @@
 
 **The owner selected the bounded Option-A qualification on 2026-08-22 and instructed the local work
 to proceed.** The selections are recorded beneath the questions rather than replacing their original
-reasoning. H40, the protocol and population are frozen locally; the one armed run remains a separate
-recorded act.
+reasoning. H40, the protocol and population were frozen locally, and attempt 1 has now run. It is
+negative: eight conditions pass and P3/P5/P6 fail. D064 records the result without repairing it.
 
 Written 2026-08-21 against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md`, revised after the
 fifth pass, and reconciled after the sixth local adversarial pass. The audit now records
@@ -126,8 +126,8 @@ and marked `authored_target_component` as a ceiling arm.
 - **H39** is M094's; **D063** is M094's decision slot and is **unfilled**.
 - **H40** and **D064** are therefore the next free slots for M095.
 
-> **Resolved in part.** H40 is now registered as proposed/unrun. D064 remains reserved and unfilled
-> until a checked result exists; accepting or rejecting the result is still the owner's register act.
+> **Resolved.** H40 is refuted by attempt 1. D064 accepts the checked negative record and forbids a
+> post-verdict repair from being presented as the same experiment.
 
 Registering either is a register act and is not done here.
 

@@ -32,10 +32,11 @@ attribute external-model competence to Mira. See
   language extension. M092 was voluntarily aborted without verdict. M093 is a non-qualifying real
   repository rehearsal. **M094 is the current positive qualified real-software anchor:** autonomous
   measurement selected the limiting component and assembled its repair with zero model/network
-  calls. **M095 is the active development frontier:** an adopted repair changes later constructive
-  reach, and a failed search can descend to an enabling prerequisite; nothing is frozen or qualified
-  yet. The next planned boundaries are real-software endogenous language extension (M096), hard
-  persistence across complete process death/restart (M097), then repeated cumulative cycles.
+  calls. **M095 is a negative qualified result:** its development chain changes structural reach,
+  but all six positive structural qualification worlds fail to execution-confirm B because A's
+  locally accepted renderer is overbroad. The next experiment must establish contract-safe
+  composition before real-software endogenous language extension, hard persistence across complete
+  process death/restart, and repeated cumulative cycles.
   These results remain bounded mechanism evidence and do not imply open-ended recursive
   self-improvement or general intelligence.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
@@ -348,7 +349,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
-| M095 | Test whether one acquired repair changes the constructive reach of a later repair | **Protocol and structural population frozen locally — not run** | H40 and an exhaustive nine-entry population are frozen. Three structures cross unaided-ranking, failed-search-descent and no-visible-enabler arrangements. Thirty-one audit defects found, thirty repaired, one disclosed. No qualification run or verdict yet. |
+| M095 | Test whether one acquired repair changes the constructive reach of a later repair | **Negative qualified result — attempt 1; H40 refuted** | All nine frozen entries ran locally. A is reached in all six positives, but its extra mapping keys make every B survivor fail execution: 0/6 positive, 3/3 negative witnesses remain negative. Eight of eleven conditions pass; P3/P5/P6 fail. No retry or post-verdict repair. |
 | M094 | Let the lineage measure which real component limits it and assemble that repair | **Positive qualified scientific result** | Attempt 2, run commit `43ef9d30`: zero model/network calls; `mira_core/contracts.py` selected by measurement; `Goal` and `Observation` repaired; 12/12 conditions true and 2/2 cross-component qualification. Attempt 1 remains withdrawn over byte-exact rollback evidence. |
 | M093 | Exercise the transformation/adoption path on a real repository component | **Engineering rehearsal — non-qualifying** | Real `MemoryLedger` transformation, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Target, diagnosis and patch remain substantially authored. |
 | M092 | Attempt endogenous substrate extension under a frozen canonical search | **Aborted without verdict** | Search voluntarily stopped before terminal candidate, independent reproduction or qualification. H38 unresolved; D062 unfilled. |
@@ -420,13 +421,20 @@ human-controlled, even after a scientific result passes.
 
 ### Current frontier after M094 / M095
 
-M094 is the current qualified anchor on the real-software self-transformation line. M095 is frozen
-but unrun, and asks the first explicitly cumulative question on that line: does
+M094 remains the qualified anchor on the real-software self-transformation line. M095 asked the
+first explicitly cumulative question on that line: does
 an adopted repair alter what the lineage can construct next? The current mechanism demonstrates the
 enabling relation in six demand-bearing arrangements, with four found by ranking alone and two only
-after failed-search descent to the prerequisite.
+after failed-search descent to the prerequisite. Its structural qualification refuted the stronger
+claim: A's locally accepted mapping was overbroad, so B failed execution in all six positive worlds.
 
-The next ordered boundaries are intentionally stronger rather than larger versions of M095:
+The negative result inserts a prerequisite before the previously ordered boundaries:
+
+- **Next experiment — contract-safe composition:** distinguish exact output contracts from subset
+  capability satisfaction, and qualify a mechanism whose A can be safely embedded by B across the
+  frozen structural families. This must be a new protocol, not a repair of M095 attempt 1.
+
+The later ordered boundaries remain stronger rather than larger versions of M095:
 
 - **M096 — endogenous language extension in the real-software line:** prove the inherited operation
   language is insufficient, acquire an extension without receiving the finished operation, persist
@@ -438,8 +446,8 @@ The next ordered boundaries are intentionally stronger rather than larger versio
   causal pattern survives fresh tasks and eventually materially different domains. Only then does it
   become meaningful to measure whether the ability to improve is itself improving.
 
-M095 must first earn its qualification verdict under the frozen protocol. No later milestone may be
-cited to retroactively strengthen it.
+M095's negative verdict is final for attempt 1. No later milestone may be cited to retroactively
+strengthen or repair it.
 
 ### After M091
 

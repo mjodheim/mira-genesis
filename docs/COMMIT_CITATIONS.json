@@ -65,7 +65,6 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M071/DEVELOPMENT_QUALIFICATION.md"
       ]
@@ -223,7 +222,6 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M074/SCIENTIFIC_RESULT.md",
         "experiments/M074/STATUS.md"
@@ -308,7 +306,6 @@
         "FAILURE_LOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
@@ -343,7 +340,6 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "PROVENANCE.md",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M066/DEVELOPMENT_RESULT.md",
         "experiments/M066/STATUS.md",
@@ -389,7 +385,6 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
@@ -553,6 +548,7 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
+        "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M094/POST_VERDICT_DISCLOSURE.md",
         "experiments/M094/RESULT.json"
@@ -1054,7 +1050,6 @@
         "CHANGELOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "ROADMAP.md",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
@@ -1189,6 +1184,20 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M086/DISQUALIFICATION.md"
+      ]
+    },
+    "951c7c271f07a5bf2c08735c30b8d49f39cf8b73": {
+      "subject": "science(m095): freeze structural qualification protocol",
+      "preserved_by": "branch/codex-m095-qualification-design",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md"
       ]
     },
     "958c52fc4e4f47dfdeacd492bb691dded2ede81d": {
@@ -1343,7 +1352,6 @@
         "FAILURE_LOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M065/PROTOCOL.md",
@@ -1427,7 +1435,6 @@
         "FAILURE_LOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M065/CANONICAL_ARMED.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
@@ -1542,7 +1549,6 @@
         "FAILURE_LOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M069/DEVELOPMENT_RESULT.md",
@@ -1842,7 +1848,6 @@
         "FAILURE_LOG.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M064/DEVELOPMENT_RESULT.md",
         "experiments/M064/PROTOCOL.md",
@@ -1873,7 +1878,6 @@
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M068/DEVELOPMENT_RESULT.md",
@@ -1962,7 +1966,6 @@
       "cited_in": [
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
         "PROJECT_STATE.yaml",
-        "README.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXECUTION_PROTOCOL.json",
         "experiments/M071/EXTERNAL_RESULT.md",

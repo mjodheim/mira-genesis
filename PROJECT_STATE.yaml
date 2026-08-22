@@ -1,11 +1,11 @@
 project: Mira Genesis
 updated_at: 2026-08-22
-status: m094_positive_qualified_m095_development_frontier_not_frozen
+status: m094_positive_qualified_m095_negative_qualified_h40_refuted
 
 active_research_question: >-
-  Can an adopted, lineage-selected repair causally change what later repairs are reachable,
-  including by using a failed search to descend to an enabling prerequisite, before the project
-  attempts endogenous transformation-language extension in the same real-software lineage?
+  Can locally accepted repairs be made contract-safe under structural variation, so that an
+  execution-confirmed repair A can be embedded by B without extra output violating the caller's
+  exact nested contract, before endogenous transformation-language extension is attempted?
 
 preceding_research_question: >-
   M094 asked whether the lineage could measure which real repository component limited it and
@@ -98,21 +98,36 @@ current_real_software_frontier:
     decision_slot: D063
     decision_slot_filled: false
   M095:
-    status: development_mechanism_under_adversarial_audit
-    scientific_verdict_exists: false
-    hypothesis_registered: false
-    protocol_frozen: false
-    qualification_pool_exists: false
-    run_armed: false
-    audit_defects: 19
-    audit_defects_repaired: 18
+    status: negative_qualified_scientific_result_attempt_1
+    scientific_verdict_exists: true
+    hypothesis_registered: true
+    hypothesis: H40
+    hypothesis_status: refuted
+    protocol_frozen: true
+    qualification_pool_exists: true
+    qualification_population_entries: 9
+    run_armed: true
+    run_consumed: true
+    audit_defects: 31
+    audit_defects_repaired: 30
     audit_defects_disclosed_not_repaired: 1
     demand_bearing_arrangements_demonstrated: 6
     arrangements_demonstrated_without_descending: 4
     arrangements_requiring_failed_search_descent: 2
     no_inner_demand_negative_arrangements: 2
     operation_set_changes_between_s0_and_s1: false
-    current_ceiling: authored_world_operation_language_and_unresolved_qualification_design
+    qualification_positive_entries: 6
+    qualification_positive_demonstrated: 0
+    qualification_negative_entries: 3
+    qualification_negative_remained_negative: 3
+    conditions_total: 11
+    conditions_passed: 8
+    conditions_failed: [P3, P5, P6]
+    source_commit: 951c7c271f07a5bf2c08735c30b8d49f39cf8b73
+    result_digest: bdd35111220f256f86c19194428cb3ce60b8a04488c161109a1c92887a401e75
+    checker_digest: bb24a484012d123d0336fb7c1974e58255222b6c91ce0bb22770f42e58d5d42f
+    decision: D064
+    current_ceiling: contract_safe_composition_of_locally_satisfied_capabilities
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -1028,7 +1043,7 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m094_positive_qualified_m095_development_frontier
+  status: m094_positive_qualified_m095_negative_qualified_h40_refuted
   objective: bounded_contract_blind_adaptive_embodiment_and_endogenous_real_software_self_transformation
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
@@ -2589,16 +2604,20 @@ phase_eight:
   M095:
     title: improvement enabling improvement in the real-software lineage
     epistemic_track: endogenous_bounded_lineage
-    status: development_mechanism_under_adversarial_audit_not_frozen_not_qualified
-    hypothesis_registered: false
-    protocol_frozen: false
-    qualification_pool_exists: false
-    run_armed: false
-    scientific_result_exists: false
-    scientific_verdict_exists: false
+    status: negative_qualified_scientific_result_attempt_1
+    hypothesis_registered: true
+    hypothesis: H40
+    hypothesis_status: refuted
+    protocol_frozen: true
+    qualification_pool_exists: true
+    qualification_population_entries: 9
+    run_armed: true
+    run_consumed: true
+    scientific_result_exists: true
+    scientific_verdict_exists: true
     authored_world: true
-    audit_defects_found: 19
-    audit_defects_repaired: 18
+    audit_defects_found: 31
+    audit_defects_repaired: 30
     audit_defects_disclosed_not_repaired: 1
     demand_bearing_arrangements_demonstrated: 6
     demonstrated_without_descending: 4
@@ -2619,16 +2638,21 @@ phase_eight:
     random_target_arm: unrunnable
     withheld_operation_control_falsifiable: false
     withheld_operation_control_status: disclosed_boundary_not_repaired
-    current_remaining_work:
-      - qualification_pool_outside_the_development_world
-      - constructibility_verified_before_freeze
-      - recomputing_checker
-      - scientific_runner
-      - hypothesis_and_falsifiers
-      - frozen_protocol
-      - owner_freeze_and_arming
-      - scientific_qualification_run
-    next_planned_boundary: M096_real_software_endogenous_transformation_language_extension
+    qualification_positive_entries: 6
+    qualification_positive_demonstrated: 0
+    qualification_negative_entries: 3
+    qualification_negative_remained_negative: 3
+    qualification_conditions_passed: 8
+    qualification_conditions_failed: [P3, P5, P6]
+    qualification_replayed_exactly: true
+    failure: locally_accepted_a_renderer_emits_extra_keys_rejected_by_b_exact_nested_contract
+    source_commit: 951c7c271f07a5bf2c08735c30b8d49f39cf8b73
+    result_digest: bdd35111220f256f86c19194428cb3ce60b8a04488c161109a1c92887a401e75
+    checker_digest: bb24a484012d123d0336fb7c1974e58255222b6c91ce0bb22770f42e58d5d42f
+    decision: D064
+    post_verdict_repair_permitted: false
+    next_required_boundary: contract_safe_composition_under_a_new_protocol
+    next_planned_boundary_after_that: real_software_endogenous_transformation_language_extension
     generality_gate_advanced: false
     agi_evidence: false
 

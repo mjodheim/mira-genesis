@@ -1045,10 +1045,18 @@ enabling insufficiency remain negative. The stronger result — demand ranking f
 scored separately from cases where the lineage must descend to the obstacle named by its own failed
 search.
 
-**Status:** **FROZEN / UNRUN.** M095's development mechanism and qualification apparatus survived
-seven adversarial passes. The protocol and exhaustive nine-entry structural population were frozen
-locally on 22 August 2026 before any qualification entry was run through the chain. H40 is neither
-supported nor refuted; the first armed run must start from the clean freeze commit.
+**Status:** **REFUTED BY ATTEMPT 1.** The protocol and exhaustive nine-entry structural population
+were frozen locally on 22 August 2026, then run once from clean source commit `951c7c2`, with zero
+model and network calls. The checker recomputed all eleven conditions: eight passed and P3, P5 and
+P6 failed. None of the six demand-bearing structural entries execution-confirmed B after A; all
+three zero-inner-demand negatives remained negative. Result `bdd35111…`, checker `bb24a484…`.
+
+The qualification exposed a compositional-contract failure rather than a reachability or budget
+failure. A was reached in all six positive worlds and made the nested operation applicable, but its
+renderer was allowed to emit extra keys. That satisfies A's local subset requirement; when B embeds
+the complete mapping, the extras disagree with the caller's exact nested mapping, so every B
+survivor is refused by execution. The evidence replays exactly. See
+`experiments/M095/POST_VERDICT_ANALYSIS.md`.
 
 **Why it is asked.** M094 can locate and synthesise a repair. H40 asks the next causal question:
 whether adopting one repair changes what the same bounded mechanism can construct next, rather than

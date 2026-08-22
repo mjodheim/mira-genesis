@@ -2224,3 +2224,39 @@ semantics are serialized lineage state and are the sole authority a fixed generi
 consults. Not AGI, not open-ended evolution, not arbitrary self-modification, not general language
 invention, not a self-hosting interpreter, not support for H35, no gate, no independent
 reproduction, no production authority.
+
+## D064 — M095 is negative; local capability satisfaction did not compose
+
+### The decision
+
+M095 attempt 1 is accepted as a **negative qualified result** and H40 is refuted. The frozen run
+started from clean commit `951c7c2`, executed all nine structural-population entries locally, made
+zero model and network calls, and used no retry. The checker recomputed all eleven conditions: eight
+passed; P3, P5 and P6 failed. Result `bdd35111…`, checker `bb24a484…`.
+
+No post-verdict change to the M095 mechanism, protocol, population, runner or checker may be used to
+turn this attempt positive. D063 remains unfilled and M094 is untouched.
+
+### What failed
+
+A was reached in all six demand-bearing worlds and made the nested operation structurally
+applicable. B then produced structural survivors but zero execution confirmations. The adopted A
+renderers emitted keys beyond the local requirement: local capability satisfaction checks the
+required bindings and permits extras, while B's nested value is compared as a complete mapping.
+Every structural family exposed the mismatch in both ranking regimes. All three zero-demand
+negative witnesses remained negative, and the full record replayed exactly.
+
+### The next causal ceiling
+
+**Contract-safe composition.** Before the real-software line attempts endogenous operation
+acquisition, a new experiment must distinguish exact output contracts from subset capability
+satisfaction and show that a repair accepted as A can be embedded by B without changing the
+caller's behaviour. Whether that is achieved by exact acceptance, minimal synthesis or a derived
+projection is a successor question; choosing after this result requires a new frozen protocol.
+
+### Claim boundary
+
+The development world still demonstrates structural applicability growth and failed-search descent.
+It does not qualify behaviourally compositional reach across structural variation. Not recursive
+self-improvement, not general program repair, not an operation-acquisition result, no gate, no
+independent human reproduction.

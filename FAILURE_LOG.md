@@ -1248,3 +1248,17 @@ artifact rather than a broken commitment. M086-A then reproduced the same defect
 experiment during that interval. The lesson is not about EOL conversion, which is now handled by
 convention; it is that a repair landed as a one-line infrastructure commit leaves no trace a
 reviewer can follow, and this project's evidence is exactly the trace.
+
+## M095 — Negative structural qualification: local satisfaction did not compose
+
+Attempt 1 ran once on 22 August 2026 from clean commit `951c7c2`, after H40, the protocol and the
+nine-entry structural population were frozen. It used zero model and network calls. All three
+zero-inner-demand witnesses remained negative, but none of the six demand-bearing worlds
+execution-confirmed B after A. The checker reports eight of eleven conditions passed; P3, P5 and P6
+failed, and P7 replayed every entry exactly.
+
+A was found in all six positive worlds. Its mapping satisfied the locally observed required keys but
+also emitted extra keys. B embedded that complete mapping inside an exact nested contract, so every
+structural survivor disagreed with the caller at execution. Status: **NEGATIVE QUALIFIED RESULT —
+H40 REFUTED, NO RETRY, NO POST-VERDICT REPAIR.** See D064 and
+`experiments/M095/POST_VERDICT_ANALYSIS.md`.
