@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- **M097 qualifies endogenous repair-operation acquisition.** From freeze `3b1dd98`, the lineage
+  exhausted 2,800 symbolic stack programs and registered the minimal independently accepted
+  `PUSH_LEFT, PUSH_RIGHT, SUB` definition. Inherited/acquisition-ablated scored 0/4; the restored
+  extension execution-confirmed 4/4 fresh real-Python worlds. All 12 conditions replayed true.
+  Result `e976788f…`; checker `00334618…`. Hard process persistence remains M098.
+
 - **M096 qualifies contract-safe compositional reach.** H41's frozen 4 × 3 population ran locally
   once from `d0c91c3`: exact closed mapping contracts demonstrated 8/8 positive relations and kept
   4/4 zero-demand controls negative, with zero model, network or remote calls. The independent

@@ -467,6 +467,16 @@
         "experiments/M052/PROTOCOL.md"
       ]
     },
+    "3b1dd98d28f32f9d8be549073492b48358434227": {
+      "subject": "science(m097): freeze endogenous operation acquisition",
+      "preserved_by": "experiment/m097-operation-acquisition-freeze",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "SCIENTIFIC_HYPOTHESES.md"
+      ]
+    },
     "3bc3b50a052851d7fb8847b6eeb6c87ba8c2c320": {
       "subject": "M050: define bounded primitive-composition protocol",
       "preserved_by": "provenance/3bc3b50",
@@ -1670,7 +1680,9 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PROJECT_STATE.md",
-        "SCIENTIFIC_HYPOTHESES.md"
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M096/RESULT.json"
       ]
     },
     "d2c6308d1bf8747587ccec7457861eff43b04454": {

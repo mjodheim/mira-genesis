@@ -2295,3 +2295,32 @@ persistence follows as M098.
 Not general program repair, not arbitrary language invention, not open-ended evolution, not hard
 persistence, no Genesis or generality gate, no independent human reproduction, no production or
 network authority.
+
+## D066 — M097 registers an assembled binary-expression repair operation
+
+### The decision
+
+H42 is supported by M097 attempt 1. The inherited real-software mapping language is structurally
+closed over single-field value expressions and therefore cannot emit `ast.BinOp` at any depth.
+M097 exhaustively assembled 2,800 programs from seven generic stack instructions, independently
+validated the survivors, and registered the shortest content-addressed accepted definition:
+`PUSH_LEFT, PUSH_RIGHT, SUB`.
+
+From the clean freeze commit `3b1dd98`, the inherited and acquisition-ablated arms reached 0/4 fresh
+worlds; the serialized/restored extended registry execution-confirmed 4/4. A built but unregistered
+definition changed nothing, and the inherited operation digest was conserved. The checker replayed
+12/12 conditions true. Result `e976788f…`; checker `00334618…`.
+
+### Ownership boundary
+
+The acquired symbolic definition and registry digest are lineage state. Field and key names are
+recovered from demand. The interpreter that turns the definition into Python AST and the assembly
+substrate remain authored host machinery. M097 therefore establishes bounded operation acquisition,
+not a self-hosting or wholly state-owned repair language.
+
+### Next ceiling
+
+M098 must remove process continuity: persist the accepted registry, terminate the complete producer
+process, start a fresh consumer that cannot import acquisition, validator or qualification-authoring
+modules, reconstruct only through a frozen generic runtime, solve a fresh post-restart requirement,
+and demonstrate exact fault rollback.

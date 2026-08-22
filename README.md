@@ -16,7 +16,8 @@ replayable**.
 > **Current frontier:** M095 remains a negative attempt-1 result. Its cause is now resolved by the
 > distinct M096 protocol: closed exact mapping contracts qualified compositional reach in 8/8
 > demand-bearing worlds, with 4/4 zero-demand controls negative and all 10 conditions replayed true.
-> The next experiment is M097, endogenous operation-language extension in the real-software line.
+> M097 now also qualifies endogenous operation acquisition (0/4 inherited, 4/4 extended, 12/12
+> conditions). The next experiment is M098, hard persistence across complete process death.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -70,6 +71,7 @@ the current cumulative **real-software** line.
 | M094 | **Positive qualified scientific result** | The lineage measured the limiting real component, selected the tied top targets and assembled an executable repair from composable operations; 12/12 conditions passed. |
 | M095 | **Negative qualified result — attempt 1** | The development chain works, but 0/6 demand-bearing structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative. Eight of eleven conditions pass; P3/P5/P6 fail. |
 | M096 | **Positive qualified scientific result** | Exact closed mapping contracts restore compositional reach: 8/8 positives, 4/4 negatives, and 10/10 conditions independently replayed true. |
+| M097 | **Positive qualified scientific result** | The lineage assembled and registered a new binary-expression repair operation; inherited scored 0/4, extended 4/4, and 12/12 conditions replayed true. |
 
 `main` currently contains the M094 qualified result. The local branch preserves M095's frozen
 negative attempt-1 result and M096's distinct positive successor; publication awaits the

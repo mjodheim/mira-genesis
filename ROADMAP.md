@@ -434,10 +434,10 @@ population, while all four zero-demand controls remained negative. All ten condi
 
 The ordered boundaries now continue as stronger claims rather than larger versions of M096:
 
-- **M097 — endogenous language extension in the real-software line:** prove the inherited operation
-  language is insufficient, acquire an extension without receiving the finished operation, persist
-  it, and use it to construct a previously inaccessible capability. More budget or composition of
-  the same language must not substitute for extension.
+- **M097 — endogenous language extension in the real-software line: POSITIVE.** The inherited
+  single-field operation language is insufficient at any depth; 2,800 symbolic programs were
+  exhausted, one generic subtraction definition was registered, and reach changed from 0/4 to 4/4
+  fresh real-Python worlds. All 12 conditions replayed true.
 - **M098 — hard persistence:** terminate the complete process and prove the acquired transformation
   capability returns from lineage-owned persisted state rather than a hidden host implementation.
 - **Later — repeated cumulative cycles:** A enables B, B enlarges the machinery for C, and the same

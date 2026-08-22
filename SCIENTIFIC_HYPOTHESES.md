@@ -1103,3 +1103,28 @@ authored operations and search bound.
 **What it would not establish.** Not acquisition of a new operation, an unauthored operation
 language, persistence after process termination, natural-world generality, unrestricted program
 repair, recursive self-improvement, AGI, any completion gate or independent human evaluation.
+
+## H42 — The real-software repair language can acquire a new operation
+
+A binary-expression mapping requirement lies outside the inherited single-field operation
+language's constructive image at every depth. From a bounded symbolic substrate containing no
+finished derived-field operation, the lineage can assemble and independently validate a generic
+expression definition, register it in serialized language state, and use it to execution-confirm
+previously unreachable real Python repairs across fresh structures.
+
+**Status:** **SUPPORTED.** M097 froze at local commit `3b1dd98` and ran attempt 1 once, locally, with
+zero model and network calls. It exhausted all 2,800 stack programs; 68 were well formed, five met
+the public behavior, and content-addressed minimality adopted `PUSH_LEFT, PUSH_RIGHT, SUB`.
+Registration changed constructive reach from absent to execution-confirmed. The inherited and
+acquisition-ablated languages scored 0/4 on the fresh population; the restored extended registry
+scored 4/4. The checker replayed all twelve conditions true. Result `e976788f…`; checker
+`00334618…`.
+
+**What it establishes.** One bounded generic operation definition was assembled rather than handed
+over as a finished operation, registered causally, serialized, and reused across different real
+Python classes, fields, keys, arities and numeric types.
+
+**What it would not establish.** The inherited host implementation is not fully state-owned. The
+generic AST interpreter and seven-instruction substrate remain authored. No hard process-death
+persistence, arbitrary operation invention, unrestricted code generation, generality gate,
+recursive self-improvement, AGI or independent human evaluation.

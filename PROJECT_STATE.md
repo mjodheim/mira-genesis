@@ -121,6 +121,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   demand-bearing relations, preserved 4/4 zero-demand negatives and replayed all 10 conditions
   true. All six partial-contract paired legacy arms failed while both complete-contract liveness
   controls passed. Result `feb53219…`; checker `fe31bc05…`; freeze `d0c91c3`.
+- **M097 is a positive qualified result; H42 is supported.** The inherited single-field mapping
+  language is proved unable to emit binary expressions at any depth. The lineage exhausted 2,800
+  symbolic programs, registered the minimal independently validated subtraction definition and
+  changed real-Python reach from 0/4 inherited to 4/4 extended. All 12 conditions replayed true.
+  Result `e976788f…`; checker `00334618…`; freeze `3b1dd98`. Process-death persistence remains M098.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
