@@ -4,16 +4,16 @@ This directory contains the publication draft anchored to the public M100 reposi
 
 ## Proposed paper
 
-**Mira Genesis: Causal Cumulative Capability Acquisition in a Persistent Adaptive Software Lineage**
+**Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage**
 
-The preferred positioning is methodological and causal: lineage-owned transformation state, hard process persistence, cumulative constructive reach, and negative-result preservation. The manuscript explicitly avoids claims of open-ended recursive self-improvement or AGI.
+The reviewed positioning is methodological rather than performance-led: serialized lineage-resident transformation state, hard process persistence, bound-relative cumulative constructive reach, causal controls, and preservation of negative results. The manuscript explicitly states that M100 uses standard bounded enumerative program synthesis and does not establish open-ended recursive self-improvement, cross-domain generality, or AGI.
 
 ## Files
 
-- `paper.tex` — arXiv-oriented LaTeX manuscript source.
-- `references.bib` — bibliography metadata.
+- `paper.tex` — reviewed arXiv-oriented LaTeX manuscript source.
+- `references.bib` — bibliography and related-work metadata.
 - `SUBMISSION_METADATA.md` — proposed arXiv/Zenodo metadata and the author-action boundary.
-- `REPRODUCIBILITY.md` — repository anchors and replay instructions.
+- `REPRODUCIBILITY.md` — repository anchors, replay instructions, and review clarifications.
 
 ## Scientific anchor
 
