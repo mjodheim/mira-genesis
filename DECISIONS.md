@@ -2387,3 +2387,39 @@ operation (M097), and hard persistence with fault rollback (M099). The next expe
 these into repeated cumulative cycles in which an acquired capability causally helps acquire a
 later, distinct capability across fresh tasks. One persisted subtraction operation is not evidence
 of open-ended improvement.
+
+## D069 — M100 qualifies bounded repeated cumulative acquisition
+
+### The decision
+
+H45 is supported by M100 attempt 1. The protocol, nine-world population, two-file isolated runtime
+and independent checker were frozen at local commit `c4214d6`. The one armed Track-A run was local,
+clean and made zero model, network or remote calls. Independent clean replay computed all twelve
+conditions true. Result `241292fc…`; stable evidence `4bdb1aa8…`; checker `d8e945a5…`.
+
+### Causal reading
+
+The migrated pre-acquisition state could not acquire B. With the M097 subtraction A registered, the
+bounded language acquired addition B at shortest length four. C remained absent from S1, including
+after B was built but not registered. Once B was registered, the same bounded mechanism acquired
+`left + 2×right` C at shortest length five. The state census grew `0 → 1 → 2 → 3`, conserving all
+earlier definitions exactly. After S3, A, B and C each solved three fresh real-Python worlds.
+
+The stored definitions remain causally live: a digest-valid mutation of A broke B; a digest-valid
+mutation of B broke C; predecessor ablation and corruption failed closed. A live S2 fault removed C
+from reach, and restoring exact S2 bytes reproduced exact S3. All 24 invocations used isolated base
+Python processes with no project imports or repository path.
+
+### Next ceiling
+
+M100 remains one authored affine-operation family under a fixed host interpreter, static stack
+vocabulary, authored target signatures and fixed bounds. The next experiment should test whether the
+cumulative relation transfers to materially different operation/representation families and whether
+later acquisition goals can be derived from observed demands rather than preselected affine
+coefficients. This bounded result is not open-ended improvement.
+
+### Claim boundary
+
+Not AGI, not a generality or completion gate, not unrestricted or recursive self-improvement, not
+arbitrary self-modification, not a self-hosting runtime, not cross-domain transfer, not independent
+human reproduction and no production or network authority.

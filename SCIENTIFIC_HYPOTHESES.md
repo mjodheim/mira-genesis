@@ -1184,3 +1184,32 @@ validation or repository modules present in the consumer.
 self-hosting language, transactional crash-consistency proof, hostile-code sandbox, unrestricted
 program repair, repeated cumulative improvement, open-ended evolution, generality gate, AGI or
 independent human reproduction.
+
+## H45 — Registered operations can enable repeated cumulative acquisition
+
+Across fresh isolated processes, the registered M097 subtraction operation can make a bounded
+addition operation constructible, and registered addition can make a distinct weighted-addition
+operation constructible. Registration must be necessary, every prior definition must be conserved
+and reusable after the third state, downstream definitions must retain live causal references to
+their predecessors, and exact rollback must restore the chain under stable replay.
+
+**Status:** **SUPPORTED.** M100 froze its protocol, complete nine-world population, runtime and
+checker at local commit `c4214d6`. Attempt 1 ran once from that clean commit with zero model, network
+and remote calls. B was absent before A, then acquired from S1 at shortest length four. C was absent
+from S1 and remained absent after B was built but not registered, then was acquired from S2 at
+shortest length five. The operation census grew `0/1/2/3` without changing an earlier definition.
+
+After S3, A, B and C each execution-confirmed three fresh real-Python structures. Digest-valid
+predecessor mutations broke downstream capability; A/B ablation and corruption failed closed; a
+live S2 fault suppressed C, and exact rollback reproduced exact S3. All 24 invocations were isolated
+base-Python processes. Clean replay changed only frozen ephemera and all twelve conditions passed.
+Result `241292fc…`; checker `d8e945a5…`.
+
+**What it establishes.** Two bounded acquisition cycles causally extend constructive reach after the
+persisted M097 acquisition, while conserving and reusing all three operations across fresh tasks.
+The later definitions are live compositions, not cached host answers.
+
+**What it would not establish.** The affine target family, target signatures, bounds, stack
+vocabulary and generic interpreter remain authored. Not unbounded expressivity, cross-domain
+transfer, endogenous objective choice, a self-hosting runtime, open-ended evolution, unrestricted
+program repair, a generality gate, AGI or independent human reproduction.

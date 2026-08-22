@@ -1,16 +1,16 @@
 project: Mira Genesis
 updated_at: 2026-08-22
-status: m099_positive_qualified_h44_supported_m098_negative_preserved
+status: m100_positive_qualified_h45_supported
 
 active_research_question: >-
-  Can the qualified chain of contract-safe composition, endogenous real-software operation
-  acquisition and hard process-death persistence be repeated, so that one acquired capability
-  causally helps acquire a later distinct capability across fresh tasks?
+  Can M100's bounded cumulative relation transfer beyond one authored affine-operation family,
+  so that materially different observed demands rather than preselected coefficient targets drive
+  later acquisitions?
 
 preceding_research_question: >-
-  M099 asked whether the M097-acquired operation survives complete producer death, isolated
-  consumer restart, faults and exact rollback under reproducible evidence. Attempt 1 qualified
-  positively with all 12 conditions true after M098's preserved P12-only negative.
+  M100 asked whether registered subtraction can enable addition acquisition and registered
+  addition can enable weighted-addition acquisition across process boundaries with exact
+  conservation, live dependency and rollback. Attempt 1 qualified positively at 12/12.
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -214,6 +214,39 @@ current_real_software_frontier:
     checker_digest: d2a381a6657cf3a2053d6b50040ebf67dd6d78885b23e28e9b4432575c48a651
     decision: D068
     current_ceiling: repeated_cumulative_operation_acquisition_cycles
+  M100:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H45
+    hypothesis_status: supported
+    protocol_frozen: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 9
+    qualification_cycle_counts: {A: 3, B: 3, C: 3}
+    fresh_process_invocations: 24
+    operation_census: [0, 1, 2, 3]
+    b_candidates_assembled: 780
+    b_accepted_candidates: 2
+    b_shortest_length: 4
+    c_candidates_assembled: 9330
+    c_accepted_candidates: 6
+    c_shortest_length: 5
+    fresh_worlds_confirmed: 9
+    fresh_cases_confirmed: 36
+    exact_prefix_conservation: true
+    digest_valid_a_mutation_breaks_b: true
+    digest_valid_b_mutation_breaks_c: true
+    exact_s2_rollback_reproduces_s3: true
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98
+    result_digest: 241292fc81e64c8e0ec4620e72304889f52ae2185033e056b787f1b27c6c1475
+    stable_evidence_digest: 4bdb1aa8f7a85108eac4e92f8cff90f05a12520462e5ea2b358fc9b5886b19da
+    checker_digest: d8e945a595571505d9c2a44568029208f41f05010e36d8e7b3f5937016529654
+    decision: D069
+    current_ceiling: transfer_beyond_authored_affine_targets_and_fixed_interpreter
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

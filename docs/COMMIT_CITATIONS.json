@@ -198,7 +198,7 @@
     },
     "1b862ab9afaec13cf16c7fcc6da7c297956424d4": {
       "subject": "science(m098): freeze hard process persistence",
-      "preserved_by": "experiment/m098-negative-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -482,7 +482,7 @@
     },
     "3b1dd98d28f32f9d8be549073492b48358434227": {
       "subject": "science(m097): freeze endogenous operation acquisition",
-      "preserved_by": "experiment/m097-operation-acquisition-freeze",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
@@ -883,7 +883,7 @@
     },
     "62a29b0a921e9907a24e3f82944ab4adb400775a": {
       "subject": "science(m099): freeze stable process persistence",
-      "preserved_by": "experiment/m099-positive-result",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
@@ -974,7 +974,7 @@
     },
     "6f4db16d8f41de4e2b5f768f63e359d2f9a16213": {
       "subject": "science(m097): preserve positive operation acquisition",
-      "preserved_by": "experiment/m097-positive-result",
+      "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M098/PROTOCOL.json"
@@ -1106,7 +1106,7 @@
     },
     "7dc3dd03ff806a558d788a194e389a7d11dda3b5": {
       "subject": "science(m098): preserve negative stable-replay result",
-      "preserved_by": "experiment/m098-negative-result",
+      "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M099/PROTOCOL.json"
@@ -1243,7 +1243,7 @@
     },
     "951c7c271f07a5bf2c08735c30b8d49f39cf8b73": {
       "subject": "science(m095): freeze structural qualification protocol",
-      "preserved_by": "branch/codex-m095-qualification-design",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
@@ -1597,6 +1597,17 @@
         "results/M013b.json"
       ]
     },
+    "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98": {
+      "subject": "science(m100): freeze cumulative acquisition protocol",
+      "preserved_by": "experiment/m100-positive-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "experiments/M100/RESULT.json"
+      ]
+    },
     "c603dd52c6484034de3a11a7c3c660335fda14b0": {
       "subject": "research: execute M069 governed terminal repair",
       "preserved_by": "main",
@@ -1720,7 +1731,7 @@
     },
     "d0c91c3b2e5c4b5d68d65e6a4591dcc82744a3df": {
       "subject": "science(m096): freeze contract-safe composition qualification",
-      "preserved_by": "experiment/m096-contract-safe-freeze",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",

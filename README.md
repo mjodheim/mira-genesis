@@ -13,12 +13,11 @@ research question is instead whether progressively more of the machinery for dia
 transformation, validation, adoption and later improvement can become **lineage-owned, causal and
 replayable**.
 
-> **Current frontier:** M095 remains a negative attempt-1 result. Its cause is now resolved by the
-> distinct M096 protocol: closed exact mapping contracts qualified compositional reach in 8/8
-> demand-bearing worlds, with 4/4 zero-demand controls negative and all 10 conditions replayed true.
-> M097 now also qualifies endogenous operation acquisition (0/4 inherited, 4/4 extended, 12/12
-> conditions). M098 preserved an 11/12 negative caused only by an incomplete PID projection; its
-> fresh-population successor M099 now qualifies hard process-death persistence at 12/12.
+> **Current frontier:** M095's preserved negative is resolved by M096's exact-contract result;
+> M097 qualifies bounded operation acquisition, M099 qualifies hard process-death persistence after
+> M098's preserved replay defect, and M100 now qualifies two further cumulative acquisition cycles.
+> Its state grows from one registered subtraction to addition and then weighted addition, preserves
+> and reuses all three on 9/9 fresh worlds, and replays all 12 conditions true.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -53,12 +52,14 @@ The current staged objective is:
    than receiving it;
 4. **hard persistence** — kill the process and prove the acquired transformation capability returns
    from lineage-owned persisted state;
-5. **repeated cumulative cycles** — repeat the causal chain across fresh tasks and eventually across
-   materially different domains.
+5. **bounded repeated cumulative cycles** — repeat the causal chain across fresh tasks while
+   conserving and reusing earlier operations; M100 qualifies this inside one affine family;
+6. **cross-family cumulative transfer** — derive later targets from materially different observed
+   demands instead of another preselected target inside the same representation.
 
-M091 already demonstrated endogenous extension of a state-owned transformation language in a bounded
-abstract setting. The next frontier is not to relabel M091, but to bring that kind of ownership into
-the current cumulative **real-software** line.
+M091 demonstrated endogenous extension in a bounded abstract setting; M097 brought one acquired
+operation into the real-software line, and M100 repeated the enabling relation twice. The current
+frontier is transfer beyond the same authored affine representation and target schedule.
 
 ## Where the project stands now
 
@@ -75,16 +76,17 @@ the current cumulative **real-software** line.
 | M097 | **Positive qualified scientific result** | The lineage assembled and registered a new binary-expression repair operation; inherited scored 0/4, extended 4/4, and 12/12 conditions replayed true. |
 | M098 | **Negative qualified result — attempt 1** | Every direct persistence condition passed, but stable replay retained an aggregate PID list; 11/12 conditions passed and P12 failed. |
 | M099 | **Positive qualified scientific result** | The M097 operation survived producer death, ran in isolated fresh consumers on 3/3 new worlds, failed under absence/mutation/corruption, recovered after exact rollback, and replayed 12/12 true. |
+| M100 | **Positive qualified scientific result** | Registered subtraction enabled acquisition of addition; registered addition enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12 conditions replayed true. |
 
-`main` currently contains the M094 qualified result. The local branch preserves M095's frozen
-negative attempt-1 result, M096/M097's positive successors, M098's disclosed negative and M099's
-positive hard-persistence result. Publication awaits the repository's explicit IP disposition, not
-remote computation.
+The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
+disclosed negative, M099's positive hard-persistence result and M100's positive cumulative result.
+M100 was developed and qualified locally under the recorded `PUBLIC_AGPL_COMMERCIAL_OPTION`
+disposition; remote automation is used only for repository validation after local evidence is green.
 
 ## M094 — original qualified repair anchor
 
 M094 remains the qualified anchor for autonomous diagnosis and repair on the active real-software
-line; M096–M099 extend the causal chain beyond it.
+line; M096–M100 extend the causal chain beyond it.
 
 Its preserved second attempt produced a **positive** verdict with **12/12 protocol conditions
 computed and true**. The mechanism used **zero model calls and zero network calls**. Diagnosis
@@ -150,7 +152,9 @@ The active real-software line deliberately asks a stronger question: how much of
 process can become endogenous in a continuing lineage, and whether one acquisition can become a
 real prerequisite or tool for the next. M096 establishes contract-safe composition within its
 finite authored domain; M097 establishes bounded language extension and M099 establishes hard
-process-death persistence after M098's preserved replay-normalisation failure.
+process-death persistence after M098's preserved replay-normalisation failure. M100 establishes two
+further bounded cumulative acquisition cycles with exact conservation and live dependency. Transfer
+to materially different operation families remains open.
 
 ## What Mira Genesis does not currently claim
 

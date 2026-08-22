@@ -137,6 +137,14 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   rollback condition passed, and independent replay with different PID values computed all 12
   conditions true. Result `17642e0e…`; stable evidence `497b6aab…`; checker `d2a381a6…`; freeze
   `62a29b0`. The next ceiling is repeated acquisition across cumulative cycles.
+- **M100 is a positive qualified result; H45 is supported.** Starting from M097's persisted
+  subtraction A, the frozen bounded language acquired addition B only after A registration and
+  acquired `left + 2×right` C only after B registration. Building B without registration changed
+  nothing. The state grew `0/1/2/3`, conserved every earlier definition exactly, and reused A/B/C on
+  9/9 fresh worlds. Digest-valid predecessor mutations broke downstream capability; ablation and
+  corruption failed closed; exact S2 rollback reproduced exact S3. All 24 fresh isolated processes
+  and all 12 checker conditions passed. Result `241292fc…`; checker `d8e945a5…`; freeze `c4214d6`.
+  The next ceiling is transfer beyond the authored affine-operation family and preselected targets.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

@@ -15,9 +15,9 @@ construction line at M066.
 
 The active question is stronger and narrower:
 
-> Can a software lineage repeat the now-qualified chain — contract-safe composition, acquisition
-> of a previously unavailable repair operation, and hard persistence — so that one acquired
-> capability causally helps acquire a later, distinct capability across fresh tasks?
+> Can the bounded cumulative chain now qualified by M100 transfer beyond one authored affine
+> operation family, so that materially different observed demands drive later acquisitions while
+> conservation, hard persistence and causal dependency remain intact?
 
 The project is not currently claiming open-ended recursive self-improvement. It is testing the
 necessary mechanisms one at a time, under conditions designed to let a negative result remain a
@@ -33,12 +33,13 @@ valid result.
 | M096 | **Positive qualified scientific result; H41 supported** | Closed exact output contracts qualify compositional reach: 8/8 positives, 4/4 negatives, 10/10 conditions replayed true | Operation language and structural population remain authored |
 | M097 | **Positive qualified scientific result; H42 supported** | A binary-expression operation was assembled, independently validated and registered; inherited 0/4, extended 4/4, 12/12 conditions true | Generic interpreter and substrate remain authored; no process-death proof |
 | M098 | **Negative qualified result — attempt 1; H43 refuted** | Every direct hard-persistence condition passed, but replay retained an aggregate PID list; 11/12 conditions true | Frozen stable-evidence projection was incomplete |
-| M099 | **Positive qualified scientific result; H44 supported** | The M097 operation survived producer death, ran in isolated consumers on 3/3 fresh worlds, failed under all controls, recovered after exact rollback and replayed 12/12 true | One operation and authored interpreter; repeated cumulative acquisition remains open |
-| Later | Not yet demonstrated | Repeat the causal chain across fresh tasks/domains and measure whether acquired improvements improve the ability to find later improvements | Open-endedness, transfer and long-horizon autonomy remain open research problems |
+| M099 | **Positive qualified scientific result; H44 supported** | The M097 operation survived producer death, ran in isolated consumers on 3/3 fresh worlds, failed under all controls, recovered after exact rollback and replayed 12/12 true | One operation and authored interpreter; repeated cumulative acquisition remained open |
+| M100 | **Positive qualified scientific result; H45 supported** | A enabled bounded B acquisition, registered B enabled bounded C acquisition, all three remained live on 9/9 fresh worlds, and 12/12 conditions replayed true | One affine family, authored targets/bounds and fixed generic interpreter |
+| Later | Not yet demonstrated | Transfer the cumulative relation across materially different operation/representation families and derive targets from observed demands | Open-endedness, broad transfer and long-horizon autonomy remain open research problems |
 
 ## M094 — the original qualified repair anchor
 
-M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M099 extend the causal
+M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M100 extend the causal
 chain beyond it.
 
 Its second preserved attempt produced a positive verdict with **12/12 protocol conditions computed
@@ -201,9 +202,28 @@ repaired. M099 used a new three-world population and precommitted the complete e
 while leaving the process mechanism unchanged. It replayed all twelve conditions true. Within the
 declared boundary, the lineage *kept* the acquired machinery across complete producer death.
 
-## The longer-term target
+## M100 — repeated cumulative acquisition
 
-The research target after M099 is a repeated causal chain, not a single spectacular benchmark:
+M100 froze the next causal chain before any of its nine qualification worlds ran. The preserved M097
+subtraction is A. New definitions could use four static stack tokens and calls to prior registered
+operations, but no host binary operator.
+
+In fresh isolated processes, B was absent before A and addition B was acquired after A registration
+at shortest length four. C was absent from S1, including after B was built but not registered.
+After B registration, `left + 2×right` C was acquired at shortest length five. State grew from zero
+to three operations while conserving every earlier definition exactly.
+
+After S3, A, B and C each solved three fresh real-Python worlds. Digest-valid mutations proved the
+dependency remained live from C through B to A; ablation/corruption failed closed; an S2 fault
+suppressed C and exact rollback reproduced exact S3. The independent checker replayed all 24
+processes and computed 12/12 conditions true.
+
+This qualifies bounded cumulative constructive reach, not unbounded expressivity. The affine
+family, exact targets, search bounds, stack substrate and interpreter remain authored.
+
+## The longer-term target after M100
+
+M100 now demonstrates the following chain inside one bounded family:
 
 ```text
 state S0
@@ -215,9 +235,9 @@ state S2 has a larger or different transformation capability
 ...
 ```
 
-A stronger result would additionally show that earlier acquisitions improve the **process of finding
-later acquisitions** — for example by reducing search cost, exposing previously unavailable
-experiments, improving selection, or extending the constructive language.
+A stronger successor must move beyond another coefficient in the same family: materially different
+operation or representation families, targets recovered from observed demands, and a measured
+discovery advantage that cannot be explained solely by a preselected bound and signature.
 
 That still would not by itself establish AGI or open-ended evolution. General-agent claims are
 governed separately by `MIRA_GENERALITY_CRITERIA.md`, which requires cross-domain evidence,
@@ -245,7 +265,7 @@ leak hidden evidence, state that is serialized but not behaviorally consulted, c
 possibly falsify a claim, and apparent causal evidence that collapses under a stronger
 counterfactual.
 
-A negative M096 or M097 would therefore locate another ceiling. The program only loses scientific
+A negative successor would therefore locate another ceiling. The program only loses scientific
 value if failures are hidden, boundaries are moved after observation, or development demonstrations
 are promoted into claims they did not test.
 
