@@ -10,16 +10,25 @@
 \usepackage{amssymb}
 \usepackage{enumitem}
 \usepackage{xcolor}
+\usepackage{xspace}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{fancyvrb}
 \usepackage{caption}
-\hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+  pdftitle={Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage},
+  pdfauthor={Anthony Mets},
+  pdfsubject={Mechanistic evaluation of bounded cumulative capability acquisition and hard persistence in adaptive software}
+}
 \setlist{nosep,leftmargin=*}
-\newcommand{\genesis}{\textsc{Mira Genesis}}
+\newcommand{\genesis}{\textsc{Mira Genesis}\xspace}
 \newcommand{\code}[1]{\texttt{#1}}
 
-\title{\textbf{Mira Genesis: Causal Cumulative Capability Acquisition\\in a Persistent Adaptive Software Lineage}}
+\title{\textbf{Mira Genesis: A Reproducible Case Study of\\Causal Cumulative Capability Acquisition\\in a Persistent Software Lineage}}
 \author{Anthony Mets\\Independent Researcher\\\url{https://github.com/mjodheim/mira-genesis}}
 \date{Research snapshot: 23 August 2026}
 
@@ -27,166 +36,200 @@
 \maketitle
 
 \begin{abstract}
-Self-improving software is often evaluated by whether successive versions achieve higher task scores. That criterion alone does not establish whether an improvement has become part of the system's own reusable machinery, whether it survives the process that created it, or whether it causally expands the space of later improvements. We present \genesis, a public and auditable research program on adaptive software lineages, and report a sequence of qualified experiments M094--M100. The sequence begins with measured diagnosis and compositional repair of a real repository component, preserves two negative intermediate results, then establishes bounded acquisition of a new transformation operation, persistence across complete producer-process death, and repeated cumulative acquisition. In M100, a persisted subtraction operation enables acquisition of addition; registered addition then enables acquisition of a weighted-addition operation. Building but not registering the intermediate operation does not enable the successor. All three acquired operations remain live on nine fresh real-Python worlds (36/36 cases), while semantic mutation, ablation, corruption, live fault injection, exact rollback, and independent replay test the dependency and persistence claims. All 24 M100 migration, acquisition, control, and execution invocations run in fresh isolated Python processes with no project imports, model calls, network calls, or remote execution. The result is deliberately bounded to one authored affine-operation family and a fixed generic interpreter. We do not claim open-ended recursive self-improvement, cross-domain transfer, general intelligence, or autonomous production authority. The contribution is a falsifiable method for separating cumulative lineage-owned transformation capability from transient process state, externally supplied model competence, and benchmark-only improvement.
+Successive benchmark gains in self-improving software do not by themselves establish that an improvement has become reusable system state, survives the process that created it, or causally expands later constructive reach. We present \genesis, a public research program that tests those narrower attribution questions, and report the qualified M094--M100 sequence as a reproducible case study. The sequence begins with measured diagnosis and compositional repair of a repository component, preserves two negative intermediate qualifications and one withdrawn attempt, then establishes bounded acquisition of a new transformation operation, persistence across producer-process death, and repeated cumulative acquisition. M100 uses a fixed stack-based synthesis language in which newly acquired definitions may call only previously registered operations for binary combination. A persisted subtraction operation enables bounded acquisition of addition; registered addition then enables a weighted-addition target within the frozen length-five bound. Building but not registering addition leaves the prior state byte-identical and does not enable the successor. After the final state, the three operations pass 36/36 executions across nine fresh, authored Python-source qualification worlds. Semantic mutation, ablation, state corruption, live fault injection, exact rollback, and stable replay test causal dependence and persistence. The 24 M100 migration, acquisition, control, and execution invocations each run in fresh isolated Python processes inside a two-file frozen capsule; qualification performs zero model, network, or remote-execution calls. The search mechanism itself is standard bounded enumerative program synthesis, and the target family, grammar, bounds, interpreter, and qualification worlds are authored. Accordingly, we claim neither open-ended recursive self-improvement nor cross-domain generality. The contribution is an auditable experimental vocabulary for distinguishing serialized, behaviorally necessary cumulative capability from transient construction, process memory, and externally supplied model competence.
 \end{abstract}
 
 \section{Introduction}
-Research on self-improving agents has moved rapidly from theoretical self-reference to practical systems that edit their own code or agent scaffolds. The G{\"o}del Machine formalized proof-gated self-rewrite \cite{schmidhuber2007godel}; more recent systems use foundation models and empirical evaluation to modify agent implementations \cite{yin2024godelagent,robeyns2025selfimproving,zhang2025dgm}. Hyperagents further make the meta-level modification procedure editable and report accumulating, transferable meta-level improvements \cite{zhang2026hyperagents}. AlphaEvolve demonstrates the broader power of evaluator-guided code evolution for scientific and algorithmic discovery \cite{novikov2025alphaevolve}.
+Research on self-improving agents has moved rapidly from theoretical self-reference to practical systems that edit their own code, skills, parameters, or agent scaffolds. The G{\"o}del Machine formalized proof-gated self-rewrite \cite{schmidhuber2007godel}; recent systems use foundation models and empirical evaluation to modify agent implementations \cite{yin2024godelagent,robeyns2025selfimproving,zhang2025dgm}. Hyperagents make the meta-level modification procedure editable and report accumulating, transferable meta-level improvements \cite{zhang2026hyperagents}; MetaSkill-Evolve similarly evolves both task skills and the procedure that improves them \cite{wang2026metaskill}. Persistent improvement can also be stored outside source code: Voyager accumulates executable skills \cite{wang2023voyager}, while SEAL uses self-generated update directives to produce persistent weight changes \cite{zweiger2025seal}. AlphaEvolve demonstrates the broader power of evaluator-guided code evolution for scientific and algorithmic discovery \cite{novikov2025alphaevolve}.
 
-These systems motivate a narrower measurement question: \emph{what evidence is sufficient to say that an improvement belongs to a continuing software lineage rather than to the external model, the current host process, an evaluator, or a pre-authored target?} A benchmark increase can coexist with hidden dependence on unchanged host code. A serialized state can be behaviorally irrelevant. A later improvement can correlate with an earlier one without requiring it. A replay can appear stable while retaining process ephemera. These distinctions matter if ``self-improvement'' is intended to mean more than sequential code generation.
+These systems motivate a narrower measurement question: \emph{what evidence is sufficient to attribute a later capability to state retained by a continuing software lineage rather than to an external model, the still-live producer process, an evaluator, or an authored host implementation?} A benchmark increase can coexist with hidden dependence on unchanged host code. A serialized record can be behaviorally irrelevant. A later improvement can follow an earlier one chronologically without requiring it. A replay can appear stable while retaining process ephemera.
 
-\genesis studies these distinctions under deliberately constrained, precommitted experiments. The active research line separates two epistemic tracks: an endogenous lineage track, where qualified capabilities must be attributable to serialized lineage state and executable machinery; and a model-mediated governed-agent track, where external-model competence remains explicitly attributed to the composed system. The experiments reported here are on the endogenous track and use zero model calls during qualification.
+\genesis studies these distinctions under deliberately constrained, precommitted experiments. The active research line separates an endogenous lineage track, where qualified capability must be attributable to serialized state plus a frozen generic substrate, from a model-mediated governed-agent track, where foundation-model competence remains explicitly attributed to the composed system. The experiments reported here are on the endogenous track. ``Model-free'' in this paper refers only to qualification execution: generative-AI tools were used during project development and manuscript preparation and are disclosed in Section~\ref{sec:repro}.
 
-The main contribution of this paper is not breadth or benchmark performance. It is an experimentally auditable chain from real-software diagnosis through capability acquisition, hard persistence, and repeated causal reuse, with failed experiments preserved as evidence. The resulting M100 claim is narrow: \emph{bounded cumulative constructive reach} inside one authored affine family.
+The main contribution is not a new synthesis algorithm or broad task performance. M097--M100 use finite enumerative search, a standard program-synthesis technique \cite{gulwani2017synthesis}. The contribution is instead an experimentally auditable chain from real-software diagnosis through state-resident capability acquisition, hard process persistence, and bounded causal reuse, with negative outcomes preserved as evidence. The resulting M100 claim is deliberately narrow: \emph{bounded cumulative constructive reach} inside one authored affine family.
 
 \paragraph{Contributions.}
 \begin{itemize}
-  \item We present an append-only experimental sequence in which negative outcomes (M095 and M098) remain preserved rather than being repaired into successes.
-  \item We distinguish transient construction from registered lineage capability by showing that building an operation without registration does not enable its successor.
-  \item We demonstrate hard persistence of an acquired transformation across complete producer-process death and fresh isolated consumers.
-  \item We demonstrate two successive causal acquisition steps, conservation and later reuse of all acquired operations, plus semantic mutation, ablation, corruption, fault, rollback, and replay controls.
-  \item We state explicit non-claims and identify cross-family cumulative transfer as the next unresolved boundary.
+  \item We present an append-only experimental sequence in which M095 and M098 remain negative and an invalidated M094 attempt remains withdrawn rather than being rewritten as success.
+  \item We operationalize the difference between a transiently constructed candidate and a registered persistent capability, and test it with a built-but-unregistered control.
+  \item We test hard persistence across complete producer-process death and reconstruction in fresh isolated consumers.
+  \item We test two successive, bound-relative causal acquisition steps, exact state conservation, later reuse, semantic mutation, ablation, corruption, live fault, rollback, and replay.
+  \item We make the authored boundaries explicit and identify cross-family transfer and external reproduction as unresolved next steps.
 \end{itemize}
 
 \section{Research discipline and claim boundary}
-\genesis is a public repository in which protocols, qualification populations, results, checker outputs, negative results, and provenance records are preserved. Experiments distinguish development evidence from qualified scientific results. Protocols and decision rules are frozen before the evidence they decide is materialized. A failed or withdrawn attempt is retained under its original identity rather than overwritten.
+\genesis is a public repository in which protocols, qualification populations, results, checker outputs, negative results, and provenance records are preserved. Experiments distinguish development evidence from qualified scientific results. Protocols and decision rules are frozen before the evidence they decide is materialized. A failed, invalidated, or withdrawn attempt is retained under its original identity rather than overwritten.
 
 This paper uses the following operational concepts.
 
-\paragraph{Lineage-owned capability.} A transformation capability is treated as lineage-owned only if its executable definition is represented in serialized lineage state, is behaviorally consulted after reconstruction, and cannot be silently resurrected from forbidden host implementations.
+\paragraph{Lineage-resident capability.} We use this term operationally, not ontologically: an executable transformation definition is represented in serialized lineage state, is behaviorally consulted after reconstruction, and cannot be silently replaced by a forbidden host implementation under the frozen test boundary.
 
-\paragraph{Constructive reach.} A requirement is in constructive reach when the lineage can assemble and validate a transformation satisfying the declared executable contract under the frozen operation language and resource bound. Search cost and expressive reach are treated separately.
+\paragraph{Constructive reach.} A requirement is in constructive reach when the system can assemble and validate a transformation satisfying the declared executable contract under the frozen operation language and resource bound. Constructive reach is therefore always relative to a grammar and a bound unless a structural impossibility is separately proved.
 
-\paragraph{Cumulative acquisition.} Acquisition is cumulative when an accepted operation is conserved in state and materially changes whether a later operation can be acquired. Mere chronological order is insufficient.
+\paragraph{Cumulative acquisition.} Acquisition is cumulative when an accepted operation is conserved in serialized state and its registration materially changes whether a later target is constructible under the frozen boundary. Mere chronological order is insufficient.
 
-\paragraph{Hard persistence.} Persistence requires complete death of the producer process followed by reconstruction and behavioral use in fresh isolated consumers from the allowed serialized state and generic substrate.
+\paragraph{Hard persistence.} Persistence requires termination of the producer process followed by reconstruction and behavioral use in fresh isolated consumers from the allowed serialized state and frozen generic substrate.
 
-The project does not infer general intelligence from these properties. Its separate generality register requires cross-domain evidence, long-horizon autonomy, independent/private evaluation, reproduction, and adversarial audit before stronger language is permitted.
+The project does not infer general intelligence from these properties. The present paper does not claim experimenter blindness, independent external reproduction, unbounded expressivity, self-hosting, arbitrary self-modification, autonomous objective choice, or production authority.
 
-\section{Experimental progression: M094--M100}
-Table~\ref{tab:milestones} summarizes the sequence. The sequence is important because M100 depends on boundaries discovered by earlier failures rather than presenting a single polished success.
+\section{Mechanism: bounded synthesis with live predecessor calls}
+\label{sec:mechanism}
+M100 is best understood as a controlled program-synthesis experiment whose purpose is attribution rather than synthesis novelty. The frozen runtime stores a sequence of content-addressed operation definitions. The inherited M097 operation $A$ is subtraction. New M100 definitions may contain only
+\begin{center}
+\code{PUSH\_LEFT}, \code{PUSH\_RIGHT}, \code{NEG}, \code{SWAP}, and \code{CALL:<prior-id>}.
+\end{center}
+They may not contain host \code{ADD}, \code{SUB}, or \code{MUL}. Consequently, a newly synthesized definition cannot combine two operands unless it invokes a previously registered binary operation. During execution, a \code{CALL} expands the live referenced definition; no precomputed Python expression or hidden binary host function is stored in the new operation.
+
+For a target affine signature $(a,b)$, the runtime exhaustively enumerates programs up to a frozen length bound, discards malformed stack programs, checks public cases, and requires exact symbolic agreement with $(a,b)$. Candidates are ordered by shortest body and then canonical digest. This is finite enumerative synthesis in a deliberately small DSL \cite{gulwani2017synthesis}; the novelty claim of this paper is not the search procedure.
 
 \begin{table}[ht]
 \centering
 \small
-\caption{Qualified progression from real-software repair to repeated cumulative acquisition.}
+\caption{M100 cumulative chain. ``Absent'' means absent under the stated frozen bound.}
+\label{tab:chain}
+\begin{tabular}{@{}p{0.14\linewidth}p{0.20\linewidth}p{0.18\linewidth}p{0.13\linewidth}p{0.24\linewidth}@{}}
+\toprule
+State & Registered operations & Target & Bound & Qualified outcome \\
+\midrule
+$S_0$ & none & $B(x,y)=x+y$ & 4 & absent; no registered binary combiner \\
+$S_1$ & $A(x,y)=x-y$ & $B(x,y)=x+y$ & 4 & acquired; shortest accepted length 4 \\
+$S_1$ & $A$ only & $C(x,y)=x+2y$ & 5 & absent at bound 5 \\
+$S_2$ & $A,B$ & $C(x,y)=x+2y$ & 5 & acquired; shortest accepted length 5 \\
+$S_3$ & $A,B,C$ & reuse $A,B,C$ & -- & 9/9 worlds, 36/36 cases \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The distinction in Table~\ref{tab:chain} is important. $B$ is structurally impossible at $S_0$ in the new-definition grammar because no token combines two operands. The claim that $C$ depends on registered $B$, however, is explicitly \emph{bound-relative}: M100 qualifies that $C$ is unavailable from $A$ alone within length five and becomes available after $B$ is registered. The paper does not elevate this resource-bounded prerequisite into an unbounded expressivity claim.
+
+The accepted definitions themselves retain live calls to predecessors. Schematically, one accepted length-four $B$ body negates an operand and calls $A$, while one accepted length-five $C$ body calls $B$ twice. The checker separately re-derives the affine signatures from the stored token bodies and verifies that predecessor mutations break the dependent operation. The checker is separately implemented but project-authored; ``independent'' below never means an external human replication.
+
+\section{Experimental progression: M094--M100}
+Table~\ref{tab:milestones} summarizes the sequence. M100 is interpreted in light of boundaries exposed by earlier negative or invalidated attempts rather than as an isolated polished success.
+
+\begin{table}[ht]
+\centering
+\small
+\caption{Qualified progression from repository repair to repeated cumulative acquisition.}
 \label{tab:milestones}
 \begin{tabular}{@{}p{0.10\linewidth}p{0.16\linewidth}p{0.63\linewidth}@{}}
 \toprule
 Milestone & Verdict & Primary evidence \\
 \midrule
-M094 & Positive & Measured limiting real component; compositional executable repair; 2/2 cross-component qualification; 12/12 conditions. \\
+M094 & Positive & Measured limiting repository component; compositional executable repair; 2/2 cross-component qualification; 12/12 conditions. \\
 M095 & Negative & A changes structural applicability, but 0/6 positive worlds execution-confirm B after A because local partial contracts do not compose into an exact nested contract; 3/3 negatives remain negative. \\
 M096 & Positive & Exact closed output contracts restore compositional reach: 8/8 positive relations, 4/4 negative controls, 10/10 conditions. \\
-M097 & Positive & New binary-expression operation acquired beyond inherited constructive reach: inherited 0/4, extended 4/4, 12/12 conditions. \\
+M097 & Positive & New binary-expression operation acquired beyond the inherited constructive image: inherited 0/4, extended 4/4, 12/12 conditions. \\
 M098 & Negative & Direct hard-persistence objectives pass, but replay retains process-ID ephemera; 11/12 conditions. \\
 M099 & Positive & Acquired operation survives producer death and fresh consumers; absence/mutation/corruption controls and exact rollback; 12/12 conditions. \\
-M100 & Positive & A enables acquisition of B; registered B enables C; A/B/C conserved and reused on 9/9 fresh worlds; 12/12 conditions. \\
+M100 & Positive & A enables bounded acquisition of B; registered B enables C at the frozen bound; A/B/C conserved and reused on 9/9 fresh worlds; 12/12 conditions. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{M094: measured diagnosis and repair}
-M094 anchors the active line in real repository software. The lineage measures structural demand, selects the limiting component rather than receiving the target as a label, and assembles repairs from composable operations. Its preserved second attempt passes all twelve protocol conditions and two cross-component qualification requirements. A first positive-looking attempt remains withdrawn because post-verdict audit found that decoded-text equality hid CRLF-to-LF normalization during rollback. The storage mechanism was then corrected and a distinct preserved attempt run under the protocol rules. This failure history is material: rollback is treated as evidence, not ceremony.
+M094 anchors the active line in repository software rather than the later synthetic qualification fixtures. The lineage measures structural demand, selects the limiting component rather than receiving the target as a label, and assembles repairs from composable operations. Its preserved second valid attempt passes all twelve protocol conditions and two cross-component qualification requirements. A first positive-looking attempt remains withdrawn because post-verdict audit found that decoded-text equality hid CRLF-to-LF normalization during rollback. The storage mechanism was corrected and a distinct attempt was preserved under the protocol rules. The withdrawn attempt is not counted as positive evidence.
 
 M094 still has strong authored boundaries: the eligible component set, admissible observations, operation set, and composition bound are fixed by the experimenter. It is therefore a real-software diagnosis-and-repair anchor, not an unrestricted repair agent.
 
 \subsection{M095--M096: composition must preserve exact contracts}
 M095 asks whether adopting A changes whether B is constructively reachable. Development evidence shows the enabling relation, including a failure-guided descent to a lower-ranked enabler. Qualification nevertheless returns a valid negative: A's locally accepted renderer can emit extra keys, while B requires an exact nested mapping. The six demand-bearing worlds all fail execution confirmation; three negative worlds remain negative.
 
-M096 freezes a distinct successor rather than altering M095. It replaces partial output acceptance with closed exact contracts while leaving the inherited operation language and execution confirmation structure fixed. The result demonstrates all eight positive relations and preserves all four negative controls, with ten of ten checker conditions true. The pair is a useful example of why ``operation applicable'' and ``operation composes correctly'' are not equivalent.
+M096 freezes a distinct successor rather than altering M095. It replaces partial output acceptance with closed exact contracts while leaving the inherited operation language and execution-confirmation structure fixed. The result demonstrates all eight positive relations and preserves all four negative controls, with ten of ten checker conditions true. The pair illustrates why ``operation applicable'' and ``operation composes correctly'' are not equivalent.
 
-\subsection{M097: endogenous acquisition of a new operation}
-After contract-safe composition, M097 tests the operation-language boundary. The inherited language is certified unable to emit the required binary-expression form at any depth. Within a bounded assembly substrate, the lineage exhausts candidate symbolic programs, independently validates an accepted definition, registers it in serialized state, and changes real-Python reach from 0/4 inherited worlds to 4/4 extended worlds. The acquired operation is subtraction.
+\subsection{M097: acquisition of a new operation}
+After contract-safe composition, M097 tests the operation-language boundary. Every inherited mapping item reads one \code{self} field, optionally wrapped or rendered; composition does not combine values. The inherited language therefore cannot emit the required binary-expression AST form at any depth. Within a bounded assembly substrate, the system exhausts candidate symbolic programs, validates an accepted definition, registers it in serialized state, and changes Python-source qualification reach from 0/4 inherited worlds to 4/4 extended worlds. The acquired operation is subtraction.
 
-This is not a claim that the entire interpreter is self-authored. The generic interpreter, substrate, and assembly vocabulary remain authored. The qualified change is narrower: an operation absent from the inherited constructive image becomes state-owned executable machinery.
+This is not a claim that the entire interpreter is self-authored. The generic interpreter, substrate, and assembly vocabulary remain authored. The qualified change is narrower: a symbolic operation outside the inherited constructive image becomes serialized executable state that later experiments can reconstruct and call.
 
 \subsection{M098--M099: hard process persistence}
-M098 introduces a complete process boundary. The producer persists the accepted state and dies; fresh consumers reconstruct capability from the allowed serialized state and fixed substrate. Direct persistence, controls, and rollback all behave as intended, but the stable replay projection accidentally retains an aggregate list of process identifiers. The replay therefore differs and P12 fails: 11/12.
+M098 introduces a complete process boundary. The producer persists the accepted state and terminates; fresh consumers reconstruct capability from the allowed serialized state and fixed substrate. Direct persistence, controls, and rollback behave as intended, but the stable replay projection accidentally retains an aggregate list of process identifiers. The replay therefore differs and P12 fails: 11/12.
 
-M099 freezes a successor with a complete process-ephemera projection before execution while preserving the causal process mechanism. The acquired M097 operation survives producer death, runs in isolated fresh consumers on three new worlds, fails under absence/mutation/corruption controls, recovers after exact rollback, and independently replays with all twelve conditions true. This closes the specific question of whether the acquired operation is merely surviving in the memory of the process that created it.
+M099 freezes a successor with a complete process-ephemera projection before execution while preserving the causal process mechanism. The acquired M097 operation survives producer death, runs in isolated fresh consumers on three new qualification worlds, fails under absence/mutation/corruption controls, recovers after exact rollback, and stably replays with all twelve conditions true. This closes the specific within-project question of whether the operation survives only in the memory of its producer process; it is not an external reproduction claim.
 
 \section{M100: repeated cumulative acquisition}
 \subsection{Frozen question}
-M100 asks whether an already persisted acquired operation can become a constructive prerequisite for another acquired operation, which then becomes a prerequisite for a third, while all earlier definitions remain live and conserved.
+M100 asks whether an already persisted acquired operation can become a bounded constructive prerequisite for another acquired operation, which then changes bounded reach for a third, while all earlier definitions remain live and conserved.
 
-The authored operation family is affine over two inputs. The state sequence is:
-\begin{equation}
-S_0 \rightarrow S_1(A) \rightarrow S_2(A,B) \rightarrow S_3(A,B,C),
-\end{equation}
-where
+The authored affine family is
 \begin{align}
 A(x,y) &= x-y,\\
 B(x,y) &= x+y,\\
-C(x,y) &= x+2y.
+C(x,y) &= x+2y,
 \end{align}
-The important claim is not arithmetic novelty. It is the dependency structure by which the registered definitions expand the constructive language available to later acquisition.
+and the persisted state sequence is
+\begin{equation}
+S_0 \rightarrow S_1(A) \rightarrow S_2(A,B) \rightarrow S_3(A,B,C).
+\end{equation}
+The important claim is not arithmetic novelty. It is whether registration changes the bounded constructive language available to subsequent acquisition while preserving live predecessor dependence.
 
 \subsection{Acquisition chain}
-At $S_0$, B is absent. After A is registered, B is acquired with shortest accepted program length four. The acquisition evaluates 780 assembled programs, 28 of which are well formed; two are accepted. At $S_1$, C is absent. Merely building B without registering it leaves $S_1$ unchanged and C remains absent. After B is registered, C is acquired with shortest accepted length five: 9,330 programs are assembled, 202 are well formed, and six are accepted.
+At $S_0$, B has zero accepted candidates under bound four. After A is registered, B is acquired with shortest accepted length four: 780 programs are assembled, 28 are well formed, and two satisfy the exact signature. At $S_1$, C has zero accepted candidates under bound five: 3,905 programs are assembled and 90 are well formed, but all disagree with the target behavior. Merely constructing B without registering it leaves $S_1$ byte-identical and C remains absent. After B is registered, C is acquired with shortest accepted length five: 9,330 programs are assembled, 202 are well formed, and six are accepted.
 
-State grows exactly from zero to one to two to three operations. Every $S_1$ definition remains byte-identical in $S_2$, and every $S_2$ definition remains byte-identical in $S_3$. This conservation requirement prevents later states from quietly replacing the earlier operation while continuing to use the same label.
+State grows exactly from zero to one to two to three operations. Every $S_1$ definition remains byte-identical in $S_2$, and every $S_2$ definition remains byte-identical in $S_3$. This conservation condition prevents a later state from silently replacing an earlier definition while continuing to use its label.
 
 \subsection{Fresh-world reuse}
-After $S_3$, A, B, and C are each exercised on three fresh real-Python worlds with four cases per world. All nine worlds and all 36 cases pass. The frozen qualification population therefore tests that cumulative construction did not destroy earlier capability.
+After $S_3$, A, B, and C are each exercised on three fresh Python-source qualification worlds with four cases per world. All nine worlds and all 36 cases pass. These worlds are small, authored qualification fixtures with names, field order, arity, scalar types, and narratives varied across entries; they are not sampled production repositories. Their purpose is to test fresh reconstruction and conservation without reusing M097--M099 worlds.
 
 \subsection{Process isolation}
-All 24 migration, acquisition, control, and execution invocations use fresh base-Python isolated-mode processes. They import no project module and expose no repository import path. The canonical local run records zero model, network, or remote-execution calls. This is intended to make it harder for an acquired definition to borrow hidden semantics from a still-live project process.
+The frozen qualification capsule contains exactly the M100 runtime and a minimal entry point. All 24 migration, acquisition, control, and execution invocations start fresh base-Python processes in isolated mode. The capsule imports no additional \genesis project module and the repository is absent from the interpreter search path. The canonical local run records zero model, network, or remote-execution calls. This boundary does not eliminate authored host semantics: the generic runtime itself is deliberately part of the frozen capsule.
 
 \subsection{Causal controls}
-M100 includes multiple controls aimed at causal rather than chronological accumulation:
+M100 includes controls aimed at causal rather than chronological accumulation:
 \begin{itemize}
-  \item B is absent without A; C is absent without registered B.
-  \item Building B without registration does not enable C.
-  \item A digest-valid semantic mutation breaks B.
-  \item B digest-valid semantic mutation breaks C.
-  \item Removing A or B and corrupting serialized state fail closed.
+  \item B is absent without A at bound four; C is absent without registered B at bound five.
+  \item Building B without registration leaves $S_1$ unchanged and does not enable C.
+  \item A digest-valid semantic mutation breaks B; B digest-valid semantic mutation breaks C.
+  \item Removing A or B, and corrupting serialized state, fail closed.
   \item A live digest-valid fault to $S_2$ suppresses C acquisition.
   \item Restoring the exact original $S_2$ bytes reproduces the exact original $S_3$ in a fresh process.
-  \item Clean replay changes process identifiers but no retained scientific field.
+  \item Stable replay changes process identifiers and search paths but no retained scientific field.
 \end{itemize}
-The independent checker recomputes all twelve frozen M100 conditions true.
+A separately implemented project checker recomputes all twelve frozen M100 conditions as true, including independent re-derivation of the stored affine signatures.
 
 \section{Why the negative results matter}
 The M094--M100 sequence contains two negative qualified outcomes and one withdrawn positive-looking M094 attempt. They are not incidental implementation history.
 
-M095 shows that structural reach can be a misleading proxy for executable composition. The lineage could reach A and make B structurally applicable, while B still failed at execution because acceptance semantics were too weak. M098 shows that a persistence experiment can pass all direct behavioral checks while failing independent replay because the definition of stable evidence retained a non-causal field. The M094 withdrawal shows that decoded equality is insufficient evidence for byte-exact rollback.
+M095 shows that structural reach can be a misleading proxy for executable composition. The lineage could reach A and make B structurally applicable, while B still failed at execution because acceptance semantics were too weak. M098 shows that a persistence experiment can pass direct behavioral checks while failing stable replay because the evidence projection retained a non-causal field. The M094 withdrawal shows that decoded equality is insufficient evidence for byte-exact rollback.
 
-These failures support a broader methodological claim: a self-improvement benchmark should include conditions that are capable of invalidating the intended narrative after an apparently successful run. Preserving such failures makes the boundary of a positive successor more legible.
+These failures support a methodological claim rather than a performance claim: evaluation of self-modifying systems benefits from frozen conditions that can invalidate the intended narrative after an apparently successful run. Preserving such outcomes makes the boundary of a positive successor easier to audit.
 
-\section{Relation to recent self-improving agents}
-The closest recent systems pursue a broader and often more performance-oriented objective. G{\"o}del Agent uses LLM-driven self-reference to modify agent logic under high-level objectives \cite{yin2024godelagent}. A Self-Improving Coding Agent shows substantial benchmark gains after autonomous self-editing \cite{robeyns2025selfimproving}. DGM maintains an archive of self-modified coding agents and empirically validates descendants, yielding large SWE-bench and Polyglot gains \cite{zhang2025dgm}. Hyperagents make the meta-agent itself editable and demonstrate accumulation and cross-domain transfer of meta-level improvements \cite{zhang2026hyperagents}. AlphaEvolve uses evaluator-guided evolutionary code generation to improve algorithms and production infrastructure \cite{novikov2025alphaevolve}.
+\section{Relation to synthesis and self-improving agents}
+The M100 search itself belongs to bounded enumerative program synthesis: a finite DSL is searched for a program satisfying an executable and symbolic specification \cite{gulwani2017synthesis}. We therefore do not claim synthesis-algorithm novelty. The research question is what must be persisted, reconstructed, and causally required before a synthesized operation is credited as cumulative lineage state.
 
-\genesis does not claim superiority to these systems, and M100 is much narrower in task breadth. Its emphasis is complementary: qualification is model-free, acquired capability is required to live in serialized lineage state, complete process death is an explicit boundary, registration is experimentally separated from transient construction, predecessor mutations test live downstream dependency, and negative/withdrawn outcomes remain part of the public record. This trades broad empirical competence for mechanistic attribution and replayability.
+Persistent skill systems provide an important adjacent comparison. Voyager stores executable code in an ever-growing skill library and reuses those skills in new Minecraft worlds \cite{wang2023voyager}. More recent work explicitly studies evolving skill artifacts: MetaSkill-Evolve recursively modifies task and meta-skills \cite{wang2026metaskill}, while SkillCommit commits behaviorally validated skills and tests cross-instance replay before scope expansion \cite{he2026skillcommit}. SEAL instead makes persistent adaptation directly in model weights through model-generated self-edits and fine-tuning \cite{zweiger2025seal}. These systems operate at much broader semantic scales than M100 and generally rely on foundation-model competence.
 
-A particularly important comparison is Hyperagents. Hyperagents report editable meta-level self-modification and cross-domain accumulation, while M100 does not leave one affine family. Conversely, M100's claim is tied to state conservation, fresh-process reconstruction, exact rollback, and dependency-specific controls. The two approaches therefore ask different questions: how far can self-modifying agent performance generalize, versus how strongly can a bounded cumulative capability claim be causally attributed and replayed.
+Recent self-improving coding agents pursue broader performance objectives. G{\"o}del Agent uses LLM-driven self-reference to modify agent logic under high-level objectives \cite{yin2024godelagent}. A Self-Improving Coding Agent reports substantial benchmark gains after autonomous self-editing \cite{robeyns2025selfimproving}. DGM maintains an archive of self-modified coding agents and empirically validates descendants, producing large SWE-bench and Polyglot improvements \cite{zhang2025dgm}. Hyperagents make the meta-agent itself editable and report accumulation and cross-domain transfer of meta-level improvements \cite{zhang2026hyperagents}. AlphaEvolve uses evaluator-guided evolutionary code generation to improve algorithms and production infrastructure \cite{novikov2025alphaevolve}. A recent survey frames modern self-improvement as self-induced updates to model parameters or scaffold components and highlights evaluation as an open systems problem \cite{ren2026survey}.
 
-\section{Limitations and non-claims}
-M100 remains deliberately constrained.
-\begin{itemize}
-  \item The affine operation family, exact target signatures, construction bounds, stack substrate, and generic interpreter are authored.
-  \item Target choice is not endogenously derived from open-ended observed software needs.
-  \item The cumulative chain contains only three operations and two new acquisitions after the inherited M097 capability.
-  \item No independent external human reproduction is reported in this paper.
-  \item Qualification is local and bounded; it is not a benchmark of broad software-engineering competence.
-  \item The result does not establish unrestricted self-modification, open-ended recursive self-improvement, cross-domain transfer, AGI, consciousness, or production authority.
-\end{itemize}
-These limitations define the result rather than qualifying a broader claim after the fact.
+\genesis does not claim superiority to these systems. M100 is much narrower in task breadth and semantic complexity. Its complementary emphasis is attribution: qualification execution uses no foundation model; accepted operations must exist in serialized state; producer death is explicit; registration is separated from transient construction; predecessor mutations test downstream dependence; exact rollback and stable replay are part of the qualification; and negative/withdrawn outcomes remain public. The trade is clear: much less capability breadth in exchange for unusually explicit causal and persistence boundaries.
+
+\section{Threats to validity and non-claims}
+\label{sec:threats}
+\paragraph{Construct validity.} Our term \emph{lineage-resident capability} is an operational definition tied to the frozen state/runtime boundary. It does not imply metaphysical autonomy or a self-authored generic interpreter. The C-on-B dependency is resource-bound: C is absent from $S_1$ at length five, not claimed impossible at arbitrary length.
+
+\paragraph{Internal validity.} Protocol freezing, content digests, fault controls, rollback, and a separately implemented checker reduce some forms of post-hoc reinterpretation, but the experimenter authored the grammar, targets, bounds, worlds, runtime, and checker and was not blinded. The checker is independent in implementation from parts of the measured runtime, not independent in authorship. Generative-AI assistance during development is another source of correlated design error; qualification's zero-model-call boundary does not remove that possibility.
+
+\paragraph{External validity.} M100 contains one affine family, three stored operations, two new cumulative acquisitions, and nine small authored Python-source worlds. It has no cross-family transfer, no sampled production corpus, no cross-operating-system replication reported here, and no independent external human reproduction. Results therefore do not support broad software-engineering competence or open-ended adaptation.
+
+\paragraph{Statistical validity.} The headline M100 counts are deterministic censuses of a frozen finite search space and qualification population, not random samples from a broader task distribution. We therefore report exact counts rather than inferential significance tests; the limitation is coverage, not sampling uncertainty.
+
+\paragraph{Non-claims.} The result does not establish unrestricted self-modification, open-ended recursive self-improvement, arbitrary objective generation, cross-domain transfer, AGI, consciousness, hostile-code containment, or autonomous production authority.
 
 \section{Next experiment: cross-family cumulative transfer}
-The next meaningful boundary is not another coefficient within the same affine representation. A stronger successor should derive later transformation needs from materially different observed demands and require acquisition across different operation or representation families. Earlier acquisitions should measurably improve the ability to discover later acquisitions---for example by exposing missing prerequisites, reducing search cost, extending the transformation language, or enabling a representation unavailable at the earlier state.
+The next meaningful boundary is not another coefficient within the same affine representation. A stronger successor should derive later transformation needs from materially different observed demands and require acquisition across different operation or representation families. Earlier acquisitions should measurably improve the ability to discover later acquisitions---for example by exposing missing prerequisites, reducing description length or search cost, extending the transformation language, or enabling a representation unavailable at the earlier state.
 
-A useful successor would therefore preserve the M100 controls while changing the source of novelty:
+A useful successor would preserve the M100 controls while changing the source of novelty:
 \begin{enumerate}
-  \item observe a real software insufficiency rather than receive a preselected affine signature;
+  \item observe a software insufficiency rather than receive a preselected affine signature;
   \item establish that the inherited language cannot satisfy it under the frozen boundary;
-  \item acquire and persist an extension from lineage-owned machinery;
+  \item acquire and persist an extension from lineage-resident machinery;
   \item use that extension as a causal prerequisite or discovery aid for a later requirement from a materially different family;
-  \item repeat after process death, with conservation, ablation, corruption, rollback, and independent replay.
+  \item repeat after process death, with conservation, ablation, corruption, rollback, stable replay, and external reproduction if feasible.
 \end{enumerate}
 Even a positive result would remain below the project's separate generality gates, but it would remove the central authored-family ceiling exposed by M100.
 
 \section{Reproducibility and provenance}
+\label{sec:repro}
 The public repository is the authoritative evidence record. The paper is anchored to repository integration commit
 \begin{center}
 \code{c2273f1ea72e089cd3646e162130bc83b8070b0b}.
@@ -200,22 +243,33 @@ pytest -q
 python scripts/check_repository_integrity.py
 python scripts/check_m100_result.py --strict --require-result --no-write
 \end{Verbatim}
-Experiment-local protocols and checkers remain authoritative for scientific verdicts; the generic test suite is not treated as a substitute for frozen qualification.
+Experiment-local protocols and checkers remain authoritative for scientific verdicts; the generic test suite is a regression/integrity check rather than a substitute for frozen qualification. The accompanying reproducibility note maps each paper claim to the preserved M094--M100 evidence directories.
 
-The repository records Anthony Mets as project author and research director and discloses substantial generative-AI assistance in coding, review, analysis, documentation, and research support. AI systems are treated as tools rather than human authors or scientific decision authorities. Human publication and claim decisions remain external to the self-modifying lineage.
+The repository records Anthony Mets as project author and research director and discloses substantial generative-AI assistance in coding, review, analysis, documentation, and research support. AI systems are treated as tools rather than human authors or scientific decision authorities. The author remains responsible for protocol decisions, acceptance/rejection of work, claims, and publication. The present pre-submission review was also AI-assisted and should not be represented as independent peer review.
 
 \section{Conclusion}
-\genesis M094--M100 provides a bounded, auditable example of a software lineage in which transformation capability progresses from measured repair to state-owned acquisition, survives complete producer-process death, and becomes cumulatively causal for later acquisitions. M100 demonstrates that registration of previously acquired operations can change subsequent constructive reach while conserving and reusing earlier definitions under fresh-process isolation and adversarial controls. The result is not open-ended self-improvement. Its value is narrower: it supplies a reproducible experimental vocabulary for asking whether an improvement is actually owned, persistent, and causally useful to the lineage that is said to have acquired it. The next test is whether that cumulative relation survives when the authored affine family is removed.
+The M094--M100 sequence provides a bounded, auditable case study in which transformation capability progresses from measured repair to serialized operation acquisition, survives producer-process death, and becomes causally useful to later bounded acquisition. M100 shows that registering prior operations changes constructive reach under frozen resource bounds while conserving and reusing earlier definitions under fresh-process isolation and adversarial controls. The result is not open-ended self-improvement, and the synthesis algorithm is not novel. Its narrower value is methodological: it makes ownership-by-state, process persistence, registration, live dependency, rollback, and replay separately falsifiable. The next test is whether those attribution properties survive materially different transformation families and independent reproduction.
 
 \section*{Acknowledgments and assistance disclosure}
-Mira Genesis was developed with substantial generative-AI assistance under the author's direction, including OpenAI Codex, Anthropic Claude, and OpenAI ChatGPT as recorded in the repository provenance. These systems assisted coding, review, testing, analysis, and documentation. They are not listed as authors. The author remains responsible for the research claims, experimental decisions, and publication.
+Mira Genesis and this manuscript were developed with substantial generative-AI assistance under the author's direction, including OpenAI Codex, Anthropic Claude, and OpenAI ChatGPT as recorded in the repository provenance. These systems assisted coding, review, testing, analysis, and documentation. They are not listed as authors. The author remains responsible for the research claims, experimental decisions, and publication.
 
-\begin{thebibliography}{9}
+\begin{thebibliography}{99}
 \bibitem{schmidhuber2007godel}
 J. Schmidhuber.
 \newblock G{\"o}del Machines: Fully Self-referential Optimal Universal Self-improvers.
 \newblock In \emph{Artificial General Intelligence}, pp. 199--226. Springer, 2007.
 \newblock doi:10.1007/978-3-540-68677-4\_7.
+
+\bibitem{gulwani2017synthesis}
+S. Gulwani, O. Polozov, and R. Singh.
+\newblock Program Synthesis.
+\newblock \emph{Foundations and Trends in Programming Languages}, 4(1--2):1--119, 2017.
+\newblock doi:10.1561/2500000010.
+
+\bibitem{wang2023voyager}
+G. Wang, Y. Xie, Y. Jiang, A. Mandlekar, C. Xiao, Y. Zhu, L. Fan, and A. Anandkumar.
+\newblock Voyager: An Open-Ended Embodied Agent with Large Language Models.
+\newblock arXiv:2305.16291, 2023.
 
 \bibitem{yin2024godelagent}
 X. Yin, X. Wang, L. Pan, X. Wan, and W. Y. Wang.
@@ -232,6 +286,11 @@ J. Zhang, S. Hu, C. Lu, R. Lange, and J. Clune.
 \newblock Darwin G{\"o}del Machine: Open-Ended Evolution of Self-Improving Agents.
 \newblock arXiv:2505.22954, 2025.
 
+\bibitem{zweiger2025seal}
+A. Zweiger, J. Pari, H. Guo, E. Aky{\"u}rek, Y. Kim, and P. Agrawal.
+\newblock Self-Adapting Language Models.
+\newblock arXiv:2506.10943, 2025.
+
 \bibitem{novikov2025alphaevolve}
 A. Novikov et al.
 \newblock AlphaEvolve: A Coding Agent for Scientific and Algorithmic Discovery.
@@ -241,5 +300,20 @@ A. Novikov et al.
 J. Zhang, B. Zhao, W. Yang, J. Foerster, J. Clune, M. Jiang, S. Devlin, and T. Shavrina.
 \newblock Hyperagents.
 \newblock arXiv:2603.19461, 2026.
+
+\bibitem{wang2026metaskill}
+Z. Wang, M. Yan, J. Bi, S. Yan, V. Tresp, and Y. Ma.
+\newblock MetaSkill-Evolve: Recursive Self-Improvement of LLM Agents via Two-Timescale Meta-Skill Evolution.
+\newblock arXiv:2607.05297, 2026.
+
+\bibitem{ren2026survey}
+Z. Ren et al.
+\newblock Self-Improvements in Modern Agentic Systems: A Survey.
+\newblock arXiv:2607.13104, 2026.
+
+\bibitem{he2026skillcommit}
+Y. He and W. Yang.
+\newblock SkillCommit: Evolving Agent Skills through Behaviorally Validated Scope Expansion.
+\newblock arXiv:2608.15165, 2026.
 \end{thebibliography}
 \end{document}
