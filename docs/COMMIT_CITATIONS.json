@@ -883,14 +883,15 @@
     },
     "62a29b0a921e9907a24e3f82944ab4adb400775a": {
       "subject": "science(m099): freeze stable process persistence",
-      "preserved_by": "experiment/m099-stable-persistence-freeze",
+      "preserved_by": "experiment/m099-positive-result",
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M099/RESULT.json"
       ]
     },
     "63d8b18d72451ffe93f905e1c733a89ddbc70fb4": {
@@ -975,6 +976,7 @@
       "subject": "science(m097): preserve positive operation acquisition",
       "preserved_by": "experiment/m097-positive-result",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M098/PROTOCOL.json"
       ]
     },
@@ -1106,6 +1108,7 @@
       "subject": "science(m098): preserve negative stable-replay result",
       "preserved_by": "experiment/m098-negative-result",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M099/PROTOCOL.json"
       ]
     },
