@@ -1,0 +1,133 @@
+{
+  "schema": "m097-protocol-v1",
+  "milestone": "M097",
+  "hypothesis": "H42",
+  "decision_slot": "D066",
+  "status": "frozen",
+  "track": "A",
+  "date_authored": "2026-08-22",
+  "date_frozen": "2026-08-22",
+  "claim": "A real-Python mapping requirement whose value is a binary expression lies outside the constructive image of the inherited single-field repair-operation language at any composition depth. From a frozen symbolic stack substrate containing no finished derived-field operation, the lineage can assemble and independently validate a new generic expression-operation definition, register it in serialized lineage state, and thereby execution-confirm the previously unreachable requirement plus all four fresh qualification worlds, while the inherited, acquisition-ablated and built-but-unregistered controls close nothing.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_assembly_substrate_eliminated": false,
+    "entire_inherited_language_state_owned": false,
+    "experimenter_blindness": false,
+    "generality_gate": false,
+    "hard_process_termination_persistence": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "open_ended_evolution": false,
+    "production_authority": false,
+    "unrestricted_code_generation": false,
+    "unrestricted_program_repair": false
+  },
+  "conditions": [
+    "P1_frozen_protocol_pool_mechanism_and_checker_are_bound",
+    "P2_fresh_population_is_complete_buildable_and_unrun_before_freeze",
+    "P3_inherited_language_is_provably_insufficient_at_any_bound",
+    "P4_operation_is_assembled_from_microinstructions_not_selected_finished",
+    "P5_independent_validator_accepts_without_qualification_access",
+    "P6_registration_changes_the_state_owned_operation_language",
+    "P7_registration_changes_real_python_constructive_reach",
+    "P8_acquired_operation_generalizes_to_every_fresh_real_python_world",
+    "P9_more_budget_and_acquisition_ablation_close_nothing",
+    "P10_building_without_registration_changes_nothing",
+    "P11_serialized_extension_round_trips_and_inherited_language_is_conserved",
+    "P12_replay_chronology_track_a_and_local_only_execution"
+  ],
+  "falsifiers": [
+    "The inherited operation language can emit an ast.BinOp mapping value at any composition depth.",
+    "The required method is reachable or execution-confirmed before extension registration.",
+    "The substrate contains a finished derived-field operation rather than smaller stack instructions.",
+    "The bounded acquisition does not exhaust all 2,800 instruction programs or adopts no independently accepted definition.",
+    "The adopted definition is selected by a target, field, class, key or qualification-world name rather than by public behavior and content-addressed minimality.",
+    "The independent validator imports or reads the qualification pool.",
+    "Registration does not change the serialized operation-language state.",
+    "Any of the four fresh qualification requirements remains unreachable after registration or becomes reachable without acquisition.",
+    "More budget over the unchanged inherited language closes the binary-expression gap.",
+    "A built and validated but unregistered definition changes constructive reach.",
+    "The serialized extension fails an exact state round-trip or inherited operation identity changes.",
+    "Any evidence differs from clean local replay, the result is overwritten or rerolled, or model, network, remote or dirty-tree evidence enters Track A."
+  ],
+  "expressive_gap": {
+    "required_ast_node": "BinOp",
+    "inherited_invariant": "each emitted mapping value is derived from exactly one self field, optionally under a unary container wrapper or zero-argument renderer call",
+    "proof_method": "structural closure over every inherited operation: mapping items are appended independently and no operation combines them; rendering maps each item independently, so depth and budget cannot introduce a binary expression",
+    "differs_from_m091": "M091 extended an abstract integer slot language. M097 extends the operation registry used to construct real Python source methods and validates the emitted source in fresh subprocesses."
+  },
+  "assembly_substrate": {
+    "authored": true,
+    "max_length": 4,
+    "candidate_programs": 2800,
+    "instructions": [
+      "PUSH_LEFT",
+      "PUSH_RIGHT",
+      "ADD",
+      "SUB",
+      "MUL",
+      "NEG",
+      "SWAP"
+    ],
+    "finished_derived_field_operation_present": false,
+    "field_and_key_names_come_from_observed_demand": true,
+    "selection_rule": "shortest independently accepted construction, then canonical content digest"
+  },
+  "state_boundary": {
+    "serialized": "the acquired expression-operation definition and inherited operation digest",
+    "fixed_generic_host": "the interpreter that turns registered symbolic definitions into AST mapping operations",
+    "not_yet_claimed": "survival across complete process death with development modules absent; reserved for M098"
+  },
+  "mechanism": {
+    "digest": "b47f8fc3a18c26d99ca877f4341ab1997c9710c19bee65b0b5a31761785aad17",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "metamorphosis/m094_composition.py",
+      "metamorphosis/m094_diagnosis.py",
+      "metamorphosis/m097_language.py",
+      "metamorphosis/m097_acquisition.py",
+      "metamorphosis/m097_validator.py",
+      "metamorphosis/m097_execution.py"
+    ]
+  },
+  "qualification_apparatus": {
+    "digest": "f99d1d1ed9cdc06831b9c2bde30815550f87515b55b9ff9ab56a0caf35288ad2",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "scripts/author_m097_qualification_pool.py",
+      "scripts/run_m095_qualification.py",
+      "scripts/run_m097_qualification.py",
+      "scripts/check_m097_result.py"
+    ]
+  },
+  "qualification_population": {
+    "construction": "all four authored structures; no draw, exclusion, salt or reroll",
+    "entries": 4,
+    "families": [
+      "elapsed_window",
+      "remaining_capacity",
+      "floating_displacement",
+      "account_balance"
+    ],
+    "pool_digest": "1f10d0ac2fd580d34f531ae143ebfcffbe3dc7e0923de1ab25320d4e77d054c5",
+    "development_world_excluded": true,
+    "full_extension_outcome_unrun_before_freeze": true
+  },
+  "run_policy": {
+    "armed_write_required": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "no_overwrite": true,
+    "result_path": "experiments/M097/RESULT.json"
+  },
+  "owner_authorization": "The project owner instructed continued local validation through M096, M097 and the persistence successor on 2026-08-22. This authorizes local freeze and execution, not public push.",
+  "publication": {
+    "disposition": "PENDING_EXPLICIT_OWNER_DISPOSITION",
+    "local_work_authorized": true,
+    "public_push_authorized": false
+  },
+  "remote_execution_forbidden": true,
+  "verdict_rule": "positive only when all twelve frozen conditions are computed and true"
+}

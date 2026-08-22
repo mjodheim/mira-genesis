@@ -1,0 +1,225 @@
+{
+  "construction": "all four authored structures; no draw, exclusion, salt or reroll",
+  "development_world_excluded": true,
+  "entries": [
+    {
+      "axes": [
+        "reversed declaration order",
+        "signed integers",
+        "unrelated string field"
+      ],
+      "caller_count": 2,
+      "cases": [
+        {
+          "closed": 9,
+          "label": "a",
+          "opened": 2
+        },
+        {
+          "closed": 3,
+          "label": "b",
+          "opened": -4
+        },
+        {
+          "closed": 10,
+          "label": "c",
+          "opened": 10
+        },
+        {
+          "closed": 2,
+          "label": "d",
+          "opened": 7
+        }
+      ],
+      "class": "Window",
+      "entry_digest": "75390275390f8f5baca60dc8d98cf6265889cdea98030f0516f8f8b510e98626",
+      "fields": [
+        {
+          "annotation": "int",
+          "name": "opened"
+        },
+        {
+          "annotation": "int",
+          "name": "closed"
+        },
+        {
+          "annotation": "str",
+          "name": "label"
+        }
+      ],
+      "id": "elapsed_window",
+      "key": "elapsed",
+      "left_field": "closed",
+      "operator": "sub",
+      "right_field": "opened"
+    },
+    {
+      "axes": [
+        "different business meaning",
+        "third numeric field",
+        "negative result allowed"
+      ],
+      "caller_count": 2,
+      "cases": [
+        {
+          "maximum": 12,
+          "occupied": 5,
+          "reserved": 1
+        },
+        {
+          "maximum": 0,
+          "occupied": 0,
+          "reserved": 0
+        },
+        {
+          "maximum": 3,
+          "occupied": 8,
+          "reserved": 2
+        },
+        {
+          "maximum": 101,
+          "occupied": 44,
+          "reserved": 9
+        }
+      ],
+      "class": "Capacity",
+      "entry_digest": "2a68b543271404251484dfcc518d1d719eb43f6ef66c11ca948812beeca992c5",
+      "fields": [
+        {
+          "annotation": "int",
+          "name": "maximum"
+        },
+        {
+          "annotation": "int",
+          "name": "occupied"
+        },
+        {
+          "annotation": "int",
+          "name": "reserved"
+        }
+      ],
+      "id": "remaining_capacity",
+      "key": "remaining",
+      "left_field": "maximum",
+      "operator": "sub",
+      "right_field": "occupied"
+    },
+    {
+      "axes": [
+        "floating values",
+        "renamed result key",
+        "unrelated categorical field"
+      ],
+      "caller_count": 2,
+      "cases": [
+        {
+          "axis": "x",
+          "finish": 4.75,
+          "origin": 1.5
+        },
+        {
+          "axis": "y",
+          "finish": 5.5,
+          "origin": -2.0
+        },
+        {
+          "axis": "z",
+          "finish": 3.0,
+          "origin": 8.25
+        },
+        {
+          "axis": "t",
+          "finish": 0.125,
+          "origin": 0.0
+        }
+      ],
+      "class": "Movement",
+      "entry_digest": "5a8aeb771953d60758a870bee6e6e20f669fcd7e39c96c0d2301e8c2f99d4d8c",
+      "fields": [
+        {
+          "annotation": "float",
+          "name": "origin"
+        },
+        {
+          "annotation": "float",
+          "name": "finish"
+        },
+        {
+          "annotation": "str",
+          "name": "axis"
+        }
+      ],
+      "id": "floating_displacement",
+      "key": "delta",
+      "left_field": "finish",
+      "operator": "sub",
+      "right_field": "origin"
+    },
+    {
+      "axes": [
+        "four declared fields",
+        "operands declared out of expression order",
+        "financial interpretation"
+      ],
+      "caller_count": 2,
+      "cases": [
+        {
+          "credits": 11,
+          "debits": 4,
+          "owner": "a",
+          "revision": 1
+        },
+        {
+          "credits": 3,
+          "debits": 9,
+          "owner": "b",
+          "revision": 2
+        },
+        {
+          "credits": 0,
+          "debits": 0,
+          "owner": "c",
+          "revision": 3
+        },
+        {
+          "credits": 5,
+          "debits": -2,
+          "owner": "d",
+          "revision": 4
+        }
+      ],
+      "class": "AccountSlice",
+      "entry_digest": "f49844f7a86ea102c939e6fb9e7937f21dfbbde7a7e61818930a12c640587871",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "owner"
+        },
+        {
+          "annotation": "int",
+          "name": "debits"
+        },
+        {
+          "annotation": "int",
+          "name": "credits"
+        },
+        {
+          "annotation": "int",
+          "name": "revision"
+        }
+      ],
+      "id": "account_balance",
+      "key": "balance",
+      "left_field": "credits",
+      "operator": "sub",
+      "right_field": "debits"
+    }
+  ],
+  "milestone": "M097",
+  "pool_digest": "1f10d0ac2fd580d34f531ae143ebfcffbe3dc7e0923de1ab25320d4e77d054c5",
+  "population_size": 4,
+  "preflight_boundary": "construct and parse source, recover the unambiguous binary demand and cases, and check content addresses only; no candidate acquisition, registration, extended search or execution before freeze",
+  "qualification_was_not_run_during_development": true,
+  "schema": "m097-qualification-pool-v1",
+  "status": "frozen"
+}
