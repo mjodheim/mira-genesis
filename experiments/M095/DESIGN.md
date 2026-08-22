@@ -245,7 +245,9 @@ the plain renderer and **no enabling would have been demonstrated**.
 > (defect 10). Each time this section was updated to say it was resolved. What finally settled
 > it is not another argument but a test that **permutes every tie and requires the whole sweep
 > unchanged**, because A4's own premise is that tied members carry no information about order.
-> `DESIGN_AUDIT.md` now records sixteen defects across four passes, fifteen repaired.
+> At that point `DESIGN_AUDIT.md` recorded sixteen defects across four passes, fifteen repaired.
+> The completed audit now records nineteen across five passes, eighteen repaired; defect 19 is
+> disclosed rather than repaired because making that control falsifiable would change the design.
 
 Amendment A4's rule applies at the capability level as it does at the class level: every capability
 the measure ranks equal first is repaired. At S1 the lineage now repairs both — `as_mapping` for the
@@ -285,10 +287,10 @@ What remains before a freeze: a qualification pool drawn from outside this world
 case verified by construction, a checker that recomputes rather than reads, a runner, and a
 protocol. Freezing it and arming a run are the owner's acts, not an agent's.
 
-Later audit passes have since found five further defects (5 to 9), four repaired and one — the
-domain boundary — disclosed above. `DESIGN_AUDIT.md` carries the arithmetic. Two things it says
-are not about M095. Four of the nine defects were regressions of amendments this project had
-already paid for and written down, which is evidence that recording an amendment does not, by
-itself, carry it into the next milestone's code. And two of defect 9's three literals were
-written by the commit that repaired defect 8 — asserting a property feels like establishing it,
-and it feels that way most strongly while establishing something else.
+Later audit passes ultimately found fifteen further defects (5 to 19): fourteen repaired and one —
+the withheld-operation control — disclosed rather than repaired. `DESIGN_AUDIT.md` carries the
+arithmetic. Two things it says are not about M095. Five of the nineteen defects were regressions
+of amendments this project had already paid for and written down, which is evidence that recording
+an amendment does not, by itself, carry it into the next milestone's code. And two of defect 9's
+three literals were written by the commit that repaired defect 8 — asserting a property feels like
+establishing it, and it feels that way most strongly while establishing something else.
