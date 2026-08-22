@@ -1,0 +1,103 @@
+{
+  "entries": [
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 3,
+      "b_survivors": 3,
+      "descent_used": false,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "renamed_minimal--ranking_unaided"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 2,
+      "b_survivors": 2,
+      "descent_used": true,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "renamed_minimal--failed_search_descent"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 0,
+      "b_survivors": 0,
+      "descent_used": false,
+      "enabling_demonstrated": false,
+      "expected_relation": false,
+      "id": "renamed_minimal--no_visible_enabler"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 3,
+      "b_survivors": 3,
+      "descent_used": false,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "larger_arity--ranking_unaided"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 2,
+      "b_survivors": 2,
+      "descent_used": true,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "larger_arity--failed_search_descent"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 0,
+      "b_survivors": 0,
+      "descent_used": false,
+      "enabling_demonstrated": false,
+      "expected_relation": false,
+      "id": "larger_arity--no_visible_enabler"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 3,
+      "b_survivors": 3,
+      "descent_used": false,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "unrelated_and_collection--ranking_unaided"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 2,
+      "b_survivors": 2,
+      "descent_used": true,
+      "enabling_demonstrated": true,
+      "expected_relation": true,
+      "id": "unrelated_and_collection--failed_search_descent"
+    },
+    {
+      "a_confirmed": 3,
+      "a_survivors": 3,
+      "b_confirmed": 0,
+      "b_survivors": 0,
+      "descent_used": false,
+      "enabling_demonstrated": false,
+      "expected_relation": false,
+      "id": "unrelated_and_collection--no_visible_enabler"
+    }
+  ],
+  "entries_run": 9,
+  "negative_entries": 3,
+  "negative_remained_negative": 3,
+  "passed": true,
+  "positive_demonstrated": 6,
+  "positive_entries": 6,
+  "qualification_claimed": false,
+  "reason": "the M095 population and verdict were observed before M096 development",
+  "schema": "m096-development-recovery-v1"
+}

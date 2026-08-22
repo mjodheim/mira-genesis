@@ -1,0 +1,114 @@
+{
+  "schema": "m096-protocol-v1",
+  "milestone": "M096",
+  "hypothesis": "H41",
+  "decision_slot": "D065",
+  "status": "frozen",
+  "track": "A",
+  "date_authored": "2026-08-22",
+  "date_frozen": "2026-08-22",
+  "claim": "Within the inherited frozen diagnosis, operation language, execution confirmation and composition bound, requiring every adopted mapping repair to expose exactly the complete observed top-level contract is sufficient for behaviourally compositional reach across every demand-bearing member of a fresh finite structural population: B remains unreachable from S0, becomes reachable after exact-contract A, and becomes unreachable again when A is removed. Every world with no visible A demand must remain negative.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_operation_language_eliminated": false,
+    "authored_structural_population_eliminated": false,
+    "endogenous_new_operation_acquisition": false,
+    "experimenter_blindness": false,
+    "generality_gate": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "open_ended_evolution": false,
+    "persistence_after_process_termination": false,
+    "unrestricted_program_repair": false
+  },
+  "historical_boundary": {
+    "m095_attempt_1_remains_negative": true,
+    "m095_result_is_not_retried_or_relabelled": true,
+    "development_population": "the already observed M095 qualification population",
+    "development_result": "6/6 demand-bearing relations recovered and 3/3 zero-demand controls remained negative; this is development evidence only",
+    "qualification_population_was_not_run_before_freeze": true
+  },
+  "conditions": [
+    "P1_frozen_protocol_pool_mechanism_and_checker_are_bound",
+    "P2_fresh_finite_population_is_exhaustive_buildable_and_unrun_before_freeze",
+    "P3_every_demand_bearing_world_composes_under_the_exact_contract",
+    "P4_every_zero_inner_demand_world_remains_negative",
+    "P5_ranking_unaided_and_failed_search_descent_are_both_qualified",
+    "P6_all_causal_pillars_and_execution_confirmation_hold",
+    "P7_every_adopted_enabler_has_an_exact_closed_output_contract",
+    "P8_paired_legacy_sensitivity_arm_is_runnable_matched_and_non_decisive",
+    "P9_all_paired_evidence_replays_byte_semantically",
+    "P10_fixed_search_chronology_track_a_and_local_only_execution"
+  ],
+  "falsifiers": [
+    "Any of the eight demand-bearing qualification entries fails to demonstrate the enabling relation under the exact contract.",
+    "Any of the four zero-inner-demand entries demonstrates the relation or is excluded.",
+    "A ranking-unaided entry requires descent, or a declared descent entry is reported as unaided.",
+    "B is reachable from S0, A is not identified by the measured applicability flip, B is not execution-confirmed after A, or B remains reachable without A.",
+    "Any adopted A has a top-level output key absent from the observed contract, omits a demanded key, contains a duplicate key, or uses an open mapping literal.",
+    "The complete-contract paired legacy liveness control does not run successfully, or the paired arms do not start from the same measured world.",
+    "Any recorded entry differs from a clean local replay.",
+    "The protocol, population, mechanism, operation set, composition bound, runner or checker moves after freeze.",
+    "A population member is dropped, rerolled, overwritten or replaced after its outcome is known.",
+    "A model call, network call, remote runner, dirty tree or pre-freeze enabling outcome enters Track A."
+  ],
+  "mechanism": {
+    "digest": "1f9f23b1c5e58cb8ef382bd7335978576c5943a8270178f1bc5bba6360fbe4de",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "additive_change": "replace subset mapping acceptance with closed exact top-level mapping acceptance only for the scoped M096 run; restore the inherited M095 shapes afterwards",
+    "inherited_unchanged": "diagnosis, operation enumeration, composition order and bound, execution probe, nested reach operation, world measurement and lineage control flow",
+    "files": [
+      "metamorphosis/m094_composition.py",
+      "metamorphosis/m094_diagnosis.py",
+      "metamorphosis/m094_execution.py",
+      "metamorphosis/m094_synthesis.py",
+      "metamorphosis/m095_reach.py",
+      "metamorphosis/m095_world.py",
+      "metamorphosis/m095_chain.py",
+      "metamorphosis/m096_contracts.py"
+    ]
+  },
+  "qualification_apparatus": {
+    "digest": "f7d093e2fbb17bed2f06367f5fb6390d21c6809957703f9a8611803caea5cc89",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "scripts/author_m095_qualification_pool.py",
+      "scripts/author_m096_qualification_pool.py",
+      "scripts/run_m095_qualification.py",
+      "scripts/run_m096_qualification.py",
+      "scripts/check_m096_result.py"
+    ]
+  },
+  "qualification_population": {
+    "construction": "exhaustive Cartesian product, not a draw",
+    "structures": 4,
+    "arrangements": 3,
+    "entries": 12,
+    "positive_entries": 8,
+    "negative_entries": 4,
+    "pool_digest": "317ff523241ebe2a168c6395f4e59662555f0455c58bfbcffe3869ce1762a766"
+  },
+  "paired_legacy_arm": {
+    "decisive": false,
+    "purpose": "measure sensitivity to exact versus subset acceptance in byte-independent copies of every frozen world",
+    "required_liveness": "both complete_minimal_contract positive entries must remain demonstrable under the inherited subset mechanism",
+    "partial_contract_outcomes": "reported without a required direction because content-addressed survivor ordering can select an exact legacy survivor; M095 attempt 1 remains the preserved negative evidence for subset non-composition"
+  },
+  "run_policy": {
+    "armed_write_required": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "no_overwrite": true,
+    "result_path": "experiments/M096/RESULT.json"
+  },
+  "owner_authorization": "The project owner instructed the agent on 2026-08-22 to continue locally until M095's exposed cause and the successor stages were validated. This authorizes local freeze and execution, not public push.",
+  "publication": {
+    "disposition": "PENDING_EXPLICIT_OWNER_DISPOSITION",
+    "local_work_authorized": true,
+    "public_push_authorized": false
+  },
+  "remote_execution_forbidden": true,
+  "verdict_rule": "negative if any computed condition fails; incomplete while any condition is uncomputed; positive only when all ten conditions are computed and true"
+}

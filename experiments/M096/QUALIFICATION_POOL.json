@@ -1,0 +1,347 @@
+{
+  "arrangements": [
+    {
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "ranking_unaided",
+      "inner_call_sites": 4,
+      "outer_call_sites": 2
+    },
+    {
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 4
+    },
+    {
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 3
+    }
+  ],
+  "construction": "exhaustive Cartesian product; no draw, salt, exclusion or reroll",
+  "development_population": "the observed M095 qualification population",
+  "entries": [
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "01deaf3585f8768151c1dd779769c34b01cd7bbdf1adb5e1fc086a7138f86497",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "aliased_partial_contract--ranking_unaided",
+      "inner_call_sites": 4,
+      "outer_call_sites": 2,
+      "structure": "aliased_partial_contract"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "7b62378af5156f0664e9a79f97fda8f83b942eba666f59a0ff67114dd39dc5f1",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "aliased_partial_contract--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 4,
+      "structure": "aliased_partial_contract"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "00a88f4a351556555573be1ae0885829bbeb8258f67d9597bed4382bdf4517ea",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "aliased_partial_contract--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 3,
+      "structure": "aliased_partial_contract"
+    },
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "164ffedc630757005458b8487074743a2b01aba540044ebfcd7f92688ac6ba4f",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "sparse_text_contract--ranking_unaided",
+      "inner_call_sites": 4,
+      "outer_call_sites": 2,
+      "structure": "sparse_text_contract"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "321c05d4454342fcd7b8b4a64d153957845339a2212b8cef5831b8801eef33e3",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "sparse_text_contract--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 4,
+      "structure": "sparse_text_contract"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "98c11a391bc7495a9f6627a0df6f314b60dce78879d437610ddf090042499283",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "sparse_text_contract--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 3,
+      "structure": "sparse_text_contract"
+    },
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "3a323f22778c4a7e433b7516bc9bc0bbde570f792e2af3118a1972ccde19805d",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "mixed_scalar_subset--ranking_unaided",
+      "inner_call_sites": 4,
+      "outer_call_sites": 2,
+      "structure": "mixed_scalar_subset"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "d40d0dfe259c11ae8fc171a270aa9d5122c08f3b387bb6815350fb683856554e",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "mixed_scalar_subset--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 4,
+      "structure": "mixed_scalar_subset"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "b6bef6964edc04f9a5c929ca24a9ac72728d8ca072a9ac571a7d96a7395ca379",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "mixed_scalar_subset--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 3,
+      "structure": "mixed_scalar_subset"
+    },
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "fe44cff16105e1018fadbdaeb03d1bcf8099beaa6b0841795fff63afcb0b337a",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "complete_minimal_contract--ranking_unaided",
+      "inner_call_sites": 4,
+      "outer_call_sites": 2,
+      "structure": "complete_minimal_contract"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "a29e1a6a855f3afeee10aa3c3d1ac0957d953b8c28eef5e1e17be38c438728cb",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "complete_minimal_contract--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 4,
+      "structure": "complete_minimal_contract"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "b16e8cf9e09461814c9a9a01d15e5c03457828aabfe363a01af6f729f43ab4d9",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "complete_minimal_contract--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 3,
+      "structure": "complete_minimal_contract"
+    }
+  ],
+  "experimenter_blindness_claimed": false,
+  "milestone": "M096",
+  "pool_digest": "317ff523241ebe2a168c6395f4e59662555f0455c58bfbcffe3869ce1762a766",
+  "population_size": 12,
+  "preflight_boundary": "S0 construction, parsing, measured demand, absence of renderers and exhaustive B-from-S0 control only; no S0-to-S1 adoption and no enabling verdict before freeze",
+  "qualification_population_was_not_run_during_development": true,
+  "schema": "m096-qualification-pool-v1",
+  "status": "frozen",
+  "structures": [
+    {
+      "id": "aliased_partial_contract",
+      "inner_class": "Locale",
+      "inner_fields": [
+        {
+          "annotation": "str",
+          "field": "primary",
+          "key": "left"
+        },
+        {
+          "annotation": "str",
+          "field": "secondary",
+          "key": "right"
+        },
+        {
+          "annotation": "str",
+          "field": "region",
+          "key": "region"
+        }
+      ],
+      "inner_rendered": [
+        "primary",
+        "secondary"
+      ],
+      "nested_field": "locale",
+      "outer_class": "Dispatch",
+      "outer_fields": [
+        {
+          "annotation": "str",
+          "field": "dispatch_id"
+        },
+        {
+          "annotation": "int",
+          "field": "priority"
+        }
+      ],
+      "outer_rendered": [
+        "dispatch_id"
+      ],
+      "variation_axes": [
+        "re-keyed inner fields",
+        "declared inner field omitted from the contract",
+        "declared outer field omitted from the nested capability"
+      ]
+    },
+    {
+      "id": "sparse_text_contract",
+      "inner_class": "Palette",
+      "inner_fields": [
+        {
+          "annotation": "str",
+          "field": "foreground",
+          "key": "ink"
+        },
+        {
+          "annotation": "str",
+          "field": "background",
+          "key": "paper"
+        },
+        {
+          "annotation": "str",
+          "field": "accent",
+          "key": "accent"
+        },
+        {
+          "annotation": "str",
+          "field": "locale",
+          "key": "locale"
+        },
+        {
+          "annotation": "str",
+          "field": "theme",
+          "key": "theme"
+        }
+      ],
+      "inner_rendered": [
+        "foreground",
+        "background"
+      ],
+      "nested_field": "palette",
+      "outer_class": "Presentation",
+      "outer_fields": [
+        {
+          "annotation": "str",
+          "field": "title"
+        },
+        {
+          "annotation": "str",
+          "field": "edition"
+        }
+      ],
+      "outer_rendered": [
+        "title",
+        "edition"
+      ],
+      "variation_axes": [
+        "two demanded bindings among five declared fields",
+        "two re-keyed string bindings",
+        "three unrelated fields omitted"
+      ]
+    },
+    {
+      "id": "mixed_scalar_subset",
+      "inner_class": "Telemetry",
+      "inner_fields": [
+        {
+          "annotation": "float",
+          "field": "temperature",
+          "key": "temp_c"
+        },
+        {
+          "annotation": "int",
+          "field": "sequence",
+          "key": "seq"
+        },
+        {
+          "annotation": "bool",
+          "field": "healthy",
+          "key": "ok"
+        },
+        {
+          "annotation": "str",
+          "field": "note",
+          "key": "note"
+        }
+      ],
+      "inner_rendered": [
+        "temperature",
+        "sequence",
+        "healthy"
+      ],
+      "nested_field": "telemetry",
+      "outer_class": "Transmission",
+      "outer_fields": [
+        {
+          "annotation": "str",
+          "field": "channel"
+        },
+        {
+          "annotation": "bool",
+          "field": "retry"
+        }
+      ],
+      "outer_rendered": [
+        "channel"
+      ],
+      "variation_axes": [
+        "four declared inner fields",
+        "three mixed scalar bindings",
+        "all demanded keys differ from their fields"
+      ]
+    },
+    {
+      "id": "complete_minimal_contract",
+      "inner_class": "Boundary",
+      "inner_fields": [
+        {
+          "annotation": "int",
+          "field": "start",
+          "key": "start"
+        },
+        {
+          "annotation": "int",
+          "field": "stop",
+          "key": "stop"
+        }
+      ],
+      "inner_rendered": [
+        "start",
+        "stop"
+      ],
+      "nested_field": "boundary",
+      "outer_class": "Region",
+      "outer_fields": [
+        {
+          "annotation": "str",
+          "field": "region_name"
+        }
+      ],
+      "outer_rendered": [
+        "region_name"
+      ],
+      "variation_axes": [
+        "complete rather than subset inner contract",
+        "identity key bindings",
+        "integer boundary values"
+      ]
+    }
+  ]
+}
