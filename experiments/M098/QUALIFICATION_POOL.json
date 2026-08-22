@@ -1,0 +1,76 @@
+{
+  "construction": "all three post-M097 structures; no draw, salt, exclusion or reroll",
+  "entries": [
+    {
+      "caller_count": 2,
+      "cases": [
+        {"high": 7.0, "low": -2.5, "sensor": "a"},
+        {"high": 5.0, "low": 5.0, "sensor": "b"},
+        {"high": 3.25, "low": 9.5, "sensor": "c"},
+        {"high": 1.0, "low": 0.125, "sensor": "d"}
+      ],
+      "class": "ThermalBand",
+      "entry_digest": "33321106bf812a935d722b164f15aef4f1debc557555bf3afdc306ca8902cfec",
+      "fields": [
+        {"annotation": "str", "name": "sensor"},
+        {"annotation": "float", "name": "low"},
+        {"annotation": "float", "name": "high"}
+      ],
+      "id": "thermal_spread",
+      "key": "spread",
+      "left_field": "high",
+      "operator": "sub",
+      "right_field": "low"
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {"ceiling": 8, "channel": "a", "epoch": 2, "floor": 1},
+        {"ceiling": 4, "channel": "b", "epoch": 3, "floor": -4},
+        {"ceiling": 2, "channel": "c", "epoch": 4, "floor": 9},
+        {"ceiling": 0, "channel": "d", "epoch": 5, "floor": 0}
+      ],
+      "class": "VersionRange",
+      "entry_digest": "adf0b42258716027eeb6538b298f2b24e2cf4e4405f7659b2931411a505a838c",
+      "fields": [
+        {"annotation": "int", "name": "floor"},
+        {"annotation": "int", "name": "ceiling"},
+        {"annotation": "str", "name": "channel"},
+        {"annotation": "int", "name": "epoch"}
+      ],
+      "id": "version_span",
+      "key": "span",
+      "left_field": "ceiling",
+      "operator": "sub",
+      "right_field": "floor"
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {"account": "x", "consumed": 4, "granted": 12},
+        {"account": "y", "consumed": 0, "granted": 0},
+        {"account": "z", "consumed": 17, "granted": 6},
+        {"account": "w", "consumed": -3, "granted": 2}
+      ],
+      "class": "QuotaSlice",
+      "entry_digest": "7640141f98887d5bd8010b62f2c9b526d0a9cab7dd9d9a321e6d2d1fa3d8cad5",
+      "fields": [
+        {"annotation": "int", "name": "consumed"},
+        {"annotation": "str", "name": "account"},
+        {"annotation": "int", "name": "granted"}
+      ],
+      "id": "quota_unused",
+      "key": "unused",
+      "left_field": "granted",
+      "operator": "sub",
+      "right_field": "consumed"
+    }
+  ],
+  "m097_development_and_qualification_worlds_excluded": true,
+  "milestone": "M098",
+  "pool_digest": "7a51e2bb955e8ef63cbac2cb183fbe42e6ccaae98190e2cb0aef3e5618d0a7ca",
+  "population_size": 3,
+  "preflight_boundary": "construct and parse source and cases only; producer, persisted-state consumer, fault mutation, rollback and any capability execution are forbidden before freeze",
+  "schema": "m098-qualification-pool-v1",
+  "status": "frozen"
+}
