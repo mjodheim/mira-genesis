@@ -2,7 +2,7 @@
 
 ## Recommended title
 
-**Mira Genesis: Causal Cumulative Capability Acquisition in a Persistent Adaptive Software Lineage**
+**Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage**
 
 ## Author
 
@@ -16,7 +16,11 @@ Independent Researcher
 
 ## Keywords
 
-adaptive software lineage; self-improvement; cumulative capability acquisition; self-modification; causal evaluation; persistent state; reproducibility; software agents
+adaptive software lineage; cumulative capability acquisition; program synthesis; self-modification; causal evaluation; persistent state; reproducibility; software agents
+
+## Positioning after pre-submission review
+
+The paper is a mechanistic, reproducible case study rather than a broad performance benchmark. M100 uses a fixed authored DSL and standard bounded enumerative synthesis. Its positive claim is bound-relative cumulative constructive reach with explicit registration, persistence, conservation, mutation, ablation, rollback, and replay controls. Fresh M100 worlds are authored Python-source qualification fixtures, not sampled production repositories.
 
 ## Repository anchor
 
@@ -27,7 +31,7 @@ adaptive software lineage; self-improvement; cumulative capability acquisition; 
 
 ## Suggested Zenodo record
 
-Archive an immutable repository snapshot at the M100 integration commit, then add the DOI to the paper and `CITATION.cff` in a follow-up publication commit. Do not invent a DOI before the deposit exists.
+Archive an immutable repository snapshot at the publication integration commit, then add the DOI to the paper and `CITATION.cff` in a follow-up publication commit. Do not invent or pre-fill a DOI before reservation/deposit.
 
 ## License notes
 
@@ -37,7 +41,7 @@ Archive an immutable repository snapshot at the M100 integration commit, then ad
 
 ## AI-assistance disclosure
 
-Mira Genesis and this manuscript were developed with substantial generative-AI assistance under Anthony Mets's direction. The repository records OpenAI Codex, Anthropic Claude, and OpenAI ChatGPT as tools/automation, not human contributors. Anthony Mets remains responsible for objectives, protocol decisions, acceptance/rejection of work, scientific claims, and publication.
+Mira Genesis and this manuscript were developed with substantial generative-AI assistance under Anthony Mets's direction. The repository records OpenAI Codex, Anthropic Claude, and OpenAI ChatGPT as tools/automation, not human contributors. Anthony Mets remains responsible for objectives, protocol decisions, acceptance/rejection of work, scientific claims, and publication. The pre-submission review was AI-assisted and must not be represented as independent peer review.
 
 ## Final actions that require the author's account or attestation
 
