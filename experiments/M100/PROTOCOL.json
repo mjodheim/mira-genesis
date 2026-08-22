@@ -1,0 +1,127 @@
+{
+  "schema": "m100-protocol-v1",
+  "milestone": "M100",
+  "hypothesis": "H45",
+  "decision_slot": "D069",
+  "status": "frozen",
+  "track": "A",
+  "date_authored": "2026-08-22",
+  "date_frozen": "2026-08-22",
+  "claim": "Across fresh isolated Python processes, the registered M097 subtraction operation makes bounded addition acquisition possible, registered addition makes bounded weighted-addition acquisition possible, the lineage conserves and reuses all three operations on nine fresh real-Python worlds, live predecessor mutation or ablation breaks downstream capability, and exact rollback restores the cumulative chain.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_generic_interpreter_eliminated": false,
+    "cross_domain_transfer": false,
+    "endogenous_objective_choice": false,
+    "experimenter_blindness": false,
+    "generality_gate": false,
+    "hostile_code_sandbox": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "open_ended_evolution": false,
+    "production_authority": false,
+    "self_hosting_runtime": false,
+    "unbounded_expressivity": false,
+    "unrestricted_program_repair": false
+  },
+  "conditions": [
+    "P1_frozen_public_protocol_pool_mechanism_checker_and_predecessors_are_bound",
+    "P2_complete_fresh_three_by_three_population_was_source_only_before_freeze",
+    "P3_fresh_process_cycles_require_registration_and_acquire_b_then_c_in_order",
+    "P4_s0_s1_s2_s3_strictly_grow_and_conserve_all_prior_definitions",
+    "P5_all_acquired_operations_remain_reusable_on_nine_fresh_worlds_after_s3",
+    "P6_every_migration_acquisition_control_and_execution_is_process_isolated",
+    "P7_new_definitions_use_only_static_stack_tokens_and_live_predecessor_calls",
+    "P8_digest_valid_semantic_mutations_prove_live_transitive_dependency",
+    "P9_predecessor_ablation_and_state_corruption_fail_closed",
+    "P10_live_fault_suppresses_c_and_byte_exact_rollback_restores_it",
+    "P11_capsule_census_and_complete_fresh_process_chronology_are_observed",
+    "P12_stable_replay_chronology_track_a_and_local_only_execution"
+  ],
+  "falsifiers": [
+    "Any frozen protocol, pool, mechanism, checker, projection or predecessor binding moves.",
+    "The nine-world population is incomplete, reuses a predecessor world, or crosses the execution boundary before freeze.",
+    "B is available without A, C is available without registered B, or an unregistered B changes reach.",
+    "The operation census is not 0/1/2/3, a prior definition changes, or the exact A/B/C signatures are not conserved.",
+    "Any of the three fresh worlds for A, B or C fails after S3.",
+    "Any migration, acquisition, control or execution is non-isolated, imports a project module or exposes the repository search path.",
+    "A new definition contains a host binary operator or does not retain its live predecessor call.",
+    "A digest-valid A mutation leaves B working or a digest-valid B mutation leaves C working.",
+    "Removing A or B or corrupting state does not fail closed.",
+    "The live S2 fault leaves C available, exact S2 rollback fails, or the post-rollback S3 differs.",
+    "The two-file capsule or 24-process census changes, PID records are absent, or the key cycle processes are not distinct.",
+    "Stable replay changes a scientific field, an unlisted field must be removed, the result is overwritten or rerolled, or model, network, remote or dirty-tree evidence enters Track A."
+  ],
+  "preserved_inputs": {
+    "m097_result_digest": "e976788fcbf7b8eff0d426dee9fa914a8aeaa7c126b2038b9f3394a1a76690c0",
+    "m097_inherited_state_digest": "2e02c5434c06c4a60af496306de3653f3070abac65a016b35445a7908aed98bd",
+    "m097_extended_state_digest": "2097d3a733f06b5d0f0b1e8071ca5e71b0d7fd1f5c7f5e050fc1b76f015b301c",
+    "m099_result_digest": "17642e0eda4fb71439269489452e835af8e30e1926518e07201303dbf72b4695",
+    "m099_checker_digest": "d2a381a6657cf3a2053d6b50040ebf67dd6d78885b23e28e9b4432575c48a651"
+  },
+  "cumulative_chain": {
+    "A": {"origin": "M097", "signature": [1, -1]},
+    "B": {"requires_registered": "A", "signature": [1, 1], "search_bound": 4},
+    "C": {"requires_registered": "B", "signature": [1, 2], "search_bound": 5},
+    "new_definition_tokens": ["PUSH_LEFT", "PUSH_RIGHT", "NEG", "SWAP", "CALL:<prior-operation-id>"],
+    "new_definitions_may_use_host_binary_tokens": false,
+    "selection": "shortest body then canonical body digest",
+    "independent_acceptance": "exact affine signature"
+  },
+  "stable_projection": {
+    "excluded_keys": ["pid", "process_pids", "search_path"],
+    "recursive": true,
+    "policy_frozen_before_qualification": true,
+    "retained_process_facts": [
+      "fresh_process_invocations",
+      "pid_records_present",
+      "all_key_cycle_processes_distinct",
+      "all_invocations_isolated",
+      "no_project_modules_imported",
+      "repository_absent_from_search_paths"
+    ]
+  },
+  "mechanism": {
+    "digest": "a3e10e3f849651ed0f653d52e50f5ac89fb67c5fec467d911bc419870366ea22",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "metamorphosis/m100_runtime.py",
+      "scripts/run_m100_isolated.py"
+    ]
+  },
+  "qualification_apparatus": {
+    "digest": "dee0c0c5c884958e41880d51256df53df7b6dbb3f50a200b8bcf7a13401ccdc4",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "scripts/author_m100_qualification_pool.py",
+      "scripts/run_m100_qualification.py",
+      "scripts/check_m100_result.py"
+    ]
+  },
+  "qualification_population": {
+    "construction": "all nine authored post-M099 structures, three per conserved operation; no draw, exclusion, salt or reroll",
+    "entries": 9,
+    "cycle_counts": {"A": 3, "B": 3, "C": 3},
+    "pool_digest": "2de1bee32c2a2923f7e05568ae6a5dfa771507b9bb7e0e508c2004c8d6880cdb",
+    "development_world_excluded": true,
+    "m097_through_m099_worlds_excluded": true,
+    "process_acquisition_execution_and_faults_unrun_before_freeze": true
+  },
+  "run_policy": {
+    "armed_write_required": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "no_overwrite": true,
+    "result_path": "experiments/M100/RESULT.json"
+  },
+  "owner_authorization": "The project owner explicitly confirmed PUBLIC_AGPL_COMMERCIAL_OPTION for M100 on 2026-08-22 and instructed continuation of cumulative repetition with local-first validation.",
+  "publication": {
+    "disposition": "PUBLIC_AGPL_COMMERCIAL_OPTION",
+    "confirmed_before_enabling_implementation": true,
+    "public_push_authorized_after_local_validation": true
+  },
+  "remote_execution_forbidden": true,
+  "verdict_rule": "positive only when all twelve frozen conditions are computed and true"
+}

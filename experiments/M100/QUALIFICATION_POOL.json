@@ -1,0 +1,515 @@
+{
+  "construction": "all nine authored post-M099 structures, three per conserved operation; no draw, exclusion, salt or reroll",
+  "cycle_counts": {
+    "A": 3,
+    "B": 3,
+    "C": 3
+  },
+  "entries": [
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "baseline": 3,
+          "channel": "a",
+          "observed": 11
+        },
+        {
+          "baseline": 7,
+          "channel": "b",
+          "observed": 7
+        },
+        {
+          "baseline": 14,
+          "channel": "c",
+          "observed": 2
+        },
+        {
+          "baseline": -5,
+          "channel": "d",
+          "observed": 4
+        }
+      ],
+      "class": "SignalFrame",
+      "cycle": "A",
+      "entry_digest": "c62e52915744663043621b788aafe10c7363de690a685f98474cb9b29def6632",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "channel"
+        },
+        {
+          "annotation": "int",
+          "name": "baseline"
+        },
+        {
+          "annotation": "int",
+          "name": "observed"
+        }
+      ],
+      "id": "signal_margin",
+      "key": "margin",
+      "left_field": "observed",
+      "right_field": "baseline",
+      "signature": [
+        1,
+        -1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "available": 8.0,
+          "reserved": 2.5,
+          "revision": 1,
+          "route": "n"
+        },
+        {
+          "available": 5.0,
+          "reserved": 5.0,
+          "revision": 2,
+          "route": "s"
+        },
+        {
+          "available": 1.5,
+          "reserved": 9.25,
+          "revision": 3,
+          "route": "e"
+        },
+        {
+          "available": 3.25,
+          "reserved": -1.0,
+          "revision": 4,
+          "route": "w"
+        }
+      ],
+      "class": "RouteBudget",
+      "cycle": "A",
+      "entry_digest": "e9dd1e2593ab6f224c0a9cba9fd25ff1a358325a2f4d1d30c9a470d92d6b6bc4",
+      "fields": [
+        {
+          "annotation": "float",
+          "name": "reserved"
+        },
+        {
+          "annotation": "str",
+          "name": "route"
+        },
+        {
+          "annotation": "float",
+          "name": "available"
+        },
+        {
+          "annotation": "int",
+          "name": "revision"
+        }
+      ],
+      "id": "route_slack",
+      "key": "slack",
+      "left_field": "available",
+      "right_field": "reserved",
+      "signature": [
+        1,
+        -1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "epoch": 1,
+          "measured": 10.5,
+          "probe": "p",
+          "reference": 2.0
+        },
+        {
+          "epoch": 2,
+          "measured": 4.0,
+          "probe": "q",
+          "reference": 4.0
+        },
+        {
+          "epoch": 3,
+          "measured": -3.5,
+          "probe": "r",
+          "reference": 1.0
+        },
+        {
+          "epoch": 4,
+          "measured": 0.25,
+          "probe": "s",
+          "reference": -2.5
+        }
+      ],
+      "class": "CalibrationRead",
+      "cycle": "A",
+      "entry_digest": "b97c660a860c61516dff529284f9df2dccb33317c704c3074816f1813cb0c16d",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "probe"
+        },
+        {
+          "annotation": "float",
+          "name": "measured"
+        },
+        {
+          "annotation": "int",
+          "name": "epoch"
+        },
+        {
+          "annotation": "float",
+          "name": "reference"
+        }
+      ],
+      "id": "thermal_offset",
+      "key": "offset",
+      "left_field": "measured",
+      "right_field": "reference",
+      "signature": [
+        1,
+        -1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "node": "a",
+          "primary": 9,
+          "secondary": 4
+        },
+        {
+          "node": "b",
+          "primary": 3,
+          "secondary": -3
+        },
+        {
+          "node": "c",
+          "primary": -2,
+          "secondary": 8
+        },
+        {
+          "node": "d",
+          "primary": -7,
+          "secondary": -5
+        }
+      ],
+      "class": "LoadPair",
+      "cycle": "B",
+      "entry_digest": "6cd51362ce465d179458e7c0448d75a995d37741dcfe0ebee18580c533605721",
+      "fields": [
+        {
+          "annotation": "int",
+          "name": "secondary"
+        },
+        {
+          "annotation": "int",
+          "name": "primary"
+        },
+        {
+          "annotation": "str",
+          "name": "node"
+        }
+      ],
+      "id": "combined_load",
+      "key": "combined",
+      "left_field": "primary",
+      "right_field": "secondary",
+      "signature": [
+        1,
+        1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "account": "x",
+          "carried": 1.25,
+          "earned": 4.5,
+          "period": 1
+        },
+        {
+          "account": "y",
+          "carried": 0.0,
+          "earned": 0.0,
+          "period": 2
+        },
+        {
+          "account": "z",
+          "carried": 9.5,
+          "earned": -2.0,
+          "period": 3
+        },
+        {
+          "account": "w",
+          "carried": -3.0,
+          "earned": -1.5,
+          "period": 4
+        }
+      ],
+      "class": "CreditPair",
+      "cycle": "B",
+      "entry_digest": "b39a62e9e6bc20d2afbc5b698743639c01b26de55252bf6b8aff3d6a31f40125",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "account"
+        },
+        {
+          "annotation": "float",
+          "name": "earned"
+        },
+        {
+          "annotation": "int",
+          "name": "period"
+        },
+        {
+          "annotation": "float",
+          "name": "carried"
+        }
+      ],
+      "id": "total_credit",
+      "key": "total",
+      "left_field": "earned",
+      "right_field": "carried",
+      "signature": [
+        1,
+        1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "outbound": 12,
+          "returning": 5,
+          "route": "m",
+          "version": 1
+        },
+        {
+          "outbound": 7,
+          "returning": 0,
+          "route": "n",
+          "version": 2
+        },
+        {
+          "outbound": 6,
+          "returning": -4,
+          "route": "o",
+          "version": 3
+        },
+        {
+          "outbound": -2,
+          "returning": -9,
+          "route": "p",
+          "version": 4
+        }
+      ],
+      "class": "RouteLegs",
+      "cycle": "B",
+      "entry_digest": "a4c06122b87f85581c21c38130a5b77ee6d27a98f194147264fb8df0ecba1151",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "route"
+        },
+        {
+          "annotation": "int",
+          "name": "returning"
+        },
+        {
+          "annotation": "int",
+          "name": "outbound"
+        },
+        {
+          "annotation": "int",
+          "name": "version"
+        }
+      ],
+      "id": "merged_distance",
+      "key": "distance",
+      "left_field": "outbound",
+      "right_field": "returning",
+      "signature": [
+        1,
+        1
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "base": 10,
+          "bonus": 3,
+          "label": "a"
+        },
+        {
+          "base": 4,
+          "bonus": 0,
+          "label": "b"
+        },
+        {
+          "base": -2,
+          "bonus": 5,
+          "label": "c"
+        },
+        {
+          "base": 7,
+          "bonus": -4,
+          "label": "d"
+        }
+      ],
+      "class": "ScorePair",
+      "cycle": "C",
+      "entry_digest": "f7e412ddf4b0ee591fd823c4f47afb6e3c27612cf6b2c1f230a982e17b88e065",
+      "fields": [
+        {
+          "annotation": "int",
+          "name": "base"
+        },
+        {
+          "annotation": "str",
+          "name": "label"
+        },
+        {
+          "annotation": "int",
+          "name": "bonus"
+        }
+      ],
+      "id": "reinforced_score",
+      "key": "reinforced",
+      "left_field": "base",
+      "right_field": "bonus",
+      "signature": [
+        1,
+        2
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "batch": 1,
+          "currency": "e",
+          "setup": 8.0,
+          "unit": 2.5
+        },
+        {
+          "batch": 2,
+          "currency": "f",
+          "setup": 3.0,
+          "unit": 0.0
+        },
+        {
+          "batch": 3,
+          "currency": "g",
+          "setup": 2.0,
+          "unit": -1.5
+        },
+        {
+          "batch": 4,
+          "currency": "h",
+          "setup": -2.5,
+          "unit": 4.25
+        }
+      ],
+      "class": "CostFrame",
+      "cycle": "C",
+      "entry_digest": "f1ba0be43b490631fc9d947c960d2594568793e3a811d92ab084bd34eec67be7",
+      "fields": [
+        {
+          "annotation": "float",
+          "name": "unit"
+        },
+        {
+          "annotation": "float",
+          "name": "setup"
+        },
+        {
+          "annotation": "str",
+          "name": "currency"
+        },
+        {
+          "annotation": "int",
+          "name": "batch"
+        }
+      ],
+      "id": "replicated_cost",
+      "key": "replicated",
+      "left_field": "setup",
+      "right_field": "unit",
+      "signature": [
+        1,
+        2
+      ]
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {
+          "core": 20,
+          "generation": 1,
+          "serial": "u",
+          "shell": 3
+        },
+        {
+          "core": 6,
+          "generation": 2,
+          "serial": "v",
+          "shell": 0
+        },
+        {
+          "core": 9,
+          "generation": 3,
+          "serial": "w",
+          "shell": -4
+        },
+        {
+          "core": -5,
+          "generation": 4,
+          "serial": "x",
+          "shell": 7
+        }
+      ],
+      "class": "MassBlend",
+      "cycle": "C",
+      "entry_digest": "05bea4faf5562f21d9e68e10b86aa5f9f2a7fb6770db663dee1e9fe2a0bd32e6",
+      "fields": [
+        {
+          "annotation": "str",
+          "name": "serial"
+        },
+        {
+          "annotation": "int",
+          "name": "shell"
+        },
+        {
+          "annotation": "int",
+          "name": "core"
+        },
+        {
+          "annotation": "int",
+          "name": "generation"
+        }
+      ],
+      "id": "duplicated_mass",
+      "key": "loaded",
+      "left_field": "core",
+      "right_field": "shell",
+      "signature": [
+        1,
+        2
+      ]
+    }
+  ],
+  "m097_through_m099_worlds_excluded": true,
+  "milestone": "M100",
+  "pool_digest": "2de1bee32c2a2923f7e05568ae6a5dfa771507b9bb7e0e508c2004c8d6880cdb",
+  "population_size": 9,
+  "preflight_boundary": "construct and parse source and cases only; migration, acquisition, registration, isolated execution, mutation, ablation and rollback are forbidden before freeze",
+  "schema": "m100-qualification-pool-v1",
+  "status": "frozen"
+}
