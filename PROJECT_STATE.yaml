@@ -1,20 +1,16 @@
 project: Mira Genesis
-updated_at: 2026-08-17
-status: phase_eight_m084_mechanisms_integrated_into_one_persistent_lineage_no_gate_advanced
+updated_at: 2026-08-22
+status: m094_positive_qualified_m095_development_frontier_not_frozen
 
 active_research_question: >-
-  M084 showed that the mechanisms M076-M083 qualified separately can be the faculties of one
-  persistent lineage across three real substrates, but its ablation cost only efficiency and every
-  goal, carrier and substrate is project-authored. The next question is G4: can knowledge acquired
-  in one domain improve held-out performance in a materially different one, on tasks maintained
-  outside this project, behind the M075 fail-closed private boundary and with independent
-  reproduction?
+  Can an adopted, lineage-selected repair causally change what later repairs are reachable,
+  including by using a failed search to descend to an enabling prerequisite, before the project
+  attempts endogenous transformation-language extension in the same real-software lineage?
 
 preceding_research_question: >-
-  After M074 validly found zero calibrated refusals despite complete feasible-task execution, can a
-  successor develop task-agnostic epistemic and remaining-budget state on a separate bank, then
-  transfer it across private uncontaminated, materially different capability families with
-  independent reproduction?
+  M094 asked whether the lineage could measure which real repository component limited it and
+  assemble the repair without being handed the target or finished patch. Attempt 2 qualified
+  positively with all 12 conditions true and 2/2 cross-component qualification cases.
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -70,6 +66,53 @@ epistemic_tracks:
   measurement_track:
     reserved_experiment: M045
     separate: true
+
+current_real_software_frontier:
+  M091:
+    status: positive_scientific_result_h37_supported
+    bounded_abstract_language_extension: true
+    inherited_language_insufficiency_proved: true
+    state_owned_language_extended_endogenously: true
+    real_software_lineage_result: false
+  M092:
+    status: aborted_without_verdict
+    terminal_candidate_claimed: false
+    independent_reproduction_performed: false
+    qualification_materialised: false
+  M093:
+    status: engineering_rehearsal_non_qualifying
+    real_repository_transformation: true
+    autonomous_diagnosis_demonstrated: false
+    non_predefined_repair_generation_demonstrated: false
+  M094:
+    status: positive_qualified_scientific_result
+    attempt: 2
+    run_commit: 43ef9d30
+    adopted_mechanism_digest_prefix: 259e12f5
+    model_calls: 0
+    network_calls: 0
+    conditions_computed: 12
+    conditions_true: 12
+    qualification_entries: 2
+    qualification_satisfied: 2
+    decision_slot: D063
+    decision_slot_filled: false
+  M095:
+    status: development_mechanism_under_adversarial_audit
+    scientific_verdict_exists: false
+    hypothesis_registered: false
+    protocol_frozen: false
+    qualification_pool_exists: false
+    run_armed: false
+    audit_defects: 19
+    audit_defects_repaired: 18
+    audit_defects_disclosed_not_repaired: 1
+    demand_bearing_arrangements_demonstrated: 6
+    arrangements_demonstrated_without_descending: 4
+    arrangements_requiring_failed_search_descent: 2
+    no_inner_demand_negative_arrangements: 2
+    operation_set_changes_between_s0_and_s1: false
+    current_ceiling: authored_world_operation_language_and_unresolved_qualification_design
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
@@ -985,12 +1028,12 @@ active_construction_frontier:
   closure_decision: D026
 
 phase_eight:
-  status: m073_positive_qualified_with_m069_posthoc_disqualification
-  objective: bounded_contract_blind_adaptive_embodiment
+  status: m094_positive_qualified_m095_development_frontier
+  objective: bounded_contract_blind_adaptive_embodiment_and_endogenous_real_software_self_transformation
   agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
   entry_decision: D027
   hypothesis: H14
-  current_hypothesis: H15
+  current_hypothesis: null
   M067:
     canonical: false
     protocol: experiments/M067/PROTOCOL.md
@@ -2540,6 +2583,52 @@ phase_eight:
       - composition_bound
     external_model_called: false
     network_calls: 0
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M095:
+    title: improvement enabling improvement in the real-software lineage
+    epistemic_track: endogenous_bounded_lineage
+    status: development_mechanism_under_adversarial_audit_not_frozen_not_qualified
+    hypothesis_registered: false
+    protocol_frozen: false
+    qualification_pool_exists: false
+    run_armed: false
+    scientific_result_exists: false
+    scientific_verdict_exists: false
+    authored_world: true
+    audit_defects_found: 19
+    audit_defects_repaired: 18
+    audit_defects_disclosed_not_repaired: 1
+    demand_bearing_arrangements_demonstrated: 6
+    demonstrated_without_descending: 4
+    demonstrated_with_failed_search_descent: 2
+    zero_inner_demand_negative_arrangements: 2
+    failed_search_names_obstacle: true
+    obstacle_identifies_missing_supplier: true
+    descent_adds_operation_to_language: false
+    operation_set_same_at_s0_and_s1: true
+    b_from_s0_examined: 191
+    b_from_s0_survivors: 0
+    a_from_s0_examined: 191
+    a_from_s0_confirmed: 3
+    b_from_s1_examined: 239
+    b_from_s1_confirmed: 12
+    b_without_a_examined: 191
+    b_without_a_survivors: 0
+    random_target_arm: unrunnable
+    withheld_operation_control_falsifiable: false
+    withheld_operation_control_status: disclosed_boundary_not_repaired
+    current_remaining_work:
+      - qualification_pool_outside_the_development_world
+      - constructibility_verified_before_freeze
+      - recomputing_checker
+      - scientific_runner
+      - hypothesis_and_falsifiers
+      - frozen_protocol
+      - owner_freeze_and_arming
+      - scientific_qualification_run
+    next_planned_boundary: M096_real_software_endogenous_transformation_language_extension
     generality_gate_advanced: false
     agi_evidence: false
 

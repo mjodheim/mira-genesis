@@ -23,25 +23,21 @@ attribute external-model competence to Mira. See
   arrangement mechanism from copying to reduction.
 - **Phase 7 — canonical real-substrate completion:** M064–M066. M066 passed all ten gates
   canonically; the construction line is closed by D026.
-- **Phase 8 — adaptive embodiment:** M067 removes the complete supplied target adapter and
-  discovers four opaque contracts across a committed body class. Positive and qualified in
-  development on exact commit `7d38ac8`. M068 then induces four distinct command languages from
-  the complete 37,448-word space after a separate target freeze. Positive in development on exact
-  learner commit `f033ac7`, qualified by first run `31314960014`. M069 then attempted a governed
-  real filesystem/process crossing. Its historical learner met the task thresholds, but a later
-  audit showed hidden evidence was reachable through candidate execution and evaluator output;
-  D037 post-hoc disqualifies the positive verdict.
-  M070 then crossed into independently maintained, blindly selected Terminal-Bench 2 containers,
-  but scored 0/2 after a UTF-8/process-tree transport failure. The negative result is preserved.
-  M071's corrected system then passed 1/2 fresh blindly selected tasks. M072 isolates the causal
-  value of authority admission and audit chaining under a bounded authored threat model. M073 then
-  induces one executable capsule from four external demonstrations, removes the teacher and applies
-  the capsule successfully to twelve fresh authored programs. M074 then froze and ran one paired
-  refusal-calibration campaign: all feasible tasks succeeded, but the model never refused an
-  impossible member, so its precommitted threshold failed. M075 now develops explicit
-  self-evidence on a separate public bank, with no model result yet.
-  These results remain mechanism
-  evidence and do not change the endogenous Genesis ownership gates.
+- **Phase 8 — adaptive embodiment and the current endogenous real-software frontier:** M067–M084
+  progressively test opaque contract induction, real-environment governance, multimodal grounding,
+  planning, retention, interface transfer and persistent-lineage integration. M085 remains prepared
+  but blocked on an independent maintainer. M086-A was post-hoc disqualified; M086-B and M086-C are
+  preserved negatives. M087–M091 then progressively make selection, experiment construction and the
+  transformation language itself more lineage-owned, with M091 supporting bounded endogenous
+  language extension. M092 was voluntarily aborted without verdict. M093 is a non-qualifying real
+  repository rehearsal. **M094 is the current positive qualified real-software anchor:** autonomous
+  measurement selected the limiting component and assembled its repair with zero model/network
+  calls. **M095 is the active development frontier:** an adopted repair changes later constructive
+  reach, and a failed search can descend to an enabling prerequisite; nothing is frozen or qualified
+  yet. The next planned boundaries are real-software endogenous language extension (M096), hard
+  persistence across complete process death/restart (M097), then repeated cumulative cycles.
+  These results remain bounded mechanism evidence and do not imply open-ended recursive
+  self-improvement or general intelligence.
 - **Measurement track:** proxy objectives versus exact hidden quality; still open as M045.
 
 M042 remains the positive canonical finite-DFA completion. M066 is the positive canonical
@@ -352,6 +348,10 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
+| M095 | Test whether one acquired repair changes the constructive reach of a later repair | **Development mechanism under adversarial audit — not frozen, not qualified** | The enabling relation holds in all six demand-bearing arrangements; four find the enabling order from demand ranking alone and two require failed-search descent to a lower-ranked enabler. Two zero-inner-demand arrangements remain negative. Nineteen audit defects found, eighteen repaired, one disclosed. No hypothesis/protocol/qualification/run/verdict yet. |
+| M094 | Let the lineage measure which real component limits it and assemble that repair | **Positive qualified scientific result** | Attempt 2, run commit `43ef9d30`: zero model/network calls; `mira_core/contracts.py` selected by measurement; `Goal` and `Observation` repaired; 12/12 conditions true and 2/2 cross-component qualification. Attempt 1 remains withdrawn over byte-exact rollback evidence. |
+| M093 | Exercise the transformation/adoption path on a real repository component | **Engineering rehearsal — non-qualifying** | Real `MemoryLedger` transformation, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Target, diagnosis and patch remain substantially authored. |
+| M092 | Attempt endogenous substrate extension under a frozen canonical search | **Aborted without verdict** | Search voluntarily stopped before terminal candidate, independent reproduction or qualification. H38 unresolved; D062 unfilled. |
 | M091 | Add an operation to the language the lineage actually owns, when that language cannot express a transformation it needs | **Positive qualified development; H37 supported; no gate** | Protocol frozen at `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and passed. The gap is deliberately **not** M089's fan-in: the requirement reads one input position, and the validator refuses M090's fan-in probe as overbroad. Insufficiency is proved by a closure lemma over 22,500 abstract states with zero escapes, an abstraction re-checked against the concrete interpreter on 452 slot functions, and a finite certificate refuting every constant, every affine map of the requirement's source and every function of a rival position. 3,248 candidates assembled from the frozen substrate, 3,247 refused across five reasons, and the adopted body matches none of the 87 behaviours reachable by compositions of the inherited language. Two worlds drawn afterwards from a salt derived from the extended language's digest were solved 5/5 on held-out instances in two materially different families, the second by conjugating the new operation with the inherited sign flip. All controls 0/2: a depth-six budget arm at 7,072,128 programs and 418,704 behaviours, a built-but-unregistered arm holding the same validated bytes, a fresh agent, and a macro-only arm that really did memoize a composition and cut its search from 38,848 programs to 5,477 — the M055 contrast made numeric. Rollback is exact and behavioural on both sides, and the before-adoption restore genuinely reverses the provisional extension. **H35 remains not supported** and is not re-attempted. |
 | M090 | Make the language the lineage stores the language its interpreter executes | **Positive qualified development; H36 supported; no gate** | Protocol frozen at `ffe5086`; result `79876238...f8d8bd`, attempt 3 after two disclosed corrections, twelve conditions computed and passed. D059's precondition: M089 dispatched base operations from a module constant while `base_operations` was serialized and consulted by nothing. One registry now holds every primitive, the interpreter branches on no identifier, and migration conserved every inherited behaviour over 5,328 legacy programs with zero mismatches. Removing a primitive removes the capability, mutating one changes behaviour, rollback is exact and behavioural on both sides, and a fresh process cannot resurrect a removed primitive. The historical control reproduces the M089 defect. **H35 remains not supported** and is not re-attempted; the probe extension is authored. Amendment A1, a scanner defect that made the first run negative, is disclosed and the superseded run preserved. |
 | M089 | Extend the language the lineage uses to improve itself, when that language cannot express the modification it needs | **Valid negative; H35 not supported; no gate** | Protocol frozen at `f8ab249` before any qualification data existed; result `20c432a3...134f4b`, attempt 1, no retry. Nine of ten conditions passed and **P10 failed**. L0's insufficiency is proved by an invariant holding at any length; 85 primitives were assembled from an eight-operation substrate and 84 rejected; the adopted primitive is not macro-reducible to L0, `macro_only_extension` could not acquire anything, `extension_built_but_not_registered` scored 0/2 isolating registration as the causal step, and `more_budget_same_meta_language` examined 266,400 programs against 2,664 and closed nothing. P10 failed because `execute` dispatches base operations from a module constant rather than from the language state, so no fault to the pre-extension language can change behaviour: **only the registry is executable state.** The negative is preserved, not repaired. |
@@ -417,6 +417,29 @@ a richer organism.
 All scientific autonomy remains inside explicit finite or resource-limited sandboxes.
 Repository writes, network access, credentials, deployment and production changes remain
 human-controlled, even after a scientific result passes.
+
+### Current frontier after M094 / M095
+
+M094 is the current qualified anchor on the real-software self-transformation line. M095 is still
+only development evidence, but it asks the first explicitly cumulative question on that line: does
+an adopted repair alter what the lineage can construct next? The current mechanism demonstrates the
+enabling relation in six demand-bearing arrangements, with four found by ranking alone and two only
+after failed-search descent to the prerequisite.
+
+The next ordered boundaries are intentionally stronger rather than larger versions of M095:
+
+- **M096 — endogenous language extension in the real-software line:** prove the inherited operation
+  language is insufficient, acquire an extension without receiving the finished operation, persist
+  it, and use it to construct a previously inaccessible capability. More budget or composition of
+  the same language must not substitute for extension.
+- **M097 — hard persistence:** terminate the complete process and prove the acquired transformation
+  capability returns from lineage-owned persisted state rather than a hidden host implementation.
+- **Later — repeated cumulative cycles:** A enables B, B enlarges the machinery for C, and the same
+  causal pattern survives fresh tasks and eventually materially different domains. Only then does it
+  become meaningful to measure whether the ability to improve is itself improving.
+
+M095 must first earn its own frozen protocol and qualification. No later milestone may be cited to
+retroactively strengthen it.
 
 ### After M091
 
