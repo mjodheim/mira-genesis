@@ -71,6 +71,18 @@ def test_the_world_presents_a_plain_and_a_nested_demand(tmp_path: Path) -> None:
     assert unmet[("Sample", NESTED)].demand == 2
 
 
+def test_the_chain_can_run_an_already_built_world(tmp_path: Path) -> None:
+    """Qualification may vary structure without gaining a second chain implementation."""
+
+    root = tmp_path / "root"
+    counterfactual = tmp_path / "counterfactual"
+    build(root)
+    build(counterfactual)
+    built = chain.run_existing(root, counterfactual)
+    assert built.enabling_demonstrated is True
+    assert built.facts["inner_class"] == "Reading"
+
+
 def test_nothing_renders_itself_at_s0(tmp_path: Path) -> None:
     world.build(tmp_path)
     tree = ast.parse((tmp_path / world.COMPONENT).read_text(encoding="utf-8"))

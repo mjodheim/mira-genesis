@@ -556,10 +556,23 @@ def run(root: Path, counterfactual_root: Path, *,
     without A, is B still out of reach?
     """
 
-    chain = Chain()
     arrangement = dict(reading_callers=reading_callers, sample_callers=sample_callers)
     world.build(root, **arrangement)
     world.build(counterfactual_root, **arrangement)
+    return run_existing(root, counterfactual_root)
+
+
+def run_existing(root: Path, counterfactual_root: Path) -> Chain:
+    """Run the unchanged chain on two already-built, byte-independent S0 worlds.
+
+    Qualification varies world structure rather than only caller counts.  Its world author lives
+    outside the lineage, under ``scripts/``; this entry point merely removes the default builder
+    from the path.  Both roots must already contain the component and callers, and neither is
+    trusted as a description of the other: ``WorldFacts`` and the diagnosis re-read them.
+    """
+
+    clear_caches()
+    chain = Chain()
     chain.facts = world.WorldFacts.of(root).to_dict()
 
     # The control runs first, on untouched S0.

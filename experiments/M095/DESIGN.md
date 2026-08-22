@@ -246,7 +246,7 @@ the plain renderer and **no enabling would have been demonstrated**.
 > it is not another argument but a test that **permutes every tie and requires the whole sweep
 > unchanged**, because A4's own premise is that tied members carry no information about order.
 > The fourth-pass snapshot recorded sixteen defects, fifteen repaired. The current audit records
-> twenty-six across six passes, twenty-five repaired; defect 19 remains disclosed rather than
+> thirty-one across seven passes, thirty repaired; defect 19 remains disclosed rather than
 > repaired.
 
 Amendment A4's rule applies at the capability level as it does at the class level: every capability
@@ -287,7 +287,7 @@ What remains before a freeze: a qualification pool drawn from outside this world
 case verified by construction, a checker that recomputes rather than reads, a runner, and a
 protocol. Freezing it and arming a run are the owner's acts, not an agent's.
 
-Six adversarial passes have now recorded twenty-six defects; twenty-five are repaired and defect
+Seven adversarial passes have now recorded thirty-one defects; thirty are repaired and defect
 19 remains disclosed because making its withheld-operation arm falsifiable would require inventing
 a second operation for the sake of a control. The sixth pass found seven further defects in method
 selection, nested-demand attribution, the evidence record, tied-round completeness and the

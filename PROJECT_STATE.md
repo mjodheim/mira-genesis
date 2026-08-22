@@ -107,12 +107,13 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   operations, with zero model and network calls; qualification passed 2/2 cross-component and all
   twelve conditions computed true. The eligible set, observations, operation set and composition
   bound remain authored.
-- **M095 is the active development frontier and has no scientific verdict.** In its authored world,
+- **M095 is the active frozen-but-unrun frontier and has no scientific verdict.** In its authored world,
   adopting one repair changes what a later repair is constructibly reachable. The relation is now
   demonstrated in all six demand-bearing arrangements; four find the enabling order from the
   diagnosis ranking alone and two require the failed-search descent to the lower-ranked enabler.
   Two zero-inner-demand arrangements remain deliberately negative because no observable enabler
-  exists. No hypothesis or protocol is frozen, no qualification pool exists and no run is armed.
+  exists. H40, its protocol and an exhaustive nine-entry structural population are frozen locally;
+  no qualification run or verdict exists.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
@@ -1103,7 +1104,7 @@ question remains open but is not a missing completion gate.
   **Still authored, and the next ceiling**: the eligible component set, the admissible observations,
   the operation set and the composition bound. D063 is unfilled.
 
-- **M095 is a MECHANISM DEMONSTRATION — nothing is frozen and no run has been armed.** It asks
+- **M095 is FROZEN AND UNRUN.** It asks
   whether an adopted repair changes what the lineage can *reach*, and the mechanism is built and
   measured in an authored, disclosed world: `S0 →(A) S1 →(B) S2`, with the diagnosis choosing both
   targets. **B is unreachable from S0** — 191 compositions examined, 0 survivors — and reachable
@@ -1111,8 +1112,8 @@ question remains open but is not a missing completion gate.
   causes: removing A leaves B unreachable, and withholding the nested operation at S1 leaves B
   unreachable, so **A is necessary and the operation is the vehicle** — a conjunctive claim, not
   "A enabled B". Every reached repair is confirmed by executing it.
-  **A design audit run before any protocol has found nineteen defects across five passes**
-  (`experiments/M095/DESIGN_AUDIT.md`). Eighteen are repaired; one is disclosed rather than repaired — defect 19 is a control that cannot fail
+  **A design audit run before any protocol has found thirty-one defects across seven passes**
+  (`experiments/M095/DESIGN_AUDIT.md`). Thirty are repaired; one is disclosed rather than repaired — defect 19 is a control that cannot fail
   and is disclosed rather than repaired. Three were in the instrument, two of them regressions of
   M094 amendments: the search had stopped executing candidates (A2), and the nested requirement did
   not record what the call sites wrote, so the probe refused every correct candidate. Three were in
@@ -1172,10 +1173,10 @@ question remains open but is not a missing completion gate.
   **amendment A1 for the fifth time in this milestone**, in the field added to repair A2.
   **Five of the nineteen audit defects were regressions of amendments this project had already
   bought and written down**, and A4 alone accounts for three, which says the amendment register is
-  doing less work than it appears to. What remains before a freeze: a qualification pool drawn from
-  outside this world with every hidden case verified by construction, a checker that recomputes
-  rather than reads, a runner and a protocol. No hypothesis is registered, no protocol is frozen,
-  no qualification pool exists, and freezing or arming remains the owner's act.
+  doing less work than it appears to. H40, a local-only runner, a recomputing checker and an
+  exhaustive nine-entry population are now frozen. The population crosses three structures with
+  unaided-ranking, failed-search-descent and zero-visible-enabler arrangements; every S0 passed its
+  construction audit without running the chain. No qualification result exists yet.
   See `experiments/M095/DESIGN.md` and `experiments/M095/OPEN_DECISIONS.md`.
 
 ## Parallel measurement track — M045

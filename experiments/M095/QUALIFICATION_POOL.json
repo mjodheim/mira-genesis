@@ -1,0 +1,180 @@
+{
+  "arrangements": [
+    {
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "ranking_unaided",
+      "inner_call_sites": 3,
+      "outer_call_sites": 2
+    },
+    {
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 3
+    },
+    {
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 2
+    }
+  ],
+  "construction": "exhaustive Cartesian product; no draw, salt, exclusion or reroll",
+  "development_world_excluded": true,
+  "entries": [
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "42adfc27ff3fecb98785e231d29dccd208dc13fe36ce11888fb8263692af0fe8",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "renamed_minimal--ranking_unaided",
+      "inner_call_sites": 3,
+      "outer_call_sites": 2,
+      "structure": "renamed_minimal"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "7d3b17949e0267966e8fb162363801d1444d99e07a3ceb69c38a8bda25ac00f7",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "renamed_minimal--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 3,
+      "structure": "renamed_minimal"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "5345493f620e27ae68d5423b3002ca61c9af764d2d616429c3b46b90f6808f4d",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "renamed_minimal--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 2,
+      "structure": "renamed_minimal"
+    },
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "2930b9ef66693b2b56c734babe3e0c83f79e08984365d9ffa04a17a4b3a2b522",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "larger_arity--ranking_unaided",
+      "inner_call_sites": 3,
+      "outer_call_sites": 2,
+      "structure": "larger_arity"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "829afa4d2b8ff7c2e9f5d9300ddbf36f4ec64cdabfd4b0ca81d52898d0a6efe0",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "larger_arity--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 3,
+      "structure": "larger_arity"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "5431f8eac6561658751d80d83fa36e506824c54dc1f451807713f7f1ab715ddc",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "larger_arity--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 2,
+      "structure": "larger_arity"
+    },
+    {
+      "arrangement": "ranking_unaided",
+      "entry_digest": "0f6b218f42d068a7ebff367e9594d6c183f18f517f7a37a1fdb4061de0f88f03",
+      "expected_descent": false,
+      "expected_relation": true,
+      "id": "unrelated_and_collection--ranking_unaided",
+      "inner_call_sites": 3,
+      "outer_call_sites": 2,
+      "structure": "unrelated_and_collection"
+    },
+    {
+      "arrangement": "failed_search_descent",
+      "entry_digest": "fbeb18db1bae2ab7ef5e17baf22053a02f5d0128dda8a6127d662a4dee8ac887",
+      "expected_descent": true,
+      "expected_relation": true,
+      "id": "unrelated_and_collection--failed_search_descent",
+      "inner_call_sites": 1,
+      "outer_call_sites": 3,
+      "structure": "unrelated_and_collection"
+    },
+    {
+      "arrangement": "no_visible_enabler",
+      "entry_digest": "3aaf2b43a172119e88f26c5c4f8b94961bb5cb3943dae88c84a75e1c3c5f45c9",
+      "expected_descent": false,
+      "expected_relation": false,
+      "id": "unrelated_and_collection--no_visible_enabler",
+      "inner_call_sites": 0,
+      "outer_call_sites": 2,
+      "structure": "unrelated_and_collection"
+    }
+  ],
+  "experimenter_blindness_claimed": false,
+  "lineage_reachability_claimed": false,
+  "milestone": "M095",
+  "pool_digest": "4a7fedf2a4c3e7eaab3acb33a4055fcadd8f80d1e702de0462809c4bcbf495f3",
+  "population_size": 9,
+  "preflight_boundary": "S0 construction, measured demand, absence of renderers and exhaustive B-from-S0 control only; the chain and enabling verdict are forbidden before freeze",
+  "schema": "m095-qualification-pool-v1",
+  "status": "frozen",
+  "structures": [
+    {
+      "id": "renamed_minimal",
+      "inner_class": "Coordinate",
+      "inner_fields": [
+        {"annotation": "str", "field": "x", "key": "x_axis"},
+        {"annotation": "str", "field": "y", "key": "y_axis"}
+      ],
+      "inner_rendered": ["x", "y"],
+      "nested_field": "coordinate",
+      "outer_class": "Envelope",
+      "outer_fields": [{"annotation": "str", "field": "label"}],
+      "outer_rendered": ["label"],
+      "variation_axes": ["renamed classes", "renamed fields", "re-keyed inner mapping"]
+    },
+    {
+      "id": "larger_arity",
+      "inner_class": "Vector",
+      "inner_fields": [
+        {"annotation": "int", "field": "horizontal", "key": "x"},
+        {"annotation": "int", "field": "vertical", "key": "y"},
+        {"annotation": "int", "field": "depth", "key": "z"}
+      ],
+      "inner_rendered": ["horizontal", "vertical", "depth"],
+      "nested_field": "vector",
+      "outer_class": "Frame",
+      "outer_fields": [
+        {"annotation": "str", "field": "frame_id"},
+        {"annotation": "int", "field": "sequence"}
+      ],
+      "outer_rendered": ["frame_id", "sequence"],
+      "variation_axes": ["three-field inner", "two scalar outer fields", "integer values"]
+    },
+    {
+      "id": "unrelated_and_collection",
+      "inner_class": "Marker",
+      "inner_fields": [
+        {"annotation": "str", "field": "code", "key": "code"},
+        {"annotation": "float", "field": "confidence", "key": "confidence"},
+        {"annotation": "bool", "field": "active", "key": "active"}
+      ],
+      "inner_rendered": ["code", "confidence"],
+      "nested_field": "marker",
+      "outer_class": "Batch",
+      "outer_fields": [
+        {"annotation": "str", "field": "batch_id"},
+        {"annotation": "list[str]", "field": "tags"},
+        {"annotation": "int", "field": "ignored"}
+      ],
+      "outer_rendered": ["batch_id", "tags"],
+      "variation_axes": ["declared fields omitted from the demand", "collection-valued outer field", "mixed scalar types"]
+    }
+  ]
+}

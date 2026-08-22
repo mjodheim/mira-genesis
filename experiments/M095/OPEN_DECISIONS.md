@@ -1,13 +1,13 @@
 # M095 — decisions that are the owner's, with the evidence for each
 
-**Nothing here is decided.** This document exists because the apparatus reached the point where the
-remaining questions are scientific judgements rather than engineering, and leaving them implicit in
-code would be deciding them by default. Each entry states the question, what has been measured, the
-options and what each costs. Freezing a protocol and arming a run remain the owner's acts.
+**The owner selected the bounded Option-A qualification on 2026-08-22 and instructed the local work
+to proceed.** The selections are recorded beneath the questions rather than replacing their original
+reasoning. H40, the protocol and population are frozen locally; the one armed run remains a separate
+recorded act.
 
 Written 2026-08-21 against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md`, revised after the
 fifth pass, and reconciled after the sixth local adversarial pass. The audit now records
-**twenty-six defects, twenty-five repaired**.
+**thirty-one defects, thirty repaired**.
 
 **Two entries below have changed since they were written, and are marked.** Section 2 asked how to
 state a domain that no longer exists in the form it described; section 5 asked whether escaping a
@@ -47,6 +47,11 @@ from S0. Worlds failing any of those are excluded **and recorded**, never silent
 machinery does not exist yet and should not be written until the axes are chosen, because writing it
 would choose them.
 
+> **Resolved: Option A, exhaustive rather than drawn.** Three declared structures are crossed with
+> three arrangements, so all nine entries run and no salt can discard an inconvenient one. The
+> preflight builds and parses every S0, measures its demand, verifies absence of renderers and
+> exhausts B from S0 without running the chain. The development world itself is excluded.
+
 ---
 
 ## 2. How the domain is stated in a protocol — **the question changed**
@@ -70,6 +75,11 @@ would choose them.
 >
 > The second is more honest and more expensive. The first risks a reader taking "six of eight" as
 > six instances of the stronger claim.
+
+> **Resolved: two conditions.** H40 scores the enabling relation and ranking autonomy separately.
+> Qualification requires six of six demand-bearing structural entries to demonstrate the relation;
+> it separately requires the three declared unaided cases and three declared descent cases to retain
+> those modes.
 
 The reasoning as originally written follows, and is what the answer had to overcome.
 
@@ -101,6 +111,10 @@ and marked `authored_target_component` as a ceiling arm.
   which is arguably right because a wider domain is not a worse result — but it is exactly the
   direction an arm is most likely to be written to ignore, and the arm currently refuses to ignore it.
 
+> **Resolved: inside the verdict.** A moved boundary is a finding in either direction. The separate
+> random-target arm remains outside the verdict because defect 19 shows that it cannot produce the
+> causal rival its name implies.
+
 ---
 
 ## 4. Register slots
@@ -111,6 +125,9 @@ and marked `authored_target_component` as a ceiling arm.
   are cited across six files as unclaimed and should probably stay reserved rather than reused.
 - **H39** is M094's; **D063** is M094's decision slot and is **unfilled**.
 - **H40** and **D064** are therefore the next free slots for M095.
+
+> **Resolved in part.** H40 is now registered as proposed/unrun. D064 remains reserved and unfilled
+> until a checked result exists; accepting or rejecting the result is still the owner's register act.
 
 Registering either is a register act and is not done here.
 
@@ -166,3 +183,6 @@ That is smaller than the milestone appeared to support before the domain was swe
 first version of it a reader can check rather than trust. Whether it is worth freezing, worth
 widening first, or worth recording as a mechanism demonstration and moving on, is the decision the
 rest of this document feeds.
+
+> **Resolved: qualify the bounded claim before M096.** The qualification does not promote the claim
+> beyond its authored structural population and explicitly leaves new-operation acquisition to M096.

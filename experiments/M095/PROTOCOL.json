@@ -1,0 +1,111 @@
+{
+  "arms": {
+    "decisive": [
+      "exhaustive_structural_population",
+      "development_world_arrangement",
+      "more_budget_same_operations"
+    ],
+    "non_decisive_ceiling": ["random_target"],
+    "random_target_reason": "No eligible rival in the authored world can write into the inner class, so the arm cannot produce the causal alternative it names. Defect 19 is disclosed and the arm cannot support the verdict."
+  },
+  "claim": "Within the frozen diagnosis, operation language and composition bound, an execution-confirmed adopted repair A can change the constructive reach of a later repair B: B is unreachable from S0, reachable after A, and unreachable in the counterfactual with A removed. The relation must hold across all six demand-bearing members of a finite structural population, while all three worlds with no visible enabler remain negative. Whether demand ranking found A unaided or failed-search descent was required is scored separately.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_operation_language_eliminated": false,
+    "authored_structural_population_eliminated": false,
+    "experimenter_blindness": false,
+    "generality_gate": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "m096_new_operation_acquisition": false,
+    "open_ended_evolution": false,
+    "unrestricted_program_repair": false
+  },
+  "conditions": [
+    "P1_frozen_protocol_pool_and_mechanism_are_bound",
+    "P2_the_finite_structural_population_is_exhaustive_and_buildable",
+    "P3_every_demand_bearing_structural_world_demonstrates_enabling",
+    "P4_every_zero_inner_demand_world_remains_negative",
+    "P5_relation_and_ranking_help_are_separate_conditions",
+    "P6_the_causal_pillars_and_execution_confirmation_hold",
+    "P7_preserved_entry_evidence_replays_byte_semantically",
+    "P8_the_arrangement_domain_arm_is_a_verdict_condition",
+    "P9_more_budget_over_the_same_operations_cannot_substitute_for_a",
+    "P10_operation_language_and_bounds_are_fixed_and_the_ceiling_is_disclosed",
+    "P11_chronology_track_a_and_no_leaked_or_rerolled_evidence"
+  ],
+  "date_authored": "2026-08-22",
+  "date_frozen": "2026-08-22",
+  "decision_slot": "D064",
+  "design_audit": {
+    "defects_before_qualification_design": 26,
+    "qualification_instrument_defects_before_freeze": 5,
+    "repaired_before_freeze": 30,
+    "disclosed_not_repaired": [19],
+    "document": "experiments/M095/DESIGN_AUDIT.md"
+  },
+  "falsifiers": [
+    "Any of the six demand-bearing structural entries fails to demonstrate the enabling relation.",
+    "Any zero-inner-demand negative entry demonstrates the relation or is silently excluded.",
+    "A ranking-unaided entry requires descent, or a declared descent entry is counted as ranking-unaided.",
+    "B is reachable from S0, A does not produce the measured applicability flip, B is not execution-confirmed after A, or B remains reachable in the without-A counterfactual.",
+    "The recorded evidence differs from a clean local replay of any population entry or decisive arm.",
+    "More budget over the identical operation set reaches B from S0 before A.",
+    "The protocol, population, mechanism, operation set or composition bound moves after freeze.",
+    "A failed, incomplete or unrunnable population entry is dropped, rerolled or reported as support.",
+    "A model call, network call, remote runner or qualification evidence available before freeze enters Track A."
+  ],
+  "hypothesis": "H40",
+  "mechanism": {
+    "digest": "6c39a1d20cac628ec8d9e62bc0098dacf0b4b11a07757ee779e6627c86f4f29e",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "metamorphosis/m094_composition.py",
+      "metamorphosis/m094_diagnosis.py",
+      "metamorphosis/m094_execution.py",
+      "metamorphosis/m094_synthesis.py",
+      "metamorphosis/m095_reach.py",
+      "metamorphosis/m095_world.py",
+      "metamorphosis/m095_chain.py",
+      "metamorphosis/m095_arms.py"
+    ]
+  },
+  "milestone": "M095",
+  "owner_authorization": "The project owner instructed the local Option-A qualification to proceed on 2026-08-22. Freezing and arming remain separate recorded acts.",
+  "publication": {
+    "disposition": "PENDING_EXPLICIT_OWNER_DISPOSITION",
+    "local_work_authorized": true,
+    "public_push_authorized": false
+  },
+  "qualification_apparatus": {
+    "digest": "6f0484885ec27cec511143a39169a99a49960ed32308d71d28d66e2f434c4c0e",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "scripts/author_m095_qualification_pool.py",
+      "scripts/run_m095_qualification.py",
+      "scripts/check_m095_result.py"
+    ]
+  },
+  "qualification_population": {
+    "construction": "exhaustive Cartesian product, not a draw",
+    "entries": 9,
+    "negative_entries": 3,
+    "pool_digest": "4a7fedf2a4c3e7eaab3acb33a4055fcadd8f80d1e702de0462809c4bcbf495f3",
+    "positive_entries": 6,
+    "structures": 3
+  },
+  "remote_execution_forbidden": true,
+  "run_policy": {
+    "armed_write_required": true,
+    "attempt_is_derived_from_withdrawn_artifacts": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "result_path": "experiments/M095/RESULT.json"
+  },
+  "schema": "m095-protocol-v1",
+  "status": "frozen",
+  "track": "A",
+  "verdict_rule": "negative if any computed condition fails; incomplete while any condition is uncomputed; positive only when all eleven conditions are computed and true"
+}

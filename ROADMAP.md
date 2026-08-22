@@ -348,7 +348,7 @@ then sends the entire public equivalence class to disjoint hidden validation.
 | M072 | Isolate causal value of governance mechanisms with matched ablations | **Positive qualified development result** | On 48 committed authored scenarios, full governance has zero unauthorized release/false refusal and detects 18/18 tampers; admission and audit ablations each lose 18 matching invariants. Result `ab555d2f`. |
 | M073 | Appropriate a demonstrated skill into model-free lineage execution | **Positive qualified development result** | Four frozen teacher repairs induce capsule `444a8a54`; after commit and teacher removal it passes 12/12 holdouts, while unchanged and memorizer controls pass 0/12. Result `edaf03b4`. |
 | M074 | Measure calibrated refusal and the causal value of terminal refusal | **Negative scientific result** | Exact protocol `28ddd8b`; 12/12 episodes, zero defect/retry. Feasible success 6/6, impossible success 0/6, but 0/3 true refusals, margin 0.0 and zero saved steps. Result `75e84682`. |
-| M095 | Test whether one acquired repair changes the constructive reach of a later repair | **Development mechanism under adversarial audit — not frozen, not qualified** | The enabling relation holds in all six demand-bearing arrangements; four find the enabling order from demand ranking alone and two require failed-search descent to a lower-ranked enabler. Two zero-inner-demand arrangements remain negative. Nineteen audit defects found, eighteen repaired, one disclosed. No hypothesis/protocol/qualification/run/verdict yet. |
+| M095 | Test whether one acquired repair changes the constructive reach of a later repair | **Protocol and structural population frozen locally — not run** | H40 and an exhaustive nine-entry population are frozen. Three structures cross unaided-ranking, failed-search-descent and no-visible-enabler arrangements. Thirty-one audit defects found, thirty repaired, one disclosed. No qualification run or verdict yet. |
 | M094 | Let the lineage measure which real component limits it and assemble that repair | **Positive qualified scientific result** | Attempt 2, run commit `43ef9d30`: zero model/network calls; `mira_core/contracts.py` selected by measurement; `Goal` and `Observation` repaired; 12/12 conditions true and 2/2 cross-component qualification. Attempt 1 remains withdrawn over byte-exact rollback evidence. |
 | M093 | Exercise the transformation/adoption path on a real repository component | **Engineering rehearsal — non-qualifying** | Real `MemoryLedger` transformation, subprocess sandbox, A/B comparison, held-out validation, transactional adoption, persistence and exact rollback. Target, diagnosis and patch remain substantially authored. |
 | M092 | Attempt endogenous substrate extension under a frozen canonical search | **Aborted without verdict** | Search voluntarily stopped before terminal candidate, independent reproduction or qualification. H38 unresolved; D062 unfilled. |
@@ -420,8 +420,8 @@ human-controlled, even after a scientific result passes.
 
 ### Current frontier after M094 / M095
 
-M094 is the current qualified anchor on the real-software self-transformation line. M095 is still
-only development evidence, but it asks the first explicitly cumulative question on that line: does
+M094 is the current qualified anchor on the real-software self-transformation line. M095 is frozen
+but unrun, and asks the first explicitly cumulative question on that line: does
 an adopted repair alter what the lineage can construct next? The current mechanism demonstrates the
 enabling relation in six demand-bearing arrangements, with four found by ranking alone and two only
 after failed-search descent to the prerequisite.
@@ -438,8 +438,8 @@ The next ordered boundaries are intentionally stronger rather than larger versio
   causal pattern survives fresh tasks and eventually materially different domains. Only then does it
   become meaningful to measure whether the ability to improve is itself improving.
 
-M095 must first earn its own frozen protocol and qualification. No later milestone may be cited to
-retroactively strengthen it.
+M095 must first earn its qualification verdict under the frozen protocol. No later milestone may be
+cited to retroactively strengthen it.
 
 ### After M091
 

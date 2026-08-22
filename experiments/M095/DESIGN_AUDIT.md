@@ -2,9 +2,16 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **twenty-six** defects across six passes:
-twenty-five are repaired. One is not: defect 19 is a control that cannot fail, disclosed rather
+mechanism rather than confirming it. It has found **thirty-one** defects across seven passes:
+thirty are repaired. One is not: defect 19 is a control that cannot fail, disclosed rather
 than quietly carried.
+
+The seventh pass attacked the qualification apparatus before freeze and without running the chain
+on a qualification world. It found five defects: the preflight excluded every negative witness, an
+unarmed invocation could acquire the result before refusing its write, a dirty tree could be
+misattributed to a clean source commit, the declared apparatus digest was not enforced, and the
+repository's own reachability graph could not see the pool author. All five were repaired before any
+result existed.
 
 The sixth pass was a local mutation attack. It constructed small Python worlds that contradicted
 the apparatus's assumptions — two renderers on one class, two objects with the same nested field
@@ -634,6 +641,61 @@ shape already rejects exactly this kind of ambiguous attribution; the M095 shape
 the source field, and that candidate is the class under measurement. Pinned by
 `test_nested_demand_is_not_attributed_when_two_reachable_classes_explain_it`.
 
+## Defect 27 — the preflight required an operation that a negative witness must not have — **REPAIRED**
+
+The first structural-pool preflight required every S0 control to be offered the nested operation.
+That is correct for a demand-bearing world and impossible for the three declared negative witnesses:
+with zero direct inner demand, there is no inner rendering requirement from which such an operation
+can be constructed. The preflight therefore rejected every negative by construction and would have
+left a qualification containing only cases expected to pass.
+
+**Repaired before freeze and before any chain run.** Demand-bearing entries must offer the operation;
+zero-demand entries must not manufacture one. All nine still require a nested unmet target and an
+unreachable B-from-S0 control. Pinned by
+`test_every_world_passes_the_s0_preflight_without_running_the_chain`.
+
+## Defect 28 — an unarmed invocation could acquire the result before refusing its write — **REPAIRED**
+
+The first runner checked `--arm` only after executing all nine worlds. An unarmed invocation would
+therefore observe the complete qualification on stdout and merely be refused permission to save it.
+Arming governed the file write, not the scientific act, and a later armed execution would already be
+a result-informed retry.
+
+**Repaired before freeze.** Execution itself requires `--arm`, the result path is fixed to
+`experiments/M095/RESULT.json`, and an existing result is never rerun or overwritten. Pinned by
+`test_materializing_without_arming_is_refused_before_any_world_runs`.
+
+## Defect 29 — a clean commit was recorded but not required — **REPAIRED**
+
+The runner recorded `source_commit` and whether the working tree was dirty only after doing the
+work. A dirty tree could therefore produce evidence attributed to a commit whose bytes were not the
+bytes executed, and P11 would discover that only after the one allowed result had been consumed.
+
+**Repaired before freeze.** The source commit and clean working tree are now preconditions checked
+before any pool audit or world execution. The armed run must execute the committed frozen tree.
+
+## Defect 30 — the protocol named an apparatus digest that no gate enforced — **REPAIRED**
+
+The draft protocol bound the mechanism but the first runner checked only that digest. The pool
+author, runner or checker could move after freeze while the runner still accepted the protocol — the
+same empty-binding shape M094 amendment A3 exposed in its audit record.
+
+**Repaired before freeze.** Both runner and checker recompute the qualification-apparatus digest
+from the exact listed files and refuse drift. The protocol's raw bytes and semantic pool digest are
+bound separately in the result.
+
+## Defect 31 — the pool author was invisible to the repository reachability gate — **REPAIRED**
+
+The new runner imported the pool author through the package-qualified `scripts.*` spelling. Runtime
+and pytest accepted it, but the repository integrity graph names script modules as direct entry
+points, so it reported `author_m095_qualification_pool.py` as orphaned after the complete Python
+suite had passed. A green test suite therefore still described a structurally unreachable module.
+
+**Repaired before freeze.** The runner and checker use the repository's established direct script
+imports and explicitly add the scripts directory when invoked with `python -m`. The complete orphan
+gate and both invocation forms now agree. Pinned by `check_repository_integrity.py --orphans` and the
+qualification test modules.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -655,7 +717,7 @@ produces neither.
 
 ## The honest summary
 
-Twenty-six defects across six adversarial passes.
+Thirty-one defects across seven adversarial passes.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -665,7 +727,7 @@ kind: an instrument defect costs a run, a selection defect costs the claim.
 
 The sixth pass added one method-selection defect, two nested-demand attribution defects, three
 record/verdict defects, and one cross-instrument subject defect. All seven are repaired. In total,
-twenty-five are repaired; defect 19 is not, and is disclosed instead.
+thirty are repaired; defect 19 is not, and is disclosed instead.
 
 **Defect 7 was repaired after being recorded as unrepairable**, which is worth more than the
 repair. The audit said escaping it "needs handling this milestone does not have" and left it

@@ -1033,3 +1033,36 @@ self-modification, not general program repair, not unrestricted code generation,
 gate, no Genesis gate, no independent reproduction. **The eligible component set, the admissible
 observation set and the repair operation set would all remain authored**, and are the expected next
 ceiling.
+
+## H40 — One adopted repair can change the constructive reach of the next
+
+Within a frozen diagnosis, authored operation language and exhaustive composition bound, a
+persistent Track-A lineage can adopt an execution-confirmed repair A that changes the constructive
+reach of a later repair B: B is unreachable from S0, becomes reachable after A, and is unreachable
+again in a counterfactual that replays the same round without A. The relation holds across every
+demand-bearing member of a finite precommitted structural population, while worlds that expose no
+enabling insufficiency remain negative. The stronger result — demand ranking finding A unaided — is
+scored separately from cases where the lineage must descend to the obstacle named by its own failed
+search.
+
+**Status:** **FROZEN / UNRUN.** M095's development mechanism and qualification apparatus survived
+seven adversarial passes. The protocol and exhaustive nine-entry structural population were frozen
+locally on 22 August 2026 before any qualification entry was run through the chain. H40 is neither
+supported nor refuted; the first armed run must start from the clean freeze commit.
+
+**Why it is asked.** M094 can locate and synthesise a repair. H40 asks the next causal question:
+whether adopting one repair changes what the same bounded mechanism can construct next, rather than
+merely allowing two independent repairs in sequence.
+
+**What would count.** All six demand-bearing entries — three structures crossed with an unaided
+ranking arrangement and a failed-search-descent arrangement — must demonstrate the causal chain.
+All three zero-inner-demand entries must remain negative. The S0 control, applicability flip,
+execution-confirmed B and without-A counterfactual must all hold; the development arrangement and
+more-budget arms are verdict conditions. The random-target arm is a disclosed non-decisive ceiling
+because no eligible rival can touch the inner class.
+
+**What it would not establish.** Not acquisition of a new operation, which is M096's question. Not
+an unauthored operation language, natural-world qualification, experimenter blindness, general
+program repair, recursive self-improvement, AGI, any Genesis gate or independent human evaluation.
+The qualification worlds are deliberately authored and exhaustive because the corresponding demand
+does not naturally exist in `mira_core` and planting it would invalidate the qualification.
