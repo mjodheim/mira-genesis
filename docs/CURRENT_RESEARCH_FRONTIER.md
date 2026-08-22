@@ -106,8 +106,8 @@ presents no diagnosed insufficiency of its own, so there is no visible repair to
 
 ### Why M095 is still development evidence
 
-The current branch has undergone repeated adversarial review. At the latest snapshot, **19 defects
-have been recorded across five passes and 18 repaired**. Several were especially important:
+The current branch has undergone repeated adversarial review. At the latest snapshot, **26 defects
+have been recorded across six passes and 25 repaired**. Several were especially important:
 
 - search survivors were once accepted structurally without execution;
 - hidden cases could be constructed incorrectly;
@@ -116,6 +116,12 @@ have been recorded across five passes and 18 repaired**. Several were especially
 - the original counterfactual was only the control repeated on a byte-identical world;
 - a probe that never ran could be recorded as candidates that ran and failed;
 - some record fields were assertions disguised as measured booleans;
+- the reach operation could call a different method from the one that actually satisfied the
+  rendering requirement;
+- world facts counted filenames and unrelated public methods instead of measured demand and
+  structural rendering supply;
+- a random-target arm could exclude the inner class for a different nested target from the one
+  its control actually ranked;
 - the withheld-operation arm is true by construction because no alternative operation can satisfy
   the nested requirement.
 

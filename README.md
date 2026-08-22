@@ -116,8 +116,8 @@ That development relation now holds across all six tested demand-bearing arrange
 cases where the enabler is initially outranked. Two deliberately negative arrangements remain where
 no inner demand exists and therefore no visible enabler exists to descend to.
 
-This is promising **development evidence only**. The current M095 line has recorded 19 defects across
-five adversarial audit passes, with 18 repaired at the latest snapshot. Several controls that looked
+This is promising **development evidence only**. The current M095 line has recorded 26 defects across
+six adversarial audit passes, with 25 repaired at the latest snapshot. Several controls that looked
 positive were shown not to test what their names implied. No M095 hypothesis is frozen, no protocol
 exists, no qualification pool exists, no run is armed and no verdict exists.
 

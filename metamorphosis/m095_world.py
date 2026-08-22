@@ -129,34 +129,102 @@ class WorldFacts:
     def of(cls, root: Path) -> WorldFacts:
         """Read what is on disk, so the record cannot disagree with the world."""
 
+        # Local imports keep the authored-world module independent at import time while letting
+        # its record use the same measurement as the experiment.  Filenames and public-method
+        # counts are descriptions of an intention, not evidence of demand or supply.
+        from metamorphosis.m094_diagnosis import (
+            CAPABILITY_SHAPES,
+            RenderAsMapping,
+            _encode_rendering,
+            decode_rendering,
+            diagnose,
+        )
+        from metamorphosis.m095_reach import (
+            RenderNestedValueObject,
+            supplying_method,
+        )
+
         tree = ast.parse((root / COMPONENT).read_text(encoding="utf-8"))
         classes = [node for node in tree.body if isinstance(node, ast.ClassDef)]
         # The outer class is the one with a field annotated as another class here; the
         # inner class is what that annotation names. Read rather than defaulted, so a
         # world built differently cannot be recorded as this one.
         names = {node.name for node in classes}
-        outer, inner, nested_field = "", "", ""
+        relationships: list[tuple[str, str, str]] = []
         for node in classes:
             for item in node.body:
                 if not (isinstance(item, ast.AnnAssign) and isinstance(item.target, ast.Name)):
                     continue
                 annotation = ast.unparse(item.annotation).strip()
                 if annotation in names:
-                    outer, inner, nested_field = node.name, annotation, item.target.id
-                    break
-            if outer:
-                break
+                    relationships.append((node.name, annotation, item.target.id))
 
-        # A substring search for "def " would find one in a docstring or a comment. Ask
-        # the tree whether any class defines a public method.
-        renders = any(
-            isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef))
-            and not item.name.startswith("_")
-            for node in classes for item in node.body
+        outer, inner, nested_field = relationships[0] if relationships else ("", "", "")
+
+        plain = RenderAsMapping()
+        nested = RenderNestedValueObject()
+        diagnosis = diagnose(root, (COMPONENT,), tuple(CAPABILITY_SHAPES) + (nested,))
+        by_name = {node.name: node for node in classes}
+
+        # When more than one nested relation exists, describe the same ranked unmet subject as
+        # the chain's control.  Fall back to the first syntactic relation only when no nested
+        # demand exists, so a demand-free authored world can still describe its topology.
+        ranked_nested = next(
+            (item for item in diagnosis.unmet if item.capability == nested.name), None
         )
+        if ranked_nested is not None:
+            fields = {field for _key, field, _wrapper in decode_rendering(ranked_nested.detail)}
+            selected = next(
+                (
+                    relation for relation in relationships
+                    if relation[0] == ranked_nested.target and relation[2] in fields
+                ),
+                None,
+            )
+            if selected is not None:
+                outer, inner, nested_field = selected
+
+        inner_demand = sum(
+            item.demand for item in diagnosis.considered
+            if item.target == inner and item.capability == plain.name
+        )
+        outer_demand = sum(
+            item.demand for item in diagnosis.considered
+            if item.target == outer and item.capability == nested.name
+        )
+
+        # A renderer can exist before any caller asks for it, so diagnosis alone is not enough
+        # for this state fact.  Ask whether each class has a callable method returning its own
+        # declared fields as a mapping.  This still distinguishes a renderer from an unrelated
+        # public method such as ``validate``.
+        renders = any(
+            supplying_method(
+                node,
+                _encode_rendering(tuple(
+                    (item.target.id, item.target.id, None)
+                    for item in node.body
+                    if isinstance(item, ast.AnnAssign)
+                    and isinstance(item.target, ast.Name)
+                    and not item.target.id.startswith("_")
+                )),
+            ) is not None
+            for node in classes
+        )
+        for item in diagnosis.considered:
+            if renders:
+                break
+            node = by_name.get(item.target)
+            if node is None:
+                continue
+            if item.capability == plain.name:
+                renders = supplying_method(node, item.detail) is not None
+            elif item.capability == nested.name:
+                renders = nested.is_supplied_by(node, item.target, item.detail)
+            if renders:
+                break
         return cls(
-            inner_call_sites=len(list(root.glob("reading_caller_*.py"))),
-            outer_call_sites=len(list(root.glob("sample_caller_*.py"))),
+            inner_call_sites=inner_demand,
+            outer_call_sites=outer_demand,
             inner_class=inner,
             outer_class=outer,
             nested_field=nested_field,

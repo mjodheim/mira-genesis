@@ -2,9 +2,17 @@
 
 **Nothing is frozen.** This audit was run against the M095 mechanism *before* proposing a
 protocol, because that is where M094's four amendments say defects are cheap. It attacks the
-mechanism rather than confirming it. It has found **nineteen** defects across five passes: eighteen are
-repaired. One is not: defect 19 is a control that cannot fail, disclosed rather than quietly
-carried.
+mechanism rather than confirming it. It has found **twenty-six** defects across six passes:
+twenty-five are repaired. One is not: defect 19 is a control that cannot fail, disclosed rather
+than quietly carried.
+
+The sixth pass was a local mutation attack. It constructed small Python worlds that contradicted
+the apparatus's assumptions — two renderers on one class, two objects with the same nested field
+name, misleading filenames, unrelated public methods, an incomplete tied round, and two competing
+nested targets. The first attack produced eight failing regression tests; attacking the repairs
+and the remaining attribution surface brought the pass to a dozen failing tests across seven
+defect families. This was AI-assisted development review on the project owner's machine, not
+independent human evaluation.
 
 The fifth pass did not look for defects. It asked what the two disclosed ones would take to
 remove, and one of them turned out to need far less than the audit had claimed.
@@ -21,7 +29,7 @@ amendment A4's defect was found for the **third** time in this milestone, inside
 written to remove it.
 
 The attack that mattered most in the first pass was not clever. It was: *which of M094's lessons
-has M095 already forgotten?* Five of the nineteen turned out to be regressions of amendments this
+has M095 already forgotten?* Five of the first nineteen turned out to be regressions of amendments this
 project paid for one milestone ago.
 
 The attack that mattered most in the second pass was one question the first pass never asked.
@@ -536,6 +544,96 @@ show.
 The left-hand column of that table — B reachable at S1, unreachable at S0 — remains measured,
 and it is the half the milestone rests on.
 
+## Defect 20 — the emitted call could name a method that did not supply the requirement — **REPAIRED**
+
+`supplying_method` first asked whether *some* method on the class supplied the rendering, then
+returned the first public method whose mapping merely contained the required keys. With a wrong
+key-to-field renderer followed by a correct one, the class-wide predicate passed and the emitted
+outer repair called the wrong method. Async functions and decorated properties could also be
+selected even though the generated expression is synchronous `obj.method()`.
+
+`RenderNestedValueObject.is_supplied_by` had the same call-contract gap for async,
+argument-taking and decorated methods.
+
+**Repaired.** Each candidate method must itself satisfy the exact key, field and wrapper mapping,
+and it must be an undecorated synchronous instance method callable with no extra arguments. Pinned
+by `test_the_supplier_is_the_method_that_satisfies_the_requirement`,
+`test_an_async_or_decorated_renderer_cannot_be_called_as_a_plain_method`, and
+`test_a_nested_supplier_must_also_be_a_plain_callable_method`. Both supply predicates now ignore
+returns inside nested helper definitions, pinned separately for the plain and nested shapes.
+
+## Defect 21 — nested demand combined two different base objects — **REPAIRED**
+
+The nested-binding reader reduced `obj.field.subfield` to `(field, subfield)`, discarding `obj`.
+It therefore accepted a mapping that combined `sample.reading.reading_id` with
+`other.reading.unit` as one rendering of `reading`, although no single value object supplied both
+values.
+
+**Repaired.** A nested rendering now requires every value to share both the same base object and
+the same field. Pinned by `test_nested_bindings_do_not_combine_two_different_base_objects`.
+
+## Defect 22 — world demand was counted from filenames, not code — **REPAIRED**
+
+`WorldFacts.of` counted `reading_caller_*.py` and `sample_caller_*.py`. Replacing one named caller
+with a comment left the record at three inner call sites while the diagnosis measured two. The
+evidence could therefore describe the files the author intended to build rather than the demand
+that actually ran.
+
+**Repaired.** The record now derives both call-site counts from the same diagnosis and capability
+shapes as the chain. Pinned by
+`test_the_world_facts_count_measured_demand_not_matching_filenames`.
+
+## Defect 23 — any public method was recorded as a renderer — **REPAIRED**
+
+The S0 fact `nothing_renders_itself_at_s0` became false when a class gained
+`validate(self) -> True`. The record asked only whether any public method existed, not whether a
+callable method rendered the class's declared fields or satisfied a measured nested rendering.
+
+**Repaired.** `WorldFacts.of` now applies the structural rendering predicates and the same callable
+contract as the reach operation. Pinned by
+`test_an_unrelated_public_method_is_not_recorded_as_a_renderer` while the existing positive
+renderer test keeps the check from becoming permanently true.
+
+## Defect 24 — tied-round completeness was asserted but not bound to the tied set — **REPAIRED**
+
+`every_tied_capability_repaired` meant `second_step` was non-empty and every recorded attempt
+reached. It never compared those attempts with `s1_tied`; `to_dict` did not expose either tied set;
+and `enabling_demonstrated` did not require the completeness claim. A record that omitted one of
+two tied capabilities could therefore say both `every_tied_capability_was_repaired: true` and
+`enabling_demonstrated: true`.
+
+**Repaired.** Attempted targets must equal the measured tied set, both S0 and S1 sets are recorded,
+and the central verdict requires both completeness checks. The permutation case where B is
+reached after A in the S0 tied round is handled separately: it passes only if that entire S0 set
+was attempted and reached. Pinned by `test_tie_completeness_is_bound_to_the_measured_s1_set` and
+the existing full tie-permutation sweep.
+
+## Defect 25 — instruments described different nested subjects — **REPAIRED**
+
+The control binds B to the first ranked nested insufficiency in `diagnosis.unmet`. The helper that
+decides which inner classes can enable B instead took the first nested entry from unsorted
+`diagnosis.considered`. In a world with two outer/inner pairs, the control targeted the higher
+demand `OuterTwo`/`InnerTwo` relation while the arm excluded rivals for
+`OuterOne`/`InnerOne`.
+
+`WorldFacts.of` also chose the first syntactic outer/inner annotation pair, so the evidence record
+could describe `OuterOne` while the chain actually attacked `OuterTwo`.
+
+**Repaired.** Both the arm and the world facts now derive their subject from the same ranked unmet
+nested target as the control. Pinned by `test_random_target_arm_uses_the_ranked_nested_subject`.
+
+## Defect 26 — nested demand ignored rival-class ambiguity — **REPAIRED**
+
+`RenderNestedValueObject.demand_sites` accepted a nested literal for every class declaring the
+same outer field name. When two reachable outer classes both declared `reading`, one caller was
+credited as demand for both even though the site did not distinguish them. M094's plain-rendering
+shape already rejects exactly this kind of ambiguous attribution; the M095 shape ignored the
+`rivals` passed to it.
+
+**Repaired.** A nested site is evidence only when exactly one reachable candidate class declares
+the source field, and that candidate is the class under measurement. Pinned by
+`test_nested_demand_is_not_attributed_when_two_reachable_classes_explain_it`.
+
 ## What the chain measures after the repairs
 
 | | examined | survivors | executed | confirmed | reached |
@@ -557,7 +655,7 @@ produces neither.
 
 ## The honest summary
 
-Nineteen defects, in four distinct families.
+Twenty-six defects across six adversarial passes.
 
 Three were in the **instrument** — defects 1, 2 and 3 — and all three would have made a
 qualification report a false refutation. Two were in the **record** — defect 6 and the inert
@@ -565,7 +663,9 @@ parameter recorded beneath it — and would have made the evidence describe a wo
 one that ran. Three were in the **selection** — defects 4, 5 and 8 — and those are the expensive
 kind: an instrument defect costs a run, a selection defect costs the claim.
 
-Eighteen are repaired. Defect 19 is not, and is disclosed instead.
+The sixth pass added one method-selection defect, two nested-demand attribution defects, three
+record/verdict defects, and one cross-instrument subject defect. All seven are repaired. In total,
+twenty-five are repaired; defect 19 is not, and is disclosed instead.
 
 **Defect 7 was repaired after being recorded as unrepairable**, which is worth more than the
 repair. The audit said escaping it "needs handling this milestone does not have" and left it
@@ -577,24 +677,21 @@ forgetting a known list but that asserting a property feels like establishing it
 
 **The pattern worth naming.** Defect 4 was the capability tie at S1; defect 5 was the same rule
 missing at S0; both are amendment A4, which this project paid for one milestone earlier. Defect 1
-was amendment A2. Defect 3 was amendment A1's family. Five of nineteen are regressions of amendments already bought and recorded, and A4 alone
+was amendment A2. Defect 3 was amendment A1's family. Five of the first nineteen are regressions
+of amendments already bought and recorded, and A4 alone
 accounts for three of them — defects 4, 5 and 10, each found after the previous one was
 declared settled. The amendments were written down and were not carried forward into
 new code — which suggests the register is doing less work than it looks like it is doing, and that
 the next milestone should assume it will forget them too.
 
 **What defect 7 changes about the milestone.** The central result was measured in one arrangement
-of the authored world and read as a property of the mechanism. It is a property of the mechanism
-*and* of the arrangement. In two of six arrangements the enabling relation does not hold at all,
-and no repair that keeps the greedy top-demand rule recovers them, because the enabling repair is
-outranked by the repair it enables and a greedy rule cannot reach downward. The claim now carries
-its domain, and the boundary is pinned by a test asserting a negative.
+of the authored world and read as a property of the mechanism. The later descent repair widened
+the measured domain: the relation now holds in all six demand-bearing arrangements, but only four
+have the diagnosis's own ranking produce the enabling order unaided. Two require the failed search
+to name and descend to the lower-ranked enabler. The two zero-inner-demand arrangements remain
+negative because no enabling insufficiency exists for the diagnosis to find.
 
-That is a smaller milestone than the one the mechanism appeared to support a day ago. It is also
-the first version of it that a reader can check rather than trust.
-
-What remains before a protocol is still the ordinary apparatus — a random-target arm, a
-more-budget arm, a qualification pool drawn from outside this world with every hidden case
-verified by construction, and a checker that recomputes rather than reads — with one addition
-defect 7 forces: **a world-arrangement arm**, so the domain is measured by the run rather than
-asserted by this document.
+What remains before a protocol is a project-owner decision about the qualification population,
+then a pool verified by construction, a checker that recomputes, a runner, and a frozen protocol.
+The random-target, more-budget and world-arrangement development arms already exist; their presence
+does not turn this development mechanism into a qualified result.

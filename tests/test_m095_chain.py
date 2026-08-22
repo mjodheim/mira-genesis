@@ -235,6 +235,18 @@ def test_the_world_facts_are_counted_not_defaulted(tmp_path: Path) -> None:
     assert facts.to_dict()["inner_call_sites"] == 1
 
 
+def test_the_world_facts_count_measured_demand_not_matching_filenames(tmp_path: Path) -> None:
+    """A file whose name says ``reading_caller`` is not evidence if its code says nothing."""
+
+    build(tmp_path)
+    (tmp_path / "reading_caller_0.py").write_text(
+        "# this file presents no rendering demand\n", encoding="utf-8"
+    )
+    facts = WorldFacts.of(tmp_path)
+    assert facts.inner_call_sites == 2
+    assert facts.outer_call_sites == 2
+
+
 def test_the_caller_counts_are_resolved_when_build_runs_not_when_it_is_defined(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -369,6 +381,35 @@ def test_the_capability_tie_is_real_and_no_longer_decides_anything(
     # And every one of them is repaired, so the ordering decides nothing.
     assert len(executed.second_step) == 2
     assert executed.every_tied_capability_repaired is True
+
+
+def test_tie_completeness_is_bound_to_the_measured_s1_set() -> None:
+    """Successful attempts are not complete unless they cover every measured tied target."""
+
+    nested = Attempt(
+        label="B", class_name="Sample", capability=NESTED, requirement="reading=reading",
+        adopted_source="def as_mapping(self): pass",
+    )
+    omitted = "Sample/render_value_object_as_mapping"
+    built = Chain(
+        control=Attempt(label="control", class_name="Sample", capability=NESTED, requirement=""),
+        step_a=Attempt(
+            label="A", class_name="Reading", capability="render_value_object_as_mapping",
+            requirement="", adopted_source="def as_mapping(self): pass",
+        ),
+        step_b=nested,
+        counterfactual=Attempt(
+            label="without A", class_name="Sample", capability=NESTED, requirement=""
+        ),
+        second_step=[nested],
+        s1_tied=[f"Sample/{NESTED}", omitted],
+        step_a_identified_by="the_nested_operation_became_applicable",
+    )
+
+    assert built.every_tied_capability_repaired is False
+    assert built.enabling_demonstrated is False
+    record = built.to_dict()
+    assert record["s1_tied_capabilities"] == [f"Sample/{NESTED}", omitted]
 
 
 def test_two_repairs_on_one_class_do_not_collide_on_a_name(executed: Chain) -> None:
@@ -645,3 +686,65 @@ def test_whether_anything_renders_itself_is_read_from_the_tree_not_from_a_substr
         encoding="utf-8",
     )
     assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is False
+
+
+def test_an_unrelated_public_method_is_not_recorded_as_a_renderer(tmp_path: Path) -> None:
+    """A validator changes neither rendering capability nor the stated S0 fact."""
+
+    build(tmp_path)
+    source = (tmp_path / COMPONENT).read_text(encoding="utf-8")
+    source = source.replace(
+        "    unit: str\n\n\n@dataclass",
+        "    unit: str\n\n"
+        "    def validate(self):\n"
+        "        return True\n\n\n@dataclass",
+    )
+    (tmp_path / COMPONENT).write_text(source, encoding="utf-8")
+    assert WorldFacts.of(tmp_path).nothing_renders_itself_at_s0 is True
+
+
+def test_random_target_arm_uses_the_ranked_nested_subject(tmp_path: Path) -> None:
+    """Its inner-class exclusion must describe the same nested target as the control."""
+
+    (tmp_path / "pkg").mkdir()
+    (tmp_path / "pkg" / "__init__.py").write_text("", encoding="utf-8")
+    (tmp_path / COMPONENT).write_text(
+        "class InnerOne:\n    one_id: str\n    one_unit: str\n\n"
+        "class InnerTwo:\n    two_id: str\n    two_unit: str\n\n"
+        "class OuterOne:\n    held_one: InnerOne\n\n"
+        "class OuterTwo:\n    held_two: InnerTwo\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "inner_callers.py").write_text(
+        "from pkg.values import InnerOne, InnerTwo\n\n"
+        "def one(value: InnerOne):\n"
+        "    return {'one_id': value.one_id, 'one_unit': value.one_unit}\n\n"
+        "def two(value: InnerTwo):\n"
+        "    return {'two_id': value.two_id, 'two_unit': value.two_unit}\n",
+        encoding="utf-8",
+    )
+    for index in range(1):
+        (tmp_path / f"outer_one_{index}.py").write_text(
+            "from pkg.values import OuterOne\n\n"
+            "def render(value: OuterOne):\n"
+            "    return {'held': {'one_id': value.held_one.one_id, "
+            "'one_unit': value.held_one.one_unit}}\n",
+            encoding="utf-8",
+        )
+    for index in range(3):
+        (tmp_path / f"outer_two_{index}.py").write_text(
+            "from pkg.values import OuterTwo\n\n"
+            "def render(value: OuterTwo):\n"
+            "    return {'held': {'two_id': value.held_two.two_id, "
+            "'two_unit': value.held_two.two_unit}}\n",
+            encoding="utf-8",
+        )
+
+    ranked = next(item for item in measure(tmp_path).unmet if item.capability == NESTED)
+    assert ranked.target == "OuterTwo"
+    assert chain.nested_inner_classes(tmp_path) == ("InnerTwo",)
+    facts = WorldFacts.of(tmp_path)
+    assert (facts.outer_class, facts.inner_class, facts.nested_field) == (
+        "OuterTwo", "InnerTwo", "held_two",
+    )
+    assert (facts.inner_call_sites, facts.outer_call_sites) == (1, 3)

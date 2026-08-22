@@ -35,7 +35,7 @@ import ast
 from dataclasses import dataclass, replace
 
 from metamorphosis.m094_composition import MappingItem, MethodDraft, Operation
-from metamorphosis.m094_diagnosis import RenderAsMapping, decode_rendering
+from metamorphosis.m094_diagnosis import _mapping_bindings, decode_rendering
 
 REACH_SCHEMA = "m095-reach-v1"
 
@@ -60,6 +60,71 @@ def rendered_method(wrapper: str | None) -> str | None:
     return None
 
 
+def _plain_zero_argument_method(node: ast.AST) -> bool:
+    """Can generated code safely invoke this as synchronous ``obj.method()``?
+
+    The syntax M095 emits is deliberately narrow.  Async functions return a coroutine,
+    argument-taking methods cannot be called that way, and a decorator can turn an otherwise
+    ordinary function into a property, static method, class method, or an unknown wrapper.  A
+    syntax-only check cannot prove those altered call contracts, so they do not count.
+    """
+
+    if not isinstance(node, ast.FunctionDef):
+        return False
+    if node.name.startswith("_") or node.decorator_list:
+        return False
+    positional = (*node.args.posonlyargs, *node.args.args)
+    return bool(
+        len(positional) == 1
+        and not node.args.vararg
+        and not node.args.kwonlyargs
+        and not node.args.kwarg
+    )
+
+
+class _OwnReturns(ast.NodeVisitor):
+    """Collect returns while refusing to descend into nested definitions."""
+
+    def __init__(self) -> None:
+        self.values: list[ast.expr] = []
+
+    def visit_Return(self, node: ast.Return) -> None:  # noqa: N802 - ast visitor API
+        if node.value is not None:
+            self.values.append(node.value)
+
+    def visit_FunctionDef(self, node: ast.FunctionDef) -> None:  # noqa: N802
+        return
+
+    def visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None:  # noqa: N802
+        return
+
+    def visit_ClassDef(self, node: ast.ClassDef) -> None:  # noqa: N802
+        return
+
+
+def _own_return_values(method: ast.FunctionDef) -> tuple[ast.expr, ...]:
+    returned = _OwnReturns()
+    for statement in method.body:
+        returned.visit(statement)
+    return tuple(returned.values)
+
+
+def _method_supplies_mapping(method: ast.FunctionDef, requirement: str) -> bool:
+    """Does this method's own control flow return the exact required mapping?"""
+
+    wanted = decode_rendering(requirement)
+    if not wanted:
+        return False
+
+    for value in _own_return_values(method):
+        produced = _mapping_bindings(value)
+        if produced is not None and all(
+            produced.get(key) == (field, wrapper) for key, field, wrapper in wanted
+        ):
+            return True
+    return False
+
+
 def supplying_method(class_node: ast.ClassDef, requirement: str) -> str | None:
     """Which public zero-argument method of *class_node* supplies *requirement*, if any.
 
@@ -71,26 +136,9 @@ def supplying_method(class_node: ast.ClassDef, requirement: str) -> str | None:
     unbuildable at S0.
     """
 
-    if not RenderAsMapping().is_supplied_by(class_node, class_node.name, requirement):
-        return None
-
-    wanted = decode_rendering(requirement)
     for node in class_node.body:
-        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
-            continue
-        if node.name.startswith("_"):
-            continue
-        if len(node.args.args) != 1 or node.args.vararg or node.args.kwonlyargs:
-            continue
-        for inner in ast.walk(node):
-            if not isinstance(inner, ast.Return) or not isinstance(inner.value, ast.Dict):
-                continue
-            keys = {
-                item.value for item in inner.value.keys
-                if isinstance(item, ast.Constant) and isinstance(item.value, str)
-            }
-            if {key for key, _field, _wrapper in wanted} <= keys:
-                return node.name
+        if _plain_zero_argument_method(node) and _method_supplies_mapping(node, requirement):
+            return node.name
     return None
 
 
@@ -186,13 +234,13 @@ def unreachable_operations(
 # ── seeing the nested demand ──────────────────────────────────────────
 
 
-def _attribute_chain(node: ast.expr) -> tuple[str, str] | None:
-    """For `obj.field.sub`, return `(field, sub)`. Anything else gives None."""
+def _attribute_chain(node: ast.expr) -> tuple[str, str, str] | None:
+    """For `obj.field.sub`, return `(obj, field, sub)`. Anything else gives None."""
 
     if (isinstance(node, ast.Attribute)
             and isinstance(node.value, ast.Attribute)
             and isinstance(node.value.value, ast.Name)):
-        return node.value.attr, node.attr
+        return node.value.value.id, node.value.attr, node.attr
     return None
 
 
@@ -220,7 +268,10 @@ def nested_bindings(node: ast.expr) -> dict[str, tuple[str, tuple[tuple[str, str
         chains = [_attribute_chain(item) for item in value.values]
         if None in chains:
             continue
-        sources = {pair[0] for pair in chains if pair}
+        # The base object matters as much as the field spelling.  Combining
+        # ``sample.reading.id`` with ``other.reading.unit`` would otherwise manufacture a
+        # renderer demand no single object can satisfy.
+        sources = {(chain[0], chain[1]) for chain in chains if chain}
         if len(sources) != 1:
             continue
         inner_keys = [
@@ -230,9 +281,10 @@ def nested_bindings(node: ast.expr) -> dict[str, tuple[str, tuple[tuple[str, str
         if len(inner_keys) != len(chains):
             continue
         inner = tuple(sorted(
-            (inner_key, chain[1]) for inner_key, chain in zip(inner_keys, chains) if chain
+            (inner_key, chain[2]) for inner_key, chain in zip(inner_keys, chains) if chain
         ))
-        found[key.value] = (sources.pop(), inner)
+        _base, field = sources.pop()
+        found[key.value] = (field, inner)
     return found
 
 
@@ -270,8 +322,17 @@ class RenderNestedValueObject:
         sites: list[tuple[str, str]] = []
         for node in ast.walk(tree):
             for key, (field, inner) in nested_bindings(node).items():
-                if field in declared:
-                    sites.append((class_node.name, encode_nested(key, field, inner)))
+                if field not in declared:
+                    continue
+                explainers = {
+                    rival.identity for rival in rivals if field in rival.fields
+                }
+                if rivals and (
+                    len(explainers) != 1
+                    or not any(name == class_node.name for _, name in explainers)
+                ):
+                    continue
+                sites.append((class_node.name, encode_nested(key, field, inner)))
         return sites
 
     def is_supplied_by(self, class_node: ast.ClassDef, target: str, detail: str) -> bool:
@@ -279,15 +340,13 @@ class RenderNestedValueObject:
 
         wanted = decode_rendering(detail)
         for node in class_node.body:
-            if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            if not _plain_zero_argument_method(node):
                 continue
-            if node.name.startswith("_"):
-                continue
-            for inner in ast.walk(node):
-                if not isinstance(inner, ast.Return) or not isinstance(inner.value, ast.Dict):
+            for returned in _own_return_values(node):
+                if not isinstance(returned, ast.Dict):
                     continue
                 produced: dict[str, str] = {}
-                for key, value in zip(inner.value.keys, inner.value.values):
+                for key, value in zip(returned.keys, returned.values):
                     if not (isinstance(key, ast.Constant) and isinstance(key.value, str)):
                         continue
                     # `self.field.method()` -- a renderer called on the field.

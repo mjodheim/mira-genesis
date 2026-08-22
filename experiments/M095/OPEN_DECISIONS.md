@@ -5,8 +5,9 @@ remaining questions are scientific judgements rather than engineering, and leavi
 code would be deciding them by default. Each entry states the question, what has been measured, the
 options and what each costs. Freezing a protocol and arming a run remain the owner's acts.
 
-Written 2026-08-21 against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md`, and revised the same
-day after the fifth audit pass. The audit now records **nineteen defects, eighteen repaired**.
+Written 2026-08-21 against `experiments/M095/DESIGN.md` and `DESIGN_AUDIT.md`, revised after the
+fifth pass, and reconciled after the sixth local adversarial pass. The audit now records
+**twenty-six defects, twenty-five repaired**.
 
 **Two entries below have changed since they were written, and are marked.** Section 2 asked how to
 state a domain that no longer exists in the form it described; section 5 asked whether escaping a

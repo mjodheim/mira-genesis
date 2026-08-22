@@ -24,7 +24,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from metamorphosis import m095_reach as reach  # noqa: E402
 from metamorphosis.m094_composition import MethodDraft, render, unparse  # noqa: E402
-from metamorphosis.m094_diagnosis import _encode_rendering  # noqa: E402
+from metamorphosis.m094_diagnosis import CandidateClass, _encode_rendering  # noqa: E402
 from metamorphosis.m095_reach import (  # noqa: E402,F401
     RENDER_PREFIX,
     IncludeRenderedField,
@@ -166,6 +166,134 @@ def test_a_private_or_argument_taking_method_does_not_count() -> None:
 '''
     assert _operation(private).is_reachable() is False
     assert _operation(needs_args).is_reachable() is False
+
+
+def test_the_supplier_is_the_method_that_satisfies_the_requirement() -> None:
+    """A class-wide supply check must not bless the first key-shaped method.
+
+    The first method below has every required key but binds both to the wrong fields.  A second
+    method actually supplies the requirement.  Selecting the first one would make the assembled
+    outer repair call code that does not reproduce what the callers wrote.
+    """
+
+    two_methods = S0 + '''
+    def wrong(self):
+        return {'inner_id': self.label, 'label': self.inner_id}
+
+    def right(self):
+        return {'inner_id': self.inner_id, 'label': self.label}
+'''
+    operation = _operation(two_methods)
+    assert operation.supplier() == "right"
+
+    draft = operation.apply(MethodDraft(name="as_mapping", returns="mapping"))
+    assert draft is not None
+    assert "self.inner.right()" in unparse(render(draft))
+
+
+def test_a_nested_helper_return_does_not_supply_its_enclosing_method() -> None:
+    """A correct mapping in dead nested code cannot bless the method's wrong return."""
+
+    misleading = S0 + '''
+    def misleading(self):
+        def nested():
+            return {'inner_id': self.inner_id, 'label': self.label}
+        return {'inner_id': self.label, 'label': self.inner_id}
+'''
+    assert _operation(misleading).supplier() is None
+
+
+def test_an_async_or_decorated_renderer_cannot_be_called_as_a_plain_method() -> None:
+    """The emitted expression is synchronous ``obj.method()``, so its supplier must be too."""
+
+    asynchronous = S0 + '''
+    async def as_mapping(self):
+        return {'inner_id': self.inner_id, 'label': self.label}
+'''
+    property_method = S0 + '''
+    @property
+    def as_mapping(self):
+        return {'inner_id': self.inner_id, 'label': self.label}
+'''
+    assert _operation(asynchronous).is_reachable() is False
+    assert _operation(property_method).is_reachable() is False
+
+
+def test_nested_bindings_do_not_combine_two_different_base_objects() -> None:
+    """Equal field spellings on different objects are not one nested rendering."""
+
+    expression = ast.parse(
+        "{'reading': {'id': sample.reading.reading_id, "
+        "'unit': other.reading.unit}}",
+        mode="eval",
+    ).body
+    assert reach.nested_bindings(expression) == {}
+
+
+def test_nested_demand_is_not_attributed_when_two_reachable_classes_explain_it() -> None:
+    """A shared outer field name is ambiguous evidence, as it is for M094's plain shape."""
+
+    caller = ast.parse(
+        "def render(value):\n"
+        "    return {'held': {'id': value.reading.item_id}}\n"
+    )
+    outer = find_class(ast.parse("class OuterOne:\n    reading: InnerOne\n"), "OuterOne")
+    assert outer is not None
+    exported = frozenset({"OuterOne", "OuterTwo"})
+    rivals = (
+        CandidateClass(
+            "pkg/values.py", "pkg.values", exported, "OuterOne", frozenset({"reading"})
+        ),
+        CandidateClass(
+            "pkg/values.py", "pkg.values", exported, "OuterTwo", frozenset({"reading"})
+        ),
+    )
+    shape = reach.RenderNestedValueObject()
+    assert shape.demand_sites(caller, outer, rivals) == []
+    assert shape.demand_sites(caller, outer, rivals[:1]) == [
+        ("OuterOne", "held=reading|nested:id:item_id")
+    ]
+
+
+def test_a_nested_supplier_must_also_be_a_plain_callable_method() -> None:
+    """The nested shape used to count methods the generated caller could not invoke."""
+
+    detail = reach.encode_nested(
+        "inner", "inner", (("inner_id", "inner_id"), ("label", "label"))
+    )
+    shape = reach.RenderNestedValueObject()
+    for method in (
+        "async def as_mapping(self):\n"
+        "        return {'inner': self.inner.as_mapping()}\n",
+        "def as_mapping(self, style):\n"
+        "        return {'inner': self.inner.as_mapping()}\n",
+        "@property\n"
+        "    def as_mapping(self):\n"
+        "        return {'inner': self.inner.as_mapping()}\n",
+    ):
+        source = "class Outer:\n    inner: Inner\n\n    " + method
+        node = find_class(ast.parse(source), "Outer")
+        assert node is not None
+        assert shape.is_supplied_by(node, "Outer", detail) is False
+
+
+def test_the_nested_shape_ignores_a_return_inside_a_nested_helper() -> None:
+    """Its supply predicate must inspect the callable method, not dead nested code."""
+
+    detail = reach.encode_nested(
+        "inner", "inner", (("inner_id", "inner_id"), ("label", "label"))
+    )
+    source = '''class Outer:
+    inner: Inner
+
+    def misleading(self):
+        def helper():
+            return {'inner': self.inner.as_mapping()}
+        return {'wrong': self.inner.as_mapping()}
+'''
+    node = find_class(ast.parse(source), "Outer")
+    assert node is not None
+    assert reach.RenderNestedValueObject().is_supplied_by(node, "Outer", detail) is False
 
 
 # ── what the enabled operation actually emits ─────────────────────────

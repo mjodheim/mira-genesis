@@ -340,9 +340,7 @@ def nested_inner_classes(root: Path) -> tuple[str, ...]:
     """
 
     diagnosis = measure(root)
-    target = next(
-        (item for item in diagnosis.considered if item.capability == NESTED), None
-    )
+    target = next((item for item in diagnosis.unmet if item.capability == NESTED), None)
     if target is None:
         return ()
     tree = ast.parse((root / world.COMPONENT).read_text(encoding="utf-8"))
@@ -445,9 +443,29 @@ class Chain:
 
     @property
     def every_tied_capability_repaired(self) -> bool:
-        """Nothing at S1 was left to a name-based tie-break."""
+        """Nothing in the round that reached B was left to a name-based tie-break."""
 
-        return bool(self.second_step) and all(item.reached for item in self.second_step)
+        if self.s1_tied:
+            attempted = {f"{item.class_name}/{item.capability}" for item in self.second_step}
+            return bool(
+                attempted == set(self.s1_tied)
+                and all(item.reached for item in self.second_step)
+            )
+
+        # A permutation can put the nested target after its enabler in the S0 tied round.  Then
+        # B is repaired there and S1 has nothing left to select.  That is complete only when the
+        # whole measured S0 set was attempted and reached; an empty S1 is not sufficient by
+        # itself.
+        first_attempted = {
+            f"{item.class_name}/{item.capability}" for item in self.first_step
+        }
+        return bool(
+            self.step_b is not None
+            and self.step_b.notes.get("reached_in_the_first_round_after_its_enabler") is True
+            and self.s0_tied
+            and first_attempted == set(self.s0_tied)
+            and all(item.reached for item in self.first_step)
+        )
 
     @property
     def enabling_demonstrated(self) -> bool:
@@ -464,6 +482,10 @@ class Chain:
             # And the second repair must be the nested one. Without this the claim can
             # be carried by whatever else happened to be tied.
             and self.step_b.capability == NESTED
+            # A successful subset is not evidence that a tied selection was handled without
+            # the identifier ordering deciding what got left behind.
+            and self.s0_tie_was_not_broken_by_name
+            and self.every_tied_capability_repaired
         )
 
     @property
@@ -511,9 +533,11 @@ class Chain:
             "first_target_selected_by_the_diagnosis": self.selected_first,
             "second_target_selected_by_the_diagnosis": self.selected_second,
             "first_step_repairs": [item.to_dict() for item in self.first_step],
+            "s0_tied_capabilities": list(self.s0_tied),
             "descended_to_an_unranked_enabler": self.descended_to,
             "descent_attempts": [item.to_dict() for item in self.descent],
             "second_step_repairs": [item.to_dict() for item in self.second_step],
+            "s1_tied_capabilities": list(self.s1_tied),
             "every_tied_capability_was_repaired": self.every_tied_capability_repaired,
             "the_s0_tie_was_not_broken_by_a_name": self.s0_tie_was_not_broken_by_name,
             "second_target_came_from": self.selected_second,
