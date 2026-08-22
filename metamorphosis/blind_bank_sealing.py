@@ -178,10 +178,15 @@ def scan_tree_for_leaks(
     base = _resolve(root)
     problems: list[str] = []
     if tracked_paths is None:
-        candidates = [
-            path for path in base.rglob("*")
-            if path.is_file() and ".git" not in path.parts and "__pycache__" not in path.parts
-        ]
+        ignored_worktree_parts = {
+            ".git", ".pytest_cache", ".venv", ".venv-win", ".venv-314", "__pycache__"
+        }
+        candidates = []
+        for directory, names, files in os.walk(base, topdown=True):
+            # Prune before traversal: a broken or foreign-platform link inside an ignored virtual
+            # environment can fail during ``scandir`` before a later Path filter ever sees it.
+            names[:] = [name for name in names if name not in ignored_worktree_parts]
+            candidates.extend(Path(directory) / name for name in files)
     else:
         candidates = [base / relative for relative in tracked_paths]
 

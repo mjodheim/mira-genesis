@@ -270,6 +270,15 @@ def test_the_repository_itself_carries_no_leak() -> None:
     assert scan_tree_for_leaks(ROOT, tracked_paths=tracked) == []
 
 
+def test_untracked_virtual_environment_is_outside_the_public_tree_scan(tmp_path) -> None:
+    virtual_environment = tmp_path / ".venv" / "Lib"
+    virtual_environment.mkdir(parents=True)
+    (virtual_environment / "third_party_payload.json").write_text(
+        '{"schema":"m075b-private-task-bank-v1"}', encoding="utf-8"
+    )
+    assert scan_tree_for_leaks(tmp_path, tracked_paths=None) == []
+
+
 # ---------------------------------------------------------------------------------------------
 # repository guards
 # ---------------------------------------------------------------------------------------------
