@@ -419,7 +419,7 @@ All scientific autonomy remains inside explicit finite or resource-limited sandb
 Repository writes, network access, credentials, deployment and production changes remain
 human-controlled, even after a scientific result passes.
 
-### Current frontier after M094 / M095
+### Current frontier after M096
 
 M094 remains the qualified anchor on the real-software self-transformation line. M095 asked the
 first explicitly cumulative question on that line: does
@@ -428,26 +428,24 @@ enabling relation in six demand-bearing arrangements, with four found by ranking
 after failed-search descent to the prerequisite. Its structural qualification refuted the stronger
 claim: A's locally accepted mapping was overbroad, so B failed execution in all six positive worlds.
 
-The negative result inserts a prerequisite before the previously ordered boundaries:
+M096 preserved that negative result and tested its cause under a new protocol. Closed exact mapping
+contracts qualified the relation across all eight demand-bearing members of a fresh twelve-entry
+population, while all four zero-demand controls remained negative. All ten conditions replayed true.
 
-- **Next experiment — contract-safe composition:** distinguish exact output contracts from subset
-  capability satisfaction, and qualify a mechanism whose A can be safely embedded by B across the
-  frozen structural families. This must be a new protocol, not a repair of M095 attempt 1.
+The ordered boundaries now continue as stronger claims rather than larger versions of M096:
 
-The later ordered boundaries remain stronger rather than larger versions of M095:
-
-- **M096 — endogenous language extension in the real-software line:** prove the inherited operation
+- **M097 — endogenous language extension in the real-software line:** prove the inherited operation
   language is insufficient, acquire an extension without receiving the finished operation, persist
   it, and use it to construct a previously inaccessible capability. More budget or composition of
   the same language must not substitute for extension.
-- **M097 — hard persistence:** terminate the complete process and prove the acquired transformation
+- **M098 — hard persistence:** terminate the complete process and prove the acquired transformation
   capability returns from lineage-owned persisted state rather than a hidden host implementation.
 - **Later — repeated cumulative cycles:** A enables B, B enlarges the machinery for C, and the same
   causal pattern survives fresh tasks and eventually materially different domains. Only then does it
   become meaningful to measure whether the ability to improve is itself improving.
 
-M095's negative verdict is final for attempt 1. No later milestone may be cited to retroactively
-strengthen or repair it.
+M095's negative verdict is final for attempt 1. M096 is a distinct positive successor and may not be
+cited to retroactively strengthen or repair M095.
 
 ### After M091
 

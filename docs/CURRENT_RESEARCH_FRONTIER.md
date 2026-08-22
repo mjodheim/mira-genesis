@@ -30,9 +30,9 @@ valid result.
 | M093 | Engineering rehearsal | Real repository transformation, sandbox validation, adoption, persistence and rollback | Target, diagnosis and patch were substantially authored |
 | M094 | **Positive qualified scientific result** | The lineage measured the limiting real component, selected the tied top targets and assembled an executable repair from composable operations; qualification passed cross-component | Eligible components, observations, operation set and composition bound remain authored |
 | M095 | **Negative qualified result — attempt 1; H40 refuted** | Development shows structural reach and failed-search descent, but 0/6 positive structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative | Local subset capability satisfaction does not compose into an exact nested contract |
-| Next | Required successor boundary | Establish contract-safe composition across structural variation under a new frozen protocol | Must prevent or safely project A's extra output keys without an authored target-specific patch |
-| M096 plan | Deferred successor boundary | Bring endogenous transformation-language extension into the current cumulative real-software line | Premature until behaviourally compositional reach is qualified |
-| M097 | Planned successor boundary | Persist an acquired transformation capability across complete process death/restart | Must reconstruct capability from lineage-owned persisted state rather than host code |
+| M096 | **Positive qualified scientific result; H41 supported** | Closed exact output contracts qualify compositional reach: 8/8 positives, 4/4 negatives, 10/10 conditions replayed true | Operation language and structural population remain authored |
+| M097 | Active successor boundary | Bring endogenous transformation-language extension into the current cumulative real-software line | Must prove insufficiency, acquire rather than receive the operation, and close same-language budget controls |
+| M098 | Planned successor boundary | Persist an acquired transformation capability across complete process death/restart | Must reconstruct capability from lineage-owned persisted state rather than host code |
 | Later | Not yet demonstrated | Repeat the causal chain across fresh tasks/domains and measure whether acquired improvements improve the ability to find later improvements | Open-endedness, transfer and long-horizon autonomy remain open research problems |
 
 ## M094 — the strongest current qualified real-software result
@@ -146,16 +146,26 @@ Authoritative material:
 - `experiments/M095/POST_VERDICT_ANALYSIS.md`;
 - D064 and H40.
 
-## The next objective: contract-safe composition, then language
+## M096 — contract-safe compositional reach
 
 M095 keeps the operation set fixed. Its negative result now shows that structural applicability is
 not sufficient: a repair accepted under a partial local contract may not compose inside an exact
 nested contract.
 
-The immediate successor must distinguish exact output contracts from subset capability
-satisfaction and qualify one of three mechanisms under a new protocol: exact acceptance, minimal
-synthesis, or a demand-derived projection of a broader renderer. It must not repair or rerun M095
-attempt 1.
+M096 chose the first falsifiable successor: closed exact acceptance. It froze four new structures
+crossed with three demand arrangements before any enabling chain ran. Attempt 1 then demonstrated
+all eight demand-bearing relations and kept all four zero-demand witnesses negative. All ten
+conditions replayed true. The paired inherited mechanism failed all six partial-contract positives
+and remained live on both complete-contract positives. M095 attempt 1 remains negative.
+
+Authoritative material:
+
+- `experiments/M096/PROTOCOL.json`;
+- `experiments/M096/RESULT.json`;
+- `experiments/M096/CHECK_REPORT.json`;
+- D065 and H41.
+
+## The next objective: endogenous operation acquisition
 
 Only after that prerequisite is earned does the previously planned language boundary become live:
 
@@ -165,7 +175,7 @@ Only after that prerequisite is earned does the previously planned language boun
 > inherited language could not reach.
 
 M091 already demonstrated endogenous extension of a state-owned transformation language in a
-bounded abstract setting. M096 should not relabel that result. The interesting successor is to
+bounded abstract setting. M097 should not relabel that result. The interesting successor is to
 bring the same kind of ownership into the **current real-software cumulative line**, where an
 acquired improvement can become part of the machinery that produces later improvements.
 
@@ -174,7 +184,7 @@ acquired improvement can become part of the machinery that produces later improv
 A capability that exists only because one Python process still has host code in memory is not a
 lineage-owned capability.
 
-M097 should therefore require a hard process boundary:
+M098 should therefore require a hard process boundary:
 
 1. persist the accepted lineage state;
 2. terminate the process completely;
@@ -187,7 +197,7 @@ Only then is it reasonable to say the lineage *kept* the acquired machinery.
 
 ## The longer-term target
 
-The research target after M097 is a repeated causal chain, not a single spectacular benchmark:
+The research target after M098 is a repeated causal chain, not a single spectacular benchmark:
 
 ```text
 state S0

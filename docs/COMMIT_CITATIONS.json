@@ -1197,7 +1197,9 @@
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md"
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "experiments/M095/POST_VERDICT_ANALYSIS.md",
+        "experiments/M095/RESULT.json"
       ]
     },
     "958c52fc4e4f47dfdeacd492bb691dded2ede81d": {
@@ -1659,6 +1661,16 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M073/STATUS.md"
+      ]
+    },
+    "d0c91c3b2e5c4b5d68d65e6a4591dcc82744a3df": {
+      "subject": "science(m096): freeze contract-safe composition qualification",
+      "preserved_by": "experiment/m096-contract-safe-freeze",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "SCIENTIFIC_HYPOTHESES.md"
       ]
     },
     "d2c6308d1bf8747587ccec7457861eff43b04454": {

@@ -13,10 +13,10 @@ research question is instead whether progressively more of the machinery for dia
 transformation, validation, adoption and later improvement can become **lineage-owned, causal and
 replayable**.
 
-> **Current frontier:** M094 is a positive qualified real-software result. M095's frozen structural
-> qualification returned **negative on attempt 1**: A was reached, but its overbroad mapping made B
-> fail execution in all six positive worlds. H40 is refuted; the next experiment must establish
-> contract-safe composition before the planned language-extension step.
+> **Current frontier:** M095 remains a negative attempt-1 result. Its cause is now resolved by the
+> distinct M096 protocol: closed exact mapping contracts qualified compositional reach in 8/8
+> demand-bearing worlds, with 4/4 zero-demand controls negative and all 10 conditions replayed true.
+> The next experiment is M097, endogenous operation-language extension in the real-software line.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -69,10 +69,11 @@ the current cumulative **real-software** line.
 | M093 | **Engineering rehearsal** | Real repository transformation, sandbox validation, adoption, persistence and rollback worked, but the target, diagnosis and patch were substantially authored. |
 | M094 | **Positive qualified scientific result** | The lineage measured the limiting real component, selected the tied top targets and assembled an executable repair from composable operations; 12/12 conditions passed. |
 | M095 | **Negative qualified result — attempt 1** | The development chain works, but 0/6 demand-bearing structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative. Eight of eleven conditions pass; P3/P5/P6 fail. |
+| M096 | **Positive qualified scientific result** | Exact closed mapping contracts restore compositional reach: 8/8 positives, 4/4 negatives, and 10/10 conditions independently replayed true. |
 
-`main` currently contains the M094 qualified result. The local M095 branch preserves its frozen
-negative attempt-1 result; publication awaits the repository's explicit IP disposition, not remote
-computation.
+`main` currently contains the M094 qualified result. The local branch preserves M095's frozen
+negative attempt-1 result and M096's distinct positive successor; publication awaits the
+repository's explicit IP disposition, not remote computation.
 
 ## M094 — current qualified anchor
 
@@ -123,8 +124,9 @@ disclosed. Attempt 1 then ran all nine frozen entries: 0/6 positives demonstrate
 3/3 negatives remain negative, and the checker reports eight passes with P3/P5/P6 failed. A's local
 renderer may emit extra keys; B's exact nested contract rejects them. No post-verdict repair is made.
 
-See [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md) and
-`experiments/M095/` for the current boundary.
+M096 then froze a new population and accepted only complete exact output contracts. It demonstrated
+8/8 positive relations and preserved 4/4 negative controls; the checker replayed all ten conditions
+true. See `experiments/M095/` for the preserved negative and `experiments/M096/` for its successor.
 
 ## What has already been completed — and what “complete” means
 
@@ -139,8 +141,8 @@ not imply unrestricted self-modification, general intelligence or open-ended evo
 
 The active real-software line deliberately asks a stronger question: how much of the improvement
 process can become endogenous in a continuing lineage, and whether one acquisition can become a
-real prerequisite or tool for the next. M095 shows contract-safe composition must be established
-before the planned language-extension and hard-persistence steps.
+real prerequisite or tool for the next. M096 establishes contract-safe composition within its
+finite authored domain; M097 and M098 now address language extension and hard persistence.
 
 ## What Mira Genesis does not currently claim
 

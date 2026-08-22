@@ -1074,3 +1074,32 @@ an unauthored operation language, natural-world qualification, experimenter blin
 program repair, recursive self-improvement, AGI, any Genesis gate or independent human evaluation.
 The qualification worlds are deliberately authored and exhaustive because the corresponding demand
 does not naturally exist in `mira_core` and planting it would invalidate the qualification.
+
+## H41 — Exact output contracts make adopted repairs composition-safe
+
+Within the inherited frozen diagnosis, operation language, execution confirmation and composition
+bound, replacing subset mapping acceptance with a closed exact top-level mapping contract is
+sufficient for behaviourally compositional reach: B is unreachable at S0, reachable after the
+execution-confirmed exact-contract repair A, and unreachable again without A. The relation must hold
+across every demand-bearing member of a fresh structural population, while every world with no
+visible A demand remains negative.
+
+**Status:** **SUPPORTED.** M096 froze four new structures crossed exhaustively with three demand
+arrangements at local commit `d0c91c3`, then ran attempt 1 once with zero model calls, zero network
+calls and no remote execution. The exact-contract mechanism demonstrated 8/8 positive relations and
+kept 4/4 zero-demand controls negative. Four positives were found by ranking alone and four required
+failed-search descent. The independent checker replayed both mechanisms on all twelve entries and
+computed all ten conditions true. Result `feb53219…`; checker `fe31bc05…`.
+
+All six positive partial-contract entries also failed under the paired inherited subset mechanism,
+while both complete-contract positives succeeded under both mechanisms. Every adopted M096 enabler
+returned exactly the demanded keys. M095 attempt 1 remains negative and is neither retried nor
+relabelled.
+
+**What it establishes.** A closed output contract can turn M095's structural applicability growth
+into execution-confirmed compositional reach across the frozen finite population, under the same
+authored operations and search bound.
+
+**What it would not establish.** Not acquisition of a new operation, an unauthored operation
+language, persistence after process termination, natural-world generality, unrestricted program
+repair, recursive self-improvement, AGI, any completion gate or independent human evaluation.

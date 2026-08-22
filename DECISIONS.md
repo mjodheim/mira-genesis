@@ -2260,3 +2260,38 @@ The development world still demonstrates structural applicability growth and fai
 It does not qualify behaviourally compositional reach across structural variation. Not recursive
 self-improvement, not general program repair, not an operation-acquisition result, no gate, no
 independent human reproduction.
+
+## D065 — M096 adopts closed exact mapping contracts and qualifies composition
+
+### The decision
+
+H41 is supported by M096 attempt 1. The contract-safe mechanism accepts an adopted mapping repair
+only when its complete closed top-level binding set equals the observed demand. It is scoped to M096
+and restores the frozen M095 capability shapes after every run; M094 and M095 source and evidence
+remain unchanged.
+
+The protocol and fresh twelve-entry Cartesian population were frozen at local commit `d0c91c3`.
+The one armed local acquisition then demonstrated 8/8 demand-bearing relations and preserved 4/4
+zero-demand negatives. The checker rebuilt every world and replayed both the exact and inherited
+mechanisms: 10/10 conditions passed. Result `feb53219…`; checker `fe31bc05…`.
+
+### Causal reading
+
+All six positive partial-contract entries failed under the inherited subset mechanism and succeeded
+under exact acceptance. Both complete-contract positives succeeded in both arms, which keeps the
+paired legacy control live. The change does not add a repair operation, enlarge the composition
+bound or alter execution confirmation; it changes which complete output contract may be adopted.
+
+### The next ceiling
+
+M096 still uses an authored fixed operation language. The next experiment is M097: prove that a
+needed real-software transformation operation lies outside that inherited language, acquire an
+extension without being handed the finished operation, persist it as lineage-owned state, and use
+it to construct a capability that the inherited language cannot reach. Hard process-termination
+persistence follows as M098.
+
+### Claim boundary
+
+Not general program repair, not arbitrary language invention, not open-ended evolution, not hard
+persistence, no Genesis or generality gate, no independent human reproduction, no production or
+network authority.

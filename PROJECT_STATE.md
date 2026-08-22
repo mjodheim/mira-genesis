@@ -115,6 +115,12 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   exists. The frozen exhaustive population returned 0/6 positive and 3/3 negative witnesses. A is
   reached, but its renderer emits extra keys and every B survivor is refused by execution. Eight of
   eleven conditions pass; P3/P5/P6 fail. No retry or post-verdict repair is made.
+- **M096 is a positive qualified result; H41 is supported.** A distinct frozen protocol replaces
+  subset mapping acceptance with a closed exact output contract while leaving the inherited
+  operation language, bound and execution confirmation unchanged. Attempt 1 demonstrated 8/8
+  demand-bearing relations, preserved 4/4 zero-demand negatives and replayed all 10 conditions
+  true. All six partial-contract paired legacy arms failed while both complete-contract liveness
+  controls passed. Result `feb53219…`; checker `fe31bc05…`; freeze `d0c91c3`.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

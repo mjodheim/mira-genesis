@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **M096 qualifies contract-safe compositional reach.** H41's frozen 4 × 3 population ran locally
+  once from `d0c91c3`: exact closed mapping contracts demonstrated 8/8 positive relations and kept
+  4/4 zero-demand controls negative, with zero model, network or remote calls. The independent
+  replay computed all 10 conditions true. All six partial-contract positives failed under inherited
+  subset acceptance while both complete-contract liveness controls succeeded in both arms. Result
+  `feb53219…`; checker `fe31bc05…`. M095 remains negative; M097 is the next boundary.
+
 - **M095 attempt 1 is a preserved negative qualification.** H40, an eleven-condition protocol and
   an exhaustive nine-entry structural population were frozen before any qualification chain ran.
   From clean commit `951c7c2`, with zero model/network calls and no retry, all nine entries ran:
