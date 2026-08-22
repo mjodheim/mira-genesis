@@ -1,0 +1,78 @@
+{
+  "construction": "all three post-M098 successor structures; no draw, salt, exclusion or reroll",
+  "entries": [
+    {
+      "caller_count": 2,
+      "cases": [
+        {"allocated": 15, "generation": 1, "pool": "a", "used": 3},
+        {"allocated": 8, "generation": 2, "pool": "b", "used": 8},
+        {"allocated": 5, "generation": 3, "pool": "c", "used": 21},
+        {"allocated": 6, "generation": 4, "pool": "d", "used": -2}
+      ],
+      "class": "StorageWindow",
+      "entry_digest": "bfd428edad39ed69a952d7c0d1f5916c77ba8b77e8292a81b1bea82a4a15a947",
+      "fields": [
+        {"annotation": "str", "name": "pool"},
+        {"annotation": "int", "name": "used"},
+        {"annotation": "int", "name": "generation"},
+        {"annotation": "int", "name": "allocated"}
+      ],
+      "id": "storage_headroom",
+      "key": "headroom",
+      "left_field": "allocated",
+      "operator": "sub",
+      "right_field": "used"
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {"inlet": 9.5, "outlet": 2.25, "station": "n"},
+        {"inlet": 4.0, "outlet": 4.0, "station": "s"},
+        {"inlet": 1.25, "outlet": 7.75, "station": "e"},
+        {"inlet": 0.5, "outlet": -3.0, "station": "w"}
+      ],
+      "class": "PressurePair",
+      "entry_digest": "0325f074d89525b5b681a871810928ffd88ab68ea10baaa5e6b5e829be555dfe",
+      "fields": [
+        {"annotation": "float", "name": "outlet"},
+        {"annotation": "float", "name": "inlet"},
+        {"annotation": "str", "name": "station"}
+      ],
+      "id": "pressure_drop",
+      "key": "drop",
+      "left_field": "inlet",
+      "operator": "sub",
+      "right_field": "outlet"
+    },
+    {
+      "caller_count": 2,
+      "cases": [
+        {"counted": 13, "cycle": 1, "expected": 10, "sku": "q", "warehouse": "a"},
+        {"counted": 5, "cycle": 2, "expected": 5, "sku": "r", "warehouse": "b"},
+        {"counted": 4, "cycle": 3, "expected": 19, "sku": "s", "warehouse": "c"},
+        {"counted": 7, "cycle": 4, "expected": -2, "sku": "t", "warehouse": "d"}
+      ],
+      "class": "InventoryFrame",
+      "entry_digest": "60332d29541e27efd469dfa6574f0590a262145d3db24583ce2b5f57847e55b9",
+      "fields": [
+        {"annotation": "str", "name": "sku"},
+        {"annotation": "int", "name": "expected"},
+        {"annotation": "str", "name": "warehouse"},
+        {"annotation": "int", "name": "counted"},
+        {"annotation": "int", "name": "cycle"}
+      ],
+      "id": "inventory_delta",
+      "key": "delta",
+      "left_field": "counted",
+      "operator": "sub",
+      "right_field": "expected"
+    }
+  ],
+  "m097_and_m098_worlds_excluded": true,
+  "milestone": "M099",
+  "pool_digest": "98027966862f8446555de983bc4245d3ceabcefb41ce5c4ce99373db831b91c9",
+  "population_size": 3,
+  "preflight_boundary": "construct and parse source and cases only; producer, persisted-state consumer, fault mutation, rollback and any capability execution are forbidden before freeze",
+  "schema": "m099-qualification-pool-v1",
+  "status": "frozen"
+}

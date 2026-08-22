@@ -1,0 +1,135 @@
+{
+  "schema": "m099-protocol-v1",
+  "milestone": "M099",
+  "hypothesis": "H44",
+  "decision_slot": "D068",
+  "status": "frozen",
+  "track": "A",
+  "date_authored": "2026-08-22",
+  "date_frozen": "2026-08-22",
+  "claim": "The M097-acquired symbolic repair operation persists through complete producer-process death and is reconstructed solely from canonical disk state by fresh isolated consumers across all three post-M098 worlds; removal, semantic mutation, corruption and live fault close the capability, byte-exact rollback restores it, and every scientific outcome reproduces exactly after the precommitted complete process/location-ephemera projection.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_generic_interpreter_eliminated": false,
+    "crash_consistent_transaction_protocol": false,
+    "durability_beyond_local_filesystem": false,
+    "experimenter_blindness": false,
+    "generality_gate": false,
+    "host_code_self_regeneration": false,
+    "hostile_code_sandbox": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "open_ended_evolution": false,
+    "production_authority": false,
+    "unrestricted_program_repair": false
+  },
+  "conditions": [
+    "P1_frozen_protocol_pool_mechanism_checker_inputs_and_projection_are_bound",
+    "P2_fresh_post_m098_population_is_complete_buildable_and_unrun_before_freeze",
+    "P3_separate_producer_persists_exact_m097_state_then_terminates",
+    "P4_isolated_capsule_contains_only_bound_generic_runtime",
+    "P5_persisted_extension_executes_all_fresh_post_restart_worlds",
+    "P6_fresh_consumers_have_no_repository_or_acquisition_module_access",
+    "P7_persisted_extension_is_necessary_after_restart",
+    "P8_semantic_mutation_and_digest_corruption_controls_fail",
+    "P9_producer_death_and_fresh_consumer_process_boundaries_are_observed",
+    "P10_live_state_fault_suppresses_capability_in_a_new_process",
+    "P11_byte_exact_rollback_restores_capability_in_a_third_process",
+    "P12_stable_replay_chronology_track_a_and_local_only_execution"
+  ],
+  "falsifiers": [
+    "The protocol, pool, mechanism, checker, predecessor inputs or projection policy differs from its frozen binding.",
+    "Any qualification world was process-executed before freeze or any M097/M098 world was reused.",
+    "The producer does not persist the exact M097 state or remains alive before consumers.",
+    "The isolated capsule contains more than the bound runtime and entry point.",
+    "Any fresh post-M098 world fails after restart with the retained extension.",
+    "Any consumer is non-isolated, imports a project module or retains the repository search path.",
+    "The extension-absent control succeeds.",
+    "The semantic mutation succeeds or corrupt state does not fail closed.",
+    "The producer death and fresh-consumer process census is not observed.",
+    "The live semantic fault does not suppress the capability in a new process.",
+    "Byte-exact rollback does not restore the capability in another fresh process.",
+    "A scientific outcome differs on clean replay, an unlisted field must be removed to obtain equality, the result is overwritten or rerolled, or model, network, remote or dirty-tree evidence enters Track A."
+  ],
+  "preserved_inputs": {
+    "m097_result_digest": "e976788fcbf7b8eff0d426dee9fa914a8aeaa7c126b2038b9f3394a1a76690c0",
+    "m097_state_digest": "2097d3a733f06b5d0f0b1e8071ca5e71b0d7fd1f5c7f5e050fc1b76f015b301c",
+    "m098_result_commit": "7dc3dd0",
+    "m098_result_digest": "3cce5155033bd57c0e4e8adf3c01f7ea728a6088e793154418070b13ef8e9d80",
+    "m098_checker_digest": "b04513a2c769fe4b6dd26ae51ce4d9061919231f930e010cb4dc65b11ec52e54",
+    "m098_failed_conditions": [
+      "P12"
+    ]
+  },
+  "stable_projection": {
+    "excluded_keys": [
+      "consumer_pids",
+      "pid",
+      "producer_pid",
+      "search_path"
+    ],
+    "recursive": true,
+    "policy_frozen_before_qualification": true,
+    "retained_process_facts": [
+      "producer_process_is_terminated",
+      "producer_terminated_before_consumers",
+      "fresh_process_invocations",
+      "consumer_pid_records_present",
+      "all_consumers_are_distinct_from_producer"
+    ],
+    "m098_diagnostic_equivalence_digest": "3794831aa3a13fd6711e50b3a44b9a1bcef1266c0d713d8fff0a069ea397643c"
+  },
+  "mechanism": {
+    "digest": "77226bfb8c04d5a0bba8315634798e2c191d45c1db6256381bc5012aaf46b2cb",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "metamorphosis/m098_runtime.py",
+      "scripts/run_m098_fresh_process.py",
+      "scripts/run_m098_persist_producer.py",
+      "scripts/author_m098_qualification_pool.py",
+      "scripts/run_m095_qualification.py",
+      "scripts/run_m098_qualification.py"
+    ],
+    "process_mechanism_changed_from_m098": false
+  },
+  "qualification_apparatus": {
+    "digest": "e979d1fef1bfc4d71e567e55ca6e64ad6120ab4a52f1628baaf35b671ea176a7",
+    "digest_rule": "sha256 of canonical JSON mapping each listed path to its raw sha256",
+    "files": [
+      "scripts/author_m099_qualification_pool.py",
+      "scripts/run_m099_qualification.py",
+      "scripts/check_m098_result.py",
+      "scripts/check_m099_result.py"
+    ]
+  },
+  "qualification_population": {
+    "construction": "all three authored post-M098 structures; no draw, exclusion, salt or reroll",
+    "entries": 3,
+    "families": [
+      "storage_headroom",
+      "pressure_drop",
+      "inventory_delta"
+    ],
+    "pool_digest": "98027966862f8446555de983bc4245d3ceabcefb41ce5c4ce99373db831b91c9",
+    "development_world_excluded": true,
+    "m097_and_m098_worlds_excluded": true,
+    "producer_consumer_fault_and_rollback_unrun_before_freeze": true
+  },
+  "run_policy": {
+    "armed_write_required": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "no_overwrite": true,
+    "result_path": "experiments/M099/RESULT.json"
+  },
+  "owner_authorization": "The project owner instructed uninterrupted local validation of every successor required to close the M095-M097 line on 2026-08-22. This authorizes local freeze and execution, not public push.",
+  "publication": {
+    "disposition": "PENDING_EXPLICIT_OWNER_DISPOSITION",
+    "local_work_authorized": true,
+    "public_push_authorized": false
+  },
+  "remote_execution_forbidden": true,
+  "verdict_rule": "positive only when all twelve frozen conditions are computed and true"
+}
