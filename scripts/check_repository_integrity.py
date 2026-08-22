@@ -62,6 +62,15 @@ DISTRIBUTION_ALIASES = {
     "PIL": "pillow",
 }
 
+# Standalone capsule entry points deliberately import a sibling by its copied filename.  In the
+# repository that sibling remains namespaced under ``metamorphosis``; at runtime both files are
+# copied into an otherwise empty directory and Python is launched with ``-I``.  Keep the mapping
+# explicit so the integrity graph can model that boundary without treating the sibling as PyPI or
+# requiring frozen capsule source to gain repository-only import logic.
+LOCAL_IMPORT_ALIASES = {
+    "m098_runtime": "metamorphosis.m098_runtime",
+}
+
 
 def source_files() -> list[Path]:
     directories = tuple(ROOT / package for package in PACKAGES) + (ROOT / "scripts", ROOT / "tests")
@@ -117,6 +126,11 @@ def check_imports() -> list[str]:
     sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "scripts"))
     failures: list[str] = []
+    for local_name, qualified_name in LOCAL_IMPORT_ALIASES.items():
+        try:
+            sys.modules[local_name] = importlib.import_module(qualified_name)
+        except Exception as error:  # noqa: BLE001 - preserve the complete diagnostic
+            failures.append(f"{qualified_name}: {type(error).__name__}: {error}")
     for path in source_files():
         if path.parts[-2] == "tests":
             continue  # pytest owns collection and fixture setup for tests
@@ -148,6 +162,7 @@ def check_orphans() -> list[str]:
             # Handles `metamorphosis.m012b_dfa` and `m014b_eval_support`, as well as
             # `metamorphosis.m012b_dfa.DFA` produced by `from x.y import z`.
             for candidate in (target, target.rsplit(".", 1)[0]):
+                candidate = LOCAL_IMPORT_ALIASES.get(candidate, candidate)
                 if candidate in files:
                     queue.append(candidate)
 
@@ -181,7 +196,12 @@ def check_dependencies() -> list[str]:
     # ``scripts.foo`` import when they need the package-qualified identity; pyproject's pytest
     # path also supports the historical bare ``foo`` entry-point imports.  Neither spelling is a
     # third-party dependency.
-    local = set(PACKAGES) | {"scripts"} | {module_name(path) for path in source_files()}
+    local = (
+        set(PACKAGES)
+        | {"scripts"}
+        | set(LOCAL_IMPORT_ALIASES)
+        | {module_name(path) for path in source_files()}
+    )
     used: set[str] = set()
     for path in source_files():
         for name in imported_names(path):

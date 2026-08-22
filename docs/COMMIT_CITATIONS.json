@@ -198,9 +198,11 @@
     },
     "1b862ab9afaec13cf16c7fcc6da7c297956424d4": {
       "subject": "science(m098): freeze hard process persistence",
-      "preserved_by": "experiment/m098-process-persistence-freeze",
+      "preserved_by": "experiment/m098-negative-result",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M098/POST_VERDICT_ANALYSIS.md",
@@ -485,7 +487,10 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PROJECT_STATE.md",
-        "SCIENTIFIC_HYPOTHESES.md"
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M097/RESULT.json"
       ]
     },
     "3bc3b50a052851d7fb8847b6eeb6c87ba8c2c320": {
@@ -876,6 +881,18 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "62a29b0a921e9907a24e3f82944ab4adb400775a": {
+      "subject": "science(m099): freeze stable process persistence",
+      "preserved_by": "experiment/m099-stable-persistence-freeze",
+      "cited_in": [
+        "CHANGELOG.md",
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "63d8b18d72451ffe93f905e1c733a89ddbc70fb4": {
       "subject": "docs(m038): reconcile the protocol with the calibration, and fix four underspecifications",
       "preserved_by": "main",
@@ -952,6 +969,13 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M071/EXTERNAL_RESULT.json",
         "experiments/M071/EXTERNAL_RESULT.md"
+      ]
+    },
+    "6f4db16d8f41de4e2b5f768f63e359d2f9a16213": {
+      "subject": "science(m097): preserve positive operation acquisition",
+      "preserved_by": "experiment/m097-positive-result",
+      "cited_in": [
+        "experiments/M098/PROTOCOL.json"
       ]
     },
     "6f4f20a118b3744fa2de08cee05b860362623fef": {
@@ -1076,6 +1100,13 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M067/DEVELOPMENT_RESULT.md",
         "experiments/M067/PROTOCOL.md"
+      ]
+    },
+    "7dc3dd03ff806a558d788a194e389a7d11dda3b5": {
+      "subject": "science(m098): preserve negative stable-replay result",
+      "preserved_by": "experiment/m098-negative-result",
+      "cited_in": [
+        "experiments/M099/PROTOCOL.json"
       ]
     },
     "82e0bf9689a30de2f6f7c69fdd42af89b842d6ee": {
@@ -1691,6 +1722,7 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M096/RESULT.json"

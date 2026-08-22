@@ -2,11 +2,25 @@
 
 ## Unreleased
 
+- **M099 qualifies stable hard process-death persistence.** From freeze `62a29b0`, the unchanged
+  M098 process mechanism persisted the exact M097 registry, terminated its producer and reconstructed
+  the operation in eight isolated fresh consumers with no project imports. The extension solved
+  3/3 new worlds; absence, semantic mutation and corruption failed; live fault and byte-exact
+  rollback removed then restored the capability. A precommitted complete ephemeral projection made
+  clean replay exact: 12/12 conditions true. Result `17642e0e…`; stable evidence `497b6aab…`;
+  checker `d2a381a6…`.
+
+- **M098 attempt 1 is preserved negative at 11/12.** Every direct persistence, isolation, control,
+  fault and rollback condition passed, but the frozen stable projection removed singular PID fields
+  while retaining the aggregate `consumer_pids` list. Replay therefore failed P12. Removing only
+  that field in a disclosed post-verdict diagnostic made the records equal, but M098 was not
+  repaired or rerun. Result `3cce5155…`; checker `b04513a2…`.
+
 - **M097 qualifies endogenous repair-operation acquisition.** From freeze `3b1dd98`, the lineage
   exhausted 2,800 symbolic stack programs and registered the minimal independently accepted
   `PUSH_LEFT, PUSH_RIGHT, SUB` definition. Inherited/acquisition-ablated scored 0/4; the restored
   extension execution-confirmed 4/4 fresh real-Python worlds. All 12 conditions replayed true.
-  Result `e976788f…`; checker `00334618…`. Hard process persistence remains M098.
+  Result `e976788f…`; checker `00334618…`. Hard process persistence is later qualified by M099.
 
 - **M096 qualifies contract-safe compositional reach.** H41's frozen 4 × 3 population ran locally
   once from `d0c91c3`: exact closed mapping contracts demonstrated 8/8 positive relations and kept

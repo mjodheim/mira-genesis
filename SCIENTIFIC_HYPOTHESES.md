@@ -1156,3 +1156,31 @@ claim because reproducible stable evidence was an explicit conjunct.
 
 **What follows.** A successor requires a new protocol and fresh worlds, with all concrete process
 identifiers excluded from the stable projection before freeze. M098 is not retried or relabelled.
+
+## H44 — Hard persistence is reproducible under a precommitted ephemeral projection
+
+With the complete process/location-ephemera policy frozen in advance, the operation acquired by
+M097 can survive producer death, be reconstructed by isolated fresh consumers from canonical disk
+state, remain necessary across fresh post-M098 worlds, fail under semantic mutation or corruption,
+recover after byte-exact rollback, and reproduce every retained scientific outcome exactly.
+
+**Status:** **SUPPORTED.** M099 froze a three-world population and the recursive four-key projection
+at local commit `62a29b0a`. The process mechanism was unchanged from M098. Attempt 1 ran once with
+zero model, network and remote calls. The producer wrote the exact 304-byte M097 registry and died;
+eight later base-Python `-I` consumers imported no project modules and retained no repository search
+path. The extension execution-confirmed 3/3 fresh worlds. Empty, semantically mutated and corrupt
+states failed. A live mutation removed the capability and restoring the exact original bytes
+restored it in another process.
+
+The independent replay used different operating-system process identifiers but produced the same
+precommitted stable evidence digest, `497b6aab…`. All twelve conditions are true. Result
+`17642e0e…`; checker `d2a381a6…`.
+
+**What it establishes.** One acquired symbolic real-Python repair operation is durable across a
+complete producer/consumer process boundary and exact local rollback without acquisition,
+validation or repository modules present in the consumer.
+
+**What it would not establish.** The generic interpreter remains authored host code. This is not a
+self-hosting language, transactional crash-consistency proof, hostile-code sandbox, unrestricted
+program repair, repeated cumulative improvement, open-ended evolution, generality gate, AGI or
+independent human reproduction.

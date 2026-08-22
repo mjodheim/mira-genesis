@@ -2358,3 +2358,32 @@ normalisation, but fixing it after observing the verdict would still be result-s
 M099 must freeze the complete ephemeral-field policy before execution and use an entirely fresh
 population. It must rerun every direct persistence, isolation, necessity, fault and rollback
 condition; M098's positive subconditions are evidence, not a substitute.
+
+## D068 — M099 qualifies stable hard persistence; advance to repeated cumulative cycles
+
+### The decision
+
+H44 is supported by M099 attempt 1. The three-world successor population and the recursive
+`consumer_pids`/`pid`/`producer_pid`/`search_path` exclusion policy were frozen at local commit
+`62a29b0a`. The process mechanism itself is unchanged from M098. The armed run was local, clean and
+made zero model or network calls. All twelve conditions passed on independent replay. Result
+`17642e0e…`; stable evidence `497b6aab…`; checker `d2a381a6…`.
+
+### Causal reading
+
+The producer wrote the exact M097 state and terminated. Eight subsequent consumers ran under the
+base interpreter in isolated mode with only a two-file generic capsule, no project imports and no
+repository search path. The extension solved all three fresh structures; extension absence,
+semantic mutation and digest corruption closed the capability. A live semantic fault failed, the
+original bytes were restored exactly, and another fresh process succeeded.
+
+The replay changed process identifiers but no retained scientific field. This closes the narrow
+evidence defect that made M098 negative without changing or relabelling M098.
+
+### Next ceiling
+
+The active line now has contract-safe composition (M096), bounded acquisition of a new real-Python
+operation (M097), and hard persistence with fault rollback (M099). The next experiment must combine
+these into repeated cumulative cycles in which an acquired capability causally helps acquire a
+later, distinct capability across fresh tasks. One persisted subtraction operation is not evidence
+of open-ended improvement.

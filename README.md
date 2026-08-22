@@ -17,7 +17,8 @@ replayable**.
 > distinct M096 protocol: closed exact mapping contracts qualified compositional reach in 8/8
 > demand-bearing worlds, with 4/4 zero-demand controls negative and all 10 conditions replayed true.
 > M097 now also qualifies endogenous operation acquisition (0/4 inherited, 4/4 extended, 12/12
-> conditions). The next experiment is M098, hard persistence across complete process death.
+> conditions). M098 preserved an 11/12 negative caused only by an incomplete PID projection; its
+> fresh-population successor M099 now qualifies hard process-death persistence at 12/12.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -72,14 +73,18 @@ the current cumulative **real-software** line.
 | M095 | **Negative qualified result — attempt 1** | The development chain works, but 0/6 demand-bearing structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative. Eight of eleven conditions pass; P3/P5/P6 fail. |
 | M096 | **Positive qualified scientific result** | Exact closed mapping contracts restore compositional reach: 8/8 positives, 4/4 negatives, and 10/10 conditions independently replayed true. |
 | M097 | **Positive qualified scientific result** | The lineage assembled and registered a new binary-expression repair operation; inherited scored 0/4, extended 4/4, and 12/12 conditions replayed true. |
+| M098 | **Negative qualified result — attempt 1** | Every direct persistence condition passed, but stable replay retained an aggregate PID list; 11/12 conditions passed and P12 failed. |
+| M099 | **Positive qualified scientific result** | The M097 operation survived producer death, ran in isolated fresh consumers on 3/3 new worlds, failed under absence/mutation/corruption, recovered after exact rollback, and replayed 12/12 true. |
 
 `main` currently contains the M094 qualified result. The local branch preserves M095's frozen
-negative attempt-1 result and M096's distinct positive successor; publication awaits the
-repository's explicit IP disposition, not remote computation.
+negative attempt-1 result, M096/M097's positive successors, M098's disclosed negative and M099's
+positive hard-persistence result. Publication awaits the repository's explicit IP disposition, not
+remote computation.
 
-## M094 — current qualified anchor
+## M094 — original qualified repair anchor
 
-M094 is the strongest qualified result on the active real-software line.
+M094 remains the qualified anchor for autonomous diagnosis and repair on the active real-software
+line; M096–M099 extend the causal chain beyond it.
 
 Its preserved second attempt produced a **positive** verdict with **12/12 protocol conditions
 computed and true**. The mechanism used **zero model calls and zero network calls**. Diagnosis
@@ -144,7 +149,8 @@ not imply unrestricted self-modification, general intelligence or open-ended evo
 The active real-software line deliberately asks a stronger question: how much of the improvement
 process can become endogenous in a continuing lineage, and whether one acquisition can become a
 real prerequisite or tool for the next. M096 establishes contract-safe composition within its
-finite authored domain; M097 and M098 now address language extension and hard persistence.
+finite authored domain; M097 establishes bounded language extension and M099 establishes hard
+process-death persistence after M098's preserved replay-normalisation failure.
 
 ## What Mira Genesis does not currently claim
 

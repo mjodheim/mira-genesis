@@ -15,9 +15,9 @@ construction line at M066.
 
 The active question is stronger and narrower:
 
-> Can a software lineage make an internally selected and validated change that alters what later
-> changes are reachable, then progressively acquire the machinery needed to extend that process
-> without a human supplying the finished next repair?
+> Can a software lineage repeat the now-qualified chain — contract-safe composition, acquisition
+> of a previously unavailable repair operation, and hard persistence — so that one acquired
+> capability causally helps acquire a later, distinct capability across fresh tasks?
 
 The project is not currently claiming open-ended recursive self-improvement. It is testing the
 necessary mechanisms one at a time, under conditions designed to let a negative result remain a
@@ -32,12 +32,14 @@ valid result.
 | M095 | **Negative qualified result — attempt 1; H40 refuted** | Development shows structural reach and failed-search descent, but 0/6 positive structural qualification worlds execution-confirm B after A; 3/3 negatives remain negative | Local subset capability satisfaction does not compose into an exact nested contract |
 | M096 | **Positive qualified scientific result; H41 supported** | Closed exact output contracts qualify compositional reach: 8/8 positives, 4/4 negatives, 10/10 conditions replayed true | Operation language and structural population remain authored |
 | M097 | **Positive qualified scientific result; H42 supported** | A binary-expression operation was assembled, independently validated and registered; inherited 0/4, extended 4/4, 12/12 conditions true | Generic interpreter and substrate remain authored; no process-death proof |
-| M098 | Planned successor boundary | Persist an acquired transformation capability across complete process death/restart | Must reconstruct capability from lineage-owned persisted state rather than host code |
+| M098 | **Negative qualified result — attempt 1; H43 refuted** | Every direct hard-persistence condition passed, but replay retained an aggregate PID list; 11/12 conditions true | Frozen stable-evidence projection was incomplete |
+| M099 | **Positive qualified scientific result; H44 supported** | The M097 operation survived producer death, ran in isolated consumers on 3/3 fresh worlds, failed under all controls, recovered after exact rollback and replayed 12/12 true | One operation and authored interpreter; repeated cumulative acquisition remains open |
 | Later | Not yet demonstrated | Repeat the causal chain across fresh tasks/domains and measure whether acquired improvements improve the ability to find later improvements | Open-endedness, transfer and long-horizon autonomy remain open research problems |
 
-## M094 — the strongest current qualified real-software result
+## M094 — the original qualified repair anchor
 
-M094 is the current qualified anchor for the active line.
+M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M099 extend the causal
+chain beyond it.
 
 Its second preserved attempt produced a positive verdict with **12/12 protocol conditions computed
 and true**. The mechanism made **zero model calls and zero network calls**. The diagnosis selected
@@ -165,26 +167,26 @@ Authoritative material:
 - `experiments/M096/CHECK_REPORT.json`;
 - D065 and H41.
 
-## The next objective: endogenous operation acquisition
+## M097 — endogenous operation acquisition
 
-Only after that prerequisite is earned does the previously planned language boundary become live:
+After M096 earned the composition prerequisite, M097 tested the language boundary:
 
 > encounter a transformation requirement that the inherited operation language cannot express,
 > establish that insufficiency rather than merely failing to search deeply enough, acquire an
 > extension from lineage-owned machinery, register it, and then use it to reach something that the
 > inherited language could not reach.
 
-M091 already demonstrated endogenous extension of a state-owned transformation language in a
-bounded abstract setting. M097 should not relabel that result. The interesting successor is to
-bring the same kind of ownership into the **current real-software cumulative line**, where an
-acquired improvement can become part of the machinery that produces later improvements.
+M091 had already demonstrated endogenous extension of a state-owned transformation language in a
+bounded abstract setting. M097 did not relabel that result: it assembled and registered a generic
+binary-expression operation in the **current real-software cumulative line**, changing reach from
+0/4 inherited to 4/4 extended worlds with all twelve conditions true.
 
-## Persistence after acquisition
+## M098 and M099 — persistence after acquisition
 
 A capability that exists only because one Python process still has host code in memory is not a
 lineage-owned capability.
 
-M098 should therefore require a hard process boundary:
+M098 therefore froze a hard process boundary:
 
 1. persist the accepted lineage state;
 2. terminate the process completely;
@@ -193,11 +195,15 @@ M098 should therefore require a hard process boundary:
 5. demonstrate the capability on a fresh requirement;
 6. force a fault and restore the prior lineage exactly.
 
-Only then is it reasonable to say the lineage *kept* the acquired machinery.
+All six direct objectives passed in M098, but its stable replay projection accidentally retained
+the aggregate `consumer_pids` list, making the attempt negative at 11/12. The frozen result was not
+repaired. M099 used a new three-world population and precommitted the complete ephemeral-key policy
+while leaving the process mechanism unchanged. It replayed all twelve conditions true. Within the
+declared boundary, the lineage *kept* the acquired machinery across complete producer death.
 
 ## The longer-term target
 
-The research target after M098 is a repeated causal chain, not a single spectacular benchmark:
+The research target after M099 is a repeated causal chain, not a single spectacular benchmark:
 
 ```text
 state S0

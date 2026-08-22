@@ -1,16 +1,16 @@
 project: Mira Genesis
 updated_at: 2026-08-22
-status: m094_positive_qualified_m095_negative_qualified_h40_refuted
+status: m099_positive_qualified_h44_supported_m098_negative_preserved
 
 active_research_question: >-
-  Can locally accepted repairs be made contract-safe under structural variation, so that an
-  execution-confirmed repair A can be embedded by B without extra output violating the caller's
-  exact nested contract, before endogenous transformation-language extension is attempted?
+  Can the qualified chain of contract-safe composition, endogenous real-software operation
+  acquisition and hard process-death persistence be repeated, so that one acquired capability
+  causally helps acquire a later distinct capability across fresh tasks?
 
 preceding_research_question: >-
-  M094 asked whether the lineage could measure which real repository component limited it and
-  assemble the repair without being handed the target or finished patch. Attempt 2 qualified
-  positively with all 12 conditions true and 2/2 cross-component qualification cases.
+  M099 asked whether the M097-acquired operation survives complete producer death, isolated
+  consumer restart, faults and exact rollback under reproducible evidence. Attempt 1 qualified
+  positively with all 12 conditions true after M098's preserved P12-only negative.
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -128,6 +128,92 @@ current_real_software_frontier:
     checker_digest: bb24a484012d123d0336fb7c1974e58255222b6c91ce0bb22770f42e58d5d42f
     decision: D064
     current_ceiling: contract_safe_composition_of_locally_satisfied_capabilities
+  M096:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H41
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 12
+    demand_bearing_entries: 8
+    demand_bearing_demonstrated: 8
+    zero_demand_entries: 4
+    zero_demand_remained_negative: 4
+    ranking_unaided_entries: 4
+    failed_search_descent_entries: 4
+    conditions_total: 10
+    conditions_passed: 10
+    source_commit: d0c91c3b2e5c4b5d68d65e6a4591dcc82744a3df
+    result_digest: feb53219bc9bc449249d546db2e9fc29a9926b94e3f35a125ce3275245dd1385
+    checker_digest: fe31bc050e8739252a1cc40cb7bdc927ce9a865b61c824a13365fc1e4ba41dee
+    decision: D065
+    current_ceiling: endogenous_real_software_operation_acquisition
+  M097:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H42
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    candidate_programs_exhausted: 2800
+    well_formed_programs: 68
+    accepted_programs: 5
+    adopted_body: [PUSH_LEFT, PUSH_RIGHT, SUB]
+    inherited_qualification: [0, 4]
+    extended_qualification: [4, 4]
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: 3b1dd98d28f32f9d8be549073492b48358434227
+    result_digest: e976788fcbf7b8eff0d426dee9fa914a8aeaa7c126b2038b9f3394a1a76690c0
+    state_digest: 2097d3a733f06b5d0f0b1e8071ca5e71b0d7fd1f5c7f5e050fc1b76f015b301c
+    checker_digest: 003346184ee4f54993561c49fd2c498a5d67836f7a0d5d201dde3983a0d42622
+    decision: D066
+    current_ceiling: hard_process_death_persistence
+  M098:
+    status: negative_qualified_scientific_result_attempt_1
+    scientific_verdict_exists: true
+    hypothesis: H43
+    hypothesis_status: refuted
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 3
+    post_restart_worlds_confirmed: 3
+    fresh_process_invocations: 8
+    direct_persistence_conditions_passed: 11
+    conditions_total: 12
+    conditions_passed: 11
+    conditions_failed: [P12]
+    failure_cause: aggregate_consumer_pids_omitted_from_stable_projection_policy
+    source_commit: 1b862ab9afaec13cf16c7fcc6da7c297956424d4
+    result_digest: 3cce5155033bd57c0e4e8adf3c01f7ea728a6088e793154418070b13ef8e9d80
+    checker_digest: b04513a2c769fe4b6dd26ae51ce4d9061919231f930e010cb4dc65b11ec52e54
+    decision: D067
+    current_ceiling: stable_replay_with_complete_ephemeral_projection
+  M099:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H44
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 3
+    post_restart_worlds_confirmed: 3
+    fresh_process_invocations: 8
+    state_bytes: 304
+    stable_projection_excluded_keys: [consumer_pids, pid, producer_pid, search_path]
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: 62a29b0a921e9907a24e3f82944ab4adb400775a
+    result_digest: 17642e0eda4fb71439269489452e835af8e30e1926518e07201303dbf72b4695
+    stable_evidence_digest: 497b6aaba1ec10217566080d434e0d9262c4d85ed11951bf7419521f51461969
+    checker_digest: d2a381a6657cf3a2053d6b50040ebf67dd6d78885b23e28e9b4432575c48a651
+    decision: D068
+    current_ceiling: repeated_cumulative_operation_acquisition_cycles
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

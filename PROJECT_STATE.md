@@ -125,7 +125,18 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   language is proved unable to emit binary expressions at any depth. The lineage exhausted 2,800
   symbolic programs, registered the minimal independently validated subtraction definition and
   changed real-Python reach from 0/4 inherited to 4/4 extended. All 12 conditions replayed true.
-  Result `e976788f…`; checker `00334618…`; freeze `3b1dd98`. Process-death persistence remains M098.
+  Result `e976788f…`; checker `00334618…`; freeze `3b1dd98`.
+- **M098 is a negative qualified result; H43 is refuted by attempt 1.** All direct hard-persistence
+  observations passed: exact M097 state, producer death, eight isolated consumers, 3/3 new worlds,
+  negative absence/mutation/corruption controls, live-fault suppression and exact rollback. The
+  frozen stable projection retained `consumer_pids`, so replay failed P12 and the verdict is 11/12.
+  Result `3cce5155…`; checker `b04513a2…`; freeze `1b862ab`.
+- **M099 is a positive qualified result; H44 is supported.** A new three-world successor froze the
+  complete ephemeral projection before execution while leaving the M098 process mechanism
+  unchanged. The persisted M097 operation again scored 3/3 after producer death, every control and
+  rollback condition passed, and independent replay with different PID values computed all 12
+  conditions true. Result `17642e0e…`; stable evidence `497b6aab…`; checker `d2a381a6…`; freeze
+  `62a29b0`. The next ceiling is repeated acquisition across cumulative cycles.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
