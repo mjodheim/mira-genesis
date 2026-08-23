@@ -301,6 +301,8 @@ def decode_c_definition(
         raise ValueError("M102 C does not retain exactly live M101 B")
     if item["policy_dependency"] != policy["policy_id"]:
         raise ValueError("M102 C does not retain the live registry policy")
+    if not any(token.startswith(f"CALL:{b_id}:") for token in item["body"]):
+        raise ValueError("M102 C body does not execute its declared live M101 B dependency")
     trace = c_symbolic_trace(list(item["body"]), m101_state)
     if trace is None or len(trace) != 4 or any(index not in range(4) for index in trace):
         raise ValueError("M102 C is not a well-formed four-effect definition")
@@ -1273,6 +1275,73 @@ def mutate_c_duplicate_effect(state: dict[str, Any]) -> dict[str, Any]:
             mutated,
         )
     )
+
+
+def mutate_m101_b_order(state: dict[str, Any]) -> dict[str, Any]:
+    """Create a digest-valid live B semantic fault and re-address dependent C.
+
+    B still has one live A call, one direct application and the complete distinct
+    symbolic image.  Only the non-commuting execution order changes, so failure cannot
+    be explained by a malformed or dead serialized dependency.
+    """
+    checked = decode_state(state)
+    if checked["c_definition"] is None:
+        raise ValueError("C is required for the live B mutation")
+    predecessor = m101_runtime.decode_state(checked["m101_ascii"].encode("ascii"))
+    a, b = copy.deepcopy(predecessor["definitions"])
+    body = list(b["body"])
+    call_index = next(index for index, token in enumerate(body) if token.startswith("CALL:"))
+    call = _parse_call(body[call_index])
+    if call is None or call[0] != a["definition_id"] or len(call[1]) != 2:
+        raise ValueError("embedded B call shape is invalid")
+    left, right = call[1]
+    if left == right:
+        raise ValueError("embedded B cannot be order-mutated")
+    body[call_index] = f"CALL:{a['definition_id']}:{right}:{left}"
+    mutated_b = m101_runtime.definition(
+        m101_runtime.B_ORIGIN, body, [str(a["definition_id"])]
+    )
+    mutated_m101 = m101_runtime.decode_state(
+        m101_runtime._state(
+            predecessor["m100_ascii"].encode("ascii"), [a, mutated_b]
+        )
+    )
+    mutated_m101_raw = m101_runtime.canonical_json(mutated_m101).encode("ascii")
+    old_b_id = str(b["definition_id"])
+    new_b_id = str(mutated_b["definition_id"])
+    c_body = [
+        token.replace(f"CALL:{old_b_id}:", f"CALL:{new_b_id}:")
+        if token.startswith("CALL:")
+        else token
+        for token in checked["c_definition"]["body"]
+    ]
+    mutated_c = c_definition(
+        c_body, b_id=new_b_id, policy_id=checked["policy"]["policy_id"]
+    )
+    return decode_state(
+        _state(mutated_m101_raw, checked["policy"], checked["journal"], mutated_c)
+    )
+
+
+def ablate_m101_b_raw(state: dict[str, Any]) -> bytes:
+    """Remove B while keeping outer M102 bytes internally content-addressed.
+
+    The result is intentionally rejected by the M102 decoder because C cannot have a
+    live B dependency.  Returning raw bytes allows a fresh consumer to demonstrate
+    fail-closed removal without the producer relabelling the invalid state as valid.
+    """
+    checked = decode_state(state)
+    predecessor = m101_runtime.decode_state(checked["m101_ascii"].encode("ascii"))
+    without_b = m101_runtime.ablate_b(predecessor)
+    predecessor_raw = m101_runtime.canonical_json(without_b).encode("ascii")
+    return canonical_json(
+        _state(
+            predecessor_raw,
+            checked["policy"],
+            checked["journal"],
+            checked["c_definition"],
+        )
+    ).encode("ascii")
 
 
 def ablate_c(state: dict[str, Any]) -> dict[str, Any]:

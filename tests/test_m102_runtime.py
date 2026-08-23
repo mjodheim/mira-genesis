@@ -8,7 +8,9 @@ from pathlib import Path
 import pytest
 
 from metamorphosis import m101_runtime
+from metamorphosis import m102_executor
 from metamorphosis import m102_runtime as runtime
+from scripts import check_m102_definitions
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -285,6 +287,26 @@ def test_c_is_demand_derived_and_depends_on_live_m101_b(
     )
 
 
+def test_c_decoder_rejects_a_dead_declared_b_dependency(
+    u2: dict[str, object],
+) -> None:
+    fault = copy.deepcopy(u2)
+    predecessor = m101_runtime.decode_state(fault["m101_ascii"].encode("ascii"))
+    a_id = predecessor["definitions"][0]["definition_id"]
+    b_id = predecessor["definitions"][1]["definition_id"]
+    body = list(fault["c_definition"]["body"])
+    call_index = next(index for index, token in enumerate(body) if token.startswith("CALL:"))
+    call_parts = body[call_index].split(":")
+    body[call_index] = ":".join(["CALL", a_id, *call_parts[2:4]])
+    fault["c_definition"] = runtime.c_definition(
+        body, b_id=b_id, policy_id=fault["policy"]["policy_id"]
+    )
+    payload = {key: value for key, value in fault.items() if key != "state_digest"}
+    fault["state_digest"] = runtime.digest(payload)
+    with pytest.raises(ValueError, match="does not execute its declared live M101 B"):
+        runtime.decode_state(fault)
+
+
 def test_c_executes_against_actual_sqlite_state(u2: dict[str, object]) -> None:
     execution = runtime.execute_c_world(u2, _c_demand())
     assert execution["confirmed"] is True
@@ -313,6 +335,34 @@ def test_policy_and_c_mutations_break_only_the_predicted_capability(
     assert runtime.execute_registry_sequence(
         c_fault, "record_alpha", ["prepare", "finish"], value
     ) == {"value": "still-live", "values": [1, 2]}
+
+
+def test_live_b_order_mutation_selectively_breaks_c(u2: dict[str, object]) -> None:
+    mutation = runtime.mutate_m101_b_order(u2)
+    assert runtime.decode_state(runtime.encode_state(mutation)) == mutation
+    assert mutation["m101_sha256"] != u2["m101_sha256"]
+    assert mutation["c_definition"]["definition_dependencies"] != u2["c_definition"][
+        "definition_dependencies"
+    ]
+    assert runtime.execute_c_world(mutation, _c_demand())["confirmed"] is False
+    assert runtime.execute_registry_sequence(
+        mutation,
+        "record_alpha",
+        ["prepare", "finish"],
+        {"raw": "retained", "values": [5, 1]},
+    ) == {"value": "retained", "values": [1, 5]}
+
+
+def test_b_ablation_is_content_addressed_but_fails_closed(u2: dict[str, object]) -> None:
+    raw = runtime.ablate_m101_b_raw(u2)
+    outer = json.loads(raw.decode("ascii"))
+    payload = {key: value for key, value in outer.items() if key != "state_digest"}
+    assert outer["state_digest"] == runtime.digest(payload)
+    assert hashlib.sha256(outer["m101_ascii"].encode("ascii")).hexdigest() == outer[
+        "m101_sha256"
+    ]
+    with pytest.raises(ValueError, match="requires exact M101 T2"):
+        runtime.decode_state(raw)
 
 
 def test_c_ablation_and_corruption_fail_closed(u2: dict[str, object]) -> None:
@@ -347,3 +397,72 @@ def test_sqlite_identifiers_are_fail_closed() -> None:
                 "default": 0,
             }
         )
+
+
+def test_independent_definition_checker_validates_u0_u1_u2(
+    u0: dict[str, object], u1: dict[str, object], u2: dict[str, object]
+) -> None:
+    expected = "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0"
+    reports = [
+        check_m102_definitions.validate(
+            runtime.encode_state(state), expected_m101_sha256=expected
+        )
+        for state in (u0, u1, u2)
+    ]
+    assert all(report["confirmed"] is True for report in reports)
+    assert reports[0]["policy"]["carrier_input_causal"] is False
+    assert reports[1]["policy"]["carrier_input_causal"] is True
+    assert reports[2]["registry_entry_count"] == len(u2["journal"])
+    assert reports[2]["c_definition"]["complete_distinct_trace"] is True
+    assert reports[2]["c_definition"]["live_b_calls"] == 1
+
+
+def test_independent_definition_checker_rejects_semantic_c_mutation(
+    u2: dict[str, object],
+) -> None:
+    mutation = runtime.mutate_c_duplicate_effect(u2)
+    with pytest.raises(ValueError, match="four distinct opaque effects"):
+        check_m102_definitions.validate(runtime.encode_state(mutation))
+
+
+def test_execution_only_module_reuses_registered_state_without_search(
+    u2: dict[str, object],
+) -> None:
+    encoded = runtime.encode_state(u2)
+    checked = m102_executor.decode_state(encoded)
+    record_world = {
+        "schema": "m102-record-execution-world-v1",
+        "world_id": "development_executor_record",
+        "carrier": "record_alpha",
+        "slots": ["prepare", "finish"],
+        "cases": [
+            {
+                "case_id": "development-executor-record-1",
+                "input": {"raw": "kept", "values": [8, 2]},
+                "expected": {"value": "kept", "values": [2, 8]},
+            }
+        ],
+    }
+    record = m102_executor.execute_record(
+        checked, m102_executor._record_world(record_world), last_write=False
+    )
+    sqlite_world = {
+        "schema": "m102-sqlite-execution-world-v1",
+        "world_id": "development_executor_sqlite",
+        "slots": _c_demand()["slots"],
+        "cases": _c_demand()["public_cases"],
+    }
+    sqlite = m102_executor.execute_sqlite(
+        checked, m102_executor._sqlite_world(sqlite_world)
+    )
+    assert record["confirmed"] is True
+    assert sqlite["confirmed"] is True
+
+
+def test_execution_only_source_has_no_acquisition_or_search_path() -> None:
+    source = (ROOT / "metamorphosis/m102_executor.py").read_text(encoding="utf-8")
+    assert "def acquire_" not in source
+    assert "import itertools" not in source
+    assert "m102_runtime" not in source.replace('"m102_runtime"', "")
+    assert "POLICY_TOKENS" not in source
+    assert "C_MAX_TRANSFORMS" not in source
