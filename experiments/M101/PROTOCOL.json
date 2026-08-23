@@ -3,11 +3,11 @@
   "milestone": "M101",
   "hypothesis": "H46",
   "decision_slot": "D070",
-  "status": "freeze_candidate",
+  "status": "frozen",
   "track": "A",
   "date_authored": "2026-08-23",
-  "date_frozen": null,
-  "canonical_run_allowed": false,
+  "date_frozen": "2026-08-23",
+  "canonical_run_allowed": true,
   "claim": "A carrier-neutral transformation-composition capability acquired from observable text demand, without an explicit target-operation label or access to consumer-family qualification material, can be registered as persistent lineage state, increase constructive reach in fresh record and Python-syntax families relative to an otherwise identical fresh lineage, and become causally necessary to a later demand-derived Python-syntax acquisition while the M100 predecessor state is conserved and hard persistence, live dependency, fault rollback and stable replay remain intact.",
   "claim_boundary": {
     "agi": false,
@@ -262,9 +262,9 @@
     "scientific_verdict": false
   },
   "freeze": {
-    "status": "candidate",
+    "status": "frozen",
     "apparatus_source_commit": "358d2a683cf0defb0b2a6d72b02cfe311f2b6b0a",
-    "freeze_commit": null,
+    "freeze_commit": "219b958c470ece57158f97009d6fd38c7f65e0c9",
     "freeze_ref": "experiment/m101-frozen-protocol",
     "candidate_commit_must_precede_final_freeze_commit": true
   },

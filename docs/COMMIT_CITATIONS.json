@@ -259,6 +259,13 @@
         "experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json"
       ]
     },
+    "219b958c470ece57158f97009d6fd38c7f65e0c9": {
+      "subject": "science(m101): close immutable freeze-ref binding",
+      "preserved_by": "experiment/m101-frozen-protocol",
+      "cited_in": [
+        "experiments/M101/PROTOCOL.json"
+      ]
+    },
     "2296e778d443e57b44a533b143ea126cb6be3a97": {
       "subject": "Make M022 control evidence complete",
       "preserved_by": "main",
@@ -460,6 +467,13 @@
         "archives/workflows/m040-preserve-development-002.yml",
         "docs/COMMIT_CITATIONS.json",
         "results/M040_DEVELOPMENT_002.md"
+      ]
+    },
+    "358d2a683cf0defb0b2a6d72b02cfe311f2b6b0a": {
+      "subject": "feat(m101): close isolated causal-control boundary",
+      "preserved_by": "experiment/m101-frozen-protocol",
+      "cited_in": [
+        "experiments/M101/PROTOCOL.json"
       ]
     },
     "35bb3692db268349d435a1d1d716026ce5f4574e": {
@@ -1609,6 +1623,7 @@
         "experiments/M100/RESULT.json",
         "experiments/M100/RESULT.md",
         "experiments/M101/PRE_REGISTRATION.md",
+        "experiments/M101/PROTOCOL.json",
         "experiments/M101/PROTOCOL_DRAFT.json",
         "papers/m100-preprint/README.md",
         "papers/m100-preprint/REPRODUCIBILITY.md",
@@ -1814,7 +1829,8 @@
       "subject": "docs(research): pre-register Genesis II M101 cross-family transfer",
       "preserved_by": "main",
       "cited_in": [
-        "IP_ASSET_REGISTER.md"
+        "IP_ASSET_REGISTER.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "db609a0355bd602e8ff9640a718c228a36e381a5": {

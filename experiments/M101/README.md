@@ -2,14 +2,12 @@
 
 M101 is the first planned Genesis II experiment.
 
-**Current state:** pre-registered design plus two enabling implementation slices. The carrier-neutral
-runtime and development-only unit fixtures now exercise exact M100-byte migration, closed
-public-demand projection, A acquisition/registration, text-record-syntax reuse, later A-dependent B
-acquisition, live mutation, ablation, corruption and conservation. A separate two-file execution-only
-capsule also reuses registered A and B in isolated fresh processes, and a standalone checker
-independently recomputes content addresses and symbolic A/B semantics without importing either M101
-implementation module. This is apparatus development evidence only: no qualification pool, frozen
-scientific runner, final protocol, canonical run or scientific result exists on this branch.
+**Current state:** the complete pre-run boundary is frozen. The final protocol binds the reviewed
+pre-registration, exact M100 predecessor, carrier-neutral acquisition mechanism, separate
+execution-only consumer capsule, independent definition/result checkers, recursive stable projection
+and the complete fifteen-world population. The population received only its source-only preflight;
+the M101 scientific mechanism has never executed it. No canonical run, scientific result or D070
+decision exists on this branch.
 
 Authoritative design documents:
 
@@ -37,12 +35,18 @@ this order:
 8. write `PROTOCOL.json` binding exact mechanism/pool/checker/capsule/predecessor digests and freeze it;
 9. only then allow one armed local Track-A canonical run.
 
-The current implementation reaches the first development form of step 5. The isolated capsule proves
-only individual fresh consumer invocations; it does not yet establish the full process-death
-chronology, independent qualification replay, untouched population or frozen bindings required by
-the pre-registration. The next load-bearing increment is to complete causal-control coverage across
-that isolated boundary and adversarially audit the capsule/checker split before authoring the exact
-15-world pool later in the sequence.
+Steps 1--8 are complete and frozen. Development-only fixtures exercised the complete 42-process
+chronology and all causal controls; this evidence is apparatus validation, not qualification. The
+committed population contains exactly 1 producer trigger, 2 text holdouts, 3 record transfers, 3
+direct syntax transfers, 3 B-reuse worlds and 3 M100-conservation worlds, each with four public and
+four hidden cases. Its preflight constructed and parsed those records only and explicitly recorded
+that acquisition, registration, baseline, transfer, execution, mutation, ablation and rollback were
+not run.
+
+The immutable freeze ref is `experiment/m101-frozen-protocol`. The runner will refuse an armed run
+unless the working tree is clean, `HEAD` is exactly that ref, every bound digest still matches and
+`experiments/M101/RESULT.json` is absent. The remaining step is therefore a distinct owner-authorized
+action: one local `--arm` canonical Track-A run, followed by the independent stable replay/checker.
 
 If implementation shows that a decisive condition is impossible or ill-posed before qualification,
 record a named pre-run amendment rather than silently editing `PRE_REGISTRATION.md`. If any decisive
