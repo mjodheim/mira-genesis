@@ -1599,13 +1599,20 @@
     },
     "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98": {
       "subject": "science(m100): freeze cumulative acquisition protocol",
-      "preserved_by": "experiment/m100-positive-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
-        "experiments/M100/RESULT.json"
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M100/RESULT.json",
+        "experiments/M100/RESULT.md",
+        "experiments/M101/PRE_REGISTRATION.md",
+        "experiments/M101/PROTOCOL_DRAFT.json",
+        "papers/m100-preprint/README.md",
+        "papers/m100-preprint/REPRODUCIBILITY.md",
+        "papers/m100-preprint/SUBMISSION_METADATA.md"
       ]
     },
     "c603dd52c6484034de3a11a7c3c660335fda14b0": {
@@ -1801,6 +1808,13 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
+      ]
+    },
+    "d79706550d35eb74e243e4253abe6e097b10fef8": {
+      "subject": "docs(research): pre-register Genesis II M101 cross-family transfer",
+      "preserved_by": "main",
+      "cited_in": [
+        "IP_ASSET_REGISTER.md"
       ]
     },
     "db609a0355bd602e8ff9640a718c228a36e381a5": {

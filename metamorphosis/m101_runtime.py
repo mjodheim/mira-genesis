@@ -28,6 +28,7 @@ from typing import Any, Callable
 STATE_SCHEMA = "m101-lineage-state-v1"
 DEFINITION_SCHEMA = "m101-definition-v1"
 RUNTIME_SCHEMA = "m101-isolated-runtime-v1"
+PUBLIC_DEMAND_SCHEMA = "m101-public-demand-v1"
 A_ORIGIN = "m101-a"
 B_ORIGIN = "m101-b"
 
@@ -71,6 +72,64 @@ def sha256_bytes(raw: bytes) -> str:
 def _closed(value: Any, keys: set[str], label: str) -> dict[str, Any]:
     if not isinstance(value, dict) or set(value) != keys:
         raise ValueError(f"{label} is not a closed record")
+    return value
+
+
+def _cases(value: Any, label: str) -> list[dict[str, Any]]:
+    if not isinstance(value, list) or not value:
+        raise ValueError(f"{label} cases are missing")
+    cases: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for raw in value:
+        case = _closed(raw, {"case_id", "input", "expected"}, f"{label} case")
+        case_id = case["case_id"]
+        if not isinstance(case_id, str) or not case_id or case_id in seen:
+            raise ValueError(f"{label} case ids are invalid")
+        seen.add(case_id)
+        cases.append(copy.deepcopy(case))
+    return cases
+
+
+def public_demand(world: dict[str, Any]) -> dict[str, Any]:
+    """Project a world into the only record acquisition and baseline APIs accept.
+
+    The projection is intentionally closed and has no field capable of carrying hidden
+    cases. Scientific runners can materialise this record before entering an acquisition
+    capsule and bind the exact public case ids that crossed the boundary.
+    """
+    if not isinstance(world, dict):
+        raise ValueError("world is invalid")
+    required = {"id", "role", "carrier", "catalog", "public_cases"}
+    if not required.issubset(world):
+        raise ValueError("world cannot be projected to public demand")
+    demand = {
+        "schema": PUBLIC_DEMAND_SCHEMA,
+        "world_id": world["id"],
+        "role": world["role"],
+        "carrier": world["carrier"],
+        "catalog": copy.deepcopy(world["catalog"]),
+        "public_cases": _cases(world["public_cases"], "public demand"),
+    }
+    return decode_public_demand(demand)
+
+
+def decode_public_demand(raw: dict[str, Any]) -> dict[str, Any]:
+    value = _closed(
+        copy.deepcopy(raw),
+        {"schema", "world_id", "role", "carrier", "catalog", "public_cases"},
+        "M101 public demand",
+    )
+    if value["schema"] != PUBLIC_DEMAND_SCHEMA:
+        raise ValueError("M101 public demand schema mismatch")
+    if not isinstance(value["world_id"], str) or not value["world_id"]:
+        raise ValueError("M101 public demand world id is invalid")
+    if not isinstance(value["role"], str) or not value["role"]:
+        raise ValueError("M101 public demand role is invalid")
+    if value["carrier"] not in {"text", "record", "syntax"}:
+        raise ValueError("M101 public demand carrier is invalid")
+    if not isinstance(value["catalog"], list) or not value["catalog"]:
+        raise ValueError("M101 public demand catalog is invalid")
+    value["public_cases"] = _cases(value["public_cases"], "public demand")
     return value
 
 
@@ -190,7 +249,13 @@ def _b_call_order(body: list[str], allowed_dependency: str) -> tuple[int, ...] |
                 return None
             loaded = True
         elif kind == "call":
-            if not loaded or call_seen or direct_count or not isinstance(payload, tuple) or len(payload) != 3:
+            if (
+                not loaded
+                or call_seen
+                or direct_count
+                or not isinstance(payload, tuple)
+                or len(payload) != 3
+            ):
                 return None
             dep, left, right = payload
             if dep != allowed_dependency:
@@ -536,7 +601,7 @@ def apply_pipeline(value: Any, atomics: list[Atomic]) -> Any:
 
 def infer_slots(
     public_cases: list[dict[str, Any]], catalog: list[Atomic], exact_length: int
-) -> tuple[list[int] | None, dict[str, int]]:
+) -> tuple[list[int] | None, dict[str, Any]]:
     if exact_length < 1:
         raise ValueError("exact_length must be positive")
     assembled = 0
@@ -552,11 +617,17 @@ def infer_slots(
                 accepted.append(indices)
         except Exception:
             continue
-    accepted.sort(key=lambda item: (item, digest(list(item))))
-    return (list(accepted[0]) if accepted else None), {
+    accepted.sort(key=lambda item: digest([catalog[index].descriptor for index in item]))
+    selected = list(accepted[0]) if accepted else None
+    stats: dict[str, Any] = {
         "assembled": assembled,
         "accepted": len(accepted),
     }
+    if selected is not None:
+        stats["selected_pipeline_digest"] = digest(
+            [catalog[index].descriptor for index in selected]
+        )
+    return selected, stats
 
 
 def single_atomic_reachable(public_cases: list[dict[str, Any]], catalog: list[Atomic]) -> bool:
@@ -600,17 +671,17 @@ def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -
 
 
 def acquire_a(
-    state: dict[str, Any], world: dict[str, Any], *, register_result: bool
+    state: dict[str, Any], demand: dict[str, Any], *, register_result: bool
 ) -> dict[str, Any]:
     checked = decode_state(state)
     if checked["definitions"]:
         raise ValueError("A acquisition requires T0")
-    if world.get("carrier") != "text" or world.get("role") != "producer_trigger":
+    public = decode_public_demand(demand)
+    if public["carrier"] != "text" or public["role"] != "producer_trigger":
         raise ValueError("A acquisition may consume only the text producer trigger")
-    public_cases = world.get("public_cases")
-    if not isinstance(public_cases, list) or not public_cases:
-        raise ValueError("producer public cases are missing")
-    catalog = build_catalog(world)
+    public_cases = public["public_cases"]
+    public_case_ids = [case["case_id"] for case in public_cases]
+    catalog = build_catalog(public)
     one_reachable = single_atomic_reachable(public_cases, catalog)
     inferred, inference_stats = infer_slots(public_cases, catalog, 2)
     if one_reachable or inferred is None:
@@ -625,6 +696,7 @@ def acquire_a(
             "adopted": None,
             "registered": False,
             "next_state": None,
+            "public_case_ids": public_case_ids,
         }
     slots = (catalog[inferred[0]], catalog[inferred[1]])
     assembled = 0
@@ -658,6 +730,7 @@ def acquire_a(
             "adopted": None,
             "registered": False,
             "next_state": None,
+            "public_case_ids": public_case_ids,
         }
     adopted = definition(A_ORIGIN, accepted[0], [])
     next_state = register(checked, adopted) if register_result else None
@@ -674,6 +747,7 @@ def acquire_a(
         "adopted": adopted,
         "registered": bool(register_result),
         "next_state": next_state,
+        "public_case_ids": public_case_ids,
     }
 
 
@@ -683,10 +757,8 @@ def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
         raise ValueError("A is not registered")
     a = checked["definitions"][0]
     catalog = build_catalog(world)
-    public_cases = world.get("public_cases")
-    hidden_cases = world.get("hidden_cases")
-    if not isinstance(public_cases, list) or not isinstance(hidden_cases, list):
-        raise ValueError("world cases are invalid")
+    public_cases = _cases(world.get("public_cases"), "world public")
+    hidden_cases = _cases(world.get("hidden_cases"), "world hidden")
     inferred, inference_stats = infer_slots(public_cases, catalog, 2)
     if inferred is None:
         return {
@@ -717,14 +789,15 @@ def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def baseline(world: dict[str, Any]) -> dict[str, Any]:
-    catalog = build_catalog(world)
-    public_cases = world.get("public_cases")
-    if not isinstance(public_cases, list):
-        raise ValueError("world public cases are invalid")
+def baseline(demand: dict[str, Any]) -> dict[str, Any]:
+    public = decode_public_demand(demand)
+    catalog = build_catalog(public)
+    public_cases = public["public_cases"]
     inferred, stats = infer_slots(public_cases, catalog, 1)
     return {
         "schema": "m101-baseline-v1",
+        "world_id": public["world_id"],
+        "public_case_ids": [case["case_id"] for case in public_cases],
         "reachable": inferred is not None,
         "inferred_slot_indices": inferred,
         "search": stats,
@@ -756,7 +829,9 @@ def _execute_b_body(
             dep, left, right = payload
             if dep != a["definition_id"]:
                 return None
-            current = _execute_a_body(list(a["body"]), current, (slots[int(left)], slots[int(right)]))
+            current = _execute_a_body(
+                list(a["body"]), current, (slots[int(left)], slots[int(right)])
+            )
             if current is None:
                 return None
         elif kind == "apply":
@@ -776,9 +851,11 @@ def _execute_b_body(
 
 
 def acquire_b(
-    state: dict[str, Any], world: dict[str, Any], *, register_result: bool
+    state: dict[str, Any], demand: dict[str, Any], *, register_result: bool
 ) -> dict[str, Any]:
     checked = decode_state(state)
+    public = decode_public_demand(demand)
+    public_case_ids = [case["case_id"] for case in public["public_cases"]]
     if len(checked["definitions"]) != 1:
         return {
             "schema": "m101-b-acquisition-v1",
@@ -789,15 +866,14 @@ def acquire_b(
             "accepted": 0,
             "registered": False,
             "next_state": None,
+            "public_case_ids": public_case_ids,
         }
-    if world.get("carrier") != "syntax" or world.get("role") != "b_reuse":
+    if public["carrier"] != "syntax" or public["role"] != "b_reuse":
         raise ValueError("B acquisition requires a syntax B world")
     a = checked["definitions"][0]
     a_id = str(a["definition_id"])
-    public_cases = world.get("public_cases")
-    if not isinstance(public_cases, list):
-        raise ValueError("B public cases are invalid")
-    catalog = build_catalog(world)
+    public_cases = public["public_cases"]
+    catalog = build_catalog(public)
     inferred, inference_stats = infer_slots(public_cases, catalog, 3)
     if inferred is None:
         return {
@@ -810,6 +886,7 @@ def acquire_b(
             "accepted": 0,
             "registered": False,
             "next_state": None,
+            "public_case_ids": public_case_ids,
         }
     slots = (catalog[inferred[0]], catalog[inferred[1]], catalog[inferred[2]])
 
@@ -849,6 +926,7 @@ def acquire_b(
             "accepted": 0,
             "registered": False,
             "next_state": None,
+            "public_case_ids": public_case_ids,
         }
     adopted = definition(B_ORIGIN, accepted[0], [a_id])
     next_state = register(checked, adopted) if register_result else None
@@ -864,6 +942,7 @@ def acquire_b(
         "adopted": adopted,
         "registered": bool(register_result),
         "next_state": next_state,
+        "public_case_ids": public_case_ids,
     }
 
 
@@ -876,10 +955,8 @@ def execute_b(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
     if b["dependencies"] != [a_id]:
         raise ValueError("B lost its live A dependency")
     catalog = build_catalog(world)
-    public_cases = world.get("public_cases")
-    hidden_cases = world.get("hidden_cases")
-    if not isinstance(public_cases, list) or not isinstance(hidden_cases, list):
-        raise ValueError("B world cases are invalid")
+    public_cases = _cases(world.get("public_cases"), "B world public")
+    hidden_cases = _cases(world.get("hidden_cases"), "B world hidden")
     inferred, inference_stats = infer_slots(public_cases, catalog, 3)
     if inferred is None:
         return {

@@ -15,6 +15,7 @@ def test_repository_scripts_are_local_not_a_distribution_dependency() -> None:
 def test_isolated_capsule_sibling_has_an_explicit_repository_alias() -> None:
     assert integrity.LOCAL_IMPORT_ALIASES == {
         "m098_runtime": "metamorphosis.m098_runtime",
+        "m101_executor": "metamorphosis.m101_executor",
     }
 
 
