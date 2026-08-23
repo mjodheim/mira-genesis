@@ -224,8 +224,7 @@ def _m101_b_world() -> dict[str, Any]:
             _source(
                 "sealed_signal",
                 "reading",
-                expression.replace("datum", "reading"),
-                "qualified conservation",
+                f"abs({expression.replace('datum', 'reading')})",
             ),
         )
         for expression in expressions
@@ -243,8 +242,8 @@ def _m101_b_world() -> dict[str, Any]:
                 "new": "reading",
             },
             {"kind": "rename_function", "old": "raw_signal", "new": "sealed_signal"},
-            {"kind": "add_docstring", "text": "qualified conservation"},
-            {"kind": "wrap_return", "call": "repr"},
+            {"kind": "wrap_return", "call": "abs"},
+            {"kind": "add_docstring", "text": "excluded formatting distractor"},
         ],
         "public_cases": public,
         "hidden_cases": hidden,

@@ -2781,7 +2781,7 @@
       }
     },
     {
-      "entry_digest": "837ced2c8bd716788bb952577791ed41f165a380a75f549dbd2a7bc9343842c0",
+      "entry_digest": "2fd06b3eb5e014f18c7e2361d94114c4c0c002b33f93cc335f662fca87a81dc5",
       "world": {
         "carrier": "syntax",
         "catalog": [
@@ -2797,33 +2797,33 @@
             "old": "raw_signal"
           },
           {
-            "kind": "add_docstring",
-            "text": "qualified conservation"
+            "call": "abs",
+            "kind": "wrap_return"
           },
           {
-            "call": "repr",
-            "kind": "wrap_return"
+            "kind": "add_docstring",
+            "text": "excluded formatting distractor"
           }
         ],
         "hidden_cases": [
           {
             "case_id": "m102_m101_b_conserve_syntax-05",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading // 7",
+            "expected": "def sealed_signal(reading):\n    return abs(reading // 7)",
             "input": "def raw_signal(datum):\n    return datum // 7"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-06",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading * reading + 2",
+            "expected": "def sealed_signal(reading):\n    return abs(reading * reading + 2)",
             "input": "def raw_signal(datum):\n    return datum * datum + 2"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-07",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading % 11",
+            "expected": "def sealed_signal(reading):\n    return abs(reading % 11)",
             "input": "def raw_signal(datum):\n    return datum % 11"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-08",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading + reading - 5",
+            "expected": "def sealed_signal(reading):\n    return abs(reading + reading - 5)",
             "input": "def raw_signal(datum):\n    return datum + datum - 5"
           }
         ],
@@ -2831,22 +2831,22 @@
         "public_cases": [
           {
             "case_id": "m102_m101_b_conserve_syntax-01",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading + 17",
+            "expected": "def sealed_signal(reading):\n    return abs(reading + 17)",
             "input": "def raw_signal(datum):\n    return datum + 17"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-02",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading - 19",
+            "expected": "def sealed_signal(reading):\n    return abs(reading - 19)",
             "input": "def raw_signal(datum):\n    return datum - 19"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-03",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading * 6",
+            "expected": "def sealed_signal(reading):\n    return abs(reading * 6)",
             "input": "def raw_signal(datum):\n    return datum * 6"
           },
           {
             "case_id": "m102_m101_b_conserve_syntax-04",
-            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return -reading + 3",
+            "expected": "def sealed_signal(reading):\n    return abs(-reading + 3)",
             "input": "def raw_signal(datum):\n    return -datum + 3"
           }
         ],
@@ -3087,7 +3087,7 @@
   ],
   "m101_qualification_worlds_excluded": true,
   "milestone": "M102",
-  "pool_digest": "c68877ad3f2e8a18c6addfc5c85fb1e7d6612645173289c4e82f7aa81ef920b2",
+  "pool_digest": "eac8d305bcf9dd33ddbe40ad84b6884459d3eb984c711a273790fb5adbf1390d",
   "population_size": 13,
   "preflight_boundary": "closed-schema construction, digest checks, AST parsing, and independent raw SQLite model materialisation only; K/C acquisition, registry migration, transfer, baseline, hidden scoring, mutation, ablation, rollback and replay are forbidden before freeze",
   "requirements_per_source": {
