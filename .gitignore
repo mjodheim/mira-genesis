@@ -10,6 +10,17 @@ venv/
 dist/
 build/
 *.egg-info/
+
+# Local quality-tool state and reports.
+.coverage
+coverage.xml
+htmlcov/
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.tox/
+.nox/
+
 results/local/
 # Development outputs are reproducible through `scripts/run_*_development.py` and
 # published as CI artifacts. Only canonical results are versioned.
