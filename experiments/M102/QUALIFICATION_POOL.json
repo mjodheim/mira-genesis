@@ -1,0 +1,3111 @@
+{
+  "construction": "complete authored 1/3/1/3/1/1/3 population; no draw, salt, replacement or reroll",
+  "development_fixture_excluded": true,
+  "entries": [
+    {
+      "entry_digest": "bc034af4071a93f1062e6d866cf236cdd9e8bffceccd8254f6c07c779b753530",
+      "world": {
+        "carrier": "registry",
+        "hidden_lookups": [
+          {
+            "carrier": "retention_alpha",
+            "case_id": "m102_policy_lookup-05",
+            "expected_descriptor": {
+              "key": "readings",
+              "kind": "sort_list"
+            },
+            "slot": "alpha_finish"
+          },
+          {
+            "carrier": "retention_beta",
+            "case_id": "m102_policy_lookup-06",
+            "expected_descriptor": {
+              "key": "obsolete_flag",
+              "kind": "drop_key"
+            },
+            "slot": "beta_prepare"
+          },
+          {
+            "carrier": "retention_gamma",
+            "case_id": "m102_policy_lookup-07",
+            "expected_descriptor": {
+              "key": "verified_flag",
+              "kind": "set_default",
+              "value": true
+            },
+            "slot": "gamma_prepare"
+          },
+          {
+            "carrier": "retention_gamma",
+            "case_id": "m102_policy_lookup-08",
+            "expected_descriptor": {
+              "kind": "rename_key",
+              "new": "sample_batch",
+              "old": "entry_batch"
+            },
+            "slot": "gamma_finish"
+          }
+        ],
+        "id": "m102_policy_collision_delta",
+        "incoming_events": [
+          {
+            "carrier": "collision_delta",
+            "descriptor": {
+              "kind": "rename_key",
+              "new": "text_fragment",
+              "old": "source_fragment"
+            },
+            "event_id": "registry-event-5478955a6ae3f4a1",
+            "schema": "m102-registry-event-v1",
+            "slot": "alpha_prepare"
+          },
+          {
+            "carrier": "collision_delta",
+            "descriptor": {
+              "key": "scratch_note",
+              "kind": "drop_key"
+            },
+            "event_id": "registry-event-6947c5d2f74519bb",
+            "schema": "m102-registry-event-v1",
+            "slot": "beta_finish"
+          }
+        ],
+        "public_lookups": [
+          {
+            "carrier": "retention_alpha",
+            "case_id": "m102_policy_lookup-01",
+            "expected_descriptor": {
+              "kind": "rename_key",
+              "new": "payload_value",
+              "old": "payload_raw"
+            },
+            "slot": "alpha_prepare"
+          },
+          {
+            "carrier": "collision_delta",
+            "case_id": "m102_policy_lookup-02",
+            "expected_descriptor": {
+              "kind": "rename_key",
+              "new": "text_fragment",
+              "old": "source_fragment"
+            },
+            "slot": "alpha_prepare"
+          },
+          {
+            "carrier": "retention_beta",
+            "case_id": "m102_policy_lookup-03",
+            "expected_descriptor": {
+              "key": "phase_name",
+              "kind": "set_default",
+              "value": "queued"
+            },
+            "slot": "beta_finish"
+          },
+          {
+            "carrier": "collision_delta",
+            "case_id": "m102_policy_lookup-04",
+            "expected_descriptor": {
+              "key": "scratch_note",
+              "kind": "drop_key"
+            },
+            "slot": "beta_finish"
+          }
+        ],
+        "role": "policy_producer_trigger"
+      }
+    },
+    {
+      "entry_digest": "1c55e211a0b6499f1a030281339bf2e59553887096fa1459b9fc8a06462eff3b",
+      "world": {
+        "carrier": "retention_alpha",
+        "events": [
+          {
+            "carrier": "retention_alpha",
+            "descriptor": {
+              "kind": "rename_key",
+              "new": "payload_value",
+              "old": "payload_raw"
+            },
+            "event_id": "registry-event-fcaafe7680357f13",
+            "schema": "m102-registry-event-v1",
+            "slot": "alpha_prepare"
+          },
+          {
+            "carrier": "retention_alpha",
+            "descriptor": {
+              "key": "readings",
+              "kind": "sort_list"
+            },
+            "event_id": "registry-event-8cd62bc101281ef1",
+            "schema": "m102-registry-event-v1",
+            "slot": "alpha_finish"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_record_retain_alpha-05",
+            "expected": {
+              "payload_value": "alpha-25",
+              "readings": [
+                2,
+                25,
+                29
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-25",
+              "readings": [
+                29,
+                25,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-06",
+            "expected": {
+              "payload_value": "alpha-26",
+              "readings": [
+                2,
+                26,
+                30
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-26",
+              "readings": [
+                30,
+                26,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-07",
+            "expected": {
+              "payload_value": "alpha-27",
+              "readings": [
+                2,
+                27,
+                31
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-27",
+              "readings": [
+                31,
+                27,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-08",
+            "expected": {
+              "payload_value": "alpha-28",
+              "readings": [
+                2,
+                28,
+                32
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-28",
+              "readings": [
+                32,
+                28,
+                2
+              ]
+            }
+          }
+        ],
+        "id": "m102_record_retain_alpha",
+        "public_cases": [
+          {
+            "case_id": "m102_record_retain_alpha-01",
+            "expected": {
+              "payload_value": "alpha-21",
+              "readings": [
+                2,
+                21,
+                25
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-21",
+              "readings": [
+                25,
+                21,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-02",
+            "expected": {
+              "payload_value": "alpha-22",
+              "readings": [
+                2,
+                22,
+                26
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-22",
+              "readings": [
+                26,
+                22,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-03",
+            "expected": {
+              "payload_value": "alpha-23",
+              "readings": [
+                2,
+                23,
+                27
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-23",
+              "readings": [
+                27,
+                23,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m102_record_retain_alpha-04",
+            "expected": {
+              "payload_value": "alpha-24",
+              "readings": [
+                2,
+                24,
+                28
+              ]
+            },
+            "input": {
+              "payload_raw": "alpha-24",
+              "readings": [
+                28,
+                24,
+                2
+              ]
+            }
+          }
+        ],
+        "role": "record_retention",
+        "slots": [
+          "alpha_prepare",
+          "alpha_finish"
+        ]
+      }
+    },
+    {
+      "entry_digest": "72da36373c4d686aad598a05a79845487317c7c1ada77fcdfdbdceae294f7a33",
+      "world": {
+        "carrier": "retention_beta",
+        "events": [
+          {
+            "carrier": "retention_beta",
+            "descriptor": {
+              "key": "obsolete_flag",
+              "kind": "drop_key"
+            },
+            "event_id": "registry-event-1cd11aa8277d1c9c",
+            "schema": "m102-registry-event-v1",
+            "slot": "beta_prepare"
+          },
+          {
+            "carrier": "retention_beta",
+            "descriptor": {
+              "key": "phase_name",
+              "kind": "set_default",
+              "value": "queued"
+            },
+            "event_id": "registry-event-cb624dede8396c26",
+            "schema": "m102-registry-event-v1",
+            "slot": "beta_finish"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_record_retain_beta-05",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 235
+            },
+            "input": {
+              "obsolete_flag": "remove-35",
+              "token_id": 235
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-06",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 236
+            },
+            "input": {
+              "obsolete_flag": "remove-36",
+              "token_id": 236
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-07",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 237
+            },
+            "input": {
+              "obsolete_flag": "remove-37",
+              "token_id": 237
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-08",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 238
+            },
+            "input": {
+              "obsolete_flag": "remove-38",
+              "token_id": 238
+            }
+          }
+        ],
+        "id": "m102_record_retain_beta",
+        "public_cases": [
+          {
+            "case_id": "m102_record_retain_beta-01",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 231
+            },
+            "input": {
+              "obsolete_flag": "remove-31",
+              "token_id": 231
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-02",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 232
+            },
+            "input": {
+              "obsolete_flag": "remove-32",
+              "token_id": 232
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-03",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 233
+            },
+            "input": {
+              "obsolete_flag": "remove-33",
+              "token_id": 233
+            }
+          },
+          {
+            "case_id": "m102_record_retain_beta-04",
+            "expected": {
+              "phase_name": "queued",
+              "token_id": 234
+            },
+            "input": {
+              "obsolete_flag": "remove-34",
+              "token_id": 234
+            }
+          }
+        ],
+        "role": "record_retention",
+        "slots": [
+          "beta_prepare",
+          "beta_finish"
+        ]
+      }
+    },
+    {
+      "entry_digest": "824cf56270b478a367a9daa43e1c77fa204fba31ced11f3fa3b5a207f03f0518",
+      "world": {
+        "carrier": "retention_gamma",
+        "events": [
+          {
+            "carrier": "retention_gamma",
+            "descriptor": {
+              "key": "verified_flag",
+              "kind": "set_default",
+              "value": true
+            },
+            "event_id": "registry-event-0ef0641164f2e0d3",
+            "schema": "m102-registry-event-v1",
+            "slot": "gamma_prepare"
+          },
+          {
+            "carrier": "retention_gamma",
+            "descriptor": {
+              "kind": "rename_key",
+              "new": "sample_batch",
+              "old": "entry_batch"
+            },
+            "event_id": "registry-event-1f02696ba660e212",
+            "schema": "m102-registry-event-v1",
+            "slot": "gamma_finish"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_record_retain_gamma-05",
+            "expected": {
+              "sample_batch": [
+                90,
+                91
+              ],
+              "series_id": "g-45",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                90,
+                91
+              ],
+              "series_id": "g-45"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-06",
+            "expected": {
+              "sample_batch": [
+                92,
+                93
+              ],
+              "series_id": "g-46",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                92,
+                93
+              ],
+              "series_id": "g-46"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-07",
+            "expected": {
+              "sample_batch": [
+                94,
+                95
+              ],
+              "series_id": "g-47",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                94,
+                95
+              ],
+              "series_id": "g-47"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-08",
+            "expected": {
+              "sample_batch": [
+                96,
+                97
+              ],
+              "series_id": "g-48",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                96,
+                97
+              ],
+              "series_id": "g-48"
+            }
+          }
+        ],
+        "id": "m102_record_retain_gamma",
+        "public_cases": [
+          {
+            "case_id": "m102_record_retain_gamma-01",
+            "expected": {
+              "sample_batch": [
+                82,
+                83
+              ],
+              "series_id": "g-41",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                82,
+                83
+              ],
+              "series_id": "g-41"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-02",
+            "expected": {
+              "sample_batch": [
+                84,
+                85
+              ],
+              "series_id": "g-42",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                84,
+                85
+              ],
+              "series_id": "g-42"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-03",
+            "expected": {
+              "sample_batch": [
+                86,
+                87
+              ],
+              "series_id": "g-43",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                86,
+                87
+              ],
+              "series_id": "g-43"
+            }
+          },
+          {
+            "case_id": "m102_record_retain_gamma-04",
+            "expected": {
+              "sample_batch": [
+                88,
+                89
+              ],
+              "series_id": "g-44",
+              "verified_flag": true
+            },
+            "input": {
+              "entry_batch": [
+                88,
+                89
+              ],
+              "series_id": "g-44"
+            }
+          }
+        ],
+        "role": "record_retention",
+        "slots": [
+          "gamma_prepare",
+          "gamma_finish"
+        ]
+      }
+    },
+    {
+      "entry_digest": "9ca608b52791a5851434910576255cc30dba7b42b3247ab4576cdd5518766dfe",
+      "world": {
+        "carrier": "sqlite",
+        "events": [
+          {
+            "carrier": "sqlite",
+            "descriptor": {
+              "column": "caption_size",
+              "default": -1,
+              "kind": "add_column",
+              "table": "qualified_objects",
+              "type": "INTEGER"
+            },
+            "event_id": "registry-event-dcfbddaac1a24446",
+            "schema": "m102-registry-event-v1",
+            "slot": "sql_expand"
+          },
+          {
+            "carrier": "sqlite",
+            "descriptor": {
+              "kind": "backfill_length",
+              "source": "title_text",
+              "table": "qualified_objects",
+              "target": "caption_size"
+            },
+            "event_id": "registry-event-b4458ac14c5476db",
+            "schema": "m102-registry-event-v1",
+            "slot": "sql_derive"
+          },
+          {
+            "carrier": "sqlite",
+            "descriptor": {
+              "kind": "rename_column",
+              "new": "caption_text",
+              "old": "title_text",
+              "table": "qualified_objects"
+            },
+            "event_id": "registry-event-ff6e847b56756419",
+            "schema": "m102-registry-event-v1",
+            "slot": "sql_rename"
+          },
+          {
+            "carrier": "sqlite",
+            "descriptor": {
+              "columns": [
+                "caption_text",
+                "caption_size"
+              ],
+              "kind": "create_index",
+              "name": "idx_qualified_caption_size",
+              "table": "qualified_objects"
+            },
+            "event_id": "registry-event-8dce82426bb3072d",
+            "schema": "m102-registry-event-v1",
+            "slot": "sql_index"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_sqlite_c_trigger-05",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "GARNET-HARBOR",
+                  "object_key": 20591
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20591,
+                  "title_text": "GARNET-HARBOR"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-06",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 12,
+                  "caption_text": "HELIUM-GROVE",
+                  "object_key": 20601
+                },
+                {
+                  "caption_size": 12,
+                  "caption_text": "INDIGO-CLIFF",
+                  "object_key": 20602
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20601,
+                  "title_text": "HELIUM-GROVE"
+                },
+                {
+                  "object_key": 20602,
+                  "title_text": "INDIGO-CLIFF"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-07",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "JASPER-THREAD",
+                  "object_key": 20611
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20611,
+                  "title_text": "JASPER-THREAD"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-08",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 10,
+                  "caption_text": "KELP-SPIRE",
+                  "object_key": 20621
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "LIMESTONE-ARC",
+                  "object_key": 20622
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20621,
+                  "title_text": "KELP-SPIRE"
+                },
+                {
+                  "object_key": 20622,
+                  "title_text": "LIMESTONE-ARC"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "id": "m102_sqlite_c_trigger",
+        "public_cases": [
+          {
+            "case_id": "m102_sqlite_c_trigger-01",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 12,
+                  "caption_text": "AURORA-CROWN",
+                  "object_key": 20551
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20551,
+                  "title_text": "AURORA-CROWN"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-02",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 12,
+                  "caption_text": "BRONZE-VAULT",
+                  "object_key": 20561
+                },
+                {
+                  "caption_size": 11,
+                  "caption_text": "CINDER-LAKE",
+                  "object_key": 20562
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20561,
+                  "title_text": "BRONZE-VAULT"
+                },
+                {
+                  "object_key": 20562,
+                  "title_text": "CINDER-LAKE"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-03",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 11,
+                  "caption_text": "DUSK-ORCHID",
+                  "object_key": 20571
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20571,
+                  "title_text": "DUSK-ORCHID"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_trigger-04",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 10,
+                  "caption_text": "EMBER-PASS",
+                  "object_key": 20581
+                },
+                {
+                  "caption_size": 11,
+                  "caption_text": "FALLOW-MOON",
+                  "object_key": 20582
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 20581,
+                  "title_text": "EMBER-PASS"
+                },
+                {
+                  "object_key": 20582,
+                  "title_text": "FALLOW-MOON"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "role": "sqlite_c_trigger",
+        "slots": [
+          "sql_expand",
+          "sql_derive",
+          "sql_rename",
+          "sql_index"
+        ]
+      }
+    },
+    {
+      "entry_digest": "b593665e99ac6d86a82d95331c9960d041b391e3bfcabe6fe5860e9a6e71cfd7",
+      "world": {
+        "carrier": "sqlite",
+        "hidden_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-05",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-5",
+                  "object_key": 24651
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-5",
+                  "object_key": 24652
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24651,
+                  "title_text": "AMBER-REUSE-5"
+                },
+                {
+                  "object_key": 24652,
+                  "title_text": "BIRCH-REUSE-5"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-06",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-6",
+                  "object_key": 24661
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-6",
+                  "object_key": 24662
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24661,
+                  "title_text": "AMBER-REUSE-6"
+                },
+                {
+                  "object_key": 24662,
+                  "title_text": "BIRCH-REUSE-6"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-07",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-7",
+                  "object_key": 24671
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-7",
+                  "object_key": 24672
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24671,
+                  "title_text": "AMBER-REUSE-7"
+                },
+                {
+                  "object_key": 24672,
+                  "title_text": "BIRCH-REUSE-7"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-08",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-8",
+                  "object_key": 24681
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-8",
+                  "object_key": 24682
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24681,
+                  "title_text": "AMBER-REUSE-8"
+                },
+                {
+                  "object_key": 24682,
+                  "title_text": "BIRCH-REUSE-8"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "id": "m102_sqlite_c_reuse_amber",
+        "public_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-01",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-1",
+                  "object_key": 24611
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-1",
+                  "object_key": 24612
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24611,
+                  "title_text": "AMBER-REUSE-1"
+                },
+                {
+                  "object_key": 24612,
+                  "title_text": "BIRCH-REUSE-1"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-02",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-2",
+                  "object_key": 24621
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-2",
+                  "object_key": 24622
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24621,
+                  "title_text": "AMBER-REUSE-2"
+                },
+                {
+                  "object_key": 24622,
+                  "title_text": "BIRCH-REUSE-2"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-03",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-3",
+                  "object_key": 24631
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-3",
+                  "object_key": 24632
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24631,
+                  "title_text": "AMBER-REUSE-3"
+                },
+                {
+                  "object_key": 24632,
+                  "title_text": "BIRCH-REUSE-3"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_amber-04",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 13,
+                  "caption_text": "AMBER-REUSE-4",
+                  "object_key": 24641
+                },
+                {
+                  "caption_size": 13,
+                  "caption_text": "BIRCH-REUSE-4",
+                  "object_key": 24642
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24641,
+                  "title_text": "AMBER-REUSE-4"
+                },
+                {
+                  "object_key": 24642,
+                  "title_text": "BIRCH-REUSE-4"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "role": "sqlite_c_reuse",
+        "slots": [
+          "sql_expand",
+          "sql_derive",
+          "sql_rename",
+          "sql_index"
+        ]
+      }
+    },
+    {
+      "entry_digest": "c5cc8d25c53b2dfc6952058fa8d8866d33d82f54ac4095088e6adddd5ed124c4",
+      "world": {
+        "carrier": "sqlite",
+        "hidden_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-05",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-15",
+                  "object_key": 25751
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25751,
+                  "title_text": "COBALT-REUSE-15"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-06",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-16",
+                  "object_key": 25761
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25761,
+                  "title_text": "COBALT-REUSE-16"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-07",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-17",
+                  "object_key": 25771
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25771,
+                  "title_text": "COBALT-REUSE-17"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-08",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-18",
+                  "object_key": 25781
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25781,
+                  "title_text": "COBALT-REUSE-18"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "id": "m102_sqlite_c_reuse_cobalt",
+        "public_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-01",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-11",
+                  "object_key": 25711
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25711,
+                  "title_text": "COBALT-REUSE-11"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-02",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-12",
+                  "object_key": 25721
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25721,
+                  "title_text": "COBALT-REUSE-12"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-03",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-13",
+                  "object_key": 25731
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25731,
+                  "title_text": "COBALT-REUSE-13"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_cobalt-04",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 15,
+                  "caption_text": "COBALT-REUSE-14",
+                  "object_key": 25741
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 25741,
+                  "title_text": "COBALT-REUSE-14"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "role": "sqlite_c_reuse",
+        "slots": [
+          "sql_expand",
+          "sql_derive",
+          "sql_rename",
+          "sql_index"
+        ]
+      }
+    },
+    {
+      "entry_digest": "8bbd363506d528a8941497d98d3c7b6ef5bee65e3fcdeb9a1be969fff884bd08",
+      "world": {
+        "carrier": "sqlite",
+        "hidden_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-05",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-25",
+                  "object_key": 24791
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-25",
+                  "object_key": 24792
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24791,
+                  "title_text": "FJORD-REUSE-25"
+                },
+                {
+                  "object_key": 24792,
+                  "title_text": "GRANITE-REUSE-25"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-06",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-26",
+                  "object_key": 24801
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-26",
+                  "object_key": 24802
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24801,
+                  "title_text": "FJORD-REUSE-26"
+                },
+                {
+                  "object_key": 24802,
+                  "title_text": "GRANITE-REUSE-26"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-07",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-27",
+                  "object_key": 24811
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-27",
+                  "object_key": 24812
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24811,
+                  "title_text": "FJORD-REUSE-27"
+                },
+                {
+                  "object_key": 24812,
+                  "title_text": "GRANITE-REUSE-27"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-08",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-28",
+                  "object_key": 24821
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-28",
+                  "object_key": 24822
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24821,
+                  "title_text": "FJORD-REUSE-28"
+                },
+                {
+                  "object_key": 24822,
+                  "title_text": "GRANITE-REUSE-28"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "id": "m102_sqlite_c_reuse_fjord",
+        "public_cases": [
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-01",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-21",
+                  "object_key": 24751
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-21",
+                  "object_key": 24752
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24751,
+                  "title_text": "FJORD-REUSE-21"
+                },
+                {
+                  "object_key": 24752,
+                  "title_text": "GRANITE-REUSE-21"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-02",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-22",
+                  "object_key": 24761
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-22",
+                  "object_key": 24762
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24761,
+                  "title_text": "FJORD-REUSE-22"
+                },
+                {
+                  "object_key": 24762,
+                  "title_text": "GRANITE-REUSE-22"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-03",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-23",
+                  "object_key": 24771
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-23",
+                  "object_key": 24772
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24771,
+                  "title_text": "FJORD-REUSE-23"
+                },
+                {
+                  "object_key": 24772,
+                  "title_text": "GRANITE-REUSE-23"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          },
+          {
+            "case_id": "m102_sqlite_c_reuse_fjord-04",
+            "expected": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "caption_text",
+                  "type": "TEXT"
+                },
+                {
+                  "name": "caption_size",
+                  "type": "INTEGER"
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "caption_text",
+                    "caption_size"
+                  ],
+                  "name": "idx_qualified_caption_size"
+                }
+              ],
+              "rows": [
+                {
+                  "caption_size": 14,
+                  "caption_text": "FJORD-REUSE-24",
+                  "object_key": 24781
+                },
+                {
+                  "caption_size": 16,
+                  "caption_text": "GRANITE-REUSE-24",
+                  "object_key": 24782
+                }
+              ],
+              "table": "qualified_objects"
+            },
+            "input": {
+              "columns": [
+                {
+                  "name": "object_key",
+                  "type": "INTEGER"
+                },
+                {
+                  "name": "title_text",
+                  "type": "TEXT"
+                }
+              ],
+              "indexes": [],
+              "rows": [
+                {
+                  "object_key": 24781,
+                  "title_text": "FJORD-REUSE-24"
+                },
+                {
+                  "object_key": 24782,
+                  "title_text": "GRANITE-REUSE-24"
+                }
+              ],
+              "table": "qualified_objects"
+            }
+          }
+        ],
+        "role": "sqlite_c_reuse",
+        "slots": [
+          "sql_expand",
+          "sql_derive",
+          "sql_rename",
+          "sql_index"
+        ]
+      }
+    },
+    {
+      "entry_digest": "c017261786acd352975e20327d5643f8674b37ed1d1c59c0386fbda5c296564d",
+      "world": {
+        "carrier": "text",
+        "catalog": [
+          {
+            "kind": "suffix",
+            "value": "!excluded"
+          },
+          {
+            "kind": "replace",
+            "new": " ",
+            "old": "~"
+          },
+          {
+            "kind": "lower"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_m101_a_conserve_text-05",
+            "expected": "cedar crown",
+            "input": "CEDAR~CROWN"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-06",
+            "expected": "lunar stone",
+            "input": "LUNAR~STONE"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-07",
+            "expected": "ochre bridge",
+            "input": "OCHRE~BRIDGE"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-08",
+            "expected": "velvet ore",
+            "input": "VELVET~ORE"
+          }
+        ],
+        "id": "m102_m101_a_conserve_text",
+        "public_cases": [
+          {
+            "case_id": "m102_m101_a_conserve_text-01",
+            "expected": "basalt ridge",
+            "input": "BASALT~RIDGE"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-02",
+            "expected": "mica field",
+            "input": "MICA~FIELD"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-03",
+            "expected": "nickel cove",
+            "input": "NICKEL~COVE"
+          },
+          {
+            "case_id": "m102_m101_a_conserve_text-04",
+            "expected": "frost glass",
+            "input": "FROST~GLASS"
+          }
+        ],
+        "role": "m101_a_conservation"
+      }
+    },
+    {
+      "entry_digest": "837ced2c8bd716788bb952577791ed41f165a380a75f549dbd2a7bc9343842c0",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "function": "sealed_signal",
+            "kind": "rename_argument",
+            "new": "reading",
+            "old": "datum"
+          },
+          {
+            "kind": "rename_function",
+            "new": "sealed_signal",
+            "old": "raw_signal"
+          },
+          {
+            "kind": "add_docstring",
+            "text": "qualified conservation"
+          },
+          {
+            "call": "repr",
+            "kind": "wrap_return"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m102_m101_b_conserve_syntax-05",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading // 7",
+            "input": "def raw_signal(datum):\n    return datum // 7"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-06",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading * reading + 2",
+            "input": "def raw_signal(datum):\n    return datum * datum + 2"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-07",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading % 11",
+            "input": "def raw_signal(datum):\n    return datum % 11"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-08",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading + reading - 5",
+            "input": "def raw_signal(datum):\n    return datum + datum - 5"
+          }
+        ],
+        "id": "m102_m101_b_conserve_syntax",
+        "public_cases": [
+          {
+            "case_id": "m102_m101_b_conserve_syntax-01",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading + 17",
+            "input": "def raw_signal(datum):\n    return datum + 17"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-02",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading - 19",
+            "input": "def raw_signal(datum):\n    return datum - 19"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-03",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return reading * 6",
+            "input": "def raw_signal(datum):\n    return datum * 6"
+          },
+          {
+            "case_id": "m102_m101_b_conserve_syntax-04",
+            "expected": "def sealed_signal(reading):\n    'qualified conservation'\n    return -reading + 3",
+            "input": "def raw_signal(datum):\n    return -datum + 3"
+          }
+        ],
+        "role": "m101_b_conservation"
+      }
+    },
+    {
+      "entry_digest": "6d5c99420e98e2e4d1e3c6457234df3b04fabc816208f678e24de654b2cce8a4",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m102_m100_conserve_subtraction-05",
+            "expected": -22,
+            "input": {
+              "left": -36,
+              "right": -14
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-06",
+            "expected": 45,
+            "input": {
+              "left": 52,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-07",
+            "expected": 47,
+            "input": {
+              "left": 18,
+              "right": -29
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-08",
+            "expected": -57,
+            "input": {
+              "left": -41,
+              "right": 16
+            }
+          }
+        ],
+        "id": "m102_m100_conserve_subtraction",
+        "operation_index": 0,
+        "public_cases": [
+          {
+            "case_id": "m102_m100_conserve_subtraction-01",
+            "expected": 19,
+            "input": {
+              "left": 31,
+              "right": 12
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-02",
+            "expected": -25,
+            "input": {
+              "left": -17,
+              "right": 8
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-03",
+            "expected": 57,
+            "input": {
+              "left": 44,
+              "right": -13
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_subtraction-04",
+            "expected": -18,
+            "input": {
+              "left": 9,
+              "right": 27
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    },
+    {
+      "entry_digest": "cf1c31d2afd7de88cb257691ebfecde76e32ae86478c48485c55ae32d70c42a2",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m102_m100_conserve_addition-05",
+            "expected": -50,
+            "input": {
+              "left": -36,
+              "right": -14
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-06",
+            "expected": 59,
+            "input": {
+              "left": 52,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-07",
+            "expected": -11,
+            "input": {
+              "left": 18,
+              "right": -29
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-08",
+            "expected": -25,
+            "input": {
+              "left": -41,
+              "right": 16
+            }
+          }
+        ],
+        "id": "m102_m100_conserve_addition",
+        "operation_index": 1,
+        "public_cases": [
+          {
+            "case_id": "m102_m100_conserve_addition-01",
+            "expected": 43,
+            "input": {
+              "left": 31,
+              "right": 12
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-02",
+            "expected": -9,
+            "input": {
+              "left": -17,
+              "right": 8
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-03",
+            "expected": 31,
+            "input": {
+              "left": 44,
+              "right": -13
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_addition-04",
+            "expected": 36,
+            "input": {
+              "left": 9,
+              "right": 27
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    },
+    {
+      "entry_digest": "d1dca803134a3f6dac891ff39ff5d5d9fc472c894876d040993a2e15fd253e0d",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m102_m100_conserve_weighted-05",
+            "expected": -64,
+            "input": {
+              "left": -36,
+              "right": -14
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-06",
+            "expected": 66,
+            "input": {
+              "left": 52,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-07",
+            "expected": -40,
+            "input": {
+              "left": 18,
+              "right": -29
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-08",
+            "expected": -9,
+            "input": {
+              "left": -41,
+              "right": 16
+            }
+          }
+        ],
+        "id": "m102_m100_conserve_weighted",
+        "operation_index": 2,
+        "public_cases": [
+          {
+            "case_id": "m102_m100_conserve_weighted-01",
+            "expected": 55,
+            "input": {
+              "left": 31,
+              "right": 12
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-02",
+            "expected": -1,
+            "input": {
+              "left": -17,
+              "right": 8
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-03",
+            "expected": 18,
+            "input": {
+              "left": 44,
+              "right": -13
+            }
+          },
+          {
+            "case_id": "m102_m100_conserve_weighted-04",
+            "expected": 63,
+            "input": {
+              "left": 9,
+              "right": 27
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    }
+  ],
+  "m101_qualification_worlds_excluded": true,
+  "milestone": "M102",
+  "pool_digest": "2cf4516742f2842a0a81ccbad5c71bc40dc265bb9649edfa846fe0fa5eba91b3",
+  "population_size": 13,
+  "preflight_boundary": "closed-schema construction, digest checks, AST parsing, and independent raw SQLite model materialisation only; K/C acquisition, registry migration, transfer, baseline, hidden scoring, mutation, ablation, rollback and replay are forbidden before freeze",
+  "requirements_per_source": {
+    "hidden": 4,
+    "public": 4
+  },
+  "reroll": false,
+  "result_dependent_draw": false,
+  "role_counts": {
+    "m100_conservation": 3,
+    "m101_a_conservation": 1,
+    "m101_b_conservation": 1,
+    "policy_producer_trigger": 1,
+    "record_retention": 3,
+    "sqlite_c_reuse": 3,
+    "sqlite_c_trigger": 1
+  },
+  "schema": "m102-qualification-pool-v1",
+  "scientifically_executed_before_freeze": false,
+  "status": "candidate"
+}
