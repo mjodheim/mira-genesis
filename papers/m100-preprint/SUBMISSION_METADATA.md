@@ -25,7 +25,7 @@ The paper is a mechanistic, reproducible case study rather than a broad performa
 ## Repository anchor
 
 - Repository: `https://github.com/mjodheim/mira-genesis`
-- Publication snapshot: assign to the merged publication state before archival/deposit
+- Publication snapshot: the merged publication state is the archival target
 - M100 freeze: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`
 - M100 preservation tag: `experiment/m100-positive-result`
 
