@@ -54,7 +54,9 @@ jobs:
           python -m pip install -e ".[dev]"
 
       - name: Run the complete test suite
-        run: pytest -q
+        # This is the repository's measured full-suite mode: module-scoped fixtures stay on one
+        # worker, so the same tests and frozen recomputations run without duplicating fixtures.
+        run: pytest -q -n 10 --dist loadscope
 
   integrity:
     name: Repository integrity
@@ -75,6 +77,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -e ".[dev]"
+
+      - name: Report repository inventory and enforce structural hygiene
+        run: python scripts/audit_repository_layout.py --check
 
       - name: Every module must import cleanly
         run: python scripts/check_repository_integrity.py --imports
@@ -156,8 +161,9 @@ jobs:
       - name: The M091 result must replay from its own preserved artifacts
         run: python scripts/check_m091_result.py --require-result
 
-      # M092 is deliberately pre-result. These checks preserve the sealed M092-A source, the exact
-      # pre-search protocol and the scanner's five positive controls without inventing a result.
+      # M092 is preserved as aborted without verdict. These checks keep the sealed M092-A
+      # checkpoint, the exact pre-search protocol and the scanner controls intact without
+      # inventing a result after the fact.
       - name: The M092-A substrate checkpoint must remain byte-exact
         run: python -m scripts.check_m092a_checkpoint
 
@@ -170,11 +176,10 @@ jobs:
       - name: The M092-B proposal stream must resume byte-identically
         run: python -m scripts.check_m092b_search_enumerator
 
-      # M092-C/D freeze the candidate-side global certificate construction and the criterion
-      # selector before the first target search exists.  These gates are intentionally pre-search:
-      # they use only the neutral countdown rehearsal and fail if result/registration artifacts
-      # appear prematurely.  Once the canonical run is preserved they must be replaced by the
-      # decisive M092 result checker rather than weakened or skipped.
+      # M092-C/D preserve the candidate-side global certificate construction and criterion
+      # selector from the aborted pre-result state. These gates remain intentionally pre-search:
+      # they protect the preserved instrument and must not be repurposed into a retrospective
+      # result.
       - name: M092 path-wise certificate policy search must remain target-neutral
         run: python -m scripts.check_m092_certificate_policy_search
 
