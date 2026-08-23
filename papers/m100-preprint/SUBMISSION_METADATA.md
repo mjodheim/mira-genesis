@@ -25,13 +25,13 @@ The paper is a mechanistic, reproducible case study rather than a broad performa
 ## Repository anchor
 
 - Repository: `https://github.com/mjodheim/mira-genesis`
-- Integration commit: `c2273f1ea72e089cd3646e162130bc83b8070b0b`
+- Publication snapshot: assign to the merged publication state before archival/deposit
 - M100 freeze: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`
 - M100 preservation tag: `experiment/m100-positive-result`
 
 ## Suggested Zenodo record
 
-Archive an immutable repository snapshot at the publication integration commit, then add the DOI to the paper and `CITATION.cff` in a follow-up publication commit. Do not invent or pre-fill a DOI before reservation/deposit.
+Archive an immutable repository snapshot at the merged publication state, then add the DOI to the paper and `CITATION.cff` in a follow-up publication commit. Do not invent or pre-fill a DOI before reservation/deposit.
 
 ## License notes
 
