@@ -5,7 +5,7 @@ This preprint summarizes evidence already preserved in the public Mira Genesis r
 ## Paper anchor
 
 - Repository: `https://github.com/mjodheim/mira-genesis`
-- Publication snapshot: assign to the merged publication state before archival/deposit
+- Publication snapshot: the merged publication state is the archival target
 - M100 freeze/source commit: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`
 - Preservation tag: `experiment/m100-positive-result`
 
