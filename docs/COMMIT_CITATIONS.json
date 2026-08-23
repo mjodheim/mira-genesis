@@ -259,6 +259,13 @@
         "experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json"
       ]
     },
+    "219b958c470ece57158f97009d6fd38c7f65e0c9": {
+      "subject": "science(m101): close immutable freeze-ref binding",
+      "preserved_by": "experiment/m101-frozen-protocol",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "2296e778d443e57b44a533b143ea126cb6be3a97": {
       "subject": "Make M022 control evidence complete",
       "preserved_by": "main",
@@ -462,6 +469,14 @@
         "results/M040_DEVELOPMENT_002.md"
       ]
     },
+    "358d2a683cf0defb0b2a6d72b02cfe311f2b6b0a": {
+      "subject": "feat(m101): close isolated causal-control boundary",
+      "preserved_by": "experiment/m101-frozen-protocol",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/PROTOCOL.json"
+      ]
+    },
     "35bb3692db268349d435a1d1d716026ce5f4574e": {
       "subject": "Merge PR #153: fetch frozen M092 checkpoint history",
       "preserved_by": "main",
@@ -528,6 +543,13 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "405ff2024465b5465b2c1551b47598b94134af18": {
+      "subject": "science(m101): amend pre-run Git freeze verification",
+      "preserved_by": "experiment/m101-frozen-protocol-v2",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "4080ccc4b9381b1a2b0f8714e904c57335330877": {
@@ -1484,6 +1506,13 @@
         "experiments/M078/STATUS.md"
       ]
     },
+    "b0d0dfadfdb932f09493f17d5b11615c44cca9d3": {
+      "subject": "science(m101): amend stable fresh-process identity",
+      "preserved_by": "experiment/m101-frozen-protocol-v3",
+      "cited_in": [
+        "experiments/M101/PROTOCOL.json"
+      ]
+    },
     "b1489d7a3a264de8a9e783eb139dafe28732b040": {
       "subject": "Merge M064 negative qualification and M065 corrected freeze",
       "preserved_by": "main",
@@ -1599,13 +1628,21 @@
     },
     "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98": {
       "subject": "science(m100): freeze cumulative acquisition protocol",
-      "preserved_by": "experiment/m100-positive-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "SCIENTIFIC_HYPOTHESES.md",
-        "experiments/M100/RESULT.json"
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M100/RESULT.json",
+        "experiments/M100/RESULT.md",
+        "experiments/M101/PRE_REGISTRATION.md",
+        "experiments/M101/PROTOCOL.json",
+        "experiments/M101/PROTOCOL_DRAFT.json",
+        "papers/m100-preprint/README.md",
+        "papers/m100-preprint/REPRODUCIBILITY.md",
+        "papers/m100-preprint/SUBMISSION_METADATA.md"
       ]
     },
     "c603dd52c6484034de3a11a7c3c660335fda14b0": {
@@ -1721,6 +1758,14 @@
         "experiments/M020/STATUS.md"
       ]
     },
+    "cf97fbbd8d683648157a527f2f833daa6d32c6a2": {
+      "subject": "fix(m101): remove authored target traces",
+      "preserved_by": "experiment/m101-frozen-protocol-v4",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/PROTOCOL.json"
+      ]
+    },
     "d01ac6c34f15a4885fe4ff4600ee487f135082ae": {
       "subject": "m073: freeze external teacher execution before calls",
       "preserved_by": "main",
@@ -1801,6 +1846,14 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
+      ]
+    },
+    "d79706550d35eb74e243e4253abe6e097b10fef8": {
+      "subject": "docs(research): pre-register Genesis II M101 cross-family transfer",
+      "preserved_by": "main",
+      "cited_in": [
+        "IP_ASSET_REGISTER.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "db609a0355bd602e8ff9640a718c228a36e381a5": {
@@ -1948,6 +2001,14 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M084/RESULT.md",
         "experiments/M084/STATUS.md"
+      ]
+    },
+    "ef7a0945ede28128ebde956effc032aaa85011af": {
+      "subject": "science(m101): freeze stable-process protocol v3",
+      "preserved_by": "experiment/m101-frozen-protocol-v3",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/PRE_RUN_AMENDMENT_003.md"
       ]
     },
     "f033ac70628e79550e6263ac2bb60a6769bca42e": {

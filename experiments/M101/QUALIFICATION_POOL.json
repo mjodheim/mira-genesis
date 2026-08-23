@@ -1,0 +1,1348 @@
+{
+  "cases_per_world": {
+    "hidden": 4,
+    "public": 4
+  },
+  "construction": "complete authored 1/2/3/3/3/3 population; no draw, salt, replacement or reroll",
+  "development_fixture_excluded": true,
+  "entries": [
+    {
+      "entry_digest": "03b6c1ff6da2a396413bbff732b94d4d75b030659419add4222e7a8a3be91711",
+      "world": {
+        "carrier": "text",
+        "catalog": [
+          {
+            "kind": "suffix",
+            "value": "?"
+          },
+          {
+            "kind": "strip"
+          },
+          {
+            "kind": "upper"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_text_origin_trim_upper-05",
+            "expected": "MARBLE",
+            "input": "\nmarble "
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-06",
+            "expected": "ZINC",
+            "input": " zinc\t"
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-07",
+            "expected": "AMBER",
+            "input": "  amber"
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-08",
+            "expected": "QUARTZ",
+            "input": "quartz  "
+          }
+        ],
+        "id": "m101_text_origin_trim_upper",
+        "public_cases": [
+          {
+            "case_id": "m101_text_origin_trim_upper-01",
+            "expected": "BIRCH",
+            "input": "  birch  "
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-02",
+            "expected": "SLATE",
+            "input": "\tslate\n"
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-03",
+            "expected": "COPPER",
+            "input": " copper"
+          },
+          {
+            "case_id": "m101_text_origin_trim_upper-04",
+            "expected": "OPAL",
+            "input": "opal "
+          }
+        ],
+        "role": "producer_trigger"
+      }
+    },
+    {
+      "entry_digest": "b3902073c20aa41af5d05cef45c24b2b24d17f57f5e87f28ddd7bb46affcd938",
+      "world": {
+        "carrier": "text",
+        "catalog": [
+          {
+            "kind": "upper"
+          },
+          {
+            "kind": "prefix",
+            "value": "!"
+          },
+          {
+            "kind": "replace",
+            "new": " ",
+            "old": "_"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-05",
+            "expected": "WINTER ASH",
+            "input": "winter_ash"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-06",
+            "expected": "QUIET BAY",
+            "input": "quiet_bay"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-07",
+            "expected": "IRON PEAK",
+            "input": "iron_peak"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-08",
+            "expected": "SILVER ROAD",
+            "input": "silver_road"
+          }
+        ],
+        "id": "m101_text_transfer_delimiter_upper",
+        "public_cases": [
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-01",
+            "expected": "NORTH GATE",
+            "input": "north_gate"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-02",
+            "expected": "RED FOX",
+            "input": "red_fox"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-03",
+            "expected": "DEEP BLUE",
+            "input": "deep_blue"
+          },
+          {
+            "case_id": "m101_text_transfer_delimiter_upper-04",
+            "expected": "SMALL ORE",
+            "input": "small_ore"
+          }
+        ],
+        "role": "text_holdout"
+      }
+    },
+    {
+      "entry_digest": "549ac1acb6b33e97d9750f95de7f032fea7346d49c5e640f1154df4a7cbb5a5b",
+      "world": {
+        "carrier": "text",
+        "catalog": [
+          {
+            "kind": "suffix",
+            "value": "::ok"
+          },
+          {
+            "kind": "replace",
+            "new": "x",
+            "old": "A"
+          },
+          {
+            "kind": "lower"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_text_transfer_lower_suffix-05",
+            "expected": "ember::ok",
+            "input": "EMBER"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-06",
+            "expected": "fjord::ok",
+            "input": "FjOrD"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-07",
+            "expected": "granite::ok",
+            "input": "GRANITE"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-08",
+            "expected": "harbor::ok",
+            "input": "HaRbOr"
+          }
+        ],
+        "id": "m101_text_transfer_lower_suffix",
+        "public_cases": [
+          {
+            "case_id": "m101_text_transfer_lower_suffix-01",
+            "expected": "alpha::ok",
+            "input": "ALPHA"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-02",
+            "expected": "bronze::ok",
+            "input": "BrOnZe"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-03",
+            "expected": "cedar::ok",
+            "input": "CEDAR"
+          },
+          {
+            "case_id": "m101_text_transfer_lower_suffix-04",
+            "expected": "delta::ok",
+            "input": "DeLtA"
+          }
+        ],
+        "role": "text_holdout"
+      }
+    },
+    {
+      "entry_digest": "d5cae46d92431d933b7039dba9b9dd7eb9a11bceca70ad9b1b14feb1cd715bcd",
+      "world": {
+        "carrier": "record",
+        "catalog": [
+          {
+            "key": "label",
+            "kind": "drop_key"
+          },
+          {
+            "key": "ordered",
+            "kind": "sort_list"
+          },
+          {
+            "kind": "rename_key",
+            "new": "ordered",
+            "old": "raw"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_record_transfer_rename_sort-05",
+            "expected": {
+              "label": "e",
+              "ordered": [
+                4,
+                12
+              ]
+            },
+            "input": {
+              "label": "e",
+              "raw": [
+                12,
+                4
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-06",
+            "expected": {
+              "label": "f",
+              "ordered": [
+                -8,
+                -1,
+                2
+              ]
+            },
+            "input": {
+              "label": "f",
+              "raw": [
+                -1,
+                -8,
+                2
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-07",
+            "expected": {
+              "label": "g",
+              "ordered": [
+                6
+              ]
+            },
+            "input": {
+              "label": "g",
+              "raw": [
+                6
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-08",
+            "expected": {
+              "label": "h",
+              "ordered": [
+                3,
+                9,
+                9
+              ]
+            },
+            "input": {
+              "label": "h",
+              "raw": [
+                9,
+                3,
+                9
+              ]
+            }
+          }
+        ],
+        "id": "m101_record_transfer_rename_sort",
+        "public_cases": [
+          {
+            "case_id": "m101_record_transfer_rename_sort-01",
+            "expected": {
+              "label": "a",
+              "ordered": [
+                2,
+                5,
+                8
+              ]
+            },
+            "input": {
+              "label": "a",
+              "raw": [
+                8,
+                2,
+                5
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-02",
+            "expected": {
+              "label": "b",
+              "ordered": [
+                -4,
+                0,
+                3
+              ]
+            },
+            "input": {
+              "label": "b",
+              "raw": [
+                0,
+                -4,
+                3
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-03",
+            "expected": {
+              "label": "c",
+              "ordered": [
+                1,
+                7,
+                7
+              ]
+            },
+            "input": {
+              "label": "c",
+              "raw": [
+                7,
+                7,
+                1
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_sort-04",
+            "expected": {
+              "label": "d",
+              "ordered": []
+            },
+            "input": {
+              "label": "d",
+              "raw": []
+            }
+          }
+        ],
+        "role": "record_transfer"
+      }
+    },
+    {
+      "entry_digest": "a41bf4a8cc56305c56c2f08e7301e8d56bb2ec09d7722f288ac96e1169394131",
+      "world": {
+        "carrier": "record",
+        "catalog": [
+          {
+            "key": "discarded",
+            "kind": "drop_key"
+          },
+          {
+            "kind": "rename_key",
+            "new": "discarded",
+            "old": "payload"
+          },
+          {
+            "key": "note",
+            "kind": "set_default",
+            "value": "none"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_record_transfer_rename_drop-05",
+            "expected": {
+              "colour": "white",
+              "revision": 5
+            },
+            "input": {
+              "colour": "white",
+              "payload": 11,
+              "revision": 5
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-06",
+            "expected": {
+              "colour": "black",
+              "revision": 6
+            },
+            "input": {
+              "colour": "black",
+              "payload": 4,
+              "revision": 6
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-07",
+            "expected": {
+              "colour": "violet",
+              "revision": 7
+            },
+            "input": {
+              "colour": "violet",
+              "payload": -7,
+              "revision": 7
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-08",
+            "expected": {
+              "colour": "silver",
+              "revision": 8
+            },
+            "input": {
+              "colour": "silver",
+              "payload": 6,
+              "revision": 8
+            }
+          }
+        ],
+        "id": "m101_record_transfer_rename_drop",
+        "public_cases": [
+          {
+            "case_id": "m101_record_transfer_rename_drop-01",
+            "expected": {
+              "colour": "red",
+              "revision": 1
+            },
+            "input": {
+              "colour": "red",
+              "payload": 3,
+              "revision": 1
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-02",
+            "expected": {
+              "colour": "blue",
+              "revision": 2
+            },
+            "input": {
+              "colour": "blue",
+              "payload": 8,
+              "revision": 2
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-03",
+            "expected": {
+              "colour": "green",
+              "revision": 3
+            },
+            "input": {
+              "colour": "green",
+              "payload": -2,
+              "revision": 3
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_rename_drop-04",
+            "expected": {
+              "colour": "amber",
+              "revision": 4
+            },
+            "input": {
+              "colour": "amber",
+              "payload": 0,
+              "revision": 4
+            }
+          }
+        ],
+        "role": "record_transfer"
+      }
+    },
+    {
+      "entry_digest": "f9c96173eba044e7e0d58f4f4eb29ea46472cbff49cd42121952911c721e4d2d",
+      "world": {
+        "carrier": "record",
+        "catalog": [
+          {
+            "key": "status",
+            "kind": "set_default",
+            "value": "pending"
+          },
+          {
+            "key": "values",
+            "kind": "sort_list"
+          },
+          {
+            "key": "status",
+            "kind": "drop_key"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_record_transfer_reset_default-05",
+            "expected": {
+              "status": "pending",
+              "token": 5,
+              "values": [
+                5,
+                0
+              ]
+            },
+            "input": {
+              "status": "warm",
+              "token": 5,
+              "values": [
+                5,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-06",
+            "expected": {
+              "status": "pending",
+              "token": 6,
+              "values": [
+                6,
+                0
+              ]
+            },
+            "input": {
+              "status": "cold",
+              "token": 6,
+              "values": [
+                6,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-07",
+            "expected": {
+              "status": "pending",
+              "token": 7,
+              "values": [
+                7,
+                0
+              ]
+            },
+            "input": {
+              "status": "new",
+              "token": 7,
+              "values": [
+                7,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-08",
+            "expected": {
+              "status": "pending",
+              "token": 8,
+              "values": [
+                8,
+                0
+              ]
+            },
+            "input": {
+              "status": "old",
+              "token": 8,
+              "values": [
+                8,
+                0
+              ]
+            }
+          }
+        ],
+        "id": "m101_record_transfer_reset_default",
+        "public_cases": [
+          {
+            "case_id": "m101_record_transfer_reset_default-01",
+            "expected": {
+              "status": "pending",
+              "token": 1,
+              "values": [
+                1,
+                0
+              ]
+            },
+            "input": {
+              "status": "ready",
+              "token": 1,
+              "values": [
+                1,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-02",
+            "expected": {
+              "status": "pending",
+              "token": 2,
+              "values": [
+                2,
+                0
+              ]
+            },
+            "input": {
+              "status": "held",
+              "token": 2,
+              "values": [
+                2,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-03",
+            "expected": {
+              "status": "pending",
+              "token": 3,
+              "values": [
+                3,
+                0
+              ]
+            },
+            "input": {
+              "status": "open",
+              "token": 3,
+              "values": [
+                3,
+                0
+              ]
+            }
+          },
+          {
+            "case_id": "m101_record_transfer_reset_default-04",
+            "expected": {
+              "status": "pending",
+              "token": 4,
+              "values": [
+                4,
+                0
+              ]
+            },
+            "input": {
+              "status": "closed",
+              "token": 4,
+              "values": [
+                4,
+                0
+              ]
+            }
+          }
+        ],
+        "role": "record_transfer"
+      }
+    },
+    {
+      "entry_digest": "8f773da897516e0b6ee197dfa121dc0e4ec049a6ad407d981955fb54cf510d29",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "function": "refine",
+            "kind": "rename_argument",
+            "new": "datum",
+            "old": "x"
+          },
+          {
+            "kind": "add_docstring",
+            "text": "distractor"
+          },
+          {
+            "kind": "rename_function",
+            "new": "refine",
+            "old": "sketch"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_transfer_function_argument-05",
+            "expected": "def refine(datum):\n    return datum // 2",
+            "input": "def sketch(x):\n    return x // 2"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-06",
+            "expected": "def refine(datum):\n    return datum - 11",
+            "input": "def sketch(x):\n    return x - 11"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-07",
+            "expected": "def refine(datum):\n    return datum * datum",
+            "input": "def sketch(x):\n    return x * x"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-08",
+            "expected": "def refine(datum):\n    return datum + 1",
+            "input": "def sketch(x):\n    return x + 1"
+          }
+        ],
+        "id": "m101_syntax_transfer_function_argument",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_transfer_function_argument-01",
+            "expected": "def refine(datum):\n    return datum - 4",
+            "input": "def sketch(x):\n    return x - 4"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-02",
+            "expected": "def refine(datum):\n    return datum * 3",
+            "input": "def sketch(x):\n    return x * 3"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-03",
+            "expected": "def refine(datum):\n    return -datum",
+            "input": "def sketch(x):\n    return -x"
+          },
+          {
+            "case_id": "m101_syntax_transfer_function_argument-04",
+            "expected": "def refine(datum):\n    return datum + 9",
+            "input": "def sketch(x):\n    return x + 9"
+          }
+        ],
+        "role": "syntax_transfer"
+      }
+    },
+    {
+      "entry_digest": "e98068a0997fe7edb079372bfdc57f8f734decd898b567fe35710c87aacc3b7b",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "kind": "rename_function",
+            "new": "ready_calc",
+            "old": "stage_calc"
+          },
+          {
+            "kind": "rename_function",
+            "new": "stage_calc",
+            "old": "draft_calc"
+          },
+          {
+            "call": "repr",
+            "kind": "wrap_return"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-05",
+            "expected": "def ready_calc(value):\n    return value // 3",
+            "input": "def draft_calc(value):\n    return value // 3"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-06",
+            "expected": "def ready_calc(value):\n    return value + 12",
+            "input": "def draft_calc(value):\n    return value + 12"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-07",
+            "expected": "def ready_calc(value):\n    return value * value",
+            "input": "def draft_calc(value):\n    return value * value"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-08",
+            "expected": "def ready_calc(value):\n    return value - 1",
+            "input": "def draft_calc(value):\n    return value - 1"
+          }
+        ],
+        "id": "m101_syntax_transfer_two_stage_name",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-01",
+            "expected": "def ready_calc(value):\n    return value + 2",
+            "input": "def draft_calc(value):\n    return value + 2"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-02",
+            "expected": "def ready_calc(value):\n    return value - 5",
+            "input": "def draft_calc(value):\n    return value - 5"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-03",
+            "expected": "def ready_calc(value):\n    return value * 4",
+            "input": "def draft_calc(value):\n    return value * 4"
+          },
+          {
+            "case_id": "m101_syntax_transfer_two_stage_name-04",
+            "expected": "def ready_calc(value):\n    return -value",
+            "input": "def draft_calc(value):\n    return -value"
+          }
+        ],
+        "role": "syntax_transfer"
+      }
+    },
+    {
+      "entry_digest": "7b92878b50dec6ce4b1684b31ddc577bf3908b199eec86dfa1c46f872c874292",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "kind": "rename_function",
+            "new": "clean_value",
+            "old": "rough_value"
+          },
+          {
+            "call": "str",
+            "kind": "wrap_return"
+          },
+          {
+            "function": "clean_value",
+            "kind": "rename_argument",
+            "new": "sample",
+            "old": "item"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-05",
+            "expected": "def clean_value(sample):\n    return sample // 4",
+            "input": "def rough_value(item):\n    return item // 4"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-06",
+            "expected": "def clean_value(sample):\n    return sample + 15",
+            "input": "def rough_value(item):\n    return item + 15"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-07",
+            "expected": "def clean_value(sample):\n    return sample * sample",
+            "input": "def rough_value(item):\n    return item * item"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-08",
+            "expected": "def clean_value(sample):\n    return sample - 2",
+            "input": "def rough_value(item):\n    return item - 2"
+          }
+        ],
+        "id": "m101_syntax_transfer_clean_sample",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-01",
+            "expected": "def clean_value(sample):\n    return sample - 6",
+            "input": "def rough_value(item):\n    return item - 6"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-02",
+            "expected": "def clean_value(sample):\n    return sample + 3",
+            "input": "def rough_value(item):\n    return item + 3"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-03",
+            "expected": "def clean_value(sample):\n    return sample * 5",
+            "input": "def rough_value(item):\n    return item * 5"
+          },
+          {
+            "case_id": "m101_syntax_transfer_clean_sample-04",
+            "expected": "def clean_value(sample):\n    return -sample",
+            "input": "def rough_value(item):\n    return -item"
+          }
+        ],
+        "role": "syntax_transfer"
+      }
+    },
+    {
+      "entry_digest": "c7834431ee9026ec3cbf4a8a2444ec5a554f42afb17a39ccd17948a89163174e",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "kind": "rename_function",
+            "new": "stage",
+            "old": "draft"
+          },
+          {
+            "function": "stage",
+            "kind": "rename_argument",
+            "new": "payload",
+            "old": "x"
+          },
+          {
+            "kind": "rename_function",
+            "new": "published",
+            "old": "stage"
+          },
+          {
+            "kind": "add_docstring",
+            "text": "unused"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_b_publish_payload-05",
+            "expected": "def published(payload):\n    return payload // 2",
+            "input": "def draft(x):\n    return x // 2"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-06",
+            "expected": "def published(payload):\n    return payload - 11",
+            "input": "def draft(x):\n    return x - 11"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-07",
+            "expected": "def published(payload):\n    return payload * payload",
+            "input": "def draft(x):\n    return x * x"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-08",
+            "expected": "def published(payload):\n    return payload + 1",
+            "input": "def draft(x):\n    return x + 1"
+          }
+        ],
+        "id": "m101_syntax_b_publish_payload",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_b_publish_payload-01",
+            "expected": "def published(payload):\n    return payload - 4",
+            "input": "def draft(x):\n    return x - 4"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-02",
+            "expected": "def published(payload):\n    return payload * 3",
+            "input": "def draft(x):\n    return x * 3"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-03",
+            "expected": "def published(payload):\n    return -payload",
+            "input": "def draft(x):\n    return -x"
+          },
+          {
+            "case_id": "m101_syntax_b_publish_payload-04",
+            "expected": "def published(payload):\n    return payload + 9",
+            "input": "def draft(x):\n    return x + 9"
+          }
+        ],
+        "role": "b_reuse"
+      }
+    },
+    {
+      "entry_digest": "5ceef49481d52514d439eb4b7cea8b5f549ec0da172c1403465e19d8069eb856",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "kind": "rename_function",
+            "new": "safe_metric",
+            "old": "raw_metric"
+          },
+          {
+            "function": "safe_metric",
+            "kind": "rename_argument",
+            "new": "measure",
+            "old": "value"
+          },
+          {
+            "call": "abs",
+            "kind": "wrap_return"
+          },
+          {
+            "kind": "add_docstring",
+            "text": "unused"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_b_safe_absolute-05",
+            "expected": "def safe_metric(measure):\n    return abs(measure // 3)",
+            "input": "def raw_metric(value):\n    return value // 3"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-06",
+            "expected": "def safe_metric(measure):\n    return abs(measure + 12)",
+            "input": "def raw_metric(value):\n    return value + 12"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-07",
+            "expected": "def safe_metric(measure):\n    return abs(measure * measure)",
+            "input": "def raw_metric(value):\n    return value * value"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-08",
+            "expected": "def safe_metric(measure):\n    return abs(measure - 1)",
+            "input": "def raw_metric(value):\n    return value - 1"
+          }
+        ],
+        "id": "m101_syntax_b_safe_absolute",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_b_safe_absolute-01",
+            "expected": "def safe_metric(measure):\n    return abs(measure + 2)",
+            "input": "def raw_metric(value):\n    return value + 2"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-02",
+            "expected": "def safe_metric(measure):\n    return abs(measure - 5)",
+            "input": "def raw_metric(value):\n    return value - 5"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-03",
+            "expected": "def safe_metric(measure):\n    return abs(measure * 4)",
+            "input": "def raw_metric(value):\n    return value * 4"
+          },
+          {
+            "case_id": "m101_syntax_b_safe_absolute-04",
+            "expected": "def safe_metric(measure):\n    return abs(-measure)",
+            "input": "def raw_metric(value):\n    return -value"
+          }
+        ],
+        "role": "b_reuse"
+      }
+    },
+    {
+      "entry_digest": "814777be3a095e19131497123a55d8ba9c801d7e3746a4e3c9e844ff25d01c75",
+      "world": {
+        "carrier": "syntax",
+        "catalog": [
+          {
+            "kind": "rename_function",
+            "new": "core_label",
+            "old": "seed_label"
+          },
+          {
+            "function": "core_label",
+            "kind": "rename_argument",
+            "new": "datum",
+            "old": "item"
+          },
+          {
+            "kind": "add_docstring",
+            "text": "qualified label"
+          },
+          {
+            "call": "repr",
+            "kind": "wrap_return"
+          }
+        ],
+        "hidden_cases": [
+          {
+            "case_id": "m101_syntax_b_core_documented-05",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum // 4",
+            "input": "def seed_label(item):\n    return item // 4"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-06",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum + 15",
+            "input": "def seed_label(item):\n    return item + 15"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-07",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum * datum",
+            "input": "def seed_label(item):\n    return item * item"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-08",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum - 2",
+            "input": "def seed_label(item):\n    return item - 2"
+          }
+        ],
+        "id": "m101_syntax_b_core_documented",
+        "public_cases": [
+          {
+            "case_id": "m101_syntax_b_core_documented-01",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum - 6",
+            "input": "def seed_label(item):\n    return item - 6"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-02",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum + 3",
+            "input": "def seed_label(item):\n    return item + 3"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-03",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return datum * 5",
+            "input": "def seed_label(item):\n    return item * 5"
+          },
+          {
+            "case_id": "m101_syntax_b_core_documented-04",
+            "expected": "def core_label(datum):\n    'qualified label'\n    return -datum",
+            "input": "def seed_label(item):\n    return -item"
+          }
+        ],
+        "role": "b_reuse"
+      }
+    },
+    {
+      "entry_digest": "1a37d943961268d80aeab726ef52a63c6ffcaf3cce962cb5b2a1a65868e41bb5",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m101_m100_conserve_subtraction-05",
+            "expected": 7,
+            "input": {
+              "left": 13,
+              "right": 6
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-06",
+            "expected": 4,
+            "input": {
+              "left": -5,
+              "right": -9
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-07",
+            "expected": -9,
+            "input": {
+              "left": 2,
+              "right": 11
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-08",
+            "expected": 7,
+            "input": {
+              "left": 4,
+              "right": -3
+            }
+          }
+        ],
+        "id": "m101_m100_conserve_subtraction",
+        "operation_index": 0,
+        "public_cases": [
+          {
+            "case_id": "m101_m100_conserve_subtraction-01",
+            "expected": 5,
+            "input": {
+              "left": 8,
+              "right": 3
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-02",
+            "expected": 0,
+            "input": {
+              "left": 5,
+              "right": 5
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-03",
+            "expected": -9,
+            "input": {
+              "left": -2,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_subtraction-04",
+            "expected": 4,
+            "input": {
+              "left": 0,
+              "right": -4
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    },
+    {
+      "entry_digest": "43fdc611ea7085642095ca2f4414253151f67d563d2578494a48f1a389e587fa",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m101_m100_conserve_addition-05",
+            "expected": 19,
+            "input": {
+              "left": 13,
+              "right": 6
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-06",
+            "expected": -14,
+            "input": {
+              "left": -5,
+              "right": -9
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-07",
+            "expected": 13,
+            "input": {
+              "left": 2,
+              "right": 11
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-08",
+            "expected": 1,
+            "input": {
+              "left": 4,
+              "right": -3
+            }
+          }
+        ],
+        "id": "m101_m100_conserve_addition",
+        "operation_index": 1,
+        "public_cases": [
+          {
+            "case_id": "m101_m100_conserve_addition-01",
+            "expected": 11,
+            "input": {
+              "left": 8,
+              "right": 3
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-02",
+            "expected": 10,
+            "input": {
+              "left": 5,
+              "right": 5
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-03",
+            "expected": 5,
+            "input": {
+              "left": -2,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_addition-04",
+            "expected": -4,
+            "input": {
+              "left": 0,
+              "right": -4
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    },
+    {
+      "entry_digest": "89e709703d0731f0b38db237ad1c9b172dbfff3471e3003ae82964c950c33269",
+      "world": {
+        "carrier": "m100",
+        "hidden_cases": [
+          {
+            "case_id": "m101_m100_conserve_weighted-05",
+            "expected": 25,
+            "input": {
+              "left": 13,
+              "right": 6
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-06",
+            "expected": -23,
+            "input": {
+              "left": -5,
+              "right": -9
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-07",
+            "expected": 24,
+            "input": {
+              "left": 2,
+              "right": 11
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-08",
+            "expected": -2,
+            "input": {
+              "left": 4,
+              "right": -3
+            }
+          }
+        ],
+        "id": "m101_m100_conserve_weighted",
+        "operation_index": 2,
+        "public_cases": [
+          {
+            "case_id": "m101_m100_conserve_weighted-01",
+            "expected": 14,
+            "input": {
+              "left": 8,
+              "right": 3
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-02",
+            "expected": 15,
+            "input": {
+              "left": 5,
+              "right": 5
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-03",
+            "expected": 12,
+            "input": {
+              "left": -2,
+              "right": 7
+            }
+          },
+          {
+            "case_id": "m101_m100_conserve_weighted-04",
+            "expected": -8,
+            "input": {
+              "left": 0,
+              "right": -4
+            }
+          }
+        ],
+        "role": "m100_conservation"
+      }
+    }
+  ],
+  "m097_through_m100_worlds_excluded": true,
+  "milestone": "M101",
+  "pool_digest": "85f9d5dfc0fef2d368f005594f03ba6d2b54c9935e9520650d3da33632560fd6",
+  "population_size": 15,
+  "preflight_boundary": "closed-schema construction, JSON instantiation and Python AST parsing only; M101 acquisition, registration, baseline, transfer, execution, mutation, ablation and rollback are forbidden before final freeze",
+  "reroll": false,
+  "result_dependent_draw": false,
+  "role_counts": {
+    "b_reuse": 3,
+    "m100_conservation": 3,
+    "producer_trigger": 1,
+    "record_transfer": 3,
+    "syntax_transfer": 3,
+    "text_holdout": 2
+  },
+  "schema": "m101-qualification-pool-v1",
+  "status": "frozen"
+}

@@ -2,8 +2,12 @@
 
 M101 is the first planned Genesis II experiment.
 
-**Current state:** pre-registered design only. No enabling M101 runtime, qualification pool, checker,
-canonical run or scientific result exists on this branch at this point.
+**Current state:** the complete pre-run boundary is frozen. The final protocol binds the reviewed
+pre-registration, exact M100 predecessor, carrier-neutral acquisition mechanism, separate
+execution-only consumer capsule, independent definition/result checkers, recursive stable projection
+and the complete fifteen-world population. The population received only its source-only preflight;
+the M101 scientific mechanism has never executed it. No canonical run, scientific result or D070
+decision exists on this branch.
 
 Authoritative design documents:
 
@@ -30,6 +34,31 @@ this order:
    rollback and stable-projection policy;
 8. write `PROTOCOL.json` binding exact mechanism/pool/checker/capsule/predecessor digests and freeze it;
 9. only then allow one armed local Track-A canonical run.
+
+Steps 1--8 are complete and frozen. Development-only fixtures exercised the complete 44-process
+chronology and all causal controls; this evidence is apparatus validation, not qualification. The
+committed population contains exactly 1 producer trigger, 2 text holdouts, 3 record transfers, 3
+direct syntax transfers, 3 B-reuse worlds and 3 M100-conservation worlds, each with four public and
+four hidden cases. Its preflight constructed and parsed those records only and explicitly recorded
+that acquisition, registration, baseline, transfer, execution, mutation, ablation and rollback were
+not run.
+
+Three earlier freeze refs remain preserved as refused pre-run records. The first exposed an LF/CRLF
+raw-stream comparison defect; `PRE_RUN_AMENDMENT_001.md` replaces it with Git-object identity and
+explicit annotated-tag peeling. The exact v2 full-suite replay then observed legitimate Windows PID
+recycling between already terminated processes; `PRE_RUN_AMENDMENT_002.md` replaces global PID
+uniqueness with stable invocation ordinals and a source audit of synchronous isolated subprocess
+launches. A later adversarial audit refused v3 because the shared runtime contained a host-side
+two-atomic composition helper that made the fresh baseline scientifically non-equivalent while its
+baseline action hid that reach, and because A/B search prefiltered the exact authored target traces.
+`PRE_RUN_AMENDMENT_003.md` records the falsifier and the material v4 correction. None of these events
+executed a pool case through M101.
+
+The authoritative immutable freeze ref is `experiment/m101-frozen-protocol-v4`. The runner will
+refuse an armed run unless the working tree is clean, `HEAD` is exactly that ref, every bound digest
+still matches and `experiments/M101/RESULT.json` is absent. The remaining step is therefore a
+distinct owner-authorized action: one local `--arm` canonical Track-A run, followed by the
+independent stable replay/checker.
 
 If implementation shows that a decisive condition is impossible or ill-posed before qualification,
 record a named pre-run amendment rather than silently editing `PRE_REGISTRATION.md`. If any decisive
