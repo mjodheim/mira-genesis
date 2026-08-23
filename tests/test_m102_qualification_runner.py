@@ -9,6 +9,7 @@ import pytest
 from metamorphosis import m102_runtime as runtime
 from scripts import audit_m102_boundaries
 from scripts import check_m102_result as checker
+from scripts import build_m102_protocol as protocol_builder
 from scripts import run_m102_qualification as runner
 from scripts.author_m102_qualification_pool import load_pool
 from scripts.author_m102_qualification_pool import digest
@@ -93,6 +94,20 @@ def test_result_checker_does_not_import_m102_implementation() -> None:
     )
     assert not imports & {"metamorphosis", "m102_runtime", "m102_executor"}
     assert all(f"check_p{index}" in checker.__dict__ for index in range(1, 16))
+
+
+def test_protocol_candidate_is_exact_but_cannot_arm_a_run() -> None:
+    candidate = protocol_builder.build_candidate()
+    assert candidate["status"] == "owner_review_required"
+    assert candidate["canonical_run_allowed"] is False
+    assert candidate["attempt"] == 1
+    assert candidate["qualification_population"]["pool_digest"] == load_pool()["pool_digest"]
+    assert candidate["predecessor"]["m101_t2_raw_sha256"] == (
+        "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0"
+    )
+    assert candidate["freeze"]["owner_acceptance_required"] is True
+    with pytest.raises(ValueError, match="source commit"):
+        protocol_builder.build_final("not-a-commit", "not-authorized")
 
 
 def test_no_m102_scientific_result_exists_before_freeze() -> None:

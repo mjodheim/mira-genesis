@@ -829,6 +829,8 @@ def require_frozen(protocol: dict[str, Any], pool: dict[str, Any]) -> None:
     for section, path_key, digest_key in (
         ("pre_registration", "path", "raw_sha256"),
         ("pre_registration", "draft_path", "draft_raw_sha256"),
+        ("protocol_candidate", "path", "raw_sha256"),
+        ("adversarial_review", "path", "raw_sha256"),
         ("publication", "review_record", "review_raw_sha256"),
     ):
         record = protocol.get(section, {})

@@ -21,6 +21,7 @@ FILES = {
     "predecessor_definition_checker": ROOT / "scripts" / "check_m101_definitions.py",
     "result_checker": ROOT / "scripts" / "check_m102_result.py",
     "pool_author": ROOT / "scripts" / "author_m102_qualification_pool.py",
+    "protocol_builder": ROOT / "scripts" / "build_m102_protocol.py",
     "qualification_runner": ROOT / "scripts" / "run_m102_qualification.py",
 }
 
@@ -235,6 +236,14 @@ def audit() -> dict[str, Any]:
             "RESULT_PATH.open('x'",
         )
     )
+    checks["final_protocol_builder_requires_owner_acceptance_and_frozen_pool"] = all(
+        token in ast.unparse(functions["protocol_builder"]["build_final"])
+        for token in (
+            "owner_authorization_reference",
+            "pool['status'] != 'frozen'",
+            "CANDIDATE_PATH.exists()",
+        )
+    ) and "i_accept_frozen_protocol" in sources["protocol_builder"]
     run_text = sources["qualification_runner"]
     checks["hidden_materialisation_follows_producer_state_creation_in_source_order"] = (
         run_text.index("u1_path = base / \"U1.json\"")
