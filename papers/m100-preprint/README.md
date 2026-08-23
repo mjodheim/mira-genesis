@@ -1,8 +1,8 @@
 # Mira Genesis M100 preprint package
 
-This directory contains the publication draft anchored to the public M100 repository state. It is intentionally downstream of the scientific record: no frozen experiment, protocol, result, checker, threshold, or qualification population is modified by the manuscript.
+This directory contains the reviewed publication package for the public M100 repository state. It is intentionally downstream of the scientific record: no frozen experiment, protocol, result, checker, threshold, or qualification population is modified by the manuscript.
 
-## Proposed paper
+## Paper
 
 **Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage**
 
