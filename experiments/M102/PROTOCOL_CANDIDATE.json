@@ -1,0 +1,279 @@
+{
+  "adversarial_review": {
+    "path": "experiments/M102/ADVERSARIAL_REVIEW.md",
+    "qualification_executed": false,
+    "raw_sha256": "3d8af682d570f1894d8cd9f8fde55e2bd77f493d2106caeefb46815aef57618b"
+  },
+  "attempt": 1,
+  "candidate_source_commit": "644e0100508faec2a78e07ec4a9ccf2316c79682",
+  "canonical_result_policy": {
+    "canonical_command": "python scripts/run_m102_qualification.py materialize --authorized-by-owner --i-understand-this-is-the-only-canonical-attempt",
+    "checker_path": "experiments/M102/CHECK_REPORT.json",
+    "exclusive_create": true,
+    "preserve_first_result_even_if_negative": true,
+    "repair_after_verdict_belongs_to_M103": true,
+    "result_path": "experiments/M102/RESULT.json"
+  },
+  "canonical_run_allowed": false,
+  "capsules": {
+    "acquisition": {
+      "digest": "3aaf5259f7868cacd344f1e6705b8eb32ad6b49fcea6bc5d992b58b15522c6e7",
+      "member_digests": {
+        "m101_runtime.py": "a58e6dd705df8a89724b8cd3cb2f65dc4056c87a7e8932ef8aa71d04b6c81475",
+        "m102_runtime.py": "401aaaa7138316bfa0c4c7a96c4dadcb3b67e74fa3f67465e92b97f14aedf0a3",
+        "run.py": "2d79194e5dcd1f06af6ab103bc83b35c3190550f1318696c4de113e3bf67b69c"
+      },
+      "member_sources": {
+        "m101_runtime.py": "metamorphosis/m101_runtime.py",
+        "m102_runtime.py": "metamorphosis/m102_runtime.py",
+        "run.py": "scripts/run_m102_acquisition_process.py"
+      },
+      "members": [
+        "m101_runtime.py",
+        "m102_runtime.py",
+        "run.py"
+      ]
+    },
+    "definition_checker": {
+      "digest": "60f8e47d5d53b0a390f099b29f6793348342ba0aa6b09978a13f98f7303324b3",
+      "member_digests": {
+        "check_m101_definitions.py": "2c12d05b527c4a0390287c74eecf7ee25ae264a1610e3f4d92f976657ab84b75",
+        "check_m102_definitions.py": "3ff791b81f945b49f73a5759e90827329951c8e8c014638551919525f871ecaa"
+      },
+      "member_sources": {
+        "check_m101_definitions.py": "scripts/check_m101_definitions.py",
+        "check_m102_definitions.py": "scripts/check_m102_definitions.py"
+      },
+      "members": [
+        "check_m101_definitions.py",
+        "check_m102_definitions.py"
+      ]
+    },
+    "execution": {
+      "digest": "7efb0613108b49a291f554d21470fad0e4839601d4d4e2c0bd5a3435ecf54b9a",
+      "member_digests": {
+        "m101_executor.py": "a5ce52dc925c0430c7925aced3c0fef72a2f725214d009f6ec76b131b8c2aaa6",
+        "m102_executor.py": "a91f219d6e6b6bd3f8d2a0aea75cbaca087775490487e83b39f3f395b18788e0",
+        "run.py": "6ce4e048cb566d794ff52a3c1f7f70acdb20039a6f4cb590df17e83fbfb4c16a"
+      },
+      "member_sources": {
+        "m101_executor.py": "metamorphosis/m101_executor.py",
+        "m102_executor.py": "metamorphosis/m102_executor.py",
+        "run.py": "scripts/run_m102_fresh_process.py"
+      },
+      "members": [
+        "m101_executor.py",
+        "m102_executor.py",
+        "run.py"
+      ]
+    }
+  },
+  "checker": {
+    "digest": "a1cd1072050f6eedf6683143119b3d0ba33a9897dd75746990bbc0d7b758d52b",
+    "files": [
+      "scripts/check_m102_result.py"
+    ],
+    "member_digests": {
+      "scripts/check_m102_result.py": "012e2ee6aca73dee19ed7fd19c657fb7b01548bd1af71943dcf1abbeb6448f72"
+    }
+  },
+  "claim_exclusions": [
+    "independent task authorship",
+    "closed G4",
+    "closed G5",
+    "broad continual learning",
+    "general-agent evidence",
+    "AGI",
+    "independent human reproduction",
+    "external deployment authority"
+  ],
+  "claim_if_positive": "bounded continual interference and registry meta-improvement mechanism evidence under an independently maintained SQLite execution interface",
+  "decision": "D071",
+  "decisive_conditions": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15"
+  ],
+  "freeze": {
+    "annotated_tag_required": true,
+    "owner_acceptance_required": true,
+    "owner_authorization_reference": null,
+    "protocol_commit": null,
+    "source_commit": null,
+    "tag": "experiment/m102-frozen-protocol-v1"
+  },
+  "hypothesis": "H47",
+  "information_boundary": {
+    "C_sees": "U1-reached SQLite descriptors and four public trigger cases only",
+    "K_sees": "U0 journal, incoming public events and four public lookup requirements only",
+    "hidden_SQLite_and_reuse_material_after_U2_producer_death": true,
+    "hidden_record_material_after_U1_producer_death": true,
+    "qualification_pool_absent_from_capsules": true,
+    "result_checker_absent_from_acquisition_and_execution_capsules": true
+  },
+  "mechanism": {
+    "digest": "5bf69ab6f0756408ad45846edd516fb378786b50f8aecee8c8939adb7339efd4",
+    "files": [
+      "metamorphosis/m101_runtime.py",
+      "metamorphosis/m101_executor.py",
+      "metamorphosis/m102_runtime.py",
+      "metamorphosis/m102_executor.py",
+      "scripts/run_m102_acquisition_process.py",
+      "scripts/run_m102_fresh_process.py"
+    ],
+    "member_digests": {
+      "metamorphosis/m101_executor.py": "a5ce52dc925c0430c7925aced3c0fef72a2f725214d009f6ec76b131b8c2aaa6",
+      "metamorphosis/m101_runtime.py": "a58e6dd705df8a89724b8cd3cb2f65dc4056c87a7e8932ef8aa71d04b6c81475",
+      "metamorphosis/m102_executor.py": "a91f219d6e6b6bd3f8d2a0aea75cbaca087775490487e83b39f3f395b18788e0",
+      "metamorphosis/m102_runtime.py": "401aaaa7138316bfa0c4c7a96c4dadcb3b67e74fa3f67465e92b97f14aedf0a3",
+      "scripts/run_m102_acquisition_process.py": "2d79194e5dcd1f06af6ab103bc83b35c3190550f1318696c4de113e3bf67b69c",
+      "scripts/run_m102_fresh_process.py": "6ce4e048cb566d794ff52a3c1f7f70acdb20039a6f4cb590df17e83fbfb4c16a"
+    }
+  },
+  "milestone": "M102",
+  "phase_order": [
+    "create_U0_from_exact_M101_T2",
+    "close_flat_image_and_build_K_without_registration",
+    "run_fail_closed_and_destructive_flat_controls",
+    "acquire_register_K_as_U1",
+    "terminate_K_producer",
+    "materialize_record_hidden_and_test_retention",
+    "register_SQLite_events_through_K",
+    "test_no_K_joint_registry_baseline",
+    "build_C_without_registration",
+    "acquire_register_C_as_U2",
+    "terminate_C_producer",
+    "materialize_SQLite_hidden_and_reuse",
+    "execute_retention_and_conservation",
+    "execute_mutation_ablation_corruption_controls",
+    "exact_byte_rollback_and_full_restoration"
+  ],
+  "pre_registration": {
+    "draft_path": "experiments/M102/PROTOCOL_DRAFT.json",
+    "draft_raw_sha256": "ae637048cede8dc71cdffac8aa3a1a6a544c24f52a1e061d47d91b57442606a4",
+    "path": "experiments/M102/PRE_REGISTRATION.md",
+    "raw_sha256": "7b704c362f71ac88f695d25558003bc1e619bc8dc2e73c17b3efeb6c8d2870c4"
+  },
+  "predecessor": {
+    "checker_digest": "95bffc8ba2a0b70d06148c71be3e28b2fc1f64f8655d380430bdedc5c682cb43",
+    "m100_sha256": "fba316a10f294fea4124e460e5a7987cc00b46d3d0e32260ea8cad80b39cf9ac",
+    "m101_t2_raw_sha256": "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0",
+    "m101_t2_state_digest": "b8b042c49538752bd837f8619b91fc9dd0f25bd10aa7bf822ff2107a9bd8a462",
+    "milestone": "M101",
+    "positive_checker_required": true,
+    "preservation_commit": "0bb19744e2782925222ebb83aa56918eb874ab53",
+    "preservation_tag": "experiment/m101-positive-result",
+    "result_digest": "486f33e6673c8ad66f822ba11a91a595a155a65b36f2c5292c9ea200d9dbda35",
+    "stable_evidence_digest": "45f18dc644784d38a598066e53f1b19d8619cf47fc094c8a0456574373565e92"
+  },
+  "protocol_candidate": {
+    "path": "experiments/M102/PROTOCOL_CANDIDATE.json",
+    "raw_sha256": null,
+    "self_binding_deferred_to_final_protocol": true
+  },
+  "publication": {
+    "disposition": "PUBLIC_AGPL_COMMERCIAL_OPTION",
+    "review_raw_sha256": "f999fd54e86b2254d1c4585557a64e6fb08b16d01840e6719b237986e581c731",
+    "review_record": "docs/IP_REVIEWS/M102_PUBLICATION_REVIEW.md"
+  },
+  "publication_disposition": "PUBLIC_AGPL_COMMERCIAL_OPTION",
+  "python_identity": {
+    "implementation": "cpython",
+    "version_info": [
+      3,
+      11,
+      16
+    ]
+  },
+  "qualification_apparatus": {
+    "digest": "809b1fbc8a1c67327a9414c2de6be755bbc6f56e6770b995593b932a7dd712a0",
+    "files": [
+      "experiments/M102/PRE_REGISTRATION.md",
+      "experiments/M102/PROTOCOL_DRAFT.json",
+      "experiments/M102/ADVERSARIAL_REVIEW.md",
+      "experiments/M102/QUALIFICATION_POOL.json",
+      "scripts/author_m102_qualification_pool.py",
+      "scripts/audit_m102_boundaries.py",
+      "scripts/build_m102_protocol.py",
+      "scripts/check_m101_definitions.py",
+      "scripts/check_m102_definitions.py",
+      "scripts/run_m102_qualification.py"
+    ],
+    "member_digests": {
+      "experiments/M102/ADVERSARIAL_REVIEW.md": "3d8af682d570f1894d8cd9f8fde55e2bd77f493d2106caeefb46815aef57618b",
+      "experiments/M102/PRE_REGISTRATION.md": "7b704c362f71ac88f695d25558003bc1e619bc8dc2e73c17b3efeb6c8d2870c4",
+      "experiments/M102/PROTOCOL_DRAFT.json": "ae637048cede8dc71cdffac8aa3a1a6a544c24f52a1e061d47d91b57442606a4",
+      "experiments/M102/QUALIFICATION_POOL.json": "b43a4a5b48808297cf240c3ad774e18ee22382f65287750206c1c5f3f25516ec",
+      "scripts/audit_m102_boundaries.py": "01a357cb4408ca2a5a48a6f2338208988c3af3034f15f90cc0728cf51b3f4905",
+      "scripts/author_m102_qualification_pool.py": "e5a817a90f6825f33075fde984064217e528938e907a025ef7e0b9c363572adc",
+      "scripts/build_m102_protocol.py": "fdd35b2814db316c898c98340077ceab828ce656fdc7a05855be274dc6e4537d",
+      "scripts/check_m101_definitions.py": "2c12d05b527c4a0390287c74eecf7ee25ae264a1610e3f4d92f976657ab84b75",
+      "scripts/check_m102_definitions.py": "3ff791b81f945b49f73a5759e90827329951c8e8c014638551919525f871ecaa",
+      "scripts/run_m102_qualification.py": "f28233033a36fd724722e34532ada909f9a3817e4918fcacc5f879b0d6c9696c"
+    }
+  },
+  "qualification_population": {
+    "path": "experiments/M102/QUALIFICATION_POOL.json",
+    "pool_digest": "3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38",
+    "population_size": 13,
+    "raw_sha256": "b43a4a5b48808297cf240c3ad774e18ee22382f65287750206c1c5f3f25516ec",
+    "reroll": false,
+    "result_dependent_draw": false,
+    "role_counts": {
+      "m100_conservation": 3,
+      "m101_a_conservation": 1,
+      "m101_b_conservation": 1,
+      "policy_producer_trigger": 1,
+      "record_retention": 3,
+      "sqlite_c_reuse": 3,
+      "sqlite_c_trigger": 1
+    },
+    "scientifically_executed_before_freeze": false,
+    "status": "frozen"
+  },
+  "runtime_constraints": {
+    "credential_authority": false,
+    "deployment_authority": false,
+    "fresh_isolated_process_per_scientific_action": true,
+    "model_calls": 0,
+    "network_calls": 0,
+    "official_adoption": "human-controlled and out of scope",
+    "remote_execution_calls": 0,
+    "repository_authority": false
+  },
+  "schema": "m102-protocol-candidate-v1",
+  "sqlite_identity": {
+    "module": "sqlite3",
+    "sqlite_version": "3.53.1",
+    "sqlite_version_info": [
+      3,
+      53,
+      1
+    ]
+  },
+  "stable_projection": {
+    "excluded_keys": [
+      "elapsed_seconds",
+      "pid",
+      "process_pids",
+      "search_path",
+      "started_at_utc"
+    ],
+    "policy_frozen_before_qualification": true,
+    "recursive": true
+  },
+  "status": "owner_review_required",
+  "verdict_rule": "positive_iff_P1_through_P15_are_computed_and_true_else_negative"
+}
