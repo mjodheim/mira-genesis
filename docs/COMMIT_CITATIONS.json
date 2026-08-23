@@ -940,6 +940,14 @@
         "results/M038_TRIGGER_CALIBRATION.md"
       ]
     },
+    "644e0100508faec2a78e07ec4a9ccf2316c79682": {
+      "subject": "fix(m102): bind canonical interpreter identity",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M102/PROTOCOL_CANDIDATE.json"
+      ]
+    },
     "664c385d6b4f14286cbae02b3ae93b2b1420b8dd": {
       "subject": "docs(m038): correct the calibration status, the M036 reading, and nine schema gaps",
       "preserved_by": "main",
