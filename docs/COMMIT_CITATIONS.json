@@ -1995,6 +1995,14 @@
         "experiments/M084/STATUS.md"
       ]
     },
+    "ef7a0945ede28128ebde956effc032aaa85011af": {
+      "subject": "science(m101): freeze stable-process protocol v3",
+      "preserved_by": "experiment/m101-frozen-protocol-v3",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/PRE_RUN_AMENDMENT_003.md"
+      ]
+    },
     "f033ac70628e79550e6263ac2bb60a6769bca42e": {
       "subject": "feat: induce opaque command languages in M068",
       "preserved_by": "main",
