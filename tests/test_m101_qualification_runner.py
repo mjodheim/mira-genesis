@@ -139,7 +139,9 @@ def test_complete_development_chronology_crosses_fresh_processes_and_controls() 
     assert evidence["rollback"]["after_restore"]["runtime"]["confirmed"] is True
     process = evidence["process_boundary"]
     assert process["all_invocations_isolated"] is True
-    assert process["all_processes_distinct"] is True
+    assert process["all_invocation_ordinals_unique_and_contiguous"] is True
+    assert process["synchronous_process_exit_before_next_launch"] is True
+    assert process["fresh_subprocess_launch_source_audited"] is True
     assert process["no_project_modules_imported"] is True
     assert process["repository_absent_from_search_paths"] is True
     development_pool = _development_pool()

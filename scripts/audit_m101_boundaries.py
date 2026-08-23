@@ -16,6 +16,7 @@ FILES = {
     "execution_entry": ROOT / "scripts" / "run_m101_fresh_process.py",
     "definition_checker": ROOT / "scripts" / "check_m101_definitions.py",
     "pool_author": ROOT / "scripts" / "author_m101_qualification_pool.py",
+    "qualification_runner": ROOT / "scripts" / "run_m101_qualification.py",
 }
 
 
@@ -118,6 +119,14 @@ def audit() -> dict[str, Any]:
                 '"fault_was_injected": False',
             )
         )
+    )
+    fresh_launcher = _functions(trees["qualification_runner"])["_fresh"]
+    fresh_launcher_text = ast.unparse(fresh_launcher)
+    checks[
+        "qualification_runner_launches_one_isolated_synchronous_subprocess_per_invocation"
+    ] = all(
+        token in fresh_launcher_text
+        for token in ("subprocess.run", "'-I'", "cwd=capsule", "check=False")
     )
 
     runtime_functions = _functions(trees["acquisition_runtime"])

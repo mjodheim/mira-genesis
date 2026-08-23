@@ -270,13 +270,17 @@ def check_p12(evidence: dict[str, Any]) -> Condition:
     process = evidence.get("process_boundary", {})
     failures: list[str] = []
     for key in (
-        "pid_records_present", "all_processes_distinct", "all_invocations_isolated",
-        "no_project_modules_imported", "repository_absent_from_search_paths",
+        "pid_records_present", "all_invocation_ordinals_unique_and_contiguous",
+        "synchronous_process_exit_before_next_launch", "fresh_subprocess_launch_source_audited",
+        "all_invocations_isolated", "no_project_modules_imported",
+        "repository_absent_from_search_paths",
     ):
         if process.get(key) is not True:
             failures.append(f"process-boundary fact failed: {key}")
     if process.get("fresh_process_invocations") != 42:
         failures.append("complete frozen chronology is not exactly 42 isolated invocations")
+    if process.get("invocation_ordinals") != list(range(1, 43)):
+        failures.append("frozen process chronology ordinals are not exactly 1 through 42")
     capsules = evidence.get("capsules", {})
     if capsules.get("execution", {}).get("members") != ["m101_executor.py", "run.py"]:
         failures.append("execution-only capsule census changed")

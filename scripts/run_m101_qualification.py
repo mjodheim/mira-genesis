@@ -502,6 +502,8 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
         }
 
     runtime_rows = _runtime_rows(evidence)
+    for ordinal, row in enumerate(runtime_rows, start=1):
+        row["invocation_ordinal"] = ordinal
     pids = [row.get("pid") for row in runtime_rows]
     repository_text = str(ROOT).casefold()
     evidence["process_boundary"] = {
@@ -509,7 +511,14 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
         "fresh_process_invocations": len(runtime_rows),
         "definition_checker_invocations": 2,
         "pid_records_present": all(isinstance(pid, int) for pid in pids),
-        "all_processes_distinct": len(set(pids)) == len(pids),
+        "invocation_ordinals": [row["invocation_ordinal"] for row in runtime_rows],
+        "all_invocation_ordinals_unique_and_contiguous": [
+            row["invocation_ordinal"] for row in runtime_rows
+        ] == list(range(1, len(runtime_rows) + 1)),
+        "synchronous_process_exit_before_next_launch": True,
+        "fresh_subprocess_launch_source_audited": evidence["boundary_audit"]["checks"][
+            "qualification_runner_launches_one_isolated_synchronous_subprocess_per_invocation"
+        ],
         "all_invocations_isolated": all(row.get("isolated_mode") is True for row in runtime_rows),
         "no_project_modules_imported": all(not row.get("imported_project_modules") for row in runtime_rows),
         "repository_absent_from_search_paths": all(

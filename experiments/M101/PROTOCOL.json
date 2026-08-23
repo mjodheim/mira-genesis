@@ -3,11 +3,11 @@
   "milestone": "M101",
   "hypothesis": "H46",
   "decision_slot": "D070",
-  "status": "frozen",
+  "status": "freeze_candidate",
   "track": "A",
   "date_authored": "2026-08-23",
-  "date_frozen": "2026-08-23",
-  "canonical_run_allowed": true,
+  "date_frozen": null,
+  "canonical_run_allowed": false,
   "claim": "A carrier-neutral transformation-composition capability acquired from observable text demand, without an explicit target-operation label or access to consumer-family qualification material, can be registered as persistent lineage state, increase constructive reach in fresh record and Python-syntax families relative to an otherwise identical fresh lineage, and become causally necessary to a later demand-derived Python-syntax acquisition while the M100 predecessor state is conserved and hard persistence, live dependency, fault rollback and stable replay remain intact.",
   "claim_boundary": {
     "agi": false,
@@ -39,6 +39,15 @@
       "path": "experiments/M101/PRE_RUN_AMENDMENT_001.md",
       "raw_sha256": "b36ccad6cff9e078d498d50cfe79f4091792030f4195de641951d48dcba56b80",
       "scope": "Git-object freeze verification and annotated-tag peeling only",
+      "scientific_content_changed": false,
+      "pool_executed_before_amendment": false,
+      "result_existed_before_amendment": false
+    },
+    {
+      "id": "PRE_RUN_AMENDMENT_002",
+      "path": "experiments/M101/PRE_RUN_AMENDMENT_002.md",
+      "raw_sha256": "ed2de695b224f2f534c6aeae991c0445b98dc2f637eb4327a72ba1a1a07f1bf3",
+      "scope": "stable fresh-process identity under operating-system PID recycling",
       "scientific_content_changed": false,
       "pool_executed_before_amendment": false,
       "result_existed_before_amendment": false
@@ -201,7 +210,9 @@
     "fresh_process_invocations": 42,
     "definition_checker_invocations": 2,
     "all_runtime_process_ids_required": true,
-    "all_runtime_processes_distinct": true,
+    "invocation_ordinals_unique_and_contiguous": true,
+    "synchronous_process_exit_before_next_launch": true,
+    "fresh_subprocess_launch_source_audited": true,
     "all_invocations_isolated": true,
     "repository_absent_from_search_paths": true,
     "project_modules_outside_capsules_forbidden": true
@@ -217,7 +228,7 @@
     ]
   },
   "qualification_apparatus": {
-    "digest": "ad7c54510d6c727fb92e3ed17c0b3f14753d6c9ee240d14fe220c428c8ea0b1f",
+    "digest": "2c9d39bf96f11874e00fef5ba49ccadb6bb0895c8cee7e45811efb4e943c1b74",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "scripts/author_m101_qualification_pool.py",
@@ -226,7 +237,7 @@
     ]
   },
   "checker": {
-    "digest": "0b897981b89022dfacfe0bb80600afcda810ffcadcaecb9f44e4e4f31494bff2",
+    "digest": "e0fa514147b32d411c27bdbff3de4d9d9e44012ccbc786a4cf934d4af35d0fa8",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "scripts/check_m101_definitions.py",
@@ -268,16 +279,19 @@
   },
   "boundary_audit": {
     "schema": "m101-boundary-audit-v1",
-    "report_digest": "c8827a10c4b3e520f27b32b12be6fa622807f7407ca98124a7b1b9de2f4df26f",
+    "report_digest": "3e29c2654ba223e0002420b7c0ad7f40c7950520bafb5a7412e2892d19aa1633",
     "passed_before_population_freeze": true,
     "scientific_verdict": false
   },
   "freeze": {
-    "status": "frozen",
+    "status": "candidate",
     "apparatus_source_commit": "358d2a683cf0defb0b2a6d72b02cfe311f2b6b0a",
-    "freeze_commit": "405ff2024465b5465b2c1551b47598b94134af18",
-    "freeze_ref": "experiment/m101-frozen-protocol-v2",
-    "supersedes_pre_run_ref": "experiment/m101-frozen-protocol",
+    "freeze_commit": null,
+    "freeze_ref": "experiment/m101-frozen-protocol-v3",
+    "supersedes_pre_run_refs": [
+      "experiment/m101-frozen-protocol",
+      "experiment/m101-frozen-protocol-v2"
+    ],
     "candidate_commit_must_precede_final_freeze_commit": true
   },
   "run_policy": {
