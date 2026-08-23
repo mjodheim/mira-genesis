@@ -635,6 +635,36 @@ def single_atomic_reachable(public_cases: list[dict[str, Any]], catalog: list[At
     return slots is not None
 
 
+def one_atomic_baseline_search(
+    public_cases: list[dict[str, Any]], catalog: list[Atomic], candidate_budget: int
+) -> tuple[list[int] | None, dict[str, Any]]:
+    """Spend a matched budget without ever composing two atomic effects."""
+    if not catalog or candidate_budget < len(catalog):
+        raise ValueError("one-atomic baseline budget is invalid")
+    accepted: list[int] = []
+    for attempt in range(candidate_budget):
+        index = attempt % len(catalog)
+        try:
+            if all(
+                catalog[index].apply(copy.deepcopy(case["input"])) == case["expected"]
+                for case in public_cases
+            ):
+                accepted.append(index)
+        except Exception:
+            continue
+    unique = sorted(set(accepted), key=lambda index: catalog[index].identity)
+    selected = [unique[0]] if unique else None
+    report: dict[str, Any] = {
+        "assembled": candidate_budget,
+        "accepted": len(accepted),
+        "unique_semantic_candidates": len(catalog),
+        "repeated_budget_rounds": candidate_budget // len(catalog),
+    }
+    if selected is not None:
+        report["selected_pipeline_digest"] = digest(catalog[selected[0]].descriptor)
+    return selected, report
+
+
 def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -> Any | None:
     stack: list[Any] = []
     returned = False
@@ -793,7 +823,8 @@ def baseline(demand: dict[str, Any]) -> dict[str, Any]:
     public = decode_public_demand(demand)
     catalog = build_catalog(public)
     public_cases = public["public_cases"]
-    inferred, stats = infer_slots(public_cases, catalog, 1)
+    candidate_budget = len(catalog) ** 2
+    inferred, stats = one_atomic_baseline_search(public_cases, catalog, candidate_budget)
     return {
         "schema": "m101-baseline-v1",
         "world_id": public["world_id"],
@@ -801,6 +832,7 @@ def baseline(demand: dict[str, Any]) -> dict[str, Any]:
         "reachable": inferred is not None,
         "inferred_slot_indices": inferred,
         "search": stats,
+        "candidate_budget": candidate_budget,
         "structural_max_atomic_effects": 1,
         "more_budget_same_language_can_exceed_one_effect": False,
     }

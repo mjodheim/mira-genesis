@@ -70,6 +70,7 @@ DISTRIBUTION_ALIASES = {
 LOCAL_IMPORT_ALIASES = {
     "m098_runtime": "metamorphosis.m098_runtime",
     "m101_executor": "metamorphosis.m101_executor",
+    "m101_runtime": "metamorphosis.m101_runtime",
 }
 
 

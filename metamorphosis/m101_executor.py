@@ -31,6 +31,9 @@ DEFINITION_SCHEMA = "m101-definition-v1"
 RUNTIME_SCHEMA = "m101-fresh-executor-v1"
 A_ORIGIN = "m101-a"
 B_ORIGIN = "m101-b"
+M100_STATE_SCHEMA = "m100-cumulative-operation-language-v1"
+M100_DEFINITION_SCHEMA = "m100-cumulative-operation-v1"
+M097_DEFINITION_SCHEMA = "m097-expression-operation-v1"
 
 FORBIDDEN_A_SUBSTRINGS = (
     "text",
@@ -192,6 +195,135 @@ def _b_call_order(body: list[str], allowed_dependency: str) -> tuple[int, ...] |
     return tuple(order)
 
 
+def _m100_definition_id(body: list[str], dependencies: list[str], origin: str) -> str:
+    if origin == "m097":
+        payload = {"schema": M097_DEFINITION_SCHEMA, "body": body}
+        return "derived-expression-" + digest(payload)[:16]
+    payload = {
+        "schema": M100_DEFINITION_SCHEMA,
+        "body": body,
+        "dependency_ids": dependencies,
+    }
+    return "cumulative-expression-" + digest(payload)[:16]
+
+
+def _m100_dependencies(body: list[str]) -> list[str]:
+    dependencies: list[str] = []
+    for token in body:
+        if token.startswith("CALL:") and token[5:] not in dependencies:
+            dependencies.append(token[5:])
+    return dependencies
+
+
+def _m100_symbolic(
+    body: list[str], signatures: dict[str, tuple[int, int]]
+) -> tuple[int, int] | None:
+    stack: list[tuple[int, int]] = []
+    for token in body:
+        if token == "PUSH_LEFT":
+            stack.append((1, 0))
+        elif token == "PUSH_RIGHT":
+            stack.append((0, 1))
+        elif token == "NEG":
+            if not stack:
+                return None
+            left, right = stack.pop()
+            stack.append((-left, -right))
+        elif token == "SWAP":
+            if len(stack) < 2:
+                return None
+            stack[-1], stack[-2] = stack[-2], stack[-1]
+        else:
+            if len(stack) < 2:
+                return None
+            right = stack.pop()
+            left = stack.pop()
+            if token == "ADD":
+                stack.append((left[0] + right[0], left[1] + right[1]))
+            elif token == "SUB":
+                stack.append((left[0] - right[0], left[1] - right[1]))
+            elif token == "MUL":
+                return None
+            elif token.startswith("CALL:") and token[5:] in signatures:
+                signature = signatures[token[5:]]
+                stack.append(
+                    (
+                        signature[0] * left[0] + signature[1] * right[0],
+                        signature[0] * left[1] + signature[1] * right[1],
+                    )
+                )
+            else:
+                return None
+    return stack[0] if len(stack) == 1 else None
+
+
+def decode_m100_state(raw: bytes) -> dict[str, Any]:
+    try:
+        value = json.loads(raw.decode("ascii"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(f"embedded M100 state is not canonical ASCII JSON: {error}") from error
+    if canonical_json(value).encode("ascii") != raw:
+        raise ValueError("embedded M100 state bytes are not canonical JSON")
+    value = _closed(
+        value,
+        {
+            "schema",
+            "inherited_digest",
+            "origin_m097_state_digest",
+            "operations",
+            "state_digest",
+        },
+        "embedded M100 state",
+    )
+    payload = {key: item for key, item in value.items() if key != "state_digest"}
+    if value["state_digest"] != digest(payload) or value["schema"] != M100_STATE_SCHEMA:
+        raise ValueError("embedded M100 state binding is invalid")
+    operations = value["operations"]
+    if not isinstance(operations, list) or len(operations) != 3:
+        raise ValueError("embedded M100 state is not the complete S3 lineage")
+    signatures: dict[str, tuple[int, int]] = {}
+    for index, raw_definition in enumerate(operations):
+        definition = _closed(
+            raw_definition,
+            {"schema", "operation_id", "origin", "body", "dependency_ids"},
+            "embedded M100 operation",
+        )
+        operation_id = definition["operation_id"]
+        origin = definition["origin"]
+        body = definition["body"]
+        dependencies = definition["dependency_ids"]
+        if definition["schema"] != M100_DEFINITION_SCHEMA:
+            raise ValueError("embedded M100 operation schema mismatch")
+        if not isinstance(operation_id, str) or origin not in {"m097", "m100-cycle"}:
+            raise ValueError("embedded M100 operation identity is invalid")
+        if not isinstance(body, list) or not 0 < len(body) <= 6 or not all(
+            isinstance(token, str) for token in body
+        ):
+            raise ValueError("embedded M100 operation body is invalid")
+        if not isinstance(dependencies, list) or not all(
+            isinstance(dependency, str) for dependency in dependencies
+        ):
+            raise ValueError("embedded M100 dependencies are invalid")
+        if dependencies != _m100_dependencies(body):
+            raise ValueError("embedded M100 live dependencies changed")
+        if operation_id != _m100_definition_id(body, dependencies, str(origin)):
+            raise ValueError("embedded M100 operation address changed")
+        if any(dependency not in signatures for dependency in dependencies):
+            raise ValueError("embedded M100 operation has a missing dependency")
+        if index == 0:
+            if origin != "m097" or dependencies:
+                raise ValueError("embedded M100 A origin changed")
+        elif origin != "m100-cycle":
+            raise ValueError("embedded M100 successor origin changed")
+        signature = _m100_symbolic(body, signatures)
+        if signature is None:
+            raise ValueError("embedded M100 operation is not executable affine state")
+        signatures[operation_id] = signature
+    if list(signatures.values()) != [(1, -1), (1, 1), (1, 2)]:
+        raise ValueError("embedded M100 A/B/C semantics changed")
+    return value
+
+
 def decode_state(raw: bytes) -> dict[str, Any]:
     try:
         decoded = raw.decode("ascii")
@@ -214,6 +346,7 @@ def decode_state(raw: bytes) -> dict[str, Any]:
         raise ValueError("M101 predecessor binding is invalid")
     if sha256_bytes(value["m100_ascii"].encode("ascii")) != value["m100_sha256"]:
         raise ValueError("M100 predecessor bytes changed")
+    decode_m100_state(value["m100_ascii"].encode("ascii"))
     definitions = value["definitions"]
     if not isinstance(definitions, list) or len(definitions) > 2:
         raise ValueError("M101 definition census is invalid")
@@ -485,6 +618,36 @@ def _world(raw: Any) -> dict[str, Any]:
     return value
 
 
+def _m100_world(raw: Any) -> dict[str, Any]:
+    value = _closed(
+        raw,
+        {"id", "role", "carrier", "operation_index", "public_cases", "hidden_cases"},
+        "M101 M100-conservation world",
+    )
+    if not isinstance(value["id"], str) or not value["id"]:
+        raise ValueError("M100-conservation world id is invalid")
+    if value["role"] != "m100_conservation" or value["carrier"] != "m100":
+        raise ValueError("M100-conservation world role is invalid")
+    if value["operation_index"] not in {0, 1, 2}:
+        raise ValueError("M100-conservation operation index is invalid")
+    value["public_cases"] = _cases(value["public_cases"], "M100 world public")
+    value["hidden_cases"] = _cases(value["hidden_cases"], "M100 world hidden")
+    public_ids = {case["case_id"] for case in value["public_cases"]}
+    hidden_ids = {case["case_id"] for case in value["hidden_cases"]}
+    if public_ids & hidden_ids:
+        raise ValueError("M100 world public and hidden case ids overlap")
+    for case in value["public_cases"] + value["hidden_cases"]:
+        arguments = _closed(case["input"], {"left", "right"}, "M100 case input")
+        if any(
+            isinstance(arguments[key], bool) or not isinstance(arguments[key], (int, float))
+            for key in ("left", "right")
+        ):
+            raise ValueError("M100 case input is not numeric")
+        if isinstance(case["expected"], bool) or not isinstance(case["expected"], (int, float)):
+            raise ValueError("M100 case expectation is not numeric")
+    return value
+
+
 def build_catalog(world: dict[str, Any]) -> list[Atomic]:
     atomics = [
         atomic_from_descriptor(str(world["carrier"]), descriptor)
@@ -606,6 +769,50 @@ def _execute_b_body(
     return current if returned else None
 
 
+def _execute_m100_body(
+    body: list[str],
+    definitions: dict[str, dict[str, Any]],
+    left: int | float,
+    right: int | float,
+) -> int | float | None:
+    stack: list[int | float] = []
+    for token in body:
+        if token == "PUSH_LEFT":
+            stack.append(left)
+        elif token == "PUSH_RIGHT":
+            stack.append(right)
+        elif token == "NEG":
+            if not stack:
+                return None
+            stack.append(-stack.pop())
+        elif token == "SWAP":
+            if len(stack) < 2:
+                return None
+            stack[-1], stack[-2] = stack[-2], stack[-1]
+        else:
+            if len(stack) < 2:
+                return None
+            call_right = stack.pop()
+            call_left = stack.pop()
+            if token == "ADD":
+                stack.append(call_left + call_right)
+            elif token == "SUB":
+                stack.append(call_left - call_right)
+            elif token == "MUL":
+                stack.append(call_left * call_right)
+            elif token.startswith("CALL:") and token[5:] in definitions:
+                target = definitions[token[5:]]
+                result = _execute_m100_body(
+                    list(target["body"]), definitions, call_left, call_right
+                )
+                if result is None:
+                    return None
+                stack.append(result)
+            else:
+                return None
+    return stack[0] if len(stack) == 1 else None
+
+
 def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
     if not state["definitions"]:
         raise ValueError("A is not registered")
@@ -682,6 +889,37 @@ def execute_b(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def execute_m100(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
+    predecessor = decode_m100_state(state["m100_ascii"].encode("ascii"))
+    definitions = {
+        str(item["operation_id"]): item for item in predecessor["operations"]
+    }
+    operation = predecessor["operations"][int(world["operation_index"])]
+    outcomes = []
+    for case in world["hidden_cases"]:
+        arguments = case["input"]
+        try:
+            output = _execute_m100_body(
+                list(operation["body"]), definitions, arguments["left"], arguments["right"]
+            )
+            passed = output == case["expected"]
+        except Exception as error:
+            output = {"error": f"{type(error).__name__}: {error}"}
+            passed = False
+        outcomes.append({"case_id": case["case_id"], "passed": passed, "output": output})
+    return {
+        "schema": "m101-m100-conservation-execution-v1",
+        "confirmed": all(item["passed"] for item in outcomes),
+        "operation_index": world["operation_index"],
+        "operation_id": operation["operation_id"],
+        "public_case_ids": [case["case_id"] for case in world["public_cases"]],
+        "hidden_case_ids": [case["case_id"] for case in world["hidden_cases"]],
+        "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
+        "hidden_total": len(outcomes),
+        "outcomes": outcomes,
+    }
+
+
 def _project_modules() -> list[str]:
     return sorted(
         name
@@ -697,11 +935,13 @@ def run(action: str, state_path: Path, world_path: Path) -> dict[str, Any]:
         world_raw = json.loads(world_path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as error:
         raise ValueError(f"world is not JSON: {error}") from error
-    world = _world(world_raw)
+    world = _m100_world(world_raw) if action == "execute-m100" else _world(world_raw)
     if action == "execute-a":
         execution = execute_a(state, world)
     elif action == "execute-b":
         execution = execute_b(state, world)
+    elif action == "execute-m100":
+        execution = execute_m100(state, world)
     else:
         raise ValueError("unknown M101 execution action")
     return {
@@ -722,7 +962,7 @@ def run(action: str, state_path: Path, world_path: Path) -> dict[str, Any]:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("action", choices=("execute-a", "execute-b"))
+    parser.add_argument("action", choices=("execute-a", "execute-b", "execute-m100"))
     parser.add_argument("--state", required=True)
     parser.add_argument("--world", required=True)
     arguments = parser.parse_args()

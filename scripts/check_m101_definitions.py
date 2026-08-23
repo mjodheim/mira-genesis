@@ -19,6 +19,9 @@ DEFINITION_SCHEMA = "m101-definition-v1"
 REPORT_SCHEMA = "m101-definition-validation-v1"
 A_ORIGIN = "m101-a"
 B_ORIGIN = "m101-b"
+M100_STATE_SCHEMA = "m100-cumulative-operation-language-v1"
+M100_DEFINITION_SCHEMA = "m100-cumulative-operation-v1"
+M097_DEFINITION_SCHEMA = "m097-expression-operation-v1"
 
 FORBIDDEN_A_SUBSTRINGS = (
     "text",
@@ -57,6 +60,136 @@ def _definition_id(origin: str, body: list[str], dependencies: list[str]) -> str
     }
     prefix = "generic-combinator" if origin == A_ORIGIN else "syntax-successor"
     return f"{prefix}-{digest(payload)[:16]}"
+
+
+def _m100_id(body: list[str], dependencies: list[str], origin: str) -> str:
+    if origin == "m097":
+        return "derived-expression-" + digest(
+            {"schema": M097_DEFINITION_SCHEMA, "body": body}
+        )[:16]
+    return "cumulative-expression-" + digest(
+        {
+            "schema": M100_DEFINITION_SCHEMA,
+            "body": body,
+            "dependency_ids": dependencies,
+        }
+    )[:16]
+
+
+def _m100_signature(
+    body: list[str], known: dict[str, tuple[int, int]]
+) -> tuple[int, int] | None:
+    stack: list[tuple[int, int]] = []
+    for token in body:
+        if token == "PUSH_LEFT":
+            stack.append((1, 0))
+        elif token == "PUSH_RIGHT":
+            stack.append((0, 1))
+        elif token == "NEG":
+            if not stack:
+                return None
+            left, right = stack.pop()
+            stack.append((-left, -right))
+        elif token == "SWAP":
+            if len(stack) < 2:
+                return None
+            stack[-1], stack[-2] = stack[-2], stack[-1]
+        else:
+            if len(stack) < 2:
+                return None
+            right = stack.pop()
+            left = stack.pop()
+            if token == "ADD":
+                stack.append((left[0] + right[0], left[1] + right[1]))
+            elif token == "SUB":
+                stack.append((left[0] - right[0], left[1] - right[1]))
+            elif token == "MUL":
+                return None
+            elif token.startswith("CALL:") and token[5:] in known:
+                signature = known[token[5:]]
+                stack.append(
+                    (
+                        signature[0] * left[0] + signature[1] * right[0],
+                        signature[0] * left[1] + signature[1] * right[1],
+                    )
+                )
+            else:
+                return None
+    return stack[0] if len(stack) == 1 else None
+
+
+def _validate_m100(raw: bytes) -> list[dict[str, Any]]:
+    try:
+        state = json.loads(raw.decode("ascii"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise ValueError(f"embedded M100 state is not canonical ASCII JSON: {error}") from error
+    if canonical_json(state).encode("ascii") != raw:
+        raise ValueError("embedded M100 state bytes are not canonical JSON")
+    state = _closed(
+        state,
+        {
+            "schema",
+            "inherited_digest",
+            "origin_m097_state_digest",
+            "operations",
+            "state_digest",
+        },
+        "embedded M100 state",
+    )
+    payload = {key: value for key, value in state.items() if key != "state_digest"}
+    if state["schema"] != M100_STATE_SCHEMA or state["state_digest"] != digest(payload):
+        raise ValueError("embedded M100 state binding is invalid")
+    operations = state["operations"]
+    if not isinstance(operations, list) or len(operations) != 3:
+        raise ValueError("embedded M100 state is not the complete S3 lineage")
+    known: dict[str, tuple[int, int]] = {}
+    reports: list[dict[str, Any]] = []
+    for index, raw_operation in enumerate(operations):
+        operation = _closed(
+            raw_operation,
+            {"schema", "operation_id", "origin", "body", "dependency_ids"},
+            "embedded M100 operation",
+        )
+        body = operation["body"]
+        dependencies = operation["dependency_ids"]
+        origin = operation["origin"]
+        operation_id = operation["operation_id"]
+        if operation["schema"] != M100_DEFINITION_SCHEMA:
+            raise ValueError("embedded M100 operation schema mismatch")
+        if not isinstance(operation_id, str) or origin not in {"m097", "m100-cycle"}:
+            raise ValueError("embedded M100 operation identity is invalid")
+        if not isinstance(body, list) or not 0 < len(body) <= 6 or not all(
+            isinstance(token, str) for token in body
+        ):
+            raise ValueError("embedded M100 operation body is invalid")
+        if not isinstance(dependencies, list) or not all(
+            isinstance(dependency, str) for dependency in dependencies
+        ):
+            raise ValueError("embedded M100 dependency list is invalid")
+        observed_dependencies: list[str] = []
+        for token in body:
+            if token.startswith("CALL:") and token[5:] not in observed_dependencies:
+                observed_dependencies.append(token[5:])
+        if dependencies != observed_dependencies or any(
+            dependency not in known for dependency in dependencies
+        ):
+            raise ValueError("embedded M100 live dependency graph changed")
+        if operation_id != _m100_id(body, dependencies, str(origin)):
+            raise ValueError("embedded M100 operation address changed")
+        if (index == 0 and (origin != "m097" or dependencies)) or (
+            index > 0 and origin != "m100-cycle"
+        ):
+            raise ValueError("embedded M100 operation chronology changed")
+        signature = _m100_signature(body, known)
+        if signature is None:
+            raise ValueError("embedded M100 operation has no independent affine signature")
+        known[operation_id] = signature
+        reports.append(
+            {"operation_id": operation_id, "signature": list(signature), "origin": origin}
+        )
+    if [item["signature"] for item in reports] != [[1, -1], [1, 1], [1, 2]]:
+        raise ValueError("embedded M100 A/B/C semantics changed")
+    return reports
 
 
 def _symbolic_a(
@@ -186,6 +319,7 @@ def validate(raw: bytes, *, expected_m100_sha256: str | None = None) -> dict[str
         raise ValueError("M100 predecessor bytes changed")
     if expected_m100_sha256 is not None and measured_m100 != expected_m100_sha256:
         raise ValueError("M100 predecessor differs from the independently expected digest")
+    m100_reports = _validate_m100(state["m100_ascii"].encode("ascii"))
 
     definitions = state["definitions"]
     if not isinstance(definitions, list) or len(definitions) > 2:
@@ -266,6 +400,7 @@ def validate(raw: bytes, *, expected_m100_sha256: str | None = None) -> dict[str
         "state_raw_sha256": hashlib.sha256(raw).hexdigest(),
         "state_digest": state["state_digest"],
         "m100_sha256": measured_m100,
+        "m100_operations": m100_reports,
         "definition_count": len(definitions),
         "definitions": definition_reports,
         "independent_of_runtime_modules": True,
