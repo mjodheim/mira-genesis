@@ -51,6 +51,15 @@
       "scientific_content_changed": false,
       "pool_executed_before_amendment": false,
       "result_existed_before_amendment": false
+    },
+    {
+      "id": "PRE_RUN_AMENDMENT_003",
+      "path": "experiments/M101/PRE_RUN_AMENDMENT_003.md",
+      "raw_sha256": "07183e1b03270ba85a94a45d89e5c9e6d61d25b53c968b01d6d05a2da958f6cc",
+      "scope": "remove the host-side composition shortcut and authored exact-target trace prefilters; restore same-action baseline parity and strengthen all-world dependency controls",
+      "scientific_content_changed": true,
+      "pool_executed_before_amendment": false,
+      "result_existed_before_amendment": false
     }
   ],
   "predecessor": {
@@ -105,9 +114,10 @@
       "RETURN"
     ],
     "maximum_body_length": 5,
-    "search": "complete exhaustive enumeration of every body through the maximum length",
+    "search": "complete exhaustive enumeration of every syntactically well-formed body through the maximum length, with no exact target-trace prefilter",
+    "exact_target_trace_prefilter_allowed": false,
     "selection": "shortest accepted body then canonical content digest",
-    "validator": "independent symbolic trace recomputation over opaque slots, with no runtime or consumer-pool import"
+    "validator": "independent symbolic trace recomputation requiring a permutation of two distinct opaque slots, with no runtime or consumer-pool import"
   },
   "structural_closure": {
     "fresh_baseline_candidate_semantics": "exactly one atomic application",
@@ -115,6 +125,13 @@
     "budget_matching_method": "repeat the complete one-atomic semantic candidate set without composing candidates",
     "maximum_atomic_effects_without_A": 1,
     "more_budget_same_language_can_exceed_one_effect": false,
+    "baseline_and_retained_action": "execute-a",
+    "baseline_and_retained_capsule": "execution",
+    "baseline_and_retained_world_bytes_identical": true,
+    "only_state_difference": [
+      "definitions",
+      "state_digest"
+    ],
     "source_audit_check": "baseline_language_is_exactly_one_atomic_application"
   },
   "cumulative_chain": {
@@ -207,7 +224,7 @@
     "policy_frozen_before_qualification": true
   },
   "process_chronology": {
-    "fresh_process_invocations": 42,
+    "fresh_process_invocations": 44,
     "definition_checker_invocations": 2,
     "all_runtime_process_ids_required": true,
     "invocation_ordinals_unique_and_contiguous": true,
@@ -218,7 +235,7 @@
     "project_modules_outside_capsules_forbidden": true
   },
   "mechanism": {
-    "digest": "dc3ad731bc42c0de52fc8efa1d5027527cffce90f36d18dd972b3ad6e0dfba34",
+    "digest": "94c6fded566fbe207d630feca12c523e0a885c5d52fa67f0695bdeaaa1b54f44",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "metamorphosis/m101_runtime.py",
@@ -228,7 +245,7 @@
     ]
   },
   "qualification_apparatus": {
-    "digest": "2c9d39bf96f11874e00fef5ba49ccadb6bb0895c8cee7e45811efb4e943c1b74",
+    "digest": "aea982b69b388ed63e926cd0a5e435095dd6f31410615611ef4dca5c42430604",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "scripts/author_m101_qualification_pool.py",
@@ -237,7 +254,7 @@
     ]
   },
   "checker": {
-    "digest": "e0fa514147b32d411c27bdbff3de4d9d9e44012ccbc786a4cf934d4af35d0fa8",
+    "digest": "4a65c8fb3bcd5505891a627edd811472e44e451907aead533906a4590c7ef864",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "scripts/check_m101_definitions.py",
@@ -246,57 +263,59 @@
   },
   "capsules": {
     "acquisition": {
-      "digest": "eaf6b58bc7658f577281cebe6536db3bdae16c893df311b652a5c6bd1fd73a46",
+      "digest": "9eab82c30cc4afc48ccd1db937333a2198fffd8a0dee49f6a008d545339e6d2b",
       "members": [
         "m101_runtime.py",
         "run.py"
       ],
       "member_digests": {
-        "m101_runtime.py": "81005fc43c02385f03606a1cf1f056f744df1e6fa22cf6b1536869f094cbb3bd",
-        "run.py": "148c3494bd99008ce25e4746e78eac9cd9d957f1332426d8b3f7a37e4d892d0d"
+        "m101_runtime.py": "a58e6dd705df8a89724b8cd3cb2f65dc4056c87a7e8932ef8aa71d04b6c81475",
+        "run.py": "1cd08690236a226220e8936751f80ee2325a22b5e0aa40e1a2b86b140678f8ce"
       }
     },
     "execution": {
-      "digest": "0308e64e8d43e30e985c713afd9023c342caae1cf056aed2f32363234e99dc25",
+      "digest": "8441b36d92a2600ec3d9bd59ad70c1868fffdab5feacd05b69bc01c65fac4516",
       "members": [
         "m101_executor.py",
         "run.py"
       ],
       "member_digests": {
-        "m101_executor.py": "0b5957e80d457f0240110cbf6c5750a16cd4afe46c36ed0170f61738d36820ef",
+        "m101_executor.py": "a5ce52dc925c0430c7925aced3c0fef72a2f725214d009f6ec76b131b8c2aaa6",
         "run.py": "6b651a6cb368958d7f495942cbe5ed5fb4552953ee43bd964c35947474a0ae9a"
       }
     },
     "definition_checker": {
-      "digest": "0ea998ae4f220310e4818518640234ce2b51d01d41573c35dd47d2cc1e49ae52",
+      "digest": "0771906a3f210a1b778a238460c388c1b105c7a9856ac93daac5decef9a25696",
       "members": [
         "check.py"
       ],
       "member_digests": {
-        "check.py": "05b35116c24caab94734550f4415e5b00643b31fbfe2d2452f6018accb056678"
+        "check.py": "2c12d05b527c4a0390287c74eecf7ee25ae264a1610e3f4d92f976657ab84b75"
       }
     }
   },
   "boundary_audit": {
     "schema": "m101-boundary-audit-v1",
-    "report_digest": "3e29c2654ba223e0002420b7c0ad7f40c7950520bafb5a7412e2892d19aa1633",
-    "passed_before_population_freeze": true,
+    "report_digest": "c518f221e00b421af671e07dad743ff354bb6b08416de723c722cc22a0fc764a",
+    "passed_before_final_protocol_freeze": true,
     "scientific_verdict": false
   },
   "freeze": {
     "status": "frozen",
-    "apparatus_source_commit": "358d2a683cf0defb0b2a6d72b02cfe311f2b6b0a",
-    "freeze_commit": "b0d0dfadfdb932f09493f17d5b11615c44cca9d3",
-    "freeze_ref": "experiment/m101-frozen-protocol-v3",
+    "apparatus_source_commit": "cf97fbbd8d683648157a527f2f833daa6d32c6a2",
+    "freeze_commit": "cf97fbbd8d683648157a527f2f833daa6d32c6a2",
+    "freeze_ref": "experiment/m101-frozen-protocol-v4",
     "supersedes_pre_run_refs": [
       "experiment/m101-frozen-protocol",
-      "experiment/m101-frozen-protocol-v2"
+      "experiment/m101-frozen-protocol-v2",
+      "experiment/m101-frozen-protocol-v3"
     ],
     "candidate_commit_must_precede_final_freeze_commit": true
   },
   "run_policy": {
     "armed_write_required": true,
     "canonical_first_run_is_local": true,
+    "explicit_owner_authorization_required": true,
     "no_post_verdict_repair": true,
     "no_reroll": true,
     "no_overwrite": true,

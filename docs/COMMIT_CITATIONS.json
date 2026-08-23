@@ -1758,6 +1758,14 @@
         "experiments/M020/STATUS.md"
       ]
     },
+    "cf97fbbd8d683648157a527f2f833daa6d32c6a2": {
+      "subject": "fix(m101): remove authored target traces",
+      "preserved_by": "experiment/m101-frozen-protocol-v4",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/PROTOCOL.json"
+      ]
+    },
     "d01ac6c34f15a4885fe4ff4600ee487f135082ae": {
       "subject": "m073: freeze external teacher execution before calls",
       "preserved_by": "main",
