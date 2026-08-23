@@ -71,7 +71,7 @@ GitHub Actions et aux hashes d'artefacts publiés dans `results/`.
 ## Retrait R003 — workflows de jalons restés exécutables
 
 - Date : 23 août 2026
-- Dernier commit avant retrait : `d79706550d35eb74e243e4253abe6e097b10fef8`
+- Retrait réalisé dans : PR #187 (historique Git de la réorganisation)
 - Copies exactes conservées dans `archives/workflows/`
 - Total : 25 workflows retirés de la surface GitHub Actions active
 
@@ -98,7 +98,7 @@ la politique d'attribution. Le cycle de vie est désormais documenté dans
 ## Retrait R004 — Dockerfile sans entrée d'exécution supportée
 
 - Date : 23 août 2026
-- Dernier commit contenant le fichier : `8e578e0258b600787b859aceb4e63ae7223ad9a7`
+- Retrait réalisé dans : PR #187 (le fichier reste consultable dans l'historique Git)
 - Fichier retiré : `Dockerfile`
 
 Le Dockerfile installait le paquet puis déclarait `ENTRYPOINT ["mira-run"]`. La configuration
