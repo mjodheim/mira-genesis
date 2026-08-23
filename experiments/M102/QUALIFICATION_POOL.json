@@ -617,7 +617,7 @@
       }
     },
     {
-      "entry_digest": "9ca608b52791a5851434910576255cc30dba7b42b3247ab4576cdd5518766dfe",
+      "entry_digest": "4023afdc6789d03fba13f7b3d586b165bc96e4681670254e5cec219f09b784bf",
       "world": {
         "carrier": "sqlite",
         "events": [
@@ -630,9 +630,9 @@
               "table": "qualified_objects",
               "type": "INTEGER"
             },
-            "event_id": "registry-event-dcfbddaac1a24446",
+            "event_id": "registry-event-b253c9e5badd5173",
             "schema": "m102-registry-event-v1",
-            "slot": "sql_expand"
+            "slot": "alpha_prepare"
           },
           {
             "carrier": "sqlite",
@@ -642,9 +642,9 @@
               "table": "qualified_objects",
               "target": "caption_size"
             },
-            "event_id": "registry-event-b4458ac14c5476db",
+            "event_id": "registry-event-652a04ccc9b9fafc",
             "schema": "m102-registry-event-v1",
-            "slot": "sql_derive"
+            "slot": "beta_finish"
           },
           {
             "carrier": "sqlite",
@@ -654,9 +654,9 @@
               "old": "title_text",
               "table": "qualified_objects"
             },
-            "event_id": "registry-event-ff6e847b56756419",
+            "event_id": "registry-event-a43585e44399b5c0",
             "schema": "m102-registry-event-v1",
-            "slot": "sql_rename"
+            "slot": "gamma_prepare"
           },
           {
             "carrier": "sqlite",
@@ -669,9 +669,9 @@
               "name": "idx_qualified_caption_size",
               "table": "qualified_objects"
             },
-            "event_id": "registry-event-8dce82426bb3072d",
+            "event_id": "registry-event-e089adf2c3fe6da8",
             "schema": "m102-registry-event-v1",
-            "slot": "sql_index"
+            "slot": "alpha_finish"
           }
         ],
         "hidden_cases": [
@@ -1165,15 +1165,15 @@
         ],
         "role": "sqlite_c_trigger",
         "slots": [
-          "sql_expand",
-          "sql_derive",
-          "sql_rename",
-          "sql_index"
+          "alpha_prepare",
+          "beta_finish",
+          "gamma_prepare",
+          "alpha_finish"
         ]
       }
     },
     {
-      "entry_digest": "b593665e99ac6d86a82d95331c9960d041b391e3bfcabe6fe5860e9a6e71cfd7",
+      "entry_digest": "40179f5d4138f35028428ab0cfa28d2cb755bc8a10b9029acd9316ba413b0aa9",
       "world": {
         "carrier": "sqlite",
         "hidden_cases": [
@@ -1703,15 +1703,15 @@
         ],
         "role": "sqlite_c_reuse",
         "slots": [
-          "sql_expand",
-          "sql_derive",
-          "sql_rename",
-          "sql_index"
+          "alpha_prepare",
+          "beta_finish",
+          "gamma_prepare",
+          "alpha_finish"
         ]
       }
     },
     {
-      "entry_digest": "c5cc8d25c53b2dfc6952058fa8d8866d33d82f54ac4095088e6adddd5ed124c4",
+      "entry_digest": "c37eb0c5ff8837ac9036e0a12db2fd3757f686126a6c2afcc8754d41d717f309",
       "world": {
         "carrier": "sqlite",
         "hidden_cases": [
@@ -2169,15 +2169,15 @@
         ],
         "role": "sqlite_c_reuse",
         "slots": [
-          "sql_expand",
-          "sql_derive",
-          "sql_rename",
-          "sql_index"
+          "alpha_prepare",
+          "beta_finish",
+          "gamma_prepare",
+          "alpha_finish"
         ]
       }
     },
     {
-      "entry_digest": "8bbd363506d528a8941497d98d3c7b6ef5bee65e3fcdeb9a1be969fff884bd08",
+      "entry_digest": "40080d8fcbc46c512760233f9c03403b8095678035c1406a209dbe8ab97c29d9",
       "world": {
         "carrier": "sqlite",
         "hidden_cases": [
@@ -2707,10 +2707,10 @@
         ],
         "role": "sqlite_c_reuse",
         "slots": [
-          "sql_expand",
-          "sql_derive",
-          "sql_rename",
-          "sql_index"
+          "alpha_prepare",
+          "beta_finish",
+          "gamma_prepare",
+          "alpha_finish"
         ]
       }
     },
@@ -3087,7 +3087,7 @@
   ],
   "m101_qualification_worlds_excluded": true,
   "milestone": "M102",
-  "pool_digest": "2cf4516742f2842a0a81ccbad5c71bc40dc265bb9649edfa846fe0fa5eba91b3",
+  "pool_digest": "c68877ad3f2e8a18c6addfc5c85fb1e7d6612645173289c4e82f7aa81ef920b2",
   "population_size": 13,
   "preflight_boundary": "closed-schema construction, digest checks, AST parsing, and independent raw SQLite model materialisation only; K/C acquisition, registry migration, transfer, baseline, hidden scoring, mutation, ablation, rollback and replay are forbidden before freeze",
   "requirements_per_source": {

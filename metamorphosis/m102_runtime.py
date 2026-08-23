@@ -1096,11 +1096,15 @@ def acquire_c(
 ) -> dict[str, Any]:
     checked = decode_state(state)
     public = decode_c_demand(demand)
-    if checked["policy"]["origin"] != ACQUIRED_POLICY_ORIGIN:
+    if checked["c_definition"] is not None:
+        raise ValueError("C acquisition requires pre-C state")
+    try:
+        registry_index(checked)
+    except ValueError:
         return {
             "schema": "m102-c-acquisition-v1",
             "confirmed": False,
-            "reason": "registered acquired policy K is required",
+            "reason": "joint registered descriptors are unrepresentable by the live policy",
             "assembled": 0,
             "well_formed": 0,
             "accepted": 0,
@@ -1108,9 +1112,6 @@ def acquire_c(
             "next_state": None,
             "public_case_ids": [item["case_id"] for item in public["public_cases"]],
         }
-    if checked["c_definition"] is not None:
-        raise ValueError("C acquisition requires pre-C state")
-    registry_index(checked)
     m101_state = m101_runtime.decode_state(checked["m101_ascii"].encode("ascii"))
     _a_id, b_id = _m101_ids(m101_state)
     slots = public["slots"]
@@ -1253,6 +1254,19 @@ def mutate_policy_to_flat(state: dict[str, Any]) -> dict[str, Any]:
             checked["m101_ascii"].encode("ascii"), flat, checked["journal"], c_item
         )
     )
+
+
+def ablate_policy_raw(state: dict[str, Any]) -> bytes:
+    """Remove K without re-addressing C, producing a digest-valid fail-closed state."""
+    checked = decode_state(state)
+    return canonical_json(
+        _state(
+            checked["m101_ascii"].encode("ascii"),
+            inherited_flat_policy(),
+            checked["journal"],
+            checked["c_definition"],
+        )
+    ).encode("ascii")
 
 
 def mutate_c_duplicate_effect(state: dict[str, Any]) -> dict[str, Any]:

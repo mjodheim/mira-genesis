@@ -159,7 +159,7 @@ def _sqlite_world(
         "id": world_id,
         "role": role,
         "carrier": "sqlite",
-        "slots": ["sql_expand", "sql_derive", "sql_rename", "sql_index"],
+        "slots": ["alpha_prepare", "beta_finish", "gamma_prepare", "alpha_finish"],
         "public_cases": public,
         "hidden_cases": hidden,
     }
@@ -397,7 +397,7 @@ def authored_worlds() -> list[dict[str, Any]]:
     sqlite_events = [
         _event(
             "sqlite",
-            "sql_expand",
+            "alpha_prepare",
             {
                 "kind": "add_column",
                 "table": "qualified_objects",
@@ -408,7 +408,7 @@ def authored_worlds() -> list[dict[str, Any]]:
         ),
         _event(
             "sqlite",
-            "sql_derive",
+            "beta_finish",
             {
                 "kind": "backfill_length",
                 "table": "qualified_objects",
@@ -418,7 +418,7 @@ def authored_worlds() -> list[dict[str, Any]]:
         ),
         _event(
             "sqlite",
-            "sql_rename",
+            "gamma_prepare",
             {
                 "kind": "rename_column",
                 "table": "qualified_objects",
@@ -428,7 +428,7 @@ def authored_worlds() -> list[dict[str, Any]]:
         ),
         _event(
             "sqlite",
-            "sql_index",
+            "alpha_finish",
             {
                 "kind": "create_index",
                 "table": "qualified_objects",

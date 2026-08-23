@@ -191,6 +191,8 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
         control = str(arguments.control)
         if control == "flat-policy":
             output = runtime.encode_state(runtime.mutate_policy_to_flat(state))
+        elif control == "policy-ablate":
+            output = runtime.ablate_policy_raw(state)
         elif control == "c-duplicate":
             output = runtime.encode_state(runtime.mutate_c_duplicate_effect(state))
         elif control == "c-ablate":
@@ -255,7 +257,15 @@ def main() -> int:
     parser.add_argument("--register", action="store_true")
     parser.add_argument(
         "--control",
-        choices=("flat-policy", "c-duplicate", "c-ablate", "b-order", "b-ablate", "corrupt"),
+        choices=(
+            "flat-policy",
+            "policy-ablate",
+            "c-duplicate",
+            "c-ablate",
+            "b-order",
+            "b-ablate",
+            "corrupt",
+        ),
     )
     parser.add_argument("--restore")
     arguments = parser.parse_args()

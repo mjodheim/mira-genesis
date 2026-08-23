@@ -287,6 +287,21 @@ def test_c_is_demand_derived_and_depends_on_live_m101_b(
     )
 
 
+def test_c_without_k_fails_from_unrepresentable_joint_registry_not_host_gate(
+    u0: dict[str, object],
+) -> None:
+    flat_joint = runtime.force_last_write_events(
+        u0, [*_incoming_events(), *_sqlite_events()]
+    )
+    result = runtime.acquire_c(flat_joint, _c_demand(), register_result=False)
+    assert result["confirmed"] is False
+    assert result["assembled"] == 0
+    assert result["reason"] == (
+        "joint registered descriptors are unrepresentable by the live policy"
+    )
+    assert "required" not in result["reason"]
+
+
 def test_c_decoder_rejects_a_dead_declared_b_dependency(
     u2: dict[str, object],
 ) -> None:
@@ -362,6 +377,17 @@ def test_b_ablation_is_content_addressed_but_fails_closed(u2: dict[str, object])
         "m101_sha256"
     ]
     with pytest.raises(ValueError, match="requires exact M101 T2"):
+        runtime.decode_state(raw)
+
+
+def test_k_ablation_is_content_addressed_but_c_dependency_fails_closed(
+    u2: dict[str, object],
+) -> None:
+    raw = runtime.ablate_policy_raw(u2)
+    outer = json.loads(raw.decode("ascii"))
+    payload = {key: value for key, value in outer.items() if key != "state_digest"}
+    assert outer["state_digest"] == runtime.digest(payload)
+    with pytest.raises(ValueError, match="live registry policy"):
         runtime.decode_state(raw)
 
 
