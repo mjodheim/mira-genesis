@@ -97,7 +97,9 @@ def test_result_checker_does_not_import_m102_implementation() -> None:
 
 
 def test_protocol_candidate_is_exact_but_cannot_arm_a_run() -> None:
-    candidate = protocol_builder.build_candidate()
+    candidate = json.loads(
+        (ROOT / "experiments/M102/PROTOCOL_CANDIDATE.json").read_text(encoding="utf-8")
+    )
     assert candidate["status"] == "owner_review_required"
     assert candidate["canonical_run_allowed"] is False
     assert candidate["attempt"] == 1
@@ -106,10 +108,20 @@ def test_protocol_candidate_is_exact_but_cannot_arm_a_run() -> None:
         "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0"
     )
     assert candidate["freeze"]["owner_acceptance_required"] is True
-    assert candidate["python_identity"]["implementation"] == "cpython"
-    assert candidate["python_identity"]["version_info"][:2] == [3, 11]
+    assert candidate["python_identity"] == protocol_builder.CANONICAL_PYTHON_IDENTITY
+    assert candidate["sqlite_identity"] == protocol_builder.CANONICAL_SQLITE_IDENTITY
     with pytest.raises(ValueError, match="source commit"):
         protocol_builder.build_final("not-a-commit", "not-authorized")
+
+
+def test_protocol_builder_refuses_a_noncanonical_runtime(monkeypatch) -> None:
+    monkeypatch.setattr(
+        protocol_builder,
+        "_current_python_identity",
+        lambda: {"implementation": "cpython", "version_info": [3, 13, 7]},
+    )
+    with pytest.raises(RuntimeError, match="canonical CPython 3.11.16"):
+        protocol_builder.build_candidate()
 
 
 def test_no_m102_scientific_result_exists_before_freeze() -> None:

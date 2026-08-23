@@ -60,6 +60,16 @@ APPARATUS_FILES = [
 
 CHECKER_FILES = ["scripts/check_m102_result.py"]
 
+CANONICAL_PYTHON_IDENTITY = {
+    "implementation": "cpython",
+    "version_info": [3, 11, 16],
+}
+CANONICAL_SQLITE_IDENTITY = {
+    "module": "sqlite3",
+    "sqlite_version": "3.53.1",
+    "sqlite_version_info": [3, 53, 1],
+}
+
 
 def _raw_sha256(path: str) -> str:
     return hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
@@ -78,6 +88,40 @@ def _git_head() -> str:
 def _bound_files(paths: list[str]) -> dict[str, Any]:
     measured, members = file_set_digest(paths)
     return {"files": paths, "member_digests": members, "digest": measured}
+
+
+def _current_python_identity() -> dict[str, Any]:
+    return {
+        "implementation": sys.implementation.name,
+        "version_info": [
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ],
+    }
+
+
+def _current_sqlite_identity() -> dict[str, Any]:
+    return {
+        "module": "sqlite3",
+        "sqlite_version": sqlite3.sqlite_version,
+        "sqlite_version_info": list(sqlite3.sqlite_version_info),
+    }
+
+
+def _require_canonical_runtime() -> None:
+    python_identity = _current_python_identity()
+    sqlite_identity = _current_sqlite_identity()
+    if python_identity != CANONICAL_PYTHON_IDENTITY:
+        raise RuntimeError(
+            "M102 protocol construction requires canonical CPython 3.11.16; "
+            f"observed {python_identity}"
+        )
+    if sqlite_identity != CANONICAL_SQLITE_IDENTITY:
+        raise RuntimeError(
+            "M102 protocol construction requires canonical SQLite 3.53.1; "
+            f"observed {sqlite_identity}"
+        )
 
 
 def _predecessor() -> dict[str, Any]:
@@ -158,19 +202,8 @@ def _base() -> dict[str, Any]:
         "qualification_apparatus": _bound_files(APPARATUS_FILES),
         "checker": _bound_files(CHECKER_FILES),
         "capsules": _capsules(),
-        "sqlite_identity": {
-            "module": "sqlite3",
-            "sqlite_version": sqlite3.sqlite_version,
-            "sqlite_version_info": list(sqlite3.sqlite_version_info),
-        },
-        "python_identity": {
-            "implementation": sys.implementation.name,
-            "version_info": [
-                sys.version_info.major,
-                sys.version_info.minor,
-                sys.version_info.micro,
-            ],
-        },
+        "sqlite_identity": CANONICAL_SQLITE_IDENTITY,
+        "python_identity": CANONICAL_PYTHON_IDENTITY,
         "stable_projection": {
             "excluded_keys": sorted(EPHEMERAL_KEYS),
             "recursive": True,
@@ -242,6 +275,7 @@ def _base() -> dict[str, Any]:
 
 
 def build_candidate() -> dict[str, Any]:
+    _require_canonical_runtime()
     value = {
         "schema": "m102-protocol-candidate-v1",
         "status": "owner_review_required",
@@ -272,6 +306,7 @@ def build_final(source_commit: str, owner_authorization_reference: str) -> dict[
         raise ValueError("final M102 source commit must equal the current frozen-source HEAD")
     if not owner_authorization_reference.strip():
         raise ValueError("owner authorization reference is required")
+    _require_canonical_runtime()
     pool = load_pool()
     if pool["status"] != "frozen":
         raise ValueError("M102 pool must be frozen before final protocol construction")

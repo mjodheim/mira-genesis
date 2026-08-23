@@ -244,6 +244,16 @@ def audit() -> dict[str, Any]:
             "CANDIDATE_PATH.exists()",
         )
     ) and "i_accept_frozen_protocol" in sources["protocol_builder"]
+    canonical_runtime_text = ast.unparse(
+        functions["protocol_builder"]["_require_canonical_runtime"]
+    )
+    checks["protocol_builder_requires_exact_canonical_runtime"] = all(
+        token in canonical_runtime_text
+        for token in ("CANONICAL_PYTHON_IDENTITY", "CANONICAL_SQLITE_IDENTITY", "raise RuntimeError")
+    ) and all(
+        "_require_canonical_runtime()" in ast.unparse(functions["protocol_builder"][name])
+        for name in ("build_candidate", "build_final")
+    )
     run_text = sources["qualification_runner"]
     checks["hidden_materialisation_follows_producer_state_creation_in_source_order"] = (
         run_text.index("u1_path = base / \"U1.json\"")

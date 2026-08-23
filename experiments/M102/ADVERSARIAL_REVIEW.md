@@ -50,6 +50,20 @@ Correction: the M102 conservation world uses semantic `wrap_return(abs)` as the 
 keeps docstring insertion only as a distractor. The change was made before freeze and before any
 qualification execution.
 
+### F4 — protocol construction did not fail closed outside the canonical runtime
+
+The first owner-review candidate recorded CPython 3.11.16 and SQLite 3.53.1, but its builder derived
+those fields from the interpreter that invoked it. The Python 3.13 CI matrix therefore constructed
+an alternate candidate instead of refusing construction. The frozen runner would later have bound
+that alternate identity consistently, so the original candidate alone did not prevent a runtime
+substitution before final freeze.
+
+Correction: candidate and final protocol construction now require the exact canonical CPython
+3.11.16 and SQLite 3.53.1 identities and fail closed otherwise. The multi-version CI test reads the
+committed candidate as evidence and separately mutates the observed runtime identity to verify the
+refusal. This correction occurred before final protocol acceptance and before any qualification
+execution; it requires a superseding owner-review candidate with fresh apparatus bindings.
+
 ## Shortcut and leakage audit
 
 The current source audit verifies all of the following:
