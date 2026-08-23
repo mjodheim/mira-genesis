@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import json
 from typing import Any
 
 import pytest
@@ -108,6 +109,7 @@ def test_projection_removes_only_the_recursive_frozen_ephemera() -> None:
         "nested": {"confirmed": True},
         "fresh_process_invocations": 4,
     }
+    assert checker.checker_stable_projection(value) == runner.stable_projection(value)
 
 
 def test_frozen_population_cannot_cross_the_boundary_without_armed_materialize() -> None:
@@ -115,6 +117,16 @@ def test_frozen_population_cannot_cross_the_boundary_without_armed_materialize()
         runner.run_experiment({"status": "frozen", "entries": []})
     with pytest.raises(runner.QualificationRefused, match="requires --arm"):
         runner.materialize()
+
+
+def test_predecessor_verifier_requires_the_exact_positive_m100_record() -> None:
+    protocol = json.loads(runner.PROTOCOL_PATH.read_text(encoding="utf-8"))
+    runner.verify_predecessor(protocol)
+
+    moved = deepcopy(protocol)
+    moved["predecessor"]["stable_evidence_digest"] = "0" * 64
+    with pytest.raises(runner.QualificationRefused, match="stable_evidence_digest"):
+        runner.verify_predecessor(moved)
 
 
 def test_complete_development_chronology_crosses_fresh_processes_and_controls() -> None:
@@ -145,7 +157,9 @@ def test_complete_development_chronology_crosses_fresh_processes_and_controls() 
     controls = evidence["dependency_controls"]
     assert all(row["runtime"]["confirmed"] is False for row in controls["fault_breaks_all_b_worlds"])
     assert controls["ablate_a"]["runtime"]["failed_closed"] is True
-    assert controls["ablate_b"]["runtime"]["failed_closed"] is True
+    assert controls["ablate_b_equals_t1"] is True
+    assert len(controls["ablate_b"]) == len(evidence["b_reuse"])
+    assert all(row["runtime"]["failed_closed"] is True for row in controls["ablate_b"])
     assert controls["a_survives_b_ablation"]["runtime"]["confirmed"] is True
     assert controls["corrupt_state"]["runtime"]["failed_closed"] is True
     assert evidence["rollback"]["restored_bytes_equal"] is True
@@ -191,3 +205,14 @@ def test_checker_rejects_baseline_parity_shortcuts_even_if_summary_bit_is_forged
     condition = checker.check_p8(extra_state_difference)
     assert condition.passed is False
     assert "baseline/retained state diff is not exactly A plus its digest" in condition.failures
+
+    invalid_t2_definition = deepcopy(evidence)
+    invalid_t2_definition["definition_validation"]["T2"]["returncode"] = 1
+    condition = checker.check_p10(invalid_t2_definition)
+    assert condition.passed is False
+    assert "independent T2 definition validation failed" in condition.failures
+
+    missing_b_world_control = deepcopy(evidence)
+    missing_b_world_control["dependency_controls"]["ablate_b"] = []
+    assert checker.check_p9(missing_b_world_control).passed is False
+    assert checker.check_p13(missing_b_world_control).passed is False

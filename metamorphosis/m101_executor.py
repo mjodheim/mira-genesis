@@ -395,7 +395,8 @@ def decode_state(raw: bytes) -> dict[str, Any]:
                 raise ValueError("only B may follow A")
             if item["dependencies"] != [a_id]:
                 raise ValueError("B does not retain exactly one live A dependency")
-            if _b_call_order(list(item["body"]), a_id) != (0, 1, 2):
+            b_order = _b_call_order(list(item["body"]), a_id)
+            if b_order is None or sorted(b_order) != [0, 1, 2]:
                 raise ValueError("B does not encode the required three-effect order through A")
         seen[str(item["definition_id"])] = item
     return value

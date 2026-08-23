@@ -15,6 +15,7 @@ FILES = {
     "acquisition_entry": ROOT / "scripts" / "run_m101_acquisition_process.py",
     "execution_entry": ROOT / "scripts" / "run_m101_fresh_process.py",
     "definition_checker": ROOT / "scripts" / "check_m101_definitions.py",
+    "result_checker": ROOT / "scripts" / "check_m101_result.py",
     "pool_author": ROOT / "scripts" / "author_m101_qualification_pool.py",
     "qualification_runner": ROOT / "scripts" / "run_m101_qualification.py",
 }
@@ -73,6 +74,16 @@ def audit() -> dict[str, Any]:
             "strip", "upper", "lower", "sort", "docstring",
         )
     )
+    b_executor_text = ast.unparse(
+        _functions(trees["execution_runtime"])["_execute_b_body"]
+    ).lower()
+    checks["b_execution_path_is_carrier_neutral"] = not any(
+        term in b_executor_text
+        for term in (
+            "text", "record", "mapping", "syntax", "ast", "rename",
+            "strip", "upper", "lower", "sort", "docstring",
+        )
+    )
     checks["carrier_specific_code_is_confined_to_atomic_adapters"] = all(
         name in execution_functions
         for name in ("_text_atomic", "_record_atomic", "_syntax_atomic", "atomic_from_descriptor")
@@ -96,6 +107,10 @@ def audit() -> dict[str, Any]:
         token not in sources["acquisition_entry"] + sources["acquisition_runtime"]
         for token in ("QUALIFICATION_POOL", "author_m101", "hidden_cases")
     )
+    checks["acquisition_capsule_has_no_ambient_payload_or_repository_enumerator"] = all(
+        token not in sources["acquisition_entry"] + sources["acquisition_runtime"]
+        for token in (".glob(", ".rglob(", ".iterdir(", "os.listdir", "os.walk", "ROOT =")
+    )
     checks["acquisition_api_uses_closed_public_projection"] = all(
         token in sources["acquisition_runtime"]
         for token in ("PUBLIC_DEMAND_SCHEMA", "decode_public_demand", "public_case_ids")
@@ -107,6 +122,10 @@ def audit() -> dict[str, Any]:
     }
     checks["definition_checker_recomputes_symbolic_a_and_b"] = all(
         name in _functions(trees["definition_checker"]) for name in ("_symbolic_a", "_symbolic_b")
+    )
+    checks["result_checker_owns_the_stable_projection"] = (
+        "def checker_stable_projection" in sources["result_checker"]
+        and "stable_projection," not in sources["result_checker"]
     )
     checks["pool_author_is_source_only_and_mechanism_free"] = (
         not _imports(trees["pool_author"])
@@ -130,6 +149,17 @@ def audit() -> dict[str, Any]:
     )
 
     runtime_functions = _functions(trees["acquisition_runtime"])
+    acquisition_search_text = (
+        ast.unparse(runtime_functions["acquire_a"])
+        + ast.unparse(runtime_functions["acquire_b"])
+    )
+    checks["acquisition_search_does_not_prefilter_exact_target_trace"] = all(
+        token not in acquisition_search_text
+        for token in (
+            "_a_call_order(body) != (0, 1)",
+            "_b_call_order(body, a_id) != (0, 1, 2)",
+        )
+    )
     t0_baseline = _functions(trees["execution_runtime"])["_execute_t0_baseline"]
     t0_baseline_text = ast.unparse(t0_baseline)
     checks["baseline_language_is_exactly_one_atomic_application"] = (
@@ -161,6 +191,30 @@ def audit() -> dict[str, Any]:
             'baseline_envelope["action"]',
             'retained_envelope["action"]',
             'differing_state_keys == ["definitions", "state_digest"]',
+        )
+    )
+    capsule_source = "".join(
+        sources[name]
+        for name in (
+            "acquisition_runtime", "execution_runtime", "acquisition_entry", "execution_entry"
+        )
+    )
+    capsule_imports = set().union(
+        *(
+            _imports(trees[name])
+            for name in (
+                "acquisition_runtime", "execution_runtime", "acquisition_entry", "execution_entry"
+            )
+        )
+    )
+    checks["capsules_have_no_model_network_or_dynamic_code_path"] = (
+        not capsule_imports
+        & {
+            "anthropic", "http", "openai", "requests", "socket", "urllib", "webbrowser"
+        }
+        and all(
+            token not in capsule_source
+            for token in ("__import__(", "eval(", "exec(", "compile(")
         )
     )
 

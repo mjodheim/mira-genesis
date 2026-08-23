@@ -358,8 +358,8 @@ def validate(raw: bytes, *, expected_m100_sha256: str | None = None) -> dict[str
             if item["origin"] != A_ORIGIN or dependencies:
                 raise ValueError("the first M101 definition must be dependency-free A")
             trace = _symbolic_a(body)
-            if trace != (0, 1):
-                raise ValueError("A symbolic semantics are not slot 0 followed by slot 1")
+            if trace is None or sorted(trace) != [0, 1]:
+                raise ValueError("A symbolic semantics do not compose two distinct opaque slots")
             text = canonical_json(item).lower()
             if any(term in text for term in FORBIDDEN_A_SUBSTRINGS):
                 raise ValueError("A contains a forbidden carrier or shortcut identifier")
@@ -379,7 +379,12 @@ def validate(raw: bytes, *, expected_m100_sha256: str | None = None) -> dict[str
             if dependencies != [a_id]:
                 raise ValueError("B does not retain exactly one live A dependency")
             trace, call_count, direct_count = _symbolic_b(body, a_id, a_body)
-            if trace != (0, 1, 2) or call_count != 1 or direct_count != 1:
+            if (
+                trace is None
+                or sorted(trace) != [0, 1, 2]
+                or call_count != 1
+                or direct_count != 1
+            ):
                 raise ValueError("B symbolic semantics do not extend A with slot 2")
             definition_reports.append(
                 {

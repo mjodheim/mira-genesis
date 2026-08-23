@@ -30,8 +30,22 @@ from run_m101_qualification import (
     m100_s3_bytes,
     require_frozen,
     run_experiment,
-    stable_projection,
 )
+
+CHECKER_EPHEMERAL_KEYS = {"pid", "process_pids", "search_path"}
+
+
+def checker_stable_projection(value: Any) -> Any:
+    """Independent implementation of the frozen recursive ephemera projection."""
+    if isinstance(value, dict):
+        return {
+            key: checker_stable_projection(item)
+            for key, item in value.items()
+            if key not in CHECKER_EPHEMERAL_KEYS
+        }
+    if isinstance(value, list):
+        return [checker_stable_projection(item) for item in value]
+    return value
 
 
 @dataclass(frozen=True)
@@ -160,7 +174,11 @@ def check_p5(evidence: dict[str, Any]) -> Condition:
     adopted = acquisition.get("adopted", {})
     if acquisition.get("confirmed") is not True or acquisition.get("assembled", 0) <= 0:
         failures.append("A was not exhaustively assembled")
-    if adopted.get("body") != ["LOAD_INPUT", "APPLY_SLOT:0", "APPLY_SLOT:1", "RETURN"]:
+    if (
+        acquisition.get("shortest_accepted_length") != 4
+        or not isinstance(adopted.get("body"), list)
+        or len(adopted["body"]) != 4
+    ):
         failures.append("A is not the shortest generic two-stage body")
     validation = evidence.get("definition_validation", {}).get("T1", {})
     if not _success(validation):
@@ -171,7 +189,7 @@ def check_p5(evidence: dict[str, Any]) -> Condition:
         expected_m100 = m100_s3_bytes()[1]
         try:
             report = validate_definitions(raw, expected_m100_sha256=expected_m100)
-            if report["definitions"][0]["symbolic_trace"] != [0, 1]:
+            if sorted(report["definitions"][0]["symbolic_trace"]) != [0, 1]:
                 failures.append("independent A trace changed")
         except Exception as error:
             failures.append(f"independent A recomputation failed: {error}")
@@ -243,6 +261,12 @@ def check_p9(evidence: dict[str, Any]) -> Condition:
         failures.append("B did not acquire and register from T1")
     if chronology.get("t1_unchanged_after_b_build") is not True:
         failures.append("unregistered B changed T1")
+    controls = evidence.get("dependency_controls", {})
+    expected_b_worlds = len(evidence.get("b_reuse", []))
+    if controls.get("ablate_b_equals_t1") is not True or any(
+        not _failure(row) for row in controls.get("ablate_b", [])
+    ) or not expected_b_worlds or len(controls.get("ablate_b", [])) != expected_b_worlds:
+        failures.append("fresh T1 consumers did not keep B absent across all B worlds")
     return _condition("P9", "later_python_syntax_target_is_demand_derived_and_B_is_acquired_only_with_registered_A", failures)
 
 
@@ -254,6 +278,24 @@ def check_p10(evidence: dict[str, Any]) -> Condition:
         str(token).startswith(f"CALL:{a.get('definition_id')}:") for token in b.get("body", [])
     ):
         failures.append("B lost its live content-addressed A reference")
+    validation = evidence.get("definition_validation", {}).get("T2", {})
+    if not _success(validation):
+        failures.append("independent T2 definition validation failed")
+    else:
+        try:
+            report = validate_definitions(
+                canonical_json(state).encode("ascii"),
+                expected_m100_sha256=m100_s3_bytes()[1],
+            )
+            b_report = report["definitions"][1]
+            if (
+                sorted(b_report["symbolic_trace"]) != [0, 1, 2]
+                or b_report["live_a_calls"] != 1
+                or b_report["direct_applications"] != 1
+            ):
+                failures.append("independent B trace or live-call structure changed")
+        except Exception as error:
+            failures.append(f"independent B recomputation failed: {error}")
     controls = evidence.get("dependency_controls", {})
     if not controls.get("fault_breaks_all_b_worlds") or any(
         not _failure(row) for row in controls.get("fault_breaks_all_b_worlds", [])
@@ -290,10 +332,10 @@ def check_p12(evidence: dict[str, Any]) -> Condition:
     ):
         if process.get(key) is not True:
             failures.append(f"process-boundary fact failed: {key}")
-    if process.get("fresh_process_invocations") != 42:
-        failures.append("complete frozen chronology is not exactly 42 isolated invocations")
-    if process.get("invocation_ordinals") != list(range(1, 43)):
-        failures.append("frozen process chronology ordinals are not exactly 1 through 42")
+    if process.get("fresh_process_invocations") != 44:
+        failures.append("complete frozen chronology is not exactly 44 isolated invocations")
+    if process.get("invocation_ordinals") != list(range(1, 45)):
+        failures.append("frozen process chronology ordinals are not exactly 1 through 44")
     capsules = evidence.get("capsules", {})
     if capsules.get("execution", {}).get("members") != ["m101_executor.py", "run.py"]:
         failures.append("execution-only capsule census changed")
@@ -305,8 +347,15 @@ def check_p13(evidence: dict[str, Any]) -> Condition:
     failures: list[str] = []
     if not _failure(controls.get("ablate_a", {})):
         failures.append("A ablation did not fail closed")
-    if not _failure(controls.get("ablate_b", {})):
-        failures.append("B ablation did not fail closed")
+    expected_b_worlds = len(evidence.get("b_reuse", []))
+    if (
+        controls.get("ablate_b_equals_t1") is not True
+        or not expected_b_worlds
+        or len(controls.get("ablate_b", [])) != expected_b_worlds
+    ):
+        failures.append("B ablation did not restore the exact T1 control state")
+    elif any(not _failure(row) for row in controls["ablate_b"]):
+        failures.append("B ablation did not fail closed across every B world")
     if not _success(controls.get("a_survives_b_ablation", {})):
         failures.append("B ablation damaged unrelated A")
     if not _failure(controls.get("corrupt_state", {})):
@@ -334,9 +383,9 @@ def check_p15(
     protocol: dict[str, Any], pool: dict[str, Any], result: dict[str, Any], replay: dict[str, Any]
 ) -> Condition:
     failures: list[str] = []
-    if digest(stable_projection(replay)) != result.get("stable_evidence_digest"):
+    if digest(checker_stable_projection(replay)) != result.get("stable_evidence_digest"):
         failures.append("stable clean replay changed retained scientific evidence")
-    if digest(stable_projection(result.get("scientific_evidence", {}))) != result.get(
+    if digest(checker_stable_projection(result.get("scientific_evidence", {}))) != result.get(
         "stable_evidence_digest"
     ):
         failures.append("recorded stable evidence digest mismatch")

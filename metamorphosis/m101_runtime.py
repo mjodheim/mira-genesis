@@ -357,7 +357,8 @@ def decode_state(raw: bytes | str | dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("only B may follow A")
             if item["dependencies"] != [a_id]:
                 raise ValueError("B does not retain exactly one live A dependency")
-            if _b_call_order(list(item["body"]), a_id) != (0, 1, 2):
+            b_order = _b_call_order(list(item["body"]), a_id)
+            if b_order is None or sorted(b_order) != [0, 1, 2]:
                 raise ValueError("B does not encode the required three-effect order through A")
         seen[str(item["definition_id"])] = item
     return value
@@ -716,7 +717,7 @@ def acquire_a(
         for body_tuple in itertools.product(A_TOKENS, repeat=length):
             assembled += 1
             body = list(body_tuple)
-            if _a_call_order(body) != (0, 1):
+            if _a_call_order(body) is None:
                 continue
             well_formed += 1
             binding, binding_report = _a_bindings(body, public_cases, catalog)
@@ -881,7 +882,8 @@ def acquire_b(
         for body_tuple in itertools.product(alphabet, repeat=length):
             assembled += 1
             body = list(body_tuple)
-            if _b_call_order(body, a_id) != (0, 1, 2):
+            b_order = _b_call_order(body, a_id)
+            if b_order is None or any(slot not in {0, 1, 2} for slot in b_order):
                 continue
             well_formed += 1
             binding, binding_report = _b_bindings(body, checked, public_cases, catalog)

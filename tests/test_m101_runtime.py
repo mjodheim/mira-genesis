@@ -233,9 +233,8 @@ def test_development_a_is_demand_derived_registered_and_carrier_neutral() -> Non
     assert acquired["public_case_ids"] == [
         f"text-public-{index}" for index in range(1, 5)
     ]
-    assert acquired["adopted"]["body"] == [
-        "LOAD_INPUT", "APPLY_SLOT:0", "APPLY_SLOT:1", "RETURN"
-    ]
+    assert acquired["shortest_accepted_length"] == 4
+    assert sorted(runtime._a_call_order(acquired["adopted"]["body"])) == [0, 1]
     assert acquired["adopted"]["dependencies"] == []
     assert not any(
         term in runtime.canonical_json(acquired["adopted"]).lower()
@@ -326,10 +325,8 @@ def test_independent_definition_validator_recomputes_a_and_b_semantics() -> None
     assert report["scientific_verdict"] is False
     assert report["definition_count"] == 2
     assert report["m100_sha256"] == hashlib.sha256(raw_m100).hexdigest()
-    assert [item["symbolic_trace"] for item in report["definitions"]] == [
-        [0, 1],
-        [0, 1, 2],
-    ]
+    assert sorted(report["definitions"][0]["symbolic_trace"]) == [0, 1]
+    assert sorted(report["definitions"][1]["symbolic_trace"]) == [0, 1, 2]
     assert report["definitions"][1]["live_a_calls"] == 1
 
     fault = runtime.rewrite_a_order_for_fault(t2)

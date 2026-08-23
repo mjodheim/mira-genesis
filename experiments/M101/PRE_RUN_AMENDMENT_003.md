@@ -22,6 +22,12 @@ not by a constructive limitation of the otherwise identical T0 runtime. This is 
 `compose` primitive and baseline-parity falsifier named in the pre-registration and pre-implementation
 review.
 
+The same audit found a second authored-target shortcut in v3. A search rejected every body whose
+symbolic trace was not exactly `(0, 1)` before consulting behavioural evidence, and B search did the
+same for `(0, 1, 2)`. The protocol may predict the semantic class, but the acquisition process may
+not receive the exact accepted trace as a prefilter. Those filters made the exhaustive search partly
+ceremonial.
+
 No M101 qualification world was executed to find this defect. The reproduction used only a
 development fixture. The v3 tag remains immutable as a refused pre-run protocol and cannot support a
 scientific claim.
@@ -34,16 +40,21 @@ all thresholds, but materially changes the mechanism and controls:
 1. `apply_pipeline`, `infer_slots` and `resolve_slots` are removed from both M101 runtimes.
 2. A candidate or registered A binding can be tested only by interpreting that explicit A body over
    opaque slots. B bindings can be tested only through the explicit B body and its live A call.
-3. The acquisition capsule contains no hidden-case reader and no execution helper.
-4. T0 and T1 consumer comparisons now call the same `execute-a` action in the same execution-only
+3. Acquisition enumerates every syntactically well-formed lower-language body through the frozen
+   bound and applies no exact `(0, 1)` or `(0, 1, 2)` semantic-trace prefilter. Behaviour, shortest
+   length and canonical digest determine the selected body. Independent validation then requires a
+   carrier-neutral permutation of the two or three distinct opaque slots.
+4. The acquisition capsule contains no hidden-case reader and no execution helper.
+5. T0 and T1 consumer comparisons now call the same `execute-a` action in the same execution-only
    capsule with the same exact world bytes. Their input states are machine-diffed; the only permitted
    differing keys are `definitions` and the `state_digest` implied by A registration.
-5. T0's branch enumerates only one-atomic applications. Repeating that finite image spends the same
+6. T0's branch enumerates only one-atomic applications. Repeating that finite image spends the same
    `catalog_size ** 2` candidate budget as registered-A binding, but cannot compose candidates.
-6. The live A fault now replaces the second distinct effect with a duplicate of the first. This
+7. The live A fault now replaces the second distinct effect with a duplicate of the first. This
    prevents carrier rebinding from compensating for a mere reversal while retaining a digest-valid,
    content-addressed dependency graph.
-7. The boundary audit and independent verdict checker fail when the host shortcut returns, when the
+8. The boundary audit and independent verdict checker fail when the host shortcut or exact-target
+   prefilter returns, when the
    arms use different executors/actions/world bytes, or when their state diff contains any extra key.
 
 Targeted development tests pass after the correction. They include forged parity-summary controls

@@ -18,6 +18,7 @@ EXPERIMENT = ROOT / "experiments" / "M101"
 PROTOCOL_PATH = EXPERIMENT / "PROTOCOL.json"
 RESULT_PATH = EXPERIMENT / "RESULT.json"
 M100_RESULT_PATH = ROOT / "experiments" / "M100" / "RESULT.json"
+M100_CHECK_PATH = ROOT / "experiments" / "M100" / "CHECK_REPORT.json"
 ISOLATED_PYTHON = Path(getattr(sys, "_base_executable", sys.executable)).resolve()
 RESULT_SCHEMA = "m101-result-v1"
 EPHEMERAL_KEYS = {"pid", "process_pids", "search_path"}
@@ -41,6 +42,65 @@ def stable_projection(value: Any) -> Any:
     if isinstance(value, list):
         return [stable_projection(item) for item in value]
     return value
+
+
+def verify_predecessor(protocol: dict[str, Any]) -> None:
+    """Fail closed unless the live predecessor is the exact positive M100 record."""
+    predecessor = protocol.get("predecessor", {})
+    result = json.loads(M100_RESULT_PATH.read_text(encoding="utf-8"))
+    checker = json.loads(M100_CHECK_PATH.read_text(encoding="utf-8"))
+    result_payload = {key: value for key, value in result.items() if key != "result_digest"}
+    if result.get("result_digest") != digest(result_payload):
+        raise QualificationRefused("the preserved M100 result digest is internally invalid")
+    for field in ("result_digest", "stable_evidence_digest"):
+        if predecessor.get(field) != result.get(field):
+            raise QualificationRefused(f"the M100 {field} binding moved")
+    if predecessor.get("freeze_source_commit") != result.get("source_commit"):
+        raise QualificationRefused("the M100 source-commit binding moved")
+    if predecessor.get("checker_digest") != checker.get("report_digest"):
+        raise QualificationRefused("the M100 checker binding moved")
+    if checker.get("verdict") != "positive" or checker.get("failed") != 0:
+        raise QualificationRefused("the preserved M100 checker is not positive")
+    _raw, measured_s3 = m100_s3_bytes()
+    if predecessor.get("m100_s3_raw_sha256") != measured_s3:
+        raise QualificationRefused("the exact M100 S3 predecessor bytes moved")
+
+    preservation_tag = predecessor.get("preservation_tag")
+    if not isinstance(preservation_tag, str) or not preservation_tag:
+        raise QualificationRefused("the M100 preservation tag is not bound")
+    tag_commit = subprocess.run(
+        ["git", "rev-parse", f"refs/tags/{preservation_tag}^{{commit}}"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    tag_parent = subprocess.run(
+        ["git", "rev-parse", f"{tag_commit}^"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    if tag_parent != predecessor.get("freeze_source_commit"):
+        raise QualificationRefused("the M100 preservation-tag chronology moved")
+    for path in ("experiments/M100/RESULT.json", "experiments/M100/CHECK_REPORT.json"):
+        tagged_object = subprocess.run(
+            ["git", "rev-parse", f"{tag_commit}:{path}"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        live_object = subprocess.run(
+            ["git", "hash-object", path],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        if tagged_object != live_object:
+            raise QualificationRefused(f"the preserved M100 artifact moved: {path}")
 
 
 def file_set_digest(paths: list[str]) -> tuple[str, dict[str, str]]:
@@ -377,9 +437,12 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
         ablate_a_execution = _execution(
             capsules["execution"], "execute-b", ablate_a_path, world_paths[b_trigger["id"]]
         )
-        ablate_b_execution = _execution(
-            capsules["execution"], "execute-b", ablate_b_path, world_paths[b_trigger["id"]]
-        )
+        ablate_b_executions = [
+            _execution(
+                capsules["execution"], "execute-b", ablate_b_path, world_paths[world["id"]]
+            )
+            for world in b_worlds
+        ]
         unrelated_after_b_ablation = _execution(
             capsules["execution"],
             "execute-a",
@@ -512,7 +575,8 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
                 "create_ablate_a": create_ablate_a,
                 "ablate_a": ablate_a_execution,
                 "create_ablate_b": create_ablate_b,
-                "ablate_b": ablate_b_execution,
+                "ablate_b_equals_t1": ablate_b_path.read_bytes() == t1_bytes,
+                "ablate_b": ablate_b_executions,
                 "a_survives_b_ablation": unrelated_after_b_ablation,
                 "create_corrupt": create_corrupt,
                 "corrupt_state": corrupt_execution,
@@ -563,6 +627,30 @@ def require_frozen(protocol: dict[str, Any], pool: dict[str, Any]) -> None:
         raise QualificationRefused("M101 population is not frozen")
     if protocol.get("qualification_population", {}).get("pool_digest") != pool.get("pool_digest"):
         raise QualificationRefused("M101 protocol does not bind the frozen pool")
+    verify_predecessor(protocol)
+
+    immutable_records: dict[str, str] = {}
+    pre_registration = protocol.get("pre_registration", {})
+    for path_key, digest_key in (
+        ("path", "raw_sha256"),
+        ("draft_path", "draft_raw_sha256"),
+        ("adversarial_review_path", "adversarial_review_raw_sha256"),
+    ):
+        path = pre_registration.get(path_key)
+        expected = pre_registration.get(digest_key)
+        if not isinstance(path, str) or not isinstance(expected, str):
+            raise QualificationRefused(f"M101 {path_key} binding is invalid")
+        immutable_records[path] = expected
+    publication = protocol.get("publication", {})
+    review_path = publication.get("review_record")
+    review_digest = publication.get("review_raw_sha256")
+    if not isinstance(review_path, str) or not isinstance(review_digest, str):
+        raise QualificationRefused("M101 publication-review binding is invalid")
+    immutable_records[review_path] = review_digest
+    for path, expected in immutable_records.items():
+        measured = hashlib.sha256((ROOT / path).read_bytes()).hexdigest()
+        if measured != expected:
+            raise QualificationRefused(f"M101 immutable research record moved: {path}")
     for section in ("mechanism", "qualification_apparatus", "checker"):
         declared = protocol.get(section, {})
         measured, _members = file_set_digest(list(declared.get("files", [])))
@@ -618,6 +706,7 @@ def require_frozen(protocol: dict[str, Any], pool: dict[str, Any]) -> None:
     candidate_bound_paths = {
         "experiments/M101/QUALIFICATION_POOL.json",
         *amendment_paths,
+        *immutable_records,
         *protocol["mechanism"]["files"],
         *protocol["qualification_apparatus"]["files"],
         *protocol["checker"]["files"],
