@@ -1,7 +1,8 @@
 cff-version: 1.2.0
 message: >-
   If you use Mira Genesis in software, research, teaching or a publication,
-  please cite the project using this metadata and identify any modifications.
+  please cite the project using this metadata and, for the M094-M100 research
+  result, use the preferred preprint citation below.
 type: software
 title: "Mira Genesis"
 abstract: >-
@@ -21,3 +22,12 @@ keywords:
   - "trans-substrate continuity"
   - "WebAssembly"
   - "reproducible research"
+preferred-citation:
+  type: article
+  title: "Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage"
+  authors:
+    - family-names: "Mets"
+      given-names: "Anthony"
+  year: 2026
+  doi: "10.5281/zenodo.22067855"
+  url: "https://doi.org/10.5281/zenodo.22067855"
