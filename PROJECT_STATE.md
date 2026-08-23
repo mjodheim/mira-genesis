@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 23 August 2026**
+**Updated: 24 August 2026**
 
 ## Authoritative summary
 
@@ -155,6 +155,17 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Result `486f33e…`; stable evidence `45f18dc6…`; checker `95bffc8b…`; freeze `b3e172b`. This is
   partial bounded cross-family mechanism evidence, not G4 closure. The next ceiling is deeper
   cumulative retention under genuine interference and an independently maintained domain.
+- **M102 is frozen at the owner-review boundary; no scientific result exists.** H47 tests whether
+  an observable flat-registry collision can cause acquisition of a generic state-owned addressing
+  policy K that prevents demonstrated destructive forgetting, then remains live with M101 B for a
+  later four-effect SQLite capability C. The exact thirteen-record population is frozen at digest
+  `3d6785dd…`; the non-armable protocol candidate is `ce585aa2…`. Acquisition and execution are in
+  separate isolated capsules, the checker independently reconstructs K/A/B/C and actual SQLite
+  state, and two full DEVELOPMENT rehearsals have identical stable projections. Pre-freeze review
+  found and removed a dead-B declaration path, a host-side K origin gate and interpreter-sensitive
+  docstring formatting. `PROTOCOL.json`, `RESULT.json`, `CHECK_REPORT.json` and D071 remain absent.
+  Owner acceptance of the final protocol and separate authorization of the unique canonical attempt
+  are still required. This apparatus state is not evidence for H47, G4, G5 or a general-agent claim.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

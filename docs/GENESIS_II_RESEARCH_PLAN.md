@@ -1,7 +1,7 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M101 attempt 1 positive at 15/15, next ceiling under design
-**Date:** 2026-08-23
+**Status:** active; M102 population frozen, exact protocol candidate awaiting owner acceptance
+**Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
 
@@ -160,3 +160,16 @@ corruption, rollback and stable replay remain decisive.
 SQLite supplies an independently maintained execution interface, not independent task authorship:
 the adapters, tasks and evaluator remain project-authored. Even a positive M102 could move only the
 bounded mechanism record, not close G4/G5 or support a general-agent claim.
+
+### M102 pre-freeze state
+
+The complete thirteen-record population is frozen and has not been scientifically executed. The
+non-armable owner-review candidate binds exact M101 T2 bytes, Python/SQLite identities, mechanism,
+capsules, pool, independent definition/result checkers, P1–P15 and stable projection. A full
+frozen-style DEVELOPMENT lineage replayed stably twice across fresh isolated processes.
+
+Adversarial review corrected three pre-freeze falsifiers: a declared-but-not-executed B dependency,
+a host-side K-origin gate that manufactured causality, and Python docstring formatting that mixed
+representation with conservation. C acquisition now fails without K only because the live flat
+policy cannot represent the joint collision relation. `PROTOCOL.json`, the unique attempt, result,
+checker report and D071 remain absent pending owner decisions.

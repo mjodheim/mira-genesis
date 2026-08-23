@@ -1248,3 +1248,28 @@ execute two ordered atomics at any budget.
 generic runtime remain authored. This is partial bounded cross-family evidence, not G4 closure,
 external-domain transfer, general-agent evidence, open-ended evolution, recursive self-improvement,
 AGI, independent human reproduction or production authority.
+
+---
+
+## H47 — Observable registry interference can cause a persistent meta-policy improvement
+
+Starting from exact positive M101 T2 state, an inherited flat registry cannot represent two unequal
+carrier-local descriptors sharing a slot. From public collision demand only, the lineage can acquire
+and register a carrier-neutral state-owned addressing policy K whose constructive image represents
+the joint relation, prevents a demonstrated destructive no-upgrade forgetting event and remains
+live after producer death. K plus live M101 B can then become necessary to acquire, persist and reuse
+a later four-effect capability C scored from actual SQLite database state while retaining all
+preregistered record, M101 A/B and M100 capabilities.
+
+**Status:** **PRE-REGISTERED AND UNTESTED; OWNER REVIEW REQUIRED.** The thirteen-record population is
+frozen at `3d6785dd…` but has not been scientifically executed. The exact protocol candidate
+`ce585aa2…` is non-armable and requires owner acceptance before `PROTOCOL.json` and its annotated
+freeze tag may be created. A separate owner authorization is required for the unique canonical
+attempt. Two complete DEVELOPMENT rehearsals and the independent source audit validate apparatus
+mechanics only; they are not evidence for H47.
+
+**Positive claim ceiling.** If and only if P1–P15 are all independently computed true on attempt 1,
+H47 would support bounded continual-interference and registry meta-improvement mechanism evidence
+under an independently maintained SQLite execution interface. The SQLite task family, adapters and
+evaluator remain project-authored. A positive result would not close G4/G5, establish independent
+task authorship, broad continual learning, general-agent evidence or AGI.
