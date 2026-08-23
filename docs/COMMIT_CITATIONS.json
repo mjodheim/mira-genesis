@@ -69,6 +69,14 @@
         "experiments/M071/DEVELOPMENT_QUALIFICATION.md"
       ]
     },
+    "0bb19744e2782925222ebb83aa56918eb874ab53": {
+      "subject": "science(m101): preserve positive checker verdict",
+      "preserved_by": "experiment/m101-positive-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/RESULT.md"
+      ]
+    },
     "09ed0d3c4b7427e8f6e6ef7d17a893d14ba5e5fe": {
       "subject": "feat: freeze the M086-C protocol before any harness, bank or holdout",
       "preserved_by": "main",
@@ -848,6 +856,14 @@
         "experiments/M023/STATUS.md"
       ]
     },
+    "5c952cb069600fc1e15adce09f3d6f616ee82af4": {
+      "subject": "science(m101): preserve canonical first result",
+      "preserved_by": "experiment/m101-canonical-first-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/RESULT.md"
+      ]
+    },
     "5e4a0feebbb44aa73309d40eca1e88e0833e6756": {
       "subject": "feat(m091): freeze the protocol, the invariant proof and the assembly substrate",
       "preserved_by": "main",
@@ -1541,6 +1557,18 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M048/PROTOCOL.md"
+      ]
+    },
+    "b3e172bba0cfdd282e6235e62bb8e7d213a77837": {
+      "subject": "science(m101): freeze corrected protocol v4",
+      "preserved_by": "experiment/m101-frozen-protocol-v4",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M101/RESULT.json",
+        "experiments/M101/RESULT.md"
       ]
     },
     "b3e9abaa4b4274bc8f134c8ab35e2005b29e8c4d": {

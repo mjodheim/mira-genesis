@@ -2423,3 +2423,44 @@ coefficients. This bounded result is not open-ended improvement.
 Not AGI, not a generality or completion gate, not unrestricted or recursive self-improvement, not
 arbitrary self-modification, not a self-hosting runtime, not cross-domain transfer, not independent
 human reproduction and no production or network authority.
+
+## D070 — M101 qualifies bounded cross-family cumulative transfer
+
+### The decision
+
+H46 is supported by M101 attempt 1. After three refused pre-run freezes and their disclosed
+falsifiers, the corrected protocol, exact M100 predecessor, carrier-neutral runtime, separate
+execution capsule, independent checkers and fifteen-world population were frozen at
+`b3e172bba0cfdd282e6235e62bb8e7d213a77837`. The one owner-authorized armed Track-A run was local,
+clean and made zero model, network or remote-execution calls. Independent clean replay computed all
+fifteen conditions true. Result `486f33e…`; stable evidence `45f18dc6…`; checker `95bffc8b…`.
+
+### Causal reading
+
+From public text demand only, the lineage assembled a shortest carrier-neutral two-effect
+combinator A without receiving an exact target trace or consumer-family material. After producer
+death, persisted A passed all eight held-out text, record and Python-syntax transfer worlds. The
+otherwise identical fresh T0 lineage — same atomics, runtime, public observations and budget, but no
+A bytes — passed zero hidden cases because its candidate language could invoke only one atomic
+transformation.
+
+Registered A then made a three-effect Python-syntax operation B constructible. B stores a live,
+content-addressed call to A; removing or semantically mutating A broke B in every B world. Building
+without registration left predecessor bytes unchanged, corruption failed closed, exact T2 rollback
+restored B, and the exact M100 state and its three acquired operations remained conserved and live.
+All 44 scientific invocations crossed isolated process boundaries with no project import path.
+
+### Next ceiling
+
+M101 is the first qualified bounded cross-family cumulative mechanism result, but all carriers,
+atomic adapters, worlds and evaluators remain project-authored and share one generic runtime. The
+chain is only A → B and introduces no genuine interference pressure. A successor must test deeper
+retention and causal acquisition under interference, with at least one independently maintained
+domain or interface selected under an uncontaminated freeze boundary. It may not treat another
+authored carrier or a cost-only improvement as closure of G4.
+
+### Claim boundary
+
+This moves G4 only to partial bounded cross-family mechanism evidence. It is not G4 closure,
+general-agent evidence, AGI, natural-world generality, open-ended or recursive self-improvement,
+self-hosting, arbitrary self-modification, independent human reproduction or production authority.

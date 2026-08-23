@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active research-plan transition after the M094-M100 preprint  
+**Status:** active; M101 attempt 1 positive at 15/15, next ceiling under design
 **Date:** 2026-08-23
 
 ## Why Genesis II stays in this repository
@@ -86,6 +86,19 @@ A positive M101 would be stronger than M100 in four specific ways:
 If those conditions pass, the result may justify moving G4 from `open` to **partial bounded
 cross-family mechanism evidence**. It would not close G4: all M101 families and evaluators remain
 project-authored, and no independent external maintainer or uncontaminated private domain is added.
+
+## M101 outcome
+
+M101 attempt 1 qualified positively from corrected v4 freeze `b3e172b`. The acquired A capability
+passed all eight held-out transfer worlds while eight fresh equal-budget baselines passed zero
+hidden cases, and A remained causally necessary for later B acquisition. M100 conservation and all
+mutation, ablation, corruption, rollback, isolation and stable-replay controls passed; the
+independent checker computed P1–P15 true. D070 therefore moves G4 to partial bounded cross-family
+mechanism evidence, exactly within the boundary predicted above.
+
+The result does not alter the M094–M100 paper or create a new publication claim. The next research
+question follows the measured residual ceiling: deeper cumulative retention under genuine
+interference and at least one independently maintained domain or interface.
 
 ## What a negative M101 would mean
 
