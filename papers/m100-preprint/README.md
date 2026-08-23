@@ -17,7 +17,7 @@ The reviewed positioning is methodological rather than performance-led: serializ
 
 ## Scientific anchor
 
-- repository integration commit: `c2273f1ea72e089cd3646e162130bc83b8070b0b`;
+- publication snapshot: assigned after this publication PR is merged;
 - M100 freeze/source commit: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`;
 - M100 preservation tag: `experiment/m100-positive-result`.
 
