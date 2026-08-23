@@ -67,3 +67,50 @@ La règle « un seul run canonique, jamais rejoué » implique qu'un workflow sc
 ne doit plus être exécutable. Sa valeur est documentaire, pas opérationnelle : les copies
 de `archives/workflows/` conservent la recette exacte, et la preuve reste attachée aux runs
 GitHub Actions et aux hashes d'artefacts publiés dans `results/`.
+
+## Retrait R003 — workflows de jalons restés exécutables
+
+- Date : 23 août 2026
+- Dernier commit avant retrait : `d79706550d35eb74e243e4253abe6e097b10fef8`
+- Copies exactes conservées dans `archives/workflows/`
+- Total : 25 workflows retirés de la surface GitHub Actions active
+
+### M017 à M066
+
+Dix-neuf workflows de développement ou canoniques appartenant aux jalons M017, M019,
+M021, M022, M026–M033, M042 et M064–M066 restaient sous `.github/workflows/` alors que
+leurs jalons étaient historiques. Leur contenu a été déplacé byte-for-byte dans
+`archives/workflows/` : la recette reste lisible et versionnée mais n'est plus une
+surface d'exécution permanente.
+
+### M092
+
+Les six workflows M092 (`adoption-qualification-rehearsal`, `canonical-search`,
+`canonical-transport-rehearsal`, `independent-reproduction`,
+`reproduction-transport-rehearsal` et `runtime-envelope`) ont également été archivés.
+Le registre public classe M092 `Aborted without verdict`; conserver ses workflows armés dans
+GitHub Actions ne représentait donc plus l'état scientifique actuel.
+
+Après R003, `.github/workflows/` ne contient plus que l'intégration continue permanente et
+la politique d'attribution. Le cycle de vie est désormais documenté dans
+`docs/REPOSITORY_ARCHITECTURE.md` et vérifié par `scripts/audit_repository_layout.py`.
+
+## Retrait R004 — Dockerfile sans entrée d'exécution supportée
+
+- Date : 23 août 2026
+- Dernier commit contenant le fichier : `8e578e0258b600787b859aceb4e63ae7223ad9a7`
+- Fichier retiré : `Dockerfile`
+
+Le Dockerfile installait le paquet puis déclarait `ENTRYPOINT ["mira-run"]`. La configuration
+`pyproject.toml` actuelle n'installe aucune commande `mira-run`, et `mira_core/agent.py` expose
+la bibliothèque `MiraAgent` sans fonction CLI `main`. L'image construite ne disposait donc pas
+de l'exécutable qu'elle annonçait comme point d'entrée.
+
+Le fichier copiait en outre `scripts/` et `experiments/` dans une image présentée comme runtime,
+ce qui mélangeait sans contrat explicite code réutilisable et matériel de recherche. Aucune
+commande Docker supportée n'est documentée dans le README actuel.
+
+Plutôt que de maintenir une image qui se construit mais ne démarre pas correctement, le Dockerfile
+est retiré. Si un conteneur runtime redevient un produit supporté, il devra être réintroduit avec
+une CLI réellement définie, un smoke test d'image et une frontière explicite entre runtime et
+matériel scientifique.
