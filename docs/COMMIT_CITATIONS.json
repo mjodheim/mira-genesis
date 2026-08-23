@@ -263,7 +263,7 @@
       "subject": "science(m101): close immutable freeze-ref binding",
       "preserved_by": "experiment/m101-frozen-protocol",
       "cited_in": [
-        "experiments/M101/PROTOCOL.json"
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "2296e778d443e57b44a533b143ea126cb6be3a97": {
@@ -473,6 +473,7 @@
       "subject": "feat(m101): close isolated causal-control boundary",
       "preserved_by": "experiment/m101-frozen-protocol",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M101/PROTOCOL.json"
       ]
     },
@@ -542,6 +543,13 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "405ff2024465b5465b2c1551b47598b94134af18": {
+      "subject": "science(m101): amend pre-run Git freeze verification",
+      "preserved_by": "experiment/m101-frozen-protocol-v2",
+      "cited_in": [
+        "experiments/M101/PROTOCOL.json"
       ]
     },
     "4080ccc4b9381b1a2b0f8714e904c57335330877": {

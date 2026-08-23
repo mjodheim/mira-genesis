@@ -43,10 +43,14 @@ four hidden cases. Its preflight constructed and parsed those records only and e
 that acquisition, registration, baseline, transfer, execution, mutation, ablation and rollback were
 not run.
 
-The immutable freeze ref is `experiment/m101-frozen-protocol`. The runner will refuse an armed run
-unless the working tree is clean, `HEAD` is exactly that ref, every bound digest still matches and
-`experiments/M101/RESULT.json` is absent. The remaining step is therefore a distinct owner-authorized
-action: one local `--arm` canonical Track-A run, followed by the independent stable replay/checker.
+The first freeze ref is preserved as a refused pre-run record: its raw-stream comparison treated
+Git LF and Windows CRLF as different content. `PRE_RUN_AMENDMENT_001.md` records the correction and
+confirms that no pool case had executed. The authoritative immutable freeze ref is now
+`experiment/m101-frozen-protocol-v2`, which compares Git object identities and explicitly peels
+annotated tags. The runner will refuse an armed run unless the working tree is clean, `HEAD` is
+exactly that ref, every bound digest still matches and `experiments/M101/RESULT.json` is absent. The
+remaining step is therefore a distinct owner-authorized action: one local `--arm` canonical Track-A
+run, followed by the independent stable replay/checker.
 
 If implementation shows that a decisive condition is impossible or ill-posed before qualification,
 record a named pre-run amendment rather than silently editing `PRE_REGISTRATION.md`. If any decisive
