@@ -543,6 +543,55 @@ def require_frozen(protocol: dict[str, Any], pool: dict[str, Any]) -> None:
         "policy_frozen_before_qualification": True,
     }:
         raise QualificationRefused("M101 stable projection is not the implemented frozen policy")
+    freeze = protocol.get("freeze", {})
+    candidate_commit = freeze.get("freeze_commit")
+    freeze_ref = freeze.get("freeze_ref")
+    if not isinstance(candidate_commit, str) or len(candidate_commit) != 40:
+        raise QualificationRefused("M101 freeze-candidate commit is not bound")
+    if not isinstance(freeze_ref, str) or not freeze_ref.startswith("experiment/m101-"):
+        raise QualificationRefused("M101 immutable freeze ref is not bound")
+    resolved_ref = subprocess.run(
+        ["git", "rev-parse", f"refs/tags/{freeze_ref}"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if resolved_ref.returncode != 0:
+        raise QualificationRefused("M101 immutable freeze ref does not exist")
+    freeze_commit = resolved_ref.stdout.strip()
+    parent = subprocess.run(
+        ["git", "rev-parse", f"{freeze_commit}^"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    if parent != candidate_commit:
+        raise QualificationRefused("M101 freeze ref is not the direct child of its bound candidate")
+    candidate_bound_paths = {
+        "experiments/M101/QUALIFICATION_POOL.json",
+        *protocol["mechanism"]["files"],
+        *protocol["qualification_apparatus"]["files"],
+        *protocol["checker"]["files"],
+    }
+    for path in sorted(candidate_bound_paths):
+        committed = subprocess.run(
+            ["git", "show", f"{candidate_commit}:{path}"],
+            cwd=ROOT,
+            capture_output=True,
+            check=True,
+        ).stdout
+        if committed != (ROOT / path).read_bytes():
+            raise QualificationRefused(f"bound M101 artifact moved after candidate commit: {path}")
+    committed_protocol = subprocess.run(
+        ["git", "show", f"{freeze_commit}:experiments/M101/PROTOCOL.json"],
+        cwd=ROOT,
+        capture_output=True,
+        check=True,
+    ).stdout
+    if committed_protocol != PROTOCOL_PATH.read_bytes():
+        raise QualificationRefused("live M101 protocol differs from the immutable freeze ref")
 
 
 def materialize(*, armed: bool = False) -> dict[str, Any]:
@@ -566,6 +615,16 @@ def materialize(*, armed: bool = False) -> dict[str, Any]:
     source_commit = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True
     ).stdout.strip()
+    freeze_ref = protocol["freeze"]["freeze_ref"]
+    frozen_commit = subprocess.run(
+        ["git", "rev-parse", f"refs/tags/{freeze_ref}"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.strip()
+    if source_commit != frozen_commit:
+        raise QualificationRefused("canonical M101 must run exactly from the immutable freeze commit")
     started = time.time()
     evidence = run_experiment(pool, allow_frozen=True)
     mechanism_digest, mechanism_members = file_set_digest(protocol["mechanism"]["files"])

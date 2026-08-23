@@ -206,7 +206,7 @@
     ]
   },
   "qualification_apparatus": {
-    "digest": "09f927227c87978e9a5a14d90d1b59dd8b83ac2ec2cef331a154c53ff22c0542",
+    "digest": "014c0088fcf500b3b782b3dea4099b95de0fd13adb51964674caddddd472000d",
     "digest_rule": "sha256 of canonical JSON mapping each listed repository path to its raw sha256",
     "files": [
       "scripts/author_m101_qualification_pool.py",
