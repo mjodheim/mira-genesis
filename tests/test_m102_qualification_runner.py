@@ -106,6 +106,8 @@ def test_protocol_candidate_is_exact_but_cannot_arm_a_run() -> None:
         "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0"
     )
     assert candidate["freeze"]["owner_acceptance_required"] is True
+    assert candidate["python_identity"]["implementation"] == "cpython"
+    assert candidate["python_identity"]["version_info"][:2] == [3, 11]
     with pytest.raises(ValueError, match="source commit"):
         protocol_builder.build_final("not-a-commit", "not-authorized")
 

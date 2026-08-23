@@ -13,6 +13,7 @@ import json
 import re
 import sqlite3
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -161,6 +162,14 @@ def _base() -> dict[str, Any]:
             "module": "sqlite3",
             "sqlite_version": sqlite3.sqlite_version,
             "sqlite_version_info": list(sqlite3.sqlite_version_info),
+        },
+        "python_identity": {
+            "implementation": sys.implementation.name,
+            "version_info": [
+                sys.version_info.major,
+                sys.version_info.minor,
+                sys.version_info.micro,
+            ],
         },
         "stable_projection": {
             "excluded_keys": sorted(EPHEMERAL_KEYS),

@@ -865,6 +865,15 @@ def require_frozen(protocol: dict[str, Any], pool: dict[str, Any]) -> None:
         "sqlite_version_info": list(sqlite3.sqlite_version_info),
     }:
         raise QualificationRefused("M102 SQLite identity differs from frozen binding")
+    if protocol.get("python_identity") != {
+        "implementation": sys.implementation.name,
+        "version_info": [
+            sys.version_info.major,
+            sys.version_info.minor,
+            sys.version_info.micro,
+        ],
+    }:
+        raise QualificationRefused("M102 Python identity differs from frozen binding")
 
     freeze = protocol.get("freeze", {})
     source_commit = freeze.get("source_commit")
