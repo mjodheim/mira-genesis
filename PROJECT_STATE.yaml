@@ -313,7 +313,9 @@ current_real_software_frontier:
     qualification_population_entries: 13
     qualification_population_status: frozen_not_executed
     qualification_pool_digest: 3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38
-    protocol_candidate_digest: ce585aa257fbe5aa1734c48864b5901d14769bf4bc3baaa94fb959acd50f6288
+    protocol_candidate_digest: 4549f17f79405c212122362ce5154623ce55acafe03ee854be16e870fa061c84
+    superseded_protocol_candidate_digest: ce585aa257fbe5aa1734c48864b5901d14769bf4bc3baaa94fb959acd50f6288
+    candidate_supersession_reason: pre_freeze_CI_found_noncanonical_runtime_construction
     exact_m101_t2_raw_sha256: cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0
     development_full_rehearsals: 2
     development_stable_replay_equal: true

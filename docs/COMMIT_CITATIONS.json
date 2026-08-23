@@ -236,6 +236,14 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "1c8b4d25a08feaa11f690308bab8ea02430be8c1": {
+      "subject": "fix(m102): fail closed outside canonical runtime",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M102/PROTOCOL_CANDIDATE.json"
+      ]
+    },
     "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
       "subject": "test: preserve negative M074 scientific result",
       "preserved_by": "main",
@@ -944,8 +952,7 @@
       "subject": "fix(m102): bind canonical interpreter identity",
       "preserved_by": "codex/m102-registry-interference",
       "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M102/PROTOCOL_CANDIDATE.json"
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "664c385d6b4f14286cbae02b3ae93b2b1420b8dd": {

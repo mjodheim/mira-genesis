@@ -159,11 +159,13 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   an observable flat-registry collision can cause acquisition of a generic state-owned addressing
   policy K that prevents demonstrated destructive forgetting, then remains live with M101 B for a
   later four-effect SQLite capability C. The exact thirteen-record population is frozen at digest
-  `3d6785dd…`; the non-armable protocol candidate is `ce585aa2…`. Acquisition and execution are in
+  `3d6785dd…`; the superseding non-armable protocol candidate is `4549f17f…`. Acquisition and execution are in
   separate isolated capsules, the checker independently reconstructs K/A/B/C and actual SQLite
   state, and two full DEVELOPMENT rehearsals have identical stable projections. Pre-freeze review
-  found and removed a dead-B declaration path, a host-side K origin gate and interpreter-sensitive
-  docstring formatting. `PROTOCOL.json`, `RESULT.json`, `CHECK_REPORT.json` and D071 remain absent.
+  found and removed a dead-B declaration path, a host-side K origin gate, interpreter-sensitive
+  docstring formatting and a protocol builder that did not fail closed outside the exact canonical
+  runtime. The earlier candidate `ce585aa2…` was superseded after that CI falsifier and never armed.
+  `PROTOCOL.json`, `RESULT.json`, `CHECK_REPORT.json` and D071 remain absent.
   Owner acceptance of the final protocol and separate authorization of the unique canonical attempt
   are still required. This apparatus state is not evidence for H47, G4, G5 or a general-agent claim.
 

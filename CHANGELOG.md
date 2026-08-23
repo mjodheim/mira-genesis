@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **M102 reaches a superseding owner-review candidate without running qualification.** H47's
+  thirteen-record population remains frozen and unexecuted at `3d6785dd…`. CI rejected the first
+  candidate because its builder permitted interpreter-dependent reconstruction; construction now
+  fails closed outside CPython 3.11.16 plus SQLite 3.53.1. The replacement candidate is
+  `4549f17f…`, remains non-armable, and still requires owner protocol acceptance plus a separate
+  authorization for the unique canonical attempt.
+
 - **M101 qualifies bounded cross-family cumulative transfer.** From corrected v4 freeze `b3e172b`,
   one carrier-neutral combinator A was acquired from public text demand, survived producer death and
   passed 8/8 held-out text/record/Python-syntax worlds. Eight equal-budget fresh T0 baselines passed

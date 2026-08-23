@@ -1263,10 +1263,12 @@ preregistered record, M101 A/B and M100 capabilities.
 
 **Status:** **PRE-REGISTERED AND UNTESTED; OWNER REVIEW REQUIRED.** The thirteen-record population is
 frozen at `3d6785dd…` but has not been scientifically executed. The exact protocol candidate
-`ce585aa2…` is non-armable and requires owner acceptance before `PROTOCOL.json` and its annotated
+`4549f17f…` is non-armable and requires owner acceptance before `PROTOCOL.json` and its annotated
 freeze tag may be created. A separate owner authorization is required for the unique canonical
 attempt. Two complete DEVELOPMENT rehearsals and the independent source audit validate apparatus
-mechanics only; they are not evidence for H47.
+mechanics only; they are not evidence for H47. Candidate `ce585aa2…` was superseded before final
+freeze after the Python 3.13 CI matrix showed that protocol construction did not fail closed outside
+the exact canonical CPython/SQLite runtime; no qualification was executed.
 
 **Positive claim ceiling.** If and only if P1–P15 are all independently computed true on attempt 1,
 H47 would support bounded continual-interference and registry meta-improvement mechanism evidence

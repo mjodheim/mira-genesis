@@ -2,10 +2,10 @@
   "adversarial_review": {
     "path": "experiments/M102/ADVERSARIAL_REVIEW.md",
     "qualification_executed": false,
-    "raw_sha256": "3d8af682d570f1894d8cd9f8fde55e2bd77f493d2106caeefb46815aef57618b"
+    "raw_sha256": "89ab8b47cddbfb64c67244187469faf2e2b4a0d204727bf2df55dd6ed06eefd4"
   },
   "attempt": 1,
-  "candidate_source_commit": "644e0100508faec2a78e07ec4a9ccf2316c79682",
+  "candidate_source_commit": "1c8b4d25a08feaa11f690308bab8ea02430be8c1",
   "canonical_result_policy": {
     "canonical_command": "python scripts/run_m102_qualification.py materialize --authorized-by-owner --i-understand-this-is-the-only-canonical-attempt",
     "checker_path": "experiments/M102/CHECK_REPORT.json",
@@ -198,7 +198,7 @@
     ]
   },
   "qualification_apparatus": {
-    "digest": "809b1fbc8a1c67327a9414c2de6be755bbc6f56e6770b995593b932a7dd712a0",
+    "digest": "99450825670eb2804fb8d605a3489982cb141f53612f3c73ab2003286058ba41",
     "files": [
       "experiments/M102/PRE_REGISTRATION.md",
       "experiments/M102/PROTOCOL_DRAFT.json",
@@ -212,13 +212,13 @@
       "scripts/run_m102_qualification.py"
     ],
     "member_digests": {
-      "experiments/M102/ADVERSARIAL_REVIEW.md": "3d8af682d570f1894d8cd9f8fde55e2bd77f493d2106caeefb46815aef57618b",
+      "experiments/M102/ADVERSARIAL_REVIEW.md": "89ab8b47cddbfb64c67244187469faf2e2b4a0d204727bf2df55dd6ed06eefd4",
       "experiments/M102/PRE_REGISTRATION.md": "7b704c362f71ac88f695d25558003bc1e619bc8dc2e73c17b3efeb6c8d2870c4",
       "experiments/M102/PROTOCOL_DRAFT.json": "ae637048cede8dc71cdffac8aa3a1a6a544c24f52a1e061d47d91b57442606a4",
       "experiments/M102/QUALIFICATION_POOL.json": "b43a4a5b48808297cf240c3ad774e18ee22382f65287750206c1c5f3f25516ec",
-      "scripts/audit_m102_boundaries.py": "01a357cb4408ca2a5a48a6f2338208988c3af3034f15f90cc0728cf51b3f4905",
+      "scripts/audit_m102_boundaries.py": "7a3d04aa295509b1d4c28b3a83babf7b01a291723b6eb392fc2eeb06d99b5bc8",
       "scripts/author_m102_qualification_pool.py": "e5a817a90f6825f33075fde984064217e528938e907a025ef7e0b9c363572adc",
-      "scripts/build_m102_protocol.py": "fdd35b2814db316c898c98340077ceab828ce656fdc7a05855be274dc6e4537d",
+      "scripts/build_m102_protocol.py": "c414e5b09028c0c6fdd6448a3e1071ce8a0c60eb4b6675ba1d1ace9150ef6f5a",
       "scripts/check_m101_definitions.py": "2c12d05b527c4a0390287c74eecf7ee25ae264a1610e3f4d92f976657ab84b75",
       "scripts/check_m102_definitions.py": "3ff791b81f945b49f73a5759e90827329951c8e8c014638551919525f871ecaa",
       "scripts/run_m102_qualification.py": "f28233033a36fd724722e34532ada909f9a3817e4918fcacc5f879b0d6c9696c"
