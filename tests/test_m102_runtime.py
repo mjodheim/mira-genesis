@@ -11,6 +11,7 @@ from metamorphosis import m101_runtime
 from metamorphosis import m102_executor
 from metamorphosis import m102_runtime as runtime
 from scripts import check_m102_definitions
+from scripts import check_m102_result
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -492,3 +493,20 @@ def test_execution_only_source_has_no_acquisition_or_search_path() -> None:
     assert "m102_runtime" not in source.replace('"m102_runtime"', "")
     assert "POLICY_TOKENS" not in source
     assert "C_MAX_TRANSFORMS" not in source
+
+
+def test_independent_result_checker_executes_development_sqlite_state(
+    u2: dict[str, object],
+) -> None:
+    demand = _c_demand()
+    world = {
+        "id": "development_independent_checker_sqlite",
+        "role": "sqlite_c_reuse",
+        "carrier": "sqlite",
+        "slots": demand["slots"],
+        "public_cases": demand["public_cases"][:2],
+        "hidden_cases": demand["public_cases"][2:],
+    }
+    outcomes = check_m102_result._independent_sqlite(u2, world)
+    assert len(outcomes) == 4
+    assert all(outcome["passed"] is True for outcome in outcomes)
