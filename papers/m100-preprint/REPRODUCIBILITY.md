@@ -2,12 +2,18 @@
 
 This preprint summarizes evidence already preserved in the public Mira Genesis repository. It does not change any frozen protocol, result, checker, threshold, qualification population, or scientific verdict.
 
-## Paper anchor
+## Persistent publication identifier
+
+- DOI: `10.5281/zenodo.22067855`
+- DOI URL: `https://doi.org/10.5281/zenodo.22067855`
+
+## Scientific anchors
 
 - Repository: `https://github.com/mjodheim/mira-genesis`
-- Publication snapshot: the merged publication state is the archival target
 - M100 freeze/source commit: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`
 - Preservation tag: `experiment/m100-positive-result`
+
+The exact GitHub publication-package merge snapshot is preserved in the deposited Zenodo package manifest. The M100 experiment itself remains anchored to the frozen scientific commit and preservation tag above.
 
 ## M100 immutable identifiers
 

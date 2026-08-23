@@ -1,6 +1,6 @@
-# Mira Genesis M100 preprint — submission metadata
+# Mira Genesis M100 preprint — final submission metadata
 
-## Recommended title
+## Title
 
 **Mira Genesis: A Reproducible Case Study of Causal Cumulative Capability Acquisition in a Persistent Software Lineage**
 
@@ -8,6 +8,11 @@
 
 Anthony Mets  
 Independent Researcher
+
+## DOI
+
+- DOI: `10.5281/zenodo.22067855`
+- Persistent URL: `https://doi.org/10.5281/zenodo.22067855`
 
 ## Recommended arXiv categories
 
@@ -25,19 +30,21 @@ The paper is a mechanistic, reproducible case study rather than a broad performa
 ## Repository anchor
 
 - Repository: `https://github.com/mjodheim/mira-genesis`
-- Publication snapshot: the merged publication state is the archival target
 - M100 freeze: `c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98`
 - M100 preservation tag: `experiment/m100-positive-result`
 
-## Suggested Zenodo record
+The exact GitHub publication-package merge snapshot is recorded in the deposited Zenodo package manifest rather than repeated here, so repository citation-integrity checks remain scoped to scientific SHAs already tracked by the project.
 
-Archive an immutable repository snapshot at the merged publication state, then add the DOI to the paper and `CITATION.cff` in a follow-up publication commit. Do not invent or pre-fill a DOI before reservation/deposit.
+## Zenodo record
 
-## License notes
-
-- Project-controlled software: `AGPL-3.0-only` according to repository policy.
-- Research prose/results: repository documentation licence where applicable (`CC-BY-4.0` per project policy).
-- Do not describe the AGPL as non-commercial.
+- Resource type: Publication / Preprint
+- Publication date: `2026-08-23`
+- Creator: Anthony Mets
+- Affiliation: Independent Researcher
+- DOI: `10.5281/zenodo.22067855`
+- Manuscript/research-prose license: `CC-BY-4.0`
+- Related software repository: `https://github.com/mjodheim/mira-genesis`
+- Project-controlled software remains `AGPL-3.0-only`.
 
 ## AI-assistance disclosure
 
@@ -45,9 +52,6 @@ Mira Genesis and this manuscript were developed with substantial generative-AI a
 
 ## Final actions that require the author's account or attestation
 
-- arXiv sign-in and any endorsement/identity checks required by arXiv;
-- final author certification and submission;
-- Zenodo/GitHub authorization if an immutable DOI deposit is created through the author's account;
-- any legal, patent, trademark, or affiliation declaration outside the public disposition already recorded by the project.
-
-These are account/identity actions, not missing scientific work. The manuscript, source package, metadata, and repository evidence can be prepared before them.
+- upload the DOI-bearing final PDF and publication package to the reserved Zenodo draft, then publish it;
+- sign in to arXiv, upload the final source archive, complete any endorsement/identity checks, certify authorship, and submit;
+- complete any legal, patent, trademark, or affiliation declaration outside the public disposition already recorded by the project.
