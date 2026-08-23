@@ -658,37 +658,59 @@ def build_catalog(world: dict[str, Any]) -> list[Atomic]:
     return atomics
 
 
-def _apply_pipeline(value: Any, atomics: list[Atomic]) -> Any:
-    current = copy.deepcopy(value)
-    for atomic in atomics:
-        current = atomic.apply(current)
-    return current
+def _execute_t0_baseline(world: dict[str, Any], catalog: list[Atomic]) -> dict[str, Any]:
+    """Evaluate T0's complete one-atomic image under a matched N-squared budget.
 
-
-def resolve_slots(
-    public_cases: list[dict[str, Any]], catalog: list[Atomic], exact_length: int
-) -> tuple[list[int] | None, dict[str, Any]]:
-    assembled = 0
-    accepted: list[tuple[int, ...]] = []
-    for indices in itertools.product(range(len(catalog)), repeat=exact_length):
-        assembled += 1
+    This function and retained-A execution live in the same frozen executor and receive
+    the same world payload.  The state is the only arm input that differs.  Repeating
+    the N single-atomic candidates spends the matched budget but cannot compose them.
+    """
+    candidate_budget = len(catalog) ** 2
+    accepted: list[int] = []
+    for attempt in range(candidate_budget):
+        index = attempt % len(catalog)
+        atomic = catalog[index]
         try:
             if all(
-                _apply_pipeline(case["input"], [catalog[index] for index in indices])
-                == case["expected"]
-                for case in public_cases
+                atomic.apply(copy.deepcopy(case["input"])) == case["expected"]
+                for case in world["public_cases"]
             ):
-                accepted.append(indices)
+                accepted.append(index)
         except Exception:
             continue
-    accepted.sort(key=lambda item: digest([catalog[index].descriptor for index in item]))
-    selected = list(accepted[0]) if accepted else None
-    report: dict[str, Any] = {"assembled": assembled, "accepted": len(accepted)}
+    unique = sorted(set(accepted), key=lambda index: catalog[index].identity)
+    selected = unique[0] if unique else None
+    outcomes = []
     if selected is not None:
-        report["selected_pipeline_digest"] = digest(
-            [catalog[index].descriptor for index in selected]
-        )
-    return selected, report
+        for case in world["hidden_cases"]:
+            try:
+                output = catalog[selected].apply(copy.deepcopy(case["input"]))
+                passed = output == case["expected"]
+            except Exception as error:
+                output = {"error": f"{type(error).__name__}: {error}"}
+                passed = False
+            outcomes.append({"case_id": case["case_id"], "passed": passed, "output": output})
+    reachable = bool(outcomes) and all(item["passed"] for item in outcomes)
+    return {
+        "schema": "m101-t0-baseline-execution-v1",
+        "confirmed": not reachable,
+        "reachable": reachable,
+        "public_case_ids": [case["case_id"] for case in world["public_cases"]],
+        "hidden_case_ids": [case["case_id"] for case in world["hidden_cases"]],
+        "selected_atomic_index": selected,
+        "candidate_budget": candidate_budget,
+        "search": {
+            "assembled": candidate_budget,
+            "accepted": len(accepted),
+            "unique_semantic_candidates": len(catalog),
+            "repeated_budget_rounds": candidate_budget // len(catalog),
+        },
+        "structural_max_atomic_effects": 1,
+        "more_budget_same_language_can_exceed_one_effect": False,
+        "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
+        "hidden_total": len(world["hidden_cases"]),
+        "outcomes": outcomes,
+    }
 
 
 def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -> Any | None:
@@ -724,6 +746,35 @@ def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -
         else:
             return None
     return result if returned and not stack else None
+
+
+def _a_bindings(
+    body: list[str], public_cases: list[dict[str, Any]], catalog: list[Atomic]
+) -> tuple[list[int] | None, dict[str, Any]]:
+    """Resolve carrier bindings only by interpreting the registered A bytes."""
+    accepted: list[tuple[int, int]] = []
+    assembled = 0
+    for left, right in itertools.product(range(len(catalog)), repeat=2):
+        assembled += 1
+        slots = (catalog[left], catalog[right])
+        try:
+            if all(
+                _execute_a_body(body, case["input"], slots) == case["expected"]
+                for case in public_cases
+            ):
+                accepted.append((left, right))
+        except Exception:
+            continue
+    accepted.sort(
+        key=lambda item: digest([catalog[item[0]].descriptor, catalog[item[1]].descriptor])
+    )
+    selected = list(accepted[0]) if accepted else None
+    report: dict[str, Any] = {"assembled": assembled, "accepted": len(accepted)}
+    if selected is not None:
+        report["selected_binding_digest"] = digest(
+            [catalog[selected[0]].descriptor, catalog[selected[1]].descriptor]
+        )
+    return selected, report
 
 
 def _execute_b_body(
@@ -767,6 +818,44 @@ def _execute_b_body(
         else:
             return None
     return current if returned else None
+
+
+def _b_bindings(
+    body: list[str],
+    state: dict[str, Any],
+    public_cases: list[dict[str, Any]],
+    catalog: list[Atomic],
+) -> tuple[list[int] | None, dict[str, Any]]:
+    """Resolve carrier bindings only through registered B and its live A call."""
+    accepted: list[tuple[int, int, int]] = []
+    assembled = 0
+    for first, second, third in itertools.product(range(len(catalog)), repeat=3):
+        assembled += 1
+        slots = (catalog[first], catalog[second], catalog[third])
+        try:
+            if all(
+                _execute_b_body(body, state, case["input"], slots) == case["expected"]
+                for case in public_cases
+            ):
+                accepted.append((first, second, third))
+        except Exception:
+            continue
+    accepted.sort(
+        key=lambda item: digest(
+            [
+                catalog[item[0]].descriptor,
+                catalog[item[1]].descriptor,
+                catalog[item[2]].descriptor,
+            ]
+        )
+    )
+    selected = list(accepted[0]) if accepted else None
+    report: dict[str, Any] = {"assembled": assembled, "accepted": len(accepted)}
+    if selected is not None:
+        report["selected_binding_digest"] = digest(
+            [catalog[selected[0]].descriptor, catalog[selected[1]].descriptor, catalog[selected[2]].descriptor]
+        )
+    return selected, report
 
 
 def _execute_m100_body(
@@ -814,16 +903,18 @@ def _execute_m100_body(
 
 
 def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
-    if not state["definitions"]:
-        raise ValueError("A is not registered")
-    a = state["definitions"][0]
     catalog = build_catalog(world)
-    inferred, inference = resolve_slots(world["public_cases"], catalog, 2)
+    if not state["definitions"]:
+        return _execute_t0_baseline(world, catalog)
+    a = state["definitions"][0]
+    inferred, binding_search = _a_bindings(
+        list(a["body"]), world["public_cases"], catalog
+    )
     if inferred is None:
         return {
             "schema": "m101-a-execution-v1",
             "confirmed": False,
-            "inference": inference,
+            "binding_search": binding_search,
             "hidden_passed": 0,
             "hidden_total": len(world["hidden_cases"]),
         }
@@ -843,7 +934,7 @@ def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
         "public_case_ids": [case["case_id"] for case in world["public_cases"]],
         "hidden_case_ids": [case["case_id"] for case in world["hidden_cases"]],
         "inferred_slot_indices": inferred,
-        "inference": inference,
+        "binding_search": binding_search,
         "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
         "hidden_total": len(outcomes),
         "outcomes": outcomes,
@@ -857,12 +948,14 @@ def execute_b(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
     if b["dependencies"] != [a["definition_id"]]:
         raise ValueError("B lost its live A dependency")
     catalog = build_catalog(world)
-    inferred, inference = resolve_slots(world["public_cases"], catalog, 3)
+    inferred, binding_search = _b_bindings(
+        list(b["body"]), state, world["public_cases"], catalog
+    )
     if inferred is None:
         return {
             "schema": "m101-b-execution-v1",
             "confirmed": False,
-            "inference": inference,
+            "binding_search": binding_search,
             "hidden_passed": 0,
             "hidden_total": len(world["hidden_cases"]),
         }
@@ -882,7 +975,7 @@ def execute_b(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
         "public_case_ids": [case["case_id"] for case in world["public_cases"]],
         "hidden_case_ids": [case["case_id"] for case in world["hidden_cases"]],
         "inferred_slot_indices": inferred,
-        "inference": inference,
+        "binding_search": binding_search,
         "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
         "hidden_total": len(outcomes),
         "outcomes": outcomes,
@@ -931,11 +1024,12 @@ def _project_modules() -> list[str]:
 def run(action: str, state_path: Path, world_path: Path) -> dict[str, Any]:
     raw = state_path.read_bytes()
     state = decode_state(raw)
+    world_raw = world_path.read_bytes()
     try:
-        world_raw = json.loads(world_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as error:
+        world_value = json.loads(world_raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
         raise ValueError(f"world is not JSON: {error}") from error
-    world = _m100_world(world_raw) if action == "execute-m100" else _world(world_raw)
+    world = _m100_world(world_value) if action == "execute-m100" else _world(world_value)
     if action == "execute-a":
         execution = execute_a(state, world)
     elif action == "execute-b":
@@ -950,6 +1044,7 @@ def run(action: str, state_path: Path, world_path: Path) -> dict[str, Any]:
         "pid": os.getpid(),
         "isolated_mode": sys.flags.isolated == 1,
         "state_raw_sha256": sha256_bytes(raw),
+        "world_raw_sha256": sha256_bytes(world_raw),
         "state_digest": state["state_digest"],
         "m100_sha256": state["m100_sha256"],
         "definition_count": len(state["definitions"]),

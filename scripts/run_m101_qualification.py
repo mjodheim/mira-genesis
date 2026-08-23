@@ -263,12 +263,13 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
             baselines.append(
                 {
                     "entry": world["id"],
+                    "world_digest": digest(world),
                     "public_demand_digest": digest(public_demand(world)),
-                    "fresh": _acquisition(
-                        capsules["acquisition"],
-                        "baseline",
-                        state=t0_path,
-                        demand=demand_paths[world["id"]],
+                    "fresh": _execution(
+                        capsules["execution"],
+                        "execute-a",
+                        t0_path,
+                        world_paths[world["id"]],
                     ),
                 }
             )
@@ -416,19 +417,38 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
         }
         baseline_by_entry = {row["entry"]: row for row in baselines}
         execution_by_entry = {row["entry"]: row for row in a_executions}
+        t0_parity_state = json.loads(t0_bytes.decode("ascii"))
+        t1_parity_state = json.loads(t1_bytes.decode("ascii"))
+        differing_state_keys = sorted(
+            key
+            for key in t0_parity_state
+            if t0_parity_state[key] != t1_parity_state[key]
+        )
         parity_rows = []
         for world in transfers:
-            baseline_row = baseline_by_entry[world["id"]]["fresh"]["runtime"]["baseline"]
+            baseline_envelope = baseline_by_entry[world["id"]]["fresh"]["runtime"]
+            retained_envelope = execution_by_entry[world["id"]]["fresh"]["runtime"]
+            baseline_row = baseline_envelope["execution"]
             execution_row = execution_by_entry[world["id"]]["fresh"]["runtime"]["execution"]
             parity_rows.append(
                 {
                     "entry": world["id"],
+                    "same_executor_capsule": True,
+                    "same_action": (
+                        baseline_envelope["action"]
+                        == retained_envelope["action"]
+                        == "execute-a"
+                    ),
+                    "same_world_payload_digest": baseline_envelope["world_raw_sha256"]
+                    == retained_envelope["world_raw_sha256"],
                     "catalog_digest": digest(world["catalog"]),
                     "public_demand_digest": digest(public_demand(world)),
                     "public_case_ids_equal": baseline_row["public_case_ids"]
                     == execution_row["public_case_ids"],
+                    "hidden_case_ids_equal": baseline_row["hidden_case_ids"]
+                    == execution_row["hidden_case_ids"],
                     "candidate_budget_equal": baseline_row["candidate_budget"]
-                    == execution_row["inference"]["assembled"],
+                    == execution_row["binding_search"]["assembled"],
                     "baseline_structural_max_atomic_effects": baseline_row[
                         "structural_max_atomic_effects"
                     ],
@@ -439,9 +459,9 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
         baseline_parity = {
             "common_descriptor": {
                 "m100_sha256": m100_sha256,
-                "acquisition_capsule_digest": capsule_reports["acquisition"]["capsule_digest"],
                 "execution_capsule_digest": capsule_reports["execution"]["capsule_digest"],
-                "validation_policy": "closed public demand; exact hidden equality",
+                "action": "execute-a",
+                "validation_policy": "same full world payload; public binding then exact hidden equality",
                 "observation_budget": 4,
             },
             "arm_difference": {
@@ -450,12 +470,19 @@ def run_experiment(pool: dict[str, Any], *, allow_frozen: bool = False) -> dict[
                 "baseline_definition_count": 0,
                 "retained_definition_count": 1,
                 "permitted_difference": "registered A and state digest implied by that registration",
+                "differing_state_keys": differing_state_keys,
             },
             "rows": parity_rows,
             "only_permitted_causal_difference": all(
-                row["public_case_ids_equal"] and row["candidate_budget_equal"]
+                row["same_executor_capsule"]
+                and row["same_action"]
+                and row["same_world_payload_digest"]
+                and row["public_case_ids_equal"]
+                and row["hidden_case_ids_equal"]
+                and row["candidate_budget_equal"]
                 for row in parity_rows
-            ),
+            )
+            and differing_state_keys == ["definitions", "state_digest"],
         }
 
         evidence: dict[str, Any] = {

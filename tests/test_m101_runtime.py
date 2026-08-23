@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from metamorphosis import m100_runtime
+from metamorphosis import m101_executor as executor
 from metamorphosis import m101_runtime as runtime
 from scripts import check_m101_definitions as validator
 from scripts import run_m101_development as development
@@ -220,7 +221,9 @@ def test_development_a_is_demand_derived_registered_and_carrier_neutral() -> Non
     t0 = runtime.create_state(_m100_s3_bytes()[0])
     world = _text_world()
     demand = runtime.public_demand(world)
-    assert runtime.baseline(demand)["reachable"] is False
+    baseline = executor.execute_a(t0, executor._world(deepcopy(world)))
+    assert baseline["reachable"] is False
+    assert baseline["structural_max_atomic_effects"] == 1
     built = runtime.acquire_a(t0, demand, register_result=False)
     assert built["confirmed"] is True
     assert built["registered"] is False
@@ -238,18 +241,21 @@ def test_development_a_is_demand_derived_registered_and_carrier_neutral() -> Non
         term in runtime.canonical_json(acquired["adopted"]).lower()
         for term in runtime.FORBIDDEN_A_SUBSTRINGS
     )
-    assert runtime.execute_a(acquired["next_state"], world)["hidden_passed"] == 4
+    assert executor.execute_a(
+        acquired["next_state"], executor._world(deepcopy(world))
+    )["hidden_passed"] == 4
 
 
 @pytest.mark.parametrize("world_factory", [_record_world, _syntax_transfer_world])
 def test_registered_a_transfers_while_the_fresh_baseline_remains_closed(world_factory) -> None:
     _t0_state, t1 = _t1()
     world = world_factory()
-    demand = runtime.public_demand(world)
-    assert runtime.baseline(demand)["reachable"] is False
-    execution = runtime.execute_a(t1, world)
+    baseline = executor.execute_a(_t0_state, executor._world(deepcopy(world)))
+    assert baseline["reachable"] is False
+    execution = executor.execute_a(t1, executor._world(deepcopy(world)))
     assert execution["confirmed"] is True
     assert execution["hidden_passed"] == 4
+    assert baseline["candidate_budget"] == execution["binding_search"]["assembled"]
 
 
 def test_later_syntax_b_requires_registered_a_and_retains_a_live() -> None:
@@ -264,10 +270,10 @@ def test_later_syntax_b_requires_registered_a_and_retains_a_live() -> None:
     a, b = t2["definitions"]
     assert b["dependencies"] == [a["definition_id"]]
     assert any(token.startswith(f"CALL:{a['definition_id']}:") for token in b["body"])
-    assert runtime.execute_b(t2, world)["hidden_passed"] == 4
+    assert executor.execute_b(t2, executor._world(deepcopy(world)))["hidden_passed"] == 4
 
     fault = runtime.rewrite_a_order_for_fault(t2)
-    assert runtime.execute_b_fault_state(fault, world)["confirmed"] is False
+    assert executor.execute_b(fault, executor._world(deepcopy(world)))["confirmed"] is False
     with pytest.raises(
         ValueError, match="missing or forward dependency|first M101 definition"
     ):
@@ -292,6 +298,22 @@ def test_definition_and_state_tampering_fail_closed() -> None:
     changed_predecessor["state_digest"] = runtime.digest(payload)
     with pytest.raises(ValueError, match="predecessor bytes changed"):
         runtime.decode_state(changed_predecessor)
+
+
+def test_t0_has_no_host_pipeline_shortcut_and_same_executor_compares_t0_to_t1() -> None:
+    runtime_source = (ROOT / "metamorphosis/m101_runtime.py").read_text(encoding="utf-8")
+    executor_source = (ROOT / "metamorphosis/m101_executor.py").read_text(encoding="utf-8")
+    for forbidden in ("apply_pipeline", "infer_slots", "resolve_slots"):
+        assert forbidden not in runtime_source
+        assert forbidden not in executor_source
+
+    t0, t1 = _t1()
+    world = executor._world(deepcopy(_record_world()))
+    baseline = executor.execute_a(t0, deepcopy(world))
+    retained = executor.execute_a(t1, deepcopy(world))
+    assert baseline["reachable"] is False
+    assert retained["confirmed"] is True
+    assert baseline["candidate_budget"] == retained["binding_search"]["assembled"]
 
 
 def test_independent_definition_validator_recomputes_a_and_b_semantics() -> None:

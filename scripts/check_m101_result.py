@@ -134,7 +134,7 @@ def check_p4(evidence: dict[str, Any]) -> Condition:
     failures: list[str] = []
     baselines = evidence.get("fresh_baselines", [])
     for row in baselines:
-        baseline = row.get("fresh", {}).get("runtime", {}).get("baseline", {})
+        baseline = row.get("fresh", {}).get("runtime", {}).get("execution", {})
         if baseline.get("structural_max_atomic_effects") != 1:
             failures.append(f"{row.get('entry')} baseline can exceed one atomic effect")
         if baseline.get("more_budget_same_language_can_exceed_one_effect") is not False:
@@ -143,6 +143,10 @@ def check_p4(evidence: dict[str, Any]) -> Condition:
         "baseline_language_is_exactly_one_atomic_application"
     ):
         failures.append("source audit does not prove one-atomic baseline semantics")
+    if not evidence.get("boundary_audit", {}).get("checks", {}).get(
+        "host_pipeline_shortcut_is_absent"
+    ):
+        failures.append("source audit does not exclude the v3 host-pipeline shortcut")
     return _condition("P4", "T0_structural_closure_proves_two_ordered_effects_unreachable_without_language_change", failures)
 
 
@@ -196,7 +200,7 @@ def check_p7(evidence: dict[str, Any]) -> Condition:
     if len(holdouts) != 8 or not all(_success(row.get("fresh", {})) for row in holdouts):
         failures.append("retained A did not solve all eight transfer holdouts")
     if len(baselines) != 8 or any(
-        row.get("fresh", {}).get("runtime", {}).get("baseline", {}).get("reachable") is not False
+        row.get("fresh", {}).get("runtime", {}).get("execution", {}).get("reachable") is not False
         for row in baselines
     ):
         failures.append("fresh baseline did not score zero of eight")
@@ -208,8 +212,17 @@ def check_p8(evidence: dict[str, Any]) -> Condition:
     failures: list[str] = []
     if parity.get("only_permitted_causal_difference") is not True:
         failures.append("baseline and retained arms differ outside registered A/state digest")
+    if parity.get("arm_difference", {}).get("differing_state_keys") != [
+        "definitions", "state_digest"
+    ]:
+        failures.append("baseline/retained state diff is not exactly A plus its digest")
     if any(
         row.get("candidate_budget_equal") is not True
+        or row.get("same_executor_capsule") is not True
+        or row.get("same_action") is not True
+        or row.get("same_world_payload_digest") is not True
+        or row.get("public_case_ids_equal") is not True
+        or row.get("hidden_case_ids_equal") is not True
         or row.get("baseline_structural_max_atomic_effects") != 1
         for row in parity.get("rows", [])
     ):

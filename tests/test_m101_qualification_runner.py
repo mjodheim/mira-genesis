@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from copy import deepcopy
 from typing import Any
 
 import pytest
@@ -127,8 +128,20 @@ def test_complete_development_chronology_crosses_fresh_processes_and_controls() 
     assert all(row["fresh"]["runtime"]["confirmed"] for row in evidence["a_reuse"])
     assert all(row["fresh"]["runtime"]["confirmed"] for row in evidence["b_reuse"])
     assert all(row["fresh"]["runtime"]["confirmed"] for row in evidence["m100_conservation"])
-    assert all(row["fresh"]["runtime"]["baseline"]["reachable"] is False for row in evidence["fresh_baselines"])
+    assert all(
+        row["fresh"]["runtime"]["execution"]["reachable"] is False
+        for row in evidence["fresh_baselines"]
+    )
     assert evidence["baseline_parity"]["only_permitted_causal_difference"] is True
+    assert evidence["baseline_parity"]["arm_difference"]["differing_state_keys"] == [
+        "definitions", "state_digest"
+    ]
+    assert all(
+        row["same_executor_capsule"]
+        and row["same_action"]
+        and row["same_world_payload_digest"]
+        for row in evidence["baseline_parity"]["rows"]
+    )
     controls = evidence["dependency_controls"]
     assert all(row["runtime"]["confirmed"] is False for row in controls["fault_breaks_all_b_worlds"])
     assert controls["ablate_a"]["runtime"]["failed_closed"] is True
@@ -158,3 +171,23 @@ def test_complete_development_chronology_crosses_fresh_processes_and_controls() 
         checker.check_p14(evidence),
     ):
         assert condition.passed is True, condition.failures
+
+
+def test_checker_rejects_baseline_parity_shortcuts_even_if_summary_bit_is_forged() -> None:
+    evidence = runner.run_experiment(_development_pool())
+
+    different_executor = deepcopy(evidence)
+    different_executor["baseline_parity"]["rows"][0]["same_executor_capsule"] = False
+    different_executor["baseline_parity"]["only_permitted_causal_difference"] = True
+    condition = checker.check_p8(different_executor)
+    assert condition.passed is False
+    assert "matched-budget structural closure changed" in condition.failures
+
+    extra_state_difference = deepcopy(evidence)
+    extra_state_difference["baseline_parity"]["arm_difference"]["differing_state_keys"] = [
+        "definitions", "m100_ascii", "state_digest"
+    ]
+    extra_state_difference["baseline_parity"]["only_permitted_causal_difference"] = True
+    condition = checker.check_p8(extra_state_difference)
+    assert condition.passed is False
+    assert "baseline/retained state diff is not exactly A plus its digest" in condition.failures

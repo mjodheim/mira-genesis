@@ -592,77 +592,24 @@ def build_catalog(world: dict[str, Any]) -> list[Atomic]:
     return atomics
 
 
-def apply_pipeline(value: Any, atomics: list[Atomic]) -> Any:
-    current = copy.deepcopy(value)
-    for atomic in atomics:
-        current = atomic.apply(current)
-    return current
+def _single_atomic_reachable(
+    public_cases: list[dict[str, Any]], catalog: list[Atomic]
+) -> bool:
+    """Return whether one inherited atomic alone satisfies the public demand.
 
-
-def infer_slots(
-    public_cases: list[dict[str, Any]], catalog: list[Atomic], exact_length: int
-) -> tuple[list[int] | None, dict[str, Any]]:
-    if exact_length < 1:
-        raise ValueError("exact_length must be positive")
-    assembled = 0
-    accepted: list[tuple[int, ...]] = []
-    for indices in itertools.product(range(len(catalog)), repeat=exact_length):
-        assembled += 1
+    This is deliberately not implemented through a variable-length pipeline helper.
+    T0's executable candidate image is the finite set of single atomic applications.
+    """
+    for atomic in catalog:
         try:
             if all(
-                apply_pipeline(case["input"], [catalog[index] for index in indices])
-                == case["expected"]
+                atomic.apply(copy.deepcopy(case["input"])) == case["expected"]
                 for case in public_cases
             ):
-                accepted.append(indices)
+                return True
         except Exception:
             continue
-    accepted.sort(key=lambda item: digest([catalog[index].descriptor for index in item]))
-    selected = list(accepted[0]) if accepted else None
-    stats: dict[str, Any] = {
-        "assembled": assembled,
-        "accepted": len(accepted),
-    }
-    if selected is not None:
-        stats["selected_pipeline_digest"] = digest(
-            [catalog[index].descriptor for index in selected]
-        )
-    return selected, stats
-
-
-def single_atomic_reachable(public_cases: list[dict[str, Any]], catalog: list[Atomic]) -> bool:
-    slots, _stats = infer_slots(public_cases, catalog, 1)
-    return slots is not None
-
-
-def one_atomic_baseline_search(
-    public_cases: list[dict[str, Any]], catalog: list[Atomic], candidate_budget: int
-) -> tuple[list[int] | None, dict[str, Any]]:
-    """Spend a matched budget without ever composing two atomic effects."""
-    if not catalog or candidate_budget < len(catalog):
-        raise ValueError("one-atomic baseline budget is invalid")
-    accepted: list[int] = []
-    for attempt in range(candidate_budget):
-        index = attempt % len(catalog)
-        try:
-            if all(
-                catalog[index].apply(copy.deepcopy(case["input"])) == case["expected"]
-                for case in public_cases
-            ):
-                accepted.append(index)
-        except Exception:
-            continue
-    unique = sorted(set(accepted), key=lambda index: catalog[index].identity)
-    selected = [unique[0]] if unique else None
-    report: dict[str, Any] = {
-        "assembled": candidate_budget,
-        "accepted": len(accepted),
-        "unique_semantic_candidates": len(catalog),
-        "repeated_budget_rounds": candidate_budget // len(catalog),
-    }
-    if selected is not None:
-        report["selected_pipeline_digest"] = digest(catalog[selected[0]].descriptor)
-    return selected, report
+    return False
 
 
 def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -> Any | None:
@@ -700,6 +647,41 @@ def _execute_a_body(body: list[str], value: Any, slots: tuple[Atomic, Atomic]) -
     return result if returned and not stack else None
 
 
+def _a_bindings(
+    body: list[str], public_cases: list[dict[str, Any]], catalog: list[Atomic]
+) -> tuple[list[int] | None, dict[str, Any]]:
+    """Resolve opaque slots only by executing the candidate/registered A body.
+
+    The removed v3 implementation first executed a host-side list pipeline and could
+    therefore solve a two-effect demand at T0 without A.  Here every two-effect trial
+    is mediated by the explicit body under test.  With no body in lineage state, this
+    operation is unavailable to the consumer baseline.
+    """
+    accepted: list[tuple[int, int]] = []
+    assembled = 0
+    for left, right in itertools.product(range(len(catalog)), repeat=2):
+        assembled += 1
+        slots = (catalog[left], catalog[right])
+        try:
+            if all(
+                _execute_a_body(body, case["input"], slots) == case["expected"]
+                for case in public_cases
+            ):
+                accepted.append((left, right))
+        except Exception:
+            continue
+    accepted.sort(
+        key=lambda item: digest([catalog[item[0]].descriptor, catalog[item[1]].descriptor])
+    )
+    selected = list(accepted[0]) if accepted else None
+    report: dict[str, Any] = {"assembled": assembled, "accepted": len(accepted)}
+    if selected is not None:
+        report["selected_binding_digest"] = digest(
+            [catalog[selected[0]].descriptor, catalog[selected[1]].descriptor]
+        )
+    return selected, report
+
+
 def acquire_a(
     state: dict[str, Any], demand: dict[str, Any], *, register_result: bool
 ) -> dict[str, Any]:
@@ -712,14 +694,12 @@ def acquire_a(
     public_cases = public["public_cases"]
     public_case_ids = [case["case_id"] for case in public_cases]
     catalog = build_catalog(public)
-    one_reachable = single_atomic_reachable(public_cases, catalog)
-    inferred, inference_stats = infer_slots(public_cases, catalog, 2)
-    if one_reachable or inferred is None:
+    one_reachable = _single_atomic_reachable(public_cases, catalog)
+    if one_reachable:
         return {
             "schema": "m101-a-acquisition-v1",
             "confirmed": False,
             "single_atomic_reachable": one_reachable,
-            "inference": inference_stats,
             "assembled": 0,
             "well_formed": 0,
             "accepted": 0,
@@ -728,10 +708,10 @@ def acquire_a(
             "next_state": None,
             "public_case_ids": public_case_ids,
         }
-    slots = (catalog[inferred[0]], catalog[inferred[1]])
     assembled = 0
     well_formed = 0
-    accepted: list[list[str]] = []
+    binding_candidates_evaluated = 0
+    accepted: list[tuple[list[str], list[int], dict[str, Any]]] = []
     for length in range(1, A_MAX_BODY + 1):
         for body_tuple in itertools.product(A_TOKENS, repeat=length):
             assembled += 1
@@ -739,102 +719,43 @@ def acquire_a(
             if _a_call_order(body) != (0, 1):
                 continue
             well_formed += 1
-            try:
-                if all(
-                    _execute_a_body(body, case["input"], slots) == case["expected"]
-                    for case in public_cases
-                ):
-                    accepted.append(body)
-            except Exception:
-                continue
-    accepted.sort(key=lambda body: (len(body), digest(body)))
+            binding, binding_report = _a_bindings(body, public_cases, catalog)
+            binding_candidates_evaluated += int(binding_report["assembled"])
+            if binding is not None:
+                accepted.append((body, binding, binding_report))
+    accepted.sort(key=lambda item: (len(item[0]), digest(item[0])))
     if not accepted:
         return {
             "schema": "m101-a-acquisition-v1",
             "confirmed": False,
             "single_atomic_reachable": False,
-            "inference": inference_stats,
             "assembled": assembled,
             "well_formed": well_formed,
+            "binding_candidates_evaluated": binding_candidates_evaluated,
             "accepted": 0,
             "adopted": None,
             "registered": False,
             "next_state": None,
             "public_case_ids": public_case_ids,
         }
-    adopted = definition(A_ORIGIN, accepted[0], [])
+    selected_body, selected_binding, selected_binding_report = accepted[0]
+    adopted = definition(A_ORIGIN, selected_body, [])
     next_state = register(checked, adopted) if register_result else None
     return {
         "schema": "m101-a-acquisition-v1",
         "confirmed": True,
         "single_atomic_reachable": False,
-        "inferred_slot_indices": inferred,
-        "inference": inference_stats,
+        "inferred_slot_indices": selected_binding,
+        "binding_search": selected_binding_report,
         "assembled": assembled,
         "well_formed": well_formed,
+        "binding_candidates_evaluated": binding_candidates_evaluated,
         "accepted": len(accepted),
-        "shortest_accepted_length": len(accepted[0]),
+        "shortest_accepted_length": len(selected_body),
         "adopted": adopted,
         "registered": bool(register_result),
         "next_state": next_state,
         "public_case_ids": public_case_ids,
-    }
-
-
-def execute_a(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
-    checked = decode_state(state)
-    if not checked["definitions"]:
-        raise ValueError("A is not registered")
-    a = checked["definitions"][0]
-    catalog = build_catalog(world)
-    public_cases = _cases(world.get("public_cases"), "world public")
-    hidden_cases = _cases(world.get("hidden_cases"), "world hidden")
-    inferred, inference_stats = infer_slots(public_cases, catalog, 2)
-    if inferred is None:
-        return {
-            "schema": "m101-a-execution-v1",
-            "confirmed": False,
-            "inference": inference_stats,
-            "hidden_passed": 0,
-            "hidden_total": len(hidden_cases),
-        }
-    slots = (catalog[inferred[0]], catalog[inferred[1]])
-    outcomes = []
-    for case in hidden_cases:
-        try:
-            output = _execute_a_body(list(a["body"]), case["input"], slots)
-            passed = output == case["expected"]
-        except Exception as error:
-            output = {"error": f"{type(error).__name__}: {error}"}
-            passed = False
-        outcomes.append({"passed": passed, "output": output})
-    return {
-        "schema": "m101-a-execution-v1",
-        "confirmed": all(item["passed"] for item in outcomes),
-        "inferred_slot_indices": inferred,
-        "inference": inference_stats,
-        "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
-        "hidden_total": len(outcomes),
-        "outcomes": outcomes,
-    }
-
-
-def baseline(demand: dict[str, Any]) -> dict[str, Any]:
-    public = decode_public_demand(demand)
-    catalog = build_catalog(public)
-    public_cases = public["public_cases"]
-    candidate_budget = len(catalog) ** 2
-    inferred, stats = one_atomic_baseline_search(public_cases, catalog, candidate_budget)
-    return {
-        "schema": "m101-baseline-v1",
-        "world_id": public["world_id"],
-        "public_case_ids": [case["case_id"] for case in public_cases],
-        "reachable": inferred is not None,
-        "inferred_slot_indices": inferred,
-        "search": stats,
-        "candidate_budget": candidate_budget,
-        "structural_max_atomic_effects": 1,
-        "more_budget_same_language_can_exceed_one_effect": False,
     }
 
 
@@ -882,6 +803,44 @@ def _execute_b_body(
     return current if returned else None
 
 
+def _b_bindings(
+    body: list[str],
+    state: dict[str, Any],
+    public_cases: list[dict[str, Any]],
+    catalog: list[Atomic],
+) -> tuple[list[int] | None, dict[str, Any]]:
+    """Resolve three opaque slots only through the candidate B body and live A."""
+    accepted: list[tuple[int, int, int]] = []
+    assembled = 0
+    for first, second, third in itertools.product(range(len(catalog)), repeat=3):
+        assembled += 1
+        slots = (catalog[first], catalog[second], catalog[third])
+        try:
+            if all(
+                _execute_b_body(body, state, case["input"], slots) == case["expected"]
+                for case in public_cases
+            ):
+                accepted.append((first, second, third))
+        except Exception:
+            continue
+    accepted.sort(
+        key=lambda item: digest(
+            [
+                catalog[item[0]].descriptor,
+                catalog[item[1]].descriptor,
+                catalog[item[2]].descriptor,
+            ]
+        )
+    )
+    selected = list(accepted[0]) if accepted else None
+    report: dict[str, Any] = {"assembled": assembled, "accepted": len(accepted)}
+    if selected is not None:
+        report["selected_binding_digest"] = digest(
+            [catalog[selected[0]].descriptor, catalog[selected[1]].descriptor, catalog[selected[2]].descriptor]
+        )
+    return selected, report
+
+
 def acquire_b(
     state: dict[str, Any], demand: dict[str, Any], *, register_result: bool
 ) -> dict[str, Any]:
@@ -906,21 +865,6 @@ def acquire_b(
     a_id = str(a["definition_id"])
     public_cases = public["public_cases"]
     catalog = build_catalog(public)
-    inferred, inference_stats = infer_slots(public_cases, catalog, 3)
-    if inferred is None:
-        return {
-            "schema": "m101-b-acquisition-v1",
-            "confirmed": False,
-            "reason": "three-effect demand was not recoverable from observations",
-            "inference": inference_stats,
-            "assembled": 0,
-            "well_formed": 0,
-            "accepted": 0,
-            "registered": False,
-            "next_state": None,
-            "public_case_ids": public_case_ids,
-        }
-    slots = (catalog[inferred[0]], catalog[inferred[1]], catalog[inferred[2]])
 
     alphabet = [
         "LOAD_INPUT",
@@ -931,7 +875,8 @@ def acquire_b(
     ] + [f"CALL:{a_id}:{left}:{right}" for left in range(3) for right in range(3)]
     assembled = 0
     well_formed = 0
-    accepted: list[list[str]] = []
+    binding_candidates_evaluated = 0
+    accepted: list[tuple[list[str], list[int], dict[str, Any]]] = []
     for length in range(1, B_MAX_BODY + 1):
         for body_tuple in itertools.product(alphabet, repeat=length):
             assembled += 1
@@ -939,38 +884,36 @@ def acquire_b(
             if _b_call_order(body, a_id) != (0, 1, 2):
                 continue
             well_formed += 1
-            try:
-                if all(
-                    _execute_b_body(body, checked, case["input"], slots) == case["expected"]
-                    for case in public_cases
-                ):
-                    accepted.append(body)
-            except Exception:
-                continue
-    accepted.sort(key=lambda body: (len(body), digest(body)))
+            binding, binding_report = _b_bindings(body, checked, public_cases, catalog)
+            binding_candidates_evaluated += int(binding_report["assembled"])
+            if binding is not None:
+                accepted.append((body, binding, binding_report))
+    accepted.sort(key=lambda item: (len(item[0]), digest(item[0])))
     if not accepted:
         return {
             "schema": "m101-b-acquisition-v1",
             "confirmed": False,
-            "inference": inference_stats,
             "assembled": assembled,
             "well_formed": well_formed,
+            "binding_candidates_evaluated": binding_candidates_evaluated,
             "accepted": 0,
             "registered": False,
             "next_state": None,
             "public_case_ids": public_case_ids,
         }
-    adopted = definition(B_ORIGIN, accepted[0], [a_id])
+    selected_body, selected_binding, selected_binding_report = accepted[0]
+    adopted = definition(B_ORIGIN, selected_body, [a_id])
     next_state = register(checked, adopted) if register_result else None
     return {
         "schema": "m101-b-acquisition-v1",
         "confirmed": True,
-        "inferred_slot_indices": inferred,
-        "inference": inference_stats,
+        "inferred_slot_indices": selected_binding,
+        "binding_search": selected_binding_report,
         "assembled": assembled,
         "well_formed": well_formed,
+        "binding_candidates_evaluated": binding_candidates_evaluated,
         "accepted": len(accepted),
-        "shortest_accepted_length": len(accepted[0]),
+        "shortest_accepted_length": len(selected_body),
         "adopted": adopted,
         "registered": bool(register_result),
         "next_state": next_state,
@@ -978,49 +921,8 @@ def acquire_b(
     }
 
 
-def execute_b(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
-    checked = decode_state(state)
-    if len(checked["definitions"]) != 2:
-        raise ValueError("B is not registered")
-    b = checked["definitions"][1]
-    a_id = str(checked["definitions"][0]["definition_id"])
-    if b["dependencies"] != [a_id]:
-        raise ValueError("B lost its live A dependency")
-    catalog = build_catalog(world)
-    public_cases = _cases(world.get("public_cases"), "B world public")
-    hidden_cases = _cases(world.get("hidden_cases"), "B world hidden")
-    inferred, inference_stats = infer_slots(public_cases, catalog, 3)
-    if inferred is None:
-        return {
-            "schema": "m101-b-execution-v1",
-            "confirmed": False,
-            "inference": inference_stats,
-            "hidden_passed": 0,
-            "hidden_total": len(hidden_cases),
-        }
-    slots = (catalog[inferred[0]], catalog[inferred[1]], catalog[inferred[2]])
-    outcomes = []
-    for case in hidden_cases:
-        try:
-            output = _execute_b_body(list(b["body"]), checked, case["input"], slots)
-            passed = output == case["expected"]
-        except Exception as error:
-            output = {"error": f"{type(error).__name__}: {error}"}
-            passed = False
-        outcomes.append({"passed": passed, "output": output})
-    return {
-        "schema": "m101-b-execution-v1",
-        "confirmed": all(item["passed"] for item in outcomes),
-        "inferred_slot_indices": inferred,
-        "inference": inference_stats,
-        "hidden_passed": sum(bool(item["passed"]) for item in outcomes),
-        "hidden_total": len(outcomes),
-        "outcomes": outcomes,
-    }
-
-
 def rewrite_a_order_for_fault(state: dict[str, Any]) -> dict[str, Any]:
-    """Create a normal, digest-valid semantic fault by reversing A's call order.
+    """Create a digest-valid fault by replacing A's second effect with its first.
 
     The dependent B is re-addressed so the content-addressed dependency graph remains valid;
     no semantic repair is performed. Normal ``decode_state`` accepts the mutated state because
@@ -1030,7 +932,7 @@ def rewrite_a_order_for_fault(state: dict[str, Any]) -> dict[str, Any]:
     if len(checked["definitions"]) != 2:
         raise ValueError("T2 is required for the live mutation control")
     old_a, old_b = copy.deepcopy(checked["definitions"])
-    mutated_a = definition(A_ORIGIN, ["LOAD_INPUT", "APPLY_SLOT:1", "APPLY_SLOT:0", "RETURN"], [])
+    mutated_a = definition(A_ORIGIN, ["LOAD_INPUT", "APPLY_SLOT:0", "APPLY_SLOT:0", "RETURN"], [])
     old_id = str(old_a["definition_id"])
     new_id = str(mutated_a["definition_id"])
     new_b_body = [
@@ -1040,11 +942,6 @@ def rewrite_a_order_for_fault(state: dict[str, Any]) -> dict[str, Any]:
     mutated_b = definition(B_ORIGIN, new_b_body, [new_id])
     return decode_state(_state(checked["m100_ascii"].encode("ascii"), [mutated_a, mutated_b]))
 
-
-def execute_b_fault_state(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
-    """Execute B from the digest-valid semantically mutated lineage state."""
-    result = execute_b(state, world)
-    return {**result, "schema": "m101-b-fault-execution-v1"}
 
 def ablate_a_raw(state: dict[str, Any]) -> bytes:
     checked = decode_state(state)

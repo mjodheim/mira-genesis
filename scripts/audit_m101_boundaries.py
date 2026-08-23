@@ -93,7 +93,7 @@ def audit() -> dict[str, Any]:
         and not acquisition_imports & {"metamorphosis", "scripts", "mira_core"}
     )
     checks["acquisition_capsule_source_has_no_pool_or_hidden_case_loader"] = all(
-        token not in sources["acquisition_entry"]
+        token not in sources["acquisition_entry"] + sources["acquisition_runtime"]
         for token in ("QUALIFICATION_POOL", "author_m101", "hidden_cases")
     )
     checks["acquisition_api_uses_closed_public_projection"] = all(
@@ -130,23 +130,38 @@ def audit() -> dict[str, Any]:
     )
 
     runtime_functions = _functions(trees["acquisition_runtime"])
-    baseline = runtime_functions["baseline"]
-    one_atomic_search = runtime_functions["one_atomic_baseline_search"]
+    t0_baseline = _functions(trees["execution_runtime"])["_execute_t0_baseline"]
+    t0_baseline_text = ast.unparse(t0_baseline)
     checks["baseline_language_is_exactly_one_atomic_application"] = (
-        "catalog[index].apply" in ast.unparse(one_atomic_search)
-        and "apply_pipeline" not in ast.unparse(one_atomic_search)
+        "atomic.apply" in t0_baseline_text
+        and "_execute_a_body" not in t0_baseline_text
+        and "_execute_b_body" not in t0_baseline_text
         and all(
-        token in ast.unparse(baseline)
+        token in t0_baseline_text
         for token in ("structural_max_atomic_effects", "more_budget_same_language_can_exceed_one_effect")
         )
     )
     checks["baseline_budget_matches_two_slot_resolution_budget"] = (
-        "len(catalog) ** 2" in ast.unparse(baseline)
-        and "candidate_budget" in ast.unparse(baseline)
+        "len(catalog) ** 2" in t0_baseline_text
+        and "candidate_budget" in t0_baseline_text
+    )
+    mechanism_source = sources["acquisition_runtime"] + sources["execution_runtime"]
+    checks["host_pipeline_shortcut_is_absent"] = all(
+        token not in mechanism_source
+        for token in ("apply_pipeline", "infer_slots", "resolve_slots")
     )
     checks["finished_composition_primitive_is_absent"] = all(
-        token not in sources["acquisition_runtime"]
+        token not in mechanism_source
         for token in ('"COMPOSE"', '"CHAIN"')
+    )
+    checks["baseline_and_retained_arms_use_one_executor_action"] = all(
+        token in sources["qualification_runner"]
+        for token in (
+            '"same_executor_capsule": True',
+            'baseline_envelope["action"]',
+            'retained_envelope["action"]',
+            'differing_state_keys == ["definitions", "state_digest"]',
+        )
     )
 
     report: dict[str, Any] = {

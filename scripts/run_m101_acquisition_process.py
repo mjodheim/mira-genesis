@@ -87,15 +87,6 @@ def run(arguments: argparse.Namespace) -> dict[str, object]:
         "m100_sha256": state["m100_sha256"],
         "input_definition_count": len(state["definitions"]),
     }
-    if action == "baseline":
-        if state["definitions"]:
-            raise ValueError("fresh baseline requires T0 without registered M101 definitions")
-        result = runtime.baseline(_demand(arguments.demand))
-        return _envelope(
-            action,
-            {**state_facts, "confirmed": result["reachable"] is False, "baseline": result},
-        )
-
     if action in {"acquire-a", "acquire-b"}:
         demand = _demand(arguments.demand)
         register_result = bool(arguments.register)
@@ -174,7 +165,7 @@ def main() -> int:
     parser.add_argument(
         "action",
         choices=(
-            "create-state", "baseline", "acquire-a", "acquire-b", "state-control", "rollback"
+            "create-state", "acquire-a", "acquire-b", "state-control", "rollback"
         ),
     )
     parser.add_argument("--m100")
