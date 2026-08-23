@@ -1,0 +1,174 @@
+{
+  "schema": "m101-protocol-draft-v1",
+  "milestone": "M101",
+  "hypothesis": "H46",
+  "decision_slot": "D070",
+  "status": "pre_registered_preimplementation",
+  "track": "A",
+  "date_authored": "2026-08-23",
+  "date_frozen": null,
+  "canonical_run_allowed": false,
+  "claim": "A carrier-neutral transformation-composition capability acquired from observable text demand, without an explicit target-operation label or access to consumer-family qualification material, can be registered as persistent lineage state, increase constructive reach in fresh record and Python-syntax families relative to an otherwise identical fresh lineage, and become causally necessary to a later demand-derived Python-syntax acquisition while the M100 predecessor state is conserved and hard persistence, live dependency, fault rollback and stable replay remain intact.",
+  "claim_boundary": {
+    "agi": false,
+    "arbitrary_self_modification": false,
+    "authored_generic_interpreter_eliminated": false,
+    "cross_domain_generality_gate_closed": false,
+    "endogenous_objective_choice": false,
+    "experimenter_blindness": false,
+    "independent_human_evaluation": false,
+    "m085_external_maintainer_evidence": false,
+    "natural_world_generality": false,
+    "open_ended_evolution": false,
+    "production_authority": false,
+    "self_hosting_runtime": false,
+    "unbounded_expressivity": false,
+    "unrestricted_program_repair": false
+  },
+  "predecessor": {
+    "milestone": "M100",
+    "freeze_source_commit": "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98",
+    "result_digest": "241292fc81e64c8e0ec4620e72304889f52ae2185033e056b787f1b27c6c1475",
+    "stable_evidence_digest": "4bdb1aa8f7a85108eac4e92f8cff90f05a12520462e5ea2b358fc9b5886b19da",
+    "checker_digest": "d8e945a595571505d9c2a44568029208f41f05010e36d8e7b3f5937016529654",
+    "preservation_tag": "experiment/m100-positive-result",
+    "must_remain_byte_exact": true
+  },
+  "families": [
+    {
+      "id": "text",
+      "role": "producer",
+      "carrier": "scalar strings",
+      "candidate_limit_before_A": "at most one inherited atomic transform per candidate"
+    },
+    {
+      "id": "record",
+      "role": "consumer_transfer",
+      "carrier": "exact structured mappings",
+      "candidate_limit_before_A": "at most one inherited atomic transform per candidate"
+    },
+    {
+      "id": "python_syntax",
+      "role": "consumer_transfer_and_cumulative",
+      "carrier": "Python source/AST with execution confirmation where declared",
+      "candidate_limit_before_A": "at most one inherited atomic transform per candidate"
+    }
+  ],
+  "acquisition_A": {
+    "semantic_class_predicted_by_protocol": "generic ordered composition of two referenced transformations",
+    "target_label_visible_to_acquisition": false,
+    "consumer_material_visible_to_acquisition": false,
+    "carrier_specific_identifiers_allowed_in_definition": false,
+    "finished_compose_or_chain_instruction_allowed": false,
+    "lower_language_semantics": [
+      "place opaque input on stack",
+      "apply referenced transform slot",
+      "reorder or duplicate stack values if required",
+      "return a value"
+    ],
+    "search": "bounded exhaustive enumeration",
+    "selection": "shortest independently accepted symbolic body then canonical content digest",
+    "validator": "independent symbolic call-order and carrier-neutral behaviour validation without consumer qualification access"
+  },
+  "cumulative_chain": {
+    "T0": "exact M100 predecessor plus authored M101 atomic catalogs, no acquired A",
+    "producer_transition": "derive missing requirement from public text observations, assemble and validate A, register A",
+    "T1": "M100 conserved and A registered, then producer terminates",
+    "transfer": "fresh processes reuse A on text holdouts and transfer A to record and Python-syntax holdouts",
+    "later_transition": "derive a three-effect Python-syntax requirement from observations and acquire registered operation B using live A",
+    "T2": "M100 conserved and A/B registered, then fresh processes reconstruct and reuse retained capabilities"
+  },
+  "qualification_population": {
+    "total_worlds": 15,
+    "cases_per_world": {
+      "public": 4,
+      "hidden": 4
+    },
+    "roles": {
+      "text_producer_trigger": 1,
+      "text_holdout": 2,
+      "record_transfer": 3,
+      "python_syntax_transfer": 3,
+      "python_syntax_B_reuse": 3,
+      "m100_conservation": 3
+    },
+    "predecessor_worlds_reused": false,
+    "development_fixture_excluded": true,
+    "result_dependent_draw": false,
+    "reroll": false,
+    "scientific_mechanism_may_execute_pool_before_final_freeze": false
+  },
+  "fresh_baseline": {
+    "same_runtime": true,
+    "same_atomic_catalogs": true,
+    "same_public_consumer_evidence": true,
+    "same_search_bound": true,
+    "same_candidate_budget": true,
+    "same_observation_budget": true,
+    "same_validation_policy": true,
+    "same_m100_predecessor": true,
+    "registered_A": false,
+    "access_to_A_bytes": false,
+    "required_two_effect_holdout_score": "0/8"
+  },
+  "conditions": [
+    "P1_frozen_preregistration_predecessor_mechanism_pool_capsule_checker_and_projection_bindings",
+    "P2_complete_fifteen_world_population_is_valid_fresh_and_unexecuted_before_final_freeze",
+    "P3_A_acquisition_receives_only_allowed_public_text_demand_and_generic_substrate_state",
+    "P4_T0_structural_closure_proves_two_ordered_effects_unreachable_without_language_change",
+    "P5_A_is_exhaustively_assembled_carrier_neutral_independently_validated_and_not_a_finished_primitive",
+    "P6_registration_not_construction_is_the_causal_T0_to_T1_state_change",
+    "P7_A_survives_producer_death_and_transfers_to_all_eight_fresh_text_record_and_syntax_holdouts_while_fresh_baseline_scores_zero",
+    "P8_more_budget_over_unchanged_T0_cannot_substitute_for_A",
+    "P9_later_python_syntax_target_is_demand_derived_and_B_is_acquired_only_with_registered_A",
+    "P10_B_retains_live_A_dependency_and_semantic_A_mutation_or_ablation_breaks_dependent_behaviour",
+    "P11_M100_predecessor_and_A_are_conserved_through_T2_and_all_three_fresh_M100_worlds_still_execute",
+    "P12_all_producer_consumer_transfer_B_reuse_and_predecessor_reuse_steps_cross_hard_isolated_process_boundaries",
+    "P13_A_B_ablation_state_corruption_and_hidden_host_shortcut_controls_fail_closed",
+    "P14_live_semantic_fault_suppresses_dependent_capability_and_byte_exact_rollback_restores_state_and_behaviour",
+    "P15_stable_clean_replay_changes_no_scientific_field_and_track_A_records_zero_model_network_or_remote_execution_calls"
+  ],
+  "falsifiers": [
+    "The producer acquisition receives an explicit composition target or reads consumer qualification material.",
+    "A contains carrier-specific, fixture-specific, class, field, key or qualification identifiers.",
+    "Any two-effect transfer world is reachable from T0 under the unchanged one-atomic candidate language.",
+    "More search budget over unchanged T0 closes a transfer world despite the claimed structural closure.",
+    "Built and validated but unregistered A changes lineage state or constructive reach.",
+    "The fresh baseline receives different authored machinery, different public evidence, different budget or any access to A.",
+    "A fails any frozen text, record or direct Python-syntax transfer world after producer death.",
+    "B is reachable without A, does not retain live A references, or survives a decisive A mutation through a host shortcut.",
+    "The M100 predecessor bytes change or any fresh M100 A/B/C conservation world fails after T2.",
+    "A scientific consumer can import unbound project/development modules or read the repository outside the frozen capsule.",
+    "Ablation or corruption silently self-repairs instead of failing closed.",
+    "Rollback restores only semantic equivalence rather than the exact declared bytes.",
+    "Stable replay requires removing an ephemera field that was not frozen before the canonical run.",
+    "Model, network or remote-execution competence enters Track A qualification.",
+    "The first result is overwritten, rerolled or repaired after verdict."
+  ],
+  "implementation_bindings_required_before_run": {
+    "final_protocol_path": "experiments/M101/PROTOCOL.json",
+    "mechanism_digest": null,
+    "qualification_pool_digest": null,
+    "qualification_apparatus_digest": null,
+    "checker_digest": null,
+    "capsule_digest": null,
+    "stable_projection": null,
+    "freeze_commit": null
+  },
+  "run_policy": {
+    "armed_write_required": true,
+    "canonical_first_run_is_local": true,
+    "no_post_verdict_repair": true,
+    "no_reroll": true,
+    "no_overwrite": true,
+    "remote_execution_forbidden": true,
+    "result_path": "experiments/M101/RESULT.json"
+  },
+  "publication": {
+    "disposition": "PUBLIC_AGPL_COMMERCIAL_OPTION",
+    "review_record": "docs/IP_REVIEWS/M101_PUBLICATION_REVIEW.md",
+    "public_design_authorized": true,
+    "enabling_implementation_authorized_subject_to_final_freeze": true
+  },
+  "verdict_rule": "No verdict may be produced from this draft. The final executable protocol must preserve all fifteen decisive conditions and the falsifier set and may return positive only when all fifteen are computed and true."
+}
