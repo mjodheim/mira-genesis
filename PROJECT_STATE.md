@@ -1,6 +1,6 @@
 # Mira Genesis — Adaptive Embodiment project state
 
-**Updated: 22 August 2026**
+**Updated: 23 August 2026**
 
 ## Authoritative summary
 
@@ -145,6 +145,16 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   corruption failed closed; exact S2 rollback reproduced exact S3. All 24 fresh isolated processes
   and all 12 checker conditions passed. Result `241292fc…`; checker `d8e945a5…`; freeze `c4214d6`.
   The next ceiling is transfer beyond the authored affine-operation family and preselected targets.
+- **M101 is a positive qualified result; H46 is supported.** From public text demand only, the
+  lineage assembled a carrier-neutral two-effect combinator A, persisted it through producer death
+  and reused it on all eight held-out text, record and Python-syntax worlds. Eight otherwise equal
+  fresh T0 baselines passed zero hidden cases because their constructive image could invoke only one
+  atomic transformation. A then became a live content-addressed prerequisite for demand-derived
+  three-effect syntax operation B. Mutation, ablation, corruption, exact rollback, all three M100
+  conservation worlds and stable replay passed; P1–P15 are true across 44 isolated invocations.
+  Result `486f33e…`; stable evidence `45f18dc6…`; checker `95bffc8b…`; freeze `b3e172b`. This is
+  partial bounded cross-family mechanism evidence, not G4 closure. The next ceiling is deeper
+  cumulative retention under genuine interference and an independently maintained domain.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

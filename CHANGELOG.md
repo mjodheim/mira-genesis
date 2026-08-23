@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **M101 qualifies bounded cross-family cumulative transfer.** From corrected v4 freeze `b3e172b`,
+  one carrier-neutral combinator A was acquired from public text demand, survived producer death and
+  passed 8/8 held-out text/record/Python-syntax worlds. Eight equal-budget fresh T0 baselines passed
+  zero hidden cases. A then remained a live content-addressed prerequisite for acquired syntax
+  operation B. M100 conservation, mutation/ablation/corruption, exact rollback and stable replay all
+  passed: 15/15 conditions, zero model/network/remote calls. Result `486f33e…`; stable evidence
+  `45f18dc6…`; checker `95bffc8b…`. This is partial bounded G4 evidence, not G4 closure.
+
 - **M099 qualifies stable hard process-death persistence.** From freeze `62a29b0`, the unchanged
   M098 process mechanism persisted the exact M097 registry, terminated its producer and reconstructed
   the operation in eight isolated fresh consumers with no project imports. The extension solved

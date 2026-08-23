@@ -419,7 +419,7 @@ All scientific autonomy remains inside explicit finite or resource-limited sandb
 Repository writes, network access, credentials, deployment and production changes remain
 human-controlled, even after a scientific result passes.
 
-### Current frontier after M099
+### Current frontier after M101
 
 M094 remains the qualified anchor on the real-software self-transformation line. M095 asked the
 first explicitly cumulative question on that line: does
@@ -445,12 +445,18 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   complete ephemeral-field policy. The retained M097 operation returned after producer death in
   isolated consumers, scored 3/3, failed under absence/mutation/corruption, recovered after exact
   rollback and replayed all 12 conditions true despite new process identifiers.
-- **Later — repeated cumulative cycles:** A enables B, B enlarges the machinery for C, and the same
-  causal pattern survives fresh tasks and eventually materially different domains. Only then does it
-  become meaningful to measure whether the ability to improve is itself improving.
+- **M100 — repeated cumulative cycles: POSITIVE.** Persisted subtraction enabled acquisition of
+  addition, which enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12
+  conditions replayed true inside one authored affine family.
+- **M101 — bounded cross-family transfer: POSITIVE.** A carrier-neutral capability acquired from
+  text transferred to record and Python-syntax carriers against fresh-lineage controls, then became
+  a live prerequisite for a later syntax acquisition. All 15 conditions replayed true.
+- **Later — depth under interference and external pressure:** extend A → B into a longer chain while
+  later acquisitions threaten earlier ones, and test at least one independently maintained domain
+  under a frozen uncontaminated boundary.
 
-M095 and M098's negative verdicts are final for attempt 1. M096 and M099 are distinct positive
-successors and may not be cited to retroactively strengthen or repair their predecessors.
+M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
+positive successors and may not be cited to retroactively strengthen or repair their predecessors.
 
 ### After M091
 

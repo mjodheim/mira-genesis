@@ -1,16 +1,16 @@
 project: Mira Genesis
-updated_at: 2026-08-22
-status: m100_positive_qualified_h45_supported
+updated_at: 2026-08-23
+status: m101_positive_qualified_h46_supported
 
 active_research_question: >-
-  Can M100's bounded cumulative relation transfer beyond one authored affine-operation family,
-  so that materially different observed demands rather than preselected coefficient targets drive
-  later acquisitions?
+  Can M101's bounded cross-family cumulative relation extend into a deeper chain under genuine
+  interference and at least one independently maintained domain, while retaining M100, A and B
+  causally and reproducibly?
 
 preceding_research_question: >-
-  M100 asked whether registered subtraction can enable addition acquisition and registered
-  addition can enable weighted-addition acquisition across process boundaries with exact
-  conservation, live dependency and rollback. Attempt 1 qualified positively at 12/12.
+  M101 asked whether a carrier-neutral capability acquired from public text demand can increase
+  constructive reach in fresh record and Python-syntax carriers versus an otherwise equal fresh
+  lineage, then enable a later syntax acquisition. Attempt 1 qualified positively at 15/15.
 
 epistemic_tracks:
   endogenous_bounded_lineage:
@@ -247,6 +247,53 @@ current_real_software_frontier:
     checker_digest: d8e945a595571505d9c2a44568029208f41f05010e36d8e7b3f5937016529654
     decision: D069
     current_ceiling: transfer_beyond_authored_affine_targets_and_fixed_interpreter
+  M101:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H46
+    hypothesis_status: supported
+    protocol_frozen: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    track: A_endogenous_lineage
+    attempt: 1
+    prior_attempts: []
+    run_armed: true
+    run_consumed: true
+    model_calls: 0
+    network_calls: 0
+    remote_execution: false
+    qualification_population_entries: 15
+    producer_trigger_entries: 1
+    heldout_a_transfer_worlds: 8
+    fresh_baseline_worlds: 8
+    fresh_baseline_hidden_passed: 0
+    b_reuse_worlds: 3
+    m100_conservation_worlds: 3
+    state_definition_census: [0, 1, 2]
+    a_candidates_assembled: 9330
+    a_well_formed: 15
+    a_binding_candidates_evaluated: 135
+    a_accepted_candidates: 8
+    a_shortest_length: 4
+    a_carrier_specific_identity: false
+    b_candidates_assembled: 41370
+    b_well_formed: 27
+    b_binding_candidates_evaluated: 1728
+    b_accepted_candidates: 6
+    b_shortest_length: 4
+    b_live_content_addressed_dependency_on_a: true
+    m100_bytes_conserved: true
+    fresh_process_invocations: 44
+    exact_t2_rollback_restored: true
+    conditions_total: 15
+    conditions_passed: 15
+    source_commit: b3e172bba0cfdd282e6235e62bb8e7d213a77837
+    result_digest: 486f33e6673c8ad66f822ba11a91a595a155a65b36f2c5292c9ea200d9dbda35
+    stable_evidence_digest: 45f18dc644784d38a598066e53f1b19d8619cf47fc094c8a0456574373565e92
+    checker_digest: 95bffc8ba2a0b70d06148c71be3e28b2fc1f64f8655d380430bdedc5c682cb43
+    decision: D070
+    generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
+    current_ceiling: authored_carriers_shallow_chain_no_genuine_interference_or_external_domain
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

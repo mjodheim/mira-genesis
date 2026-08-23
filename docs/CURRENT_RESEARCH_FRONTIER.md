@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 22 August 2026**
+**Reader-facing status snapshot — 23 August 2026**
 
 This document explains where the active research line stands now and what the next milestones are
 trying to establish. It is a navigation and interpretation layer, not a replacement for frozen
@@ -15,9 +15,9 @@ construction line at M066.
 
 The active question is stronger and narrower:
 
-> Can the bounded cumulative chain now qualified by M100 transfer beyond one authored affine
-> operation family, so that materially different observed demands drive later acquisitions while
-> conservation, hard persistence and causal dependency remain intact?
+> Can M101's bounded cross-family cumulative relation extend into a deeper chain under genuine
+> interference and at least one independently maintained domain, while retaining M100, A and B
+> causally and reproducibly?
 
 The project is not currently claiming open-ended recursive self-improvement. It is testing the
 necessary mechanisms one at a time, under conditions designed to let a negative result remain a
@@ -35,11 +35,12 @@ valid result.
 | M098 | **Negative qualified result — attempt 1; H43 refuted** | Every direct hard-persistence condition passed, but replay retained an aggregate PID list; 11/12 conditions true | Frozen stable-evidence projection was incomplete |
 | M099 | **Positive qualified scientific result; H44 supported** | The M097 operation survived producer death, ran in isolated consumers on 3/3 fresh worlds, failed under all controls, recovered after exact rollback and replayed 12/12 true | One operation and authored interpreter; repeated cumulative acquisition remained open |
 | M100 | **Positive qualified scientific result; H45 supported** | A enabled bounded B acquisition, registered B enabled bounded C acquisition, all three remained live on 9/9 fresh worlds, and 12/12 conditions replayed true | One affine family, authored targets/bounds and fixed generic interpreter |
-| Later | Not yet demonstrated | Transfer the cumulative relation across materially different operation/representation families and derive targets from observed demands | Open-endedness, broad transfer and long-horizon autonomy remain open research problems |
+| M101 | **Positive qualified scientific result; H46 supported** | A carrier-neutral acquisition from text added reach on all eight held-out text/record/syntax worlds against fresh T0 controls and became a live prerequisite for B; 15/15 conditions replayed true | All carriers/evaluators authored; chain only A → B; no genuine interference or independently maintained domain |
+| Later | Not yet demonstrated | Extend the chain under interference and independently maintained domain pressure without forgetting M100/A/B | External transfer, deeper continual learning and long-horizon autonomy remain open |
 
 ## M094 — the original qualified repair anchor
 
-M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M100 extend the causal
+M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M101 extend the causal
 chain beyond it.
 
 Its second preserved attempt produced a positive verdict with **12/12 protocol conditions computed
@@ -221,23 +222,46 @@ processes and computed 12/12 conditions true.
 This qualifies bounded cumulative constructive reach, not unbounded expressivity. The affine
 family, exact targets, search bounds, stack substrate and interpreter remain authored.
 
-## The longer-term target after M100
+## M101 — bounded cross-family cumulative transfer
 
-M100 now demonstrates the following chain inside one bounded family:
+M101 froze a carrier-neutral extension mechanism and fifteen project-authored worlds only after
+three pre-run freeze candidates were refused and preserved. The material v4 correction removed a
+host-side two-atomic composition shortcut and authored exact target traces before any qualification
+world was executed by the scientific mechanism.
+
+From public text demand alone, the clean canonical run assembled shortest two-effect combinator A.
+After its producer died, persisted A passed all eight held-out text, record and Python-syntax worlds.
+Eight otherwise identical fresh T0 lineages saw the same public demands, atomics, interpreter and
+budget but no A bytes; their constructive image could invoke only one atomic operation and every
+baseline passed zero hidden cases.
+
+A then became the live content-addressed prerequisite of acquired three-effect syntax operation B.
+Mutation and ablation of A broke B; B ablation preserved unrelated A; corruption failed closed;
+exact T2 rollback restored the chain; and the exact M100 predecessor remained conserved and live.
+All 44 invocations crossed isolated process boundaries, and independent replay computed P1–P15
+true with zero model, network or remote-execution calls.
+
+This qualifies bounded cross-family constructive reach, not natural or external-domain generality.
+All carriers, adapters, worlds, bounds and evaluators are authored by the project and share one
+generic runtime. G4 therefore advances only to partial bounded mechanism evidence.
+
+## The longer-term target after M101
+
+M101 now demonstrates the following chain across three bounded authored carriers:
 
 ```text
-state S0
+state T0
   -> acquire A
-state S1 has new reach
+state T1 has cross-carrier reach
   -> acquire B using that reach
-state S2 has a larger or different transformation capability
-  -> acquire C
-...
+state T2 retains A + B
+  -> future successor must acquire C under interference/external pressure
 ```
 
-A stronger successor must move beyond another coefficient in the same family: materially different
-operation or representation families, targets recovered from observed demands, and a measured
-discovery advantage that cannot be explained solely by a preselected bound and signature.
+A stronger successor must extend this beyond A → B while later learning creates real interference,
+and must include at least one independently maintained domain or interface selected behind a frozen
+uncontaminated boundary. Retention, negative transfer, rollback, dependency growth and reconstruction
+cost must be measured; another project-authored carrier alone would not clear the measured ceiling.
 
 That still would not by itself establish AGI or open-ended evolution. General-agent claims are
 governed separately by `MIRA_GENERALITY_CRITERIA.md`, which requires cross-domain evidence,
@@ -276,7 +300,7 @@ are promoted into claims they did not test.
 - `ROADMAP.md` — historical construction roadmap;
 - `GENESIS_COMPLETION_CRITERIA.md` — frozen bounded completion criteria;
 - `MIRA_GENERALITY_CRITERIA.md` — stronger generality vocabulary and gates;
-- `experiments/M094/` — current qualified real-software anchor;
-- `experiments/M095/` — active improvement-enabling-improvement work;
+- `experiments/M094/` — qualified real-software diagnosis-and-repair anchor;
+- `experiments/M101/` — current bounded cross-family result and immutable evidence;
 - `FAILURE_LOG.md` — preserved failure history;
 - `docs/EPISTEMIC_TRACKS.md` — endogenous versus model-mediated attribution boundary.

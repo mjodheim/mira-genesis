@@ -17,7 +17,9 @@ replayable**.
 > M097 qualifies bounded operation acquisition, M099 qualifies hard process-death persistence after
 > M098's preserved replay defect, and M100 now qualifies two further cumulative acquisition cycles.
 > Its state grows from one registered subtraction to addition and then weighted addition, preserves
-> and reuses all three on 9/9 fresh worlds, and replays all 12 conditions true.
+> and reuses all three on 9/9 fresh worlds. M101 then qualifies a carrier-neutral acquisition from
+> text, its constructive-reach transfer to records and Python syntax versus eight fresh baselines,
+> and its live necessity for a later syntax acquisition; all 15 conditions replay true.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -55,11 +57,15 @@ The current staged objective is:
 5. **bounded repeated cumulative cycles** — repeat the causal chain across fresh tasks while
    conserving and reusing earlier operations; M100 qualifies this inside one affine family;
 6. **cross-family cumulative transfer** — derive later targets from materially different observed
-   demands instead of another preselected target inside the same representation.
+   demands instead of another preselected target inside the same representation; M101 qualifies
+   this across three bounded project-authored carriers;
+7. **depth, interference and external pressure** — retain and extend the chain when later learning
+   can damage earlier acquisitions and at least one domain is maintained independently.
 
 M091 demonstrated endogenous extension in a bounded abstract setting; M097 brought one acquired
-operation into the real-software line, and M100 repeated the enabling relation twice. The current
-frontier is transfer beyond the same authored affine representation and target schedule.
+operation into the real-software line, M100 repeated the enabling relation twice, and M101 moved the
+relation across authored text, record and Python-syntax carriers. The current frontier is a deeper
+chain under genuine interference and an independently maintained domain.
 
 ## Where the project stands now
 
@@ -77,16 +83,18 @@ frontier is transfer beyond the same authored affine representation and target s
 | M098 | **Negative qualified result — attempt 1** | Every direct persistence condition passed, but stable replay retained an aggregate PID list; 11/12 conditions passed and P12 failed. |
 | M099 | **Positive qualified scientific result** | The M097 operation survived producer death, ran in isolated fresh consumers on 3/3 new worlds, failed under absence/mutation/corruption, recovered after exact rollback, and replayed 12/12 true. |
 | M100 | **Positive qualified scientific result** | Registered subtraction enabled acquisition of addition; registered addition enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12 conditions replayed true. |
+| M101 | **Positive qualified scientific result** | A carrier-neutral capability acquired from text added reach on 8/8 held-out text/record/syntax worlds versus 0 hidden passes for eight fresh baselines, then remained a live prerequisite for B; 15/15 conditions replayed true. |
 
 The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
-disclosed negative, M099's positive hard-persistence result and M100's positive cumulative result.
-M100 was developed and qualified locally under the recorded `PUBLIC_AGPL_COMMERCIAL_OPTION`
-disposition; remote automation is used only for repository validation after local evidence is green.
+disclosed negative, M099's positive hard-persistence result, M100's positive cumulative result and
+M101's bounded cross-family result. M100–M101 were developed and qualified locally under the
+recorded `PUBLIC_AGPL_COMMERCIAL_OPTION` disposition; remote automation is used only for repository
+validation after local evidence is green.
 
 ## M094 — original qualified repair anchor
 
 M094 remains the qualified anchor for autonomous diagnosis and repair on the active real-software
-line; M096–M100 extend the causal chain beyond it.
+line; M096–M101 extend the causal chain beyond it.
 
 Its preserved second attempt produced a **positive** verdict with **12/12 protocol conditions
 computed and true**. The mechanism used **zero model calls and zero network calls**. Diagnosis
@@ -153,8 +161,9 @@ process can become endogenous in a continuing lineage, and whether one acquisiti
 real prerequisite or tool for the next. M096 establishes contract-safe composition within its
 finite authored domain; M097 establishes bounded language extension and M099 establishes hard
 process-death persistence after M098's preserved replay-normalisation failure. M100 establishes two
-further bounded cumulative acquisition cycles with exact conservation and live dependency. Transfer
-to materially different operation families remains open.
+further bounded cumulative acquisition cycles with exact conservation and live dependency. M101
+establishes bounded transfer of acquired reach across authored carrier families; independently
+maintained domains, interference and deeper chains remain open.
 
 ## What Mira Genesis does not currently claim
 

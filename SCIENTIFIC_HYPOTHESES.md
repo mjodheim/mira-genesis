@@ -1213,3 +1213,38 @@ The later definitions are live compositions, not cached host answers.
 vocabulary and generic interpreter remain authored. Not unbounded expressivity, cross-domain
 transfer, endogenous objective choice, a self-hosting runtime, open-ended evolution, unrestricted
 program repair, a generality gate, AGI or independent human reproduction.
+
+## H46 — An acquired carrier-neutral capability can transfer and enable later acquisition
+
+Under one fixed authored multi-carrier interpreter, a carrier-neutral transformation-composition
+capability acquired from observable text demand, without consumer-family qualification material or
+a supplied target-operation label, can be registered as persistent lineage state and increase
+constructive reach in fresh record and Python-syntax families relative to an otherwise identical
+fresh lineage. It can then become causally necessary to acquire and persist a later demand-derived
+Python-syntax transformation while conserving M100 and surviving process death, mutation, ablation,
+corruption, exact rollback and stable replay.
+
+**Status:** **SUPPORTED.** M101 froze the corrected v4 protocol and complete fifteen-world
+population at `b3e172bba0cfdd282e6235e62bb8e7d213a77837` after refusing three pre-run candidates. The
+single armed local Track-A attempt used zero model, network and remote-execution calls. A was
+assembled from public text demand without an authored target trace: 9,330 bodies, 15 well formed,
+135 binding candidates, eight accepted and shortest length four. After producer death it passed all
+eight held-out text/record/Python-syntax worlds; all eight equal-budget fresh T0 baselines passed zero
+hidden cases.
+
+B was then assembled from an observable three-effect syntax demand: 41,370 bodies, 27 well formed,
+1,728 bindings, six accepted and shortest length four. Its serialized definition contains a live
+content-addressed call to A. A mutation/ablation broke B; B ablation spared unrelated A; corruption
+failed closed; exact rollback restored T2; and the exact M100 bytes remained live. All 44 scientific
+invocations ran in isolated processes. Independent replay computed P1–P15 true. Result
+`486f33e…`; stable evidence `45f18dc6…`; checker `95bffc8b…`.
+
+**What it establishes.** One bounded producer-domain acquisition adds constructive reach across
+three project-authored carrier families and becomes the live prerequisite of a later acquisition.
+The fresh-lineage comparison excludes a cost-only reading because its constructive image cannot
+execute two ordered atomics at any budget.
+
+**What it would not establish.** The carriers, atomic adapters, worlds, evaluator, bounds and
+generic runtime remain authored. This is partial bounded cross-family evidence, not G4 closure,
+external-domain transfer, general-agent evidence, open-ended evolution, recursive self-improvement,
+AGI, independent human reproduction or production authority.
