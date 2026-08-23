@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_committed_m102_pool_matches_source_only_authorship() -> None:
     committed = author.load_pool()
-    rebuilt = author.build_pool(status="candidate")
+    rebuilt = author.build_pool(status="frozen")
     assert committed == rebuilt
     report = author.audit(committed)
     assert report["passed"] is True

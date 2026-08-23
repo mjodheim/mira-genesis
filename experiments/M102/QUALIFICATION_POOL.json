@@ -3087,7 +3087,7 @@
   ],
   "m101_qualification_worlds_excluded": true,
   "milestone": "M102",
-  "pool_digest": "eac8d305bcf9dd33ddbe40ad84b6884459d3eb984c711a273790fb5adbf1390d",
+  "pool_digest": "3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38",
   "population_size": 13,
   "preflight_boundary": "closed-schema construction, digest checks, AST parsing, and independent raw SQLite model materialisation only; K/C acquisition, registry migration, transfer, baseline, hidden scoring, mutation, ablation, rollback and replay are forbidden before freeze",
   "requirements_per_source": {
@@ -3107,5 +3107,5 @@
   },
   "schema": "m102-qualification-pool-v1",
   "scientifically_executed_before_freeze": false,
-  "status": "candidate"
+  "status": "frozen"
 }
