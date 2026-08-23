@@ -549,7 +549,7 @@
       "subject": "science(m101): amend pre-run Git freeze verification",
       "preserved_by": "experiment/m101-frozen-protocol-v2",
       "cited_in": [
-        "experiments/M101/PROTOCOL.json"
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "4080ccc4b9381b1a2b0f8714e904c57335330877": {
@@ -1504,6 +1504,13 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M078/RESULT.md",
         "experiments/M078/STATUS.md"
+      ]
+    },
+    "b0d0dfadfdb932f09493f17d5b11615c44cca9d3": {
+      "subject": "science(m101): amend stable fresh-process identity",
+      "preserved_by": "experiment/m101-frozen-protocol-v3",
+      "cited_in": [
+        "experiments/M101/PROTOCOL.json"
       ]
     },
     "b1489d7a3a264de8a9e783eb139dafe28732b040": {
