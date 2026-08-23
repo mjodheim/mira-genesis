@@ -1,7 +1,8 @@
 # Third-party dependency and tooling audit
 
-**Snapshot date: 12 August 2026.** Amended 19 August 2026: one development dependency added
-(`pytest-xdist`, MIT, test-runner only) — see the table below. No runtime dependency changed.
+**Snapshot date: 12 August 2026.** Amended 19 August 2026 for `pytest-xdist`; amended 23 August
+2026 for M102's planned use of the SQLite library exposed by Python's optional standard-library
+`sqlite3` module. No declared Python package dependency changed.
 
 This is the project's initial human-readable due-diligence inventory. It distinguishes software that
 Mira Genesis directly declares as a Python dependency from tools, container images and operating
@@ -116,6 +117,24 @@ The Debian packages above have independent copyright/licence records. Do not inf
 from the base image name. If the M083-derived image is ever distributed, extract the applicable
 `/usr/share/doc/*/copyright` records (and any upstream notices) from the exact built image and attach
 them to the release compliance record.
+
+### M102 / SQLite-backed interference environment
+
+M102 plans to use Python's optional standard-library `sqlite3` module against disposable local
+database files. Python's documentation states that the module requires the third-party SQLite
+library; the exact SQLite version is supplied by the Python distribution and must be recorded in
+the final M102 protocol and result. SQLite's official copyright record states that its deliverable
+code and documentation are dedicated to the public domain.
+
+Upstream references checked for this amendment:
+
+- <https://docs.python.org/3/library/sqlite3.html>
+- <https://www.sqlite.org/copyright.html>
+
+M102 does not vendor SQLite source or binaries. SQLite remains an external component of the local
+Python runtime. A product that embeds or redistributes Python/SQLite still requires an exact
+release-specific runtime and notice review; the upstream public-domain statement is not rewritten
+as a Mira Genesis licence.
 
 ## 4. Node.js and WebAssembly research
 
