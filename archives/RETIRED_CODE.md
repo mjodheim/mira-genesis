@@ -68,32 +68,29 @@ ne doit plus être exécutable. Sa valeur est documentaire, pas opérationnelle 
 de `archives/workflows/` conservent la recette exacte, et la preuve reste attachée aux runs
 GitHub Actions et aux hashes d'artefacts publiés dans `results/`.
 
-## Retrait R003 — workflows de jalons restés exécutables
+## Retrait R003 — workflows de jalons réellement relocalisables
 
 - Date : 23 août 2026
 - Retrait réalisé dans : PR #187 (historique Git de la réorganisation)
 - Copies exactes conservées dans `archives/workflows/`
-- Total : 25 workflows retirés de la surface GitHub Actions active
+- Total : 16 workflows retirés de la surface GitHub Actions
 
-### M017 à M066
+Les workflows M017, M019, M021, M022, M026–M033 et M042 restaient sous
+`.github/workflows/` alors que leurs jalons étaient historiques. Leur contenu a été déplacé
+byte-for-byte dans `archives/workflows/` : la recette reste lisible et versionnée mais n'est
+plus une surface d'exécution permanente.
 
-Dix-neuf workflows de développement ou canoniques appartenant aux jalons M017, M019,
-M021, M022, M026–M033, M042 et M064–M066 restaient sous `.github/workflows/` alors que
-leurs jalons étaient historiques. Leur contenu a été déplacé byte-for-byte dans
-`archives/workflows/` : la recette reste lisible et versionnée mais n'est plus une
-surface d'exécution permanente.
+### Exception découverte par la validation complète
 
-### M092
+La première version de PR #187 avait également déplacé M064, M065, M066 et les six workflows
+M092. La suite complète a correctement refusé cette opération : leurs frozen protocols/checkers
+engagent les fichiers eux-mêmes à leur chemin historique `.github/workflows/...`. Les bytes étaient
+identiques mais le déplacement suffisait à rendre les engagements faux.
 
-Les six workflows M092 (`adoption-qualification-rehearsal`, `canonical-search`,
-`canonical-transport-rehearsal`, `independent-reproduction`,
-`reproduction-transport-rehearsal` et `runtime-envelope`) ont également été archivés.
-Le registre public classe M092 `Aborted without verdict`; conserver ses workflows armés dans
-GitHub Actions ne représentait donc plus l'état scientifique actuel.
-
-Après R003, `.github/workflows/` ne contient plus que l'intégration continue permanente et
-la politique d'attribution. Le cycle de vie est désormais documenté dans
-`docs/REPOSITORY_ARCHITECTURE.md` et vérifié par `scripts/audit_repository_layout.py`.
+Ces neuf fichiers ont donc été restaurés **byte-exactement** à leur chemin d'origine et ne sont pas
+dupliqués dans `archives/workflows/`. Ils sont désormais classés comme **preuves path-bound**, pas
+comme infrastructure permanente. `scripts/audit_repository_layout.py` vérifie explicitement leur
+présence au bon endroit et distingue ces preuves des deux workflows opérationnels permanents.
 
 ## Retrait R004 — Dockerfile sans entrée d'exécution supportée
 

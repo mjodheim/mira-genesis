@@ -37,11 +37,25 @@ REQUIRED_DIRECTORIES = (
     "tests",
 )
 
-# These workflows are permanent repository infrastructure.  A milestone-specific workflow is
-# allowed only while explicitly listed below; when its canonical run is consumed, superseded or
-# abandoned, its exact YAML belongs in archives/workflows/ instead of the executable Actions tree.
+# Permanent workflows are normal repository infrastructure.  Most milestone workflows should be
+# archived after use, but a small set is itself part of a frozen protocol: its exact historical
+# path under .github/workflows is committed by scientific hashes/tests.  Those files must remain
+# byte-exact at that path even when the milestone is no longer operational.
 PERMANENT_WORKFLOWS = frozenset({"ci.yml", "attribution-policy.yml"})
 ACTIVE_MILESTONE_WORKFLOWS: frozenset[str] = frozenset()
+FROZEN_PATH_WORKFLOWS = frozenset(
+    {
+        "m064-canonical.yml",
+        "m065-canonical.yml",
+        "m066-canonical.yml",
+        "m092-adoption-qualification-rehearsal.yml",
+        "m092-canonical-search.yml",
+        "m092-canonical-transport-rehearsal.yml",
+        "m092-independent-reproduction.yml",
+        "m092-reproduction-transport-rehearsal.yml",
+        "m092-runtime-envelope.yml",
+    }
+)
 MILESTONE_WORKFLOW = re.compile(r"m\d{3}.*\.ya?ml", re.IGNORECASE)
 
 FORBIDDEN_TRACKED_PARTS = frozenset(
@@ -122,14 +136,21 @@ def inventory() -> dict[str, object]:
     largest = sorted(files, key=lambda path: path.stat().st_size, reverse=True)[:15]
     workflow_dir = ROOT / ".github" / "workflows"
     archive_dir = ROOT / "archives" / "workflows"
+    workflow_files = sorted(path.name for path in workflow_dir.glob("*.y*ml") if path.is_file())
 
     return {
         "tracked_files": len(files),
         "tracked_bytes": total_bytes,
         "top_level": dict(sorted(by_top_level.items())),
         "extensions": dict(sorted(by_extension.items(), key=lambda item: (-item[1], item[0]))),
-        "active_workflows": sorted(
-            path.name for path in workflow_dir.glob("*.y*ml") if path.is_file()
+        "workflow_files": workflow_files,
+        "operational_workflows": sorted(
+            name
+            for name in workflow_files
+            if name in PERMANENT_WORKFLOWS or name in ACTIVE_MILESTONE_WORKFLOWS
+        ),
+        "frozen_path_workflows": sorted(
+            name for name in workflow_files if name in FROZEN_PATH_WORKFLOWS
         ),
         "archived_workflows": len(list(archive_dir.glob("*.y*ml"))),
         "largest_files": [
@@ -156,10 +177,20 @@ def hygiene_problems() -> list[str]:
         if (ROOT / "src" / package).exists() and (ROOT / package).exists():
             problems.append(f"package exists in both root and src layouts: {package}")
 
-    active_dir = ROOT / ".github" / "workflows"
+    workflow_dir = ROOT / ".github" / "workflows"
     archived_dir = ROOT / "archives" / "workflows"
-    for path in active_dir.glob("*.y*ml"):
+
+    # A path-bound workflow is evidence: absence or relocation is itself a reproducibility defect.
+    for name in sorted(FROZEN_PATH_WORKFLOWS):
+        if not (workflow_dir / name).is_file():
+            problems.append(f"frozen path-bound workflow is missing: {name}")
+        if (archived_dir / name).exists():
+            problems.append(f"frozen path-bound workflow is duplicated in archive: {name}")
+
+    for path in workflow_dir.glob("*.y*ml"):
         if not MILESTONE_WORKFLOW.fullmatch(path.name):
+            continue
+        if path.name in FROZEN_PATH_WORKFLOWS:
             continue
         if path.name not in ACTIVE_MILESTONE_WORKFLOWS:
             problems.append(
@@ -171,7 +202,7 @@ def hygiene_problems() -> list[str]:
 
     active_non_milestone = {
         path.name
-        for path in active_dir.glob("*.y*ml")
+        for path in workflow_dir.glob("*.y*ml")
         if not MILESTONE_WORKFLOW.fullmatch(path.name)
     }
     unexpected = sorted(active_non_milestone - PERMANENT_WORKFLOWS)
@@ -203,7 +234,8 @@ def _human_bytes(value: int) -> str:
 def print_human(report: dict[str, object], problems: list[str]) -> None:
     print(f"Tracked files : {report['tracked_files']}")
     print(f"Tracked size  : {_human_bytes(int(report['tracked_bytes']))}")
-    print(f"Active CI     : {len(report['active_workflows'])} workflow(s)")
+    print(f"Operational CI: {len(report['operational_workflows'])} workflow(s)")
+    print(f"Frozen paths  : {len(report['frozen_path_workflows'])} workflow(s)")
     print(f"Archived CI   : {report['archived_workflows']} workflow(s)")
     print("\nTop-level inventory:")
     for name, values in report["top_level"].items():
