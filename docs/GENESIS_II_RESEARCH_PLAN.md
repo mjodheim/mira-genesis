@@ -142,3 +142,21 @@ cause rather than add breadth around an unresolved failure.
 
 Independent external transfer remains governed by the existing M085 / generality boundary and is not
 silently substituted by project-authored M101 worlds.
+
+## M102 — registered-policy improvement under interference
+
+M101's positive result leaves its prior acquisitions in an append-only, interference-free state.
+M102 therefore pre-registers H47 against a different failure mode: two carrier-local bindings have
+the same inherited flat registry key but incompatible descriptors. A no-upgrade lineage must either
+refuse the later binding or overwrite and forget the earlier one.
+
+The proposed lineage may advance only by acquiring a generic state-owned addressing policy from the
+observable collision, validating a transactionally re-indexed descendant, and registering that
+policy. The policy must then remain causally necessary, with live M101 B, for a later four-effect
+capability executed and scored from actual SQLite database state. Equal-budget flat-policy controls,
+destructive forgetting, K/B mutation and ablation, exact predecessor conservation, process death,
+corruption, rollback and stable replay remain decisive.
+
+SQLite supplies an independently maintained execution interface, not independent task authorship:
+the adapters, tasks and evaluator remain project-authored. Even a positive M102 could move only the
+bounded mechanism record, not close G4/G5 or support a general-agent claim.
