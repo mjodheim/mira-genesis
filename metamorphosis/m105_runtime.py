@@ -921,6 +921,14 @@ def predecessor_conservation(state: dict[str, Any]) -> dict[str, Any]:
     return report
 
 
+def execute_m104_world(state: dict[str, Any], world: dict[str, Any]) -> dict[str, Any]:
+    """Execute an inherited M104 definition through the frozen M103 interface."""
+
+    state = decode_state(state)
+    predecessor = m103_runtime.decode_state(state["m104_ascii"].encode("ascii"))
+    return m103_runtime.execute_world(predecessor, world)
+
+
 def state_summary(state: dict[str, Any]) -> dict[str, Any]:
     state = decode_state(state)
     return {

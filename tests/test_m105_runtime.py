@@ -275,3 +275,16 @@ def test_definition_digest_rejects_semantic_mutation() -> None:
     broken["state_digest"] = runtime.digest(payload)
     with pytest.raises(ValueError, match="consumer content address mismatch"):
         runtime.decode_state(broken)
+
+
+def test_inherited_m104_world_executes_through_exact_embedded_state() -> None:
+    w0 = runtime.create_state(m104_v3_bytes())
+    pool = json.loads(
+        (ROOT / "experiments" / "M104" / "QUALIFICATION_POOL.json").read_text(
+            encoding="ascii"
+        )
+    )
+    world = pool["configuration"]["hidden_worlds"][0]
+    execution = runtime.execute_m104_world(w0, world)
+    assert execution["confirmed"] is True
+    assert all(case["confirmed"] for case in execution["outcomes"])

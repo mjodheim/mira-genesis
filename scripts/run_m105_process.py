@@ -116,6 +116,25 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
             },
         )
 
+    if action == "rollback":
+        if arguments.state is None or arguments.restore is None:
+            raise ValueError("current and exact rollback bytes are required")
+        current_raw = Path(arguments.state).read_bytes()
+        restore_raw = Path(arguments.restore).read_bytes()
+        restored = runtime.decode_state(restore_raw)
+        if restore_raw == current_raw:
+            raise ValueError("rollback input does not differ from accepted state")
+        return _envelope(
+            action,
+            {
+                "confirmed": True,
+                "input_raw_sha256": hashlib.sha256(current_raw).hexdigest(),
+                "restored_state_digest": restored["state_digest"],
+                "restored_raw_sha256": _write(arguments.out, restore_raw),
+                "restoration_is_byte_exact": True,
+            },
+        )
+
     state_raw, state = _state(arguments.state)
     facts = _facts(state_raw, state)
     if action == "acquire-feature":
@@ -188,6 +207,13 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
             action,
             {**facts, "confirmed": True, "execution_output": output},
         )
+    if action == "execute-m104-world":
+        world = _canonical_value(arguments.execution, "inherited M104 world")
+        output = runtime.execute_m104_world(state, world)
+        return _envelope(
+            action,
+            {**facts, "confirmed": output["confirmed"], "inherited_execution": output},
+        )
     if action == "conservation":
         report = runtime.predecessor_conservation(state)
         return _envelope(
@@ -228,23 +254,6 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
                 "output_differs": output != state_raw,
             },
         )
-    if action == "rollback":
-        if arguments.restore is None:
-            raise ValueError("exact rollback bytes are required")
-        restore_raw = Path(arguments.restore).read_bytes()
-        restored = runtime.decode_state(restore_raw)
-        if restore_raw == state_raw:
-            raise ValueError("rollback input does not differ from accepted state")
-        return _envelope(
-            action,
-            {
-                **facts,
-                "confirmed": True,
-                "restored_state_digest": restored["state_digest"],
-                "restored_raw_sha256": _write(arguments.out, restore_raw),
-                "restoration_is_byte_exact": True,
-            },
-        )
     raise ValueError("unknown M105 action")
 
 
@@ -257,6 +266,7 @@ def main() -> int:
             "acquire-feature",
             "acquire-consumer",
             "execute-definition",
+            "execute-m104-world",
             "conservation",
             "semantic-census",
             "state-control",
