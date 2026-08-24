@@ -1385,3 +1385,23 @@ M103 attempt 1 is negative even though the runner itself completed. The result i
 positive and the checker is not retried through `python -m`. Exact process output and bindings are
 preserved in `experiments/M103/CHECKER_FAILURE.json` (raw SHA-256 `fbc09a6c…`). D072 closes M103;
 a clean-entry-point correction and entirely fresh population belong to M104.
+
+### Post-result lifecycle suite
+
+The first targeted repository run after D072 returned 21 passes and seven failures. Two assertions
+still required `RESULT.json` to be absent; three pre-freeze integrity tests tried to reconstruct a
+pool whose author deliberately refuses once a result exists; and two candidate/audit tests reached
+the same closed authoring path. One surviving test also executed `run_experiment()` twice on the
+already exposed M103 pool under the label DEVELOPMENT replay. Those executions wrote no artifact,
+cannot rescue P15 and are not additional canonical attempts, but calling them after closure was the
+wrong lifecycle behavior and is disclosed here.
+
+Post-result tests now bind the immutable protocol, result and checker-failure hashes, require the
+report to remain absent, verify denied authorization leaves result bytes untouched, and explicitly
+forbid calling the closed runner/checker. They do not modify or re-execute M103 science.
+
+The first lifecycle correction run returned 25 passes and two test-only failures: one guard called a
+hash helper from the runner although that helper belongs to the runtime, and one tried to exercise
+the candidate builder from the intentionally dirty correction worktree, so its clean-tree refusal
+preceded the expected post-result refusal. The guards now use the standard-library hash and inspect
+the two frozen refusal branches statically; neither failure touched an experiment artifact.

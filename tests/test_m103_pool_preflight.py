@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import hashlib
 from pathlib import Path
+
+import pytest
 
 from metamorphosis import m103_runtime as runtime
 from scripts import author_m103_qualification_pool as author
@@ -20,7 +23,11 @@ VALIDATED_S_PRIME_FEATURES = {
 
 def test_pool_is_exact_deterministic_complete_population() -> None:
     raw = POOL.read_bytes()
-    assert raw == runtime.canonical_json(author.build_pool()).encode("ascii")
+    assert hashlib.sha256(raw).hexdigest() == (
+        "ba83473768f6a7e6417c553932fb34278c6d78df272c4a0f5262fa12a45ff971"
+    )
+    with pytest.raises(RuntimeError, match="cannot be authored after a result exists"):
+        author.build_pool()
     pool = json.loads(raw)
     payload = {key: value for key, value in pool.items() if key != "pool_digest"}
     assert pool["pool_digest"] == runtime.digest(payload)

@@ -27,11 +27,12 @@ def test_owner_review_candidate_is_exact_and_current() -> None:
         "b1f920b44707b5da3c90f99a6b51a9b070fbbf10"
     )
     assert candidate["canonical_run_allowed"] is False
-    for key, value in builder._base().items():
-        assert candidate[key] == value
+    protocol = json.loads(PROTOCOL.read_text(encoding="ascii"))
+    assert protocol["protocol_candidate"]["candidate_digest"] == candidate["candidate_digest"]
+    assert protocol["protocol_candidate"]["raw_sha256"] == hashlib.sha256(raw).hexdigest()
 
 
-def test_final_protocol_is_exact_but_canonical_evidence_remains_absent() -> None:
+def test_final_protocol_and_negative_canonical_lifecycle_are_exact() -> None:
     raw = PROTOCOL.read_bytes()
     protocol = json.loads(raw.decode("ascii"))
     payload = {key: value for key, value in protocol.items() if key != "protocol_digest"}
@@ -49,5 +50,13 @@ def test_final_protocol_is_exact_but_canonical_evidence_remains_absent() -> None
     assert protocol["owner_protocol_acceptance"]["recorded"] is True
     assert protocol["canonical_run_allowed"] is False
     assert protocol["status"] == "frozen_protocol_run_not_authorized"
-    for name in ("RESULT.json", "CHECK_REPORT.json"):
-        assert not (ROOT / "experiments" / "M103" / name).exists()
+    result = ROOT / "experiments" / "M103" / "RESULT.json"
+    report = ROOT / "experiments" / "M103" / "CHECK_REPORT.json"
+    failure = ROOT / "experiments" / "M103" / "CHECKER_FAILURE.json"
+    assert hashlib.sha256(result.read_bytes()).hexdigest() == (
+        "6d89f26f994124ef7207ed1c580a7a72cd468a83d3f8787c1085a5b8e062ff26"
+    )
+    assert not report.exists()
+    failure_doc = json.loads(failure.read_text(encoding="ascii"))
+    assert failure_doc["scientific_verdict"] == "negative"
+    assert failure_doc["rerun_or_post_verdict_repair_allowed"] is False
