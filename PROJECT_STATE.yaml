@@ -1,12 +1,13 @@
 project: Mira Genesis
 updated_at: 2026-08-24
-status: m104_positive_m105_constructor_substrate_frontier
+status: m105_preregistered_executable_constructor_vocabulary_extension
 
 active_research_question: >-
-  Can a successor lineage diagnose that the fixed M104 constructor vocabulary or lower interpreter
-  cannot express a demanded acquisition, acquire a persisted extension to that substrate, and use it
-  to make a later capability structurally reachable that an equal-observation, equal-budget lineage
-  retaining the frozen M104 constructor cannot build?
+  Can exact positive M104 V3 acquire a carrier-neutral executable constructor feature from
+  DEVELOPMENT-only behavior, persist it across process death, and use it to validate generalized
+  JSON and SQLite acquisitions outside M104's complete finite exact-context dispatch image while a
+  fresh equal-runtime lineage exhausts the same lower semantic space and remains unable to validate
+  the same later behavior?
 
 preceding_research_question: >-
   M104 asked whether the unchanged M103 constructor-reach mechanism could qualify under an entirely
@@ -513,6 +514,43 @@ current_real_software_frontier:
     network_calls_allowed: 0
     remote_execution_calls_allowed: 0
     current_ceiling: constructor_feature_vocabulary_subset_bound_and_lower_interpreter_remain_authored_and_fixed
+  M105:
+    status: preregistered_before_enabling_implementation
+    hypothesis: H50
+    hypothesis_status: untested
+    decision_slot: D074
+    decision_slot_filled: false
+    exact_predecessor: M104_positive_V3_attempt_1
+    predecessor_raw_sha256: 98d61df076e6b764f6b00f27793b82ef27e20cd35049780499029dc3ed7edf77
+    predecessor_state_digest: a34b3b9dab99ee848a9c209a95ec9201fd7056eb99393d45d4041c885f19417a
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    owner_workflow_authorization_recorded: true
+    enabling_implementation_exists: false
+    development_fixture_exists: false
+    qualification_pool_exists: false
+    final_protocol_exists: false
+    result_exists: false
+    checker_report_exists: false
+    feature_registry_initially_empty: true
+    lower_feature_inputs: 2
+    lower_feature_operators: [CONST_FALSE, CONST_TRUE, INPUT_0, INPUT_1, NOT, AND, OR]
+    lower_feature_maximum_nodes: 8
+    complete_boolean_semantic_image: 16
+    later_carriers_planned: [json_document, sqlite]
+    m104_finite_dispatch_closure_required: true
+    fresh_complete_semantic_baseline_required: true
+    process_death_required: true
+    live_content_addressed_dependency_required: true
+    exact_m100_through_m104_conservation_required: true
+    decisive_conditions_planned: 16
+    canonical_attempts_allowed: 1
+    canonical_attempts_consumed: 0
+    canonical_checker_attempts_allowed: 1
+    canonical_checker_attempts_consumed: 0
+    model_calls_allowed: 0
+    network_calls_allowed: 0
+    remote_execution_calls_allowed: 0
+    current_ceiling: fixed_lower_boolean_interpreter_signal_contract_bounds_carriers_tasks_adapters_and_evaluator
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

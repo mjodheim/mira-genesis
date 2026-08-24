@@ -39,6 +39,7 @@ valid result.
 | M102 | **Positive qualified scientific result; H47 supported** | Observable collisions caused acquisition of generic state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later C scored from real SQLite state; 15/15 conditions replayed true | Hypothesis constructors, tasks, adapters and evaluator remain authored; G4/G5 remain partial |
 | M103 | **Negative checker-instrument result; H48 unresolved** | The unique runner result was preserved, but the frozen direct-script checker failed before replay and left P15 uncomputed; D072 is permanently negative | The scientific mechanism could not be qualified from this attempt; M103 may not be repaired or rerun |
 | M104 | **Positive qualified scientific result; H49 supported** | The unchanged M103 mechanism qualified on a fresh population: acquired S-prime survived producer death, enabled two later acquisitions outside S0's complete image, and passed P1-P15 with stable replay | Seven-token feature vocabulary, subset bound, lower interpreter, carriers, tasks, adapters and evaluator remain authored; no generality gate closes |
+| M105 | **Pre-registered; H50 untested** | Test whether exact M104 V3 can acquire and persist an executable high-level constructor feature that enables generalized JSON/SQLite acquisition beyond finite exact-context dispatch | Lower Boolean interpreter, two-signal contract, bounds, carriers, tasks, adapters and evaluator remain authored |
 
 ## M094 — the original qualified repair anchor
 
@@ -358,5 +359,6 @@ are promoted into claims they did not test.
 - `experiments/M102/` — bounded interference result and immutable evidence;
 - `experiments/M103/` — preserved negative checker-instrument attempt;
 - `experiments/M104/` — fresh-population positive result and immutable evidence;
+- `experiments/M105/` — pre-registered executable constructor-vocabulary question;
 - `FAILURE_LOG.md` — preserved failure history;
 - `docs/EPISTEMIC_TRACKS.md` — endogenous versus model-mediated attribution boundary.

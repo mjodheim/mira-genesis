@@ -222,3 +222,24 @@ result `f2be4d85…` was preserved before the one checker invocation. Independen
 evidence `9f2d1758…` and P1-P15 are all true (`7032528b…`). D073 supports H49 only within the frozen
 bounds. The next experiment must attack the authored constructor vocabulary or lower interpreter and
 show an acquisition-substrate extension changes structural reach versus an equal M104 constructor.
+
+## M105 — executable constructor-vocabulary extension
+
+M104's constructor improvement is state-owned, but its semantics are still selected from seven
+authored high-level feature tokens. M105 therefore separates high-level vocabulary growth from the
+still-authored lower interpreter. Exact positive M104 V3 is wrapped unchanged with an empty registry
+of executable constructor features. DEVELOPMENT-only behavior may select and register one generic
+two-input Boolean expression from a complete sixteen-function semantic census, without receiving
+the accepted tree, identifier or future consumer material.
+
+After producer death, live F must support generalized JSON-document and real SQLite acquisitions
+whose definitions remain valid over unseen opaque nonces and signal combinations. Frozen M104 can
+emit only finite exact-context dispatches. A fresh M105 lineage has the same lower expression
+substrate and current qualification observations but no F bytes or historical DEVELOPMENT material;
+it must exhaust the semantic space and refuse the underdetermined generalized behavior rather than
+merely run out of budget.
+
+This is a bounded state-conditioned validated-reach claim. The lower Boolean operators, interpreter,
+two-signal contract, program bound, carriers, tasks, adapters and evaluator remain authored. A
+positive M105 moves the next ceiling to progressively acquiring or replacing lower constructor
+primitives/interpreter machinery; a negative M105 must determine the specific M106 correction.
