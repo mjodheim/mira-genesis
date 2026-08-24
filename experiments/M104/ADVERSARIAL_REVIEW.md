@@ -95,6 +95,17 @@ the raw pool and candidate; it also requires the freeze commit's complete change
 exactly `experiments/M104/PROTOCOL.json`. Parent/tag checks are necessary but no longer treated as
 sufficient.
 
+### A12 — The fifth candidate omitted the inherited runner/fixture binding group
+
+Candidate `3d765cd5…` bound M103 `mechanism` and `checker`, but M104 directly imports
+`scripts/run_m103_qualification.py` and reads the DEVELOPMENT/predecessor fixtures in M103's
+`apparatus` group. Those causal bytes were therefore not protected by the successor commitment.
+The candidate is preserved at `provenance/m104-superseded-candidate-a5` and was not accepted.
+
+Candidate construction and canonical preflight now bind and recompute all three frozen M103 groups:
+`apparatus`, `mechanism` and `checker`. The exact inherited orchestration dependency is no longer
+implicit.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

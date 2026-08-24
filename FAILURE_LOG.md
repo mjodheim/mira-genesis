@@ -1453,3 +1453,13 @@ protocol freeze or qualification occurred.
 Tag `provenance/m104-superseded-candidate-a4` preserves it. The replacement preflight recomputes the
 raw pool/candidate, every M104 apparatus member, both inherited M103 binding groups and their set
 digests, then requires the freeze commit to change exactly one path: the final protocol.
+
+### M104 pre-freeze candidate A5 — inherited runner and fixtures were not bound
+
+Candidate `3d765cd5…` recomputed every M104 file and both selected M103 groups, but M104's wrapper
+executes `scripts/run_m103_qualification.py`, whose runner and fixture bindings live in M103's
+`apparatus` group. Omitting that group meant a causal dependency could drift without invalidating
+the M104 candidate. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a5` preserves it. The replacement binds and recomputes
+M103 `apparatus`, `mechanism` and `checker` as three separate exact sets.

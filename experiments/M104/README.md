@@ -41,3 +41,7 @@ reachable identity and are resolved at every lifecycle boundary.
 Candidate `9f6e1b42…` is superseded as A4 because parent/tag checks alone did not prove the freeze
 commit left every reviewed apparatus blob unchanged. The canonical runner now recomputes all bound
 members and requires a protocol-only freeze commit.
+
+Candidate `3d765cd5…` is superseded as A5 because it omitted M103's inherited `apparatus` group,
+which contains the runner and fixtures M104 actually uses. All three M103 binding groups are now
+explicitly committed and recomputed.

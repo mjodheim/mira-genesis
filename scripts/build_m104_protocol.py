@@ -29,8 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v3"
-CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v2"
+SOURCE_TAG = "provenance/m104-owner-review-source-v4"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v3"
 CANONICAL_PYTHON_IDENTITY = {"implementation": "cpython", "version_info": [3, 11, 16]}
 CANONICAL_SQLITE_IDENTITY = {
     "module": "sqlite3",
@@ -102,7 +102,7 @@ def _m103_binding() -> dict[str, Any]:
     if protocol.get("protocol_digest") != runner.M103_PROTOCOL_DIGEST:
         raise RuntimeError("M103 protocol binding changed")
     bound: dict[str, Any] = {}
-    for name in ("mechanism", "checker"):
+    for name in ("apparatus", "mechanism", "checker"):
         expected = protocol["bound_files"][name]
         current = _file_binding(expected["files"])
         if current["member_digests"] != expected["member_digests"]:
