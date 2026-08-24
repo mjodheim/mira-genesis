@@ -1425,6 +1425,15 @@
         "experiments/M086B/RESULT.md"
       ]
     },
+    "971f5030d58f119c27eb4e08f3ae55118e2a1f7a": {
+      "subject": "science(m106): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m106-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
       "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
       "preserved_by": "main",
@@ -1779,6 +1788,15 @@
         "papers/m100-preprint/README.md",
         "papers/m100-preprint/REPRODUCIBILITY.md",
         "papers/m100-preprint/SUBMISSION_METADATA.md"
+      ]
+    },
+    "c4672fe0fd024b84b0b110d0850115f0445f7354": {
+      "subject": "result(m106): preserve the unique canonical first result",
+      "preserved_by": "experiment/m106-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "c49764cd53d28616fab5cd0c59d9fb9e8fc5a953": {

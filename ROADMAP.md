@@ -479,6 +479,13 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   not refuted, and D074 forbids retry or repair. This is D072's defect repeated — the pre-freeze test
   of the entry point exercised only the refusal path, which returns before the deferred import.
 
+- **M106 — corrective replication of the constructor-vocabulary extension: POSITIVE.** The unique
+  attempt from frozen protocol `e92e1b08…` produced result `7c22c889…`, preserved and pushed before
+  checking, and the single checker replay computed P1-P16 all true (`76299018…`) with replay equality
+  and zero external calls. The mechanism module was imported unchanged and the target semantic was
+  fixed before implementation, so H51 replicates rather than repairs H50. Both fresh arms refused by
+  underdetermination with the semantic image exhausted. D075. M105 stays negative.
+
 M095, M098, M103 and M105's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.
 
