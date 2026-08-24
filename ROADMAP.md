@@ -458,12 +458,17 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   observations and budget but structurally could not represent the joint relation. Real SQLite,
   retention, mutation/ablation/corruption, exact rollback and stable replay all passed. Result
   `92d4ed3e…`; checker `3ba2f130…`; D071. This strengthens bounded G4/G5 evidence but closes neither.
-- **M103 — acquisition-machinery reach: SELECTED FROM D071 CEILING.** M102 improved state addressing,
-  not the fixed host hypothesis constructor that produced K and C candidates. M103 must start from
-  exact M102 U2, prove an acquisition lies outside S0's complete constructive image, acquire and
-  persist state-owned S-prime from observable failure, then show S-prime is causally necessary for a
-  later acquisition an equal-budget S0 lineage cannot construct. Exact predecessor retention,
-  process death, live dependency, rollback and no hidden-target access remain mandatory.
+- **M103 — acquisition-machinery reach: IMPLEMENTED/AUDITED PRE-FREEZE; UNTESTED.** M102 improved
+  state addressing, not the fixed host hypothesis constructor that produced K and C candidates.
+  M103 starts from exact M102 U2 and independently closes S0's context-invariant constructive image.
+  The complete 98-subset generic search acquires state-owned S-prime from DEVELOPMENT-only failure,
+  then reuses it after process death for configuration and disposable-filesystem acquisition while
+  fresh/equal/32-repeat S0 remains outside reach. All four feature ablations, ambiguity refusal,
+  truthful compiled-dependency accounting, exact rollback and fresh behavioral M100-M102 retention
+  are decisive. Seven false-positive paths were corrected and disclosed before freeze. Corrected
+  DEVELOPMENT replay is stable at 15/15, but it is not a result. Exact owner-review candidate
+  `b44c80e5…` binds source `b1f920b4…`; protocol acceptance, immutable freeze and a separate one-run
+  authorization remain mandatory.
 
 M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
 positive successors and may not be cited to retroactively strengthen or repair their predecessors.

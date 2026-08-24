@@ -91,6 +91,7 @@ machinery itself.
 | M100 | **Positive qualified scientific result** | Registered subtraction enabled acquisition of addition; registered addition enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12 conditions replayed true. |
 | M101 | **Positive qualified scientific result** | A carrier-neutral capability acquired from text added reach on 8/8 held-out text/record/syntax worlds versus 0 hidden passes for eight fresh baselines, then remained a live prerequisite for B; 15/15 conditions replayed true. |
 | M102 | **Positive qualified scientific result** | Observable flat-registry collisions caused acquisition of state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later SQLite capability C. Real-state, retention, causal-control, rollback and replay checks passed 15/15. |
+| M103 | **Pre-registered; untested** | H48 asks whether an acquired state-owned constructor extension can add later constructive reach beyond S0's closed context-invariant image. No enabling implementation, frozen protocol, qualification pool or result exists. |
 
 The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
 disclosed negative, M099's positive hard-persistence result, M100's positive cumulative result and
@@ -171,7 +172,8 @@ process-death persistence after M098's preserved replay-normalisation failure. M
 further bounded cumulative acquisition cycles with exact conservation and live dependency. M101
 establishes bounded transfer of acquired reach across authored carrier families. M102 establishes
 bounded state-owned registry improvement under measured interference and real SQLite execution.
-Acquisition-hypothesis machinery, independently authored domains and deeper chains remain open.
+M103 now pre-registers the acquisition-hypothesis-machinery question; independently authored
+domains, lower-substrate ownership and deeper chains remain open.
 
 ## What Mira Genesis does not currently claim
 

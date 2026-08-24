@@ -1290,3 +1290,62 @@ digest, and DEVELOPMENT rehearsals snapshot both artifacts before execution and 
 afterwards. This is a post-result repository-lifecycle correction, not a repair to H47 or D071. The
 first red targeted run remains disclosed here rather than being described as an initially green
 post-result suite.
+
+## M103 pre-freeze development — stable projection retained named producer PIDs
+
+The first two non-canonical M103 development rehearsals passed P1-P14 but disagreed on their stable
+evidence digests, so P15 remained false. A recursive diff isolated exactly three process-ephemera
+fields: `s_prime_producer_pid`, `d_producer_pid` and `e_producer_pid`. The projection already removed
+the generic `pid` and `process_pids` keys but did not apply M099's intended suffix rule to named
+producer fields.
+
+No M103 protocol was frozen and no canonical result existed. The pre-freeze instrument now excludes
+every key ending in `_pid` or `_pids` recursively, in both runner and independent checker. The raw
+evidence retains all producer identifiers for process-boundary inspection; only the declared stable
+projection removes them. A corrected development replay is required before freeze.
+
+## M103 pre-freeze adversarial audit — six additional false-positive paths
+
+The pre-freeze red team found six further defects or underpowered controls after the initial PID
+projection failure: an all-features host switch made S-prime state nearly decorative; the
+more-budget arm did not actually repeat work; S0 closure was certified only by the runtime being
+tested; M101/M102 retention was partly structural rather than behavioral; the producer module named
+the exact four-token winning subset; and zero external-call counters were not themselves decisive.
+
+All were corrected before any `PROTOCOL.json` or canonical result existed. The feature interpreter
+now executes four separable steps; the control repeats the complete S0 image 32 times; an independent
+closure checker imports no M103 runtime/search; a separate execution-only predecessor capsule runs
+seven fresh M100-M102 probes; the accepted subset constant is absent from the producer runtime; and
+P1/P14/P15 require isolation/import/call-counter evidence. The complete disclosure and residual
+claim ceiling are in `experiments/M103/ADVERSARIAL_REVIEW.md`. No qualification population was
+redrawn and no scientific attempt was consumed.
+
+## M103 pre-freeze full-suite checkpoint — repository integration registers were incomplete
+
+The first complete post-candidate local suite returned 2,895 passes, 12 expected skips and three
+failures. All three were repository-integrity guards: the copied `m103_runtime` capsule alias and
+the local `tests` namespace were absent from dependency classification; the three executable M103
+author scripts were not classified as entry points; and candidate source commit `48be7c06…` was
+cited but not yet recorded in `docs/COMMIT_CITATIONS.json`.
+
+No M103 behavioral test or P1-P15 condition failed. The integrity checker now recognizes explicit
+M103 capsule/local-test aliases and `author_` entry points. Annotated provenance tag
+`provenance/m103-owner-review-source-v1` preserves the cited source commit, and the citation manifest
+records it. This occurred before protocol acceptance, freeze or canonical execution.
+
+## M103 pre-freeze CI checkpoint — the first owner-review candidate was checkout-dependent
+
+The first PR CI run returned 2,897 passes, 11 expected skips and two failures on Python 3.11. One
+failure was a correct fail-closed refusal: GitHub's CPython 3.11.16 shipped SQLite 3.45.1 rather than
+the canonical SQLite 3.53.1, but the test had incorrectly expected candidate construction to
+succeed. The second failure was decisive for the candidate itself: its predecessor checker raw hash
+named the CRLF Windows working-tree copy (`aadf6971…`), while CI measured the unchanged committed LF
+blob (`5a35f161…`). Further inspection found the same portability defect in retained M100/M101 source
+bindings. The M0* attribute convention no longer matched milestone names beginning at M100.
+
+No final `PROTOCOL.json`, result or checker existed, and the qualification population had not run.
+The first candidate `0a74e8f2…` is therefore superseded before acceptance. M100+ JSON artifacts and
+all M103-bound capsule sources now have explicit stable-byte attributes; `.gitattributes` is itself
+bound; builders require a clean worktree; and non-canonical CI verifies refusal rather than trying to
+construct a different candidate. The population was not altered or redrawn. A replacement owner-
+review candidate must be built from the canonical runtime and pass both CI platforms before freeze.

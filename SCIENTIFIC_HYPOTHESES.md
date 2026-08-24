@@ -1275,3 +1275,32 @@ mechanism evidence under an independently maintained SQLite execution interface.
 constructor, SQLite task family, adapters and evaluator remain project-authored. The result does not
 close G4/G5, establish independent task authorship, broad continual learning, general-agent
 evidence, recursive self-improvement or AGI.
+
+---
+
+## H48 — An acquired constructor extension can expand later acquisition reach
+
+Starting from exact positive M102 U2, a state-owned inherited hypothesis constructor S0 whose
+complete image is context-invariant can diagnose its inability to satisfy a same-input/different-
+context development demand, acquire and register a generic content-addressed constructor extension
+S-prime from a bounded feature substrate, and persist it across producer death. The unchanged
+S-prime can then make later configuration and disposable-filesystem capabilities constructible while
+otherwise identical fresh/equal-budget S0 lineages remain structurally unable to construct them.
+S-prime must be necessary at acquisition time, reused after another process death, refuse ambiguous
+evidence, and preserve the exact live M100/M101/M102 lineage.
+
+**Status:** **PRE-REGISTERED; IMPLEMENTED AND AUDITED PRE-FREEZE; UNTESTED.** The runtime, complete
+separated population, independent closure/definition/result checkers and causal controls exist.
+Seven pre-freeze false-positive paths were disclosed and corrected before any protocol freeze or
+canonical result. Two DEVELOPMENT rehearsals replayed P1-P15 stably; they are not scientific
+evidence. Owner-review candidate `b44c80e5…` exists, but no final `PROTOCOL.json` or result exists.
+See `experiments/M103/PRE_REGISTRATION.md` and `experiments/M103/ADVERSARIAL_REVIEW.md`.
+
+**What a positive result could establish.** A bounded acquired change to the hypothesis-
+construction machinery adds constructive reach for later acquisitions across two project-authored
+software carriers. The state-owned extension, not a larger runtime budget, is causally necessary.
+
+**What it could not establish.** The feature vocabulary, lower interpreter, carriers, action
+adapters, tasks, evaluator and bounds remain authored. This is not self-hosting, recursive or
+open-ended self-improvement, independent task authorship, a closed generality gate, general-agent
+evidence or AGI.

@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M102 positive, M103 acquisition-machinery reach selected for pre-registration
+**Status:** active; M102 positive, M103/H48 pre-registered before enabling implementation
 **Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
@@ -186,9 +186,17 @@ constructor S0, acquire and serialize a generic improvement S-prime to that cons
 producer death, and use live S-prime to acquire a later capability that an otherwise identical
 equal-budget S0 lineage cannot construct.
 
-The protocol must distinguish reach from speed by closing S0's constructive image, keep the target
-and qualification consumers unavailable to S-prime acquisition, and require live content-addressed
-dependencies through M101 B, M102 K/C and S-prime where claimed. Mutation, ablation, corruption,
-exact rollback, M100-M102 retention, isolated processes and stable replay remain decisive. A positive
-result would be bounded acquisition-machinery meta-improvement evidence, not recursive
-self-improvement, independent task authorship, G4/G5 closure, general-agent evidence or AGI.
+H48 freezes S0 as a context-invariant linear constructor. The positive demands contain identical
+initial payloads that require different traces under different observable contexts, so S0 remains
+incapable at every budget. S-prime may be assembled only from a generic constructor-feature
+substrate on a DEVELOPMENT fixture and must refuse when public evidence leaves multiple semantic
+classes. Configuration and disposable-filesystem consumers become available only after S-prime's
+producer dies.
+
+The protocol distinguishes acquisition-time causality from runtime causality. S-prime must remain
+necessary to acquire later hypotheses, including after another process death. If compiled consumers
+can execute after S-prime is removed, that independence is reported rather than masked by a fake
+live reference. Mutation, ablation, corruption, exact rollback, fresh/more-budget S0, M100-M102
+retention, isolated processes and stable replay remain decisive. A positive result would be bounded
+acquisition-machinery improvement evidence, not recursive self-improvement, independent task
+authorship, G4/G5 closure, general-agent evidence or AGI.

@@ -1,5 +1,6 @@
 # Digest-bearing artifacts are stored byte-exact. Any end-of-line conversion would change
 # their SHA-256 between platforms and break the reproducibility claims that cite it.
+.gitattributes text eol=lf
 results/artifacts/*.json -text
 experiments/M074/DEVELOPMENT_PROBE_BANK.json -text
 experiments/M074/DEVELOPMENT_DRYRUN.json -text
@@ -27,6 +28,35 @@ experiments/M0*/BANK_COMMITMENT.json -text
 experiments/M0*/EPISODE_COMMITMENT.json -text
 experiments/M0*/SCHEDULE_COMMITMENT.json -text
 experiments/M0*/*-image/Dockerfile -text
+
+# Genesis II experiment artifacts and every source byte bound by M103 must be invariant across
+# Windows and POSIX checkouts. The older M0* convention stopped matching at M100, which allowed
+# M102's checker and two retained runtime sources to acquire checkout-specific CRLF bytes in the
+# first M103 owner-review candidate. JSON evidence remains byte-exact; executable/text sources are
+# canonical LF so isolated capsules have the same digest and behavior on every supported checkout.
+experiments/M1*/*.json -text
+experiments/M103/PRE_REGISTRATION.md text eol=lf
+experiments/M103/ADVERSARIAL_REVIEW.md text eol=lf
+metamorphosis/m100_runtime.py text eol=lf
+metamorphosis/m101_runtime.py text eol=lf
+metamorphosis/m101_executor.py text eol=lf
+metamorphosis/m102_runtime.py text eol=lf
+metamorphosis/m102_executor.py text eol=lf
+metamorphosis/m103_runtime.py text eol=lf
+scripts/run_m102_fresh_process.py text eol=lf
+scripts/run_m103_process.py text eol=lf
+scripts/check_m101_definitions.py text eol=lf
+scripts/check_m102_definitions.py text eol=lf
+scripts/check_m103_definitions.py text eol=lf
+scripts/check_m103_closure.py text eol=lf
+scripts/check_m103_result.py text eol=lf
+scripts/author_m103_development_fixture.py text eol=lf
+scripts/author_m103_qualification_pool.py text eol=lf
+scripts/author_m103_predecessor_conservation.py text eol=lf
+scripts/audit_m103_boundaries.py text eol=lf
+scripts/build_m103_protocol.py text eol=lf
+scripts/run_m103_development.py text eol=lf
+scripts/run_m103_qualification.py text eol=lf
 
 experiments/M084/PROTOCOL.json -text
 experiments/M084/BANK_COMMITMENT.json -text

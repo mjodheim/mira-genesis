@@ -14,6 +14,7 @@ def test_repository_scripts_are_local_not_a_distribution_dependency() -> None:
 
 def test_every_module_is_reachable_from_a_legitimate_entry_point() -> None:
     assert "build_" in integrity.ENTRY_POINT_PREFIXES
+    assert "author_" in integrity.ENTRY_POINT_PREFIXES
     assert integrity.check_orphans() == []
 
 
@@ -24,6 +25,7 @@ def test_isolated_capsule_sibling_has_an_explicit_repository_alias() -> None:
         "m101_runtime": "metamorphosis.m101_runtime",
         "m102_executor": "metamorphosis.m102_executor",
         "m102_runtime": "metamorphosis.m102_runtime",
+        "m103_runtime": "metamorphosis.m103_runtime",
     }
 
 
