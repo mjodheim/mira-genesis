@@ -199,7 +199,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   but no F bytes or DEVELOPMENT fixture; ambiguity or validated-image failure, not exhausted budget,
   must prevent adoption. P1-P16, exact predecessor conservation, mutation/ablation/corruption,
   rollback, isolation and replay are decisive. No implementation, pool, final protocol or result
-  exists yet. The lower Boolean interpreter and every interface/evaluator bound remain authored.
+  existed at pre-registration. The implementation, separated fixtures, isolated orchestration and
+  independent checkers now pass a clean adversarial audit; two DEVELOPMENT rehearsals have equal
+  stable projections and candidate P1-P16 are true. Because M103 died on an instrument rather than
+  a mechanism, the freeze lifecycle itself was rehearsed in a throwaway clone through candidate,
+  final protocol, freeze tag and preflight, and two pre-freeze defects were corrected: an absent
+  canonical result made the checker materialize a false negative report and burn its single
+  attempt, the freeze machinery was not bound to its own validator, and twenty-one of the
+  thirty-nine bound apparatus members had no end-of-line attribute, so a protocol frozen here would
+  have recorded digests no other Windows checkout could reproduce. The checker now refuses
+  without writing when no result exists, and no predicate, falsifier or verdict rule changed. This
+  is not a scientific result: no final protocol, canonical attempt or checker report exists, and
+  the canonical command has never been executed in any checkout. The lower Boolean interpreter and
+  every interface/evaluator bound remain authored.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

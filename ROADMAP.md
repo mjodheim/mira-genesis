@@ -476,8 +476,13 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   DEVELOPMENT-only demand may select a generic content-addressed classifier from a complete bounded
   Boolean semantic image; after process death it must enable generalized JSON/SQLite definitions
   outside M104's finite exact-context dispatch reach. Fresh controls exhaust the same semantic image
-  without the acquired state. H50/P1-P16 are frozen before implementation; no fixture, pool, final
-  protocol or result exists. A positive result would move the ceiling only to the lower interpreter.
+  without the acquired state. H50/P1-P16 were frozen before implementation. The implementation,
+  fixtures, isolation and three independent validators now pass adversarial development audit; two
+  rehearsals are stable and candidate P1-P16 are true. The freeze lifecycle was rehearsed in a clone
+  and two instrument defects were corrected before any candidate existed, including a checker that
+  burned its single attempt on an absent result. No final protocol or canonical result exists and
+  the canonical command has never run. A positive result would move the ceiling only to the lower
+  interpreter.
 
 M095, M098 and M103's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.

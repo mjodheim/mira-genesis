@@ -400,12 +400,34 @@ def _failure_report(error: Exception) -> dict[str, Any]:
     return report
 
 
+def _refusal(reason: str) -> dict[str, Any]:
+    """Refuse before the canonical checker attempt without materializing a verdict."""
+    report: dict[str, Any] = {
+        "schema": "m105-check-refusal-v1",
+        "confirmed": False,
+        "failed_closed": True,
+        "report_materialized": False,
+        "checker_attempt_consumed": False,
+        "error": reason,
+    }
+    report["report_digest"] = digest(report)
+    return report
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--replay", action="store_true")
     arguments = parser.parse_args()
     if REPORT_PATH.exists():
         print(json.dumps(_failure_report(ValueError("M105 checker report already exists")), sort_keys=True))
+        return 3
+    if not RESULT_PATH.exists():
+        print(
+            json.dumps(
+                _refusal("M105 canonical result is absent; the checker attempt is preserved"),
+                sort_keys=True,
+            )
+        )
         return 3
     try:
         result = json.loads(RESULT_PATH.read_text(encoding="ascii"))

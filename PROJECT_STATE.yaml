@@ -515,7 +515,7 @@ current_real_software_frontier:
     remote_execution_calls_allowed: 0
     current_ceiling: constructor_feature_vocabulary_subset_bound_and_lower_interpreter_remain_authored_and_fixed
   M105:
-    status: preregistered_before_enabling_implementation
+    status: apparatus_complete_awaiting_owner_final_freeze
     hypothesis: H50
     hypothesis_status: untested
     decision_slot: D074
@@ -525,9 +525,19 @@ current_real_software_frontier:
     predecessor_state_digest: a34b3b9dab99ee848a9c209a95ec9201fd7056eb99393d45d4041c885f19417a
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
     owner_workflow_authorization_recorded: true
-    enabling_implementation_exists: false
-    development_fixture_exists: false
-    qualification_pool_exists: false
+    enabling_implementation_exists: true
+    development_fixture_exists: true
+    qualification_pool_exists: true
+    adversarial_pre_freeze_audit_clean: true
+    development_rehearsals_completed: 2
+    development_rehearsal_stable_projection_equal: true
+    adversarial_review_recorded: true
+    freeze_lifecycle_rehearsed_in_throwaway_clone: true
+    pre_freeze_instrument_defects_corrected: 3
+    apparatus_byte_invariant_across_checkouts: true
+    canonical_command_never_executed: true
+    candidate_decisive_conditions_true: 16
+    protocol_candidate_exists: false
     final_protocol_exists: false
     result_exists: false
     checker_report_exists: false

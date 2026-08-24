@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -72,3 +73,17 @@ def test_independent_checkers_reject_content_mutation() -> None:
     broken["state_digest"] = runtime.digest(payload)
     with pytest.raises(ValueError, match="feature semantics mismatch"):
         definition_checker.validate(runtime.canonical_json(broken).encode("ascii"))
+
+
+def test_absent_canonical_result_refuses_without_consuming_the_checker_attempt(
+    tmp_path, monkeypatch
+) -> None:
+    """M103 died on an instrument failure; an absent result must not burn the one attempt."""
+    from scripts import check_m105_result
+
+    monkeypatch.setattr(check_m105_result, "RESULT_PATH", tmp_path / "RESULT.json")
+    monkeypatch.setattr(check_m105_result, "REPORT_PATH", tmp_path / "CHECK_REPORT.json")
+    monkeypatch.setattr(sys, "argv", ["check_m105_result.py"])
+
+    assert check_m105_result.main() == 3
+    assert not (tmp_path / "CHECK_REPORT.json").exists()
