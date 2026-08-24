@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-24
-status: m102_positive_m103_protocol_candidate_owner_review_required
+status: m102_positive_m103_protocol_frozen_run_authorization_required
 
 active_research_question: >-
   Can the exact M102 U2 lineage observe that its fixed hypothesis constructor cannot represent a
@@ -353,13 +353,13 @@ current_real_software_frontier:
     generality_gate_5_status: stronger_partial_bounded_interference_evidence
     current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
   M103:
-    status: exact_protocol_candidate_awaiting_owner_acceptance
+    status: frozen_protocol_run_not_authorized
     scientific_verdict_exists: false
     hypothesis: H48
     hypothesis_status: untested
     decision_slot: D072
     decision_slot_filled: false
-    protocol_frozen: false
+    protocol_frozen: true
     qualification_pool_exists: true
     qualification_pool_digest: 1f1b5d4289685f8401564d0f0e5d7c4f8ffda10561fbeba9ec8a36114e22b59e
     qualification_pool_records: 11
@@ -367,7 +367,7 @@ current_real_software_frontier:
     predecessor_conservation_fixture_digest: 7bfb93b917f78f5f1c2e2c16cee587f8eb50bdd7f9f98d7e922b6ae6506a51ea
     enabling_implementation_exists: true
     adversarial_review_complete: true
-    pre_freeze_falsifiers_disclosed_and_corrected: 7
+    pre_freeze_falsifiers_disclosed_and_corrected: 8
     unresolved_decisive_falsifiers: 0
     development_full_rehearsals: 2
     development_conditions_passed: 15
@@ -378,6 +378,12 @@ current_real_software_frontier:
     protocol_candidate_digest: b44c80e52f8569f70f9d5b1ba89cb2fd42bac9a8628d83e42ae21cf4226e90f2
     protocol_candidate_raw_sha256: 8565d330046cc2e25ec8fe6930ed6b1f62a2c32bcb17170565ebbdc04c74d659
     protocol_candidate_source_commit: b1f920b44707b5da3c90f99a6b51a9b070fbbf10
+    owner_protocol_acceptance_recorded: true
+    final_protocol_exists: true
+    final_protocol_digest: cb21a4fa29d9895e477d12f6710eaa4f7c70dfca2e740812fe6846c4ff530de9
+    final_protocol_raw_sha256: 97c4aaf6aecfbf36903819043fa10d946c3a1d9e9e1b6193ff3e131c4bf4291b
+    final_protocol_source_commit: 42c7f6a6f52a9650e75cc7a8d7e5f4ece8711aff
+    freeze_tag: experiment/m103-frozen-protocol-v1
     boundary_audit_report_digest: a5800607ee71bb7302d1683e5c1c38a557f185b7a1fdfbc70d3dbed34532852a
     canonical_run_allowed: false
     canonical_run_authorized: false

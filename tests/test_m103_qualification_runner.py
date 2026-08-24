@@ -12,22 +12,22 @@ from scripts import run_m103_qualification as runner
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_canonical_paths_are_absent_before_freeze() -> None:
-    assert not runner.PROTOCOL_PATH.exists()
+def test_frozen_protocol_exists_but_canonical_evidence_is_absent() -> None:
+    assert runner.PROTOCOL_PATH.exists()
     assert not runner.RESULT_PATH.exists()
     assert not runner.CHECK_PATH.exists()
     report = runner.preflight()
     assert report["pool"]["confirmed"] is True
-    assert report["protocol_exists"] is False
-    assert report["frozen"] is False
-    assert report["confirmed"] is False
+    assert report["protocol_exists"] is True
+    assert report["result_absent"] is True
+    assert report["check_report_absent"] is True
 
 
-def test_canonical_materialization_refuses_without_owner_and_freeze() -> None:
+def test_canonical_materialization_refuses_without_distinct_run_authorization() -> None:
     with pytest.raises(runner.QualificationRefused, match="owner authorization"):
         runner.materialize(authorized_by_owner=False, understand_unique_attempt=False)
-    with pytest.raises(FileNotFoundError):
-        runner.materialize(authorized_by_owner=True, understand_unique_attempt=True)
+    with pytest.raises(runner.QualificationRefused, match="owner authorization"):
+        runner.materialize(authorized_by_owner=False, understand_unique_attempt=True)
     assert not runner.RESULT_PATH.exists()
 
 

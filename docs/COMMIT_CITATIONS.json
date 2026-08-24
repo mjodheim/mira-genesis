@@ -597,6 +597,17 @@
         "tests/test_m070_agent_design_freeze.py"
       ]
     },
+    "42c7f6a6f52a9650e75cc7a8d7e5f4ece8711aff": {
+      "subject": "Merge pull request #193 from mjodheim/codex/m103-acquisition-machinery",
+      "preserved_by": "main",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M103/PROTOCOL.json",
+        "tests/test_m103_protocol_candidate.py"
+      ]
+    },
     "4351fc007a95d341b017e10511de730e20651947": {
       "subject": "feat: add neutral M073 external-teacher runner",
       "preserved_by": "main",

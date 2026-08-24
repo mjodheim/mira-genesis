@@ -3,8 +3,7 @@
 **Hypothesis:** H48  
 **Decision slot:** D072  
 **Track:** A — endogenous bounded lineage  
-**Status:** implementation and pre-freeze adversarial audit complete; exact owner-review protocol
-candidate `b44c80e5…` exists; no frozen protocol or result exists
+**Status:** final protocol `cb21a4fa…` accepted and frozen; canonical run not authorised; no result
 
 M102 changed a state-owned registry policy, but fixed host functions still enumerated every policy
 and transformation hypothesis. M103 targets that ceiling directly. It asks whether the exact M102
@@ -40,8 +39,10 @@ See:
 - `PREDECESSOR_CONSERVATION.json` — fresh M100-M102 behavioral probes;
 - `ADVERSARIAL_REVIEW.md` — named pre-freeze falsifiers, corrections and residual ceiling;
 - `PROTOCOL_CANDIDATE.json` — exact bound candidate requiring explicit owner acceptance;
+- `PROTOCOL.json` — accepted immutable protocol; run authorisation remains separate;
 - `docs/IP_REVIEWS/M103_PUBLICATION_REVIEW.md` — publication/provenance decision.
 
 Two corrected DEVELOPMENT rehearsals computed P1-P15 true with identical stable projection
 `967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3`. This is apparatus
-validation, not a scientific result. No M103 canonical execution is authorised by these files.
+validation, not a scientific result. The final protocol remains explicitly disarmed; no M103
+canonical execution is authorised by these files.

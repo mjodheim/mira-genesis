@@ -2520,5 +2520,9 @@ No decision exists yet. H48 is pre-registered before enabling implementation. D0
 only from the first canonical M103 result produced under a final immutable `PROTOCOL.json`, after a
 separate owner acceptance of that protocol and explicit authorization of the unique attempt.
 
+The owner accepted exact candidate `b44c80e5…` on 24 August 2026. Final protocol `cb21a4fa…` is
+frozen under `experiment/m103-frozen-protocol-v1` and explicitly keeps canonical execution
+unauthorised. This freeze does not fill D072.
+
 The decision will be negative if any decisive predicate is false or uncomputed. Development runs,
 pre-freeze audits, protocol candidates and post-result repairs cannot fill D072.

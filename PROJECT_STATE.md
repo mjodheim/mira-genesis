@@ -170,8 +170,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   evaluator remain project-authored. G4/G5 remain partial. The next ceiling is that hypothesis
   generation itself is still fixed host machinery; M103 must test a state-owned acquisition
   mechanism improvement that changes later constructive reach versus an otherwise identical S0.
-- **M103 H48 now has a complete pre-freeze implementation and clean adversarial review; no frozen
-  protocol or result exists.** Exact M102 U2 is embedded unchanged. The bounded producer exhausts
+- **M103 H48 now has an accepted immutable protocol; no result exists and the canonical run is not
+  authorised.** Exact M102 U2 is embedded unchanged. The bounded producer exhausts
   98 generic feature subsets after S0's independently certified context-invariant closure and
   acquires a content-addressed S-prime without a target subset in the production runtime. After
   producer death the same S-prime can acquire configuration D and disposable-filesystem E in
@@ -179,10 +179,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   feature ablations, ambiguity refusal, truthful post-compilation independence, corruption, exact
   rollback, seven fresh M100-M102 behavioral probes and stable replay are wired into P1-P15. Two
   corrected non-canonical rehearsals matched at `967a0389…`; this is apparatus validation only.
-  Owner-review candidate `b44c80e5…` binds source `b1f920b4…`, the complete populations, exact
-  CPython/SQLite identities, capsules, checkers and clean boundary-audit report `a5800607…`.
-  Explicit protocol acceptance, immutable freeze and a distinct canonical-run authorization are
-  still required. D072 remains reserved.
+  Accepted candidate `b44c80e5…` produced final protocol `cb21a4fa…`, binding source `42c7f6a6…`,
+  the complete populations, exact CPython/SQLite identities, capsules, checkers and clean boundary-
+  audit report `a5800607…`. Immutable tag `experiment/m103-frozen-protocol-v1` binds the freeze; a
+  distinct canonical-run authorization is still required. D072 remains reserved.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
