@@ -90,9 +90,18 @@ def test_entrypoint_preflight_call_surface_does_not_open_scientific_paths() -> N
 def test_m103_frozen_mechanism_members_remain_exact() -> None:
     protocol = json.loads((ROOT / "experiments" / "M103" / "PROTOCOL.json").read_text(encoding="ascii"))
     assert protocol["protocol_digest"] == runner.M103_PROTOCOL_DIGEST
-    for group in ("apparatus", "mechanism", "checker"):
+    for group in ("mechanism", "checker"):
         for path, expected in protocol["bound_files"][group]["member_digests"].items():
             assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == expected
+    for path in protocol_builder.INHERITED_ORCHESTRATION_FILES[:3]:
+        expected = protocol["bound_files"]["apparatus"]["member_digests"][path]
+        assert hashlib.sha256((ROOT / path).read_bytes()).hexdigest() == expected
+    assert hashlib.sha256((ROOT / "experiments/M102/RESULT.json").read_bytes()).hexdigest() == (
+        protocol["predecessor"]["result_raw_sha256"]
+    )
+    assert hashlib.sha256((ROOT / "experiments/M102/CHECK_REPORT.json").read_bytes()).hexdigest() == (
+        protocol["predecessor"]["checker_raw_sha256"]
+    )
 
 
 def test_closed_m103_artifacts_are_not_reused_or_changed() -> None:
@@ -137,4 +146,4 @@ def test_canonical_preflight_verifies_every_freeze_blob_and_path() -> None:
     assert "protocol candidate raw bytes changed" in source
     assert "M103 {name}" in source
     assert "freeze commit must contain only the final protocol" in source
-    assert 'for name in ("apparatus", "mechanism", "checker")' in source
+    assert 'for name in ("mechanism", "checker", "inherited_orchestration")' in source

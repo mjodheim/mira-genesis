@@ -102,9 +102,14 @@ Candidate `3d765cd5…` bound M103 `mechanism` and `checker`, but M104 directly 
 `apparatus` group. Those causal bytes were therefore not protected by the successor commitment.
 The candidate is preserved at `provenance/m104-superseded-candidate-a5` and was not accepted.
 
-Candidate construction and canonical preflight now bind and recompute all three frozen M103 groups:
-`apparatus`, `mechanism` and `checker`. The exact inherited orchestration dependency is no longer
-implicit.
+Candidate construction and canonical preflight must therefore bind every causal inherited byte; the
+exact inherited orchestration dependency may not remain implicit.
+
+The first implementation of that correction overreached by binding the complete historical
+`apparatus` group, including `.gitattributes`, which legitimately changed when M104 added its own
+byte rules. A targeted test failed before any replacement candidate was generated. The binding now
+names the causal inherited subset: M103 qualification runner, DEVELOPMENT fixture, predecessor
+fixture, M102 result and M102 checker, alongside the exact M103 mechanism/checker groups.
 
 ## Residual ceiling
 

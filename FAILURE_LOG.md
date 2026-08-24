@@ -1461,5 +1461,12 @@ executes `scripts/run_m103_qualification.py`, whose runner and fixture bindings 
 `apparatus` group. Omitting that group meant a causal dependency could drift without invalidating
 the M104 candidate. No acceptance, final protocol or qualification occurred.
 
-Tag `provenance/m104-superseded-candidate-a5` preserves it. The replacement binds and recomputes
-M103 `apparatus`, `mechanism` and `checker` as three separate exact sets.
+Tag `provenance/m104-superseded-candidate-a5` preserves it. The replacement must bind the exact
+causal inherited orchestration bytes as well as M103 `mechanism` and `checker`.
+
+The first correction checkpoint then returned nine passes and one targeted failure before any new
+candidate was generated. Binding the full M103 `apparatus` group also bound `.gitattributes`, whose
+bytes legitimately changed when M104 registered its own paths. The test exposed an overbroad notion
+of causal inheritance, not a qualification failure. The corrected set names only the M103 runner,
+two fixtures and M102 result/checker bytes actually read, plus the unchanged M103 mechanism/checker
+groups. The red checkpoint is preserved here rather than described as green.

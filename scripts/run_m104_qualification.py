@@ -127,7 +127,7 @@ def require_frozen() -> dict[str, Any]:
         raise QualificationRefused("M104 protocol candidate raw bytes changed")
     _verify_file_binding(protocol.get("m104_bound_files", {}), label="apparatus")
     m103_binding = protocol.get("m103_exact_binding", {})
-    for name in ("apparatus", "mechanism", "checker"):
+    for name in ("mechanism", "checker", "inherited_orchestration"):
         _verify_file_binding(
             m103_binding.get("bound_files", {}).get(name, {}),
             label=f"M103 {name}",

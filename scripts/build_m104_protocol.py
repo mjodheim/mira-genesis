@@ -29,8 +29,15 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v4"
+SOURCE_TAG = "provenance/m104-owner-review-source-v5"
 CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v3"
+INHERITED_ORCHESTRATION_FILES = [
+    "scripts/run_m103_qualification.py",
+    "experiments/M103/DEVELOPMENT_FIXTURE.json",
+    "experiments/M103/PREDECESSOR_CONSERVATION.json",
+    "experiments/M102/RESULT.json",
+    "experiments/M102/CHECK_REPORT.json",
+]
 CANONICAL_PYTHON_IDENTITY = {"implementation": "cpython", "version_info": [3, 11, 16]}
 CANONICAL_SQLITE_IDENTITY = {
     "module": "sqlite3",
@@ -102,7 +109,7 @@ def _m103_binding() -> dict[str, Any]:
     if protocol.get("protocol_digest") != runner.M103_PROTOCOL_DIGEST:
         raise RuntimeError("M103 protocol binding changed")
     bound: dict[str, Any] = {}
-    for name in ("apparatus", "mechanism", "checker"):
+    for name in ("mechanism", "checker"):
         expected = protocol["bound_files"][name]
         current = _file_binding(expected["files"])
         if current["member_digests"] != expected["member_digests"]:
@@ -110,6 +117,15 @@ def _m103_binding() -> dict[str, Any]:
         if current["digest"] != expected["digest"]:
             raise RuntimeError(f"M103 {name} set digest changed")
         bound[name] = current
+    inherited = _file_binding(INHERITED_ORCHESTRATION_FILES)
+    for path in INHERITED_ORCHESTRATION_FILES[:3]:
+        if inherited["member_digests"][path] != protocol["bound_files"]["apparatus"]["member_digests"][path]:
+            raise RuntimeError(f"M103 inherited orchestration byte changed: {path}")
+    if inherited["member_digests"]["experiments/M102/RESULT.json"] != protocol["predecessor"]["result_raw_sha256"]:
+        raise RuntimeError("M102 result bytes changed")
+    if inherited["member_digests"]["experiments/M102/CHECK_REPORT.json"] != protocol["predecessor"]["checker_raw_sha256"]:
+        raise RuntimeError("M102 checker bytes changed")
+    bound["inherited_orchestration"] = inherited
     return {"protocol_digest": protocol["protocol_digest"], "bound_files": bound}
 
 
