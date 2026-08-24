@@ -37,3 +37,7 @@ candidate-only commit directly above the bound source before final protocol mate
 Candidate `6b17901b…` is superseded as A3 because its full source SHA could not satisfy the
 repository's non-circular citation register. Annotated source/candidate refs now carry the exact
 reachable identity and are resolved at every lifecycle boundary.
+
+Candidate `9f6e1b42…` is superseded as A4 because parent/tag checks alone did not prove the freeze
+commit left every reviewed apparatus blob unchanged. The canonical runner now recomputes all bound
+members and requires a protocol-only freeze commit.

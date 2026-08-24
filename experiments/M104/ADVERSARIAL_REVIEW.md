@@ -83,6 +83,18 @@ tag to resolve to `HEAD`; finalization requires the candidate tag to resolve to 
 commit; canonical preflight resolves the accepted source ref and requires it to be the freeze
 parent. Exact reachability is preserved without an impossible self-citation.
 
+### A11 — The fourth candidate did not verify every freeze blob
+
+Candidate `9f6e1b42…` correctly used annotated refs, but canonical preflight checked only the freeze
+tag/parent and clean worktree. A direct child could still alter runner or checker bytes in the same
+commit as `PROTOCOL.json`. That candidate is preserved at
+`provenance/m104-superseded-candidate-a4` and was not accepted.
+
+Canonical preflight now recomputes every M104 apparatus member, both inherited M103 binding groups,
+the raw pool and candidate; it also requires the freeze commit's complete changed-path census to be
+exactly `experiments/M104/PROTOCOL.json`. Parent/tag checks are necessary but no longer treated as
+sufficient.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

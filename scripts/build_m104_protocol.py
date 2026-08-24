@@ -29,8 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v2"
-CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v1"
+SOURCE_TAG = "provenance/m104-owner-review-source-v3"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v2"
 CANONICAL_PYTHON_IDENTITY = {"implementation": "cpython", "version_info": [3, 11, 16]}
 CANONICAL_SQLITE_IDENTITY = {
     "module": "sqlite3",

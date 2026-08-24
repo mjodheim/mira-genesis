@@ -21,6 +21,7 @@ from scripts import run_m103_qualification as m103  # noqa: E402
 
 EXPERIMENT = ROOT / "experiments" / "M104"
 POOL_PATH = EXPERIMENT / "QUALIFICATION_POOL.json"
+PROTOCOL_CANDIDATE_PATH = EXPERIMENT / "PROTOCOL_CANDIDATE.json"
 PROTOCOL_PATH = EXPERIMENT / "PROTOCOL.json"
 RESULT_PATH = EXPERIMENT / "RESULT.json"
 CHECK_PATH = EXPERIMENT / "CHECK_REPORT.json"
@@ -96,6 +97,16 @@ def _canonical_runtime_confirmed() -> bool:
     )
 
 
+def _verify_file_binding(binding: dict[str, Any], *, label: str) -> None:
+    files = binding.get("files")
+    expected_members = binding.get("member_digests")
+    if not isinstance(files, list) or not isinstance(expected_members, dict):
+        raise QualificationRefused(f"M104 {label} binding shape is invalid")
+    measured = {path: sha256_bytes((ROOT / path).read_bytes()) for path in files}
+    if measured != expected_members or digest(measured) != binding.get("digest"):
+        raise QualificationRefused(f"M104 {label} bound bytes changed")
+
+
 def require_frozen() -> dict[str, Any]:
     if not PROTOCOL_PATH.exists():
         raise QualificationRefused("M104 final protocol is absent")
@@ -109,6 +120,18 @@ def require_frozen() -> dict[str, Any]:
         raise QualificationRefused("M104 protocol pool binding mismatch")
     if protocol.get("m103_protocol_digest") != M103_PROTOCOL_DIGEST:
         raise QualificationRefused("M104 protocol changed its M103 mechanism binding")
+    if sha256_bytes(POOL_PATH.read_bytes()) != protocol.get("qualification_pool_raw_sha256"):
+        raise QualificationRefused("M104 qualification pool raw bytes changed")
+    candidate_binding = protocol.get("protocol_candidate", {})
+    if sha256_bytes(PROTOCOL_CANDIDATE_PATH.read_bytes()) != candidate_binding.get("raw_sha256"):
+        raise QualificationRefused("M104 protocol candidate raw bytes changed")
+    _verify_file_binding(protocol.get("m104_bound_files", {}), label="apparatus")
+    m103_binding = protocol.get("m103_exact_binding", {})
+    for name in ("mechanism", "checker"):
+        _verify_file_binding(
+            m103_binding.get("bound_files", {}).get(name, {}),
+            label=f"M103 {name}",
+        )
     if protocol.get("owner_protocol_acceptance", {}).get("recorded") is not True:
         raise QualificationRefused("M104 owner protocol acceptance is absent")
     if protocol.get("canonical_run_allowed") is not False:
@@ -126,6 +149,9 @@ def require_frozen() -> dict[str, Any]:
         raise QualificationRefused("M104 HEAD is not the frozen tag commit")
     if _git("rev-parse", "HEAD^") != _git("rev-list", "-n", "1", source_ref):
         raise QualificationRefused("M104 freeze parent is not the accepted source ref")
+    changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()
+    if changed_paths != ["experiments/M104/PROTOCOL.json"]:
+        raise QualificationRefused("M104 freeze commit must contain only the final protocol")
     if _git("status", "--porcelain"):
         raise QualificationRefused("M104 canonical worktree is not clean")
     return protocol

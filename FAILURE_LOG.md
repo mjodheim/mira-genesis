@@ -1442,3 +1442,14 @@ Tag `provenance/m104-superseded-candidate-a3` preserves A3. The replacement uses
 and candidate refs: construction, finalization and canonical preflight each resolve the ref and
 verify the exact parent relation. This keeps the commitment reachable and avoids weakening the
 commit-citation guard.
+
+### M104 pre-freeze candidate A4 — freeze parent did not imply unchanged apparatus
+
+Candidate `9f6e1b42…` resolved annotated source/candidate refs correctly, but the canonical runner
+verified only the freeze tag, parent and clean worktree. A freeze commit could therefore contain
+`PROTOCOL.json` plus a changed runner/checker and still pass those checks. No owner acceptance,
+protocol freeze or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a4` preserves it. The replacement preflight recomputes the
+raw pool/candidate, every M104 apparatus member, both inherited M103 binding groups and their set
+digests, then requires the freeze commit to change exactly one path: the final protocol.

@@ -128,3 +128,12 @@ def test_finalization_has_a_read_only_candidate_commit_validator() -> None:
     assert "owner-review candidate tag does not resolve to HEAD" in source
     assert "candidate_source_ref" in source
     assert '"candidate_source_commit"' not in source
+
+
+def test_canonical_preflight_verifies_every_freeze_blob_and_path() -> None:
+    source = Path(runner.__file__).read_text(encoding="utf-8")
+    assert "def _verify_file_binding" in source
+    assert "qualification pool raw bytes changed" in source
+    assert "protocol candidate raw bytes changed" in source
+    assert "M103 {name}" in source
+    assert "freeze commit must contain only the final protocol" in source
