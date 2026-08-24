@@ -906,6 +906,14 @@
         "experiments/M076/STATUS.md"
       ]
     },
+    "608ab0465795893aeebf6a2b772993c99b5647fc": {
+      "subject": "science(m102): supersede owner-review candidate",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M102/PROTOCOL.json"
+      ]
+    },
     "616f31619e7337dd0c114fc1f09e1cefa1a8f7fd": {
       "subject": "ci: pin and report the M048 Node runtime",
       "preserved_by": "main",
