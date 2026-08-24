@@ -1981,6 +1981,17 @@
         "experiments/M087/RESULT.md"
       ]
     },
+    "dd205f257b6093b83ee4dbf1b48af0a0bff21275": {
+      "subject": "science(m103): preserve canonical attempt 1",
+      "preserved_by": "experiment/m103-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M103/CHECKER_FAILURE.json"
+      ]
+    },
     "dd74e17531e9845556bd9877c16cdbfb3a2b34ff": {
       "subject": "test: lock M072 preregistration invariants",
       "preserved_by": "main",

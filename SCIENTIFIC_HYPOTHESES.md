@@ -1289,11 +1289,13 @@ otherwise identical fresh/equal-budget S0 lineages remain structurally unable to
 S-prime must be necessary at acquisition time, reused after another process death, refuse ambiguous
 evidence, and preserve the exact live M100/M101/M102 lineage.
 
-**Status:** **FINAL PROTOCOL FROZEN; RUN NOT AUTHORISED; UNTESTED.** The runtime, complete separated
-population, independent closure/definition/result checkers and causal controls exist. Eight
-pre-freeze false-positive paths were disclosed and corrected before any protocol freeze or canonical
-result. Two DEVELOPMENT rehearsals replayed P1-P15 stably; they are not scientific evidence. Accepted
-candidate `b44c80e5…` produced protocol `cb21a4fa…`; no result exists.
+**Status:** **NOT SUPPORTED BY M103 ATTEMPT 1; NEGATIVE FAIL-CLOSED INSTRUMENT RESULT.** The unique
+canonical runner produced preserved result `d2ace036…`, but the first frozen checker invocation
+could not import its replay runner from the direct script entry point and exited 3 before P1-P15
+evaluation. P15 remained uncomputed, so the frozen verdict is negative. This does not refute the
+mechanism, but no positive subcondition can support H48 without the required independent replay.
+M103 is closed without retry; a fresh-population successor is required. See D072 and
+`experiments/M103/CHECKER_FAILURE.json`.
 See `experiments/M103/PRE_REGISTRATION.md` and `experiments/M103/ADVERSARIAL_REVIEW.md`.
 
 **What a positive result could establish.** A bounded acquired change to the hypothesis-

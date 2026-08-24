@@ -39,10 +39,15 @@ See:
 - `PREDECESSOR_CONSERVATION.json` — fresh M100-M102 behavioral probes;
 - `ADVERSARIAL_REVIEW.md` — named pre-freeze falsifiers, corrections and residual ceiling;
 - `PROTOCOL_CANDIDATE.json` — exact bound candidate requiring explicit owner acceptance;
-- `PROTOCOL.json` — accepted immutable protocol; run authorisation remains separate;
+- `PROTOCOL.json` — accepted immutable protocol used for the unique attempt;
+- `RESULT.json` — immutable first canonical result, preserved before checking;
+- `CHECKER_FAILURE.json` — exact binding and fail-closed record of the first checker invocation;
 - `docs/IP_REVIEWS/M103_PUBLICATION_REVIEW.md` — publication/provenance decision.
 
 Two corrected DEVELOPMENT rehearsals computed P1-P15 true with identical stable projection
-`967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3`. This is apparatus
-validation, not a scientific result. The final protocol remains explicitly disarmed; no M103
-canonical execution is authorised by these files.
+`967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3`. They remain apparatus
+validation, not scientific evidence. The unique canonical runner later produced result
+`d2ace036…`, but the first frozen checker invocation failed before replay because its direct script
+entry point could not resolve the `scripts` package. P15 was uncomputed, so D072 records a negative
+fail-closed instrument result. M103 is closed and will not be rerun or repaired; M104 owns any
+successor correction.

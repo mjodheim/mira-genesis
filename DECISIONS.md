@@ -2514,15 +2514,36 @@ project-authored. It is not recursive self-improvement, independent task authors
 evidence, AGI, self-hosting, arbitrary self-modification, independent human reproduction or
 production authority.
 
-## D072 — Reserved for the first frozen M103 attempt
+## D072 — M103 is negative because the frozen replay checker could not start
 
-No decision exists yet. H48 is pre-registered before enabling implementation. D072 may be filled
-only from the first canonical M103 result produced under a final immutable `PROTOCOL.json`, after a
-separate owner acceptance of that protocol and explicit authorization of the unique attempt.
+### The decision
 
-The owner accepted exact candidate `b44c80e5…` on 24 August 2026. Final protocol `cb21a4fa…` is
-frozen under `experiment/m103-frozen-protocol-v1` and explicitly keeps canonical execution
-unauthorised. This freeze does not fill D072.
+M103 attempt 1 is a **negative scientific result by fail-closed instrumentation**, and H48 remains
+unsupported by this attempt. The owner-authorized canonical runner executed exactly once from
+protocol `cb21a4fa…` and produced result `d2ace036…`, stable evidence `6a11fff9…`, raw result
+`6d89f26f…`. Those first bytes are preserved at commit
+`dd205f257b6093b83ee4dbf1b48af0a0bff21275` and tag
+`experiment/m103-canonical-first-result` before any checker was invoked.
 
-The decision will be negative if any decisive predicate is false or uncomputed. Development runs,
-pre-freeze audits, protocol candidates and post-result repairs cannot fill D072.
+The first frozen checker invocation then exited 3 before replay with
+`ModuleNotFoundError: No module named 'scripts'`. Direct script execution places the `scripts`
+directory, not the repository root, on Python's import path, while the replay branch imports
+`scripts.run_m103_qualification`. No `CHECK_REPORT.json` was materialized. P15 is therefore
+uncomputed, and the frozen rule — positive iff P1-P15 are all computed and true — makes the attempt
+negative. The exact failure is preserved in `experiments/M103/CHECKER_FAILURE.json` (raw SHA-256
+`fbc09a6c…`).
+
+### Scientific reading
+
+This attempt does not refute the constructor mechanism: the failure occurred before independent
+replay evaluated any predicate. It also does not support H48. The canonical result cannot be rescued
+by invoking the same checker as a module, changing its import bootstrap, or generating a report
+post hoc. M103 will not be rerun or repaired.
+
+### Next ceiling
+
+M104 must be a distinct successor with a fresh qualification population. It may leave the M103
+mechanism unchanged, but it must freeze a checker entry point that works from a clean checkout with
+an explicitly controlled import path, exercise that exact command before freeze without touching
+qualification data, and rerun every P1-P15 condition under a new protocol and unique result. A
+positive M104 would close only the M103 instrument defect; it would not retroactively change D072.

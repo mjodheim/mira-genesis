@@ -1,12 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-24
-status: m102_positive_m103_protocol_frozen_run_authorization_required
+status: m102_positive_m103_negative_checker_instrument_m104_required
 
 active_research_question: >-
-  Can the exact M102 U2 lineage observe that its fixed hypothesis constructor cannot represent a
-  required acquisition, acquire a persistent state-owned improvement S-prime to that acquisition
-  machinery, and show that S-prime changes later constructive reach versus an otherwise identical
-  equal-budget S0 while retaining live M100, M101 and M102 capabilities?
+  Can a distinct M104 successor, using the unchanged M103 mechanism, a corrected clean-checkout
+  checker entry point and an entirely fresh qualification population, compute every frozen causal
+  predicate and determine whether the acquired constructor extension changes later constructive
+  reach versus otherwise identical S0 controls?
 
 preceding_research_question: >-
   M101 asked whether a carrier-neutral capability acquired from public text demand can increase
@@ -353,12 +353,13 @@ current_real_software_frontier:
     generality_gate_5_status: stronger_partial_bounded_interference_evidence
     current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
   M103:
-    status: frozen_protocol_run_not_authorized
-    scientific_verdict_exists: false
+    status: negative_fail_closed_checker_instrument_attempt_1
+    scientific_verdict_exists: true
+    scientific_verdict: negative
     hypothesis: H48
-    hypothesis_status: untested
+    hypothesis_status: not_supported_in_attempt_1_instrument_failed_before_replay
     decision_slot: D072
-    decision_slot_filled: false
+    decision_slot_filled: true
     protocol_frozen: true
     qualification_pool_exists: true
     qualification_pool_digest: 1f1b5d4289685f8401564d0f0e5d7c4f8ffda10561fbeba9ec8a36114e22b59e
@@ -386,7 +387,27 @@ current_real_software_frontier:
     freeze_tag: experiment/m103-frozen-protocol-v1
     boundary_audit_report_digest: a5800607ee71bb7302d1683e5c1c38a557f185b7a1fdfbc70d3dbed34532852a
     canonical_run_allowed: false
-    canonical_run_authorized: false
+    canonical_run_authorized: true
+    canonical_run_executed: true
+    canonical_attempts: 1
+    canonical_rerun_allowed: false
+    result_exists: true
+    result_commit: dd205f257b6093b83ee4dbf1b48af0a0bff21275
+    first_result_tag: experiment/m103-canonical-first-result
+    result_digest: d2ace036a29d18be95f2fc5e0eee1285193cf96e8a7d7feebde46f61f96b0a81
+    result_raw_sha256: 6d89f26f994124ef7207ed1c580a7a72cd468a83d3f8787c1085a5b8e062ff26
+    stable_evidence_digest: 6a11fff9b3a4b3a00deee5150fe8884094a3baf09ac307b495a02ccb74617a97
+    checker_invocations: 1
+    checker_process_exit: 3
+    checker_error: "ModuleNotFoundError: No module named 'scripts'"
+    checker_report_exists: false
+    failed_closed: true
+    uncomputed_decisive_predicates: [P15]
+    checker_failure_artifact: experiments/M103/CHECKER_FAILURE.json
+    checker_failure_artifact_raw_sha256: fbc09a6c61ef4201d35c3e5114c6efa83908423f09833efa59b2d60817e54b6a
+    post_verdict_checker_retry_allowed: false
+    successor: M104
+    successor_requires_fresh_population: true
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
     track: A_endogenous_lineage
     exact_predecessor: M102_U2_attempt_1
@@ -406,7 +427,7 @@ current_real_software_frontier:
     model_calls_allowed_in_canonical_run: 0
     network_calls_allowed_in_canonical_run: 0
     remote_execution_calls_allowed_in_canonical_run: 0
-    current_ceiling: lower_constructor_feature_vocabulary_interpreter_carriers_tasks_and_evaluator_remain_authored
+    current_ceiling: frozen_checker_entry_point_cannot_import_replay_runner_so_mechanism_claim_remains_unresolved
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

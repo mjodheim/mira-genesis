@@ -1363,3 +1363,45 @@ now require the exact accepted protocol while preserving absent evidence, and ex
 authorization combinations. They never invoke `authorized_by_owner=True` with the unique-attempt
 acknowledgement. This is a lifecycle/safety correction before the freeze commit, not evidence for
 H48 and not a consumed attempt.
+
+## M103 canonical attempt 1 — frozen checker entry point could not import replay
+
+The owner-authorized runner executed exactly once on 24 August 2026 from
+`experiment/m103-frozen-protocol-v1`. It exited zero and materialized result `d2ace036…`, stable
+evidence `6a11fff9…`. The result was committed and tagged before analysis.
+
+The first checker command used the frozen repository script entry point:
+
+`python scripts/check_m103_result.py --replay --write`
+
+It exited 3 with `ModuleNotFoundError: No module named 'scripts'`. When Python executes a file under
+`scripts/` directly, that directory is `sys.path[0]`; the replay-only import
+`from scripts import run_m103_qualification` therefore cannot resolve the package from the
+repository root. The pre-freeze tests imported the checker as a module and never exercised the exact
+direct-script replay/write command, so they missed the defect. No `CHECK_REPORT.json` exists.
+
+The frozen verdict rule makes any false or uncomputed predicate negative. P15 was not computed, so
+M103 attempt 1 is negative even though the runner itself completed. The result is not relabelled as
+positive and the checker is not retried through `python -m`. Exact process output and bindings are
+preserved in `experiments/M103/CHECKER_FAILURE.json` (raw SHA-256 `fbc09a6c…`). D072 closes M103;
+a clean-entry-point correction and entirely fresh population belong to M104.
+
+### Post-result lifecycle suite
+
+The first targeted repository run after D072 returned 21 passes and seven failures. Two assertions
+still required `RESULT.json` to be absent; three pre-freeze integrity tests tried to reconstruct a
+pool whose author deliberately refuses once a result exists; and two candidate/audit tests reached
+the same closed authoring path. One surviving test also executed `run_experiment()` twice on the
+already exposed M103 pool under the label DEVELOPMENT replay. Those executions wrote no artifact,
+cannot rescue P15 and are not additional canonical attempts, but calling them after closure was the
+wrong lifecycle behavior and is disclosed here.
+
+Post-result tests now bind the immutable protocol, result and checker-failure hashes, require the
+report to remain absent, verify denied authorization leaves result bytes untouched, and explicitly
+forbid calling the closed runner/checker. They do not modify or re-execute M103 science.
+
+The first lifecycle correction run returned 25 passes and two test-only failures: one guard called a
+hash helper from the runner although that helper belongs to the runtime, and one tried to exercise
+the candidate builder from the intentionally dirty correction worktree, so its clean-tree refusal
+preceded the expected post-result refusal. The guards now use the standard-library hash and inspect
+the two frozen refusal branches statically; neither failure touched an experiment artifact.

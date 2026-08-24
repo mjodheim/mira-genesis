@@ -170,19 +170,17 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   evaluator remain project-authored. G4/G5 remain partial. The next ceiling is that hypothesis
   generation itself is still fixed host machinery; M103 must test a state-owned acquisition
   mechanism improvement that changes later constructive reach versus an otherwise identical S0.
-- **M103 H48 now has an accepted immutable protocol; no result exists and the canonical run is not
-  authorised.** Exact M102 U2 is embedded unchanged. The bounded producer exhausts
-  98 generic feature subsets after S0's independently certified context-invariant closure and
-  acquires a content-addressed S-prime without a target subset in the production runtime. After
-  producer death the same S-prime can acquire configuration D and disposable-filesystem E in
-  DEVELOPMENT rehearsals while fresh/equal/32-repeat S0 controls remain outside reach. All four
-  feature ablations, ambiguity refusal, truthful post-compilation independence, corruption, exact
-  rollback, seven fresh M100-M102 behavioral probes and stable replay are wired into P1-P15. Two
-  corrected non-canonical rehearsals matched at `967a0389…`; this is apparatus validation only.
-  Accepted candidate `b44c80e5…` produced final protocol `cb21a4fa…`, binding source `42c7f6a6…`,
-  the complete populations, exact CPython/SQLite identities, capsules, checkers and clean boundary-
-  audit report `a5800607…`. Immutable tag `experiment/m103-frozen-protocol-v1` binds the freeze; a
-  distinct canonical-run authorization is still required. D072 remains reserved.
+- **M103 attempt 1 is negative by fail-closed checker instrumentation; H48 remains unsupported.**
+  The owner-authorized runner executed exactly once from protocol `cb21a4fa…` and materialized
+  result `d2ace036…`, stable evidence `6a11fff9…`, raw result `6d89f26f…`. The first bytes were
+  preserved at commit `dd205f257b6093b83ee4dbf1b48af0a0bff21275` and tag
+  `experiment/m103-canonical-first-result` before checking. The first frozen checker command then
+  exited 3 before replay: direct execution of `scripts/check_m103_result.py` could not import
+  `scripts.run_m103_qualification`. No `CHECK_REPORT.json` was created and P15 remained uncomputed,
+  so the frozen all-P1-P15 rule makes the result negative. The failure is preserved at
+  `experiments/M103/CHECKER_FAILURE.json`; M103 is not retried or repaired. D072 requires M104 to
+  use a corrected clean-checkout checker entry point, an entirely fresh population and a distinct
+  freeze. The mechanism was not falsified, but no M103 subcondition advances a claim or gate.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

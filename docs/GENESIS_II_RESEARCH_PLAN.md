@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M102 positive, M103/H48 protocol frozen and canonical run not authorised
+**Status:** active; M102 positive, M103 negative on frozen checker instrumentation, M104 required
 **Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
@@ -200,3 +200,10 @@ live reference. Mutation, ablation, corruption, exact rollback, fresh/more-budge
 retention, isolated processes and stable replay remain decisive. A positive result would be bounded
 acquisition-machinery improvement evidence, not recursive self-improvement, independent task
 authorship, G4/G5 closure, general-agent evidence or AGI.
+
+M103 attempt 1 did not produce that positive result. The unique runner completed and its first bytes
+are preserved, but the first frozen checker command failed before replay because direct script
+execution could not resolve its repository-root `scripts` import. P15 remained uncomputed and the
+frozen rule made the attempt negative. D072 closes M103 without retry. M104 must correct only this
+instrument boundary, use a fresh qualification population and repeat every causal condition under a
+new freeze; a positive successor would not retroactively alter M103.
