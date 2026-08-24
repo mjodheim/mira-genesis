@@ -37,6 +37,10 @@ experiments/M0*/*-image/Dockerfile -text
 experiments/M1*/*.json -text
 experiments/M103/PRE_REGISTRATION.md text eol=lf
 experiments/M103/ADVERSARIAL_REVIEW.md text eol=lf
+experiments/M104/*.md text eol=lf
+docs/IP_REVIEWS/M104_PUBLICATION_REVIEW.md text eol=lf
+scripts/*m104*.py text eol=lf
+tests/test_m104_successor.py text eol=lf
 metamorphosis/m100_runtime.py text eol=lf
 metamorphosis/m101_runtime.py text eol=lf
 metamorphosis/m101_executor.py text eol=lf

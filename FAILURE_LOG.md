@@ -1405,3 +1405,100 @@ hash helper from the runner although that helper belongs to the runtime, and one
 the candidate builder from the intentionally dirty correction worktree, so its clean-tree refusal
 preceded the expected post-result refusal. The guards now use the standard-library hash and inspect
 the two frozen refusal branches statically; neither failure touched an experiment artifact.
+
+## M104 pre-freeze candidate A1 — absolute checkout path entered the commitment
+
+The first M104 candidate (`e528f564…`, raw `f972c1cb…`) passed the direct-script import test but
+embedded the full Windows repository root from that preflight report. A protocol accepting it would
+have bound checkout identity rather than the portable fact being tested. No M104 qualification
+experiment, result, report or final protocol existed.
+
+The exact candidate is preserved at tag `provenance/m104-superseded-candidate-a1`. It is superseded,
+not amended into the accepted candidate. The preflight now emits only
+`repository_root_resolved: true`; `.gitattributes` explicitly fixes every M104 bound source/prose
+path to LF or byte-exact JSON and is itself part of the bound apparatus. A new clean-source candidate
+is required.
+
+### M104 pre-freeze candidate A2 — clean-tree and source-commit rules were mutually exclusive
+
+Replacement candidate `62ab21c5…` removed the absolute path and matched every bound Git blob, but
+the final builder could not legally consume it. The candidate was created untracked from its clean
+source commit; finalization then required a clean worktree and `HEAD` equal to that source commit.
+Leaving the candidate untracked violated cleanliness, while committing it changed `HEAD`.
+
+No owner acceptance, final protocol, qualification run, result or report existed. The exact A2
+candidate is preserved at `provenance/m104-superseded-candidate-a2`. The corrected chronology is:
+clean source commit, generated candidate, candidate-only commit, owner acceptance, final protocol,
+then a freeze commit/tag directly above the candidate commit. The builder now verifies the parent,
+the candidate-only path census and exact committed candidate blob.
+
+### M104 pre-freeze candidate A3 — full source SHA violated the citation register
+
+Candidate `6b17901b…` satisfied portability and candidate-only commit validation, but repository
+integrity failed because its full source commit SHA was not in `docs/COMMIT_CITATIONS.json`. Placing
+that SHA in the source commit itself is circular. No protocol acceptance or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a3` preserves A3. The replacement uses annotated source
+and candidate refs: construction, finalization and canonical preflight each resolve the ref and
+verify the exact parent relation. This keeps the commitment reachable and avoids weakening the
+commit-citation guard.
+
+### M104 pre-freeze candidate A4 — freeze parent did not imply unchanged apparatus
+
+Candidate `9f6e1b42…` resolved annotated source/candidate refs correctly, but the canonical runner
+verified only the freeze tag, parent and clean worktree. A freeze commit could therefore contain
+`PROTOCOL.json` plus a changed runner/checker and still pass those checks. No owner acceptance,
+protocol freeze or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a4` preserves it. The replacement preflight recomputes the
+raw pool/candidate, every M104 apparatus member, both inherited M103 binding groups and their set
+digests, then requires the freeze commit to change exactly one path: the final protocol.
+
+### M104 pre-freeze candidate A5 — inherited runner and fixtures were not bound
+
+Candidate `3d765cd5…` recomputed every M104 file and both selected M103 groups, but M104's wrapper
+executes `scripts/run_m103_qualification.py`, whose runner and fixture bindings live in M103's
+`apparatus` group. Omitting that group meant a causal dependency could drift without invalidating
+the M104 candidate. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a5` preserves it. The replacement must bind the exact
+causal inherited orchestration bytes as well as M103 `mechanism` and `checker`.
+
+The first correction checkpoint then returned nine passes and one targeted failure before any new
+candidate was generated. Binding the full M103 `apparatus` group also bound `.gitattributes`, whose
+bytes legitimately changed when M104 registered its own paths. The test exposed an overbroad notion
+of causal inheritance, not a qualification failure. The corrected set names only the M103 runner,
+two fixtures and M102 result/checker bytes actually read, plus the unchanged M103 mechanism/checker
+groups. The red checkpoint is preserved here rather than described as green.
+
+### M104 pre-freeze candidate A6 — replay did not seal the result commit boundary
+
+Candidate `99cb23f5…` sealed the protocol-only freeze but the independent checker did not require the
+preserved first-result commit to be a direct RESULT-only child of that freeze. A changed runner or
+checker could therefore accompany the result and influence replay. No owner acceptance, final
+protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a6` preserves it. The replacement freezes the first-result
+tag and makes the checker verify tag, parent, path census, committed result bytes, clean tree, raw
+pool/candidate and every current causal file binding before replay.
+
+### M104 pre-freeze candidate A7 — checker trusted protocol and pool digest fields
+
+Candidate `4f30459f…` made replay history exact, but the checker did not recalculate the protocol and
+pool payload digests before comparing their recorded fields to the result. The runner already did,
+but that is not an independent check. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a7` preserves it. The replacement checker independently
+recomputes protocol, candidate and pool identities; fixes the expected pool and M103 identities;
+and reconstructs the annotated source/candidate/freeze/result history before any replay.
+
+### M104 pre-freeze candidate A8 — runner trusted fields the checker would only reject post-result
+
+Candidate `46393b91…` closed the independent checker boundary, but the pre-run runner did not itself
+prove that all final bindings and history were the exact owner-accepted candidate. A manually
+divergent yet internally hashed freeze could therefore consume the sole attempt before the checker
+failed closed. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a8` preserves it. The replacement runner independently
+reconstructs candidate identity and equality, fixed group membership, annotated ancestry, path
+censuses and committed bytes before qualification.

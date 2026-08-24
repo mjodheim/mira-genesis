@@ -1,0 +1,81 @@
+{
+  "schema": "m104-protocol-draft-v1",
+  "milestone": "M104",
+  "hypothesis": "H49",
+  "decision": "D073",
+  "status": "pre_registered_before_m104_pool_runner_or_checker_implementation",
+  "pre_registration_date": "2026-08-24",
+  "predecessor": {
+    "scientific_state": "exact_M102_U2_attempt_1",
+    "mechanism": "exact_frozen_M103_mechanism",
+    "m103_verdict": "negative_fail_closed_checker_instrument",
+    "m103_result_reuse_as_m104_evidence": false
+  },
+  "permitted_changes_from_m103": [
+    "M104 experiment namespace",
+    "entirely fresh qualification population",
+    "pool digest binding adapter",
+    "result and report schemas and paths",
+    "direct-script checker repository-root bootstrap",
+    "pre-freeze entrypoint preflight mode"
+  ],
+  "forbidden_changes_from_m103": [
+    "M103 runtime",
+    "M103 isolated process capsule",
+    "M103 feature vocabulary or search bounds",
+    "M103 closure or definition checkers",
+    "M103 predecessor conservation fixture",
+    "M103 predicate semantics",
+    "M103 result, protocol, failure or verdict"
+  ],
+  "qualification_population": {
+    "fresh_from_M103": true,
+    "complete_population": true,
+    "record_count": 11,
+    "hidden_case_count": 16,
+    "configuration_hidden_worlds": 4,
+    "filesystem_hidden_worlds": 4,
+    "reroll": false,
+    "result_dependent_draw": false
+  },
+  "checker": {
+    "exact_direct_script_entrypoint_pretested_before_freeze": true,
+    "entrypoint_preflight_must_not_open_qualification_data": true,
+    "canonical_checker_attempts": 1,
+    "alternative_post_failure_invocation_allowed": false,
+    "predicate_semantics": "exact_M103_P1_P15"
+  },
+  "decisive_conditions": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15"
+  ],
+  "verdict_rule": "positive_iff_P1_through_P15_are_computed_and_true_else_negative",
+  "canonical_attempts": 1,
+  "model_calls_allowed": 0,
+  "network_calls_allowed": 0,
+  "remote_execution_calls_allowed": 0,
+  "claim_if_positive": "bounded acquired constructor-reach improvement on a fresh successor population",
+  "claim_exclusions": [
+    "retroactive repair of M103",
+    "self-hosting",
+    "recursive or open-ended self-improvement",
+    "independent task authorship",
+    "closed G1-G10",
+    "general-agent evidence",
+    "AGI"
+  ]
+}
+

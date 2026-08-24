@@ -15,9 +15,9 @@ construction line at M066.
 
 The active question is stronger and narrower:
 
-> Can exact M102 U2 acquire a persistent improvement to its own hypothesis-construction machinery
-> and use that improvement to make a later acquisition constructible when an otherwise identical
-> equal-budget S0 cannot, while retaining M100, M101 and M102 capabilities?
+> Can the positive M104 lineage extend the fixed authored vocabulary or lower interpreter of its
+> hypothesis-construction machinery, persist that extension, and use it to make a later acquisition
+> constructible outside the complete image of an otherwise identical frozen-M104 constructor?
 
 The project is not currently claiming open-ended recursive self-improvement. It is testing the
 necessary mechanisms one at a time, under conditions designed to let a negative result remain a
@@ -37,7 +37,8 @@ valid result.
 | M100 | **Positive qualified scientific result; H45 supported** | A enabled bounded B acquisition, registered B enabled bounded C acquisition, all three remained live on 9/9 fresh worlds, and 12/12 conditions replayed true | One affine family, authored targets/bounds and fixed generic interpreter |
 | M101 | **Positive qualified scientific result; H46 supported** | A carrier-neutral acquisition from text added reach on all eight held-out text/record/syntax worlds against fresh T0 controls and became a live prerequisite for B; 15/15 conditions replayed true | All carriers/evaluators authored; chain only A → B; no genuine interference or independently maintained domain |
 | M102 | **Positive qualified scientific result; H47 supported** | Observable collisions caused acquisition of generic state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later C scored from real SQLite state; 15/15 conditions replayed true | Hypothesis constructors, tasks, adapters and evaluator remain authored; G4/G5 remain partial |
-| M103 | **Protocol frozen; run not authorised; H48 untested** | Test whether acquired serialized S-prime expands later acquisition reach beyond S0's complete context-invariant image and is reused after producer death | Complete authored apparatus is frozen as `cb21a4fa…`; no evidence yet, and all substrates/tasks remain authored |
+| M103 | **Negative checker-instrument result; H48 unresolved** | The unique runner result was preserved, but the frozen direct-script checker failed before replay and left P15 uncomputed; D072 is permanently negative | The scientific mechanism could not be qualified from this attempt; M103 may not be repaired or rerun |
+| M104 | **Positive qualified scientific result; H49 supported** | The unchanged M103 mechanism qualified on a fresh population: acquired S-prime survived producer death, enabled two later acquisitions outside S0's complete image, and passed P1-P15 with stable replay | Seven-token feature vocabulary, subset bound, lower interpreter, carriers, tasks, adapters and evaluator remain authored; no generality gate closes |
 
 ## M094 — the original qualified repair anchor
 
@@ -265,9 +266,31 @@ outcomes and stable replay passed across 58 isolated invocations. Independent ch
 result `92d4ed3e…`, stable evidence `eab68a79…`, report `3ba2f130…`. D071 supports bounded
 continual-interference and registry meta-policy evidence, not G4/G5 closure.
 
-## The longer-term target after M102
+## M103 and M104 — acquired constructor reach, then instrument correction
 
-M102 now preserves the following chain across bounded authored carriers and real SQLite execution:
+M103 was the first frozen attempt to test whether exact M102 U2 could acquire a persistent
+hypothesis-constructor extension. Its unique runner materialized and preserved a result, but the
+first and only frozen checker command failed during direct-script import before replay. P15 remained
+uncomputed, so D072 records a negative checker-instrument result. The result and failure remain
+immutable; M103 was not rerun or repaired.
+
+M104 preserved the exact M103 mechanism and predicate meanings, changed only the experiment
+instrument, and used a fresh complete population. Under frozen protocol `b3d8a6b3…`, the sole
+canonical attempt acquired carrier-neutral S-prime on DEVELOPMENT data, persisted it across producer
+death, and used it to acquire configuration and disposable-filesystem capabilities outside S0's
+complete context-invariant image. Fresh, equal-budget and 32-repeat S0 controls remained outside
+that reach; mutation, ablation, corruption, exact rollback, ambiguity refusal and M100-M102
+conservation controls passed.
+
+The first result was preserved before the one allowed checker/replay. Independent P1-P15 evaluation
+returned 15 true, 0 false and 0 uncomputed; replay was byte-stable with evidence digest
+`9f2d1758…`. The result digest is `f2be4d85…`, the report digest is `7032528b…`, and D073 supports H49
+only within the frozen, project-authored boundary. M103 remains negative.
+
+## The longer-term target after M104
+
+The continuing lineage now preserves the following chain across bounded authored carriers and real
+SQLite execution:
 
 ```text
 state T0
@@ -279,13 +302,19 @@ state T2 retains A + B
 state U1 retains A + B + K
   -> acquire C using live K + B
 state U2 retains A + B + K + C
-  -> future successor must improve later acquisition machinery itself
+  -> acquire constructor extension S-prime after closing S0
+state V1 has S-prime
+  -> acquire later configuration and filesystem capabilities outside S0 reach
+state V3 retains the exact predecessor + S-prime + both later capabilities
 ```
 
-A stronger successor must close S0's constructive image, acquire a serialized S-prime from observable
-failure, and show that S-prime makes a later acquisition reachable rather than merely cheaper. It
-must preserve the full predecessor and keep live dependencies causal. Independently authored held-out
-domains remain a separate necessary frontier; another project-authored carrier alone cannot close G4.
+A stronger successor must now attack a bound M104 did not remove. Increasing the subset size or
+search budget would not qualify: the seven high-level feature identities and their host-side
+semantics would still be authored. The next experiment must close the exact frozen-M104 constructor
+image and show that a state-owned extension of its feature vocabulary or lower executable substrate
+adds later validated constructive reach, survives process death and remains causally necessary.
+Independently authored held-out domains remain a separate necessary frontier; another
+project-authored carrier alone cannot close G4.
 
 That still would not by itself establish AGI or open-ended evolution. General-agent claims are
 governed separately by `MIRA_GENERALITY_CRITERIA.md`, which requires cross-domain evidence,
@@ -326,6 +355,8 @@ are promoted into claims they did not test.
 - `MIRA_GENERALITY_CRITERIA.md` — stronger generality vocabulary and gates;
 - `experiments/M094/` — qualified real-software diagnosis-and-repair anchor;
 - `experiments/M101/` — bounded cross-family result and immutable evidence;
-- `experiments/M102/` — current bounded interference result and immutable evidence;
+- `experiments/M102/` — bounded interference result and immutable evidence;
+- `experiments/M103/` — preserved negative checker-instrument attempt;
+- `experiments/M104/` — fresh-population positive result and immutable evidence;
 - `FAILURE_LOG.md` — preserved failure history;
 - `docs/EPISTEMIC_TRACKS.md` — endogenous versus model-mediated attribution boundary.
