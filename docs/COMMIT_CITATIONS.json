@@ -639,10 +639,11 @@
     },
     "482fc0d62519db1622236ed8220a6ea407c111ee": {
       "subject": "science(m102): preserve independent positive verdict",
-      "preserved_by": "experiment/m102-positive-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "48a4d5d0f6a25de275e646e5abb876fc912024fb": {
@@ -652,6 +653,19 @@
         "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json"
+      ]
+    },
+    "48be7c06a42edaec1d33f8a46a3407dbc3a098c2": {
+      "subject": "feat(m103): complete adversarially controlled apparatus",
+      "preserved_by": "provenance/m103-owner-review-source-v1",
+      "cited_in": [
+        "FAILURE_LOG.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M103/PROTOCOL_CANDIDATE.json",
+        "tests/test_m103_protocol_candidate.py"
       ]
     },
     "49033001f79591bc9534e43489a9d4147edd4529": {
@@ -923,7 +937,10 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M102/PROTOCOL.json",
         "experiments/M102/README.md",
-        "experiments/M102/RESULT.json"
+        "experiments/M102/RESULT.json",
+        "experiments/M103/PRE_REGISTRATION.md",
+        "experiments/M103/PROTOCOL_CANDIDATE.json",
+        "scripts/build_m103_protocol.py"
       ]
     },
     "616f31619e7337dd0c114fc1f09e1cefa1a8f7fd": {
@@ -2026,10 +2043,11 @@
     },
     "e48dd38127126376af1ec8ad22d1f55099e352a9": {
       "subject": "science(m102): preserve canonical attempt 1",
-      "preserved_by": "experiment/m102-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.yaml"
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "e68b85ea43653fdeeb5ada4847a7a57f235eefc7": {

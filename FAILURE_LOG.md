@@ -1319,3 +1319,16 @@ seven fresh M100-M102 probes; the accepted subset constant is absent from the pr
 P1/P14/P15 require isolation/import/call-counter evidence. The complete disclosure and residual
 claim ceiling are in `experiments/M103/ADVERSARIAL_REVIEW.md`. No qualification population was
 redrawn and no scientific attempt was consumed.
+
+## M103 pre-freeze full-suite checkpoint — repository integration registers were incomplete
+
+The first complete post-candidate local suite returned 2,895 passes, 12 expected skips and three
+failures. All three were repository-integrity guards: the copied `m103_runtime` capsule alias and
+the local `tests` namespace were absent from dependency classification; the three executable M103
+author scripts were not classified as entry points; and candidate source commit `48be7c06…` was
+cited but not yet recorded in `docs/COMMIT_CITATIONS.json`.
+
+No M103 behavioral test or P1-P15 condition failed. The integrity checker now recognizes explicit
+M103 capsule/local-test aliases and `author_` entry points. Annotated provenance tag
+`provenance/m103-owner-review-source-v1` preserves the cited source commit, and the citation manifest
+records it. This occurred before protocol acceptance, freeze or canonical execution.
