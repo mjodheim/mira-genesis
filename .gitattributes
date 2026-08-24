@@ -147,3 +147,14 @@ experiments/M092/VALIDATION_RECEIPT.json text eol=lf
 experiments/M092/RESULT.json text eol=lf
 experiments/M092/REGISTER_CLAIM.json text eol=lf
 experiments/M092/WITHDRAWN_RESULT_*.json text eol=lf
+
+# M105 binds its complete apparatus by raw-byte SHA-256, so every bound member must have the same
+# bytes on every supported checkout. M103 and M104 each had to add these entries after the fact;
+# M105's twenty-one Python/Markdown members were still unguarded, which on a fresh Windows clone
+# checked them out with CRLF and would have made the frozen binding unverifiable off this machine.
+# The JSON fixtures are already covered by the experiments/M1* rule above.
+experiments/M105/*.md text eol=lf
+docs/IP_REVIEWS/M105_PUBLICATION_REVIEW.md text eol=lf
+metamorphosis/m105_runtime.py text eol=lf
+scripts/*m105*.py text eol=lf
+tests/test_m105_*.py text eol=lf
