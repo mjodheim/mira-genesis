@@ -18,5 +18,9 @@ M104 requires:
 - a new immutable protocol, separate owner acceptance and separate one-run authorization;
 - preservation of M103 as negative regardless of M104's outcome.
 
-No M104 result exists. DEVELOPMENT checks and entry-point smoke tests are apparatus evidence only.
-
+The fresh pool and apparatus now exist. Pool `a84fa3c…` contains eleven records and sixteen hidden
+cases; the freshness audit `e861811f…` reports empty M103 overlap sets for identifiers, contexts,
+descriptor values and initials. The exact direct-script checker preflight succeeds from another
+working directory without changing the pool or creating result/report paths. No complete M104
+experiment has run, no protocol candidate/final protocol/result/report exists, and these checks are
+apparatus evidence only.

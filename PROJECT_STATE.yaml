@@ -429,7 +429,7 @@ current_real_software_frontier:
     remote_execution_calls_allowed_in_canonical_run: 0
     current_ceiling: frozen_checker_entry_point_cannot_import_replay_runner_so_mechanism_claim_remains_unresolved
   M104:
-    status: pre_registered_implementation_and_pool_absent
+    status: apparatus_built_candidate_and_result_absent
     hypothesis: H49
     hypothesis_status: untested
     decision_slot: D073
@@ -438,15 +438,31 @@ current_real_software_frontier:
     exact_predecessor: M102_U2_attempt_1
     m103_result_eligible_as_evidence: false
     fresh_population_required: true
+    qualification_pool_exists: true
+    qualification_pool_digest: a84fa3c5f9c2db51f31f83fa1b910c48f919bdc5c203d548833a7311d7bf1dad
+    qualification_pool_raw_sha256: 732e2f46eefef4223e5a715db385639f43ceacf00b27e7c83dff9c15fbf8eb62
+    qualification_pool_records: 11
+    qualification_hidden_cases: 16
+    freshness_audit_confirmed: true
+    freshness_audit_report_digest: e861811f7e82a8c67f8b62fc51451c006734322ad6df16a06f1b931cd1f65183
+    m103_identity_overlap_sets_empty: [ids, contexts, descriptors, initials]
     corrected_direct_script_checker_required: true
     prefreeze_entrypoint_subprocess_test_required: true
+    direct_script_entrypoint_preflight_confirmed: true
+    direct_script_entrypoint_opens_qualification_data: false
+    enabling_implementation_exists: true
+    complete_experiment_executed: false
+    protocol_candidate_exists: false
+    final_protocol_exists: false
+    result_exists: false
+    checker_report_exists: false
     canonical_attempts_allowed: 1
     canonical_checker_attempts_allowed: 1
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
     model_calls_allowed: 0
     network_calls_allowed: 0
     remote_execution_calls_allowed: 0
-    current_ceiling: implementation_and_fresh_pool_not_yet_built
+    current_ceiling: adversarial_audit_and_clean_owner_review_candidate_not_yet_complete
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

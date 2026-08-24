@@ -465,11 +465,12 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   was materialized and P15 remained uncomputed. The frozen rule therefore makes attempt 1 negative.
   H48 is unsupported but not mechanism-refuted. D072 forbids retry or post-verdict repair; M104 must
   use a corrected clean-checkout entry point and an entirely fresh qualification population.
-- **M104 — fresh-population instrument successor: PRE-REGISTERED; NOT IMPLEMENTED.** H49 keeps the
-  M103 mechanism and P1-P15 semantics byte-identical, changes only the experiment namespace, fresh
-  population and direct-script checker bootstrap, and requires an exact subprocess entry-point test
-  before freeze. A positive result would not repair M103 and would leave all authored mechanism and
-  task bounds in place.
+- **M104 — fresh-population instrument successor: APPARATUS BUILT; CANDIDATE PENDING.** H49 keeps the
+  M103 mechanism and P1-P15 semantics byte-identical. Fresh pool `a84fa3c…` has zero M103 overlap in
+  the four frozen identity categories, and the direct-script checker entry point succeeds from a
+  different working directory without qualification access. No complete experiment, protocol
+  candidate or result exists. A positive result would not repair M103 and would leave all authored
+  mechanism and task bounds in place.
 
 M095, M098 and M103's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.
