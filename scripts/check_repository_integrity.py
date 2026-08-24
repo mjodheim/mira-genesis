@@ -46,7 +46,7 @@ HEX_TOKEN = re.compile(r"(?<![0-9a-zA-Z])([0-9a-f]{7,40})(?![0-9a-zA-Z])")
 
 # Modules under `scripts/` that are legitimate entry points. They do not need to be
 # imported by another module to be considered live.
-ENTRY_POINT_PREFIXES = ("run_", "audit_", "train_", "check_")
+ENTRY_POINT_PREFIXES = ("run_", "audit_", "build_", "train_", "check_")
 
 # Tools invoked from the command line and never imported by source code. Declaring them
 # without importing them is legitimate.
@@ -71,6 +71,8 @@ LOCAL_IMPORT_ALIASES = {
     "m098_runtime": "metamorphosis.m098_runtime",
     "m101_executor": "metamorphosis.m101_executor",
     "m101_runtime": "metamorphosis.m101_runtime",
+    "m102_executor": "metamorphosis.m102_executor",
+    "m102_runtime": "metamorphosis.m102_runtime",
 }
 
 

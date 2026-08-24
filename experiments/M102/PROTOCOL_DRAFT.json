@@ -1,0 +1,102 @@
+{
+  "schema": "m102-protocol-draft-v1",
+  "milestone": "M102",
+  "hypothesis": "H47",
+  "decision_slot": "D071",
+  "track": "A_endogenous_lineage",
+  "status": "draft_non_executable_no_result_permitted",
+  "pre_registration": "experiments/M102/PRE_REGISTRATION.md",
+  "pre_registration_date": "2026-08-23",
+  "publication_review": "docs/IP_REVIEWS/M102_PUBLICATION_REVIEW.md",
+  "publication_disposition": "PUBLIC_AGPL_COMMERCIAL_OPTION",
+  "predecessor": {
+    "milestone": "M101",
+    "freeze_commit": "b3e172bba0cfdd282e6235e62bb8e7d213a77837",
+    "result_digest": "486f33e6673c8ad66f822ba11a91a595a155a65b36f2c5292c9ea200d9dbda35",
+    "stable_evidence_digest": "45f18dc644784d38a598066e53f1b19d8619cf47fc094c8a0456574373565e92",
+    "checker_digest": "95bffc8ba2a0b70d06148c71be3e28b2fc1f64f8655d380430bdedc5c682cb43",
+    "t2_raw_sha256": "cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0",
+    "t2_state_digest": "b8b042c49538752bd837f8619b91fc9dd0f25bd10aa7bf822ff2107a9bd8a462",
+    "preservation_tag": "experiment/m101-positive-result"
+  },
+  "state_chronology": [
+    "U0_exact_M101_T2_plus_inherited_flat_policy_and_prior_registry_events",
+    "U1_registered_acquired_policy_K_and_joint_registry_without_forgetting",
+    "U2_U1_plus_M101_B_dependent_SQLite_capability_C"
+  ],
+  "qualification_population": {
+    "total_entries": 13,
+    "policy_producer_trigger": 1,
+    "earlier_record_retention": 3,
+    "sqlite_c_acquisition_trigger": 1,
+    "sqlite_c_reuse": 3,
+    "m101_a_b_conservation": 2,
+    "m100_conservation": 3,
+    "public_cases_per_entry": 4,
+    "hidden_cases_per_entry": 4,
+    "development_overlap_permitted": false
+  },
+  "decisive_conditions": [
+    "P1_frozen_bindings",
+    "P2_clean_population",
+    "P3_exact_predecessor",
+    "P4_inherited_insufficiency",
+    "P5_endogenous_K_acquisition",
+    "P6_registration_causality",
+    "P7_hard_persistence",
+    "P8_real_interference",
+    "P9_demand_derived_C",
+    "P10_live_cumulative_dependency",
+    "P11_continual_retention",
+    "P12_real_SQLite_state",
+    "P13_isolated_authority",
+    "P14_causal_controls_and_rollback",
+    "P15_stable_first_attempt"
+  ],
+  "canonical_limits": {
+    "attempts": 1,
+    "model_calls": 0,
+    "network_calls": 0,
+    "remote_execution": false,
+    "repository_authority": false,
+    "credential_authority": false,
+    "deployment_authority": false,
+    "result_overwrite": false
+  },
+  "required_future_bindings": [
+    "pre_registration_raw_sha256",
+    "m101_t2_raw_bytes_sha256",
+    "runtime_digest",
+    "policy_language_digest",
+    "acquisition_capsule_digest",
+    "execution_capsule_digest",
+    "definition_checker_digest",
+    "result_checker_digest",
+    "qualification_pool_digest",
+    "sqlite_runtime_identity",
+    "stable_projection_digest",
+    "freeze_commit_and_annotated_tag"
+  ],
+  "forbidden_before_final_protocol_freeze": [
+    "qualification_policy_acquisition",
+    "qualification_registry_migration",
+    "qualification_c_acquisition",
+    "qualification_transfer_execution",
+    "qualification_baselines",
+    "qualification_mutation_ablation_corruption_or_rollback",
+    "canonical_result_materialization"
+  ],
+  "verdict_rule": "positive_iff_P1_through_P15_are_computed_and_true_else_negative",
+  "claim_boundary": {
+    "bounded_registry_meta_improvement_evidence_possible": true,
+    "bounded_continual_interference_evidence_possible": true,
+    "independently_maintained_execution_interface_possible": true,
+    "independent_task_authorship_claimed": false,
+    "g4_closed": false,
+    "g5_closed": false,
+    "general_agent_evidence_claimed": false,
+    "agi_claimed": false,
+    "open_ended_improvement_claimed": false,
+    "recursive_self_improvement_claimed": false
+  }
+}

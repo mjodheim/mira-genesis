@@ -1,7 +1,7 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M101 attempt 1 positive at 15/15, next ceiling under design
-**Date:** 2026-08-23
+**Status:** active; M102 protocol frozen, unique canonical attempt awaiting separate authorization
+**Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
 
@@ -142,3 +142,36 @@ cause rather than add breadth around an unresolved failure.
 
 Independent external transfer remains governed by the existing M085 / generality boundary and is not
 silently substituted by project-authored M101 worlds.
+
+## M102 — registered-policy improvement under interference
+
+M101's positive result leaves its prior acquisitions in an append-only, interference-free state.
+M102 therefore pre-registers H47 against a different failure mode: two carrier-local bindings have
+the same inherited flat registry key but incompatible descriptors. A no-upgrade lineage must either
+refuse the later binding or overwrite and forget the earlier one.
+
+The proposed lineage may advance only by acquiring a generic state-owned addressing policy from the
+observable collision, validating a transactionally re-indexed descendant, and registering that
+policy. The policy must then remain causally necessary, with live M101 B, for a later four-effect
+capability executed and scored from actual SQLite database state. Equal-budget flat-policy controls,
+destructive forgetting, K/B mutation and ablation, exact predecessor conservation, process death,
+corruption, rollback and stable replay remain decisive.
+
+SQLite supplies an independently maintained execution interface, not independent task authorship:
+the adapters, tasks and evaluator remain project-authored. Even a positive M102 could move only the
+bounded mechanism record, not close G4/G5 or support a general-agent claim.
+
+### M102 frozen pre-run state
+
+The complete thirteen-record population and protocol are frozen and have not been scientifically
+executed. Accepted candidate `4549f17f…` produced protocol `59689da6…`, whose annotated freeze tag
+binds exact M101 T2 bytes, Python/SQLite identities, mechanism,
+capsules, pool, independent definition/result checkers, P1–P15 and stable projection. A full
+frozen-style DEVELOPMENT lineage replayed stably twice across fresh isolated processes.
+
+Adversarial review corrected four pre-freeze falsifiers: a declared-but-not-executed B dependency,
+a host-side K-origin gate that manufactured causality, and Python docstring formatting that mixed
+representation with conservation, plus protocol construction that did not fail closed outside the
+canonical runtime. C acquisition now fails without K only because the live flat policy cannot
+represent the joint collision relation. The unique attempt, result, checker report and D071 remain
+absent pending separate canonical-run authorization.

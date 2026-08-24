@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- **M102 freezes its owner-accepted protocol without running qualification.** H47's
+  thirteen-record population remains frozen and unexecuted at `3d6785dd…`. CI rejected the first
+  candidate because its builder permitted interpreter-dependent reconstruction; construction now
+  fails closed outside CPython 3.11.16 plus SQLite 3.53.1. The replacement candidate is
+  `4549f17f…`; frozen protocol `59689da6…` is anchored by annotated tag
+  `experiment/m102-frozen-protocol-v1`. The separate authorization for the unique canonical attempt
+  remains absent.
+
 - **M101 qualifies bounded cross-family cumulative transfer.** From corrected v4 freeze `b3e172b`,
   one carrier-neutral combinator A was acquired from public text demand, survived producer death and
   passed 8/8 held-out text/record/Python-syntax worlds. Eight equal-budget fresh T0 baselines passed

@@ -1262,3 +1262,17 @@ also emitted extra keys. B embedded that complete mapping inside an exact nested
 structural survivor disagreed with the caller at execution. Status: **NEGATIVE QUALIFIED RESULT —
 H40 REFUTED, NO RETRY, NO POST-VERDICT REPAIR.** See D064 and
 `experiments/M095/POST_VERDICT_ANALYSIS.md`.
+
+## M102 pre-freeze — the first owner-review candidate allowed runtime substitution
+
+The first M102 owner-review candidate (`ce585aa2…`) recorded CPython 3.11.16 and SQLite 3.53.1, but
+its builder derived those identities from whichever interpreter invoked it. The Python 3.13 CI
+matrix therefore constructed a different candidate and exposed the mismatch. This was not a
+qualification result: `PROTOCOL.json` did not exist, the canonical attempt was not armed, and the
+qualification population had never been scientifically executed.
+
+The builder now fails closed unless both exact canonical identities are present. The independent
+boundary audit checks that both candidate and final builders enforce the gate, and a regression test
+mutates the observed runtime identity. The first candidate remains in Git history as superseded;
+candidate `4549f17f…` replaces it for owner review. The frozen population digest remains
+`3d6785dd…` and no reroll occurred.

@@ -236,6 +236,14 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "1c8b4d25a08feaa11f690308bab8ea02430be8c1": {
+      "subject": "fix(m102): fail closed outside canonical runtime",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M102/PROTOCOL_CANDIDATE.json"
+      ]
+    },
     "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
       "subject": "test: preserve negative M074 scientific result",
       "preserved_by": "main",
@@ -898,6 +906,14 @@
         "experiments/M076/STATUS.md"
       ]
     },
+    "608ab0465795893aeebf6a2b772993c99b5647fc": {
+      "subject": "science(m102): supersede owner-review candidate",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M102/PROTOCOL.json"
+      ]
+    },
     "616f31619e7337dd0c114fc1f09e1cefa1a8f7fd": {
       "subject": "ci: pin and report the M048 Node runtime",
       "preserved_by": "main",
@@ -938,6 +954,13 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "results/M038_TRIGGER_CALIBRATION.md"
+      ]
+    },
+    "644e0100508faec2a78e07ec4a9ccf2316c79682": {
+      "subject": "fix(m102): bind canonical interpreter identity",
+      "preserved_by": "codex/m102-registry-interference",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "664c385d6b4f14286cbae02b3ae93b2b1420b8dd": {
@@ -1644,6 +1667,16 @@
         "experiments/M040/STATUS.md",
         "results/M040_CANONICAL_RESULT.md",
         "results/artifacts/M040_CANONICAL_RESULT.json"
+      ]
+    },
+    "bdadb1074deea02f10039460cffa2ac24cd44b63": {
+      "subject": "science(m102): freeze owner-accepted protocol",
+      "preserved_by": "experiment/m102-frozen-protocol-v1",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "c3612588343e10ed15347bc7d57470150e4d6966": {
