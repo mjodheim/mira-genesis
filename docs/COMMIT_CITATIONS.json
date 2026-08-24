@@ -21,6 +21,14 @@
         "results/artifacts/M039_CANONICAL_RESULT.json"
       ]
     },
+    "0516f6bd6742551b48599a61aec2553d509dbc68": {
+      "subject": "science(m105): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m105-frozen-protocol-v1",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M105/README.md"
+      ]
+    },
     "0663c885346c41e310a0ae47eca122e7e2b6ed82": {
       "subject": "feat(m039): canonical three-cycle lineage with bounded Gate 2 and Gate 9",
       "preserved_by": "main",
@@ -1529,7 +1537,7 @@
       ]
     },
     "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
-      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosisâ†’synthesisâ†’adoption feat(docker): sandbox isolation Dockerfile",
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis\u00e2\u2020\u2019synthesis\u00e2\u2020\u2019adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",

@@ -99,6 +99,21 @@ changed.
 The direct-script entry point that killed M103 was re-verified: `python scripts/check_m105_result.py`
 imports and executes from a clean checkout with no import error.
 
+## Superseded freeze v1
+
+The first freeze was built, tagged and pushed, then withdrawn before any canonical attempt. Its
+bound apparatus contained a test asserting that `require_frozen` succeeds whenever `PROTOCOL.json`
+exists. `require_frozen` is designed to refuse off the exact freeze commit, so the assertion could
+only hold on the machine that froze it; both CI test jobs failed once the protocol existed. The
+pre-freeze rehearsals had exercised `preflight` **after** freezing but always with `HEAD` on the
+freeze commit, never from another checkout, which is exactly the angle CI covered.
+
+Because the test is a bound member, correcting it changes the apparatus digest and invalidates
+protocol `75dea6b7…`. `experiment/m105-frozen-protocol-v1` is therefore superseded, retained as
+provenance and never to be used. No canonical attempt ran under it, so no result, predicate or
+verdict is affected — a pre-run freeze may be replaced, and M104 replaced eight candidates the same
+way. The v2 apparatus is validated against a locally simulated CI merge checkout before freezing.
+
 ## Remaining authored ceiling
 
 Even a fully positive M105 would be bounded evidence that a state-owned executable high-level

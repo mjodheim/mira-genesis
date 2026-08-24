@@ -208,7 +208,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   attempt, the freeze machinery was not bound to its own validator, and twenty-one of the
   thirty-nine bound apparatus members had no end-of-line attribute, so a protocol frozen here would
   have recorded digests no other Windows checkout could reproduce, and the rehearsal test asserted
-  the canonical-runtime predicate P1 unconditionally, which made both CI jobs red. P2-P16 hold on
+  the canonical-runtime predicate P1 unconditionally, which made both CI jobs red. A first freeze
+  was then built and withdrawn before any canonical attempt: its bound apparatus asserted that
+  `require_frozen` succeeds whenever the protocol exists, which cannot hold off the freeze commit.
+  `experiment/m105-frozen-protocol-v1` is superseded and retained as provenance only. P2-P16 hold on
   Linux under Python 3.11 and 3.13; only the runtime pin differed. The checker now refuses
   without writing when no result exists, and no predicate, falsifier or verdict rule changed. This
   is not a scientific result: no final protocol, canonical attempt or checker report exists, and
