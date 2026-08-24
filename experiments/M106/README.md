@@ -1,13 +1,5 @@
 # M106 — corrective replication of the executable constructor-vocabulary extension
 
-> **VERDICT: POSITIVE (attempt 1). H51 supported within its frozen bounds. D075.**
->
-> Protocol `e92e1b08…`; result `7c22c889…`; report `76299018…`. P1-P16 all computed true, replay
-> equal, zero model/network/remote calls. Both fresh arms refused with four surviving behavioural
-> classes and the semantic image exhausted.
->
-> M105 remains negative and is not repaired by this result.
-
 M105/H50 attempt 1 is negative by fail-closed checker instrumentation (D074). Its unique canonical
 runner completed and its result `0ae9c096…` is preserved, but the single frozen checker raised
 `ModuleNotFoundError: No module named 'scripts'` in a deferred replay import and evaluated **no**
