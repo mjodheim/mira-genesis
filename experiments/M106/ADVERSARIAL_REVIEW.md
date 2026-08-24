@@ -85,3 +85,35 @@ A genuine lower-interpreter result requires a substrate that is *deliberately in
 target provably lies outside the complete image of the current primitives and an acquired executable
 primitive brings it inside. That cannot be obtained by another milestone in this substrate, and it
 is the next ceiling.
+
+## The rehearsal, and what it caught
+
+The complete `CANONICAL -> PRESERVE -> CHECK -> REPLAY` chain was rehearsed end to end in a
+throwaway clone with its own rehearsal freeze, using exactly the commands the canonical chronology
+will use. It consumed no canonical attempt and wrote nothing to the repository's evidence path.
+
+**The first rehearsal returned `verdict: negative`, P14 false, 15/16.** The mechanical M105->M106
+rename had renamed the isolated-process schema the runner filters on, while the capsule entry point
+`scripts/run_m105_process.py` is a mechanism file M106 preserves unchanged and still emits
+`m105-isolated-process-v1`. The filter matched nothing, `isolated_records` was empty, and both
+isolation booleans became false through `bool([])` rather than through any error — an isolation
+predicate reporting "no isolated process violated isolation". Without this rehearsal M106 would have
+spent its unique canonical attempt on that. The filter is now bound to the schema the mechanism
+actually emits, and a systematic sweep confirmed no other renamed schema is compared against
+mechanism output.
+
+After the correction the rehearsal returns `verdict: positive`, **16/16 computed and true, zero
+uncomputed, replay equal, exit 0**.
+
+Exit codes and artefacts were exercised on the rehearsal result:
+
+| case | exit | behaviour |
+|---|---|---|
+| result present, replay | 0 | all sixteen predicates computed; report materialized |
+| report already exists | 3 | refuses; does not overwrite |
+| result absent | 3 | `m106-check-refusal-v1`; writes nothing; attempt preserved |
+| result digest corrupted | 1 | negative, failed closed, report materialized |
+| evidence tampered with a recomputed digest | 1 | negative; caught by independent stable-projection recomputation |
+
+The last row matters: a coherent forgery that repairs `result_digest` is still detected, because the
+checker recomputes the stable projection itself rather than trusting the result's own summary.
