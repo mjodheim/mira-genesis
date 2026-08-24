@@ -555,6 +555,45 @@ current_real_software_frontier:
     identical_defect_to: D072
     current_ceiling: checker_entry_point_must_be_exercised_through_the_replay_branch_on_a_materialized_result_before_freeze
 
+  M106:
+    status: positive_qualified_attempt_1
+    hypothesis: H51
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D075
+    decision_slot_filled: true
+    verdict: positive
+    replication_of: H50
+    mechanism_module: metamorphosis/m105_runtime.py
+    mechanism_imported_unchanged: true
+    target_truth_table: [true, false, false, true]
+    target_fixed_before_implementation: true
+    protocol_digest: e92e1b087f7417c5e12811cb03a6204067049553ff6ffe35c6eeebe88be11b70
+    bound_apparatus_digest: 2a37e36728f93d1f6ede352fc8c744664729bb4f8ddaf9111be379b835170659
+    freeze_tag: experiment/m106-frozen-protocol-v1
+    result_digest: 7c22c889f5852ef4e8b6e63fa7c78352c741ee4d32dc2ed0c90061fd5cc8f394
+    stable_evidence_digest: 7c7cabc440eeaedbf198f4d316769c57c9589ceb8e2bb9e805e2317258f1aa4f
+    result_raw_sha256: 7a7c015ecfb5506c1eec5e6073773c021bd8b5caf94fb40a65a1e2f521436770
+    result_tag: experiment/m106-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 762990181bbe096bcc8b407b8abc75adf2816073822bcbd424827748bfcc4f00
+    positive_result_tag: experiment/m106-positive-result
+    decisive_conditions: 16
+    predicates_computed: 16
+    predicates_true: 16
+    replay_equal: true
+    fresh_control_semantic_classes: 4
+    fresh_control_image_exhausted: true
+    canonical_attempts_allowed: 1
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_allowed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_instrument_defects_corrected: 3
+    lower_interpreter_semantically_complete: true
+    current_ceiling: lower_interpreter_extension_requires_a_deliberately_incomplete_substrate
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

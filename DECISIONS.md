@@ -2634,3 +2634,61 @@ checkout, before the freeze — exercising a refusal path is not evidence that t
 The pre-freeze audit must assert that every deferred import in the checker resolves under the exact
 frozen command. A positive M106 would close only the M105 instrument defect; it would not
 retroactively change D074, and M103's D072 verdict likewise remains unchanged.
+
+## D075 — M106 positively replicates the constructor-vocabulary extension M105 could not evaluate
+
+### The decision
+
+M106 attempt 1 is a **positive qualified result**, and H51 is supported within its frozen bounds.
+The unique canonical runner executed exactly once from frozen protocol `e92e1b08…` on the canonical
+CPython 3.11.16 / SQLite 3.53.1 runtime, at freeze commit `971f503` on a clean worktree, and
+produced result `7c22c889…`, stable evidence `7c7cabc4…`, raw bytes `7a7c015e…`. Those first bytes
+were committed at `c4672fe`, tagged `experiment/m106-canonical-first-result` and **pushed before any
+checker ran**. The single frozen checker replay then computed **P1-P16 all true**, report
+`76299018…`, replay equal, with zero model, network and remote-execution calls.
+
+### Why this is a replication and not a repaired M105
+
+`metamorphosis/m105_runtime.py` — the mechanism — was **imported unchanged** and bound by digest.
+The orchestration, checker, protocol builder and boundary audit were derived from their M105
+counterparts by a mechanical milestone rename that protected every mechanism reference, so
+instrument logic was inherited rather than rewritten. Only the population, the DEVELOPMENT fixture
+and the entry points differ.
+
+The target semantic `(True, False, False, True)` was fixed in the pre-registration **before
+implementation** and differs from M105's `(False, True, True, False)`. A mechanism tuned to M105's
+target could not have passed. The acquired feature's content address differs accordingly.
+
+M105 remains negative. D074 is unchanged and is not retroactively repaired by this result.
+
+### What the result establishes
+
+From DEVELOPMENT-only behaviour the lineage acquired, independently validated and registered a
+carrier-neutral executable Boolean classifier F, which survived producer death and became a live
+content-addressed prerequisite for later JSON-document and SQLite acquisitions whose definitions lie
+outside the complete finite exact-context dispatch image of the frozen M104 constructor. Both fresh
+arms — same predecessor, runtime, substrate, observations and complete sixteen-function search —
+refused with **four surviving behavioural classes per carrier and the semantic image exhausted**.
+The repeated fresh arm also returned four. The refusal is underdetermination, not search exhaustion,
+so the difference is constructive reach and not cost.
+
+### What it does not establish
+
+Ownership or extension of the lower Boolean interpreter; open-ended vocabulary growth; modification
+of the acquisition machinery; recursive or open-ended self-improvement; independent task authorship;
+a closed generality gate; general-agent evidence; AGI. The acquired feature is one of exactly
+sixteen semantics the lineage enumerates, and H51 is bounded accordingly.
+
+### Next ceiling — and why it cannot be reached in this substrate
+
+`execute_expression` is **semantically complete** over its two-signal space: all sixteen Boolean
+functions are reachable inside the eight-node bound. No acquisition in this substrate can extend
+Boolean reach, ever. M106's reach claim is therefore about the consumer dispatch image only.
+
+A genuine lower-interpreter result requires a substrate that is **deliberately incomplete**, where a
+target provably lies outside the complete image of the current primitives and an acquired executable
+primitive brings it inside. The monotone fragment `{AND, OR}` over two signals has a complete image
+of exactly **four of sixteen** functions and is closed under its own operators, so `XOR`, `XNOR` and
+every negation-dependent function are excluded by a monotonicity lemma rather than by budget.
+Acquiring `NOT` as executable state extends that image to sixteen. The successor must be built on
+such a substrate; it cannot be another milestone here.
