@@ -29,8 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v7"
-CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v5"
+SOURCE_TAG = "provenance/m104-owner-review-source-v8"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v6"
 INHERITED_ORCHESTRATION_FILES = [
     "scripts/run_m103_qualification.py",
     "experiments/M103/DEVELOPMENT_FIXTURE.json",

@@ -167,4 +167,12 @@ def test_canonical_preflight_verifies_every_freeze_blob_and_path() -> None:
     assert "M103 {name}" in source
     assert "freeze commit must contain only the final protocol" in source
     assert "must be an annotated tag" in source
+    assert "protocol candidate identity or digest mismatch" in source
+    assert "final protocol changed accepted candidate field" in source
+    assert "accepted candidate commit contains other changes" in source
+    assert "working protocol differs from its frozen blob" in source
+    assert runner.EXPECTED_M104_FILES == protocol_builder.M104_FILES
+    assert runner.EXPECTED_INHERITED_ORCHESTRATION_FILES == (
+        protocol_builder.INHERITED_ORCHESTRATION_FILES
+    )
     assert 'for name in ("mechanism", "checker", "inherited_orchestration")' in source

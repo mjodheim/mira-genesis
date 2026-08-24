@@ -53,3 +53,6 @@ of the freeze and exact current bindings before any predicate is evaluated.
 Candidate `4f30459f…` is superseded as A7 because the checker did not independently recompute final
 protocol and pool digests. The replacement also recomputes the candidate, fixes expected pool/M103
 identities and reconstructs the annotated source-to-result history before replay.
+
+Candidate `46393b91…` is superseded as A8 because these exact accepted-candidate/history checks were
+not yet mirrored in the pre-run boundary. The runner now reconstructs them before the unique attempt.

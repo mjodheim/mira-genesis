@@ -1491,3 +1491,14 @@ but that is not an independent check. No acceptance, final protocol or qualifica
 Tag `provenance/m104-superseded-candidate-a7` preserves it. The replacement checker independently
 recomputes protocol, candidate and pool identities; fixes the expected pool and M103 identities;
 and reconstructs the annotated source/candidate/freeze/result history before any replay.
+
+### M104 pre-freeze candidate A8 — runner trusted fields the checker would only reject post-result
+
+Candidate `46393b91…` closed the independent checker boundary, but the pre-run runner did not itself
+prove that all final bindings and history were the exact owner-accepted candidate. A manually
+divergent yet internally hashed freeze could therefore consume the sole attempt before the checker
+failed closed. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a8` preserves it. The replacement runner independently
+reconstructs candidate identity and equality, fixed group membership, annotated ancestry, path
+censuses and committed bytes before qualification.

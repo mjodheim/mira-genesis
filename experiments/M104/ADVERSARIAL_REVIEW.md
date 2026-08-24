@@ -135,6 +135,18 @@ and candidate digests, fixes the expected pool and M103 identities independently
 protocol-to-pool binding. It also reconstructs the annotated source/candidate/freeze/first-result
 chain, exact changed-path censuses, runtime identity and non-omittable file-group memberships.
 
+### A15 — The eighth candidate left accepted-candidate reconstruction to the post-result checker
+
+Candidate `46393b91…` made the independent checker reconstruct the full lineage, but the canonical
+runner still trusted several final-protocol binding groups instead of proving that they were exactly
+those in the owner-accepted candidate. A divergent manual freeze would fail closed only after
+consuming the unique attempt. No acceptance, final protocol or qualification occurred. The candidate
+is preserved at `provenance/m104-superseded-candidate-a8`.
+
+The runner now recomputes candidate identity, candidate-to-final field equality, fixed pool and M103
+identities, non-omittable memberships, annotated source/candidate/freeze ancestry, exact path censuses
+and committed candidate/protocol bytes before qualification can begin.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

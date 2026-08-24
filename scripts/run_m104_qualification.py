@@ -31,6 +31,29 @@ POOL_RAW_SHA256 = "732e2f46eefef4223e5a715db385639f43ceacf00b27e7c83dff9c15fbf8e
 M103_PROTOCOL_DIGEST = "cb21a4fa29d9895e477d12f6710eaa4f7c70dfca2e740812fe6846c4ff530de9"
 CANONICAL_PYTHON = (3, 11, 16)
 CANONICAL_SQLITE = (3, 53, 1)
+EXPECTED_PREDICATES = [f"P{index}" for index in range(1, 16)]
+EXPECTED_M104_FILES = [
+    ".gitattributes",
+    "experiments/M104/README.md",
+    "experiments/M104/PRE_REGISTRATION.md",
+    "experiments/M104/PROTOCOL_DRAFT.json",
+    "experiments/M104/QUALIFICATION_POOL.json",
+    "experiments/M104/ADVERSARIAL_REVIEW.md",
+    "docs/IP_REVIEWS/M104_PUBLICATION_REVIEW.md",
+    "scripts/author_m104_qualification_pool.py",
+    "scripts/audit_m104_freshness.py",
+    "scripts/run_m104_qualification.py",
+    "scripts/check_m104_result.py",
+    "scripts/build_m104_protocol.py",
+    "tests/test_m104_successor.py",
+]
+EXPECTED_INHERITED_ORCHESTRATION_FILES = [
+    "scripts/run_m103_qualification.py",
+    "experiments/M103/DEVELOPMENT_FIXTURE.json",
+    "experiments/M103/PREDECESSOR_CONSERVATION.json",
+    "experiments/M102/RESULT.json",
+    "experiments/M102/CHECK_REPORT.json",
+]
 
 
 class QualificationRefused(RuntimeError):
@@ -112,6 +135,85 @@ def _verify_file_binding(binding: dict[str, Any], *, label: str) -> None:
         raise QualificationRefused(f"M104 {label} bound bytes changed")
 
 
+def _verify_candidate_and_inherited_boundaries(
+    protocol: dict[str, Any], candidate: dict[str, Any]
+) -> None:
+    candidate_payload = {key: value for key, value in candidate.items() if key != "candidate_digest"}
+    if candidate.get("schema") != "m104-protocol-candidate-v1" or candidate.get(
+        "candidate_digest"
+    ) != digest(candidate_payload):
+        raise QualificationRefused("M104 protocol candidate identity or digest mismatch")
+    candidate_binding = protocol.get("protocol_candidate", {})
+    if candidate_binding.get("candidate_digest") != candidate.get("candidate_digest"):
+        raise QualificationRefused("M104 final protocol candidate digest binding mismatch")
+    if candidate.get("qualification_pool_digest") != POOL_DIGEST:
+        raise QualificationRefused("M104 candidate qualification pool binding mismatch")
+    if candidate.get("qualification_pool_raw_sha256") != POOL_RAW_SHA256:
+        raise QualificationRefused("M104 candidate qualification pool raw binding mismatch")
+    if candidate.get("status") != "owner_review_required_run_not_authorized":
+        raise QualificationRefused("M104 protocol candidate status mismatch")
+    if candidate.get("canonical_run_allowed") is not False or candidate.get(
+        "separate_owner_run_authorization_required"
+    ) is not True:
+        raise QualificationRefused("M104 candidate authorization boundary mismatch")
+    if protocol.get("candidate_source_ref") != candidate.get("candidate_source_ref"):
+        raise QualificationRefused("M104 candidate source reference mismatch")
+    for field in (
+        "m103_exact_binding",
+        "m104_bound_files",
+        "canonical_runtime",
+        "canonical_result_policy",
+        "decisive_conditions",
+        "verdict_rule",
+    ):
+        if protocol.get(field) != candidate.get(field):
+            raise QualificationRefused(
+                f"M104 final protocol changed accepted candidate field: {field}"
+            )
+    if protocol.get("decisive_conditions") != EXPECTED_PREDICATES:
+        raise QualificationRefused("M104 decisive predicate declaration changed")
+    policy = protocol.get("canonical_result_policy", {})
+    if (
+        policy.get("canonical_attempts") != 1
+        or policy.get("canonical_checker_attempts") != 1
+        or policy.get("exclusive_create") is not True
+        or policy.get("preserve_first_result_even_if_negative") is not True
+    ):
+        raise QualificationRefused("M104 unique-attempt result policy mismatch")
+    if protocol.get("m104_bound_files", {}).get("files") != EXPECTED_M104_FILES:
+        raise QualificationRefused("M104 apparatus membership mismatch")
+
+    m103_protocol = json.loads(M103_PROTOCOL_PATH.read_text(encoding="ascii"))
+    m103_payload = {key: value for key, value in m103_protocol.items() if key != "protocol_digest"}
+    if m103_protocol.get("protocol_digest") != digest(m103_payload) or m103_protocol.get(
+        "protocol_digest"
+    ) != M103_PROTOCOL_DIGEST:
+        raise QualificationRefused("M104 frozen M103 protocol identity mismatch")
+    exact_binding = protocol.get("m103_exact_binding", {})
+    for name in ("mechanism", "checker"):
+        if exact_binding.get("bound_files", {}).get(name) != m103_protocol.get("bound_files", {}).get(
+            name
+        ):
+            raise QualificationRefused(f"M104 M103 {name} membership or digest mismatch")
+    inherited = exact_binding.get("bound_files", {}).get("inherited_orchestration", {})
+    if inherited.get("files") != EXPECTED_INHERITED_ORCHESTRATION_FILES:
+        raise QualificationRefused("M104 inherited orchestration membership mismatch")
+    inherited_members = inherited.get("member_digests", {})
+    for path in EXPECTED_INHERITED_ORCHESTRATION_FILES[:3]:
+        if inherited_members.get(path) != m103_protocol["bound_files"]["apparatus"]["member_digests"][
+            path
+        ]:
+            raise QualificationRefused(f"M104 inherited M103 apparatus digest mismatch: {path}")
+    if inherited_members.get("experiments/M102/RESULT.json") != m103_protocol["predecessor"][
+        "result_raw_sha256"
+    ]:
+        raise QualificationRefused("M104 inherited M102 result digest mismatch")
+    if inherited_members.get("experiments/M102/CHECK_REPORT.json") != m103_protocol["predecessor"][
+        "checker_raw_sha256"
+    ]:
+        raise QualificationRefused("M104 inherited M102 checker digest mismatch")
+
+
 def require_frozen() -> dict[str, Any]:
     if not PROTOCOL_PATH.exists():
         raise QualificationRefused("M104 final protocol is absent")
@@ -125,11 +227,16 @@ def require_frozen() -> dict[str, Any]:
         raise QualificationRefused("M104 protocol pool binding mismatch")
     if protocol.get("m103_protocol_digest") != M103_PROTOCOL_DIGEST:
         raise QualificationRefused("M104 protocol changed its M103 mechanism binding")
-    if sha256_bytes(POOL_PATH.read_bytes()) != protocol.get("qualification_pool_raw_sha256"):
+    if protocol.get("status") != "frozen_protocol_run_not_authorized":
+        raise QualificationRefused("M104 final protocol status mismatch")
+    pool_raw = sha256_bytes(POOL_PATH.read_bytes())
+    if pool_raw != POOL_RAW_SHA256 or pool_raw != protocol.get("qualification_pool_raw_sha256"):
         raise QualificationRefused("M104 qualification pool raw bytes changed")
+    candidate = json.loads(PROTOCOL_CANDIDATE_PATH.read_text(encoding="ascii"))
     candidate_binding = protocol.get("protocol_candidate", {})
     if sha256_bytes(PROTOCOL_CANDIDATE_PATH.read_bytes()) != candidate_binding.get("raw_sha256"):
         raise QualificationRefused("M104 protocol candidate raw bytes changed")
+    _verify_candidate_and_inherited_boundaries(protocol, candidate)
     _verify_file_binding(protocol.get("m104_bound_files", {}), label="apparatus")
     m103_binding = protocol.get("m103_exact_binding", {})
     for name in ("mechanism", "checker", "inherited_orchestration"):
@@ -137,7 +244,13 @@ def require_frozen() -> dict[str, Any]:
             m103_binding.get("bound_files", {}).get(name, {}),
             label=f"M103 {name}",
         )
-    if protocol.get("owner_protocol_acceptance", {}).get("recorded") is not True:
+    acceptance = protocol.get("owner_protocol_acceptance", {})
+    if (
+        acceptance.get("required") is not True
+        or acceptance.get("recorded") is not True
+        or not isinstance(acceptance.get("authorization_reference"), str)
+        or not acceptance["authorization_reference"]
+    ):
         raise QualificationRefused("M104 owner protocol acceptance is absent")
     if protocol.get("canonical_run_allowed") is not False:
         raise QualificationRefused("M104 protocol must remain internally disarmed")
@@ -159,6 +272,35 @@ def require_frozen() -> dict[str, Any]:
     changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()
     if changed_paths != ["experiments/M104/PROTOCOL.json"]:
         raise QualificationRefused("M104 freeze commit must contain only the final protocol")
+    committed_protocol = subprocess.run(
+        ["git", "show", "HEAD:experiments/M104/PROTOCOL.json"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if committed_protocol.returncode != 0 or committed_protocol.stdout != PROTOCOL_PATH.read_bytes():
+        raise QualificationRefused("M104 working protocol differs from its frozen blob")
+    candidate_commit = _git("rev-parse", "HEAD^")
+    candidate_paths = _git(
+        "diff-tree", "--no-commit-id", "--name-only", "-r", candidate_commit
+    ).splitlines()
+    if candidate_paths != ["experiments/M104/PROTOCOL_CANDIDATE.json"]:
+        raise QualificationRefused("M104 accepted candidate commit contains other changes")
+    committed_candidate = subprocess.run(
+        ["git", "show", f"{candidate_commit}:experiments/M104/PROTOCOL_CANDIDATE.json"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if (
+        committed_candidate.returncode != 0
+        or committed_candidate.stdout != PROTOCOL_CANDIDATE_PATH.read_bytes()
+    ):
+        raise QualificationRefused("M104 working candidate differs from its accepted blob")
+    candidate_source_ref = candidate.get("candidate_source_ref")
+    _require_annotated_tag(candidate_source_ref, label="candidate source reference")
+    if _git("rev-parse", f"{candidate_commit}^") != _git("rev-list", "-n", "1", candidate_source_ref):
+        raise QualificationRefused("M104 candidate parent is not its bound source tag")
     if _git("status", "--porcelain"):
         raise QualificationRefused("M104 canonical worktree is not clean")
     return protocol
