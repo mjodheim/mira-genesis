@@ -586,6 +586,14 @@
         "results/M032_DEVELOPMENT_BASE.md"
       ]
     },
+    "40841522e860cf952eef5c6e98d0fecbb55eead4": {
+      "subject": "result(m105): preserve the negative canonical checker report",
+      "preserved_by": "experiment/m105-negative-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M105/CHECKER_FAILURE.json"
+      ]
+    },
     "41ebe791605f55e7a44df8f0939d730139cf219a": {
       "subject": "style: normalize pretarget test file",
       "preserved_by": "main",
