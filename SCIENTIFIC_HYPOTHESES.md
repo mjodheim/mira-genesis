@@ -1261,14 +1261,14 @@ live after producer death. K plus live M101 B can then become necessary to acqui
 a later four-effect capability C scored from actual SQLite database state while retaining all
 preregistered record, M101 A/B and M100 capabilities.
 
-**Status:** **PRE-REGISTERED AND UNTESTED; OWNER REVIEW REQUIRED.** The thirteen-record population is
-frozen at `3d6785dd…` but has not been scientifically executed. The exact protocol candidate
-`4549f17f…` is non-armable and requires owner acceptance before `PROTOCOL.json` and its annotated
-freeze tag may be created. A separate owner authorization is required for the unique canonical
-attempt. Two complete DEVELOPMENT rehearsals and the independent source audit validate apparatus
-mechanics only; they are not evidence for H47. Candidate `ce585aa2…` was superseded before final
-freeze after the Python 3.13 CI matrix showed that protocol construction did not fail closed outside
-the exact canonical CPython/SQLite runtime; no qualification was executed.
+**Status:** **FROZEN AND UNTESTED; CANONICAL RUN AUTHORIZATION REQUIRED.** The thirteen-record
+population is frozen at `3d6785dd…` but has not been scientifically executed. Accepted candidate
+`4549f17f…` produced exact protocol `59689da6…`, frozen by annotated tag
+`experiment/m102-frozen-protocol-v1` at commit `bdadb10`. A separate owner authorization is required
+for the unique canonical attempt. Two complete DEVELOPMENT rehearsals and the independent source
+audit validate apparatus mechanics only; they are not evidence for H47. Candidate `ce585aa2…` was
+superseded before final freeze after the Python 3.13 CI matrix showed that protocol construction did
+not fail closed outside the exact canonical CPython/SQLite runtime; no qualification was executed.
 
 **Positive claim ceiling.** If and only if P1–P15 are all independently computed true on attempt 1,
 H47 would support bounded continual-interference and registry meta-improvement mechanism evidence

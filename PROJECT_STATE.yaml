@@ -295,18 +295,19 @@ current_real_software_frontier:
     generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
     current_ceiling: authored_carriers_shallow_chain_no_genuine_interference_or_external_domain
   M102:
-    status: frozen_population_protocol_candidate_awaiting_owner_acceptance
+    status: frozen_protocol_awaiting_canonical_run_authorization
     scientific_verdict_exists: false
     hypothesis: H47
     hypothesis_status: preregistered_untested
     decision: D071_pending
-    protocol_frozen: false
-    protocol_candidate_status: owner_review_required
-    canonical_run_allowed: false
+    protocol_frozen: true
+    protocol_candidate_status: accepted_and_bound
+    canonical_run_allowed: true
+    canonical_run_authorized: false
     run_consumed: false
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
     track: A_endogenous_lineage
-    attempt: 1_reserved_not_run
+    attempt: 1_reserved_not_authorized_not_run
     model_calls_in_development_rehearsal: 0
     network_calls_in_development_rehearsal: 0
     remote_execution_in_development_rehearsal: false
@@ -314,6 +315,10 @@ current_real_software_frontier:
     qualification_population_status: frozen_not_executed
     qualification_pool_digest: 3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38
     protocol_candidate_digest: 4549f17f79405c212122362ce5154623ce55acafe03ee854be16e870fa061c84
+    frozen_protocol_digest: 59689da64a6007589aefc15a633b069672b190ab799384503a02064bbf8599dc
+    frozen_protocol_source_commit: 608ab0465795893aeebf6a2b772993c99b5647fc
+    frozen_protocol_commit: bdadb1074deea02f10039460cffa2ac24cd44b63
+    frozen_protocol_tag: experiment/m102-frozen-protocol-v1
     superseded_protocol_candidate_digest: ce585aa257fbe5aa1734c48864b5901d14769bf4bc3baaa94fb959acd50f6288
     candidate_supersession_reason: pre_freeze_CI_found_noncanonical_runtime_construction
     exact_m101_t2_raw_sha256: cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0
@@ -322,7 +327,8 @@ current_real_software_frontier:
     qualification_executed: false
     result_path_exists: false
     checker_report_exists: false
-    owner_protocol_acceptance_required: true
+    owner_protocol_acceptance_required: false
+    owner_protocol_acceptance_recorded: true
     owner_canonical_run_authorization_required: true
     current_ceiling: unknown_until_unique_attempt
 

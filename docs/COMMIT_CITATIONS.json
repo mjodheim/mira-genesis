@@ -1669,6 +1669,16 @@
         "results/artifacts/M040_CANONICAL_RESULT.json"
       ]
     },
+    "bdadb1074deea02f10039460cffa2ac24cd44b63": {
+      "subject": "science(m102): freeze owner-accepted protocol",
+      "preserved_by": "experiment/m102-frozen-protocol-v1",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "SCIENTIFIC_HYPOTHESES.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "c3612588343e10ed15347bc7d57470150e4d6966": {
       "subject": "ci: install torch for full repository tests",
       "preserved_by": "provenance/26c8671",

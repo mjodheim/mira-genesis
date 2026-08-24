@@ -451,12 +451,12 @@ The ordered boundaries now continue as stronger claims rather than larger versio
 - **M101 — bounded cross-family transfer: POSITIVE.** A carrier-neutral capability acquired from
   text transferred to record and Python-syntax carriers against fresh-lineage controls, then became
   a live prerequisite for a later syntax acquisition. All 15 conditions replayed true.
-- **M102 — registry-policy improvement under interference: AWAITING OWNER FREEZE ACCEPTANCE.** The
-  thirteen-record population is frozen but scientifically untouched. The non-armable protocol
-  candidate tests real destructive forgetting under flat registry collisions, endogenous generic K
+- **M102 — registry-policy improvement under interference: PROTOCOL FROZEN; RUN UNAUTHORIZED.** The
+  thirteen-record population and protocol `59689da6…` are frozen but scientifically untouched. The
+  protocol tests real destructive forgetting under flat registry collisions, endogenous generic K
   acquisition, K/B-dependent C acquisition and actual SQLite state. Acquisition/execution capsules,
-  P1–P15 checker, causal controls and stable replay pass two separate DEVELOPMENT rehearsals. No
-  `PROTOCOL.json`, attempt, result or D071 exists yet.
+  P1–P15 checker, causal controls and stable replay pass two separate DEVELOPMENT rehearsals. The
+  unique attempt remains separately unauthorized; no result or D071 exists yet.
 - **After M102 — result-dependent only:** a negative attempt must target its measured falsifier; a
   positive attempt may justify deeper interference, longer A→B→C chains or a later independently
   authored domain. No successor question is selected before D071.
