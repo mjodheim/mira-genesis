@@ -1328,3 +1328,28 @@ D072 and contributes no positive evidence to H49. See D073.
 M103's instrument defect. All lower vocabulary, carrier, task, adapter, evaluator and budget bounds
 remain authored; no generality gate closes. The next hypothesis must attack the fixed constructor
 feature vocabulary or lower interpreter rather than repeat this mechanism on another authored pool.
+
+---
+
+## H50 — A state-owned executable feature can extend the constructor vocabulary
+
+Starting from exact positive M104 V3, an initially empty constructor-feature registry can acquire and
+register a carrier-neutral executable Boolean classifier from DEVELOPMENT-only behavior without an
+authored target body, persist it across producer death, and use it as a live content-addressed
+dependency of later generalized JSON-document and SQLite acquisitions. Those definitions must lie
+outside frozen M104's complete finite exact-context dispatch image, while an otherwise identical
+fresh lineage with the same lower substrate, later observations and complete semantic census but no
+acquired feature bytes cannot validate the same behavior.
+
+**Status:** **PRE-REGISTERED; UNTESTED.** No enabling M105 implementation, development fixture,
+qualification population, final protocol or result exists. H50, its P1-P16 conditions and its
+falsifiers are frozen at `experiments/M105/PRE_REGISTRATION.md` before implementation.
+
+**What a positive result could establish.** A bounded, executable, state-owned extension of the
+high-level constructor vocabulary adds validated later constructive reach and remains causally live
+after process death.
+
+**What it could not establish.** The lower Boolean interpreter, operators, two-signal contract,
+eight-node bound, carriers, tasks, adapters and evaluator remain authored. Not open-ended language
+growth, lower-substrate ownership, self-hosting, recursive improvement, G1-G10 closure, general-
+agent evidence or AGI.

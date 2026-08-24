@@ -1,0 +1,78 @@
+{
+  "schema": "m105-protocol-draft-v1",
+  "milestone": "M105",
+  "hypothesis": "H50",
+  "decision": "D074",
+  "status": "pre_registered_before_enabling_implementation",
+  "pre_registration_date": "2026-08-24",
+  "predecessor": {
+    "source": "exact_positive_M104_V3_from_frozen_result",
+    "raw_sha256": "98d61df076e6b764f6b00f27793b82ef27e20cd35049780499029dc3ed7edf77",
+    "state_digest": "a34b3b9dab99ee848a9c209a95ec9201fd7056eb99393d45d4041c885f19417a"
+  },
+  "feature_language": {
+    "inputs": 2,
+    "operators": [
+      "CONST_FALSE",
+      "CONST_TRUE",
+      "INPUT_0",
+      "INPUT_1",
+      "NOT",
+      "AND",
+      "OR"
+    ],
+    "maximum_nodes": 8,
+    "complete_semantic_image": 16,
+    "target_specific_operator_allowed": false
+  },
+  "chronology": [
+    "W0_exact_M104_V3_empty_registry",
+    "DEVELOPMENT_acquire_F",
+    "producer_death",
+    "qualification_acquire_JSON_J",
+    "producer_death",
+    "qualification_acquire_SQLite_Q",
+    "producer_death",
+    "hidden_execution_controls_rollback_replay"
+  ],
+  "later_carriers": [
+    "json_document",
+    "sqlite"
+  ],
+  "decisive_conditions": [
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5",
+    "P6",
+    "P7",
+    "P8",
+    "P9",
+    "P10",
+    "P11",
+    "P12",
+    "P13",
+    "P14",
+    "P15",
+    "P16"
+  ],
+  "verdict_rule": "positive_iff_P1_through_P16_are_computed_and_true_else_negative",
+  "canonical_attempts": 1,
+  "canonical_checker_attempts": 1,
+  "model_calls_allowed": 0,
+  "network_calls_allowed": 0,
+  "remote_execution_calls_allowed": 0,
+  "owner_workflow_authorization_recorded": true,
+  "claim_if_positive": "bounded_state_owned_executable_constructor_vocabulary_extension",
+  "claim_exclusions": [
+    "lower_interpreter_ownership",
+    "open_ended_vocabulary_growth",
+    "self_hosting",
+    "recursive_or_open_ended_self_improvement",
+    "independent_task_authorship",
+    "closed_G1_G10",
+    "general_agent_evidence",
+    "AGI"
+  ]
+}
