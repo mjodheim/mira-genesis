@@ -726,7 +726,11 @@ def run_experiment(pool: dict[str, Any] | None = None) -> dict[str, Any]:
         isolated_records = [
             item
             for item in process_records
-            if item.get("runtime", {}).get("schema") == "m106-isolated-process-v1"
+            # The capsule entry point is scripts/run_m105_process.py, a mechanism file M106
+            # preserves unchanged, so it emits the m105 process schema. Filtering on an m106 schema
+            # here silently produced an empty record set and made P14 false with no error: the
+            # isolation predicate would have reported "no isolated process violated isolation".
+            if item.get("runtime", {}).get("schema") == "m105-isolated-process-v1"
         ]
         producer_pid = acquire_feature["runtime"].get("pid")
         later_pids = [
