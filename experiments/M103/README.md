@@ -4,7 +4,7 @@
 **Decision slot:** D072  
 **Track:** A — endogenous bounded lineage  
 **Status:** implementation and pre-freeze adversarial audit complete; exact owner-review protocol
-candidate `0a74e8f2…` exists; no frozen protocol or result exists
+candidate `b44c80e5…` exists; no frozen protocol or result exists
 
 M102 changed a state-owned registry policy, but fixed host functions still enumerated every policy
 and transformation hypothesis. M103 targets that ceiling directly. It asks whether the exact M102

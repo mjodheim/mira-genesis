@@ -660,12 +660,7 @@
       "preserved_by": "provenance/m103-owner-review-source-v1",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M103/PROTOCOL_CANDIDATE.json",
-        "tests/test_m103_protocol_candidate.py"
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "49033001f79591bc9534e43489a9d4147edd4529": {
@@ -1593,6 +1588,18 @@
         "experiments/M065/CANONICAL_ARMED.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M066/PROTOCOL.md"
+      ]
+    },
+    "b1f920b44707b5da3c90f99a6b51a9b070fbbf10": {
+      "subject": "fix(m103): make protocol bindings checkout-stable",
+      "preserved_by": "provenance/m103-owner-review-source-v2",
+      "cited_in": [
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "ROADMAP.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M103/PROTOCOL_CANDIDATE.json",
+        "tests/test_m103_protocol_candidate.py"
       ]
     },
     "b211826b3d21e4e2b473b4754a6341d352f7cd03": {

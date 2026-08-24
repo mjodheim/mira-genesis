@@ -1293,7 +1293,7 @@ evidence, and preserve the exact live M100/M101/M102 lineage.
 separated population, independent closure/definition/result checkers and causal controls exist.
 Seven pre-freeze false-positive paths were disclosed and corrected before any protocol freeze or
 canonical result. Two DEVELOPMENT rehearsals replayed P1-P15 stably; they are not scientific
-evidence. Owner-review candidate `0a74e8f2…` exists, but no final `PROTOCOL.json` or result exists.
+evidence. Owner-review candidate `b44c80e5…` exists, but no final `PROTOCOL.json` or result exists.
 See `experiments/M103/PRE_REGISTRATION.md` and `experiments/M103/ADVERSARIAL_REVIEW.md`.
 
 **What a positive result could establish.** A bounded acquired change to the hypothesis-

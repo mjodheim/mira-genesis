@@ -375,9 +375,9 @@ current_real_software_frontier:
     development_stable_replay_equal: true
     development_stable_evidence_digest: 967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3
     protocol_candidate_exists: true
-    protocol_candidate_digest: 0a74e8f2f3238b6d7a613a60e5cc0f353a94010eba9d6b78e2ba3a693d279523
-    protocol_candidate_raw_sha256: 424903d3aace9fc47005261e51b9ac90bc8b172e36bb38a65edec76268cca6b0
-    protocol_candidate_source_commit: 48be7c06a42edaec1d33f8a46a3407dbc3a098c2
+    protocol_candidate_digest: b44c80e52f8569f70f9d5b1ba89cb2fd42bac9a8628d83e42ae21cf4226e90f2
+    protocol_candidate_raw_sha256: 8565d330046cc2e25ec8fe6930ed6b1f62a2c32bcb17170565ebbdc04c74d659
+    protocol_candidate_source_commit: b1f920b44707b5da3c90f99a6b51a9b070fbbf10
     boundary_audit_report_digest: a5800607ee71bb7302d1683e5c1c38a557f185b7a1fdfbc70d3dbed34532852a
     canonical_run_allowed: false
     canonical_run_authorized: false

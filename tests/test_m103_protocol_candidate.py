@@ -17,13 +17,13 @@ def test_owner_review_candidate_is_exact_and_current() -> None:
     payload = {key: value for key, value in candidate.items() if key != "candidate_digest"}
     assert candidate["candidate_digest"] == builder.digest(payload)
     assert candidate["candidate_digest"] == (
-        "0a74e8f2f3238b6d7a613a60e5cc0f353a94010eba9d6b78e2ba3a693d279523"
+        "b44c80e52f8569f70f9d5b1ba89cb2fd42bac9a8628d83e42ae21cf4226e90f2"
     )
     assert hashlib.sha256(raw).hexdigest() == (
-        "424903d3aace9fc47005261e51b9ac90bc8b172e36bb38a65edec76268cca6b0"
+        "8565d330046cc2e25ec8fe6930ed6b1f62a2c32bcb17170565ebbdc04c74d659"
     )
     assert candidate["candidate_source_commit"] == (
-        "48be7c06a42edaec1d33f8a46a3407dbc3a098c2"
+        "b1f920b44707b5da3c90f99a6b51a9b070fbbf10"
     )
     assert candidate["canonical_run_allowed"] is False
     for key, value in builder._base().items():
