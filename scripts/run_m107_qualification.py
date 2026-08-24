@@ -40,7 +40,12 @@ RUNTIME_SOURCES = {
 }
 
 EPHEMERAL_KEYS = {
+    # M098 was negative because its frozen stable projection retained consumer PIDs. The derived
+    # boolean producer_pid_absent_from_later is stable and carries the claim; the raw identifiers
+    # are pure process accident and must never enter a replayed projection.
     "pid",
+    "producer_pid",
+    "later_pids",
     "search_path",
     "python_executable",
     "elapsed_seconds",
