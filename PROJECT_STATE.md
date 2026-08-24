@@ -190,33 +190,22 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   constructor-reach improvement and leaves M103 negative. No generality gate closes. The next
   ceiling is the authored constructor feature vocabulary, subset bound and lower interpreter; M105
   must make an extension to that acquisition substrate causally necessary at equal budget.
-- **M105/H50 is pre-registered before enabling implementation.** It starts from exact M104 V3 raw
-  bytes `98d61df0…`, with an empty state-owned executable feature registry. DEVELOPMENT-only behavior
-  may select one content-addressed classifier from the complete sixteen-function semantic image of
-  a fixed two-input Boolean expression substrate. After producer death, live F must enable
-  generalized JSON-document and SQLite acquisitions outside M104's finite exact-context dispatch
-  image. Fresh controls receive the same current observations, runtime and complete semantic census
-  but no F bytes or DEVELOPMENT fixture; ambiguity or validated-image failure, not exhausted budget,
-  must prevent adoption. P1-P16, exact predecessor conservation, mutation/ablation/corruption,
-  rollback, isolation and replay are decisive. No implementation, pool, final protocol or result
-  existed at pre-registration. The implementation, separated fixtures, isolated orchestration and
-  independent checkers now pass a clean adversarial audit; two DEVELOPMENT rehearsals have equal
-  stable projections and candidate P1-P16 are true. Because M103 died on an instrument rather than
-  a mechanism, the freeze lifecycle itself was rehearsed in a throwaway clone through candidate,
-  final protocol, freeze tag and preflight, and two pre-freeze defects were corrected: an absent
-  canonical result made the checker materialize a false negative report and burn its single
-  attempt, the freeze machinery was not bound to its own validator, and twenty-one of the
-  thirty-nine bound apparatus members had no end-of-line attribute, so a protocol frozen here would
-  have recorded digests no other Windows checkout could reproduce, and the rehearsal test asserted
-  the canonical-runtime predicate P1 unconditionally, which made both CI jobs red. A first freeze
-  was then built and withdrawn before any canonical attempt: its bound apparatus asserted that
-  `require_frozen` succeeds whenever the protocol exists, which cannot hold off the freeze commit.
-  `experiment/m105-frozen-protocol-v1` is superseded and retained as provenance only. P2-P16 hold on
-  Linux under Python 3.11 and 3.13; only the runtime pin differed. The checker now refuses
-  without writing when no result exists, and no predicate, falsifier or verdict rule changed. This
-  is not a scientific result: no final protocol, canonical attempt or checker report exists, and
-  the canonical command has never been executed in any checkout. The lower Boolean interpreter and
-  every interface/evaluator bound remain authored.
+- **M105/H50 attempt 1 is negative by fail-closed checker instrumentation; H50 remains unsupported.**
+  The owner froze protocol `43d270df…` after four pre-freeze instrument defects were corrected and a
+  first freeze was withdrawn, then separately authorized the unique run. The runner executed exactly
+  once on the canonical CPython 3.11.16 / SQLite 3.53.1 runtime, at freeze commit `c49764c` on a
+  clean worktree, and materialized result `0ae9c096…`, stable evidence `50a20f5e…`, raw bytes
+  `98146042…`. Those first bytes were committed at `9568f50`, tagged
+  `experiment/m105-canonical-first-result` and pushed before any checker ran. The single frozen
+  checker invocation then exited 1 with `ModuleNotFoundError: No module named 'scripts'`:
+  `check_m105_result.py` defers `from scripts import run_m105_qualification` into the `--replay`
+  branch and carries no `sys.path` bootstrap. A `CHECK_REPORT.json` was materialized with
+  `verdict: negative` and digest `77968967…`, but **no predicate was evaluated** — P1-P16 are all
+  uncomputed, so the frozen all-true rule makes attempt 1 negative. This is D072's defect repeated:
+  the pre-freeze check of the entry point exercised only the refusal path, which returns before the
+  import. D074 forbids retry or repair. The mechanism is not falsified and the 197 KB of evidence,
+  produced with zero model, network and remote-execution calls, was never evaluated. The lower
+  Boolean interpreter and every interface/evaluator bound remain authored.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

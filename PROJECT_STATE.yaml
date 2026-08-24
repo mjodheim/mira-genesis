@@ -515,54 +515,45 @@ current_real_software_frontier:
     remote_execution_calls_allowed: 0
     current_ceiling: constructor_feature_vocabulary_subset_bound_and_lower_interpreter_remain_authored_and_fixed
   M105:
-    status: apparatus_complete_awaiting_owner_final_freeze
+    status: negative_by_fail_closed_checker_instrumentation
     hypothesis: H50
-    hypothesis_status: untested
+    hypothesis_status: unsupported_not_refuted
     decision_slot: D074
-    decision_slot_filled: false
+    decision_slot_filled: true
+    verdict: negative
     exact_predecessor: M104_positive_V3_attempt_1
     predecessor_raw_sha256: 98d61df076e6b764f6b00f27793b82ef27e20cd35049780499029dc3ed7edf77
-    predecessor_state_digest: a34b3b9dab99ee848a9c209a95ec9201fd7056eb99393d45d4041c885f19417a
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
-    owner_workflow_authorization_recorded: true
-    enabling_implementation_exists: true
-    development_fixture_exists: true
-    qualification_pool_exists: true
-    adversarial_pre_freeze_audit_clean: true
-    development_rehearsals_completed: 2
-    development_rehearsal_stable_projection_equal: true
-    adversarial_review_recorded: true
-    freeze_lifecycle_rehearsed_in_throwaway_clone: true
-    pre_freeze_instrument_defects_corrected: 5
+    protocol_digest: 43d270df1efdeeb6ccc47824ed2bd1ea137fa428fd5859c5f44a061597bd5902
+    bound_apparatus_digest: be1358290aa8c5f31005998311470e54e75619325bfeb52ad81f864b3c711823
+    freeze_tag: experiment/m105-frozen-protocol-v2
     superseded_freezes: [experiment/m105-frozen-protocol-v1]
-    mechanism_predicates_hold_on_linux_3_11_and_3_13: true
-    apparatus_byte_invariant_across_checkouts: true
-    canonical_command_never_executed: true
-    candidate_decisive_conditions_true: 16
-    protocol_candidate_exists: false
-    final_protocol_exists: false
-    result_exists: false
-    checker_report_exists: false
-    feature_registry_initially_empty: true
-    lower_feature_inputs: 2
-    lower_feature_operators: [CONST_FALSE, CONST_TRUE, INPUT_0, INPUT_1, NOT, AND, OR]
-    lower_feature_maximum_nodes: 8
-    complete_boolean_semantic_image: 16
-    later_carriers_planned: [json_document, sqlite]
-    m104_finite_dispatch_closure_required: true
-    fresh_complete_semantic_baseline_required: true
-    process_death_required: true
-    live_content_addressed_dependency_required: true
-    exact_m100_through_m104_conservation_required: true
-    decisive_conditions_planned: 16
+    pre_freeze_instrument_defects_corrected: 5
+    result_digest: 0ae9c0968a20445fa490effc788597c735cff94be85e4c7466475431513bf866
+    stable_evidence_digest: 50a20f5e99cd0cbc2bcc8593ef03e4e3d485fe168516a346ae8ddcce672fca24
+    result_raw_sha256: 981460426a97f812e2567fc884722bc6d5f50e7a8105eec86ac140afaba3e502
+    result_tag: experiment/m105-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 77968967b101884ee34a2761ed6ccdbb98bcb15c99cf651c14ef0db4de4411d9
+    check_report_materialized: true
+    checker_exit_code: 1
+    checker_failure: "ModuleNotFoundError: No module named 'scripts'"
+    checker_failure_record: experiments/M105/CHECKER_FAILURE.json
+    negative_result_tag: experiment/m105-negative-result
+    decisive_conditions: 16
+    predicates_computed: 0
     canonical_attempts_allowed: 1
-    canonical_attempts_consumed: 0
+    canonical_attempts_consumed: 1
     canonical_checker_attempts_allowed: 1
-    canonical_checker_attempts_consumed: 0
-    model_calls_allowed: 0
-    network_calls_allowed: 0
-    remote_execution_calls_allowed: 0
-    current_ceiling: fixed_lower_boolean_interpreter_signal_contract_bounds_carriers_tasks_adapters_and_evaluator
+    canonical_checker_attempts_consumed: 1
+    retry_permitted: false
+    repair_after_result_permitted: false
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    mechanism_falsified: false
+    identical_defect_to: D072
+    current_ceiling: checker_entry_point_must_be_exercised_through_the_replay_branch_on_a_materialized_result_before_freeze
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

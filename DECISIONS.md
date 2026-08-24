@@ -2586,3 +2586,51 @@ fixed feature product. The next falsifiable question is whether the lineage can 
 current constructor vocabulary cannot express a demanded acquisition, acquire a persisted extension
 to that vocabulary or lower constructor, and thereby make a later capability structurally reachable
 that an equal-observation, equal-budget lineage retaining the frozen M104 constructor cannot build.
+
+## D074 — M105 is negative because the frozen checker repeated M103's import defect
+
+### The decision
+
+M105 attempt 1 is a **negative scientific result by fail-closed instrumentation**, and H50 remains
+unsupported by this attempt. The owner authorized the freeze, then separately authorized the unique
+run. The canonical runner executed exactly once from protocol `43d270df…` on the canonical CPython
+3.11.16 / SQLite 3.53.1 runtime, with `HEAD` at freeze commit `c49764c` and a clean worktree, and
+produced result `0ae9c096…`, stable evidence `50a20f5e…`, raw result `98146042…`. Those first bytes
+were committed at `9568f500a46b35ad34ce8b854a6803f46176ab8c` and tagged
+`experiment/m105-canonical-first-result`, and the tag was pushed, before any checker was invoked.
+
+The single frozen checker invocation then exited 1 with
+`ModuleNotFoundError: No module named 'scripts'`. `scripts/check_m105_result.py` defers
+`from scripts import run_m105_qualification` into the `--replay` branch at line 355 and carries no
+`sys.path` bootstrap, unlike `scripts/audit_m105_boundaries.py`. Direct script execution places the
+`scripts` directory, not the repository root, on Python's import path. Unlike M103 a
+`CHECK_REPORT.json` **was** materialized, carrying `verdict: negative` and report digest
+`77968967…`. No predicate was evaluated: P1-P16 are all uncomputed, and the frozen rule — positive
+iff P1-P16 are all computed and true — makes the attempt negative. The exact failure is preserved in
+`experiments/M105/CHECKER_FAILURE.json` (raw SHA-256 `fd46db20…`).
+
+### Scientific reading
+
+This attempt does not refute the constructor-vocabulary mechanism: the failure occurred before any
+independent replay evaluated any predicate. It also does not support H50. The 197 KB of scientific
+evidence inside result `0ae9c096…` was produced with zero model, network and remote-execution calls
+and has never been evaluated. It cannot be rescued by invoking the same checker as a module,
+changing its import bootstrap, or generating a report post hoc. M105 will not be rerun or repaired.
+
+**This is D072's defect, repeated.** D072 required M104 to freeze a checker entry point working from
+a clean checkout with an explicitly controlled import path. M104's checker was corrected and M104
+qualified positively. M105's checker reintroduced the defect, and the pre-freeze verification that
+claimed to have re-tested the M103 entry point exercised only the refusal path: with `RESULT.json`
+absent the checker returns at the `m105-check-refusal-v1` guard, long before line 355. The path that
+imports was never executed before the freeze. A guard added to protect the checker attempt made the
+verification of that attempt vacuous.
+
+### Next ceiling
+
+M106 must be a distinct successor with a fresh qualification population and a distinct freeze. It
+may leave the M105 mechanism unchanged, but its checker entry point must be exercised **against a
+materialized DEVELOPMENT result, end to end, through the replay branch**, in a throwaway clean
+checkout, before the freeze — exercising a refusal path is not evidence that the checking path runs.
+The pre-freeze audit must assert that every deferred import in the checker resolves under the exact
+frozen command. A positive M106 would close only the M105 instrument defect; it would not
+retroactively change D074, and M103's D072 verdict likewise remains unchanged.

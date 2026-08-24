@@ -1,5 +1,16 @@
 # M105 — executable constructor-vocabulary extension
 
+> **VERDICT: NEGATIVE (attempt 1), by fail-closed checker instrumentation. D074.**
+>
+> The unique canonical attempt ran once from frozen protocol `43d270df…` and produced result
+> `0ae9c096…`, preserved and pushed at `experiment/m105-canonical-first-result` before any checking.
+> The single frozen checker replay then exited 1 with `ModuleNotFoundError: No module named 'scripts'`
+> and evaluated **no predicate**: P1-P16 are all uncomputed, so the frozen all-true rule makes the
+> attempt negative. See `CHECKER_FAILURE.json` and `../../DECISIONS.md` (D074).
+>
+> H50 is **unsupported but not refuted** — the mechanism was never evaluated. No retry and no repair
+> is permitted. Everything below documents the apparatus as frozen, not a qualified result.
+
 M104 qualified a bounded improvement to hypothesis construction, but its acquired constructor was
 still only a subset of seven authored feature tokens interpreted by host conditionals. M105 tests
 whether the continuing lineage can acquire an executable feature definition absent from that
