@@ -1261,17 +1261,17 @@ live after producer death. K plus live M101 B can then become necessary to acqui
 a later four-effect capability C scored from actual SQLite database state while retaining all
 preregistered record, M101 A/B and M100 capabilities.
 
-**Status:** **FROZEN AND UNTESTED; CANONICAL RUN AUTHORIZATION REQUIRED.** The thirteen-record
-population is frozen at `3d6785dd…` but has not been scientifically executed. Accepted candidate
-`4549f17f…` produced exact protocol `59689da6…`, frozen by annotated tag
-`experiment/m102-frozen-protocol-v1` at commit `bdadb10`. A separate owner authorization is required
-for the unique canonical attempt. Two complete DEVELOPMENT rehearsals and the independent source
-audit validate apparatus mechanics only; they are not evidence for H47. Candidate `ce585aa2…` was
-superseded before final freeze after the Python 3.13 CI matrix showed that protocol construction did
-not fail closed outside the exact canonical CPython/SQLite runtime; no qualification was executed.
+**Status:** **SUPPORTED IN BOUNDED M102 ATTEMPT 1.** The unique owner-authorized run used exact
+protocol `59689da6…` and the previously untouched thirteen-record population `3d6785dd…`. The
+independent checker computed P1-P15 true: K was acquired from observable collision demand, changed
+the registry's constructive image, prevented demonstrated destructive forgetting, persisted across
+producer death, and remained live with M101 B for C acquisition and real SQLite execution. The
+otherwise identical no-K lineage could not represent the joint relation. Result `92d4ed3e…`, stable
+evidence `eab68a79…`, report `3ba2f130…`; attempt 1, no reroll, zero model/network/remote calls. The
+pre-freeze supersession of candidate `ce585aa2…` remains part of the record and supplied no result.
 
-**Positive claim ceiling.** If and only if P1–P15 are all independently computed true on attempt 1,
-H47 would support bounded continual-interference and registry meta-improvement mechanism evidence
-under an independently maintained SQLite execution interface. The SQLite task family, adapters and
-evaluator remain project-authored. A positive result would not close G4/G5, establish independent
-task authorship, broad continual learning, general-agent evidence or AGI.
+**Claim ceiling.** H47 supports bounded continual-interference and registry meta-improvement
+mechanism evidence under an independently maintained SQLite execution interface. The hypothesis
+constructor, SQLite task family, adapters and evaluator remain project-authored. The result does not
+close G4/G5, establish independent task authorship, broad continual learning, general-agent
+evidence, recursive self-improvement or AGI.

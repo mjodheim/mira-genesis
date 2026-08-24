@@ -451,15 +451,19 @@ The ordered boundaries now continue as stronger claims rather than larger versio
 - **M101 — bounded cross-family transfer: POSITIVE.** A carrier-neutral capability acquired from
   text transferred to record and Python-syntax carriers against fresh-lineage controls, then became
   a live prerequisite for a later syntax acquisition. All 15 conditions replayed true.
-- **M102 — registry-policy improvement under interference: PROTOCOL FROZEN; RUN UNAUTHORIZED.** The
-  thirteen-record population and protocol `59689da6…` are frozen but scientifically untouched. The
-  protocol tests real destructive forgetting under flat registry collisions, endogenous generic K
-  acquisition, K/B-dependent C acquisition and actual SQLite state. Acquisition/execution capsules,
-  P1–P15 checker, causal controls and stable replay pass two separate DEVELOPMENT rehearsals. The
-  unique attempt remains separately unauthorized; no result or D071 exists yet.
-- **After M102 — result-dependent only:** a negative attempt must target its measured falsifier; a
-  positive attempt may justify deeper interference, longer A→B→C chains or a later independently
-  authored domain. No successor question is selected before D071.
+- **M102 — registry-policy improvement under interference: POSITIVE.** Unique attempt 1 from frozen
+  protocol `59689da6…` passed P1-P15. Observable flat-key collisions caused acquisition of generic
+  state-owned policy K; K prevented a demonstrated destructive overwrite, survived producer death
+  and remained live with M101 B for later SQLite capability C. The no-K arm had identical runtime,
+  observations and budget but structurally could not represent the joint relation. Real SQLite,
+  retention, mutation/ablation/corruption, exact rollback and stable replay all passed. Result
+  `92d4ed3e…`; checker `3ba2f130…`; D071. This strengthens bounded G4/G5 evidence but closes neither.
+- **M103 — acquisition-machinery reach: SELECTED FROM D071 CEILING.** M102 improved state addressing,
+  not the fixed host hypothesis constructor that produced K and C candidates. M103 must start from
+  exact M102 U2, prove an acquisition lies outside S0's complete constructive image, acquire and
+  persist state-owned S-prime from observable failure, then show S-prime is causally necessary for a
+  later acquisition an equal-budget S0 lineage cannot construct. Exact predecessor retention,
+  process death, live dependency, rollback and no hidden-target access remain mandatory.
 
 M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
 positive successors and may not be cited to retroactively strengthen or repair their predecessors.

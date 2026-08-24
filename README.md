@@ -19,7 +19,9 @@ replayable**.
 > Its state grows from one registered subtraction to addition and then weighted addition, preserves
 > and reuses all three on 9/9 fresh worlds. M101 then qualifies a carrier-neutral acquisition from
 > text, its constructive-reach transfer to records and Python syntax versus eight fresh baselines,
-> and its live necessity for a later syntax acquisition; all 15 conditions replay true.
+> and its live necessity for a later syntax acquisition. M102 adds genuine destructive interference:
+> acquired state-owned registry policy K prevents measured forgetting and remains necessary with
+> M101 B for later SQLite capability C. Both M101 and M102 pass all 15 frozen conditions.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -59,13 +61,17 @@ The current staged objective is:
 6. **cross-family cumulative transfer** — derive later targets from materially different observed
    demands instead of another preselected target inside the same representation; M101 qualifies
    this across three bounded project-authored carriers;
-7. **depth, interference and external pressure** — retain and extend the chain when later learning
-   can damage earlier acquisitions and at least one domain is maintained independently.
+7. **depth and interference** — retain and extend the chain when later learning can damage earlier
+   acquisitions; M102 qualifies this in a bounded project-authored schedule with real SQLite;
+8. **acquisition machinery and external pressure** — make an acquired improvement change what later
+   acquisition can construct, then move toward independently authored held-out domains.
 
 M091 demonstrated endogenous extension in a bounded abstract setting; M097 brought one acquired
-operation into the real-software line, M100 repeated the enabling relation twice, and M101 moved the
-relation across authored text, record and Python-syntax carriers. The current frontier is a deeper
-chain under genuine interference and an independently maintained domain.
+operation into the real-software line, M100 repeated the enabling relation twice, M101 moved the
+relation across authored text, record and Python-syntax carriers, and M102 acquired a registry
+policy under real forgetting pressure before reusing the chain in SQLite. The current frontier is
+whether an acquired state-owned improvement can expand the constructive reach of the acquisition
+machinery itself.
 
 ## Where the project stands now
 
@@ -84,17 +90,18 @@ chain under genuine interference and an independently maintained domain.
 | M099 | **Positive qualified scientific result** | The M097 operation survived producer death, ran in isolated fresh consumers on 3/3 new worlds, failed under absence/mutation/corruption, recovered after exact rollback, and replayed 12/12 true. |
 | M100 | **Positive qualified scientific result** | Registered subtraction enabled acquisition of addition; registered addition enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12 conditions replayed true. |
 | M101 | **Positive qualified scientific result** | A carrier-neutral capability acquired from text added reach on 8/8 held-out text/record/syntax worlds versus 0 hidden passes for eight fresh baselines, then remained a live prerequisite for B; 15/15 conditions replayed true. |
+| M102 | **Positive qualified scientific result** | Observable flat-registry collisions caused acquisition of state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later SQLite capability C. Real-state, retention, causal-control, rollback and replay checks passed 15/15. |
 
 The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
 disclosed negative, M099's positive hard-persistence result, M100's positive cumulative result and
-M101's bounded cross-family result. M100–M101 were developed and qualified locally under the
+M101's bounded cross-family result, plus M102's bounded interference result. M100–M102 were developed and qualified locally under the
 recorded `PUBLIC_AGPL_COMMERCIAL_OPTION` disposition; remote automation is used only for repository
 validation after local evidence is green.
 
 ## M094 — original qualified repair anchor
 
 M094 remains the qualified anchor for autonomous diagnosis and repair on the active real-software
-line; M096–M101 extend the causal chain beyond it.
+line; M096–M102 extend the causal chain beyond it.
 
 Its preserved second attempt produced a **positive** verdict with **12/12 protocol conditions
 computed and true**. The mechanism used **zero model calls and zero network calls**. Diagnosis
@@ -162,8 +169,9 @@ real prerequisite or tool for the next. M096 establishes contract-safe compositi
 finite authored domain; M097 establishes bounded language extension and M099 establishes hard
 process-death persistence after M098's preserved replay-normalisation failure. M100 establishes two
 further bounded cumulative acquisition cycles with exact conservation and live dependency. M101
-establishes bounded transfer of acquired reach across authored carrier families; independently
-maintained domains, interference and deeper chains remain open.
+establishes bounded transfer of acquired reach across authored carrier families. M102 establishes
+bounded state-owned registry improvement under measured interference and real SQLite execution.
+Acquisition-hypothesis machinery, independently authored domains and deeper chains remain open.
 
 ## What Mira Genesis does not currently claim
 
