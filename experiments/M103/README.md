@@ -3,8 +3,8 @@
 **Hypothesis:** H48  
 **Decision slot:** D072  
 **Track:** A — endogenous bounded lineage  
-**Status:** implementation and pre-freeze adversarial audit complete; owner-review protocol
-candidate pending; no frozen protocol or result exists
+**Status:** implementation and pre-freeze adversarial audit complete; exact owner-review protocol
+candidate `0a74e8f2…` exists; no frozen protocol or result exists
 
 M102 changed a state-owned registry policy, but fixed host functions still enumerated every policy
 and transformation hypothesis. M103 targets that ceiling directly. It asks whether the exact M102
@@ -39,6 +39,7 @@ See:
 - `QUALIFICATION_POOL.json` — complete separated pre-freeze population;
 - `PREDECESSOR_CONSERVATION.json` — fresh M100-M102 behavioral probes;
 - `ADVERSARIAL_REVIEW.md` — named pre-freeze falsifiers, corrections and residual ceiling;
+- `PROTOCOL_CANDIDATE.json` — exact bound candidate requiring explicit owner acceptance;
 - `docs/IP_REVIEWS/M103_PUBLICATION_REVIEW.md` — publication/provenance decision.
 
 Two corrected DEVELOPMENT rehearsals computed P1-P15 true with identical stable projection

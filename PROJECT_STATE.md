@@ -179,8 +179,10 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   feature ablations, ambiguity refusal, truthful post-compilation independence, corruption, exact
   rollback, seven fresh M100-M102 behavioral probes and stable replay are wired into P1-P15. Two
   corrected non-canonical rehearsals matched at `967a0389…`; this is apparatus validation only.
-  A final owner-review candidate, protocol acceptance, immutable freeze and distinct canonical-run
-  authorization are still required. D072 remains reserved.
+  Owner-review candidate `0a74e8f2…` binds source `48be7c06…`, the complete populations, exact
+  CPython/SQLite identities, capsules, checkers and clean boundary-audit report `a5800607…`.
+  Explicit protocol acceptance, immutable freeze and a distinct canonical-run authorization are
+  still required. D072 remains reserved.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

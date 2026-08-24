@@ -466,8 +466,9 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   fresh/equal/32-repeat S0 remains outside reach. All four feature ablations, ambiguity refusal,
   truthful compiled-dependency accounting, exact rollback and fresh behavioral M100-M102 retention
   are decisive. Seven false-positive paths were corrected and disclosed before freeze. Corrected
-  DEVELOPMENT replay is stable at 15/15, but it is not a result. Owner review, final protocol,
-  immutable freeze and a separate one-run authorization remain mandatory.
+  DEVELOPMENT replay is stable at 15/15, but it is not a result. Exact owner-review candidate
+  `0a74e8f2…` binds source `48be7c06…`; protocol acceptance, immutable freeze and a separate one-run
+  authorization remain mandatory.
 
 M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
 positive successors and may not be cited to retroactively strengthen or repair their predecessors.
