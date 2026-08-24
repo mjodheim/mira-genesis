@@ -213,6 +213,24 @@ def materialize_candidate() -> dict[str, Any]:
     return candidate
 
 
+def validate_candidate_commit(candidate: dict[str, Any]) -> str:
+    candidate_commit = _git("rev-parse", "HEAD")
+    if _git("rev-parse", "HEAD^") != candidate["candidate_source_commit"]:
+        raise RuntimeError("M104 candidate commit is not the direct child of its bound source")
+    changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()
+    if changed_paths != ["experiments/M104/PROTOCOL_CANDIDATE.json"]:
+        raise RuntimeError("M104 candidate commit must contain only the candidate artifact")
+    committed_candidate = subprocess.run(
+        ["git", "show", "HEAD:experiments/M104/PROTOCOL_CANDIDATE.json"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if committed_candidate.returncode != 0 or committed_candidate.stdout != CANDIDATE_PATH.read_bytes():
+        raise RuntimeError("M104 working candidate differs from its committed blob")
+    return candidate_commit
+
+
 def build_final(*, accepted_candidate_digest: str, authorization_reference: str) -> dict[str, Any]:
     _require_authoring_boundary()
     candidate = json.loads(CANDIDATE_PATH.read_text(encoding="ascii"))
@@ -221,15 +239,15 @@ def build_final(*, accepted_candidate_digest: str, authorization_reference: str)
         raise RuntimeError("M104 candidate digest mismatch")
     if accepted_candidate_digest != candidate["candidate_digest"]:
         raise RuntimeError("M104 owner acceptance does not match the exact candidate")
-    if _git("rev-parse", "HEAD") != candidate["candidate_source_commit"]:
-        raise RuntimeError("M104 final protocol must be built from the candidate source commit")
+    candidate_commit = validate_candidate_commit(candidate)
     payload: dict[str, Any] = {
         "schema": "m104-protocol-v1",
         "milestone": "M104",
         "hypothesis": "H49",
         "decision": "D073",
         "status": "frozen_protocol_run_not_authorized",
-        "source_commit": candidate["candidate_source_commit"],
+        "source_commit": candidate_commit,
+        "candidate_source_commit": candidate["candidate_source_commit"],
         "freeze_tag": FREEZE_TAG,
         "protocol_candidate": {
             "path": "experiments/M104/PROTOCOL_CANDIDATE.json",

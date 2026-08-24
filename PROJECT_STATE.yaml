@@ -453,11 +453,16 @@ current_real_software_frontier:
     enabling_implementation_exists: true
     complete_experiment_executed: false
     protocol_candidate_exists: false
-    superseded_protocol_candidates: 1
+    superseded_protocol_candidates: 2
     superseded_candidate_digests:
       - e528f5642291e0311d278c1b7b049f8988e3edc1ccc9e71a62739c8bc0f5e952
-    superseded_candidate_reason: absolute_windows_checkout_path_in_entrypoint_preflight
-    superseded_candidate_tag: provenance/m104-superseded-candidate-a1
+      - 62ab21c545811f69ecfcfdc22ece0a32d26141e30cee2720aa544bf0f16e4b81
+    superseded_candidate_reasons:
+      - absolute_windows_checkout_path_in_entrypoint_preflight
+      - mutually_exclusive_clean_tree_and_source_commit_finalization_rules
+    superseded_candidate_tags:
+      - provenance/m104-superseded-candidate-a1
+      - provenance/m104-superseded-candidate-a2
     final_protocol_exists: false
     result_exists: false
     checker_report_exists: false

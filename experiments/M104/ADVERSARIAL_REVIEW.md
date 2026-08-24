@@ -60,6 +60,17 @@ qualification execution. Tag `provenance/m104-superseded-candidate-a1` preserves
 now records only the boolean root-resolution fact, and explicit M104 LF/byte rules plus
 `.gitattributes` itself are included in the bound apparatus.
 
+### A9 — The second candidate could not satisfy its own finalization boundary
+
+Portable candidate `62ab21c5…` was produced untracked from a clean source, but the final builder
+required both a clean worktree and `HEAD == candidate_source_commit`. The candidate could therefore
+be neither present untracked nor committed when finalization ran. It was superseded before review or
+qualification and preserved at `provenance/m104-superseded-candidate-a2`.
+
+Finalization now requires a candidate-only commit whose parent is the bound source commit and whose
+Git blob equals the working candidate. The final protocol binds that candidate commit as its source;
+the later freeze commit must be its direct child. This makes the chronology executable and audited.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

@@ -1418,3 +1418,16 @@ not amended into the accepted candidate. The preflight now emits only
 `repository_root_resolved: true`; `.gitattributes` explicitly fixes every M104 bound source/prose
 path to LF or byte-exact JSON and is itself part of the bound apparatus. A new clean-source candidate
 is required.
+
+### M104 pre-freeze candidate A2 — clean-tree and source-commit rules were mutually exclusive
+
+Replacement candidate `62ab21c5…` removed the absolute path and matched every bound Git blob, but
+the final builder could not legally consume it. The candidate was created untracked from its clean
+source commit; finalization then required a clean worktree and `HEAD` equal to that source commit.
+Leaving the candidate untracked violated cleanliness, while committing it changed `HEAD`.
+
+No owner acceptance, final protocol, qualification run, result or report existed. The exact A2
+candidate is preserved at `provenance/m104-superseded-candidate-a2`. The corrected chronology is:
+clean source commit, generated candidate, candidate-only commit, owner acceptance, final protocol,
+then a freeze commit/tag directly above the candidate commit. The builder now verifies the parent,
+the candidate-only path census and exact committed candidate blob.

@@ -28,3 +28,8 @@ apparatus evidence only.
 The first generated candidate `e528f564…` is superseded before review because it bound an absolute
 Windows checkout path. Its tag and failure-log entry preserve the falsifier. A replacement candidate
 must contain only a portable root-resolution fact and bind the new M104 byte-normalization rules.
+
+Portable replacement `62ab21c5…` is also superseded: its builder required an impossible combination
+of an untracked candidate, clean worktree and unchanged `HEAD`. Tag
+`provenance/m104-superseded-candidate-a2` preserves it. The corrected lifecycle requires a
+candidate-only commit directly above the bound source before final protocol materialization.
