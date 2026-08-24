@@ -1317,12 +1317,14 @@ and satisfy the unchanged P1-P15 semantics on an entirely fresh population. A co
 launched through its exact direct-script entry point can independently replay and materialize the
 complete verdict.
 
-**Status:** **PRE-REGISTERED; APPARATUS BUILT; NO PROTOCOL CANDIDATE OR RESULT.** M103 remains
-negative under D072 and is not evidence for H49. Fresh pool `a84fa3c…` and audit `e861811f…` exist;
-the direct-script checker preflight succeeds without qualification access. No complete M104
-experiment has run. M104 still requires adversarial audit, a review candidate, separate protocol
-acceptance and one-run authorization.
+**Status:** **SUPPORTED WITHIN THE FROZEN M104 BOUNDS.** Under owner-accepted protocol `b3d8a6b3…`,
+the unique attempt produced result `f2be4d85…` with stable evidence `9f2d1758…`. The exact
+direct-script checker independently reconstructed the frozen boundaries and matched replay, with
+P1-P15 all true, zero failed or uncomputed predicates and zero model/network/remote-execution calls.
+Report `7032528b…` is preserved at `experiment/m104-positive-result`. M103 remains negative under
+D072 and contributes no positive evidence to H49. See D073.
 
-**Claim ceiling.** A positive M104 would support bounded acquired constructor-reach improvement and
-close only M103's instrument defect. All lower vocabulary, carrier, task, adapter, evaluator and
-budget bounds remain authored; no generality gate closes.
+**Claim ceiling.** M104 supports bounded acquired constructor-reach improvement and closes only
+M103's instrument defect. All lower vocabulary, carrier, task, adapter, evaluator and budget bounds
+remain authored; no generality gate closes. The next hypothesis must attack the fixed constructor
+feature vocabulary or lower interpreter rather than repeat this mechanism on another authored pool.

@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M102 positive, M103 negative on frozen checker instrumentation, M104 required
+**Status:** active; M102 positive, M103 negative on frozen checker instrumentation, M104 positive
 **Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
@@ -216,3 +216,9 @@ and corrects the checker process bootstrap that D072 identified. The exact direc
 must be exercised before freeze without opening qualification bytes. Only a new frozen attempt and
 independent replay may support H49. If positive, the next ceiling returns to the authored feature
 vocabulary and lower constructor interpreter; M104 itself removes no mechanism bound.
+
+M104 attempt 1 is positive. Protocol `b3d8a6b3…` bound the fresh population and unchanged mechanism;
+result `f2be4d85…` was preserved before the one checker invocation. Independent replay matched stable
+evidence `9f2d1758…` and P1-P15 are all true (`7032528b…`). D073 supports H49 only within the frozen
+bounds. The next experiment must attack the authored constructor vocabulary or lower interpreter and
+show an acquisition-substrate extension changes structural reach versus an equal M104 constructor.

@@ -2,14 +2,16 @@
 
 ## Unreleased
 
-- **M103 protocol is accepted and frozen without executing qualification.** H48 starts from exact
-  M102 U2 and
-  tests whether a serialized constructor extension S-prime can escape inherited S0's proved
-  context-invariant image, survive producer death and enable later configuration/filesystem
-  acquisitions that otherwise identical S0 controls cannot construct. Ambiguous evidence must
-  refuse; acquisition-time and runtime dependencies are measured separately. No result exists.
-  Accepted candidate `b44c80e5…` produced immutable protocol `cb21a4fa…` under
-  `experiment/m103-frozen-protocol-v1`; canonical execution remains separately unauthorised.
+- **M104 qualifies the unchanged constructor-reach mechanism on a fresh population.** The owner
+  accepted candidate `6416e54b…`, froze protocol `b3d8a6b3…`, then separately authorized one attempt
+  on pool `a84fa3c…`. Result `f2be4d85…` and stable evidence `9f2d1758…` were preserved before the
+  one checker invocation. Independent replay matched and P1-P15 are true (`7032528b…`), with zero
+  model/network/remote calls. This is bounded acquired constructor-reach evidence; the feature
+  vocabulary and lower interpreter remain authored.
+
+- **M103 remains negative by fail-closed checker instrumentation.** Its runner result is preserved,
+  but the first frozen checker command could not import the replay runner and left P15 uncomputed.
+  D072 forbids retry or repair; M104 does not retroactively change that verdict.
 
 - **M102 qualifies bounded registry-policy improvement under interference.** The unique authorized
   attempt 1 ran from frozen protocol `59689da6…` and the untouched thirteen-record population

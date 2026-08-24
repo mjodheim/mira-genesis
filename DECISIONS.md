@@ -2548,9 +2548,41 @@ an explicitly controlled import path, exercise that exact command before freeze 
 qualification data, and rerun every P1-P15 condition under a new protocol and unique result. A
 positive M104 would close only the M103 instrument defect; it would not retroactively change D072.
 
-## D073 — Reserved for the first frozen M104 attempt
+## D073 — M104 positively qualifies the unchanged constructor-reach mechanism
 
-No decision exists. H49 is pre-registered before any M104 pool, runner or checker implementation.
-D073 may be filled only by a new immutable protocol over an entirely fresh population, after owner
-acceptance and separate authorization of one canonical attempt. M103 artifacts and verdict are not
-eligible evidence for D073.
+### The decision
+
+M104 attempt 1 is a **positive qualified result**, and H49 is supported within its frozen bounds.
+The owner accepted candidate `6416e54b…`, then separately authorized the unique run under protocol
+`b3d8a6b3…`. The runner executed once on the untouched fresh pool `a84fa3c…` and produced result
+`f2be4d85…`, stable evidence `9f2d1758…`, raw result `74723305…`. Those first bytes were committed
+and tagged `experiment/m104-canonical-first-result` before the checker was invoked.
+
+The one frozen direct-script checker invocation then completed successfully. It independently
+reconstructed the accepted candidate, protocol, pool, canonical runtime, non-omittable causal file
+groups and annotated source/candidate/freeze/result history; replay matched stable evidence exactly.
+P1-P15 are all computed and true, with zero failed or uncomputed conditions and zero model, network
+or remote-execution calls. Report `7032528b…` (raw `90037f26…`) is preserved at
+`experiment/m104-positive-result`.
+
+### Scientific reading
+
+The result establishes bounded acquired constructor-reach improvement on a fresh successor
+population. A DEVELOPMENT-acquired, serialized generic S-prime survives producer death and makes
+later configuration and disposable-filesystem acquisitions constructible outside the complete
+context-invariant image of S0. Fresh/equal-budget and 32-repeat S0 controls do not obtain that reach;
+acquisition-time dependency, mutation, ablation, corruption, rollback, ambiguity refusal and live
+M100-M102 conservation behave as precommitted.
+
+This closes M103's checker-instrument defect only; D072 and M103's negative verdict remain unchanged.
+It does not establish self-hosting, recursive or open-ended self-improvement, independent task
+authorship, a closed generality gate, general-agent evidence or AGI. The feature vocabulary, subset
+bound, lower constructor interpreter, carriers, adapters, tasks and evaluator remain authored.
+
+### Next ceiling
+
+M105 must attack the authored constructor substrate rather than add another carrier to the same
+fixed feature product. The next falsifiable question is whether the lineage can diagnose that its
+current constructor vocabulary cannot express a demanded acquisition, acquire a persisted extension
+to that vocabulary or lower constructor, and thereby make a later capability structurally reachable
+that an equal-observation, equal-budget lineage retaining the frozen M104 constructor cannot build.

@@ -181,15 +181,15 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   `experiments/M103/CHECKER_FAILURE.json`; M103 is not retried or repaired. D072 requires M104 to
   use a corrected clean-checkout checker entry point, an entirely fresh population and a distinct
   freeze. The mechanism was not falsified, but no M103 subcondition advances a claim or gate.
-- **M104/H49 is pre-registered with apparatus built; no candidate or result exists.** It is the
-  D072-prescribed successor, not a repair or replay of M103. Exact M103 mechanism and P1-P15 semantics
-  remain unchanged. Fresh complete pool `a84fa3c…` contains eleven records/sixteen hidden cases and
-  audit `e861811f…` finds no reused M103 identifiers, contexts, actionable descriptor values or
-  initials. The corrected direct-script checker bootstrap succeeds from another working directory
-  without changing the pool or creating scientific paths. No complete M104 experiment has run.
-  D073 still requires a clean candidate, adversarial review, separate owner acceptance and one-run
-  authorization. Even a positive M104 leaves the authored constructor vocabulary, lower interpreter,
-  carriers, tasks, adapters, evaluator and bounds as the next ceiling.
+- **M104/H49 is positive under the frozen bounds; D073 is filled.** The owner accepted candidate
+  `6416e54b…`, then separately authorized one run under protocol `b3d8a6b3…` over fresh pool
+  `a84fa3c…`. Result `f2be4d85…`, stable evidence `9f2d1758…` and raw bytes `74723305…` were
+  preserved before checking. The one direct-script checker invocation reconstructed the protocol,
+  pool, runtime, causal file groups and annotated history, then matched independent replay: P1-P15
+  all true, report `7032528b…`, zero model/network/remote calls. This supports bounded acquired
+  constructor-reach improvement and leaves M103 negative. No generality gate closes. The next
+  ceiling is the authored constructor feature vocabulary, subset bound and lower interpreter; M105
+  must make an extension to that acquisition substrate causally necessary at equal budget.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

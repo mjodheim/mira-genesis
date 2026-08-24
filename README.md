@@ -91,13 +91,15 @@ machinery itself.
 | M100 | **Positive qualified scientific result** | Registered subtraction enabled acquisition of addition; registered addition enabled weighted addition; all three remained live on 9/9 fresh worlds and all 12 conditions replayed true. |
 | M101 | **Positive qualified scientific result** | A carrier-neutral capability acquired from text added reach on 8/8 held-out text/record/syntax worlds versus 0 hidden passes for eight fresh baselines, then remained a live prerequisite for B; 15/15 conditions replayed true. |
 | M102 | **Positive qualified scientific result** | Observable flat-registry collisions caused acquisition of state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later SQLite capability C. Real-state, retention, causal-control, rollback and replay checks passed 15/15. |
-| M103 | **Protocol frozen; run not authorised; untested** | H48 asks whether an acquired state-owned constructor extension adds later constructive reach beyond S0's closed context-invariant image. The complete apparatus and population are bound by protocol `cb21a4fa…`; no result exists. |
+| M103 | **Negative fail-closed instrument result — attempt 1** | The runner completed, but the first frozen checker command could not import its replay runner; P15 was uncomputed. D072 forbids retry or repair. |
+| M104 | **Positive qualified scientific result** | The unchanged M103 mechanism qualified on a fresh population with a corrected checker: acquired S-prime added later constructor reach beyond S0, and all P1-P15 independently replayed true. |
 
 The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
 disclosed negative, M099's positive hard-persistence result, M100's positive cumulative result and
 M101's bounded cross-family result, plus M102's bounded interference result. M100–M102 were developed and qualified locally under the
 recorded `PUBLIC_AGPL_COMMERCIAL_OPTION` disposition; remote automation is used only for repository
-validation after local evidence is green.
+validation after local evidence is green. M104 then qualifies the unchanged constructor-reach
+mechanism on an entirely fresh population; it does not retroactively alter M103.
 
 ## M094 — original qualified repair anchor
 
@@ -172,8 +174,9 @@ process-death persistence after M098's preserved replay-normalisation failure. M
 further bounded cumulative acquisition cycles with exact conservation and live dependency. M101
 establishes bounded transfer of acquired reach across authored carrier families. M102 establishes
 bounded state-owned registry improvement under measured interference and real SQLite execution.
-M103 now freezes the acquisition-hypothesis-machinery test without executing it; independently authored
-domains, lower-substrate ownership and deeper chains remain open.
+M103 remains a negative checker-instrument attempt. M104 positively qualifies the unchanged
+acquisition-hypothesis-machinery mechanism on a fresh population. Independently authored domains,
+ownership of the constructor vocabulary/lower interpreter and deeper chains remain open.
 
 ## What Mira Genesis does not currently claim
 
