@@ -72,3 +72,28 @@ Even a fully positive M107 leaves the **acquisition machinery** authored: the se
 space, the adoption rule, the demands and the evaluator. Nothing here modifies the mechanism that
 performs later acquisitions. Recursive depth, measured acceleration and self-identification of the
 bottleneck are all out of scope, and the successor must be derived from that ceiling.
+
+## The rehearsal, and the fourth defect it caught
+
+The complete `CANONICAL -> PRESERVE -> CHECK -> REPLAY` chain was rehearsed end to end in a throwaway
+clone with its own rehearsal freeze, using exactly the commands the canonical chronology will use. It
+consumed no canonical attempt and wrote nothing to the repository's evidence path.
+
+**The first full rehearsal returned `verdict: negative`, P16 false, 15/16, `replay_equal: false`.**
+The stable projection excluded `pid` but not `producer_pid` or `later_pids`, so two runs of the same
+deterministic experiment produced different projections. **This is exactly the defect that made M098
+negative** — a frozen projection retaining process identifiers that clean replay cannot reproduce.
+The raw identifiers are pure process accident; the derived boolean `producer_pid_absent_from_later`
+carries the claim and stays. Orchestration and checker now share one key set.
+
+After the correction the rehearsal returns `verdict: positive`, **16/16 computed and true, zero
+uncomputed, replay equal, exit 0**.
+
+Four defects were therefore found before any freeze, two of them fatal to a canonical attempt:
+
+| defect | consequence if unfound |
+|---|---|
+| acquisition took a single demand | H52's joint-determination claim untestable |
+| isolation detector resolved `built-in` relative to the capsule | **P15 false** — every process reporting a false leak |
+| protocol bound M106's inherited pool identity | freeze unbuildable |
+| process identifiers inside the stable projection | **P16 false** — M098's exact failure mode |
