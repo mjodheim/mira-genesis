@@ -36,7 +36,7 @@ def entrypoint_preflight() -> dict[str, Any]:
     return {
         "schema": "m104-checker-entrypoint-preflight-v1",
         "confirmed": ROOT == qualification.ROOT,
-        "repository_root": str(ROOT),
+        "repository_root_resolved": ROOT == qualification.ROOT,
         "checker_raw_sha256": hashlib.sha256(source).hexdigest(),
         "runner_imported": qualification.__name__ == "scripts.run_m104_qualification",
         "qualification_pool_opened": False,

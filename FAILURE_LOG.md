@@ -1405,3 +1405,16 @@ hash helper from the runner although that helper belongs to the runtime, and one
 the candidate builder from the intentionally dirty correction worktree, so its clean-tree refusal
 preceded the expected post-result refusal. The guards now use the standard-library hash and inspect
 the two frozen refusal branches statically; neither failure touched an experiment artifact.
+
+## M104 pre-freeze candidate A1 — absolute checkout path entered the commitment
+
+The first M104 candidate (`e528f564…`, raw `f972c1cb…`) passed the direct-script import test but
+embedded the full Windows repository root from that preflight report. A protocol accepting it would
+have bound checkout identity rather than the portable fact being tested. No M104 qualification
+experiment, result, report or final protocol existed.
+
+The exact candidate is preserved at tag `provenance/m104-superseded-candidate-a1`. It is superseded,
+not amended into the accepted candidate. The preflight now emits only
+`repository_root_resolved: true`; `.gitattributes` explicitly fixes every M104 bound source/prose
+path to LF or byte-exact JSON and is itself part of the bound apparatus. A new clean-source candidate
+is required.

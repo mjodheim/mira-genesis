@@ -453,6 +453,11 @@ current_real_software_frontier:
     enabling_implementation_exists: true
     complete_experiment_executed: false
     protocol_candidate_exists: false
+    superseded_protocol_candidates: 1
+    superseded_candidate_digests:
+      - e528f5642291e0311d278c1b7b049f8988e3edc1ccc9e71a62739c8bc0f5e952
+    superseded_candidate_reason: absolute_windows_checkout_path_in_entrypoint_preflight
+    superseded_candidate_tag: provenance/m104-superseded-candidate-a1
     final_protocol_exists: false
     result_exists: false
     checker_report_exists: false

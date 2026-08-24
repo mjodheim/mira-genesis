@@ -24,3 +24,7 @@ descriptor values and initials. The exact direct-script checker preflight succee
 working directory without changing the pool or creating result/report paths. No complete M104
 experiment has run, no protocol candidate/final protocol/result/report exists, and these checks are
 apparatus evidence only.
+
+The first generated candidate `e528f564…` is superseded before review because it bound an absolute
+Windows checkout path. Its tag and failure-log entry preserve the falsifier. A replacement candidate
+must contain only a portable root-resolution fact and bind the new M104 byte-normalization rules.

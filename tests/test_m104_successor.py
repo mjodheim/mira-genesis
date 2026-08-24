@@ -59,6 +59,8 @@ def test_exact_direct_script_entrypoint_works_from_another_directory_without_dat
     report = json.loads(completed.stdout)
     assert report["confirmed"] is True
     assert report["runner_imported"] is True
+    assert report["repository_root_resolved"] is True
+    assert "repository_root" not in report
     assert report["qualification_pool_opened"] is False
     assert report["result_opened"] is False
     assert report["report_opened"] is False

@@ -52,10 +52,17 @@ canonical result and one canonical checker attempt.
 D072, the M103 result tag, the negative tag and `CHECKER_FAILURE.json` remain immutable. M104 result
 schema explicitly records that M103 result bytes are not used as evidence. D073 cannot alter D072.
 
+### A8 — The first candidate bound an absolute Windows checkout path
+
+Candidate `e528f564…` included the concrete `C:\\Users\\…` repository root returned by entrypoint
+preflight. It was not portable and was superseded before owner review, protocol acceptance or any
+qualification execution. Tag `provenance/m104-superseded-candidate-a1` preserves it. The preflight
+now records only the boolean root-resolution fact, and explicit M104 LF/byte rules plus
+`.gitattributes` itself are included in the bound apparatus.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,
 carrier adapters, tasks, evaluator and entire population remain project-authored. M104 removes an
 instrument defect; it removes no scientific bound. The next milestone must attack one of those
 bounds with a new hypothesis rather than add another same-shape carrier.
-

@@ -36,6 +36,7 @@ CANONICAL_SQLITE_IDENTITY = {
     "sqlite_version_info": [3, 53, 1],
 }
 M104_FILES = [
+    ".gitattributes",
     "experiments/M104/README.md",
     "experiments/M104/PRE_REGISTRATION.md",
     "experiments/M104/PROTOCOL_DRAFT.json",
@@ -122,7 +123,11 @@ def _entrypoint_preflight() -> dict[str, Any]:
     if completed.returncode != 0:
         raise RuntimeError(f"M104 checker entrypoint preflight failed: {completed.stderr or completed.stdout}")
     report = json.loads(completed.stdout)
-    if report.get("confirmed") is not True or report.get("runner_imported") is not True:
+    if (
+        report.get("confirmed") is not True
+        or report.get("runner_imported") is not True
+        or report.get("repository_root_resolved") is not True
+    ):
         raise RuntimeError("M104 checker entrypoint preflight is not confirmed")
     if any(report.get(key) is not False for key in ("qualification_pool_opened", "result_opened", "report_opened")):
         raise RuntimeError("M104 checker entrypoint preflight reports data access")
@@ -295,4 +300,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
