@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M102 positive, M103/H48 pre-registered before enabling implementation
+**Status:** active; M102 positive, M103/H48 protocol frozen and canonical run not authorised
 **Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository

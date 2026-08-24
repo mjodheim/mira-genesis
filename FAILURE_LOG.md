@@ -1349,3 +1349,17 @@ all M103-bound capsule sources now have explicit stable-byte attributes; `.gitat
 bound; builders require a clean worktree; and non-canonical CI verifies refusal rather than trying to
 construct a different candidate. The population was not altered or redrawn. A replacement owner-
 review candidate must be built from the canonical runtime and pass both CI platforms before freeze.
+
+## M103 freeze checkpoint — two pre-freeze lifecycle assertions rejected the accepted protocol
+
+After owner acceptance materialized the final protocol but before its commit or tag, the first
+targeted lifecycle run returned 25 passes and two failures. Both assertions still described the
+pre-freeze state: one required `PROTOCOL.json` to be absent, and the other invoked the fully
+authorized materialization path expecting a missing protocol file. The latter would become unsafe
+once the tag existed because a test could consume the unique scientific attempt.
+
+No qualification process started and `RESULT.json`/`CHECK_REPORT.json` remained absent. The tests
+now require the exact accepted protocol while preserving absent evidence, and exercise only denied
+authorization combinations. They never invoke `authorized_by_owner=True` with the unique-attempt
+acknowledgement. This is a lifecycle/safety correction before the freeze commit, not evidence for
+H48 and not a consumed attempt.

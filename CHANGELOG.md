@@ -2,12 +2,14 @@
 
 ## Unreleased
 
-- **M103 is pre-registered before enabling implementation.** H48 starts from exact M102 U2 and
+- **M103 protocol is accepted and frozen without executing qualification.** H48 starts from exact
+  M102 U2 and
   tests whether a serialized constructor extension S-prime can escape inherited S0's proved
   context-invariant image, survive producer death and enable later configuration/filesystem
   acquisitions that otherwise identical S0 controls cannot construct. Ambiguous evidence must
-  refuse; acquisition-time and runtime dependencies are measured separately. No qualification pool,
-  final protocol or result exists.
+  refuse; acquisition-time and runtime dependencies are measured separately. No result exists.
+  Accepted candidate `b44c80e5…` produced immutable protocol `cb21a4fa…` under
+  `experiment/m103-frozen-protocol-v1`; canonical execution remains separately unauthorised.
 
 - **M102 qualifies bounded registry-policy improvement under interference.** The unique authorized
   attempt 1 ran from frozen protocol `59689da6…` and the untouched thirteen-record population
