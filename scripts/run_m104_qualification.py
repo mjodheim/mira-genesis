@@ -118,14 +118,14 @@ def require_frozen() -> dict[str, Any]:
     if RESULT_PATH.exists() or CHECK_PATH.exists():
         raise QualificationRefused("M104 canonical evidence path already exists")
     freeze_tag = protocol.get("freeze_tag")
-    source_commit = protocol.get("source_commit")
-    if not freeze_tag or not source_commit:
+    source_ref = protocol.get("source_ref")
+    if not freeze_tag or not source_ref:
         raise QualificationRefused("M104 freeze identity is incomplete")
     head = _git("rev-parse", "HEAD")
     if _git("rev-list", "-n", "1", freeze_tag) != head:
         raise QualificationRefused("M104 HEAD is not the frozen tag commit")
-    if _git("rev-parse", "HEAD^") != source_commit:
-        raise QualificationRefused("M104 freeze parent is not the accepted source commit")
+    if _git("rev-parse", "HEAD^") != _git("rev-list", "-n", "1", source_ref):
+        raise QualificationRefused("M104 freeze parent is not the accepted source ref")
     if _git("status", "--porcelain"):
         raise QualificationRefused("M104 canonical worktree is not clean")
     return protocol
@@ -209,4 +209,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

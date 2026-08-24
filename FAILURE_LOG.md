@@ -1431,3 +1431,14 @@ candidate is preserved at `provenance/m104-superseded-candidate-a2`. The correct
 clean source commit, generated candidate, candidate-only commit, owner acceptance, final protocol,
 then a freeze commit/tag directly above the candidate commit. The builder now verifies the parent,
 the candidate-only path census and exact committed candidate blob.
+
+### M104 pre-freeze candidate A3 — full source SHA violated the citation register
+
+Candidate `6b17901b…` satisfied portability and candidate-only commit validation, but repository
+integrity failed because its full source commit SHA was not in `docs/COMMIT_CITATIONS.json`. Placing
+that SHA in the source commit itself is circular. No protocol acceptance or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a3` preserves A3. The replacement uses annotated source
+and candidate refs: construction, finalization and canonical preflight each resolve the ref and
+verify the exact parent relation. This keeps the commitment reachable and avoids weakening the
+commit-citation guard.

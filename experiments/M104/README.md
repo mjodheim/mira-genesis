@@ -33,3 +33,7 @@ Portable replacement `62ab21c5…` is also superseded: its builder required an i
 of an untracked candidate, clean worktree and unchanged `HEAD`. Tag
 `provenance/m104-superseded-candidate-a2` preserves it. The corrected lifecycle requires a
 candidate-only commit directly above the bound source before final protocol materialization.
+
+Candidate `6b17901b…` is superseded as A3 because its full source SHA could not satisfy the
+repository's non-circular citation register. Annotated source/candidate refs now carry the exact
+reachable identity and are resolved at every lifecycle boundary.

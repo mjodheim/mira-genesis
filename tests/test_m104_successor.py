@@ -125,3 +125,6 @@ def test_finalization_has_a_read_only_candidate_commit_validator() -> None:
     assert "def validate_candidate_commit" in source
     assert "candidate commit must contain only the candidate artifact" in source
     assert "working candidate differs from its committed blob" in source
+    assert "owner-review candidate tag does not resolve to HEAD" in source
+    assert "candidate_source_ref" in source
+    assert '"candidate_source_commit"' not in source

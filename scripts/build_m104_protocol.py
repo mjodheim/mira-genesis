@@ -29,6 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
+SOURCE_TAG = "provenance/m104-owner-review-source-v2"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v1"
 CANONICAL_PYTHON_IDENTITY = {"implementation": "cpython", "version_info": [3, 11, 16]}
 CANONICAL_SQLITE_IDENTITY = {
     "module": "sqlite3",
@@ -143,13 +145,15 @@ def build_candidate() -> dict[str, Any]:
         raise RuntimeError("M104 freshness audit failed")
     entrypoint = _entrypoint_preflight()
     source_commit = _git("rev-parse", "HEAD")
+    if _git("rev-list", "-n", "1", SOURCE_TAG) != source_commit:
+        raise RuntimeError("M104 owner-review source tag does not resolve to HEAD")
     payload: dict[str, Any] = {
         "schema": "m104-protocol-candidate-v1",
         "milestone": "M104",
         "hypothesis": "H49",
         "decision": "D073",
         "status": "owner_review_required_run_not_authorized",
-        "candidate_source_commit": source_commit,
+        "candidate_source_ref": SOURCE_TAG,
         "pre_registration_raw_sha256": _raw(PRE_REGISTRATION),
         "protocol_draft_raw_sha256": _raw(DRAFT),
         "qualification_pool_digest": runner.POOL_DIGEST,
@@ -215,8 +219,10 @@ def materialize_candidate() -> dict[str, Any]:
 
 def validate_candidate_commit(candidate: dict[str, Any]) -> str:
     candidate_commit = _git("rev-parse", "HEAD")
-    if _git("rev-parse", "HEAD^") != candidate["candidate_source_commit"]:
+    if _git("rev-parse", "HEAD^") != _git("rev-list", "-n", "1", candidate["candidate_source_ref"]):
         raise RuntimeError("M104 candidate commit is not the direct child of its bound source")
+    if _git("rev-list", "-n", "1", CANDIDATE_TAG) != candidate_commit:
+        raise RuntimeError("M104 owner-review candidate tag does not resolve to HEAD")
     changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()
     if changed_paths != ["experiments/M104/PROTOCOL_CANDIDATE.json"]:
         raise RuntimeError("M104 candidate commit must contain only the candidate artifact")
@@ -246,8 +252,8 @@ def build_final(*, accepted_candidate_digest: str, authorization_reference: str)
         "hypothesis": "H49",
         "decision": "D073",
         "status": "frozen_protocol_run_not_authorized",
-        "source_commit": candidate_commit,
-        "candidate_source_commit": candidate["candidate_source_commit"],
+        "source_ref": CANDIDATE_TAG,
+        "candidate_source_ref": candidate["candidate_source_ref"],
         "freeze_tag": FREEZE_TAG,
         "protocol_candidate": {
             "path": "experiments/M104/PROTOCOL_CANDIDATE.json",

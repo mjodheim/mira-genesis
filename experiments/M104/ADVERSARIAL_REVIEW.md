@@ -71,6 +71,18 @@ Finalization now requires a candidate-only commit whose parent is the bound sour
 Git blob equals the working candidate. The final protocol binds that candidate commit as its source;
 the later freeze commit must be its direct child. This makes the chronology executable and audited.
 
+### A10 — The third candidate created an unregistered full-SHA citation
+
+Candidate `6b17901b…` was portable and its candidate-only lifecycle validated, but its full source
+commit SHA triggered the repository citation guard. That SHA cannot be written into the content of
+the commit it identifies without circularity. The candidate is preserved at
+`provenance/m104-superseded-candidate-a3` and was not accepted.
+
+The replacement binds named annotated provenance refs. Candidate construction requires the source
+tag to resolve to `HEAD`; finalization requires the candidate tag to resolve to the candidate-only
+commit; canonical preflight resolves the accepted source ref and requires it to be the freeze
+parent. Exact reachability is preserved without an impossible self-citation.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,
