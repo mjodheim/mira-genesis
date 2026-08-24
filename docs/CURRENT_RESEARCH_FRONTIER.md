@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 23 August 2026**
+**Reader-facing status snapshot — 24 August 2026**
 
 This document explains where the active research line stands now and what the next milestones are
 trying to establish. It is a navigation and interpretation layer, not a replacement for frozen
@@ -15,9 +15,9 @@ construction line at M066.
 
 The active question is stronger and narrower:
 
-> Can M101's bounded cross-family cumulative relation extend into a deeper chain under genuine
-> interference and at least one independently maintained domain, while retaining M100, A and B
-> causally and reproducibly?
+> Can exact M102 U2 acquire a persistent improvement to its own hypothesis-construction machinery
+> and use that improvement to make a later acquisition constructible when an otherwise identical
+> equal-budget S0 cannot, while retaining M100, M101 and M102 capabilities?
 
 The project is not currently claiming open-ended recursive self-improvement. It is testing the
 necessary mechanisms one at a time, under conditions designed to let a negative result remain a
@@ -36,11 +36,12 @@ valid result.
 | M099 | **Positive qualified scientific result; H44 supported** | The M097 operation survived producer death, ran in isolated consumers on 3/3 fresh worlds, failed under all controls, recovered after exact rollback and replayed 12/12 true | One operation and authored interpreter; repeated cumulative acquisition remained open |
 | M100 | **Positive qualified scientific result; H45 supported** | A enabled bounded B acquisition, registered B enabled bounded C acquisition, all three remained live on 9/9 fresh worlds, and 12/12 conditions replayed true | One affine family, authored targets/bounds and fixed generic interpreter |
 | M101 | **Positive qualified scientific result; H46 supported** | A carrier-neutral acquisition from text added reach on all eight held-out text/record/syntax worlds against fresh T0 controls and became a live prerequisite for B; 15/15 conditions replayed true | All carriers/evaluators authored; chain only A → B; no genuine interference or independently maintained domain |
-| Later | Not yet demonstrated | Extend the chain under interference and independently maintained domain pressure without forgetting M100/A/B | External transfer, deeper continual learning and long-horizon autonomy remain open |
+| M102 | **Positive qualified scientific result; H47 supported** | Observable collisions caused acquisition of generic state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later C scored from real SQLite state; 15/15 conditions replayed true | Hypothesis constructors, tasks, adapters and evaluator remain authored; G4/G5 remain partial |
+| M103 | Selected for pre-registration | Test whether acquired serialized S-prime expands later acquisition reach beyond S0's complete constructive image | No evidence yet; exact protocol and controls must be frozen before implementation/qualification |
 
 ## M094 — the original qualified repair anchor
 
-M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M101 extend the causal
+M094 is the qualified diagnosis-and-repair anchor for the active line; M096–M102 extend the causal
 chain beyond it.
 
 Its second preserved attempt produced a positive verdict with **12/12 protocol conditions computed
@@ -245,9 +246,28 @@ This qualifies bounded cross-family constructive reach, not natural or external-
 All carriers, adapters, worlds, bounds and evaluators are authored by the project and share one
 generic runtime. G4 therefore advances only to partial bounded mechanism evidence.
 
-## The longer-term target after M101
+## M102 — registry-policy improvement under interference
 
-M101 now demonstrates the following chain across three bounded authored carriers:
+M102 starts from exact M101 T2 and puts retention at genuine risk. The inherited flat registry can
+store only one descriptor per slot; two unequal carrier-local descriptors at a shared slot make the
+joint relation structurally unrepresentable. In the preserved no-upgrade arm, the later registration
+really overwrites an earlier capability.
+
+From public collision observations, the lineage assembled and registered shortest generic
+carrier+slot policy K. K survived producer death, retained the record capabilities and registered
+later SQLite demands. Live K plus live M101 B then made four-effect capability C constructible. The
+otherwise identical no-K lineage had the same predecessor, runtime, observations and budget but its
+live policy could not represent the joint relation.
+
+The unique attempt 1 used frozen protocol `59689da6…` and untouched pool `3d6785dd…`. Mutation,
+ablation, corruption, exact rollback, M100/M101 retention, 32 independently inspected real SQLite
+outcomes and stable replay passed across 58 isolated invocations. Independent checker P1-P15 passed;
+result `92d4ed3e…`, stable evidence `eab68a79…`, report `3ba2f130…`. D071 supports bounded
+continual-interference and registry meta-policy evidence, not G4/G5 closure.
+
+## The longer-term target after M102
+
+M102 now preserves the following chain across bounded authored carriers and real SQLite execution:
 
 ```text
 state T0
@@ -255,13 +275,17 @@ state T0
 state T1 has cross-carrier reach
   -> acquire B using that reach
 state T2 retains A + B
-  -> future successor must acquire C under interference/external pressure
+  -> acquire registry policy K under interference
+state U1 retains A + B + K
+  -> acquire C using live K + B
+state U2 retains A + B + K + C
+  -> future successor must improve later acquisition machinery itself
 ```
 
-A stronger successor must extend this beyond A → B while later learning creates real interference,
-and must include at least one independently maintained domain or interface selected behind a frozen
-uncontaminated boundary. Retention, negative transfer, rollback, dependency growth and reconstruction
-cost must be measured; another project-authored carrier alone would not clear the measured ceiling.
+A stronger successor must close S0's constructive image, acquire a serialized S-prime from observable
+failure, and show that S-prime makes a later acquisition reachable rather than merely cheaper. It
+must preserve the full predecessor and keep live dependencies causal. Independently authored held-out
+domains remain a separate necessary frontier; another project-authored carrier alone cannot close G4.
 
 That still would not by itself establish AGI or open-ended evolution. General-agent claims are
 governed separately by `MIRA_GENERALITY_CRITERIA.md`, which requires cross-domain evidence,
@@ -301,6 +325,7 @@ are promoted into claims they did not test.
 - `GENESIS_COMPLETION_CRITERIA.md` — frozen bounded completion criteria;
 - `MIRA_GENERALITY_CRITERIA.md` — stronger generality vocabulary and gates;
 - `experiments/M094/` — qualified real-software diagnosis-and-repair anchor;
-- `experiments/M101/` — current bounded cross-family result and immutable evidence;
+- `experiments/M101/` — bounded cross-family result and immutable evidence;
+- `experiments/M102/` — current bounded interference result and immutable evidence;
 - `FAILURE_LOG.md` — preserved failure history;
 - `docs/EPISTEMIC_TRACKS.md` — endogenous versus model-mediated attribution boundary.

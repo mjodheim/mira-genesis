@@ -1,6 +1,6 @@
 # Mira Genesis II — research plan
 
-**Status:** active; M102 protocol frozen, unique canonical attempt awaiting separate authorization
+**Status:** active; M102 positive, M103 acquisition-machinery reach selected for pre-registration
 **Date:** 2026-08-24
 
 ## Why Genesis II stays in this repository
@@ -161,17 +161,34 @@ SQLite supplies an independently maintained execution interface, not independent
 the adapters, tasks and evaluator remain project-authored. Even a positive M102 could move only the
 bounded mechanism record, not close G4/G5 or support a general-agent claim.
 
-### M102 frozen pre-run state
+### M102 qualified outcome
 
-The complete thirteen-record population and protocol are frozen and have not been scientifically
-executed. Accepted candidate `4549f17f…` produced protocol `59689da6…`, whose annotated freeze tag
-binds exact M101 T2 bytes, Python/SQLite identities, mechanism,
-capsules, pool, independent definition/result checkers, P1–P15 and stable projection. A full
-frozen-style DEVELOPMENT lineage replayed stably twice across fresh isolated processes.
+The complete thirteen-record population and protocol were frozen before the unique owner-authorized
+attempt 1. Accepted candidate `4549f17f…` produced protocol `59689da6…`, whose annotated freeze tag
+binds exact M101 T2 bytes, Python/SQLite identities, mechanism, capsules, pool, independent
+definition/result checkers, P1-P15 and stable projection.
 
 Adversarial review corrected four pre-freeze falsifiers: a declared-but-not-executed B dependency,
 a host-side K-origin gate that manufactured causality, and Python docstring formatting that mixed
 representation with conservation, plus protocol construction that did not fail closed outside the
-canonical runtime. C acquisition now fails without K only because the live flat policy cannot
-represent the joint collision relation. The unique attempt, result, checker report and D071 remain
-absent pending separate canonical-run authorization.
+canonical runtime. C acquisition fails without K only because the live flat policy cannot represent
+the joint collision relation. The canonical result then passed P1-P15 with result `92d4ed3e…`, stable
+evidence `eab68a79…` and independent report `3ba2f130…`. D071 supports bounded
+continual-interference and registry meta-policy evidence; project-authored tasks prevent G4/G5
+closure.
+
+## M103 — acquisition machinery must itself gain constructive reach
+
+M102's acquired K changes how capabilities are addressed, but both K and C are still found by fixed
+host-side hypothesis constructors. M103 therefore targets the next causal layer. Starting from exact
+M102 U2, the lineage must observe a requirement outside the complete constructive image of inherited
+constructor S0, acquire and serialize a generic improvement S-prime to that constructor, survive
+producer death, and use live S-prime to acquire a later capability that an otherwise identical
+equal-budget S0 lineage cannot construct.
+
+The protocol must distinguish reach from speed by closing S0's constructive image, keep the target
+and qualification consumers unavailable to S-prime acquisition, and require live content-addressed
+dependencies through M101 B, M102 K/C and S-prime where claimed. Mutation, ablation, corruption,
+exact rollback, M100-M102 retention, isolated processes and stable replay remain decisive. A positive
+result would be bounded acquisition-machinery meta-improvement evidence, not recursive
+self-improvement, independent task authorship, G4/G5 closure, general-agent evidence or AGI.

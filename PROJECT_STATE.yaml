@@ -1,11 +1,12 @@
 project: Mira Genesis
 updated_at: 2026-08-24
-status: m102_protocol_candidate_owner_review_no_result
+status: m102_positive_m103_preregistration
 
 active_research_question: >-
-  Can a lineage acquire a generic state-owned registry policy from observable interference,
-  demonstrate that it prevents real forgetting, and use that policy with live M101 B to make a
-  later four-effect SQLite capability constructible and persistent?
+  Can the exact M102 U2 lineage observe that its fixed hypothesis constructor cannot represent a
+  required acquisition, acquire a persistent state-owned improvement S-prime to that acquisition
+  machinery, and show that S-prime changes later constructive reach versus an otherwise identical
+  equal-budget S0 while retaining live M100, M101 and M102 capabilities?
 
 preceding_research_question: >-
   M101 asked whether a carrier-neutral capability acquired from public text demand can increase
@@ -295,24 +296,24 @@ current_real_software_frontier:
     generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
     current_ceiling: authored_carriers_shallow_chain_no_genuine_interference_or_external_domain
   M102:
-    status: frozen_protocol_awaiting_canonical_run_authorization
-    scientific_verdict_exists: false
+    status: positive_qualified_attempt_1
+    scientific_verdict_exists: true
     hypothesis: H47
-    hypothesis_status: preregistered_untested
-    decision: D071_pending
+    hypothesis_status: supported_bounded
+    decision: D071
     protocol_frozen: true
     protocol_candidate_status: accepted_and_bound
     canonical_run_allowed: true
-    canonical_run_authorized: false
-    run_consumed: false
+    canonical_run_authorized: true
+    run_consumed: true
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
     track: A_endogenous_lineage
-    attempt: 1_reserved_not_authorized_not_run
+    attempt: 1_positive_no_reroll
     model_calls_in_development_rehearsal: 0
     network_calls_in_development_rehearsal: 0
     remote_execution_in_development_rehearsal: false
     qualification_population_entries: 13
-    qualification_population_status: frozen_not_executed
+    qualification_population_status: frozen_executed_once
     qualification_pool_digest: 3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38
     protocol_candidate_digest: 4549f17f79405c212122362ce5154623ce55acafe03ee854be16e870fa061c84
     frozen_protocol_digest: 59689da64a6007589aefc15a633b069672b190ab799384503a02064bbf8599dc
@@ -324,13 +325,33 @@ current_real_software_frontier:
     exact_m101_t2_raw_sha256: cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0
     development_full_rehearsals: 2
     development_stable_replay_equal: true
-    qualification_executed: false
-    result_path_exists: false
-    checker_report_exists: false
+    qualification_executed: true
+    result_path_exists: true
+    checker_report_exists: true
     owner_protocol_acceptance_required: false
     owner_protocol_acceptance_recorded: true
-    owner_canonical_run_authorization_required: true
-    current_ceiling: unknown_until_unique_attempt
+    owner_canonical_run_authorization_required: false
+    result_digest: 92d4ed3ecde9bc48a930d0591a562dedc754bf8ab00eb5a20528be76325624fa
+    result_raw_sha256: 5274aeef7afaa04600f8cc4dba6d4d0640d99e0a25c171be4183144725c9fe97
+    stable_evidence_digest: eab68a79c0617d2d4ca48aaf0cd71630aa3a4e4e67b5b4c9b63f4e318ee170fb
+    checker_report_digest: 3ba2f1301fa33545942628202b80e9f68951f8eef9af90a3f21e202c75484fd2
+    checker_report_raw_sha256: aadf6971cf73e49c7d8e2eadbfb8b38ac8711f7fc343d8d470bde24d1302e0db
+    first_result_commit: e48dd38127126376af1ec8ad22d1f55099e352a9
+    positive_result_commit: 482fc0d62519db1622236ed8220a6ea407c111ee
+    first_result_tag: experiment/m102-canonical-first-result
+    positive_result_tag: experiment/m102-positive-result
+    conditions_total: 15
+    conditions_passed: 15
+    conditions_failed: 0
+    conditions_uncomputed: 0
+    fresh_process_invocations: 58
+    definition_checker_invocations: 2
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
+    generality_gate_5_status: stronger_partial_bounded_interference_evidence
+    current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

@@ -2464,3 +2464,52 @@ authored carrier or a cost-only improvement as closure of G4.
 This moves G4 only to partial bounded cross-family mechanism evidence. It is not G4 closure,
 general-agent evidence, AGI, natural-world generality, open-ended or recursive self-improvement,
 self-hosting, arbitrary self-modification, independent human reproduction or production authority.
+
+## D071 — M102 qualifies bounded registry-policy improvement under interference
+
+### The decision
+
+H47 is supported by M102 attempt 1. The owner-authorized local Track-A run used frozen protocol
+`59689da64a6007589aefc15a633b069672b190ab799384503a02064bbf8599dc`, the untouched thirteen-record
+population `3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38`, exact CPython 3.11.16
+and SQLite 3.53.1. It made zero model, network or remote-execution calls. The first result is preserved
+at commit `e48dd38127126376af1ec8ad22d1f55099e352a9` and tag
+`experiment/m102-canonical-first-result`. Independent replay computed all fifteen conditions true;
+the positive report is preserved at commit `482fc0d62519db1622236ed8220a6ea407c111ee` and tag
+`experiment/m102-positive-result`. Result `92d4ed3e…`; stable evidence `eab68a79…`; report
+`3ba2f130…`.
+
+### Causal reading
+
+Exact M101 T2 began with a flat slot-only registry whose complete constructive image cannot retain
+two unequal carrier-local descriptors at a shared slot. Observable collisions caused the lineage to
+assemble and register shortest generic carrier+slot policy K. The no-upgrade path performed a real
+destructive overwrite; K represented the joint relation and retained all preregistered record
+capabilities after its producer died.
+
+Live K then registered SQLite demands that collide with prior slots. Live K plus M101 B made later
+four-effect capability C constructible and persistent. The otherwise identical no-K lineage had the
+same predecessor, capsule, public demand and budget but could not represent the joint registry, so
+its failure is structural rather than a cost difference. Removing or mutating K or B broke C as
+predicted; built-but-unregistered, corruption and flat-policy controls failed; exact rollback
+restored accepted bytes and behavior. All M100, M101 and record capabilities remained live. The
+checker independently inspected 32 real SQLite outcomes across 58 isolated scientific invocations.
+
+### Next ceiling
+
+M102 improves the state-owned addressing machinery, but the hypothesis constructors that assembled
+K and C remain fixed host code over project-authored alphabets and bounds. The simplest remaining
+alternative is therefore that Genesis can retain and route authored capabilities but cannot improve
+the mechanism that proposes later acquisitions. M103 must put that alternative at risk: start from
+exact M102 U2, close inherited constructor S0's complete constructive image, acquire a serialized
+generic S-prime from observable failure, and show that live S-prime enables a later acquisition an
+otherwise identical equal-budget S0 cannot construct. A speed-only gain is insufficient.
+
+### Claim boundary
+
+This is bounded continual-interference and registry meta-policy mechanism evidence under an
+independently maintained SQLite execution interface. It strengthens partial G4/G5 evidence but
+closes neither gate because tasks, adapters, evaluator and interference schedule remain
+project-authored. It is not recursive self-improvement, independent task authorship, general-agent
+evidence, AGI, self-hosting, arbitrary self-modification, independent human reproduction or
+production authority.

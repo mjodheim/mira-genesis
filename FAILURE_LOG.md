@@ -1276,3 +1276,17 @@ boundary audit checks that both candidate and final builders enforce the gate, a
 mutates the observed runtime identity. The first candidate remains in Git history as superseded;
 candidate `4549f17f…` replaces it for owner review. The frozen population digest remains
 `3d6785dd…` and no reroll occurred.
+
+## M102 post-result — two pre-run lifecycle assertions rejected the preserved result
+
+After the unique canonical result and independent positive report were committed, the first targeted
+repository test run returned 47 passes and two failures. Both failing tests still asserted that
+`experiments/M102/RESULT.json` did not exist. That assertion was valid only during pre-freeze
+development and became false precisely because the authorized attempt had been preserved. No P1-P15
+condition failed, no result or checker byte changed, and no qualification reran.
+
+The lifecycle tests now verify the immutable attempt-1 raw/result digests and positive checker
+digest, and DEVELOPMENT rehearsals snapshot both artifacts before execution and require exact bytes
+afterwards. This is a post-result repository-lifecycle correction, not a repair to H47 or D071. The
+first red targeted run remains disclosed here rather than being described as an initially green
+post-result suite.

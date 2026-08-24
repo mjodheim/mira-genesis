@@ -2,13 +2,13 @@
 
 ## Unreleased
 
-- **M102 freezes its owner-accepted protocol without running qualification.** H47's
-  thirteen-record population remains frozen and unexecuted at `3d6785dd…`. CI rejected the first
-  candidate because its builder permitted interpreter-dependent reconstruction; construction now
-  fails closed outside CPython 3.11.16 plus SQLite 3.53.1. The replacement candidate is
-  `4549f17f…`; frozen protocol `59689da6…` is anchored by annotated tag
-  `experiment/m102-frozen-protocol-v1`. The separate authorization for the unique canonical attempt
-  remains absent.
+- **M102 qualifies bounded registry-policy improvement under interference.** The unique authorized
+  attempt 1 ran from frozen protocol `59689da6…` and the untouched thirteen-record population
+  `3d6785dd…`, with zero model, network or remote-execution calls. The lineage acquired generic
+  carrier+slot policy K after observable flat-key collisions, prevented demonstrated destructive
+  forgetting, survived producer death, then used live K plus M101 B to acquire C and pass real
+  SQLite state checks. The independent checker computed P1-P15 true; result `92d4ed3e…`, stable
+  evidence `eab68a79…`, report `3ba2f130…`. The pre-freeze runtime-binding failure remains preserved.
 
 - **M101 qualifies bounded cross-family cumulative transfer.** From corrected v4 freeze `b3e172b`,
   one carrier-neutral combinator A was acquired from public text demand, survived producer death and

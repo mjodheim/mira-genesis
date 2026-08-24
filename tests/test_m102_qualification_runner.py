@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 from pathlib import Path
 
@@ -16,6 +17,11 @@ from scripts.author_m102_qualification_pool import digest
 
 
 ROOT = Path(__file__).resolve().parents[1]
+RESULT_PATH = ROOT / "experiments/M102/RESULT.json"
+CHECK_PATH = ROOT / "experiments/M102/CHECK_REPORT.json"
+EXPECTED_RESULT_DIGEST = "92d4ed3ecde9bc48a930d0591a562dedc754bf8ab00eb5a20528be76325624fa"
+EXPECTED_RESULT_RAW_SHA256 = "5274aeef7afaa04600f8cc4dba6d4d0640d99e0a25c171be4183144725c9fe97"
+EXPECTED_REPORT_DIGEST = "3ba2f1301fa33545942628202b80e9f68951f8eef9af90a3f21e202c75484fd2"
 
 
 def test_m102_adversarial_source_audit_is_clean() -> None:
@@ -124,9 +130,21 @@ def test_protocol_builder_refuses_a_noncanonical_runtime(monkeypatch) -> None:
         protocol_builder.build_candidate()
 
 
-def test_no_m102_scientific_result_exists_before_freeze() -> None:
-    assert not (ROOT / "experiments/M102/RESULT.json").exists()
-    assert not (ROOT / "experiments/M102/CHECK_REPORT.json").exists()
+def test_m102_canonical_first_result_and_positive_report_are_preserved() -> None:
+    result_bytes = RESULT_PATH.read_bytes()
+    result = json.loads(result_bytes)
+    report = json.loads(CHECK_PATH.read_text(encoding="utf-8"))
+    assert hashlib.sha256(result_bytes).hexdigest() == EXPECTED_RESULT_RAW_SHA256
+    assert result["result_digest"] == EXPECTED_RESULT_DIGEST
+    assert result["attempt"] == 1
+    assert result["canonical"] is True
+    assert result["reroll"] is False
+    assert report["result_digest"] == EXPECTED_RESULT_DIGEST
+    assert report["report_digest"] == EXPECTED_REPORT_DIGEST
+    assert report["verdict"] == "positive"
+    assert report["passed"] == 15
+    assert report["failed"] == 0
+    assert report["uncomputed"] == 0
 
 
 def _cases(prefix: str, pairs: list[tuple[object, object]]) -> tuple[list[dict], list[dict]]:
@@ -423,6 +441,8 @@ def _development_rehearsal_pool() -> dict:
 
 
 def test_full_runner_rehearses_only_on_development_population() -> None:
+    result_before = RESULT_PATH.read_bytes()
+    report_before = CHECK_PATH.read_bytes()
     pool = _development_rehearsal_pool()
     evidence = runner.run_experiment(pool)
     assert evidence["states"]["U2"]["c_definition_id"]
@@ -449,4 +469,5 @@ def test_full_runner_rehearses_only_on_development_population() -> None:
     assert digest(runner.stable_projection(replay)) == digest(
         runner.stable_projection(evidence)
     )
-    assert not (ROOT / "experiments/M102/RESULT.json").exists()
+    assert RESULT_PATH.read_bytes() == result_before
+    assert CHECK_PATH.read_bytes() == report_before
