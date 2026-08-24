@@ -1290,3 +1290,32 @@ digest, and DEVELOPMENT rehearsals snapshot both artifacts before execution and 
 afterwards. This is a post-result repository-lifecycle correction, not a repair to H47 or D071. The
 first red targeted run remains disclosed here rather than being described as an initially green
 post-result suite.
+
+## M103 pre-freeze development — stable projection retained named producer PIDs
+
+The first two non-canonical M103 development rehearsals passed P1-P14 but disagreed on their stable
+evidence digests, so P15 remained false. A recursive diff isolated exactly three process-ephemera
+fields: `s_prime_producer_pid`, `d_producer_pid` and `e_producer_pid`. The projection already removed
+the generic `pid` and `process_pids` keys but did not apply M099's intended suffix rule to named
+producer fields.
+
+No M103 protocol was frozen and no canonical result existed. The pre-freeze instrument now excludes
+every key ending in `_pid` or `_pids` recursively, in both runner and independent checker. The raw
+evidence retains all producer identifiers for process-boundary inspection; only the declared stable
+projection removes them. A corrected development replay is required before freeze.
+
+## M103 pre-freeze adversarial audit — six additional false-positive paths
+
+The pre-freeze red team found six further defects or underpowered controls after the initial PID
+projection failure: an all-features host switch made S-prime state nearly decorative; the
+more-budget arm did not actually repeat work; S0 closure was certified only by the runtime being
+tested; M101/M102 retention was partly structural rather than behavioral; the producer module named
+the exact four-token winning subset; and zero external-call counters were not themselves decisive.
+
+All were corrected before any `PROTOCOL.json` or canonical result existed. The feature interpreter
+now executes four separable steps; the control repeats the complete S0 image 32 times; an independent
+closure checker imports no M103 runtime/search; a separate execution-only predecessor capsule runs
+seven fresh M100-M102 probes; the accepted subset constant is absent from the producer runtime; and
+P1/P14/P15 require isolation/import/call-counter evidence. The complete disclosure and residual
+claim ceiling are in `experiments/M103/ADVERSARIAL_REVIEW.md`. No qualification population was
+redrawn and no scientific attempt was consumed.

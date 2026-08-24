@@ -458,15 +458,16 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   observations and budget but structurally could not represent the joint relation. Real SQLite,
   retention, mutation/ablation/corruption, exact rollback and stable replay all passed. Result
   `92d4ed3e…`; checker `3ba2f130…`; D071. This strengthens bounded G4/G5 evidence but closes neither.
-- **M103 — acquisition-machinery reach: PRE-REGISTERED AS H48; UNTESTED.** M102 improved state
-  addressing, not the fixed host hypothesis constructor that produced K and C candidates. M103
-  starts from exact M102 U2 and closes S0's context-invariant constructive image. It requires a
-  generic state-owned S-prime acquired from DEVELOPMENT-only observable failure, then reused after
-  producer death to acquire configuration and disposable-filesystem capabilities that equal/more-
-  budget S0 cannot construct. Ambiguous evidence must refuse. S-prime is required causally at
-  acquisition time; compiled runtime dependence must be measured rather than invented. Exact
-  predecessor retention, rollback and no future-family access remain mandatory. No implementation,
-  frozen protocol, qualification pool or result exists yet.
+- **M103 — acquisition-machinery reach: IMPLEMENTED/AUDITED PRE-FREEZE; UNTESTED.** M102 improved
+  state addressing, not the fixed host hypothesis constructor that produced K and C candidates.
+  M103 starts from exact M102 U2 and independently closes S0's context-invariant constructive image.
+  The complete 98-subset generic search acquires state-owned S-prime from DEVELOPMENT-only failure,
+  then reuses it after process death for configuration and disposable-filesystem acquisition while
+  fresh/equal/32-repeat S0 remains outside reach. All four feature ablations, ambiguity refusal,
+  truthful compiled-dependency accounting, exact rollback and fresh behavioral M100-M102 retention
+  are decisive. Seven false-positive paths were corrected and disclosed before freeze. Corrected
+  DEVELOPMENT replay is stable at 15/15, but it is not a result. Owner review, final protocol,
+  immutable freeze and a separate one-run authorization remain mandatory.
 
 M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
 positive successors and may not be cited to retroactively strengthen or repair their predecessors.

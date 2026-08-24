@@ -1289,8 +1289,12 @@ otherwise identical fresh/equal-budget S0 lineages remain structurally unable to
 S-prime must be necessary at acquisition time, reused after another process death, refuse ambiguous
 evidence, and preserve the exact live M100/M101/M102 lineage.
 
-**Status:** **PRE-REGISTERED; UNTESTED.** No enabling M103 implementation, qualification pool,
-frozen executable protocol or result exists. See `experiments/M103/PRE_REGISTRATION.md`.
+**Status:** **PRE-REGISTERED; IMPLEMENTED AND AUDITED PRE-FREEZE; UNTESTED.** The runtime, complete
+separated population, independent closure/definition/result checkers and causal controls exist.
+Seven pre-freeze false-positive paths were disclosed and corrected before any protocol freeze or
+canonical result. Two DEVELOPMENT rehearsals replayed P1-P15 stably; they are not scientific
+evidence. No final `PROTOCOL.json` or result exists. See `experiments/M103/PRE_REGISTRATION.md` and
+`experiments/M103/ADVERSARIAL_REVIEW.md`.
 
 **What a positive result could establish.** A bounded acquired change to the hypothesis-
 construction machinery adds constructive reach for later acquisitions across two project-authored

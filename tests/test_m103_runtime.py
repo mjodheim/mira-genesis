@@ -9,6 +9,14 @@ import pytest
 from metamorphosis import m103_runtime as runtime
 
 
+VALIDATED_S_PRIME_FEATURES = {
+    "OBSERVE_CONTEXT",
+    "PARTITION_EQUAL",
+    "SYNTHESIZE_PARTITIONS",
+    "EMIT_GUARDED",
+}
+
+
 ROOT = Path(__file__).resolve().parents[1]
 M102_RESULT = ROOT / "experiments" / "M102" / "RESULT.json"
 M102_U2_RAW_SHA256 = "3bad4d5400e8d9a11b15ba596336925823ffb4064a5bbe38f93f64b7384a198d"
@@ -148,7 +156,7 @@ def test_s0_closure_and_constructor_acquisition_change_reach() -> None:
     assert closure["demand_outside_complete_image"] is True
     assert closure["budget_independent"] is True
     assert runtime.construct_hypothesis(v0["constructor"], development_demand())["confirmed"] is False
-    assert set(v1["constructor"]["features"]) == runtime.REQUIRED_FEATURES
+    assert set(v1["constructor"]["features"]) == VALIDATED_S_PRIME_FEATURES
     assert runtime.construct_hypothesis(v1["constructor"], development_demand())["confirmed"] is True
     assert v1["m102_ascii"] == v0["m102_ascii"]
 
@@ -236,10 +244,11 @@ def test_ambiguity_refuses_without_state_change() -> None:
 
 def test_feature_mutation_corruption_ablation_and_conservation() -> None:
     _v0, v1 = acquire_v1()
-    mutated = runtime.mutate_constructor_without_partition(v1)
-    assert runtime.acquire_consumer(mutated, configuration_demand(), register_result=False)[
-        "confirmed"
-    ] is False
+    for feature in VALIDATED_S_PRIME_FEATURES:
+        mutated = runtime.mutate_constructor_without_feature(v1, feature)
+        assert runtime.acquire_consumer(mutated, configuration_demand(), register_result=False)[
+            "confirmed"
+        ] is False
     with pytest.raises(ValueError, match="digest mismatch"):
         runtime.decode_state(runtime.corrupt_state_digest(v1))
     conservation = runtime.predecessor_conservation(v1)

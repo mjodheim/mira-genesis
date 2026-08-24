@@ -1,6 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-08-24
-status: m102_positive_m103_preregistration
+status: m102_positive_m103_pre_freeze_owner_review_pending
 
 active_research_question: >-
   Can the exact M102 U2 lineage observe that its fixed hypothesis constructor cannot represent a
@@ -353,14 +353,27 @@ current_real_software_frontier:
     generality_gate_5_status: stronger_partial_bounded_interference_evidence
     current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
   M103:
-    status: pre_registered_no_enabling_implementation_no_result
+    status: implementation_and_adversarial_audit_complete_owner_review_candidate_pending
     scientific_verdict_exists: false
     hypothesis: H48
     hypothesis_status: untested
     decision_slot: D072
     decision_slot_filled: false
     protocol_frozen: false
-    qualification_pool_exists: false
+    qualification_pool_exists: true
+    qualification_pool_digest: 1f1b5d4289685f8401564d0f0e5d7c4f8ffda10561fbeba9ec8a36114e22b59e
+    qualification_pool_records: 11
+    qualification_hidden_cases: 16
+    predecessor_conservation_fixture_digest: 7bfb93b917f78f5f1c2e2c16cee587f8eb50bdd7f9f98d7e922b6ae6506a51ea
+    enabling_implementation_exists: true
+    adversarial_review_complete: true
+    pre_freeze_falsifiers_disclosed_and_corrected: 7
+    unresolved_decisive_falsifiers: 0
+    development_full_rehearsals: 2
+    development_conditions_passed: 15
+    development_conditions_total: 15
+    development_stable_replay_equal: true
+    development_stable_evidence_digest: 967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3
     canonical_run_allowed: false
     canonical_run_authorized: false
     publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION

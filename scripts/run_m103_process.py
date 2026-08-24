@@ -132,9 +132,22 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
         )
     if action == "acquire-consumer":
         demand = runtime.decode_demand(_canonical_value(arguments.demand, "M103 demand"))
-        acquisition = runtime.acquire_consumer(
-            state, demand, register_result=bool(arguments.register)
-        )
+        repetitions = int(arguments.repetitions)
+        if not 1 <= repetitions <= 100:
+            raise ValueError("M103 acquisition repetitions are out of bounds")
+        if arguments.register and repetitions != 1:
+            raise ValueError("registered acquisition cannot be repeated")
+        attempts = [
+            runtime.acquire_consumer(
+                state, demand, register_result=bool(arguments.register)
+            )
+            for _index in range(repetitions)
+        ]
+        acquisition = attempts[-1]
+        stable_attempts = [
+            {key: value for key, value in attempt.items() if key != "next_state"}
+            for attempt in attempts
+        ]
         output_digest, output_sha256 = _write_acquisition(arguments, acquisition)
         return _envelope(
             action,
@@ -142,6 +155,11 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
                 **facts,
                 "confirmed": acquisition["confirmed"],
                 "acquisition": acquisition,
+                "repetitions": repetitions,
+                "total_assembled": sum(int(attempt["assembled"]) for attempt in attempts),
+                "repeated_image_identical": all(
+                    attempt == stable_attempts[0] for attempt in stable_attempts
+                ),
                 "output_state_digest": output_digest,
                 "output_raw_sha256": output_sha256,
             },
@@ -173,6 +191,18 @@ def run(arguments: argparse.Namespace) -> dict[str, Any]:
             output = runtime.encode_state(runtime.ablate_constructor(state))
         elif control == "constructor-mutate":
             output = runtime.encode_state(runtime.mutate_constructor_without_partition(state))
+        elif control == "constructor-drop-observe":
+            output = runtime.encode_state(
+                runtime.mutate_constructor_without_feature(state, "OBSERVE_CONTEXT")
+            )
+        elif control == "constructor-drop-synthesize":
+            output = runtime.encode_state(
+                runtime.mutate_constructor_without_feature(state, "SYNTHESIZE_PARTITIONS")
+            )
+        elif control == "constructor-drop-emit":
+            output = runtime.encode_state(
+                runtime.mutate_constructor_without_feature(state, "EMIT_GUARDED")
+            )
         elif control == "configuration-ablate":
             output = runtime.encode_state(runtime.ablate_family(state, "configuration"))
         elif control == "filesystem-ablate":
@@ -232,11 +262,15 @@ def main() -> int:
     parser.add_argument("--out")
     parser.add_argument("--restore")
     parser.add_argument("--register", action="store_true")
+    parser.add_argument("--repetitions", type=int, default=1)
     parser.add_argument(
         "--control",
         choices=(
             "constructor-ablate",
             "constructor-mutate",
+            "constructor-drop-observe",
+            "constructor-drop-synthesize",
+            "constructor-drop-emit",
             "configuration-ablate",
             "filesystem-ablate",
             "corrupt",

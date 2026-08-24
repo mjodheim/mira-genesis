@@ -42,14 +42,6 @@ DEFINITION_SCHEMA = "m103-consumer-definition-v1"
 S0_ORIGIN = "m103-inherited-s0"
 S_PRIME_ORIGIN = "m103-acquired-s-prime"
 
-REQUIRED_FEATURES = frozenset(
-    {
-        "OBSERVE_CONTEXT",
-        "PARTITION_EQUAL",
-        "SYNTHESIZE_PARTITIONS",
-        "EMIT_GUARDED",
-    }
-)
 FEATURE_TOKENS = (
     "ALLOW_EMPTY_LINEAR",
     "EMIT_GUARDED",
@@ -637,59 +629,92 @@ def construct_hypothesis(constructor: dict[str, Any], demand: dict[str, Any]) ->
     built_by = decode_constructor(constructor)
     public = decode_demand(demand)
     traces = _traces(public)
+    if "SORT_ACTION_IDS" in built_by["features"]:
+        traces.sort(key=canonical_json)
+    if "REVERSE_ACTION_ORDER" in built_by["features"]:
+        traces = [list(reversed(body)) for body in traces]
+    if "ALLOW_EMPTY_LINEAR" in built_by["features"]:
+        traces = [[], *traces]
     assembled = 0
     accepted: list[dict[str, Any]] = []
     features = set(built_by["features"])
 
-    if not REQUIRED_FEATURES.issubset(features):
-        for body in traces:
-            assembled += 1
-            if _trace_passes(public, body, public["public_cases"]):
-                dispatch = [
-                    {"context": copy.deepcopy(context), "body": list(body)}
-                    for context in sorted(
-                        {canonical_json(case["context"]): case["context"] for case in public["public_cases"]}.values(),
-                        key=canonical_json,
-                    )
-                ]
-                accepted.append(
-                    consumer_definition(
-                        public["family"], built_by["constructor_id"], public["actions"], dispatch
-                    )
-                )
-    else:
-        groups: dict[str, list[dict[str, Any]]] = {}
-        contexts: dict[str, list[Any]] = {}
-        for case in public["public_cases"]:
-            key = canonical_json(case["context"])
-            groups.setdefault(key, []).append(case)
-            contexts[key] = case["context"]
-        accepted_by_group: list[tuple[str, list[list[str]]]] = []
+    # Each state-owned feature performs one distinct constructor step.  There is no
+    # host-side "all features present" switch.  Missing observation or partitioning
+    # collapses every case into one group; missing partition synthesis requires one
+    # common trace; missing guarded emission assigns the first trace globally.
+    observed_keys: dict[str, str] = {}
+    actual_contexts: dict[str, list[Any]] = {}
+    for case in public["public_cases"]:
+        actual_key = canonical_json(case["context"])
+        actual_contexts[actual_key] = case["context"]
+        observed_keys[case["case_id"]] = (
+            actual_key if "OBSERVE_CONTEXT" in features else canonical_json(["opaque-context"])
+        )
+
+    groups: dict[str, list[dict[str, Any]]] = {}
+    for case in public["public_cases"]:
+        group_key = (
+            observed_keys[case["case_id"]]
+            if "PARTITION_EQUAL" in features
+            else canonical_json(["single-partition"])
+        )
+        groups.setdefault(group_key, []).append(case)
+
+    accepted_by_group: list[tuple[str, list[list[str]]]] = []
+    if "SYNTHESIZE_PARTITIONS" in features:
         for key in sorted(groups):
             bodies: list[list[str]] = []
             for body in traces:
                 assembled += 1
-                if _trace_passes(public, body, groups[key]):
+                if body and _trace_passes(public, body, groups[key]):
                     bodies.append(body)
             accepted_by_group.append((key, bodies))
-        if all(bodies for _key, bodies in accepted_by_group):
-            for choices in itertools.product(*(bodies for _key, bodies in accepted_by_group)):
-                dispatch = [
-                    {"context": copy.deepcopy(contexts[key]), "body": list(body)}
-                    for (key, _bodies), body in zip(accepted_by_group, choices, strict=True)
-                ]
-                definition = consumer_definition(
-                    public["family"], built_by["constructor_id"], public["actions"], dispatch
+    else:
+        common: list[list[str]] = []
+        for body in traces:
+            assembled += 1
+            if body and _trace_passes(public, body, public["public_cases"]):
+                common.append(body)
+        accepted_by_group = [(key, list(common)) for key in sorted(groups)]
+
+    if all(bodies for _key, bodies in accepted_by_group):
+        for choices in itertools.product(*(bodies for _key, bodies in accepted_by_group)):
+            body_by_group = {
+                key: list(body)
+                for (key, _bodies), body in zip(accepted_by_group, choices, strict=True)
+            }
+            first_body = list(choices[0])
+            dispatch: list[dict[str, Any]] = []
+            for actual_key, context in sorted(actual_contexts.items()):
+                matching_case = next(
+                    case
+                    for case in public["public_cases"]
+                    if canonical_json(case["context"]) == actual_key
                 )
-                try:
-                    if all(
-                        execute_definition(definition, case["context"], case["initial"])
-                        == case["expected"]
-                        for case in public["public_cases"]
-                    ):
-                        accepted.append(definition)
-                except Exception:
-                    continue
+                group_key = (
+                    observed_keys[matching_case["case_id"]]
+                    if "PARTITION_EQUAL" in features
+                    else canonical_json(["single-partition"])
+                )
+                emitted_body = (
+                    body_by_group[group_key]
+                    if "EMIT_GUARDED" in features
+                    else first_body
+                )
+                dispatch.append({"context": copy.deepcopy(context), "body": list(emitted_body)})
+            definition = consumer_definition(
+                public["family"], built_by["constructor_id"], public["actions"], dispatch
+            )
+            try:
+                if all(
+                    execute_definition(definition, case["context"], case["initial"])
+                    == case["expected"]
+                    for case in public["public_cases"]
+                ):
+                    accepted.append(definition)
+            except Exception:
+                continue
 
     by_signature: dict[str, list[dict[str, Any]]] = {}
     for definition in accepted:
@@ -908,9 +933,18 @@ def ablate_constructor(state: dict[str, Any]) -> dict[str, Any]:
 
 
 def mutate_constructor_without_partition(state: dict[str, Any]) -> dict[str, Any]:
+    return mutate_constructor_without_feature(state, "PARTITION_EQUAL")
+
+
+def mutate_constructor_without_feature(state: dict[str, Any], feature: str) -> dict[str, Any]:
     checked = decode_state(state)
+    if (
+        checked["constructor"]["origin"] != S_PRIME_ORIGIN
+        or feature not in checked["constructor"]["features"]
+    ):
+        raise ValueError("M103 feature ablation target is not present in S-prime")
     features = [
-        feature for feature in checked["constructor"]["features"] if feature != "PARTITION_EQUAL"
+        item for item in checked["constructor"]["features"] if item != feature
     ]
     return replace_constructor(state, constructor_definition(S_PRIME_ORIGIN, features))
 
@@ -952,10 +986,11 @@ def state_summary(state: dict[str, Any]) -> dict[str, Any]:
 
 
 def predecessor_conservation(state: dict[str, Any]) -> dict[str, Any]:
-    """Execute fresh bounded probes through M100, M101 and M102 state.
+    """Report structural liveness indicators for the embedded predecessor.
 
-    These probes are not a substitute for the independent definition checker.  They
-    make exact embedding behavioral rather than structural-only.
+    Decisive behavioral conservation is performed by the separate execution-only
+    M102 capsule over fresh M103 probes.  This local report is deliberately not
+    presented as a substitute for that execution or the independent checker.
     """
 
     checked = decode_state(state)
@@ -984,6 +1019,7 @@ def predecessor_conservation(state: dict[str, Any]) -> dict[str, Any]:
     c_item = m102_state["c_definition"]
     return {
         "schema": "m103-predecessor-conservation-v1",
+        "scope": "structural indicators; not decisive behavioral conservation",
         "m102_raw_sha256": checked["m102_sha256"],
         "m102_state_digest": m102_state["state_digest"],
         "m101_state_digest": m101_state["state_digest"],
