@@ -167,3 +167,9 @@ experiments/M106/*.md text eol=lf
 metamorphosis/m106_runtime.py text eol=lf
 scripts/*m106*.py text eol=lf
 tests/test_m106_*.py text eol=lf
+
+# M107 binds its apparatus by raw-byte SHA-256. These entries exist before any candidate.
+experiments/M107/*.md text eol=lf
+metamorphosis/m107_runtime.py text eol=lf
+scripts/*m107*.py text eol=lf
+tests/test_m107_*.py text eol=lf

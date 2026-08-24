@@ -9,6 +9,7 @@ exception. The report records the interpreter's own view of its isolation.
 from __future__ import annotations
 
 import argparse
+import importlib
 import json
 import os
 import sys
@@ -20,7 +21,13 @@ CAPSULE = Path(__file__).resolve().parent
 if str(CAPSULE) not in sys.path:
     sys.path.insert(0, str(CAPSULE))
 
-import m107_runtime as runtime  # noqa: E402
+# Inside a capsule the runtime sits beside this file under its copied name; in the repository it
+# stays namespaced under ``metamorphosis``. The same dual import M105 uses, so the integrity graph
+# can model the boundary without the frozen capsule source gaining repository-only logic.
+if (CAPSULE / "m107_runtime.py").exists():
+    runtime = importlib.import_module("m107_runtime")
+else:  # pragma: no cover - normal repository import
+    from metamorphosis import m107_runtime as runtime
 
 
 def _imported_project_modules() -> list[str]:
