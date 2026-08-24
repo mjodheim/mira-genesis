@@ -479,8 +479,9 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   without the acquired state. H50/P1-P16 were frozen before implementation. The implementation,
   fixtures, isolation and three independent validators now pass adversarial development audit; two
   rehearsals are stable and candidate P1-P16 are true. The freeze lifecycle was rehearsed in a clone
-  and two instrument defects were corrected before any candidate existed, including a checker that
-  burned its single attempt on an absent result. No final protocol or canonical result exists and
+  and four instrument defects were corrected before any candidate existed, including a checker that
+  burned its single attempt on an absent result and a rehearsal test that asserted the canonical
+  runtime pin unconditionally. Every mechanism predicate P2-P16 holds on Linux under 3.11 and 3.13. No final protocol or canonical result exists and
   the canonical command has never run. A positive result would move the ceiling only to the lower
   interpreter.
 

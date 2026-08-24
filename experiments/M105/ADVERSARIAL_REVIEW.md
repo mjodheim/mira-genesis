@@ -80,6 +80,16 @@ Two defects were found and corrected before any candidate existed:
    M105's were missing. `.gitattributes` now pins them, and the JSON fixtures were already covered
    by the `experiments/M1*` rule.
 
+4. **The rehearsal test asserted a canonical-runtime fact it could not have.**
+   `test_development_rehearsal_satisfies_all_predicates_with_stable_replay` asserted all sixteen
+   predicates true, but P1 pins CPython 3.11.16 with SQLite 3.53.1, so it is correctly false on any
+   other interpreter. Both CI jobs therefore failed on that single test — P2-P16 held on Linux under
+   both 3.11 and 3.13, and only P1 differed — which would have left CI permanently red on the frozen
+   commit and made the evidence commit unable to pass first CI, the standard every prior milestone
+   was held to. The test now asserts P2-P16 unconditionally and P1 iff the interpreter is the
+   canonical pair. The frozen verdict rule is unchanged: a canonical attempt still requires P1-P16
+   all true, and `require_frozen` refuses to run off the canonical runtime, so P1 cannot be dodged.
+
 Separately, `experiments/M100/RESULT.json` and `CHECK_REPORT.json` held stale CRLF working-tree
 copies predating that rule, which made M101's predecessor verifier compare a CRLF `git hash-object`
 against its LF preservation-tag blob and refuse. The working tree was renormalized to the bytes

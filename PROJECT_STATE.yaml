@@ -533,7 +533,8 @@ current_real_software_frontier:
     development_rehearsal_stable_projection_equal: true
     adversarial_review_recorded: true
     freeze_lifecycle_rehearsed_in_throwaway_clone: true
-    pre_freeze_instrument_defects_corrected: 3
+    pre_freeze_instrument_defects_corrected: 4
+    mechanism_predicates_hold_on_linux_3_11_and_3_13: true
     apparatus_byte_invariant_across_checkouts: true
     canonical_command_never_executed: true
     candidate_decisive_conditions_true: 16

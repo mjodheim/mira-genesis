@@ -207,7 +207,9 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   canonical result made the checker materialize a false negative report and burn its single
   attempt, the freeze machinery was not bound to its own validator, and twenty-one of the
   thirty-nine bound apparatus members had no end-of-line attribute, so a protocol frozen here would
-  have recorded digests no other Windows checkout could reproduce. The checker now refuses
+  have recorded digests no other Windows checkout could reproduce, and the rehearsal test asserted
+  the canonical-runtime predicate P1 unconditionally, which made both CI jobs red. P2-P16 hold on
+  Linux under Python 3.11 and 3.13; only the runtime pin differed. The checker now refuses
   without writing when no result exists, and no predicate, falsifier or verdict rule changed. This
   is not a scientific result: no final protocol, canonical attempt or checker report exists, and
   the canonical command has never been executed in any checkout. The lower Boolean interpreter and
