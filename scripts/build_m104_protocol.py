@@ -29,8 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v6"
-CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v4"
+SOURCE_TAG = "provenance/m104-owner-review-source-v7"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v5"
 INHERITED_ORCHESTRATION_FILES = [
     "scripts/run_m103_qualification.py",
     "experiments/M103/DEVELOPMENT_FIXTURE.json",
@@ -72,6 +72,11 @@ def _git(*arguments: str) -> str:
     if completed.returncode != 0:
         raise RuntimeError(completed.stderr.strip() or "git command failed")
     return completed.stdout.strip()
+
+
+def _require_annotated_tag(reference: str, *, label: str) -> None:
+    if _git("cat-file", "-t", reference) != "tag":
+        raise RuntimeError(f"M104 {label} must be an annotated tag")
 
 
 def _raw(path: Path) -> str:
@@ -161,6 +166,7 @@ def build_candidate() -> dict[str, Any]:
         raise RuntimeError("M104 freshness audit failed")
     entrypoint = _entrypoint_preflight()
     source_commit = _git("rev-parse", "HEAD")
+    _require_annotated_tag(SOURCE_TAG, label="owner-review source reference")
     if _git("rev-list", "-n", "1", SOURCE_TAG) != source_commit:
         raise RuntimeError("M104 owner-review source tag does not resolve to HEAD")
     payload: dict[str, Any] = {
@@ -236,8 +242,10 @@ def materialize_candidate() -> dict[str, Any]:
 
 def validate_candidate_commit(candidate: dict[str, Any]) -> str:
     candidate_commit = _git("rev-parse", "HEAD")
+    _require_annotated_tag(candidate["candidate_source_ref"], label="candidate source reference")
     if _git("rev-parse", "HEAD^") != _git("rev-list", "-n", "1", candidate["candidate_source_ref"]):
         raise RuntimeError("M104 candidate commit is not the direct child of its bound source")
+    _require_annotated_tag(CANDIDATE_TAG, label="owner-review candidate reference")
     if _git("rev-list", "-n", "1", CANDIDATE_TAG) != candidate_commit:
         raise RuntimeError("M104 owner-review candidate tag does not resolve to HEAD")
     changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()

@@ -123,6 +123,18 @@ the checker independently requires `HEAD` to equal that tag, its parent to equal
 changed-path census to contain only `RESULT.json`, its working result to equal the committed blob,
 the tree to be clean, and every pool/candidate/apparatus/inherited binding to remain exact.
 
+### A14 — The seventh candidate did not independently recompute protocol and pool digests
+
+Candidate `4f30459f…` sealed the result commit and current blobs, but the checker compared result
+bindings to the protocol/pool fields without independently recalculating those two internal digests.
+The runner had checked them, yet checker independence should not inherit that assumption. The
+candidate is preserved at `provenance/m104-superseded-candidate-a7` and was not accepted.
+
+Before replay, the checker now recomputes the final protocol digest and schema, recomputes the pool
+and candidate digests, fixes the expected pool and M103 identities independently, and verifies the
+protocol-to-pool binding. It also reconstructs the annotated source/candidate/freeze/first-result
+chain, exact changed-path censuses, runtime identity and non-omittable file-group memberships.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

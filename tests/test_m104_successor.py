@@ -130,7 +130,22 @@ def test_checker_predicate_logic_is_frozen_and_runtime_independent() -> None:
     assert "def verify_result_boundary" in source
     assert "first-result commit must contain only RESULT.json" in source
     assert "working result differs from its committed blob" in source
+    assert "freeze commit must contain only PROTOCOL.json" in source
+    assert "candidate commit must contain only PROTOCOL_CANDIDATE.json" in source
+    assert "candidate parent is not its bound source tag" in source
+    assert "must be an annotated tag" in source
     assert "result_boundary_confirmed" in source
+    assert "protocol_boundary_confirmed" in source
+    assert "protocol identity or digest mismatch" in source
+    assert "qualification pool identity or digest mismatch" in source
+    assert "protocol candidate identity or digest mismatch" in source
+    assert "protocol qualification pool binding mismatch" in source
+    assert checker.EXPECTED_POOL_DIGEST == runner.POOL_DIGEST
+    assert checker.EXPECTED_POOL_RAW_SHA256 == runner.POOL_RAW_SHA256
+    assert checker.EXPECTED_M104_FILES == protocol_builder.M104_FILES
+    assert checker.EXPECTED_INHERITED_ORCHESTRATION_FILES == (
+        protocol_builder.INHERITED_ORCHESTRATION_FILES
+    )
 
 
 def test_finalization_has_a_read_only_candidate_commit_validator() -> None:
@@ -141,6 +156,7 @@ def test_finalization_has_a_read_only_candidate_commit_validator() -> None:
     assert "owner-review candidate tag does not resolve to HEAD" in source
     assert "candidate_source_ref" in source
     assert '"candidate_source_commit"' not in source
+    assert "must be an annotated tag" in source
 
 
 def test_canonical_preflight_verifies_every_freeze_blob_and_path() -> None:
@@ -150,4 +166,5 @@ def test_canonical_preflight_verifies_every_freeze_blob_and_path() -> None:
     assert "protocol candidate raw bytes changed" in source
     assert "M103 {name}" in source
     assert "freeze commit must contain only the final protocol" in source
+    assert "must be an annotated tag" in source
     assert 'for name in ("mechanism", "checker", "inherited_orchestration")' in source

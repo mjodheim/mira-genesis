@@ -453,7 +453,7 @@ current_real_software_frontier:
     enabling_implementation_exists: true
     complete_experiment_executed: false
     protocol_candidate_exists: false
-    superseded_protocol_candidates: 6
+    superseded_protocol_candidates: 7
     superseded_candidate_digests:
       - e528f5642291e0311d278c1b7b049f8988e3edc1ccc9e71a62739c8bc0f5e952
       - 62ab21c545811f69ecfcfdc22ece0a32d26141e30cee2720aa544bf0f16e4b81
@@ -461,6 +461,7 @@ current_real_software_frontier:
       - 9f6e1b42b56a9470eb3154a298ca11eaaa10d352ba6f408f7d3d64c4b274719f
       - 3d765cd5e379b24bcf8b664f9bca98f220037d341ea7f3ea5fca63cafd102b33
       - 99cb23f564cfccd4a2d7509875fda9416d40fbed39228ab9b5b2d0d31888b0f4
+      - 4f30459f852ec1ac4b8229fbf060c902060fa6c1c3da0ae3d6be686e84764aa8
     superseded_candidate_reasons:
       - absolute_windows_checkout_path_in_entrypoint_preflight
       - mutually_exclusive_clean_tree_and_source_commit_finalization_rules
@@ -468,6 +469,7 @@ current_real_software_frontier:
       - freeze_parent_check_did_not_verify_all_bound_blobs_or_path_census
       - inherited_m103_runner_and_fixture_apparatus_group_not_bound
       - first_result_commit_and_replay_blobs_not_independently_sealed
+      - checker_did_not_recompute_final_protocol_and_pool_internal_digests
     superseded_candidate_tags:
       - provenance/m104-superseded-candidate-a1
       - provenance/m104-superseded-candidate-a2
@@ -475,6 +477,7 @@ current_real_software_frontier:
       - provenance/m104-superseded-candidate-a4
       - provenance/m104-superseded-candidate-a5
       - provenance/m104-superseded-candidate-a6
+      - provenance/m104-superseded-candidate-a7
     final_protocol_exists: false
     result_exists: false
     checker_report_exists: false

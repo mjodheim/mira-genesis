@@ -1481,3 +1481,13 @@ protocol or qualification occurred.
 Tag `provenance/m104-superseded-candidate-a6` preserves it. The replacement freezes the first-result
 tag and makes the checker verify tag, parent, path census, committed result bytes, clean tree, raw
 pool/candidate and every current causal file binding before replay.
+
+### M104 pre-freeze candidate A7 — checker trusted protocol and pool digest fields
+
+Candidate `4f30459f…` made replay history exact, but the checker did not recalculate the protocol and
+pool payload digests before comparing their recorded fields to the result. The runner already did,
+but that is not an independent check. No acceptance, final protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a7` preserves it. The replacement checker independently
+recomputes protocol, candidate and pool identities; fixes the expected pool and M103 identities;
+and reconstructs the annotated source/candidate/freeze/result history before any replay.

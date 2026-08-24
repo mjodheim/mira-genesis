@@ -89,6 +89,11 @@ def _git(*arguments: str) -> str:
     return completed.stdout.strip()
 
 
+def _require_annotated_tag(reference: str, *, label: str) -> None:
+    if not reference or _git("cat-file", "-t", reference) != "tag":
+        raise QualificationRefused(f"M104 {label} must be an annotated tag")
+
+
 def _canonical_runtime_confirmed() -> bool:
     return (
         sys.implementation.name == "cpython"
@@ -144,6 +149,8 @@ def require_frozen() -> dict[str, Any]:
     source_ref = protocol.get("source_ref")
     if not freeze_tag or not source_ref:
         raise QualificationRefused("M104 freeze identity is incomplete")
+    _require_annotated_tag(freeze_tag, label="freeze reference")
+    _require_annotated_tag(source_ref, label="accepted candidate reference")
     head = _git("rev-parse", "HEAD")
     if _git("rev-list", "-n", "1", freeze_tag) != head:
         raise QualificationRefused("M104 HEAD is not the frozen tag commit")

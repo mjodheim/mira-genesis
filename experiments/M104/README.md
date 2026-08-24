@@ -49,3 +49,7 @@ committed and recomputed alongside M103 mechanism/checker groups.
 Candidate `99cb23f5…` is superseded as A6 because it did not seal the first-result commit before
 checker replay. The checker now requires an annotated first-result tag, a direct RESULT-only child
 of the freeze and exact current bindings before any predicate is evaluated.
+
+Candidate `4f30459f…` is superseded as A7 because the checker did not independently recompute final
+protocol and pool digests. The replacement also recomputes the candidate, fixes expected pool/M103
+identities and reconstructs the annotated source-to-result history before replay.
