@@ -458,20 +458,16 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   observations and budget but structurally could not represent the joint relation. Real SQLite,
   retention, mutation/ablation/corruption, exact rollback and stable replay all passed. Result
   `92d4ed3e…`; checker `3ba2f130…`; D071. This strengthens bounded G4/G5 evidence but closes neither.
-- **M103 — acquisition-machinery reach: PROTOCOL FROZEN; RUN NOT AUTHORISED; UNTESTED.** M102 improved
-  state addressing, not the fixed host hypothesis constructor that produced K and C candidates.
-  M103 starts from exact M102 U2 and independently closes S0's context-invariant constructive image.
-  The complete 98-subset generic search acquires state-owned S-prime from DEVELOPMENT-only failure,
-  then reuses it after process death for configuration and disposable-filesystem acquisition while
-  fresh/equal/32-repeat S0 remains outside reach. All four feature ablations, ambiguity refusal,
-  truthful compiled-dependency accounting, exact rollback and fresh behavioral M100-M102 retention
-  are decisive. Eight false-positive paths were corrected and disclosed before freeze. Corrected
-  DEVELOPMENT replay is stable at 15/15, but it is not a result. Accepted candidate `b44c80e5…`
-  produced immutable protocol `cb21a4fa…` under tag `experiment/m103-frozen-protocol-v1`; a separate
-  one-run authorization remains mandatory.
+- **M103 — acquisition-machinery reach: NEGATIVE FAIL-CLOSED INSTRUMENT RESULT.** The unique runner
+  completed and its first result is preserved (`d2ace036…`; stable evidence `6a11fff9…`; tag
+  `experiment/m103-canonical-first-result`). The first frozen checker command exited 3 before replay
+  because its direct script entry point could not import `scripts.run_m103_qualification`; no report
+  was materialized and P15 remained uncomputed. The frozen rule therefore makes attempt 1 negative.
+  H48 is unsupported but not mechanism-refuted. D072 forbids retry or post-verdict repair; M104 must
+  use a corrected clean-checkout entry point and an entirely fresh qualification population.
 
-M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
-positive successors and may not be cited to retroactively strengthen or repair their predecessors.
+M095, M098 and M103's negative verdicts are final for attempt 1. Positive successors may not be
+cited to retroactively strengthen or repair their predecessors.
 
 ### After M091
 

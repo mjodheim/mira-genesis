@@ -1,0 +1,31 @@
+{
+  "schema": "m103-checker-attempt-failure-v1",
+  "milestone": "M103",
+  "attempt": 1,
+  "date": "2026-08-24",
+  "protocol_digest": "cb21a4fa29d9895e477d12f6710eaa4f7c70dfca2e740812fe6846c4ff530de9",
+  "freeze_tag": "experiment/m103-frozen-protocol-v1",
+  "result_commit": "dd205f257b6093b83ee4dbf1b48af0a0bff21275",
+  "result_tag": "experiment/m103-canonical-first-result",
+  "result_raw_sha256": "6d89f26f994124ef7207ed1c580a7a72cd468a83d3f8787c1085a5b8e062ff26",
+  "result_digest": "d2ace036a29d18be95f2fc5e0eee1285193cf96e8a7d7feebde46f61f96b0a81",
+  "stable_evidence_digest": "6a11fff9b3a4b3a00deee5150fe8884094a3baf09ac307b495a02ccb74617a97",
+  "checker_path": "scripts/check_m103_result.py",
+  "checker_raw_sha256": "326eaecf719333fdce910a2ebc17ed04bd0c5d39ec2e0142c7bac675c73cfcc7",
+  "command": "C:\\Users\\antho\\AppData\\Roaming\\uv\\python\\cpython-3.11.16-windows-x86_64-none\\python.exe scripts/check_m103_result.py --replay --write",
+  "working_directory": "C:\\Users\\antho\\Dev\\Github\\Mjodheim\\Mira Genesis",
+  "process_exit_code": 3,
+  "stdout": {
+    "error": "ModuleNotFoundError: No module named 'scripts'",
+    "failed_closed": true,
+    "schema": "m103-check-report-v1",
+    "scientific_verdict": true,
+    "verdict": "negative"
+  },
+  "check_report_materialized": false,
+  "failed_predicate_effect": "P15 stable replay remained uncomputed because the frozen checker could not import the replay runner when invoked through its repository script entry point.",
+  "scientific_verdict": "negative",
+  "hypothesis_status": "not_supported_in_attempt_1_due_to_frozen_checker_instrument_failure",
+  "rerun_or_post_verdict_repair_allowed": false,
+  "repair_milestone": "M104"
+}
