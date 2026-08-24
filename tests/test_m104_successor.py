@@ -127,6 +127,10 @@ def test_checker_predicate_logic_is_frozen_and_runtime_independent() -> None:
     assert "from metamorphosis import m103_runtime" not in source
     assert "predicate_checker.evaluate_conditions" in source
     assert checker.EXPECTED_PREDICATES == [f"P{index}" for index in range(1, 16)]
+    assert "def verify_result_boundary" in source
+    assert "first-result commit must contain only RESULT.json" in source
+    assert "working result differs from its committed blob" in source
+    assert "result_boundary_confirmed" in source
 
 
 def test_finalization_has_a_read_only_candidate_commit_validator() -> None:

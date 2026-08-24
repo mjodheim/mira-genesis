@@ -111,6 +111,18 @@ byte rules. A targeted test failed before any replacement candidate was generate
 names the causal inherited subset: M103 qualification runner, DEVELOPMENT fixture, predecessor
 fixture, M102 result and M102 checker, alongside the exact M103 mechanism/checker groups.
 
+### A13 — The sixth candidate did not seal the first-result commit before replay
+
+Candidate `99cb23f5…` protected the freeze commit and every causal input, but the checker did not prove
+that the commit carrying the first result changed only `RESULT.json` or that replay still used the
+reviewed blobs. A code change could therefore travel with the result. The candidate is preserved at
+`provenance/m104-superseded-candidate-a6` and was not accepted.
+
+The frozen policy now names `experiment/m104-canonical-first-result`. Before predicate evaluation,
+the checker independently requires `HEAD` to equal that tag, its parent to equal the freeze tag, its
+changed-path census to contain only `RESULT.json`, its working result to equal the committed blob,
+the tree to be clean, and every pool/candidate/apparatus/inherited binding to remain exact.
+
 ## Residual ceiling
 
 Even if M104 is positive, the constructor feature vocabulary, subset bound, lower interpreter,

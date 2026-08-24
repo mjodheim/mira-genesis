@@ -43,5 +43,9 @@ commit left every reviewed apparatus blob unchanged. The canonical runner now re
 members and requires a protocol-only freeze commit.
 
 Candidate `3d765cd5…` is superseded as A5 because it omitted M103's inherited `apparatus` group,
-which contains the runner and fixtures M104 actually uses. All three M103 binding groups are now
-explicitly committed and recomputed.
+which contains the runner and fixtures M104 actually uses. The exact causal inherited subset is now
+committed and recomputed alongside M103 mechanism/checker groups.
+
+Candidate `99cb23f5…` is superseded as A6 because it did not seal the first-result commit before
+checker replay. The checker now requires an annotated first-result tag, a direct RESULT-only child
+of the freeze and exact current bindings before any predicate is evaluated.

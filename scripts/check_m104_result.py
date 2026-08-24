@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import subprocess
 import sys
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,66 @@ EXPECTED_PREDICATES = [f"P{index}" for index in range(1, 16)]
 canonical_json = predicate_checker.canonical_json
 digest = predicate_checker.digest
 stable_projection = predicate_checker.stable_projection
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _git(*arguments: str) -> str:
+    completed = subprocess.run(
+        ["git", *arguments], cwd=ROOT, capture_output=True, text=True, check=False
+    )
+    if completed.returncode != 0:
+        raise ValueError(completed.stderr.strip() or "git command failed")
+    return completed.stdout.strip()
+
+
+def _verify_file_binding(binding: dict[str, Any], *, label: str) -> None:
+    files = binding.get("files")
+    expected = binding.get("member_digests")
+    if not isinstance(files, list) or not isinstance(expected, dict):
+        raise ValueError(f"M104 {label} binding shape is invalid")
+    measured = {path: _sha256(ROOT / path) for path in files}
+    if measured != expected or digest(measured) != binding.get("digest"):
+        raise ValueError(f"M104 {label} bound bytes changed")
+
+
+def verify_result_boundary(protocol: dict[str, Any]) -> None:
+    if REPORT_PATH.exists():
+        raise ValueError("M104 checker report already exists")
+    if _sha256(POOL_PATH) != protocol.get("qualification_pool_raw_sha256"):
+        raise ValueError("M104 pool raw bytes changed before checker replay")
+    candidate = protocol.get("protocol_candidate", {})
+    candidate_path = EXPERIMENT / "PROTOCOL_CANDIDATE.json"
+    if _sha256(candidate_path) != candidate.get("raw_sha256"):
+        raise ValueError("M104 candidate raw bytes changed before checker replay")
+    _verify_file_binding(protocol.get("m104_bound_files", {}), label="apparatus")
+    for name in ("mechanism", "checker", "inherited_orchestration"):
+        _verify_file_binding(
+            protocol.get("m103_exact_binding", {}).get("bound_files", {}).get(name, {}),
+            label=f"M103 {name}",
+        )
+    head = _git("rev-parse", "HEAD")
+    result_tag = protocol.get("canonical_result_policy", {}).get("first_result_tag")
+    if not result_tag or _git("rev-list", "-n", "1", result_tag) != head:
+        raise ValueError("M104 HEAD is not the preserved first-result tag")
+    freeze_tag = protocol.get("freeze_tag")
+    if not freeze_tag or _git("rev-parse", "HEAD^") != _git("rev-list", "-n", "1", freeze_tag):
+        raise ValueError("M104 result commit is not the direct child of the freeze")
+    changed_paths = _git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").splitlines()
+    if changed_paths != ["experiments/M104/RESULT.json"]:
+        raise ValueError("M104 first-result commit must contain only RESULT.json")
+    committed_result = subprocess.run(
+        ["git", "show", "HEAD:experiments/M104/RESULT.json"],
+        cwd=ROOT,
+        capture_output=True,
+        check=False,
+    )
+    if committed_result.returncode != 0 or committed_result.stdout != RESULT_PATH.read_bytes():
+        raise ValueError("M104 working result differs from its committed blob")
+    if _git("status", "--porcelain"):
+        raise ValueError("M104 checker requires a clean first-result worktree")
 
 
 def entrypoint_preflight() -> dict[str, Any]:
@@ -53,6 +114,7 @@ def check_result(result: dict[str, Any], *, replay: bool) -> dict[str, Any]:
         raise ValueError("M104 result digest mismatch")
     protocol = json.loads(PROTOCOL_PATH.read_text(encoding="ascii"))
     pool = json.loads(POOL_PATH.read_text(encoding="ascii"))
+    verify_result_boundary(protocol)
     if result.get("protocol_digest") != protocol.get("protocol_digest"):
         raise ValueError("M104 result protocol binding mismatch")
     if result.get("pool_digest") != pool.get("pool_digest"):
@@ -94,6 +156,7 @@ def check_result(result: dict[str, Any], *, replay: bool) -> dict[str, Any]:
         "predicate_semantics_source": "frozen_M103_independent_checker",
         "imports_m103_runtime_for_predicates": False,
         "direct_script_root_bootstrap": True,
+        "result_boundary_confirmed": True,
     }
     report["report_digest"] = digest(report)
     return report

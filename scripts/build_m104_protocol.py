@@ -29,8 +29,8 @@ DRAFT = EXPERIMENT / "PROTOCOL_DRAFT.json"
 POOL = EXPERIMENT / "QUALIFICATION_POOL.json"
 M103_PROTOCOL = ROOT / "experiments" / "M103" / "PROTOCOL.json"
 FREEZE_TAG = "experiment/m104-frozen-protocol-v1"
-SOURCE_TAG = "provenance/m104-owner-review-source-v5"
-CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v3"
+SOURCE_TAG = "provenance/m104-owner-review-source-v6"
+CANDIDATE_TAG = "provenance/m104-owner-review-candidate-v4"
 INHERITED_ORCHESTRATION_FILES = [
     "scripts/run_m103_qualification.py",
     "experiments/M103/DEVELOPMENT_FIXTURE.json",
@@ -194,6 +194,7 @@ def build_candidate() -> dict[str, Any]:
             "checker_path": "experiments/M104/CHECK_REPORT.json",
             "canonical_command": "python scripts/run_m104_qualification.py materialize --authorized-by-owner --i-understand-this-is-the-only-canonical-attempt",
             "checker_command": "python scripts/check_m104_result.py --replay --write",
+            "first_result_tag": "experiment/m104-canonical-first-result",
             "exclusive_create": True,
             "canonical_attempts": 1,
             "canonical_checker_attempts": 1,

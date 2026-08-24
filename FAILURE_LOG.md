@@ -1470,3 +1470,14 @@ bytes legitimately changed when M104 registered its own paths. The test exposed 
 of causal inheritance, not a qualification failure. The corrected set names only the M103 runner,
 two fixtures and M102 result/checker bytes actually read, plus the unchanged M103 mechanism/checker
 groups. The red checkpoint is preserved here rather than described as green.
+
+### M104 pre-freeze candidate A6 — replay did not seal the result commit boundary
+
+Candidate `99cb23f5…` sealed the protocol-only freeze but the independent checker did not require the
+preserved first-result commit to be a direct RESULT-only child of that freeze. A changed runner or
+checker could therefore accompany the result and influence replay. No owner acceptance, final
+protocol or qualification occurred.
+
+Tag `provenance/m104-superseded-candidate-a6` preserves it. The replacement freezes the first-result
+tag and makes the checker verify tag, parent, path census, committed result bytes, clean tree, raw
+pool/candidate and every current causal file binding before replay.
