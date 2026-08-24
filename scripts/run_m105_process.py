@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import importlib
 import json
 import os
 import sys
@@ -12,7 +13,10 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import m105_runtime as runtime
+if (Path(__file__).resolve().parent / "m105_runtime.py").exists():
+    runtime = importlib.import_module("m105_runtime")
+else:  # pragma: no cover - normal repository import
+    from metamorphosis import m105_runtime as runtime
 
 
 PROCESS_SCHEMA = "m105-isolated-process-v1"
