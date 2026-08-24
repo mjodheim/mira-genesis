@@ -2513,3 +2513,12 @@ closes neither gate because tasks, adapters, evaluator and interference schedule
 project-authored. It is not recursive self-improvement, independent task authorship, general-agent
 evidence, AGI, self-hosting, arbitrary self-modification, independent human reproduction or
 production authority.
+
+## D072 — Reserved for the first frozen M103 attempt
+
+No decision exists yet. H48 is pre-registered before enabling implementation. D072 may be filled
+only from the first canonical M103 result produced under a final immutable `PROTOCOL.json`, after a
+separate owner acceptance of that protocol and explicit authorization of the unique attempt.
+
+The decision will be negative if any decisive predicate is false or uncomputed. Development runs,
+pre-freeze audits, protocol candidates and post-result repairs cannot fill D072.

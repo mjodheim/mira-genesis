@@ -458,12 +458,15 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   observations and budget but structurally could not represent the joint relation. Real SQLite,
   retention, mutation/ablation/corruption, exact rollback and stable replay all passed. Result
   `92d4ed3e…`; checker `3ba2f130…`; D071. This strengthens bounded G4/G5 evidence but closes neither.
-- **M103 — acquisition-machinery reach: SELECTED FROM D071 CEILING.** M102 improved state addressing,
-  not the fixed host hypothesis constructor that produced K and C candidates. M103 must start from
-  exact M102 U2, prove an acquisition lies outside S0's complete constructive image, acquire and
-  persist state-owned S-prime from observable failure, then show S-prime is causally necessary for a
-  later acquisition an equal-budget S0 lineage cannot construct. Exact predecessor retention,
-  process death, live dependency, rollback and no hidden-target access remain mandatory.
+- **M103 — acquisition-machinery reach: PRE-REGISTERED AS H48; UNTESTED.** M102 improved state
+  addressing, not the fixed host hypothesis constructor that produced K and C candidates. M103
+  starts from exact M102 U2 and closes S0's context-invariant constructive image. It requires a
+  generic state-owned S-prime acquired from DEVELOPMENT-only observable failure, then reused after
+  producer death to acquire configuration and disposable-filesystem capabilities that equal/more-
+  budget S0 cannot construct. Ambiguous evidence must refuse. S-prime is required causally at
+  acquisition time; compiled runtime dependence must be measured rather than invented. Exact
+  predecessor retention, rollback and no future-family access remain mandatory. No implementation,
+  frozen protocol, qualification pool or result exists yet.
 
 M095 and M098's negative verdicts are final for attempt 1. M096, M099, M100 and M101 are distinct
 positive successors and may not be cited to retroactively strengthen or repair their predecessors.

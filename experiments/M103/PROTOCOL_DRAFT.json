@@ -1,0 +1,112 @@
+{
+  "attempt_policy": {
+    "canonical_attempts": 1,
+    "post_result_repair": "forbidden",
+    "reroll": "forbidden",
+    "result_absence_required_before_freeze": true,
+    "separate_owner_authorization_required": true
+  },
+  "claim_boundary": {
+    "could_support": "bounded project-authored acquisition-machinery improvement with process-persistent causal reuse",
+    "does_not_support": [
+      "recursive or open-ended self-improvement",
+      "self-hosting",
+      "independent task authorship",
+      "closure of G1-G10",
+      "general-agent evidence",
+      "AGI",
+      "production authority"
+    ]
+  },
+  "constructor": {
+    "ambiguity_policy": "adopt only when accepted candidates occupy exactly one public semantic class; otherwise refuse without state change",
+    "candidate_order": "feature count, body length, canonical digest within one semantic class",
+    "s0_invariant": "one deterministic context-invariant linear action trace is assigned to every case",
+    "s_prime_forbidden_content": [
+      "development values or action ids",
+      "qualification carrier/context/action identities",
+      "accepted D or E body",
+      "target digest",
+      "hidden case",
+      "solution label"
+    ],
+    "s_prime_required_semantics": [
+      "observe generic context vector",
+      "partition by observed equality",
+      "delegate each partition to inherited linear search",
+      "emit total guarded hypothesis",
+      "require one public semantic class"
+    ]
+  },
+  "controls": [
+    "s0_complete_closure",
+    "more_budget_s0",
+    "fresh_s0_configuration",
+    "fresh_s0_filesystem",
+    "s_prime_built_not_registered",
+    "s_prime_feature_ablation",
+    "s_prime_semantic_mutation",
+    "s_prime_corruption",
+    "ambiguous_demand_refusal",
+    "non_discriminating_demand_refusal",
+    "d_ablation",
+    "e_ablation",
+    "post_compile_s_prime_ablation_truthful_boundary",
+    "live_fault_exact_rollback",
+    "m100_m101_m102_behavioral_conservation",
+    "stable_replay"
+  ],
+  "decisive_conditions": [
+    "P1_exact_predecessor",
+    "P2_s0_closure",
+    "P3_observable_diagnosis",
+    "P4_genuine_constructor_acquisition",
+    "P5_producer_isolation",
+    "P6_new_configuration_reach",
+    "P7_repeated_later_reach",
+    "P8_causal_acquisition_dependency",
+    "P9_ambiguity_and_refusal",
+    "P10_retention",
+    "P11_truthful_dependency_boundary",
+    "P12_corruption_and_rollback",
+    "P13_baseline_parity",
+    "P14_process_persistence",
+    "P15_stable_replay_and_provenance"
+  ],
+  "development_boundary": {
+    "consumer_qualification_material_available": false,
+    "fixture": "development-only context-conditioned transformation demand",
+    "network": false,
+    "repository_visible_to_acquisition_process": false
+  },
+  "epistemic_track": "A",
+  "hypothesis": "H48",
+  "milestone": "M103",
+  "population_shape": {
+    "configuration_family": "public acquisition cases plus hidden execution cases against actual configparser state",
+    "development_family": "excluded from qualification",
+    "filesystem_family": "public acquisition cases plus hidden execution cases against actual disposable-directory state",
+    "negative_families": "ambiguity, non-discrimination, mutation, ablation, corruption and rollback"
+  },
+  "predecessor": {
+    "m102_positive_tag": "experiment/m102-positive-result",
+    "m102_protocol_digest": "59689da64a6007589aefc15a633b069672b190ab799384503a02064bbf8599dc",
+    "m102_result_digest": "92d4ed3ecde9bc48a930d0591a562dedc754bf8ab00eb5a20528be76325624fa",
+    "m102_stable_evidence_digest": "eab68a79c0617d2d4ca48aaf0cd71630aa3a4e4e67b5b4c9b63f4e318ee170fb",
+    "m102_u2_raw_sha256": "3bad4d5400e8d9a11b15ba596336925823ffb4064a5bbe38f93f64b7384a198d",
+    "m102_u2_state_digest": "fbf7b0232aa8adf4e67513719c63f19f28c1b7e8b86437af1135ff18335d3a0e"
+  },
+  "process_order": [
+    "create V0 from exact M102 U2 and S0",
+    "exhaust S0 on development demand",
+    "acquire and register S-prime as V1",
+    "terminate S-prime producer",
+    "materialize configuration qualification and acquire D as V2",
+    "terminate D producer",
+    "materialize filesystem qualification and acquire E as V3",
+    "terminate E producer",
+    "run hidden execution, controls, rollback and replay in isolated consumers"
+  ],
+  "schema": "m103-protocol-draft-v1",
+  "status": "pre_registered_no_enabling_implementation_no_result"
+}

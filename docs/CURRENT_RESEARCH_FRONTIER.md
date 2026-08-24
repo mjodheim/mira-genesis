@@ -37,7 +37,7 @@ valid result.
 | M100 | **Positive qualified scientific result; H45 supported** | A enabled bounded B acquisition, registered B enabled bounded C acquisition, all three remained live on 9/9 fresh worlds, and 12/12 conditions replayed true | One affine family, authored targets/bounds and fixed generic interpreter |
 | M101 | **Positive qualified scientific result; H46 supported** | A carrier-neutral acquisition from text added reach on all eight held-out text/record/syntax worlds against fresh T0 controls and became a live prerequisite for B; 15/15 conditions replayed true | All carriers/evaluators authored; chain only A → B; no genuine interference or independently maintained domain |
 | M102 | **Positive qualified scientific result; H47 supported** | Observable collisions caused acquisition of generic state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later C scored from real SQLite state; 15/15 conditions replayed true | Hypothesis constructors, tasks, adapters and evaluator remain authored; G4/G5 remain partial |
-| M103 | Selected for pre-registration | Test whether acquired serialized S-prime expands later acquisition reach beyond S0's complete constructive image | No evidence yet; exact protocol and controls must be frozen before implementation/qualification |
+| M103 | **Pre-registered; H48 untested** | Test whether acquired serialized S-prime expands later acquisition reach beyond S0's complete context-invariant image and is reused after producer death | No enabling implementation, qualification pool, frozen executable protocol or evidence yet; all substrates/tasks remain authored |
 
 ## M094 — the original qualified repair anchor
 

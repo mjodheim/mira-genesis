@@ -170,6 +170,11 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   evaluator remain project-authored. G4/G5 remain partial. The next ceiling is that hypothesis
   generation itself is still fixed host machinery; M103 must test a state-owned acquisition
   mechanism improvement that changes later constructive reach versus an otherwise identical S0.
+- **M103 is pre-registered as H48; no enabling implementation or result exists.** The exact M102 U2
+  lineage begins with context-invariant constructor S0. H48 requires an acquired generic serialized
+  S-prime to add constructive reach after producer death in configuration and disposable-filesystem
+  carriers, with fresh/more-budget S0 controls, ambiguity refusal, truthful acquisition/runtime
+  dependency accounting and exact M100-M102 conservation. D072 remains reserved.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and

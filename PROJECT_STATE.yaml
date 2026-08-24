@@ -352,6 +352,37 @@ current_real_software_frontier:
     generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
     generality_gate_5_status: stronger_partial_bounded_interference_evidence
     current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
+  M103:
+    status: pre_registered_no_enabling_implementation_no_result
+    scientific_verdict_exists: false
+    hypothesis: H48
+    hypothesis_status: untested
+    decision_slot: D072
+    decision_slot_filled: false
+    protocol_frozen: false
+    qualification_pool_exists: false
+    canonical_run_allowed: false
+    canonical_run_authorized: false
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    track: A_endogenous_lineage
+    exact_predecessor: M102_U2_attempt_1
+    exact_m102_u2_raw_sha256: 3bad4d5400e8d9a11b15ba596336925823ffb4064a5bbe38f93f64b7384a198d
+    exact_m102_u2_state_digest: fbf7b0232aa8adf4e67513719c63f19f28c1b7e8b86437af1135ff18335d3a0e
+    inherited_constructor_invariant: context_invariant_linear_trace
+    proposed_acquired_mechanism: generic_state_owned_context_conditioned_constructor_extension
+    development_consumer_separation_required: true
+    ambiguity_refusal_required: true
+    planned_later_carriers: [configparser, disposable_filesystem]
+    fresh_and_more_budget_s0_controls_required: true
+    acquisition_dependency_must_be_causal: true
+    runtime_dependency_must_not_be_fabricated: true
+    process_death_required: true
+    exact_m100_m101_m102_conservation_required: true
+    decisive_conditions_planned: 15
+    model_calls_allowed_in_canonical_run: 0
+    network_calls_allowed_in_canonical_run: 0
+    remote_execution_calls_allowed_in_canonical_run: 0
+    current_ceiling: lower_constructor_feature_vocabulary_interpreter_carriers_tasks_and_evaluator_remain_authored
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

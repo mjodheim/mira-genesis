@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- **M103 is pre-registered before enabling implementation.** H48 starts from exact M102 U2 and
+  tests whether a serialized constructor extension S-prime can escape inherited S0's proved
+  context-invariant image, survive producer death and enable later configuration/filesystem
+  acquisitions that otherwise identical S0 controls cannot construct. Ambiguous evidence must
+  refuse; acquisition-time and runtime dependencies are measured separately. No qualification pool,
+  final protocol or result exists.
+
 - **M102 qualifies bounded registry-policy improvement under interference.** The unique authorized
   attempt 1 ran from frozen protocol `59689da6…` and the untouched thirteen-record population
   `3d6785dd…`, with zero model, network or remote-execution calls. The lineage acquired generic
