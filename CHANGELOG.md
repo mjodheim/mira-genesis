@@ -1422,3 +1422,11 @@ this release; the experiment records under `experiments/` were already authorita
 - Added protocols, reports, aggregated results, tests and scripts.
 - Created the state, hypothesis, decision and failure registers.
 - Opened phase M012: autonomous morphogenesis.
+
+## M105 — negative checker-instrument result (2026-08-25)
+
+The unique canonical attempt executed once from frozen protocol `43d270df…` and its first bytes
+(`0ae9c096…`) were preserved and tagged before any checking. The single frozen checker replay then
+exited 1 with `ModuleNotFoundError: No module named 'scripts'` and left P1-P16 uncomputed, so the
+frozen all-true rule makes attempt 1 negative. D074 forbids retry or repair; H50 is unsupported but
+not refuted. This repeats D072's M103 defect, which M104 had closed for its own checker.

@@ -586,6 +586,14 @@
         "results/M032_DEVELOPMENT_BASE.md"
       ]
     },
+    "40841522e860cf952eef5c6e98d0fecbb55eead4": {
+      "subject": "result(m105): preserve the negative canonical checker report",
+      "preserved_by": "experiment/m105-negative-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M105/CHECKER_FAILURE.json"
+      ]
+    },
     "41ebe791605f55e7a44df8f0939d730139cf219a": {
       "subject": "style: normalize pretarget test file",
       "preserved_by": "main",
@@ -1361,6 +1369,14 @@
         "experiments/M095/RESULT.json"
       ]
     },
+    "9568f500a46b35ad34ce8b854a6803f46176ab8c": {
+      "subject": "result(m105): preserve the unique canonical first result",
+      "preserved_by": "experiment/m105-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "958c52fc4e4f47dfdeacd492bb691dded2ede81d": {
       "subject": "feat: add the M082 browser environment under M081's interface",
       "preserved_by": "main",
@@ -1763,6 +1779,14 @@
         "papers/m100-preprint/README.md",
         "papers/m100-preprint/REPRODUCIBILITY.md",
         "papers/m100-preprint/SUBMISSION_METADATA.md"
+      ]
+    },
+    "c49764cd53d28616fab5cd0c59d9fb9e8fc5a953": {
+      "subject": "science(m105): freeze the owner-authorized protocol v2",
+      "preserved_by": "experiment/m105-frozen-protocol-v2",
+      "cited_in": [
+        "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "c603dd52c6484034de3a11a7c3c660335fda14b0": {
