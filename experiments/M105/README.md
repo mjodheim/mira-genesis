@@ -43,6 +43,15 @@ tag, final protocol, freeze tag, runner preflight — and two instrument defects
 before any candidate existed. See `ADVERSARIAL_REVIEW.md`. The canonical `materialize` command was
 not executed in any checkout, so attempt 1 and its outcome remain unconsumed and unknown.
 
+`experiment/m105-frozen-protocol-v1` (protocol `75dea6b7…`, commit `0516f6b`) is **superseded and
+must not be used**. It froze an apparatus whose `test_canonical_entrypoint_refuses_before_final_freeze`
+asserted that `require_frozen` succeeds whenever `PROTOCOL.json` exists. `require_frozen` refuses
+everywhere except the exact freeze commit, on a clean worktree, on the canonical runtime — that is
+its purpose — so both CI test jobs failed on that single test once the protocol existed. No canonical
+attempt was executed under v1 and no scientific record depends on it; the tag is retained as
+provenance only. The v2 apparatus asserts the protocol's content unconditionally and accepts an
+environment-gate refusal off the freeze commit, while treating any content-level refusal as a defect.
+
 The owner-signed chronology is, in order, on a clean worktree at the exact reviewed commit:
 
 1. annotate the reviewed source commit and run `build_m105_protocol.py candidate --source-ref …`;
