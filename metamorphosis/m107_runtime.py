@@ -383,7 +383,7 @@ def _observed_table(demand: dict[str, Any]) -> dict[tuple[bool, bool], bool]:
 
 
 def acquire_operator(
-    state: dict[str, Any], demand: dict[str, Any], *, register_result: bool
+    state: dict[str, Any], demands: Any, *, register_result: bool
 ) -> dict[str, Any]:
     """Search the generic operator space for one that makes the demanded behaviour constructible.
 
@@ -392,14 +392,21 @@ def acquire_operator(
     operator table brings the demanded function inside the complete image.
     """
     state = decode_state(state)
-    demand = decode_operator_demand(demand)
-    observed = _observed_table(demand)
-    complete = len(observed) == len(SIGNAL_ROWS)
-    target = tuple(observed.get(row) for row in SIGNAL_ROWS) if complete else None
+    # One or several demanded behaviours. Several jointly constrain the extension far more than one:
+    # a single behaviour leaves distinct reach classes and must be refused.
+    raw_demands = demands if isinstance(demands, list) else [demands]
+    decoded_demands = [decode_operator_demand(item) for item in raw_demands]
+    observed_tables = [_observed_table(item) for item in decoded_demands]
+    complete = all(len(table) == len(SIGNAL_ROWS) for table in observed_tables)
+    wanted = (
+        [tuple(table.get(row) for row in SIGNAL_ROWS) for table in observed_tables]
+        if complete
+        else []
+    )
 
     base_operators = state["operators"]
     base_image = complete_image(base_operators)
-    already = complete and target in base_image
+    already = complete and all(target in base_image for target in wanted)
 
     survivors: list[dict[str, Any]] = []
     if complete and not already:
@@ -414,12 +421,12 @@ def acquire_operator(
                 continue
             extended = base_operators + [candidate]
             image = complete_image(extended)
-            if target in image:
+            if all(target in image for target in wanted):
                 survivors.append(
                     {
                         "operator": candidate,
                         "image_size": len(image),
-                        "witness": image[target],
+                        "witnesses": [image[target] for target in wanted],
                     }
                 )
 
@@ -436,11 +443,13 @@ def acquire_operator(
 
     report: dict[str, Any] = {
         "schema": "m107-operator-acquisition-v1",
-        "demand_id": demand["demand_id"],
-        "demand_digest": demand["demand_digest"],
-        "observation_rows": len(observed),
+        "demand_ids": [item["demand_id"] for item in decoded_demands],
+        "demand_digests": [item["demand_digest"] for item in decoded_demands],
+        "demand_count": len(decoded_demands),
+        "demanded_targets": [list(target) for target in wanted],
+        "observation_rows": [len(table) for table in observed_tables],
         "observations_complete": complete,
-        "target_already_in_base_image": already,
+        "targets_already_in_base_image": already,
         "base_image_size": len(base_image),
         "operator_space_size": len(operator_space()),
         "operator_space_exhausted": True,
@@ -455,7 +464,7 @@ def acquire_operator(
         return report
     if already:
         report.update({"confirmed": False, "registered": False,
-                       "reason": "demanded_function_is_already_constructible",
+                       "reason": "demanded_functions_are_already_constructible",
                        "next_state": None})
         return report
     if not survivors:
@@ -485,7 +494,7 @@ def acquire_operator(
             "confirmed": True,
             "adopted_operator": adopted,
             "extended_image_size": len(complete_image(extended)),
-            "witness_expression": chosen["witness"],
+            "witness_expressions": chosen["witnesses"],
         }
     )
     if register_result:
