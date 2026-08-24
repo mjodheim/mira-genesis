@@ -207,3 +207,12 @@ execution could not resolve its repository-root `scripts` import. P15 remained u
 frozen rule made the attempt negative. D072 closes M103 without retry. M104 must correct only this
 instrument boundary, use a fresh qualification population and repeat every causal condition under a
 new freeze; a positive successor would not retroactively alter M103.
+
+## M104 — fresh-population instrument successor
+
+M104 is deliberately narrow. It keeps the complete M103 mechanism and predicate meanings unchanged,
+draws no inference from unverified M103 subconditions, authors an entirely fresh complete population,
+and corrects the checker process bootstrap that D072 identified. The exact direct-script entry point
+must be exercised before freeze without opening qualification bytes. Only a new frozen attempt and
+independent replay may support H49. If positive, the next ceiling returns to the authored feature
+vocabulary and lower constructor interpreter; M104 itself removes no mechanism bound.

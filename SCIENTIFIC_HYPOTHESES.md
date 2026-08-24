@@ -1306,3 +1306,20 @@ software carriers. The state-owned extension, not a larger runtime budget, is ca
 adapters, tasks, evaluator and bounds remain authored. This is not self-hosting, recursive or
 open-ended self-improvement, independent task authorship, a closed generality gate, general-agent
 evidence or AGI.
+
+---
+
+## H49 — The unchanged M103 mechanism qualifies under a fresh population and executable checker instrument
+
+Starting again from exact M102 U2, the byte-identical M103 mechanism can acquire and persist generic
+S-prime, use it to acquire configuration D and filesystem E outside S0's complete constructive image,
+and satisfy the unchanged P1-P15 semantics on an entirely fresh population. A corrected checker
+launched through its exact direct-script entry point can independently replay and materialize the
+complete verdict.
+
+**Status:** **PRE-REGISTERED; IMPLEMENTATION AND POOL ABSENT.** M103 remains negative under D072 and
+is not evidence for H49. M104 requires a separate protocol acceptance and one-run authorization.
+
+**Claim ceiling.** A positive M104 would support bounded acquired constructor-reach improvement and
+close only M103's instrument defect. All lower vocabulary, carrier, task, adapter, evaluator and
+budget bounds remain authored; no generality gate closes.

@@ -428,6 +428,25 @@ current_real_software_frontier:
     network_calls_allowed_in_canonical_run: 0
     remote_execution_calls_allowed_in_canonical_run: 0
     current_ceiling: frozen_checker_entry_point_cannot_import_replay_runner_so_mechanism_claim_remains_unresolved
+  M104:
+    status: pre_registered_implementation_and_pool_absent
+    hypothesis: H49
+    hypothesis_status: untested
+    decision_slot: D073
+    decision_slot_filled: false
+    exact_mechanism: M103_frozen_mechanism
+    exact_predecessor: M102_U2_attempt_1
+    m103_result_eligible_as_evidence: false
+    fresh_population_required: true
+    corrected_direct_script_checker_required: true
+    prefreeze_entrypoint_subprocess_test_required: true
+    canonical_attempts_allowed: 1
+    canonical_checker_attempts_allowed: 1
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    model_calls_allowed: 0
+    network_calls_allowed: 0
+    remote_execution_calls_allowed: 0
+    current_ceiling: implementation_and_fresh_pool_not_yet_built
 
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is

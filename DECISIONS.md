@@ -2547,3 +2547,10 @@ mechanism unchanged, but it must freeze a checker entry point that works from a 
 an explicitly controlled import path, exercise that exact command before freeze without touching
 qualification data, and rerun every P1-P15 condition under a new protocol and unique result. A
 positive M104 would close only the M103 instrument defect; it would not retroactively change D072.
+
+## D073 — Reserved for the first frozen M104 attempt
+
+No decision exists. H49 is pre-registered before any M104 pool, runner or checker implementation.
+D073 may be filled only by a new immutable protocol over an entirely fresh population, after owner
+acceptance and separate authorization of one canonical attempt. M103 artifacts and verdict are not
+eligible evidence for D073.

@@ -181,6 +181,13 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   `experiments/M103/CHECKER_FAILURE.json`; M103 is not retried or repaired. D072 requires M104 to
   use a corrected clean-checkout checker entry point, an entirely fresh population and a distinct
   freeze. The mechanism was not falsified, but no M103 subcondition advances a claim or gate.
+- **M104/H49 is pre-registered and not yet implemented.** It is the D072-prescribed successor, not a
+  repair or replay of M103. Exact M103 mechanism and P1-P15 semantics must remain unchanged; M104 may
+  add only a fresh complete qualification population, experiment namespace bindings and a corrected
+  direct-script checker bootstrap tested as a subprocess before freeze without opening qualification
+  data. D073 requires separate owner acceptance and one-run authorization. Even a positive M104
+  would leave the authored constructor vocabulary, lower interpreter, carriers, tasks, adapters,
+  evaluator and bounds as the next ceiling.
 
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
