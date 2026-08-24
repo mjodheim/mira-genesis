@@ -79,12 +79,12 @@ def candidate(source_ref: str) -> dict[str, Any]:
         "decision_slot": "D074",
         "status": "owner_authorized_candidate_not_finally_frozen",
         "candidate_source_ref": source_ref,
-        "predecessor": {
-            "m104_protocol_digest": "b3d8a6b3bc231778ab68bfbbc21f15be6d87a8d4652c8c843ee576cfa499a888",
-            "m104_result_digest": "f2be4d8516207187f0892eb6c8cecd0f648563456f33aa07fe13787b0e867de3",
-        },
-        "qualification_pool_digest": POOL_DIGEST,
-        "qualification_pool_raw_sha256": POOL_RAW_SHA256,
+        "demands_digest": DEMANDS_DIGEST,
+        "demands_raw_sha256": DEMANDS_RAW_SHA256,
+        "initial_operator_table": ["AND", "OR"],
+        "base_image_size": 4,
+        "operator_space_size": 20,
+        "node_bound": 9,
         "lower_substrate": {
             "inputs": 2,
             "operators": ["CONST_FALSE", "CONST_TRUE", "INPUT_0", "INPUT_1", "NOT", "AND", "OR"],
@@ -145,15 +145,12 @@ def final_protocol(candidate_value: dict[str, Any], source_ref: str, freeze_tag:
             "raw_sha256": _sha(CANDIDATE_PATH),
             "candidate_source_ref": candidate_value["candidate_source_ref"],
         },
-        "predecessor": candidate_value["predecessor"],
-        "development_fixture_raw_sha256": candidate_value[
-            "development_fixture_raw_sha256"
-        ],
-        "qualification_pool_digest": candidate_value["qualification_pool_digest"],
-        "qualification_pool_raw_sha256": candidate_value[
-            "qualification_pool_raw_sha256"
-        ],
-        "lower_substrate": candidate_value["lower_substrate"],
+        "demands_digest": candidate_value["demands_digest"],
+        "demands_raw_sha256": candidate_value["demands_raw_sha256"],
+        "initial_operator_table": candidate_value["initial_operator_table"],
+        "base_image_size": candidate_value["base_image_size"],
+        "operator_space_size": candidate_value["operator_space_size"],
+        "node_bound": candidate_value["node_bound"],
         "bound_files": candidate_value["bound_files"],
         "canonical_runtime": candidate_value["canonical_runtime"],
         "decisive_conditions": candidate_value["decisive_conditions"],
