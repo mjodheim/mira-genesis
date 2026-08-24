@@ -64,6 +64,7 @@ MECHANISM_FILES = [
 ]
 
 APPARATUS_FILES = [
+    ".gitattributes",
     "experiments/M103/PRE_REGISTRATION.md",
     "experiments/M103/PROTOCOL_DRAFT.json",
     "experiments/M103/ADVERSARIAL_REVIEW.md",
@@ -110,6 +111,18 @@ def _git_head() -> str:
         text=True,
         check=True,
     ).stdout.strip()
+
+
+def _require_clean_worktree() -> None:
+    status = subprocess.run(
+        ["git", "status", "--porcelain"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout
+    if status:
+        raise RuntimeError("M103 protocol construction requires a clean worktree")
 
 
 def _bound_files(paths: list[str]) -> dict[str, Any]:
@@ -327,6 +340,7 @@ def _base() -> dict[str, Any]:
 
 
 def build_candidate() -> dict[str, Any]:
+    _require_clean_worktree()
     _require_canonical_runtime()
     payload = {
         "schema": "m103-protocol-candidate-v1",
@@ -361,6 +375,7 @@ def build_final(source_commit: str, owner_authorization_reference: str) -> dict[
         raise ValueError("final M103 source commit must equal current owner-reviewed HEAD")
     if not owner_authorization_reference.strip():
         raise ValueError("owner protocol-acceptance reference is required")
+    _require_clean_worktree()
     _require_canonical_runtime()
     candidate = _load_valid_candidate()
     payload = {
@@ -391,12 +406,39 @@ def _write_exclusive(path: Path, value: dict[str, Any]) -> None:
     path.write_bytes(canonical_json(value).encode("ascii"))
 
 
+def _write_candidate(value: dict[str, Any], *, supersede: bool) -> None:
+    if not CANDIDATE_PATH.exists():
+        _write_exclusive(CANDIDATE_PATH, value)
+        return
+    if not supersede:
+        raise FileExistsError(f"refusing to overwrite {CANDIDATE_PATH}")
+    for forbidden in (
+        FINAL_PATH,
+        EXPERIMENT / "RESULT.json",
+        EXPERIMENT / "CHECK_REPORT.json",
+    ):
+        if forbidden.exists():
+            raise RuntimeError(
+                "a frozen protocol or M103 evidence exists; candidate supersession refused"
+            )
+    previous = json.loads(CANDIDATE_PATH.read_text(encoding="ascii"))
+    previous_payload = {
+        key: item for key, item in previous.items() if key != "candidate_digest"
+    }
+    if previous.get("status") != "owner_review_required" or previous.get(
+        "candidate_digest"
+    ) != digest(previous_payload):
+        raise RuntimeError("existing M103 owner-review candidate is not a valid supersedable artifact")
+    CANDIDATE_PATH.write_bytes(canonical_json(value).encode("ascii"))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--candidate", action="store_true")
     mode.add_argument("--final", action="store_true")
     parser.add_argument("--write", action="store_true")
+    parser.add_argument("--supersede-pre-freeze-candidate", action="store_true")
     parser.add_argument("--source-commit")
     parser.add_argument("--owner-authorization-reference")
     parser.add_argument("--i-accept-frozen-protocol", action="store_true")
@@ -413,7 +455,12 @@ def main() -> int:
         )
         target = FINAL_PATH
     if arguments.write:
-        _write_exclusive(target, value)
+        if arguments.candidate:
+            _write_candidate(value, supersede=arguments.supersede_pre_freeze_candidate)
+        else:
+            if arguments.supersede_pre_freeze_candidate:
+                raise ValueError("candidate supersession flag is invalid for final protocol")
+            _write_exclusive(target, value)
     else:
         print(json.dumps(value, indent=2, sort_keys=True))
     return 0

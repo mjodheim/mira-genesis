@@ -1332,3 +1332,20 @@ No M103 behavioral test or P1-P15 condition failed. The integrity checker now re
 M103 capsule/local-test aliases and `author_` entry points. Annotated provenance tag
 `provenance/m103-owner-review-source-v1` preserves the cited source commit, and the citation manifest
 records it. This occurred before protocol acceptance, freeze or canonical execution.
+
+## M103 pre-freeze CI checkpoint — the first owner-review candidate was checkout-dependent
+
+The first PR CI run returned 2,897 passes, 11 expected skips and two failures on Python 3.11. One
+failure was a correct fail-closed refusal: GitHub's CPython 3.11.16 shipped SQLite 3.45.1 rather than
+the canonical SQLite 3.53.1, but the test had incorrectly expected candidate construction to
+succeed. The second failure was decisive for the candidate itself: its predecessor checker raw hash
+named the CRLF Windows working-tree copy (`aadf6971…`), while CI measured the unchanged committed LF
+blob (`5a35f161…`). Further inspection found the same portability defect in retained M100/M101 source
+bindings. The M0* attribute convention no longer matched milestone names beginning at M100.
+
+No final `PROTOCOL.json`, result or checker existed, and the qualification population had not run.
+The first candidate `0a74e8f2…` is therefore superseded before acceptance. M100+ JSON artifacts and
+all M103-bound capsule sources now have explicit stable-byte attributes; `.gitattributes` is itself
+bound; builders require a clean worktree; and non-canonical CI verifies refusal rather than trying to
+construct a different candidate. The population was not altered or redrawn. A replacement owner-
+review candidate must be built from the canonical runtime and pass both CI platforms before freeze.

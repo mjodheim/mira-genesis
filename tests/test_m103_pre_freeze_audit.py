@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts import audit_m103_boundaries as boundary
 from scripts import author_m103_predecessor_conservation as conservation_author
 from scripts import build_m103_protocol as protocol_builder
@@ -30,6 +32,16 @@ def test_predecessor_conservation_fixture_is_exact_and_complete() -> None:
 
 
 def test_protocol_candidate_builder_binds_clean_apparatus_without_arming_run() -> None:
+    canonical_runtime = (
+        protocol_builder._current_python_identity()
+        == protocol_builder.CANONICAL_PYTHON_IDENTITY
+        and protocol_builder._current_sqlite_identity()
+        == protocol_builder.CANONICAL_SQLITE_IDENTITY
+    )
+    if not canonical_runtime:
+        with pytest.raises(RuntimeError, match="requires canonical"):
+            protocol_builder.build_candidate()
+        return
     candidate = protocol_builder.build_candidate()
     assert candidate["schema"] == "m103-protocol-candidate-v1"
     assert candidate["canonical_run_allowed"] is False

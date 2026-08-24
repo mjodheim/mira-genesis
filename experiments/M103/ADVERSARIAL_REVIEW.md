@@ -87,7 +87,20 @@ Correction before freeze: P1/P14/P15 now require isolated predecessor executors,
 imports and aggregated zero external-call counters across every runtime scientific invocation.
 Capsule membership remains digest-bound separately.
 
-None of A1-A7 follows a scientific result. No canonical attempt existed, no qualification verdict
+### A8 — the first owner-review candidate bound checkout-specific bytes
+
+The first CI run after candidate publication found that the candidate bound Windows CRLF working-
+tree bytes for M102's checker and retained M100/M101 sources, while the Linux checkout exposed the
+committed LF bytes. The same run also showed that a test incorrectly expected candidate construction
+to succeed under CI's non-canonical SQLite 3.45.1, even though the builder correctly refused it.
+
+Correction before freeze: the M100+ artifact convention and every source copied into an M103 capsule
+now have explicit byte-stability attributes, the affected clean working-tree files are restored from
+their unchanged committed LF blobs, `.gitattributes` is itself protocol-bound, candidate/final
+construction requires a clean worktree, and non-canonical CI explicitly tests fail-closed behavior.
+The superseded candidate remains in Git history. No population changed and no qualification ran.
+
+None of A1-A8 follows a scientific result. No canonical attempt existed, no qualification verdict
 was observed and the qualification pool was not replaced or redrawn.
 
 ## Shortcut, leakage and authority audit
