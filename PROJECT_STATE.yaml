@@ -594,6 +594,48 @@ current_real_software_frontier:
     lower_interpreter_semantically_complete: true
     current_ceiling: lower_interpreter_extension_requires_a_deliberately_incomplete_substrate
 
+  M107:
+    status: positive_qualified_attempt_1
+    hypothesis: H52
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D076
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_endogenous_extension_of_the_lower_interpreter
+    protocol_digest: 928c49908611a0c2b89a72655273c5c77eaf32a623af0671e741232aa45a2987
+    bound_apparatus_digest: 9d6ec8e753aac8bcdee521e6092e472687c07abdf003b2ffded45072c0cd74f9
+    freeze_tag: experiment/m107-frozen-protocol-v1
+    result_digest: a11d6b3b7c584c135ddbf3a740e72ed876815be99c40fa4bd55d5dd72323b362
+    stable_evidence_digest: 5c6eadfef68db188daf83f3194e8b7e7a1ecbbd1215520d5b6708ee03ae42d2d
+    result_raw_sha256: c4746bb7905af90e8be915e73a66f93ef1b37db1f9b45f2ac036c19f73c85b8a
+    result_tag: experiment/m107-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 0c5f93785f3be96d379ef2fd38b2ce0d7765db6a0f596f363133518a7e99b5b8
+    positive_result_tag: experiment/m107-positive-result
+    predicates_computed: 16
+    predicates_true: 16
+    replay_equal: true
+    base_image_size: 4
+    extended_image_size: 16
+    exclusion_is_budget_independent: true
+    operator_space_size: 20
+    operator_space_exhausted: true
+    single_demand_reach_classes: 2
+    joint_demand_reach_classes: 1
+    adopted_operator_arity: 1
+    ablation_returns_base_image: true
+    rollback_byte_exact: true
+    fresh_control_fails_at_larger_bound: true
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_instrument_defects_corrected: 5
+    recursive_depth_demonstrated: 0
+    acquisition_machinery_modified: false
+    current_ceiling: the_acquisition_machinery_itself_remains_authored
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

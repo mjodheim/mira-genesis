@@ -437,6 +437,15 @@
         "experiments/M073/STATUS.md"
       ]
     },
+    "308b4d99e0bed8d61eceed558805a206b16ae24c": {
+      "subject": "science(m107): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m107-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "312bbb145af6e11473dde5cd21bcb0602ddc41d1": {
       "subject": "docs(m094): record the freeze commit",
       "preserved_by": "main",
@@ -1222,6 +1231,15 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M099/PROTOCOL.json"
+      ]
+    },
+    "8270b7825bbc7af2295da4804fac23d8ebc1e974": {
+      "subject": "result(m107): preserve the unique canonical first result",
+      "preserved_by": "experiment/m107-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "82e0bf9689a30de2f6f7c69fdd42af89b842d6ee": {

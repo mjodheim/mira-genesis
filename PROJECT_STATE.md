@@ -220,6 +220,20 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   Boolean interpreter is **semantically complete** over its two-signal space, so no acquisition here
   can ever extend Boolean reach; the next ceiling needs a deliberately incomplete substrate.
 
+- **M107/H52 is a positive qualified result: the first endogenous extension of the lower
+  interpreter.** Its interpreter holds no operator semantics at all -- operators live in the
+  lineage's own state table. S0 is the monotone fragment, whose complete image is **four of sixteen**
+  and which excludes every non-monotone target by a **monotonicity lemma at every node bound**, not
+  by a search budget. From frozen protocol `928c4990...` the unique attempt produced result
+  `a11d6b3b...`, preserved and pushed before checking; the single checker replay computed **P1-P16
+  all true**, report `0c5f9378...`, replay equal, zero external calls. The lineage proved its own
+  interpreter insufficient, exhausted the generic twenty-operator space, acquired one unary operator
+  as content-addressed state, survived producer death and took `complete_image` from **4 to 16**.
+  Ablation returns it to exactly 4 with a byte-identical S0; fresh controls fail at bound 9 and again
+  at 13. Observing one demand alone leaves two reach classes and is refused -- pre-registered as P4.
+  D076 records it. This is **not** recursive self-improvement: one operator, acquired once, from a
+  space the host codes. The **acquisition machinery** remains authored and is the next ceiling.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its

@@ -1438,3 +1438,11 @@ were preserved and pushed before any checking, and the single checker replay com
 true (`76299018…`) with replay equality and zero external calls. The mechanism module
 `metamorphosis/m105_runtime.py` was imported unchanged and the target semantic was fixed before
 implementation, so H51 replicates the question M105 could never evaluate. D075; M105 stays negative.
+
+## M107 - positive qualified interpreter extension (2026-08-25)
+
+The first Genesis result in which an acquisition changes what the lower interpreter can express.
+From frozen protocol `928c4990...` the unique attempt produced `a11d6b3b...`, preserved before
+checking; the single checker replay computed P1-P16 all true (`0c5f9378...`). `complete_image` goes
+4 -> 16 by one acquired unary operator held as lineage state, with the exclusion proved by a
+monotonicity lemma rather than a search bound. D076. Recursive depth remains zero.
