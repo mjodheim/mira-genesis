@@ -413,10 +413,17 @@ def _widened_then_extended(
 def component_trial(
     state: dict[str, Any], demand: dict[str, Any], max_nodes: int = MAX_EXPRESSION_NODES
 ) -> dict[str, Any]:
-    """Extend each registered component in turn and record which one resolves this demand.
+    """Which single component must be extended for this demand to become constructible?
 
-    The procedure is identical for every component and reads no host annotation. A demand that more
-    than one component resolves is unusable as evidence and is reported as such rather than assigned.
+    The test is **necessity**, not sufficiency, and the rule is uniform across the registry: a
+    component counts when extending it turns an unconstructible demand constructible and no smaller
+    extension already reached it. That asymmetry is real and is declared rather than hidden: widening
+    the candidate space is a no-op unless the operator search that follows finds something the
+    narrower space did not, so the candidate space counts only where the current space is already
+    exhausted for this demand.
+
+    No host annotation is read. A demand that more than one component resolves under this rule is
+    unusable as evidence and is reported as such rather than assigned to one of them.
     """
     wanted = demand_target(demand)
     outcomes: dict[str, bool] = {}
@@ -440,6 +447,8 @@ def component_trial(
         "determined": len(resolving) == 1,
         "component": resolving[0] if len(resolving) == 1 else None,
         "label_source": "lineage_component_trial",
+        "semantics": "minimal_necessary_component",
+        "components_examined": sorted(COMPONENTS),
     }
 
 
