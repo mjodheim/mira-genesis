@@ -1,0 +1,6 @@
+# Per-directory attributes so a milestone can pin its own bytes without editing a file an
+# earlier frozen protocol already bound. The root .gitattributes is bound by M105 and M106; editing
+# it to pin M107 broke M106's binding and made its freeze unverifiable. Milestone-local attribute
+# files decouple that permanently.
+*.md text eol=lf
+*.json -text

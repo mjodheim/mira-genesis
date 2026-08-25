@@ -21,7 +21,12 @@ EXPECTED_PREDICATES = [f"P{index}" for index in range(1, 17)]
 
 APPARATUS_FILES = sorted(
     {
-        ".gitattributes",
+        # Milestone-local attribute files, not the root .gitattributes: the root is bound by M105
+        # and M106, so pinning M107 there would break their frozen bindings permanently.
+        "experiments/M107/.gitattributes",
+        "metamorphosis/.gitattributes",
+        "scripts/.gitattributes",
+        "tests/.gitattributes",
         "experiments/M107/README.md",
         "experiments/M107/PRE_REGISTRATION.md",
         "experiments/M107/ADVERSARIAL_REVIEW.md",
