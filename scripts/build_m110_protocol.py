@@ -39,6 +39,7 @@ APPARATUS_FILES = sorted(
         "experiments/M110/README.md",
         "experiments/M110/PRE_REGISTRATION.md",
         "experiments/M110/ADVERSARIAL_REVIEW.md",
+        "experiments/M110/PRE_FREEZE_REHEARSAL.md",
         "experiments/M110/POPULATION.json",
         "experiments/M110/ADMISSION_LOG.json",
         # The producer bytes the restored cascade is read from.
