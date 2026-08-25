@@ -1,0 +1,7 @@
+# Per-directory attributes owned by M108. The root .gitattributes is bound by M105 and M106, and
+# metamorphosis/, scripts/ and tests/ each carry an attribute file bound by M107, so no earlier
+# frozen protocol can be edited to pin M108. This file is new, M108 binds it, and nothing else
+# depends on its bytes. Sources outside this directory are bound by LF-normalized content instead;
+# see scripts/build_m108_protocol.py.
+*.md text eol=lf
+*.json -text

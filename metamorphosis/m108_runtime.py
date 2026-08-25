@@ -796,3 +796,50 @@ def structural_exclusion_certificate(target: Iterable[bool], width: int) -> dict
         and certificate["depends_on_unread_signal"]
     )
     return certificate
+
+
+def is_monotone(table: Iterable[bool], width: int) -> bool:
+    """Raising any signal never lowers the output. M107's lemma, generalized to the width."""
+    rows = rows_for_width(width)
+    values = list(table)
+    for i, row_i in enumerate(rows):
+        for j, row_j in enumerate(rows):
+            if all(a <= b for a, b in zip(row_i, row_j)) and values[i] and not values[j]:
+                return False
+    return True
+
+
+def monotone_exclusion_certificate(
+    state_operators: Iterable[dict[str, Any]],
+    target: Iterable[bool],
+    width: int = WORLD_SIGNAL_WIDTH,
+    max_nodes: int = MAX_EXPRESSION_NODES,
+) -> dict[str, Any]:
+    """The target is outside this image for every node bound, because monotone operators compose.
+
+    This is the second, independent half of B's exclusion: even a lineage whose interface already
+    read every signal of the world could not build B while its operator table stayed monotone.
+    """
+    operators = list(state_operators)
+    wanted = tuple(bool(value) for value in target)
+    image = expression_image(operators, width, max_nodes)
+    all_operators_monotone = all(expr._operator_is_monotone(item) for item in operators)
+    image_all_monotone = all(is_monotone(table, width) for table in image)
+    target_monotone = is_monotone(wanted, width)
+    lemma = bool(all_operators_monotone and image_all_monotone and not target_monotone)
+    certificate: dict[str, Any] = {
+        "schema": "m108-monotone-exclusion-v1",
+        "target": list(wanted),
+        "width": width,
+        "max_nodes": max_nodes,
+        "image_size": len(image),
+        "target_in_image": wanted in image,
+        "target_is_monotone": target_monotone,
+        "every_operator_is_monotone": all_operators_monotone,
+        "complete_image_is_monotone": image_all_monotone,
+        "excluded_by_monotonicity_lemma": lemma,
+        "budget_independent": lemma,
+    }
+    certificate["confirmed"] = bool(not certificate["target_in_image"] and lemma)
+    certificate["certificate_digest"] = digest(certificate)
+    return certificate
