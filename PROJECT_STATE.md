@@ -251,6 +251,25 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   budget. Ablation is a byte-exact rollback. D077 records it. Recursive depth of **two** remains
   unmeasured, and the blame labels remain authored supervision.
 
+- **M109/H54 is a positive qualified result: a modified machinery produces the next
+  modification.** M108's blame labels were authored and it had one generation; M109 removes both. The
+  lineage determines each label by a controlled trial on itself -- extend each registered component,
+  observe which extension resolves the demand -- and there is no episodes fixture. A third registered
+  component, the **candidate space**, is closed by the monotonicity lemma when restricted to the
+  monotone operators, which makes a second generation structurally possible. From frozen protocol
+  `8e76b30f...` at freeze commit `0a01b26` the unique attempt produced result `262e0bd5...`,
+  committed at `31068b7`, preserved and pushed before checking; the single checker replay computed
+  **P1-P18 all true**, report `ff167573...`, replay equal, zero external calls across twenty-one
+  isolated processes, and the stable projection is byte-identical to the pre-freeze rehearsal's. The
+  hardwired lineage refuses stage one *with progress still available* on the only axis it can name,
+  and refuses again at bound 13. Generation 1 attributes to the signal interface and resolves stage
+  one; stage two is revealed only then; generation 2 attributes to the candidate space and resolves
+  it. `ReachImprove` is **6 subset 20 subset 243**, strict at both inclusions. A fresh `M0` handed
+  stage two's record is refused with **zero** consistent rules, by the monotonicity lemma applied to
+  the attribution cascade -- which contradicts what the pre-registration predicted and was recorded
+  as a correction before the freeze. D078. Recursive depth of **three** and **acceleration** remain
+  unmeasured, and the registry, feature vocabulary and curriculum remain authored.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its

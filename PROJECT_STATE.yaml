@@ -697,6 +697,75 @@ current_real_software_frontier:
     recursive_depth_demonstrated: 1
     current_ceiling: recursive_depth_of_two_requires_a_second_machinery_generation
 
+  M109:
+    status: positive_qualified_attempt_1
+    hypothesis: H54
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D078
+    decision_slot_filled: true
+    verdict: positive
+    claim: two_successive_lineage_acquired_machinery_generations_with_a_strict_reach_chain
+    protocol_digest: 8e76b30fe8ad645d2b695a372525462d27f66990a9f8d264411c0b2ed8c75178
+    bound_apparatus_digest: 5d5dfac1dd082c9080c9571679e0e9c8c9fe1bd3f1010a4aaa2c203794580272
+    bound_member_digest_modes: [raw, lf_normalized]
+    freeze_tag: experiment/m109-frozen-protocol-v1
+    result_digest: 262e0bd5b67b573a01f00293ec1fef79da94908819006f08acb8bd30d6941f09
+    stable_evidence_digest: 0c6ad0c2930f8dd25b8ccf2e9692615845c4326da109d752672dc7f989e1a576
+    result_raw_sha256: 0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009
+    result_tag: experiment/m109-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: ff1675738b6aabc358d2cfb568d93dec396c7beff8b8b68e14c09ecc011ea24a
+    positive_result_tag: experiment/m109-positive-result
+    predicates_computed: 18
+    predicates_true: 18
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    component_registry: [operator_table, signal_interface, candidate_space]
+    blame_labels_are_lineage_determined: true
+    trial_semantics: minimal_necessary_component
+    trials_at_resolution_time: 0
+    episodes_fixture_exists: false
+    attribution_domain_rows: [1, 2, 3, 6, 7]
+    attribution_domain_unreachable_rows: [0, 4, 5]
+    attribution_domain_ambiguous_rows: []
+    attribution_domain_census_states: 84
+    attribution_domain_census_pairs: 10496
+    monotone_candidate_space_closed_by_lemma: true
+    machinery_generations: 2
+    generation_one_component: signal_interface
+    generation_two_component: candidate_space
+    generation_one_consistent_rules: 2
+    generation_two_consistent_rules: 2
+    rule_space_size: 18
+    surviving_rule_classes_each_generation: 1
+    adoption_is_conservative: true
+    reach_improve_m0: 6
+    reach_improve_m1: 20
+    reach_improve_m2: 243
+    reach_chain_strict: true
+    gained_by_generation_one: 14
+    gained_by_generation_two: 223
+    handed_counterfactual_outcome: no_expressible_rule_reproduces_the_trial_record
+    handed_counterfactual_consistent_rules: 0
+    dependency_between_generations: monotonicity_lemma_on_the_attribution_cascade
+    baseline_fails_at_larger_bound: true
+    ablation_returns_to_state_before_generation_two: true
+    rollback_byte_exact: true
+    corruption_fails_closed: true
+    curriculum_boundary_measured_in_three_directions: true
+    isolated_processes: 21
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 3
+    registry_feature_vocabulary_and_curriculum_remain_authored: true
+    conservative_adoption_is_load_bearing_for_the_positive_half: true
+    recursive_depth_demonstrated: 2
+    acceleration_measured: false
+    current_ceiling: recursive_depth_of_three_and_measured_acceleration
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

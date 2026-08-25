@@ -503,6 +503,15 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   for any operator set, and outside the monotone image at full width by the lemma. P1-P16 all
   computed true, replay equal. D077. Recursive depth of two remains unmeasured.
 
+- **M109 - two successive machinery generations: POSITIVE.** The first result in which a modified
+  acquisition machinery produces the next modification, and in which the blame labels are the
+  lineage's own experimental findings rather than host annotations. A third component, the candidate
+  space, is closed by the monotonicity lemma when restricted to the monotone operators. Generation 1
+  attributes to the signal interface, generation 2 to the candidate space, and `ReachImprove` is
+  6 subset 20 subset 243, strict at both inclusions. A fresh lineage handed the second generation's
+  record is refused with zero consistent rules, by lemma. P1-P18 all computed true, replay equal.
+  D078. Recursive depth of three and acceleration remain unmeasured.
+
 M095, M098, M103 and M105's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.
 
