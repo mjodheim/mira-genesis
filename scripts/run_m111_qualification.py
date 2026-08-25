@@ -505,6 +505,22 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                         isolated.append(report)
                         diagnostic[force][order][seq] = _sequence_summary(report)
 
+            # ---- ablation of generation three -------------------------------------------------
+            ablated_state = runtime.create_state(
+                g3["machinery_state"], g3["consumer_state"],
+                policy=None, probe_budget=g3["probe_budget"],
+            )
+            ablation = _run(
+                _build_capsule(
+                    base, tag + "-ablate-three",
+                    {"WORLD.json": world_bytes,
+                     "STATE.json": runtime.encode_state(ablated_state),
+                     "DEMANDS.json": sequence_bytes["determined_then_B"]},
+                ),
+                "sequence",
+            )
+            isolated.append(ablation)
+
             # ---- mutation and corruption -----------------------------------------------------
             mutated_policy = copy.deepcopy(g3["policy"])
             mutated = runtime.create_state(
@@ -558,6 +574,14 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                     "probe_rollback": rollback_run.get("probe_rollback"),
                     "static_arms": static,
                     "diagnostic": diagnostic,
+                    "ablation": {
+                        "generation_three_removed": _sequence_summary(ablation),
+                        "removal_returns_to_m2_byte_exactly": runtime.encode_state(
+                            ablated_state
+                        )
+                        == arm_bytes["M2"],
+                        "ablated_state_digest": ablated_state["state_digest"],
+                    },
                     "mutation": _sequence_summary(mutation),
                     "corruption": corruption.get("corruption"),
                 }

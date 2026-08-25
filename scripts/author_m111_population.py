@@ -33,7 +33,7 @@ DEFAULT_COUNT = 5
 # The row the criterion requires to be undetermined, and the rows it requires to be determined. Which
 # components any of them resolve through is measured later and is never required here.
 AMBIGUOUS_ROW = 3
-DETERMINED_ROWS = (1, 5, 7)
+DETERMINED_ROWS = (1, 7)
 
 
 def generate_world(tag: str, seed: int) -> dict[str, Any]:
@@ -51,14 +51,17 @@ def generate_world(tag: str, seed: int) -> dict[str, Any]:
 
 
 def admit(world: dict[str, Any]) -> dict[str, Any]:
-    """Structure only. Ambiguity is required; which components produce it is not."""
-    census = consumer.attribution_census(world)
+    """Structure only. Ambiguity is required; which components produce it is not.
+
+    Row 7 is required because it is what the expressibility lemma needs: row 3 lies below row 7
+    componentwise, so a record holding both is what forces a policy out of the monotone language. A
+    record holding only rows 1 and 3 would be satisfiable monotonically and would test nothing.
+    """
+    survey = runtime.base_state_survey(world)
     reasons = []
-    if not census["census_complete"]:
-        reasons.append("census_incomplete")
-    if census["ambiguous_rows"] != [AMBIGUOUS_ROW]:
+    if survey["ambiguous_rows"] != [AMBIGUOUS_ROW]:
         reasons.append("the_ambiguous_row_is_not_the_declared_one")
-    missing = [row for row in DETERMINED_ROWS if str(row) not in census["canonical_targets"]]
+    missing = [row for row in DETERMINED_ROWS if row not in survey["determined_rows"]]
     if missing:
         reasons.append("required_determined_rows_absent_at_base_state")
     pair = runtime.ambiguous_pair(world, AMBIGUOUS_ROW) if not reasons else None
@@ -68,8 +71,8 @@ def admit(world: dict[str, Any]) -> dict[str, Any]:
         "world_id": world["world_id"],
         "admitted": not reasons,
         "reasons": reasons,
-        "rows": census["rows"],
-        "ambiguous_rows": census["ambiguous_rows"],
+        "rows": survey["rows"],
+        "ambiguous_rows": survey["ambiguous_rows"],
         "missing_determined_rows": missing,
     }
 

@@ -565,6 +565,41 @@ def acquire_policy(
 # ----------------------------------------------------------------------------------------
 
 
+def base_state_survey(
+    world: dict[str, Any], max_nodes: int = MAX_EXPRESSION_NODES
+) -> dict[str, Any]:
+    """Which rows arise at the base state, and which of them carry more than one component.
+
+    The demands are posed at the base state, so base-state structure is what admission needs. The
+    full four-state census still runs inside the experiment and is what P6 is computed from; this is
+    a cheaper view of the same trial, not a different one.
+    """
+    state = consumer.create_state()
+    image = consumer.state_image(state, world, max_nodes)
+    labels: dict[int, set[str]] = {}
+    counts: dict[int, int] = {}
+    least: dict[int, tuple[int, ...]] = {}
+    for values in itertools.product(consumer.VALUES, repeat=consumer.DOCUMENT_COUNT):
+        if values in image:
+            continue
+        trial = consumer.component_trial(state, world, values, max_nodes)
+        if not trial["determined"]:
+            continue
+        row = consumer.failure_features(state, world, values, max_nodes)["row_index"]
+        labels.setdefault(row, set()).add(trial["component"])
+        counts[row] = counts.get(row, 0) + 1
+        if row not in least or values < least[row]:
+            least[row] = values
+    return {
+        "schema": "m111-base-state-survey-v1",
+        "rows": sorted(labels),
+        "ambiguous_rows": sorted(row for row, found in labels.items() if len(found) > 1),
+        "determined_rows": sorted(row for row, found in labels.items() if len(found) == 1),
+        "row_counts": {str(row): counts[row] for row in sorted(counts)},
+        "least_targets": {str(row): list(least[row]) for row in sorted(least)},
+    }
+
+
 def ambiguous_pair(
     world: dict[str, Any], row: int = 3, max_nodes: int = MAX_EXPRESSION_NODES
 ) -> dict[str, Any] | None:

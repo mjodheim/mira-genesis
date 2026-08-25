@@ -139,7 +139,7 @@ P1–P24, computed by an independent checker from the preserved result.
 | P17 | the diagnostic lineage resolves both `A` and `B` on every world, in both demand orders |
 | P18 | never-probe fails the ambiguous demand in both orders |
 | P19 | always-probe fails the ambiguous demand when the determined demand comes first, in both probe orders, on the same total budget |
-| P20 | probe counts are equal between the diagnostic arm and the fixed probe arms |
+| P20 | every arm starts from the same probe budget, and the diagnostic arm never spends more probes than the always-probe arm |
 | P21 | ablation of generation 3 is byte-exact and loses exactly the ambiguous demand |
 | P22 | mutation of the acquired policy changes behaviour causally; corruption fails closed |
 | P23 | earlier capabilities are conserved: every demand `M2` resolved is still resolved |
@@ -186,6 +186,13 @@ let a reader believe the control fails for a reason of principle. It does not: i
 spends a scarce budget on the first demand it meets. Both orders are run and both are reported, so
 the control's order-dependence is visible instead of hidden, and the acquired policy's
 order-independence is a measurement rather than a claim.
+
+**Correction 4 — P20 as first written was false.** It said probe counts are equal between the
+diagnostic arm and the fixed probe arms. The never-probe arm spends zero by construction, so no
+run could ever satisfy that, and a predicate that cannot be true is as useless as one that cannot
+be false. What the equalization claim actually needs is that no arm is handed a larger budget and
+that the diagnostic arm does not buy its result with extra experiments. P20 now states exactly
+that, and it is stated before any protocol exists.
 
 ## What a positive M111 would not license
 
