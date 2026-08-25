@@ -89,9 +89,11 @@ def audit_population(path: Path) -> dict[str, Any]:
     for key in ("row_labels", "canonical_targets", "census", "pair", "policy", "episodes"):
         if key in payload:
             findings.append({"kind": "answer_bearing_key", "detail": key})
-    own = {item.get("world_digest") for item in payload.get("worlds", [])} | {
-        payload.get("population_digest")
-    }
+    # The population is two strata. An earlier version read only `worlds` and therefore flagged
+    # every world identity in the file as foreign, which is a defect in the audit rather than a leak.
+    own = {payload.get("population_digest")}
+    for key in ("worlds", "ambiguous_worlds", "witness_worlds"):
+        own |= {item.get("world_digest") for item in payload.get(key, [])}
     for match in DIGEST_PATTERN.findall(raw):
         if match not in own:
             findings.append({"kind": "foreign_digest", "detail": match})

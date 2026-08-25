@@ -25,9 +25,23 @@ canonical interpreter over the same population and apparatus.
 | predicted verdict | positive, P1–P24 all computed true |
 | replay | performed and equal |
 
-**Predicted stable evidence digest:** recorded in the commit that adds this line, before the freeze
-commit and before any canonical attempt. A discrepancy at the canonical run is evidence, not
-something to reconcile.
+| **predicted stable evidence digest** | `f77c8b8930e8568dd0f91362b3879e15e5ee5e2faa752367c4671ab4230f327e` |
+
+The rehearsal ran the whole canonical path in a foreign CRLF clone over this exact population and
+returned **P1-P24 all computed true, replay performed and equal**. A discrepancy at the canonical run
+is evidence, not something to reconcile.
+
+## What the rehearsal found wrong, before the freeze
+
+**The boundary audit read a schema that no longer existed.** It collected world identities from
+`population["worlds"]`, which the two-stratum file does not have, so every one of the five world
+digests came back flagged as a foreign digest. That is a defect in the audit rather than a leak in
+the population, and it is exactly the kind of thing a dress rehearsal exists to surface: the audit
+had passed earlier only because the population file did not exist yet. Repaired before the freeze,
+and the audit now confirms in all five directions.
+
+The stable evidence digest above is unaffected: the audit is not on the path `run_experiment` takes,
+so the prediction stands as measured.
 
 ## What the development rehearsal already measured
 
