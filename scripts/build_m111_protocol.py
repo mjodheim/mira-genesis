@@ -121,7 +121,12 @@ def candidate(source_ref: str, authorization: dict[str, Any]) -> dict[str, Any]:
         "status": "owner_authorized_candidate_not_finally_frozen",
         "candidate_source_ref": source_ref,
         "population_digest": population["population_digest"],
-        "population_world_digests": [item["world_digest"] for item in population["worlds"]],
+        "population_ambiguous_world_digests": [
+            item["world_digest"] for item in population["ambiguous_worlds"]
+        ],
+        "population_witness_world_digests": [
+            item["world_digest"] for item in population["witness_worlds"]
+        ],
         "predecessors": {
             "machinery": {
                 "milestone": "M109",
@@ -270,7 +275,12 @@ def final_protocol(
             "candidate_source_ref": candidate_value["candidate_source_ref"],
         },
         "population_digest": candidate_value["population_digest"],
-        "population_world_digests": candidate_value["population_world_digests"],
+        "population_ambiguous_world_digests": candidate_value[
+            "population_ambiguous_world_digests"
+        ],
+        "population_witness_world_digests": candidate_value[
+            "population_witness_world_digests"
+        ],
         "predecessors": candidate_value["predecessors"],
         "registry": candidate_value["registry"],
         "impossibility": candidate_value["impossibility"],
