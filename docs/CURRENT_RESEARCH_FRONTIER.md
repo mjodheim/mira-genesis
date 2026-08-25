@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 24 August 2026**
+**Reader-facing status snapshot — 25 August 2026**
 
 This document explains where the active research line stands now and what the next milestones are
 trying to establish. It is a navigation and interpretation layer, not a replacement for frozen
@@ -44,6 +44,7 @@ valid result.
 | M107 | **Positive qualified; H52 supported in bounds** | The interpreter holds no operator semantics; S0's complete image is 4 of 16 and excludes both targets by a monotonicity lemma at every bound; one acquired unary operator, registered as state, takes the image to 16 and survives producer death | First endogenous interpreter extension. Recursive depth zero: the acquisition machinery, candidate space, demands and evaluator remain authored |
 | M108 | **Positive qualified; H53 supported in bounds** | The attribution rule the acquisition machinery uses is held as lineage state and expressed in the lineage's own language; the monotone rule space holds zero consistent rules so M107's acquisition is a proved precondition; `M1` attributes to the signal interface and builds `B`, `M0` exhausts twenty operators and refuses at two bounds | First modification of the acquisition machinery. Recursive depth of two unmeasured; blame labels are authored supervision and `B`'s feature row is one the episode set covers |
 | M109 | **Positive qualified; H54 supported in bounds** | The lineage determines its own blame labels by controlled trial; a third component, the candidate space, is closed by the monotonicity lemma; two successive generations attribute to different components and ReachImprove is 6 ⊂ 20 ⊂ 243, strict; a lineage handed the second record is refused with zero consistent rules, by lemma | First machinery that produces the next machinery. Depth three and acceleration unmeasured; registry, feature vocabulary and curriculum remain authored; conservative adoption is load-bearing for the positive half |
+| M110 | **Positive qualified in both halves; H55 supported in bounds** | The M109 cascade, restored from the producer's frozen bytes and executed by `m109_runtime.attribute` unchanged, transfers into reference-bearing JSON records over a four-valued chain: inside the producer's reachable census `M0` 0/6 and `M1`/`M2` 6/6 at row 7, `M2` alone 6/6 at row 3; **outside it, at row 5, `M0` is 6/6 while `M1` and `M2` are 0/6**. `ReachImprove` strict on every world | Capacity rises while realized competence does not. The consumer family is project-authored and was chosen to reach row 5, so G4 does not advance; registry and feature vocabulary stay shared authored vocabulary |
 
 ## M094 — the original qualified repair anchor
 
@@ -324,6 +325,51 @@ project-authored carrier alone cannot close G4.
 That still would not by itself establish AGI or open-ended evolution. General-agent claims are
 governed separately by `MIRA_GENERALITY_CRITERIA.md`, which requires cross-domain evidence,
 long-horizon autonomy, external/private evaluation, independent reproduction and adversarial audit.
+
+## M110 — how far the acquired machinery actually reaches
+
+M109 left one objection standing, and it was not "can it do it a third time?". It was **"the mechanism
+works because the laboratory was built for it."**
+
+M110 attacks that and only that. It restores the M109 rule cascade from the producer's frozen result
+bytes, verifies it reproduces the recorded `M0`, `M1` and `M2` state digests, binds the raw SHA-256
+of those bytes into the checker so a functionally equivalent rebuild would fail, and executes
+attribution with `m109_runtime.attribute` itself.
+
+The consumer family is materially different: JSON documents over the chain `0 < 1 < 2 < 3`, where a
+document's latent field lives in a *different* document reached by following its reference, and
+expressions are rendered as Python source, compiled and executed. That reference edge is the whole
+design. In the producer's prefix-truncated world `g0 implies g1` — a signal the interface cannot read
+is a signal no operator can recover. A reference breaks that implication, and feature row 5 becomes
+reachable where it was structurally impossible before.
+
+Conservative adoption pins an acquired rule only on rows the producer's census declares reachable, so
+**row 5 was never pinned** — yet generation 1's adopted rule is the program `g0 and g2`, and a program
+has a value everywhere.
+
+```text
+                              M0      M1      M2      ground truth
+row 7, inside the census     0/6     6/6     6/6      signal interface
+row 3, inside the census     0/6     0/6     6/6      candidate space
+row 5, OUTSIDE the census    6/6     0/6     0/6      operator table
+row 1, conservation          6/6     6/6     6/6      operator table
+
+ReachImprove strict on every world:  M0 94-261  <  M1 134-449  <  M2 324-558
+```
+
+Both halves were pre-registered as hypotheses, and both hold with no world dissenting.
+
+This is the first Genesis result in which **capacity rises across the generational chain while
+realized competence does not**, and the first in which an acquired improvement is measured doing
+harm: on a failure geometry its producer could not present, the improved machinery misroutes the
+single step it is allowed and ends strictly worse than the predecessor it improved on.
+
+What it does not establish: the consumer family is project-authored, not independently maintained,
+and was **chosen** to reach row 5. **G4 does not advance.** The registry and the three-feature
+vocabulary are shared authored vocabulary on both sides. Recursive depth of three and acceleration
+remain unmeasured.
+
+Authoritative material: `experiments/M110/`, `scripts/check_m110_result.py`, D079 and PR #208.
 
 ## What the project does not currently claim
 
