@@ -2887,3 +2887,117 @@ Recursive depth of two. `M1`'s improved machinery must itself acquire a **furthe
 improvement that `M0` could not acquire, with `ReachImprove(M0) ⊂ ReachImprove(M1) ⊂
 ReachImprove(M2)`, and the second acquisition must be enabled *because of* the first. Until that is
 closed, no result may be described as recursive self-improvement.
+
+## D078 — M109 qualifies two successive machinery generations over a self-determined blame record
+
+### The decision
+
+M109 attempt 1 is a **positive qualified result**, and H54 is supported within its frozen bounds. The
+unique canonical runner executed exactly once from frozen protocol `8e76b30f…` on the canonical
+CPython 3.11.16 runtime, at freeze commit `0a01b26` on a clean worktree, and produced result
+`262e0bd5…`, stable evidence `0c6ad0c2…`, raw bytes `0af98fb4…`. Those first bytes were committed at
+`31068b7`, tagged `experiment/m109-canonical-first-result` and **pushed before any checker ran**. The
+single frozen checker replay then computed **P1-P18 all true**, report `ff167573…`, replay equal,
+with zero model, network and remote-execution calls across twenty-one isolated processes.
+
+The stable projection is byte-identical to the one the pre-freeze rehearsal produced in a throwaway
+clone that received the sources with CRLF, so the evidence carries no accident of the machine that
+ran it.
+
+### What is new here, and why M108 could not have shown it
+
+M108 qualified **one** lineage-acquired modification of the acquisition machinery, and conceded two
+limits before its freeze: the attribution episodes carried **authored blame labels**, and there was
+exactly one generation.
+
+Both are removed.
+
+**The labels are the lineage's own experimental findings.** In a learning phase it runs a controlled
+trial on itself — extend each registered component in turn, observe which extension resolves the
+demand. The test is necessity rather than sufficiency, declared as `minimal_necessary_component`, and
+that asymmetry is recorded rather than hidden: widening the candidate space is a no-op unless the
+operator search that follows finds something the narrower space did not. There is no episodes
+fixture, and the input preflight asserts its absence.
+
+**A third registered component makes a second generation possible.** The **candidate space** — which
+operators the machinery may consider adopting — is, when restricted to the monotone operators,
+*closed*: every operator table reachable through it keeps the image monotone. A non-monotone demand
+is therefore excluded from the operator axis by the same lemma M107 and M108 used, at every node
+bound, and widening the space is a machinery act structurally distinct from extending the table.
+
+```
+M0  {AND, OR}, width 2, monotone space, attribution hardwired; reach 4
+  stage one: refuses -- and g2 is TRUE at that failure, so the only axis it can
+             name still offered progress. Refuses again at bound 13.
+  trial -> signal interface, by the lineage's own experiment
+  generation 1: 2 consistent rules of 18, one class
+M1  resolves stage one, width 2 -> 3, witness five nodes, executes to target
+  stage two, revealed only now: M1 falls back to the hardwired axis and refuses
+  trial -> candidate space
+  generation 2: 2 consistent, one class, rule distinct from generation 1
+M2  resolves stage two, monotone -> complete, witness four nodes, executes
+
+ReachImprove(M0) = 6  <  ReachImprove(M1) = 20  <  ReachImprove(M2) = 243
+                        strict at both inclusions, +14 then +223
+```
+
+### The dependency is a lemma, not a failed search
+
+A fresh `M0` **handed** stage two's record from outside is refused, with **zero** consistent rules.
+Feature row 3 lies below row 7 componentwise, so every monotone program true at row 3 is true at row
+7, and none of the eighteen programs the lineage can express targets the candidate space without also
+targeting the signal interface. Generation 2 becomes expressible only once generation 1 has claimed
+row 7.
+
+This is the monotonicity lemma applied one level up — to the attribution cascade rather than to the
+operator table. It contradicts what the first draft of the pre-registration predicted, which expected
+that counterfactual to *succeed* and the claim to be bounded to within the lineage's own operation.
+The correction was recorded before the freeze, and the counterfactual remained a **measurement**
+whose outcome is carried in the check report itself.
+
+### The attribution domain
+
+A complete census over the declared probe family — every operator table one candidate addition away
+from the initial one, at both interface widths, under both candidate spaces, 84 states — against all
+256 world functions, 10 496 determined pairs. Rows 1, 2, 3, 6, 7 are reachable while attributing;
+rows 0, 4, 5 are not. **No row carries more than one label**, which is what makes a rule derivable at
+all.
+
+### The controls
+
+Ablation of generation 2 is a byte-exact return to the state held before it, and stage two is lost.
+Mutation changes attribution and stage two is lost. Corruption fails closed. A record naming two
+components is refused; a record with nothing left uncovered is refused. Producer capsules held no
+demand at all, stage-one capsules held only the first demand and stage-two capsules only the second,
+and all three directions were measured.
+
+### What this establishes
+
+**Two successive lineage-acquired machinery generations with a strict improvement-reach chain.**
+Within a frozen bounded environment, a modification the lineage acquired to its own acquisition
+machinery enabled a second, distinct machinery modification that the unmodified lineage could not
+have reached, and the improvement-reach of the three successive machineries is strictly increasing.
+This is the first Genesis result in which a modified machinery produces the next modification, and in
+which the blame labels are the lineage's own findings rather than host annotations.
+
+### What it does not establish
+
+Recursive depth of three or more; measured recursive acceleration; autonomous invention of the
+component registry, the feature vocabulary or the curriculum; open-ended machinery growth; transfer
+to an independently maintained domain; G1-G10 closure; general-agent evidence; self-hosting; AGI.
+
+Three limits are **conceded and were declared inside the frozen protocol** before any result existed.
+The registry, feature vocabulary and staged curriculum remain authored. The trial's asymmetry between
+components is real. And **conservative adoption is load-bearing for the positive half**: it is not
+what stops `M0`, which is refused under both conservative and non-conservative adoption, but under
+non-conservative adoption `M1` fails too and M109 would have been negative.
+
+It is not recursive self-improvement: two rules of three nodes each, over three authored features, in
+a three-signal Boolean world, with the budgets and the evaluator fixed.
+
+### Next ceiling
+
+Recursive depth of **three**, and the first measurement of **acceleration** — whether successive
+generations arrive at decreasing cost, rather than merely arriving. Until acceleration is measured,
+no result may be described as compounding, and until depth three is closed, none may be described as
+open-ended.

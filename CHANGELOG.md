@@ -1455,3 +1455,14 @@ preserved before checking; the single checker replay computed P1-P16 all true (`
 attribution rule is held as lineage state and expressed in the lineage's own language; the monotone
 rule space contains zero consistent rules, so M107's acquisition is a proved precondition. D077.
 Recursive depth of two remains unmeasured, and the episode blame labels are authored supervision.
+
+## M109 - positive qualified two-generation machinery chain (2026-08-25)
+
+The first Genesis result in which a modified acquisition machinery produces the next modification,
+and in which the lineage determines its own blame labels by controlled trial rather than reading host
+annotations. From frozen protocol `8e76b30f...` the unique attempt produced `262e0bd5...`, preserved
+before checking; the single checker replay computed P1-P18 all true (`ff167573...`). ReachImprove is
+6 subset 20 subset 243, strict at both inclusions. The dependency between generations is the
+monotonicity lemma applied to the attribution cascade, not a failed search. D078. Recursive depth of
+three and acceleration remain unmeasured, and conservative adoption is declared load-bearing for the
+positive half.

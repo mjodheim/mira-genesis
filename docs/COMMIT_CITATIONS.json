@@ -87,6 +87,15 @@
         "experiments/M086C/RESULT.md"
       ]
     },
+    "0a01b262cf96bc73a3435b294dc48f5047a846e6": {
+      "subject": "science(m109): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m109-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "0bb19744e2782925222ebb83aa56918eb874ab53": {
       "subject": "science(m101): preserve positive checker verdict",
       "preserved_by": "main",
@@ -440,6 +449,15 @@
     "308b4d99e0bed8d61eceed558805a206b16ae24c": {
       "subject": "science(m107): freeze the owner-authorized protocol",
       "preserved_by": "experiment/m107-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
+    "31068b7140085bd79b7c5bea12d452b6e1742690": {
+      "subject": "result(m109): preserve the unique canonical first result",
+      "preserved_by": "experiment/m109-canonical-first-result",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
