@@ -207,6 +207,19 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   produced with zero model, network and remote-execution calls, was never evaluated. The lower
   Boolean interpreter and every interface/evaluator bound remain authored.
 
+- **M106/H51 is a positive qualified result: the constructor-vocabulary extension M105 could not
+  evaluate replicates on a fresh population.** The unique attempt ran once from frozen protocol
+  `e92e1b08…` and produced result `7c22c889…`, stable evidence `7c7cabc4…`, preserved and pushed at
+  `experiment/m106-canonical-first-result` before any checking. The single checker replay computed
+  **P1-P16 all true**, report `76299018…`, replay equal, zero model/network/remote calls. The
+  mechanism module `metamorphosis/m105_runtime.py` was imported **unchanged** and bound by digest,
+  and the target semantic `(True, False, False, True)` was fixed before implementation and differs
+  from M105's, so this is a replication rather than an improved system. Both fresh arms refused with
+  four surviving behavioural classes per carrier and the semantic image exhausted — underdetermination,
+  not search exhaustion. D075 records it; M105 stays negative and D074 is unchanged. The lower
+  Boolean interpreter is **semantically complete** over its two-signal space, so no acquisition here
+  can ever extend Boolean reach; the next ceiling needs a deliberately incomplete substrate.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its

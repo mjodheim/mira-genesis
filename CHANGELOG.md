@@ -1430,3 +1430,11 @@ The unique canonical attempt executed once from frozen protocol `43d270df…` an
 exited 1 with `ModuleNotFoundError: No module named 'scripts'` and left P1-P16 uncomputed, so the
 frozen all-true rule makes attempt 1 negative. D074 forbids retry or repair; H50 is unsupported but
 not refuted. This repeats D072's M103 defect, which M104 had closed for its own checker.
+
+## M106 — positive qualified replication (2026-08-25)
+
+The unique canonical attempt ran once from frozen protocol `e92e1b08…`; its first bytes `7c22c889…`
+were preserved and pushed before any checking, and the single checker replay computed P1-P16 all
+true (`76299018…`) with replay equality and zero external calls. The mechanism module
+`metamorphosis/m105_runtime.py` was imported unchanged and the target semantic was fixed before
+implementation, so H51 replicates the question M105 could never evaluate. D075; M105 stays negative.
