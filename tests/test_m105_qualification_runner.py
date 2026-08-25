@@ -3,8 +3,12 @@ from __future__ import annotations
 import sqlite3
 import sys
 
+from pathlib import Path
+
 from scripts import check_m105_result as checker
 from scripts import run_m105_qualification as qualification
+
+EXPERIMENT = Path(__file__).resolve().parents[1] / "experiments" / "M105"
 
 
 def _on_canonical_runtime() -> bool:
@@ -43,8 +47,18 @@ _CONTENT_REFUSALS = (
     "is not owner-authorized",
     "decisive predicate declaration changed",
     "pool binding mismatch",
-    "bound apparatus changed",
 )
+
+# Before the canonical attempt, a drifted apparatus is a defect: the freeze would be unverifiable
+# and the run must not proceed. After the attempt it is expected. Recording M105's verdict required
+# editing bound members -- the README banner and the pre-freeze audit test that had outlived its
+# phase -- and M106 later had to pin its own bytes in the shared root .gitattributes, which M105
+# also binds. The freeze tag experiment/m105-frozen-protocol-v2 remains the authoritative byte
+# record; nothing further may run under this spent protocol anyway.
+#
+# M106 avoids the drift entirely by keeping its verdict outside the bound list and by pinning bytes
+# in milestone-local attribute files. M105 predates both lessons.
+_POST_RESULT_REFUSALS = ("bound apparatus changed",)
 
 
 def test_canonical_entrypoint_is_gated_by_the_final_freeze() -> None:
@@ -72,7 +86,10 @@ def test_canonical_entrypoint_is_gated_by_the_final_freeze() -> None:
     except qualification.QualificationRefused as error:
         # An environment gate refused. That is correct behaviour off the freeze commit; it must
         # never be the protocol's content that is wrong.
-        assert not any(reason in str(error) for reason in _CONTENT_REFUSALS), str(error)
+        allowed = _CONTENT_REFUSALS
+        if not (EXPERIMENT / "RESULT.json").exists():
+            allowed = _CONTENT_REFUSALS + _POST_RESULT_REFUSALS
+        assert not any(reason in str(error) for reason in allowed), str(error)
     else:
         assert armed["protocol_digest"] == protocol["protocol_digest"]
         assert (
