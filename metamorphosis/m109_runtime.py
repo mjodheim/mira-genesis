@@ -511,15 +511,39 @@ def record_episode(
     return payload
 
 
+# The states a lineage of this world can occupy while an acquisition is under way: any operator table
+# one candidate addition away from the initial one, at any interface width, under either candidate
+# space. Authored, and declared: the attribution domain below is a census over this family.
+PROBE_WIDTHS = (BASE_SIGNAL_WIDTH, WORLD_SIGNAL_WIDTH)
+
+
+def probe_states() -> list[dict[str, Any]]:
+    tables = [expr.initial_operators()]
+    for candidate in expr.operator_space():
+        tables.append(expr.initial_operators() + [_named(candidate)])
+    return [
+        create_state(table, signal_width=width, candidate_space=space)
+        for table in tables
+        for width in PROBE_WIDTHS
+        for space in CANDIDATE_SPACES
+    ]
+
+
+_DOMAIN_MEMO: dict[int, str] = {}
+
+
 def attribution_domain(
-    states: Iterable[dict[str, Any]], max_nodes: int = MAX_EXPRESSION_NODES
+    states: Iterable[dict[str, Any]] | None = None, max_nodes: int = MAX_EXPRESSION_NODES
 ) -> dict[str, Any]:
     """Which feature rows can arise while attributing, over every state and every world function."""
+    if states is None and max_nodes in _DOMAIN_MEMO:
+        return json.loads(_DOMAIN_MEMO[max_nodes])
+    family = list(states) if states is not None else probe_states()
     witnesses: dict[int, dict[str, Any]] = {}
     ambiguous: list[int] = []
     labels: dict[int, set[str]] = {}
     examined = 0
-    for state in states:
+    for state in family:
         image = state_image(state, max_nodes)
         for table in itertools.product((False, True), repeat=2 ** WORLD_SIGNAL_WIDTH):
             target = tuple(table)
@@ -545,16 +569,22 @@ def attribution_domain(
     for row, found in labels.items():
         if len(found) > 1:
             ambiguous.append(row)
-    return {
+    census = {
         "schema": "m109-attribution-domain-v1",
         "rows": sorted(witnesses),
         "unreachable_rows": [row for row in range(len(FEATURE_ROWS)) if row not in witnesses],
         "ambiguous_rows": sorted(ambiguous),
         "row_labels": {str(row): sorted(found) for row, found in sorted(labels.items())},
         "determined_pairs_examined": examined,
+        "state_family_size": len(family),
+        "world_function_count": 2 ** (2 ** WORLD_SIGNAL_WIDTH),
         "census_complete": True,
         "witnesses": [witnesses[row] for row in sorted(witnesses)],
     }
+    if states is None:
+        _DOMAIN_MEMO[max_nodes] = canonical_json(census)
+        return json.loads(_DOMAIN_MEMO[max_nodes])
+    return census
 
 
 def acquire_rule(
