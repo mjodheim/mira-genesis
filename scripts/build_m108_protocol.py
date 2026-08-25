@@ -104,7 +104,7 @@ def _require_annotated_tag(reference: str, expected_commit: str) -> None:
         raise ValueError("%s does not bind the expected commit" % reference)
 
 
-def candidate(source_ref: str) -> dict[str, Any]:
+def candidate(source_ref: str, authorization: dict[str, Any]) -> dict[str, Any]:
     episodes = json.loads((EXPERIMENT / "EPISODES.json").read_text(encoding="ascii"))
     demand = json.loads((EXPERIMENT / "DEMAND.json").read_text(encoding="ascii"))
     payload: dict[str, Any] = {
@@ -157,6 +157,7 @@ def candidate(source_ref: str) -> dict[str, Any]:
             "preserve_first_result_even_if_negative": True,
             "repair_after_result_forbidden": True,
         },
+        "owner_workflow_authorization": authorization,
         "governance_constraints": {
             "descendants_are_disposable": True,
             "fixed_budget": True,
@@ -212,6 +213,7 @@ def final_protocol(
         "decisive_conditions": candidate_value["decisive_conditions"],
         "verdict_rule": candidate_value["verdict_rule"],
         "canonical_result_policy": candidate_value["canonical_result_policy"],
+        "owner_workflow_authorization": candidate_value["owner_workflow_authorization"],
         "governance_constraints": candidate_value["governance_constraints"],
         "canonical_run_allowed": True,
         "model_calls_allowed": 0,
@@ -234,6 +236,12 @@ def main() -> int:
     subparsers = parser.add_subparsers(dest="command", required=True)
     candidate_parser = subparsers.add_parser("candidate")
     candidate_parser.add_argument("--source-ref", required=True)
+    # The owner authorization is an explicit input rather than a constant in this file. M107 carried
+    # its authorization as a hardcoded literal, which means the freeze could be rebuilt by anyone who
+    # ran the script. Here a candidate cannot be constructed at all without the owner recording a
+    # date and a scope, and the recorded values travel into the frozen protocol.
+    candidate_parser.add_argument("--owner-authorization-date", required=True)
+    candidate_parser.add_argument("--owner-authorization-scope", required=True)
     final_parser = subparsers.add_parser("final")
     final_parser.add_argument("--source-ref", required=True)
     final_parser.add_argument("--freeze-tag", required=True)
@@ -245,7 +253,18 @@ def main() -> int:
     if arguments.command == "candidate":
         if CANDIDATE_PATH.exists() or PROTOCOL_PATH.exists():
             raise SystemExit("M108 candidate or final protocol already exists")
-        _write_exclusive(CANDIDATE_PATH, candidate(arguments.source_ref))
+        _write_exclusive(
+            CANDIDATE_PATH,
+            candidate(
+                arguments.source_ref,
+                {
+                    "recorded": True,
+                    "date": arguments.owner_authorization_date,
+                    "scope": arguments.owner_authorization_scope,
+                    "recorded_as_explicit_input": True,
+                },
+            ),
+        )
         return 0
     if PROTOCOL_PATH.exists() or not CANDIDATE_PATH.exists():
         raise SystemExit("M108 final protocol state is invalid")
