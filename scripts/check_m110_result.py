@@ -1,6 +1,6 @@
 """Independent M110 checker.
 
-Evaluates P1-P22 from the canonical result and, with --replay, re-runs the experiment and compares
+Evaluates P1-P24 from the canonical result and, with --replay, re-runs the experiment and compares
 stable projections. One canonical checker attempt is permitted.
 
 M103 and M105 were both lost because a frozen checker could not start: each deferred an import into
@@ -29,7 +29,11 @@ PROTOCOL_PATH = EXPERIMENT / "PROTOCOL.json"
 RESULT_PATH = EXPERIMENT / "RESULT.json"
 REPORT_PATH = EXPERIMENT / "CHECK_REPORT.json"
 
-EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 23)]
+EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 25)]
+# The exact bytes D078 preserved. Binding them here is what makes the restored cascade a
+# continuation of the frozen producer rather than an equivalent reimplementation.
+PRODUCER_RESULT_BYTES = "0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009"
+FEATURE_ROW_COUNT = 8
 OPERATOR_TABLE = "operator_table"
 SIGNAL_INTERFACE = "signal_interface"
 CANDIDATE_SPACE = "candidate_space"
@@ -83,6 +87,40 @@ def _every(worlds: list[dict[str, Any]], predicate) -> bool:
     return bool(worlds) and all(bool(predicate(world)) for world in worlds)
 
 
+def _attribution_map_recomputes(provenance: dict[str, Any]) -> bool:
+    """Recompute the cascade here, from the restored truth tables, importing nothing.
+
+    The consumer delegates attribution to the producer module. A comparison of module names
+    could never falsify that; recomputing every row from the preserved tables can.
+    """
+    restored = provenance.get("restored_rules") or {}
+    order = provenance.get("cascade_order") or []
+    recorded = provenance.get("attribution_map") or {}
+    if sorted(recorded) != ["M0", "M1", "M2"] or len(order) != 2:
+        return False
+    cascades = {
+        "M0": [],
+        "M1": [restored.get(order[0])],
+        "M2": [restored.get(order[0]), restored.get(order[1])],
+    }
+    for arm, cascade in cascades.items():
+        rows = recorded.get(arm) or {}
+        if sorted(int(key) for key in rows) != list(range(FEATURE_ROW_COUNT)):
+            return False
+        for row in range(FEATURE_ROW_COUNT):
+            expected = OPERATOR_TABLE
+            for rule in cascade:
+                table = (rule or {}).get("truth_table") or []
+                if len(table) != FEATURE_ROW_COUNT:
+                    return False
+                if bool(table[row]):
+                    expected = rule.get("selects_component_when_true")
+                    break
+            if rows[str(row)] != expected:
+                return False
+    return True
+
+
 def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> dict[str, bool]:
     """Predicate semantics. Deliberately imports nothing: no runtime, no orchestration."""
     preflight = evidence.get("input_preflight") or {}
@@ -111,7 +149,8 @@ def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> 
         and provenance_checks.get("m0_state_digest_reproduced") is True
         and provenance_checks.get("m1_state_digest_reproduced") is True
         and provenance_checks.get("m2_state_digest_reproduced") is True
-        and provenance_checks.get("producer_result_digest_matches") is True,
+        and provenance_checks.get("producer_result_digest_matches") is True
+        and provenance.get("producer_result_bytes_digest") == PRODUCER_RESULT_BYTES,
         "P3": boundary.get("no_capsule_held_a_producer_fixture") is True
         and checks.get("population_holds_no_census_or_label") is True
         and checks.get("no_producer_fixture_in_the_experiment_directory") is True,
@@ -124,7 +163,21 @@ def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> 
                 _row(world, key).get("equal_inputs_across_arms") is True
                 for key in (world.get("rows") or {})
             ),
-        ),
+        )
+        and (boundary.get("arm_capsules") or {}).get(
+            "every_group_holds_one_capsule_per_arm"
+        )
+        is True
+        and (boundary.get("arm_capsules") or {}).get(
+            "every_group_shares_its_world_and_demand_bytes"
+        )
+        is True
+        and (boundary.get("arm_capsules") or {}).get(
+            "every_group_holds_distinct_state_bytes"
+        )
+        is True
+        and (boundary.get("arm_capsules") or {}).get("capsule_member_lists_are_uniform")
+        is True,
         # -- impossibility rather than an exhausted budget -----------------------------------
         "P5": _every(
             worlds,
@@ -240,6 +293,19 @@ def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> 
             worlds, lambda world: (world.get("reach_chain") or {}).get("strict_chain") is True
         ),
         # -- instrument ------------------------------------------------------------------------
+        # -- declared ceilings, measured rather than assumed --------------------------------
+        "P23": _every(
+            worlds,
+            lambda world: ((world.get("host_shortcut") or {}).get(
+                "row_three_with_a_host_widened_candidate_space"
+            ) or {}).get("confirmed")
+            is True
+            and ((world.get("host_shortcut") or {}).get(
+                "row_seven_with_a_host_widened_interface"
+            ) or {}).get("confirmed")
+            is True,
+        ),
+        "P24": _attribution_map_recomputes(provenance),
         "P22": boundary.get("all_processes_isolated") is True
         and boundary.get("all_processes_zero_external_calls") is True
         and evidence.get("runtime", {}).get("matches_canonical") is True

@@ -42,7 +42,7 @@ RESULT_PATH = EXPERIMENT / "RESULT.json"
 CHECK_PATH = EXPERIMENT / "CHECK_REPORT.json"
 
 CANONICAL_PYTHON = (3, 11, 16)
-EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 23)]
+EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 25)]
 ISOLATED_PYTHON = Path(sys.executable).resolve()
 DEEPER_BOUND = runtime.DEEPER_EXPRESSION_NODES
 REACH_BUDGET = 2
@@ -154,12 +154,25 @@ def restore_arms() -> dict[str, Any]:
         in producer.COMPONENTS,
         "generations_are_distinct": first["rule_id"] != second["rule_id"],
         "cascade_is_contiguous": [first["generation"], second["generation"]] == [1, 2],
-        "attribution_is_delegated_to_the_producer_module": runtime.attribute.__module__
-        == "metamorphosis.m110_runtime"
-        and producer.attribute.__module__ == "metamorphosis.m109_runtime",
     }
     cascades = {"M0": [], "M1": [first], "M2": [first, second]}
     arms = {name: runtime.create_state(rules=rules) for name, rules in cascades.items()}
+    # The consumer delegates attribution to the producer module. Recording the whole map lets
+    # an importless checker recompute it from the restored truth tables, which a __module__
+    # comparison could never falsify.
+    attribution_map = {
+        name: {
+            str(row): runtime.attribute(state, {"row_index": row})["component"]
+            for row in range(len(runtime.FEATURE_ROWS))
+        }
+        for name, state in arms.items()
+    }
+    checks["consumer_attribution_equals_the_producer_module_on_every_row"] = all(
+        attribution_map[name][str(row)]
+        == producer.attribute({"rules": state["rules"]}, {"row_index": row})["component"]
+        for name, state in arms.items()
+        for row in range(len(runtime.FEATURE_ROWS))
+    )
     return {
         "schema": "m110-provenance-v1",
         "confirmed": all(checks.values()),
@@ -180,6 +193,8 @@ def restore_arms() -> dict[str, Any]:
         "restored_rules": {"generation_one": first, "generation_two": second},
         "arm_state_digests": {name: state["state_digest"] for name, state in arms.items()},
         "arm_generations": {name: len(state["rules"]) for name, state in arms.items()},
+        "attribution_map": attribution_map,
+        "cascade_order": ["generation_one", "generation_two"],
         "arm_adapter_projection_digests": {
             name: digest(runtime.adapter_projection(state)) for name, state in arms.items()
         },
@@ -187,8 +202,10 @@ def restore_arms() -> dict[str, Any]:
     }
 
 
-def verify_inputs(provenance: dict[str, Any]) -> dict[str, Any]:
-    population = _read_canonical(POPULATION_PATH, "M110 canonical population")
+def verify_inputs(
+    provenance: dict[str, Any], population_path: Path = POPULATION_PATH
+) -> dict[str, Any]:
+    population = _read_canonical(population_path, "M110 population")
     worlds = [runtime.decode_world(item) for item in population["worlds"]]
     arms = provenance["_arms"]
     adapters = {digest(runtime.adapter_projection(state)) for state in arms.values()}
@@ -202,6 +219,9 @@ def verify_inputs(provenance: dict[str, Any]) -> dict[str, Any]:
         "population_is_canonical_tag": population.get("tag") == "canonical",
         "population_seed_range_is_disjoint_from_development": population.get("seed_range")
         == [1000, 1999],
+        "population_tag_matches_the_declared_path": (
+            population.get("tag") == "canonical"
+        ) == (population_path == POPULATION_PATH),
         "population_is_non_empty": len(worlds) > 0,
         "world_identities_are_distinct": len({item["world_digest"] for item in worlds})
         == len(worlds),
@@ -330,15 +350,18 @@ def _solved(outcome: dict[str, Any]) -> bool:
 # ----------------------------------------------------------------------------------------
 
 
-def run_experiment() -> dict[str, Any]:
+def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
     provenance = restore_arms()
-    preflight_report = verify_inputs(provenance)
-    if not preflight_report["confirmed"] or not provenance["confirmed"]:
+    preflight_report = verify_inputs(provenance, population_path)
+    rehearsal = population_path != POPULATION_PATH
+    if not provenance["confirmed"]:
+        raise QualificationRefused("M110 provenance preflight failed")
+    if not preflight_report["confirmed"] and not rehearsal:
         raise QualificationRefused("M110 input preflight failed")
 
     arms = provenance.pop("_arms")
     arm_bytes = {name: runtime.encode_state(state) for name, state in arms.items()}
-    population = _read_canonical(POPULATION_PATH, "M110 canonical population")
+    population = _read_canonical(population_path, "M110 population")
     worlds = [runtime.decode_world(item) for item in population["worlds"]]
 
     base = Path(tempfile.mkdtemp(prefix="m110-"))
@@ -539,6 +562,39 @@ def run_experiment() -> dict[str, Any]:
                 ),
                 "resolve",
             )
+            # The host could always have flipped either switch itself. Measuring that, rather
+            # than leaving it implicit, is what keeps the claim about the *decision* the
+            # restored cascade makes and not about an extension the host cannot supply.
+            shortcut_space = _run(
+                _build_capsule(
+                    base,
+                    tag + "-shortcut-space",
+                    {
+                        "WORLD.json": world_bytes,
+                        "STATE.json": runtime.encode_state(
+                            runtime.create_state(candidate_space=runtime.COMPLETE_SPACE)
+                        ),
+                        "DEMAND.json": row_three,
+                    },
+                ),
+                "resolve",
+            )
+            shortcut_width = _run(
+                _build_capsule(
+                    base,
+                    tag + "-shortcut-width",
+                    {
+                        "WORLD.json": world_bytes,
+                        "STATE.json": runtime.encode_state(
+                            runtime.create_state(
+                                interface_width=runtime.MAX_INTERFACE_WIDTH
+                            )
+                        ),
+                        "DEMAND.json": row_seven,
+                    },
+                ),
+                "resolve",
+            )
             corruption = _run(
                 _build_capsule(base, tag + "-corrupt", {"STATE.json": arm_bytes["M2"]}),
                 "corruption",
@@ -549,6 +605,8 @@ def run_experiment() -> dict[str, Any]:
                 ablation_one_five,
                 mutation,
                 unregistered,
+                shortcut_space,
+                shortcut_width,
                 corruption,
             ]
 
@@ -600,6 +658,14 @@ def run_experiment() -> dict[str, Any]:
                         in unregistered["capsule_members"],
                         "state_held_no_rule": unregistered.get("generations") == 0,
                     },
+                    "host_shortcut": {
+                        "row_three_with_a_host_widened_candidate_space": _resolution_outcome(
+                            shortcut_space
+                        ),
+                        "row_seven_with_a_host_widened_interface": _resolution_outcome(
+                            shortcut_width
+                        ),
+                    },
                     "corruption": corruption.get("corruption"),
                     "reach_improve": {
                         name: {
@@ -647,9 +713,7 @@ def run_experiment() -> dict[str, Any]:
                     )
                     for item in isolated
                 ),
-                "arm_capsules_differ_only_in_state": _arm_capsules_differ_only_in_state(
-                    arm_capsules
-                ),
+                "arm_capsules": _arm_capsule_grouping(arm_capsules),
                 "isolated_process_count": len(isolated),
                 "arm_pids": [item["runtime"]["pid"] for item in arm_capsules],
                 "all_processes_isolated": all(
@@ -670,16 +734,37 @@ def run_experiment() -> dict[str, Any]:
         shutil.rmtree(base, ignore_errors=True)
 
 
-def _arm_capsules_differ_only_in_state(reports: list[dict[str, Any]]) -> bool:
-    grouped: dict[tuple[str, ...], set[str]] = {}
+def _arm_capsule_grouping(reports: list[dict[str, Any]]) -> dict[str, Any]:
+    """Group arm capsules by the inputs they share, and measure what must differ.
+
+    An earlier version of this asserted `len(group) >= 1`, which no arrangement could falsify.
+    Grouping on the world and demand bytes makes both halves refutable: a group must hold
+    exactly one capsule per arm, and their state bytes must be pairwise distinct.
+    """
+    grouped: dict[str, list[dict[str, Any]]] = {}
     for report in reports:
-        members = tuple(report["capsule_members"])
-        grouped.setdefault(members, set()).add(
-            canonical_json(
-                {k: v for k, v in report["input_digests"].items() if k != "STATE.json"}
-            )
+        inputs = report["input_digests"]
+        key = "%s|%s" % (inputs.get("WORLD.json"), inputs.get("DEMAND.json"))
+        grouped.setdefault(key, []).append(report)
+    sizes = sorted({len(value) for value in grouped.values()})
+    return {
+        "group_count": len(grouped),
+        "group_sizes": sizes,
+        "every_group_holds_one_capsule_per_arm": sizes == [len(ARM_NAMES)],
+        "every_group_shares_its_world_and_demand_bytes": all(
+            len({item["input_digests"].get("WORLD.json") for item in value}) == 1
+            and len({item["input_digests"].get("DEMAND.json") for item in value}) == 1
+            for value in grouped.values()
+        ),
+        "every_group_holds_distinct_state_bytes": all(
+            len({item["input_digests"].get("STATE.json") for item in value}) == len(value)
+            for value in grouped.values()
+        ),
+        "capsule_member_lists_are_uniform": len(
+            {tuple(item["capsule_members"]) for item in reports}
         )
-    return all(len(value) >= 1 for value in grouped.values()) and len(grouped) >= 1
+        == 1,
+    }
 
 
 def _census_agreement(per_world: list[dict[str, Any]], provenance: dict[str, Any]) -> dict[str, Any]:
@@ -824,6 +909,7 @@ def main() -> int:
     subparsers.add_parser("preflight")
     development = subparsers.add_parser("development")
     development.add_argument("--out")
+    development.add_argument("--population", default=None)
     canonical = subparsers.add_parser("canonical")
     canonical.add_argument("--owner-authorized", action="store_true")
     canonical.add_argument("--understand-unique-attempt", action="store_true")
@@ -832,7 +918,9 @@ def main() -> int:
         if arguments.command == "preflight":
             report = preflight()
         elif arguments.command == "development":
-            evidence = run_experiment()
+            evidence = run_experiment(
+                Path(arguments.population) if arguments.population else POPULATION_PATH
+            )
             report = {
                 "schema": "m110-development-rehearsal-v1",
                 "confirmed": True,

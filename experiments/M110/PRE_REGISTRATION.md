@@ -149,7 +149,7 @@ target at the base state carrying that row — a rule that cannot see the arms.
 
 ## Decisive conditions
 
-P1–P22 are computed by an independent checker from the preserved result. Every one is a measurement.
+P1–P24 are computed by an independent checker from the preserved result. Every one is a measurement.
 
 | | |
 |---|---|
@@ -175,6 +175,8 @@ P1–P22 are computed by an independent checker from the preserved result. Every
 | P20 | mutation of the generation-2 rule causally changes `M2` on the row-3 demand; corruption fails closed |
 | P21 | `ReachImprove` is strict, `M0` ⊂ `M1` ⊂ `M2`, on every canonical world |
 | P22 | every process isolated, zero model/network/remote calls, replay performed and equal |
+| P23 | a host-widened candidate space resolves the row-3 demand and a host-widened interface resolves the row-7 demand |
+| P24 | the recorded attribution map recomputes exactly from the restored truth tables, in the checker, importing nothing |
 
 P21 with P16 is the dissociation this milestone exists to measure: **capacity may rise while realized
 competence falls.**
@@ -195,6 +197,18 @@ not chosen neutrally: references were chosen *because* they break `g0 ⟹ g1`. T
 stress test, not a neutral sample, and the claim is correspondingly conditional. What is **not**
 tuned is the row → component map, which is measured per world by the consumer's own trial and is not
 consulted when admitting a world.
+
+**Correction 4 — two predicates could not fail, and one ceiling was implicit.** The first draft of
+the apparatus carried a capsule-equality field asserting `len(group) >= 1` and a delegation field
+comparing module names. Neither could be falsified by any arrangement, which is the defect M095
+recorded as "record fields that are assertions disguised as measured booleans". Both are replaced:
+capsules are grouped by the world and demand bytes they share, so a group must hold one capsule
+per arm with pairwise-distinct state bytes; and the full attribution map is recorded and
+recomputed by the checker from the restored truth tables alone. Separately, the host could always
+have widened either component itself. Leaving that implicit would have let a reader hear a claim
+about an extension the host cannot supply, so it is now measured as **P23** and the claim is
+explicitly about *which component the restored cascade decides to extend*, not about reach the
+host lacks. P23 and P24 raise the predicate count from 22 to 24, before any protocol exists.
 
 **Correction 3 — "materially different" is bounded by shared vocabulary.** The registry names and the
 feature vocabulary are shared authored vocabulary, not transferred content. M110 cannot claim that a
