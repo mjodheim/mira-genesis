@@ -263,6 +263,16 @@
         "experiments/M102/PROTOCOL_CANDIDATE.json"
       ]
     },
+    "1d5d70a44cc9c56164d454631eae3d1c1b7e8dd6": {
+      "subject": "science(m111): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m111-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "1dfd04b939b474047cff1c7196b512ea6c3d21f5": {
       "subject": "science(m110): record the pre-freeze rehearsal and its predicted stable evidence digest",
       "preserved_by": "experiment/m110-apparatus-v1",
@@ -1495,6 +1505,15 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "9837d0b88e8f06d191040347ac6d820f34c538c1": {
+      "subject": "result(m111): preserve the unique canonical first result",
+      "preserved_by": "experiment/m111-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
       "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
       "preserved_by": "main",
@@ -2214,6 +2233,15 @@
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M092/DESIGN_AUDIT.md"
+      ]
+    },
+    "e7f5e842004b0b72f57d704cdd7adb5e7afbe5d1": {
+      "subject": "science(m111): strengthen correction 5 with a thousand-world search that found nothing",
+      "preserved_by": "experiment/m111-apparatus-v1",
+      "cited_in": [
+        "experiments/M111/PROTOCOL.json",
+        "experiments/M111/PROTOCOL_CANDIDATE.json",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "eaacf8e66b866c2d777d2caa0fe80c8a7617363f": {
