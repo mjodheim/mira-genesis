@@ -128,6 +128,10 @@ def main() -> int:
     try:
         if arguments.action == "census":
             report["census"] = consumer.attribution_census(_world(), bound)
+        elif arguments.action == "pair":
+            world = _world()
+            report["pair"] = runtime.ambiguous_pair(world, 3, bound)
+            report["survey"] = runtime.base_state_survey(world, bound)
         elif arguments.action == "expressibility":
             state = runtime.decode_state(_read("STATE.json"))
             report["expressibility"] = runtime.expressibility_certificate(

@@ -77,7 +77,18 @@ def stable_projection(value: Any) -> Any:
 
 
 def _worlds(evidence: dict[str, Any]) -> list[dict[str, Any]]:
-    return list(evidence.get("worlds") or [])
+    """Only the ambiguous stratum carries arms; witness worlds contribute record, not competence."""
+    return [
+        item
+        for item in (evidence.get("worlds") or [])
+        if item.get("stratum") == "ambiguous"
+    ]
+
+
+def _witness(evidence: dict[str, Any]) -> list[dict[str, Any]]:
+    return [
+        item for item in (evidence.get("worlds") or []) if item.get("stratum") == "witness"
+    ]
 
 
 def _every(worlds: list[dict[str, Any]], predicate) -> bool:
@@ -109,6 +120,9 @@ def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> 
     provenance = evidence.get("provenance") or {}
     provenance_checks = provenance.get("checks") or {}
     boundary = evidence.get("boundary") or {}
+    expressibility = evidence.get("expressibility") or {}
+    generation_three = evidence.get("generation_three") or {}
+    pooled = evidence.get("pooled_record") or {}
     worlds = _worlds(evidence)
 
     return {
@@ -139,66 +153,33 @@ def evaluate_conditions(evidence: dict[str, Any], *, replay_confirmed: bool) -> 
             worlds,
             lambda world: (world.get("census") or {}).get("census_complete") is True
             and (world.get("census") or {}).get("ambiguous_rows") == [AMBIGUOUS_ROW],
+        )
+        and bool(_witness(evidence))
+        and all(
+            UPPER_ROW in ((item.get("base_survey") or {}).get("determined_rows") or [])
+            for item in _witness(evidence)
         ),
         # -- the expressibility lemma ----------------------------------------------------------
-        "P7": _every(
-            worlds,
-            lambda world: ((world.get("expressibility") or {}).get("M1") or {}).get(
-                "separating_program_count"
-            )
-            == 0
-            and ((world.get("expressibility") or {}).get("M1") or {}).get(
-                "closed_by_monotonicity_lemma"
-            )
-            is True
-            and ((world.get("expressibility") or {}).get("M1") or {}).get("rule_space_size")
-            == MONOTONE_RULE_SPACE,
-        ),
-        "P8": _every(
-            worlds,
-            lambda world: ((world.get("expressibility") or {}).get("M2") or {}).get(
-                "rule_space_size", 0
-            )
-            > MONOTONE_RULE_SPACE
-            and ((world.get("expressibility") or {}).get("M2") or {}).get(
-                "separating_program_count", 0
-            )
-            > 0,
-        ),
-        "P9": _every(
-            worlds,
-            lambda world: ((world.get("expressibility") or {}).get("M2") or {}).get(
-                "non_monotone_in_monotone_space"
-            )
-            == 0
-            and ((world.get("expressibility") or {}).get("M2") or {}).get(
-                "non_monotone_in_complete_space", 0
-            )
-            > 0,
-        ),
-        "P10": _every(
-            worlds,
-            lambda world: (world.get("ablated_acquisition") or {}).get("confirmed") is False
-            and ((world.get("generation_three") or {}).get("acquisition") or {}).get("confirmed")
-            is True,
-        ),
-        "P11": _every(
-            worlds,
-            lambda world: world.get("episodes_fixture_present") is False
-            and ((world.get("generation_three") or {}).get("acquisition") or {}).get(
-                "labels_are_lineage_determined"
-            )
-            is True
-            and (world.get("episode_survey") or {}).get("undetermined") == [AMBIGUOUS_ROW],
-        ),
-        "P12": _every(
-            worlds,
-            lambda world: AMBIGUOUS_ROW
-            in ((world.get("generation_three") or {}).get("policy_fires_on") or [])
-            and not (
-                set((world.get("episode_survey") or {}).get("determined") or [])
-                & set((world.get("generation_three") or {}).get("policy_fires_on") or [])
-            ),
+        "P7": (expressibility.get("M1") or {}).get("separating_program_count") == 0
+        and (expressibility.get("M1") or {}).get("closed_by_monotonicity_lemma") is True
+        and (expressibility.get("M1") or {}).get("rule_space_size") == MONOTONE_RULE_SPACE,
+        "P8": (expressibility.get("M2") or {}).get("rule_space_size", 0) > MONOTONE_RULE_SPACE
+        and (expressibility.get("M2") or {}).get("separating_program_count", 0) > 0
+        and provenance_checks.get("acquired_operator_is_non_monotone") is True,
+        "P9": (expressibility.get("M2") or {}).get("non_monotone_in_monotone_space") == 0
+        and (expressibility.get("M2") or {}).get("non_monotone_in_complete_space", 0) > 0,
+        "P10": (evidence.get("ablated_acquisition") or {}).get("confirmed") is False
+        and (generation_three.get("acquisition") or {}).get("confirmed") is True,
+        "P11": pooled.get("no_episodes_fixture_in_any_capsule") is True
+        and (generation_three.get("acquisition") or {}).get("labels_are_lineage_determined")
+        is True
+        and pooled.get("undetermined") == [AMBIGUOUS_ROW]
+        and pooled.get("worlds_contributing", 0) > 1
+        and generation_three.get("one_policy_for_the_whole_population") is True,
+        "P12": AMBIGUOUS_ROW in (generation_three.get("policy_fires_on") or [])
+        and not (
+            set(pooled.get("determined") or [])
+            & set(generation_three.get("policy_fires_on") or [])
         ),
         "P13": _every(
             worlds,

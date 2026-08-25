@@ -45,9 +45,10 @@ CANONICAL_PYTHON = (3, 11, 16)
 EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 25)]
 ISOLATED_PYTHON = Path(sys.executable).resolve()
 AMBIGUOUS_ROW = 3
-UPPER_ROW = 7
-DETERMINED_ROWS = (1, 5, 7)
+WITNESS_ROW = 7
+CONTRAST_ROW = 1
 STATIC_ARMS = ("M0", "M1", "M2", "always_signal")
+DETERMINED_FIRST = ("determined_then_A", "determined_then_B")
 
 RUNTIME_SOURCES = {
     "m107_runtime.py": "metamorphosis/m107_runtime.py",
@@ -233,18 +234,24 @@ def verify_inputs(
     provenance: dict[str, Any], population_path: Path = POPULATION_PATH
 ) -> dict[str, Any]:
     population = _read_canonical(population_path, "M111 population")
-    worlds = [consumer.decode_world(item) for item in population["worlds"]]
+    ambiguous = [consumer.decode_world(item) for item in population["ambiguous_worlds"]]
+    witness = [consumer.decode_world(item) for item in population["witness_worlds"]]
+    worlds = ambiguous + witness
     arms = build_arms(provenance)
     adapters = {digest(runtime.adapter_projection(state)) for state in arms.values()}
     checks = {
-        "population_schema": population.get("schema") == "m111-ambiguous-population-v1",
+        "population_schema": population.get("schema") == "m111-two-stratum-population-v1",
         "population_is_canonical_tag": population.get("tag") == "canonical",
         "population_seed_range_is_disjoint": population.get("seed_range") == [3000, 3999],
-        "population_is_non_empty": len(worlds) > 0,
+        "both_strata_are_non_empty": len(ambiguous) > 0 and len(witness) > 0,
+        "strata_are_disjoint": not (
+            {item["world_digest"] for item in ambiguous}
+            & {item["world_digest"] for item in witness}
+        ),
         "world_identities_are_distinct": len({item["world_digest"] for item in worlds})
         == len(worlds),
         "population_holds_no_census_pair_or_label": not any(
-            key in population for key in ("row_labels", "canonical_targets", "census", "pair")
+            key in population for key in ("row_labels", "canonical_targets", "census", "pair", "episodes")
         ),
         "registry_extends_the_producer_triple": tuple(runtime.COMPONENTS)
         == tuple(machinery.COMPONENTS) + (runtime.COMPONENT_DIAGNOSTIC,),
@@ -267,6 +274,8 @@ def verify_inputs(
         "checks": checks,
         "population_digest": population["population_digest"],
         "world_count": len(worlds),
+        "ambiguous_world_count": len(ambiguous),
+        "witness_world_count": len(witness),
         "world_digests": [item["world_digest"] for item in worlds],
         "arm_state_digests": {name: state["state_digest"] for name, state in arms.items()},
         "arm_adapter_digests": sorted(adapters),
@@ -351,117 +360,146 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
     arms = build_arms(provenance)
     arm_bytes = {name: runtime.encode_state(state) for name, state in arms.items()}
     population = _read_canonical(population_path, "M111 population")
-    worlds = [consumer.decode_world(item) for item in population["worlds"]]
+    ambiguous_worlds = [
+        consumer.decode_world(item) for item in population["ambiguous_worlds"]
+    ]
+    witness_worlds = [consumer.decode_world(item) for item in population["witness_worlds"]]
 
     base = Path(tempfile.mkdtemp(prefix="m111-"))
     isolated: list[dict[str, Any]] = []
-    per_world: list[dict[str, Any]] = []
     try:
-        for index, world in enumerate(worlds):
-            tag = "w%d" % index
-            world_bytes = canonical_json({"world": world}).encode("ascii")
+        # ---- phase one: the lineage meets every world and records what it finds -------------
+        pooled: list[dict[str, Any]] = []
+        surveyed: list[dict[str, Any]] = []
+        for stratum, worlds in (("ambiguous", ambiguous_worlds), ("witness", witness_worlds)):
+            for index, world in enumerate(worlds):
+                tag = "%s%d" % (stratum[0], index)
+                world_bytes = canonical_json({"world": world}).encode("ascii")
 
-            census_run = _run(
-                _build_capsule(base, tag + "-census", {"WORLD.json": world_bytes}), "census"
-            )
-            if not census_run.get("confirmed"):
-                raise QualificationRefused("M111 census failed on %s" % world["world_id"])
-            census = census_run["census"]
-            isolated.append(census_run)
-
-            pair = runtime.ambiguous_pair(world, AMBIGUOUS_ROW)
-            if pair is None:
-                raise QualificationRefused(
-                    "M111 world %s exhibits no ambiguous pair" % world["world_id"]
+                census_run = _run(
+                    _build_capsule(base, tag + "-census", {"WORLD.json": world_bytes}), "census"
                 )
-            demand_a = consumer.consumer_demand(
-                "A", pair["targets"][pair["components"][0]]
-            )
-            demand_b = consumer.consumer_demand(
-                "B", pair["targets"][pair["components"][1]]
-            )
-            determined = consumer.consumer_demand(
-                "determined", census["canonical_targets"][str(UPPER_ROW)]
-            )
+                if not census_run.get("confirmed"):
+                    raise QualificationRefused("M111 census failed on %s" % world["world_id"])
+                census = census_run["census"]
+                isolated.append(census_run)
 
-            # ---- the lineage records its own episodes; this capsule holds only the world ----
-            targets = [demand_a["target"], demand_b["target"]] + [
-                census["canonical_targets"][str(row)]
-                for row in DETERMINED_ROWS
-                if str(row) in census["canonical_targets"]
-            ]
-            episodes_run = _run(
-                _build_capsule(
-                    base,
-                    tag + "-episodes",
-                    {
-                        "WORLD.json": world_bytes,
-                        "TARGETS.json": canonical_json({"targets": targets}).encode("ascii"),
-                    },
-                ),
-                "episodes",
-            )
-            if not episodes_run.get("confirmed"):
-                raise QualificationRefused("M111 episode recording failed")
-            isolated.append(episodes_run)
-            record_bytes = canonical_json(
-                {"episodes": episodes_run["episodes"]}
-            ).encode("ascii")
+                pair_run = _run(
+                    _build_capsule(base, tag + "-pair", {"WORLD.json": world_bytes}), "pair"
+                )
+                isolated.append(pair_run)
+                pair = pair_run.get("pair")
+                if stratum == "ambiguous" and not pair:
+                    raise QualificationRefused(
+                        "M111 ambiguous world %s exhibits no pair" % world["world_id"]
+                    )
 
-            # ---- expressibility, at the terminal state and at the ablated one ---------------
-            expressibility: dict[str, Any] = {}
-            for name in ("M2", "M1"):
-                report = _run(
+                targets: list[list[int]] = []
+                if pair:
+                    targets += [pair["targets"][name] for name in pair["components"]]
+                targets += [
+                    census["canonical_targets"][str(row)]
+                    for row in sorted(int(key) for key in census["canonical_targets"])
+                ]
+                episodes_run = _run(
                     _build_capsule(
-                        base, "%s-expressibility-%s" % (tag, name),
-                        {"STATE.json": arm_bytes[name]},
+                        base,
+                        tag + "-episodes",
+                        {
+                            "WORLD.json": world_bytes,
+                            "TARGETS.json": canonical_json({"targets": targets}).encode("ascii"),
+                        },
                     ),
-                    "expressibility",
+                    "episodes",
                 )
-                isolated.append(report)
-                expressibility[name] = {
-                    **report.get("expressibility", {}),
-                    "policy_rule_space": report.get("policy_rule_space"),
-                }
+                if not episodes_run.get("confirmed"):
+                    raise QualificationRefused("M111 episode recording failed")
+                isolated.append(episodes_run)
+                pooled += episodes_run["episodes"]
 
-            # ---- generation 3, and the same acquisition with generation 2 ablated -----------
-            acquire_run = _run(
+                surveyed.append(
+                    {
+                        "stratum": stratum,
+                        "world_id": world["world_id"],
+                        "world_digest": world["world_digest"],
+                        "world_bytes": world_bytes,
+                        "census": {k: v for k, v in census.items() if k != "witnesses"},
+                        "base_survey": pair_run.get("survey"),
+                        "ambiguous_pair": pair,
+                        "episodes_fixture_present": episodes_run.get("episodes_fixture_present"),
+                        "episode_count": len(episodes_run["episodes"]),
+                    }
+                )
+
+        record_bytes = canonical_json({"episodes": pooled}).encode("ascii")
+        pooled_survey = runtime.undetermined_rows(pooled)
+
+        # ---- phase two: one policy, from the whole record -----------------------------------
+        expressibility: dict[str, Any] = {}
+        for name in ("M2", "M1"):
+            report = _run(
                 _build_capsule(
-                    base, tag + "-acquire",
-                    {"STATE.json": arm_bytes["M2"], "RECORD.json": record_bytes},
+                    base, "expressibility-" + name, {"STATE.json": arm_bytes[name]}
                 ),
-                "acquire",
+                "expressibility",
             )
-            isolated.append(acquire_run)
-            if not acquire_run.get("confirmed") or "next_state" not in acquire_run:
-                raise QualificationRefused("M111 generation three did not adopt a policy")
-            g3 = runtime.decode_state(acquire_run["next_state"])
-            g3_bytes = runtime.encode_state(g3)
+            isolated.append(report)
+            expressibility[name] = {
+                **report.get("expressibility", {}),
+                "policy_rule_space": report.get("policy_rule_space"),
+            }
 
-            ablated_run = _run(
-                _build_capsule(
-                    base, tag + "-acquire-ablated",
-                    {"STATE.json": arm_bytes["M1"], "RECORD.json": record_bytes},
-                ),
-                "acquire_refuse_only",
+        acquire_run = _run(
+            _build_capsule(
+                base, "acquire", {"STATE.json": arm_bytes["M2"], "RECORD.json": record_bytes}
+            ),
+            "acquire",
+        )
+        isolated.append(acquire_run)
+        if not acquire_run.get("confirmed") or "next_state" not in acquire_run:
+            raise QualificationRefused("M111 generation three did not adopt a policy")
+        g3 = runtime.decode_state(acquire_run["next_state"])
+        g3_bytes = runtime.encode_state(g3)
+
+        ablated_run = _run(
+            _build_capsule(
+                base, "acquire-ablated",
+                {"STATE.json": arm_bytes["M1"], "RECORD.json": record_bytes},
+            ),
+            "acquire_refuse_only",
+        )
+        isolated.append(ablated_run)
+
+        ablated_state = runtime.create_state(
+            g3["machinery_state"], g3["consumer_state"],
+            policy=None, probe_budget=g3["probe_budget"],
+        )
+        mutated_policy = copy.deepcopy(g3["policy"])
+        mutated_state = runtime.create_state(
+            g3["machinery_state"], g3["consumer_state"],
+            policy=runtime.diagnostic_policy(
+                mutated_policy["body"],
+                [not value for value in mutated_policy["truth_table"]],
+                mutated_policy["generation"],
+            ),
+            probe_budget=g3["probe_budget"],
+        )
+
+        # ---- phase three: competence, on the ambiguous worlds --------------------------------
+        per_world: list[dict[str, Any]] = []
+        for entry in surveyed:
+            if entry["stratum"] != "ambiguous":
+                per_world.append({k: v for k, v in entry.items() if k != "world_bytes"})
+                continue
+            tag = "c%d" % len(per_world)
+            world_bytes = entry["world_bytes"]
+            pair = entry["ambiguous_pair"]
+            census = entry["census"]
+            demand_a = consumer.consumer_demand("A", pair["targets"][pair["components"][0]])
+            demand_b = consumer.consumer_demand("B", pair["targets"][pair["components"][1]])
+            determined = consumer.consumer_demand(
+                "determined", census["canonical_targets"][str(CONTRAST_ROW)]
             )
-            isolated.append(ablated_run)
-
-            # ---- the probe is an experiment, not an adoption --------------------------------
-            demands_pair = canonical_json(
-                {"demands": [demand_a, demand_b]}
-            ).encode("ascii")
-            rollback_run = _run(
-                _build_capsule(
-                    base, tag + "-rollback",
-                    {"WORLD.json": world_bytes, "STATE.json": g3_bytes,
-                     "DEMANDS.json": demands_pair},
-                ),
-                "probe_rollback",
-            )
-            isolated.append(rollback_run)
-
-            # ---- the sequences ---------------------------------------------------------------
             sequences = {
                 "determined_then_A": [determined, demand_a],
                 "determined_then_B": [determined, demand_b],
@@ -476,7 +514,7 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
             static: dict[str, Any] = {}
             for name in STATIC_ARMS:
                 static[name] = {}
-                for seq in ("determined_then_A", "determined_then_B"):
+                for seq in DETERMINED_FIRST:
                     report = _run(
                         _build_capsule(
                             base, "%s-static-%s-%s" % (tag, name, seq),
@@ -505,10 +543,15 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                         isolated.append(report)
                         diagnostic[force][order][seq] = _sequence_summary(report)
 
-            # ---- ablation of generation three -------------------------------------------------
-            ablated_state = runtime.create_state(
-                g3["machinery_state"], g3["consumer_state"],
-                policy=None, probe_budget=g3["probe_budget"],
+            rollback_run = _run(
+                _build_capsule(
+                    base, tag + "-rollback",
+                    {"WORLD.json": world_bytes, "STATE.json": g3_bytes,
+                     "DEMANDS.json": canonical_json(
+                         {"demands": [demand_a, demand_b]}
+                     ).encode("ascii")},
+                ),
+                "probe_rollback",
             )
             ablation = _run(
                 _build_capsule(
@@ -519,24 +562,11 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                 ),
                 "sequence",
             )
-            isolated.append(ablation)
-
-            # ---- mutation and corruption -----------------------------------------------------
-            mutated_policy = copy.deepcopy(g3["policy"])
-            mutated = runtime.create_state(
-                g3["machinery_state"], g3["consumer_state"],
-                policy=runtime.diagnostic_policy(
-                    mutated_policy["body"],
-                    [not value for value in mutated_policy["truth_table"]],
-                    mutated_policy["generation"],
-                ),
-                probe_budget=g3["probe_budget"],
-            )
             mutation = _run(
                 _build_capsule(
                     base, tag + "-mutation",
                     {"WORLD.json": world_bytes,
-                     "STATE.json": runtime.encode_state(mutated),
+                     "STATE.json": runtime.encode_state(mutated_state),
                      "DEMANDS.json": sequence_bytes["determined_then_B"]},
                 ),
                 "sequence",
@@ -544,14 +574,11 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
             corruption = _run(
                 _build_capsule(base, tag + "-corrupt", {"STATE.json": g3_bytes}), "corruption"
             )
-            isolated += [mutation, corruption]
+            isolated += [rollback_run, ablation, mutation, corruption]
 
             per_world.append(
                 {
-                    "world_id": world["world_id"],
-                    "world_digest": world["world_digest"],
-                    "census": {k: v for k, v in census.items() if k != "witnesses"},
-                    "ambiguous_pair": pair,
+                    **{k: v for k, v in entry.items() if k != "world_bytes"},
                     "demands": {
                         "A": {"target": demand_a["target"], "digest": demand_a["demand_digest"]},
                         "B": {"target": demand_b["target"], "digest": demand_b["demand_digest"]},
@@ -560,25 +587,12 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                             "digest": determined["demand_digest"],
                         },
                     },
-                    "episode_survey": episodes_run.get("survey"),
-                    "episodes_fixture_present": episodes_run.get("episodes_fixture_present"),
-                    "expressibility": expressibility,
-                    "generation_three": {
-                        "acquisition": acquire_run.get("acquisition"),
-                        "state_digest": g3["state_digest"],
-                        "policy_fires_on": (acquire_run.get("acquisition") or {}).get(
-                            "policy_fires_on"
-                        ),
-                    },
-                    "ablated_acquisition": ablated_run.get("acquisition"),
-                    "probe_rollback": rollback_run.get("probe_rollback"),
                     "static_arms": static,
                     "diagnostic": diagnostic,
+                    "probe_rollback": rollback_run.get("probe_rollback"),
                     "ablation": {
                         "generation_three_removed": _sequence_summary(ablation),
-                        "removal_returns_to_m2_byte_exactly": runtime.encode_state(
-                            ablated_state
-                        )
+                        "removal_returns_to_m2_byte_exactly": runtime.encode_state(ablated_state)
                         == arm_bytes["M2"],
                         "ablated_state_digest": ablated_state["state_digest"],
                     },
@@ -599,8 +613,28 @@ def run_experiment(population_path: Path = POPULATION_PATH) -> dict[str, Any]:
                 "canonical_python": list(CANONICAL_PYTHON),
                 "matches_canonical": tuple(sys.version_info[:3]) == CANONICAL_PYTHON,
                 "ambiguous_row": AMBIGUOUS_ROW,
-                "upper_row": UPPER_ROW,
+                "witness_row": WITNESS_ROW,
+                "contrast_row": CONTRAST_ROW,
             },
+            "pooled_record": {
+                "episode_count": len(pooled),
+                "worlds_contributing": len(surveyed),
+                "row_components": pooled_survey["row_components"],
+                "undetermined": pooled_survey["undetermined"],
+                "determined": pooled_survey["determined"],
+                "record_digest": sha256_bytes(record_bytes),
+                "no_episodes_fixture_in_any_capsule": all(
+                    item.get("episodes_fixture_present") is False for item in surveyed
+                ),
+            },
+            "expressibility": expressibility,
+            "generation_three": {
+                "acquisition": acquire_run.get("acquisition"),
+                "state_digest": g3["state_digest"],
+                "policy_fires_on": (acquire_run.get("acquisition") or {}).get("policy_fires_on"),
+                "one_policy_for_the_whole_population": True,
+            },
+            "ablated_acquisition": ablated_run.get("acquisition"),
             "worlds": per_world,
             "boundary": {
                 "no_capsule_held_a_producer_fixture": all(
