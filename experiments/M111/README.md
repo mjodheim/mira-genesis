@@ -54,9 +54,11 @@ operator in a monotone candidate space makes one. That is the depth-three depend
 
 ## The record is pooled, and a measurement forced it
 
-A survey of **160 worlds** found row-3 ambiguity in 10 and row 7 in 57, and **zero co-occurrences**
-where independence predicts about 3.6. In this carrier the ambiguity that makes a probe necessary and
-the row that forces a policy out of the monotone language do not live in the same world.
+Across **1 160 worlds** — a 160-world census plus a 1 000-world search over both declared seed ranges
+— row-3 ambiguity and row-7 reachability **never co-occur**. At roughly 6 per cent ambiguity and 36
+per cent row-7 reachability, independence predicts about 25 such worlds and zero were found. In this
+carrier the ambiguity that makes a probe necessary and the row that forces a policy out of the
+monotone language do not live in the same world.
 
 So the population has **two strata** and the record spans both: an *ambiguous* world contributes the
 undetermined row, a *witness* world contributes row 7 as determined, and **one policy** is acquired

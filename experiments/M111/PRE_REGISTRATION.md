@@ -208,9 +208,16 @@ world can hold the barrier.** The design above acquired one policy per world. A 
 | **row 3 ambiguous *and* row 7 present** | **0** |
 
 Row 7 is reachable in 57 of 160 worlds and row 3 is ambiguous in 10, so independence would predict
-about 3.6 co-occurrences. Zero were observed. In this carrier the ambiguity that makes a probe
-necessary and the row that forces a policy out of the monotone language **do not co-occur in one
-world**.
+about 3.6 co-occurrences. Zero were observed.
+
+A second, wider search then scanned **1 000 further worlds** across both declared seed ranges — 500 in
+the development range and 500 in the canonical range — looking for a single world carrying both. It
+found **none**. Over **1 160 worlds** in total, at roughly 6 per cent ambiguity and 36 per cent row-7
+reachability, independence predicts about **25** co-occurrences and **zero** were observed.
+
+This is not rarity. In this carrier the ambiguity that makes a probe necessary and the row that
+forces a policy out of the monotone language **do not co-occur in one world**, and no amount of
+searching will produce one.
 
 The repair is not to weaken the requirement, which would delete the depth-three claim. It is to
 notice that a lineage does not live in one world. Its record spans everything it has met, so episodes
