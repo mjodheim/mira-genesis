@@ -124,13 +124,13 @@ P1–P24, computed by an independent checker from the preserved result.
 | P2 | the restored `M0`/`M1`/`M2` reproduce the frozen M109 state digests, and M110's result bytes are bound |
 | P3 | boundary audit confirms no producer-domain constant in the M111 runtime or population |
 | P4 | all arms share one adapter and differ only in declared lineage state |
-| P5 | every canonical world exhibits `A` and `B` with the identical feature row and different components |
-| P6 | the ambiguity is confirmed by a complete census over every target and probe state |
+| P5 | every ambiguous canonical world exhibits `A` and `B` with the identical feature row and different components |
+| P6 | ambiguity is confirmed by a complete census on every ambiguous world, and row 7 is determined on every witness world |
 | P7 | the monotone rule space holds **zero** programs firing at row 3 and not row 7 |
 | P8 | the M109 terminal state, reproduced at digest `5c08fa30…`, already holds the lineage's own non-monotone operator, and its policy rule space is 127 with at least one separating program |
 | P9 | non-monotone operators are absent from the monotone candidate space and present in the complete one |
 | P10 | the acquired policy is expressible only in the post-generation-2 rule space |
-| P11 | the policy is acquired from a lineage-produced record, with no episodes fixture present |
+| P11 | one policy is acquired from a single record pooled across the whole population, with no episodes fixture present |
 | P12 | the acquired policy fires on every undetermined observed row and on no determined observed row |
 | P13 | a probe leaves the state byte-identical: it is an experiment, not an adoption |
 | P14 | `M0`, `M1` refuse both `A` and `B` on every world |
@@ -193,6 +193,41 @@ run could ever satisfy that, and a predicate that cannot be true is as useless a
 be false. What the equalization claim actually needs is that no arm is handed a larger budget and
 that the diagnostic arm does not buy its result with extra experiments. P20 now states exactly
 that, and it is stated before any protocol exists.
+
+**Correction 5 — the record is pooled across the lineage's worlds, because in this carrier no single
+world can hold the barrier.** The design above acquired one policy per world. A pre-freeze survey of
+**160 independently generated worlds** measured why that cannot work here:
+
+| structure | worlds |
+|---|---|
+| rows `{1,3}` only | 96 |
+| rows `{1,3,5,7}` | 44 |
+| rows `{1,3,7}` | 13 |
+| rows `{1,3,5}` | 7 |
+| row 3 ambiguous | 10 |
+| **row 3 ambiguous *and* row 7 present** | **0** |
+
+Row 7 is reachable in 57 of 160 worlds and row 3 is ambiguous in 10, so independence would predict
+about 3.6 co-occurrences. Zero were observed. In this carrier the ambiguity that makes a probe
+necessary and the row that forces a policy out of the monotone language **do not co-occur in one
+world**.
+
+The repair is not to weaken the requirement, which would delete the depth-three claim. It is to
+notice that a lineage does not live in one world. Its record spans everything it has met, so episodes
+are **pooled across the population** and one policy is acquired from the whole history: an *ambiguous*
+world contributes the undetermined row, a *witness* world contributes row 7 as determined, and the
+pooled requirement is exactly the one no monotone program satisfies.
+
+This is a stronger claim than the per-world one, not a weaker one: a single policy must hold across
+every world in the population rather than being refitted for each. The population is therefore
+declared in **two strata**, both admitted on structure only:
+
+- **ambiguous worlds** — the only ambiguous base-state row is row 3;
+- **witness worlds** — row 7 is present and determined at the base state.
+
+Competence is measured on the ambiguous worlds, because that is where `A` and `B` live. The 160-world
+measurement is recorded here rather than in a result, because it is what motivated the design and it
+was taken before any protocol existed.
 
 ## What a positive M111 would not license
 
