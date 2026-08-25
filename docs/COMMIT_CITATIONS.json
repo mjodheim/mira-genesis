@@ -263,6 +263,15 @@
         "experiments/M102/PROTOCOL_CANDIDATE.json"
       ]
     },
+    "1dfd04b939b474047cff1c7196b512ea6c3d21f5": {
+      "subject": "science(m110): record the pre-freeze rehearsal and its predicted stable evidence digest",
+      "preserved_by": "experiment/m110-apparatus-v1",
+      "cited_in": [
+        "experiments/M110/PROTOCOL.json",
+        "experiments/M110/PROTOCOL_CANDIDATE.json",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
       "subject": "test: preserve negative M074 scientific result",
       "preserved_by": "main",
@@ -597,6 +606,14 @@
         "results/M026_METAPRODUCTIVITY_DEVELOPMENT_RESULT.md"
       ]
     },
+    "401686a05db8de31d41549d1d5be6fe19a79af77": {
+      "subject": "result(m110): preserve the unique canonical first result",
+      "preserved_by": "experiment/m110-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "405ff2024465b5465b2c1551b47598b94134af18": {
       "subject": "science(m101): amend pre-run Git freeze verification",
       "preserved_by": "main",
@@ -859,6 +876,14 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
+    "57603b71f848ce1605c2cf8607907735441bfaf4": {
+      "subject": "science(m110): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m110-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
@@ -1607,7 +1632,7 @@
       ]
     },
     "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
-      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis\u00e2\u2020\u2019synthesis\u00e2\u2020\u2019adoption feat(docker): sandbox isolation Dockerfile",
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosisâ†’synthesisâ†’adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",

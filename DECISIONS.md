@@ -3001,3 +3001,103 @@ Recursive depth of **three**, and the first measurement of **acceleration** — 
 generations arrive at decreasing cost, rather than merely arriving. Until acceleration is measured,
 no result may be described as compounding, and until depth three is closed, none may be described as
 open-ended.
+
+## D079 — M110 qualifies census-conditional causal transfer of the acquired machinery
+
+### The decision
+
+M110 attempt 1 is a **positive qualified result**, and H55 is supported within its frozen bounds —
+**both halves**. The unique canonical runner executed exactly once from frozen protocol `05826a37…`
+on the canonical CPython 3.11.16 runtime, at freeze commit `57603b71` on a clean worktree, and
+produced result `cbd3ea3e…`, stable evidence `92ee5e05…`, raw bytes `163a46da…`. Those first bytes
+were committed at `401686a`, tagged `experiment/m110-canonical-first-result` and **pushed before any
+checker ran**. The single frozen checker replay then computed **P1-P24 all true**, report
+`e598b95c…`, replay equal, with zero model, network and remote-execution calls across **186 isolated
+processes** over six canonical worlds.
+
+The stable evidence digest is byte-identical to the one `PRE_FREEZE_REHEARSAL.md` predicted **before**
+the freeze, in a throwaway clone that received the sources with CRLF. That prediction was recorded
+inside a bound apparatus member, so it could not be reconciled afterwards.
+
+### What is new here, and why M109 could not have shown it
+
+M109 qualified two successive lineage-acquired machinery generations, entirely inside one
+three-signal Boolean laboratory. The strongest objection it left standing was not "can it do it a
+third time?" but **"it works because that laboratory was built for it."**
+
+M110 restores the M109 rule cascade from the producer's frozen result bytes — verified to reproduce
+the recorded `M0`, `M1` and `M2` state digests, with the raw SHA-256 `0af98fb4…` bound into the
+checker — and runs it, unchanged and unretrained, against reference-bearing JSON documents over the
+chain `0 < 1 < 2 < 3`. Attribution is executed by `m109_runtime.attribute` itself; a reimplementation
+would have ended the generational chain rather than continued it.
+
+```
+row 7, inside the producer census    M0 0/6   M1 6/6   M2 6/6
+row 3, inside the producer census    M0 0/6   M1 0/6   M2 6/6
+row 5, OUTSIDE it                    M0 6/6   M1 0/6   M2 0/6
+row 1, conservation                  M0 6/6   M1 6/6   M2 6/6
+
+ReachImprove strict on every world:  M0 94-261  <  M1 134-449  <  M2 324-558
+```
+
+**H55-a.** Inside the producer's reachable attribution census the restored cascades strictly add
+capability, across a materially different carrier that took no part in producing them.
+
+**H55-b.** Outside it they strictly *remove* capability. A fresh `M0` resolves the row-5 demand on
+every world and both `M1` and `M2` refuse on every world.
+
+### The negative half is a lemma, not an accident
+
+Conservative adoption pins an acquired rule only on rows the producer's census declares reachable.
+Rows 0 and 4 are impossible in **any** domain implementing these feature semantics, because
+`¬g1 ⟹ g2`. Row 5 is excluded only by `g0 ⟹ g1`, which is a property of prefix truncation rather
+than of the vocabulary — and a reference edge breaks it. The conservatism guarantee therefore says
+nothing off the producer's reachable row set, and the adopted program `g0 ∧ g2` extrapolates there
+regardless.
+
+The consumer census confirms the geometry is genuinely new: **row 5 is reached by the consumer and by
+no producer state**, while labels agree with the producer on every shared row and are world-invariant
+across the population. A pre-freeze survey of 60 independently generated worlds admitted 19 on
+structure alone and found the identical row-to-component map in all 19.
+
+### The dissociation
+
+**Capacity rises monotonically across the generational chain while realized competence does not.**
+`ReachImprove` is strict on every world, and on a failure geometry its producer could not present the
+acquired machinery misroutes the single step it is allowed and ends strictly worse than the
+predecessor it improved on. This is the first Genesis result in which an acquired improvement is
+measured doing harm.
+
+### The controls
+
+Deeper bound at 13 nodes leaves `M0` refusing rows 7 and 3, so the exclusions are reach rather than
+budget; the monotone-closure certificate, the visible-function lemma and the fixed point at bounds
+7/9/11/13 confirm on every world. Ablation of generation 2 is a byte-exact return to `M1` and loses
+row 3; ablation of generation 1 is a byte-exact return to `M0`, loses row 7 and **regains row 5**.
+Mutation loses row 3. A capsule holding the rule bytes with a state holding none refuses. Corruption
+fails closed. The arms differ in `rules` and in no other field, and received identical world and
+demand bytes.
+
+### What this establishes
+
+**Bounded multi-generation acquisition-machinery improvement with census-conditional causal
+transfer.** An improvement the lineage acquired to its own acquisition machinery causally changes
+acquisition capability in a materially different family that took no part in producing it — upward
+inside the failure geometry its producer could present, and downward outside it.
+
+### What it does not establish
+
+Independent external-domain transfer; the consumer family is project-authored and not independently
+maintained, so **G4 does not advance**. The component registry and the feature vocabulary are shared
+authored vocabulary rather than transferred content. The family was **chosen** to reach row 5, which
+is declared in the frozen protocol as a deliberate stress test rather than a neutral sample. The host
+can widen either component directly, so the claim is about which component the cascade decides to
+extend, not about reach the host lacks. Recursive depth of three, measured acceleration, open-ended
+machinery growth, G1-G10 closure, general-agent evidence, self-hosting and AGI are all untouched.
+
+### Next ceiling
+
+Two, in order. First, **self-directed diagnosis**: whether the lineage can infer which internal
+component is limiting without being handed its name, across worlds where the true bottleneck varies —
+M110 shows the cost of getting that wrong. Second, an **independently authored consumer family**,
+which is the only thing that can move G4 past partial.

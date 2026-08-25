@@ -270,6 +270,30 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   as a correction before the freeze. D078. Recursive depth of **three** and **acceleration** remain
   unmeasured, and the registry, feature vocabulary and curriculum remain authored.
 
+- **M110/H55 is a positive qualified result, in both halves: the acquired machinery transfers, and it
+  transfers only as far as its producer's census reaches.** M109's whole chain happened inside one
+  three-signal Boolean laboratory, so the objection it left standing was that the mechanism works
+  because that laboratory was built for it. M110 restores the M109 rule cascade from the producer's
+  frozen result bytes -- verified to reproduce the recorded `M0`, `M1` and `M2` state digests, with
+  raw SHA-256 `0af98fb4...` bound into the checker -- and runs it unchanged against reference-bearing
+  JSON documents over the chain `0 < 1 < 2 < 3`, where a document's latent field lives in another
+  document reached by following its reference. Attribution is executed by `m109_runtime.attribute`
+  itself. From frozen protocol `05826a37...` at freeze commit `57603b71` the unique attempt produced
+  result `cbd3ea3e...`, committed at `401686a`, preserved and pushed before checking; the single
+  checker replay computed **P1-P24 all true**, report `e598b95c...`, replay equal, zero external calls
+  across **186 isolated processes** over six canonical worlds, and the stable projection is
+  byte-identical to the pre-freeze rehearsal's prediction. Unanimously across all six worlds: at row 7
+  `M0` 0/6 while `M1` and `M2` are 6/6; at row 3 `M0` and `M1` are 0/6 while `M2` is 6/6; and at row 5
+  -- **outside** the producer's reachable census -- `M0` is **6/6 while `M1` and `M2` are 0/6**.
+  Conservative adoption pins a rule only on rows the producer's census reaches, and row 5 is excluded
+  there only by `g0 implies g1`, a property of prefix truncation that a reference edge breaks. So the
+  acquired program extrapolates and is wrong. `ReachImprove` is strict on every world, `M0` 94-261
+  subset `M1` 134-449 subset `M2` 324-558, which makes M110 the first Genesis result where **capacity
+  rises across the generational chain while realized competence does not**, and the first where an
+  acquired improvement is measured doing harm. D079. The consumer family is project-authored and was
+  chosen to reach row 5, so **G4 does not advance**; the registry and feature vocabulary remain shared
+  authored vocabulary; recursive depth of three and acceleration remain unmeasured.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its

@@ -766,6 +766,93 @@ current_real_software_frontier:
     acceleration_measured: false
     current_ceiling: recursive_depth_of_three_and_measured_acceleration
 
+  M110:
+    status: positive_qualified_attempt_1
+    hypothesis: H55
+    hypothesis_status: supported_within_frozen_bounds_both_halves
+    decision_slot: D079
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_multi_generation_acquisition_machinery_improvement_with_census_conditional_causal_transfer
+    protocol_digest: 05826a375eb1106e1a98dd0e66e804f7a7abee8964569e1b37c7ba25d7796c8e
+    bound_apparatus_digest: becccc1c94327eed55b622b224522d041166d7edb6e9323835ba7c9b338c9bbc
+    bound_member_digest_modes: [raw, lf_normalized]
+    freeze_tag: experiment/m110-frozen-protocol-v1
+    freeze_commit: 57603b71f848ce1605c2cf8607907735441bfaf4
+    population_digest: d4e8ae471eb46bbf1bc40f51746cef83d6f5ea3a65c1eadd4388b8b07cdaa33e
+    result_digest: cbd3ea3e98986584c54ed02c41e5fbc1afc5a25dec2cbc9f1a9d6b9e46802744
+    stable_evidence_digest: 92ee5e051d9a955c500f6006f273b17e8d70dd0ffeda48cba8aca17a7146bfb7
+    result_raw_sha256: 163a46dadd815d98d03fede22905a181c4d406a19d391c5ee2631efc3a2488e3
+    result_tag: experiment/m110-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: e598b95cea85d6b1dff53afa81a03c3f6d2ab307e512edc0d8abbc928beeec83
+    positive_result_tag: experiment/m110-positive-result
+    predicates_computed: 24
+    predicates_true: 24
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    predecessor_milestone: M109
+    predecessor_decision_slot: D078
+    predecessor_result_digest: 262e0bd5b67b573a01f00293ec1fef79da94908819006f08acb8bd30d6941f09
+    predecessor_raw_bytes_bound_into_the_checker: 0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009
+    cascade_restored_not_reimplemented: true
+    attribution_executed_by: m109_runtime.attribute
+    transferred_content: the_rule_cascade_only
+    consumer_carrier: reference_bearing_json_documents_with_a_side_table
+    consumer_value_chain: [0, 1, 2, 3]
+    consumer_documents_per_world: 5
+    consumer_target_space_per_world: 1024
+    consumer_worlds: 6
+    consumer_seed_range: [1000, 1999]
+    development_seed_range: [0, 999]
+    latent_field_reached_only_by_an_accessor: true
+    second_execution_path: expression_rendered_as_python_compiled_and_executed
+    producer_reachable_rows: [1, 2, 3, 6, 7]
+    consumer_reachable_rows: [1, 3, 5, 7]
+    rows_only_the_consumer_reaches: [5]
+    labels_agree_on_every_shared_row: true
+    consumer_label_is_world_invariant: true
+    row_seven_solved: {M0: 0, M1: 6, M2: 6}
+    row_three_solved: {M0: 0, M1: 0, M2: 6}
+    row_five_solved: {M0: 6, M1: 0, M2: 0}
+    row_one_solved: {M0: 6, M1: 6, M2: 6}
+    positive_transfer_inside_the_producer_census: true
+    negative_transfer_outside_the_producer_census: true
+    reach_improve_m0_range: [94, 261]
+    reach_improve_m1_range: [134, 449]
+    reach_improve_m2_range: [324, 558]
+    reach_chain_strict_on_every_world: true
+    capacity_rises_while_realized_competence_does_not: true
+    monotone_closure_certificate_confirmed: true
+    visible_function_lemma_violations: 0
+    fixed_point_bounds: [7, 9, 11, 13]
+    baseline_fails_at_larger_bound: true
+    ablation_of_generation_two_byte_exact: true
+    ablation_of_generation_one_byte_exact: true
+    ablation_of_generation_one_regains_row_five: true
+    mutation_loses_row_three: true
+    built_but_unregistered_refuses: true
+    corruption_fails_closed: true
+    arms_differ_only_in_the_rule_cascade: true
+    host_shortcut_resolves_both_demands: true
+    isolated_processes: 186
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 4
+    pre_freeze_admission_survey_worlds: 60
+    pre_freeze_admission_survey_admitted: 19
+    pre_freeze_admission_survey_distinct_label_maps: 1
+    consumer_family_is_project_authored: true
+    consumer_family_chosen_to_reach_row_five: true
+    registry_and_feature_vocabulary_are_shared_authored_vocabulary: true
+    g4_advances_to_independent_transfer: false
+    recursive_depth_demonstrated: 2
+    acceleration_measured: false
+    current_ceiling: self_directed_diagnosis_of_the_limiting_component_and_an_independently_authored_consumer_family
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that
