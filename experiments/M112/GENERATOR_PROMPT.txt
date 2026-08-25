@@ -1,0 +1,18 @@
+Emit a JSON object with a single key "records" whose value is a list of exactly N entries.
+
+Each entry is an object with exactly two keys:
+
+  "fields" : an object with exactly three keys "alpha", "beta", "gamma".
+             Each value is an integer in the closed range 0 to 3.
+
+  "linked" : an object with exactly two keys "zeta" and "note".
+             "zeta" is an integer in the closed range 0 to 3.
+             "note" is a short lowercase ASCII string of at most eight characters.
+
+Produce the entries independently of one another. Do not repeat an entry. Do not order the entries
+by any field. Do not add keys, comments, prose, explanation or any other text: the response must be
+the JSON object and nothing else.
+
+You are not told what these records are for, and you should not guess. Do not attempt to make them
+interesting, balanced, adversarial, representative or difficult. Any such attempt would make the
+output worse for its purpose.
