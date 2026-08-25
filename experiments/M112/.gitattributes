@@ -1,0 +1,6 @@
+# Per-directory attributes owned by M112, registered in the same commit that creates the directory
+# and before any digest exists to be wrong. The root .gitattributes is bound by M105 and M106.
+# Digest-bearing artifacts under this contract are bound by raw bytes; prose is LF-normalized.
+*.md text eol=lf
+*.txt text eol=lf
+*.json -text

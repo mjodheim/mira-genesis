@@ -123,6 +123,8 @@ jobs:
 
       - name: No blind sealed bank may be revealed and no result may exist
         run: python scripts/check_blind_bank_readiness.py --assert-not-revealed
+      - name: M112 world bank not revealed
+        run: python scripts/check_m112_world_bank_readiness.py --assert-not-revealed
 
       # The gate reporting `phase: draft` on a repository with no artifacts proves nothing about
       # what it would refuse once artifacts exist. This constructs the three violations external

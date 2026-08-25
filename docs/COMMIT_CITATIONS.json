@@ -873,6 +873,14 @@
         "tests/test_historical_code_binding.py"
       ]
     },
+    "566e49851086bb72ed5c44ae5731e6035a0bdda0": {
+      "subject": "Merge pull request #209 from mjodheim/science/m111-self-diagnosis",
+      "preserved_by": "main",
+      "cited_in": [
+        "papers/genesis-ii-preprint/SUBMISSION_METADATA.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "571f9954533e8177412563d4f3f4de30e0a98454": {
       "subject": "test: preserve first M072 causal governance result",
       "preserved_by": "main",
