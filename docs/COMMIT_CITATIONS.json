@@ -1488,6 +1488,15 @@
         "experiments/M070/TASK_SELECTION.json"
       ]
     },
+    "9c61a14940b78221f330a28af87ef230a6f7fb3b": {
+      "subject": "science(m108): freeze the owner-authorized protocol",
+      "preserved_by": "experiment/m108-frozen-protocol-v1",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "9d482d21110cb258e80d02298b215cb14e6b2bcb": {
       "subject": "research: freeze M069 governed terminal tasks",
       "preserved_by": "main",
@@ -2078,6 +2087,15 @@
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "tests/test_repository_integrity.py"
+      ]
+    },
+    "ddcb2fae80c7bfca2996bde2f05313397182b6c8": {
+      "subject": "result(m108): preserve the unique canonical first result",
+      "preserved_by": "experiment/m108-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "de85e31b95520d0ff90e451d192d106cf56589a8": {

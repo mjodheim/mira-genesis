@@ -234,6 +234,23 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   D076 records it. This is **not** recursive self-improvement: one operator, acquired once, from a
   space the host codes. The **acquisition machinery** remains authored and is the next ceiling.
 
+- **M108/H53 is a positive qualified result: the first lineage-acquired modification of the
+  acquisition machinery.** The attribution rule the machinery uses to decide which part of itself is
+  at fault is held as lineage state and expressed as a program in the language the interpreter runs.
+  `M0`'s operator table is obtained by replaying M107's own frozen acquisition and is **saturated**
+  at the base width, so no failure of its can be an operator failure. From frozen protocol
+  `0160def2...` at freeze commit `9c61a14` the unique attempt produced result `9bb97e2d...`,
+  committed at `ddcb2fa`, preserved and pushed before checking; the single checker replay computed
+  **P1-P16 all true**, report `9c5627fb...`, replay equal, zero external calls across fourteen
+  isolated processes. A census over 63 states and 14 303 unconstructible pairs proves one feature row
+  unreachable while attributing; the monotone fragment's four-program rule space contains **zero**
+  consistent rules, so generation 1 is a *proved* precondition. Episodes covering two of three domain
+  rows leave two attribution classes and are refused; the full record exhausts the sixteen-program
+  space to one class. `M1` blames the signal interface, extends it and builds `B` in six nodes; `M0`
+  exhausts all twenty operators and refuses at bound 9 and again at 13, on an equal machinery-step
+  budget. Ablation is a byte-exact rollback. D077 records it. Recursive depth of **two** remains
+  unmeasured, and the blame labels remain authored supervision.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its
