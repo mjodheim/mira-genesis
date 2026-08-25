@@ -2692,3 +2692,73 @@ of exactly **four of sixteen** functions and is closed under its own operators, 
 every negation-dependent function are excluded by a monotonicity lemma rather than by budget.
 Acquiring `NOT` as executable state extends that image to sixteen. The successor must be built on
 such a substrate; it cannot be another milestone here.
+
+## D076 — M107 qualifies an endogenous extension of the lower interpreter
+
+### The decision
+
+M107 attempt 1 is a **positive qualified result**, and H52 is supported within its frozen bounds.
+The unique canonical runner executed exactly once from frozen protocol `928c4990…` on the canonical
+CPython 3.11.16 runtime, at freeze commit `308b4d9` on a clean worktree, and produced result
+`a11d6b3b…`, stable evidence `5c6eadfe…`, raw bytes `c4746bb7…`. Those first bytes were committed at
+`8270b78`, tagged `experiment/m107-canonical-first-result` and **pushed before any checker ran**. The
+single frozen checker replay then computed **P1-P16 all true**, report `0c5f9378…`, replay equal,
+with zero model, network and remote-execution calls.
+
+### What is new here, and why M106 could not have shown it
+
+M105 and M106 share an interpreter that hardcodes its operators and is *semantically complete* over
+two signals: all sixteen Boolean functions already lie inside its complete image, so no acquisition
+there can enlarge Boolean reach. Their reach claims are about the consumer dispatch image only.
+
+M107's interpreter holds **no operator semantics at all**. It evaluates an expression by looking each
+node's operator up in a table carried in the lineage's own state. The initial table is the monotone
+fragment `{AND, OR}`, whose complete image is **four of sixteen** functions and which is closed under
+its own operators, so every non-monotone target is excluded **by a monotonicity lemma at every node
+bound** rather than by a search budget. Nine nodes is the closure fixed point: images are identical
+at nine, eleven and thirteen.
+
+The lineage proved that insufficiency, searched the complete generic twenty-operator space, acquired
+one executable operator, registered it as state, survived producer death, and constructed both
+demanded functions:
+
+```
+complete_image(S0) = 4     D1, D2 excluded by lemma, budget-independent
+  -> acquisition: 20 candidates exhausted, exactly one surviving reach class
+  -> unary operator (1,0) registered as content-addressed lineage state
+complete_image(S1) = 16    D1, D2 constructible and executing to target
+```
+
+Ablation returns the image to exactly four and makes both targets unconstructible; the ablated state
+is **byte-identical** to S0. Mutation of the acquired table loses the reach. Corruption fails closed.
+Fresh controls holding S0, the same observations and the same exhaustive search fail at bound nine
+**and again at bound thirteen**.
+
+### The underdetermination control
+
+Observing D1 alone leaves **two** surviving reach classes and the lineage refuses. Only the two joint
+demands collapse the survivors to one. This was pre-registered as P4 before any protocol existed: an
+acquisition adopting an extension under D1 alone would be selecting rather than inferring.
+
+### What this establishes
+
+**Bounded endogenous extension of the lower interpreter.** This is the first Genesis result in which
+an acquisition changes what the interpreter can express at all, rather than which of its existing
+expressions is selected. `complete_image(S0)` provably excludes the target; `complete_image(S1)`
+contains it; `S1` differs from `S0` only by the acquired extension.
+
+### What it does not establish
+
+Modification of the **acquisition machinery** itself; recursive depth of two or more; measured
+recursive acceleration; self-identification of which internal mechanism to improve; open-ended
+operator growth; transfer to an independently maintained domain; G1-G10 closure; general-agent
+evidence; self-hosting; AGI. One operator was acquired once, from a space of twenty the host codes.
+
+### Next ceiling
+
+The acquisition machinery remains authored: the search, the candidate space, the adoption rule, the
+demands and the evaluator. The successor must establish that an acquired extension changes the
+mechanism that performs later acquisitions — `M0` cannot construct `B`; `M0` acquires `A`; `A`
+transforms `M0` into `M1`; `M1` constructs `B`; and `B` lies outside `complete_image(M0)`. That is
+the threshold of recursive depth, and no result before it may be described as recursive
+self-improvement.

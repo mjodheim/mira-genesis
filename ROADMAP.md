@@ -486,6 +486,14 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   fixed before implementation, so H51 replicates rather than repairs H50. Both fresh arms refused by
   underdetermination with the semantic image exhausted. D075. M105 stays negative.
 
+- **M107 - endogenous extension of the lower interpreter: POSITIVE.** The first result in which an
+  acquisition changes what the interpreter can express. S0's complete image is four of sixteen and
+  excludes both targets by a monotonicity lemma at every bound; the lineage exhausted the generic
+  twenty-operator space, acquired one unary operator as state, survived producer death and reached
+  sixteen. Ablation returns exactly to four with a byte-identical S0. One demand alone leaves two
+  reach classes and is refused. P1-P16 all computed true, replay equal. D076. Recursive depth remains
+  zero: the acquisition machinery is untouched.
+
 M095, M098, M103 and M105's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.
 
