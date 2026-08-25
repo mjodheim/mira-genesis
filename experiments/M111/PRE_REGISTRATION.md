@@ -127,18 +127,18 @@ P1–P24, computed by an independent checker from the preserved result.
 | P5 | every canonical world exhibits `A` and `B` with the identical feature row and different components |
 | P6 | the ambiguity is confirmed by a complete census over every target and probe state |
 | P7 | the monotone rule space holds **zero** programs firing at row 3 and not row 7 |
-| P8 | after one non-monotone operator the rule space grows and holds at least one such program |
+| P8 | the M109 terminal state, reproduced at digest `5c08fa30…`, already holds the lineage's own non-monotone operator, and its policy rule space is 127 with at least one separating program |
 | P9 | non-monotone operators are absent from the monotone candidate space and present in the complete one |
 | P10 | the acquired policy is expressible only in the post-generation-2 rule space |
 | P11 | the policy is acquired from a lineage-produced record, with no episodes fixture present |
-| P12 | the acquired policy fires on the undetermined rows and on no determined row |
+| P12 | the acquired policy fires on every undetermined observed row and on no determined observed row |
 | P13 | a probe leaves the state byte-identical: it is an experiment, not an adoption |
 | P14 | `M0`, `M1` refuse both `A` and `B` on every world |
 | P15 | `M2` resolves `A` and refuses `B` on every world |
 | P16 | a fixed always-signal strategy resolves `B` and refuses `A` on every world |
 | P17 | the diagnostic lineage resolves both `A` and `B` on every world, in both demand orders |
 | P18 | never-probe fails the ambiguous demand in both orders |
-| P19 | always-probe succeeds in one order and fails in the other, on the same total budget |
+| P19 | always-probe fails the ambiguous demand when the determined demand comes first, in both probe orders, on the same total budget |
 | P20 | probe counts are equal between the diagnostic arm and the fixed probe arms |
 | P21 | ablation of generation 3 is byte-exact and loses exactly the ambiguous demand |
 | P22 | mutation of the acquired policy changes behaviour causally; corruption fails closed |
@@ -158,6 +158,34 @@ Recorded because a claim of acceleration must survive them, not because they dec
 Acceleration is reported if it appears and reported as absent if it does not. **Three generations do
 not license the word "compounding" and never will without a pre-registered trend across generations
 that survives its controls.**
+
+## Corrections recorded before freeze
+
+**Correction 1 — the non-monotone operator was already the lineage's own, and this is stronger than
+what was first written.** The draft above describes M111 adopting a non-monotone operator to make the
+policy expressible. That is not what the record shows. M109's *terminal* state — the state after
+generation 2 resolved stage two, reproduced here byte-exactly at digest `5c08fa30…` — already holds
+an operator the lineage acquired for itself, named `ACQUIRED_cfc43adf`, whose truth table is `[1, 0]`:
+**negation**, and non-monotone. It entered the table because generation 2 widened the candidate space
+and the widened search adopted it.
+
+So the enabling step is not an M111 act at all. Generation 2 enlarged the policy language **as a side
+effect of resolving its own demand**, from 18 programs to 127, of which 25 separate row 3 from row 7.
+M111 inherits that and acquires generation 3 inside it. The predecessor is therefore the M109
+terminal state and not the state at generation 2's adoption, and the ablation control removes
+generation 2 *and the operator it brought*, which is what the dependency actually is.
+
+**Correction 2 — the acquired policy fires on row 2 as well as row 3, and row 2 is unreachable.**
+Conservative adoption pins a policy only on rows the record observed. Row 2 is `(F,T,F)`, and `¬g1`
+implies `g2` in any domain implementing these features, so every reachable row here is odd and row 2
+never arises. The policy firing there is unobservable rather than harmless-by-argument, and it is
+disclosed rather than trimmed. **P12 is therefore stated over observed rows**, not over all eight.
+
+**Correction 3 — the always-probe control must be run in both demand orders.** A single order would
+let a reader believe the control fails for a reason of principle. It does not: it fails because it
+spends a scarce budget on the first demand it meets. Both orders are run and both are reported, so
+the control's order-dependence is visible instead of hidden, and the acquired policy's
+order-independence is a measurement rather than a claim.
 
 ## What a positive M111 would not license
 
