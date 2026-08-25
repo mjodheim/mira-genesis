@@ -2762,3 +2762,128 @@ mechanism that performs later acquisitions — `M0` cannot construct `B`; `M0` a
 transforms `M0` into `M1`; `M1` constructs `B`; and `B` lies outside `complete_image(M0)`. That is
 the threshold of recursive depth, and no result before it may be described as recursive
 self-improvement.
+
+## D077 — M108 qualifies an endogenous modification of the acquisition machinery
+
+### The decision
+
+M108 attempt 1 is a **positive qualified result**, and H53 is supported within its frozen bounds.
+The unique canonical runner executed exactly once from frozen protocol `0160def2…` on the canonical
+CPython 3.11.16 runtime, at freeze commit `9c61a14` on a clean worktree, and produced result
+`9bb97e2d…`, stable evidence `0f976f9e…`, raw bytes `1b0c530b…`. Those first bytes were committed at
+`ddcb2fa`, tagged `experiment/m108-canonical-first-result` and **pushed before any checker ran**. The
+single frozen checker replay then computed **P1-P16 all true**, report `9c5627fb…`, replay equal,
+with zero model, network and remote-execution calls across fourteen isolated processes.
+
+### What is new here, and why M107 could not have shown it
+
+M107 changed *what the lineage can express*. Its acquisition machinery — the search, the candidate
+space, the adoption rule, and above all the attribution of failure — was authored and fixed, and
+recursive depth was zero.
+
+M108 holds the **attribution rule as lineage state**, expressed as a program in the very language the
+interpreter runs, over failure features rather than task signals. Acquiring that rule is a
+modification of the machinery, not of the vocabulary it searches.
+
+`M0` is not constructed for this milestone. Its operator table is obtained by replaying M107's own
+frozen acquisition, so the claim that M108 begins where M107 ended is a computed fact:
+`{AND, OR, ACQUIRED_153c9dbcc7}`, saturated at the base width with all sixteen functions of two
+signals already reachable. No failure of `M0`'s can therefore be an operator failure.
+
+### Why this is a second generation rather than another extension
+
+Attribution is consulted only on a demand the lineage could not construct. A complete census over the
+state family — every operator table reachable by one candidate addition, at every interface width,
+against all 256 world functions, 14 303 unconstructible pairs — establishes that feature row
+`(False, True)` is **unreachable while attributing**: a saturated operator table together with a
+demand that is a function of the readable signals means the demand is already constructible. Two
+rules differing only there are the same machinery.
+
+Every rule consistent with the blame record maps the all-false row to "blame the signal interface".
+The complete image of the monotone fragment over the feature signals holds four programs, none of
+them true at that row, because no constant is expressible from projections under `AND` and `OR`. The
+exclusion is the same monotonicity lemma M107 used, at every node bound.
+
+A lineage that had not acquired a negation-like operator therefore **could not express its own
+corrected attribution rule at all**. The monotone control confirmed it: rule space four, consistent
+rules zero. Generation 1 is a *proved* precondition for generation 2.
+
+```
+M0  attribution hardwired to the operator axis, reach saturated at base width
+  -> episodes covering rows {0,3}:  2 attribution classes, REFUSED
+  -> episodes covering rows {0,2,3}: 16-program space exhausted, 2 consistent
+                                     rules, 1 class, all non-monotone
+  -> adopted [1,0,1,0], two nodes, content-addressed lineage state
+M1  attributes B to the signal interface, extends it, builds B in six nodes
+M0  exhausts all twenty operators and refuses, at bound 9 and again at 13
+```
+
+Both lineages had the same machinery-step budget and both used one step of two. The difference is
+attribution, not allowance.
+
+### The two-sided exclusion
+
+`B` was outside reach for two independent structural reasons, each budget-independent. Every
+expression at the base interface width reads only signals 0 and 1, so its world image is constant
+along axis 2: sixteen liftable images out of 256 world functions, intersection empty, **for any
+operator set, arity and depth**. And `B` is non-monotone, so it is outside the complete image of the
+monotone fragment at *full* width by the lemma. `B` required **both** generations; neither alone
+sufficed.
+
+### The controls
+
+Ablation of the rule is a **byte-exact** rollback to `M0` and the capability is gone. Mutation
+returns attribution to the operator axis and the capability is gone. Corruption fails closed on
+identity mismatch. The producer process was dead before `B` existed; the producer capsule never held
+the demand and no later capsule held the episodes.
+
+### What this establishes
+
+**Bounded lineage-acquired modification of the acquisition machinery.** Within a frozen bounded
+environment, a modification the lineage acquired to its own acquisition machinery causally expanded
+the set of later improvements it could construct under an equal budget. This is the first Genesis
+result in which an acquisition changes the machinery that performs later acquisitions rather than the
+vocabulary that machinery searches.
+
+### What it does not establish
+
+Recursive depth of two or more; measured recursive acceleration; autonomous identification of which
+mechanism to improve; open-ended machinery growth; transfer to an independently maintained domain;
+G1-G10 closure; general-agent evidence; self-hosting; AGI.
+
+Two limits are **conceded and were declared before the freeze**. The episode blame labels are
+authored supervision: M108 tests whether an acquired attribution rule changes later acquisitions, not
+whether a lineage can invent the labels. And `B`'s feature row is one the episode set already covers,
+so what is shown is generalization to a new demand with a recorded feature pattern, not extrapolation
+into an unobserved feature region.
+
+### Two corrections recorded before the freeze
+
+The first draft of the pre-registration asserted a single correct rule, `f0 AND NOT f1`. Building the
+instrument showed that claim false twice, and both corrections are recorded in the pre-registration
+rather than repaired silently. The original feature vocabulary made the two features dependent,
+leaving one row unreachable and a *monotone* rule consistent with every realizable episode, which
+would have made the recursion argument vacuous. And determinacy judged against the observed rows
+alone would have let a single episode determine a rule. No protocol, population or result existed at
+any point during either correction.
+
+### A structural repository defect, resolved without touching frozen bytes
+
+M107 pinned its bound bytes with milestone-local `.gitattributes` files and bound them. That fixed
+M107 and does not generalize: git reads at most one attribute file per directory, so binding one in a
+shared directory locks that directory for every later milestone. M108's sources sit in exactly those
+directories and could not be pinned without editing bytes M107's frozen protocol binds — which
+M107's own live gate correctly refuses.
+
+M108 binds JSON evidence by raw bytes, where digests genuinely depend on them, and Python and
+Markdown members by SHA-256 over LF-normalized content, with the mode recorded per member. This is
+strictly more portable than raw-byte binding: it is blind only to a difference that cannot change
+what a Python module does. The full rehearsal confirmed the bound apparatus verifies in a foreign
+checkout that received the sources with CRLF.
+
+### Next ceiling
+
+Recursive depth of two. `M1`'s improved machinery must itself acquire a **further** machinery
+improvement that `M0` could not acquire, with `ReachImprove(M0) ⊂ ReachImprove(M1) ⊂
+ReachImprove(M2)`, and the second acquisition must be enabled *because of* the first. Until that is
+closed, no result may be described as recursive self-improvement.

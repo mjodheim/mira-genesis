@@ -494,6 +494,15 @@ The ordered boundaries now continue as stronger claims rather than larger versio
   reach classes and is refused. P1-P16 all computed true, replay equal. D076. Recursive depth remains
   zero: the acquisition machinery is untouched.
 
+- **M108 - endogenous modification of the acquisition machinery: POSITIVE.** The first result in
+  which an acquisition changes the machinery that performs later acquisitions rather than the
+  vocabulary it searches. The attribution rule is held as lineage state and expressed in the
+  lineage's own language; every rule consistent with its blame record is non-monotone, so a lineage
+  without M107's acquisition could not express its own corrected attribution at all. `B` was excluded
+  two ways, both budget-independent: outside all sixteen liftable images at the base interface width
+  for any operator set, and outside the monotone image at full width by the lemma. P1-P16 all
+  computed true, replay equal. D077. Recursive depth of two remains unmeasured.
+
 M095, M098, M103 and M105's negative verdicts are final for attempt 1. Positive successors may not be
 cited to retroactively strengthen or repair their predecessors.
 

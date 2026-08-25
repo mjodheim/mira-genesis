@@ -1446,3 +1446,12 @@ From frozen protocol `928c4990...` the unique attempt produced `a11d6b3b...`, pr
 checking; the single checker replay computed P1-P16 all true (`0c5f9378...`). `complete_image` goes
 4 -> 16 by one acquired unary operator held as lineage state, with the exclusion proved by a
 monotonicity lemma rather than a search bound. D076. Recursive depth remains zero.
+
+## M108 - positive qualified machinery modification (2026-08-25)
+
+The first Genesis result in which an acquisition changes the machinery that performs later
+acquisitions. From frozen protocol `0160def2...` the unique attempt produced `9bb97e2d...`,
+preserved before checking; the single checker replay computed P1-P16 all true (`9c5627fb...`). The
+attribution rule is held as lineage state and expressed in the lineage's own language; the monotone
+rule space contains zero consistent rules, so M107's acquisition is a proved precondition. D077.
+Recursive depth of two remains unmeasured, and the episode blame labels are authored supervision.
