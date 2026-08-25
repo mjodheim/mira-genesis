@@ -294,6 +294,28 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   chosen to reach row 5, so **G4 does not advance**; the registry and feature vocabulary remain shared
   authored vocabulary; recursive depth of three and acceleration remain unmeasured.
 
+- **M111/H56 is a positive qualified result: the lineage spends an experiment where its own
+  observation runs out, and could not have derived where to spend it before generation 2.** M110
+  measured an acquired improvement doing harm; widening the census would not repair that. M111 instead
+  exhibits an information bound: in each ambiguous world two demands present the **identical feature
+  row** `(F, T, T)` and have different limiting components, so no function of the feature vocabulary
+  is right on both. Unanimously across three ambiguous worlds and both probe orders: `M0` 0/3 and 0/3,
+  `M1` 0/3 and 0/3, `M2` 3/3 and 0/3, an authored always-signal strategy 0/3 and 3/3, never-probe 3/3
+  and 0/3, always-probe 3/3 and 0/3 having spent the same budget on a determined demand -- and the
+  **acquired diagnostic policy 3/3 and 3/3**. From frozen protocol `395b2c35...` at freeze commit
+  `1d5d70a4` the unique attempt produced result `7b14b07e...`, committed at `9837d0b`, preserved and
+  pushed before checking; the single checker replay computed **P1-P24 all true**, report `c2109e52...`,
+  replay equal, zero external calls across **127 isolated processes**, and the stable projection is
+  byte-identical to the pre-freeze rehearsal's prediction. **Depth three is a lemma**: the policy rule
+  space is 18 at `M1` with **zero** programs separating row 3 from row 7, and **127** at `M2` with
+  **25**, because M109's terminal state already holds the negation operator the lineage adopted for
+  itself when generation 2 widened its candidate space; ablating generation 2 **refuses** the
+  acquisition outright. A pre-freeze search over **1 160 worlds** found **zero** worlds carrying both
+  the ambiguity and row 7 where independence predicts about 25, which is why the record is pooled
+  across a two-stratum population and **one** policy is acquired from the whole history. D080. The
+  registry, the **probe primitive** and the budget remain authored, the population is selected for
+  ambiguity by design, and **G1-G10 do not advance**.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its

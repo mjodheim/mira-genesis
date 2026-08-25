@@ -45,6 +45,7 @@ valid result.
 | M108 | **Positive qualified; H53 supported in bounds** | The attribution rule the acquisition machinery uses is held as lineage state and expressed in the lineage's own language; the monotone rule space holds zero consistent rules so M107's acquisition is a proved precondition; `M1` attributes to the signal interface and builds `B`, `M0` exhausts twenty operators and refuses at two bounds | First modification of the acquisition machinery. Recursive depth of two unmeasured; blame labels are authored supervision and `B`'s feature row is one the episode set covers |
 | M109 | **Positive qualified; H54 supported in bounds** | The lineage determines its own blame labels by controlled trial; a third component, the candidate space, is closed by the monotonicity lemma; two successive generations attribute to different components and ReachImprove is 6 ⊂ 20 ⊂ 243, strict; a lineage handed the second record is refused with zero consistent rules, by lemma | First machinery that produces the next machinery. Depth three and acceleration unmeasured; registry, feature vocabulary and curriculum remain authored; conservative adoption is load-bearing for the positive half |
 | M110 | **Positive qualified in both halves; H55 supported in bounds** | The M109 cascade, restored from the producer's frozen bytes and executed by `m109_runtime.attribute` unchanged, transfers into reference-bearing JSON records over a four-valued chain: inside the producer's reachable census `M0` 0/6 and `M1`/`M2` 6/6 at row 7, `M2` alone 6/6 at row 3; **outside it, at row 5, `M0` is 6/6 while `M1` and `M2` are 0/6**. `ReachImprove` strict on every world | Capacity rises while realized competence does not. The consumer family is project-authored and was chosen to reach row 5, so G4 does not advance; registry and feature vocabulary stay shared authored vocabulary |
+| M111 | **Positive qualified; H56 supported in bounds** | Two demands present the identical feature row and have different limiting components, so no function of the vocabulary is right on both. Every static arm fails one; the acquired diagnostic policy resolves both on a budget always-probe wastes. Policy rule space 18 with **0** separating programs at `M1`, **127** with **25** at `M2`; ablating generation 2 refuses the acquisition | The registry, the probe primitive and the budget remain authored. The population is selected for ambiguity by design. G1-G10 do not advance |
 
 ## M094 — the original qualified repair anchor
 
@@ -370,6 +371,47 @@ vocabulary are shared authored vocabulary on both sides. Recursive depth of thre
 remain unmeasured.
 
 Authoritative material: `experiments/M110/`, `scripts/check_m110_result.py`, D079 and PR #208.
+
+## M111 — knowing that you do not know
+
+M110's finding was uncomfortable: an acquired improvement can be confident and wrong. The repair is
+not a wider census. It is a lineage that recognizes where its own observation runs out.
+
+The impossibility here is **exhibited, not argued**. In each ambiguous world two demands present the
+machinery with the identical feature row `(F, T, T)` and have different limiting components. No
+function of that vocabulary is right on both — an information bound, shown by producing the pair.
+
+```text
+                              A      B      probes   (three ambiguous worlds, both probe orders)
+M0  hardwired                0/3    0/3        0
+M1  generation 1             0/3    0/3        0
+M2  generation 2             3/3    0/3        0
+always_signal, fixed         0/3    3/3        0
+never-probe                  3/3    0/3        0
+always-probe                 3/3    0/3        3     same budget, spent on the determined demand
+ACQUIRED POLICY              3/3    3/3        3
+```
+
+A **probe** extends one component, tests, and rolls back; the serialized state before and after is
+compared, so the rollback is measured rather than promised. Probes are scarce — one per world — which
+is what turns "run an experiment" into a decision rather than a free lunch.
+
+**Depth three is a lemma.** The policy must fire on row 3 and not row 7, row 3 lies below row 7
+componentwise, and every monotone program true at the lower row is true at the upper one. M109's
+terminal state already holds an operator **the lineage adopted for itself** — negation, non-monotone —
+taken by the widened search generation 2 unlocked. That takes the policy rule space from 18 programs
+to 127, with 25 separating the two rows. Ablate generation 2 and the acquisition is **refused**, not
+merely unsuccessful.
+
+**One policy, not one per world.** A pre-freeze search over **1 160 worlds** found **zero** carrying
+both the ambiguity and row 7, where independence predicts about 25. So the population has two strata
+and the record spans both — an ambiguous world contributes the undetermined row, a witness world
+contributes row 7 — and a single policy is acquired from the whole history.
+
+What it does not establish: the registry, the **probe primitive** and the budget are authored. The
+lineage does not invent experimentation; it decides where to spend one. **G1-G10 do not advance.**
+
+Authoritative material: `experiments/M111/`, `scripts/check_m111_result.py`, D080 and PR #209.
 
 ## What the project does not currently claim
 

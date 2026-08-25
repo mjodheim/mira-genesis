@@ -853,6 +853,95 @@ current_real_software_frontier:
     acceleration_measured: false
     current_ceiling: self_directed_diagnosis_of_the_limiting_component_and_an_independently_authored_consumer_family
 
+  M111:
+    status: positive_qualified_attempt_1
+    hypothesis: H56
+    hypothesis_status: supported_within_frozen_bounds_all_three_halves
+    decision_slot: D080
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_self_directed_diagnosis_and_acquisition_machinery_adaptation_at_recursive_depth_three
+    protocol_digest: 395b2c3507dc13bb07ae927ecda32febad5b4537a73a356ec670df90a0e66ce1
+    bound_apparatus_digest: a9ba20f12617d5e89a177e73040e7fd9e14911a3c9c4e5ff97fd647e55de5687
+    freeze_tag: experiment/m111-frozen-protocol-v1
+    freeze_commit: 1d5d70a44cc9c56164d454631eae3d1c1b7e8dd6
+    population_digest: 9ee85959f9be39be9c84fa083ac656863380a70dfcddb52bd961623139bc3313
+    result_digest: 7b14b07e768b1c9291a069f4198b0b0becd92773d856ef539f48027bdca42cf7
+    stable_evidence_digest: f77c8b8930e8568dd0f91362b3879e15e5ee5e2faa752367c4671ab4230f327e
+    result_raw_sha256: aa1c8a270a7e4b3c420aa798c67f7ba9ba60f44a7a09b0948d22c3637481165a
+    result_tag: experiment/m111-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: c2109e52faa525b594d8b5e3851701b6db3640053f354f4750c21098515d5638
+    positive_result_tag: experiment/m111-positive-result
+    predicates_computed: 24
+    predicates_true: 24
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    machinery_predecessor: M109
+    machinery_predecessor_decision_slot: D078
+    machinery_terminal_state_digest: 5c08fa3036da6a914bf9a0db
+    carrier_predecessor: M110
+    carrier_predecessor_decision_slot: D079
+    component_registry: [operator_table, signal_interface, candidate_space, diagnostic_policy]
+    fourth_component_added: diagnostic_policy
+    probe_primitive_is_authored: true
+    probe_budget_per_world: 1
+    probe_leaves_state_byte_identical: true
+    probe_orders_measured: [candidates_first, signals_first]
+    impossibility_kind: exhibited_information_bound
+    two_demands_share_one_feature_row: true
+    ambiguous_row: 3
+    witness_row: 7
+    population_strata: [ambiguous, witness]
+    ambiguous_worlds: 3
+    witness_worlds: 2
+    record_is_pooled_across_the_population: true
+    pooled_episode_count: 19
+    pooled_worlds_contributing: 5
+    pooled_undetermined_rows: [3]
+    pooled_determined_rows: [1, 5, 7]
+    policy_rule_space_at_m1: 18
+    separating_programs_at_m1: 0
+    policy_rule_space_at_m2: 127
+    separating_programs_at_m2: 25
+    generation_three_acquired: true
+    generation_three_consistent_policies: 7
+    generation_three_fires_on_rows: [2, 3]
+    generation_two_ablated_acquisition: refused
+    generation_two_ablation_reason: no_expressible_policy_and_no_operator_makes_one_expressible
+    depth_dependency_is_a_lemma: true
+    recursive_depth_demonstrated: 3
+    m0_resolves_pair: [0, 0]
+    m1_resolves_pair: [0, 0]
+    m2_resolves_pair: [3, 0]
+    always_signal_resolves_pair: [0, 3]
+    never_probe_resolves_pair: [3, 0]
+    always_probe_resolves_pair: [3, 0]
+    acquired_policy_resolves_pair: [3, 3]
+    acquired_policy_result_is_order_independent: true
+    ablation_of_generation_three_byte_exact: true
+    mutation_loses_the_ambiguous_demand: true
+    corruption_fails_closed: true
+    earlier_capabilities_conserved: true
+    isolated_processes: 127
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 5
+    prefreeze_worlds_surveyed_for_co_occurrence: 1160
+    prefreeze_co_occurrences_found: 0
+    prefreeze_co_occurrences_expected_under_independence: 25
+    registry_probe_primitive_and_budget_remain_authored: true
+    population_selected_for_ambiguity_by_design: true
+    policy_also_fires_on_an_unreachable_row: true
+    elimination_complete_only_because_two_candidates_remain: true
+    g1_to_g10_advance: false
+    acceleration_measured: true
+    acceleration_claimed: false
+    current_ceiling: independently_authored_held_out_tasks_an_evaluator_the_project_does_not_own_and_third_party_reproduction
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that
