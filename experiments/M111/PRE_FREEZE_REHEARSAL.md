@@ -24,7 +24,6 @@ canonical interpreter over the same population and apparatus.
 | witness worlds | 2 |
 | predicted verdict | positive, P1–P24 all computed true |
 | replay | performed and equal |
-
 | **predicted stable evidence digest** | `f77c8b8930e8568dd0f91362b3879e15e5ee5e2faa752367c4671ab4230f327e` |
 
 The rehearsal ran the whole canonical path in a foreign CRLF clone over this exact population and
