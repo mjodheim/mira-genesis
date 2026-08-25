@@ -102,6 +102,65 @@ how weak: a fresh `M0` will be **handed** the stage-two episode from outside and
 lineage's own operation*; if it fails, the reason is recorded and must be structural rather than
 budgetary.
 
+## Corrections recorded before freeze
+
+Building the instrument falsified three statements in the first draft of this pre-registration. All
+three are recorded here rather than repaired silently. No protocol, population or result existed at
+any point during them.
+
+### 1. The hardwired failure is exhaustion, not progress on the wrong axis
+
+The draft claimed the hardwired machinery "extends the operator table, strictly enlarges its reach,
+and still fails". It does not. The operator search is demand-directed: it looks for a candidate that
+makes *this* demand constructible and adopts nothing when none does. The honest statement, and what
+the instrument measures, is sharper:
+
+> at the failure, the operator axis is **not** exhausted in general — `g2` is true, some candidate
+> would strictly enlarge reach — while it **is** exhausted for this demand. The hardwired machinery
+> fails with progress still available on the only axis it can name.
+
+P5 is restated accordingly.
+
+### 2. The dependency between generations is expressibility, not only evidence reachability
+
+The draft predicted that a fresh `M0` **handed** the stage-two episode from outside would acquire the
+second rule, bounding the claim to *within the lineage's own operation*. It does not, and the reason
+is a lemma:
+
+Row 3 `(False, True, True)` is below row 7 `(True, True, True)` componentwise, so every monotone
+program true at row 3 is necessarily true at row 7. None of the eighteen programs the lineage can
+express fires for the candidate space without also firing for the signal interface. A conservative
+second rule is therefore **inexpressible** until generation 1 has claimed row 7 and removed it from
+the relevant domain.
+
+This is the same monotonicity lemma M107 and M108 used, applied one level up — to the attribution
+cascade rather than to the operator table. It is a stronger dependency than the draft claimed, and P17
+remains a measurement rather than a hurdle: whatever the counterfactual returns is recorded.
+
+The barrier is robust to the adoption rule. A fresh `M0` is refused under **both** conservative and
+non-conservative adoption, for different reasons:
+
+| adoption rule | `M0` alone | `M1` after generation 1 |
+|---|---|---|
+| conservative | refused — no expressible rule (0 consistent) | **confirmed** — 8 consistent, 1 class |
+| non-conservative | refused — underdetermined (13 consistent, 2 classes) | refused — 13 consistent, 2 classes |
+
+### 3. Adoption is conservative, and that is load-bearing for the positive half
+
+A rule may fire only on rows for which the lineage holds positive evidence; a relevant row it has
+never observed is required **not** to fire. This is a standard induction principle — do not act where
+you have not looked — and it is what leaves later rows available to a later generation.
+
+It is also **authored**, and the table above shows exactly what it carries: it is not what stops
+`M0`, but it *is* what lets `M1` succeed. Under non-conservative adoption neither lineage acquires the
+second rule and M109 would be negative. This is declared as a limitation of the result, not concealed
+inside it.
+
+The draft's underdetermination control is restated for the same reason. Under conservatism a single
+episode determines generation 1, so "one episode leaves it underdetermined" is false here. The
+genuine refusals the instrument must exhibit are: a record naming **no** attributable component, and
+a record naming **more than one**.
+
 ## Decisive conditions
 
 - **P1** runtime and input preflight bind the canonical runtime and the exact fixtures.
@@ -112,14 +171,14 @@ budgetary.
 - **P4** `D1` is excluded from the operator-table and candidate-space axes and reachable only through
   the interface; `D2` is excluded from the operator-table and interface axes and reachable only
   through the candidate space. Both by complete census, both budget-independent.
-- **P5** the hardwired machinery extends the operator table on `D1`, strictly enlarges its reach, and
-  still fails — progress on the wrong axis, not exhaustion.
+- **P5** at the hardwired failure the operator axis offers progress in general (`g2` true) while
+  being exhausted for this demand, so the refusal is not "nothing left to try".
 - **P6** every episode label is produced by the lineage's own component trial; no label is read from a
   fixture, and the trial procedure is identical for every component.
 - **P7** trials occur only in the learning phase; at resolution time the machinery performs no trial
   and holds one machinery step.
-- **P8** a trial record covering fewer than the reachable feature rows leaves the rule
-  underdetermined and the lineage refuses.
+- **P8** a trial record naming no attributable component is refused, and one naming more than one
+  component is refused; adoption is conservative and never fires on a relevant row never observed.
 - **P9** `A1` is determined, adopted as content-addressed lineage state, and attribution switches to
   the state-held rule.
 - **P10** the producer process dies between generations; each later stage receives only serialized
