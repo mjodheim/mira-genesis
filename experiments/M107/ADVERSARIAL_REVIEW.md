@@ -97,3 +97,34 @@ Four defects were therefore found before any freeze, two of them fatal to a cano
 | isolation detector resolved `built-in` relative to the capsule | **P15 false** — every process reporting a false leak |
 | protocol bound M106's inherited pool identity | freeze unbuildable |
 | process identifiers inside the stable projection | **P16 false** — M098's exact failure mode |
+
+## A structural defect in the repository's freeze design, found by M107
+
+Every milestone binds its apparatus by raw-byte SHA-256, and every milestone must pin those bytes in
+`.gitattributes` or inherit M105's checkout-dependent defect. But the root `.gitattributes` is itself
+a bound member of M105's and M106's protocols. **Pinning milestone N+1 therefore necessarily breaks
+milestone N's binding.** The design is self-defeating at the second freeze.
+
+M107 hit it immediately: adding its entries to the root file made M106's frozen-apparatus test
+report `['.gitattributes']` and both CI test jobs fail. M105's binding turned out to have been broken
+already — by M106's own pinning, and by the two bound members edited to record M105's verdict — but
+that only surfaces on the exact canonical runtime, because `require_frozen` refuses on the runtime
+check first everywhere else.
+
+The fix is architectural, not local. Git applies `.gitattributes` per directory, so each milestone
+pins its own members in files no earlier protocol binds:
+
+- `experiments/M107/.gitattributes`, `metamorphosis/.gitattributes`, `scripts/.gitattributes`,
+  `tests/.gitattributes` — bound by M107;
+- the root file restored to its frozen bytes, so M106's binding digest matches the freeze again.
+
+Two rules follow for every future milestone, both now enforced by tests:
+
+1. **Never bind a file an earlier frozen protocol binds.** Pin bytes in milestone-local attribute
+   files.
+2. **Never record a verdict inside a bound member.** M106 keeps its result summary outside the bound
+   list for this reason; M105 predates the lesson and its binding is permanently drifted.
+
+A drifted apparatus is a defect *before* the canonical attempt, because the freeze would be
+unverifiable and the run must not proceed. *After* the attempt the protocol is spent and the freeze
+tag is the authoritative byte record.
