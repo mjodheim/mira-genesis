@@ -49,10 +49,10 @@ evidence it can ever hold.
 - **`D2 = (NOT x0) AND x1`** — non-monotone. At the world width the interface is exhausted and the
   monotone candidate space is closed by the lemma. Only widening the candidate space can reach it.
 
-The hardwired machinery does not merely stall on `D1`: it blames the operator table, extends it, and
-makes **real progress on the wrong axis** — reach goes from four functions to five — while never
-approaching `D1`. A control that merely exhausted would be weaker than one that improves and still
-fails.
+The hardwired machinery blames the operator table, searches its candidate space for an operator that
+would resolve `D1`, and adopts nothing. Its refusal is not "nothing left to try": at that very failure
+`g2` is true, so the operator axis still offers strict progress in general. It is exhausted only for
+this demand, on the only axis the machinery can name. See the corrections below.
 
 ## Episodes the lineage generates for itself
 
@@ -90,17 +90,20 @@ sampling.
 M108's dependency was **expressibility**: the corrected rule was inexpressible in the pre-generation
 language, by lemma.
 
-M109's dependency is **evidence reachability**: at stage two the lineage's language is still
-monotone, so `A2` is a monotone rule that `M0` could express. What `M0` cannot do is *reach the
-evidence that determines it*. `M0` never resolves `D1`, therefore never encounters `D2`, therefore
-never runs `D2`'s trial, therefore holds no episode that distinguishes the candidate space from the
-operator table.
+M109 carries **two** dependencies, and the second was not anticipated.
 
-This is a weaker dependency than M108's and a different one, and the milestone will measure exactly
-how weak: a fresh `M0` will be **handed** the stage-two episode from outside and asked to acquire
-`A2`. Whatever that control returns is reported. If it succeeds, the claim is bounded to *within the
-lineage's own operation*; if it fails, the reason is recorded and must be structural rather than
-budgetary.
+The first is **evidence reachability**: `M0` never resolves `D1`, therefore never encounters `D2`,
+therefore never runs `D2`'s trial, therefore holds no episode distinguishing the candidate space from
+the operator table.
+
+The second is **expressibility**, and it is the same monotonicity lemma applied one level up — to the
+attribution cascade rather than to the operator table. Every monotone program true at row 3 is true at
+row 7, so no rule the lineage can express fires for the candidate space without also firing for the
+signal interface. Generation 2 becomes expressible only once generation 1 has claimed row 7. This was
+found by building the instrument, contradicts the first draft, and is recorded below.
+
+The milestone still **measures** the handed-episode counterfactual rather than assuming it: a fresh
+`M0` is given the stage-two episode from outside and the outcome is recorded whatever it is.
 
 ## Corrections recorded before freeze
 
