@@ -1,0 +1,6 @@
+# Per-directory attributes owned by M111. The root .gitattributes is bound by M105 and M106, and
+# metamorphosis/, scripts/ and tests/ each carry an attribute file bound by M107. M111 follows the
+# scheme M109 and M110 established: JSON evidence bound by raw bytes, text members by LF-normalized
+# content.
+*.md text eol=lf
+*.json -text

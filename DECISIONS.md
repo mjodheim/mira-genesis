@@ -3101,3 +3101,104 @@ Two, in order. First, **self-directed diagnosis**: whether the lineage can infer
 component is limiting without being handed its name, across worlds where the true bottleneck varies —
 M110 shows the cost of getting that wrong. Second, an **independently authored consumer family**,
 which is the only thing that can move G4 past partial.
+
+## D080 — M111 qualifies self-directed diagnosis at recursive depth three
+
+### The decision
+
+M111 attempt 1 is a **positive qualified result**, and H56 is supported within its frozen bounds in
+all three halves. The unique canonical runner executed exactly once from frozen protocol `395b2c35…`
+on the canonical CPython 3.11.16 runtime, at freeze commit `1d5d70a4` on a clean worktree, and
+produced result `7b14b07e…`, stable evidence `f77c8b89…`, raw bytes `aa1c8a27…`. Those first bytes
+were committed at `9837d0b`, tagged `experiment/m111-canonical-first-result` and **pushed before any
+checker ran**. The single frozen checker replay then computed **P1-P24 all true**, report
+`c2109e52…`, replay equal, with zero model, network and remote-execution calls across **127 isolated
+processes** over five worlds in two strata.
+
+The stable evidence digest is byte-identical to the one `PRE_FREEZE_REHEARSAL.md` predicted **before**
+the freeze, in a throwaway clone that received the sources with CRLF.
+
+### What is new here, and why M110 could not have shown it
+
+M110 measured an acquired machinery improvement doing harm: outside its producer's attribution census
+it was confident, wrong, and strictly worse than the fresh predecessor it improved on. Widening the
+census would not repair that. M111 asks instead whether the lineage can tell **when its own
+observation does not determine the answer**.
+
+The impossibility is **exhibited rather than argued**. In each ambiguous world two demands present the
+identical feature row `(F, T, T)` and have different limiting components, so no function of the
+feature vocabulary is right on both.
+
+```
+                              A      B      probes
+M0  hardwired                0/3    0/3        0
+M1  generation 1             0/3    0/3        0
+M2  generation 2             3/3    0/3        0
+always_signal, fixed         0/3    3/3        0
+never-probe                  3/3    0/3        0
+always-probe                 3/3    0/3        3
+ACQUIRED POLICY              3/3    3/3        3     both probe orders
+```
+
+Always-probe holds the same budget and spends it on the demand its own record would have called
+determined. The acquired policy does not fire there, keeps the probe, and spends it where its record
+says it does not know.
+
+### Depth three is a lemma, not a search
+
+```
+policy rule space at M1   18 programs,  0 separating row 3 from row 7
+policy rule space at M2  127 programs, 25 separating row 3 from row 7
+generation 3 acquired: 7 consistent policies, fires on rows [2, 3]
+generation 2 ablated:  REFUSED - no_expressible_policy_and_no_operator_makes_one_expressible
+```
+
+Row 3 lies below row 7 componentwise, so every monotone program true at the lower row is true at the
+upper one. M109's **terminal** state, reproduced byte-exactly at `5c08fa30…`, already holds an
+operator **the lineage adopted for itself** — `ACQUIRED_cfc43adf`, truth table `[1, 0]`, negation, and
+non-monotone — taken by the widened search generation 2 unlocked. Generation 2 therefore does not
+merely precede generation 3: it **creates its expressibility**, and removing it refuses the
+acquisition by lemma rather than by failed search.
+
+### One policy, and the measurement that forced it
+
+Across **1 160 worlds** — a 160-world census plus a 1 000-world search over both declared seed ranges
+— row-3 ambiguity and row-7 reachability **never co-occur**. At roughly six per cent ambiguity and
+thirty-six per cent row-7 reachability, independence predicts about twenty-five such worlds and zero
+were found. In this carrier the ambiguity that makes a probe necessary and the row that forces a
+policy out of the monotone language do not live in the same world.
+
+The record is therefore **pooled across a two-stratum population** and one policy is acquired from the
+whole history rather than refitted per world, which is a stronger claim than the per-world one. That
+measurement and its consequence were recorded as pre-registration corrections before the freeze.
+
+### The controls
+
+Ablation of generation 3 is a byte-exact return to `M2` and loses the ambiguous demand. Mutation of
+the policy loses it. Corruption fails closed. **Every probe left the serialized state byte-identical**
+and none reports itself an adoption. Earlier capabilities are conserved. The arms share one adapter,
+one probe budget and identical world and demand bytes.
+
+### What this establishes
+
+**Bounded self-directed diagnosis and acquisition-machinery adaptation at recursive depth three.**
+The lineage derives from a record spanning its own history which failure rows its vocabulary does not
+determine, and spends a scarce experiment exactly there — and that derivation was inexpressible in
+the language it held before generation 2.
+
+### What it does not establish
+
+The registry, the **probe primitive** and the budget remain authored: the lineage does not invent
+experimentation, it decides where to spend one. The population is selected for ambiguity by design.
+The acquired policy also fires on row 2, which is unreachable because `¬g1 ⟹ g2`, and that is
+disclosed rather than trimmed. Elimination is complete only because two candidates remain; three live
+candidates are not tested. Open-ended machinery growth, unbounded depth, independent external-domain
+transfer, **G1-G10 closure**, general-agent evidence, self-hosting and AGI are all untouched.
+Acceleration is measured and reported, not claimed.
+
+### Next ceiling
+
+Not another generation. The three things that would move a generality gate are all external:
+independently authored held-out tasks, an evaluator the project does not own, and reproduction by a
+third party. The next constructive work is the **architecture that can receive** such an evaluation
+without the lineage being able to reach its contents.
