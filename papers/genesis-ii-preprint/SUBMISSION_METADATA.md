@@ -13,7 +13,10 @@ Anthony Mets, Independent Researcher. AI development assistance is recorded in
 
 ## Proposed scope
 
-**M107 through M111**, with M112 named as the architecture and its bank recorded as absent.
+**M107 through M112.** This is a change: the previous proposal scoped M107-M111 and named M112 as an
+architecture whose bank did not exist. **The bank now exists**, the milestone ran once, and D081
+recorded a mixed result. The scope recommendation below is restated on that evidence, and M113 is
+**not** in scope because it has no result and cannot obtain one without an owner-only freeze.
 
 Genesis I (`10.5281/zenodo.22067855`) covers M094–M100 and is not rewritten. Its stated limitation —
 that the qualified cumulative chain lives inside one authored operation family — is the sentence this
@@ -26,7 +29,7 @@ package starts from.
 | M109 | D078 | two successive machinery generations; the lineage determines its own blame labels by controlled trial |
 | M110 | D079 | causal transfer into a materially different carrier — and an acquired improvement measured **doing harm** |
 | M111 | D080 | self-directed diagnosis under a scarce experiment budget, at recursive depth three by lemma |
-| M112 | — | the receiving architecture for an externally authored world bank; **the bank does not exist** |
+| M112 | D081 | worlds this project did not choose: one blind sealed invocation, the diagnosis reproducing 24/24 and every transfer outcome reproducing while the arm stays **negative at 22/24** |
 
 ## Three candidate titles
 
@@ -114,16 +117,16 @@ adaptive software lineage.
 | artifact | why |
 |---|---|
 | `experiments/M107` … `experiments/M111` in full | protocols, results, check reports, adversarial reviews, pre-freeze rehearsals |
-| `metamorphosis/m107_runtime.py` … `m111_runtime.py` | the substrate chain, imported unchanged at each level |
-| `scripts/run_m1{07..11}_*.py`, `scripts/check_m1{07..11}_result.py` | orchestration and the independent checkers |
-| `tests/test_m1{07..11}_*.py` | the milestone suites |
-| `DECISIONS.md` (D076–D080), `FAILURE_LOG.md` | including the preserved negatives |
+| `metamorphosis/m107_runtime.py` … `m112_world_bank.py` | the substrate chain, imported unchanged at each level |
+| `scripts/run_m1{07..12}_*.py`, `scripts/check_m1{07..12}_result.py` | orchestration and the independent checkers |
+| `tests/test_m1{07..12}_*.py` | the milestone suites |
+| `DECISIONS.md` (D076–D081), `FAILURE_LOG.md` | including the preserved negatives |
 | `docs/CURRENT_RESEARCH_FRONTIER.md`, `MIRA_GENERALITY_CRITERIA.md` | the interpretation layer and the gates that did not move |
-| `experiments/M112` | the architecture, with the bank recorded as absent |
+| `experiments/M112` in full | the isolation attestation, the published commitment, the sealed bank, the reveal authorization, the preserved result and the recorded materialization defect |
 
 ## Exact snapshot to freeze
 
-The publication snapshot must be a **merge commit on `main`** at or after PR #209, so that all five
+The publication snapshot must be a **merge commit on `main`** at or after PR #211, so that all six
 milestones and their preserved results are present. The tags below are the scientific anchors and
 must be pushed before the deposit:
 
@@ -133,20 +136,64 @@ experiment/m108-positive-result
 experiment/m109-positive-result
 experiment/m110-positive-result
 experiment/m111-positive-result
+experiment/m112-canonical-first-result
+experiment/m112-mixed-result
 ```
 
-Recommended anchor commit: `566e498` — *Merge pull request #209*, the point at which M111 entered
-`main`. If M112 is included in scope, use its merge commit instead.
+Recommended anchor commit: `8176c53` — *Merge pull request #211*, the point at which M112's revealed
+bank, its preserved result and its recorded materialization defect entered `main`. If the owner keeps
+the scope at M111 instead, the anchor is `566e498` — *Merge pull request #209*.
 
 ## Decision the owner has to make, and the honest reading
 
-**Recommendation: PUBLISH, at M111.**
+**Recommendation: PUBLISH, and extend the scope to M112.**
 
-The frontier condition set in the previous mandate was one additional closed objection. Two were
-closed — a positive cross-carrier transfer *and* a precisely located structural ceiling — and a third
-result was added on top. Waiting for an externally authored bank means waiting on a third party, and
-that wait has no defined end.
+The previous recommendation was *publish at M111*, and its stated weakness was exact: without a bank
+the project did not author, every world in the paper is one this project chose, and a reviewer is
+entitled to say so. That weakness now has a measurement against it rather than a reply.
 
-The argument against is worth stating too: without M112's bank, every world in the paper is one this
-project chose, and a reviewer is entitled to say so. The reply is that the paper says so first, in
-the abstract, and that the harm result cuts against the interest that selection would serve.
+M112 answers the objection **in the direction that costs the project something**, which is why it
+belongs in the paper rather than in a successor:
+
+- the **diagnosis result does not depend on the project having chosen its worlds** — 24 of 24, five
+  ambiguous blind worlds, both probe orders, unanimous;
+- **every transfer outcome reproduces**, including the row-5 harm that is the paper's spine, on six
+  worlds the project did not select;
+- and the arm is nevertheless recorded **negative at 22/24**, because `P1` is an invocation artifact
+  and `P5` is a real measurement: a blind world's constructive image closed at nine nodes where
+  1 160 project-authored worlds had always closed at seven.
+
+That last item is the strongest single piece of evidence in the package that project-authored worlds
+are not neutral — and the project found it by being wrong in public, under a commitment published
+before the tested system was frozen. A paper whose central claim is *capacity rises, competence does
+not* is the right place for it, and a paper that omits it in order to keep an arm positive would be
+the selective reporting the harm result exists to rule out.
+
+Two boundaries hold whatever the owner decides. M112 is **not** external human evaluation and must
+never be described as one: the evidence tier is `blind_generated_sealed_bank`, custody is procedural,
+and `human_maintained_sealed_bank` remains an external blocker. And **no generality gate advances**,
+so the gates table in the paper is unchanged by the extension.
+
+**M113 is not in scope.** It has no result, its canonical run is behind owner-only gates, and a
+milestone that is described in a paper before it runs is a commitment the record has not earned.
+
+### Genesis II, or the beginning of Genesis III
+
+The three options in the mandate resolve on where the *question* changes rather than on where the
+milestone numbers do.
+
+M107 through M112 are one question asked five times: **can a lineage improve the machinery it uses to
+acquire capabilities, and how far does that improvement carry?** M112 does not change the question —
+it removes one confound from the answer by taking the worlds out of the project's hands, while the
+carrier, the evaluator, the registry, the feature vocabulary and the probe primitive stay exactly
+where M107 put them.
+
+M113 changes the question: **can the project stop designing the world the lineage learns in at all?**
+The generator emits the machine rather than filling in a form, and the pre-freeze survey already says
+the inherited three-feature vocabulary is not a function on that family. That is a different line of
+work with a different failure mode, and its natural successor — whether the lineage can establish
+that its own vocabulary is insufficient and acquire an extension to it — is a different paper.
+
+**So: Genesis II is M107–M112. Genesis III opens at M113.** This is a recommendation on the evidence
+as it stands, not a decision; scope is the owner's, and nothing here may alter a frozen result to
+suit it.

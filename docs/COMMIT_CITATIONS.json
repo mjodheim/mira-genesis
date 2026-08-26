@@ -1330,6 +1330,14 @@
         "experiments/M099/PROTOCOL.json"
       ]
     },
+    "8176c537fef5f646398a9b8ae7254326aa66a3b2": {
+      "subject": "Merge pull request #211 from mjodheim/science/m112-blind-materialization",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "papers/genesis-ii-preprint/SUBMISSION_METADATA.md"
+      ]
+    },
     "8270b7825bbc7af2295da4804fac23d8ebc1e974": {
       "subject": "result(m107): preserve the unique canonical first result",
       "preserved_by": "experiment/m107-canonical-first-result",
