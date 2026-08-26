@@ -1,0 +1,34 @@
+Meta-learning asks how experience across tasks can improve the process of learning new tasks. MAML optimizes initial parameters so that a small number of gradient steps adapts effectively to new tasks \cite{finn2017maml}, while learned-optimizer work explicitly represents an update procedure as a learned object \cite{andrychowicz2016learning}. These traditions are conceptually close to Genesis II because the object of interest is not only a task solution but the machinery that produces later adaptation.
+
+The comparison is nevertheless limited. M107--M112 contain no gradient-trained meta-learner and make no sample-efficiency claim. Their acquisition rules are symbolic lineage state in a finite system, allowing exact ablations and complete support censuses. The relevant connection is the evaluation question: if a learned update procedure becomes a reusable inductive bias, its transfer should be tested not only for average gain but also for where its support ends and whether the learned update itself causes negative transfer.
+
+\subsection{Persistent skills and model adaptation}
+Persistent improvement can be stored in forms other than self-edited agent code. Voyager accumulates reusable executable skills in an embodied agent \cite{wang2023voyager}. SEAL generates self-edit directives that drive persistent weight updates \cite{zweiger2025seal}. SkillCommit builds a hierarchy of reusable procedural skills while validating behavioral transfer across experiences \cite{he2026skillcommit}. AlphaEvolve demonstrates evaluator-guided code evolution for scientific and algorithmic discovery \cite{novikov2025alphaevolve}.
+
+These systems motivate similar attribution questions -- what exactly persists, what later behavior requires it, and whether the update transfers -- but the storage mechanisms and evaluation regimes differ substantially. Genesis II focuses on content-addressed symbolic state so that removal and mutation can be exact and predecessor reconstruction can be verified byte-wise.
+
+\subsection{Transfer learning and negative transfer}
+Transfer learning distinguishes beneficial reuse from negative transfer, where source knowledge degrades target performance \cite{rosenstein2005transfer,pan2010transfer,wang2019negative,zhang2020negative}. M110 belongs to that family of problems but transfers an unusual object: a rule for changing the acquisition process itself. The target failure is not merely lower average accuracy. The transferred rule has a known support region in the producer's complete failure census, extrapolates to one newly realizable row, and causes a specific wrong component modification.
+
+The complete census makes the transfer analysis mechanistically sharper than an aggregate source/target comparison, while the authored finite carrier makes it much narrower in external validity. The work should therefore be read as a causal negative-transfer case study, not as a general theory of domain adaptation.
+
+\subsection{Active learning, abstention, and selective prediction}
+Active learning studies how a learner allocates expensive labels or queries \cite{settles2009active}. Selective classification studies when a predictor should abstain rather than commit under uncertainty \cite{geifman2017selective}. M111 shares the resource-allocation intuition but differs in several ways. It has no probabilistic confidence score, no human labeling oracle, and no claim that the query mechanism is learned. Instead, a discrete feature collision proves that the held observation vocabulary cannot determine the limiting component, and the lineage acquires a policy for when to spend one existing probe.
+
+The result is therefore closer to a bounded diagnosis policy than to standard active learning. Its most distinctive feature is generational expressibility: the policy is structurally inexpressible before a previously acquired non-monotone operator enters the lineage state.
+
+\subsection{Program synthesis and finite mechanistic evaluation}
+Finite enumerative program synthesis is well established \cite{gulwani2017synthesis}. Genesis II does not claim synthesis novelty. Exhaustive search and finite Boolean images are used as measurement instruments: they let the project state when a predecessor language truly cannot express a required rule, distinguish reach from budget, and construct counterfactual states exactly.
+
+This is a trade-off. The small DSLs are not representative of the complexity of modern learned agents, but they permit stronger internal causal claims than benchmark deltas alone. The paper's intended contribution is the experimental vocabulary built on top of those standard finite techniques.
+
+\section{Threats to validity}
+\label{sec:threats}
+\subsection{Internal validity}
+The checkers, runners, and experiments are all project-authored, so shared bugs remain possible. Replays and byte-level bindings reduce accidental drift but do not create independent implementation. The permanently negative M103 and M105 checker failures show that instrument risk is real rather than hypothetical. External reimplementation remains necessary for stronger confidence.
+
+The causal interventions also depend on the completeness of the frozen boundary. A hidden host shortcut outside the bound apparatus could weaken an ablation. The experiments respond by running isolated capsules, binding predecessor bytes, comparing arm input projections, and including host-shortcut controls, but no software experiment can prove the absence of every undeclared causal path without assumptions about the execution environment.
+
+\subsection{Construct validity}
+\reach is an authored capacity measure. It is meaningful within the frozen finite search universe and should not be equated with intelligence, usefulness, or expected task performance. Likewise, ``machinery generation'' is an operational term for a causal chain of state-held acquisition changes, not a universal taxonomy of recursive self-improvement.
+
