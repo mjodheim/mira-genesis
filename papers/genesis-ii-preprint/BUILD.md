@@ -35,13 +35,16 @@ Clean intermediates with:
 latexmk -C
 ```
 
+The repository assembly has been checked with the committed manuscript chunks at TeX-safe boundaries; the DOI-bearing build is 22 pages.
+
 ## arXiv source archive
 
-The minimal upload needs:
+Because `paper.tex` includes the files under `manuscript/`, the source upload must include that directory as well as the generated vector figures:
 
 ```text
 paper.tex
 references.bib
+manuscript/*.tex
 figures/fig1_chain.pdf
 figures/fig2_capacity_competence.pdf
 figures/fig3_expressibility.pdf
@@ -51,8 +54,15 @@ figures/fig4_blind_closure.pdf
 Create the archive from the package directory with:
 
 ```bash
-zip genesis-ii-arxiv-source.zip paper.tex references.bib figures/fig1_chain.pdf figures/fig2_capacity_competence.pdf figures/fig3_expressibility.pdf figures/fig4_blind_closure.pdf
+zip -r genesis-ii-arxiv-source.zip \
+  paper.tex references.bib manuscript \
+  figures/fig1_chain.pdf \
+  figures/fig2_capacity_competence.pdf \
+  figures/fig3_expressibility.pdf \
+  figures/fig4_blind_closure.pdf
 ```
+
+For a submission archive, include only the manuscript chunks actually referenced by `paper.tex`; unused historical split fragments, if present in a working tree, are not required.
 
 ## Zenodo
 
