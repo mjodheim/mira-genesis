@@ -1,0 +1,33 @@
+\subsection{Unanimous transfer outcomes}
+The four posed demands produce the outcomes in Table~\ref{tab:transfer}. Every entry is unanimous across six canonical worlds.
+
+\begin{table}[H]
+\centering
+\small
+\caption{M110 census-conditional transfer, unanimous across six canonical worlds.}
+\label{tab:transfer}
+\begin{tabular}{@{}llllll@{}}
+\toprule
+Demand & Producer census & Ground truth & \mzero & \mone & \mtwo \\
+\midrule
+row 7 & inside & signal interface & 0/6 & 6/6 & 6/6 \\
+row 3 & inside & candidate space & 0/6 & 0/6 & 6/6 \\
+\textbf{row 5} & \textbf{outside} & \textbf{operator table} & \textbf{6/6} & \textbf{0/6} & \textbf{0/6} \\
+row 1 & inside & operator table & 6/6 & 6/6 & 6/6 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Inside the producer's reachable census, the restored cascade adds capability exactly in the order implied by its two generations: generation one resolves row 7 and generation two additionally resolves row 3. Outside the producer census, the same generation-one program $g_0\wedge g_2$ fires on row 5 and points to the signal interface, while the consumer's own controlled trial says the limiting component is the operator table. Removing generation one restores the fresh baseline's correct row-5 behavior. The transferred machinery is therefore causally implicated in both the gains and the loss.
+
+\subsection{The harmful boundary can be derived before the consumer runs}
+The negative half is not a post-hoc story fitted to row 5. Conservative adoption constrains an acquired rule only on rows the producer can reach. Rows 0, 4, and 5 lie outside that set. Rows 0 and 4 are excluded by a feature-semantics implication, $\neg g_1\Rightarrow g_2$, and cannot arise in any carrier implementing the same feature definitions. Row 5 is different. It is excluded in the producer only because prefix truncation makes $g_0\Rightarrow g_1$. That is a property of the producer family rather than a logical property of the vocabulary.
+
+A carrier with a reference edge can break the implication and realize row 5. The adopted rule has a defined value there despite never having been constrained by evidence there. The producer record therefore predicts a region in which its conservatism guarantee is silent. The consumer experiment is still necessary: it establishes that such a row is actually realizable in the new carrier, that its limiting component differs, and that the extrapolation causes a wrong modification rather than remaining benign.
+
+\subsection{Capacity rises while competence falls}
+\reach is strict on every world, \mzero$\subset$\mone$\subset$\mtwo, with recorded ranges 94--261, 134--449, and 324--558. Yet row-5 competence is 6/6, 0/6, 0/6.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.78\linewidth]{figures/fig2_capacity_competence.pdf}
