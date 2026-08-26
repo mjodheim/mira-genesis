@@ -1,0 +1,46 @@
+M111 & P1--P24 true & identical-row ambiguous pair; equal probe budget; both probe orders; generation-two expressibility ablation; generation-three ablation/mutation/corruption \\
+M112 & procedural 10/10; diagnosis 24/24; transfer 22/24 & one-shot generation; isolation attestation; pre-reveal seal; no retry; unchanged inherited instruments; preserved P1/P5 failures \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Artifact-oriented reproduction checklist}
+\label{app:repro}
+A third party should distinguish verification of the preserved record from a new scientific replication.
+
+\paragraph{Record verification.}
+\begin{enumerate}
+  \item Checkout the publication anchor with complete Git history; shallow clones can fail history-dependent integrity checks.
+  \item Use the canonical Python version recorded by the target milestone.
+  \item Verify frozen protocol and bound-apparatus digests before executing a checker.
+  \item Run the milestone checker in read-only/recompute mode first.
+  \item Where permitted, run the explicit replay mode and compare the stable evidence projection.
+  \item For M112, verify generator/input identity, public chronology, sealed payload commitment, reveal digest, and preserved-bank checker recomputation; do not regenerate the qualifying bank and call it a replay.
+\end{enumerate}
+
+\paragraph{Independent replication.}
+An independent replication would require a third party to implement or audit the mechanism, freeze its own uncontaminated evaluation, and retain the ability to obtain a negative result. No such replication exists at the time of this snapshot.
+
+\section{Claim matrix}
+\label{app:claims}
+\begin{table}[H]
+\centering
+\small
+\caption{Language licensed and not licensed by the Genesis II evidence.}
+\begin{tabularx}{\textwidth}{@{}X X@{}}
+\toprule
+Defensible wording & Wording not licensed \\
+\midrule
+bounded interpreter extension & autonomous invention of arbitrary operators \\
+bounded acquisition-machinery modification & unrestricted self-rewriting \\
+two successive machinery generations and a third diagnostic generation & open-ended recursive self-improvement \\
+census-conditional causal transfer & general cross-domain transfer \\
+capacity--competence dissociation under a designed stress carrier & universal law that self-improvement causes harm \\
+bounded self-directed diagnosis using an authored probe & general metacognition or autonomous experimentation \\
+blind-generated sealed bank with context blindness & independent human evaluation or training-data independence \\
+procedurally committed mixed result & independent reproduction \\
+no generality gate advances & AGI or general-agent evidence \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
