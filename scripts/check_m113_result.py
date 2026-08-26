@@ -21,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from metamorphosis import carrier_host as host  # noqa: E402
 from metamorphosis import m113_carrier_bank as bank  # noqa: E402
 from metamorphosis import m113_evaluator as evaluator  # noqa: E402
 
@@ -29,13 +30,26 @@ RESULT_PATH = EXPERIMENT / "RESULT.json"
 REPORT_PATH = EXPERIMENT / "CHECK_REPORT.json"
 DEVELOPMENT_PATH = EXPERIMENT / "DEVELOPMENT_RUN.json"
 
-EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 19)]
+EXPECTED_PREDICATES = ["P%d" % index for index in range(1, 23)]
 
 # The arm H58 is stated over. `M2` is the acquired cascade; `M3` adds the M111 diagnostic policy and
 # its inherited record, and is what the pre-registration calls the full descendant.
 FRESH_ARM = "T0"
 DESCENDANT_ARM = "M3"
 CASCADE_ARM = "M2"
+# The arm that removes generation two and keeps generation one and the diagnostic policy. It is the
+# only place the record can say which acquisition the descendant's behaviour is actually owed to,
+# and it is read here rather than left in the result for someone to notice.
+ABLATED_ARM = "ablated"
+
+SCORE_KEYS = (
+    "correct_construction",
+    "unmet_construction",
+    "false_refusal",
+    "calibrated_refusal",
+    "invented_adapter",
+    "undetermined",
+)
 
 
 def canonical_json(value: Any) -> str:
@@ -50,6 +64,17 @@ def _total(result: dict[str, Any], arm: str, key: str) -> int:
     return int((result["per_arm_totals"].get(arm) or {}).get(key, 0))
 
 
+def _marginal(result: dict[str, Any], arm: str, baseline: str) -> dict[str, int]:
+    """`arm` minus `baseline` on every scored measure and on the attribution count.
+
+    A difference, not a verdict. M110 recorded why the direction has to stay visible: an acquisition
+    that raises one measure and lowers another is not summarised by either of them.
+    """
+    row = {key: _total(result, arm, key) - _total(result, baseline, key) for key in SCORE_KEYS}
+    row["attribution_correct"] = _agreement(result, arm)[0] - _agreement(result, baseline)[0]
+    return row
+
+
 def _agreement(result: dict[str, Any], arm: str) -> tuple[int, int]:
     entry = result["attribution_agreement"].get(arm) or {}
     return int(entry.get("correct", 0)), int(entry.get("correct", 0)) + int(
@@ -58,10 +83,13 @@ def _agreement(result: dict[str, Any], arm: str) -> tuple[int, int]:
 
 
 def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
-    """P1-P18. Each one is recomputed; none is copied from a boolean the runner wrote about itself."""
+    """P1-P22. Each one is recomputed; none is copied from a boolean the runner wrote about itself."""
     checks = result.get("provenance_checks") or {}
     cardinality = result.get("cardinality") or {}
     carriers = result.get("carriers") or []
+    death = result.get("producer_death") or {}
+    distinctness = result.get("structural_distinctness") or {}
+    preservation = result.get("preservation") or {}
 
     # Recomputed from the invocation counts and the arm's own budget rather than read off the
     # boolean the runner wrote. M095 recorded what a record field that asserts rather than measures
@@ -79,6 +107,13 @@ def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
     rollback_matches = bool(adapter_rows) and all(
         row["rollback_matches_fresh"] is True for row in adapter_rows
     )
+    # The distinct-structure count is recomputed from the carriers themselves rather than read off
+    # the runner's summary. A count of distinct machines that is only ever asserted is the M095
+    # defect, and this particular count is the one that decides whether a bank of renamings passes.
+    bodies = result.get("qualifying_carrier_bodies") or {}
+    recounted_structures = len(
+        {host.structural_signature(body) for body in bodies.values() if isinstance(body, dict)}
+    )
     recomputed_cardinality = evaluator.cardinality_report(
         requested_carrier_count=int(cardinality.get("requested_carrier_count", -1)),
         records_emitted=int(cardinality.get("records_emitted", -1)),
@@ -86,10 +121,21 @@ def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
         schema_valid_carriers=int(cardinality.get("schema_valid_carriers", -1)),
         qualifying_carriers=int(cardinality.get("qualifying_carriers", -1)),
         minimum_qualifying=int(cardinality.get("minimum_qualifying_carriers", -1)),
+        distinct_qualifying_structures=recounted_structures,
+        minimum_distinct_structures=int(
+            cardinality.get("minimum_distinct_qualifying_structures", -1)
+        ),
     )
     cardinality_reproduces = all(
         recomputed_cardinality[key] == cardinality.get(key)
-        for key in ("identities_hold", "monotone", "minimum_met", "identities")
+        for key in (
+            "identities_hold",
+            "monotone",
+            "minimum_met",
+            "identities",
+            "distinct_qualifying_structures",
+            "distinct_minimum_met",
+        )
     )
     refusals_closed = all(
         arm[demand_class]["exploration_closed"] is True
@@ -163,8 +209,29 @@ def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
         "P16": bool(within_budget),
         # A refusal is a reach fact, not a budget fact.
         "P17": bool(refusals_closed),
-        # H58 itself.
-        "P18": bool(strictly_better and no_worse),
+        # Producer death: the capability is the lineage's, not one process's memory.
+        "P18": bool(death.get("capsules_run"))
+        and death.get("every_capsule_started") is True
+        and death.get("no_capsule_held_a_producer_result") is True
+        and death.get("no_capsule_could_reach_a_producer_result") is True,
+        "P19": death.get("every_verdict_matched_in_process") is True,
+        # Nothing this milestone did disturbed the milestones it imports.
+        "P20": preservation.get("every_predecessor_still_reproduces") is True
+        and all(
+            entry.get("conditions_true") == entry.get("conditions_computed")
+            for key, entry in preservation.items()
+            if isinstance(entry, dict) and entry.get("available")
+        ),
+        # A bank can meet its carrier minimum and still be one machine under several names. This is
+        # M112's defect one level up, and it is the only predicate here whose count the checker
+        # recomputes from the carriers rather than from any number the runner wrote.
+        "P21": recomputed_cardinality["distinct_minimum_met"] is True
+        and recounted_structures
+        == int(distinctness.get("distinct_qualifying_structures", -1))
+        # Every qualifying carrier must have left a body behind, or the recount is over a subset.
+        and len(bodies) == int(result.get("qualifying_carriers", -1)),
+        # H58 itself, last, so the hypothesis is never mistaken for one of its preconditions.
+        "P22": bool(strictly_better and no_worse),
     }
 
 
@@ -195,6 +262,23 @@ def measurements(result: dict[str, Any]) -> dict[str, Any]:
         "peak_invocations_by_arm": result.get("peak_invocations_by_arm"),
         "cascade_arm_calibrated_refusal": _total(result, CASCADE_ARM, "calibrated_refusal"),
         "fresh_arm_calibrated_refusal": _total(result, FRESH_ARM, "calibrated_refusal"),
+        "producer_death": result.get("producer_death"),
+        "preservation": result.get("preservation"),
+        "structural_distinctness": result.get("structural_distinctness"),
+        # Which acquisition the descendant's behaviour is owed to, reported whether or not H58 is
+        # true. `ablated` holds generation one and the policy, so `M3` minus `ablated` is generation
+        # two's entire marginal contribution and `M3` minus `M2` is the policy's. A positive H58
+        # that reports only `M3` against `T0` would credit a cascade for an effect one generation
+        # of it may not have produced.
+        "generation_decomposition": {
+            "generation_two_marginal": _marginal(result, DESCENDANT_ARM, ABLATED_ARM),
+            "generation_three_marginal": _marginal(result, DESCENDANT_ARM, CASCADE_ARM),
+            "cascade_marginal": _marginal(result, CASCADE_ARM, FRESH_ARM),
+            "generation_two_changes_no_outcome_count": all(
+                _total(result, DESCENDANT_ARM, key) == _total(result, ABLATED_ARM, key)
+                for key in SCORE_KEYS
+            ),
+        },
     }
 
 
@@ -215,7 +299,9 @@ def check(result: dict[str, Any]) -> dict[str, Any]:
         "failing": failing,
         "verdict": "positive" if not missing and not failing else "negative",
         "verdict_rule": (
-            "positive iff every predicate is computed true; P18 requires the full descendant to be "
+            "positive iff every predicate is computed true; P21 requires the qualifying carriers "
+            "to be distinct machines rather than renamings of one another, and P22 requires the "
+            "full descendant to be "
             "strictly better than the fresh control on at least one of correct construction, "
             "calibrated refusal, invented adapters or attribution agreement, and no worse on the "
             "other three"

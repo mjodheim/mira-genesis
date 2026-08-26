@@ -58,6 +58,8 @@ def survey(sample: int, seed: str) -> dict[str, Any]:
     state_counts: list[int] = []
     observation_depths: Counter[int] = Counter()
     latent_carriers = 0
+    # The distinct-structure minimum in the plan is stated over this subset, not over the sample.
+    qualifying_signatures: set[str] = set()
 
     for index in range(int(sample)):
         carrier = devkit.development_carrier("%s:%d" % (seed, index))
@@ -73,6 +75,7 @@ def survey(sample: int, seed: str) -> dict[str, Any]:
                 blocking[clause] += 1
             continue
         qualifying += 1
+        qualifying_signatures.add(host.structural_signature(carrier))
         observation_depths[int(report["max_observation_depth"])] += 1
         census = evaluator.attribution_census(carrier)
         for row, labels in census["row_labels"].items():
@@ -96,6 +99,11 @@ def survey(sample: int, seed: str) -> dict[str, Any]:
         "surface_kind_counts": dict(sorted(surfaces.items())),
         "distinct_structural_signatures": len(signatures),
         "every_carrier_structurally_distinct": len(signatures) == int(sample),
+        "distinct_qualifying_structures": len(qualifying_signatures),
+        "every_qualifying_carrier_structurally_distinct": len(qualifying_signatures) == qualifying,
+        "distinct_qualifying_structure_rate": round(
+            len(qualifying_signatures) / float(sample), 6
+        ),
         "carriers_holding_a_latent_cell": latent_carriers,
         "max_observation_depth_counts": {
             str(depth): count for depth, count in sorted(observation_depths.items())

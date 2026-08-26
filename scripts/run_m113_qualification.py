@@ -28,7 +28,10 @@ import argparse
 import hashlib
 import json
 import platform
+import shutil
+import subprocess
 import sys
+import tempfile
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -78,10 +81,112 @@ ARM_NAMES = (
     "budget_plus",
 )
 
+# Two further arms are not per-demand states and so are recorded outside `ARM_NAMES`:
+# `producer_death` runs the full descendant in an isolated capsule, and `preservation` re-checks
+# both predecessors against their own preserved results.
+OUT_OF_BAND_ARMS = ("producer_death", "preservation")
+
 # `budget_plus` is a fresh lineage given four times the observation budget. Its purpose is to make
 # "the machinery could not" separable from "the run could not afford to", which M084 recorded as the
 # distinction an episode count cannot make.
 BUDGET_MULTIPLIER = {"budget_plus": 4}
+
+# What an isolated capsule holds. Everything else -- and in particular both producer results -- is
+# absent from the import path rather than merely unread, which the child process measures for itself.
+# `metamorphosis` is a namespace package, so the capsule carries no `__init__.py`: there is none to
+# carry, and inventing one would change how the modules import inside the capsule but not outside it.
+CAPSULE_SOURCES = {
+    "metamorphosis/m107_runtime.py": "metamorphosis/m107_runtime.py",
+    "metamorphosis/m108_runtime.py": "metamorphosis/m108_runtime.py",
+    "metamorphosis/m109_runtime.py": "metamorphosis/m109_runtime.py",
+    "metamorphosis/m110_runtime.py": "metamorphosis/m110_runtime.py",
+    "metamorphosis/m111_runtime.py": "metamorphosis/m111_runtime.py",
+    "metamorphosis/carrier_host.py": "metamorphosis/carrier_host.py",
+    "metamorphosis/m113_runtime.py": "metamorphosis/m113_runtime.py",
+    "run.py": "scripts/run_m113_process.py",
+}
+
+
+def run_isolated_arm(
+    state: dict[str, Any], carrier: dict[str, Any], demand: dict[str, Any]
+) -> dict[str, Any]:
+    """Run one arm in a process whose import path cannot reach either producer result.
+
+    M099 recorded why this is not decoration: a capability that exists only because one process still
+    holds host code in memory is not a lineage-owned capability. The capsule carries the runtime
+    modules and three JSON files, and the child reports its own view of what it could reach.
+    """
+    directory = Path(tempfile.mkdtemp(prefix="m113-capsule-"))
+    try:
+        for member, source in CAPSULE_SOURCES.items():
+            target = directory / member
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT / source, target)
+        (directory / "STATE.json").write_bytes((canonical_json(state) + "\n").encode("ascii"))
+        (directory / "CARRIER.json").write_bytes((canonical_json(carrier) + "\n").encode("ascii"))
+        (directory / "DEMAND.json").write_bytes((canonical_json(demand) + "\n").encode("ascii"))
+        completed = subprocess.run(
+            [sys.executable, "-I", str(directory / "run.py")],
+            capture_output=True,
+            text=True,
+            cwd=str(directory),
+            timeout=600,
+            check=False,
+        )
+        if completed.returncode != 0:
+            return {
+                "started": True,
+                "exit_status": completed.returncode,
+                "stderr_tail": completed.stderr.strip()[-400:],
+                "outcome": None,
+            }
+        report = json.loads(completed.stdout)
+        members = set(report["capsule_members"])
+        report["started"] = True
+        report["exit_status"] = 0
+        report["capsule_holds_no_producer_result"] = not any(
+            member.startswith("experiments/") for member in members
+        )
+        return report
+    finally:
+        shutil.rmtree(directory, ignore_errors=True)
+
+
+def preservation_arm() -> dict[str, Any]:
+    """Re-check M110 and M111 against their own preserved results, unchanged.
+
+    M113 imports both predecessors. If anything here had disturbed them, their frozen checkers would
+    stop reproducing their own verdicts, and that has to be measured rather than assumed -- the M100
+    working-tree drift was invisible in `git status` and green in CI at the same time.
+    """
+    from scripts.check_m110_result import evaluate_conditions as m110_conditions
+    from scripts.check_m111_result import evaluate_conditions as m111_conditions
+
+    found: dict[str, Any] = {}
+    for name, path, conditions in (
+        ("M110", ROOT / "experiments" / "M110" / "RESULT.json", m110_conditions),
+        ("M111", ROOT / "experiments" / "M111" / "RESULT.json", m111_conditions),
+    ):
+        if not path.is_file():
+            found[name] = {"available": False}
+            continue
+        result = json.loads(path.read_bytes().decode("ascii"))
+        recomputed = digest({k: v for k, v in result.items() if k != "result_digest"})
+        computed = conditions(result["scientific_evidence"], replay_confirmed=True)
+        found[name] = {
+            "available": True,
+            "result_digest_reproduces": recomputed == result.get("result_digest"),
+            "conditions_computed": len(computed),
+            "conditions_true": sum(1 for value in computed.values() if value),
+            "false_conditions": sorted(k for k, v in computed.items() if not v),
+        }
+    found["schema"] = "m113-preservation-arm-v1"
+    found["every_predecessor_still_reproduces"] = all(
+        entry.get("available") and entry.get("result_digest_reproduces")
+        for key, entry in found.items()
+        if isinstance(entry, dict)
+    )
+    return found
 
 
 def canonical_json(value: Any) -> str:
@@ -214,6 +319,7 @@ def run_bank(
     *,
     requested_carrier_count: int,
     minimum_qualifying: int,
+    minimum_distinct_structures: int,
     session_budget: int,
 ) -> dict[str, Any]:
     restored = restore_arms()
@@ -224,17 +330,32 @@ def run_bank(
         demand_class: Counter() for demand_class in evaluator.DEMAND_CLASSES
     }
     adapter_agreement: list[dict[str, Any]] = []
+    producer_death: list[dict[str, Any]] = []
     entries: list[dict[str, Any]] = []
     invocation_peak: dict[str, int] = {name: 0 for name in ARM_NAMES}
     qualifying = 0
     schema_valid = len(carriers)
     pairs_posed = 0
+    # Renaming-invariant identities, collected here rather than left behind at acceptance. Two
+    # carriers that differ only by renaming are one experiment run twice, and a bank that collapses
+    # this way meets every cardinality identity while presenting fewer machines than it counts.
+    valid_signatures: Counter = Counter()
+    qualifying_signatures: Counter = Counter()
+    qualifying_bodies: dict[str, Any] = {}
 
     for index, carrier in enumerate(carriers):
+        valid_signatures[host.structural_signature(carrier)] += 1
         report = evaluator.qualification_report(carrier)
         if not report["qualifies"]:
             continue
         qualifying += 1
+        qualifying_signatures[host.structural_signature(carrier)] += 1
+        # The body itself, once per carrier rather than once per pair, so the checker recomputes the
+        # renaming-invariant signature instead of believing the one this script wrote. After reveal
+        # the bank is public, so nothing is disclosed here that the commitment did not already fix.
+        qualifying_bodies[str(carrier.get("carrier_ref") or opaque_domain_id(nonce, index))] = {
+            key: value for key, value in carrier.items() if key != "carrier_ref"
+        }
         reference = carrier.get("carrier_ref") or opaque_domain_id(nonce, index)
         census = evaluator.attribution_census(carrier)
         for row, labels in census["row_labels"].items():
@@ -307,6 +428,34 @@ def run_bank(
                                 == truth["component"]
                             ] += 1
                 record["arms"][name] = arm_record
+
+            # producer_death: the full descendant's state, in a process that cannot reach either
+            # producer result. Run once per pair on the reachable twin, which is the twin where a
+            # difference would show as a different verdict rather than as the same refusal.
+            reachable_demand = evaluator.materialize_twin(pair, evaluator.CLASS_REACHABLE)
+            isolated = run_isolated_arm(states["M3"], carrier, reachable_demand)
+            in_process = record["arms"]["M3"][evaluator.CLASS_REACHABLE]
+            record["producer_death"] = {
+                "started": isolated.get("started"),
+                "exit_status": isolated.get("exit_status"),
+                "capsule_holds_no_producer_result": isolated.get(
+                    "capsule_holds_no_producer_result"
+                ),
+                "producer_result_reachable": isolated.get("producer_result_reachable"),
+                "diagnosis_result_reachable": isolated.get("diagnosis_result_reachable"),
+                "verdict": (isolated.get("outcome") or {}).get("verdict"),
+                "matches_in_process_verdict": bool(
+                    isolated.get("outcome")
+                    and isolated["outcome"]["verdict"] == in_process["verdict"]
+                ),
+                "matches_in_process_sequence": bool(
+                    isolated.get("outcome")
+                    and isolated["outcome"].get("sequence") == in_process.get("sequence_recorded")
+                )
+                if in_process.get("sequence_recorded") is not None
+                else None,
+            }
+            producer_death.append(record["producer_death"])
             entries.append(record)
 
     cardinality = evaluator.cardinality_report(
@@ -316,6 +465,8 @@ def run_bank(
         schema_valid_carriers=schema_valid,
         qualifying_carriers=qualifying,
         minimum_qualifying=int(minimum_qualifying),
+        distinct_qualifying_structures=len(qualifying_signatures),
+        minimum_distinct_structures=int(minimum_distinct_structures),
     )
     disagreeing_rows = sorted(
         row
@@ -338,10 +489,37 @@ def run_bank(
         "corruption_control": restored["corruption"],
         "attribution_map": restored["attribution_map"],
         "rows_where_the_cascades_disagree": disagreeing_rows,
-        "arms_declared_but_not_run_here": [
-            "producer_death, which needs an isolated consumer process",
-            "preservation, which re-runs the M110 and M111 populations unchanged",
-        ],
+        "producer_death": {
+            "capsules_run": len(producer_death),
+            "every_capsule_started": bool(producer_death)
+            and all(item["started"] for item in producer_death),
+            "no_capsule_held_a_producer_result": bool(producer_death)
+            and all(item["capsule_holds_no_producer_result"] for item in producer_death),
+            "no_capsule_could_reach_a_producer_result": bool(producer_death)
+            and all(
+                item["producer_result_reachable"] is False
+                and item["diagnosis_result_reachable"] is False
+                for item in producer_death
+            ),
+            "every_verdict_matched_in_process": bool(producer_death)
+            and all(item["matches_in_process_verdict"] for item in producer_death),
+            "capsule_members": sorted(CAPSULE_SOURCES),
+        },
+        "preservation": preservation_arm(),
+        "qualifying_carrier_bodies": qualifying_bodies,
+        "structural_distinctness": {
+            "schema": "m113-structural-distinctness-v1",
+            "schema_valid_carriers": schema_valid,
+            "distinct_schema_valid_structures": len(valid_signatures),
+            "qualifying_carriers": qualifying,
+            "distinct_qualifying_structures": len(qualifying_signatures),
+            # The signatures themselves, so a reader can see which machines were emitted twice
+            # rather than take a count on trust.
+            "repeated_qualifying_signatures": sorted(
+                key for key, count in qualifying_signatures.items() if count > 1
+            ),
+            "largest_qualifying_repeat": max(qualifying_signatures.values(), default=0),
+        },
         "cardinality": cardinality,
         "session_budget": int(session_budget),
         "budget_multipliers": dict(BUDGET_MULTIPLIER),
@@ -352,6 +530,7 @@ def run_bank(
         "qualifying_carriers": qualifying,
         "demand_pairs_posed": pairs_posed,
         "arms": list(ARM_NAMES),
+        "out_of_band_arms": list(OUT_OF_BAND_ARMS),
         "adapter_agreement": adapter_agreement,
         "per_arm_totals": {name: dict(counter) for name, counter in per_arm.items()},
         "attribution_agreement": {
@@ -416,6 +595,7 @@ def main() -> int:
         DEVELOPMENT_NONCE,
         requested_carrier_count=sample,
         minimum_qualifying=int(plan["minimum_qualifying_carriers"]),
+        minimum_distinct_structures=int(plan["minimum_distinct_qualifying_structures"]),
         session_budget=int(plan["session_budget"]),
     )
     result["development"] = True

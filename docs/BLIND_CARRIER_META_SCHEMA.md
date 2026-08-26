@@ -62,6 +62,34 @@ action, error and surface token consistently changes nothing the host computes e
 graph, the reachable and unreachable observation sets, the structural signature and every response
 across a bijection. A host with a preference for some particular carrier fails it. Nothing else does.
 
+## Equivariance has a second use: counting machines rather than records
+
+The same bijection that proves the host neutral also gives the bank a **renaming-invariant identity**.
+`carrier_host.structural_signature` hashes the skeleton — surface kind, cell sizes, initial
+configuration, observability, error count, and each action's arity, guard, effect and error index —
+with every name and token removed. Two carriers that differ only by a consistent renaming hash the
+same, and they are the same experiment run twice.
+
+That matters because a bank is counted before it is read. Twenty-four renamings of four machines
+satisfy every cardinality identity a materialization can check — requested equals emitted equals
+enveloped — and can meet a minimum stated over *carriers* while presenting four machines. It is M112's
+defect one level up: a count standing in for the quantity that actually matters.
+
+So the chain runs one step further than the identities do:
+
+```
+requested == emitted == enveloped
+    >= schema_valid           (measured)
+    >= qualifying             (measured)
+    >= distinct structures    (measured)
+```
+
+The last step can never be an identity and is declared as measured. The minimum a bank must meet is
+stated over the distinct count, the qualifying carrier bodies are preserved in the result so a checker
+recomputes the signatures itself rather than trusting the runner's number, and a bank that collapses
+is refused rather than counted. Emitters are also asked not to repeat themselves — but an instruction
+in a prompt is not a measurement, and only the second of those two is evidence.
+
 ## The meta-channel, and the honest shape of the boundary
 
 A learner that cannot form a syntactically valid request discovers nothing, so something has to be
@@ -151,7 +179,8 @@ missing one silently readmits the defect.
 Claiming a construction on the unreachable twin is scored as an **invented adapter** — the failure
 G1 names — and it is reachable in practice rather than in theory: a learner whose observation
 interface is narrower than the demand can match the narrowed projection in good faith and be wrong.
-On M113's development population the fresh lineage does exactly that on 13 of 44 such demands.
+On M113's development population the fresh lineage does exactly that on 13 of 44 such demands, and
+the full descendant on 15 of 44.
 
 ## Reusing this for another milestone
 

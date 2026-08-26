@@ -1,0 +1,16 @@
+# Per-directory attributes owned by M113, and the only ones this milestone may declare.
+#
+# Every other attributes file in this repository is already **bound apparatus of a frozen
+# protocol**: the root file is bound by M105 and M106, and metamorphosis/, scripts/ and tests/ are
+# bound by M107 -- which created them precisely to stop later milestones editing the root. Appending
+# to any of them rebinds a freeze this milestone may not touch. M113's first commit appended to the
+# root and broke two M106 tests; moving those entries into the per-directory files broke an M107 one
+# instead. There is no fourth place to put them, because git reads one filename per directory.
+#
+# The conclusion is not a better location. It is that an attributes entry does not compose across
+# freezes and a **declared digest mode** does: `m113_carrier_bank.TESTED_SYSTEM_DIGEST_MODES` marks
+# every bound source member `lf_normalized`, as M110 and M111 bind theirs, so no member outside this
+# directory needs an attribute at all. This file covers only what lives here.
+*.md text eol=lf
+*.txt text eol=lf
+*.json -text

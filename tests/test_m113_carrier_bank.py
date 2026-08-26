@@ -203,30 +203,41 @@ def test_a_demand_belonging_to_another_carrier_is_refused():
 
 
 def test_the_cardinality_identity_holds_on_a_well_formed_materialization():
-    report = evaluator.cardinality_report(24, 24, 24, 22, 5, 3)
+    report = evaluator.cardinality_report(24, 24, 24, 22, 5, 3, 5, 3)
     evaluator.assert_cardinality(report)
     assert report["identities_hold"] is True
     assert report["minimum_met"] is True
+    assert report["distinct_minimum_met"] is True
+    assert report["renaming_collapse"] == 0
 
 
 def test_the_m112_defect_would_now_fail_the_guard():
     """A hundred requested, twenty enveloped. The exact shape of M112's materialization defect."""
-    report = evaluator.cardinality_report(100, 100, 20, 20, 5, 3)
+    report = evaluator.cardinality_report(100, 100, 20, 20, 5, 3, 5, 3)
     assert report["identities_hold"] is False
     with pytest.raises(evaluator.EvaluationError):
         evaluator.assert_cardinality(report)
 
 
 def test_a_non_monotone_cardinality_chain_is_refused():
-    report = evaluator.cardinality_report(24, 24, 24, 24, 30, 3)
+    report = evaluator.cardinality_report(24, 24, 24, 24, 30, 3, 30, 3)
+    with pytest.raises(evaluator.EvaluationError):
+        evaluator.assert_cardinality(report)
+
+
+def test_more_distinct_structures_than_qualifying_carriers_is_refused():
+    """Every distinct structure is a qualifying carrier, so the reverse cannot happen."""
+    report = evaluator.cardinality_report(24, 24, 24, 24, 5, 3, 9, 3)
+    assert report["monotone"] is False
     with pytest.raises(evaluator.EvaluationError):
         evaluator.assert_cardinality(report)
 
 
 def test_the_minimum_can_be_missed():
-    report = evaluator.cardinality_report(24, 24, 24, 20, 2, 3)
+    report = evaluator.cardinality_report(24, 24, 24, 20, 2, 3, 2, 3)
     evaluator.assert_cardinality(report)
     assert report["minimum_met"] is False
+    assert report["distinct_minimum_met"] is False
 
 
 # ---------------------------------------------------------------- the payload contract
@@ -317,7 +328,9 @@ def a_plan(**overrides):
         "cardinality_derivation": {
             "records_to_carriers": "identity",
             "carriers_to_qualifying": "measured_after_reveal",
+            "qualifying_to_distinct_structures": "measured_after_reveal",
         },
+        "minimum_distinct_qualifying_structures": 3,
         "qualification_rule": "m113_evaluator.qualification_report",
         "demand_derivation_rule": "m113_evaluator.derive_demand_pair",
         "closure_rule": "exact_fixed_point_no_inherited_bound",
@@ -347,9 +360,16 @@ def test_a_well_formed_plan_validates():
         {"demand_derivation_rule": "chosen_by_the_project"},
         {"measured_over_carriers": 40},
         {"cardinality_derivation": {"records_to_carriers": "five_to_one",
-                                    "carriers_to_qualifying": "measured_after_reveal"}},
+                                    "carriers_to_qualifying": "measured_after_reveal",
+                                    "qualifying_to_distinct_structures": "measured_after_reveal"}},
         {"cardinality_derivation": {"records_to_carriers": "identity",
-                                    "carriers_to_qualifying": "identity"}},
+                                    "carriers_to_qualifying": "identity",
+                                    "qualifying_to_distinct_structures": "measured_after_reveal"}},
+        {"cardinality_derivation": {"records_to_carriers": "identity",
+                                    "carriers_to_qualifying": "measured_after_reveal",
+                                    "qualifying_to_distinct_structures": "identity"}},
+        {"minimum_distinct_qualifying_structures": 1},
+        {"minimum_distinct_qualifying_structures": 9},
     ],
 )
 def test_a_plan_that_weakens_the_contract_is_refused(override):
@@ -392,13 +412,82 @@ def test_the_tested_system_binding_refuses_a_drifted_member(tmp_path):
         "schema": bank.SYSTEM_PROTOCOL_SCHEMA,
         "tested_system_unmodified_after_reveal": True,
         "tested_system_digests": {path: "0" * 64 for path in bank.TESTED_SYSTEM_PATHS},
+        "tested_system_digest_modes": dict(bank.TESTED_SYSTEM_DIGEST_MODES),
     }
     protocol["protocol_commitment_sha256"] = bank.system_protocol_commitment(protocol)
     with pytest.raises(bank.CarrierBankError, match="changed after it was frozen"):
         bank.validate_system_protocol(protocol, root=bank.EXPERIMENT_DIRECTORY.parent.parent)
 
 
-# ---------------------------------------------------------------- the learner
+def test_the_tested_system_binding_refuses_an_undeclared_digest_mode():
+    """A default is a decision nobody made, and the decision is which bytes a third party reproduces."""
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    protocol = {
+        "schema": bank.SYSTEM_PROTOCOL_SCHEMA,
+        "tested_system_unmodified_after_reveal": True,
+        "tested_system_digests": bank.tested_system_digests(root),
+        "tested_system_digest_modes": {
+            path: mode
+            for path, mode in bank.TESTED_SYSTEM_DIGEST_MODES.items()
+            if path != "metamorphosis/m109_runtime.py"
+        },
+    }
+    protocol["protocol_commitment_sha256"] = bank.system_protocol_commitment(protocol)
+    with pytest.raises(bank.CarrierBankError, match="digest mode"):
+        bank.validate_system_protocol(protocol, root=root)
+
+
+def test_the_tested_system_digest_does_not_depend_on_the_checkout(tmp_path):
+    """The defect this mode exists for, constructed rather than argued.
+
+    Four of the eleven bound members are CRLF in this working tree and five belong to frozen
+    milestones no attributes file here may extend. A raw-byte binding would therefore pin the
+    bytes of one checkout; under `lf_normalized` a CRLF copy and an LF copy hash the same.
+    """
+    crlf = bytes((13, 10))
+    lf = bytes((10,))
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    reference = bank.tested_system_digests(root)
+
+    for name, convert in (("crlf", lambda raw: raw.replace(crlf, lf).replace(lf, crlf)),
+                          ("lf", lambda raw: raw.replace(crlf, lf))):
+        checkout = tmp_path / name
+        for relative in bank.TESTED_SYSTEM_PATHS:
+            target = checkout / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(convert((root / relative).read_bytes()))
+        assert bank.tested_system_digests(checkout) == reference, name
+
+    # And the mode still binds: a real edit is still refused.
+    edited = tmp_path / "lf" / "metamorphosis" / "m113_evaluator.py"
+    edited.write_bytes(edited.read_bytes() + b"# drift" + lf)
+    assert bank.tested_system_digests(tmp_path / "lf") != reference
+
+
+def test_this_milestone_declares_no_attributes_file_a_freeze_already_binds():
+    """Three protocols bind the four attributes files this milestone would otherwise reach for.
+
+    The root file is bound by M105 and M106; metamorphosis/, scripts/ and tests/ are bound by
+    M107, which created them to stop later milestones editing the root. M113 tried both in turn
+    and broke an M106 test, then an M107 one. Git reads one attributes filename per directory, so
+    there is no fourth place -- which is why the tested system is bound by a declared digest mode
+    rather than by an attribute.
+    """
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    frozen_elsewhere = (
+        ".gitattributes",
+        "metamorphosis/.gitattributes",
+        "scripts/.gitattributes",
+        "tests/.gitattributes",
+    )
+    for relative in frozen_elsewhere:
+        text = (root / relative).read_text(encoding="utf-8").lower()
+        assert "m113" not in text, relative
+        assert "carrier_host" not in text, relative
+
+    local = bank.EXPERIMENT_DIRECTORY / ".gitattributes"
+    assert local.is_file()
+    assert set(bank.TESTED_SYSTEM_DIGEST_MODES.values()) == {"lf_normalized"}
 
 
 def test_lineage_state_round_trips_and_refuses_a_drifted_digest():
@@ -625,3 +714,208 @@ def test_the_demand_rule_poses_one_pair_per_attribution_row():
             evaluator.assert_demand_pair_delta(pair)
         return
     raise AssertionError("no qualifying carrier was produced by this seed range")
+
+
+# ---------------------------------------------------------------- producer death and preservation
+
+
+def test_an_isolated_capsule_cannot_reach_either_producer_result():
+    """M099's distinction: a capability that lives in one process's memory is not the lineage's.
+
+    The capsule is the boundary, and the child measures its own view of it rather than being told.
+    """
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "m113_runner", bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_qualification.py"
+    )
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    carrier = qualifying_carriers(1)[0]
+    pair = evaluator.derive_demand_pair(carrier, opaque_domain_id(NONCE, 0), BUDGET)
+    demand = evaluator.materialize_twin(pair, evaluator.CLASS_REACHABLE)
+    state = runtime.create_state(
+        action_width=demand["entry"]["action_width"],
+        observation_width=demand["entry"]["observation_width"],
+        composition_space=demand["entry"]["composition_space"],
+    )
+    report = runner.run_isolated_arm(state, carrier, demand)
+    assert report["started"] is True
+    assert report["exit_status"] == 0
+    assert report["producer_result_reachable"] is False
+    assert report["diagnosis_result_reachable"] is False
+    assert report["capsule_holds_no_producer_result"] is True
+    assert not any(member.startswith("experiments/") for member in report["capsule_members"])
+
+    in_process = runtime.resolve(
+        state, host.Channel(carrier, demand["carrier_ref"], BUDGET), demand
+    )
+    assert report["outcome"]["verdict"] == in_process["verdict"]
+    assert report["outcome"]["sequence"] == in_process["sequence"]
+
+
+def test_the_preservation_arm_finds_both_predecessors_intact():
+    """M113 imports M110 and M111. If it had disturbed them, their own checkers would say so."""
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "m113_runner2",
+        bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_qualification.py",
+    )
+    runner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(runner)
+
+    report = runner.preservation_arm()
+    assert report["every_predecessor_still_reproduces"] is True
+    for name in ("M110", "M111"):
+        entry = report[name]
+        assert entry["available"] is True
+        assert entry["result_digest_reproduces"] is True
+        assert entry["conditions_true"] == entry["conditions_computed"]
+        assert entry["false_conditions"] == []
+
+
+# ---------------------------------------------------------------------- which generation did it
+
+
+def test_the_checker_decomposes_the_descendant_into_its_generations():
+    """`M3` against `T0` is a sum. The record has to say which acquisition the sum is owed to.
+
+    `ablated` holds generation one and the policy, so `M3` minus `ablated` is generation two's whole
+    marginal contribution. On the development population it is zero on every outcome measure, and a
+    result that reported only the descendant against the fresh control would have credited the
+    cascade for an effect the policy produced.
+    """
+    import importlib.util
+
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    spec = importlib.util.spec_from_file_location(
+        "m113_checker", root / "scripts" / "check_m113_result.py"
+    )
+    checker = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(checker)
+
+    development = json.loads(
+        (root / "experiments" / "M113" / "DEVELOPMENT_RUN.json").read_bytes().decode("ascii")
+    )
+    decomposition = checker.measurements(development)["generation_decomposition"]
+
+    for name in ("generation_two_marginal", "generation_three_marginal", "cascade_marginal"):
+        assert set(decomposition[name]) == set(checker.SCORE_KEYS) | {"attribution_correct"}
+
+    # The marginals are differences and must reconstruct the totals they were taken from.
+    for key in checker.SCORE_KEYS:
+        assert (
+            development["per_arm_totals"]["M3"][key]
+            - development["per_arm_totals"]["ablated"][key]
+            == decomposition["generation_two_marginal"][key]
+        )
+        assert (
+            development["per_arm_totals"]["M3"][key] - development["per_arm_totals"]["M2"][key]
+            == decomposition["generation_three_marginal"][key]
+        )
+
+    # The finding itself, pinned so that a later run which changes it has to say so.
+    assert decomposition["generation_two_changes_no_outcome_count"] is True
+    assert decomposition["generation_two_marginal"]["attribution_correct"] == 1
+    assert decomposition["generation_three_marginal"]["correct_construction"] == 9
+    assert decomposition["generation_three_marginal"]["calibrated_refusal"] == -22
+
+
+# ------------------------------------------------------- a bank of renamings is one machine twice
+
+
+def _rename_carrier(carrier: dict, tag: str) -> dict:
+    """A consistent renaming of every cell, action, error and surface token."""
+    names = sorted(
+        {item["name"] for item in carrier["cells"]}
+        | {item["name"] for item in carrier["actions"]}
+        | set(carrier["errors"])
+        | {
+            carrier["surface"][key]
+            for key in ("ok_token", "error_token", "action_key", "argument_key", "status_key")
+        }
+    )
+    mapping = {name: "%s%02d" % (tag, position) for position, name in enumerate(names)}
+    surface = dict(carrier["surface"])
+    for key in ("ok_token", "error_token", "action_key", "argument_key", "status_key"):
+        surface[key] = mapping[surface[key]]
+    return host.validate_carrier(
+        {
+            "surface": surface,
+            "cells": [
+                {"name": mapping[item["name"]], "size": item["size"]} for item in carrier["cells"]
+            ],
+            "initial": list(carrier["initial"]),
+            "visible": list(carrier["visible"]),
+            "errors": [mapping[item] for item in carrier["errors"]],
+            "actions": [
+                {
+                    "name": mapping[item["name"]],
+                    "arity": item["arity"],
+                    "arg_size": item["arg_size"],
+                    "guard": item["guard"],
+                    "effect": item["effect"],
+                    "error": mapping[item["error"]],
+                }
+                for item in carrier["actions"]
+            ],
+        }
+    )
+
+
+def test_a_bank_of_renamings_counts_as_one_machine():
+    """M112's defect one level up: a count that stands in for the quantity that matters.
+
+    Twenty-four renamings of one machine satisfy every cardinality identity and meet a carrier
+    minimum while presenting one experiment. The renaming-invariant signature is what refuses it.
+    """
+    original = qualifying_carriers(1)[0]
+    renamed = _rename_carrier(original, "zz")
+
+    assert host.structural_signature(original) == host.structural_signature(renamed)
+    # And they are genuinely different bytes, so nothing else in the chain would have noticed.
+    assert original["carrier_digest"] != renamed["carrier_digest"]
+    assert evaluator.qualification_report(renamed)["qualifies"] is True
+
+    collapsed = evaluator.cardinality_report(
+        requested_carrier_count=24,
+        records_emitted=24,
+        carriers_enveloped=24,
+        schema_valid_carriers=24,
+        qualifying_carriers=24,
+        minimum_qualifying=3,
+        distinct_qualifying_structures=1,
+        minimum_distinct_structures=3,
+    )
+    assert collapsed["identities_hold"] is True
+    assert collapsed["monotone"] is True
+    # The carrier minimum is met by a bank that holds one machine. The distinct minimum is not.
+    assert collapsed["minimum_met"] is True
+    assert collapsed["distinct_minimum_met"] is False
+    assert collapsed["renaming_collapse"] == 23
+
+
+def test_a_plan_that_does_not_declare_the_distinct_structure_derivation_is_refused():
+    """The derivation has to be declared before the bank exists, or it is chosen after it."""
+    plan = json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "ANALYSIS_PLAN_CANDIDATE.json").read_bytes().decode("ascii")
+    )
+    bank.validate_analysis_plan(plan)
+
+    for mutate in (
+        lambda p: p["cardinality_derivation"].pop("qualifying_to_distinct_structures"),
+        lambda p: p["cardinality_derivation"].update(
+            {"qualifying_to_distinct_structures": "identity"}
+        ),
+        lambda p: p.pop("minimum_distinct_qualifying_structures"),
+        lambda p: p.update({"minimum_distinct_qualifying_structures": 1}),
+        # Every distinct structure is a qualifying carrier, so this one could never pass.
+        lambda p: p.update({"minimum_distinct_qualifying_structures": 99}),
+    ):
+        broken = json.loads(json.dumps(plan))
+        mutate(broken)
+        broken["plan_commitment_sha256"] = bank.analysis_plan_commitment(broken)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_analysis_plan(broken)

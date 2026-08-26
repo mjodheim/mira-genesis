@@ -725,14 +725,23 @@ def cardinality_report(
     schema_valid_carriers: int,
     qualifying_carriers: int,
     minimum_qualifying: int,
+    distinct_qualifying_structures: int,
+    minimum_distinct_structures: int,
 ) -> dict[str, Any]:
     """Say what each count is, and prove the ones that are supposed to be identities.
 
     M112 froze `requested_record_count = requested_world_count` while a world was five records, so
     a hundred bought twenty. The error was not arithmetic; it was that no stage ever compared the
     two numbers. Here every adjacent pair is compared, the identities are named as identities, and
-    the one quantity that genuinely cannot be an identity -- how many of the emitted carriers turn
-    out to qualify -- is declared as measured after reveal and carries a minimum that can fail.
+    the quantities that genuinely cannot be identities are declared as measured after reveal and
+    carry minima that can fail.
+
+    The last step is the one M112's defect would have taken a level higher. Two carriers that differ
+    only by renaming are the same experiment twice, so a bank of twenty-four renamings of four
+    machines satisfies every identity above while presenting four machines. `carrier_host` computes a
+    renaming-invariant signature and the acceptance stage counts them; without this step that count
+    was measured and then dropped before it reached the result, which is a count standing in for the
+    quantity that matters -- M112's shape exactly.
     """
     requested = int(requested_carrier_count)
     emitted = int(records_emitted)
@@ -740,6 +749,8 @@ def cardinality_report(
     valid = int(schema_valid_carriers)
     qualifying = int(qualifying_carriers)
     minimum = int(minimum_qualifying)
+    distinct = int(distinct_qualifying_structures)
+    distinct_minimum = int(minimum_distinct_structures)
 
     identities = {
         "requested_equals_emitted": requested == emitted,
@@ -748,6 +759,9 @@ def cardinality_report(
     derivations = {
         "enveloped_to_schema_valid": "measured: a payload the host refuses is not a carrier",
         "schema_valid_to_qualifying": "measured after reveal against the frozen qualification rule",
+        "qualifying_to_distinct_structures": (
+            "measured after reveal: two carriers that differ only by renaming are one experiment"
+        ),
     }
     return {
         "schema": "m113-cardinality-report-v1",
@@ -756,12 +770,17 @@ def cardinality_report(
         "carriers_enveloped": enveloped,
         "schema_valid_carriers": valid,
         "qualifying_carriers": qualifying,
+        "distinct_qualifying_structures": distinct,
         "minimum_qualifying_carriers": minimum,
+        "minimum_distinct_qualifying_structures": distinct_minimum,
         "identities": identities,
         "identities_hold": all(identities.values()),
         "declared_derivations": derivations,
-        "monotone": requested >= emitted >= enveloped >= valid >= qualifying >= 0,
+        "monotone": requested >= emitted >= enveloped >= valid >= qualifying >= distinct >= 0,
         "minimum_met": qualifying >= minimum,
+        "distinct_minimum_met": distinct >= distinct_minimum,
+        # A bank can meet its carrier minimum and still be one machine wearing several names.
+        "renaming_collapse": qualifying - distinct,
     }
 
 

@@ -116,6 +116,17 @@ TESTED_SYSTEM_PATHS = (
     "scripts/check_m113_result.py",
 )
 
+# How each member's bytes are reduced before hashing, declared per member rather than assumed.
+#
+# M110 and M111 established this and the reason is not stylistic. A raw-byte digest binds the bytes
+# a *particular checkout* produced, so a member that no attributes file pins to LF hashes one way on
+# a POSIX clone and another on a Windows one, and the freeze stops being verifiable by anyone else.
+# Five of the members above -- `m107_runtime.py` through `m111_runtime.py` -- belong to frozen
+# milestones and are pinned by no attributes file this milestone may extend; four of them are CRLF
+# in this working tree right now. Declaring `lf_normalized` for every source member removes the
+# dependence without touching a byte any predecessor owns.
+TESTED_SYSTEM_DIGEST_MODES = {path: "lf_normalized" for path in TESTED_SYSTEM_PATHS}
+
 CARRIER_BANK_CLAIM_BOUNDARY = {
     "evidence_tier": "blind_generated_sealed_bank",
     "procedural_independence": True,
@@ -303,6 +314,25 @@ def validate_analysis_plan(plan: Mapping[str, Any]) -> None:
         raise CarrierBankError(
             "how many carriers qualify cannot be an identity and must be declared as measured"
         )
+    if derivation.get("qualifying_to_distinct_structures") != "measured_after_reveal":
+        raise CarrierBankError(
+            "how many of the qualifying carriers are distinct machines rather than renamings of "
+            "one another cannot be an identity and must be declared as measured: a bank of "
+            "renamings satisfies every count above it while presenting fewer machines than it "
+            "counts"
+        )
+
+    distinct_minimum = plan.get("minimum_distinct_qualifying_structures")
+    if not isinstance(distinct_minimum, int) or distinct_minimum < 2:
+        raise CarrierBankError(
+            "the plan must declare a minimum over distinct qualifying structures, and a minimum "
+            "below two cannot fail"
+        )
+    if distinct_minimum > minimum:
+        raise CarrierBankError(
+            "the distinct-structure minimum cannot exceed the carrier minimum: every distinct "
+            "structure is a qualifying carrier, so such a plan could never pass"
+        )
 
     if plan.get("insufficient_bank_verdict") != "negative":
         raise CarrierBankError(
@@ -340,14 +370,24 @@ def system_protocol_commitment(protocol: Mapping[str, Any]) -> str:
 
 
 def tested_system_digests(root: Path) -> dict[str, str]:
-    """Raw working-tree bytes, exactly as every milestone from M100 on binds its apparatus."""
+    """Working-tree bytes under each member's declared digest mode, as M110 and M111 bind theirs.
+
+    An undeclared mode is refused rather than defaulted. M110 recorded why: a default is a decision
+    nobody made, and the decision here is which bytes a third party has to reproduce.
+    """
     resolved = Path(root).resolve()
     found: dict[str, str] = {}
     for relative in TESTED_SYSTEM_PATHS:
         path = resolved / relative
         if not path.is_file():
             raise CarrierBankError("tested system member is missing: %s" % relative)
-        found[relative] = hashlib.sha256(path.read_bytes()).hexdigest()
+        raw = path.read_bytes()
+        mode = TESTED_SYSTEM_DIGEST_MODES.get(relative)
+        if mode == "lf_normalized":
+            raw = raw.replace(bytes((13, 10)), bytes((10,)))
+        elif mode != "raw":
+            raise CarrierBankError("tested system member has no declared digest mode: %s" % relative)
+        found[relative] = hashlib.sha256(raw).hexdigest()
     return found
 
 
@@ -359,6 +399,12 @@ def validate_system_protocol(protocol: Mapping[str, Any], *, root: Path) -> None
         raise CarrierBankError("system protocol declares no tested system digests")
     if sorted(declared) != sorted(TESTED_SYSTEM_PATHS):
         raise CarrierBankError("system protocol does not bind exactly the declared tested system")
+    modes = protocol.get("tested_system_digest_modes")
+    if modes != TESTED_SYSTEM_DIGEST_MODES:
+        raise CarrierBankError(
+            "the system protocol must carry the digest mode of every member it binds, or the "
+            "digests it names are the bytes of one checkout rather than of the system"
+        )
     measured = tested_system_digests(root)
     drifted = sorted(key for key in measured if measured[key] != declared.get(key))
     if drifted:
@@ -486,6 +532,7 @@ __all__ = [
     "REPORT_SCHEMA",
     "SURVEY_SCHEMA",
     "SYSTEM_PROTOCOL_SCHEMA",
+    "TESTED_SYSTEM_DIGEST_MODES",
     "TESTED_SYSTEM_PATHS",
     "analysis_plan_commitment",
     "assess_carrier_bank_readiness",
