@@ -1,3 +1,13 @@
+\section{M108: modifying the machinery that performs later acquisitions}
+\label{sec:m108}
+M108 reconstructs M107's acquired operator rather than hand-coding a stronger baseline. At the base interface width, the operator table is already saturated at 16 of 16 Boolean functions. A later failure therefore cannot honestly be explained by a missing Boolean operator. The acquisition machinery nevertheless begins hardwired to blame that axis.
+
+The lineage receives a bounded episode record over attribution rows. With episodes covering only rows $\{0,3\}$, two attribution classes survive and acquisition is refused. With rows $\{0,2,3\}$, the sixteen-program attribution space yields two consistent programs in one attribution class. The adopted rule has truth table $[1,0,1,0]$, is non-monotone, two nodes long, and becomes content-addressed lineage state.
+
+On the held demand $B$, the modified state \mone attributes the failure to the signal interface, widens it, and constructs the target in six nodes. Fresh \mzero exhausts all twenty operators and refuses at both bounds 9 and 13 under an equal machinery-step budget. Byte-exact ablation returns to \mzero and removes the capability; mutation sends attribution back to the operator axis; corruption fails closed on the state identity mismatch. P1--P16 compute true, replay is equal, and the canonical run uses fourteen isolated processes with zero external calls.
+
+Two structural arguments make the dependency stronger than ``the search happened not to find a solution.'' First, at the base interface width, all 16 liftable images of the 256 world functions exclude $B$ for any operator set. Second, at full width, $B$ lies outside the monotone image by lemma. The capability therefore requires both the earlier interpreter extension and the acquired attribution rule that tells the machinery to widen the interface.
+
 M108 is the first result in the line where acquired state changes \emph{how later acquisition failures are acted upon}. Its limitation is equally important. The episode blame labels are authored supervision, and the held demand occurs on a feature row already represented in those episodes. The experiment demonstrates machinery modification and generalization to a new demand with a recorded feature pattern; it does not yet show that the lineage can determine its own blame labels.
 
 \section{M109: machinery that produces the next machinery generation}
@@ -31,9 +41,4 @@ P1--P18 compute true with replay equality across 21 isolated processes and zero 
 M110 restores the M109 cascade from frozen result bytes and runs it unchanged in a materially different carrier: reference-bearing JSON records over a four-valued chain. The consumer did not participate in producing the rules. Attribution is still executed by the producer runtime, and the checker verifies predecessor result digests and state digests rather than accepting a functionally equivalent rebuild.
 
 This setup asks two questions under one frozen protocol. \emph{H55-a}: does the acquired cascade add capability in a carrier that differs materially from the producer? \emph{H55-b}: does the same machinery become harmful outside the failure rows the producer could present? Both halves are necessary. A transfer result that reported only the positive rows would miss the paper's central finding.
-
-\subsection{A materially different carrier}
-The producer laboratory operates over three-signal Boolean structures. The consumer operates over five-document reference-bearing JSON worlds whose values lie on the chain $0<1<2<3$. A reference edge breaks one structural implication that was guaranteed by the producer's prefix-truncation family. The registry and feature vocabulary are deliberately shared so the transferred object is the attribution machinery rather than a new representation designed for the consumer.
-
-The producer reaches rows $\{1,2,3,6,7\}$. The consumer reaches $\{1,3,5,7\}$. Labels agree on every shared row. Row 5 is the critical novelty: it is realized by the consumer and by no producer state. Thus the experiment exposes an extrapolation region without changing the rule representation or the component names.
 
