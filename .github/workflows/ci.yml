@@ -125,6 +125,15 @@ jobs:
         run: python scripts/check_blind_bank_readiness.py --assert-not-revealed
       - name: M112 world bank not revealed
         run: python scripts/check_m112_world_bank_readiness.py --assert-not-revealed
+      - name: M113 carrier bank not revealed
+        run: python scripts/check_m113_carrier_bank_readiness.py --assert-not-revealed
+
+      # M113's four claims of the form "X cannot see Y" are worth exactly as much as the check that
+      # enforces them, so the check is decisive rather than advisory. It also verifies that the
+      # carrier host is equivariant under a consistent renaming of every cell, action, error and
+      # surface token, which is what "the host holds no carrier semantics" actually means.
+      - name: M113 information boundaries must hold
+        run: python scripts/audit_m113_boundaries.py
 
       # The gate reporting `phase: draft` on a repository with no artifacts proves nothing about
       # what it would refuse once artifacts exist. This constructs the three violations external

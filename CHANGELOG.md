@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **M113 is pre-registered and built; it has not run and its bank does not exist.** M112 removed
+  world authorship and left the carrier. M113 puts the carrier's interaction language in a blind
+  generator's hands: the emitter chooses the state cells and their domains, which of them are
+  latent, the action names and arities, the preconditions that make the carrier impose a protocol,
+  the effects, the error vocabulary and which of four wire surfaces it speaks with which tokens.
+  The project supplies the contract of reception -- `metamorphosis/carrier_host.py`, a host that
+  holds no carrier semantics and is checked to be **equivariant under a consistent renaming** of
+  every cell, action, error and token. Closure is an exact fixed point rather than an inherited
+  bound: M112's `P5` failed because seven expression nodes closed the image on 1 160 project worlds
+  and not on the first blind one, and the devkit survey here already sees observations first
+  appearing at depth 11. One carrier is one record, that identity is declared and mechanically
+  checked, and M112's cardinality defect would now fail the guard. Seven pre-freeze defects were
+  found by measuring the apparatus rather than reading it, all repaired, each with a regression
+  test. The development run returns **17 of 18, P18 false**: the full descendant constructs 23
+  against the fresh control's 13 and attributes correctly 21 times against 10, while its calibrated
+  refusals fall from 29 to 6 and its invented adapters rise from 13 to 15. Freezing the plan,
+  pinning a generator identity and running the single invocation remain owner gates, and the Docker
+  daemon is not running, so the attested isolated invocation cannot be planned from here.
+
 - **M104 qualifies the unchanged constructor-reach mechanism on a fresh population.** The owner
   accepted candidate `6416e54b…`, froze protocol `b3d8a6b3…`, then separately authorized one attempt
   on pool `a84fa3c…`. Result `f2be4d85…` and stable evidence `9f2d1758…` were preserved before the

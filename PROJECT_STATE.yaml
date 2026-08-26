@@ -1007,6 +1007,81 @@ current_real_software_frontier:
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: an_externally_maintained_bank_independent_reproduction_and_an_external_adversarial_audit
 
+  M113:
+    status: candidate_not_frozen_bank_does_not_exist
+    hypothesis: H58
+    decision_slot: D082
+    decision_slot_filled: false
+    phase: draft
+    successor_to: M112
+    m112_untouched: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    what_the_generator_chooses:
+      - wire_surface_and_its_tokens_and_separators
+      - state_cells_their_domains_and_which_are_latent
+      - action_names_arities_and_argument_domains
+      - action_preconditions_so_the_carrier_imposes_a_protocol
+      - action_effects
+      - error_vocabulary_and_the_mapping_from_a_refused_action_to_a_code
+    what_the_project_still_owns:
+      - the_meta_schema_and_therefore_the_space_carriers_are_drawn_from
+      - the_four_wire_surface_shapes_though_not_their_tokens
+      - the_meta_channel
+      - the_qualification_rule_and_the_demand_derivation_rule
+      - the_evaluator_the_component_registry_the_feature_vocabulary_and_the_probe_primitive
+    carrier_schema_version: mira-blind-carrier-v1
+    closure_rule: exact_fixed_point_no_inherited_bound
+    p5_lesson_applied: true
+    cardinality_identity_declared_and_checked: true
+    m112_cardinality_defect_would_now_fail_the_guard: true
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    devkit_survey_sample: 1200
+    devkit_qualification_rate: 0.23
+    devkit_rate_is_not_a_prediction: true
+    probability_the_minimum_is_missed_at_the_devkit_rate: 0.062
+    deepest_observation_depth_seen_in_the_devkit_survey: 11
+    every_devkit_carrier_closed_by_fixed_point: true
+    devkit_carriers_structurally_distinct: 1200
+    inherited_feature_vocabulary_ambiguous_rows: [2, 3, 6, 7]
+    m111_record_says_row_seven_is_determined: true
+    devkit_carriers_say_row_seven_is_ambiguous: true
+    prefreeze_adversarial_defects_found: 7
+    prefreeze_adversarial_defects_repaired: 7
+    every_repair_has_a_regression_test: true
+    development_run_predicates_true: 17
+    development_run_predicates_total: 18
+    development_run_failing_predicate: P18
+    development_full_descendant_constructs: 23
+    development_fresh_control_constructs: 13
+    development_full_descendant_calibrated_refusals: 6
+    development_fresh_control_calibrated_refusals: 29
+    development_full_descendant_invented_adapters: 15
+    development_fresh_control_invented_adapters: 13
+    development_result_is_not_a_prediction: true
+    arms_run: [T0, M1, M2, M3, rollback, ablated, mutated, unregistered, budget_plus]
+    arms_declared_but_not_run: [producer_dead, preservation]
+    model_calls: 0
+    network_calls: 0
+    track: A
+    track_b_prepared_not_run: true
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    removes_carrier_interaction_language_authorship: intended_not_yet_established
+    removes_substrate_authorship: false
+    g1_to_g10_advance: false
+    owner_gates_outstanding:
+      - freeze_the_analysis_plan
+      - pin_a_generator_identity_before_any_invocation
+      - run_the_single_qualifying_invocation
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
+    environment_blocker: docker_daemon_not_running_so_the_isolated_invocation_cannot_be_attested
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

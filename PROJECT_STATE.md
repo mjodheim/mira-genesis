@@ -316,6 +316,23 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
+- **M113/H58 is a candidate, not a result. The bank does not exist and the phase is `draft`.** It
+  asks whether a Genesis machinery can adapt to a carrier the project did not design: the blind
+  generator emits the machine itself -- its state, its observability, its actions, their
+  preconditions, their effects, its errors and the wire it speaks -- and the project supplies only
+  the contract of reception. Closure is an exact fixed point rather than an inherited bound, which is
+  M112's `P5` lesson applied rather than restated. One carrier is one record, the identity is
+  declared and mechanically checked, and M112's cardinality defect would now fail that guard. A
+  pre-freeze devkit survey over 1 200 carriers finds four of six occupied feature rows **ambiguous**
+  in the inherited vocabulary, including row 7, which M111's own record classifies as determined --
+  so the next ceiling may be the feature vocabulary rather than the carrier. Seven pre-freeze defects
+  were found by measuring the apparatus and repaired, each with a regression test. The development
+  run returns **17 of 18, P18 false**: the full descendant constructs 23 against the fresh control's
+  13 and attributes correctly 21 times against 10, while its calibrated refusals collapse from 29 to
+  6 and its invented adapters rise from 13 to 15. None of that is a prediction about the blind bank.
+  Freezing the plan, pinning a generator and running the single invocation are owner gates, and the
+  Docker daemon is not running, so the attested isolated invocation cannot be planned from here.
+
 - **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
   reproduces on worlds this project did not author, and the transfer does not come out whole.** A
   single invocation of `qwen2.5:1.5b` under ollama 0.32.15, in a container with **no repository mount

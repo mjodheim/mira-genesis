@@ -167,3 +167,19 @@ experiments/M106/*.md text eol=lf
 metamorphosis/m106_runtime.py text eol=lf
 scripts/*m106*.py text eol=lf
 tests/test_m106_*.py text eol=lf
+
+# M113 binds its apparatus by raw-byte SHA-256 through the tested-system freeze, so every bound
+# member must have identical bytes on every supported checkout. M103, M104 and M105 each had to add
+# these entries after the fact, and M105's were missing until a fresh-clone comparison caught
+# twenty-one unguarded members. M113's are added in the same commit that creates its files, before
+# any digest exists to be wrong. JSON fixtures are already covered by the experiments/M1* rule above.
+experiments/M113/*.md text eol=lf
+experiments/M113/*.txt text eol=lf
+metamorphosis/carrier_host.py text eol=lf
+metamorphosis/m113_carrier_bank.py text eol=lf
+metamorphosis/m113_carrier_devkit.py text eol=lf
+metamorphosis/m113_evaluator.py text eol=lf
+metamorphosis/m113_runtime.py text eol=lf
+scripts/*m113*.py text eol=lf
+tests/test_carrier_host.py text eol=lf
+tests/test_m113_*.py text eol=lf
