@@ -316,6 +316,28 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
+- **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
+  reproduces on worlds this project did not author, and the transfer does not come out whole.** A
+  single invocation of `qwen2.5:1.5b` under ollama 0.32.15, in a container with **no repository mount
+  and no network** -- only a loopback interface, DNS resolution failing, no `/mnt/host`, no traversal
+  out of the input mount, no symlink in it, no path or environment variable naming the project, all
+  measured inside the container before the invocation rather than asserted -- emitted 100 records from
+  one frozen input in 617 seconds. The bank was sealed with gpg AES256 and its **commitment published
+  at `e00ddd5` before the tested system was frozen at `50c7a0e` and before the reveal was authorized
+  at `007ab86`**; the revealed plaintext matched the published digest exactly. The public M111
+  criterion, applied to all twenty worlds without filtering, produced **5 ambiguous and 6 witness**,
+  both minima met. **The M111 apparatus reproduced at 24/24** and **the M110 apparatus reproduced
+  every scientific outcome** -- row 7 `0/6, 6/6, 6/6`, row 3 `0/6, 0/6, 6/6`, **row 5 `6/6, 0/6, 0/6`
+  so the harm reproduces on blind worlds** -- yet returned **22/24**: `P1` is an invocation artifact of
+  the population-path guard, and **`P5` is a real measurement**, one blind world whose image is 17 at
+  bound 7 and 18 at 9, 11 and 13, which no project-generated world did in 1 160 tries. **Two defects in
+  the freeze are recorded with the reason neither was repaired**: the spec assigned a world count to a
+  record count, leaving the bank eighty worlds short, and the plan named two predicate sets without a
+  threshold, so the checker inherits the stricter reading. D081. **No claim boundary changed.** Custody
+  is procedural rather than third-party, the carrier remains project-authored, and **no generality gate
+  advances**; `human_maintained_sealed_bank`, independent reproduction and external adversarial audit
+  remain **external blockers** nothing in this repository can lift.
+
 - **M091 extends the state-owned language endogenously, and H37 is supported.** Protocol frozen at
   `5e4a0fe`; result `d83b836d...4c07af`, **attempt 1, no retry**, fourteen conditions computed and
   passed. The lineage proved a required transformation lay outside the constructive image of its
