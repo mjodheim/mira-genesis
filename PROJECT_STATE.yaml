@@ -1082,7 +1082,11 @@ current_real_software_frontier:
     development_run_sample: 80
     development_run_seed: m113-development-run
     development_run_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
-    development_run_result_digest: 2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9
+    development_run_result_digest: 9c41183caa96af0cca7a2a40c805ab91c42b5dd8f1c936b0fda60d298cf6ee5a
+    # Re-recorded when the model-network boundary became measured. The population, every arm
+    # total and the 21/22 verdict are byte-identical to the run this supersedes; the digest
+    # moved because the result now carries what the sealed scope observed.
+    development_run_result_digest_superseded: 2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9
     development_run_predicates_true: 21
     development_run_predicates_total: 22
     development_run_failing_predicate: P22
@@ -1117,8 +1121,19 @@ current_real_software_frontier:
     corruption_arm_run_as_a_fail_closed_check: true
     declared_arms_total: 12
     arms_declared_but_not_run: []
-    model_calls: 0
-    network_calls: 0
+    # The model-network boundary, restated as the two phases it actually has. The unqualified
+    # counters these replace were literals the runner wrote into its own result, so `P15` agreed
+    # with the program it judged and could not fail. M112 had already stated the separation and
+    # M113 had regressed from it; defect twelve, found after the apparatus merged.
+    model_calls_in_qualification: 0
+    network_calls_in_qualification: 0
+    remote_execution_calls_in_qualification: 0
+    qualification_phase_silence_is_measured_by_a_sealed_scope: true
+    sealed_scope_selftest_proves_the_guard_was_live: true
+    p15_credits_silence_only_when_the_selftest_fired: true
+    generation_phase_invocations_are_counted_by_the_ledger: true
+    generation_ledger_is_required_by_the_phase_machine: true
+    a_canonical_result_must_record_exactly_one_generator_invocation: true
     track: A
     track_b_prepared_not_run: true
     evidence_tier: blind_generated_sealed_bank
@@ -1127,14 +1142,50 @@ current_real_software_frontier:
     removes_carrier_interaction_language_authorship: intended_not_yet_established
     removes_substrate_authorship: false
     g1_to_g10_advance: false
+    analysis_plan_frozen: true
+    # Written before any identity could be pinned, so the freeze consumes a rule rather than
+    # writing one. A hosted model has no blob digest, so what is pinned is the identifier, the
+    # provider and the routing switches that decide whether the frozen request is the served one.
+    generator_spec_contract_defined_before_the_identity: true
+    generator_spec_refuses_model_aliases_and_auto_routers: true
+    generator_spec_refuses_an_open_provider: true
+    generator_spec_refuses_model_and_provider_fallbacks: true
+    generator_spec_names_and_disables_eight_retry_layers: true
+    generator_spec_refuses_a_determinism_claim_for_a_hosted_model: true
+    generator_spec_refuses_credential_material_anywhere_in_the_document: true
+    generator_spec_candidate_cannot_validate_as_frozen: true
+    generator_spec_fields_pending_discovery: 6
+    generation_client_written_never_executed: true
+    generation_client_transport: stdlib_http_client_no_third_party_retry_behaviour
+    generation_client_smoke_input_checked_against_the_qualifying_digest: true
+    generation_client_fails_closed_on_a_served_identity_that_is_not_the_frozen_one: true
+    # Defect thirteen, found by the contamination checker rather than by a reader. The schema
+    # travels to the generator inside the request, so its own strings are part of the generator's
+    # sole input, and its title named the contract the emitter was emitting for.
+    output_schema_title_carried_project_context_and_was_repaired: true
+    every_file_the_generator_sees_is_contamination_free: true
+    qualifying_input_derived_at_n_24: true
+    analysis_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
+    analysis_plan_frozen_before_any_carrier_existed: true
+    analysis_plan_is_the_candidate_unchanged: true
     owner_gates_outstanding:
-      - freeze_the_analysis_plan
       - pin_a_generator_identity_before_any_invocation
       - run_the_single_qualifying_invocation
       - seal_and_publish_the_commitment
       - freeze_the_tested_system_with_the_bank_unread
       - authorize_the_reveal
     environment_blocker: docker_daemon_not_running_so_the_isolated_invocation_cannot_be_attested
+    # The generator phase cannot be run from the session that holds the owner's authorization.
+    # Each of the three is independently fatal to a single blind invocation, and none of them is a
+    # matter of configuration this session may change.
+    generator_environment_blocker:
+      no_hermes_client_present: true
+      no_openrouter_credential_present: true
+      openrouter_egress_denied_by_policy: true
+      egress_denial_observed_as: CONNECT_tunnel_403_from_the_agent_proxy
+      substituting_another_model_or_provider_is_refused_by_the_authorization: true
+      the_authoring_session_may_never_produce_the_carriers_itself: true
+      transport_fallback_authorized_but_unusable_because_the_host_is_unreachable: true
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
 

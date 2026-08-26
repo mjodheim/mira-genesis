@@ -319,12 +319,106 @@ testing a subset, so it failed for a reason unrelated to what it names the momen
 was added to the record. A predicate that can fail for the wrong reason is worse than no predicate,
 because it is read as evidence.
 
+A twelfth was found after the apparatus merged, while auditing the one boundary this milestone
+introduces and its predecessors did not have. M113 is the first milestone in this lineage whose
+**bank** is produced by a model over a network, so the separation between the generator phase and
+the qualification phase is the instrument. M112 stated that separation in its own result — it
+recorded `model_calls_in_bank_generation` beside `model_calls_in_qualification` and its checker
+required *both*, exactly one invocation to produce the bank and none at all to qualify against it —
+and M113 had regressed from it in two places at once.
+
+`P15` read three unqualified counters, `model_calls`, `network_calls` and `remote_execution_calls`,
+which `run_m113_qualification.py` wrote into the result as **literal zeros**. The predicate agreed
+with the program it was judging, and it could not fail: it is the M086-A shape this repository's own
+readiness checker cites in its docstring, in the one predicate whose whole job is to say that the
+tested system never reached for the model that wrote its world.
+
+And `m113_carrier_bank.py` declared `GENERATION_LEDGER_PATH` and then **never read it**. The shared
+contract in `blind_bank_protocol.validate_generation_ledger` is what refuses a second
+materialization against one frozen spec and what keeps every failed attempt visible. Without it in
+the phase machine, nothing counted the physical invocations that produced the bank, and several
+physical requests could have been presented afterwards as one logical invocation — which is the
+precise thing the no-retry rule exists to prevent.
+
+Both halves are repaired, and neither is now a number the runner chooses:
+
+- the qualification phase runs inside a **sealed scope** that replaces the two entry points every
+  outbound connection in CPython passes through, counts each attempt and refuses it. Because a guard
+  that was never armed and a genuinely silent run record the same zero, the scope ends by making the
+  guard fire once on its own, against a reserved TEST-NET-1 address that routes nowhere, and records
+  that it intercepted it. `P15` credits the silence only when the self-test proves the instrument
+  was live. Reaching a model, and dispatching execution to another host, both require a socket, so
+  the socket count is one measurement that entails all three counts rather than three assertions;
+- the generator phase is counted by the ledger, which the phase machine now requires, validates
+  against the shared contract and binds to the frozen spec's commitment. A canonical result must
+  record exactly one invocation. A development run has no generator phase at all, and `P15` reports
+  that half as *not applicable* rather than quietly satisfying it.
+
+The repair changed the instrument's honesty and not its measurements. Re-running the development run
+at the same sample and seed reproduces every arm total, the whole generational decomposition and the
+same 21 of 22 with `P22` false, byte for byte; only `result_digest` moved, because the result now
+carries what the sealed scope observed. The superseded digest is kept in `PROJECT_STATE.yaml` beside
+the new one.
+
+A thirteenth was found while writing the generator spec, and the contamination checker found it
+rather than a reader. The frozen `OUTPUT_SCHEMA.json` carried a `title` of
+`mira-blind-carrier-v1 emission`. The schema is not a local document: it travels to the generator
+inside the request as the structured-output contract, so **its own strings are part of the
+generator's sole input**. A blind emitter would have been told the name and version of the contract
+it was emitting for, by the one artifact whose job is to constrain the shape of the answer and say
+nothing about its purpose. Nothing frozen bound the schema yet, so it was repaired rather than
+recorded, and a test now requires every one of the three files the generator sees -- the schema, the
+prompt template and the qualifying input -- to be free of contamination tokens.
+
+## What is pinned before the generator exists, and what is not
+
+The generator spec has a contract of its own now, and it was written before any identity could be
+pinned so that the pinning consumes a rule rather than writing one. M112 could freeze a container
+image digest, a model blob digest and a runtime version, and could therefore say afterwards exactly
+what had emitted its bank. A hosted model offers none of those. What it offers is an identifier, a
+provider, and a set of routing switches that decide whether the request that was frozen is the
+request that gets served -- so those are what `validate_generator_spec` pins, and it refuses every
+shape in which the served identity could differ from the frozen one: an **alias**, whose whole
+purpose is to be repointed; a **provider left open**, so the host picks the backend and the bank's
+origin is whichever machine was free; **fallbacks** of model or provider, which are silent
+substitution by design; and **retries**, at each of the eight named layers that can turn one logical
+call into several physical ones.
+
+Two honesty conditions have no M112 analogue and exist because a remote generator invites both
+errors. A seed is recorded as *requested* and never as a guarantee -- a provider that does not
+promise determinism does not acquire it by being asked -- and `determinism_is_claimed` must be
+false. And no credential may appear anywhere in the spec, including inside the canonical request
+body it records, which is checked rather than trusted: the body is what gets digested and published,
+and a key that reached it would be published with it. That guard's first form matched any key ending
+in `_key` or `_token` and **refused the carrier meta-schema itself**, whose wire surface has an
+`action_key`, an `argument_key`, a `status_key`, an `ok_token` and an `error_token`. A guard that
+fires on the thing it protects gets switched off, so it names the credentials exactly instead of
+guessing at them.
+
+`GENERATOR_SPEC_CANDIDATE.json` holds everything that can be pinned without reaching the endpoint,
+and lists in `unset_before_freeze` exactly the six fields that discovery must fill. It **cannot
+validate as frozen**, which is the point of it: the provider and the exact model identifier cannot
+be confirmed without the instrument, and a candidate written before that reach must not be
+mistakable for a freeze.
+
+`scripts/run_m113_generation.py` is the client, and **it has never been executed**. It has three
+modes and only the third is a gate: `--discover` asks which providers actually serve the exact model
+and which of them support strict structured output; `--smoke` runs one non-qualifying probe whose
+input is checked against the qualifying digest so that a smoke test can never become a bank; and
+`--qualify` performs the single invocation against a frozen spec, refuses if that spec has already
+materialized one, sends the committed body byte for byte rather than rebuilding it, fails closed if
+the served model or provider is not the frozen one, and preserves the raw response before anything
+reads it scientifically. There are no retries at any layer, and that is enforced rather than
+requested: the transport is `http.client` from the standard library, driven directly. No vendor SDK
+and no third-party HTTP client is imported, because each carries retry behaviour that would have to
+be disabled correctly, and the way to disable it correctly is not to have it.
+
 ## What the development run already shows, and what it cannot
 
 `scripts/run_m113_qualification.py --development --sample 80 --write` runs the whole chain against a
 devkit bank at seed `m113-development-run`. It is deterministic, and the numbers below are bound to
 the file rather than transcribed beside it: `DEVELOPMENT_RUN.json` carries `result_digest`
-`2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9` against plan commitment
+`9c41183caa96af0cca7a2a40c805ab91c42b5dd8f1c936b0fda60d298cf6ee5a` against plan commitment
 `66003159…`, and a re-run at a different
 sample size produces a different digest and no longer matches this text. M100 recorded why that
 binding is worth writing down: a working tree can disagree with its own documentation while `git

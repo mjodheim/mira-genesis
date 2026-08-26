@@ -349,10 +349,40 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   worth one attribution row, while the M111 diagnostic policy carries the whole effect in both
   directions. A positive H58 must therefore be reported with the decomposition and credited to the
   generation that produced it, and whether the ablation bites is recorded as a measurement rather
-  than required as a predicate. None of that is a prediction about the blind bank. Freezing the
-  plan, pinning a generator and running the single invocation are owner gates, and the Docker daemon
-  is still not running as of 26 August 2026, so the attested isolated invocation cannot be planned
-  from here.
+  than required as a predicate. None of that is a prediction about the blind bank.
+  **The analysis plan is now frozen** at commitment `66003159...`, the candidate unchanged, before
+  any carrier exists; the five remaining owner gates are pinning a generator, running the single
+  invocation, sealing and publishing the commitment, freezing the tested system with the bank
+  unread, and authorizing the reveal.
+  A twelfth pre-freeze defect was found while auditing the one boundary this milestone introduces.
+  M113 is the first milestone here whose *bank* is written by a model over a network, and it had
+  **regressed from M112 on exactly that boundary**: `P15` read three unqualified counters the runner
+  wrote into its own result as literal zeros, so the predicate agreed with the program it judged and
+  could not fail, and `GENERATION_LEDGER_PATH` was declared and never read, so nothing counted the
+  physical invocations that produce the bank. Both halves are repaired. The qualification phase now
+  runs inside a sealed scope that intercepts and counts every outbound connection, and proves itself
+  live by making the guard fire once on an address that routes nowhere -- an absent guard and a
+  silent run otherwise record the same zero. The generator phase is counted by the ledger, which the
+  phase machine requires and binds to the frozen spec, so several physical requests cannot be
+  presented afterwards as one logical invocation. Re-running development at the same sample and seed
+  reproduces every arm total and the same 21 of 22; only the digest moved.
+  **The generator phase cannot be run from this session, and that is an instrument blocker rather
+  than a step that was skipped.** No Hermes client and no OpenRouter credential exist in this
+  environment, and `openrouter.ai` is refused by egress policy with a 403 on the CONNECT tunnel.
+  Each is independently fatal to a single blind invocation. The authorization permits a transport
+  fallback but no substitution of model or provider, and the session holding it knows H58 and
+  M107-M113 and may therefore never author the carriers itself. The Docker daemon is still not
+  running as of 26 August 2026, so the attested isolated invocation cannot be planned from here
+  either.
+  What could be built without the instrument was: the generator identity now has a **contract**,
+  written before any identity could be pinned, refusing model aliases and auto-routers, an open
+  provider, model and provider fallbacks, retries at eight named layers, a determinism claim for a
+  hosted model, and credential material anywhere in the published document. The candidate spec lists
+  the six fields discovery must fill and cannot validate as frozen. The client exists and **has
+  never been executed**. And the contamination checker found defect thirteen: the frozen output
+  schema's `title` was `mira-blind-carrier-v1 emission`, and the schema travels to the generator
+  inside the request, so a blind emitter would have been told the name of the contract it was
+  emitting for. Repaired, with every generator-visible file now required to be contamination-free.
 
 - **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
   reproduces on worlds this project did not author, and the transfer does not come out whole.** A

@@ -2,6 +2,69 @@
 
 ## Unreleased
 
+- **M113's analysis plan is frozen, and the model-network boundary it needs is now measured rather
+  than asserted.** The plan is frozen as the candidate unchanged, at commitment `66003159...`,
+  before any carrier exists -- the first of the six owner gates, and the only one that can be
+  consumed without a generator. A twelfth pre-freeze defect was then found while auditing the one
+  boundary this milestone introduces and its predecessors did not have. M113 is the first milestone
+  in this lineage whose *bank* is produced by a model over a network, and it had **regressed from
+  M112 on exactly that boundary**, in two places. `P15` read three unqualified counters --
+  `model_calls`, `network_calls`, `remote_execution_calls` -- that `run_m113_qualification.py`
+  wrote into its own result as literal zeros, so the predicate agreed with the program it was
+  judging and **could not fail**: the M086-A shape the readiness checker's own docstring cites, in
+  the one predicate whose whole job is to say the tested system never reached for the model that
+  wrote its world. And `m113_carrier_bank.py` declared `GENERATION_LEDGER_PATH` and **never read
+  it**, so nothing counted the physical invocations that produce the bank and several requests could
+  have been presented afterwards as one logical invocation. Both halves are repaired and neither is
+  a number the runner chooses. The qualification phase runs inside a sealed scope that replaces the
+  two entry points every outbound connection in CPython passes through, counts each attempt and
+  refuses it; because an unarmed guard and a silent run record the same zero, the scope ends by
+  making the guard fire once against a reserved TEST-NET-1 address that routes nowhere, and `P15`
+  credits the silence only when that self-test proves the instrument was live. Reaching a model and
+  dispatching execution elsewhere both need a socket, so one measurement entails all three counts.
+  The generator phase is counted by the ledger, which the phase machine now requires, validates
+  against the shared contract and binds to the frozen spec; a canonical result must record exactly
+  one invocation, and a development run reports that half as *not applicable* rather than quietly
+  satisfying it. The repair changed the instrument's honesty and not its measurements: re-running
+  development at the same sample and seed reproduces every arm total, the whole generational
+  decomposition and the same **21 of 22 with `P22` false**, and only `result_digest` moved.
+  **The qualifying invocation itself is not in this change and could not be.** No Hermes client and
+  no OpenRouter credential exist in this environment, and `openrouter.ai` is refused by egress
+  policy with a 403 on the CONNECT tunnel -- each independently fatal to a single blind invocation.
+  The authorization permits a transport fallback but no substitution of model or provider, and the
+  session holding it knows H58 and M107-M113 and may therefore never author the carriers itself.
+  Recorded as an instrument blocker beside the Docker one, not worked around.
+
+- **The M113 generator identity now has a contract, written before any identity could be pinned.**
+  M112 could freeze a container image digest, a model blob digest and a runtime version, and could
+  say afterwards exactly what emitted its bank. A hosted model offers none of those; it offers an
+  identifier, a provider, and routing switches that decide whether the frozen request is the served
+  one. `validate_generator_spec` pins those and refuses every shape in which the served identity
+  could differ from the frozen one -- a model **alias** or auto-router, a **provider left open**, a
+  model or provider **fallback**, and **retries** at each of eight named layers. Two honesty
+  conditions have no M112 analogue: a seed is recorded as requested and never as a guarantee, and a
+  hosted generator may not claim determinism; and no credential may appear anywhere in the spec,
+  including the canonical request body it publishes. `GENERATOR_SPEC_CANDIDATE.json` holds
+  everything pinnable without the instrument and lists the six fields discovery must fill; it
+  **cannot validate as frozen**, which is the point of it. `scripts/run_m113_generation.py` is the
+  client and **has never been executed**: discovery, a non-qualifying smoke probe whose input is
+  checked against the qualifying digest, and one qualifying invocation that refuses a spec which has
+  already materialized a bank, sends the committed body byte for byte, and fails closed when the
+  served model or provider is not the frozen one. Its transport is `http.client` from the standard
+  library, driven directly -- no vendor SDK and no third-party HTTP client, because each carries
+  retry behaviour that would have to be disabled correctly and the way to disable it correctly is
+  not to have it.
+  **Defect thirteen was found by the contamination checker, not by a reader.** The frozen
+  `OUTPUT_SCHEMA.json` carried a `title` of `mira-blind-carrier-v1 emission`. The schema travels to
+  the generator inside the request as the structured-output contract, so its own strings are part of
+  the generator's sole input: a blind emitter would have been told the name and version of the
+  contract it was emitting for, by the one artifact whose job is to constrain the shape of the
+  answer and say nothing about its purpose. Nothing frozen bound the schema yet, so it was repaired,
+  and every file the generator sees is now required to be contamination-free. The credential guard
+  needed narrowing for the same reason in reverse: its first form matched any key ending in `_key`
+  or `_token` and refused the carrier meta-schema itself, whose wire surface has an `action_key`, an
+  `argument_key`, a `status_key`, an `ok_token` and an `error_token`.
+
 - **M113 is pre-registered and built; it has not run and its bank does not exist.** M112 removed
   world authorship and left the carrier. M113 puts the carrier's interaction language in a blind
   generator's hands: the emitter chooses the state cells and their domains, which of them are

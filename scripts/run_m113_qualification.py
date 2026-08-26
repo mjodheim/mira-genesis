@@ -60,6 +60,131 @@ CANDIDATE_PLAN_PATH = EXPERIMENT / "ANALYSIS_PLAN_CANDIDATE.json"
 CANONICAL_PYTHON = (3, 11, 16)
 DEVELOPMENT_NONCE = "d" * 64
 
+# The model-network boundary, measured rather than declared.
+# ----------------------------------------------------------------------------------------
+#
+# M113 is the first milestone in this lineage whose *bank* is produced by a model over a network,
+# and the separation between that phase and this one is the whole instrument. M112 named the two
+# phases in its own result -- `model_calls_in_bank_generation` beside
+# `model_calls_in_qualification` -- and M113 regressed to three unqualified counters that this
+# script wrote as literal zeros. A counter a program assigns to itself is the defect the checker's
+# own docstring cites from M086-A: a predicate that cannot fail.
+#
+# So the qualification phase now *measures* its own silence. `SealedNetwork` replaces the two entry
+# points every outbound connection in CPython passes through, counts each attempt and refuses it.
+# Because a guard that was never armed and a guard that was armed over a silent run record the same
+# zero, the scope ends by attempting one connection of its own to a reserved TEST-NET-1 address that
+# routes nowhere, and records that it intercepted it. Zero interceptions of a live guard and zero
+# interceptions of an absent one are then distinguishable, and `P15` reads the difference.
+#
+# Deny-listed client modules are recorded too. Reaching a model needs a socket, so the socket count
+# is the binding measurement and this is corroboration -- but it is corroboration that names, in the
+# preserved evidence, exactly which clients were absent.
+MODEL_CLIENT_MODULES = (
+    "anthropic",
+    "cohere",
+    "google.generativeai",
+    "httpx",
+    "mistralai",
+    "ollama",
+    "openai",
+    "requests",
+    "urllib3",
+)
+
+# RFC 5737 reserves this block for documentation and it is guaranteed to route nowhere. The guard
+# refuses the attempt before any packet exists, so nothing leaves the host either way.
+SELFTEST_ADDRESS = ("192.0.2.1", 9)
+
+
+class SealedNetworkViolation(RuntimeError):
+    """Raised at the point of an outbound connection during the qualification phase."""
+
+
+class SealedNetwork:
+    """Count and refuse every outbound connection for the duration of the qualification.
+
+    `attempts` counts interceptions the measured run is responsible for. The scope's own self-test
+    is counted separately, in `selftest_intercepted`, so proving the guard is live cannot be
+    confused with the run having reached for the network.
+    """
+
+    def __init__(self) -> None:
+        self.attempts: list[str] = []
+        self.selftest_intercepted = False
+        self._selftest_running = False
+        self._socket_connect = None
+        self._create_connection = None
+
+    def _record(self, address: Any) -> None:
+        if self._selftest_running:
+            self.selftest_intercepted = True
+        else:
+            self.attempts.append(str(address))
+
+    def __enter__(self) -> "SealedNetwork":
+        import socket
+
+        self._socket_connect = socket.socket.connect
+        self._create_connection = socket.create_connection
+
+        def connect(inner_self: Any, address: Any) -> None:
+            self._record(address)
+            raise SealedNetworkViolation(
+                "the M113 qualification phase attempted an outbound connection to %s" % (address,)
+            )
+
+        def create_connection(address: Any, *args: Any, **kwargs: Any) -> None:
+            self._record(address)
+            raise SealedNetworkViolation(
+                "the M113 qualification phase attempted an outbound connection to %s" % (address,)
+            )
+
+        socket.socket.connect = connect  # type: ignore[method-assign]
+        socket.create_connection = create_connection  # type: ignore[assignment]
+        return self
+
+    def selftest(self) -> None:
+        """Prove the guard is live by making it fire once, on an address that routes nowhere."""
+        import socket
+
+        self._selftest_running = True
+        try:
+            try:
+                socket.create_connection(SELFTEST_ADDRESS, timeout=1)
+            except SealedNetworkViolation:
+                pass
+        finally:
+            self._selftest_running = False
+
+    def __exit__(self, *exc_info: Any) -> None:
+        import socket
+
+        if self._socket_connect is not None:
+            socket.socket.connect = self._socket_connect  # type: ignore[method-assign]
+        if self._create_connection is not None:
+            socket.create_connection = self._create_connection  # type: ignore[assignment]
+
+    def report(self) -> dict[str, Any]:
+        """Derive all three phase counts from the one quantity actually measured.
+
+        Reaching a model, and dispatching execution to another host, both require an outbound
+        connection. So the socket count is not three separate claims: it is one measurement that
+        entails the other two, and reporting them as equal to it says exactly that rather than
+        asserting two further zeros nothing observed.
+        """
+        attempts = len(self.attempts)
+        return {
+            "network_calls_in_qualification": attempts,
+            "model_calls_in_qualification": attempts,
+            "remote_execution_calls_in_qualification": attempts,
+            "network_guard_selftest_intercepted": bool(self.selftest_intercepted),
+            "outbound_addresses_attempted": sorted(set(self.attempts)),
+            "model_client_modules_imported": sorted(
+                name for name in MODEL_CLIENT_MODULES if name in sys.modules
+            ),
+        }
+
 SCORE_KEYS = (
     "correct_construction",
     "unmet_construction",
@@ -313,7 +438,7 @@ def build_states(
 # ----------------------------------------------------------------------------------------
 
 
-def run_bank(
+def _qualify(
     carriers: list[dict[str, Any]],
     nonce: str,
     *,
@@ -477,9 +602,6 @@ def run_bank(
         "schema": "m113-result-v1",
         "milestone": "M113",
         "hypothesis": "H58",
-        "model_calls": 0,
-        "network_calls": 0,
-        "remote_execution_calls": 0,
         "runtime": {
             "python": ".".join(str(part) for part in sys.version_info[:3]),
             "canonical_python": ".".join(str(part) for part in CANONICAL_PYTHON),
@@ -551,6 +673,70 @@ def run_bank(
     }
 
 
+def run_bank(
+    carriers: list[dict[str, Any]],
+    nonce: str,
+    *,
+    requested_carrier_count: int,
+    minimum_qualifying: int,
+    minimum_distinct_structures: int,
+    session_budget: int,
+) -> dict[str, Any]:
+    """Run the qualification phase inside the sealed scope, and record what the scope measured.
+
+    The phase counts are merged in here rather than written by the body, so the body cannot report
+    a silence it did not have to keep.
+    """
+    with SealedNetwork() as sealed:
+        result = _qualify(
+            carriers,
+            nonce,
+            requested_carrier_count=requested_carrier_count,
+            minimum_qualifying=minimum_qualifying,
+            minimum_distinct_structures=minimum_distinct_structures,
+            session_budget=session_budget,
+        )
+        sealed.selftest()
+        measured = sealed.report()
+    for key, value in measured.items():
+        if key in result:
+            raise RuntimeError("the qualification body wrote its own phase count %r" % key)
+        result[key] = value
+    return result
+
+
+def bank_generation_invocations() -> int | None:
+    """How many physical invocations produced the bank, read from the ledger rather than declared.
+
+    `P15`'s generator half is this number, and it must be exactly one on a canonical attempt. It is
+    read here rather than asserted because the whole point of the ledger is that a failed attempt
+    stays in it: a run that reached the model twice cannot present itself afterwards as one that
+    reached it once.
+    """
+    path = ROOT / bank.GENERATION_LEDGER_PATH
+    if not path.is_file():
+        return None
+    try:
+        ledger = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    spec_path = ROOT / bank.GENERATOR_SPEC_PATH
+    commitment = None
+    if spec_path.is_file():
+        try:
+            commitment = json.loads(spec_path.read_text(encoding="utf-8")).get(
+                "spec_commitment_sha256"
+            )
+        except (OSError, ValueError):
+            commitment = None
+    entries = [
+        entry for entry in (ledger.get("entries") or [])
+        if isinstance(entry, dict)
+        and (commitment is None or entry.get("spec_commitment_sha256") == commitment)
+    ]
+    return len(entries)
+
+
 def load_plan() -> dict[str, Any] | None:
     for path in (PLAN_PATH, CANDIDATE_PLAN_PATH):
         if path.is_file():
@@ -601,6 +787,9 @@ def main() -> int:
     result["development"] = True
     result["is_a_canonical_attempt"] = False
     result["plan_commitment_sha256"] = plan.get("plan_commitment_sha256")
+    # Null on a development run, which has no generator phase at all. `P15` reports that half as
+    # not applicable rather than treating an absent generator as a satisfied one.
+    result["model_calls_in_bank_generation"] = bank_generation_invocations()
     result["result_digest"] = digest({k: v for k, v in result.items() if k != "result_digest"})
 
     if arguments.write:

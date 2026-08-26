@@ -919,3 +919,370 @@ def test_a_plan_that_does_not_declare_the_distinct_structure_derivation_is_refus
         broken["plan_commitment_sha256"] = bank.analysis_plan_commitment(broken)
         with pytest.raises(bank.CarrierBankError):
             bank.validate_analysis_plan(broken)
+
+
+# -------------------------------------------------- the model-network boundary, measured
+
+
+def _load_script(name: str, filename: str):
+    import importlib.util
+
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    spec = importlib.util.spec_from_file_location(name, root / "scripts" / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_sealed_scope_counts_and_refuses_an_outbound_connection():
+    """The qualification phase's silence is measured, not asserted.
+
+    Before this, the runner wrote `model_calls: 0` as a literal and the checker read it back, so
+    `P15` agreed with the program it was judging. The scope now intercepts at the two entry points
+    every outbound connection in CPython passes through, and a run that reached for the network
+    carries the address it reached for.
+    """
+    import socket
+
+    runner = _load_script("m113_runner_seal", "run_m113_qualification.py")
+
+    with runner.SealedNetwork() as sealed:
+        with pytest.raises(runner.SealedNetworkViolation):
+            socket.create_connection(("example.invalid", 443), timeout=1)
+        with pytest.raises(runner.SealedNetworkViolation):
+            socket.socket().connect(("example.invalid", 80))
+        sealed.selftest()
+        report = sealed.report()
+
+    assert report["network_calls_in_qualification"] == 2
+    # Reaching a model and dispatching execution elsewhere both need a socket, so one measurement
+    # entails all three counts rather than three separate assertions.
+    assert report["model_calls_in_qualification"] == 2
+    assert report["remote_execution_calls_in_qualification"] == 2
+    assert report["outbound_addresses_attempted"] == [
+        "('example.invalid', 443)",
+        "('example.invalid', 80)",
+    ]
+
+    # And the scope leaves the interpreter as it found it.
+    assert socket.create_connection.__module__ == "socket"
+
+
+def test_a_guard_that_was_never_armed_is_not_a_silent_run():
+    """An absent guard and a silent run both record zero. The self-test separates them."""
+    runner = _load_script("m113_runner_selftest", "run_m113_qualification.py")
+    checker = _load_script("m113_checker_selftest", "check_m113_result.py")
+
+    with runner.SealedNetwork() as live:
+        live.selftest()
+        armed = live.report()
+    with runner.SealedNetwork() as never:
+        unarmed = never.report()
+
+    assert armed["network_guard_selftest_intercepted"] is True
+    assert unarmed["network_guard_selftest_intercepted"] is False
+    # Both report zero calls, and only one of them is evidence.
+    assert armed["network_calls_in_qualification"] == unarmed["network_calls_in_qualification"] == 0
+
+    assert checker._phase_boundary(dict(armed))["holds"] is True
+    assert checker._phase_boundary(dict(unarmed))["holds"] is False
+
+
+def test_p15_separates_the_generator_phase_from_the_qualification_phase():
+    """M112 required both halves; M113 had dropped the generator half entirely."""
+    checker = _load_script("m113_checker_phases", "check_m113_result.py")
+
+    silent = {
+        "model_calls_in_qualification": 0,
+        "network_calls_in_qualification": 0,
+        "remote_execution_calls_in_qualification": 0,
+        "network_guard_selftest_intercepted": True,
+    }
+
+    # A development run has no generator phase, and that is said rather than quietly satisfied.
+    development = dict(silent, is_a_canonical_attempt=False)
+    boundary = checker._phase_boundary(development)
+    assert boundary["holds"] is True
+    assert boundary["generation_phase"] == "not_applicable_on_a_development_run"
+
+    # A canonical run must record exactly one physical invocation.
+    canonical = dict(silent, is_a_canonical_attempt=True, model_calls_in_bank_generation=1)
+    assert checker._phase_boundary(canonical)["holds"] is True
+
+    for generation_calls in (0, 2, None):
+        broken = dict(silent, is_a_canonical_attempt=True)
+        if generation_calls is not None:
+            broken["model_calls_in_bank_generation"] = generation_calls
+        assert checker._phase_boundary(broken)["holds"] is False
+
+    # And a qualification that reached the network fails whatever the generator phase did.
+    reached = dict(silent, is_a_canonical_attempt=True, model_calls_in_bank_generation=1)
+    reached["network_calls_in_qualification"] = 1
+    assert checker._phase_boundary(reached)["holds"] is False
+
+
+def test_the_qualification_body_cannot_write_its_own_phase_count():
+    """The counts are merged in by the sealed wrapper, and a body that wrote them is refused."""
+    runner = _load_script("m113_runner_body", "run_m113_qualification.py")
+    source = (
+        bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_qualification.py"
+    ).read_text(encoding="utf-8")
+    # The literal zeros this repair removed must not come back.
+    assert '"model_calls": 0' not in source
+    assert '"network_calls": 0' not in source
+    assert hasattr(runner, "SealedNetwork")
+
+
+def test_the_generation_ledger_is_required_before_a_sealed_bank_counts(tmp_path):
+    """M113 declared the ledger path and never read it, so nothing counted the invocations.
+
+    One frozen spec admits one materialization and every failed attempt stays in the ledger. Without
+    the ledger in the phase machine, several physical requests could be presented afterwards as one
+    logical invocation, which is exactly what the no-retry rule exists to prevent.
+    """
+    report = bank.assess_carrier_bank_readiness(tmp_path)
+    assert "missing %s" % bank.GENERATION_LEDGER_PATH.name in report["blockers"]
+    assert report["phase"] == "draft"
+    assert report["ready_for_reveal"] is False
+
+
+# -------------------------------------------------- the generator spec, frozen before the identity
+
+
+def _candidate_spec() -> dict:
+    return json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json").read_bytes().decode("utf-8")
+    )
+
+
+def _frozen_spec() -> dict:
+    """The candidate with exactly the fields it declares unset filled in, as discovery would."""
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    spec = _candidate_spec()
+    for field in spec["unset_before_freeze"]:
+        assert field  # the candidate says what it is missing
+    spec["frozen_before_generation"] = True
+    spec["blindness_contract"]["audited_before_the_freeze"] = True
+    spec["generator_identity"].update(
+        provider="Fireworks",
+        provider_serves_the_model_confirmed=True,
+        model_identity_confirmed_against_the_api=True,
+    )
+    spec["sampling"]["seed_is_honoured_by_the_provider"] = False
+    spec["canonical_request_body"]["provider"]["only"] = ["Fireworks"]
+    spec.pop("unset_before_freeze")
+    spec["canonical_request_body_sha256"] = sha256_hex(
+        canonical_bytes(spec["canonical_request_body"])
+    )
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    return spec
+
+
+def _root() -> object:
+    return bank.EXPERIMENT_DIRECTORY.parent.parent
+
+
+def _plan_commitment() -> str:
+    return json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "ANALYSIS_PLAN.json").read_bytes().decode("utf-8")
+    )["plan_commitment_sha256"]
+
+
+def test_the_candidate_generator_spec_cannot_pass_as_a_frozen_one():
+    """A candidate names what discovery still has to fill, and is refused until it is filled.
+
+    The provider and the model identifier cannot be confirmed without reaching the endpoint, so a
+    candidate written before that reach must not be mistakable for a freeze.
+    """
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            _candidate_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_a_fully_pinned_generator_spec_validates():
+    """And the contract must be satisfiable, or it decides nothing."""
+    bank.validate_generator_spec(
+        _frozen_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+    )
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        # A model identifier whose purpose is to be repointed cannot identify a bank's generator.
+        lambda s: s["generator_identity"].update(model="deepseek/deepseek-v4-flash:latest"),
+        lambda s: s["generator_identity"].update(model="openrouter/auto"),
+        lambda s: s["generator_identity"].update(model="deepseek/deepseek-v4-flash:free"),
+        # An unset provider means the host picks the backend.
+        lambda s: s["generator_identity"].update(provider=None),
+        lambda s: s["generator_identity"].update(provider_serves_the_model_confirmed=False),
+        lambda s: s["generator_identity"].update(model_identity_confirmed_against_the_api=False),
+        lambda s: s["generator_identity"].update(transport="hermes"),
+        # A fallback is a silent substitution by design.
+        lambda s: s["routing"].update(allow_fallbacks=True),
+        lambda s: s["routing"].update(automatic_routing=True),
+        lambda s: s["routing"].update(provider_fallbacks=["Together"]),
+        lambda s: s["routing"].update(model_fallbacks=["deepseek/deepseek-v3"]),
+        # One physical invocation, and every layer that could produce a second named and disabled.
+        lambda s: s["invocation_policy"].update(retries_permitted=True),
+        lambda s: s["invocation_policy"].update(qualifying_invocations_permitted=2),
+        lambda s: s["invocation_policy"].update(
+            second_request_to_correct_the_output_permitted=True
+        ),
+        lambda s: s["invocation_policy"].update(repair_parsing_permitted=True),
+        lambda s: s["invocation_policy"]["retries_disabled_at"].remove("rate_limit_429"),
+        lambda s: s["invocation_policy"].update(
+            invalid_output_is_the_result_of_the_single_invocation=False
+        ),
+        # Blindness is audited, not asserted, and every channel is named.
+        lambda s: s["blindness_contract"]["absent"].remove("tools"),
+        lambda s: s["blindness_contract"]["absent"].remove("rag"),
+        lambda s: s["blindness_contract"].update(audited_before_the_freeze=False),
+        # A hosted model does not become reproducible by being sent a seed.
+        lambda s: s["sampling"].update(determinism_is_claimed=True),
+        # The schema is the contract and may not become a sentence.
+        lambda s: s["structured_output"].update(mode="prose_instruction"),
+        lambda s: s["structured_output"].update(strict=False),
+        lambda s: s.update(requested_carrier_count=100),
+        # A credential may never enter a published artifact.
+        lambda s: s["canonical_request_body"].update(api_key="sk-abcdefghijklmnopqrstuvwxyz"),
+        lambda s: s.update(authorization="Bearer sk-abcdefghijklmnopqrstuvwxyz"),
+        # Nor may project context enter the generator's sole input.
+        lambda s: s["canonical_request_body"]["messages"][0].update(
+            content="Emit machines for hypothesis H58 in the mira genesis project."
+        ),
+        lambda s: s["qualifying_input"].update(sha256="0" * 64),
+        lambda s: s["claim_boundary"].update(human_independence=True),
+    ],
+)
+def test_the_generator_spec_refuses_every_shape_that_would_lose_the_identity(mutate):
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    spec = _frozen_spec()
+    mutate(spec)
+    spec["canonical_request_body_sha256"] = sha256_hex(
+        canonical_bytes(spec["canonical_request_body"])
+    )
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_a_spec_written_for_another_plan_is_refused():
+    """The spec binds the frozen plan, so it cannot have been written for a different rule set."""
+    spec = _frozen_spec()
+    spec["analysis_plan_commitment_sha256"] = "0" * 64
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_the_credential_guard_does_not_fire_on_the_carrier_meta_schema():
+    """A guard that refuses the thing it protects gets switched off.
+
+    A carrier's wire surface has an `action_key`, an `argument_key`, a `status_key`, an `ok_token`
+    and an `error_token`. An earlier form of this guard matched any key ending in `_key` or
+    `_token` and refused the frozen output schema itself.
+    """
+    schema = json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "OUTPUT_SCHEMA.json").read_bytes().decode("utf-8")
+    )
+    bank._refuse_secret_material(schema)
+
+    surface = schema["properties"]["machines"]["items"]["properties"]["surface"]["properties"]
+    assert {"action_key", "argument_key", "status_key", "ok_token", "error_token"} <= set(surface)
+
+    with pytest.raises(bank.CarrierBankError):
+        bank._refuse_secret_material({"headers": {"authorization": "Bearer x"}})
+
+
+def test_the_generator_input_carries_no_project_context():
+    """The schema travels to the model inside the request, so its own strings are its input too.
+
+    The schema's `title` was `mira-blind-carrier-v1 emission`, which would have told a blind
+    generator the name of the contract it was emitting for. Nothing frozen bound the schema yet,
+    so it was repaired rather than recorded.
+    """
+    from metamorphosis.blind_bank_protocol import contamination_hits
+
+    for name in ("OUTPUT_SCHEMA.json", "GENERATOR_PROMPT.txt", "QUALIFYING_INPUT.txt"):
+        text = (bank.EXPERIMENT_DIRECTORY / name).read_bytes().decode("utf-8")
+        assert not contamination_hits(text), (name, contamination_hits(text))
+
+    spec = _candidate_spec()
+    assert not contamination_hits(
+        json.dumps(spec["canonical_request_body"], sort_keys=True)
+    )
+
+
+def test_the_qualifying_input_is_the_prompt_with_the_frozen_count_and_nothing_else():
+    template = (bank.EXPERIMENT_DIRECTORY / "GENERATOR_PROMPT.txt").read_bytes().decode("utf-8")
+    qualifying = (bank.EXPERIMENT_DIRECTORY / "QUALIFYING_INPUT.txt").read_bytes().decode("utf-8")
+    assert qualifying.replace("24", "N", 1) == template
+    assert "exactly 24 entries" in qualifying
+
+
+def test_the_generation_client_refuses_before_it_can_reach_anything():
+    """Every gate the client holds is reachable without a network, and each of them is checked."""
+    client = _load_script("m113_generation", "run_m113_generation.py")
+    import os
+
+    # The credential is read at the moment of use and never stored.
+    previous = os.environ.pop(client.SECRET_VARIABLE, None)
+    try:
+        with pytest.raises(client.GenerationError):
+            client._secret()
+    finally:
+        if previous is not None:
+            os.environ[client.SECRET_VARIABLE] = previous
+
+    # A qualifying call requires a frozen spec, and there is none.
+    with pytest.raises(client.GenerationError):
+        client.load_spec(frozen_required=True)
+
+    # A smoke test on a spec with no provider chosen is refused.
+    with pytest.raises(client.GenerationError):
+        client.smoke(_candidate_spec(), write=False)
+
+    # Not http, and no third-party client whose retry behaviour would have to be disabled.
+    source = (
+        bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_generation.py"
+    ).read_text(encoding="utf-8")
+    for forbidden in ("import requests", "import httpx", "import openai", "urllib.request"):
+        assert forbidden not in source
+
+    # The smoke input can never be the qualifying input.
+    qualifying = (bank.EXPERIMENT_DIRECTORY / "QUALIFYING_INPUT.txt").read_bytes().decode("utf-8")
+    assert client.SMOKE_INPUT.strip() not in qualifying
+    assert "machines" not in client.SMOKE_INPUT
+
+
+def test_a_second_materialization_against_one_frozen_spec_is_refused(tmp_path, monkeypatch):
+    """One frozen spec admits one bank. The second attempt is the retry the contract refuses."""
+    client = _load_script("m113_generation_ledger", "run_m113_generation.py")
+    ledger = tmp_path / "GENERATION_LEDGER.json"
+    ledger.write_text(
+        json.dumps({
+            "schema": client.LEDGER_SCHEMA,
+            "entries": [{
+                "attempt_index": 1,
+                "spec_commitment_sha256": "a" * 64,
+                "started_at": "2026-08-26T00:00:00Z",
+                "outcome": "materialized",
+                "payload_sha256": "b" * 64,
+                "isolation_attestation_sha256": "c" * 64,
+                "note": "",
+            }],
+        }),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(client, "LEDGER_PATH", ledger)
+    spec = {"spec_commitment_sha256": "a" * 64, "generator_identity": {}, "canonical_request_body": {}}
+    with pytest.raises(client.GenerationError):
+        client.qualify(spec)
