@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage[a4paper,margin=24mm]{geometry}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{xspace}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{fancyvrb}
+\usepackage{longtable}
+\usepackage{tabularx}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  citecolor=blue,
+  urlcolor=blue,
+  pdftitle={Mira Genesis II: When an Acquired Improvement Makes Things Worse},
+  pdfauthor={Anthony Mets},
+  pdfsubject={Bounded acquisition-machinery self-modification, negative transfer, and self-directed diagnosis in a persistent software lineage}
+}
+\setlist{nosep,leftmargin=*}
+\newcommand{\genesis}{\textsc{Mira Genesis}\xspace}
+\newcommand{\code}[1]{\texttt{#1}}
+\newcommand{\reach}{\textsc{ReachImprove}\xspace}
+\newcommand{\mzero}{\ensuremath{M0}\xspace}
+\newcommand{\mone}{\ensuremath{M1}\xspace}
+\newcommand{\mtwo}{\ensuremath{M2}\xspace}
+\newcommand{\mthree}{\ensuremath{M3}\xspace}
+
+\title{\textbf{Mira Genesis II: When an Acquired Improvement Makes Things Worse}\\
+\large Bounded Machinery Self-Modification and the Limits of Its Transfer}
+\author{Anthony Mets\\Independent Researcher\\\url{https://github.com/mjodheim/mira-genesis}}
+\date{Research snapshot: 26 August 2026\\DOI: \href{https://doi.org/10.5281/zenodo.22118735}{10.5281/zenodo.22118735}}
+
+\begin{document}
+\input{sections/part1_foundations_m107_m109}
+\input{sections/part2_m110_m112}
+\input{sections/part3_discussion_reproducibility}
+\input{sections/part4_conclusion_appendices}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}
