@@ -319,12 +319,53 @@ testing a subset, so it failed for a reason unrelated to what it names the momen
 was added to the record. A predicate that can fail for the wrong reason is worse than no predicate,
 because it is read as evidence.
 
+A twelfth was found after the apparatus merged, while auditing the one boundary this milestone
+introduces and its predecessors did not have. M113 is the first milestone in this lineage whose
+**bank** is produced by a model over a network, so the separation between the generator phase and
+the qualification phase is the instrument. M112 stated that separation in its own result — it
+recorded `model_calls_in_bank_generation` beside `model_calls_in_qualification` and its checker
+required *both*, exactly one invocation to produce the bank and none at all to qualify against it —
+and M113 had regressed from it in two places at once.
+
+`P15` read three unqualified counters, `model_calls`, `network_calls` and `remote_execution_calls`,
+which `run_m113_qualification.py` wrote into the result as **literal zeros**. The predicate agreed
+with the program it was judging, and it could not fail: it is the M086-A shape this repository's own
+readiness checker cites in its docstring, in the one predicate whose whole job is to say that the
+tested system never reached for the model that wrote its world.
+
+And `m113_carrier_bank.py` declared `GENERATION_LEDGER_PATH` and then **never read it**. The shared
+contract in `blind_bank_protocol.validate_generation_ledger` is what refuses a second
+materialization against one frozen spec and what keeps every failed attempt visible. Without it in
+the phase machine, nothing counted the physical invocations that produced the bank, and several
+physical requests could have been presented afterwards as one logical invocation — which is the
+precise thing the no-retry rule exists to prevent.
+
+Both halves are repaired, and neither is now a number the runner chooses:
+
+- the qualification phase runs inside a **sealed scope** that replaces the two entry points every
+  outbound connection in CPython passes through, counts each attempt and refuses it. Because a guard
+  that was never armed and a genuinely silent run record the same zero, the scope ends by making the
+  guard fire once on its own, against a reserved TEST-NET-1 address that routes nowhere, and records
+  that it intercepted it. `P15` credits the silence only when the self-test proves the instrument
+  was live. Reaching a model, and dispatching execution to another host, both require a socket, so
+  the socket count is one measurement that entails all three counts rather than three assertions;
+- the generator phase is counted by the ledger, which the phase machine now requires, validates
+  against the shared contract and binds to the frozen spec's commitment. A canonical result must
+  record exactly one invocation. A development run has no generator phase at all, and `P15` reports
+  that half as *not applicable* rather than quietly satisfying it.
+
+The repair changed the instrument's honesty and not its measurements. Re-running the development run
+at the same sample and seed reproduces every arm total, the whole generational decomposition and the
+same 21 of 22 with `P22` false, byte for byte; only `result_digest` moved, because the result now
+carries what the sealed scope observed. The superseded digest is kept in `PROJECT_STATE.yaml` beside
+the new one.
+
 ## What the development run already shows, and what it cannot
 
 `scripts/run_m113_qualification.py --development --sample 80 --write` runs the whole chain against a
 devkit bank at seed `m113-development-run`. It is deterministic, and the numbers below are bound to
 the file rather than transcribed beside it: `DEVELOPMENT_RUN.json` carries `result_digest`
-`2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9` against plan commitment
+`ecacda5eece8556d09fc424d79db1ca7feb0a1c7276e99f7e4afce1e1bad15f2` against plan commitment
 `66003159…`, and a re-run at a different
 sample size produces a different digest and no longer matches this text. M100 recorded why that
 binding is worth writing down: a working tree can disagree with its own documentation while `git

@@ -82,6 +82,62 @@ def _agreement(result: dict[str, Any], arm: str) -> tuple[int, int]:
     )
 
 
+def _phase_boundary(result: dict[str, Any]) -> dict[str, Any]:
+    """The generator phase and the qualification phase, separated and each one measured.
+
+    M112 recorded `model_calls_in_bank_generation` beside `model_calls_in_qualification` and
+    required both: exactly one call to produce the bank, none at all to qualify against it. M113
+    regressed to three unqualified counters that the runner wrote as literal zeros, which is a
+    predicate that cannot fail -- the M086-A shape this checker's own docstring cites.
+
+    Both halves are restored here, and neither is a number the runner chose:
+
+    * the qualification half is what the runner's sealed scope *intercepted*, and it is only
+      credited when the scope's self-test proves the guard was live, because an absent guard and a
+      silent run otherwise record the same zero;
+    * the generation half is the ledger's count of physical invocations. One frozen spec admits one
+      materialization and every failed attempt stays in the ledger, so several physical requests
+      cannot be presented as one logical invocation.
+
+    A development run has no generator phase, so that half is reported as not applicable rather
+    than quietly satisfied.
+    """
+    qualification_counts = {
+        key: result.get(key)
+        for key in (
+            "model_calls_in_qualification",
+            "network_calls_in_qualification",
+            "remote_execution_calls_in_qualification",
+        )
+    }
+    silent = all(value == 0 for value in qualification_counts.values())
+    guard_live = result.get("network_guard_selftest_intercepted") is True
+    qualification_holds = bool(silent and guard_live)
+
+    canonical = bool(result.get("is_a_canonical_attempt"))
+    generation_calls = result.get("model_calls_in_bank_generation")
+    if not canonical:
+        generation_holds = True
+        generation_state = "not_applicable_on_a_development_run"
+    elif generation_calls == 1:
+        generation_holds = True
+        generation_state = "exactly_one_invocation"
+    else:
+        generation_holds = False
+        generation_state = "the canonical bank does not record exactly one invocation"
+
+    return {
+        "holds": bool(qualification_holds and generation_holds),
+        "qualification_phase_is_silent": silent,
+        "qualification_guard_was_live": guard_live,
+        "qualification_counts": qualification_counts,
+        "outbound_addresses_attempted": result.get("outbound_addresses_attempted"),
+        "model_client_modules_imported": result.get("model_client_modules_imported"),
+        "generation_phase": generation_state,
+        "model_calls_in_bank_generation": generation_calls,
+    }
+
+
 def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
     """P1-P22. Each one is recomputed; none is copied from a boolean the runner wrote about itself."""
     checks = result.get("provenance_checks") or {}
@@ -202,10 +258,10 @@ def evaluate_conditions(result: dict[str, Any]) -> dict[str, bool]:
         "P12": bool(cardinality_reproduces) and recomputed_cardinality["identities_hold"] is True,
         "P13": recomputed_cardinality["monotone"] is True,
         "P14": recomputed_cardinality["minimum_met"] is True,
-        # Endogeneity and budget.
-        "P15": int(result.get("model_calls", -1)) == 0
-        and int(result.get("network_calls", -1)) == 0
-        and int(result.get("remote_execution_calls", -1)) == 0,
+        # Endogeneity and budget. `P15` is the model-network boundary and it is now two claims,
+        # because M113 is the first milestone in this lineage where one of the two phases is
+        # *supposed* to call a model. See `_phase_boundary`.
+        "P15": _phase_boundary(result)["holds"],
         "P16": bool(within_budget),
         # A refusal is a reach fact, not a budget fact.
         "P17": bool(refusals_closed),
@@ -264,6 +320,8 @@ def measurements(result: dict[str, Any]) -> dict[str, Any]:
         "fresh_arm_calibrated_refusal": _total(result, FRESH_ARM, "calibrated_refusal"),
         "producer_death": result.get("producer_death"),
         "preservation": result.get("preservation"),
+        # The model-network boundary, reported as evidence rather than only as a boolean.
+        "phase_boundary": _phase_boundary(result),
         "structural_distinctness": result.get("structural_distinctness"),
         # Which acquisition the descendant's behaviour is owed to, reported whether or not H58 is
         # true. `ablated` holds generation one and the policy, so `M3` minus `ablated` is generation

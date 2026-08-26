@@ -70,10 +70,12 @@ from metamorphosis import m113_evaluator as evaluator
 from metamorphosis.blind_bank_protocol import (
     EVIDENCE_TIERS,
     PHASES,
+    BlindBankError,
     canonical_bytes,
     contamination_hits,
     opaque_domain_id,
     sha256_hex,
+    validate_generation_ledger,
 )
 
 MILESTONE = "M113"
@@ -471,12 +473,44 @@ def assess_carrier_bank_readiness(root: Path) -> dict[str, Any]:
     if plan is not None and survey_present and spec_present and prompt_present and schema_present:
         phase = "spec_frozen"
 
+    # The generator phase's own record. M113 declared GENERATION_LEDGER_PATH and then never read
+    # it, so nothing counted the physical invocations that produced the bank -- and "one qualifying
+    # invocation, no retries" was a promise rather than a checked fact. M112 carried the ledger and
+    # M113 dropped it. The shared contract is what refuses a second materialization and what keeps
+    # every failed attempt visible, so several physical requests cannot be presented afterwards as
+    # one logical invocation.
+    ledger, error = _load(resolved / GENERATION_LEDGER_PATH)
+    ledger_valid = False
+    if error:
+        blockers.append(error)
+    elif ledger is None:
+        blockers.append("missing %s" % GENERATION_LEDGER_PATH.name)
+    else:
+        spec_commitment = None
+        spec, spec_error = _load(resolved / GENERATOR_SPEC_PATH)
+        if spec is not None and not spec_error:
+            declared = spec.get("spec_commitment_sha256")
+            if isinstance(declared, str) and declared:
+                spec_commitment = declared
+        try:
+            validate_generation_ledger(ledger, spec_commitment_sha256=spec_commitment)
+        except BlindBankError as exc:
+            blockers.append("generation ledger: %s" % exc)
+        else:
+            if spec_commitment is None:
+                blockers.append(
+                    "the generator spec declares no commitment for the ledger to bind, so the "
+                    "ledger cannot be shown to be this bank's"
+                )
+            else:
+                ledger_valid = True
+
     commitment, error = _load(resolved / BANK_COMMITMENT_PATH)
     if error:
         blockers.append(error)
     elif commitment is None:
         blockers.append("missing %s" % BANK_COMMITMENT_PATH.name)
-    elif phase == "spec_frozen":
+    elif phase == "spec_frozen" and ledger_valid:
         phase = "generated_sealed"
 
     protocol, error = _load(resolved / SYSTEM_PROTOCOL_PATH)

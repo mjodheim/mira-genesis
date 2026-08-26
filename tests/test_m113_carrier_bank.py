@@ -919,3 +919,128 @@ def test_a_plan_that_does_not_declare_the_distinct_structure_derivation_is_refus
         broken["plan_commitment_sha256"] = bank.analysis_plan_commitment(broken)
         with pytest.raises(bank.CarrierBankError):
             bank.validate_analysis_plan(broken)
+
+
+# -------------------------------------------------- the model-network boundary, measured
+
+
+def _load_script(name: str, filename: str):
+    import importlib.util
+
+    root = bank.EXPERIMENT_DIRECTORY.parent.parent
+    spec = importlib.util.spec_from_file_location(name, root / "scripts" / filename)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_the_sealed_scope_counts_and_refuses_an_outbound_connection():
+    """The qualification phase's silence is measured, not asserted.
+
+    Before this, the runner wrote `model_calls: 0` as a literal and the checker read it back, so
+    `P15` agreed with the program it was judging. The scope now intercepts at the two entry points
+    every outbound connection in CPython passes through, and a run that reached for the network
+    carries the address it reached for.
+    """
+    import socket
+
+    runner = _load_script("m113_runner_seal", "run_m113_qualification.py")
+
+    with runner.SealedNetwork() as sealed:
+        with pytest.raises(runner.SealedNetworkViolation):
+            socket.create_connection(("example.invalid", 443), timeout=1)
+        with pytest.raises(runner.SealedNetworkViolation):
+            socket.socket().connect(("example.invalid", 80))
+        sealed.selftest()
+        report = sealed.report()
+
+    assert report["network_calls_in_qualification"] == 2
+    # Reaching a model and dispatching execution elsewhere both need a socket, so one measurement
+    # entails all three counts rather than three separate assertions.
+    assert report["model_calls_in_qualification"] == 2
+    assert report["remote_execution_calls_in_qualification"] == 2
+    assert report["outbound_addresses_attempted"] == [
+        "('example.invalid', 443)",
+        "('example.invalid', 80)",
+    ]
+
+    # And the scope leaves the interpreter as it found it.
+    assert socket.create_connection.__module__ == "socket"
+
+
+def test_a_guard_that_was_never_armed_is_not_a_silent_run():
+    """An absent guard and a silent run both record zero. The self-test separates them."""
+    runner = _load_script("m113_runner_selftest", "run_m113_qualification.py")
+    checker = _load_script("m113_checker_selftest", "check_m113_result.py")
+
+    with runner.SealedNetwork() as live:
+        live.selftest()
+        armed = live.report()
+    with runner.SealedNetwork() as never:
+        unarmed = never.report()
+
+    assert armed["network_guard_selftest_intercepted"] is True
+    assert unarmed["network_guard_selftest_intercepted"] is False
+    # Both report zero calls, and only one of them is evidence.
+    assert armed["network_calls_in_qualification"] == unarmed["network_calls_in_qualification"] == 0
+
+    assert checker._phase_boundary(dict(armed))["holds"] is True
+    assert checker._phase_boundary(dict(unarmed))["holds"] is False
+
+
+def test_p15_separates_the_generator_phase_from_the_qualification_phase():
+    """M112 required both halves; M113 had dropped the generator half entirely."""
+    checker = _load_script("m113_checker_phases", "check_m113_result.py")
+
+    silent = {
+        "model_calls_in_qualification": 0,
+        "network_calls_in_qualification": 0,
+        "remote_execution_calls_in_qualification": 0,
+        "network_guard_selftest_intercepted": True,
+    }
+
+    # A development run has no generator phase, and that is said rather than quietly satisfied.
+    development = dict(silent, is_a_canonical_attempt=False)
+    boundary = checker._phase_boundary(development)
+    assert boundary["holds"] is True
+    assert boundary["generation_phase"] == "not_applicable_on_a_development_run"
+
+    # A canonical run must record exactly one physical invocation.
+    canonical = dict(silent, is_a_canonical_attempt=True, model_calls_in_bank_generation=1)
+    assert checker._phase_boundary(canonical)["holds"] is True
+
+    for generation_calls in (0, 2, None):
+        broken = dict(silent, is_a_canonical_attempt=True)
+        if generation_calls is not None:
+            broken["model_calls_in_bank_generation"] = generation_calls
+        assert checker._phase_boundary(broken)["holds"] is False
+
+    # And a qualification that reached the network fails whatever the generator phase did.
+    reached = dict(silent, is_a_canonical_attempt=True, model_calls_in_bank_generation=1)
+    reached["network_calls_in_qualification"] = 1
+    assert checker._phase_boundary(reached)["holds"] is False
+
+
+def test_the_qualification_body_cannot_write_its_own_phase_count():
+    """The counts are merged in by the sealed wrapper, and a body that wrote them is refused."""
+    runner = _load_script("m113_runner_body", "run_m113_qualification.py")
+    source = (
+        bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_qualification.py"
+    ).read_text(encoding="utf-8")
+    # The literal zeros this repair removed must not come back.
+    assert '"model_calls": 0' not in source
+    assert '"network_calls": 0' not in source
+    assert hasattr(runner, "SealedNetwork")
+
+
+def test_the_generation_ledger_is_required_before_a_sealed_bank_counts(tmp_path):
+    """M113 declared the ledger path and never read it, so nothing counted the invocations.
+
+    One frozen spec admits one materialization and every failed attempt stays in the ledger. Without
+    the ledger in the phase machine, several physical requests could be presented afterwards as one
+    logical invocation, which is exactly what the no-retry rule exists to prevent.
+    """
+    report = bank.assess_carrier_bank_readiness(tmp_path)
+    assert "missing %s" % bank.GENERATION_LEDGER_PATH.name in report["blockers"]
+    assert report["phase"] == "draft"
+    assert report["ready_for_reveal"] is False
