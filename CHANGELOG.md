@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- **The M113 pre-freeze sequence is one command, and it checks its own post-conditions.**
+  `run_m113_generation.py --prepare` discovers which providers actually serve the exact model,
+  adopts one under a rule stated before the data, runs the non-qualifying probe and then asserts
+  that no ledger, no sealed bank, no commitment, no reveal authorization and no result exists and
+  that the phase is still `draft`. The sequence has an order that matters and a hand-run one can
+  silently skip a step: an unadoptable discovery must never reach the probe, and a failed probe must
+  never reach the freeze. It stops at the first step that cannot proceed, so a stop is a diagnosis
+  rather than a partially applied state. The provider rule is deliberately narrow -- adopt **if and
+  only if exactly one** provider serves the exact model with strict structured output; one candidate
+  is a fact, several is a judgement made after seeing the catalogue, and that is the shape this
+  milestone exists to keep out of the record, so several stops and goes to the owner. Adoption
+  answers only the three fields discovery is entitled to answer, and a test requires the adopted
+  candidate to **still fail** `validate_generator_spec`: a discovery run may not consume the freeze
+  gate however complete its findings. Six tests cover it, including the whole pass against a stubbed
+  transport that counts physical requests -- three, never four -- and the three ways it must stop.
+  Still nothing executed against the real endpoint: this environment has no credential and
+  `openrouter.ai` remains refused by egress policy.
+
 - **M113's analysis plan is frozen, and the model-network boundary it needs is now measured rather
   than asserted.** The plan is frozen as the candidate unchanged, at commitment `66003159...`,
   before any carrier exists -- the first of the six owner gates, and the only one that can be

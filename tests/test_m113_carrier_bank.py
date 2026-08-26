@@ -1286,3 +1286,221 @@ def test_a_second_materialization_against_one_frozen_spec_is_refused(tmp_path, m
     spec = {"spec_commitment_sha256": "a" * 64, "generator_identity": {}, "canonical_request_body": {}}
     with pytest.raises(client.GenerationError):
         client.qualify(spec)
+
+
+# ------------------------------------ the pre-freeze sequence, as one development pass
+
+
+def _generation_client():
+    return _load_script("m113_generation_prepare", "run_m113_generation.py")
+
+
+def _discovery_report(*, in_catalogue=True, capable=("Fireworks",)):
+    return {
+        "schema": "m113-provider-discovery-development-v1",
+        "development": True,
+        "is_a_qualifying_call": False,
+        "milestone": "M113",
+        "requested_model": "deepseek/deepseek-v4-flash-0731",
+        "model_is_in_the_catalogue": in_catalogue,
+        "catalogue_entry": {"id": "deepseek/deepseek-v4-flash-0731"} if in_catalogue else None,
+        "providers": [
+            {
+                "name": name,
+                "context_length": 128000,
+                "supported_parameters": ["structured_outputs", "temperature"],
+                "supports_structured_outputs": True,
+                "quantization": None,
+                "status": None,
+            }
+            for name in capable
+        ],
+        "providers_that_can_serve_the_frozen_request": sorted(capable),
+        "observed_at": "2026-08-26T00:00:00Z",
+    }
+
+
+def test_the_provider_rule_adopts_only_when_the_choice_is_mechanical():
+    """One capable provider is a fact. Several is a judgement made after seeing the catalogue.
+
+    A judgement made after seeing the data is exactly the shape this milestone exists to keep out
+    of the record, so several stops and goes to the owner rather than picking.
+    """
+    client = _generation_client()
+
+    outcome = client.adopt(_discovery_report(), _candidate_spec())
+    assert outcome["adopted"] is True
+    assert outcome["provider"] == "Fireworks"
+
+    for report in (
+        _discovery_report(capable=("Fireworks", "Novita")),
+        _discovery_report(capable=()),
+        _discovery_report(in_catalogue=False),
+    ):
+        refused = client.adopt(report, _candidate_spec())
+        assert refused["adopted"] is False
+        assert refused["reason"]
+
+
+def test_discovery_can_never_complete_the_freeze():
+    """Adoption answers three fields. The other three are not discovery's to answer."""
+    client = _generation_client()
+    spec = _candidate_spec()
+    before = set(spec["unset_before_freeze"])
+
+    outcome = client.adopt(_discovery_report(), spec)
+    assert outcome["adopted"] is True
+
+    remaining = set(spec["unset_before_freeze"])
+    assert before - remaining == set(client.DISCOVERY_ANSWERS)
+    assert remaining == {
+        "blindness_contract.audited_before_the_freeze",
+        "frozen_before_generation",
+        "sampling.seed_is_honoured_by_the_provider",
+    }
+    # And the adopted candidate still cannot pass as a frozen spec.
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def _stub_transport(client, monkeypatch, *, served_model, served_provider, content):
+    """Replace the one function that touches a socket, and count the calls it would have made."""
+    calls = []
+
+    def fake_request(url, *, method="POST", body=None, timeout=900):
+        calls.append({"url": url, "method": method})
+        if method == "GET" and url.endswith("/models"):
+            payload = {"data": [{"id": "deepseek/deepseek-v4-flash-0731"}]}
+        elif method == "GET":
+            payload = {"data": {"endpoints": [{
+                "provider_name": "Fireworks",
+                "context_length": 128000,
+                "supported_parameters": ["structured_outputs", "temperature"],
+                "quantization": None,
+                "status": None,
+            }]}}
+        else:
+            payload = {
+                "id": "gen-stub",
+                "model": served_model,
+                "provider": served_provider,
+                "choices": [{"finish_reason": "stop", "message": {"content": content}}],
+                "usage": {"total_tokens": 12},
+            }
+        return {
+            "started_at": "2026-08-26T00:00:00Z",
+            "finished_at": "2026-08-26T00:00:01Z",
+            "status": 200,
+            "response_headers": {"x-request-id": "stub"},
+            "response_sha256": "0" * 64,
+            "response_bytes": 1,
+            "body": payload,
+            "raw_text": None,
+        }
+
+    monkeypatch.setattr(client, "request", fake_request)
+    return calls
+
+
+def _isolate_paths(client, monkeypatch, tmp_path):
+    experiment = tmp_path / "experiments" / "M113"
+    experiment.mkdir(parents=True)
+    candidate = experiment / "GENERATOR_SPEC_CANDIDATE.json"
+    candidate.write_bytes(
+        (bank.EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json").read_bytes()
+    )
+    monkeypatch.setattr(client, "EXPERIMENT", experiment)
+    monkeypatch.setattr(client, "CANDIDATE_SPEC_PATH", candidate)
+    monkeypatch.setattr(client, "SPEC_PATH", experiment / "GENERATOR_SPEC.json")
+    monkeypatch.setattr(client, "DISCOVERY_PATH", experiment / "PROVIDER_DISCOVERY_DEVELOPMENT.json")
+    monkeypatch.setattr(client, "SMOKE_PATH", experiment / "TRANSPORT_SMOKE_DEVELOPMENT.json")
+    monkeypatch.setattr(client, "BUNDLE_PATH", experiment / "PRE_FREEZE_BUNDLE_DEVELOPMENT.json")
+    return experiment
+
+
+def test_the_pre_freeze_pass_completes_without_consuming_a_gate(tmp_path, monkeypatch):
+    """Discover, adopt and smoke in one pass, and nothing qualifying may exist afterwards."""
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    calls = _stub_transport(
+        client, monkeypatch,
+        served_model="deepseek/deepseek-v4-flash-0731",
+        served_provider="Fireworks",
+        content='{"colours": [{"name": "amber"}, {"name": "slate"}]}',
+    )
+
+    code, bundle = client.prepare()
+    assert code == 0, bundle.get("stopped_at")
+    assert bundle["adoption"]["provider"] == "Fireworks"
+    assert bundle["smoke"]["identity_served_matches_identity_requested"] is True
+    assert bundle["smoke"]["structured_output_parsed"] is True
+    assert bundle["qualifying_invocation_performed"] is False
+    assert bundle["retries_performed"] == 0
+    assert bundle["ready_for_generator_freeze_review"] is True
+
+    # Three physical requests: two GETs for discovery, one POST for the probe. No fourth.
+    assert len(calls) == 3
+    assert [c["method"] for c in calls] == ["GET", "GET", "POST"]
+    assert bundle["physical_requests"]["qualifying"] == 0
+
+    assert bundle["post_conditions"]["phase"] == "draft"
+    assert bundle["post_conditions"]["revealed"] is False
+    assert not any(bundle["post_conditions"]["artifacts_that_must_not_exist"].values())
+    assert not (experiment / "GENERATION_LEDGER.json").exists()
+    assert not (experiment / "SEALED_BANK.json.gpg").exists()
+
+
+def test_the_pre_freeze_pass_stops_when_the_served_identity_is_not_the_requested_one(
+    tmp_path, monkeypatch
+):
+    """Fallbacks and routing are disabled precisely so this cannot pass unnoticed."""
+    client = _generation_client()
+    _isolate_paths(client, monkeypatch, tmp_path)
+    _stub_transport(
+        client, monkeypatch,
+        served_model="deepseek/deepseek-v3",
+        served_provider="Fireworks",
+        content='{"colours": [{"name": "amber"}, {"name": "slate"}]}',
+    )
+
+    code, bundle = client.prepare()
+    assert code == 3
+    assert "served identity" in bundle["stopped_at"]
+    assert bundle.get("ready_for_generator_freeze_review") is None
+
+
+def test_the_pre_freeze_pass_stops_when_strict_decoding_did_not_hold(tmp_path, monkeypatch):
+    client = _generation_client()
+    _isolate_paths(client, monkeypatch, tmp_path)
+    _stub_transport(
+        client, monkeypatch,
+        served_model="deepseek/deepseek-v4-flash-0731",
+        served_provider="Fireworks",
+        content="here are two colours: amber and slate",
+    )
+
+    code, bundle = client.prepare()
+    assert code == 4
+    assert "structured output" in bundle["stopped_at"]
+
+
+def test_the_pre_freeze_pass_refuses_to_report_success_if_it_created_qualifying_state(
+    tmp_path, monkeypatch
+):
+    """The post-conditions are checked, not assumed, and a development pass that produced a
+    qualifying artifact is an instrument fault the operator must see before any freeze."""
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    _stub_transport(
+        client, monkeypatch,
+        served_model="deepseek/deepseek-v4-flash-0731",
+        served_provider="Fireworks",
+        content='{"colours": [{"name": "amber"}, {"name": "slate"}]}',
+    )
+    (experiment / "GENERATION_LEDGER.json").write_text("{}", encoding="utf-8")
+
+    code, bundle = client.prepare()
+    assert code == 5
+    assert bundle["unexpectedly_created"] == ["GENERATION_LEDGER.json"]

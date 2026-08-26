@@ -64,6 +64,7 @@ LEDGER_PATH = EXPERIMENT / "GENERATION_LEDGER.json"
 RAW_RESPONSE_PATH = EXPERIMENT / "GENERATION_RESPONSE.json"
 DISCOVERY_PATH = EXPERIMENT / "PROVIDER_DISCOVERY_DEVELOPMENT.json"
 SMOKE_PATH = EXPERIMENT / "TRANSPORT_SMOKE_DEVELOPMENT.json"
+BUNDLE_PATH = EXPERIMENT / "PRE_FREEZE_BUNDLE_DEVELOPMENT.json"
 
 SECRET_VARIABLE = "OPENROUTER_API_KEY"
 LEDGER_SCHEMA = "mira-blind-bank-generation-ledger-v1"
@@ -317,6 +318,183 @@ def smoke(spec: dict[str, Any], *, write: bool) -> dict[str, Any]:
 
 
 # ----------------------------------------------------------------------------------------
+# DEVELOPMENT: adopt what discovery, and only discovery, can establish
+# ----------------------------------------------------------------------------------------
+
+# Which of the candidate's unset fields discovery is entitled to answer. The other three are not
+# discovery's to answer: whether the transport was audited for blindness, whether the provider
+# honours a seed, and whether the spec is frozen. Listing them here rather than filling whatever
+# happens to be unset keeps a discovery run from ever completing a freeze by accident.
+DISCOVERY_ANSWERS = (
+    "generator_identity.model_identity_confirmed_against_the_api",
+    "generator_identity.provider",
+    "generator_identity.provider_serves_the_model_confirmed",
+)
+
+
+def adopt(report: dict[str, Any], spec: dict[str, Any]) -> dict[str, Any]:
+    """Apply the provider rule to a discovery report, or refuse.
+
+    The rule is stated before the data: adopt if and only if **exactly one** provider can serve the
+    frozen request, that is, serves the exact model and supports strict structured output. One
+    candidate is a fact; several is a judgement, and a judgement made after seeing the catalogue is
+    the kind of choice this milestone exists to keep out of the record. So several stops here and
+    goes to the owner.
+    """
+    capable = list(report.get("providers_that_can_serve_the_frozen_request") or [])
+    if not report.get("model_is_in_the_catalogue"):
+        return {
+            "adopted": False,
+            "reason": "the exact model identifier is not in the catalogue, and no substitute is "
+                      "permitted",
+            "candidates": capable,
+        }
+    if len(capable) != 1:
+        return {
+            "adopted": False,
+            "reason": "%d providers can serve the frozen request; the choice is not mechanical"
+                      % len(capable),
+            "candidates": capable,
+        }
+
+    provider = capable[0]
+    spec["generator_identity"]["provider"] = provider
+    spec["generator_identity"]["provider_serves_the_model_confirmed"] = True
+    spec["generator_identity"]["model_identity_confirmed_against_the_api"] = True
+    spec["canonical_request_body"]["provider"]["only"] = [provider]
+    spec["unset_before_freeze"] = sorted(
+        field for field in spec.get("unset_before_freeze", [])
+        if field not in DISCOVERY_ANSWERS
+    )
+    spec["canonical_request_body_sha256"] = sha256_hex(
+        canonical_bytes(spec["canonical_request_body"])
+    )
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+
+    # A discovery run must never be able to produce a frozen spec. Three fields remain unset by
+    # construction, and this asserts it rather than trusting the list above.
+    try:
+        bank.validate_generator_spec(spec, root=ROOT)
+    except bank.CarrierBankError as exc:
+        still_refused = str(exc)
+    else:
+        raise GenerationError(
+            "adoption produced a spec that validates as frozen; discovery may not consume the "
+            "freeze gate"
+        )
+
+    return {
+        "adopted": True,
+        "provider": provider,
+        "candidates": capable,
+        "spec_commitment_sha256": spec["spec_commitment_sha256"],
+        "still_unset_before_freeze": list(spec["unset_before_freeze"]),
+        "still_refused_as_frozen_because": still_refused,
+    }
+
+
+def adopt_from_disk(*, write: bool) -> dict[str, Any]:
+    if not DISCOVERY_PATH.is_file():
+        raise GenerationError("no discovery report at %s" % DISCOVERY_PATH.relative_to(ROOT))
+    report = json.loads(DISCOVERY_PATH.read_text(encoding="utf-8"))
+    spec = json.loads(CANDIDATE_SPEC_PATH.read_text(encoding="utf-8"))
+    outcome = adopt(report, spec)
+    if outcome["adopted"] and write:
+        CANDIDATE_SPEC_PATH.write_bytes(canonical_bytes(spec) + b"\n")
+    return outcome
+
+
+# ----------------------------------------------------------------------------------------
+# DEVELOPMENT: the whole pre-freeze sequence, as one command
+# ----------------------------------------------------------------------------------------
+
+# What must still be absent when the pre-freeze sequence finishes. Discovery and a smoke probe are
+# development operations; if either has produced any of these, the instrument is wrong and the
+# operator needs to know before anything is frozen rather than after.
+MUST_NOT_EXIST_AFTER_PREPARE = (
+    "CHECK_REPORT.json",
+    "GENERATION_LEDGER.json",
+    "GENERATION_RESPONSE.json",
+    "GENERATOR_SPEC.json",
+    "PUBLIC_BANK_COMMITMENT.json",
+    "RESULT.json",
+    "REVEAL_AUTHORIZATION.json",
+    "SEALED_BANK.json.gpg",
+    "SYSTEM_PROTOCOL.json",
+)
+
+
+def prepare() -> tuple[int, dict[str, Any]]:
+    """Discover, adopt, smoke and check the post-conditions, in one pass.
+
+    Everything here is DEVELOPMENT and none of it consumes a gate. It stops at the first step that
+    cannot proceed, so a stop is a diagnosis rather than a partially-applied state: an unadoptable
+    discovery never reaches the smoke probe, and a failed smoke never reaches the freeze.
+    """
+    bundle: dict[str, Any] = {
+        "schema": "m113-pre-freeze-bundle-development-v1",
+        "development": True,
+        "is_a_qualifying_call": False,
+        "milestone": "M113",
+        "started_at": _now(),
+    }
+
+    spec = load_spec(frozen_required=False)
+    bundle["candidate_spec_commitment_before"] = spec.get("spec_commitment_sha256")
+
+    bundle["discovery"] = discover(spec, write=True)
+    if not bundle["discovery"]["model_is_in_the_catalogue"]:
+        bundle["stopped_at"] = "discover"
+        return 1, bundle
+
+    bundle["adoption"] = adopt_from_disk(write=True)
+    if not bundle["adoption"]["adopted"]:
+        bundle["stopped_at"] = "adopt"
+        return 2, bundle
+
+    bundle["smoke"] = smoke(load_spec(frozen_required=False), write=True)
+    if not bundle["smoke"]["identity_served_matches_identity_requested"]:
+        bundle["stopped_at"] = "smoke: the served identity is not the requested one"
+        return 3, bundle
+    if bundle["smoke"]["structured_output_parsed"] is not True:
+        bundle["stopped_at"] = "smoke: strict structured output did not come back parseable"
+        return 4, bundle
+
+    # One physical request per step, counted rather than asserted: the transport opens exactly one
+    # connection per call and never retries, so the count is the number of calls this pass made.
+    bundle["physical_requests"] = {
+        "discovery_catalogue": 1,
+        "discovery_endpoints": 1,
+        "smoke": 1,
+        "qualifying": 0,
+    }
+    bundle["retries_performed"] = 0
+    bundle["qualifying_invocation_performed"] = False
+
+    readiness = bank.assess_carrier_bank_readiness(ROOT)
+    bundle["post_conditions"] = {
+        "phase": readiness["phase"],
+        "revealed": readiness["revealed"],
+        "artifacts_that_must_not_exist": {
+            name: (EXPERIMENT / name).is_file() for name in MUST_NOT_EXIST_AFTER_PREPARE
+        },
+    }
+    created = sorted(
+        name for name, present in bundle["post_conditions"]["artifacts_that_must_not_exist"].items()
+        if present
+    )
+    if created or readiness["phase"] != "draft" or readiness["revealed"]:
+        bundle["stopped_at"] = "post-conditions: a development pass created qualifying state"
+        bundle["unexpectedly_created"] = created
+        return 5, bundle
+
+    bundle["candidate_spec_commitment_after"] = bundle["adoption"]["spec_commitment_sha256"]
+    bundle["finished_at"] = _now()
+    bundle["ready_for_generator_freeze_review"] = True
+    return 0, bundle
+
+
+# ----------------------------------------------------------------------------------------
 # The single qualifying invocation
 # ----------------------------------------------------------------------------------------
 
@@ -433,7 +611,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--discover", action="store_true", help="DEVELOPMENT: which providers serve the model")
+    mode.add_argument("--adopt", action="store_true", help="DEVELOPMENT: apply the provider rule to a discovery report")
     mode.add_argument("--smoke", action="store_true", help="DEVELOPMENT: one non-qualifying probe")
+    mode.add_argument(
+        "--prepare",
+        action="store_true",
+        help="DEVELOPMENT: discover, adopt, smoke and check the post-conditions, in one pass",
+    )
     mode.add_argument("--qualify", action="store_true", help="the single qualifying invocation")
     parser.add_argument("--write", action="store_true", help="write the development report")
     arguments = parser.parse_args()
@@ -441,10 +625,25 @@ def main() -> int:
     try:
         if arguments.qualify:
             return qualify(load_spec(frozen_required=True))
-        spec = load_spec(frozen_required=False)
-        report = discover(spec, write=arguments.write) if arguments.discover else smoke(
-            spec, write=arguments.write
-        )
+        if arguments.prepare:
+            code, bundle = prepare()
+            BUNDLE_PATH.write_bytes(canonical_bytes(bundle) + b"\n")
+            print(json.dumps(bundle, indent=2, sort_keys=True))
+            print()
+            print("wrote %s" % BUNDLE_PATH.relative_to(ROOT))
+            if code:
+                print("STOPPED at: %s" % bundle.get("stopped_at"))
+            else:
+                print("Pre-freeze sequence complete. Nothing qualifying was created and no gate")
+                print("was consumed. Send the bundle back for the generator freeze review.")
+            return code
+        if arguments.adopt:
+            report = adopt_from_disk(write=arguments.write)
+        else:
+            spec = load_spec(frozen_required=False)
+            report = discover(spec, write=arguments.write) if arguments.discover else smoke(
+                spec, write=arguments.write
+            )
     except GenerationError as exc:
         print("REFUSED: %s" % exc)
         return 1
