@@ -413,6 +413,23 @@ requested: the transport is `http.client` from the standard library, driven dire
 and no third-party HTTP client is imported, because each carries retry behaviour that would have to
 be disabled correctly, and the way to disable it correctly is not to have it.
 
+The three development steps are also available as **one pass**, `--prepare`, which discovers,
+adopts, probes and then checks its own post-conditions. It exists because the sequence has an order
+that matters and a hand-run sequence can silently skip a step: an unadoptable discovery must never
+reach the probe, and a failed probe must never reach the freeze. It stops at the first step that
+cannot proceed, so a stop is a diagnosis rather than a partially applied state, and it ends by
+asserting that no ledger, no sealed bank, no commitment, no reveal authorization and no result
+exists and that the phase is still `draft`. A development pass that produced any of those would be
+an instrument fault, and the operator has to learn that before a freeze rather than after one.
+
+The provider rule is stated before the data and is deliberately narrow: adopt **if and only if
+exactly one** provider serves the exact model and supports strict structured output. One candidate
+is a fact. Several is a judgement, and a judgement made after seeing the catalogue is the shape this
+milestone exists to keep out of the record, so several stops and goes to the owner. Adoption answers
+only the three fields discovery is entitled to answer, and a test requires that the adopted
+candidate still fails `validate_generator_spec`: a discovery run may not consume the freeze gate,
+however complete its findings.
+
 ## What the development run already shows, and what it cannot
 
 `scripts/run_m113_qualification.py --development --sample 80 --write` runs the whole chain against a

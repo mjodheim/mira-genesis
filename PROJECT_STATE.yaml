@@ -1156,6 +1156,12 @@ current_real_software_frontier:
     generator_spec_candidate_cannot_validate_as_frozen: true
     generator_spec_fields_pending_discovery: 6
     generation_client_written_never_executed: true
+    generation_client_pre_freeze_pass_is_one_command: true
+    provider_rule_declared_before_the_data: adopt_iff_exactly_one_capable_provider
+    several_capable_providers_stops_and_goes_to_the_owner: true
+    discovery_answers_three_of_the_six_unset_fields: true
+    an_adopted_candidate_still_fails_validate_generator_spec: true
+    pre_freeze_pass_checks_its_own_post_conditions: true
     generation_client_transport: stdlib_http_client_no_third_party_retry_behaviour
     generation_client_smoke_input_checked_against_the_qualifying_digest: true
     generation_client_fails_closed_on_a_served_identity_that_is_not_the_frozen_one: true
