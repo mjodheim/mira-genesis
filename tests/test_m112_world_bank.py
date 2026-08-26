@@ -236,23 +236,34 @@ def test_a_protocol_not_asserting_the_post_reveal_invariant_is_refused() -> None
 # ---------------------------------------------------------------------------------------------
 
 
-def test_the_repository_is_at_spec_frozen_and_no_bank_exists() -> None:
+def test_the_repository_is_executed_with_a_complete_authorizing_chain() -> None:
+    """These two tests once asserted `spec_frozen` and three blockers, which described a moment
+    rather than an invariant. The bank has since been materialized, so they now describe the state
+    that must hold afterwards: executed, with every artifact that authorizes the result present and
+    validating."""
     report = world_bank.assess_world_bank_readiness(ROOT)
-    assert report["phase"] == "spec_frozen"
-    assert report["ready_for_reveal"] is False
-    assert report["revealed"] is False
-    assert report["bank_exists"] is False
+    assert report["phase"] == "executed"
+    assert report["revealed"] is True
+    assert report["bank_exists"] is True
+    assert report["authorizing_chain_complete"] is True
+    assert report["blockers"] == []
     assert report["phase_is_declared"] is True
     assert report["evidence_tier_is_declared"] is True
 
 
-def test_the_remaining_blockers_are_all_artifacts_the_project_cannot_make_alone() -> None:
-    report = world_bank.assess_world_bank_readiness(ROOT)
-    assert set(report["blockers"]) == {
-        "missing PUBLIC_BANK_COMMITMENT.json",
-        "missing SYSTEM_PROTOCOL.json",
-        "missing REVEAL_AUTHORIZATION.json",
-    }
+def test_the_chain_is_incomplete_the_moment_an_authorizing_artifact_is_missing(
+    tmp_path: Path,
+) -> None:
+    """The guard has to be able to fail, or it guards nothing."""
+    import shutil
+
+    shutil.copytree(ROOT / "experiments" / "M112", tmp_path / "experiments" / "M112")
+    for name in ("metamorphosis", "scripts"):
+        shutil.copytree(ROOT / name, tmp_path / name)
+    (tmp_path / "experiments" / "M112" / "REVEAL_AUTHORIZATION.json").unlink()
+    report = world_bank.assess_world_bank_readiness(tmp_path)
+    assert report["authorizing_chain_complete"] is False
+    assert report["blockers"]
 
 
 def test_an_empty_tree_fails_closed_at_draft(tmp_path: Path) -> None:

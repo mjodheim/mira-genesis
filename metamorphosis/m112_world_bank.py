@@ -407,6 +407,15 @@ def assess_world_bank_readiness(root: Path) -> dict[str, Any]:
         "phase_is_declared": phase in PHASES,
         "ready_for_reveal": phase == "reveal_authorized" and not blockers,
         "revealed": phase == "executed",
+        # A result is permitted only if every artifact that authorizes it exists and validates. This
+        # is what the CI guard reads: `ready_for_reveal` necessarily goes false once the phase
+        # advances to `executed`, so a guard written against it would fail every legitimate run.
+        "authorizing_chain_complete": not blockers
+        and (resolved / ANALYSIS_PLAN_PATH).is_file()
+        and (resolved / GENERATOR_SPEC_PATH).is_file()
+        and (resolved / BANK_COMMITMENT_PATH).is_file()
+        and (resolved / SYSTEM_PROTOCOL_PATH).is_file()
+        and (resolved / REVEAL_AUTHORIZATION_PATH).is_file(),
         "blockers": blockers,
         "evidence_tier_if_executed": WORLD_BANK_CLAIM_BOUNDARY["evidence_tier"],
         "evidence_tier_is_declared": WORLD_BANK_CLAIM_BOUNDARY["evidence_tier"] in EVIDENCE_TIERS,

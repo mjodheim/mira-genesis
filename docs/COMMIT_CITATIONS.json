@@ -2,6 +2,15 @@
   "schema": "commit-citations-v1",
   "purpose": "Every commit the tracked scientific record cites by SHA, and the ref that keeps it reachable. Checked by scripts/check_repository_integrity.py --citations. A citation that stops resolving makes a recorded result unverifiable, so this file exists to make that failure loud instead of silent.",
   "commits": {
+    "007ab867f6a32ca7f4104e2de00858d33fb66793": {
+      "subject": "science(m112): authorize the single reveal, and say plainly what the gate is not",
+      "preserved_by": "science/m112-blind-materialization",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "021d7d73d3a27d2549f45f6a6273cfa30e981647": {
       "subject": "ci(m040): evaluate true lineage-anchor defaults on seed 400047",
       "preserved_by": "main",
@@ -406,6 +415,15 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "2c4ffa3e039fc792ee172af8287b2c5aef07fa84": {
+      "subject": "result(m112): preserve the unique canonical first result, before any checker runs",
+      "preserved_by": "experiment/m112-canonical-first-result",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "2cf454ca4e393a319f89ae5afbcd5e3f9250182c": {
       "subject": "m066(canonical): arm first immutable governance-corrected whole-wasm run",
       "preserved_by": "main",
@@ -678,6 +696,15 @@
         "tests/test_m103_protocol_candidate.py"
       ]
     },
+    "42f0ae0a427f461b33a75b6080b945bc854ff848": {
+      "subject": "science(m112): bind the blind generator and freeze the qualifying input before generation",
+      "preserved_by": "science/m112-blind-materialization",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "4351fc007a95d341b017e10511de730e20651947": {
       "subject": "feat: add neutral M073 external-teacher runner",
       "preserved_by": "main",
@@ -819,6 +846,15 @@
         "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M086C/RESULT.md"
+      ]
+    },
+    "50c7a0e36365d466eea163afcdc4234c478b7c70": {
+      "subject": "science(m112): freeze the tested system, with the bank still unread",
+      "preserved_by": "science/m112-blind-materialization",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "521895af33e30320c06437d4d9fbd83dee581a47": {
@@ -1333,6 +1369,15 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M027/STATUS.md",
         "results/M027_SEEDED_CLADE_DEVELOPMENT_RESULT.md"
+      ]
+    },
+    "849ee7b2697e315997e3f3ddcb325894167b8a58": {
+      "subject": "science(m112): record a defect in the frozen spec, before the bank is sealed or revealed",
+      "preserved_by": "science/m112-blind-materialization",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
+        "docs/COMMIT_CITATIONS.json"
       ]
     },
     "872f90060902cea2b94be653845036340b91cde3": {
@@ -2203,6 +2248,15 @@
       "preserved_by": "main",
       "cited_in": [
         "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
+    "e00ddd50bde96c043c98f32f16c78b09eb00196c": {
+      "subject": "science(m112): seal the blind bank and publish its commitment before the tested system is frozen",
+      "preserved_by": "science/m112-blind-materialization",
+      "cited_in": [
+        "DECISIONS.md",
+        "experiments/M112/RESULT_SUMMARY.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },

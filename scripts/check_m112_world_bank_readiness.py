@@ -43,10 +43,13 @@ def main() -> int:
         print("M112 reveal is not authorized", file=sys.stderr)
         return 1
     if arguments.assert_not_revealed and report["revealed"]:
-        # A result may exist only if the chain that authorizes it also exists and holds.
-        if not report["ready_for_reveal"]:
+        # A result may exist only if the chain that authorizes it also exists and holds. It cannot
+        # be written against `ready_for_reveal`, which necessarily goes false once the phase reaches
+        # `executed`; that reading failed the first legitimate run and is the reason this comment
+        # exists.
+        if not report["authorizing_chain_complete"]:
             print(
-                "M112 carries a result without an authorized reveal", file=sys.stderr
+                "M112 carries a result without a complete authorizing chain", file=sys.stderr
             )
             return 1
     if not report["phase_is_declared"] or not report["evidence_tier_is_declared"]:
