@@ -1,0 +1,26 @@
+{
+  "sources": {
+    "M107": "experiments/M107/RESULT_SUMMARY.md (D076)",
+    "M108": "experiments/M108/RESULT_SUMMARY.md (D077)",
+    "M109": "experiments/M109/RESULT_SUMMARY.md (D078)",
+    "M110": "experiments/M110/RESULT_SUMMARY.md and RESULT.json (D079)",
+    "M111": "experiments/M111/RESULT_SUMMARY.md and RESULT.json (D080)",
+    "M112": "experiments/M112/RESULT_SUMMARY.md (D081)"
+  },
+  "capacity_competence": {
+    "arms": ["M0", "M1", "M2"],
+    "reach_min": [94, 134, 324],
+    "reach_max": [261, 449, 558],
+    "row5_solved_of_6": [6, 0, 0]
+  },
+  "expressibility": {
+    "arms": ["M1", "M2"],
+    "policy_rule_space": [18, 127],
+    "separating_programs": [0, 25]
+  },
+  "blind_closure": {
+    "bounds": [7, 9, 11, 13],
+    "image_size": [17, 18, 18, 18],
+    "project_worlds_checked": 1160
+  }
+}
