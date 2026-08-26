@@ -1,0 +1,44 @@
+\section{M108: modifying the machinery that performs later acquisitions}
+\label{sec:m108}
+M108 reconstructs M107's acquired operator rather than hand-coding a stronger baseline. At the base interface width, the operator table is already saturated at 16 of 16 Boolean functions. A later failure therefore cannot honestly be explained by a missing Boolean operator. The acquisition machinery nevertheless begins hardwired to blame that axis.
+
+The lineage receives a bounded episode record over attribution rows. With episodes covering only rows $\{0,3\}$, two attribution classes survive and acquisition is refused. With rows $\{0,2,3\}$, the sixteen-program attribution space yields two consistent programs in one attribution class. The adopted rule has truth table $[1,0,1,0]$, is non-monotone, two nodes long, and becomes content-addressed lineage state.
+
+On the held demand $B$, the modified state \mone attributes the failure to the signal interface, widens it, and constructs the target in six nodes. Fresh \mzero exhausts all twenty operators and refuses at both bounds 9 and 13 under an equal machinery-step budget. Byte-exact ablation returns to \mzero and removes the capability; mutation sends attribution back to the operator axis; corruption fails closed on the state identity mismatch. P1--P16 compute true, replay is equal, and the canonical run uses fourteen isolated processes with zero external calls.
+
+Two structural arguments make the dependency stronger than ``the search happened not to find a solution.'' First, at the base interface width, all 16 liftable images of the 256 world functions exclude $B$ for any operator set. Second, at full width, $B$ lies outside the monotone image by lemma. The capability therefore requires both the earlier interpreter extension and the acquired attribution rule that tells the machinery to widen the interface.
+
+M108 is the first result in the line where acquired state changes \emph{how later acquisition failures are acted upon}. Its limitation is equally important. The episode blame labels are authored supervision, and the held demand occurs on a feature row already represented in those episodes. The experiment demonstrates machinery modification and generalization to a new demand with a recorded feature pattern; it does not yet show that the lineage can determine its own blame labels.
+
+\section{M109: machinery that produces the next machinery generation}
+\label{sec:m109}
+M109 removes the authored-label confound by making the lineage run controlled trials over registered components and infer which minimal component change resolves each failure. The attribution domain is censused over 84 states and all 256 world functions, yielding 10,496 determined state--target pairs and reachable rows $\{1,2,3,6,7\}$. No row in the producer census is ambiguous at this stage.
+
+\subsection{Stage one}
+The fresh lineage \mzero has a monotone candidate space and hardwired operator-axis attribution. On the first demand, the hardwired lineage refuses even though $g_2$ is true, meaning the axis it names still offers nominal progress. A controlled trial changes one registered component at a time and identifies the signal interface as the minimal necessary component. Eighteen expressible attribution programs are examined; two are consistent and belong to one attribution class. Generation one is adopted. \mone widens the signal interface from two to three signals and resolves the demand with a five-node witness.
+
+\subsection{Stage two}
+The second demand is revealed only after stage one has been resolved. \mone now falls back to the hardwired operator axis and refuses. A new controlled trial identifies the candidate space as the limiting component. Two consistent programs again survive, but the selected rule is distinct from generation one. Generation two is registered; \mtwo changes the candidate space from monotone to complete and resolves the second demand with a four-node witness.
+
+Under the same frozen machinery-step budget, \reach increases strictly:
+\begin{equation}
+6 \subset 20 \subset 243.
+\end{equation}
+The nested relation is computed, not inferred from the two posed demands. It says that the set of acquisition outcomes reachable under the allowed machinery steps expands at both generations.
+
+\subsection{Why generation one is a prerequisite for generation two}
+A fresh \mzero handed the stage-two trial record has zero consistent attribution rules. This is not treated as a mere failed search. Stage-two row 3 lies componentwise below row 7, and the held attribution language at that earlier state is monotone. Every monotone program true at the lower row is also true at the upper row. The required distinction -- fire at row 3 while not firing at row 7 -- is therefore inexpressible in the held language.
+
+The lineage can make the distinction only after the earlier generational path has changed what operators later attribution programs can use. In this sense generation one is not simply earlier in time: it creates a representational prerequisite for the next machinery modification.
+
+\subsection{Controls and residual assumptions}
+Removing generation two returns byte-exactly to the state before it and loses stage two. Mutating generation two changes attribution and loses the capability. A corrupted rule fails closed. A record naming more than one minimal component is refused, as is a record with no uncovered failure left to explain. Producer capsules contain no future demand, stage capsules contain only their own demand, and the blame labels are generated by the lineage's controlled trials rather than supplied at resolution time.
+
+P1--P18 compute true with replay equality across 21 isolated processes and zero external calls. The result is nevertheless bounded. The component registry, three-feature vocabulary, staged curriculum, evaluator, and conservative adoption policy are authored. Conservative adoption is load-bearing for the positive half. M109 shows two successive machinery generations in a finite designed laboratory; it does not establish open-ended recursive self-improvement.
+
+\section{M110: census-conditional causal transfer and measured harm}
+\label{sec:m110}
+M110 restores the M109 cascade from frozen result bytes and runs it unchanged in a materially different carrier: reference-bearing JSON records over a four-valued chain. The consumer did not participate in producing the rules. Attribution is still executed by the producer runtime, and the checker verifies predecessor result digests and state digests rather than accepting a functionally equivalent rebuild.
+
+This setup asks two questions under one frozen protocol. \emph{H55-a}: does the acquired cascade add capability in a carrier that differs materially from the producer? \emph{H55-b}: does the same machinery become harmful outside the failure rows the producer could present? Both halves are necessary. A transfer result that reported only the positive rows would miss the paper's central finding.
+

@@ -1,0 +1,51 @@
+\subsection{Negative evidence is admissible evidence}
+The project records qualified negative results and checker-instrument failures instead of treating them as disposable debugging. That choice matters directly here. M110 is publishable because its harmful half is not treated as an embarrassment, and M112 is interpretable because a 22/24 inherited checker result remains negative rather than being relaxed after reveal. Earlier in the research line, M103 and M105 were permanently closed when their unique frozen checker invocations failed before completing the decision rule. Those failures are not scientific support for their hypotheses, but they demonstrate that a frozen instrument is allowed to invalidate an otherwise promising run.
+
+\subsection{Claim boundary}
+The paper makes no claim of AGI or general intelligence. It also makes no claim of intelligence explosion, open-ended self-improvement, autonomous objective formation, independent external reproduction, external human evaluation, or training-data independence of the M112 generator. The strongest evidence tier reached by M112 is a \code{blind\_generated\_sealed\_bank}: project context blindness and ordering are auditable, but human independence and third-party custody are not obtained.
+
+The project's generality register requires all ten gates, independent reproduction, and external adversarial audit before a general-agent claim. None of M107--M112 closes a gate. The experiments below are mechanism evidence inside explicitly authored boundaries.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Genesis II milestones and the specific ceiling each leaves standing.}
+\label{tab:milestones}
+\begin{tabularx}{\textwidth}{@{}l l l X@{}}
+\toprule
+Milestone & Decision & Qualified status & Main ceiling after the result \\
+\midrule
+M107 & D076 & positive & candidate operator space and acquisition machinery authored \\
+M108 & D077 & positive & blame labels authored; feature row represented in training episodes \\
+M109 & D078 & positive & registry, feature vocabulary, curriculum, evaluator authored \\
+M110 & D079 & positive in both frozen halves & consumer family project-authored and chosen to reach the stress row \\
+M111 & D080 & positive & probe primitive, budget, registry, and ambiguity-selected population authored \\
+M112 & D081 & mixed & carrier, evaluator, project custody, training-data independence, human independence unresolved \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{The inherited substrate and the failure vocabulary}
+\label{sec:mechanism}
+The experiments deliberately use a small symbolic substrate because the objective is causal resolution rather than benchmark scale. A state contains a component registry, an interface width, an operator or candidate space, and content-addressed rules acquired by earlier stages. Demands are evaluated by a fixed host and a frozen three-feature observation vocabulary:
+\begin{enumerate}
+  \item $g_0$: the demand needs an unread signal;
+  \item $g_1$: candidate search is exhausted for this demand;
+  \item $g_2$: progress remains available on the operator axis.
+\end{enumerate}
+A feature row is one of the eight Boolean triples. An attribution program maps a row to a component to modify. The baseline \mzero is hardwired to the operator table. Generation one may add a rule that selects the signal interface. Generation two may add a rule that selects the candidate space. M111 adds a diagnostic policy that can intercept an attribution when the historical record says the row is underdetermined.
+
+The lower Boolean interpreter initially holds only monotone operators \code{AND} and \code{OR}. Its complete image over two signals contains 4 of the 16 Boolean functions. The key structural tool is a monotonicity lemma: any expression composed solely from monotone operators remains monotone regardless of node budget. This lets the line distinguish an expressivity boundary from an insufficient search budget. Several fresh controls still run at larger node bounds, but the lemma is what licenses the stronger claim when a non-monotone target is outside the held language.
+
+This substrate is intentionally unlike an LLM agent. It is deterministic, finite, and exhaustively inspectable. That limits external validity but enables forms of causal evidence that are difficult to obtain in large learned systems: complete function images, exact state equality, exhaustive attribution-row censuses, and semantic ablations whose consequences can be traced without stochastic confounds.
+
+\section{M107: extending the lower interpreter}
+\label{sec:m107}
+M107 asks whether the lineage can change what its interpreter can express rather than merely select a different expression inside a fixed language. With \code{AND} and \code{OR}, the complete image is 4 of 16 Boolean functions. Two frozen demands are excluded by the monotonicity lemma at every node bound. One demand alone leaves two surviving reach classes and is refused. Joint demands exhaust a twenty-operator candidate space and identify one reach class. The lineage adopts a unary non-monotone operator with truth table $(1,0)$ as content-addressed state.
+
+After adoption, the complete image becomes 16 of 16; both targets construct and execute after producer death. Ablation returns the image exactly to 4, and fresh controls still fail at bounds 9 and 13. The canonical checker computes P1--P16 true and replay equality, with zero model, network, or remote-execution calls.
+
+The scientific point is not that negation is a novel operator. It is that the lower interpreter begins with an explicitly enumerated expressive ceiling and ends with a serialized operator whose registration changes that ceiling. The acquired definition is later recovered as predecessor state rather than rewritten into successor code. M108 and M111 rely on that distinction: later expressibility is causally linked to what the lineage previously acquired.
+
+M107 also fixes the first rung of the terminology used throughout the paper. It is an \emph{interpreter extension}, not yet an acquisition-machinery modification. The machinery that observes a failure and decides which system component to change is still authored and hardwired. Thus M107 establishes a prerequisite for deeper adaptation without by itself demonstrating machinery that improves machinery.
+

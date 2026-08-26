@@ -1,0 +1,43 @@
+\section{Scope, terminology, and evidentiary discipline}
+\label{sec:discipline}
+The most important methodological choice in this paper is to separate a descriptive phrase such as ``self-improvement'' from the measurements that would make a narrower statement true. The experiments therefore use explicit operational definitions and fail-closed qualification rules.
+
+\subsection{Operational terminology}
+\paragraph{Lineage state.} A lineage state is the serialized, content-addressed state carried from one acquisition stage into the next. A claimed acquired capability or rule must be reconstructible from that state under the frozen generic substrate. A function that merely exists in the producer's process memory does not count.
+
+\paragraph{Acquisition machinery.} We use \emph{acquisition machinery} for state or logic that determines how the system responds to an acquisition failure: which component it attributes the failure to, which component it changes, or whether it spends a diagnostic experiment before committing. This is distinct from a task capability such as an arithmetic operation or renderer.
+
+\paragraph{Machinery generation.} A generation is counted only when an acquired state change alters the mechanism used to acquire a later machinery change. In the M107--M112 line, M107 supplies an interpreter extension that later machinery requires; M108 introduces a state-held attribution rule; M109 shows that modified attribution machinery producing a second distinct machinery modification; and M111 acquires a diagnostic policy whose expressibility depends on the language created by the previous generation. The term is therefore causal and lineage-relative, not a claim of unbounded recursion.
+
+\paragraph{Constructive reach.} A target belongs to constructive reach when the frozen system can construct and validate a satisfying mechanism under the declared representation and resource boundary. \reach is a milestone-specific census of targets reachable after the allowed machinery steps. It measures capacity relative to that declared universe; it is not itself a competence score.
+
+\paragraph{Competence.} Competence is measured by whether the system takes the right acquisition action and reaches the declared target on the posed demand. In M110, row-5 competence falls even as \reach increases. This separation is central: an enlarged hypothesis or modification space can make more solutions available without improving the policy that selects which modification to make.
+
+\paragraph{Producer census.} The producer census is the complete set of feature rows the producing lineage can encounter under the frozen producer family. Conservative adoption constrains acquired attribution rules on that set. Rows outside it are extrapolation regions, even if they are representable by the same feature vocabulary.
+
+\paragraph{Carrier.} A carrier is the environment-specific structure in which the generic acquisition mechanism operates. Changing a carrier can change which feature rows are realizable while preserving the feature vocabulary and component registry. M110 changes the carrier from the producer's Boolean truth-table laboratory to reference-bearing JSON records over a four-valued chain. M112 changes world contents without removing the carrier contract itself.
+
+\subsection{Freeze, preserve, check, replay}
+Each canonical milestone separates four roles that are easy to collapse in ordinary experimental software:
+\begin{enumerate}
+  \item \textbf{Freeze:} the scientific question, apparatus, population or materialization procedure, decision predicates, runtime requirements, and relevant digests are fixed before canonical evidence is materialized.
+  \item \textbf{Preserve:} the unique canonical result bytes are committed and tagged before the checker is invoked, so a failed checker cannot be followed by a silent rewrite of the result.
+  \item \textbf{Check:} a separately implemented checker recomputes declared predicates from preserved evidence rather than trusting a runner's verdict field.
+  \item \textbf{Replay:} where the protocol permits it, a stable evidence projection is recomputed in fresh processes and compared byte-for-byte after excluding declared ephemera such as PIDs and temporary paths.
+\end{enumerate}
+This is not third-party independence: the code and checker remain project-authored. It is a procedural barrier against changing the experiment after seeing the result.
+
+M107--M111 use CPython 3.11.16 as the canonical frozen runtime. Their qualification executions record zero model, network, and remote-execution calls. M112 is intentionally different. The M110/M111 tested systems remain model-free, but a separate one-shot model invocation creates the held-out bank. Repeating that invocation would violate M112's no-retry rule and is therefore not a permitted reproduction operation.
+
+\subsection{Causal identification rather than chronological storytelling}
+Chronology alone would be weak evidence. The line therefore uses several recurring interventions:
+\begin{itemize}
+  \item \textbf{Ablation:} remove an acquired generation and require a byte-exact return to the predecessor state, then test that the claimed descendant capability disappears or the prior behavior returns.
+  \item \textbf{Mutation:} change the semantic content of an acquired rule while preserving the surrounding mechanism, testing whether the result depends on the specific learned rule rather than mere registration.
+  \item \textbf{Corruption:} damage content-addressed state and require a fail-closed identity check rather than silent fallback.
+  \item \textbf{Fresh controls:} run predecessor states under the same world, demand, budget, and adapter bytes so a descendant is not compared with an easier experimental condition.
+  \item \textbf{Structural certificates:} when possible, prove a target outside a held language by complete image enumeration or a monotonicity lemma rather than inferring impossibility from a shallow search failure.
+  \item \textbf{Producer death and isolated consumers:} reconstruct from allowed state after the process that created it has terminated, excluding process-local memory as the explanation.
+\end{itemize}
+No single control proves causality in a philosophical sense. Together they target the main implementation-level alternative explanations: hidden host shortcuts, budget insufficiency, producer memory, stale fixture leakage, accidental state drift, and verdict fields that merely restate what the runner wrote.
+

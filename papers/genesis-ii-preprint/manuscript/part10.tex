@@ -1,0 +1,35 @@
+\subsection{Active learning, abstention, and selective prediction}
+Active learning studies how a learner allocates expensive labels or queries \cite{settles2009active}. Selective classification studies when a predictor should abstain rather than commit under uncertainty \cite{geifman2017selective}. M111 shares the resource-allocation intuition but differs in several ways. It has no probabilistic confidence score, no human labeling oracle, and no claim that the query mechanism is learned. Instead, a discrete feature collision proves that the held observation vocabulary cannot determine the limiting component, and the lineage acquires a policy for when to spend one existing probe.
+
+The result is therefore closer to a bounded diagnosis policy than to standard active learning. Its most distinctive feature is generational expressibility: the policy is structurally inexpressible before a previously acquired non-monotone operator enters the lineage state.
+
+\subsection{Program synthesis and finite mechanistic evaluation}
+Finite enumerative program synthesis is well established \cite{gulwani2017synthesis}. Genesis II does not claim synthesis novelty. Exhaustive search and finite Boolean images are used as measurement instruments: they let the project state when a predecessor language truly cannot express a required rule, distinguish reach from budget, and construct counterfactual states exactly.
+
+This is a trade-off. The small DSLs are not representative of the complexity of modern learned agents, but they permit stronger internal causal claims than benchmark deltas alone. The paper's intended contribution is the experimental vocabulary built on top of those standard finite techniques.
+
+\section{Threats to validity}
+\label{sec:threats}
+\subsection{Internal validity}
+The checkers, runners, and experiments are all project-authored, so shared bugs remain possible. Replays and byte-level bindings reduce accidental drift but do not create independent implementation. The permanently negative M103 and M105 checker failures show that instrument risk is real rather than hypothetical. External reimplementation remains necessary for stronger confidence.
+
+The causal interventions also depend on the completeness of the frozen boundary. A hidden host shortcut outside the bound apparatus could weaken an ablation. The experiments respond by running isolated capsules, binding predecessor bytes, comparing arm input projections, and including host-shortcut controls, but no software experiment can prove the absence of every undeclared causal path without assumptions about the execution environment.
+
+\subsection{Construct validity}
+\reach is an authored capacity measure. It is meaningful within the frozen finite search universe and should not be equated with intelligence, usefulness, or expected task performance. Likewise, ``machinery generation'' is an operational term for a causal chain of state-held acquisition changes, not a universal taxonomy of recursive self-improvement.
+
+M111's ``diagnosis'' is also narrow. The policy detects underdetermination in a three-bit feature vocabulary and spends one authored probe. Calling it metacognitive is defensible only in this operational sense. It does not establish introspective access to arbitrary internal states or general uncertainty estimation.
+
+\subsection{External validity}
+The producer and consumer carriers are finite, synthetic, and project-authored. M110 is deliberately a stress test selected to realize row 5. The results may expose a general failure mode -- unsupported meta-rule extrapolation -- without establishing its prevalence in real agent systems.
+
+M112 improves one aspect of external validity by removing direct project choice of world contents, but the carrier grammar, schema, evaluator, and selection criterion remain authored. The generator is small and may have unknown public pretraining exposure. Human-maintained sealed tasks and independent external domains remain absent.
+
+\subsection{Statistical validity}
+Most claims in M107--M111 are structural or unanimous over small frozen populations rather than population estimates. This is intentional: the experiments rely on exact counterfactuals, complete censuses, and deterministic evaluation. They should not be read as estimating broad frequencies of beneficial or harmful transfer.
+
+M112's 20-world bank is especially small because of the preserved materialization defect. The 25\% ambiguous rate versus roughly 6\% in project-generated worlds is descriptive and not used for an inferential population claim. The scientifically relevant observations are the qualifying minima, reproduced outcome patterns, and the specific fixed-point counterexample.
+
+\subsection{Reproducibility validity}
+M107--M111 permit checker replay under the frozen runtime. M112 deliberately does not permit regenerating the bank because the one-shot/no-retry rule is part of the experiment. Its reproducibility therefore concerns public chronology, digests, preserved plaintext after reveal, isolation attestation, and deterministic recomputation over that bank. Readers who require independently regenerated data should treat M112 as weaker evidence and await an external bank.
+

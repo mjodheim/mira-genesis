@@ -1,0 +1,38 @@
+\subsection{Blind generation is a useful intermediate tier}
+M112 illustrates an evidence tier between project-authored fixtures and independent human evaluation. A context-blind generator can remove direct project selection of values and expose distributional assumptions that the project did not notice, while remaining far from independent custody or uncontaminated external evaluation.
+
+That intermediate tier is valuable if described honestly. It can reveal overfitting to authored generators, as P5 demonstrates. It cannot establish human independence, because the project still chooses the contract and the model. It cannot establish training-data independence for a public project unless the model's data provenance makes that possible. And it cannot substitute for independent reproduction because the project still owns the apparatus and the reveal chronology.
+
+\subsection{Implications for evaluation of self-modifying agents}
+The experiments suggest five evaluation practices that scale conceptually beyond this substrate:
+\begin{enumerate}
+  \item \textbf{Name the object that changed.} Separate task skill, interpreter, search procedure, attribution policy, memory policy, and diagnostic policy.
+  \item \textbf{Test causal necessity.} Include predecessor reconstruction, ablation, semantic mutation, and built-but-unregistered controls where the system architecture permits them.
+  \item \textbf{Measure support.} Record the observation or failure regions on which an acquired meta-rule was constrained, then deliberately test realizable regions outside that support.
+  \item \textbf{Separate capacity from selection quality.} A larger hypothesis space or tool set is not itself a performance guarantee.
+  \item \textbf{Preserve failed instruments and mixed results.} Otherwise the evaluation machinery can silently adapt to the very results it is supposed to judge.
+\end{enumerate}
+These are methodological proposals derived from one case study, not claims that the same finite certificates are available in large stochastic agents.
+
+\section{Related work}
+\label{sec:related}
+\subsection{Self-modifying and self-improving agents}
+The G{\"o}del Machine formalized self-referential improvement as a proof-gated rewrite problem \cite{schmidhuber2007godel}. Recent systems instead use empirical evaluators and foundation models to modify agent code or scaffolding. G{\"o}del Agent permits an LLM agent to modify its own logic under a high-level objective \cite{yin2024godelagent}. Self-improving coding agents similarly edit their own implementations and measure benchmark gains \cite{robeyns2025selfimproving}. The Darwin G{\"o}del Machine maintains an archive of self-modified agents and uses open-ended empirical search to improve coding performance \cite{zhang2025dgm}. Hyperagents make both task and meta-level agent programs editable in one self-referential architecture \cite{zhang2026hyperagents}. MetaSkill-Evolve explicitly evolves task skills and meta-skills on two timescales \cite{wang2026metaskill}. Recent surveys describe this space in terms of update targets and feedback signals across model and scaffold components \cite{ren2026survey}.
+
+\genesis differs primarily in objective and scale. It does not seek state-of-the-art benchmark performance and does not use a foundation model inside the tested M107--M111 acquisition machinery. The finite substrate is chosen so that exact state identity, complete function images, reachable-row support, and structural inexpressibility can be measured. The contribution is therefore complementary: a mechanistic case study of what would count as evidence that one acquired meta-level change caused a later one and where that change fails.
+
+\subsection{Meta-learning and learned update procedures}
+Meta-learning asks how experience across tasks can improve the process of learning new tasks. MAML optimizes initial parameters so that a small number of gradient steps adapts effectively to new tasks \cite{finn2017maml}, while learned-optimizer work explicitly represents an update procedure as a learned object \cite{andrychowicz2016learning}. These traditions are conceptually close to Genesis II because the object of interest is not only a task solution but the machinery that produces later adaptation.
+
+The comparison is nevertheless limited. M107--M112 contain no gradient-trained meta-learner and make no sample-efficiency claim. Their acquisition rules are symbolic lineage state in a finite system, allowing exact ablations and complete support censuses. The relevant connection is the evaluation question: if a learned update procedure becomes a reusable inductive bias, its transfer should be tested not only for average gain but also for where its support ends and whether the learned update itself causes negative transfer.
+
+\subsection{Persistent skills and model adaptation}
+Persistent improvement can be stored in forms other than self-edited agent code. Voyager accumulates reusable executable skills in an embodied agent \cite{wang2023voyager}. SEAL generates self-edit directives that drive persistent weight updates \cite{zweiger2025seal}. SkillCommit builds a hierarchy of reusable procedural skills while validating behavioral transfer across experiences \cite{he2026skillcommit}. AlphaEvolve demonstrates evaluator-guided code evolution for scientific and algorithmic discovery \cite{novikov2025alphaevolve}.
+
+These systems motivate similar attribution questions -- what exactly persists, what later behavior requires it, and whether the update transfers -- but the storage mechanisms and evaluation regimes differ substantially. Genesis II focuses on content-addressed symbolic state so that removal and mutation can be exact and predecessor reconstruction can be verified byte-wise.
+
+\subsection{Transfer learning and negative transfer}
+Transfer learning distinguishes beneficial reuse from negative transfer, where source knowledge degrades target performance \cite{rosenstein2005transfer,pan2010transfer,wang2019negative,zhang2020negative}. M110 belongs to that family of problems but transfers an unusual object: a rule for changing the acquisition process itself. The target failure is not merely lower average accuracy. The transferred rule has a known support region in the producer's complete failure census, extrapolates to one newly realizable row, and causes a specific wrong component modification.
+
+The complete census makes the transfer analysis mechanistically sharper than an aggregate source/target comparison, while the authored finite carrier makes it much narrower in external validity. The work should therefore be read as a causal negative-transfer case study, not as a general theory of domain adaptation.
+

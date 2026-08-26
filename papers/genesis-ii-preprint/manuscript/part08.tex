@@ -1,0 +1,44 @@
+\section{Negative results and instrument honesty}
+\label{sec:negative}
+A research line on adaptive systems is especially vulnerable to selective reporting because the apparatus itself changes repeatedly. The project therefore treats instrument failures and negative qualifications as records rather than temporary obstacles.
+
+\subsection{Upstream checker failures: M103 and M105}
+M103 and M105 lie before the M107--M112 paper scope, but they are relevant to the credibility of the freeze discipline. Both had promising development rehearsals. Both canonical results were preserved before checking. In both cases the frozen checker failed on a direct-script import boundary before completing its declared predicate set. M103 left P15 uncomputed; M105 left P1--P16 uncomputed. Under their all-true decision rules, both attempts became permanently negative checker-instrument results. The project did not repair the checker and rerun the same canonical attempt; successor milestones owned any correction.
+
+These are not positive evidence for the scientific mechanisms those milestones intended to test. Their role here is methodological. A rule that permits a checker failure to be patched after seeing a canonical result would make the later ``frozen'' negative outcomes much less convincing.
+
+\subsection{M110 publishes harm instead of optimizing it away}
+M110 is itself a positive milestone only because both halves of its frozen hypothesis are supported: capability gain inside the producer census and capability loss outside it. If the consumer family had been reported only on the in-census rows, the main scientific message would disappear. The paper therefore treats the harmful row as load-bearing evidence rather than an exception.
+
+\subsection{M112 keeps a mixed verdict}
+M112 is not upgraded to positive by arguing that P1 is ``only'' an invocation artifact and P5 does not change the operating-bound outcome. The inherited rule is all predicates true; the transfer arm is 22/24 and remains negative. At the same time, the paper distinguishes checker verdict from scientific outcome pattern so readers can see exactly what did and did not reproduce.
+
+This separation between a formal inherited verdict and a mechanistic interpretation is important. A checker can encode both scientific and procedural predicates. Reporting only the boolean verdict would hide useful information; ignoring the verdict would destroy the precommitment. The correct record preserves both.
+
+\section{Discussion}
+\label{sec:discussion}
+\subsection{Why ``self-improvement'' is too coarse}
+The six milestones expose at least four distinct objects that can be said to improve:
+\begin{enumerate}
+  \item the set of expressions the lower interpreter can represent;
+  \item the rule that attributes an acquisition failure to a system component;
+  \item the language in which later attribution rules can be represented;
+  \item the policy that decides when a diagnostic experiment should be spent.
+\end{enumerate}
+Calling all four ``self-improvement'' collapses the causal question. M107 improves expressivity without yet changing acquisition attribution. M108 changes attribution without determining its own labels. M109 removes that supervision and makes one machinery modification a prerequisite for another. M111 adds a diagnostic layer whose existence depends on the earlier representational change. The sequence is useful precisely because the word \emph{improvement} is decomposed into testable state transitions.
+
+\subsection{Capacity and competence need separate axes}
+The M110 dissociation is not specific to the tiny Boolean substrate. Any adaptive system can acquire a larger action space, broader tool access, a more expressive program language, or a more powerful search procedure while becoming worse at choosing among the new options. Benchmarking only the size of the reachable set or the best-found solution can therefore miss a degradation in decision quality.
+
+For modern agent systems this suggests a concrete evaluation principle: when a system modifies its own learning or search machinery, evaluate at least two axes separately. One should ask what the modified system \emph{could} construct or solve under controlled search, and separately whether its acquired decision policy selects beneficial modifications under held-out failure geometries. A monotone increase in the first does not guarantee the second.
+
+\subsection{The transfer boundary is a property of support, not only domain labels}
+M110's producer and consumer are ``different domains'' in an implementation sense, but the more informative boundary is the producer's reachable feature support. The acquired rule is constrained on rows the producer can present and unconstrained elsewhere. The failure appears when a new carrier makes an unsupported row realizable.
+
+This view avoids treating domain identity as a categorical magic variable. Two carriers can be syntactically different while sharing all relevant failure rows, in which case transfer may be straightforward. Conversely, a small structural change can create a previously impossible row and invalidate an acquired attribution rule. For stateful self-modifying systems, support in the \emph{meta-observation space} may be more informative than task-domain names.
+
+\subsection{M111 is bounded metacognitive machinery, not general metacognition}
+M111 can be read as a small metacognitive result: the lineage uses a record of its own successes and failures to identify where its current observation vocabulary is insufficient to determine a decision. That reading is useful only with the boundary intact. The system does not infer a probabilistic confidence estimate, invent a new sensor, or formulate arbitrary experiments. It detects a discrete ambiguity in a frozen vocabulary and allocates one pre-existing probe.
+
+The significance lies in the causal depth. The diagnostic policy is not available to the earlier machinery because its rule language is monotone. A prior acquired operator makes the later diagnostic distinction expressible. Thus a lineage-acquired representational change becomes a prerequisite for a lineage-acquired decision-about-information change. That is a stronger statement than simply adding an uncertainty heuristic by hand.
+

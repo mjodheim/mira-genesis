@@ -1,0 +1,55 @@
+\section{Reproducibility, artifact map, and provenance}
+\label{sec:repro}
+The public repository contains frozen protocols, canonical results, checker reports, pre-registrations, adversarial reviews, and preserved negative or mixed outcomes. The scientific anchors for this paper are:
+\begin{Verbatim}[fontsize=\small]
+experiment/m107-positive-result
+experiment/m108-positive-result
+experiment/m109-positive-result
+experiment/m110-positive-result
+experiment/m111-positive-result
+experiment/m112-canonical-first-result
+experiment/m112-mixed-result
+\end{Verbatim}
+The recommended paper-scope repository anchor is the merge that introduced M112's preserved result into \code{main}. Publication prose is downstream of those artifacts and may not modify them.
+
+For M107--M111, each milestone has a checker that recomputes its predicates from preserved result bytes and a replay mode that compares a stable projection after re-execution. The stable projection excludes declared ephemera such as process IDs, temporary paths, elapsed times, and interpreter-local execution details. Canonical runs and checker runs are single-use and fail closed on dirty worktrees, wrong freeze commits, edited bound apparatus, or already-consumed attempts.
+
+M112 is reproducible in a different sense. Its one generator invocation may not be repeated under the frozen protocol. Third parties can verify the public history ordering, pinned generator identity, isolation attestation, sealed-bank digest, reveal match, and recompute M110/M111 predicates over the preserved revealed bank. They cannot honestly recreate the same one-shot materialization without violating the protocol. Custody is procedural rather than third-party.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Canonical checker summaries. ``External calls'' refers to model, network, and remote-execution calls in the tested qualification machinery; M112 separately uses one bank-generation model invocation.}
+\label{tab:checker}
+\begin{tabularx}{\textwidth}{@{}l p{0.22\linewidth} p{0.18\linewidth} p{0.17\linewidth} X@{}}
+\toprule
+Milestone & Predicate result & Replay & Isolated processes & External calls in qualification \\
+\midrule
+M107 & 16/16 & equal & fresh consumers & 0 \\
+M108 & 16/16 & equal & 14 & 0 \\
+M109 & 18/18 & equal & 21 & 0 \\
+M110 & 24/24 & equal & 186 & 0 \\
+M111 & 24/24 & equal & 127 & 0 \\
+M112 & proc. 10/10; diag. 24/24; transfer 22/24 & bank recomputation & inherited instruments & 0 in qualification; 1 generator call \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Generative-AI tools were used extensively during software development, adversarial review, and manuscript preparation. The repository records those tools as automation rather than authors. Anthony Mets is responsible for research objectives, protocol and publication decisions, acceptance or rejection of generated work, and the claims in this manuscript. AI-assisted review is not represented as independent peer review.
+
+\section{The next frontier: what Genesis III would have to remove}
+\label{sec:next}
+Genesis II ends at a natural boundary. M112 removes direct project authorship and selection of world contents but leaves the carrier contract, interaction language, component registry, feature vocabulary, evaluator, and probe primitive project-authored. A stronger successor must attack those remaining authorship channels without quietly moving the answer into the generator prompt or the host.
+
+The repository has pre-registered M113 as the beginning of that next line, but M113 has no canonical result and is excluded from every evidentiary statement in this paper. The publication does not predict its outcome. The methodological lesson from M112 is that a successor should be allowed to fail because a generated carrier is too thin, structurally different, or hostile to inherited assumptions; a second generation attempt selected after seeing the first would weaken the very independence being sought.
+
+Beyond any one milestone, three external requirements cannot be satisfied by internal repository work at all: a human-maintained sealed bank, independent reproduction, and external adversarial audit. The project's generality criteria record them as blockers rather than future internal tasks. While they remain absent, no internal sequence can legitimately be promoted to a general-agent or AGI claim.
+
+\section{Conclusion}
+The Genesis II sequence shows why ``self-improvement'' is too coarse a label for evaluating adaptive software. A lineage can acquire a new interpreter operator, then acquire a rule that changes how later acquisition proceeds, then use modified machinery to produce another machinery change. That chain can causally increase constructive reach and transfer to a new carrier. It can also become worse than its predecessor outside the failure geometry that produced the acquired rule.
+
+The harmful transfer is not a contradiction of the capacity increase; it is the result. \reach grows while competence falls. M111 shows one bounded way the lineage can recover: derive from its own historical record where the current feature vocabulary does not determine an answer, preserve a scarce experiment on determined cases, and spend it on the ambiguous one. The diagnostic policy itself is only expressible because an earlier machinery generation changed the lineage's language.
+
+M112 then removes the project's direct choice of world contents. The central harm and the diagnostic recovery reproduce, but a blind world falsifies an inherited fixed-point certificate that had held across 1,160 project-generated worlds. Keeping the transfer checker at 22/24 is as important as the positive results around it. The most defensible conclusion is therefore narrow: \emph{bounded multi-generation acquisition-machinery adaptation can increase capacity, induce census-conditional negative transfer, and acquire a self-directed diagnostic policy that partially repairs that failure}. Stronger claims require evidence this project does not yet have.
+
+\appendix

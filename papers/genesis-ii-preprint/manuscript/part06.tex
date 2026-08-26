@@ -1,0 +1,61 @@
+\subsection{An information bound, not a noisy prediction}
+The canonical population contains two strata. In each of three ambiguous worlds, two demands present the machinery with the identical feature row $(F,T,T)$, row 3, while having different limiting components. One is limited by the candidate space; the other by the signal interface. No deterministic function of the three held features can be correct on both. This is not uncertainty estimated from a score. It is a direct many-to-one collision in the observation vocabulary.
+
+Every static attribution arm therefore fails at least one member of the pair. \mzero and \mone solve neither. \mtwo resolves the candidate-space member but not the signal-interface member. A fixed \code{always\_signal} strategy has the complementary failure. These outcomes are unanimous across the three ambiguous worlds.
+
+The pooled record spans 19 episodes from five worlds. Rows 1, 5, and 7 are determined; row 3 is undetermined. Importantly, the policy is acquired once from this pooled history rather than fitted independently per ambiguous world.
+
+\subsection{Why the budget makes this diagnosis rather than always-on testing}
+Each ambiguous world allows one diagnostic probe shared across a sequence in which a determined demand occurs before the ambiguous one. The fixed strategies then separate cleanly:
+
+\begin{table}[H]
+\centering
+\small
+\caption{M111 diagnosis under an equal one-probe budget, across three ambiguous worlds.}
+\label{tab:diagnosis}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Arm & Ambiguous $A$ & Ambiguous $B$ & Probes spent \\
+\midrule
+\mzero, \mone & 0/3 & 0/3 & 0 \\
+\mtwo & 3/3 & 0/3 & 0 \\
+\code{always\_signal} & 0/3 & 3/3 & 0 \\
+never-probe & 3/3 & 0/3 & 0 \\
+always-probe & 3/3 & 0/3 & 3 \\
+\textbf{acquired diagnostic policy} & \textbf{3/3} & \textbf{3/3} & \textbf{3} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Always-probe has access to the same total budget as the acquired policy but spends it on the first, already determined demand. It therefore has no probe left when row 3 is encountered. The acquired policy does not fire on the determined row, preserves the budget, then fires on the ambiguous row. Both probe orders were exercised and yield the same result, so the answer is not encoded in one privileged ordering.
+
+The claim is deliberately weaker than ``the system learns to experiment.'' The probe primitive, its semantics, and the budget are authored. M111 measures whether lineage-acquired state decides \emph{where} an experiment is worth spending.
+
+\subsection{The previous generation creates the diagnostic language}
+At the earlier \mone state, the policy rule space contains 18 programs. All held operators are monotone, and zero programs can separate row 3 from row 7. The lower row is componentwise below the upper row, so a monotone policy that fires on row 3 must also fire on row 7. The required diagnostic behavior -- fire on row 3, preserve the probe on row 7 -- is therefore inexpressible.
+
+The terminal \mtwo state inherited from M109 contains a non-monotone unary operator acquired by the lineage, truth table $[1,0]$. With that operator, the policy space grows to 127 programs and contains 25 separating programs. Seven policies are consistent with the pooled record; one is adopted as generation three and fires on rows $\{2,3\}$. Row 2 is itself unreachable under the held feature semantics, and that extra firing is preserved rather than trimmed after the result.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\linewidth]{figures/fig3_expressibility.pdf}
+\caption{M111 diagnostic-policy expressibility. At \mone the held monotone language contains 18 policy programs and zero that separate row 3 from row 7. At \mtwo the previously acquired non-monotone operator expands the space to 127 programs, 25 of which make the required separation expressible.}
+\label{fig:expressibility}
+\end{figure}
+
+Ablating generation two before diagnostic-policy acquisition yields zero consistent policies and no operator that can make one expressible; the acquisition is refused. Generation two therefore does not merely precede generation three. It creates a language in which the later diagnostic rule can exist.
+
+\subsection{Why one pooled policy is nontrivial}
+The project searched a larger development census to test whether row-3 ambiguity and row-7 reachability naturally co-occur in one world. Across 1,160 project-generated worlds, the two properties never co-occurred, whereas an independence calculation would suggest roughly 25 coincidences under the measured marginal rates. This observation motivated a two-stratum canonical population and one pooled record rather than a per-world fit.
+
+The development census does not itself count as qualification evidence. Its role is architectural: it identifies a distributional property that makes the canonical test nontrivial and is recorded before freeze. The canonical claim remains carried by the five frozen worlds, their pooled record, the equal budget, the expressibility certificate, and the intervention controls.
+
+\subsection{Controls and ceiling}
+Removing generation three returns byte-exactly to \mtwo and loses the ambiguous demand. Mutating the diagnostic policy loses it as well. Corrupted state fails closed. Every probe leaves serialized lineage state byte-identical, so a probe is information acquisition rather than an undeclared state adoption. All demands already resolved by \mtwo remain resolved after the diagnostic generation.
+
+P1--P24 compute true with replay equality across 127 isolated processes and zero external calls. The limitation is substantial: the registry, probe primitive, budget, evaluator, and feature vocabulary remain authored; the population is selected for ambiguity; and one probe suffices because only two candidate components remain. M111 is bounded self-directed diagnosis, not autonomous invention of experimentation or general metacognition.
+
+\section{M112: the same instruments on worlds the project did not choose}
+\label{sec:m112}
+M112 removes one major confound while keeping the carrier and tested instruments fixed. It does not ask the generator to solve the scientific task. Instead, one pinned model invocation emits records under a frozen structural contract; the project later classifies the resulting worlds with public frozen rules and runs the unchanged M110/M111 apparatus on the qualifying subset.
+
