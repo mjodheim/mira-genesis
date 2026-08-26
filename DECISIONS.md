@@ -3202,3 +3202,106 @@ Not another generation. The three things that would move a generality gate are a
 independently authored held-out tasks, an evaluator the project does not own, and reproduction by a
 third party. The next constructive work is the **architecture that can receive** such an evaluation
 without the lineage being able to reach its contents.
+
+## D081 — M112 materializes procedural independence, and returns a mixed result
+
+### The decision
+
+M112 attempt 1 is a **mixed qualified result** at the pre-registered evidence tier
+`blind_generated_sealed_bank`. Procedural independence is **established, 10/10**. The M111 diagnosis
+apparatus **reproduces at 24/24** on worlds this project did not author. The M110 transfer apparatus
+reproduces every scientific outcome but returns **22/24** and is therefore **negative under the
+inherited rule**. Integrity is entirely true; result `7828274f…`, report `8dd6961f…`.
+
+**No claim boundary was changed.** Established: generator context blindness, procedural independence,
+removal of project world selection and authorship. Not established: human independence, independent
+human reproduction, carrier independence, G4 closure, general-agent evidence. This is **not** external
+human evaluation and may never be described as one.
+
+### The generator, and what was measured rather than asserted
+
+One invocation of `qwen2.5:1.5b` (blob `183715c4…`) under ollama 0.32.15 in
+`ollama/ollama@sha256:57d60e68…`, given exactly one input — the frozen prompt with `N` substituted by
+100, sha256 `191dfb19…` — with decoding constrained to a frozen JSON schema so that structure came
+from the contract and every value from the model. `done_reason` `stop`, 5 488 tokens, 617 seconds,
+100 records.
+
+Isolation was measured **inside the container before the invocation**, by resolving paths and listing
+mounts rather than by matching strings: only a loopback interface, DNS resolution fails, no
+`/mnt/host`, `/mnt/c` or `/host_mnt`, traversal out of the input mount fails, no symlink in it, and no
+path or environment variable naming the project.
+
+### The order is the evidence
+
+```
+42f0ae0  generator and input frozen
+849ee7b  defect recorded, before sealing
+e00ddd5  bank sealed, COMMITMENT PUBLISHED
+50c7a0e  tested system frozen, bank still unread
+007ab86  reveal authorized
+2c4ffa3  result preserved, before any checker
+```
+
+Custody is **procedural, not third-party**: the project holds the reveal key and the attestation says
+so. What the seal buys is that public timestamped ordering, not custody by a party that could
+withhold anything.
+
+### Two defects in the freeze, both recorded before they could help
+
+**The spec assigned a world count to a record count.** The prompt asks for N entries where an entry is
+one document and a world is five, so `N = 100` produced **20 worlds, not 100**. At the project's
+measured base rates that left about 1.2 expected ambiguous worlds against a minimum of three. It was
+**not repaired**: re-freezing and generating again would have been a second qualifying invocation
+after learning something about the first, whatever the stated reason. Recorded at `849ee7b`, before
+the seal.
+
+**The plan named two predicate sets but no threshold over them.** The checker therefore inherits the
+stricter available rule — each arm carries its own milestone's `positive iff every predicate is true`
+— because the stricter reading of an ambiguous freeze is the only one that cannot be accused of
+having been fitted to the outcome.
+
+### What the reveal produced
+
+The revealed plaintext matches the published `sealed_payload_sha256` exactly. The public M111
+criterion was applied to all twenty worlds without filtering: **5 ambiguous, 6 witness, 9 neither**.
+Both minima are met, so the thinness rule did not decide this attempt despite the bank being eighty
+worlds short of its plan.
+
+**The blind generator's distribution is not the project's.** The ambiguous rate over 1 160
+project-generated worlds was about 6 per cent; this bank of twenty yielded 25 per cent. That
+difference is the point rather than a nuisance: these worlds are not drawn the way the project draws
+them.
+
+### Why the transfer arm is negative
+
+Every scientific outcome reproduces, unanimously across six worlds — row 7 `0/6, 6/6, 6/6`, row 3
+`0/6, 0/6, 6/6`, **row 5 `6/6, 0/6, 0/6`**, row 1 all `6/6`, reach chain strict everywhere. The harm
+at row 5 reproduces on worlds the project did not choose.
+
+Two predicates are nevertheless false, and neither was weakened:
+
+- **P1** is an invocation artifact: M110's preflight asserts a `canonical`-tagged population sits at
+  the canonical path, and a revealed bank does not. It says nothing about the science.
+- **P5 is a real measurement**: on one blind world the image is **17 at bound 7 and 18 at 9, 11 and
+  13**. The operating bound is 9 and the image is stable at and above it, so no reach claim is
+  disturbed — but the certificate demands all four bounds agree. In 1 160 project-generated worlds
+  this never occurred. The blind generator produced a world whose closure needs more than seven nodes.
+
+### What this establishes
+
+**That the M111 diagnosis result does not depend on the project having chosen its worlds**, and that
+the M110 transfer result's scientific content does not either, though its predicate set does not come
+out whole.
+
+### What it does not establish
+
+The **carrier** remains this project's: value chain, document shape, reference edge, operators,
+bounds, evaluator, feature vocabulary, component registry and probe primitive. **No generality gate
+advances.** `human_maintained_sealed_bank`, independent reproduction and external adversarial audit
+remain **external blockers** that nothing in this repository can lift.
+
+### Next ceiling
+
+A successor may freeze a corrected spec — `requested_record_count = 5 × requested_world_count` — and a
+verdict threshold, and run its own single invocation. It may not reuse this bank, relabel this
+attempt, or describe either defect as repaired. M103 → M104 is the precedent.
