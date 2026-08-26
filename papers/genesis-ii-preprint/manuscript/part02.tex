@@ -1,3 +1,20 @@
+\section{Scope, terminology, and evidentiary discipline}
+\label{sec:discipline}
+The most important methodological choice in this paper is to separate a descriptive phrase such as ``self-improvement'' from the measurements that would make a narrower statement true. The experiments therefore use explicit operational definitions and fail-closed qualification rules.
+
+\subsection{Operational terminology}
+\paragraph{Lineage state.} A lineage state is the serialized, content-addressed state carried from one acquisition stage into the next. A claimed acquired capability or rule must be reconstructible from that state under the frozen generic substrate. A function that merely exists in the producer's process memory does not count.
+
+\paragraph{Acquisition machinery.} We use \emph{acquisition machinery} for state or logic that determines how the system responds to an acquisition failure: which component it attributes the failure to, which component it changes, or whether it spends a diagnostic experiment before committing. This is distinct from a task capability such as an arithmetic operation or renderer.
+
+\paragraph{Machinery generation.} A generation is counted only when an acquired state change alters the mechanism used to acquire a later machinery change. In the M107--M112 line, M107 supplies an interpreter extension that later machinery requires; M108 introduces a state-held attribution rule; M109 shows that modified attribution machinery producing a second distinct machinery modification; and M111 acquires a diagnostic policy whose expressibility depends on the language created by the previous generation. The term is therefore causal and lineage-relative, not a claim of unbounded recursion.
+
+\paragraph{Constructive reach.} A target belongs to constructive reach when the frozen system can construct and validate a satisfying mechanism under the declared representation and resource boundary. \reach is a milestone-specific census of targets reachable after the allowed machinery steps. It measures capacity relative to that declared universe; it is not itself a competence score.
+
+\paragraph{Competence.} Competence is measured by whether the system takes the right acquisition action and reaches the declared target on the posed demand. In M110, row-5 competence falls even as \reach increases. This separation is central: an enlarged hypothesis or modification space can make more solutions available without improving the policy that selects which modification to make.
+
+\paragraph{Producer census.} The producer census is the complete set of feature rows the producing lineage can encounter under the frozen producer family. Conservative adoption constrains acquired attribution rules on that set. Rows outside it are extrapolation regions, even if they are representable by the same feature vocabulary.
+
 \paragraph{Carrier.} A carrier is the environment-specific structure in which the generic acquisition mechanism operates. Changing a carrier can change which feature rows are realizable while preserving the feature vocabulary and component registry. M110 changes the carrier from the producer's Boolean truth-table laboratory to reference-bearing JSON records over a four-valued chain. M112 changes world contents without removing the carrier contract itself.
 
 \subsection{Freeze, preserve, check, replay}
@@ -24,25 +41,3 @@ Chronology alone would be weak evidence. The line therefore uses several recurri
 \end{itemize}
 No single control proves causality in a philosophical sense. Together they target the main implementation-level alternative explanations: hidden host shortcuts, budget insufficiency, producer memory, stale fixture leakage, accidental state drift, and verdict fields that merely restate what the runner wrote.
 
-\subsection{Negative evidence is admissible evidence}
-The project records qualified negative results and checker-instrument failures instead of treating them as disposable debugging. That choice matters directly here. M110 is publishable because its harmful half is not treated as an embarrassment, and M112 is interpretable because a 22/24 inherited checker result remains negative rather than being relaxed after reveal. Earlier in the research line, M103 and M105 were permanently closed when their unique frozen checker invocations failed before completing the decision rule. Those failures are not scientific support for their hypotheses, but they demonstrate that a frozen instrument is allowed to invalidate an otherwise promising run.
-
-\subsection{Claim boundary}
-The paper makes no claim of AGI or general intelligence. It also makes no claim of intelligence explosion, open-ended self-improvement, autonomous objective formation, independent external reproduction, external human evaluation, or training-data independence of the M112 generator. The strongest evidence tier reached by M112 is a \code{blind\_generated\_sealed\_bank}: project context blindness and ordering are auditable, but human independence and third-party custody are not obtained.
-
-The project's generality register requires all ten gates, independent reproduction, and external adversarial audit before a general-agent claim. None of M107--M112 closes a gate. The experiments below are mechanism evidence inside explicitly authored boundaries.
-
-\begin{table}[H]
-\centering
-\small
-\caption{Genesis II milestones and the specific ceiling each leaves standing.}
-\label{tab:milestones}
-\begin{tabularx}{\textwidth}{@{}l l l X@{}}
-\toprule
-Milestone & Decision & Qualified status & Main ceiling after the result \\
-\midrule
-M107 & D076 & positive & candidate operator space and acquisition machinery authored \\
-M108 & D077 & positive & blame labels authored; feature row represented in training episodes \\
-M109 & D078 & positive & registry, feature vocabulary, curriculum, evaluator authored \\
-M110 & D079 & positive in both frozen halves & consumer family project-authored and chosen to reach the stress row \\
-M111 & D080 & positive & probe primitive, budget, registry, and ambiguity-selected population authored \\
