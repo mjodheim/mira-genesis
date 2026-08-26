@@ -1,0 +1,53 @@
+M112 removes one major confound while keeping the carrier and tested instruments fixed. It does not ask the generator to solve the scientific task. Instead, one pinned model invocation emits records under a frozen structural contract; the project later classifies the resulting worlds with public frozen rules and runs the unchanged M110/M111 apparatus on the qualifying subset.
+
+\subsection{What blindness does and does not mean}
+The generator is \code{qwen2.5:1.5b}, pinned by model blob, Ollama runtime version, and container image digest. Its sole input is a frozen text file plus constrained JSON schema. The model receives no repository mount and no network route. The isolation attestation is measured inside the container before invocation by inspecting interfaces, mount accessibility, traversal, symlinks, paths, and environment variables. The invocation terminates normally with \code{done\_reason=stop}, produces 5,488 tokens and 100 records, and is the only qualifying generation call.
+
+This establishes \emph{context blindness} under the measured execution boundary: the generator cannot read the repository context used to design the experiment. It does not establish that the model's pretraining data never contained public information about \genesis or related concepts. Training-data independence is explicitly not obtained. Nor is human independence obtained: the project authored the schema and prompt, selected the pinned model before generation, and controls the seal and reveal key.
+
+\subsection{The ordering is part of the evidence}
+The public history records the following sequence:
+\begin{table}[H]
+\centering
+\small
+\caption{M112 commitment chronology. The order, rather than repeatable generation, is the reproducible object.}
+\label{tab:m112order}
+\begin{tabular}{@{}llp{0.58\linewidth}@{}}
+\toprule
+Step & Commit & Meaning \\
+\midrule
+1 & \code{42f0ae0} & generator identity and sole input frozen \\
+2 & \code{849ee7b} & materialization defect recorded before sealing \\
+3 & \code{e00ddd5} & bank sealed and public payload commitment published \\
+4 & \code{50c7a0e} & tested system frozen while bank remained unread \\
+5 & \code{007ab86} & reveal authorized \\
+6 & \code{2c4ffa3} & result preserved before any checker invocation \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The project holds the reveal key, so this is procedural custody rather than third-party custody. What the sequence prevents is a narrower failure mode: choosing or editing the tested system after reading the generated bank, silently regenerating an unfavorable bank, or changing the analysis after reveal.
+
+\subsection{A frozen materialization defect that was not repaired}
+The frozen specification assigned the requested world count to the record count even though five records form one world. The single invocation therefore produced 100 records, materializing 20 worlds instead of the intended 100. The defect was discovered and recorded after the invocation but before sealing or reveal. Repairing it would have required a second qualifying generation call after learning something about the first output, violating the frozen no-retry rule. The defect was left in place.
+
+This is a meaningful loss of statistical breadth, not a cosmetic bug. The pre-seal record noted that the smaller bank substantially reduced the expected probability of meeting the planned minimum counts. The revealed bank nevertheless contained five ambiguous worlds and six witness worlds, above the precommitted minima of three each, plus nine worlds in neither stratum. All twenty were subjected to the public classification rule; no post-reveal world selection occurred.
+
+The blind distribution also differs visibly from the project-generated one. The ambiguous rate is 25\% in the 20-world blind bank versus roughly 6\% across 1,160 project-generated worlds. With such a small bank, this is not presented as a population estimate. Its importance is qualitative: the generator produces a distribution that is not simply the project's hand-authored sampling routine replayed through another interface.
+
+\subsection{Blind transfer: scientific outcomes reproduce, checker stays negative}
+The frozen M110 apparatus is applied unmodified to the six qualifying blind transfer worlds. Every scientific outcome in Table~\ref{tab:transfer} reproduces: row 7 is gained by generation one; row 3 is additionally gained by generation two; row 1 remains conserved; and the harmful row-5 transfer remains \mzero 6/6 versus \mone/\mtwo 0/6. \reach remains strict on every world.
+
+The inherited M110 checker nevertheless returns 22/24. Two predicates are false and neither is relaxed:
+\begin{enumerate}
+  \item \textbf{P1 is an invocation artifact.} M110's original preflight requires a population tagged \code{canonical} at the canonical M110 path. The revealed M112 bank is intentionally evaluated from a distinct scratch/reveal path. This failure is reported because the inherited checker is not edited to accommodate the successor experiment.
+  \item \textbf{P5 is a real measurement.} On one blind world, the constructive image has size 17 at node bound 7 and 18 at bounds 9, 11, and 13. M110's fixed-point certificate required equality at all four bounds. The operating bound is 9 and the image is stable from 9 onward, so the posed reach outcomes do not change, but the certificate is false.
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.70\linewidth]{figures/fig4_blind_closure.pdf}
+\caption{The blind world that falsifies M112 transfer predicate P5. The constructive image grows from 17 at bound 7 to 18 at bound 9 and is stable thereafter. Across 1,160 project-generated worlds, bound 7 had always sufficed. The discrepancy is preserved rather than repaired.}
+\label{fig:closure}
+\end{figure}
+
