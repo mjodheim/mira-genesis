@@ -43,7 +43,7 @@ A system that improves the machinery it uses to acquire capabilities raises two 
 
 Paper scope: **M107 through M112**.
 
-Recommended scientific anchor: the `main` merge that introduced M112's preserved result (PR #211; short SHA `8176c53`). The eventual publication-package merge SHA must be filled in after this package is pushed/merged.
+Scientific evidence anchor: the `main` merge that introduced M112's preserved result (PR #211; short SHA `8176c53`). Genesis II publication package v1 was squash-merged by PR #215. The publication merge is downstream of the frozen evidence and does not alter it; the DOI-bearing Zenodo record is the persistent publication reference.
 
 Required tags:
 
