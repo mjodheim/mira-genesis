@@ -1,12 +1,3 @@
-M110's producer and consumer are ``different domains'' in an implementation sense, but the more informative boundary is the producer's reachable feature support. The acquired rule is constrained on rows the producer can present and unconstrained elsewhere. The failure appears when a new carrier makes an unsupported row realizable.
-
-This view avoids treating domain identity as a categorical magic variable. Two carriers can be syntactically different while sharing all relevant failure rows, in which case transfer may be straightforward. Conversely, a small structural change can create a previously impossible row and invalidate an acquired attribution rule. For stateful self-modifying systems, support in the \emph{meta-observation space} may be more informative than task-domain names.
-
-\subsection{M111 is bounded metacognitive machinery, not general metacognition}
-M111 can be read as a small metacognitive result: the lineage uses a record of its own successes and failures to identify where its current observation vocabulary is insufficient to determine a decision. That reading is useful only with the boundary intact. The system does not infer a probabilistic confidence estimate, invent a new sensor, or formulate arbitrary experiments. It detects a discrete ambiguity in a frozen vocabulary and allocates one pre-existing probe.
-
-The significance lies in the causal depth. The diagnostic policy is not available to the earlier machinery because its rule language is monotone. A prior acquired operator makes the later diagnostic distinction expressible. Thus a lineage-acquired representational change becomes a prerequisite for a lineage-acquired decision-about-information change. That is a stronger statement than simply adding an uncertainty heuristic by hand.
-
 \subsection{Blind generation is a useful intermediate tier}
 M112 illustrates an evidence tier between project-authored fixtures and independent human evaluation. A context-blind generator can remove direct project selection of values and expose distributional assumptions that the project did not notice, while remaining far from independent custody or uncontaminated external evaluation.
 
@@ -31,3 +22,17 @@ The G{\"o}del Machine formalized self-referential improvement as a proof-gated r
 \genesis differs primarily in objective and scale. It does not seek state-of-the-art benchmark performance and does not use a foundation model inside the tested M107--M111 acquisition machinery. The finite substrate is chosen so that exact state identity, complete function images, reachable-row support, and structural inexpressibility can be measured. The contribution is therefore complementary: a mechanistic case study of what would count as evidence that one acquired meta-level change caused a later one and where that change fails.
 
 \subsection{Meta-learning and learned update procedures}
+Meta-learning asks how experience across tasks can improve the process of learning new tasks. MAML optimizes initial parameters so that a small number of gradient steps adapts effectively to new tasks \cite{finn2017maml}, while learned-optimizer work explicitly represents an update procedure as a learned object \cite{andrychowicz2016learning}. These traditions are conceptually close to Genesis II because the object of interest is not only a task solution but the machinery that produces later adaptation.
+
+The comparison is nevertheless limited. M107--M112 contain no gradient-trained meta-learner and make no sample-efficiency claim. Their acquisition rules are symbolic lineage state in a finite system, allowing exact ablations and complete support censuses. The relevant connection is the evaluation question: if a learned update procedure becomes a reusable inductive bias, its transfer should be tested not only for average gain but also for where its support ends and whether the learned update itself causes negative transfer.
+
+\subsection{Persistent skills and model adaptation}
+Persistent improvement can be stored in forms other than self-edited agent code. Voyager accumulates reusable executable skills in an embodied agent \cite{wang2023voyager}. SEAL generates self-edit directives that drive persistent weight updates \cite{zweiger2025seal}. SkillCommit builds a hierarchy of reusable procedural skills while validating behavioral transfer across experiences \cite{he2026skillcommit}. AlphaEvolve demonstrates evaluator-guided code evolution for scientific and algorithmic discovery \cite{novikov2025alphaevolve}.
+
+These systems motivate similar attribution questions -- what exactly persists, what later behavior requires it, and whether the update transfers -- but the storage mechanisms and evaluation regimes differ substantially. Genesis II focuses on content-addressed symbolic state so that removal and mutation can be exact and predecessor reconstruction can be verified byte-wise.
+
+\subsection{Transfer learning and negative transfer}
+Transfer learning distinguishes beneficial reuse from negative transfer, where source knowledge degrades target performance \cite{rosenstein2005transfer,pan2010transfer,wang2019negative,zhang2020negative}. M110 belongs to that family of problems but transfers an unusual object: a rule for changing the acquisition process itself. The target failure is not merely lower average accuracy. The transferred rule has a known support region in the producer's complete failure census, extrapolates to one newly realizable row, and causes a specific wrong component modification.
+
+The complete census makes the transfer analysis mechanistically sharper than an aggregate source/target comparison, while the authored finite carrier makes it much narrower in external validity. The work should therefore be read as a causal negative-transfer case study, not as a general theory of domain adaptation.
+
