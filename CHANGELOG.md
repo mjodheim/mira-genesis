@@ -2,6 +2,39 @@
 
 ## Unreleased
 
+- **M113's analysis plan is frozen, and the model-network boundary it needs is now measured rather
+  than asserted.** The plan is frozen as the candidate unchanged, at commitment `66003159...`,
+  before any carrier exists -- the first of the six owner gates, and the only one that can be
+  consumed without a generator. A twelfth pre-freeze defect was then found while auditing the one
+  boundary this milestone introduces and its predecessors did not have. M113 is the first milestone
+  in this lineage whose *bank* is produced by a model over a network, and it had **regressed from
+  M112 on exactly that boundary**, in two places. `P15` read three unqualified counters --
+  `model_calls`, `network_calls`, `remote_execution_calls` -- that `run_m113_qualification.py`
+  wrote into its own result as literal zeros, so the predicate agreed with the program it was
+  judging and **could not fail**: the M086-A shape the readiness checker's own docstring cites, in
+  the one predicate whose whole job is to say the tested system never reached for the model that
+  wrote its world. And `m113_carrier_bank.py` declared `GENERATION_LEDGER_PATH` and **never read
+  it**, so nothing counted the physical invocations that produce the bank and several requests could
+  have been presented afterwards as one logical invocation. Both halves are repaired and neither is
+  a number the runner chooses. The qualification phase runs inside a sealed scope that replaces the
+  two entry points every outbound connection in CPython passes through, counts each attempt and
+  refuses it; because an unarmed guard and a silent run record the same zero, the scope ends by
+  making the guard fire once against a reserved TEST-NET-1 address that routes nowhere, and `P15`
+  credits the silence only when that self-test proves the instrument was live. Reaching a model and
+  dispatching execution elsewhere both need a socket, so one measurement entails all three counts.
+  The generator phase is counted by the ledger, which the phase machine now requires, validates
+  against the shared contract and binds to the frozen spec; a canonical result must record exactly
+  one invocation, and a development run reports that half as *not applicable* rather than quietly
+  satisfying it. The repair changed the instrument's honesty and not its measurements: re-running
+  development at the same sample and seed reproduces every arm total, the whole generational
+  decomposition and the same **21 of 22 with `P22` false**, and only `result_digest` moved.
+  **The qualifying invocation itself is not in this change and could not be.** No Hermes client and
+  no OpenRouter credential exist in this environment, and `openrouter.ai` is refused by egress
+  policy with a 403 on the CONNECT tunnel -- each independently fatal to a single blind invocation.
+  The authorization permits a transport fallback but no substitution of model or provider, and the
+  session holding it knows H58 and M107-M113 and may therefore never author the carriers itself.
+  Recorded as an instrument blocker beside the Docker one, not worked around.
+
 - **M113 is pre-registered and built; it has not run and its bank does not exist.** M112 removed
   world authorship and left the carrier. M113 puts the carrier's interaction language in a blind
   generator's hands: the emitter chooses the state cells and their domains, which of them are

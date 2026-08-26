@@ -1535,3 +1535,48 @@ source bytes should use it and should not reach for an attributes entry.
 
 None of this was visible in `git status`, in M113's own suite, or in its boundary audit. All three
 were found by running the whole suite.
+
+## M113's generator phase cannot be run from the session that holds its authorization
+
+Recorded 26 August 2026, after the M113 apparatus merged and the analysis plan was frozen.
+
+The owner's consolidated authorization covers the whole M113 chronology, and names the generator
+path explicitly: a local Hermes client, stateless and blind, over OpenRouter, to one exact
+DeepSeek model on one exact pinned provider with fallbacks and retries disabled. It permits a
+**transport** fallback -- a minimal local HTTP client in place of Hermes -- and it permits no
+substitution of model or provider whatsoever: if the frozen provider cannot serve the frozen
+request, that is an instrument failure and the experiment stops.
+
+Three conditions were checked in the execution environment before any freeze, and each is
+independently fatal to a single blind qualifying invocation:
+
+- **no Hermes client is present.** The owner's Hermes is configured on their own machine. This is a
+  freshly provisioned remote container holding a clean clone and no user configuration;
+- **no OpenRouter credential is present.** There is no such variable in the environment and no
+  configuration file carrying one anywhere readable;
+- **`openrouter.ai` is refused by egress policy.** The request fails at the proxy with a 403 on the
+  CONNECT tunnel, before TLS. The proxy's own documentation states that this class is an
+  organization policy denial, to be reported rather than retried or routed around.
+
+The authorized transport fallback does not lift this. It replaces Hermes with a direct HTTP client
+against the same endpoint, and the endpoint is what is unreachable.
+
+**Why nothing was substituted.** The session holding the authorization knows Genesis, H58 and
+M107-M113, so it is disqualified as the generator by the authorization's own terms and may never
+produce the carriers itself. Reaching for a different model, a different provider, an auto-router or
+a locally hosted emitter would each answer a different question than the one M113 asks, and the
+blind bank is the entire instrument. A bank this project generated would not be a blind bank; it
+would be M112's carrier authorship returned under a new name.
+
+**What this is not.** It is not a negative result for H58, which remains untested. It is not the
+`human_maintained_sealed_bank` external blocker, which is a different and larger thing that nothing
+in this repository can lift. It is an environment blocker of the same kind as the Docker daemon
+already recorded for M113's isolated invocation: the experiment is designed, frozen where it can be
+frozen, and waiting on an instrument.
+
+**What was done instead.** The first owner gate, freezing the analysis plan, does not depend on the
+generator and was consumed: the plan is frozen as the candidate unchanged, at commitment
+`66003159...`, before any carrier exists. Auditing the model-network boundary that the generator
+phase would cross then found the twelfth pre-freeze defect -- `P15` reading counters the runner
+wrote as literals, and a generation ledger declared and never read -- both repaired, each pinned by
+a regression test. The remaining five gates need the instrument.
