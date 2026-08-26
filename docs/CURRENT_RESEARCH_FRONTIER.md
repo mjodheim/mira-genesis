@@ -46,7 +46,7 @@ valid result.
 | M109 | **Positive qualified; H54 supported in bounds** | The lineage determines its own blame labels by controlled trial; a third component, the candidate space, is closed by the monotonicity lemma; two successive generations attribute to different components and ReachImprove is 6 ⊂ 20 ⊂ 243, strict; a lineage handed the second record is refused with zero consistent rules, by lemma | First machinery that produces the next machinery. Depth three and acceleration unmeasured; registry, feature vocabulary and curriculum remain authored; conservative adoption is load-bearing for the positive half |
 | M110 | **Positive qualified in both halves; H55 supported in bounds** | The M109 cascade, restored from the producer's frozen bytes and executed by `m109_runtime.attribute` unchanged, transfers into reference-bearing JSON records over a four-valued chain: inside the producer's reachable census `M0` 0/6 and `M1`/`M2` 6/6 at row 7, `M2` alone 6/6 at row 3; **outside it, at row 5, `M0` is 6/6 while `M1` and `M2` are 0/6**. `ReachImprove` strict on every world | Capacity rises while realized competence does not. The consumer family is project-authored and was chosen to reach row 5, so G4 does not advance; registry and feature vocabulary stay shared authored vocabulary |
 | M111 | **Positive qualified; H56 supported in bounds** | Two demands present the identical feature row and have different limiting components, so no function of the vocabulary is right on both. Every static arm fails one; the acquired diagnostic policy resolves both on a budget always-probe wastes. Policy rule space 18 with **0** separating programs at `M1`, **127** with **25** at `M2`; ablating generation 2 refuses the acquisition | The registry, the probe primitive and the budget remain authored. The population is selected for ambiguity by design. G1-G10 do not advance |
-| M112 | **Architecture only; no bank exists; phase `spec_frozen`** | The receiving end for a consumer-world bank the project did not author: a frozen analysis plan that can both pass and fail, a blind generator prompt that names nothing about the experiment, a tested-system freeze and a fail-closed phase machine, decisive in CI | The bank itself. Three blockers remain and every one of them is an artifact this project cannot make on its own without defeating the point |
+| M112 | **Mixed qualified; procedural independence established** | One blind invocation of `qwen2.5:1.5b` with no repository mount and no network produced 20 worlds; the commitment was published before the tested-system freeze and before reveal. Diagnosis reproduced **24/24**, transfer reproduced every outcome but returned **22/24** | The carrier. `P5` records a real difference: one blind world closes at 9 nodes rather than 7, which no project world did in 1 160 tries. No gate advances |
 
 ## M094 — the original qualified repair anchor
 
@@ -414,45 +414,54 @@ lineage does not invent experimentation; it decides where to spend one. **G1-G10
 
 Authoritative material: `experiments/M111/`, `scripts/check_m111_result.py`, D080 and PR #209.
 
-## M112 — the ceiling that is not a piece of code
+## M112 — what a blind generator changed, and what it could not
 
-M110 and M111 both qualified positively and both carry the same sentence: **the project authored the
-worlds**. `MIRA_GENERALITY_CRITERIA.md` names it for G4 in as many words. It is worth being exact
-about why no further milestone here removes it: the removal is not an ablation, a wider population or
-a better control. It is an artifact somebody outside the project has to make.
+The architecture M112 built has now been used. One invocation of `qwen2.5:1.5b` under ollama 0.32.15,
+in a container with **no repository mount and no network**, given exactly one input: the frozen prompt
+with `N` substituted by 100. Isolation was measured inside the container before the invocation, by
+resolving paths and listing mounts rather than by matching strings.
 
-M112 is therefore **not an experiment**. It is the receiving end of one, bound to the
-milestone-agnostic `mira-blind-bank-v1` contract:
+The ordering is the evidence, and it is public and timestamped:
 
-- an **analysis plan frozen before generation**, which the validator refuses unless the declared
-  minima are both reachable and refusable at base rates measured over 1 160 worlds — a minimum below
-  two is rejected as deciding nothing, retries are forbidden, and a bank that yields too few worlds
-  is a **negative result**;
-- a **blind generator prompt** asking for JSON records, not for an experiment: five documents, three
-  integers in `0..3`, a linked object. A test asserts that the words *feature*, *row*, *component*,
-  *lineage*, *machinery*, *ambiguous*, *transfer*, *diagnosis* and *monotone* do not appear in it;
-- **stratification afterwards**, by the structural criterion M111 already froze and published, so the
-  generator emits and the project classifies without either knowing what the other did;
-- a **tested-system freeze** over the M107–M111 runtimes and harnesses, with the invariant
-  `tested_system_unmodified_after_reveal`;
-- a **fail-closed phase machine**, decisive in CI, that never opens a payload and has no code path
-  that could.
+```text
+42f0ae0  generator and input frozen
+849ee7b  defect recorded, before sealing
+e00ddd5  bank sealed, COMMITMENT PUBLISHED
+50c7a0e  tested system frozen, bank still unread
+007ab86  reveal authorized
+2c4ffa3  result preserved, before any checker
+```
 
-**No bank exists, and none is simulated.** The readiness assessor reports phase `spec_frozen` and
-three blockers — the sealed commitment, the system protocol and the signed reveal — all of which
-require the external step. If nothing further happens, that is this milestone's honest terminal
-state.
+The revealed plaintext matched the published digest exactly. The public M111 criterion, applied to all
+twenty worlds with no filtering, gave **5 ambiguous and 6 witness** — both plan minima met.
 
-What a positive run under this contract would establish is bounded and stated in the frozen claim
-boundary: it removes **world authorship** and not **carrier authorship**. The value chain, the
-document shape, the reference edge, the operators, the bounds, the evaluator, the feature vocabulary
-and the component registry all remain this project's. The evidence tier is
-`blind_generated_sealed_bank`; context blindness is provable, training-data independence is not, and
-human independence is not obtained at all. **G4 does not close on it**, and no tier below
-`human_maintained_sealed_bank` ever will.
+**The blind generator's distribution is not the project's.** Over 1 160 project-generated worlds the
+ambiguous rate was about 6 per cent; this bank of twenty gave 25 per cent. That is the point rather
+than a nuisance.
 
-Authoritative material: `experiments/M112/`, `metamorphosis/m112_world_bank.py`,
-`scripts/check_m112_world_bank_readiness.py`.
+**Diagnosis reproduced at 24/24.** **Transfer reproduced every scientific outcome** — including the
+harm at row 5, where a fresh control succeeds 6/6 and both descendants refuse 6/6 — but returned
+**22/24**. `P1` is an invocation artifact. **`P5` is a real measurement**: one blind world's image is
+17 at bound 7 and 18 at 9, 11 and 13. The operating bound is 9 and the image is stable at and above
+it, so no reach claim is disturbed, but the certificate demands all four bounds agree and here they
+do not. In 1 160 project-generated worlds that never happened.
+
+Two defects in the freeze are recorded with the reason neither was repaired: the spec assigned a
+world count to a record count, leaving the bank eighty worlds short of its plan, and the plan named
+two predicate sets without a threshold over them, so the checker inherits the stricter reading rather
+than inventing one.
+
+**What changed:** the M111 result no longer depends on the project having chosen its worlds.
+**What did not:** the carrier — value chain, document shape, reference edge, operators, bounds,
+evaluator, feature vocabulary, component registry and probe primitive are all still this project's.
+The evidence tier is `blind_generated_sealed_bank` and the claim boundary was not touched. Custody is
+**procedural, not third-party**: the project holds the reveal key and the attestation says so.
+
+**No generality gate advances.** `human_maintained_sealed_bank`, independent reproduction and external
+adversarial audit are **external blockers**, not pending work, and nothing in this repository can lift
+them.
+
+Authoritative material: `experiments/M112/`, `scripts/check_m112_result.py`, D081.
 
 ## What the project does not currently claim
 
