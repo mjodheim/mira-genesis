@@ -35,6 +35,36 @@
   session holding it knows H58 and M107-M113 and may therefore never author the carriers itself.
   Recorded as an instrument blocker beside the Docker one, not worked around.
 
+- **The M113 generator identity now has a contract, written before any identity could be pinned.**
+  M112 could freeze a container image digest, a model blob digest and a runtime version, and could
+  say afterwards exactly what emitted its bank. A hosted model offers none of those; it offers an
+  identifier, a provider, and routing switches that decide whether the frozen request is the served
+  one. `validate_generator_spec` pins those and refuses every shape in which the served identity
+  could differ from the frozen one -- a model **alias** or auto-router, a **provider left open**, a
+  model or provider **fallback**, and **retries** at each of eight named layers. Two honesty
+  conditions have no M112 analogue: a seed is recorded as requested and never as a guarantee, and a
+  hosted generator may not claim determinism; and no credential may appear anywhere in the spec,
+  including the canonical request body it publishes. `GENERATOR_SPEC_CANDIDATE.json` holds
+  everything pinnable without the instrument and lists the six fields discovery must fill; it
+  **cannot validate as frozen**, which is the point of it. `scripts/run_m113_generation.py` is the
+  client and **has never been executed**: discovery, a non-qualifying smoke probe whose input is
+  checked against the qualifying digest, and one qualifying invocation that refuses a spec which has
+  already materialized a bank, sends the committed body byte for byte, and fails closed when the
+  served model or provider is not the frozen one. Its transport is `http.client` from the standard
+  library, driven directly -- no vendor SDK and no third-party HTTP client, because each carries
+  retry behaviour that would have to be disabled correctly and the way to disable it correctly is
+  not to have it.
+  **Defect thirteen was found by the contamination checker, not by a reader.** The frozen
+  `OUTPUT_SCHEMA.json` carried a `title` of `mira-blind-carrier-v1 emission`. The schema travels to
+  the generator inside the request as the structured-output contract, so its own strings are part of
+  the generator's sole input: a blind emitter would have been told the name and version of the
+  contract it was emitting for, by the one artifact whose job is to constrain the shape of the
+  answer and say nothing about its purpose. Nothing frozen bound the schema yet, so it was repaired,
+  and every file the generator sees is now required to be contamination-free. The credential guard
+  needed narrowing for the same reason in reverse: its first form matched any key ending in `_key`
+  or `_token` and refused the carrier meta-schema itself, whose wire surface has an `action_key`, an
+  `argument_key`, a `status_key`, an `ok_token` and an `error_token`.
+
 - **M113 is pre-registered and built; it has not run and its bank does not exist.** M112 removed
   world authorship and left the carrier. M113 puts the carrier's interaction language in a blind
   generator's hands: the emitter chooses the state cells and their domains, which of them are

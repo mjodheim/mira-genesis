@@ -1082,7 +1082,7 @@ current_real_software_frontier:
     development_run_sample: 80
     development_run_seed: m113-development-run
     development_run_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
-    development_run_result_digest: ecacda5eece8556d09fc424d79db1ca7feb0a1c7276e99f7e4afce1e1bad15f2
+    development_run_result_digest: 9c41183caa96af0cca7a2a40c805ab91c42b5dd8f1c936b0fda60d298cf6ee5a
     # Re-recorded when the model-network boundary became measured. The population, every arm
     # total and the 21/22 verdict are byte-identical to the run this supersedes; the digest
     # moved because the result now carries what the sealed scope observed.
@@ -1143,6 +1143,28 @@ current_real_software_frontier:
     removes_substrate_authorship: false
     g1_to_g10_advance: false
     analysis_plan_frozen: true
+    # Written before any identity could be pinned, so the freeze consumes a rule rather than
+    # writing one. A hosted model has no blob digest, so what is pinned is the identifier, the
+    # provider and the routing switches that decide whether the frozen request is the served one.
+    generator_spec_contract_defined_before_the_identity: true
+    generator_spec_refuses_model_aliases_and_auto_routers: true
+    generator_spec_refuses_an_open_provider: true
+    generator_spec_refuses_model_and_provider_fallbacks: true
+    generator_spec_names_and_disables_eight_retry_layers: true
+    generator_spec_refuses_a_determinism_claim_for_a_hosted_model: true
+    generator_spec_refuses_credential_material_anywhere_in_the_document: true
+    generator_spec_candidate_cannot_validate_as_frozen: true
+    generator_spec_fields_pending_discovery: 6
+    generation_client_written_never_executed: true
+    generation_client_transport: stdlib_http_client_no_third_party_retry_behaviour
+    generation_client_smoke_input_checked_against_the_qualifying_digest: true
+    generation_client_fails_closed_on_a_served_identity_that_is_not_the_frozen_one: true
+    # Defect thirteen, found by the contamination checker rather than by a reader. The schema
+    # travels to the generator inside the request, so its own strings are part of the generator's
+    # sole input, and its title named the contract the emitter was emitting for.
+    output_schema_title_carried_project_context_and_was_repaired: true
+    every_file_the_generator_sees_is_contamination_free: true
+    qualifying_input_derived_at_n_24: true
     analysis_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
     analysis_plan_frozen_before_any_carrier_existed: true
     analysis_plan_is_the_candidate_unchanged: true

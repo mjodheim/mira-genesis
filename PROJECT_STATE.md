@@ -374,6 +374,15 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   M107-M113 and may therefore never author the carriers itself. The Docker daemon is still not
   running as of 26 August 2026, so the attested isolated invocation cannot be planned from here
   either.
+  What could be built without the instrument was: the generator identity now has a **contract**,
+  written before any identity could be pinned, refusing model aliases and auto-routers, an open
+  provider, model and provider fallbacks, retries at eight named layers, a determinism claim for a
+  hosted model, and credential material anywhere in the published document. The candidate spec lists
+  the six fields discovery must fill and cannot validate as frozen. The client exists and **has
+  never been executed**. And the contamination checker found defect thirteen: the frozen output
+  schema's `title` was `mira-blind-carrier-v1 emission`, and the schema travels to the generator
+  inside the request, so a blind emitter would have been told the name of the contract it was
+  emitting for. Repaired, with every generator-visible file now required to be contamination-free.
 
 - **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
   reproduces on worlds this project did not author, and the transfer does not come out whole.** A

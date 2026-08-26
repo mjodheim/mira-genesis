@@ -93,6 +93,12 @@ EXPERIMENT_DIRECTORY = Path("experiments/M113")
 GENERATOR_SPEC_PATH = EXPERIMENT_DIRECTORY / "GENERATOR_SPEC.json"
 GENERATOR_PROMPT_PATH = EXPERIMENT_DIRECTORY / "GENERATOR_PROMPT.txt"
 OUTPUT_SCHEMA_PATH = EXPERIMENT_DIRECTORY / "OUTPUT_SCHEMA.json"
+# The prompt with `N` substituted, and nothing else. It is the generator's sole input, so it
+# is bound by its own digest rather than reconstructed at invocation time from a template and
+# a number that could differ from the frozen one.
+QUALIFYING_INPUT_PATH = EXPERIMENT_DIRECTORY / "QUALIFYING_INPUT.txt"
+GENERATOR_SPEC_CANDIDATE_PATH = EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json"
+SEALED_BANK_PATH = EXPERIMENT_DIRECTORY / "SEALED_BANK.json.gpg"
 ANALYSIS_PLAN_PATH = EXPERIMENT_DIRECTORY / "ANALYSIS_PLAN.json"
 DEVKIT_SURVEY_PATH = EXPERIMENT_DIRECTORY / "DEVKIT_SURVEY.json"
 BANK_COMMITMENT_PATH = EXPERIMENT_DIRECTORY / "PUBLIC_BANK_COMMITMENT.json"
@@ -420,6 +426,380 @@ def validate_system_protocol(protocol: Mapping[str, Any], *, root: Path) -> None
 
 
 # ----------------------------------------------------------------------------------------
+# The generator spec, frozen before the single invocation exists.
+# ----------------------------------------------------------------------------------------
+
+GENERATOR_SPEC_SCHEMA = "m113-carrier-bank-generator-spec-v1"
+
+# A model name that names a moving target rather than a fixed one. M112's generator was a blob
+# digest in a pinned image, so its identity could not drift underneath the experiment. A hosted
+# model has no blob to digest, and the only thing standing in for one is an identifier that the
+# provider promises not to repoint. An alias is exactly the identifier that carries no such
+# promise, so a spec naming one is refused before it can be frozen rather than after the bank
+# turns out to have come from something else.
+FORBIDDEN_MODEL_MARKERS = (
+    ":auto",
+    ":free",
+    ":latest",
+    "auto-router",
+    "auto_router",
+    "/auto",
+    "openrouter/auto",
+)
+
+TRANSPORTS = ("hermes", "http_direct")
+
+# Every layer that can turn one logical call into several physical ones. The spec must name each
+# and disable it. The list is written out rather than summarised because "retries are off" is the
+# kind of claim that is true of the layer the author was thinking about and false of one they were
+# not, and M112's contract exists because a hidden second attempt is indistinguishable afterwards
+# from a first one that went well.
+RETRY_LAYERS = (
+    "client_library",
+    "http_transport",
+    "invalid_output",
+    "provider_side_application_retry",
+    "rate_limit_429",
+    "server_error_5xx",
+    "timeout",
+    "truncated_output",
+)
+
+
+def generator_spec_commitment(spec: Mapping[str, Any]) -> str:
+    return sha256_hex(
+        canonical_bytes({k: v for k, v in spec.items() if k != "spec_commitment_sha256"})
+    )
+
+
+def _digest_of_file(root: Path, relative: str) -> str:
+    return sha256_hex(Path(root).joinpath(relative).read_bytes())
+
+
+def validate_generator_spec(
+    spec: Mapping[str, Any],
+    *,
+    root: Path | None = None,
+    plan_commitment_sha256: str | None = None,
+) -> None:
+    """Everything about the generator that must be fixed before it is allowed to produce a carrier.
+
+    M112 froze a container image digest, a model blob digest and a runtime version, and could
+    therefore say afterwards exactly what had emitted its bank. A hosted model offers none of
+    those. What it offers instead is an identifier, a provider, and a set of routing switches that
+    decide whether the request you froze is the request that gets served -- so those are what this
+    contract pins, and it refuses every shape in which the served identity could differ from the
+    frozen one:
+
+    * an **alias** for a model, which is an identifier whose whole purpose is to be repointed;
+    * a **provider left open**, so the host chooses the backend and the bank's origin is whichever
+      machine happened to be free;
+    * **fallbacks**, of model or of provider, which are a silent substitution by design;
+    * **retries** at any of the layers that can each turn one logical call into several physical
+      ones, because several physical requests presented afterwards as one invocation is the exact
+      thing the no-retry rule exists to prevent.
+
+    Two honesty conditions have no analogue in M112 and are enforced here because a remote
+    generator invites both errors. A seed is recorded as *requested* and never as a guarantee: a
+    provider that does not promise determinism does not acquire it by being asked. And no secret
+    may appear anywhere in the spec, including inside the canonical request body it records, which
+    is checked rather than trusted -- the body is what gets digested and published, and a key that
+    reached it would be published with it.
+    """
+    if not isinstance(spec, Mapping) or spec.get("schema") != GENERATOR_SPEC_SCHEMA:
+        raise CarrierBankError("generator spec schema is not the declared one")
+    if spec.get("milestone") != MILESTONE:
+        raise CarrierBankError("generator spec does not belong to this milestone")
+    if spec.get("frozen_before_generation") is not True:
+        raise CarrierBankError("a generator spec that is not frozen before generation is not one")
+
+    # -- the identity that must be served ------------------------------------------------
+    identity = spec.get("generator_identity")
+    if not isinstance(identity, Mapping):
+        raise CarrierBankError("generator spec declares no generator identity")
+
+    transport = identity.get("transport")
+    if transport not in TRANSPORTS:
+        raise CarrierBankError("generator transport must be one of %s" % (TRANSPORTS,))
+    if transport == "hermes":
+        for key in ("hermes_version", "hermes_config_sha256"):
+            if not isinstance(identity.get(key), str) or not identity.get(key):
+                raise CarrierBankError(
+                    "a Hermes transport must record %s, or what ran cannot be identified" % key
+                )
+    endpoint = identity.get("endpoint")
+    if not isinstance(endpoint, str) or not endpoint.startswith("https://"):
+        raise CarrierBankError("generator endpoint must be a declared https endpoint")
+
+    model = identity.get("model")
+    if not isinstance(model, str) or not model:
+        raise CarrierBankError("generator spec declares no exact model")
+    lowered = model.casefold()
+    marker = next((item for item in FORBIDDEN_MODEL_MARKERS if item in lowered), None)
+    if marker is not None:
+        raise CarrierBankError(
+            "the model identifier contains %r, which names a moving target rather than a fixed "
+            "one; a bank's generator must be identifiable afterwards" % marker
+        )
+    if identity.get("model_identity_confirmed_against_the_api") is not True:
+        raise CarrierBankError(
+            "the exact model identifier must be confirmed against the provider's own catalogue "
+            "before it is frozen, not assumed from how such identifiers are usually spelled"
+        )
+
+    provider = identity.get("provider")
+    if not isinstance(provider, str) or not provider:
+        raise CarrierBankError(
+            "the provider must be one concrete backend chosen before the freeze: an unset provider "
+            "means the host picks, and the bank's origin is then whichever machine was free"
+        )
+    if identity.get("provider_serves_the_model_confirmed") is not True:
+        raise CarrierBankError(
+            "the chosen provider must be confirmed to serve the exact model, by discovery rather "
+            "than by assumption"
+        )
+
+    # -- routing: nothing may be substituted for what was frozen -------------------------
+    routing = spec.get("routing")
+    if not isinstance(routing, Mapping):
+        raise CarrierBankError("generator spec declares no routing policy")
+    if routing.get("allow_fallbacks") is not False:
+        raise CarrierBankError("fallbacks must be disabled: a fallback is a silent substitution")
+    if routing.get("automatic_routing") is not False:
+        raise CarrierBankError("automatic routing must be disabled")
+    for key in ("model_fallbacks", "provider_fallbacks"):
+        value = routing.get(key)
+        if value != []:
+            raise CarrierBankError("%s must be declared and empty" % key)
+    if not isinstance(routing.get("require_parameters"), bool) and routing.get(
+        "require_parameters"
+    ) is not None:
+        raise CarrierBankError(
+            "require_parameters must be declared as a boolean, or as null when the contract does "
+            "not support it -- silence is not a declaration"
+        )
+    if routing.get("a_provider_that_cannot_serve_the_frozen_request_is_an_instrument_failure")             is not True:
+        raise CarrierBankError(
+            "the spec must declare that an unservable frozen request fails the instrument rather "
+            "than moving to another provider"
+        )
+
+    # -- exactly one physical invocation --------------------------------------------------
+    policy = spec.get("invocation_policy")
+    if not isinstance(policy, Mapping):
+        raise CarrierBankError("generator spec declares no invocation policy")
+    if policy.get("qualifying_invocations_permitted") != 1:
+        raise CarrierBankError("exactly one qualifying invocation is permitted")
+    for key in (
+        "retries_permitted",
+        "manual_correction_permitted",
+        "selection_among_outputs_permitted",
+        "repair_parsing_permitted",
+        "second_request_to_correct_the_output_permitted",
+    ):
+        if policy.get(key) is not False:
+            raise CarrierBankError("invocation policy must declare %s false" % key)
+    if policy.get("invalid_output_is_the_result_of_the_single_invocation") is not True:
+        raise CarrierBankError(
+            "the spec must declare that a non-conforming output is the result, not a reason to ask "
+            "again"
+        )
+    disabled = policy.get("retries_disabled_at")
+    if not isinstance(disabled, list) or sorted(str(item) for item in disabled) != sorted(
+        RETRY_LAYERS
+    ):
+        raise CarrierBankError(
+            "every retry layer must be named and disabled: %s" % ", ".join(sorted(RETRY_LAYERS))
+        )
+    if policy.get("an_undetected_automatic_retry_fails_closed") is not True:
+        raise CarrierBankError(
+            "the spec must declare what happens if a layer retries anyway, or the no-retry rule is "
+            "a hope rather than a protocol"
+        )
+
+    # -- blindness ------------------------------------------------------------------------
+    blindness = spec.get("blindness_contract")
+    if not isinstance(blindness, Mapping):
+        raise CarrierBankError("generator spec declares no blindness contract")
+    required_absent = (
+        "conversation_history",
+        "genesis_files",
+        "hypothesis_information",
+        "mcp",
+        "memory",
+        "milestone_information",
+        "qualification_criteria",
+        "rag",
+        "repository",
+        "shell_or_tool_calls",
+        "summarization",
+        "system_prompt_context",
+        "tools",
+        "web_search",
+    )
+    absent = blindness.get("absent")
+    if not isinstance(absent, list) or sorted(str(item) for item in absent) != sorted(
+        required_absent
+    ):
+        raise CarrierBankError(
+            "the blindness contract must name every channel that is absent: %s"
+            % ", ".join(sorted(required_absent))
+        )
+    if blindness.get("audited_before_the_freeze") is not True:
+        raise CarrierBankError("the blindness contract must be audited rather than asserted")
+    if blindness.get("the_model_receives_only_the_qualifying_input_and_the_schema") is not True:
+        raise CarrierBankError("the spec must declare what the model does receive, not only what it does not")
+
+    # -- sampling, and one honesty condition about seeds ----------------------------------
+    sampling = spec.get("sampling")
+    if not isinstance(sampling, Mapping):
+        raise CarrierBankError("generator spec declares no sampling parameters")
+    if sampling.get("declared_before_generation") is not True:
+        raise CarrierBankError("sampling parameters must be declared before generation")
+    if not isinstance(sampling.get("temperature"), (int, float)):
+        raise CarrierBankError("sampling must declare a temperature")
+    if not isinstance(sampling.get("max_output_tokens"), int) or sampling["max_output_tokens"] <= 0:
+        raise CarrierBankError("sampling must declare a positive output bound")
+    if "seed" not in sampling or "seed_is_honoured_by_the_provider" not in sampling:
+        raise CarrierBankError("a seed must be declared, together with whether it is honoured")
+    if sampling.get("seed") is not None and sampling.get("seed_is_honoured_by_the_provider") not in (
+        True,
+        False,
+    ):
+        raise CarrierBankError(
+            "whether the provider honours the seed must be recorded as measured or as unknown, and "
+            "a seed a provider does not guarantee does not make a hosted model reproducible"
+        )
+    if sampling.get("determinism_is_claimed") is not False:
+        raise CarrierBankError(
+            "a hosted generator may not claim determinism; record what is actually guaranteed"
+        )
+    if not isinstance(sampling.get("every_parameter_sent"), Mapping):
+        raise CarrierBankError(
+            "the spec must record every sampling parameter actually sent, not only the ones worth "
+            "mentioning"
+        )
+    if "reasoning" not in sampling:
+        raise CarrierBankError(
+            "reasoning or thinking parameters must be declared, as null when there are none"
+        )
+
+    # -- structured output ----------------------------------------------------------------
+    structured = spec.get("structured_output")
+    if not isinstance(structured, Mapping):
+        raise CarrierBankError("generator spec declares no structured output configuration")
+    if structured.get("mode") != "json_schema":
+        raise CarrierBankError(
+            "the frozen JSON schema is the contract and may not be replaced by an instruction in "
+            "prose"
+        )
+    if structured.get("strict") is not True:
+        raise CarrierBankError("structured output must be strict")
+    if structured.get("schema_path") != str(OUTPUT_SCHEMA_PATH).replace("\\", "/"):
+        raise CarrierBankError("structured output must bind this milestone's own schema")
+
+    # -- what the generator is given, bound by digest -------------------------------------
+    for key, path in (
+        ("output_schema", OUTPUT_SCHEMA_PATH),
+        ("prompt", GENERATOR_PROMPT_PATH),
+        ("qualifying_input", QUALIFYING_INPUT_PATH),
+    ):
+        record = spec.get(key)
+        if not isinstance(record, Mapping):
+            raise CarrierBankError("generator spec declares no %s" % key)
+        declared_digest = record.get("sha256")
+        if not isinstance(declared_digest, str) or len(declared_digest) != 64:
+            raise CarrierBankError("%s is not bound by a digest" % key)
+        if record.get("path") != str(path).replace("\\", "/"):
+            raise CarrierBankError("%s does not name this milestone's own file" % key)
+        if root is not None:
+            measured = _digest_of_file(root, record["path"])
+            if measured != declared_digest:
+                raise CarrierBankError("%s digest does not match the file it names" % key)
+
+    if spec.get("requested_carrier_count") != 24:
+        raise CarrierBankError("the generator spec must request the frozen carrier count")
+
+    # -- the request that will actually be sent, secret-free ------------------------------
+    request = spec.get("canonical_request_body")
+    if not isinstance(request, Mapping):
+        raise CarrierBankError("generator spec records no canonical request body")
+    if spec.get("canonical_request_body_sha256") != sha256_hex(canonical_bytes(request)):
+        raise CarrierBankError("the canonical request body digest does not match the body")
+    if contamination_hits(canonical_bytes(request).decode("utf-8")):
+        raise CarrierBankError("the canonical request body carries project context")
+    _refuse_secret_material(spec)
+
+    # -- provenance and boundary ------------------------------------------------------------
+    if plan_commitment_sha256 is not None:
+        if spec.get("analysis_plan_commitment_sha256") != plan_commitment_sha256:
+            raise CarrierBankError(
+                "the generator spec does not bind the frozen analysis plan, so it could have been "
+                "written for a different set of rules"
+            )
+    boundary = spec.get("claim_boundary")
+    if not isinstance(boundary, Mapping):
+        raise CarrierBankError("generator spec declares no claim boundary")
+    for key in ("human_independence", "external_reproduction", "agi"):
+        if boundary.get(key) is not False:
+            raise CarrierBankError("the claim boundary may not claim %s" % key)
+
+    if spec.get("spec_commitment_sha256") != generator_spec_commitment(spec):
+        raise CarrierBankError("generator spec commitment drifted")
+
+
+# A key is a secret and this spec is published, so credential material is refused wherever it
+# appears rather than trusted to have been kept out.
+#
+# The names are matched exactly, and that precision is not fussiness. A first version matched any
+# key ending in `_key` or `_token` and refused the carrier meta-schema itself, because a carrier's
+# wire surface has an `action_key`, an `argument_key`, a `status_key`, an `ok_token` and an
+# `error_token`. A guard that fires on the thing it is protecting gets switched off, so it names
+# the credentials instead of guessing at them.
+SECRET_BEARING_KEYS = frozenset({
+    "access_token",
+    "api-key",
+    "api_key",
+    "apikey",
+    "auth",
+    "auth_token",
+    "authorization",
+    "bearer",
+    "credential",
+    "credentials",
+    "openrouter_api_key",
+    "passwd",
+    "password",
+    "private_key",
+    "refresh_token",
+    "secret",
+    "secret_key",
+    "session_token",
+})
+SECRET_VALUE_PREFIXES = ("sk-", "sk_", "or-", "or_v1-", "hf_", "gsk_")
+
+
+def _refuse_secret_material(value: Any, path: str = "spec") -> None:
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            if str(key).casefold() in SECRET_BEARING_KEYS:
+                raise CarrierBankError(
+                    "%s.%s names credential material, which may never enter a published artifact; "
+                    "reference the environment variable instead" % (path, key)
+                )
+            _refuse_secret_material(item, "%s.%s" % (path, key))
+    elif isinstance(value, list):
+        for index, item in enumerate(value):
+            _refuse_secret_material(item, "%s[%d]" % (path, index))
+    elif isinstance(value, str):
+        stripped = value.strip()
+        if any(stripped.startswith(prefix) for prefix in SECRET_VALUE_PREFIXES) and len(
+            stripped
+        ) > 16:
+            raise CarrierBankError("%s carries something shaped like a credential" % path)
+
+
+# ----------------------------------------------------------------------------------------
 # The phase machine. It never opens a payload, and there is no path here that could.
 # ----------------------------------------------------------------------------------------
 
@@ -466,6 +846,26 @@ def assess_carrier_bank_readiness(root: Path) -> dict[str, Any]:
     schema_present = (resolved / OUTPUT_SCHEMA_PATH).is_file()
     if not spec_present:
         blockers.append("missing %s" % GENERATOR_SPEC_PATH.name)
+    else:
+        # Presence was the whole check here, which made the spec a file rather than a contract.
+        # The ledger binds to `spec_commitment_sha256`, so an unvalidated spec would let a ledger
+        # bind to a commitment nothing had checked.
+        spec_document, spec_error = _load(resolved / GENERATOR_SPEC_PATH)
+        if spec_error:
+            blockers.append(spec_error)
+        elif spec_document is None:
+            blockers.append("missing %s" % GENERATOR_SPEC_PATH.name)
+        else:
+            try:
+                validate_generator_spec(
+                    spec_document,
+                    root=resolved,
+                    plan_commitment_sha256=(
+                        plan.get("plan_commitment_sha256") if plan is not None else None
+                    ),
+                )
+            except CarrierBankError as exc:
+                blockers.append("generator spec: %s" % exc)
     if not prompt_present:
         blockers.append("missing %s" % GENERATOR_PROMPT_PATH.name)
     if not schema_present:
@@ -562,7 +962,10 @@ __all__ = [
     "CARRIER_PAYLOAD_SCHEMA",
     "CarrierBankError",
     "DEVELOPMENT_PAYLOAD_SCHEMA",
+    "FORBIDDEN_MODEL_MARKERS",
+    "GENERATOR_SPEC_SCHEMA",
     "MILESTONE",
+    "RETRY_LAYERS",
     "REPORT_SCHEMA",
     "SURVEY_SCHEMA",
     "SYSTEM_PROTOCOL_SCHEMA",
@@ -571,9 +974,11 @@ __all__ = [
     "analysis_plan_commitment",
     "assess_carrier_bank_readiness",
     "evaluator",
+    "generator_spec_commitment",
     "system_protocol_commitment",
     "tested_system_digests",
     "validate_analysis_plan",
     "validate_carrier_bank_payload",
+    "validate_generator_spec",
     "validate_system_protocol",
 ]

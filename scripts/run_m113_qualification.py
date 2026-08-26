@@ -705,6 +705,38 @@ def run_bank(
     return result
 
 
+def bank_generation_invocations() -> int | None:
+    """How many physical invocations produced the bank, read from the ledger rather than declared.
+
+    `P15`'s generator half is this number, and it must be exactly one on a canonical attempt. It is
+    read here rather than asserted because the whole point of the ledger is that a failed attempt
+    stays in it: a run that reached the model twice cannot present itself afterwards as one that
+    reached it once.
+    """
+    path = ROOT / bank.GENERATION_LEDGER_PATH
+    if not path.is_file():
+        return None
+    try:
+        ledger = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    spec_path = ROOT / bank.GENERATOR_SPEC_PATH
+    commitment = None
+    if spec_path.is_file():
+        try:
+            commitment = json.loads(spec_path.read_text(encoding="utf-8")).get(
+                "spec_commitment_sha256"
+            )
+        except (OSError, ValueError):
+            commitment = None
+    entries = [
+        entry for entry in (ledger.get("entries") or [])
+        if isinstance(entry, dict)
+        and (commitment is None or entry.get("spec_commitment_sha256") == commitment)
+    ]
+    return len(entries)
+
+
 def load_plan() -> dict[str, Any] | None:
     for path in (PLAN_PATH, CANDIDATE_PLAN_PATH):
         if path.is_file():
@@ -755,6 +787,9 @@ def main() -> int:
     result["development"] = True
     result["is_a_canonical_attempt"] = False
     result["plan_commitment_sha256"] = plan.get("plan_commitment_sha256")
+    # Null on a development run, which has no generator phase at all. `P15` reports that half as
+    # not applicable rather than treating an absent generator as a satisfied one.
+    result["model_calls_in_bank_generation"] = bank_generation_invocations()
     result["result_digest"] = digest({k: v for k, v in result.items() if k != "result_digest"})
 
     if arguments.write:

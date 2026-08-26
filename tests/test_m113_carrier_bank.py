@@ -1044,3 +1044,245 @@ def test_the_generation_ledger_is_required_before_a_sealed_bank_counts(tmp_path)
     assert "missing %s" % bank.GENERATION_LEDGER_PATH.name in report["blockers"]
     assert report["phase"] == "draft"
     assert report["ready_for_reveal"] is False
+
+
+# -------------------------------------------------- the generator spec, frozen before the identity
+
+
+def _candidate_spec() -> dict:
+    return json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json").read_bytes().decode("utf-8")
+    )
+
+
+def _frozen_spec() -> dict:
+    """The candidate with exactly the fields it declares unset filled in, as discovery would."""
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    spec = _candidate_spec()
+    for field in spec["unset_before_freeze"]:
+        assert field  # the candidate says what it is missing
+    spec["frozen_before_generation"] = True
+    spec["blindness_contract"]["audited_before_the_freeze"] = True
+    spec["generator_identity"].update(
+        provider="Fireworks",
+        provider_serves_the_model_confirmed=True,
+        model_identity_confirmed_against_the_api=True,
+    )
+    spec["sampling"]["seed_is_honoured_by_the_provider"] = False
+    spec["canonical_request_body"]["provider"]["only"] = ["Fireworks"]
+    spec.pop("unset_before_freeze")
+    spec["canonical_request_body_sha256"] = sha256_hex(
+        canonical_bytes(spec["canonical_request_body"])
+    )
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    return spec
+
+
+def _root() -> object:
+    return bank.EXPERIMENT_DIRECTORY.parent.parent
+
+
+def _plan_commitment() -> str:
+    return json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "ANALYSIS_PLAN.json").read_bytes().decode("utf-8")
+    )["plan_commitment_sha256"]
+
+
+def test_the_candidate_generator_spec_cannot_pass_as_a_frozen_one():
+    """A candidate names what discovery still has to fill, and is refused until it is filled.
+
+    The provider and the model identifier cannot be confirmed without reaching the endpoint, so a
+    candidate written before that reach must not be mistakable for a freeze.
+    """
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            _candidate_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_a_fully_pinned_generator_spec_validates():
+    """And the contract must be satisfiable, or it decides nothing."""
+    bank.validate_generator_spec(
+        _frozen_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+    )
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        # A model identifier whose purpose is to be repointed cannot identify a bank's generator.
+        lambda s: s["generator_identity"].update(model="deepseek/deepseek-v4-flash:latest"),
+        lambda s: s["generator_identity"].update(model="openrouter/auto"),
+        lambda s: s["generator_identity"].update(model="deepseek/deepseek-v4-flash:free"),
+        # An unset provider means the host picks the backend.
+        lambda s: s["generator_identity"].update(provider=None),
+        lambda s: s["generator_identity"].update(provider_serves_the_model_confirmed=False),
+        lambda s: s["generator_identity"].update(model_identity_confirmed_against_the_api=False),
+        lambda s: s["generator_identity"].update(transport="hermes"),
+        # A fallback is a silent substitution by design.
+        lambda s: s["routing"].update(allow_fallbacks=True),
+        lambda s: s["routing"].update(automatic_routing=True),
+        lambda s: s["routing"].update(provider_fallbacks=["Together"]),
+        lambda s: s["routing"].update(model_fallbacks=["deepseek/deepseek-v3"]),
+        # One physical invocation, and every layer that could produce a second named and disabled.
+        lambda s: s["invocation_policy"].update(retries_permitted=True),
+        lambda s: s["invocation_policy"].update(qualifying_invocations_permitted=2),
+        lambda s: s["invocation_policy"].update(
+            second_request_to_correct_the_output_permitted=True
+        ),
+        lambda s: s["invocation_policy"].update(repair_parsing_permitted=True),
+        lambda s: s["invocation_policy"]["retries_disabled_at"].remove("rate_limit_429"),
+        lambda s: s["invocation_policy"].update(
+            invalid_output_is_the_result_of_the_single_invocation=False
+        ),
+        # Blindness is audited, not asserted, and every channel is named.
+        lambda s: s["blindness_contract"]["absent"].remove("tools"),
+        lambda s: s["blindness_contract"]["absent"].remove("rag"),
+        lambda s: s["blindness_contract"].update(audited_before_the_freeze=False),
+        # A hosted model does not become reproducible by being sent a seed.
+        lambda s: s["sampling"].update(determinism_is_claimed=True),
+        # The schema is the contract and may not become a sentence.
+        lambda s: s["structured_output"].update(mode="prose_instruction"),
+        lambda s: s["structured_output"].update(strict=False),
+        lambda s: s.update(requested_carrier_count=100),
+        # A credential may never enter a published artifact.
+        lambda s: s["canonical_request_body"].update(api_key="sk-abcdefghijklmnopqrstuvwxyz"),
+        lambda s: s.update(authorization="Bearer sk-abcdefghijklmnopqrstuvwxyz"),
+        # Nor may project context enter the generator's sole input.
+        lambda s: s["canonical_request_body"]["messages"][0].update(
+            content="Emit machines for hypothesis H58 in the mira genesis project."
+        ),
+        lambda s: s["qualifying_input"].update(sha256="0" * 64),
+        lambda s: s["claim_boundary"].update(human_independence=True),
+    ],
+)
+def test_the_generator_spec_refuses_every_shape_that_would_lose_the_identity(mutate):
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    spec = _frozen_spec()
+    mutate(spec)
+    spec["canonical_request_body_sha256"] = sha256_hex(
+        canonical_bytes(spec["canonical_request_body"])
+    )
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_a_spec_written_for_another_plan_is_refused():
+    """The spec binds the frozen plan, so it cannot have been written for a different rule set."""
+    spec = _frozen_spec()
+    spec["analysis_plan_commitment_sha256"] = "0" * 64
+    spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(
+            spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+        )
+
+
+def test_the_credential_guard_does_not_fire_on_the_carrier_meta_schema():
+    """A guard that refuses the thing it protects gets switched off.
+
+    A carrier's wire surface has an `action_key`, an `argument_key`, a `status_key`, an `ok_token`
+    and an `error_token`. An earlier form of this guard matched any key ending in `_key` or
+    `_token` and refused the frozen output schema itself.
+    """
+    schema = json.loads(
+        (bank.EXPERIMENT_DIRECTORY / "OUTPUT_SCHEMA.json").read_bytes().decode("utf-8")
+    )
+    bank._refuse_secret_material(schema)
+
+    surface = schema["properties"]["machines"]["items"]["properties"]["surface"]["properties"]
+    assert {"action_key", "argument_key", "status_key", "ok_token", "error_token"} <= set(surface)
+
+    with pytest.raises(bank.CarrierBankError):
+        bank._refuse_secret_material({"headers": {"authorization": "Bearer x"}})
+
+
+def test_the_generator_input_carries_no_project_context():
+    """The schema travels to the model inside the request, so its own strings are its input too.
+
+    The schema's `title` was `mira-blind-carrier-v1 emission`, which would have told a blind
+    generator the name of the contract it was emitting for. Nothing frozen bound the schema yet,
+    so it was repaired rather than recorded.
+    """
+    from metamorphosis.blind_bank_protocol import contamination_hits
+
+    for name in ("OUTPUT_SCHEMA.json", "GENERATOR_PROMPT.txt", "QUALIFYING_INPUT.txt"):
+        text = (bank.EXPERIMENT_DIRECTORY / name).read_bytes().decode("utf-8")
+        assert not contamination_hits(text), (name, contamination_hits(text))
+
+    spec = _candidate_spec()
+    assert not contamination_hits(
+        json.dumps(spec["canonical_request_body"], sort_keys=True)
+    )
+
+
+def test_the_qualifying_input_is_the_prompt_with_the_frozen_count_and_nothing_else():
+    template = (bank.EXPERIMENT_DIRECTORY / "GENERATOR_PROMPT.txt").read_bytes().decode("utf-8")
+    qualifying = (bank.EXPERIMENT_DIRECTORY / "QUALIFYING_INPUT.txt").read_bytes().decode("utf-8")
+    assert qualifying.replace("24", "N", 1) == template
+    assert "exactly 24 entries" in qualifying
+
+
+def test_the_generation_client_refuses_before_it_can_reach_anything():
+    """Every gate the client holds is reachable without a network, and each of them is checked."""
+    client = _load_script("m113_generation", "run_m113_generation.py")
+    import os
+
+    # The credential is read at the moment of use and never stored.
+    previous = os.environ.pop(client.SECRET_VARIABLE, None)
+    try:
+        with pytest.raises(client.GenerationError):
+            client._secret()
+    finally:
+        if previous is not None:
+            os.environ[client.SECRET_VARIABLE] = previous
+
+    # A qualifying call requires a frozen spec, and there is none.
+    with pytest.raises(client.GenerationError):
+        client.load_spec(frozen_required=True)
+
+    # A smoke test on a spec with no provider chosen is refused.
+    with pytest.raises(client.GenerationError):
+        client.smoke(_candidate_spec(), write=False)
+
+    # Not http, and no third-party client whose retry behaviour would have to be disabled.
+    source = (
+        bank.EXPERIMENT_DIRECTORY.parent.parent / "scripts" / "run_m113_generation.py"
+    ).read_text(encoding="utf-8")
+    for forbidden in ("import requests", "import httpx", "import openai", "urllib.request"):
+        assert forbidden not in source
+
+    # The smoke input can never be the qualifying input.
+    qualifying = (bank.EXPERIMENT_DIRECTORY / "QUALIFYING_INPUT.txt").read_bytes().decode("utf-8")
+    assert client.SMOKE_INPUT.strip() not in qualifying
+    assert "machines" not in client.SMOKE_INPUT
+
+
+def test_a_second_materialization_against_one_frozen_spec_is_refused(tmp_path, monkeypatch):
+    """One frozen spec admits one bank. The second attempt is the retry the contract refuses."""
+    client = _load_script("m113_generation_ledger", "run_m113_generation.py")
+    ledger = tmp_path / "GENERATION_LEDGER.json"
+    ledger.write_text(
+        json.dumps({
+            "schema": client.LEDGER_SCHEMA,
+            "entries": [{
+                "attempt_index": 1,
+                "spec_commitment_sha256": "a" * 64,
+                "started_at": "2026-08-26T00:00:00Z",
+                "outcome": "materialized",
+                "payload_sha256": "b" * 64,
+                "isolation_attestation_sha256": "c" * 64,
+                "note": "",
+            }],
+        }),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(client, "LEDGER_PATH", ledger)
+    spec = {"spec_commitment_sha256": "a" * 64, "generator_identity": {}, "canonical_request_body": {}}
+    with pytest.raises(client.GenerationError):
+        client.qualify(spec)
