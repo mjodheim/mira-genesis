@@ -1,0 +1,58 @@
+M111's ``diagnosis'' is also narrow. The policy detects underdetermination in a three-bit feature vocabulary and spends one authored probe. Calling it metacognitive is defensible only in this operational sense. It does not establish introspective access to arbitrary internal states or general uncertainty estimation.
+
+\subsection{External validity}
+The producer and consumer carriers are finite, synthetic, and project-authored. M110 is deliberately a stress test selected to realize row 5. The results may expose a general failure mode -- unsupported meta-rule extrapolation -- without establishing its prevalence in real agent systems.
+
+M112 improves one aspect of external validity by removing direct project choice of world contents, but the carrier grammar, schema, evaluator, and selection criterion remain authored. The generator is small and may have unknown public pretraining exposure. Human-maintained sealed tasks and independent external domains remain absent.
+
+\subsection{Statistical validity}
+Most claims in M107--M111 are structural or unanimous over small frozen populations rather than population estimates. This is intentional: the experiments rely on exact counterfactuals, complete censuses, and deterministic evaluation. They should not be read as estimating broad frequencies of beneficial or harmful transfer.
+
+M112's 20-world bank is especially small because of the preserved materialization defect. The 25\% ambiguous rate versus roughly 6\% in project-generated worlds is descriptive and not used for an inferential population claim. The scientifically relevant observations are the qualifying minima, reproduced outcome patterns, and the specific fixed-point counterexample.
+
+\subsection{Reproducibility validity}
+M107--M111 permit checker replay under the frozen runtime. M112 deliberately does not permit regenerating the bank because the one-shot/no-retry rule is part of the experiment. Its reproducibility therefore concerns public chronology, digests, preserved plaintext after reveal, isolation attestation, and deterministic recomputation over that bank. Readers who require independently regenerated data should treat M112 as weaker evidence and await an external bank.
+
+\section{Reproducibility, artifact map, and provenance}
+\label{sec:repro}
+The public repository contains frozen protocols, canonical results, checker reports, pre-registrations, adversarial reviews, and preserved negative or mixed outcomes. The scientific anchors for this paper are:
+\begin{Verbatim}[fontsize=\small]
+experiment/m107-positive-result
+experiment/m108-positive-result
+experiment/m109-positive-result
+experiment/m110-positive-result
+experiment/m111-positive-result
+experiment/m112-canonical-first-result
+experiment/m112-mixed-result
+\end{Verbatim}
+The recommended paper-scope repository anchor is the merge that introduced M112's preserved result into \code{main}. Publication prose is downstream of those artifacts and may not modify them.
+
+For M107--M111, each milestone has a checker that recomputes its predicates from preserved result bytes and a replay mode that compares a stable projection after re-execution. The stable projection excludes declared ephemera such as process IDs, temporary paths, elapsed times, and interpreter-local execution details. Canonical runs and checker runs are single-use and fail closed on dirty worktrees, wrong freeze commits, edited bound apparatus, or already-consumed attempts.
+
+M112 is reproducible in a different sense. Its one generator invocation may not be repeated under the frozen protocol. Third parties can verify the public history ordering, pinned generator identity, isolation attestation, sealed-bank digest, reveal match, and recompute M110/M111 predicates over the preserved revealed bank. They cannot honestly recreate the same one-shot materialization without violating the protocol. Custody is procedural rather than third-party.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Canonical checker summaries. ``External calls'' refers to model, network, and remote-execution calls in the tested qualification machinery; M112 separately uses one bank-generation model invocation.}
+\label{tab:checker}
+\begin{tabularx}{\textwidth}{@{}l p{0.22\linewidth} p{0.18\linewidth} p{0.17\linewidth} X@{}}
+\toprule
+Milestone & Predicate result & Replay & Isolated processes & External calls in qualification \\
+\midrule
+M107 & 16/16 & equal & fresh consumers & 0 \\
+M108 & 16/16 & equal & 14 & 0 \\
+M109 & 18/18 & equal & 21 & 0 \\
+M110 & 24/24 & equal & 186 & 0 \\
+M111 & 24/24 & equal & 127 & 0 \\
+M112 & proc. 10/10; diag. 24/24; transfer 22/24 & bank recomputation & inherited instruments & 0 in qualification; 1 generator call \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Generative-AI tools were used extensively during software development, adversarial review, and manuscript preparation. The repository records those tools as automation rather than authors. Anthony Mets is responsible for research objectives, protocol and publication decisions, acceptance or rejection of generated work, and the claims in this manuscript. AI-assisted review is not represented as independent peer review.
+
+\section{The next frontier: what Genesis III would have to remove}
+\label{sec:next}
+Genesis II ends at a natural boundary. M112 removes direct project authorship and selection of world contents but leaves the carrier contract, interaction language, component registry, feature vocabulary, evaluator, and probe primitive project-authored. A stronger successor must attack those remaining authorship channels without quietly moving the answer into the generator prompt or the host.
+
