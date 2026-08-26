@@ -1502,3 +1502,36 @@ failed closed. No acceptance, final protocol or qualification occurred.
 Tag `provenance/m104-superseded-candidate-a8` preserves it. The replacement runner independently
 reconstructs candidate identity and equality, fixed group membership, annotated ancestry, path
 censuses and committed bytes before qualification.
+
+
+## Attributes files are frozen apparatus, and three protocols have been broken by that — M105, M106, M107
+
+Milestones from M100 on bind their apparatus by SHA-256 over working-tree bytes, so any bound source
+without an explicit `text eol=lf` attribute is checked out with CRLF on Windows and its digest stops
+reproducing. The remedy each milestone reached for was an attributes entry. That remedy does not
+compose, because an attributes file is itself a bound member of whichever protocol reached for it
+first.
+
+- **M105 is broken and stays broken.** Its frozen protocol binds the root `.gitattributes`, which
+  M106 later appended to. Four of M105's bound members no longer reproduce on `main`:
+  `.gitattributes`, `experiments/M105/README.md`, `tests/test_m105_pre_freeze_audit.py` and
+  `tests/test_m105_qualification_runner.py`. M105 is a permanently negative checker-instrument
+  result under **D074** and may not be re-frozen, so this is recorded rather than repaired.
+- **M106 was broken by M113 and is repaired.** M113's first commit appended its entries to the root
+  file, and `test_the_bound_apparatus_still_matches_its_frozen_bytes` and
+  `test_canonical_entrypoint_is_gated_by_the_final_freeze` failed from that commit onward. The root
+  file is restored to its frozen bytes.
+- **M107 was then broken by the repair, and is repaired.** M107 had created
+  `metamorphosis/.gitattributes`, `scripts/.gitattributes` and `tests/.gitattributes` precisely so
+  that later milestones would not edit the root — and bound all three. Moving M113's entries there
+  broke `test_canonical_entrypoint_is_gated_by_the_final_freeze` for M107 instead. Git reads one
+  attributes filename per directory, so there is no fourth location.
+
+**What replaces it.** M113 declares only `experiments/M113/.gitattributes`, which no protocol binds,
+and its tested system is bound by a **declared per-member digest mode** — `lf_normalized` for every
+source member, an undeclared mode refused — as M110 and M111 bind theirs. A digest mode composes
+across freezes because it lives in the binding rather than in a shared file. A successor that binds
+source bytes should use it and should not reach for an attributes entry.
+
+None of this was visible in `git status`, in M113's own suite, or in its boundary audit. All three
+were found by running the whole suite.

@@ -5,12 +5,14 @@ nothing may be recomputed with a changed parameter to make a figure cleaner.
 
 ## Figure 1 — the chain, and where each generation came from
 
-The lineage from M107 to M111 as a single diagram: interpreter extension, machinery modification,
-second machinery generation, transfer, diagnosis. Each arrow labelled with the decision slot and the
-state digest the successor restores.
+The lineage from M107 to M112 as a single diagram: interpreter extension, machinery modification,
+second machinery generation, transfer, diagnosis, and then the same instruments re-run on worlds the
+project did not choose. Each arrow labelled with the decision slot and the state digest the successor
+restores; the last arrow labelled with the published bank commitment rather than a state, because
+M112 changes the population and not the lineage.
 
-Source: D076–D080; `experiments/M109/RESULT.json` `stage_two_resolution.final_state_digest`
-(`5c08fa30…`), which is the state M111 restores.
+Source: D076–D081; `experiments/M109/RESULT.json` `stage_two_resolution.final_state_digest`
+(`5c08fa30…`), which is the state M111 restores; `experiments/M112/PUBLIC_BANK_COMMITMENT.json`.
 
 ## Table 1 — census-conditional transfer (M110)
 
@@ -61,15 +63,68 @@ adopted by the lineage while resolving M109's own stage two.
 
 Source: `experiments/M111/RESULT.json` `expressibility`, `provenance.acquired_operator`.
 
-## Table 4 — the preserved negatives
+## Table 4 — the same instruments, on worlds the project did not choose (M112)
+
+The M110 transfer table and the M111 diagnosis table, recomputed on the revealed blind bank, beside
+the originals. Every scientific outcome reproduces — including the row-5 harm — while the transfer
+arm is recorded **negative at 22/24**:
+
+| demand | ground truth | `M0` | `M1` | `M2` |
+|---|---|---|---|---|
+| row 7 | signal interface | 0/6 | 6/6 | 6/6 |
+| row 3 | candidate space | 0/6 | 0/6 | 6/6 |
+| **row 5** | **operator table** | **6/6** | **0/6** | **0/6** |
+| row 1 | operator table | 6/6 | 6/6 | 6/6 |
+
+Diagnosis: 24/24, five ambiguous blind worlds, both probe orders, unanimous.
+
+The two false predicates must be named in the caption, not in a footnote: `P1` is an invocation
+artifact — a preflight asserting a `canonical`-tagged population at the canonical path, while the
+revealed bank sits at a scratch path — and `P5` is a real measurement. Both are reported rather than
+suppressed, and neither was weakened after the fact.
+
+Source: `experiments/M112/RESULT.json`, `CHECK_REPORT.json`, `RESULT_SUMMARY.md`.
+
+## Figure 4 — a bound that was an empirical regularity, not a certificate
+
+The constructive image size against fixed-point bound for the blind world that failed `P5`: **17 at
+bound 7, 18 at 9, 11 and 13**, beside the 1 160 project-generated worlds on which seven nodes always
+sufficed. The declared operating bound is 9 and the image is stable at and above it, so no reach
+claim is disturbed — but the certificate demanded all four bounds agree and they do not.
+
+This is the package's cleanest evidence that project-authored worlds are not a neutral sample, and it
+was produced by the project being wrong under a commitment published in advance. It belongs beside
+Figure 2, not in an appendix.
+
+Source: `experiments/M112/RESULT.json`; base rate from the 1 160 project-generated worlds recorded in
+`MATERIALIZATION_DEFECT.md`.
+
+## Table 5 — a defect recorded before the seal, and not repaired
+
+M112's frozen spec set `requested_record_count = requested_world_count` while a world is five
+records, so a request for 100 bought 20. The note recording it was written **after the single
+invocation and before the bank was sealed, committed, revealed or read**, and it states the expected
+cost — a drop from ~94 per cent to ~12 per cent of meeting the plan's minimum — before the outcome
+was knowable.
+
+The bank met the minimum anyway, at an ambiguous rate of 25 per cent against the project's own 6.
+Both halves belong in the paper: the defect was not repaired because repairing it would have been a
+second qualifying invocation after learning something about the first.
+
+Source: `experiments/M112/MATERIALIZATION_DEFECT.md`.
+
+## Table 6 — the preserved negatives
 
 M095, M098, M103 and M105, each with what it cost and what it bought. A paper that reports only the
 positives on this line is misreporting the line.
 
 Source: `DECISIONS.md`, `FAILURE_LOG.md`.
 
-## Table 5 — what did not move
+## Table 7 — what did not move
 
-The G1–G10 evidence map before and after M107–M111: unchanged. Placed in the body, not an appendix.
+The G1–G10 evidence map before and after M107–M112: unchanged. Placed in the body, not an appendix.
+M112 removed **world** authorship and left the carrier, the evaluator, the component registry, the
+feature vocabulary and the probe primitive where they were, so no row moves and the caption says
+which authorship was removed and which was not.
 
 Source: `MIRA_GENERALITY_CRITERIA.md`.

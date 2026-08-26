@@ -33,6 +33,13 @@ monotonically throughout.
 That dissociation, *capacity rises and competence does not*, is what makes the surrounding positive
 results credible rather than selective, and it is what a reader is least likely to have seen before.
 
+M112 now sits behind it as the second load-bearing negative: the same instruments, run on a bank a
+blind generator produced under a commitment published before the tested system was frozen, reproduce
+every transfer outcome and 24 of 24 diagnosis conditions — and the transfer arm is still recorded
+**negative at 22/24**, because a blind world's constructive image needed more nodes to close than
+1 160 project-authored worlds ever had. The proposed scope in `SUBMISSION_METADATA.md` is therefore
+**M107–M112**, with M113 excluded because it has no result.
+
 ## What this package must never do
 
 Report any generality gate as advanced; describe recursive depth three as open-ended or compounding;

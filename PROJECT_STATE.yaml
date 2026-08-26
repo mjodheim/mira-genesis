@@ -1007,6 +1007,137 @@ current_real_software_frontier:
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: an_externally_maintained_bank_independent_reproduction_and_an_external_adversarial_audit
 
+  M113:
+    status: candidate_not_frozen_bank_does_not_exist
+    hypothesis: H58
+    decision_slot: D082
+    decision_slot_filled: false
+    phase: draft
+    successor_to: M112
+    m112_untouched: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    what_the_generator_chooses:
+      - wire_surface_and_its_tokens_and_separators
+      - state_cells_their_domains_and_which_are_latent
+      - action_names_arities_and_argument_domains
+      - action_preconditions_so_the_carrier_imposes_a_protocol
+      - action_effects
+      - error_vocabulary_and_the_mapping_from_a_refused_action_to_a_code
+    what_the_project_still_owns:
+      - the_meta_schema_and_therefore_the_space_carriers_are_drawn_from
+      - the_four_wire_surface_shapes_though_not_their_tokens
+      - the_meta_channel
+      - the_qualification_rule_and_the_demand_derivation_rule
+      - the_evaluator_the_component_registry_the_feature_vocabulary_and_the_probe_primitive
+    carrier_schema_version: mira-blind-carrier-v1
+    closure_rule: exact_fixed_point_no_inherited_bound
+    p5_lesson_applied: true
+    cardinality_identity_declared_and_checked: true
+    m112_cardinality_defect_would_now_fail_the_guard: true
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    devkit_survey_sample: 1200
+    devkit_qualification_rate: 0.23
+    devkit_rate_is_not_a_prediction: true
+    probability_the_minimum_is_missed_at_the_devkit_rate: 0.062
+    deepest_observation_depth_seen_in_the_devkit_survey: 11
+    every_devkit_carrier_closed_by_fixed_point: true
+    devkit_carriers_structurally_distinct: 1200
+    inherited_feature_vocabulary_ambiguous_rows: [2, 3, 6, 7]
+    m111_record_says_row_seven_is_determined: true
+    devkit_carriers_say_row_seven_is_ambiguous: true
+    prefreeze_adversarial_defects_found: 11
+    prefreeze_adversarial_defects_repaired: 11
+    every_repair_has_a_regression_test: true
+    # Three of the eleven were invisible to this milestone's own suite and its boundary audit, and
+    # surfaced only when the whole suite ran -- in sequence, the repair for the first causing the
+    # second, and the second showing that the shape of the fix was wrong.
+    defects_found_only_by_running_the_whole_suite: 3
+    root_gitattributes_is_bound_apparatus_of_m106s_frozen_protocol: true
+    m113_first_commit_had_appended_to_it_and_broke_two_m106_tests: true
+    per_directory_gitattributes_are_bound_apparatus_of_m107s_frozen_protocol: true
+    moving_the_entries_there_broke_an_m107_test_instead: true
+    every_attributes_file_in_the_repository_is_already_frozen_apparatus: true
+    m113_declares_only_experiments_m113_gitattributes: true
+    the_mechanism_that_composes_across_freezes_is_a_declared_digest_mode: true
+    # The older half of the same lesson, pre-existing on `main` and deliberately not repaired:
+    # M105's frozen protocol binds a `.gitattributes` that M106 later appended to. Four of its bound
+    # members no longer reproduce. M105 is permanently negative under D074 and may not be re-frozen.
+    m105_frozen_protocol_has_four_drifted_bound_members_on_main: true
+    m105_drift_predates_this_branch_and_is_not_repairable: true
+    tested_system_members_bound: 11
+    tested_system_members_owned_by_frozen_predecessors: 5
+    tested_system_predecessor_members_that_are_crlf_in_this_checkout: 4
+    tested_system_digest_mode: lf_normalized
+    an_undeclared_tested_system_digest_mode_is_refused: true
+    # Defect eight, found by measuring: the renaming-invariant signature was computed at acceptance
+    # and dropped before the result. A bank of renamings would have met a carrier minimum while
+    # presenting far fewer machines -- M112's defect one level up.
+    minimum_is_stated_over_distinct_qualifying_structures: true
+    minimum_distinct_qualifying_structures: 3
+    distinct_structure_rule: carrier_host.structural_signature
+    checker_recomputes_the_signatures_from_preserved_carrier_bodies: true
+    a_bank_of_renamings_would_now_fail_P21: true
+    devkit_qualifying_carriers_all_structurally_distinct: true
+    development_run_sample: 80
+    development_run_seed: m113-development-run
+    development_run_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
+    development_run_result_digest: 2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9
+    development_run_predicates_true: 21
+    development_run_predicates_total: 22
+    development_run_failing_predicate: P22
+    h58_is_the_last_predicate: P22
+    producer_death_capsules_run: 44
+    producer_death_no_capsule_could_reach_a_producer_result: true
+    producer_death_every_verdict_matched_in_process: true
+    preservation_m110_conditions_true: 24
+    preservation_m111_conditions_true: 24
+    preservation_both_result_digests_reproduce: true
+    development_full_descendant_constructs: 23
+    development_fresh_control_constructs: 13
+    development_full_descendant_calibrated_refusals: 6
+    development_fresh_control_calibrated_refusals: 29
+    development_full_descendant_invented_adapters: 15
+    development_fresh_control_invented_adapters: 13
+    development_result_is_not_a_prediction: true
+    # `M3` against `T0` is a sum. `ablated` holds generation one and the policy, so the difference
+    # between them is generation two's entire marginal contribution, and it is nothing.
+    generation_two_marginal_on_every_outcome_measure: 0
+    generation_two_marginal_attribution_rows: 1
+    generation_three_marginal_correct_construction: 9
+    generation_three_marginal_calibrated_refusal: -22
+    acquired_cascade_marginal_correct_construction: 1
+    the_descendant_effect_is_the_diagnostic_policy_not_the_cascade: true
+    ablation_biting_is_measured_never_required: true
+    a_positive_h58_must_be_reported_with_this_decomposition: true
+    arms_run: [T0, M1, M2, M3, rollback, ablated, mutated, unregistered, budget_plus]
+    out_of_band_arms_run: [producer_death, preservation]
+    # `corrupt` is the twelfth declared arm. It is not a per-demand state: a malformed acquired rule
+    # must be refused at decode rather than run, so it is exercised as a fail-closed check (P6).
+    corruption_arm_run_as_a_fail_closed_check: true
+    declared_arms_total: 12
+    arms_declared_but_not_run: []
+    model_calls: 0
+    network_calls: 0
+    track: A
+    track_b_prepared_not_run: true
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    removes_carrier_interaction_language_authorship: intended_not_yet_established
+    removes_substrate_authorship: false
+    g1_to_g10_advance: false
+    owner_gates_outstanding:
+      - freeze_the_analysis_plan
+      - pin_a_generator_identity_before_any_invocation
+      - run_the_single_qualifying_invocation
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
+    environment_blocker: docker_daemon_not_running_so_the_isolated_invocation_cannot_be_attested
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

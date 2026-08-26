@@ -316,6 +316,44 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
+- **M113/H58 is a candidate, not a result. The bank does not exist and the phase is `draft`.** It
+  asks whether a Genesis machinery can adapt to a carrier the project did not design: the blind
+  generator emits the machine itself -- its state, its observability, its actions, their
+  preconditions, their effects, its errors and the wire it speaks -- and the project supplies only
+  the contract of reception. Closure is an exact fixed point rather than an inherited bound, which is
+  M112's `P5` lesson applied rather than restated. One carrier is one record, the identity is
+  declared and mechanically checked, and M112's cardinality defect would now fail that guard. A
+  pre-freeze devkit survey over 1 200 carriers finds four of six occupied feature rows **ambiguous**
+  in the inherited vocabulary, including row 7, which M111's own record classifies as determined --
+  so the next ceiling may be the feature vocabulary rather than the carrier. Eleven pre-freeze
+  defects were found by measuring the apparatus and repaired, each with a regression test. One is
+  M112's own defect a level up: the renaming-invariant carrier signature was computed at acceptance
+  and dropped before the result, so a bank of renamings would have met a carrier minimum while
+  presenting far fewer machines -- the minimum is now stated over **distinct qualifying
+  structures**, the checker recomputes the signatures from preserved carrier bodies, and `P21` fails
+  on collapse. Three more surfaced only when the whole suite ran, in sequence: M113's first commit
+  had appended to the root `.gitattributes`, which is **bound apparatus of M106's frozen protocol**;
+  moving those entries into the per-directory files broke an **M107** test instead, because M107
+  binds those files too; and the tested system was bound by raw bytes although five of its eleven
+  members are predecessor files no attributes file here may write, four of them CRLF in this
+  checkout. Every attributes file in the repository is already frozen apparatus, so the repair is
+  not a better location: M113 declares only `experiments/M113/.gitattributes` and binds every source
+  member by a declared `lf_normalized` digest mode, which is the mechanism that composes across
+  freezes.
+  All twelve declared arms run, including producer death in a capsule that cannot reach either
+  producer result and a preservation arm that finds M110 and M111 reproducing 24 of 24 each. The
+  development run returns **21 of 22, P22 false**: the full descendant constructs 23 against the
+  fresh control's 13 and attributes correctly 21 times against 10, while its calibrated refusals
+  collapse from 29 to 6 and its invented adapters rise from 13 to 15. The checker now decomposes
+  that sum, and the split is not close: **generation two moves no outcome measure at all** and is
+  worth one attribution row, while the M111 diagnostic policy carries the whole effect in both
+  directions. A positive H58 must therefore be reported with the decomposition and credited to the
+  generation that produced it, and whether the ablation bites is recorded as a measurement rather
+  than required as a predicate. None of that is a prediction about the blind bank. Freezing the
+  plan, pinning a generator and running the single invocation are owner gates, and the Docker daemon
+  is still not running as of 26 August 2026, so the attested isolated invocation cannot be planned
+  from here.
+
 - **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
   reproduces on worlds this project did not author, and the transfer does not come out whole.** A
   single invocation of `qwen2.5:1.5b` under ollama 0.32.15, in a container with **no repository mount

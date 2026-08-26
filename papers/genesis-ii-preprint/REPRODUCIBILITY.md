@@ -25,6 +25,23 @@ A replay compares a **stable projection** that excludes PIDs, search paths, retu
 times, temporary paths and interpreter versions. It should be byte-identical on any machine running
 the canonical interpreter over the same population and apparatus.
 
+**M112 is reproducible in a different sense, and the difference has to be stated.** Its checker
+recomputes every predicate from the preserved result:
+
+```bash
+python scripts/check_m112_result.py
+```
+
+What a third party cannot do is re-run the generator: the protocol permitted **one** invocation, and
+`retries_permitted` is `false`. What is checkable instead is the **order**, in a public timestamped
+history — the bank sealed and its `sealed_payload_sha256` published at `e00ddd5`, the tested system
+frozen with the bank unread at `50c7a0e`, the reveal authorized at `007ab86`, the result preserved
+before any checker ran at `2c4ffa3` — plus the fact that the revealed plaintext matches the published
+digest, and that the container isolation was measured inside the container before the invocation
+rather than asserted afterwards. Custody is **procedural, not third-party**: the project held the
+reveal key and `ISOLATION_ATTESTATION.json` says so. A reader who does not accept a project-held key
+should read M112 as evidence about ordering and blindness, not about custody.
+
 ## What must fail
 
 A reproduction that cannot fail is not one. Each of these is expected to exit non-zero:
@@ -53,6 +70,10 @@ reproduces the digests the predecessor recorded. The checkers bind the raw SHA-2
 | `experiments/M109/RESULT.json` | `0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009` |
 | `experiments/M110/RESULT.json` | `163a46dadd815d98d03fede22905a181c4d406a19d391c5ee2631efc3a2488e3` |
 | M109 terminal state digest | `5c08fa3036da6a914bf9…` |
+
+M112 extends the same discipline outward: it restores the M110 and M111 apparatus **unmodified** and
+runs it against the revealed bank, so a reader checking that the transfer and diagnosis arms are the
+frozen ones is checking the same digests listed above.
 
 A functionally equivalent rebuild of M109 would fail these checks. That is deliberate: the claim is
 about a continuation, not about a system that happens to behave the same way.

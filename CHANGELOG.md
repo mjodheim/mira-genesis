@@ -2,6 +2,46 @@
 
 ## Unreleased
 
+- **M113 is pre-registered and built; it has not run and its bank does not exist.** M112 removed
+  world authorship and left the carrier. M113 puts the carrier's interaction language in a blind
+  generator's hands: the emitter chooses the state cells and their domains, which of them are
+  latent, the action names and arities, the preconditions that make the carrier impose a protocol,
+  the effects, the error vocabulary and which of four wire surfaces it speaks with which tokens.
+  The project supplies the contract of reception -- `metamorphosis/carrier_host.py`, a host that
+  holds no carrier semantics and is checked to be **equivariant under a consistent renaming** of
+  every cell, action, error and token. Closure is an exact fixed point rather than an inherited
+  bound: M112's `P5` failed because seven expression nodes closed the image on 1 160 project worlds
+  and not on the first blind one, and the devkit survey here already sees observations first
+  appearing at depth 11. One carrier is one record, that identity is declared and mechanically
+  checked, and M112's cardinality defect would now fail the guard -- as would the same defect one
+  level up, because the minimum is stated over **distinct qualifying structures** under a
+  renaming-invariant signature the checker recomputes from preserved carrier bodies, so a bank of
+  twenty-four renamings of four machines is refused rather than counted as twenty-four. Eleven pre-
+  freeze defects were found by measuring the apparatus rather than reading it, all repaired, each
+  with a regression test -- including three that only the whole suite could find, and that arrived
+  in sequence. The root `.gitattributes` is bound apparatus of M106's frozen protocol and M113's
+  first commit had appended to it; moving those entries into the per-directory files broke an M107
+  test instead, because M107 binds those files too; and the tested system was bound by raw bytes
+  although five of its eleven members are predecessor files no attributes file here may write. Every
+  attributes file in the repository is already frozen apparatus, so an attributes entry is not a
+  mechanism a successor can use: M113 declares only `experiments/M113/.gitattributes` and binds
+  every source member by a declared `lf_normalized` digest mode, with an undeclared mode refused.
+  All twelve declared arms run: producer death executes the full descendant in a capsule whose
+  import path cannot reach either producer result, and every isolated verdict matches the in-process
+  one; the preservation arm finds M110 and M111 reproducing their
+  result digests with 24 of 24 conditions each. The development run, bound to its own `result_digest`
+  `2e89b665…` so the text and the file cannot drift apart, returns **21 of 22, P22 false**: the full
+  descendant constructs 23 against the fresh control's 13 and attributes correctly 21 times against
+  10, while its calibrated refusals fall from 29 to 6 and its invented adapters rise from 13 to 15.
+  The checker now decomposes that sum into the generations that produced it, and **generation two
+  moves no outcome measure at all** -- one attribution row, and nothing else -- while the M111
+  diagnostic policy carries the entire effect in both directions. A positive H58 must be reported
+  with that decomposition and credited accordingly; whether the ablation bites is measured, never
+  required, because making an inert generation refute H58 would be a different claim. Freezing the
+  plan, pinning a generator identity and running the single invocation remain owner gates, and the
+  Docker daemon is still not running as of 26 August 2026, so the attested isolated invocation
+  cannot be planned from here.
+
 - **M104 qualifies the unchanged constructor-reach mechanism on a fresh population.** The owner
   accepted candidate `6416e54b…`, froze protocol `b3d8a6b3…`, then separately authorized one attempt
   on pool `a84fa3c…`. Result `f2be4d85…` and stable evidence `9f2d1758…` were preserved before the
