@@ -192,7 +192,11 @@ def load_spec(*, frozen_required: bool) -> dict[str, Any]:
         SPEC_PATH if SPEC_PATH.is_file() else CANDIDATE_SPEC_PATH
     )
     if not path.is_file():
-        raise GenerationError("no generator spec at %s" % path.relative_to(ROOT))
+        try:
+            shown = path.relative_to(ROOT)
+        except ValueError:
+            shown = path
+        raise GenerationError("no generator spec at %s" % shown)
     spec = json.loads(path.read_text(encoding="utf-8"))
     if frozen_required:
         plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
@@ -480,6 +484,16 @@ def prepare() -> tuple[int, dict[str, Any]]:
         "started_at": _now(),
     }
 
+    # A pre-freeze pass, and only that. Once the identity is frozen, re-running it would re-adopt
+    # a provider and rewrite the candidate underneath a spec the record has already committed to.
+    # Refusing is not a convenience: the freeze is the point after which the instrument stops
+    # being something this milestone may still choose.
+    if SPEC_PATH.is_file():
+        raise GenerationError(
+            "the generator identity is already frozen at %s; the pre-freeze pass may not run "
+            "against a frozen instrument" % SPEC_PATH.name
+        )
+
     spec = load_spec(frozen_required=False)
     bundle["candidate_spec_commitment_before"] = spec.get("spec_commitment_sha256")
 
@@ -512,7 +526,8 @@ def prepare() -> tuple[int, dict[str, Any]]:
     bundle["retries_performed"] = 0
     bundle["qualifying_invocation_performed"] = False
 
-    readiness = bank.assess_carrier_bank_readiness(ROOT)
+    # Read against the tree this pass wrote to, so isolation in a test is real isolation.
+    readiness = bank.assess_carrier_bank_readiness(EXPERIMENT.parents[1])
     bundle["post_conditions"] = {
         "phase": readiness["phase"],
         "revealed": readiness["revealed"],

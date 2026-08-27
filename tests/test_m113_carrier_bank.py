@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -1065,14 +1066,27 @@ _DISCOVERY_ANSWERABLE = (
 
 
 def _unadopted_spec() -> dict:
-    """The candidate as it stands before any provider has been adopted."""
+    """A genuine pre-freeze candidate, whatever state the live artifact has reached.
+
+    Once the identity is frozen the committed candidate equals the frozen spec, so a test that
+    read it directly would be describing a moment rather than an invariant -- the mistake M112
+    recorded. Every field a freeze fills is reset here, so these tests keep asserting the property
+    they name for the whole life of the milestone.
+    """
     spec = _candidate_spec()
     for section, field, blank in _DISCOVERY_ANSWERABLE:
         spec[section][field] = blank
     spec.pop("provider_selection", None)
+    spec["frozen_before_generation"] = False
+    spec["blindness_contract"]["audited_before_the_freeze"] = False
+    spec["sampling"]["seed_is_honoured_by_the_provider"] = "unknown"
     spec["unset_before_freeze"] = sorted(
-        set(spec.get("unset_before_freeze", []))
-        | {"%s.%s" % (section, field) for section, field, _ in _DISCOVERY_ANSWERABLE}
+        {"%s.%s" % (section, field) for section, field, _ in _DISCOVERY_ANSWERABLE}
+        | {
+            "blindness_contract.audited_before_the_freeze",
+            "frozen_before_generation",
+            "sampling.seed_is_honoured_by_the_provider",
+        }
     )
     return spec
 
@@ -1109,16 +1123,33 @@ def _plan_commitment() -> str:
     )["plan_commitment_sha256"]
 
 
-def test_the_candidate_generator_spec_cannot_pass_as_a_frozen_one():
-    """A candidate names what discovery still has to fill, and is refused until it is filled.
+def test_a_spec_with_any_freeze_field_unfilled_cannot_pass_as_a_frozen_one():
+    """Each field a freeze fills is load-bearing on its own, not merely in combination.
 
-    The provider and the model identifier cannot be confirmed without reaching the endpoint, so a
-    candidate written before that reach must not be mistakable for a freeze.
+    Stated as an invariant rather than as a fact about the candidate file: once the identity is
+    frozen that file *is* the frozen spec, and a test written against the earlier moment would
+    quietly stop testing anything.
     """
     with pytest.raises(bank.CarrierBankError):
         bank.validate_generator_spec(
-            _candidate_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+            _unadopted_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
         )
+
+    # And each one alone is enough to refuse a spec that is otherwise complete.
+    for mutate in (
+        lambda s: s.update(frozen_before_generation=False),
+        lambda s: s["blindness_contract"].update(audited_before_the_freeze=False),
+        lambda s: s["generator_identity"].update(provider=None),
+        lambda s: s["generator_identity"].update(provider_serves_the_model_confirmed=False),
+        lambda s: s["generator_identity"].update(model_identity_confirmed_against_the_api=False),
+    ):
+        spec = _frozen_spec()
+        mutate(spec)
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(
+                spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+            )
 
 
 def test_a_fully_pinned_generator_spec_validates():
@@ -1262,9 +1293,19 @@ def test_the_generation_client_refuses_before_it_can_reach_anything():
         if previous is not None:
             os.environ[client.SECRET_VARIABLE] = previous
 
-    # A qualifying call requires a frozen spec, and there is none.
-    with pytest.raises(client.GenerationError):
-        client.load_spec(frozen_required=True)
+    # A qualifying call requires a frozen spec. Checked against a tree that has none, so the
+    # assertion survives this milestone freezing its own.
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as empty:
+        previous_spec, previous_candidate = client.SPEC_PATH, client.CANDIDATE_SPEC_PATH
+        client.SPEC_PATH = Path(empty) / "GENERATOR_SPEC.json"
+        client.CANDIDATE_SPEC_PATH = Path(empty) / "GENERATOR_SPEC_CANDIDATE.json"
+        try:
+            with pytest.raises(client.GenerationError):
+                client.load_spec(frozen_required=True)
+        finally:
+            client.SPEC_PATH, client.CANDIDATE_SPEC_PATH = previous_spec, previous_candidate
 
     # A smoke test on a spec with no provider chosen is refused.
     with pytest.raises(client.GenerationError):
@@ -1427,10 +1468,13 @@ def _stub_transport(client, monkeypatch, *, served_model, served_provider, conte
 def _isolate_paths(client, monkeypatch, tmp_path):
     experiment = tmp_path / "experiments" / "M113"
     experiment.mkdir(parents=True)
+    from metamorphosis.blind_bank_protocol import canonical_bytes
+
     candidate = experiment / "GENERATOR_SPEC_CANDIDATE.json"
-    candidate.write_bytes(
-        (bank.EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json").read_bytes()
-    )
+    # A pre-freeze candidate, not whatever the milestone has since frozen.
+    pristine = _unadopted_spec()
+    pristine["spec_commitment_sha256"] = bank.generator_spec_commitment(pristine)
+    candidate.write_bytes(canonical_bytes(pristine) + b"\n")
     monkeypatch.setattr(client, "EXPERIMENT", experiment)
     monkeypatch.setattr(client, "CANDIDATE_SPEC_PATH", candidate)
     monkeypatch.setattr(client, "SPEC_PATH", experiment / "GENERATOR_SPEC.json")
@@ -1715,3 +1759,58 @@ def test_quantization_is_pinned_as_discovery_bound_and_never_as_attested():
         broken["spec_commitment_sha256"] = bank.generator_spec_commitment(broken)
         with pytest.raises(bank.CarrierBankError):
             bank.validate_generator_spec(broken, root=_root())
+
+
+def test_an_unmeasured_seed_guarantee_is_recorded_as_unknown_and_never_as_a_boolean():
+    """Three states, and the third is the honest one for a hosted provider.
+
+    A provider may list `seed` among its supported parameters -- so the value is accepted rather
+    than dropped -- while promising nothing about whether the same seed returns the same
+    completion. `false` would assert the seed is ignored, a measurement nobody made; `true` would
+    claim reproducibility the provider does not offer. What stays refused is silence.
+    """
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    for value in (True, False, "unknown"):
+        spec = _frozen_spec()
+        spec["sampling"]["seed_is_honoured_by_the_provider"] = value
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        bank.validate_generator_spec(spec, root=_root())
+
+    for value in (None, "probably", 1):
+        spec = _frozen_spec()
+        spec["sampling"]["seed_is_honoured_by_the_provider"] = value
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(spec, root=_root())
+
+    # Silence is refused, and so is a determinism claim under any of the three.
+    silent = _frozen_spec()
+    silent["sampling"].pop("seed_is_honoured_by_the_provider")
+    silent["spec_commitment_sha256"] = bank.generator_spec_commitment(silent)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(silent, root=_root())
+
+    claimed = _frozen_spec()
+    claimed["sampling"]["seed_is_honoured_by_the_provider"] = "unknown"
+    claimed["sampling"]["determinism_is_claimed"] = True
+    claimed["spec_commitment_sha256"] = bank.generator_spec_commitment(claimed)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(claimed, root=_root())
+
+
+def test_the_pre_freeze_pass_refuses_to_run_against_a_frozen_instrument(tmp_path, monkeypatch):
+    """The freeze is the point after which the instrument stops being choosable.
+
+    Re-running the pre-freeze pass afterwards would re-adopt a provider and rewrite the candidate
+    underneath a spec the record has already committed to.
+    """
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    frozen = experiment / "GENERATOR_SPEC.json"
+    monkeypatch.setattr(client, "SPEC_PATH", frozen)
+    frozen.write_text("{}", encoding="utf-8")
+
+    with pytest.raises(client.GenerationError) as refusal:
+        client.prepare()
+    assert "already frozen" in str(refusal.value)

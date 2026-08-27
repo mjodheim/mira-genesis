@@ -736,13 +736,23 @@ def validate_generator_spec(
         raise CarrierBankError("sampling must declare a positive output bound")
     if "seed" not in sampling or "seed_is_honoured_by_the_provider" not in sampling:
         raise CarrierBankError("a seed must be declared, together with whether it is honoured")
-    if sampling.get("seed") is not None and sampling.get("seed_is_honoured_by_the_provider") not in (
-        True,
-        False,
+    honoured = sampling.get("seed_is_honoured_by_the_provider")
+    # Identity, not equality: `1 == True` in Python, so a membership test would let an integer
+    # read as a guarantee.
+    if sampling.get("seed") is not None and not (
+        honoured is True or honoured is False or honoured == "unknown"
     ):
+        # Three states, and the third is the honest one here. A provider may list `seed` among its
+        # supported parameters -- so the value is accepted rather than dropped -- while promising
+        # nothing about whether the same seed returns the same completion. Recording `false` would
+        # assert the seed is ignored, which is a measurement nobody made; recording `true` would
+        # claim reproducibility the provider does not offer. `"unknown"` says what is actually the
+        # case. What stays refused is silence: the key must be present, and `determinism_is_claimed`
+        # must still be false whichever of the three is recorded.
         raise CarrierBankError(
-            "whether the provider honours the seed must be recorded as measured or as unknown, and "
-            "a seed a provider does not guarantee does not make a hosted model reproducible"
+            "whether the provider honours the seed must be recorded as true, false, or the string "
+            "unknown; a seed a provider does not guarantee does not make a hosted model "
+            "reproducible, and an unmeasured guarantee may not be recorded as either"
         )
     if sampling.get("determinism_is_claimed") is not False:
         raise CarrierBankError(
