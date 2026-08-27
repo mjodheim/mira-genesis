@@ -1504,3 +1504,99 @@ def test_the_pre_freeze_pass_refuses_to_report_success_if_it_created_qualifying_
     code, bundle = client.prepare()
     assert code == 5
     assert bundle["unexpectedly_created"] == ["GENERATION_LEDGER.json"]
+
+
+# ------------------------------- the transport, and the difference between silence and denial
+
+
+def test_the_generation_client_tunnels_through_the_environment_proxy(monkeypatch):
+    """Written with no reachable endpoint, this client opened a direct connection.
+
+    The first live call came back 403 `host_not_allowed` from an interception point that had never
+    seen the allowlist. Every other tool in this environment goes through `HTTPS_PROXY`, and so
+    must this one -- one plaintext CONNECT to the proxy, then TLS to the target through it, which
+    is still one physical connection carrying one request.
+    """
+    client = _generation_client()
+    seen = {}
+
+    class FakeConnection:
+        def __init__(self, host, port, timeout=None, context=None):
+            seen["connected_to"] = (host, port)
+
+        def set_tunnel(self, host, port):
+            seen["tunnelled_to"] = (host, port)
+
+        def request(self, method, path, body=None, headers=None):
+            seen["headers"] = headers
+
+        def getresponse(self):
+            class R:
+                status = 200
+
+                def read(self):
+                    return b'{"ok": true}'
+
+                def getheaders(self):
+                    return [("x-request-id", "stub")]
+
+            return R()
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(client.http.client, "HTTPSConnection", FakeConnection)
+    monkeypatch.setenv("OPENROUTER_API_KEY", "test-key-not-a-real-credential")
+    monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:34229")
+
+    client.request("https://openrouter.ai/api/v1/models", method="GET", body=None, timeout=5)
+    assert seen["connected_to"] == ("127.0.0.1", 34229)
+    assert seen["tunnelled_to"] == ("openrouter.ai", 443)
+
+    # Without a proxy configured it connects straight to the target, unchanged.
+    seen.clear()
+    monkeypatch.delenv("HTTPS_PROXY", raising=False)
+    monkeypatch.delenv("https_proxy", raising=False)
+    client.request("https://openrouter.ai/api/v1/models", method="GET", body=None, timeout=5)
+    assert seen["connected_to"] == ("openrouter.ai", 443)
+    assert "tunnelled_to" not in seen
+
+
+def test_a_denied_request_is_never_reported_as_a_fact_about_the_catalogue():
+    """The dangerous defect, and the reason it is dangerous.
+
+    The first live discovery was denied by the egress proxy. The body was unparseable, so the
+    entry list was empty, so the report said `model_is_in_the_catalogue: false` -- a conclusion
+    about DeepSeek's availability manufactured out of a network denial. Acting on it would have
+    meant hunting for a substitute for a model that was there all along, and substituting the
+    generator is the one thing the frozen contract exists to prevent.
+    """
+    client = _generation_client()
+
+    def denied(url, *, method="POST", body=None, timeout=900):
+        return {
+            "started_at": "2026-08-27T00:00:00Z",
+            "finished_at": "2026-08-27T00:00:01Z",
+            "status": 403,
+            "response_headers": {"x-deny-reason": "host_not_allowed"},
+            "response_sha256": "0" * 64,
+            "response_bytes": 100,
+            "body": None,
+            "raw_text": "Host not in allowlist: openrouter.ai.",
+        }
+
+    original = client.request
+    client.request = denied
+    try:
+        with pytest.raises(client.GenerationError) as denial:
+            client.discover(_candidate_spec(), write=False)
+        assert "instrument failure" in str(denial.value)
+        assert "not a finding about the catalogue" in str(denial.value)
+
+        spec = _candidate_spec()
+        spec["generator_identity"]["provider"] = "Fireworks"
+        with pytest.raises(client.GenerationError) as probe:
+            client.smoke(spec, write=False)
+        assert "not a finding about the provider" in str(probe.value)
+    finally:
+        client.request = original

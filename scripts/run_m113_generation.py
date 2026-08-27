@@ -131,12 +131,25 @@ def request(
         raise GenerationError("the generator endpoint must be https")
     payload = canonical_bytes(body) if body is not None else None
 
-    connection = http.client.HTTPSConnection(
-        parsed.hostname,
-        parsed.port or 443,
-        timeout=timeout,
-        context=ssl.create_default_context(),
-    )
+    # Honour the environment's egress proxy. Written without a reachable endpoint to test
+    # against, this originally opened a direct connection and ignored `HTTPS_PROXY`; the first
+    # live call came back 403 `host_not_allowed` from an interception point that had never seen
+    # the allowlist. Tunnelling through the configured proxy is what every other tool here does.
+    # It changes nothing about the request: `set_tunnel` sends one plaintext CONNECT to the proxy
+    # and then completes TLS to the target through it, so this is still one physical connection
+    # carrying one request, and still no retry at any layer.
+    context = ssl.create_default_context()
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+    if proxy:
+        via = urllib.parse.urlsplit(proxy if "://" in proxy else "http://" + proxy)
+        connection = http.client.HTTPSConnection(
+            via.hostname, via.port or 80, timeout=timeout, context=context
+        )
+        connection.set_tunnel(parsed.hostname, parsed.port or 443)
+    else:
+        connection = http.client.HTTPSConnection(
+            parsed.hostname, parsed.port or 443, timeout=timeout, context=context
+        )
     headers = {
         "Accept": "application/json",
         "Authorization": "Bearer %s" % _secret(),
@@ -199,17 +212,36 @@ def discover(spec: dict[str, Any], *, write: bool) -> dict[str, Any]:
     endpoint = urllib.parse.urlsplit(spec["generator_identity"]["endpoint"])
     base = "%s://%s" % (endpoint.scheme, endpoint.netloc)
 
-    catalogue = request("%s/api/v1/models" % base, method="GET", body=None, timeout=120)
-    entries = ((catalogue.get("body") or {}).get("data")) or []
+    # Fail closed on a transport failure rather than reporting it as a fact about the catalogue.
+    #
+    # The first live discovery returned 403 `host_not_allowed` from the egress proxy. The body was
+    # unparseable, so `entries` was empty, so `exact` was empty, and the report said
+    # `model_is_in_the_catalogue: false` -- a scientific conclusion about DeepSeek's availability
+    # manufactured out of a network denial. Acting on it would have meant hunting for a substitute
+    # model for a model that was there all along, and substituting the generator is the one thing
+    # the frozen contract exists to prevent. A discovery that could not read the catalogue does not
+    # know what is in it, and now says so.
+    def _read(url: str) -> dict[str, Any]:
+        observed = request(url, method="GET", body=None, timeout=120)
+        if observed["status"] != 200 or observed["body"] is None:
+            raise GenerationError(
+                "discovery could not read %s: HTTP %s%s. This is an instrument failure, not a "
+                "finding about the catalogue, and no conclusion about the model may be drawn "
+                "from it." % (
+                    url, observed["status"],
+                    " (%s)" % (observed["raw_text"] or "").strip()[:120]
+                    if observed["raw_text"] else "",
+                )
+            )
+        return observed["body"]
+
+    entries = _read("%s/api/v1/models" % base).get("data") or []
     exact = [item for item in entries if item.get("id") == model]
 
-    endpoints = request(
-        "%s/api/v1/models/%s/endpoints" % (base, urllib.parse.quote(model, safe="/")),
-        method="GET",
-        body=None,
-        timeout=120,
-    )
-    served = ((endpoints.get("body") or {}).get("data") or {}).get("endpoints") or []
+    served = (
+        _read("%s/api/v1/models/%s/endpoints" % (base, urllib.parse.quote(model, safe="/")))
+        .get("data") or {}
+    ).get("endpoints") or []
 
     report = {
         "schema": "m113-provider-discovery-development-v1",
@@ -281,7 +313,16 @@ def smoke(spec: dict[str, Any], *, write: bool) -> dict[str, Any]:
         "temperature": spec["sampling"]["temperature"],
     }
     observed = request(identity["endpoint"], body=body)
-    served = (observed.get("body") or {})
+    if observed["status"] != 200 or observed["body"] is None:
+        raise GenerationError(
+            "the smoke probe could not reach the model: HTTP %s%s. Diagnose the transport before "
+            "anything is frozen; this is not a finding about the provider." % (
+                observed["status"],
+                " (%s)" % (observed["raw_text"] or "").strip()[:120]
+                if observed["raw_text"] else "",
+            )
+        )
+    served = observed["body"]
 
     report = {
         "schema": "m113-transport-smoke-development-v1",
