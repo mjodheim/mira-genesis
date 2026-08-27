@@ -53,13 +53,13 @@ DEFAULT_CANDIDATES = (
 
 
 def discovery_is_predecessor_compatible(report: Mapping[str, Any]) -> bool:
-    """Whether a route advertises every parameter the predecessor smoke intentionally sends."""
+    """Whether a route positively advertises every parameter the predecessor smoke sends."""
     return bool(
         report.get("provider_found") is True
         and report.get("status") == 200
         and report.get("supports_structured_outputs") is True
         and report.get("supports_seed") is True
-        and report.get("endpoint_status") in (0, None)
+        and report.get("endpoint_status") == 0
     )
 
 
