@@ -91,7 +91,7 @@ def test_any_material_router_pipeline_stage_is_a_delta_not_silently_accepted():
         assert "no_router_pipeline_intervention" in verdict["failed_route_checks"]
 
 
-def test_provider_and_model_identity_are_both_load_bearing():
+def test_provider_model_and_router_requested_identity_are_load_bearing():
     provider = _good_report(served_provider="Together")
     assert routes.evaluate_smoke(provider)["route_viable"] is False
 
@@ -103,6 +103,12 @@ def test_provider_and_model_identity_are_both_load_bearing():
     verdict = routes.evaluate_smoke(selected)
     assert verdict["route_viable"] is False
     assert "selected_endpoint_exact" in verdict["failed_route_checks"]
+
+    requested = _good_report()
+    requested["router_metadata"]["requested"] = "deepseek/deepseek-v4-flash-latest"
+    verdict = routes.evaluate_smoke(requested)
+    assert verdict["route_viable"] is False
+    assert "router_requested_model_exact" in verdict["failed_route_checks"]
 
 
 def test_router_metadata_is_evidence_not_an_optional_nicety():
