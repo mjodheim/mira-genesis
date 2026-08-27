@@ -1580,3 +1580,55 @@ generator and was consumed: the plan is frozen as the candidate unchanged, at co
 phase would cross then found the twelfth pre-freeze defect -- `P15` reading counters the runner
 wrote as literals, and a generation ledger declared and never read -- both repaired, each pinned by
 a regression test. The remaining five gates need the instrument.
+
+## M113's single qualifying invocation returned HTTP 429, and no bank exists
+
+Recorded 27 August 2026.
+
+The generator identity was frozen at spec commitment
+`c0f13b698034ed8cbe147ff79512e8522594ac6b691d0cde1f806bc407cfd17a` — `deepseek/deepseek-v4-flash-0731`
+served by Morph at bf16, twenty-four carriers requested, one invocation permitted, retries forbidden
+at eight named layers. The freeze was committed and pushed before the invocation so the order is
+verifiable from the history rather than asserted afterwards.
+
+One physical request was made at **2026-08-27T07:27:49Z**. It returned **HTTP 429**.
+
+**This is an instrument failure, not a negative result for H58.** The distinction matters more than
+the outcome. A negative result is a measurement — the machinery ran against a bank and did not do
+what the hypothesis predicted. Nothing ran. The generator was never reached, no carrier was ever
+produced, and `P22` was not computed or approached. Anyone reading this record later must not be
+able to mistake an unreached instrument for a tested hypothesis.
+
+**The attempt is not repeated.** The frozen rule permits one physical request and no retry, for any
+status, at any layer. The ledger records attempt 1 with outcome `aborted` and no payload digest, and
+the shared contract draws the only conclusion available from it: *the frozen spec has materialized 0
+banks; exactly one is required*. Spec `c0f13b69…` can never authorize a bank. Whether M113 is
+re-frozen under a new generator spec is the owner's decision and was not taken here.
+
+**The risk was known and the trade was made deliberately.** The pre-freeze transport probe against
+Morph needed two attempts; the first returned 429 `service_overloaded` from
+`upstream_provider_shared_pool` with `is_byok` false. That was recorded before the freeze, together
+with the observation that the same condition would end the milestone for a reason with no scientific
+content. The owner declined the BYOK remedy on the ground that a new credential path could alter the
+served identity after the instrumental choice had been frozen, accepted the successful probe as
+sufficient pre-freeze validation, and authorized the invocation with the risk understood. Recording
+this is not an apportioning of blame; it is the difference between a milestone that was unlucky and
+one that was careless, and the record should be able to tell them apart.
+
+**Two client defects, both found by the failure and neither before it.** The first live qualifying
+invocation was also the first exercise of the failure path.
+
+- The ledger outcome was written as `failed`, which the shared closed vocabulary
+  (`materialized`, `failed_structural_validation`, `failed_isolation`, `aborted`) does not contain.
+  The phase machine caught it on read-back. The correct word is `aborted`. The encoding was
+  corrected; the facts were not touched.
+- The failure response was discarded. Only the status code survives for the attempt that matters.
+  The development probe's 429 named its cause, and that cause is deliberately **not** carried across
+  to this attempt: it was a different request at a different time, and borrowing it would be
+  inventing evidence this attempt did not leave.
+
+Both are repaired with regression tests, and a failed attempt now preserves its full response.
+
+**What stands.** The analysis plan remains frozen and untouched at `66003159…`. The generator spec
+remains frozen. M107–M112 are unaffected. No generality gate moved. H58 is exactly as untested as it
+was before the invocation.

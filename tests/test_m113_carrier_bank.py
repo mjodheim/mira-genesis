@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -1055,23 +1056,56 @@ def _candidate_spec() -> dict:
     )
 
 
+# The three fields discovery is entitled to answer. Tests that exercise adoption reset them, so
+# they do not depend on how far the live candidate has already been filled in.
+_DISCOVERY_ANSWERABLE = (
+    ("generator_identity", "provider", None),
+    ("generator_identity", "provider_serves_the_model_confirmed", False),
+    ("generator_identity", "model_identity_confirmed_against_the_api", False),
+)
+
+
+def _unadopted_spec() -> dict:
+    """A genuine pre-freeze candidate, whatever state the live artifact has reached.
+
+    Once the identity is frozen the committed candidate equals the frozen spec, so a test that
+    read it directly would be describing a moment rather than an invariant -- the mistake M112
+    recorded. Every field a freeze fills is reset here, so these tests keep asserting the property
+    they name for the whole life of the milestone.
+    """
+    spec = _candidate_spec()
+    for section, field, blank in _DISCOVERY_ANSWERABLE:
+        spec[section][field] = blank
+    spec.pop("provider_selection", None)
+    spec["frozen_before_generation"] = False
+    spec["blindness_contract"]["audited_before_the_freeze"] = False
+    spec["sampling"]["seed_is_honoured_by_the_provider"] = "unknown"
+    spec["unset_before_freeze"] = sorted(
+        {"%s.%s" % (section, field) for section, field, _ in _DISCOVERY_ANSWERABLE}
+        | {
+            "blindness_contract.audited_before_the_freeze",
+            "frozen_before_generation",
+            "sampling.seed_is_honoured_by_the_provider",
+        }
+    )
+    return spec
+
+
 def _frozen_spec() -> dict:
-    """The candidate with exactly the fields it declares unset filled in, as discovery would."""
+    """The candidate with exactly the three fields discovery cannot answer filled in.
+
+    Whatever provider the candidate currently pins is kept, so this follows the real artifact
+    rather than a name frozen into the test.
+    """
     from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
 
     spec = _candidate_spec()
-    for field in spec["unset_before_freeze"]:
-        assert field  # the candidate says what it is missing
+    provider = spec["generator_identity"]["provider"]
+    assert provider, "the candidate has no provider adopted yet"
     spec["frozen_before_generation"] = True
     spec["blindness_contract"]["audited_before_the_freeze"] = True
-    spec["generator_identity"].update(
-        provider="Fireworks",
-        provider_serves_the_model_confirmed=True,
-        model_identity_confirmed_against_the_api=True,
-    )
     spec["sampling"]["seed_is_honoured_by_the_provider"] = False
-    spec["canonical_request_body"]["provider"]["only"] = ["Fireworks"]
-    spec.pop("unset_before_freeze")
+    spec.pop("unset_before_freeze", None)
     spec["canonical_request_body_sha256"] = sha256_hex(
         canonical_bytes(spec["canonical_request_body"])
     )
@@ -1089,16 +1123,33 @@ def _plan_commitment() -> str:
     )["plan_commitment_sha256"]
 
 
-def test_the_candidate_generator_spec_cannot_pass_as_a_frozen_one():
-    """A candidate names what discovery still has to fill, and is refused until it is filled.
+def test_a_spec_with_any_freeze_field_unfilled_cannot_pass_as_a_frozen_one():
+    """Each field a freeze fills is load-bearing on its own, not merely in combination.
 
-    The provider and the model identifier cannot be confirmed without reaching the endpoint, so a
-    candidate written before that reach must not be mistakable for a freeze.
+    Stated as an invariant rather than as a fact about the candidate file: once the identity is
+    frozen that file *is* the frozen spec, and a test written against the earlier moment would
+    quietly stop testing anything.
     """
     with pytest.raises(bank.CarrierBankError):
         bank.validate_generator_spec(
-            _candidate_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
+            _unadopted_spec(), root=_root(), plan_commitment_sha256=_plan_commitment()
         )
+
+    # And each one alone is enough to refuse a spec that is otherwise complete.
+    for mutate in (
+        lambda s: s.update(frozen_before_generation=False),
+        lambda s: s["blindness_contract"].update(audited_before_the_freeze=False),
+        lambda s: s["generator_identity"].update(provider=None),
+        lambda s: s["generator_identity"].update(provider_serves_the_model_confirmed=False),
+        lambda s: s["generator_identity"].update(model_identity_confirmed_against_the_api=False),
+    ):
+        spec = _frozen_spec()
+        mutate(spec)
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(
+                spec, root=_root(), plan_commitment_sha256=_plan_commitment()
+            )
 
 
 def test_a_fully_pinned_generator_spec_validates():
@@ -1242,13 +1293,23 @@ def test_the_generation_client_refuses_before_it_can_reach_anything():
         if previous is not None:
             os.environ[client.SECRET_VARIABLE] = previous
 
-    # A qualifying call requires a frozen spec, and there is none.
-    with pytest.raises(client.GenerationError):
-        client.load_spec(frozen_required=True)
+    # A qualifying call requires a frozen spec. Checked against a tree that has none, so the
+    # assertion survives this milestone freezing its own.
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as empty:
+        previous_spec, previous_candidate = client.SPEC_PATH, client.CANDIDATE_SPEC_PATH
+        client.SPEC_PATH = Path(empty) / "GENERATOR_SPEC.json"
+        client.CANDIDATE_SPEC_PATH = Path(empty) / "GENERATOR_SPEC_CANDIDATE.json"
+        try:
+            with pytest.raises(client.GenerationError):
+                client.load_spec(frozen_required=True)
+        finally:
+            client.SPEC_PATH, client.CANDIDATE_SPEC_PATH = previous_spec, previous_candidate
 
     # A smoke test on a spec with no provider chosen is refused.
     with pytest.raises(client.GenerationError):
-        client.smoke(_candidate_spec(), write=False)
+        client.smoke(_unadopted_spec(), write=False)
 
     # Not http, and no third-party client whose retry behaviour would have to be disabled.
     source = (
@@ -1328,7 +1389,7 @@ def test_the_provider_rule_adopts_only_when_the_choice_is_mechanical():
     """
     client = _generation_client()
 
-    outcome = client.adopt(_discovery_report(), _candidate_spec())
+    outcome = client.adopt(_discovery_report(), _unadopted_spec())
     assert outcome["adopted"] is True
     assert outcome["provider"] == "Fireworks"
 
@@ -1337,7 +1398,7 @@ def test_the_provider_rule_adopts_only_when_the_choice_is_mechanical():
         _discovery_report(capable=()),
         _discovery_report(in_catalogue=False),
     ):
-        refused = client.adopt(report, _candidate_spec())
+        refused = client.adopt(report, _unadopted_spec())
         assert refused["adopted"] is False
         assert refused["reason"]
 
@@ -1345,7 +1406,7 @@ def test_the_provider_rule_adopts_only_when_the_choice_is_mechanical():
 def test_discovery_can_never_complete_the_freeze():
     """Adoption answers three fields. The other three are not discovery's to answer."""
     client = _generation_client()
-    spec = _candidate_spec()
+    spec = _unadopted_spec()
     before = set(spec["unset_before_freeze"])
 
     outcome = client.adopt(_discovery_report(), spec)
@@ -1407,10 +1468,13 @@ def _stub_transport(client, monkeypatch, *, served_model, served_provider, conte
 def _isolate_paths(client, monkeypatch, tmp_path):
     experiment = tmp_path / "experiments" / "M113"
     experiment.mkdir(parents=True)
+    from metamorphosis.blind_bank_protocol import canonical_bytes
+
     candidate = experiment / "GENERATOR_SPEC_CANDIDATE.json"
-    candidate.write_bytes(
-        (bank.EXPERIMENT_DIRECTORY / "GENERATOR_SPEC_CANDIDATE.json").read_bytes()
-    )
+    # A pre-freeze candidate, not whatever the milestone has since frozen.
+    pristine = _unadopted_spec()
+    pristine["spec_commitment_sha256"] = bank.generator_spec_commitment(pristine)
+    candidate.write_bytes(canonical_bytes(pristine) + b"\n")
     monkeypatch.setattr(client, "EXPERIMENT", experiment)
     monkeypatch.setattr(client, "CANDIDATE_SPEC_PATH", candidate)
     monkeypatch.setattr(client, "SPEC_PATH", experiment / "GENERATOR_SPEC.json")
@@ -1593,10 +1657,251 @@ def test_a_denied_request_is_never_reported_as_a_fact_about_the_catalogue():
         assert "instrument failure" in str(denial.value)
         assert "not a finding about the catalogue" in str(denial.value)
 
-        spec = _candidate_spec()
+        spec = _unadopted_spec()
         spec["generator_identity"]["provider"] = "Fireworks"
         with pytest.raises(client.GenerationError) as probe:
             client.smoke(spec, write=False)
         assert "not a finding about the provider" in str(probe.value)
     finally:
         client.request = original
+
+
+# ------------------------------------- the provider criterion, and what quantization can claim
+
+
+def _adopted_spec() -> dict:
+    """The candidate as it stands once a provider has been selected and recorded."""
+    return _candidate_spec()
+
+
+def test_the_recorded_criterion_must_actually_select_the_pinned_provider():
+    """A criterion that does not name the provider the spec pins is decoration."""
+    spec = _frozen_spec()
+    assert spec["provider_selection"]["selected"] == spec["generator_identity"]["provider"]
+
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    for mutate in (
+        lambda s: s["provider_selection"].update(selected="Together"),
+        lambda s: s["provider_selection"].update(candidates_considered=["Together"]),
+        lambda s: s["provider_selection"].update(criterion="   "),
+        lambda s: s["provider_selection"].pop("criterion"),
+        lambda s: s.pop("provider_selection"),
+    ):
+        broken = json.loads(json.dumps(spec))
+        mutate(broken)
+        broken["spec_commitment_sha256"] = bank.generator_spec_commitment(broken)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(broken, root=_root())
+
+
+def test_a_criterion_that_could_have_been_informed_by_the_result_is_refused():
+    """The whole point of recording when a criterion was formed.
+
+    A provider chosen for what it does to the hypothesis is not a criterion, it is an outcome
+    being selected for. And a criterion formed after the freeze, or after the bank, is one the
+    record cannot distinguish from that.
+    """
+    spec = _frozen_spec()
+    for key in (
+        "formulated_before_any_bank_existed",
+        "formulated_before_generator_freeze",
+        "formulated_before_smoke_with_the_final_identity",
+        "formulated_before_the_qualifying_invocation",
+    ):
+        broken = json.loads(json.dumps(spec))
+        broken["provider_selection"][key] = False
+        broken["spec_commitment_sha256"] = bank.generator_spec_commitment(broken)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(broken, root=_root())
+
+    depends = json.loads(json.dumps(spec))
+    depends["provider_selection"]["depends_on_any_h58_result"] = True
+    depends["spec_commitment_sha256"] = bank.generator_spec_commitment(depends)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(depends, root=_root())
+
+    # Whether the catalogue had been seen must be recorded either way. Silence on it is the part
+    # a reader cannot check, so it is refused rather than defaulted.
+    silent = json.loads(json.dumps(spec))
+    silent["provider_selection"].pop("formulated_after_observing_the_provider_catalogue")
+    silent["spec_commitment_sha256"] = bank.generator_spec_commitment(silent)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(silent, root=_root())
+
+    # Recording it as true is permitted: this project's criterion was formed after discovery ran,
+    # and says so.
+    honest = json.loads(json.dumps(spec))
+    honest["provider_selection"]["formulated_after_observing_the_provider_catalogue"] = True
+    honest["spec_commitment_sha256"] = bank.generator_spec_commitment(honest)
+    bank.validate_generator_spec(honest, root=_root())
+
+
+def test_quantization_is_pinned_as_discovery_bound_and_never_as_attested():
+    """The nearest thing a hosted generator has to M112's weight digest, and its exact limit.
+
+    OpenRouter reports quantization in the provider catalogue and not in the completion response.
+    It can be pinned from discovery; it cannot be re-verified from the served answer. A spec that
+    recorded it as attested at serve time would be claiming more than the instrument supports.
+    """
+    spec = _frozen_spec()
+    assert spec["generator_identity"]["quantization_source"] == "provider_discovery_catalogue"
+    assert spec["generator_identity"]["quantization_is_runtime_attested"] is False
+
+    for mutate in (
+        lambda s: s["generator_identity"].update(quantization_is_runtime_attested=True),
+        lambda s: s["generator_identity"].update(quantization_source="completion_response"),
+        lambda s: s["generator_identity"].update(quantization=""),
+        lambda s: s["generator_identity"].pop("quantization"),
+    ):
+        broken = json.loads(json.dumps(spec))
+        mutate(broken)
+        broken["spec_commitment_sha256"] = bank.generator_spec_commitment(broken)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(broken, root=_root())
+
+
+def test_an_unmeasured_seed_guarantee_is_recorded_as_unknown_and_never_as_a_boolean():
+    """Three states, and the third is the honest one for a hosted provider.
+
+    A provider may list `seed` among its supported parameters -- so the value is accepted rather
+    than dropped -- while promising nothing about whether the same seed returns the same
+    completion. `false` would assert the seed is ignored, a measurement nobody made; `true` would
+    claim reproducibility the provider does not offer. What stays refused is silence.
+    """
+    from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+
+    for value in (True, False, "unknown"):
+        spec = _frozen_spec()
+        spec["sampling"]["seed_is_honoured_by_the_provider"] = value
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        bank.validate_generator_spec(spec, root=_root())
+
+    for value in (None, "probably", 1):
+        spec = _frozen_spec()
+        spec["sampling"]["seed_is_honoured_by_the_provider"] = value
+        spec["spec_commitment_sha256"] = bank.generator_spec_commitment(spec)
+        with pytest.raises(bank.CarrierBankError):
+            bank.validate_generator_spec(spec, root=_root())
+
+    # Silence is refused, and so is a determinism claim under any of the three.
+    silent = _frozen_spec()
+    silent["sampling"].pop("seed_is_honoured_by_the_provider")
+    silent["spec_commitment_sha256"] = bank.generator_spec_commitment(silent)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(silent, root=_root())
+
+    claimed = _frozen_spec()
+    claimed["sampling"]["seed_is_honoured_by_the_provider"] = "unknown"
+    claimed["sampling"]["determinism_is_claimed"] = True
+    claimed["spec_commitment_sha256"] = bank.generator_spec_commitment(claimed)
+    with pytest.raises(bank.CarrierBankError):
+        bank.validate_generator_spec(claimed, root=_root())
+
+
+def test_the_pre_freeze_pass_refuses_to_run_against_a_frozen_instrument(tmp_path, monkeypatch):
+    """The freeze is the point after which the instrument stops being choosable.
+
+    Re-running the pre-freeze pass afterwards would re-adopt a provider and rewrite the candidate
+    underneath a spec the record has already committed to.
+    """
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    frozen = experiment / "GENERATOR_SPEC.json"
+    monkeypatch.setattr(client, "SPEC_PATH", frozen)
+    frozen.write_text("{}", encoding="utf-8")
+
+    with pytest.raises(client.GenerationError) as refusal:
+        client.prepare()
+    assert "already frozen" in str(refusal.value)
+
+
+# ------------------------------------ what a failed qualifying attempt must leave behind
+
+
+def test_a_failed_attempt_is_recorded_in_the_contract_s_own_vocabulary(tmp_path, monkeypatch):
+    """The client wrote an outcome the shared contract does not admit, and only the phase machine
+    reading the record back discovered it.
+
+    `LEDGER_OUTCOMES` is closed: materialized, failed_structural_validation, failed_isolation,
+    aborted. An attempt that ended before any payload existed is none of the middle two, because
+    neither stage was reached, so it is `aborted`. A record written in a private vocabulary is
+    unreadable by the contract that governs it, which is the same as not having been written.
+    """
+    from metamorphosis.blind_bank_protocol import LEDGER_OUTCOMES, validate_generation_ledger
+
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    ledger = experiment / "GENERATION_LEDGER.json"
+    monkeypatch.setattr(client, "LEDGER_PATH", ledger)
+    monkeypatch.setattr(client, "FAILED_ATTEMPT_PATH", experiment / "GENERATION_FAILED_ATTEMPT.json")
+
+    spec = _frozen_spec()
+
+    def denied(url, *, method="POST", body=None, timeout=900):
+        return {
+            "started_at": "2026-08-27T07:27:49Z",
+            "finished_at": "2026-08-27T07:27:50Z",
+            "status": 429,
+            "response_headers": {"server": "cloudflare"},
+            "response_sha256": "0" * 64,
+            "response_bytes": 220,
+            "body": {"error": {"code": 429, "message": "Provider returned error"}},
+            "raw_text": None,
+        }
+
+    monkeypatch.setattr(client, "request", denied)
+    assert client.qualify(spec) == 1
+
+    recorded = json.loads(ledger.read_text(encoding="utf-8"))
+    entry = recorded["entries"][0]
+    assert entry["outcome"] in LEDGER_OUTCOMES
+    assert entry["outcome"] == "aborted"
+    assert entry["payload_sha256"] is None
+    # Well-formed, and still refusing to authorize a bank the attempt did not produce.
+    with pytest.raises(Exception) as refusal:
+        validate_generation_ledger(
+            recorded, spec_commitment_sha256=spec["spec_commitment_sha256"]
+        )
+    assert "materialized 0 banks" in str(refusal.value)
+
+
+def test_a_failed_attempt_preserves_what_it_observed(tmp_path, monkeypatch):
+    """A failed attempt's record is the evidence of an instrument failure.
+
+    An earlier form of this wrote only the status code, so the body explaining why was lost at
+    exactly the moment it mattered most -- and the first real qualifying invocation was the one
+    that lost it.
+    """
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    failed = experiment / "GENERATION_FAILED_ATTEMPT.json"
+    monkeypatch.setattr(client, "LEDGER_PATH", experiment / "GENERATION_LEDGER.json")
+    monkeypatch.setattr(client, "FAILED_ATTEMPT_PATH", failed)
+
+    detail = {"error": {"code": 429, "metadata": {"provider_name": "Morph",
+                                                 "limit_source": "upstream_provider_shared_pool"}}}
+
+    def denied(url, *, method="POST", body=None, timeout=900):
+        return {
+            "started_at": "2026-08-27T07:27:49Z",
+            "finished_at": "2026-08-27T07:27:50Z",
+            "status": 429,
+            "response_headers": {"server": "cloudflare", "x-request-id": "abc"},
+            "response_sha256": "1" * 64,
+            "response_bytes": 220,
+            "body": detail,
+            "raw_text": None,
+        }
+
+    monkeypatch.setattr(client, "request", denied)
+    assert client.qualify(_frozen_spec()) == 1
+
+    preserved = json.loads(failed.read_text(encoding="utf-8"))
+    assert preserved["status"] == 429
+    assert preserved["body"] == detail
+    assert preserved["response_headers"]["x-request-id"] == "abc"
+    assert preserved["this_is_an_instrument_failure_not_a_hypothesis_result"] is True
+    # And no bank, no result, came out of it.
+    assert not (experiment / "GENERATION_RESPONSE.json").exists()
+    assert not (experiment / "RESULT.json").exists()

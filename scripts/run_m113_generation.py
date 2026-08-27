@@ -65,6 +65,7 @@ RAW_RESPONSE_PATH = EXPERIMENT / "GENERATION_RESPONSE.json"
 DISCOVERY_PATH = EXPERIMENT / "PROVIDER_DISCOVERY_DEVELOPMENT.json"
 SMOKE_PATH = EXPERIMENT / "TRANSPORT_SMOKE_DEVELOPMENT.json"
 BUNDLE_PATH = EXPERIMENT / "PRE_FREEZE_BUNDLE_DEVELOPMENT.json"
+FAILED_ATTEMPT_PATH = EXPERIMENT / "GENERATION_FAILED_ATTEMPT.json"
 
 SECRET_VARIABLE = "OPENROUTER_API_KEY"
 LEDGER_SCHEMA = "mira-blind-bank-generation-ledger-v1"
@@ -192,7 +193,11 @@ def load_spec(*, frozen_required: bool) -> dict[str, Any]:
         SPEC_PATH if SPEC_PATH.is_file() else CANDIDATE_SPEC_PATH
     )
     if not path.is_file():
-        raise GenerationError("no generator spec at %s" % path.relative_to(ROOT))
+        try:
+            shown = path.relative_to(ROOT)
+        except ValueError:
+            shown = path
+        raise GenerationError("no generator spec at %s" % shown)
     spec = json.loads(path.read_text(encoding="utf-8"))
     if frozen_required:
         plan = json.loads(PLAN_PATH.read_text(encoding="utf-8"))
@@ -480,6 +485,16 @@ def prepare() -> tuple[int, dict[str, Any]]:
         "started_at": _now(),
     }
 
+    # A pre-freeze pass, and only that. Once the identity is frozen, re-running it would re-adopt
+    # a provider and rewrite the candidate underneath a spec the record has already committed to.
+    # Refusing is not a convenience: the freeze is the point after which the instrument stops
+    # being something this milestone may still choose.
+    if SPEC_PATH.is_file():
+        raise GenerationError(
+            "the generator identity is already frozen at %s; the pre-freeze pass may not run "
+            "against a frozen instrument" % SPEC_PATH.name
+        )
+
     spec = load_spec(frozen_required=False)
     bundle["candidate_spec_commitment_before"] = spec.get("spec_commitment_sha256")
 
@@ -512,7 +527,8 @@ def prepare() -> tuple[int, dict[str, Any]]:
     bundle["retries_performed"] = 0
     bundle["qualifying_invocation_performed"] = False
 
-    readiness = bank.assess_carrier_bank_readiness(ROOT)
+    # Read against the tree this pass wrote to, so isolation in a test is real isolation.
+    readiness = bank.assess_carrier_bank_readiness(EXPERIMENT.parents[1])
     bundle["post_conditions"] = {
         "phase": readiness["phase"],
         "revealed": readiness["revealed"],
@@ -585,16 +601,41 @@ def qualify(spec: dict[str, Any]) -> int:
         failure = "%s: %s" % (type(exc).__name__, exc)
 
     if observed is None or observed["status"] != 200:
+        # An attempt that ended before any payload existed. `aborted` is the shared contract's
+        # word for that: it is neither a structural-validation failure nor an isolation failure,
+        # because neither stage was reached.
+        #
+        # The failure response is preserved too. A failed attempt's record *is* the evidence of an
+        # instrument failure, and an earlier form of this wrote only the status code, so the body
+        # explaining why was lost at exactly the moment it mattered most.
+        note = failure or "HTTP %s" % (observed or {}).get("status")
+        if observed is not None:
+            FAILED_ATTEMPT_PATH.write_bytes(canonical_bytes({
+                "schema": "m113-failed-attempt-v1",
+                "milestone": "M113",
+                "spec_commitment_sha256": commitment,
+                "attempt_index": attempt_index,
+                "request_body_sha256": spec["canonical_request_body_sha256"],
+                "status": observed["status"],
+                "response_headers": observed["response_headers"],
+                "response_sha256": observed["response_sha256"],
+                "response_bytes": observed["response_bytes"],
+                "body": observed["body"],
+                "raw_text": observed["raw_text"],
+                "started_at": observed["started_at"],
+                "finished_at": observed["finished_at"],
+                "this_is_an_instrument_failure_not_a_hypothesis_result": True,
+            }) + b"\n")
         _append_ledger({
             "attempt_index": attempt_index,
             "spec_commitment_sha256": commitment,
             "started_at": started,
-            "outcome": "failed",
+            "outcome": "aborted",
             "payload_sha256": None,
             "isolation_attestation_sha256": None,
-            "note": failure or "HTTP %s" % (observed or {}).get("status"),
+            "note": note,
         })
-        print("the invocation failed and is recorded as a failed attempt; no retry is permitted")
+        print("the invocation failed and is recorded as an aborted attempt; no retry is permitted")
         return 1
 
     served = observed["body"] or {}
@@ -610,7 +651,7 @@ def qualify(spec: dict[str, Any]) -> int:
             "attempt_index": attempt_index,
             "spec_commitment_sha256": commitment,
             "started_at": started,
-            "outcome": "failed",
+            "outcome": "aborted",
             "payload_sha256": None,
             "isolation_attestation_sha256": None,
             "note": "served identity differs from the frozen identity",

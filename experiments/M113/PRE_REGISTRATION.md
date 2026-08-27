@@ -413,6 +413,106 @@ requested: the transport is `http.client` from the standard library, driven dire
 and no third-party HTTP client is imported, because each carries retry behaviour that would have to
 be disabled correctly, and the way to disable it correctly is not to have it.
 
+## The provider, and the criterion that chose it
+
+Discovery found `deepseek/deepseek-v4-flash-0731` served by twenty-eight providers, twenty of them
+supporting strict structured output. The rule this milestone declared before any data adopts a
+provider only when exactly one can serve the frozen request, so twenty stopped the pass and went to
+the owner, who recorded this criterion:
+
+> Among the providers satisfying every already-frozen instrumental constraint, retain the one whose
+> declared quantization most faithfully preserves the model's weights; only on a tie, apply a
+> pre-declared deterministic tie-break.
+
+Applied to the twenty candidates it selects **Morph**, the only admissible one declared `bf16`; no
+tie-break was needed. The criterion is recorded in the spec together with the fact that it was
+**formulated after the provider catalogue had been observed** — and before the smoke probe with the
+final identity, before the generator freeze, before the qualifying invocation, and before any bank
+existed. It depends on no result of H58, and `validate_generator_spec` refuses a spec that claims
+otherwise, refuses one whose criterion does not select the provider it pins, and refuses one that
+leaves the timing unrecorded, because silence about when a choice was made is the part a reader
+cannot check.
+
+Quantization matters here for a specific reason. M112 froze a model blob digest and could therefore
+say afterwards exactly which weights emitted its bank. A hosted model offers no blob, and
+`deepseek-v4-flash-0731` served at fp4 and at bf16 is not the same computation under one name. So
+the quantization is the nearest available analogue and it is pinned — with its epistemic status
+attached. OpenRouter reports it in the **provider catalogue** and not in the completion response, so
+it is a `provider_discovery_catalogue` property that cannot be re-verified from the served answer.
+The contract requires `quantization_is_runtime_attested` to be false and refuses any spec that
+records it as attested. A discovery-bound property is not a verified one, and the record says which
+this is.
+
+## What the transport probe found, including the part that is not reassuring
+
+The probe against Morph satisfies the contract in full: HTTP 200, served model
+`deepseek/deepseek-v4-flash-0731`, served provider `Morph`, `finish_reason` `stop`, the strict
+JSON-schema response parsed, no fallback, and nothing qualifying created.
+
+It took two attempts. The first returned **HTTP 429** — `service_overloaded`, `provider_name`
+`Morph`, `limit_source` `upstream_provider_shared_pool`, `is_byok` false. Retrying a *development*
+probe is permitted and was done deliberately; the no-retry rule governs the qualifying invocation,
+not the pre-freeze instrument checks.
+
+That observation is recorded here because it bears directly on the one irreversible step. The
+qualifying invocation gets no retry: an HTTP error there is a failed attempt, and a frozen spec
+admits exactly one materialization. A 429 from a shared upstream pool would therefore end the
+milestone for a reason with no scientific content whatsoever. The remedy that removes it changes no
+frozen property — the same model, the same provider and the same committed request body, served
+from a dedicated rate-limit pool instead of a shared one — and it is the owner's to apply.
+
+The owner declined that remedy, deliberately and on the record: introducing a new credential path
+at that moment could alter the served identity, and the instrumental choice had already been frozen
+on Morph. The successful probe was accepted as sufficient pre-freeze validation and the invocation
+was authorized to proceed with the risk understood.
+
+## The qualifying invocation, and what came back
+
+One physical request was made against the frozen spec `c0f13b69…` at **2026-08-27T07:27:49Z**. It
+returned **HTTP 429**.
+
+No bank was produced. No carrier exists. **H58 is untested.**
+
+This is an **instrument failure and not a negative result**, and the distinction is not a
+consolation. A negative result is a measurement: the machinery ran against a bank and did not do
+what the hypothesis said it would. Nothing ran here. The generator was never reached, so the
+milestone learned nothing whatsoever about the hypothesis, and the record must not let a reader
+mistake the one for the other. `P22` was not computed. `P22` was not even approached.
+
+Under the frozen rule the attempt is not repeated. One physical request, no retry, at any layer and
+for any status. The ledger records attempt 1 against spec `c0f13b69…` with outcome `aborted`, no
+payload digest, and the shared contract now says exactly what follows from it: *the frozen spec has
+materialized 0 banks; exactly one is required*. That spec can never authorize a bank. Whether M113
+is re-frozen under a new generator spec is the owner's decision and is not taken here.
+
+### Two defects in the client, both found by the failure itself
+
+The first live qualifying invocation was also the first exercise of the client's failure path, and
+it exercised it badly.
+
+**The outcome was written in a private vocabulary.** `LEDGER_OUTCOMES` is closed —
+`materialized`, `failed_structural_validation`, `failed_isolation`, `aborted` — and the client
+wrote `failed`, which is none of them. Only the phase machine reading the record back discovered
+it, reporting `generation ledger outcome is malformed`. A record written in a vocabulary the
+governing contract cannot read is close to not having been written at all, and this record is the
+entire evidence of what happened. The correct word is `aborted`: the attempt ended before any
+payload existed, so it is neither of the two middle outcomes, because neither stage was reached.
+The entry's encoding was corrected and its facts — attempt index, spec commitment, timestamp,
+absent payload — were not touched.
+
+**The failure's response was not preserved.** The client recorded the status code and discarded the
+body. So for the one attempt that matters, only `HTTP 429` is evidenced; the metadata that would
+have said *why* — provider, limit source, whether the pool was shared — is gone, and cannot be
+recovered without making a second request, which the rule forbids and which would answer about a
+different moment anyway. The earlier development probe's 429 named
+`upstream_provider_shared_pool`, and it is tempting to carry that across. It is not carried across.
+That was a different request at a different time, and attributing this failure's cause from it
+would be inventing evidence the attempt did not leave.
+
+Both are repaired and pinned by tests. A failed attempt now writes
+`GENERATION_FAILED_ATTEMPT.json` carrying the status, the headers, the body and the response
+digest, flagged as an instrument failure rather than a hypothesis result.
+
 The three development steps are also available as **one pass**, `--prepare`, which discovers,
 adopts, probes and then checks its own post-conditions. It exists because the sequence has an order
 that matters and a hand-run sequence can silently skip a step: an unadoptable discovery must never
