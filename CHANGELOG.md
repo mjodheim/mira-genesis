@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+- **M114's analysis plan and generator spec are frozen — the second freeze, the first having been
+  withdrawn.** Plan commitment `e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af`,
+  the candidate unchanged; generator identity at spec commitment
+  `e12337a4a78045394e4db7b39cb710d3c6dacbd435d01f9a92530e239c288fc3`. The identity is M113's,
+  checked field by field: the same `deepseek/deepseek-v4-flash-0731` served by Morph at bf16, the
+  same sampling, the same routing switches, the same canonical request body `02a71fb5…`. The freeze
+  moved exactly four bookkeeping fields on the spec and nothing the instrument will send; a test
+  asserts that set exactly. Both frozen artifacts are pinned by digest and pushed **before the first
+  delivery attempt**, so the order is verifiable from the history rather than asserted afterwards.
+  The withdrawn first freeze stays visible: `b98116d8` is now an ancestor of `main` — #219 was merged
+  with a merge commit rather than squashed, precisely so it would be — and a test asserts that
+  `experiments/M114/FREEZE_WITHDRAWN.md` survives and that the withdrawn commitments are not the ones
+  in force. It is never to be rewritten as though it had not existed.
+  Phase is `spec_frozen`. Four owner gates remain. H59 is untested and no generality gate moved.
+
 - **M114's `P15` is versioned rather than imported, and the freeze that preceded the correction is
   withdrawn.** M113 defines `P15`'s generator half as the number of **physical invocations**, on the
   stated ground that a series of physical requests must never be presentable afterwards as one
