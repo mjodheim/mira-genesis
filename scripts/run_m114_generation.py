@@ -241,6 +241,27 @@ def _evidence(observed: dict[str, Any] | None, failure: str | None) -> dict[str,
     }
 
 
+# Fields a provider's error envelope may carry that identify the account rather than the failure.
+# The 429 body is evidence and is preserved in full -- that is the whole repair over M113, whose
+# client discarded it. But "in full" means the failure, not the caller: an account identifier says
+# nothing about why the request was rejected and everything about who sent it, and this record is
+# published. Stripped at capture, so it never reaches a ledger, a digest or a commit.
+IDENTIFYING_RESPONSE_KEYS = ("user_id", "user", "account_id", "organization", "org_id", "key")
+REDACTED = "[redacted: identifies the account, not the failure]"
+
+
+def _without_identity(value: Any) -> Any:
+    """Recursively replace account-identifying fields, preserving the document's shape."""
+    if isinstance(value, dict):
+        return {
+            key: (REDACTED if key in IDENTIFYING_RESPONSE_KEYS else _without_identity(item))
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_without_identity(item) for item in value]
+    return value
+
+
 def _read_ledger() -> dict[str, Any] | None:
     if not LEDGER_PATH.is_file():
         return None
@@ -334,7 +355,7 @@ def deliver(spec: dict[str, Any]) -> int:
             "response_headers": (observed or {}).get("response_headers") or {},
             # The failure response is evidence, not noise. M113's first form recorded only a status
             # code and lost the body that explained it, at exactly the moment it mattered most.
-            "error_body": None if evidence["completion_present"] else (
+            "error_body": None if evidence["completion_present"] else _without_identity(
                 decoded if decoded is not None else ((observed or {}).get("raw_text") or failure)
             ),
             "response_sha256": (observed or {}).get("response_sha256"),

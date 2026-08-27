@@ -1230,7 +1230,8 @@ current_real_software_frontier:
     current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
 
   M114:
-    status: candidate_not_frozen_bank_does_not_exist
+    status: aborted_without_verdict
+    record_closed: true
     hypothesis: H59
     replication_of: H58
     replication_kind: corrective_instrumental
@@ -1357,6 +1358,7 @@ current_real_software_frontier:
     whole_delivery_ledger_preserved_into_the_result_not_only_its_summary: true
     adversarial_phase_boundary_tests: 25
     freeze_pinning_tests: 9
+    abort_pinning_tests: 21
     # Versioning a predicate must not loosen it, and the direction is checked rather than
     # claimed: on any record where M113's P15 is well-defined, M114's holding implies
     # M113's. The converse is false by construction -- a bank M113 would have accepted can
@@ -1417,10 +1419,45 @@ current_real_software_frontier:
     generator_provider: Morph
     generator_quantization: bf16
     generator_quantization_is_discovery_bound_not_runtime_attested: true
+    # The delivery sequence ran to the end of its frozen budget on 27 August 2026 and materialized
+    # nothing. Three physical requests, three explicit HTTP 429s, zero model calls. The model was
+    # never reached, so H59 was not measured: this is an instrument failure, not a negative result.
+    status_of_the_delivery_sequence: instrument_aborted
+    physical_delivery_attempts: 3
+    delivery_budget: 3
+    capacity_rejections: 3
+    bank_materializations: 0
     bank_materialized: false
-    delivery_attempts_made: 0
+    delivery_ledger_digest: 96c77d492e20b0621c6dfc3bc06dbb7d6b3c00c3537c204b1a28039d913ebac8
+    delivery_ledger_is_valid_in_full_under_the_frozen_rule: true
+    every_attempt_sent_the_byte_identical_frozen_body: true
+    nothing_was_served_so_nothing_could_be_substituted: true
+    frozen_wait_honoured_before_attempts_two_and_three: true
+    # The evidence names its own cause, three times, which M113's could not: its client discarded
+    # the failure body and left only a status code.
+    all_three_responses_are_byte_identical: true
+    response_digest: f0a0b94cf22fdeeee8fb28abffc34bff0fdc4c74e771c033fa0113e4e4920713
+    provider_error_code: service_overloaded
+    limit_source: upstream_provider_shared_pool
+    is_byok: false
+    provider_requested_retry_after_seconds: 1
+    frozen_wait_seconds: 60
+    # A 60x margin over the provider's own Retry-After changed nothing. The rejection is not a
+    # momentary burst that a longer pause would have cleared.
+    the_constraint_is_not_a_matter_of_patience: true
+    this_is_an_instrument_failure_not_a_negative_h59_result: true
     h59_tested: false
     p22_computed: false
+    no_further_attempt_is_permitted_under_the_frozen_rule: true
+    frozen_spec_can_never_authorize_a_bank: true
+    nothing_is_relaunched_under_m114: true
+    successor_decision_belongs_to_the_owner: true
+    # An account identifier the provider's error envelope carried was replaced, the replacement
+    # recorded inside the ledger with its pre-redaction digest. No quantity the frozen rule reads
+    # was touched, and the client now strips such fields at capture.
+    account_identifier_redacted_from_the_error_bodies: true
+    redaction_recorded_inside_the_ledger: true
+    redaction_touched_no_measured_quantity: true
     track: A
     evidence_tier: blind_generated_sealed_bank
     human_independence: false
@@ -1428,8 +1465,10 @@ current_real_software_frontier:
     g1_to_g10_advance: false
     owner_gates_consumed:
       - freeze_the_m114_analysis_plan_and_generator_spec
-    owner_gates_outstanding:
       - run_the_delivery_sequence_under_the_frozen_budget
+    # Unreachable, not outstanding. There is no bank to seal, commit to, freeze a tested system
+    # around, or reveal, and the frozen spec can never authorize one.
+    owner_gates_unreachable_because_no_bank_exists:
       - seal_and_publish_the_commitment
       - freeze_the_tested_system_with_the_bank_unread
       - authorize_the_reveal
