@@ -29,26 +29,17 @@ def _smoke(provider: str, viable: bool = True, byok: bool = False):
     }
 
 
-def test_predecessor_compatibility_requires_structure_seed_and_live_endpoint():
+def test_predecessor_compatibility_requires_structure_seed_and_positive_live_endpoint():
     assert matrix.discovery_is_predecessor_compatible(_discovery("DeepInfra")) is True
-    assert (
-        matrix.discovery_is_predecessor_compatible(
-            _discovery("Together", supports_seed=False)
-        )
-        is False
-    )
+    assert matrix.discovery_is_predecessor_compatible(_discovery("Together", supports_seed=False)) is False
     assert (
         matrix.discovery_is_predecessor_compatible(
             _discovery("Broken", supports_structured_outputs=False)
         )
         is False
     )
-    assert (
-        matrix.discovery_is_predecessor_compatible(
-            _discovery("Down", endpoint_status=-2)
-        )
-        is False
-    )
+    assert matrix.discovery_is_predecessor_compatible(_discovery("Down", endpoint_status=-2)) is False
+    assert matrix.discovery_is_predecessor_compatible(_discovery("Unknown", endpoint_status=None)) is False
 
 
 def test_reliability_ranking_only_contains_routes_that_actually_smoked_viable():
