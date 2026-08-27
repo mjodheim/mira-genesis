@@ -1893,11 +1893,12 @@
     },
     "b98116d8e8cf92478876bfb9ba6c48c3d541db4b": {
       "subject": "science(m114): freeze the analysis plan and the generator identity (owner gate 1 of 5)",
-      "preserved_by": "UNPRESERVED",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M114/FREEZE_WITHDRAWN.md"
       ]
     },
     "baba1f23986f6b0dc65b45ef126dd043baefa9c7": {
