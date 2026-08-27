@@ -2,6 +2,56 @@
 
 ## Unreleased
 
+- **M114 opens as a corrective instrumental replication of M113, under H59.** M113 is closed. It
+  froze an identity, made one physical request, received HTTP 429, materialized no bank and left
+  H58 untested; that record is not re-frozen, not reinterpreted, not repaired and not completed,
+  and `tests/test_m113_record_is_closed.py` pins its four digests and fails if a bank, a reveal or
+  a result ever appears under `experiments/M113/`. M114 takes a **new hypothesis number** rather
+  than inheriting H58, following the M106 precedent that replicated M105 under H51: a replication
+  that reused its predecessor's number would make that predecessor's record read as still open.
+  `P22` is H59 exactly as `P22` was H58.
+  **Every scientific rule is imported, not copied.** `m114_carrier_bank` delegates its plan and
+  generator-spec rules to `m113_carrier_bank`; the qualification runner imports M113's sealed scope
+  and arms; the checker imports `P1`-`P22`; the generation client imports M113's stdlib transport;
+  the prompt, the output schema and the qualifying input are M113's files byte for byte, pinned by
+  digest and checked against both milestones' copies. The generator identity, the sampling, the
+  routing switches and the canonical request body are M113's, digest-identical. 24 carriers,
+  minimum 3 qualifying, minimum 3 distinct structures, exact per-carrier fixed-point closure, no
+  selection, no manual correction, and an insufficient bank is still a negative result. A copy
+  would drift; an import cannot.
+  **What changes is delivery semantics, and only that.** M113's protocol used one predicate, "one
+  physical request", for two quantities: how many times the instrument may *reach* the generator,
+  and how many times the generator may *produce* a bank. Those coincide only while the network
+  cooperates, and a capacity rejection spent the second budget without ever spending the first.
+  `m114_delivery` separates `delivery_attempt` from `bank_materialization`: at most 3 attempts for
+  at most 1 materialization, every attempt sending the byte-identical frozen body, a further
+  attempt permitted only after an explicit HTTP 429 carrying no completion and no evidence the
+  model executed, after a fixed pre-registered 60-second wait. Three capacity rejections end the
+  milestone as `instrument-aborted`, which is a fact about transport capacity and not a result
+  about H59. Nothing else is ever retried -- invalid JSON, a schema violation, a truncated
+  completion, a refusal, an insufficient bank, an ambiguous timeout, a lost connection, any status
+  other than 429, and above all any scientific outcome including `P22` false.
+  **Ambiguity resolves terminally, never retryably.** An attempt counts as a capacity rejection
+  only when every condition holds at once; any doubt classifies as `failed_ambiguous`, which is
+  final. The asymmetry is deliberate and lopsided: the conservative mistake costs one unused
+  attempt, while the opposite would permit a second draw against a model that may already have
+  produced one, and no downstream check could recover the difference.
+  **The checker recomputes the rule instead of reading the ledger's summary** -- the budget, index
+  contiguity, request-digest identity across attempts, provider and model substitution, each
+  outcome against the evidence carried, that nothing follows a terminal outcome, each recorded
+  retry permission, each wait, that at most one attempt materialized and nothing follows it, the
+  declared materialization index, and the spec binding. Two verdicts are added on top of
+  `P1`-`P22` and both are **strictly subtractive**: a violating ledger is `invalid`, a ledger with
+  no materialization is `instrument-aborted`, and neither can turn a negative into a positive.
+  Sixty-six tests attack the contracts and the instrument directly, including a fourth attempt, an attempt after a
+  terminal outcome, a retried ambiguous timeout, a 429 carrying a completion, two materializations,
+  a changed request body, a mislabelled outcome, a forged retry permission and a shortened wait.
+  **The rule was decided after M113's instrument failure, before any M114 bank existed, and without
+  any observation of H58 or H59 whatsoever.** It was never part of M113 and is never described as
+  though it had been. Those four statements are booleans in `m114_carrier_bank.FILIATION` that the
+  frozen plan must reproduce exactly or fail validation. M114's plan and spec are candidates; the
+  bank does not exist; the phase is `draft`. No generality gate moved.
+
 - **M113's generator identity was frozen and its single qualifying invocation returned HTTP 429.
   No bank exists and H58 is untested.** The identity was pinned at spec commitment `c0f13b69…` --
   `deepseek/deepseek-v4-flash-0731` served by Morph at bf16, twenty-four carriers, one invocation,

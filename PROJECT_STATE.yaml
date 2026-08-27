@@ -1218,6 +1218,138 @@ current_real_software_frontier:
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
 
+  M114:
+    status: candidate_not_frozen_bank_does_not_exist
+    hypothesis: H59
+    replication_of: H58
+    replication_kind: corrective_instrumental
+    decision_slot: D083
+    decision_slot_filled: false
+    phase: draft
+    successor_to: M113
+    # The predecessor's record is closed. It is not re-frozen, not reinterpreted, not repaired and
+    # not completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays true.
+    m113_untouched: true
+    m113_outcome: instrument_aborted_before_bank_materialization
+    m113_h58_tested: false
+    m113_is_not_retroactively_repaired_by_this_milestone: true
+    # Why a new number. The register carries one hypothesis per milestone, and M106 set the
+    # precedent when it replicated M105 under H51 rather than reusing H50: a replication that
+    # inherited its predecessor's number would make the predecessor's record read as still open.
+    hypothesis_number_follows_the_m106_precedent: true
+    p22_is_h59_exactly_as_p22_was_h58: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    scientific_target_is_m113s_unchanged: true
+
+    # What is imported rather than copied, so that "unchanged" is checkable and cannot drift.
+    mechanism_module: metamorphosis/m113_carrier_bank.py
+    mechanism_imported_unchanged: true
+    plan_and_spec_rules_delegated_to_m113: true
+    qualification_runner_imports_m113s_sealed_scope_and_arms: true
+    checker_imports_p1_to_p22_from_m113: true
+    generation_client_imports_m113s_transport: true
+    generator_prompt_schema_and_input_are_m113s_byte_for_byte: true
+    generator_input_digests_pinned_and_checked: 3
+    generator_identity_is_m113s: true
+    canonical_request_body_is_byte_identical_to_m113s: true
+    canonical_request_body_sha256: 02a71fb54e492bed151981f6b3f79ec947e7e404bc999caffa37c2c642beaabc
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    minimum_distinct_qualifying_structures: 3
+    closure_rule: exact_fixed_point_no_inherited_bound
+    insufficient_bank_is_a_negative_result_not_a_reason_to_generate_again: true
+
+    # The only thing M114 changes. M113's protocol used one predicate, "one physical request", for
+    # two quantities: how many times the instrument may reach for the generator, and how many times
+    # the generator may produce a bank. A capacity rejection spent the second without spending the
+    # first, and the milestone ended on a fact about queueing.
+    delivery_semantics: m114-delivery-v1
+    delivery_attempt_and_bank_materialization_are_separate_quantities: true
+    max_delivery_attempts: 3
+    max_bank_materializations: 1
+    retry_wait_seconds: 60
+    retry_wait_is_fixed_and_preregistered_not_backoff: true
+    only_capacity_rejection_before_generation_may_be_retried: true
+    retryable_status: 429
+    a_retry_requires_no_completion_and_no_evidence_the_model_executed: true
+    every_attempt_sends_the_byte_identical_frozen_body: true
+    a_scientific_outcome_is_never_retried: true
+    p22_false_is_never_a_reason_to_deliver_again: true
+    never_retried:
+      - invalid_json
+      - output_schema_violation
+      - truncated_completion
+      - model_refusal
+      - insufficient_bank
+      - timeout_after_transmission_in_an_unestablished_state
+      - connection_lost_in_an_ambiguous_state
+      - any_status_other_than_429
+      - any_scientific_outcome_including_p22_false
+    ambiguity_resolves_to_a_terminal_outcome_never_to_a_retryable_one: true
+    # The asymmetry is the safeguard. Misclassifying a capacity rejection as ambiguous costs one
+    # unused attempt; the opposite mistake would permit a second draw against a model that may
+    # already have produced one, and no downstream check could recover the difference.
+    three_capacity_rejections_is_instrument_aborted_not_a_negative_h59: true
+
+    # When the rule was decided. Recorded as booleans the frozen plan must reproduce exactly.
+    delivery_rule_decided_after_m113_instrument_failure: true
+    delivery_rule_decided_before_any_m114_bank_existed: true
+    delivery_rule_decided_without_any_observation_of_the_hypothesis: true
+    delivery_rule_was_never_part_of_m113: true
+    filiation_is_carried_in_the_plan_the_result_and_the_check_report: true
+
+    # What the checker recomputes from the attempts rather than reading from the ledger's summary.
+    checker_recomputes_the_attempt_budget: true
+    checker_recomputes_attempt_index_contiguity: true
+    checker_recomputes_that_every_request_body_digest_is_identical: true
+    checker_recomputes_that_no_provider_or_model_was_substituted: true
+    checker_recomputes_each_outcome_from_the_evidence_carried: true
+    checker_recomputes_that_nothing_follows_a_terminal_outcome: true
+    checker_recomputes_each_recorded_retry_permission: true
+    checker_recomputes_the_waits: true
+    checker_recomputes_that_at_most_one_attempt_materialized_a_bank: true
+    checker_recomputes_the_declared_materialization_index: true
+    checker_recomputes_that_the_ledger_binds_the_frozen_spec: true
+    additional_verdicts_are_strictly_subtractive: true
+    a_violating_ledger_yields: invalid
+    a_ledger_with_no_materialization_yields: instrument-aborted
+    neither_additional_verdict_can_turn_a_negative_into_a_positive: true
+
+    adversarial_delivery_tests: 23
+    adversarial_contract_tests: 17
+    adversarial_instrument_tests: 26
+    m113_record_lock_tests: 8
+    the_no_retry_enumeration_is_inside_the_plan_commitment: true
+    every_delivery_rule_has_a_test_that_tries_to_evade_it: true
+
+    development_run_seed: m114-development-run
+    development_run_sample: 24
+    development_run_predicates_true: 21
+    development_run_predicates_total: 22
+    development_run_failing_predicate: P22
+    development_result_is_not_a_prediction: true
+    development_run_has_no_generator_phase_and_reports_it_as_not_applicable: true
+
+    analysis_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
+    analysis_plan_frozen: false
+    generator_identity_frozen: false
+    bank_materialized: false
+    h59_tested: false
+    p22_computed: false
+    track: A
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    g1_to_g10_advance: false
+    owner_gates_outstanding:
+      - freeze_the_m114_analysis_plan_and_generator_spec
+      - run_the_delivery_sequence_under_the_frozen_budget
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

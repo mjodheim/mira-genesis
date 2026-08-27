@@ -316,6 +316,57 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
+- **M114/H59 is a corrective instrumental replication of M113, and it is a candidate, not a result.
+  The bank does not exist and the phase is `draft`.** M113 is closed: it froze an identity, made one
+  physical request, received HTTP 429, materialized no bank and left H58 untested. That record is
+  not re-frozen, not reinterpreted, not repaired and not completed, and its four digests are pinned
+  by a test that fails if a bank, a reveal or a result ever appears under `experiments/M113/`. M114
+  takes a **new hypothesis number** rather than inheriting H58, on the M106 precedent that
+  replicated M105 under H51: reusing a predecessor's number would make that predecessor's record
+  read as still open. `P22` is H59 exactly as `P22` was H58.
+  **Every scientific rule is imported, not copied**, which is what makes "unchanged" checkable
+  rather than a claim about two files that look alike: the plan and generator-spec rules are
+  delegated to `m113_carrier_bank`, the qualification runner imports M113's sealed scope and arms,
+  the checker imports `P1`-`P22`, the generation client imports M113's stdlib transport, and the
+  prompt, output schema and qualifying input are M113's files byte for byte, pinned by digest and
+  measured against both milestones' copies. The generator identity, the sampling, the routing
+  switches and the canonical request body are M113's, digest-identical. 24 carriers, minimum 3
+  qualifying, minimum 3 distinct structures, exact per-carrier fixed-point closure, no selection, no
+  manual correction, and an insufficient bank is still a **negative result**.
+  **What changes is delivery semantics, and only that.** M113's protocol used one predicate, "one
+  physical request", for two quantities -- how many times the instrument may *reach* the generator,
+  and how many times the generator may *produce* a bank -- and those coincide only while the network
+  cooperates. A capacity rejection spent the second budget without ever spending the first, and the
+  milestone ended on a fact about queueing. `m114_delivery` separates `delivery_attempt` from
+  `bank_materialization`: **at most 3 attempts for at most 1 materialization**, every attempt sending
+  the byte-identical frozen body, a further attempt permitted only after an explicit **HTTP 429**
+  carrying no completion and no evidence the model executed, after a **fixed pre-registered
+  60-second** wait. Three capacity rejections end the milestone as **`instrument-aborted`**, which is
+  a fact about transport capacity and not a result about H59. Nothing else is ever retried: invalid
+  JSON, a schema violation, a truncated completion, a refusal, an insufficient bank, an ambiguous
+  timeout, a lost connection, any status other than 429, and above all **any scientific outcome
+  including `P22` false**.
+  **Ambiguity resolves terminally, never retryably**, and the asymmetry is deliberately lopsided.
+  An attempt counts as a capacity rejection only when every condition holds at once; any doubt
+  classifies as `failed_ambiguous`, which is final. The conservative mistake costs one unused
+  attempt; the opposite would permit a second draw against a model that may already have produced
+  one, and no downstream check could recover the difference. The checker recomputes the whole rule
+  from the attempts rather than reading the ledger's summary -- budget, index contiguity,
+  request-digest identity, provider and model substitution, each outcome against its own evidence,
+  that nothing follows a terminal outcome, each recorded retry permission, each wait, that at most
+  one attempt materialized and nothing follows it, the declared index, and the spec binding. The two
+  verdicts M114 adds on top of `P1`-`P22` are **strictly subtractive**: a violating ledger is
+  `invalid`, a ledger with no materialization is `instrument-aborted`, and neither can turn a
+  negative into a positive. Sixty-six tests attack the contracts and the instrument directly.
+  **The rule was decided after M113's instrument failure, before any M114 bank existed, and without
+  any observation of H58 or H59 whatsoever.** It was never part of M113 and is never described as
+  though it had been. Those four statements are booleans the frozen plan must reproduce exactly or
+  fail validation. The development run returns the same shape as its predecessor's -- 21 of 22 with
+  `P22` false on synthetic devkit carriers -- and that is not a prediction about a blind bank. The
+  five owner gates outstanding are freezing the plan and spec, running the delivery sequence under
+  the frozen budget, sealing and publishing the commitment, freezing the tested system with the bank
+  unread, and authorizing the reveal. **G1-G10 do not advance.**
+
 - **M113/H58 is a candidate, not a result. The bank does not exist and the phase is `draft`.** It
   asks whether a Genesis machinery can adapt to a carrier the project did not design: the blind
   generator emits the machine itself -- its state, its observability, its actions, their

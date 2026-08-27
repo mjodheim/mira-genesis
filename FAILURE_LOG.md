@@ -1632,3 +1632,52 @@ Both are repaired with regression tests, and a failed attempt now preserves its 
 **What stands.** The analysis plan remains frozen and untouched at `66003159…`. The generator spec
 remains frozen. M107–M112 are unaffected. No generality gate moved. H58 is exactly as untested as it
 was before the invocation.
+
+## M113's protocol counted one thing where there were two, and M114 separates them
+
+Recorded 27 August 2026, after M113 closed. The entry above stands unchanged; this one is about the
+protocol, not the attempt.
+
+M113's rule was "one physical request, no retry, at any layer". Read as a scientific constraint it is
+exactly right: one draw from the generator, so nothing can be drawn twice and the better draw kept.
+But the rule was written over the *transport*, and the transport is not where the constraint lives.
+It conflated two quantities that only coincide while the network cooperates:
+
+    how many times the instrument may reach for the generator
+    how many times the generator may produce a bank
+
+The 429 spent the second budget without ever spending the first. The milestone ended on a fact about
+a queue in a shared upstream pool, with the model never reached — and the protocol had no vocabulary
+in which to say so, because it had only one counter.
+
+**Why this is a defect in the protocol and not in the outcome.** M113's record is correct: the
+attempt happened, it aborted, no bank exists, H58 is untested. Nothing about it is repaired,
+reinterpreted or completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays
+true. What is defective is that the *only* protocol available made an unreachable generator
+indistinguishable, in budget terms, from a generator that answered. That is a measurement instrument
+that cannot report its own failure mode, and it is the same shape as M112's cardinality defect and
+M086-A's unfailable threshold: a quantity that agreed with the thing it was supposed to constrain.
+
+**What replaces it.** `metamorphosis/m114_delivery.py` gives the two quantities separate names —
+`delivery_attempt` and `bank_materialization` — and separate budgets: at most 3 of the first for at
+most 1 of the second. The scientific constraint is untouched and is now stated where it belongs, on
+materializations. The transport constraint is stated on attempts, and is deliberately the narrowest
+window that addresses what happened: an explicit HTTP 429, no completion of any kind, no evidence the
+model executed, the byte-identical frozen body, a fixed pre-registered 60-second wait. Three capacity
+rejections are `instrument-aborted`, which is still not a result about the hypothesis.
+
+**The failure mode the repair could itself introduce, and what refuses it.** A milestone permitted
+three attempts is a milestone that could draw until something passes. So every ambiguity resolves to
+a *terminal* outcome rather than a retryable one — a timeout after transmission, a lost connection, a
+429 that nonetheless carried a completion, a response that decoded to something that is not an object
+— and no scientific outcome is ever retried, `P22` false included. The conservative mistake costs one
+unused attempt. The opposite would permit a second draw against a model that may already have
+produced one, and no downstream check could ever recover the difference. The checker recomputes every
+one of those rules from the attempt sequence rather than reading the ledger's own summary, and the two
+verdicts M114 adds are strictly subtractive: neither can turn a negative into a positive.
+
+**When the separation was decided.** After M113's instrument failure, before any M114 bank existed,
+and with no observation of H58 or H59 whatsoever — M113's request never reached the model and M114
+has not made one. It was never part of M113 and is never described as though it had been. The four
+statements are booleans in `m114_carrier_bank.FILIATION` that M114's frozen plan must reproduce
+exactly or fail validation.
