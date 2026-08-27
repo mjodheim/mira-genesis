@@ -363,9 +363,14 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   though it had been. Those four statements are booleans the frozen plan must reproduce exactly or
   fail validation. The development run returns the same shape as its predecessor's -- 21 of 22 with
   `P22` false on synthetic devkit carriers -- and that is not a prediction about a blind bank. The
-  five owner gates outstanding are freezing the plan and spec, running the delivery sequence under
-  the frozen budget, sealing and publishing the commitment, freezing the tested system with the bank
-  unread, and authorizing the reveal. **G1-G10 do not advance.**
+  **plan and generator spec are now frozen** — the plan at `d191f74d...`, the candidate unchanged,
+  and the identity at spec commitment `85b86442...`, which is M113's instrument checked field by
+  field rather than described. The freeze moved four bookkeeping fields on the spec and nothing
+  it will send, refuses to run twice, and refuses to run behind a delivery history; both frozen
+  artifacts are pinned by digest in the commit that creates them. The phase is `spec_frozen` and
+  no delivery attempt has been made. The four remaining owner gates are running the delivery
+  sequence under the frozen budget, sealing and publishing the commitment, freezing the tested
+  system with the bank unread, and authorizing the reveal. **G1-G10 do not advance.**
 
 - **M113/H58 is a candidate, not a result. The bank does not exist and the phase is `draft`.** It
   asks whether a Genesis machinery can adapt to a carrier the project did not design: the blind

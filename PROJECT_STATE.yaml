@@ -1225,7 +1225,7 @@ current_real_software_frontier:
     replication_kind: corrective_instrumental
     decision_slot: D083
     decision_slot_filled: false
-    phase: draft
+    phase: spec_frozen
     successor_to: M113
     # The predecessor's record is closed. It is not re-frozen, not reinterpreted, not repaired and
     # not completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays true.
@@ -1319,6 +1319,7 @@ current_real_software_frontier:
     adversarial_contract_tests: 17
     adversarial_instrument_tests: 26
     m113_record_lock_tests: 8
+    freeze_pinning_tests: 8
     the_no_retry_enumeration_is_inside_the_plan_commitment: true
     every_delivery_rule_has_a_test_that_tries_to_evade_it: true
 
@@ -1331,9 +1332,25 @@ current_real_software_frontier:
     development_run_has_no_generator_phase_and_reports_it_as_not_applicable: true
 
     analysis_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
-    analysis_plan_frozen: false
-    generator_identity_frozen: false
+    analysis_plan_frozen: true
+    analysis_plan_is_the_candidate_unchanged: true
+    analysis_plan_frozen_before_any_carrier_existed: true
+    generator_identity_frozen: true
+    generator_spec_commitment: 85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73
+    generator_spec_frozen_at: '2026-08-27T11:34:19Z'
+    # The freeze consumed a plan and a spec written before it rather than writing them at the
+    # freeze, and it moved four bookkeeping fields on the spec and nothing the instrument sends.
+    freeze_changed_only_the_specs_status_not_the_request: true
+    freeze_is_consumed_once_and_refuses_to_rerun: true
+    frozen_plan_digest: cd359081dabb3ba8c57133de0538bea648159bef1e97d8f4a8f59819adb868d9
+    frozen_spec_digest: bb56275a5ed115a607346a0a8210ca1122c8787f78a1d3238a981576d7b523dd
+    generator_identity_is_m113s_by_field_comparison: true
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
     bank_materialized: false
+    delivery_attempts_made: 0
     h59_tested: false
     p22_computed: false
     track: A
@@ -1341,8 +1358,9 @@ current_real_software_frontier:
     human_independence: false
     external_reproduction: false
     g1_to_g10_advance: false
-    owner_gates_outstanding:
+    owner_gates_consumed:
       - freeze_the_m114_analysis_plan_and_generator_spec
+    owner_gates_outstanding:
       - run_the_delivery_sequence_under_the_frozen_budget
       - seal_and_publish_the_commitment
       - freeze_the_tested_system_with_the_bank_unread

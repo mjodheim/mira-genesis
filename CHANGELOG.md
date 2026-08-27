@@ -2,6 +2,25 @@
 
 ## Unreleased
 
+- **M114's analysis plan and generator spec are frozen. The bank does not exist and no delivery
+  attempt has been made.** The plan is frozen at commitment
+  `d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339`, the candidate unchanged, and
+  the generator identity at spec commitment
+  `85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73` — M113's identity, checked
+  field by field rather than described: the same `deepseek/deepseek-v4-flash-0731` served by Morph
+  at bf16, the same sampling, the same routing switches, the same canonical request body
+  `02a71fb5…`. The freeze moved exactly four bookkeeping fields on the spec —
+  `frozen_before_generation`, `frozen_at`, its own commitment and the removal of
+  `unset_before_freeze` — and nothing the instrument will send; a test asserts that set exactly,
+  so a freeze that had quietly adjusted a parameter would fail rather than pass. It refuses to run
+  a second time, and refuses to run behind a delivery history at all.
+  Both frozen artifacts are pinned by digest in the same commit that creates them, before any
+  delivery attempt exists to be judged against them. The phase is now `spec_frozen`, and the
+  blockers are the four artifacts that do not exist yet: the delivery ledger, the public bank
+  commitment, the system protocol and the reveal authorization. Four owner gates remain — run the
+  delivery sequence under the frozen budget, seal and publish the commitment, freeze the tested
+  system with the bank unread, authorize the reveal. H59 is untested and no generality gate moved.
+
 - **M114 opens as a corrective instrumental replication of M113, under H59.** M113 is closed. It
   froze an identity, made one physical request, received HTTP 429, materialized no bank and left
   H58 untested; that record is not re-frozen, not reinterpreted, not repaired and not completed,
