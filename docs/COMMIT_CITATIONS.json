@@ -2564,11 +2564,6 @@
       "reason": "A GENUINE LOSS, recorded rather than excused. M049's positive bounded development result names this as the commit CI run 31076192847 qualified, and the object is not in this repository at all -- not dangling, absent. It predates the provenance tags and could not be preserved by them, because the sixteen-commit repair could only reach citations that still resolved. This is the population that check cannot see, which is why the commit-typed scan exists. M049's result is not wrong; it is unverifiable from the record as it stands.",
       "kind": "lost",
       "where": "PROJECT_STATE.yaml, experiments/M049/PROTOCOL.md, experiments/M049/DEVELOPMENT_RESULT.md"
-    },
-    "m114-intermediate-revision-rewritten-before-merge": {
-      "why": "An intermediate revision of the M114 development branch carried an OpenRouter account identifier inside a preserved 429 body. The branch history was rewritten before merge to remove that datum, so the revision never entered main's ancestry and nothing in the record cites it. Its SHA is deliberately not named here: this file is scanned for commit tokens, and naming it would re-cite the commit whose absence this note explains.",
-      "the_scientific_chronology_is_preserved_in_the_rewritten_commits": "the M114 freeze still precedes attempt 1, which precedes attempts 2 and 3, which precede the aborted record",
-      "no_measured_quantity_changed": true
     }
   }
 }
