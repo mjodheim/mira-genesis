@@ -12,13 +12,15 @@ It can:
 * emit only an allowlisted, publication-safe report. Raw credentials, account identifiers, raw
   provider error bodies and BYOK key metadata are never written.
 
-A route is instrument-qualified only when the smoke request proves all of the properties that M115
-would need before it is allowed to exist as H60: exact model/provider, strict structured output,
-seed accepted under require_parameters, one direct routing attempt, BYOK actually used, no fallback,
-and no OpenRouter pipeline stage that materially altered the request or response.
+Two verdicts are deliberately separated:
 
-This is DEVELOPMENT. A successful report is permission to DESIGN a milestone, never scientific
-evidence about Genesis and never permission to send the qualifying input.
+* ``route_viable`` means the exact model/provider route really served the strict-schema smoke with
+  one direct attempt, no fallback and no material router intervention;
+* ``byok_route_qualified`` additionally requires runtime ``is_byok=true``.
+
+That distinction lets DEVELOPMENT compare backup providers without pretending that shared capacity
+already fixes M113/M114.  A successful report is permission to DESIGN a later milestone, never
+scientific evidence about Genesis and never permission to send the qualifying input.
 """
 
 from __future__ import annotations
@@ -45,9 +47,9 @@ ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 CATALOGUE_ENDPOINT = "https://openrouter.ai/api/v1/models/%s/endpoints" % MODEL
 SECRET_VARIABLE = "OPENROUTER_API_KEY"
 ROUTER_METADATA_HEADER = "X-OpenRouter-Metadata"
-REPORT_SCHEMA = "genesis-generator-route-audit-v1"
+REPORT_SCHEMA = "genesis-generator-route-audit-v2"
 
-# Deliberately unrelated to carrier generation.  The qualifying input is checked by digest before
+# Deliberately unrelated to carrier generation. The qualifying input is checked by digest before
 # every network smoke so this text cannot become the bank by accident.
 SMOKE_INPUT = (
     'Return a JSON object with exactly one key "samples". Its value is a list of exactly two '
@@ -118,18 +120,27 @@ def _connection(url: str, timeout: int) -> tuple[http.client.HTTPSConnection, ur
     proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
     if proxy:
         via = urllib.parse.urlsplit(proxy if "://" in proxy else "http://" + proxy)
-        conn = http.client.HTTPSConnection(via.hostname, via.port or 80, timeout=timeout, context=context)
+        conn = http.client.HTTPSConnection(
+            via.hostname, via.port or 80, timeout=timeout, context=context
+        )
         conn.set_tunnel(parsed.hostname, parsed.port or 443)
     else:
-        conn = http.client.HTTPSConnection(parsed.hostname, parsed.port or 443, timeout=timeout, context=context)
+        conn = http.client.HTTPSConnection(
+            parsed.hostname, parsed.port or 443, timeout=timeout, context=context
+        )
     return conn, parsed
 
 
-def _request(url: str, *, method: str = "GET", body: Mapping[str, Any] | None = None,
-             timeout: int = 180) -> dict[str, Any]:
+def _request(
+    url: str,
+    *,
+    method: str = "GET",
+    body: Mapping[str, Any] | None = None,
+    timeout: int = 180,
+) -> dict[str, Any]:
     """Exactly one HTTP request, no retry and no redirect following.
 
-    The decoded response exists only in memory.  Reports are built from explicit allowlists below;
+    The decoded response exists only in memory. Reports are built from explicit allowlists below;
     neither this function nor its callers persist raw bodies or request headers.
     """
     conn, parsed = _connection(url, timeout)
@@ -162,6 +173,23 @@ def _request(url: str, *, method: str = "GET", body: Mapping[str, Any] | None = 
     }
 
 
+def _safe_number(value: Any) -> int | float | None:
+    if isinstance(value, (int, float)) and not isinstance(value, bool):
+        return value
+    return None
+
+
+def _safe_percentiles(value: Any) -> dict[str, int | float] | None:
+    if not isinstance(value, Mapping):
+        return None
+    safe = {
+        key: number
+        for key in ("p50", "p75", "p90", "p99")
+        if (number := _safe_number(value.get(key))) is not None
+    }
+    return safe or None
+
+
 def _safe_router_metadata(value: Any) -> dict[str, Any] | None:
     """Allowlist only fields needed to decide whether the route is scientifically usable."""
     if not isinstance(value, Mapping):
@@ -172,21 +200,25 @@ def _safe_router_metadata(value: Any) -> dict[str, Any] | None:
     if isinstance(available, list):
         for item in available:
             if isinstance(item, Mapping):
-                safe_available.append({
-                    "provider": item.get("provider"),
-                    "model": item.get("model"),
-                    "selected": item.get("selected") is True,
-                })
+                safe_available.append(
+                    {
+                        "provider": item.get("provider"),
+                        "model": item.get("model"),
+                        "selected": item.get("selected") is True,
+                    }
+                )
     attempts = value.get("attempts")
     safe_attempts = []
     if isinstance(attempts, list):
         for item in attempts:
             if isinstance(item, Mapping):
-                safe_attempts.append({
-                    "provider": item.get("provider"),
-                    "model": item.get("model"),
-                    "status": item.get("status"),
-                })
+                safe_attempts.append(
+                    {
+                        "provider": item.get("provider"),
+                        "model": item.get("model"),
+                        "status": item.get("status"),
+                    }
+                )
     pipeline = value.get("pipeline")
     safe_pipeline = []
     if isinstance(pipeline, list):
@@ -250,7 +282,7 @@ def _selected_endpoints(metadata: Mapping[str, Any] | None) -> list[dict[str, An
 
 
 def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
-    """Recompute route qualification from safe observations, never from a self-declared verdict."""
+    """Recompute route viability from safe observations, never from a self-declared verdict."""
     metadata = report.get("router_metadata")
     selected = _selected_endpoints(metadata if isinstance(metadata, Mapping) else None)
     attempts = metadata.get("attempts") if isinstance(metadata, Mapping) else None
@@ -258,7 +290,7 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
     requested_provider = report.get("requested_provider")
     requested_model = report.get("requested_model")
 
-    checks = {
+    route_checks = {
         "http_200": report.get("status") == 200,
         "served_model_exact": report.get("served_model") == requested_model,
         "served_provider_exact": report.get("served_provider") == requested_provider,
@@ -266,14 +298,13 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
         "finish_reason_stop": report.get("finish_reason") == "stop",
         "router_metadata_present": isinstance(metadata, Mapping),
         "router_strategy_direct": isinstance(metadata, Mapping) and metadata.get("strategy") == "direct",
-        "byok_runtime_attested": isinstance(metadata, Mapping) and metadata.get("is_byok") is True,
         "one_router_attempt": isinstance(metadata, Mapping) and metadata.get("attempt") == 1,
         "one_selected_endpoint": len(selected) == 1,
         "selected_endpoint_exact": len(selected) == 1
         and selected[0].get("provider") == requested_provider
         and selected[0].get("model") == requested_model,
         "no_fallback_attempt": isinstance(attempts, list)
-        and len(attempts) <= 1
+        and len(attempts) == 1
         and all(
             item.get("provider") == requested_provider
             and item.get("model") == requested_model
@@ -281,14 +312,18 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
             for item in attempts
             if isinstance(item, Mapping)
         ),
-        # Router metadata defines every pipeline entry as a material intervention.  A qualification
-        # smoke is intentionally tiny, so any intervention is a delta that M115 would have to own.
+        # Router metadata defines pipeline entries as material interventions. A qualification smoke
+        # is intentionally tiny, so any intervention is a delta that a later milestone would own.
         "no_router_pipeline_intervention": isinstance(pipeline, list) and len(pipeline) == 0,
     }
+    byok_runtime_attested = isinstance(metadata, Mapping) and metadata.get("is_byok") is True
+    route_viable = bool(route_checks) and all(route_checks.values())
     return {
-        "checks": checks,
-        "instrument_qualified": bool(checks) and all(checks.values()),
-        "failed_checks": sorted(name for name, holds in checks.items() if not holds),
+        "route_checks": route_checks,
+        "route_viable": route_viable,
+        "failed_route_checks": sorted(name for name, holds in route_checks.items() if not holds),
+        "byok_runtime_attested": byok_runtime_attested,
+        "byok_route_qualified": bool(route_viable and byok_runtime_attested),
     }
 
 
@@ -329,6 +364,13 @@ def discover_provider(provider: str) -> dict[str, Any]:
         "quantization": match.get("quantization"),
         "endpoint_status": match.get("status"),
         "context_length": match.get("context_length"),
+        "max_completion_tokens": match.get("max_completion_tokens"),
+        "uptime_last_5m": _safe_number(match.get("uptime_last_5m")),
+        "uptime_last_30m": _safe_number(match.get("uptime_last_30m")),
+        "uptime_last_1d": _safe_number(match.get("uptime_last_1d")),
+        "latency_last_30m": _safe_percentiles(match.get("latency_last_30m")),
+        "throughput_last_30m": _safe_percentiles(match.get("throughput_last_30m")),
+        "tag": match.get("tag") if isinstance(match.get("tag"), str) else None,
         "observed_at": observed["finished_at"],
     }
 
@@ -384,24 +426,41 @@ def smoke_provider(provider: str) -> dict[str, Any]:
     return report
 
 
+def qualifies_under_policy(report: Mapping[str, Any], *, require_byok: bool) -> bool:
+    """Select an execution policy without changing the measurements themselves."""
+    return bool(report.get("byok_route_qualified") if require_byok else report.get("route_viable"))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--provider", required=True, help="exact OpenRouter provider name, e.g. Morph")
     parser.add_argument("--discover", action="store_true", help="read provider capabilities only")
     parser.add_argument("--smoke", action="store_true", help="send one non-qualifying strict-schema smoke")
+    parser.add_argument(
+        "--require-byok",
+        action="store_true",
+        help="for a smoke, return success only when runtime metadata attests BYOK",
+    )
     parser.add_argument("--write", type=Path, default=None, help="optional path for the safe JSON report")
     args = parser.parse_args()
     if args.discover == args.smoke:
         parser.error("choose exactly one of --discover or --smoke")
+    if args.require_byok and not args.smoke:
+        parser.error("--require-byok is meaningful only with --smoke")
 
     report = discover_provider(args.provider) if args.discover else smoke_provider(args.provider)
+    if args.smoke:
+        report["qualification_policy"] = "byok" if args.require_byok else "route"
+        report["instrument_qualified"] = qualifies_under_policy(
+            report, require_byok=args.require_byok
+        )
     encoded = canonical_bytes(report) + b"\n"
     if args.write is not None:
         path = args.write if args.write.is_absolute() else ROOT / args.write
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(encoded)
     sys.stdout.buffer.write(encoded)
-    return 0 if (report.get("instrument_qualified") is True or args.discover) else 2
+    return 0 if (args.discover or report.get("instrument_qualified") is True) else 2
 
 
 if __name__ == "__main__":
