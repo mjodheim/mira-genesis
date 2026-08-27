@@ -1736,3 +1736,73 @@ been.
 
 **What stands.** M113 is untouched: its four pinned digests, its `aborted` ledger entry and its
 `H58 untested` status are exactly as they were. No generality gate moved.
+
+## M114 spent its whole delivery budget on the same rejection, and H59 is still untested
+
+Recorded 27 August 2026.
+
+M114 was built because M113 spent a single budget on a capacity rejection and could not distinguish
+"the instrument never reached the model" from "the model answered and the hypothesis failed". It
+separated the two quantities, gave itself three attempts for one materialization, and ran.
+
+**It got the same rejection three times.**
+
+| attempt | at | waited | status |
+|---|---|---|---|
+| 1 | 13:02:39Z | 0 s | 429 |
+| 2 | 13:03:40Z | 60 s | 429 |
+| 3 | 13:04:41Z | 60 s | 429 |
+
+All three responses are byte-identical — a single digest `f0a0b94c…` across attempts a minute
+apart — and each names its cause: `service_overloaded`, `limit_source:
+upstream_provider_shared_pool`, `is_byok: false`, `retry_after_seconds: 1`.
+
+**H59 is untested.** Nothing ran against a bank. No carrier was produced, no qualification attempted,
+`P22` neither computed nor approached. This is an instrument failure and it is recorded as one.
+
+**What the repair did buy, and what it did not.** It did not buy a bank. What it bought is the
+ability to say precisely what happened, which M113 could not:
+
+- Three physical network requests occurred and zero model calls did, and the record reports those as
+  two separate numbers rather than one field standing for whichever was convenient.
+- The cause is named three times from three independent responses, rather than inferred once from a
+  status code whose body an earlier client discarded.
+- The failure is demonstrably *reproducible* rather than a single unlucky event.
+- The ledger validates in full under the frozen rule, so the outcome is an **abort** and not a
+  **violation** — two verdicts M113 had no way to tell apart.
+
+**The finding that is worth keeping.** The provider asked for a one-second wait. The pre-registered
+rule waited sixty, a 60× margin, and was rejected anyway — twice. Whatever is saturating that shared
+upstream pool is not a burst, and no politeness setting reachable from inside this protocol would
+have cleared it. The remedy the provider itself names is a dedicated key, which the owner declined
+before M113's freeze on the ground that a new credential path could alter the served identity after
+the instrumental choice was frozen. That trade was made deliberately, with the risk recorded in
+advance, and it has now cost two milestones. Recording this is not blame; it is the difference
+between a milestone that was unlucky and one whose instrument was known to be fragile.
+
+**What is not done.** No fourth attempt: the budget is spent, the frozen spec
+`e12337a4a78045394e4db7b39cb710d3c6dacbd435d01f9a92530e239c288fc3` can never authorize a bank, and
+the phase machine concludes that directly from the ledger rather than being told. M114 is not
+re-frozen. Nothing is relaunched. Whether a successor opens, and with what instrument, is the
+owner's decision and was not taken here.
+
+**A defect found in the recording, not in the experiment.** The provider's 429 envelope carries a
+`user_id` identifying the account. M114's client preserved failure bodies in full — the correct
+repair over M113, which discarded them — and that fullness included the caller. It is not the API
+key and grants no access, but it is an account identifier and this repository is public. It was
+replaced in all three attempts, with the replacement, its reason and the ledger's pre-redaction
+digest recorded inside the ledger itself; no quantity the frozen rule reads was touched, and the
+client now strips identifying fields at capture. An intermediate revision of the development branch had
+already carried the unredacted value before this was caught, so the branch history was rewritten
+before merge to remove it, and it never enters `main`'s ancestry. The rewrite touched only that
+datum: the freeze stayed a distinct commit preceding the attempts and no measured quantity moved.
+
+The same defect appeared once more, one level up, and is worth recording because it is the kind that
+looks like diligence: the test written to assert the identifier's absence **quoted the identifier**
+in order to check for it, putting it back in the repository. It now matches the shape and never the
+value. The
+general lesson: "preserve the failure in full" and "preserve only the failure" are different
+instructions, and the first was implemented without the second.
+
+**What stands.** M113 is untouched and remains closed; H58 remains untested. M114's plan and spec
+remain frozen. No generality gate moved.

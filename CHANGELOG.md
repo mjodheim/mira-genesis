@@ -2,6 +2,61 @@
 
 ## Unreleased
 
+- **M114 = `instrument-aborted`. Three delivery attempts, three HTTP 429s, zero banks, H59
+  untested.** The frozen sequence ran to the end of its budget on 27 August 2026: requests at
+  13:02:39Z, 13:03:40Z and 13:04:41Z, each an explicit capacity rejection carrying no completion and
+  no evidence the model executed. The model was never reached, so **nothing about H59 was measured**.
+  A negative result is a measurement; this is a fact about a queue. `P22` was neither computed nor
+  approached, and H59 is exactly as untested as H58 remains.
+  **The evidence names its own cause, three times, which M113's could not.** All three responses are
+  byte-identical — one digest, `f0a0b94c…`, across attempts a minute apart — and each carries
+  `provider_error_code: service_overloaded`, `limit_source: upstream_provider_shared_pool`,
+  `is_byok: false` and `retry_after_seconds: 1`. M113 made one request, got a 429, and its client
+  discarded the body, leaving a status code from which the cause had to be inferred. **The provider
+  asked for a 1-second wait; the frozen rule waited 60, and was rejected anyway, twice.** The
+  constraint is not a matter of patience.
+  **The delivery separation did exactly what it was built to do.** Three physical network requests
+  occurred and zero model calls did, and the record reports those as two different numbers —
+  `physical_delivery_attempts: 3`, `bank_materializations: 0`. Under M113's protocol there was no
+  vocabulary in which to say that. The ledger validates **in full** under the frozen rule: within
+  budget, byte-identical frozen body every time, nothing served so nothing substituted, each outcome
+  recomputed from its own evidence, the 60-second wait honoured before attempts 2 and 3. An abort is
+  not a violation, and the corrective `P15` refuses this record for the right reason — the
+  qualification and delivery halves hold, the generator half does not, because there is no bank.
+  **No fourth attempt exists to take.** The budget is spent and the frozen spec `e12337a4…` can
+  never authorize a bank; the phase machine concludes it directly from the ledger. Nothing is
+  relaunched under M114. Whether a successor is opened, and with what instrument, is the owner's
+  decision and was not taken here. Twenty-one tests pin the aborted record by digest and assert that
+  nothing downstream of a bank may ever appear under it.
+  **A redaction, recorded.** OpenRouter's 429 envelope carries a `user_id` identifying the account.
+  It is not the API key and grants no access, but it identifies the owner and this record is
+  published, so it is replaced in all three attempts — with the replacement, its reason and the
+  ledger's pre-redaction digest `6a0684f7…` recorded inside the ledger itself. **No quantity the
+  frozen rule reads was touched** and the ledger still validates; the cause the provider named
+  survives, only the caller is gone. The client now strips identifying fields at capture. An intermediate revision of the
+  development branch carried the unredacted value; **the branch history was rewritten before merge
+  to remove it**, so it never enters `main`'s ancestry. The rewrite changed no measured quantity —
+  the freeze remains a distinct commit preceding the attempts, and the chronology stays
+  demonstrable: freeze, attempt 1, attempt 2, attempt 3, instrument-aborted, redacted record.
+  M113 is untouched and remains closed. The M114 plan and spec remain frozen and are not re-frozen.
+  No seal, public commitment, tested-system freeze, reveal, qualification, canonical run or result
+  exists. **No generality gate moved.**
+
+- **M114's analysis plan and generator spec are frozen — the second freeze, the first having been
+  withdrawn.** Plan commitment `e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af`,
+  the candidate unchanged; generator identity at spec commitment
+  `e12337a4a78045394e4db7b39cb710d3c6dacbd435d01f9a92530e239c288fc3`. The identity is M113's,
+  checked field by field: the same `deepseek/deepseek-v4-flash-0731` served by Morph at bf16, the
+  same sampling, the same routing switches, the same canonical request body `02a71fb5…`. The freeze
+  moved exactly four bookkeeping fields on the spec and nothing the instrument will send; a test
+  asserts that set exactly. Both frozen artifacts are pinned by digest and pushed **before the first
+  delivery attempt**, so the order is verifiable from the history rather than asserted afterwards.
+  The withdrawn first freeze stays visible: `b98116d8` is now an ancestor of `main` — #219 was merged
+  with a merge commit rather than squashed, precisely so it would be — and a test asserts that
+  `experiments/M114/FREEZE_WITHDRAWN.md` survives and that the withdrawn commitments are not the ones
+  in force. It is never to be rewritten as though it had not existed.
+  Phase is `spec_frozen`. Four owner gates remain. H59 is untested and no generality gate moved.
+
 - **M114's `P15` is versioned rather than imported, and the freeze that preceded the correction is
   withdrawn.** M113 defines `P15`'s generator half as the number of **physical invocations**, on the
   stated ground that a series of physical requests must never be presentable afterwards as one

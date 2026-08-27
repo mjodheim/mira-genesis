@@ -316,8 +316,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
-- **M114/H59 is a corrective instrumental replication of M113, and it is a candidate, not a result.
-  The bank does not exist and the phase is `draft`.** M113 is closed: it froze an identity, made one
+- **M114/H59 is `instrument-aborted`. Three delivery attempts, three HTTP 429s, zero banks, and
+  H59 untested.** M113 is closed: it froze an identity, made one
   physical request, received HTTP 429, materialized no bank and left H58 untested. That record is
   not re-frozen, not reinterpreted, not repaired and not completed, and its four digests are pinned
   by a test that fails if a bank, a reveal or a result ever appears under `experiments/M113/`. M114
@@ -380,9 +380,22 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   verdict. **A freeze consumed before this correction is withdrawn**, recorded in
   `experiments/M114/FREEZE_WITHDRAWN.md` rather than erased; no delivery attempt was made and no
   bank existed under it, so it constrained an instrument that never acted. The phase is `draft` and
-  the five owner gates are freezing the plan and spec, running the delivery sequence under the
-  frozen budget, sealing and publishing the commitment, freezing the tested system with the bank
-  unread, and authorizing the reveal. **G1-G10 do not advance.**
+  **The sequence then ran to the end of its budget and materialized nothing.** Three physical
+  requests at 13:02:39Z, 13:03:40Z and 13:04:41Z, each an explicit capacity rejection carrying no
+  completion and no evidence the model executed. The model was never reached, so **nothing about H59
+  was measured** — a negative result is a measurement, and this is a fact about a queue. All three
+  responses are **byte-identical**, one digest across attempts a minute apart, each naming
+  `service_overloaded` from an `upstream_provider_shared_pool` with `is_byok: false`. M113 could not
+  say that: its client discarded the failure body and left only a status code. **The provider asked
+  for a 1-second wait; the frozen rule waited 60 and was rejected anyway, twice** — the constraint is
+  not a matter of patience. The separation did what it was built to do: three physical network
+  requests and zero model calls, reported as two different numbers, which M113's protocol had no
+  vocabulary for. The ledger validates in full, so this is an **abort and not a violation**, and the
+  corrective `P15` refuses it for the right reason — qualification and delivery hold, the generator
+  half does not, because there is no bank. No fourth attempt exists; the frozen spec can never
+  authorize one; nothing is relaunched. A `user_id` the provider's error envelope carried was
+  redacted, with the redaction and the pre-redaction digest recorded inside the ledger and no
+  measured quantity touched. **G1-G10 do not advance.**
 
 - **M113/H58 is closed as an instrument failure. The generator identity was frozen, the single
   qualifying delivery attempt aborted at HTTP 429, zero banks were materialized and H58 is

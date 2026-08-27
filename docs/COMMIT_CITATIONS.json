@@ -1730,7 +1730,7 @@
       ]
     },
     "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
-      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis→synthesis→adoption feat(docker): sandbox isolation Dockerfile",
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis\u2192synthesis\u2192adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
@@ -1893,11 +1893,13 @@
     },
     "b98116d8e8cf92478876bfb9ba6c48c3d541db4b": {
       "subject": "science(m114): freeze the analysis plan and the generator identity (owner gate 1 of 5)",
-      "preserved_by": "UNPRESERVED",
+      "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
         "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M114/FREEZE_WITHDRAWN.md",
+        "tests/test_m114_freeze.py"
       ]
     },
     "baba1f23986f6b0dc65b45ef126dd043baefa9c7": {
