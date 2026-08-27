@@ -19,7 +19,7 @@ Two verdicts are deliberately separated:
 * ``byok_route_qualified`` additionally requires runtime ``is_byok=true``.
 
 That distinction lets DEVELOPMENT compare backup providers without pretending that shared capacity
-already fixes M113/M114.  A successful report is permission to DESIGN a later milestone, never
+already fixes M113/M114. A successful report is permission to DESIGN a later milestone, never
 scientific evidence about Genesis and never permission to send the qualifying input.
 """
 
@@ -138,10 +138,11 @@ def _request(
     body: Mapping[str, Any] | None = None,
     timeout: int = 180,
 ) -> dict[str, Any]:
-    """Exactly one HTTP request, no retry and no redirect following.
+    """Exactly one HTTP request, no retry, redirect following or response-cache replay.
 
     The decoded response exists only in memory. Reports are built from explicit allowlists below;
-    neither this function nor its callers persist raw bodies or request headers.
+    neither this function nor its callers persist raw bodies or request headers. Response caching is
+    explicitly disabled because OpenRouter intentionally strips router metadata from cache hits.
     """
     conn, parsed = _connection(url, timeout)
     payload = canonical_bytes(body) if body is not None else None
@@ -150,6 +151,7 @@ def _request(
         "Authorization": "Bearer %s" % _secret(),
         "Content-Type": "application/json",
         ROUTER_METADATA_HEADER: "enabled",
+        "X-OpenRouter-Cache": "false",
     }
     started = _now()
     try:
@@ -297,6 +299,8 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
         "structured_output_strictly_parsed": report.get("structured_output_parsed") is True,
         "finish_reason_stop": report.get("finish_reason") == "stop",
         "router_metadata_present": isinstance(metadata, Mapping),
+        "router_requested_model_exact": isinstance(metadata, Mapping)
+        and metadata.get("requested") == requested_model,
         "router_strategy_direct": isinstance(metadata, Mapping) and metadata.get("strategy") == "direct",
         "one_router_attempt": isinstance(metadata, Mapping) and metadata.get("attempt") == 1,
         "one_selected_endpoint": len(selected) == 1,
