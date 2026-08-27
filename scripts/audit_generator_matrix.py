@@ -74,13 +74,33 @@ DEFAULT_CANDIDATES = (
 
 def discovery_is_predecessor_compatible(report: Mapping[str, Any]) -> bool:
     """Whether a route positively advertises every parameter the predecessor smoke sends."""
+    endpoint_status = report.get("endpoint_status")
+    live_endpoint = (
+        isinstance(endpoint_status, (int, float))
+        and not isinstance(endpoint_status, bool)
+        and endpoint_status == 0
+    )
     return bool(
         report.get("provider_found") is True
         and report.get("status") == 200
         and report.get("supports_structured_outputs") is True
         and report.get("supports_seed") is True
-        and report.get("endpoint_status") == 0
+        and live_endpoint
     )
+
+
+def _failed_discovery(provider: str) -> dict[str, Any]:
+    """Return a fail-closed, sanitized observation for an isolated discovery exception."""
+    return {
+        "requested_provider": provider,
+        "provider_found": False,
+        "status": None,
+        "supports_structured_outputs": False,
+        "supports_seed": False,
+        "endpoint_status": None,
+        "discovery_failed": True,
+        "failure_class": "discovery_exception",
+    }
 
 
 def _metric(report: Mapping[str, Any], key: str) -> float | None:
@@ -173,7 +193,11 @@ def run_matrix(candidates: Iterable[str]) -> dict[str, Any]:
     smokes: list[dict[str, Any]] = []
 
     for provider in unique:
-        discoveries.append(routes.discover_provider(provider))
+        try:
+            discovery = routes.discover_provider(provider)
+        except Exception:
+            discovery = _failed_discovery(provider)
+        discoveries.append(discovery)
 
     for discovery in discoveries:
         if not discovery_is_predecessor_compatible(discovery):
