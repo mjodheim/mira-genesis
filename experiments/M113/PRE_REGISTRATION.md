@@ -461,6 +461,58 @@ milestone for a reason with no scientific content whatsoever. The remedy that re
 frozen property — the same model, the same provider and the same committed request body, served
 from a dedicated rate-limit pool instead of a shared one — and it is the owner's to apply.
 
+The owner declined that remedy, deliberately and on the record: introducing a new credential path
+at that moment could alter the served identity, and the instrumental choice had already been frozen
+on Morph. The successful probe was accepted as sufficient pre-freeze validation and the invocation
+was authorized to proceed with the risk understood.
+
+## The qualifying invocation, and what came back
+
+One physical request was made against the frozen spec `c0f13b69…` at **2026-08-27T07:27:49Z**. It
+returned **HTTP 429**.
+
+No bank was produced. No carrier exists. **H58 is untested.**
+
+This is an **instrument failure and not a negative result**, and the distinction is not a
+consolation. A negative result is a measurement: the machinery ran against a bank and did not do
+what the hypothesis said it would. Nothing ran here. The generator was never reached, so the
+milestone learned nothing whatsoever about the hypothesis, and the record must not let a reader
+mistake the one for the other. `P22` was not computed. `P22` was not even approached.
+
+Under the frozen rule the attempt is not repeated. One physical request, no retry, at any layer and
+for any status. The ledger records attempt 1 against spec `c0f13b69…` with outcome `aborted`, no
+payload digest, and the shared contract now says exactly what follows from it: *the frozen spec has
+materialized 0 banks; exactly one is required*. That spec can never authorize a bank. Whether M113
+is re-frozen under a new generator spec is the owner's decision and is not taken here.
+
+### Two defects in the client, both found by the failure itself
+
+The first live qualifying invocation was also the first exercise of the client's failure path, and
+it exercised it badly.
+
+**The outcome was written in a private vocabulary.** `LEDGER_OUTCOMES` is closed —
+`materialized`, `failed_structural_validation`, `failed_isolation`, `aborted` — and the client
+wrote `failed`, which is none of them. Only the phase machine reading the record back discovered
+it, reporting `generation ledger outcome is malformed`. A record written in a vocabulary the
+governing contract cannot read is close to not having been written at all, and this record is the
+entire evidence of what happened. The correct word is `aborted`: the attempt ended before any
+payload existed, so it is neither of the two middle outcomes, because neither stage was reached.
+The entry's encoding was corrected and its facts — attempt index, spec commitment, timestamp,
+absent payload — were not touched.
+
+**The failure's response was not preserved.** The client recorded the status code and discarded the
+body. So for the one attempt that matters, only `HTTP 429` is evidenced; the metadata that would
+have said *why* — provider, limit source, whether the pool was shared — is gone, and cannot be
+recovered without making a second request, which the rule forbids and which would answer about a
+different moment anyway. The earlier development probe's 429 named
+`upstream_provider_shared_pool`, and it is tempting to carry that across. It is not carried across.
+That was a different request at a different time, and attributing this failure's cause from it
+would be inventing evidence the attempt did not leave.
+
+Both are repaired and pinned by tests. A failed attempt now writes
+`GENERATION_FAILED_ATTEMPT.json` carrying the status, the headers, the body and the response
+digest, flagged as an instrument failure rather than a hypothesis result.
+
 The three development steps are also available as **one pass**, `--prepare`, which discovers,
 adopts, probes and then checks its own post-conditions. It exists because the sequence has an order
 that matters and a hand-run sequence can silently skip a step: an unadoptable discovery must never

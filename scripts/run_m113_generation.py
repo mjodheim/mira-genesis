@@ -65,6 +65,7 @@ RAW_RESPONSE_PATH = EXPERIMENT / "GENERATION_RESPONSE.json"
 DISCOVERY_PATH = EXPERIMENT / "PROVIDER_DISCOVERY_DEVELOPMENT.json"
 SMOKE_PATH = EXPERIMENT / "TRANSPORT_SMOKE_DEVELOPMENT.json"
 BUNDLE_PATH = EXPERIMENT / "PRE_FREEZE_BUNDLE_DEVELOPMENT.json"
+FAILED_ATTEMPT_PATH = EXPERIMENT / "GENERATION_FAILED_ATTEMPT.json"
 
 SECRET_VARIABLE = "OPENROUTER_API_KEY"
 LEDGER_SCHEMA = "mira-blind-bank-generation-ledger-v1"
@@ -600,16 +601,41 @@ def qualify(spec: dict[str, Any]) -> int:
         failure = "%s: %s" % (type(exc).__name__, exc)
 
     if observed is None or observed["status"] != 200:
+        # An attempt that ended before any payload existed. `aborted` is the shared contract's
+        # word for that: it is neither a structural-validation failure nor an isolation failure,
+        # because neither stage was reached.
+        #
+        # The failure response is preserved too. A failed attempt's record *is* the evidence of an
+        # instrument failure, and an earlier form of this wrote only the status code, so the body
+        # explaining why was lost at exactly the moment it mattered most.
+        note = failure or "HTTP %s" % (observed or {}).get("status")
+        if observed is not None:
+            FAILED_ATTEMPT_PATH.write_bytes(canonical_bytes({
+                "schema": "m113-failed-attempt-v1",
+                "milestone": "M113",
+                "spec_commitment_sha256": commitment,
+                "attempt_index": attempt_index,
+                "request_body_sha256": spec["canonical_request_body_sha256"],
+                "status": observed["status"],
+                "response_headers": observed["response_headers"],
+                "response_sha256": observed["response_sha256"],
+                "response_bytes": observed["response_bytes"],
+                "body": observed["body"],
+                "raw_text": observed["raw_text"],
+                "started_at": observed["started_at"],
+                "finished_at": observed["finished_at"],
+                "this_is_an_instrument_failure_not_a_hypothesis_result": True,
+            }) + b"\n")
         _append_ledger({
             "attempt_index": attempt_index,
             "spec_commitment_sha256": commitment,
             "started_at": started,
-            "outcome": "failed",
+            "outcome": "aborted",
             "payload_sha256": None,
             "isolation_attestation_sha256": None,
-            "note": failure or "HTTP %s" % (observed or {}).get("status"),
+            "note": note,
         })
-        print("the invocation failed and is recorded as a failed attempt; no retry is permitted")
+        print("the invocation failed and is recorded as an aborted attempt; no retry is permitted")
         return 1
 
     served = observed["body"] or {}
@@ -625,7 +651,7 @@ def qualify(spec: dict[str, Any]) -> int:
             "attempt_index": attempt_index,
             "spec_commitment_sha256": commitment,
             "started_at": started,
-            "outcome": "failed",
+            "outcome": "aborted",
             "payload_sha256": None,
             "isolation_attestation_sha256": None,
             "note": "served identity differs from the frozen identity",

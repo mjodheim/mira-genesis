@@ -1814,3 +1814,94 @@ def test_the_pre_freeze_pass_refuses_to_run_against_a_frozen_instrument(tmp_path
     with pytest.raises(client.GenerationError) as refusal:
         client.prepare()
     assert "already frozen" in str(refusal.value)
+
+
+# ------------------------------------ what a failed qualifying attempt must leave behind
+
+
+def test_a_failed_attempt_is_recorded_in_the_contract_s_own_vocabulary(tmp_path, monkeypatch):
+    """The client wrote an outcome the shared contract does not admit, and only the phase machine
+    reading the record back discovered it.
+
+    `LEDGER_OUTCOMES` is closed: materialized, failed_structural_validation, failed_isolation,
+    aborted. An attempt that ended before any payload existed is none of the middle two, because
+    neither stage was reached, so it is `aborted`. A record written in a private vocabulary is
+    unreadable by the contract that governs it, which is the same as not having been written.
+    """
+    from metamorphosis.blind_bank_protocol import LEDGER_OUTCOMES, validate_generation_ledger
+
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    ledger = experiment / "GENERATION_LEDGER.json"
+    monkeypatch.setattr(client, "LEDGER_PATH", ledger)
+    monkeypatch.setattr(client, "FAILED_ATTEMPT_PATH", experiment / "GENERATION_FAILED_ATTEMPT.json")
+
+    spec = _frozen_spec()
+
+    def denied(url, *, method="POST", body=None, timeout=900):
+        return {
+            "started_at": "2026-08-27T07:27:49Z",
+            "finished_at": "2026-08-27T07:27:50Z",
+            "status": 429,
+            "response_headers": {"server": "cloudflare"},
+            "response_sha256": "0" * 64,
+            "response_bytes": 220,
+            "body": {"error": {"code": 429, "message": "Provider returned error"}},
+            "raw_text": None,
+        }
+
+    monkeypatch.setattr(client, "request", denied)
+    assert client.qualify(spec) == 1
+
+    recorded = json.loads(ledger.read_text(encoding="utf-8"))
+    entry = recorded["entries"][0]
+    assert entry["outcome"] in LEDGER_OUTCOMES
+    assert entry["outcome"] == "aborted"
+    assert entry["payload_sha256"] is None
+    # Well-formed, and still refusing to authorize a bank the attempt did not produce.
+    with pytest.raises(Exception) as refusal:
+        validate_generation_ledger(
+            recorded, spec_commitment_sha256=spec["spec_commitment_sha256"]
+        )
+    assert "materialized 0 banks" in str(refusal.value)
+
+
+def test_a_failed_attempt_preserves_what_it_observed(tmp_path, monkeypatch):
+    """A failed attempt's record is the evidence of an instrument failure.
+
+    An earlier form of this wrote only the status code, so the body explaining why was lost at
+    exactly the moment it mattered most -- and the first real qualifying invocation was the one
+    that lost it.
+    """
+    client = _generation_client()
+    experiment = _isolate_paths(client, monkeypatch, tmp_path)
+    failed = experiment / "GENERATION_FAILED_ATTEMPT.json"
+    monkeypatch.setattr(client, "LEDGER_PATH", experiment / "GENERATION_LEDGER.json")
+    monkeypatch.setattr(client, "FAILED_ATTEMPT_PATH", failed)
+
+    detail = {"error": {"code": 429, "metadata": {"provider_name": "Morph",
+                                                 "limit_source": "upstream_provider_shared_pool"}}}
+
+    def denied(url, *, method="POST", body=None, timeout=900):
+        return {
+            "started_at": "2026-08-27T07:27:49Z",
+            "finished_at": "2026-08-27T07:27:50Z",
+            "status": 429,
+            "response_headers": {"server": "cloudflare", "x-request-id": "abc"},
+            "response_sha256": "1" * 64,
+            "response_bytes": 220,
+            "body": detail,
+            "raw_text": None,
+        }
+
+    monkeypatch.setattr(client, "request", denied)
+    assert client.qualify(_frozen_spec()) == 1
+
+    preserved = json.loads(failed.read_text(encoding="utf-8"))
+    assert preserved["status"] == 429
+    assert preserved["body"] == detail
+    assert preserved["response_headers"]["x-request-id"] == "abc"
+    assert preserved["this_is_an_instrument_failure_not_a_hypothesis_result"] is True
+    # And no bank, no result, came out of it.
+    assert not (experiment / "GENERATION_RESPONSE.json").exists()
+    assert not (experiment / "RESULT.json").exists()

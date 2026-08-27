@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- **M113's generator identity was frozen and its single qualifying invocation returned HTTP 429.
+  No bank exists and H58 is untested.** The identity was pinned at spec commitment `c0f13b69…` --
+  `deepseek/deepseek-v4-flash-0731` served by Morph at bf16, twenty-four carriers, one invocation,
+  retries forbidden at eight named layers -- and committed before the invocation so the order is
+  verifiable from the history. Morph was selected under a criterion the owner recorded: among
+  providers satisfying every already-frozen constraint, the one whose declared quantization most
+  faithfully preserves the weights; of the twenty capable providers it was the only bf16. The
+  criterion is stored with its timing checked rather than described, and quantization is pinned as a
+  `provider_discovery_catalogue` property with `quantization_is_runtime_attested` false, because
+  OpenRouter reports it in the catalogue and not in the completion response.
+  **The failure is an instrument failure and not a negative result**, and the record is built to
+  keep those apart. A negative result is a measurement; nothing ran. The generator was never
+  reached, no carrier was produced, `P22` was not computed or approached. Under the frozen rule the
+  attempt is not repeated: the ledger records attempt 1 as `aborted` with no payload, and the shared
+  contract concludes what follows -- the frozen spec has materialized 0 banks where exactly one is
+  required, so it can never authorize one. Re-freezing is the owner's decision and was not taken.
+  The risk was known before the freeze: the pre-freeze probe needed two attempts, the first a 429
+  from a shared upstream pool, and that was recorded together with the observation that the same
+  condition would end the milestone for a reason with no scientific content. The owner declined the
+  BYOK remedy because a new credential path could alter the served identity after the instrumental
+  choice was frozen, and authorized the invocation with the risk understood.
+  **Two client defects, both found by the failure and neither before it.** The ledger outcome was
+  written as `failed`, a word the shared closed vocabulary does not contain, and only the phase
+  machine reading the record back caught it; the correct word is `aborted` and the encoding was
+  corrected without touching the facts. And the failure response was discarded, so only the status
+  code is evidenced for the one attempt that mattered -- the development probe's 429 named its
+  cause, and that cause is deliberately not carried across, because borrowing it would be inventing
+  evidence this attempt did not leave. Both repaired, both pinned by tests, and a failed attempt now
+  preserves its full response as `GENERATION_FAILED_ATTEMPT.json`.
+  The analysis plan remains frozen and untouched at `66003159…`. M107-M112 are unaffected. No
+  generality gate moved.
+
 - **The M113 pre-freeze sequence is one command, and it checks its own post-conditions.**
   `run_m113_generation.py --prepare` discovers which providers actually serve the exact model,
   adopts one under a rule stated before the data, runs the non-qualifying probe and then asserts

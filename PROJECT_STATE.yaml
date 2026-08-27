@@ -1143,6 +1143,29 @@ current_real_software_frontier:
     removes_substrate_authorship: false
     g1_to_g10_advance: false
     analysis_plan_frozen: true
+    generator_identity_frozen: true
+    generator_spec_commitment: c0f13b698034ed8cbe147ff79512e8522594ac6b691d0cde1f806bc407cfd17a
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
+    provider_criterion_declared_by_owner_after_seeing_the_catalogue: true
+    provider_criterion_depends_on_no_h58_result: true
+    qualifying_invocation_attempted: true
+    qualifying_invocation_attempts: 1
+    qualifying_invocation_outcome: aborted_http_429
+    qualifying_invocation_at: '2026-08-27T07:27:49Z'
+    bank_materialized: false
+    # The distinction the record exists to protect. Nothing ran against a bank, so the hypothesis
+    # was not measured; an unreached instrument is not a tested hypothesis.
+    this_is_an_instrument_failure_not_a_negative_h58_result: true
+    h58_tested: false
+    p22_computed: false
+    attempt_is_not_repeated_under_the_frozen_rule: true
+    frozen_spec_can_never_authorize_a_bank: true
+    refreeze_decision_belongs_to_the_owner: true
+    byok_remedy_declined_by_owner_to_avoid_altering_the_served_identity: true
+    risk_was_recorded_before_the_freeze: true
     # Written before any identity could be pinned, so the freeze consumes a rule rather than
     # writing one. A hosted model has no blob digest, so what is pinned is the identifier, the
     # provider and the routing switches that decide whether the frozen request is the served one.
