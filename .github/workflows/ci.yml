@@ -127,6 +127,11 @@ jobs:
         run: python scripts/check_m112_world_bank_readiness.py --assert-not-revealed
       - name: M113 carrier bank not revealed
         run: python scripts/check_m113_carrier_bank_readiness.py --assert-not-revealed
+      # M114 replicates M113 correctively and shares its mechanism by import, so the boundary
+      # audit above already covers both. What it does not cover is M114's own bank, which has the
+      # same reveal discipline and needs the same decisive gate.
+      - name: M114 carrier bank not revealed
+        run: python scripts/check_m114_carrier_bank_readiness.py --assert-not-revealed
 
       # M113's four claims of the form "X cannot see Y" are worth exactly as much as the check that
       # enforces them, so the check is decisive rather than advisory. It also verifies that the

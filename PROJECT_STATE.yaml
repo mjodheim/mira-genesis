@@ -1008,11 +1008,22 @@ current_real_software_frontier:
     current_ceiling: an_externally_maintained_bank_independent_reproduction_and_an_external_adversarial_audit
 
   M113:
-    status: candidate_not_frozen_bank_does_not_exist
+    # Record reconciliation only, 27 August 2026. These two fields predated the invocation and had
+    # become factually obsolete: they still read `candidate_not_frozen_bank_does_not_exist` and
+    # `draft` after the identity had been frozen and the single attempt had aborted. Nothing under
+    # `experiments/M113/` is touched, none of the four digests pinned by
+    # `tests/test_m113_record_is_closed.py` moves, no bank, reveal or result is created, and nothing
+    # is repaired or reinterpreted. `aborted_without_verdict` is the register's existing value for
+    # exactly this shape and `spec_frozen` is what the phase machine reports for M113 today. The
+    # milestone remains an instrument failure, H58 remains untested, and the record remains closed.
+    record_reconciliation_only: true
+    record_reconciled_at: '2026-08-27'
+    status: aborted_without_verdict
+    record_closed: true
     hypothesis: H58
     decision_slot: D082
     decision_slot_filled: false
-    phase: draft
+    phase: spec_frozen
     successor_to: M112
     m112_untouched: true
     question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
@@ -1215,6 +1226,197 @@ current_real_software_frontier:
       substituting_another_model_or_provider_is_refused_by_the_authorization: true
       the_authoring_session_may_never_produce_the_carriers_itself: true
       transport_fallback_authorized_but_unusable_because_the_host_is_unreachable: true
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
+  M114:
+    status: candidate_not_frozen_bank_does_not_exist
+    hypothesis: H59
+    replication_of: H58
+    replication_kind: corrective_instrumental
+    decision_slot: D083
+    decision_slot_filled: false
+    phase: draft
+    successor_to: M113
+    # The predecessor's record is closed. It is not re-frozen, not reinterpreted, not repaired and
+    # not completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays true.
+    m113_untouched: true
+    m113_outcome: instrument_aborted_before_bank_materialization
+    m113_h58_tested: false
+    m113_is_not_retroactively_repaired_by_this_milestone: true
+    # Why a new number. The register carries one hypothesis per milestone, and M106 set the
+    # precedent when it replicated M105 under H51 rather than reusing H50: a replication that
+    # inherited its predecessor's number would make the predecessor's record read as still open.
+    hypothesis_number_follows_the_m106_precedent: true
+    p22_is_h59_exactly_as_p22_was_h58: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    scientific_target_is_m113s_unchanged: true
+
+    # What is imported rather than copied, so that "unchanged" is checkable and cannot drift.
+    mechanism_module: metamorphosis/m113_carrier_bank.py
+    mechanism_imported_unchanged: true
+    plan_and_spec_rules_delegated_to_m113: true
+    qualification_runner_imports_m113s_sealed_scope_and_arms: true
+    checker_imports_p1_to_p22_from_m113: true
+    generation_client_imports_m113s_transport: true
+    generator_prompt_schema_and_input_are_m113s_byte_for_byte: true
+    generator_input_digests_pinned_and_checked: 3
+    generator_identity_is_m113s: true
+    canonical_request_body_is_byte_identical_to_m113s: true
+    canonical_request_body_sha256: 02a71fb54e492bed151981f6b3f79ec947e7e404bc999caffa37c2c642beaabc
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    minimum_distinct_qualifying_structures: 3
+    closure_rule: exact_fixed_point_no_inherited_bound
+    insufficient_bank_is_a_negative_result_not_a_reason_to_generate_again: true
+
+    # The only thing M114 changes. M113's protocol used one predicate, "one physical request", for
+    # two quantities: how many times the instrument may reach for the generator, and how many times
+    # the generator may produce a bank. A capacity rejection spent the second without spending the
+    # first, and the milestone ended on a fact about queueing.
+    delivery_semantics: m114-delivery-v1
+    delivery_attempt_and_bank_materialization_are_separate_quantities: true
+    max_delivery_attempts: 3
+    max_bank_materializations: 1
+    retry_wait_seconds: 60
+    retry_wait_is_fixed_and_preregistered_not_backoff: true
+    only_capacity_rejection_before_generation_may_be_retried: true
+    retryable_status: 429
+    a_retry_requires_no_completion_and_no_evidence_the_model_executed: true
+    every_attempt_sends_the_byte_identical_frozen_body: true
+    a_scientific_outcome_is_never_retried: true
+    p22_false_is_never_a_reason_to_deliver_again: true
+    never_retried:
+      - invalid_json
+      - output_schema_violation
+      - truncated_completion
+      - model_refusal
+      - insufficient_bank
+      - timeout_after_transmission_in_an_unestablished_state
+      - connection_lost_in_an_ambiguous_state
+      - any_status_other_than_429
+      - any_scientific_outcome_including_p22_false
+    ambiguity_resolves_to_a_terminal_outcome_never_to_a_retryable_one: true
+    # The asymmetry is the safeguard. Misclassifying a capacity rejection as ambiguous costs one
+    # unused attempt; the opposite mistake would permit a second draw against a model that may
+    # already have produced one, and no downstream check could recover the difference.
+    three_capacity_rejections_is_instrument_aborted_not_a_negative_h59: true
+
+    # When the rule was decided. Recorded as booleans the frozen plan must reproduce exactly.
+    delivery_rule_decided_after_m113_instrument_failure: true
+    delivery_rule_decided_before_any_m114_bank_existed: true
+    delivery_rule_decided_without_any_observation_of_the_hypothesis: true
+    delivery_rule_was_never_part_of_m113: true
+    filiation_is_carried_in_the_plan_the_result_and_the_check_report: true
+
+    # What the checker recomputes from the attempts rather than reading from the ledger's summary.
+    checker_recomputes_the_attempt_budget: true
+    checker_recomputes_attempt_index_contiguity: true
+    checker_recomputes_that_every_request_body_digest_is_identical: true
+    checker_recomputes_that_no_provider_or_model_was_substituted: true
+    checker_recomputes_each_outcome_from_the_evidence_carried: true
+    checker_recomputes_that_nothing_follows_a_terminal_outcome: true
+    checker_recomputes_each_recorded_retry_permission: true
+    checker_recomputes_the_waits: true
+    checker_recomputes_that_at_most_one_attempt_materialized_a_bank: true
+    checker_recomputes_the_declared_materialization_index: true
+    checker_recomputes_that_the_ledger_binds_the_frozen_spec: true
+    additional_verdicts_are_strictly_subtractive: true
+    a_violating_ledger_yields: invalid
+    a_ledger_with_no_materialization_yields: instrument-aborted
+    neither_additional_verdict_can_turn_a_negative_into_a_positive: true
+
+    # The one predicate M114 versions, and why. M113 defines P15's generator half as the number of
+    # physical invocations, on the ground that a series of physical requests must never be
+    # presentable afterwards as one logical invocation. Separating delivery from materialization
+    # makes that no longer one number. A first form of this milestone set
+    # model_calls_in_bank_generation = bank_materializations and went on claiming P1-P22 were
+    # imported unchanged; that was false, and a milestone whose whole subject is a conflated
+    # counter may not ship one of its own and call it an import. Found and corrected before any
+    # freeze stood and before any bank existed.
+    predicates_retaining_m113_scientific_computations: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10,
+      P11, P12, P13, P14, P16, P17, P18, P19, P20, P21, P22]
+    predicates_versioned_for_this_milestone: [P15]
+    p15_version: m114-phase-boundary-v1
+    p15_is_versioned_because_delivery_and_materialization_are_separated: true
+    p15_recomputed_independently_from_the_preserved_record: true
+    p15_conjoins_qualification_generation_and_delivery: true
+    p15_qualification_half_requires_zero_calls_and_a_live_guard: true
+    p15_generation_half_requires_exactly_one_bank_materialization: true
+    p15_delivery_half_requires_the_frozen_rule_to_hold_in_full: true
+    p22_scientific_computation_is_m113s_unchanged: true
+    p15_versioning_gives_no_advantage_to_the_hypothesis: true
+    the_versioned_predicate_can_only_subtract_from_a_verdict: true
+    # The two quantities, never folded into one field again. A 429 before generation is a physical
+    # network request and is not a model execution.
+    physical_requests_and_model_calls_are_never_carried_in_one_field: true
+    model_calls_in_bank_generation_field_removed_from_the_result: true
+    separately_reported_quantities: [physical_delivery_attempts, bank_materializations,
+      model_execution_evidence, network_calls_in_qualification, model_calls_in_qualification,
+      remote_execution_calls_in_qualification]
+    whole_delivery_ledger_preserved_into_the_result_not_only_its_summary: true
+    adversarial_phase_boundary_tests: 25
+    # Versioning a predicate must not loosen it, and the direction is checked rather than
+    # claimed: on any record where M113's P15 is well-defined, M114's holding implies
+    # M113's. The converse is false by construction -- a bank M113 would have accepted can
+    # still be refused here for how it was delivered.
+    the_versioned_p15_is_strictly_stricter_than_the_one_it_replaces: true
+    adversarial_delivery_tests: 23
+    adversarial_contract_tests: 17
+    adversarial_instrument_tests: 27
+    m113_record_lock_tests: 8
+    the_no_retry_enumeration_is_inside_the_plan_commitment: true
+    every_delivery_rule_has_a_test_that_tries_to_evade_it: true
+
+    development_run_seed: m114-development-run
+    development_run_sample: 24
+    development_run_predicates_true: 21
+    development_run_predicates_total: 22
+    development_run_failing_predicate: P22
+    development_result_is_not_a_prediction: true
+    development_run_has_no_generator_phase_and_reports_it_as_not_applicable: true
+
+    analysis_plan_commitment: e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af
+    analysis_plan_frozen: false
+    generator_identity_frozen: false
+    # A freeze was consumed at 2026-08-27T11:34:19Z and is **withdrawn**, recorded rather than
+    # erased in experiments/M114/FREEZE_WITHDRAWN.md. It ran one step early -- the owner's sequence
+    # places the freeze after the apparatus PR merges -- and a pre-freeze defect in P15 was still
+    # open when it ran. Between the freeze and the withdrawal no delivery attempt was made, no bank
+    # was materialized, no seal, commitment, tested-system freeze, reveal or result existed, and
+    # nothing about H59 was observed. So the withdrawn freeze constrained an instrument that never
+    # acted, which is why withdrawing it is a correction and not the repair of a result.
+    a_freeze_was_consumed_and_withdrawn: true
+    withdrawn_freeze_at: '2026-08-27T11:34:19Z'
+    withdrawn_freeze_commit: b98116d8e8cf92478876bfb9ba6c48c3d541db4b
+    withdrawn_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
+    withdrawn_spec_commitment: 85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73
+    no_delivery_attempt_was_made_under_the_withdrawn_freeze: true
+    no_bank_existed_under_the_withdrawn_freeze: true
+    nothing_about_the_hypothesis_was_observed_under_the_withdrawn_freeze: true
+    withdrawal_is_recorded_not_erased: true
+    freeze_changed_only_the_specs_status_not_the_request: true
+    freeze_is_consumed_once_and_refuses_to_rerun: true
+    generator_identity_is_m113s_by_field_comparison: true
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
+    bank_materialized: false
+    delivery_attempts_made: 0
+    h59_tested: false
+    p22_computed: false
+    track: A
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    g1_to_g10_advance: false
+    owner_gates_outstanding:
+      - freeze_the_m114_analysis_plan_and_generator_spec
+      - run_the_delivery_sequence_under_the_frozen_budget
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
 

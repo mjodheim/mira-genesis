@@ -1,0 +1,15 @@
+# Per-directory attributes owned by M114, and the only ones this milestone may declare.
+#
+# The reasoning is M113's and is not restated: every other attributes file in this repository is
+# already **bound apparatus of a frozen protocol** -- the root file by M105 and M106, and
+# metamorphosis/, scripts/ and tests/ by M107, which created them precisely to stop later milestones
+# editing the root. Appending to any of them rebinds a freeze this milestone may not touch, and
+# git reads one filename per directory, so there is no fourth place to put an entry.
+#
+# What composes across freezes is a **declared digest mode**, not an attributes entry:
+# `m113_carrier_bank.TESTED_SYSTEM_DIGEST_MODES`, which M114 inherits by importing the mechanism
+# rather than copying it, marks every bound source member `lf_normalized`. So no member outside this
+# directory needs an attribute at all, and this file covers only what lives here.
+*.md text eol=lf
+*.txt text eol=lf
+*.json -text

@@ -1632,3 +1632,107 @@ Both are repaired with regression tests, and a failed attempt now preserves its 
 **What stands.** The analysis plan remains frozen and untouched at `66003159…`. The generator spec
 remains frozen. M107–M112 are unaffected. No generality gate moved. H58 is exactly as untested as it
 was before the invocation.
+
+## M113's protocol counted one thing where there were two, and M114 separates them
+
+Recorded 27 August 2026, after M113 closed. The entry above stands unchanged; this one is about the
+protocol, not the attempt.
+
+M113's rule was "one physical request, no retry, at any layer". Read as a scientific constraint it is
+exactly right: one draw from the generator, so nothing can be drawn twice and the better draw kept.
+But the rule was written over the *transport*, and the transport is not where the constraint lives.
+It conflated two quantities that only coincide while the network cooperates:
+
+    how many times the instrument may reach for the generator
+    how many times the generator may produce a bank
+
+The 429 spent the second budget without ever spending the first. The milestone ended on a fact about
+a queue in a shared upstream pool, with the model never reached — and the protocol had no vocabulary
+in which to say so, because it had only one counter.
+
+**Why this is a defect in the protocol and not in the outcome.** M113's record is correct: the
+attempt happened, it aborted, no bank exists, H58 is untested. Nothing about it is repaired,
+reinterpreted or completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays
+true. What is defective is that the *only* protocol available made an unreachable generator
+indistinguishable, in budget terms, from a generator that answered. That is a measurement instrument
+that cannot report its own failure mode, and it is the same shape as M112's cardinality defect and
+M086-A's unfailable threshold: a quantity that agreed with the thing it was supposed to constrain.
+
+**What replaces it.** `metamorphosis/m114_delivery.py` gives the two quantities separate names —
+`delivery_attempt` and `bank_materialization` — and separate budgets: at most 3 of the first for at
+most 1 of the second. The scientific constraint is untouched and is now stated where it belongs, on
+materializations. The transport constraint is stated on attempts, and is deliberately the narrowest
+window that addresses what happened: an explicit HTTP 429, no completion of any kind, no evidence the
+model executed, the byte-identical frozen body, a fixed pre-registered 60-second wait. Three capacity
+rejections are `instrument-aborted`, which is still not a result about the hypothesis.
+
+**The failure mode the repair could itself introduce, and what refuses it.** A milestone permitted
+three attempts is a milestone that could draw until something passes. So every ambiguity resolves to
+a *terminal* outcome rather than a retryable one — a timeout after transmission, a lost connection, a
+429 that nonetheless carried a completion, a response that decoded to something that is not an object
+— and no scientific outcome is ever retried, `P22` false included. The conservative mistake costs one
+unused attempt. The opposite would permit a second draw against a model that may already have
+produced one, and no downstream check could ever recover the difference. The checker recomputes every
+one of those rules from the attempt sequence rather than reading the ledger's own summary, and the two
+verdicts M114 adds are strictly subtractive: neither can turn a negative into a positive.
+
+**When the separation was decided.** After M113's instrument failure, before any M114 bank existed,
+and with no observation of H58 or H59 whatsoever — M113's request never reached the model and M114
+has not made one. It was never part of M113 and is never described as though it had been. The four
+statements are booleans in `m114_carrier_bank.FILIATION` that M114's frozen plan must reproduce
+exactly or fail validation.
+
+## M114 versioned P15 while claiming it had imported it, and a freeze stood over the defect
+
+Recorded 27 August 2026, before any M114 freeze stands and before any M114 bank exists.
+
+M114's premise is that the mechanism is imported rather than copied, so that "unchanged" is a
+checkable statement instead of a claim about two files that happen to look alike. Its checker
+imported `P1`-`P22` from `check_m113_result` and said so, in the module docstring, the
+pre-registration, the changelog and the project state.
+
+It was not true of `P15`.
+
+M113 defines `P15`'s generator half as the number of **physical invocations**, and its own comment
+says why: *several physical requests cannot be presented afterwards as one logical invocation*. M114
+exists to separate delivery attempts from bank materializations — which means "physical invocations"
+and "model calls" stop being the same number — and M114's runner set
+
+    model_calls_in_bank_generation = bank_materializations
+
+So `P15` had silently changed meaning in the one milestone whose entire subject is a counter that
+had silently changed meaning. A run that spent three attempts on a queue would have reported zero
+model calls in bank generation, which is true of the model and false of the network, in a field
+named for one and reporting the other.
+
+**Why this is worse than the M113 defect it echoes.** M113's `P15` regression was a predicate that
+could not fail. This was a predicate that could not fail *and* a claim, repeated in four places,
+that it had not changed. The first is an instrument defect. The second is the instrument defect plus
+a statement about the instrument that the record could not support.
+
+**What replaces it.** `P15` is versioned as `m114-phase-boundary-v1` and the claim is corrected
+everywhere it was made: `P1`-`P14` and `P16`-`P22` retain M113's scientific computations, `P15` does
+not, and the frozen analysis plan must enumerate which is which or fail validation — so the
+enumeration is inside the commitment rather than in prose that can drift. The predicate is
+recomputed independently from the preserved record, and the whole delivery ledger is preserved into
+the result rather than only its summary, because a checker handed a summary agrees with arithmetic
+the runner performed. Six quantities are reported separately and none carries two meanings;
+`model_calls_in_bank_generation` is removed from M114's result, since under this separation no
+single number could honestly fill it.
+
+**The failure mode the repair could itself introduce.** A boundary predicate that gates a bank could
+be written so that it helps the verdict it gates. So the subtractive property is asserted directly
+rather than inferred from the branches: every delivery-record shape this milestone can produce is
+swept against a run whose science already fails, and none may reach `positive`.
+
+**A freeze stood over the defect and is withdrawn.** The plan and spec had been frozen at
+11:34:19Z, one step ahead of the owner's sequence and while this defect was still open. Repairing it
+moves the plan commitment, so the freeze is withdrawn and recorded in
+`experiments/M114/FREEZE_WITHDRAWN.md` rather than erased. Between the freeze and the withdrawal no
+delivery attempt was made, no bank was materialized, and nothing about H59 was observed: the freeze
+constrained an instrument that never acted, which is the whole reason the withdrawal is a correction
+and not the repair of a result. Had a single delivery attempt been made under it, it would not have
+been.
+
+**What stands.** M113 is untouched: its four pinned digests, its `aborted` ledger entry and its
+`H58 untested` status are exactly as they were. No generality gate moved.
