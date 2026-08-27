@@ -559,6 +559,80 @@ def validate_generator_spec(
             "than by assumption"
         )
 
+    # What weights actually ran, to the extent a hosted provider lets that be known.
+    #
+    # M112 froze a model blob digest, so it could say afterwards exactly which weights emitted its
+    # bank. A hosted model offers no blob. The nearest thing is the provider's declared
+    # quantization: `deepseek-v4-flash-0731` served at fp4 and at bf16 is not the same computation
+    # under one name. So the quantization is pinned -- and pinned with its epistemic status
+    # attached, because OpenRouter reports it in the provider catalogue and *not* in the completion
+    # response. It is a property this project read at discovery time and cannot re-verify from the
+    # served answer, and a spec that claimed otherwise would be claiming more than the instrument
+    # supports.
+    if not isinstance(identity.get("quantization"), str) or not identity.get("quantization"):
+        raise CarrierBankError(
+            "the provider's declared quantization must be pinned: it is the nearest thing a hosted "
+            "generator has to the weight digest M112 could freeze"
+        )
+    if identity.get("quantization_source") != "provider_discovery_catalogue":
+        raise CarrierBankError(
+            "the quantization must record where it was read from, and the only place it is "
+            "available is the provider discovery catalogue"
+        )
+    if identity.get("quantization_is_runtime_attested") is not False:
+        raise CarrierBankError(
+            "the completion response does not carry a quantization, so it may not be recorded as "
+            "attested at serve time; a discovery-bound property is not a verified one"
+        )
+
+    # -- how this provider came to be the one --------------------------------------------
+    #
+    # The rule this milestone declared before any data adopts a provider only when exactly one can
+    # serve the frozen request. When discovery returns several, the choice is a judgement, and a
+    # judgement is only admissible here if the record says plainly when it was formed and what it
+    # could not have been formed from. So a spec that selected among several candidates has to
+    # carry its criterion, the moment it was written relative to every gate, and the statement that
+    # no result of the hypothesis under test could have informed it.
+    selection = spec.get("provider_selection")
+    if not isinstance(selection, Mapping):
+        raise CarrierBankError(
+            "a spec whose provider was chosen among several candidates must record the criterion "
+            "that chose it"
+        )
+    if not isinstance(selection.get("criterion"), str) or not selection["criterion"].strip():
+        raise CarrierBankError("the provider selection criterion must be stated, not implied")
+    if selection.get("selected") != provider:
+        raise CarrierBankError(
+            "the recorded selection does not name the provider the spec pins"
+        )
+    candidates = selection.get("candidates_considered")
+    if not isinstance(candidates, list) or provider not in candidates:
+        raise CarrierBankError(
+            "the candidates the criterion was applied to must be recorded, and must include the "
+            "one it selected"
+        )
+    for key in (
+        "formulated_before_any_bank_existed",
+        "formulated_before_generator_freeze",
+        "formulated_before_smoke_with_the_final_identity",
+        "formulated_before_the_qualifying_invocation",
+    ):
+        if selection.get(key) is not True:
+            raise CarrierBankError(
+                "the criterion must be recorded as formed before %s; a criterion formed later is "
+                "a result-shaped choice" % key.replace("formulated_before_", "").replace("_", " ")
+            )
+    if selection.get("depends_on_any_h58_result") is not False:
+        raise CarrierBankError(
+            "a provider criterion that depends on a result of the hypothesis under test is not a "
+            "criterion, it is an outcome being selected for"
+        )
+    if not isinstance(selection.get("formulated_after_observing_the_provider_catalogue"), bool):
+        raise CarrierBankError(
+            "whether the criterion was formed before or after the catalogue was seen must be "
+            "recorded either way; silence on it is the part a reader cannot check"
+        )
+
     # -- routing: nothing may be substituted for what was frozen -------------------------
     routing = spec.get("routing")
     if not isinstance(routing, Mapping):

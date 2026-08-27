@@ -413,6 +413,54 @@ requested: the transport is `http.client` from the standard library, driven dire
 and no third-party HTTP client is imported, because each carries retry behaviour that would have to
 be disabled correctly, and the way to disable it correctly is not to have it.
 
+## The provider, and the criterion that chose it
+
+Discovery found `deepseek/deepseek-v4-flash-0731` served by twenty-eight providers, twenty of them
+supporting strict structured output. The rule this milestone declared before any data adopts a
+provider only when exactly one can serve the frozen request, so twenty stopped the pass and went to
+the owner, who recorded this criterion:
+
+> Among the providers satisfying every already-frozen instrumental constraint, retain the one whose
+> declared quantization most faithfully preserves the model's weights; only on a tie, apply a
+> pre-declared deterministic tie-break.
+
+Applied to the twenty candidates it selects **Morph**, the only admissible one declared `bf16`; no
+tie-break was needed. The criterion is recorded in the spec together with the fact that it was
+**formulated after the provider catalogue had been observed** — and before the smoke probe with the
+final identity, before the generator freeze, before the qualifying invocation, and before any bank
+existed. It depends on no result of H58, and `validate_generator_spec` refuses a spec that claims
+otherwise, refuses one whose criterion does not select the provider it pins, and refuses one that
+leaves the timing unrecorded, because silence about when a choice was made is the part a reader
+cannot check.
+
+Quantization matters here for a specific reason. M112 froze a model blob digest and could therefore
+say afterwards exactly which weights emitted its bank. A hosted model offers no blob, and
+`deepseek-v4-flash-0731` served at fp4 and at bf16 is not the same computation under one name. So
+the quantization is the nearest available analogue and it is pinned — with its epistemic status
+attached. OpenRouter reports it in the **provider catalogue** and not in the completion response, so
+it is a `provider_discovery_catalogue` property that cannot be re-verified from the served answer.
+The contract requires `quantization_is_runtime_attested` to be false and refuses any spec that
+records it as attested. A discovery-bound property is not a verified one, and the record says which
+this is.
+
+## What the transport probe found, including the part that is not reassuring
+
+The probe against Morph satisfies the contract in full: HTTP 200, served model
+`deepseek/deepseek-v4-flash-0731`, served provider `Morph`, `finish_reason` `stop`, the strict
+JSON-schema response parsed, no fallback, and nothing qualifying created.
+
+It took two attempts. The first returned **HTTP 429** — `service_overloaded`, `provider_name`
+`Morph`, `limit_source` `upstream_provider_shared_pool`, `is_byok` false. Retrying a *development*
+probe is permitted and was done deliberately; the no-retry rule governs the qualifying invocation,
+not the pre-freeze instrument checks.
+
+That observation is recorded here because it bears directly on the one irreversible step. The
+qualifying invocation gets no retry: an HTTP error there is a failed attempt, and a frozen spec
+admits exactly one materialization. A 429 from a shared upstream pool would therefore end the
+milestone for a reason with no scientific content whatsoever. The remedy that removes it changes no
+frozen property — the same model, the same provider and the same committed request body, served
+from a dedicated rate-limit pool instead of a shared one — and it is the owner's to apply.
+
 The three development steps are also available as **one pass**, `--prepare`, which discovers,
 adopts, probes and then checks its own post-conditions. It exists because the sequence has an order
 that matters and a hand-run sequence can silently skip a step: an unadoptable discovery must never
