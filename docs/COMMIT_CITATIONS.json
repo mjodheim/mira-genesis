@@ -4,11 +4,14 @@
   "commits": {
     "007ab867f6a32ca7f4104e2de00858d33fb66793": {
       "subject": "science(m112): authorize the single reveal, and say plainly what the gate is not",
-      "preserved_by": "science/m112-blind-materialization",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "021d7d73d3a27d2549f45f6a6273cfa30e981647": {
@@ -98,7 +101,7 @@
     },
     "0a01b262cf96bc73a3435b294dc48f5047a846e6": {
       "subject": "science(m109): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m109-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -274,7 +277,7 @@
     },
     "1d5d70a44cc9c56164d454631eae3d1c1b7e8dd6": {
       "subject": "science(m111): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m111-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -284,11 +287,11 @@
     },
     "1dfd04b939b474047cff1c7196b512ea6c3d21f5": {
       "subject": "science(m110): record the pre-freeze rehearsal and its predicted stable evidence digest",
-      "preserved_by": "experiment/m110-apparatus-v1",
+      "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M110/PROTOCOL.json",
-        "experiments/M110/PROTOCOL_CANDIDATE.json",
-        "docs/COMMIT_CITATIONS.json"
+        "experiments/M110/PROTOCOL_CANDIDATE.json"
       ]
     },
     "1eeb345fe66308b8995f4b35618cffd9a3b0205e": {
@@ -417,11 +420,13 @@
     },
     "2c4ffa3e039fc792ee172af8287b2c5aef07fa84": {
       "subject": "result(m112): preserve the unique canonical first result, before any checker runs",
-      "preserved_by": "experiment/m112-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "2cf454ca4e393a319f89ae5afbcd5e3f9250182c": {
@@ -485,16 +490,15 @@
     },
     "308b4d99e0bed8d61eceed558805a206b16ae24c": {
       "subject": "science(m107): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m107-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
     "31068b7140085bd79b7c5bea12d452b6e1742690": {
       "subject": "result(m109): preserve the unique canonical first result",
-      "preserved_by": "experiment/m109-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -636,9 +640,10 @@
     },
     "401686a05db8de31d41549d1d5be6fe19a79af77": {
       "subject": "result(m110): preserve the unique canonical first result",
-      "preserved_by": "experiment/m110-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
@@ -660,7 +665,7 @@
     },
     "40841522e860cf952eef5c6e98d0fecbb55eead4": {
       "subject": "result(m105): preserve the negative canonical checker report",
-      "preserved_by": "experiment/m105-negative-result",
+      "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
         "experiments/M105/CHECKER_FAILURE.json"
@@ -689,20 +694,22 @@
       "subject": "Merge pull request #193 from mjodheim/codex/m103-acquisition-machinery",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M103/PROTOCOL.json",
+        "experiments/M103/RESULT.json",
         "tests/test_m103_protocol_candidate.py"
       ]
     },
     "42f0ae0a427f461b33a75b6080b945bc854ff848": {
       "subject": "science(m112): bind the blind generator and freeze the qualifying input before generation",
-      "preserved_by": "science/m112-blind-materialization",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "4351fc007a95d341b017e10511de730e20651947": {
@@ -765,7 +772,7 @@
     },
     "48be7c06a42edaec1d33f8a46a3407dbc3a098c2": {
       "subject": "feat(m103): complete adversarially controlled apparatus",
-      "preserved_by": "provenance/m103-owner-review-source-v1",
+      "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
         "docs/COMMIT_CITATIONS.json"
@@ -850,11 +857,16 @@
     },
     "50c7a0e36365d466eea163afcdc4234c478b7c70": {
       "subject": "science(m112): freeze the tested system, with the bank still unread",
-      "preserved_by": "science/m112-blind-materialization",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "experiments/M112/RESULT.json",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "experiments/M112/REVEAL_AUTHORIZATION.json",
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "521895af33e30320c06437d4d9fbd83dee581a47": {
@@ -913,7 +925,6 @@
       "subject": "Merge pull request #209 from mjodheim/science/m111-self-diagnosis",
       "preserved_by": "main",
       "cited_in": [
-        "papers/genesis-ii-preprint/SUBMISSION_METADATA.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
@@ -935,9 +946,11 @@
     },
     "57603b71f848ce1605c2cf8607907735441bfaf4": {
       "subject": "science(m110): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m110-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
@@ -1067,6 +1080,7 @@
         "experiments/M102/README.md",
         "experiments/M102/RESULT.json",
         "experiments/M103/PRE_REGISTRATION.md",
+        "experiments/M103/PROTOCOL.json",
         "experiments/M103/PROTOCOL_CANDIDATE.json",
         "scripts/build_m103_protocol.py"
       ]
@@ -1335,15 +1349,16 @@
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
+        "papers/genesis-ii-preprint/POST_PUBLICATION.md",
+        "papers/genesis-ii-preprint/README.md",
         "papers/genesis-ii-preprint/SUBMISSION_METADATA.md"
       ]
     },
     "8270b7825bbc7af2295da4804fac23d8ebc1e974": {
       "subject": "result(m107): preserve the unique canonical first result",
-      "preserved_by": "experiment/m107-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
@@ -1381,11 +1396,13 @@
     },
     "849ee7b2697e315997e3f3ddcb325894167b8a58": {
       "subject": "science(m112): record a defect in the frozen spec, before the bank is sealed or revealed",
-      "preserved_by": "science/m112-blind-materialization",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "872f90060902cea2b94be653845036340b91cde3": {
@@ -1503,10 +1520,12 @@
     },
     "9568f500a46b35ad34ce8b854a6803f46176ab8c": {
       "subject": "result(m105): preserve the unique canonical first result",
-      "preserved_by": "experiment/m105-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "docs/COMMIT_CITATIONS.json"
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M105/CHECKER_FAILURE.json"
       ]
     },
     "958c52fc4e4f47dfdeacd492bb691dded2ede81d": {
@@ -1559,16 +1578,15 @@
     },
     "971f5030d58f119c27eb4e08f3ae55118e2a1f7a": {
       "subject": "science(m106): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m106-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
     "9837d0b88e8f06d191040347ac6d820f34c538c1": {
       "subject": "result(m111): preserve the unique canonical first result",
-      "preserved_by": "experiment/m111-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -1613,7 +1631,7 @@
     },
     "9c61a14940b78221f330a28af87ef230a6f7fb3b": {
       "subject": "science(m108): freeze the owner-authorized protocol",
-      "preserved_by": "experiment/m108-frozen-protocol-v1",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -1712,7 +1730,7 @@
       ]
     },
     "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
-      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosisâ†’synthesisâ†’adoption feat(docker): sandbox isolation Dockerfile",
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis→synthesis→adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
@@ -1786,11 +1804,9 @@
     },
     "b1f920b44707b5da3c90f99a6b51a9b070fbbf10": {
       "subject": "fix(m103): make protocol bindings checkout-stable",
-      "preserved_by": "provenance/m103-owner-review-source-v2",
+      "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
         "PROJECT_STATE.yaml",
-        "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M103/PROTOCOL_CANDIDATE.json",
         "tests/test_m103_protocol_candidate.py"
@@ -1875,6 +1891,15 @@
         "results/M038_TRIGGER_CALIBRATION.md"
       ]
     },
+    "b98116d8e8cf92478876bfb9ba6c48c3d541db4b": {
+      "subject": "science(m114): freeze the analysis plan and the generator identity (owner gate 1 of 5)",
+      "preserved_by": "UNPRESERVED",
+      "cited_in": [
+        "CHANGELOG.md",
+        "PROJECT_STATE.yaml",
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "baba1f23986f6b0dc65b45ef126dd043baefa9c7": {
       "subject": "test: preserve the first M084 result",
       "preserved_by": "main",
@@ -1942,19 +1967,20 @@
     },
     "c4672fe0fd024b84b0b110d0850115f0445f7354": {
       "subject": "result(m106): preserve the unique canonical first result",
-      "preserved_by": "experiment/m106-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json"
       ]
     },
     "c49764cd53d28616fab5cd0c59d9fb9e8fc5a953": {
       "subject": "science(m105): freeze the owner-authorized protocol v2",
-      "preserved_by": "experiment/m105-frozen-protocol-v2",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "docs/COMMIT_CITATIONS.json"
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M105/CHECKER_FAILURE.json"
       ]
     },
     "c603dd52c6484034de3a11a7c3c660335fda14b0": {
@@ -2183,7 +2209,7 @@
     },
     "dd205f257b6093b83ee4dbf1b48af0a0bff21275": {
       "subject": "science(m103): preserve canonical attempt 1",
-      "preserved_by": "experiment/m103-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -2214,7 +2240,7 @@
     },
     "ddcb2fae80c7bfca2996bde2f05313397182b6c8": {
       "subject": "result(m108): preserve the unique canonical first result",
-      "preserved_by": "experiment/m108-canonical-first-result",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
         "PROJECT_STATE.md",
@@ -2261,11 +2287,16 @@
     },
     "e00ddd50bde96c043c98f32f16c78b09eb00196c": {
       "subject": "science(m112): seal the blind bank and publish its commitment before the tested system is frozen",
-      "preserved_by": "science/m112-blind-materialization",
+      "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
+        "PROJECT_STATE.md",
+        "docs/COMMIT_CITATIONS.json",
+        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "experiments/M112/RESULT.json",
         "experiments/M112/RESULT_SUMMARY.md",
-        "docs/COMMIT_CITATIONS.json"
+        "experiments/M112/REVEAL_AUTHORIZATION.json",
+        "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
     },
     "e1367c6d7cbe99d59cc79321d1427024de0fc551": {
@@ -2307,11 +2338,11 @@
     },
     "e7f5e842004b0b72f57d704cdd7adb5e7afbe5d1": {
       "subject": "science(m111): strengthen correction 5 with a thousand-world search that found nothing",
-      "preserved_by": "experiment/m111-apparatus-v1",
+      "preserved_by": "main",
       "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
         "experiments/M111/PROTOCOL.json",
-        "experiments/M111/PROTOCOL_CANDIDATE.json",
-        "docs/COMMIT_CITATIONS.json"
+        "experiments/M111/PROTOCOL_CANDIDATE.json"
       ]
     },
     "eaacf8e66b866c2d777d2caa0fe80c8a7617363f": {

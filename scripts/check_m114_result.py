@@ -1,20 +1,42 @@
-"""M114's checker: M113's predicates, unchanged, plus the delivery record they now sit on.
+"""M114's checker: M113's scientific computations, plus the one predicate M114 had to version.
 
-`P1` through `P22` are imported from `check_m113_result`, not restated. They are the scientific
-content of both milestones, `P22` is `H59` exactly as it was `H58`, and a corrective replication
-that re-typed twenty-two predicates would be a corrective replication that could quietly soften one.
+**What is imported unchanged, and what is not.** `P1`-`P14` and `P16`-`P22` retain M113's scientific
+computations exactly -- they are imported from `check_m113_result`, not restated, so a corrective
+replication cannot quietly soften one. `P15` is the explicitly versioned corrective boundary
+predicate required by M114's preregistered separation of delivery attempts from bank materialization.
 
-M114 adds one thing on top, and it can only ever subtract from a verdict:
+That exception is not a convenience, and hiding it would have been a defect of the same kind this
+milestone exists to correct. M113 defines `P15`'s generator half as the number of **physical
+invocations**, on the stated ground that a series of physical requests must never be presentable
+afterwards as one logical invocation. M114 separates delivery from materialization, so "physical
+invocations" and "model calls" are no longer the same number -- and an earlier form of this
+milestone set `model_calls_in_bank_generation = bank_materializations` while claiming `P15` was
+imported unchanged. It was not. A milestone whose whole subject is a conflated counter could not
+ship a conflated counter of its own and describe it as an import.
 
-    a canonical attempt whose delivery ledger violates the frozen rule yields `invalid`
-    a canonical attempt that materialized no bank yields `instrument-aborted`
+So `P15` is versioned here as `m114-phase-boundary-v1`, recomputed independently from the preserved
+record rather than read from any field the runner wrote about itself, and it is the conjunction of
+three halves:
 
-Neither can turn a negative into a positive. That direction matters more than it looks: the whole
-risk in a milestone that is allowed to deliver three times is that the extra attempts become a way
-to keep drawing until something passes, and a checker whose additions could only ever *help* the
-verdict would be the mechanism by which that happened. `instrument-aborted` is not a result about
-`H59`; it is the same kind of fact M113 ended on, reported in the vocabulary M114 pre-registered
-for it rather than mistaken for evidence.
+**Qualification.** Zero model calls, zero network calls, zero remote-execution calls, and a network
+guard whose self-test actually fired -- because an absent guard and a silent run otherwise record
+the same zero.
+
+**Generator.** Exactly one bank materialization. A canonical run cannot exist on fewer, and the
+frozen rule permits no more.
+
+**Delivery.** The physical requests, counted separately from the model calls, within the frozen
+budget of three; every attempt sending byte-identical request bytes to the same model and the same
+provider with no fallback available; only explicit 429s carrying no completion and no evidence of
+model execution preceding a further attempt; the frozen 60-second wait honoured; at most one
+materializing response; nothing attempted after materialization; every ambiguity terminal; and the
+ledger valid in full under the frozen rule.
+
+**None of this can help `H59`.** The delivery checker is a gate and only a gate. A violation makes
+the run `invalid`, zero materializations make it `instrument-aborted`, and no clause anywhere in it
+can turn `P22` false into `P22` true. A milestone permitted three delivery attempts has exactly one
+way to cheat -- drawing until something passes -- and a boundary predicate that could ever improve a
+verdict would be the instrument of it.
 """
 
 from __future__ import annotations
@@ -43,57 +65,228 @@ RESULT_PATH = ROOT / bank.RESULT_PATH
 REPORT_PATH = EXPERIMENT / "CHECK_REPORT.json"
 DEVELOPMENT_PATH = EXPERIMENT / "DEVELOPMENT_RUN.json"
 
+PHASE_BOUNDARY_SCHEMA = "m114-phase-boundary-v1"
+
 # The verdicts M114 can reach that M113 could not name.
 INSTRUMENT_ABORTED = "instrument-aborted"
 INVALID = "invalid"
 
+# Stated once, carried in every report, so no reader has to take "unchanged" on trust.
+PREDICATE_PROVENANCE = {
+    "schema": "m114-predicate-provenance-v1",
+    "retain_m113_scientific_computations": (
+        ["P%d" % index for index in range(1, 15)]
+        + ["P%d" % index for index in range(16, 23)]
+    ),
+    "versioned_for_this_milestone": ["P15"],
+    "p15_version": PHASE_BOUNDARY_SCHEMA,
+    "p15_reason": (
+        "M113 defines P15's generator half as the number of physical invocations. M114's "
+        "preregistered separation of delivery attempts from bank materialization makes that no "
+        "longer a single number, so P15 is recomputed here rather than imported against a changed "
+        "meaning."
+    ),
+    "p22_scientific_computation_is_unchanged_and_applied_to": bank.HYPOTHESIS,
+    "the_versioned_predicate_can_only_subtract_from_a_verdict": True,
+}
+
+
+# ----------------------------------------------------------------------------------------
+# P15, recomputed
+# ----------------------------------------------------------------------------------------
+
+
+def _qualification_half(result: dict[str, Any]) -> dict[str, Any]:
+    """Silence, and a guard that proved it was live while keeping it."""
+    counts = {
+        key: result.get(key)
+        for key in (
+            "model_calls_in_qualification",
+            "network_calls_in_qualification",
+            "remote_execution_calls_in_qualification",
+        )
+    }
+    silent = all(value == 0 for value in counts.values())
+    # An absent guard and a silent run record the same zero. Only the self-test tells them apart.
+    guard_live = result.get("network_guard_selftest_intercepted") is True
+    return {
+        "holds": bool(silent and guard_live),
+        "model_calls_in_qualification": counts["model_calls_in_qualification"],
+        "network_calls_in_qualification": counts["network_calls_in_qualification"],
+        "remote_execution_calls_in_qualification": counts[
+            "remote_execution_calls_in_qualification"
+        ],
+        "qualification_phase_is_silent": silent,
+        "qualification_guard_was_live": guard_live,
+        "outbound_addresses_attempted": result.get("outbound_addresses_attempted"),
+        "model_client_modules_imported": result.get("model_client_modules_imported"),
+    }
+
+
+def _delivery_half(result: dict[str, Any]) -> dict[str, Any]:
+    """Every delivery clause, re-derived from the preserved ledger.
+
+    Nothing here reads `bank_delivery`, which is the runner's own summary. The ledger is
+    re-validated from scratch and each clause is recomputed from the attempts, so a runner that
+    summarised its way to a pass would still fail here.
+    """
+    ledger = result.get("delivery_ledger")
+    instrument = result.get("frozen_instrument") or {}
+    findings: dict[str, Any] = {
+        "delivery_record_present": ledger is not None,
+        "physical_delivery_attempts": result.get("physical_delivery_attempts"),
+        "bank_materializations": result.get("bank_materializations"),
+        "model_execution_evidence": result.get("model_execution_evidence"),
+        "delivery_budget": delivery.MAX_DELIVERY_ATTEMPTS,
+        "retry_wait_seconds": delivery.RETRY_WAIT_SECONDS,
+    }
+    if not isinstance(ledger, dict):
+        findings["holds"] = False
+        findings["violation"] = "no delivery ledger is preserved in the result"
+        return findings
+
+    # The frozen rule, in full, before any clause below is looked at individually. A ledger that
+    # fails here fails P15 whatever the individual clauses happen to say.
+    try:
+        delivery.validate_delivery_ledger(
+            ledger,
+            spec_commitment_sha256=instrument.get("spec_commitment_sha256"),
+            request_body_sha256=instrument.get("canonical_request_body_sha256"),
+        )
+    except delivery.DeliveryError as exc:
+        findings["ledger_is_valid_under_the_frozen_rule"] = False
+        findings["violation"] = str(exc)
+        findings["holds"] = False
+        return findings
+    findings["ledger_is_valid_under_the_frozen_rule"] = True
+
+    attempts = [a for a in (ledger.get("attempts") or []) if isinstance(a, dict)]
+    outcomes = [a.get("outcome") for a in attempts]
+    digests = {a.get("request_body_sha256") for a in attempts}
+    models = {a.get("served_model") for a in attempts if a.get("served_model") is not None}
+    providers = {a.get("served_provider") for a in attempts if a.get("served_provider") is not None}
+    routing = instrument.get("routing") or {}
+    materializing = [i for i, outcome in enumerate(outcomes, start=1) if outcome == "materialized"]
+
+    clauses = {
+        "physical_attempts_are_recorded_separately": (
+            findings["physical_delivery_attempts"] == len(attempts)
+        ),
+        "within_the_frozen_delivery_budget": len(attempts) <= delivery.MAX_DELIVERY_ATTEMPTS,
+        "every_attempt_sent_identical_request_bytes": len(digests) == 1,
+        "the_request_bytes_are_the_frozen_ones": (
+            instrument.get("canonical_request_body_sha256") in digests
+        ),
+        "every_attempt_was_served_by_the_same_model": len(models) <= 1,
+        "the_served_model_is_the_frozen_one": models <= {instrument.get("model")},
+        "every_attempt_was_served_by_the_same_provider": len(providers) <= 1,
+        "the_served_provider_is_the_frozen_one": providers <= {instrument.get("provider")},
+        "no_fallback_was_available": (
+            routing.get("allow_fallbacks") is False
+            and routing.get("automatic_routing") is False
+            and not routing.get("model_fallbacks")
+            and not routing.get("provider_fallbacks")
+        ),
+        # Only a clean 429 may precede another attempt. Recomputed from each attempt's own
+        # evidence rather than from the outcome word it carries.
+        "only_clean_capacity_rejections_preceded_a_retry": all(
+            attempt.get("status") == delivery.RETRYABLE_STATUS
+            and attempt.get("completion_present") is not True
+            and attempt.get("model_execution_cannot_be_excluded") is not True
+            for attempt in attempts[:-1]
+        ),
+        "the_frozen_wait_was_honoured": all(
+            (attempt.get("waited_seconds_before_this_attempt") in (0, 0.0))
+            if position == 1
+            else (
+                isinstance(attempt.get("waited_seconds_before_this_attempt"), (int, float))
+                and attempt["waited_seconds_before_this_attempt"] >= delivery.RETRY_WAIT_SECONDS
+            )
+            for position, attempt in enumerate(attempts, start=1)
+        ),
+        "at_most_one_materializing_response": len(materializing) <= (
+            delivery.MAX_BANK_MATERIALIZATIONS
+        ),
+        "nothing_was_attempted_after_a_materialization": (
+            not materializing or materializing[-1] == len(attempts)
+        ),
+        # Every ambiguity is terminal. An ambiguous attempt that was followed by another is the one
+        # failure mode no downstream check could ever recover from.
+        "every_ambiguity_is_terminal": all(
+            outcome != "failed_ambiguous" for outcome in outcomes[:-1]
+        ),
+    }
+    findings["clauses"] = clauses
+    findings["holds"] = all(clauses.values())
+    findings["violation"] = None if findings["holds"] else ", ".join(
+        sorted(name for name, ok in clauses.items() if not ok)
+    )
+    return findings
+
+
+def phase_boundary(result: dict[str, Any]) -> dict[str, Any]:
+    """`P15` for M114: qualification silence, one materialization, and a lawful delivery record."""
+    canonical = bool(result.get("is_a_canonical_attempt"))
+    qualification = _qualification_half(result)
+    delivery_findings = _delivery_half(result)
+
+    materializations = result.get("bank_materializations")
+    if not canonical:
+        # A development run has no generator phase and no delivery phase at all. Reporting them as
+        # satisfied would be the M112 defect; reporting them as not applicable is the truth.
+        generation_holds = True
+        generation_state = "not_applicable_on_a_development_run"
+        delivery_holds = True
+        delivery_state = "not_applicable_on_a_development_run"
+    else:
+        generation_holds = materializations == delivery.MAX_BANK_MATERIALIZATIONS
+        generation_state = (
+            "exactly_one_bank_materialization" if generation_holds
+            else "the_canonical_bank_does_not_record_exactly_one_materialization"
+        )
+        delivery_holds = bool(delivery_findings["holds"])
+        delivery_state = "the_frozen_delivery_rule_holds" if delivery_holds else (
+            "the_delivery_record_violates_the_frozen_rule"
+        )
+
+    return {
+        "schema": PHASE_BOUNDARY_SCHEMA,
+        "holds": bool(qualification["holds"] and generation_holds and delivery_holds),
+        "qualification_phase": qualification,
+        "generation_phase": {
+            "holds": generation_holds,
+            "state": generation_state,
+            "bank_materializations": materializations,
+            "required": delivery.MAX_BANK_MATERIALIZATIONS,
+        },
+        "delivery_phase": dict(delivery_findings, state=delivery_state, holds=delivery_holds),
+        # Named here so no reader has to reconstruct which quantity is which. A 429 before
+        # generation is a physical network request and is not a model execution.
+        "physical_delivery_attempts": result.get("physical_delivery_attempts"),
+        "bank_materializations": materializations,
+        "model_execution_evidence": result.get("model_execution_evidence"),
+        "model_calls_in_qualification": qualification["model_calls_in_qualification"],
+        "network_calls_in_qualification": qualification["network_calls_in_qualification"],
+        "remote_execution_calls_in_qualification": qualification[
+            "remote_execution_calls_in_qualification"
+        ],
+    }
+
+
+# ----------------------------------------------------------------------------------------
+# The report
+# ----------------------------------------------------------------------------------------
+
 
 def delivery_findings(result: dict[str, Any]) -> dict[str, Any]:
-    """Recompute the delivery rule from the attempts the result carries.
-
-    The runner writes the ledger, so nothing the ledger says about itself is evidence. What is
-    evidence is the sequence of attempts, and every number below is derived from it by
-    `m114_delivery` rather than read from a field the runner filled in.
-    """
-    recorded = result.get("bank_delivery")
-    if recorded is None:
-        return {
-            "schema": "m114-delivery-findings-v1",
-            "delivery_record_present": False,
-            "state": "not_applicable_on_a_development_run",
-            "holds": True,
-            "bank_materializations": None,
-            "delivery_attempts": None,
-            "violation": None,
-        }
-
-    violation = recorded.get("ledger_violates_the_frozen_rule")
-    materializations = recorded.get("bank_materializations")
-    attempts = recorded.get("delivery_attempts")
-    return {
-        "schema": "m114-delivery-findings-v1",
-        "delivery_record_present": True,
-        "state": (
-            "violates_the_frozen_rule" if violation
-            else "materialized" if materializations == delivery.MAX_BANK_MATERIALIZATIONS
-            else "no_bank_materialized"
-        ),
-        "holds": not violation and materializations == delivery.MAX_BANK_MATERIALIZATIONS,
-        "delivery_attempts": attempts,
-        "delivery_budget": delivery.MAX_DELIVERY_ATTEMPTS,
-        "within_budget": recorded.get("within_budget"),
-        "outcomes": recorded.get("outcomes"),
-        "capacity_rejections": recorded.get("capacity_rejections"),
-        "bank_materializations": materializations,
-        "bank_materialization_index": recorded.get("bank_materialization_index"),
-        "every_attempt_sent_the_same_body": recorded.get("every_attempt_sent_the_same_body"),
-        "no_attempt_followed_a_terminal_outcome": recorded.get(
-            "no_attempt_followed_a_terminal_outcome"
-        ),
-        "no_substitution": recorded.get("no_substitution"),
-        "ledger_sha256": recorded.get("ledger_sha256"),
-        "violation": violation,
-    }
+    """What the verdict's delivery gate saw, reported whether or not the verdict is positive."""
+    boundary = phase_boundary(result)
+    canonical = bool(result.get("is_a_canonical_attempt"))
+    findings = dict(boundary["delivery_phase"])
+    findings["schema"] = "m114-delivery-findings-v1"
+    if not canonical:
+        findings["state"] = "not_applicable_on_a_development_run"
+    return findings
 
 
 def check(result: dict[str, Any]) -> dict[str, Any]:
@@ -102,31 +295,56 @@ def check(result: dict[str, Any]) -> dict[str, Any]:
     report["milestone"] = bank.MILESTONE
     report["hypothesis"] = bank.HYPOTHESIS
     report["filiation"] = dict(bank.FILIATION)
+    report["predicate_provenance"] = dict(PREDICATE_PROVENANCE)
+
+    # P15 is recomputed here. M113's own boundary predicate reads a field M114 does not write,
+    # precisely because that field would have to hold two quantities at once, so the replacement is
+    # explicit rather than an override that happens to agree.
+    boundary = phase_boundary(result)
+    conditions = dict(report["conditions"])
+    conditions["P15"] = boundary["holds"]
+    report["conditions"] = conditions
+
+    measurements = dict(report["measurements"])
+    measurements["phase_boundary"] = boundary
+    report["measurements"] = measurements
+
+    # Re-derived from the corrected conditions rather than carried over from M113's tally.
+    missing = [name for name in EXPECTED_PREDICATES if name not in conditions]
+    failing = sorted(name for name, ok in conditions.items() if not ok)
+    report["predicates_missing"] = missing
+    report["computed"] = len(conditions)
+    report["passed"] = sum(1 for value in conditions.values() if value)
+    report["failing"] = failing
+    report["verdict"] = "positive" if not missing and not failing else "negative"
 
     findings = delivery_findings(result)
     report["delivery"] = findings
 
-    # Strictly subtractive, and only on a canonical attempt. A development run has no generator
-    # phase at all, and the predicates already report that half as not applicable rather than as
-    # satisfied.
+    # Strictly subtractive, and only on a canonical attempt.
     canonical = bool(result.get("is_a_canonical_attempt"))
-    if canonical and findings["delivery_record_present"]:
-        if findings["violation"]:
+    if canonical:
+        if not findings.get("delivery_record_present"):
             report["verdict"] = INVALID
-        elif findings["bank_materializations"] != delivery.MAX_BANK_MATERIALIZATIONS:
+            report["delivery"]["violation"] = (
+                "a canonical attempt carries no delivery record, so the bank cannot be tied to a "
+                "delivery the frozen rule permitted"
+            )
+        elif findings.get("violation"):
+            report["verdict"] = INVALID
+        elif findings.get("bank_materializations") != delivery.MAX_BANK_MATERIALIZATIONS:
             report["verdict"] = INSTRUMENT_ABORTED
-    elif canonical and not findings["delivery_record_present"]:
-        report["verdict"] = INVALID
-        report["delivery"]["violation"] = (
-            "a canonical attempt carries no delivery record, so the bank cannot be tied to a "
-            "delivery the frozen rule permitted"
-        )
 
     report["verdict_rule"] = (
-        "%s M114 then subtracts, never adds: a canonical attempt whose delivery ledger violates "
+        "P1-P14 and P16-P22 retain M113's scientific computations; P15 is the explicitly versioned "
+        "corrective boundary predicate (%s) required by M114's preregistered separation of "
+        "delivery attempts from bank materialization, and is the conjunction of a silent "
+        "qualification phase under a live guard, exactly one bank materialization, and a delivery "
+        "record valid in full under the frozen rule. Positive iff every predicate is computed "
+        "true. M114 then subtracts, never adds: a canonical attempt whose delivery record violates "
         "the frozen rule is %r, and one that materialized no bank is %r, which is a fact about "
         "transport capacity and not a result about %s."
-        % (report["verdict_rule"], INVALID, INSTRUMENT_ABORTED, bank.HYPOTHESIS)
+        % (PHASE_BOUNDARY_SCHEMA, INVALID, INSTRUMENT_ABORTED, bank.HYPOTHESIS)
     )
     return report
 
@@ -143,7 +361,7 @@ def main() -> int:
 
     path = DEVELOPMENT_PATH if arguments.development else RESULT_PATH
     if not path.is_file():
-        print("no evidence at %s" % path.relative_to(ROOT))
+        print("no evidence at %s" % path.name)
         return 1
     result = json.loads(path.read_bytes().decode("ascii"))
     report = check(result)
@@ -152,7 +370,7 @@ def main() -> int:
 
     if arguments.write and not arguments.development:
         REPORT_PATH.write_bytes((canonical_json(report) + "\n").encode("ascii"))
-        print("wrote %s" % REPORT_PATH.relative_to(ROOT))
+        print("wrote %s" % REPORT_PATH.name)
 
     for name in EXPECTED_PREDICATES:
         value = report["conditions"].get(name)
@@ -162,9 +380,9 @@ def main() -> int:
     if report["failing"]:
         print("failing: %s" % ", ".join(report["failing"]))
     print()
-    print("delivery: %s" % canonical_json(report["delivery"]))
-    print()
-    print(canonical_json(report["measurements"]))
+    print("P15 (%s): %s" % (PHASE_BOUNDARY_SCHEMA, canonical_json(
+        report["measurements"]["phase_boundary"]
+    )))
     return 0
 
 

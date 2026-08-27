@@ -60,7 +60,9 @@ sameness cannot drift:
   `m113_carrier_bank`, and adds clauses; it restates none.
 - `scripts/run_m114_qualification.py` imports `run_bank`, the sealed scope and the arms from
   `scripts/run_m113_qualification.py`.
-- `scripts/check_m114_result.py` imports `P1`–`P22` from `scripts/check_m113_result.py`.
+- `scripts/check_m114_result.py` imports `P1`–`P14` and `P16`–`P22` from
+  `scripts/check_m113_result.py`. **`P15` is the one exception, and it is versioned rather
+  than imported** — see *The one predicate M114 versions* below.
 - `scripts/run_m114_generation.py` imports the transport from `scripts/run_m113_generation.py`.
 - `experiments/M114/GENERATOR_PROMPT.txt`, `QUALIFYING_INPUT.txt` and `OUTPUT_SCHEMA.json` are
   M113's files byte for byte, and `m114_carrier_bank.GENERATOR_INPUT_DIGESTS` pins all three.
@@ -155,7 +157,7 @@ that sequence:
 - that the ledger's declared `bank_materialization_index` is where the attempts actually place it;
 - that the ledger binds the frozen generator spec's commitment.
 
-`scripts/check_m114_result.py` adds two verdicts on top of `P1`–`P22`, and both are **strictly
+`scripts/check_m114_result.py` adds two verdicts on top of the predicates, and both are **strictly
 subtractive** — neither can turn a negative into a positive:
 
 - a canonical attempt whose delivery ledger violates the frozen rule ⇒ `invalid`;
@@ -166,6 +168,65 @@ directly: a fourth attempt, an attempt after a terminal outcome, a retried ambig
 carrying a completion, two materializations, a non-429 retry, a changed request body, a mislabelled
 outcome, a forged retry permission, an index mismatch, an omitted field, a provider or model
 substitution, a shortened wait.
+
+
+## The one predicate M114 versions
+
+`P1`–`P14` and `P16`–`P22` retain M113's scientific computations; `P15` is the explicitly versioned corrective boundary predicate required by M114's preregistered separation of delivery attempts from bank materialization (`m114-phase-boundary-v1`).
+
+**Why it could not be imported.** M113 defines `P15`'s generator half as the number of **physical
+invocations**, on the stated ground that a series of physical requests must never be presentable
+afterwards as one logical invocation. M114 separates delivery from materialization, so "physical
+invocations" and "model calls" are no longer the same number. An earlier form of this milestone set
+`model_calls_in_bank_generation = bank_materializations` and went on claiming `P1`–`P22` were
+imported unchanged. That was false: `P15` had changed meaning, and a milestone whose entire subject
+is a conflated counter cannot ship a conflated counter of its own and call it an import.
+
+The defect was found and corrected **before any freeze stood and before any bank existed**. It is
+recorded here rather than repaired quietly, and `experiments/M114/FREEZE_WITHDRAWN.md` records the
+freeze that was withdrawn to make room for it.
+
+**What the corrective `P15` is.** Recomputed independently from the preserved record — not from any
+field the runner wrote about itself — as the conjunction of three halves:
+
+*Qualification.* Zero model calls, zero network calls, zero remote-execution calls, and a network
+guard whose self-test actually fired. An absent guard and a silent run otherwise record the same
+zero.
+
+*Generator.* Exactly one bank materialization. A canonical run cannot exist on fewer and the frozen
+rule permits no more.
+
+*Delivery.* Physical requests counted separately from model calls and within the frozen budget of
+three; every attempt sending byte-identical request bytes to the same model and the same provider
+with no fallback available; only explicit 429s carrying no completion and no evidence of model
+execution preceding a further attempt; the frozen 60-second wait honoured; at most one materializing
+response; nothing attempted after materialization; every ambiguity terminal; and the ledger valid in
+full under the frozen rule.
+
+**Six quantities, reported separately, never folded together:**
+
+| | |
+|---|---|
+| `physical_delivery_attempts` | requests actually sent, 429s included |
+| `bank_materializations` | responses that carried a model completion |
+| `model_execution_evidence` | per attempt, what the response said about whether the model ran |
+| `network_calls_in_qualification` | must be zero |
+| `model_calls_in_qualification` | must be zero |
+| `remote_execution_calls_in_qualification` | must be zero |
+
+A 429 before generation is a **physical network request** even though it is not a model execution.
+No field carries both meanings, and `model_calls_in_bank_generation` — the field that did — is gone
+from M114's result entirely.
+
+**This gives H59 no advantage.** The delivery checker is a gate and only a gate: a violation makes
+the run `invalid`, zero materializations make it `instrument-aborted`, and no clause in it can turn
+`P22` false into `P22` true. `tests/test_m114_phase_boundary.py` asserts that property directly,
+sweeping every delivery-record shape this milestone can produce against a run whose science already
+fails, and it attacks each clause with a record built to slip past it: two rejections then a
+materialization, a 429 that carried a completion followed by a retry, an ambiguous timeout followed
+by a retry, two materializations, one byte of difference between attempts, a provider or model
+substitution, a fallback left available, an absent ledger, a forged ledger, an understated attempt
+count, and a perfect bank under a qualification guard that never proved itself live.
 
 ## When this rule was decided
 
@@ -203,7 +264,7 @@ M113 remains an instrument failure under the protocol it actually ran.
 
 | | |
 |---|---|
-| candidate analysis plan commitment | `d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339` |
+| candidate analysis plan commitment | `e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af` |
 | canonical request body | `02a71fb54e492bed151981f6b3f79ec947e7e404bc999caffa37c2c642beaabc` |
 | `GENERATOR_PROMPT.txt` | `f79fb18cde53e0efd4b1defef43460589376c0d3e93ff0eb2443836de526269e` |
 | `QUALIFYING_INPUT.txt` | `c73721aec1de46b792551c9b16291b69806f21b4181a212b356bcc73e3f592e0` |

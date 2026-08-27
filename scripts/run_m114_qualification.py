@@ -11,11 +11,26 @@ comparable: M114 exists to answer M113's question with a working instrument, and
 that had quietly moved would answer a different question.
 
 What M114 supplies instead of M113 is the record around the bank -- its own frozen plan, its own
-readiness, and the delivery ledger. `P15`'s generator half reads that ledger: the number M113 read
-was "physical invocations", and M114's separation of delivery from materialization means the number
-that matters here is how many attempts *materialized a bank*, which the frozen rule caps at one.
-The attempts that did not materialize anything are reported beside it rather than folded into it,
-because a capacity rejection is a fact about a queue and never a model call.
+readiness, and the delivery ledger.
+
+**Two quantities, two fields, and never one field carrying both.** M113 defined `P15`'s generator
+half as the number of *physical invocations*, on the stated ground that a series of physical
+requests must not be presentable afterwards as one logical invocation. M114 separates delivery from
+materialization, so the two are no longer the same number, and a field named for one of them cannot
+be allowed to hold the other:
+
+    physical_delivery_attempts   how many physical requests were sent, 429s included
+    bank_materializations        how many of them carried a model completion
+
+A 429 before generation is a **physical network request** even though it is not a model execution.
+An earlier form of this file wrote `model_calls_in_bank_generation = bank_materializations`, which
+would have reported a milestone that spent three attempts on a queue as one that made zero network
+requests -- while the same milestone claimed `P15` was imported unchanged. That field is gone; both
+quantities are now reported under their own names, and `P15` is M114's own versioned predicate
+rather than M113's read against a different meaning.
+
+The whole delivery ledger is preserved into the result, not only its summary, so the checker can
+re-derive every delivery clause itself instead of agreeing with a boolean this runner wrote.
 """
 
 from __future__ import annotations
@@ -75,17 +90,95 @@ def bank_delivery(root: Path | None = None) -> dict[str, Any] | None:
     return summary
 
 
-def bank_generation_invocations(root: Path | None = None) -> int | None:
-    """`P15`'s generator half: how many delivery attempts materialized a bank.
+def delivery_ledger(root: Path | None = None) -> dict[str, Any] | None:
+    """The whole delivery record, preserved into the result rather than summarised into it.
 
-    Not how many requests were sent. A capacity rejection never reached the model, so counting it
-    as a model call would report a generator phase that did not happen -- and, worse, would make a
-    milestone that spent three attempts on a queue look like one that drew three times.
+    The checker re-derives every delivery clause of `P15` from these attempts. Handing it only a
+    summary would make it agree with arithmetic this runner performed, which is the M095 defect:
+    a record field that asserts where it is supposed to measure.
     """
+    path = (Path(root) / bank.DELIVERY_LEDGER_PATH) if root is not None else LEDGER_PATH
+    if not path.is_file():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
+def physical_delivery_attempts(root: Path | None = None) -> int | None:
+    """How many physical requests were sent, capacity rejections included.
+
+    This is the quantity M113 called "physical invocations", and it is reported under its own name.
+    A 429 before generation is a physical network request even though no model executed; folding it
+    into a model-call count, in either direction, is exactly the conflation M114 exists to undo.
+    """
+    ledger = delivery_ledger(root)
+    if ledger is None:
+        return None
+    attempts = ledger.get("attempts")
+    return len(attempts) if isinstance(attempts, list) else 0
+
+
+def bank_materializations(root: Path | None = None) -> int | None:
+    """How many delivery attempts carried a model completion. The frozen rule caps this at one."""
     summary = bank_delivery(root)
     if summary is None:
         return None
     return summary["bank_materializations"]
+
+
+def model_execution_evidence(root: Path | None = None) -> list[dict[str, Any]] | None:
+    """Per attempt, what the response said about whether the model ran and what it produced.
+
+    Reported whether or not the verdict is positive, because this is the evidence the outcome
+    classification was derived from and a reader must be able to re-derive it.
+    """
+    ledger = delivery_ledger(root)
+    if ledger is None:
+        return None
+    attempts = ledger.get("attempts")
+    if not isinstance(attempts, list):
+        return []
+    return [
+        {
+            "attempt_index": attempt.get("attempt_index"),
+            "status": attempt.get("status"),
+            "completion_present": attempt.get("completion_present"),
+            "model_execution_cannot_be_excluded": attempt.get(
+                "model_execution_cannot_be_excluded"
+            ),
+            "outcome": attempt.get("outcome"),
+            "response_sha256": attempt.get("response_sha256"),
+        }
+        for attempt in attempts
+        if isinstance(attempt, dict)
+    ]
+
+
+def frozen_instrument(root: Path | None = None) -> dict[str, Any] | None:
+    """What the frozen spec pinned, preserved so the checker can test the record against it.
+
+    `P15`'s delivery half asks whether every attempt sent the frozen body to the frozen identity
+    with no fallback available. None of that is answerable from the ledger alone: the ledger says
+    what was sent, and only the spec says what was supposed to be.
+    """
+    path = (Path(root) / bank.GENERATOR_SPEC_PATH) if root is not None else (
+        ROOT / bank.GENERATOR_SPEC_PATH
+    )
+    if not path.is_file():
+        return None
+    try:
+        spec = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return {
+        "spec_commitment_sha256": spec.get("spec_commitment_sha256"),
+        "canonical_request_body_sha256": spec.get("canonical_request_body_sha256"),
+        "model": (spec.get("generator_identity") or {}).get("model"),
+        "provider": (spec.get("generator_identity") or {}).get("provider"),
+        "routing": spec.get("routing"),
+    }
 
 
 def load_plan() -> dict[str, Any] | None:
@@ -141,7 +234,13 @@ def main() -> int:
     result["development"] = True
     result["is_a_canonical_attempt"] = False
     result["plan_commitment_sha256"] = plan.get("plan_commitment_sha256")
-    result["model_calls_in_bank_generation"] = bank_generation_invocations()
+    # The two quantities, under their own names. `model_calls_in_bank_generation` is deliberately
+    # absent: under M114's separation there is no single number that field could honestly hold.
+    result["physical_delivery_attempts"] = physical_delivery_attempts()
+    result["bank_materializations"] = bank_materializations()
+    result["model_execution_evidence"] = model_execution_evidence()
+    result["delivery_ledger"] = delivery_ledger()
+    result["frozen_instrument"] = frozen_instrument()
     result["bank_delivery"] = bank_delivery()
     result["result_digest"] = digest({k: v for k, v in result.items() if k != "result_digest"})
 

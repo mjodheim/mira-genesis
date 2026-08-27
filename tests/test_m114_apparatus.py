@@ -249,8 +249,13 @@ def test_a_served_identity_that_is_not_the_frozen_one_is_refused(instrument, mon
 
 # ------------------------------------------------------------------ P15's generator half
 
-def test_the_phase_boundary_counts_materializations_and_not_requests(tmp_path):
-    """Three attempts that never reached the model are zero model calls, not three."""
+def test_the_two_quantities_are_counted_separately(tmp_path):
+    """Three attempts that never reached the model are three network requests and zero model calls.
+
+    The field that used to hold whichever of the two was convenient is gone. A 429 before
+    generation is a physical request; it is not an execution; and neither number is allowed to
+    stand in for the other.
+    """
     experiment = tmp_path / "experiments" / "M114"
     experiment.mkdir(parents=True)
     attempts = [
@@ -282,15 +287,43 @@ def test_the_phase_boundary_counts_materializations_and_not_requests(tmp_path):
         "attempts": attempts,
     }) + b"\n")
 
-    assert qualification.bank_generation_invocations(tmp_path) == 0
+    assert qualification.physical_delivery_attempts(tmp_path) == 3
+    assert qualification.bank_materializations(tmp_path) == 0
+    assert not hasattr(qualification, "bank_generation_invocations"), (
+        "the conflated counter must not come back"
+    )
+
+    evidence = qualification.model_execution_evidence(tmp_path)
+    assert [e["outcome"] for e in evidence] == ["capacity_rejected"] * 3
+    assert all(e["completion_present"] is False for e in evidence)
+
     summary = qualification.bank_delivery(tmp_path)
     assert summary["delivery_attempts"] == 3
     assert summary["ledger_violates_the_frozen_rule"] is None
 
 
+def test_the_whole_ledger_is_preserved_into_the_result_not_only_its_summary(tmp_path):
+    """The checker re-derives every delivery clause, so it must be handed the attempts."""
+    experiment = tmp_path / "experiments" / "M114"
+    experiment.mkdir(parents=True)
+    ledger = {
+        "schema": delivery.DELIVERY_LEDGER_SCHEMA,
+        "milestone": "M114",
+        "spec_commitment_sha256": "c" * 64,
+        "bank_materialization_index": None,
+        "attempts": [],
+    }
+    (experiment / "DELIVERY_LEDGER.json").write_bytes(canonical_bytes(ledger) + b"\n")
+    assert qualification.delivery_ledger(tmp_path) == ledger
+
+
 def test_an_absent_generator_phase_is_not_applicable_rather_than_satisfied(tmp_path):
-    assert qualification.bank_generation_invocations(tmp_path) is None
+    assert qualification.physical_delivery_attempts(tmp_path) is None
+    assert qualification.bank_materializations(tmp_path) is None
+    assert qualification.model_execution_evidence(tmp_path) is None
+    assert qualification.delivery_ledger(tmp_path) is None
     assert qualification.bank_delivery(tmp_path) is None
+    assert qualification.frozen_instrument(tmp_path) is None
 
 
 # ------------------------------------------------------------------ the subtractive verdicts
@@ -340,34 +373,29 @@ def test_the_extra_verdicts_can_only_ever_subtract():
         None,
     ):
         report = checker.check(_canonical_result(dict(result, bank_delivery=recorded)))
+        assert report["conditions"]["P22"] is False
         assert report["verdict"] != "positive", (
             "a delivery record must never be able to turn %r into a positive" % baseline
         )
 
 
-def test_a_violating_ledger_is_invalid_and_an_empty_one_is_instrument_aborted():
+def test_a_canonical_attempt_carrying_only_a_summary_is_invalid():
+    """A summary is the runner's arithmetic. The gate needs the attempts it was derived from."""
     result = json.loads(
         (bank.EXPERIMENT_DIRECTORY / "DEVELOPMENT_RUN.json").read_bytes().decode("ascii")
     )
-    invalid = checker.check(_canonical_result(dict(result, bank_delivery={
-        "bank_materializations": 1, "ledger_violates_the_frozen_rule": "a fourth attempt",
+    summarised = checker.check(_canonical_result(dict(result, bank_delivery={
+        "bank_materializations": 1, "ledger_violates_the_frozen_rule": None,
     })))
-    assert invalid["verdict"] == checker.INVALID
-
-    aborted = checker.check(_canonical_result(dict(result, bank_delivery={
-        "bank_materializations": 0, "ledger_violates_the_frozen_rule": None,
-    })))
-    assert aborted["verdict"] == checker.INSTRUMENT_ABORTED
-    assert aborted["delivery"]["state"] == "no_bank_materialized"
+    assert summarised["verdict"] == checker.INVALID
+    assert summarised["delivery"]["delivery_record_present"] is False
 
 
 def test_the_checker_states_that_an_abort_is_not_a_result_about_the_hypothesis():
     result = json.loads(
         (bank.EXPERIMENT_DIRECTORY / "DEVELOPMENT_RUN.json").read_bytes().decode("ascii")
     )
-    report = checker.check(_canonical_result(dict(result, bank_delivery={
-        "bank_materializations": 0, "ledger_violates_the_frozen_rule": None,
-    })))
+    report = checker.check(_canonical_result(result))
     assert "not a result about H59" in report["verdict_rule"]
 
 

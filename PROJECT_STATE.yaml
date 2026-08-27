@@ -1008,11 +1008,22 @@ current_real_software_frontier:
     current_ceiling: an_externally_maintained_bank_independent_reproduction_and_an_external_adversarial_audit
 
   M113:
-    status: candidate_not_frozen_bank_does_not_exist
+    # Record reconciliation only, 27 August 2026. These two fields predated the invocation and had
+    # become factually obsolete: they still read `candidate_not_frozen_bank_does_not_exist` and
+    # `draft` after the identity had been frozen and the single attempt had aborted. Nothing under
+    # `experiments/M113/` is touched, none of the four digests pinned by
+    # `tests/test_m113_record_is_closed.py` moves, no bank, reveal or result is created, and nothing
+    # is repaired or reinterpreted. `aborted_without_verdict` is the register's existing value for
+    # exactly this shape and `spec_frozen` is what the phase machine reports for M113 today. The
+    # milestone remains an instrument failure, H58 remains untested, and the record remains closed.
+    record_reconciliation_only: true
+    record_reconciled_at: '2026-08-27'
+    status: aborted_without_verdict
+    record_closed: true
     hypothesis: H58
     decision_slot: D082
     decision_slot_filled: false
-    phase: draft
+    phase: spec_frozen
     successor_to: M112
     m112_untouched: true
     question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
@@ -1225,7 +1236,7 @@ current_real_software_frontier:
     replication_kind: corrective_instrumental
     decision_slot: D083
     decision_slot_filled: false
-    phase: spec_frozen
+    phase: draft
     successor_to: M113
     # The predecessor's record is closed. It is not re-frozen, not reinterpreted, not repaired and
     # not completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays true.
@@ -1315,11 +1326,45 @@ current_real_software_frontier:
     a_ledger_with_no_materialization_yields: instrument-aborted
     neither_additional_verdict_can_turn_a_negative_into_a_positive: true
 
+    # The one predicate M114 versions, and why. M113 defines P15's generator half as the number of
+    # physical invocations, on the ground that a series of physical requests must never be
+    # presentable afterwards as one logical invocation. Separating delivery from materialization
+    # makes that no longer one number. A first form of this milestone set
+    # model_calls_in_bank_generation = bank_materializations and went on claiming P1-P22 were
+    # imported unchanged; that was false, and a milestone whose whole subject is a conflated
+    # counter may not ship one of its own and call it an import. Found and corrected before any
+    # freeze stood and before any bank existed.
+    predicates_retaining_m113_scientific_computations: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10,
+      P11, P12, P13, P14, P16, P17, P18, P19, P20, P21, P22]
+    predicates_versioned_for_this_milestone: [P15]
+    p15_version: m114-phase-boundary-v1
+    p15_is_versioned_because_delivery_and_materialization_are_separated: true
+    p15_recomputed_independently_from_the_preserved_record: true
+    p15_conjoins_qualification_generation_and_delivery: true
+    p15_qualification_half_requires_zero_calls_and_a_live_guard: true
+    p15_generation_half_requires_exactly_one_bank_materialization: true
+    p15_delivery_half_requires_the_frozen_rule_to_hold_in_full: true
+    p22_scientific_computation_is_m113s_unchanged: true
+    p15_versioning_gives_no_advantage_to_the_hypothesis: true
+    the_versioned_predicate_can_only_subtract_from_a_verdict: true
+    # The two quantities, never folded into one field again. A 429 before generation is a physical
+    # network request and is not a model execution.
+    physical_requests_and_model_calls_are_never_carried_in_one_field: true
+    model_calls_in_bank_generation_field_removed_from_the_result: true
+    separately_reported_quantities: [physical_delivery_attempts, bank_materializations,
+      model_execution_evidence, network_calls_in_qualification, model_calls_in_qualification,
+      remote_execution_calls_in_qualification]
+    whole_delivery_ledger_preserved_into_the_result_not_only_its_summary: true
+    adversarial_phase_boundary_tests: 25
+    # Versioning a predicate must not loosen it, and the direction is checked rather than
+    # claimed: on any record where M113's P15 is well-defined, M114's holding implies
+    # M113's. The converse is false by construction -- a bank M113 would have accepted can
+    # still be refused here for how it was delivered.
+    the_versioned_p15_is_strictly_stricter_than_the_one_it_replaces: true
     adversarial_delivery_tests: 23
     adversarial_contract_tests: 17
-    adversarial_instrument_tests: 26
+    adversarial_instrument_tests: 27
     m113_record_lock_tests: 8
-    freeze_pinning_tests: 8
     the_no_retry_enumeration_is_inside_the_plan_commitment: true
     every_delivery_rule_has_a_test_that_tries_to_evade_it: true
 
@@ -1331,19 +1376,27 @@ current_real_software_frontier:
     development_result_is_not_a_prediction: true
     development_run_has_no_generator_phase_and_reports_it_as_not_applicable: true
 
-    analysis_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
-    analysis_plan_frozen: true
-    analysis_plan_is_the_candidate_unchanged: true
-    analysis_plan_frozen_before_any_carrier_existed: true
-    generator_identity_frozen: true
-    generator_spec_commitment: 85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73
-    generator_spec_frozen_at: '2026-08-27T11:34:19Z'
-    # The freeze consumed a plan and a spec written before it rather than writing them at the
-    # freeze, and it moved four bookkeeping fields on the spec and nothing the instrument sends.
+    analysis_plan_commitment: e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af
+    analysis_plan_frozen: false
+    generator_identity_frozen: false
+    # A freeze was consumed at 2026-08-27T11:34:19Z and is **withdrawn**, recorded rather than
+    # erased in experiments/M114/FREEZE_WITHDRAWN.md. It ran one step early -- the owner's sequence
+    # places the freeze after the apparatus PR merges -- and a pre-freeze defect in P15 was still
+    # open when it ran. Between the freeze and the withdrawal no delivery attempt was made, no bank
+    # was materialized, no seal, commitment, tested-system freeze, reveal or result existed, and
+    # nothing about H59 was observed. So the withdrawn freeze constrained an instrument that never
+    # acted, which is why withdrawing it is a correction and not the repair of a result.
+    a_freeze_was_consumed_and_withdrawn: true
+    withdrawn_freeze_at: '2026-08-27T11:34:19Z'
+    withdrawn_freeze_commit: b98116d8e8cf92478876bfb9ba6c48c3d541db4b
+    withdrawn_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
+    withdrawn_spec_commitment: 85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73
+    no_delivery_attempt_was_made_under_the_withdrawn_freeze: true
+    no_bank_existed_under_the_withdrawn_freeze: true
+    nothing_about_the_hypothesis_was_observed_under_the_withdrawn_freeze: true
+    withdrawal_is_recorded_not_erased: true
     freeze_changed_only_the_specs_status_not_the_request: true
     freeze_is_consumed_once_and_refuses_to_rerun: true
-    frozen_plan_digest: cd359081dabb3ba8c57133de0538bea648159bef1e97d8f4a8f59819adb868d9
-    frozen_spec_digest: bb56275a5ed115a607346a0a8210ca1122c8787f78a1d3238a981576d7b523dd
     generator_identity_is_m113s_by_field_comparison: true
     generator_model: deepseek/deepseek-v4-flash-0731
     generator_provider: Morph
@@ -1358,9 +1411,8 @@ current_real_software_frontier:
     human_independence: false
     external_reproduction: false
     g1_to_g10_advance: false
-    owner_gates_consumed:
-      - freeze_the_m114_analysis_plan_and_generator_spec
     owner_gates_outstanding:
+      - freeze_the_m114_analysis_plan_and_generator_spec
       - run_the_delivery_sequence_under_the_frozen_budget
       - seal_and_publish_the_commitment
       - freeze_the_tested_system_with_the_bank_unread

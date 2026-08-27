@@ -9,7 +9,9 @@ milestone, and M106 established that a corrective replication takes a new number
 inheriting its predecessor's, so that the predecessor's record stays exactly as it was.
 
 **What is imported unchanged, and is therefore not re-litigated here.** The scientific mechanism and
-every rule that decides what a carrier is, what qualifies, and what the verdict means:
+every rule that decides what a carrier is, what qualifies, and what the verdict means -- with one
+named exception, `P15`, which is versioned rather than imported and is described at the end of this
+docstring:
 
     carrier_host             the reception contract
     m113_evaluator           qualification, closure, demand derivation, scoring
@@ -29,6 +31,18 @@ its retry window is as narrow as it is.
 
 The separation was decided **after** M113's instrument failure, **before** any M114 bank existed,
 and with **no observation of H58 whatsoever**. It was never part of M113.
+
+**The one predicate that could not be imported.** `P1`-`P14` and `P16`-`P22` retain M113's
+scientific computations. `P15` is the explicitly versioned corrective boundary predicate required by
+the separation above, and it is versioned because the separation moved the ground under it: M113
+defines its generator half as the number of *physical invocations*, on the stated ground that a
+series of physical requests must never be presentable afterwards as one logical invocation, and once
+delivery and materialization are two quantities that is no longer one number. A first form of this
+milestone quietly redefined it and went on claiming `P1`-`P22` were imported unchanged. The plan
+therefore has to enumerate which predicates keep their computation and which are versioned, so that
+"unchanged" is a checkable statement rather than a claim in a docstring. See
+`scripts/check_m114_result.py` for the predicate and `experiments/M114/FREEZE_WITHDRAWN.md` for the
+freeze that was withdrawn to make room for the correction.
 """
 
 from __future__ import annotations
@@ -116,6 +130,18 @@ NEVER_RETRIED = (
     "truncated_completion",
 )
 
+
+# `P15` is the one predicate M114 versions, and the plan must say so. M113 defines its generator
+# half as the number of physical invocations; M114's separation of delivery from materialization
+# makes that no longer a single number, so importing `P15` unchanged would be importing it against
+# a meaning that had moved underneath it. Everything else keeps M113's scientific computation, and
+# the plan enumerates which is which so no reader has to take "unchanged" on trust.
+PREDICATES_RETAINING_M113_COMPUTATIONS = tuple(
+    ["P%d" % index for index in range(1, 15)] + ["P%d" % index for index in range(16, 23)]
+)
+PREDICATES_VERSIONED_FOR_THIS_MILESTONE = ("P15",)
+P15_VERSION = "m114-phase-boundary-v1"
+
 # ----------------------------------------------------------------------------------------
 # The plan. Every scientific rule is M113's; only the schema name and the delivery clause differ.
 # ----------------------------------------------------------------------------------------
@@ -190,6 +216,34 @@ def validate_analysis_plan(plan: Mapping[str, Any]) -> None:
             "the plan must declare that no scientific outcome, P22 false included, is ever a "
             "reason to deliver again"
         )
+    # -- the versioned predicate, declared rather than discovered later ---------------------
+    if list(plan.get("predicates_retaining_m113_scientific_computations") or ()) != list(
+        PREDICATES_RETAINING_M113_COMPUTATIONS
+    ):
+        raise CarrierBankError(
+            "the plan must enumerate which predicates retain M113's scientific computations; a "
+            "milestone that versions one of them and says nothing has changed a predicate in "
+            "silence"
+        )
+    if list(plan.get("predicates_versioned_for_this_milestone") or ()) != list(
+        PREDICATES_VERSIONED_FOR_THIS_MILESTONE
+    ):
+        raise CarrierBankError(
+            "the plan must name exactly the predicates this milestone versions: %s"
+            % ", ".join(PREDICATES_VERSIONED_FOR_THIS_MILESTONE)
+        )
+    if plan.get("p15_version") != P15_VERSION:
+        raise CarrierBankError("the plan must pin the version of the corrective P15")
+    for key in (
+        "p15_is_versioned_because_delivery_and_materialization_are_separated",
+        "p15_recomputed_independently_from_the_preserved_record",
+        "p15_versioning_gives_no_advantage_to_the_hypothesis",
+        "physical_requests_and_model_calls_are_never_carried_in_one_field",
+        "p22_scientific_computation_is_m113s_unchanged",
+    ):
+        if plan.get(key) is not True:
+            raise CarrierBankError("the plan must declare %s" % key)
+
     filiation = plan.get("filiation")
     if not isinstance(filiation, Mapping) or filiation != FILIATION:
         raise CarrierBankError(

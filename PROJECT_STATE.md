@@ -327,7 +327,8 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   **Every scientific rule is imported, not copied**, which is what makes "unchanged" checkable
   rather than a claim about two files that look alike: the plan and generator-spec rules are
   delegated to `m113_carrier_bank`, the qualification runner imports M113's sealed scope and arms,
-  the checker imports `P1`-`P22`, the generation client imports M113's stdlib transport, and the
+  the checker imports `P1`-`P14` and `P16`-`P22`, the generation client imports M113's stdlib
+  transport, and the
   prompt, output schema and qualifying input are M113's files byte for byte, pinned by digest and
   measured against both milestones' copies. The generator identity, the sampling, the routing
   switches and the canonical request body are M113's, digest-identical. 24 carriers, minimum 3
@@ -355,7 +356,7 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   request-digest identity, provider and model substitution, each outcome against its own evidence,
   that nothing follows a terminal outcome, each recorded retry permission, each wait, that at most
   one attempt materialized and nothing follows it, the declared index, and the spec binding. The two
-  verdicts M114 adds on top of `P1`-`P22` are **strictly subtractive**: a violating ledger is
+  verdicts M114 adds on top of the predicates are **strictly subtractive**: a violating ledger is
   `invalid`, a ledger with no materialization is `instrument-aborted`, and neither can turn a
   negative into a positive. Sixty-six tests attack the contracts and the instrument directly.
   **The rule was decided after M113's instrument failure, before any M114 bank existed, and without
@@ -363,16 +364,33 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   though it had been. Those four statements are booleans the frozen plan must reproduce exactly or
   fail validation. The development run returns the same shape as its predecessor's -- 21 of 22 with
   `P22` false on synthetic devkit carriers -- and that is not a prediction about a blind bank. The
-  **plan and generator spec are now frozen** — the plan at `d191f74d...`, the candidate unchanged,
-  and the identity at spec commitment `85b86442...`, which is M113's instrument checked field by
-  field rather than described. The freeze moved four bookkeeping fields on the spec and nothing
-  it will send, refuses to run twice, and refuses to run behind a delivery history; both frozen
-  artifacts are pinned by digest in the commit that creates them. The phase is `spec_frozen` and
-  no delivery attempt has been made. The four remaining owner gates are running the delivery
-  sequence under the frozen budget, sealing and publishing the commitment, freezing the tested
-  system with the bank unread, and authorizing the reveal. **G1-G10 do not advance.**
+  **`P15` is versioned rather than imported, and it is the one predicate that is.** M113 defines its
+  generator half as the number of **physical invocations**, on the stated ground that a series of
+  physical requests must never be presentable afterwards as one logical invocation. Separating
+  delivery from materialization makes that no longer one number, and M114's first form set
+  `model_calls_in_bank_generation = bank_materializations` while claiming `P1`-`P22` were imported
+  unchanged. That claim was false. `P1`-`P14` and `P16`-`P22` retain M113's scientific computations;
+  `P15` is the explicitly versioned corrective boundary predicate `m114-phase-boundary-v1`,
+  recomputed independently from the preserved record as the conjunction of a silent qualification
+  phase under a guard that proved itself live, exactly one bank materialization, and a delivery
+  record valid in full under the frozen rule. Six quantities are reported separately and none
+  carries two meanings — a 429 before generation is a physical network request and is not a model
+  execution — and the conflated field is gone from the result entirely. Twenty-four adversarial
+  tests attack each clause, and one asserts directly that nothing the predicate does can improve a
+  verdict. **A freeze consumed before this correction is withdrawn**, recorded in
+  `experiments/M114/FREEZE_WITHDRAWN.md` rather than erased; no delivery attempt was made and no
+  bank existed under it, so it constrained an instrument that never acted. The phase is `draft` and
+  the five owner gates are freezing the plan and spec, running the delivery sequence under the
+  frozen budget, sealing and publishing the commitment, freezing the tested system with the bank
+  unread, and authorizing the reveal. **G1-G10 do not advance.**
 
-- **M113/H58 is a candidate, not a result. The bank does not exist and the phase is `draft`.** It
+- **M113/H58 is closed as an instrument failure. The generator identity was frozen, the single
+  qualifying delivery attempt aborted at HTTP 429, zero banks were materialized and H58 is
+  untested.** *(Record reconciliation only, 27 August 2026: this heading previously read
+  "a candidate, not a result... the phase is `draft`", which predated the invocation and had
+  become factually obsolete. Nothing under `experiments/M113/` is touched, no pinned digest
+  moves, no bank, reveal or result is created, and nothing is repaired or reinterpreted — the
+  paragraph below is the milestone's own account, left as it was written.)* It
   asks whether a Genesis machinery can adapt to a carrier the project did not design: the blind
   generator emits the machine itself -- its state, its observability, its actions, their
   preconditions, their effects, its errors and the wire it speaks -- and the project supplies only
@@ -439,6 +457,17 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   schema's `title` was `mira-blind-carrier-v1 emission`, and the schema travels to the generator
   inside the request, so a blind emitter would have been told the name of the contract it was
   emitting for. Repaired, with every generator-visible file now required to be contamination-free.
+  **Record reconciliation, 27 August 2026.** What the paragraphs above could not say, because
+  they were written before it happened: the generator identity was subsequently frozen at spec
+  commitment `c0f13b69...`, one qualifying delivery attempt was made on 27 August 2026 at
+  07:27:49Z, and it returned **HTTP 429**. Zero banks were materialized, `P22` was never
+  computed or approached, and **H58 is untested**. This is an **instrument failure and not a
+  negative result**: nothing ran against a bank, so nothing was measured. The attempt is not
+  repeated under the frozen rule, the record is **closed**, and it is not repaired,
+  reinterpreted or completed by M114. The full account is in `FAILURE_LOG.md` and the
+  `CHANGELOG.md` entry of the same date; `tests/test_m113_record_is_closed.py` pins the four
+  artifact digests and fails if a bank, a reveal or a result ever appears under
+  `experiments/M113/`.
 
 - **M112/H57 is a mixed qualified result: procedural independence is materialized, the diagnosis
   reproduces on worlds this project did not author, and the transfer does not come out whole.** A
