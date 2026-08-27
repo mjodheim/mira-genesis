@@ -35,6 +35,8 @@ def test_predecessor_compatibility_requires_structure_seed_and_positive_live_end
     assert matrix.discovery_is_predecessor_compatible(_discovery("Broken", supports_structured_outputs=False)) is False
     assert matrix.discovery_is_predecessor_compatible(_discovery("Down", endpoint_status=-2)) is False
     assert matrix.discovery_is_predecessor_compatible(_discovery("Unknown", endpoint_status=None)) is False
+    assert matrix.discovery_is_predecessor_compatible(_discovery("BooleanFalse", endpoint_status=False)) is False
+    assert matrix.discovery_is_predecessor_compatible(_discovery("BooleanTrue", endpoint_status=True)) is False
 
 
 def test_predeclared_policy_prioritizes_one_day_uptime_before_short_window():
@@ -127,6 +129,42 @@ def test_matrix_discovers_every_candidate_but_smokes_only_compatible_routes(monk
     assert report["qualifying_input_was_sent"] is False
     assert report["summary"]["qualifying_calls"] == 0
     assert report["recommendation_policy"] == matrix.RECOMMENDATION_POLICY
+
+
+def test_matrix_isolates_discovery_exception_and_continues_without_leaking_exception(monkeypatch):
+    discovered = []
+    smoked = []
+
+    def fake_discover(provider: str):
+        discovered.append(provider)
+        if provider == "Broken":
+            raise RuntimeError("private upstream diagnostic user_id=secret")
+        return _discovery(provider)
+
+    def fake_smoke(provider: str):
+        smoked.append(provider)
+        return _smoke(provider)
+
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+    monkeypatch.setattr(matrix.routes, "discover_provider", fake_discover)
+    monkeypatch.setattr(matrix.routes, "smoke_provider", fake_smoke)
+
+    report = matrix.run_matrix(["DeepInfra", "Broken", "Morph"])
+    assert discovered == ["DeepInfra", "Broken", "Morph"]
+    assert smoked == ["DeepInfra", "Morph"]
+    broken = report["discovery_reports"][1]
+    assert broken == {
+        "requested_provider": "Broken",
+        "provider_found": False,
+        "status": None,
+        "supports_structured_outputs": False,
+        "supports_seed": False,
+        "endpoint_status": None,
+        "discovery_failed": True,
+        "failure_class": "discovery_exception",
+    }
+    assert "private upstream diagnostic" not in str(report)
+    assert "user_id" not in str(report)
 
 
 def test_default_candidates_preserve_morph_as_continuity_control_and_deepinfra_as_reliable_option():
