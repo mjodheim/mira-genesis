@@ -271,6 +271,31 @@ def _structured_output_holds(content: Any) -> bool:
     )
 
 
+# ── Canonical model slug mapping ────────────────────────────────────────
+#
+# OpenRouter routes model aliases (e.g. deepseek/deepseek-v4-flash-0731)
+# to dated checkpoint slugs (e.g. deepseek/deepseek-v4-flash-20260731).
+# The endpoint catalogue reports the canonical slug, while the completion
+# response echoes the alias. A direct string comparison cannot match them.
+# This map records the verified relationship from the OpenRouter model
+# catalogue so that the two can be compared without guessing.
+#
+# Each entry is verified from https://openrouter.ai/api/v1/models/<alias>
+# and is tested by test_audit_generator_routes.py.
+_CANONICAL_SLUGS: dict[str, str] = {
+    "deepseek/deepseek-v4-flash-0731": "deepseek/deepseek-v4-flash-20260731",
+}
+
+
+def _canonical_slug(alias: str) -> str | None:
+    """Return the canonical (dated checkpoint) slug for a model alias.
+
+    Verified from OpenRouter's model catalogue. Returns None when the
+    relationship is unknown — no inference is made from string patterns.
+    """
+    return _CANONICAL_SLUGS.get(alias)
+
+
 def _selected_endpoints(metadata: Mapping[str, Any] | None) -> list[dict[str, Any]]:
     if not isinstance(metadata, Mapping):
         return []
@@ -292,6 +317,55 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
     requested_provider = report.get("requested_provider")
     requested_model = report.get("requested_model")
 
+    # ── selected_endpoint_exact ─────────────────────────────────────────
+    # Strict comparison: the endpoint model must equal the requested model.
+    # OpenRouter's endpoint catalogue reports the canonical (dated) slug
+    # while the served model is the alias, so this is often false.
+    endpoint_model = selected[0].get("model") if len(selected) == 1 else None
+    selected_endpoint_exact = bool(
+        len(selected) == 1
+        and selected[0].get("provider") == requested_provider
+        and endpoint_model == requested_model
+    )
+    # ── canonical_checkpoint_match ──────────────────────────────────────
+    # When the requested model is an alias, the endpoint catalogue returns
+    # the canonical dated checkpoint. This property verifies the known
+    # relationship from the explicit mapping, not from string manipulation.
+    canonical_slug = _canonical_slug(requested_model) if requested_model else None
+    canonical_checkpoint_match = bool(
+        len(selected) == 1
+        and selected[0].get("provider") == requested_provider
+        and canonical_slug is not None
+        and endpoint_model == canonical_slug
+    )
+
+    # ── no_fallback_attested ────────────────────────────────────────────
+    # OpenRouter's router metadata reports an "attempts" list for fallback
+    # attempts. An empty list means no fallback records exist, which is
+    # NOT the same as "no fallback occurred". However, when strategy is
+    # "direct" and exactly one endpoint was selected, no fallback occurred
+    # by construction — the router had no alternative to try.
+    # Ternary: True / False / None (unknown).
+    strategy_direct = isinstance(metadata, Mapping) and metadata.get("strategy") == "direct"
+    one_endpoint = len(selected) == 1
+    has_attempt_records = isinstance(attempts, list) and len(attempts) > 0
+    if has_attempt_records and isinstance(attempts, list):
+        # Explicit attempt records: verify exactly one, matching the provider
+        safe_attempts = [item for item in attempts if isinstance(item, Mapping)]
+        no_fallback_attested = (
+            len(attempts) == 1
+            and len(safe_attempts) == 1
+            and safe_attempts[0].get("provider") == requested_provider
+            and safe_attempts[0].get("model") == requested_model
+            and safe_attempts[0].get("status") == 200
+        )
+    elif strategy_direct and one_endpoint:
+        # Router confirms direct strategy with one endpoint — no fallback possible
+        no_fallback_attested = True
+    else:
+        # No attempt records and no direct proof — unknown
+        no_fallback_attested = None
+
     route_checks = {
         "http_200": report.get("status") == 200,
         "served_model_exact": report.get("served_model") == requested_model,
@@ -301,31 +375,11 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
         "router_metadata_present": isinstance(metadata, Mapping),
         "router_requested_model_exact": isinstance(metadata, Mapping)
         and metadata.get("requested") == requested_model,
-        "router_strategy_direct": isinstance(metadata, Mapping) and metadata.get("strategy") == "direct",
+        "router_strategy_direct": strategy_direct,
         "one_router_attempt": isinstance(metadata, Mapping) and metadata.get("attempt") == 1,
-        "one_selected_endpoint": len(selected) == 1,
-        "selected_endpoint_exact": len(selected) == 1
-        and selected[0].get("provider") == requested_provider
-        and requested_model is not None
-        and selected[0].get("model", "").replace(
-            selected[0].get("model", "")[-8:], ""
-        ) == requested_model[:-4],
-        "no_fallback_attempt": isinstance(attempts, list)
-        and (
-            len(attempts) == 0
-            or (
-                len(attempts) == 1
-                and all(
-                    item.get("provider") == requested_provider
-                    and item.get("model") == requested_model
-                    and item.get("status") == 200
-                    for item in attempts
-                    if isinstance(item, Mapping)
-                )
-            )
-        ),
-        # Router metadata defines pipeline entries as material interventions. A qualification smoke
-        # is intentionally tiny, so any intervention is a delta that a later milestone would own.
+        "one_selected_endpoint": one_endpoint,
+        "selected_endpoint_exact": selected_endpoint_exact,
+        "no_fallback_attested": no_fallback_attested is True,
         "no_router_pipeline_intervention": isinstance(pipeline, list) and len(pipeline) == 0,
     }
     byok_runtime_attested = isinstance(metadata, Mapping) and metadata.get("is_byok") is True
@@ -334,6 +388,8 @@ def evaluate_smoke(report: Mapping[str, Any]) -> dict[str, Any]:
         "route_checks": route_checks,
         "route_viable": route_viable,
         "failed_route_checks": sorted(name for name, holds in route_checks.items() if not holds),
+        "canonical_checkpoint_match": canonical_checkpoint_match,
+        "no_fallback_attested_value": no_fallback_attested,
         "byok_runtime_attested": byok_runtime_attested,
         "byok_route_qualified": bool(route_viable and byok_runtime_attested),
     }
