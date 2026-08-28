@@ -1730,7 +1730,7 @@
       ]
     },
     "a9cdaaf391d2f3a77a1f39738303964fbae87021": {
-      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis\u2192synthesis\u2192adoption feat(docker): sandbox isolation Dockerfile",
+      "subject": "feat(m094): generic AST-driven synthesis engine (P6) feat(m094): experiment runner orchestrating diagnosis→synthesis→adoption feat(docker): sandbox isolation Dockerfile",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
@@ -2544,6 +2544,31 @@
         "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "experiments/M090/RESULT.md"
+      ]
+    },
+    "2707ab012d1f85aba3c51f7fdeeb0d54e7d30329": {
+      "subject": "fix: update existing tests for new no_fallback_attested/selected_endpoint_exact semantics; register 6c7ab62 in citations",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
+      ]
+    },
+    "6c7ab62b856e74926586fc49fe8344c417a3bc38": {
+      "subject": "refactor: apply PR #228 corrections",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/INSTRUMENTAL_AUDIT_REPORT.md",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
+      ]
+    },
+    "1b13154e73fd1abea5291bed52defc1990d7e826": {
+      "subject": "fix: use full 40-char SHAs in COMMIT_CITATIONS.json for reachability check compatibility",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
       ]
     }
   },
