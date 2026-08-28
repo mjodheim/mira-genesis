@@ -2562,6 +2562,14 @@
         "experiments/M115/INSTRUMENTAL_AUDIT_REPORT.md",
         "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
       ]
+    },
+    "1b13154e73fd1abea5291bed52defc1990d7e826": {
+      "subject": "fix: use full 40-char SHAs in COMMIT_CITATIONS.json for reachability check compatibility",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
+      ]
     }
   },
   "known_unresolvable": {
