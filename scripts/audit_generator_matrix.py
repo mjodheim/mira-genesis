@@ -10,8 +10,8 @@ set is historical input to this DEVELOPMENT tool, not a claim about current avai
 re-discovers every provider before deciding whether it is safe to smoke.
 
 Every eligible provider gets at most one smoke request. There is no retry, no fallback, no output
-selection and no scientific claim. A 429 or malformed response is simply a route observation and
-the matrix continues to the next independent DEVELOPMENT candidate.
+selection and no scientific claim. A 429, malformed response, or isolated transport exception is
+simply a route observation and the matrix continues to the next independent DEVELOPMENT candidate.
 
 The recommendation rule below is deliberately written into source before the first matrix is run:
 only routes that actually pass the smoke and carry complete reliability measurements are rankable;
@@ -34,7 +34,7 @@ if str(ROOT) not in sys.path:
 from metamorphosis.blind_bank_protocol import canonical_bytes  # noqa: E402
 from scripts import audit_generator_routes as routes  # noqa: E402
 
-REPORT_SCHEMA = "genesis-generator-route-matrix-development-v2"
+REPORT_SCHEMA = "genesis-generator-route-matrix-development-v3"
 RECOMMENDATION_POLICY = {
     "schema": "generator-route-development-recommendation-v1",
     "defined_before_first_matrix_run": True,
@@ -100,6 +100,41 @@ def _failed_discovery(provider: str) -> dict[str, Any]:
         "endpoint_status": None,
         "discovery_failed": True,
         "failure_class": "discovery_exception",
+    }
+
+
+def _failed_smoke(provider: str) -> dict[str, Any]:
+    """Return a fail-closed, sanitized observation for an isolated smoke exception.
+
+    A low-level transport exception can happen either before or after request bytes leave the
+    process, so this record deliberately does not claim whether a physical request was sent.
+    """
+    return {
+        "schema": routes.REPORT_SCHEMA,
+        "mode": "smoke",
+        "development": True,
+        "is_a_qualifying_call": False,
+        "qualifying_input_was_sent": False,
+        "requested_model": routes.MODEL,
+        "requested_provider": provider,
+        "status": None,
+        "served_model": None,
+        "served_provider": None,
+        "finish_reason": None,
+        "structured_output_parsed": False,
+        "router_metadata": None,
+        "error": None,
+        "response_sha256": None,
+        "response_bytes": None,
+        "observed_at": None,
+        "route_checks": {},
+        "route_viable": False,
+        "failed_route_checks": ["smoke_exception"],
+        "byok_runtime_attested": False,
+        "byok_route_qualified": False,
+        "smoke_failed": True,
+        "failure_class": "smoke_exception",
+        "physical_request_sent": None,
     }
 
 
@@ -170,7 +205,15 @@ def summarize(
         "providers_predecessor_compatible": sorted(
             provider for provider, item in by_provider.items() if discovery_is_predecessor_compatible(item)
         ),
-        "smokes_sent": len(smokes),
+        "smokes_attempted": len(smokes),
+        "smokes_with_http_response": sum(
+            1
+            for item in smokes
+            if isinstance(item.get("status"), int) and not isinstance(item.get("status"), bool)
+        ),
+        "smokes_with_ambiguous_delivery": sum(
+            1 for item in smokes if item.get("physical_request_sent") is None and item.get("smoke_failed") is True
+        ),
         "route_viable": viable,
         "viable_but_unrankable_missing_metrics": sorted(set(viable) - rankable),
         "byok_route_qualified": sorted(
@@ -203,9 +246,13 @@ def run_matrix(candidates: Iterable[str]) -> dict[str, Any]:
         if not discovery_is_predecessor_compatible(discovery):
             continue
         provider = str(discovery["requested_provider"])
-        # smoke_provider repeats the qualifying-input guard. One physical request, no retry.
-        # A failed route does not authorize another request to that same provider.
-        smokes.append(routes.smoke_provider(provider))
+        # smoke_provider repeats the qualifying-input guard. One attempt, no retry. A transport
+        # exception is terminal for this provider but must not suppress later independent routes.
+        try:
+            smoke = routes.smoke_provider(provider)
+        except Exception:
+            smoke = _failed_smoke(provider)
+        smokes.append(smoke)
 
     return {
         "schema": REPORT_SCHEMA,
