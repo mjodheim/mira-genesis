@@ -1948,6 +1948,14 @@
         "results/M013b.json"
       ]
     },
+    "c3b10aec32ac720fb20d803d3073c61c3746245c": {
+      "subject": "fix: fail closed on non-transport route matrix errors",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/INSTRUMENTAL_AUDIT_REPORT.md"
+      ]
+    },
     "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98": {
       "subject": "science(m100): freeze cumulative acquisition protocol",
       "preserved_by": "main",
