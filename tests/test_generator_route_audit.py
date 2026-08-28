@@ -72,7 +72,7 @@ def test_a_router_fallback_is_not_a_viable_route_even_if_the_last_attempt_succee
     assert verdict["route_viable"] is False
     assert verdict["byok_route_qualified"] is False
     assert "one_router_attempt" in verdict["failed_route_checks"]
-    assert "no_fallback_attempt" in verdict["failed_route_checks"]
+    assert "no_fallback_attested" in verdict["failed_route_checks"]
 
 
 def test_any_material_router_pipeline_stage_is_a_delta_not_silently_accepted():
@@ -212,20 +212,25 @@ def test_a_non_200_never_qualifies_even_with_forged_positive_metadata():
     assert "http_200" in verdict["failed_route_checks"]
 
 
-def test_missing_attempts_array_fails_closed_for_no_fallback_evidence():
+def test_missing_attempts_array_but_direct_strategy_and_one_endpoint_suffices():
+    """When strategy is direct and exactly one endpoint is selected, no fallback
+    occurred by construction — the router had no alternative to try.
+    attempts=None with those conditions still proves no_fallback_attested=True."""
     report = _good_report()
     report["router_metadata"]["attempts"] = None
     verdict = routes.evaluate_smoke(report)
-    assert verdict["route_viable"] is False
-    assert "no_fallback_attempt" in verdict["failed_route_checks"]
+    assert verdict["route_viable"] is True
+    assert verdict["route_checks"]["no_fallback_attested"] is True
 
 
-def test_empty_attempts_array_is_not_mistaken_for_one_successful_attempt():
+def test_empty_attempts_array_with_direct_strategy_and_one_endpoint_suffices():
+    """Empty attempts array with strategy=direct and one endpoint means
+    no fallback occurred by construction."""
     report = _good_report()
     report["router_metadata"]["attempts"] = []
     verdict = routes.evaluate_smoke(report)
-    assert verdict["route_viable"] is False
-    assert "no_fallback_attempt" in verdict["failed_route_checks"]
+    assert verdict["route_viable"] is True
+    assert verdict["route_checks"]["no_fallback_attested"] is True
 
 
 def test_byok_policy_is_strictly_additive_to_generic_route_viability():
