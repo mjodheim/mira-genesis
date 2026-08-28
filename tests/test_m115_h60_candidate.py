@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts import derive_m115_h60_candidate as candidate
+from scripts import build_m115_h60_candidate as candidate
 
 
 ROOT = Path(__file__).resolve().parents[1]
