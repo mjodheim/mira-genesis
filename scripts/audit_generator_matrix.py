@@ -12,6 +12,8 @@ re-discovers every provider before deciding whether it is safe to smoke.
 Every eligible provider gets at most one smoke request. There is no retry, no fallback, no output
 selection and no scientific claim. A 429, malformed response, or isolated transport exception is
 simply a route observation and the matrix continues to the next independent DEVELOPMENT candidate.
+Safety-guard failures and programming errors are never converted into observations: they abort the
+matrix fail-closed.
 
 The recommendation rule below is deliberately written into source before the first matrix is run:
 only routes that actually pass the smoke and carry complete reliability measurements are rankable;
@@ -23,9 +25,12 @@ DEVELOPMENT recommendation, not a scientific or milestone provider-selection rul
 from __future__ import annotations
 
 import argparse
+import http.client
+import socket
+import ssl
 import sys
 from pathlib import Path
-from typing import Any, Iterable, Mapping
+from typing import Any, Callable, Iterable, Mapping, TypeVar
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -34,7 +39,7 @@ if str(ROOT) not in sys.path:
 from metamorphosis.blind_bank_protocol import canonical_bytes  # noqa: E402
 from scripts import audit_generator_routes as routes  # noqa: E402
 
-REPORT_SCHEMA = "genesis-generator-route-matrix-development-v3"
+REPORT_SCHEMA = "genesis-generator-route-matrix-development-v4"
 RECOMMENDATION_POLICY = {
     "schema": "generator-route-development-recommendation-v1",
     "defined_before_first_matrix_run": True,
@@ -72,6 +77,30 @@ DEFAULT_CANDIDATES = (
 )
 
 
+class RouteTransportError(RuntimeError):
+    """A recognized network/transport failure safe to isolate as a DEVELOPMENT observation."""
+
+
+_T = TypeVar("_T")
+# Deliberately narrow. Unknown OSError subclasses and all route-safety/programming errors propagate
+# and abort the matrix rather than being mislabeled as transport observations.
+_TRANSPORT_EXCEPTIONS = (
+    TimeoutError,
+    ConnectionError,
+    socket.gaierror,
+    ssl.SSLError,
+    http.client.HTTPException,
+)
+
+
+def _call_route_operation(operation: Callable[[str], _T], provider: str) -> _T:
+    """Translate only recognized network failures into the matrix's explicit transport class."""
+    try:
+        return operation(provider)
+    except _TRANSPORT_EXCEPTIONS as exc:
+        raise RouteTransportError from exc
+
+
 def discovery_is_predecessor_compatible(report: Mapping[str, Any]) -> bool:
     """Whether a route positively advertises every parameter the predecessor smoke sends."""
     endpoint_status = report.get("endpoint_status")
@@ -90,7 +119,7 @@ def discovery_is_predecessor_compatible(report: Mapping[str, Any]) -> bool:
 
 
 def _failed_discovery(provider: str) -> dict[str, Any]:
-    """Return a fail-closed, sanitized observation for an isolated discovery exception."""
+    """Return a fail-closed, sanitized observation for an isolated transport exception."""
     return {
         "requested_provider": provider,
         "provider_found": False,
@@ -99,12 +128,12 @@ def _failed_discovery(provider: str) -> dict[str, Any]:
         "supports_seed": False,
         "endpoint_status": None,
         "discovery_failed": True,
-        "failure_class": "discovery_exception",
+        "failure_class": "transport_exception",
     }
 
 
 def _failed_smoke(provider: str) -> dict[str, Any]:
-    """Return a fail-closed, sanitized observation for an isolated smoke exception.
+    """Return a fail-closed, sanitized observation for an isolated smoke transport exception.
 
     A low-level transport exception can happen either before or after request bytes leave the
     process, so this record deliberately does not claim whether a physical request was sent.
@@ -129,11 +158,11 @@ def _failed_smoke(provider: str) -> dict[str, Any]:
         "observed_at": None,
         "route_checks": {},
         "route_viable": False,
-        "failed_route_checks": ["smoke_exception"],
+        "failed_route_checks": ["transport_exception"],
         "byok_runtime_attested": False,
         "byok_route_qualified": False,
         "smoke_failed": True,
-        "failure_class": "smoke_exception",
+        "failure_class": "transport_exception",
         "physical_request_sent": None,
     }
 
@@ -230,6 +259,8 @@ def summarize(
 
 
 def run_matrix(candidates: Iterable[str]) -> dict[str, Any]:
+    # This safety guard is intentionally outside every exception-isolation boundary. If it fails,
+    # the whole matrix must fail closed before any route operation is attempted.
     routes._assert_smoke_is_not_qualifying_input()
     unique = list(dict.fromkeys(str(provider) for provider in candidates))
     discoveries: list[dict[str, Any]] = []
@@ -237,8 +268,8 @@ def run_matrix(candidates: Iterable[str]) -> dict[str, Any]:
 
     for provider in unique:
         try:
-            discovery = routes.discover_provider(provider)
-        except Exception:
+            discovery = _call_route_operation(routes.discover_provider, provider)
+        except RouteTransportError:
             discovery = _failed_discovery(provider)
         discoveries.append(discovery)
 
@@ -246,11 +277,11 @@ def run_matrix(candidates: Iterable[str]) -> dict[str, Any]:
         if not discovery_is_predecessor_compatible(discovery):
             continue
         provider = str(discovery["requested_provider"])
-        # smoke_provider repeats the qualifying-input guard. One attempt, no retry. A transport
-        # exception is terminal for this provider but must not suppress later independent routes.
+        # smoke_provider repeats the qualifying-input guard. Only recognized transport failures are
+        # isolated. Safety errors and programming defects propagate and abort the matrix fail-closed.
         try:
-            smoke = routes.smoke_provider(provider)
-        except Exception:
+            smoke = _call_route_operation(routes.smoke_provider, provider)
+        except RouteTransportError:
             smoke = _failed_smoke(provider)
         smokes.append(smoke)
 
