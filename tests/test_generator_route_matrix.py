@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import pytest
+
 from scripts import audit_generator_matrix as matrix
 
 
@@ -131,14 +133,14 @@ def test_matrix_discovers_every_candidate_but_smokes_only_compatible_routes(monk
     assert report["recommendation_policy"] == matrix.RECOMMENDATION_POLICY
 
 
-def test_matrix_isolates_discovery_exception_and_continues_without_leaking_exception(monkeypatch):
+def test_matrix_isolates_discovery_transport_exception_and_continues_without_leaking(monkeypatch):
     discovered = []
     smoked = []
 
     def fake_discover(provider: str):
         discovered.append(provider)
         if provider == "Broken":
-            raise RuntimeError("private upstream diagnostic user_id=secret")
+            raise TimeoutError("private upstream diagnostic user_id=secret")
         return _discovery(provider)
 
     def fake_smoke(provider: str):
@@ -161,13 +163,13 @@ def test_matrix_isolates_discovery_exception_and_continues_without_leaking_excep
         "supports_seed": False,
         "endpoint_status": None,
         "discovery_failed": True,
-        "failure_class": "discovery_exception",
+        "failure_class": "transport_exception",
     }
     assert "private upstream diagnostic" not in str(report)
     assert "user_id" not in str(report)
 
 
-def test_matrix_isolates_smoke_exception_and_continues_without_claiming_delivery(monkeypatch):
+def test_matrix_isolates_smoke_transport_exception_and_continues_without_claiming_delivery(monkeypatch):
     smoked = []
 
     def fake_smoke(provider: str):
@@ -185,7 +187,7 @@ def test_matrix_isolates_smoke_exception_and_continues_without_claiming_delivery
     failed = report["smoke_reports"][1]
     assert failed["requested_provider"] == "Broken"
     assert failed["smoke_failed"] is True
-    assert failed["failure_class"] == "smoke_exception"
+    assert failed["failure_class"] == "transport_exception"
     assert failed["physical_request_sent"] is None
     assert failed["route_viable"] is False
     assert failed["byok_route_qualified"] is False
@@ -196,6 +198,66 @@ def test_matrix_isolates_smoke_exception_and_continues_without_claiming_delivery
     assert report["summary"]["qualifying_calls"] == 0
     assert "private transport diagnostic" not in str(report)
     assert "credential_id" not in str(report)
+
+
+def test_initial_qualifying_input_guard_failure_aborts_before_any_route_operation(monkeypatch):
+    calls = []
+
+    def fail_guard():
+        raise matrix.routes.RouteAuditError("qualifying-input safety guard fired")
+
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", fail_guard)
+    monkeypatch.setattr(matrix.routes, "discover_provider", lambda provider: calls.append(provider))
+
+    with pytest.raises(matrix.routes.RouteAuditError, match="qualifying-input safety guard fired"):
+        matrix.run_matrix(["Morph"])
+    assert calls == []
+
+
+def test_repeated_smoke_guard_failure_propagates_and_aborts_fail_closed(monkeypatch):
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+    monkeypatch.setattr(matrix.routes, "discover_provider", lambda provider: _discovery(provider))
+
+    def fail_smoke_guard(provider: str):
+        raise matrix.routes.RouteAuditError("the route smoke input is a qualifying input")
+
+    monkeypatch.setattr(matrix.routes, "smoke_provider", fail_smoke_guard)
+    with pytest.raises(matrix.routes.RouteAuditError, match="qualifying input"):
+        matrix.run_matrix(["Morph"])
+
+
+def test_internal_discovery_programming_error_propagates_instead_of_becoming_transport_data(monkeypatch):
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+
+    def broken_discovery(provider: str):
+        raise RuntimeError("programming defect")
+
+    monkeypatch.setattr(matrix.routes, "discover_provider", broken_discovery)
+    with pytest.raises(RuntimeError, match="programming defect"):
+        matrix.run_matrix(["Morph"])
+
+
+def test_internal_smoke_programming_error_propagates_instead_of_becoming_transport_data(monkeypatch):
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+    monkeypatch.setattr(matrix.routes, "discover_provider", lambda provider: _discovery(provider))
+
+    def broken_smoke(provider: str):
+        raise ValueError("programming defect")
+
+    monkeypatch.setattr(matrix.routes, "smoke_provider", broken_smoke)
+    with pytest.raises(ValueError, match="programming defect"):
+        matrix.run_matrix(["Morph"])
+
+
+def test_unknown_oserror_fails_closed_instead_of_being_assumed_to_be_transport(monkeypatch):
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+
+    def ambiguous_failure(provider: str):
+        raise OSError("unclassified operating-system failure")
+
+    monkeypatch.setattr(matrix.routes, "discover_provider", ambiguous_failure)
+    with pytest.raises(OSError, match="unclassified operating-system failure"):
+        matrix.run_matrix(["Morph"])
 
 
 def test_default_candidates_preserve_morph_as_continuity_control_and_deepinfra_as_reliable_option():
