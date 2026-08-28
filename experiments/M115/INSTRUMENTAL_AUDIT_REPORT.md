@@ -34,14 +34,14 @@
 
 ## 3. M115 confirmé (inchangé)
 
-DeepSeek first-party BYOK échoue sur **3 blockers fatals** :
+DeepSeek first-party BYOK échoue. Quatre blockers documentés :
 
-| Blocker | Fatal | Preuve catalogue |
+| Blocker | Fatal ? | Preuve catalogue |
 |---|---|---|
-| **A** — `structured_outputs` non supporté | ✅ | Paramètre absent du catalogue DeepSeek |
-| **B** — Data policy exclut DeepSeek | ✅ | Probe contrôle → 404, contrôle Morph/Together → 200 |
-| **C** — BYOK jamais exercé | ❌ Seul | `byok_usage=0` toutes fenêtres |
-| **D** — `seed` non supporté | ❌ Seul | Paramètre absent du catalogue DeepSeek |
+| **A** — `structured_outputs` non supporté | ✅ Fatal indépendamment | Paramètre absent du catalogue DeepSeek |
+| **B** — Data policy exclut DeepSeek | ✅ Fatal indépendamment | Probe contrôle → 404, contrôle Morph/Together → 200 |
+| **C** — BYOK jamais exercé | ❌ Pas fatal seul | `byok_usage=0` toutes fenêtres |
+| **D** — `seed` non supporté | ✅ Bloquant sous le contrat gelé (`require_parameters=true`) | Paramètre absent du catalogue DeepSeek |
 
 ---
 
@@ -51,14 +51,14 @@ Découverte publique du catalogue OpenRouter. **Tous** supportent `structured_ou
 
 | Provider | Q | Uptime 1d | Uptime 30m | Tag | Note |
 |---|---|---|---|---|---|
-| OpenInference | fp4 | 100.0% | 100.0% | open-inference/fp4 | Meilleure uptime |
+| OpenInference | fp4 | 100.0% | 100.0% | open-inference/fp4 | |
 | Alibaba | unknown | 100.0% | 100.0% | alibaba | |
 | Cloudflare | unknown | 100.0% | 99.8% | cloudflare | Plus grand ctx (1.3M) |
 | AtlasCloud | fp4 | 99.8% | 100.0% | atlas-cloud/fp4 | |
 | Inceptron | fp4 | 99.7% | 99.6% | inceptron/fp4 | |
 | AkashML | fp8 | 99.6% | 99.6% | akashml/fp8 | |
 | NextBit | fp8 | 99.2% | 100.0% | nextbit/fp8 | |
-| **DeepInfra** | **fp8** | **99.0%** | **98.9%** | **deepinfra/fp8** | **Meilleur fp8** |
+| DeepInfra | fp8 | 99.0% | 98.9% | deepinfra/fp8 | |
 | Ambient | fp4 | 98.8% | 99.2% | ambient/fp4 | |
 | **Morph** | **bf16** | **98.3%** | **100.0%** | **morph/bf16** | **Déjà sélectionné, déjà 429** |
 | Mancer 2 | fp8 | 98.0% | 99.5% | mancer/fp8 | |
@@ -87,10 +87,10 @@ Ces propriétés ne peuvent être vérifiées que par un smoke probe DEVELOPMENT
 
 **Je ne franchis aucun gate, ne sélectionne aucune route, ne crée aucun milestone.**
 
-Le catalogue montre 15 providers instrumentally capables. Le critère de sélection de M113 (meilleure quantification → bf16) a sélectionné Morph. Ce résultat tient. Les options pour le propriétaire :
+Le catalogue montre 15 providers compatibles au niveau catalogue. Le critère de sélection de M113 (meilleure quantification → bf16) a sélectionné Morph. Ce résultat tient. Les options pour le propriétaire :
 
 ### Option A — Re-sélection sur fp8
-Si Morph est exclu pour cause de pool partagé saturé, le meilleur fp8 est **DeepInfra** (99.0% uptime 1d, tag `deepinfra/fp8`). Aussi : AkashML, Parasail, Mancer 2, NextBit.
+Si Morph est exclu pour cause de pool partagé saturé, les candidats fp8 compatibles au catalogue sont : DeepInfra, AkashML, Parasail, Mancer 2, NextBit.
 
 ### Option B — Re-sélection sur fp4
 OpenInference (100% uptime, tag `open-inference/fp4`), AtlasCloud, Ambient, Inceptron.
