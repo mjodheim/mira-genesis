@@ -2546,8 +2546,16 @@
         "experiments/M090/RESULT.md"
       ]
     },
-    "6c7ab62b856e": {
-      "subject": "refactor: apply PR #228 corrections — fix(m115): precise blocker wording, remove ranking, catalogue-compatible only",
+    "2707ab012d1f85aba3c51f7fdeeb0d54e7d30329": {
+      "subject": "fix: update existing tests for new no_fallback_attested/selected_endpoint_exact semantics; register 6c7ab62 in citations",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
+      ]
+    },
+    "6c7ab62b856e74926586fc49fe8344c417a3bc38": {
+      "subject": "refactor: apply PR #228 corrections",
       "preserved_by": "main",
       "cited_in": [
         "docs/COMMIT_CITATIONS.json",
