@@ -167,6 +167,37 @@ def test_matrix_isolates_discovery_exception_and_continues_without_leaking_excep
     assert "user_id" not in str(report)
 
 
+def test_matrix_isolates_smoke_exception_and_continues_without_claiming_delivery(monkeypatch):
+    smoked = []
+
+    def fake_smoke(provider: str):
+        smoked.append(provider)
+        if provider == "Broken":
+            raise TimeoutError("private transport diagnostic credential_id=secret")
+        return _smoke(provider)
+
+    monkeypatch.setattr(matrix.routes, "_assert_smoke_is_not_qualifying_input", lambda: None)
+    monkeypatch.setattr(matrix.routes, "discover_provider", lambda provider: _discovery(provider))
+    monkeypatch.setattr(matrix.routes, "smoke_provider", fake_smoke)
+
+    report = matrix.run_matrix(["DeepInfra", "Broken", "Morph"])
+    assert smoked == ["DeepInfra", "Broken", "Morph"]
+    failed = report["smoke_reports"][1]
+    assert failed["requested_provider"] == "Broken"
+    assert failed["smoke_failed"] is True
+    assert failed["failure_class"] == "smoke_exception"
+    assert failed["physical_request_sent"] is None
+    assert failed["route_viable"] is False
+    assert failed["byok_route_qualified"] is False
+    assert failed["is_a_qualifying_call"] is False
+    assert failed["qualifying_input_was_sent"] is False
+    assert report["summary"]["smokes_attempted"] == 3
+    assert report["summary"]["smokes_with_ambiguous_delivery"] == 1
+    assert report["summary"]["qualifying_calls"] == 0
+    assert "private transport diagnostic" not in str(report)
+    assert "credential_id" not in str(report)
+
+
 def test_default_candidates_preserve_morph_as_continuity_control_and_deepinfra_as_reliable_option():
     assert "Morph" in matrix.DEFAULT_CANDIDATES
     assert "DeepInfra" in matrix.DEFAULT_CANDIDATES
