@@ -1,0 +1,76 @@
+{
+  "schema": "m115-h60-provider-selection-candidate-v1",
+  "milestone": "M115",
+  "hypothesis": "H60",
+  "status": "candidate_not_frozen",
+  "owner_authorization": {
+    "model_identity_versioning_authorized": true,
+    "authorized_change": "accept an explicitly attested alias-dated to canonical-checkpoint relation instead of literal alias equality",
+    "m113_m114_must_remain_unchanged": true,
+    "authorization_precedes_any_h60_freeze": true,
+    "authorization_precedes_any_h60_qualifying_bank": true
+  },
+  "identity_contract_candidate": {
+    "requested_alias": "deepseek/deepseek-v4-flash-0731",
+    "canonical_checkpoint": "deepseek/deepseek-v4-flash-20260731",
+    "relation": "explicit_catalogue_mapping_only",
+    "string_pattern_inference_permitted": false,
+    "served_model_must_echo_requested_alias": true,
+    "selected_endpoint_must_equal_canonical_checkpoint": true,
+    "served_provider_must_equal_selected_provider": true,
+    "no_fallback_attested_required": true,
+    "router_strategy_direct_required": true,
+    "strict_json_schema_required": true,
+    "finish_reason_stop_required_for_development_smoke": true
+  },
+  "admissibility_source": "experiments/M115/RUNTIME_ROUTE_MATRIX_DEVELOPMENT.json",
+  "admissible_runtime_smokes_under_versioned_identity": 13,
+  "non_smoked_candidates": ["Makora"],
+  "selection_rule": {
+    "source": "scripts/audit_generator_matrix.py::RECOMMENDATION_POLICY",
+    "defined_before_first_matrix_run": true,
+    "originally_a_milestone_selection_rule": false,
+    "adopted_for_h60_milestone_selection_after_matrix_observations": true,
+    "adopted_before_any_h60_freeze": true,
+    "adopted_before_any_h60_qualifying_bank": true,
+    "adopted_before_any_h60_qualifying_invocation": true,
+    "ordering": [
+      "uptime_last_1d_desc",
+      "uptime_last_30m_desc",
+      "latency_last_30m_p50_asc",
+      "provider_name_asc"
+    ],
+    "byok_is_a_ranking_input": false,
+    "quantization_is_a_ranking_input": false,
+    "scientific_outcome_is_a_ranking_input": false
+  },
+  "selected_provider": "Alibaba",
+  "selection_evidence": {
+    "Alibaba": {
+      "uptime_last_1d": 99.98945871422205,
+      "uptime_last_30m": 99.98797932443804,
+      "latency_last_30m_p50_ms": 1214.0
+    },
+    "nearest_competitor_OpenInference": {
+      "uptime_last_1d": 99.9887349028133,
+      "uptime_last_30m": 99.9832843804475,
+      "latency_last_30m_p50_ms": 655.0
+    },
+    "selection_reason": "Alibaba ranks first on the first ordering key, uptime_last_1d, so later keys are not consulted."
+  },
+  "chronology_boundary": {
+    "matrix_observed_before_milestone_selection_rule_adoption": true,
+    "milestone_selection_rule_adoption_before_freeze": true,
+    "milestone_selection_rule_adoption_before_bank": true,
+    "milestone_selection_rule_adoption_before_qualifying_input": true,
+    "no_h60_scientific_outcome_observed": true,
+    "no_carrier_bank_materialized_for_h60": true
+  },
+  "not_done": [
+    "no freeze",
+    "no qualifying input",
+    "no bank materialization",
+    "no M113/M114 modification",
+    "no G1-G10 advancement"
+  ]
+}
