@@ -23,6 +23,15 @@ def test_preserved_matrix_selects_alibaba_under_the_predeclared_ordering():
     assert result["selected_quantization"] == "unknown"
 
 
+def test_preserved_matrix_is_bound_byte_exactly_by_git_blob_identity(tmp_path):
+    source = selection.PRESERVED_MATRIX_PATH
+    target = tmp_path / selection.PRESERVED_MATRIX_PATH
+    target.parent.mkdir(parents=True)
+    target.write_bytes(source.read_bytes() + b"\n")
+    with pytest.raises(selection.RouteSelectionError, match="blob changed"):
+        selection.load_preserved_matrix(tmp_path)
+
+
 def test_literal_alias_equality_is_not_smuggled_back_into_the_new_boundary():
     matrix = _preserved()
     result = selection.derive_selection(matrix)
