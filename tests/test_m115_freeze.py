@@ -16,8 +16,12 @@ from metamorphosis import m115_carrier_bank as bank
 PLAN_COMMITMENT = "95f01bf125a37442bd6748c2b1c018c4c8038553cabc73e9314ee875ce898f5f"
 
 
+def _raw(name: str) -> bytes:
+    return (bank.EXPERIMENT_DIRECTORY / name).read_bytes()
+
+
 def _read(name: str) -> dict:
-    return json.loads((bank.EXPERIMENT_DIRECTORY / name).read_bytes().decode("utf-8"))
+    return json.loads(_raw(name).decode("utf-8"))
 
 
 def test_the_frozen_m115_plan_commitment_is_pinned_outside_the_plan():
@@ -27,8 +31,8 @@ def test_the_frozen_m115_plan_commitment_is_pinned_outside_the_plan():
     assert bank.analysis_plan_commitment(plan) == PLAN_COMMITMENT
 
 
-def test_the_frozen_m115_plan_is_the_reviewed_candidate_unchanged():
-    assert _read("ANALYSIS_PLAN.json") == _read("ANALYSIS_PLAN_CANDIDATE.json")
+def test_the_frozen_m115_plan_is_the_reviewed_candidate_unchanged_byte_for_byte():
+    assert _raw("ANALYSIS_PLAN.json") == _raw("ANALYSIS_PLAN_CANDIDATE.json")
 
 
 def test_the_first_freeze_keeps_the_declared_chronology_and_boundaries():
