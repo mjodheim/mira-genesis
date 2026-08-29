@@ -14,9 +14,9 @@
 | Catalogue-compatibles (structured_outputs + seed) | 14 |
 | Smokes tentés | 13 |
 | Route-viable | **0** (selected_endpoint_exact échoue pour tous) |
-| `canonical_checkpoint_match` | **12/13** ✅ |
-| `no_fallback_attested` | **12/13** ✅ |
-| `structured_output_parsed` | **12/13** ✅ |
+| `canonical_checkpoint_match` | **13/13** ✅ |
+| `no_fallback_attested` | **13/13** ✅ |
+| `structured_output_parsed` | **13/13** ✅ |
 | BYOK attesté runtime | 0 |
 | Qualifying calls | 0 |
 
@@ -52,13 +52,13 @@ Tous les échecs sont sur `selected_endpoint_exact` :
 - Le endpoint catalogue retourne le slug canonique, pas l'alias
 - La comparaison stricte échoue — ce qui est **correct et attendu**
 
-`canonical_checkpoint_match` vérifie la relation de mappage explicite et passe pour 12/13 providers.
+`canonical_checkpoint_match` vérifie la relation de mappage explicite et passe pour 13/13 providers smokés.
 
 ---
 
 ## 4. Classement DEVELOPMENT (instrument corrigé)
 
-Aucun classement n'est possible car 0 route n'est `route_viable`. Le classement précédent (première matrice) est caduc car l'instrument avait deux défauts.
+Sous le contrat strict historique (`selected_endpoint_exact=true`), aucun classement n'est possible car 0 route n'est `route_viable`. La politique DEVELOPMENT de fiabilité reste toutefois préservée dans `scripts/audit_generator_matrix.py` et peut être réappliquée à un ensemble d'admissibilité explicitement versionné par un milestone successeur, à condition que cette adoption soit enregistrée avant tout freeze ou qualifying input.
 
 ---
 
@@ -77,9 +77,9 @@ Quatre défauts corrigés dans `scripts/audit_generator_routes.py` :
 
 ## 6. Résultat
 
-**Aucune route ne satisfait le contrat instrumental avec `selected_endpoint_exact=true`.** Toutes les routes satisfont `canonical_checkpoint_match` + `no_fallback_attested`. La différence est que le contrat exige l'alias exact, mais OpenRouter sert le checkpoint canonique.
+**Aucune route ne satisfait le contrat instrumental historique avec `selected_endpoint_exact=true`.** Les 13 routes smokées satisfont `canonical_checkpoint_match` + `no_fallback_attested` + `structured_output_parsed` + `finish_reason=stop`; Makora n'a pas été smoké car son endpoint était non-live au discovery.
 
-Si le propriétaire le décide, une modification du contrat pour accepter `canonical_checkpoint_match` au lieu de `selected_endpoint_exact` rendrait **12 providers route-viables**. Cette décision lui appartient.
+Une modification explicite d'un contrat successeur pour accepter `canonical_checkpoint_match` au lieu de `selected_endpoint_exact` rendrait **13 providers runtime-admissibles au regard de cette matrice DEVELOPMENT**. Cela ne modifie ni M113 ni M114 et ne constitue pas, à lui seul, une sélection qualifying.
 
 ---
 
@@ -91,6 +91,5 @@ Si le propriétaire le décide, une modification du contrat pour accepter `canon
 - ✅ Une nouvelle matrice DEVELOPMENT exécutée
 - ❌ Aucun freeze, qualifying input, ou gate consommé
 - ❌ Aucun credential, data policy, ou protocole modifié
-- ❌ Aucune route qualifying sélectionnée
-- ❌ Aucun milestone créé
+- ❌ Aucune route qualifying sélectionnée par cette matrice
 - ❌ Aucun gate franchi
