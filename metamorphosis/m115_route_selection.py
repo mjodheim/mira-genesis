@@ -26,6 +26,7 @@ carrier data.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any, Mapping
@@ -33,7 +34,9 @@ from typing import Any, Mapping
 REQUESTED_MODEL = "deepseek/deepseek-v4-flash-0731"
 CANONICAL_CHECKPOINT = "deepseek/deepseek-v4-flash-20260731"
 PRESERVED_MATRIX_PATH = Path("experiments/M115/RUNTIME_ROUTE_MATRIX_DEVELOPMENT.json")
-PRESERVED_MATRIX_COMMIT = "b46da74cdcfb05735bdc609fe45330a385c65ca0"
+# Bind the exact preserved DEVELOPMENT evidence by its Git blob identity.  This is stronger than
+# a moving branch/commit reference for the selection input itself and avoids laundering provenance
+# through a later commit: any byte change to the matrix fails closed before ranking.
 PRESERVED_MATRIX_BLOB = "3fac411f749e75f60a2dc9d31d8a92fc81563908"
 
 RELIABILITY_ORDERING = (
@@ -186,12 +189,24 @@ def derive_selection(matrix: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _git_blob_sha(raw: bytes) -> str:
+    header = f"blob {len(raw)}\0".encode("ascii")
+    return hashlib.sha1(header + raw).hexdigest()  # noqa: S324 - Git object identity is SHA-1
+
+
 def load_preserved_matrix(root: Path | None = None) -> dict[str, Any]:
     base = Path.cwd() if root is None else Path(root)
     path = base / PRESERVED_MATRIX_PATH
     if not path.is_file():
         raise RouteSelectionError("preserved route matrix is missing: %s" % path)
-    value = json.loads(path.read_text(encoding="utf-8"))
+    raw = path.read_bytes()
+    observed_blob = _git_blob_sha(raw)
+    if observed_blob != PRESERVED_MATRIX_BLOB:
+        raise RouteSelectionError(
+            "preserved route matrix blob changed: expected %s, got %s"
+            % (PRESERVED_MATRIX_BLOB, observed_blob)
+        )
+    value = json.loads(raw.decode("utf-8"))
     if not isinstance(value, dict):
         raise RouteSelectionError("preserved route matrix is not an object")
     return value
