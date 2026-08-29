@@ -38,6 +38,10 @@ PRESERVED_MATRIX_PATH = Path("experiments/M115/RUNTIME_ROUTE_MATRIX_DEVELOPMENT.
 # a moving branch/commit reference for the selection input itself and avoids laundering provenance
 # through a later commit: any byte change to the matrix fails closed before ranking.
 PRESERVED_MATRIX_BLOB = "3fac411f749e75f60a2dc9d31d8a92fc81563908"
+# The exact blob above is the authoritative selection provenance.  A commit SHA is deliberately
+# not part of this contract: the same bytes may be reachable through several later commits, while
+# the selected evidence itself must remain byte-identical.
+PRESERVED_MATRIX_COMMIT = None
 
 RELIABILITY_ORDERING = (
     "uptime_last_1d_desc",
