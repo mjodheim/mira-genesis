@@ -18,7 +18,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -26,6 +26,7 @@ if str(ROOT) not in sys.path:
 
 from metamorphosis import m115_carrier_bank as bank  # noqa: E402
 from metamorphosis import m115_delivery as delivery  # noqa: E402
+from metamorphosis import m115_identity as model_identity  # noqa: E402
 from metamorphosis import m115_sealing as sealing  # noqa: E402
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
 
@@ -52,6 +53,74 @@ def _load(path: Path) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise SealCommandError("%s is not a JSON object" % path.relative_to(ROOT))
     return value
+
+
+def _materialized_attempt(ledger: Mapping[str, Any]) -> tuple[Mapping[str, Any], int]:
+    attempts = ledger.get("attempts")
+    if not isinstance(attempts, list):
+        raise SealCommandError("delivery ledger carries no checkable attempts")
+    materialized = [
+        attempt
+        for attempt in attempts
+        if isinstance(attempt, Mapping) and attempt.get("outcome") == "materialized"
+    ]
+    if len(materialized) != 1:
+        raise SealCommandError("exactly one materialized delivery attempt is required")
+    attempt = materialized[0]
+    if ledger.get("bank_materialization_index") != attempt.get("attempt_index"):
+        raise SealCommandError("delivery ledger materialization index does not identify its bank")
+    return attempt, len(attempts)
+
+
+def _validate_response_provenance(
+    response: Mapping[str, Any], ledger: Mapping[str, Any]
+) -> None:
+    """Re-bind the plaintext about to be sealed to the sole materialized delivery attempt.
+
+    The response file is mutable operational state until this command removes it. Therefore neither
+    its stored `runtime_identity_attestation` nor its copied transport fields are trusted. Identity
+    is recomputed from the exact body that will be encrypted, and every operational field duplicated
+    from the delivery ledger must match the sole materialized attempt byte-for-value.
+    """
+    body = response.get("body")
+    if not isinstance(body, Mapping):
+        raise SealCommandError("generation response carries no materialized response body")
+
+    recomputed_attestation = model_identity.attest_completion_response(body)
+    if recomputed_attestation.get("holds") is not True:
+        raise SealCommandError(
+            "generation response body no longer passes runtime identity attestation: %s"
+            % ", ".join(recomputed_attestation.get("failed_checks") or ["unknown failure"])
+        )
+
+    recorded_attestation = response.get("runtime_identity_attestation")
+    if recorded_attestation != recomputed_attestation:
+        raise SealCommandError(
+            "generation response runtime identity attestation does not match its current body"
+        )
+
+    attempt, attempts_made = _materialized_attempt(ledger)
+    ledger_attestation = attempt.get("identity_attestation")
+    if ledger_attestation != recomputed_attestation:
+        raise SealCommandError(
+            "generation response identity does not match the materialized delivery attempt"
+        )
+
+    expected = {
+        "delivery_attempt_index": attempt.get("attempt_index"),
+        "delivery_attempts_made": attempts_made,
+        "status": attempt.get("status"),
+        "served_model": attempt.get("served_model"),
+        "served_provider": attempt.get("served_provider"),
+        "started_at": attempt.get("started_at"),
+        "finished_at": attempt.get("finished_at"),
+    }
+    drifted = [key for key, value in expected.items() if response.get(key) != value]
+    if drifted:
+        raise SealCommandError(
+            "generation response does not match the materialized delivery attempt: %s"
+            % ", ".join(sorted(drifted))
+        )
 
 
 def _preflight(passphrase: str) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
@@ -86,11 +155,7 @@ def _preflight(passphrase: str) -> tuple[dict[str, Any], dict[str, Any], dict[st
         raise SealCommandError("generation response does not bind the frozen spec")
     if response.get("request_body_sha256") != spec.get("canonical_request_body_sha256"):
         raise SealCommandError("generation response does not bind the frozen request body")
-    attestation = response.get("runtime_identity_attestation")
-    if not isinstance(attestation, dict) or attestation.get("holds") is not True:
-        raise SealCommandError("generation response lacks a passing runtime identity attestation")
-    if not isinstance(response.get("body"), dict):
-        raise SealCommandError("generation response carries no materialized response body")
+    _validate_response_provenance(response, ledger)
     return spec, ledger, response
 
 
