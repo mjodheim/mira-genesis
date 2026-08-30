@@ -1,0 +1,79 @@
+name: Final branch cleanup (one-shot)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/final-branch-cleanup-once.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Delete every non-main branch not used by an open PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+
+          python - <<'PY' > /tmp/open-pr-heads.txt
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          page = 1
+          while True:
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/pulls?state=open&per_page=100&page={page}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req) as response:
+                  prs = json.load(response)
+              if not prs:
+                  break
+              for pr in prs:
+                  if pr.get('head', {}).get('repo', {}).get('full_name') == repo:
+                      print(pr['head']['ref'])
+              if len(prs) < 100:
+                  break
+              page += 1
+          PY
+
+          deleted=0
+          kept=0
+          while IFS= read -r remote_ref; do
+            branch="${remote_ref#origin/}"
+            [[ "$branch" == "HEAD" || "$branch" == "main" ]] && continue
+            if grep -Fxq "$branch" /tmp/open-pr-heads.txt; then
+              echo "KEEP open PR: $branch"
+              kept=$((kept + 1))
+              continue
+            fi
+            echo "DELETE stale branch: $branch"
+            git push origin --delete "$branch"
+            deleted=$((deleted + 1))
+          done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin | sort -u)
+
+          {
+            echo '## Final branch cleanup'
+            echo
+            echo "Deleted: **$deleted**"
+            echo "Kept because used by open PRs: **$kept**"
+            echo 'Protected default branch `main` was never considered for deletion.'
+          } >> "$GITHUB_STEP_SUMMARY"
