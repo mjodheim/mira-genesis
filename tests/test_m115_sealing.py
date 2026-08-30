@@ -1,12 +1,67 @@
 import json
 
+from metamorphosis import m115_identity as model_identity
 from metamorphosis import m115_sealing as sealing
 from metamorphosis.blind_bank_protocol import sha256_hex
+from scripts import seal_m115_bank as seal_command
 
 
 def _write(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value), encoding="utf-8")
+
+
+def _valid_response_and_ledger():
+    body = {
+        "model": model_identity.REQUESTED_MODEL,
+        "provider": model_identity.SELECTED_PROVIDER,
+        "openrouter_metadata": {
+            "requested": model_identity.REQUESTED_MODEL,
+            "strategy": "direct",
+            "attempt": 1,
+            "is_byok": False,
+            "endpoints": {
+                "total": 1,
+                "available": [
+                    {
+                        "provider": model_identity.SELECTED_PROVIDER,
+                        "model": model_identity.CANONICAL_CHECKPOINT,
+                        "selected": True,
+                    }
+                ],
+            },
+            "attempts": [],
+            "pipeline": [],
+        },
+        "choices": [{"message": {"content": "opaque carrier content"}}],
+    }
+    attestation = model_identity.attest_completion_response(body)
+    attempt = {
+        "attempt_index": 1,
+        "started_at": "2026-08-30T08:00:00Z",
+        "finished_at": "2026-08-30T08:00:02Z",
+        "status": 200,
+        "served_model": model_identity.REQUESTED_MODEL,
+        "served_provider": model_identity.SELECTED_PROVIDER,
+        "identity_attestation": attestation,
+        "outcome": "materialized",
+    }
+    ledger = {
+        "bank_materialization_index": 1,
+        "attempts": [attempt],
+    }
+    response = {
+        "delivery_attempt_index": 1,
+        "delivery_attempts_made": 1,
+        "status": 200,
+        "served_model": model_identity.REQUESTED_MODEL,
+        "served_provider": model_identity.SELECTED_PROVIDER,
+        "runtime_identity_attestation": attestation,
+        "started_at": attempt["started_at"],
+        "finished_at": attempt["finished_at"],
+        "body": body,
+    }
+    return response, ledger
 
 
 def test_materialization_is_not_reported_as_generated_sealed(tmp_path, monkeypatch):
@@ -106,3 +161,40 @@ def test_commitment_digest_detects_metadata_drift():
     commitment["ciphertext_bytes"] = 201
 
     assert sealing.commitment_digest(commitment) != original
+
+
+def test_seal_preflight_recomputes_runtime_identity_from_current_body():
+    response, ledger = _valid_response_and_ledger()
+    response["body"]["provider"] = "Substituted Provider"
+
+    try:
+        seal_command._validate_response_provenance(response, ledger)
+    except seal_command.SealCommandError as exc:
+        assert "no longer passes runtime identity attestation" in str(exc)
+    else:
+        raise AssertionError("a substituted response body must be refused before sealing")
+
+
+def test_seal_preflight_rejects_stale_stored_attestation():
+    response, ledger = _valid_response_and_ledger()
+    response["runtime_identity_attestation"] = dict(response["runtime_identity_attestation"])
+    response["runtime_identity_attestation"]["holds"] = False
+
+    try:
+        seal_command._validate_response_provenance(response, ledger)
+    except seal_command.SealCommandError as exc:
+        assert "does not match its current body" in str(exc)
+    else:
+        raise AssertionError("a stale stored attestation must be refused before sealing")
+
+
+def test_seal_preflight_rejects_operational_drift_from_materialized_attempt():
+    response, ledger = _valid_response_and_ledger()
+    response["finished_at"] = "2026-08-30T09:00:00Z"
+
+    try:
+        seal_command._validate_response_provenance(response, ledger)
+    except seal_command.SealCommandError as exc:
+        assert "finished_at" in str(exc)
+    else:
+        raise AssertionError("a response detached from the materialized attempt must be refused")
