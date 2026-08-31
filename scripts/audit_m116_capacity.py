@@ -13,11 +13,13 @@ The acceptance rule is intentionally committed before the first network call:
 * a synthetic strict-schema payload with exactly 1536 rows and eight bounded integer fields;
 * strict parsing of that payload;
 * observed completion_tokens > 32000, proving completion beyond M115's old ceiling;
-* no returned reasoning when the provider exposes reasoning details.
+* positive reasoning telemetry showing zero reasoning tokens.
 
 At most three physical DEVELOPMENT attempts are permitted, and only an explicit HTTP 429 carrying no
 completion and no evidence of model execution may be retried after 60 seconds. The first materialized
-or otherwise terminal response ends the audit. Raw completion content is never written.
+or otherwise terminal response ends the audit. Any transport failure after the request call begins is
+persisted as ambiguous and terminal so a second invocation cannot redraw it. Raw completion content
+is never written.
 """
 
 from __future__ import annotations
@@ -110,6 +112,9 @@ QUALIFYING_INPUT_PATHS = (
     ROOT / "experiments" / "M114" / "QUALIFYING_INPUT.txt",
     ROOT / "experiments" / "M115" / "QUALIFYING_INPUT.txt",
 )
+CARRIER_SCHEMA_VOCABULARY = frozenset(
+    {"machines", "surface", "cells", "initial", "visible", "errors", "actions"}
+)
 
 
 class CapacityAuditError(RuntimeError):
@@ -131,6 +136,9 @@ def _assert_nonqualifying() -> None:
     stress = STRESS_INPUT.encode("utf-8")
     stress_digest = sha256_hex(stress)
     serialized_schema = canonical_bytes(STRESS_SCHEMA)
+    for forbidden in CARRIER_SCHEMA_VOCABULARY:
+        if ('"%s"' % forbidden).encode("utf-8") in serialized_schema:
+            raise CapacityAuditError("the M116 stress schema contains carrier-schema vocabulary")
     for path in QUALIFYING_INPUT_PATHS:
         if not path.is_file():
             continue
@@ -140,9 +148,6 @@ def _assert_nonqualifying() -> None:
         decoded = qualifying.decode("utf-8", "replace")
         if STRESS_INPUT.strip() in decoded or decoded.strip() in STRESS_INPUT:
             raise CapacityAuditError("the M116 stress input overlaps a qualifying carrier input")
-        # The stress schema must stay unrelated to the carrier interaction language.
-        if b'"machines"' in serialized_schema or b'"surface"' in serialized_schema:
-            raise CapacityAuditError("the M116 stress schema contains carrier-schema vocabulary")
 
 
 def request_body_digest() -> str:
@@ -165,18 +170,46 @@ def _connection(url: str, timeout: int) -> tuple[http.client.HTTPSConnection, ur
     return conn, parsed
 
 
+def _transport_failure_observation(
+    *,
+    started_at: str,
+    request_call_began: bool,
+) -> dict[str, Any]:
+    return {
+        "started_at": started_at,
+        "finished_at": _now(),
+        "status": None,
+        "headers": {},
+        "body": {},
+        "response_sha256": None,
+        "response_bytes": None,
+        "transport_failure_class": (
+            "ambiguous_transport_failure"
+            if request_call_began
+            else "pretransmission_transport_failure"
+        ),
+        "model_execution_cannot_be_excluded": request_call_began,
+    }
+
+
 def _request(*, timeout: int = 1200) -> dict[str, Any]:
-    conn, parsed = _connection(ENDPOINT, timeout)
+    # Missing owner credential is not a physical attempt because the request cannot begin.
+    secret = _secret()
     payload = canonical_bytes(REQUEST_BODY)
     headers = {
         "Accept": "application/json",
-        "Authorization": f"Bearer {_secret()}",
+        "Authorization": f"Bearer {secret}",
         "Content-Type": "application/json",
         "X-OpenRouter-Metadata": "enabled",
         "X-OpenRouter-Cache": "false",
     }
     started = _now()
+    conn: http.client.HTTPSConnection | None = None
+    request_call_began = False
     try:
+        conn, parsed = _connection(ENDPOINT, timeout)
+        # Once conn.request is invoked, partial transmission cannot be excluded even if it raises.
+        request_call_began = True
         conn.request("POST", parsed.path or "/", body=payload, headers=headers)
         response = conn.getresponse()
         raw = response.read()
@@ -186,8 +219,17 @@ def _request(*, timeout: int = 1200) -> dict[str, Any]:
             for key, value in response.getheaders()
             if key.lower() in {"date", "server", "retry-after", "x-generation-id"}
         }
+    except Exception:  # network/HTTP failure is deliberately converted to safe terminal evidence
+        return _transport_failure_observation(
+            started_at=started,
+            request_call_began=request_call_began,
+        )
     finally:
-        conn.close()
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:
+                pass
     try:
         decoded = json.loads(raw.decode("utf-8"))
     except (UnicodeDecodeError, ValueError):
@@ -200,6 +242,8 @@ def _request(*, timeout: int = 1200) -> dict[str, Any]:
         "body": decoded,
         "response_sha256": sha256_hex(raw),
         "response_bytes": len(raw),
+        "transport_failure_class": None,
+        "model_execution_cannot_be_excluded": False,
     }
 
 
@@ -261,6 +305,27 @@ def _reasoning_tokens(usage: Mapping[str, Any]) -> int | None:
     return value if isinstance(value, int) and not isinstance(value, bool) else None
 
 
+def _observed_selected_checkpoint(identity: Mapping[str, Any] | None) -> str | None:
+    if not isinstance(identity, Mapping):
+        return None
+    metadata = identity.get("safe_router_metadata")
+    if not isinstance(metadata, Mapping):
+        return None
+    endpoints = metadata.get("endpoints")
+    available = endpoints.get("available") if isinstance(endpoints, Mapping) else None
+    if not isinstance(available, list):
+        return None
+    selected = [
+        item
+        for item in available
+        if isinstance(item, Mapping) and item.get("selected") is True
+    ]
+    if len(selected) != 1:
+        return None
+    value = selected[0].get("model")
+    return value if isinstance(value, str) else None
+
+
 def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]:
     body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
     first, message = _first_message(body)
@@ -275,12 +340,12 @@ def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]
         message.get(key) in (None, "", [], {})
         for key in ("reasoning", "reasoning_content", "reasoning_details")
     )
-    reasoning_observation_holds = reasoning_fields_empty and reasoning_tokens in (None, 0)
+    # The preregistered gate requires positive evidence, not absence of evidence.
+    reasoning_observation_holds = reasoning_fields_empty and reasoning_tokens == 0
 
     identity = model_identity.attest_completion_response(body) if isinstance(content, str) and content.strip() else None
     identity_holds = isinstance(identity, Mapping) and identity.get("holds") is True
-    router = identity.get("router_attestation") if isinstance(identity, Mapping) else None
-    canonical_checkpoint = router.get("canonical_checkpoint") if isinstance(router, Mapping) else None
+    observed_checkpoint = _observed_selected_checkpoint(identity)
 
     checks = {
         "http_200": observed.get("status") == 200,
@@ -289,9 +354,9 @@ def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]
         "completion_exceeds_m115_ceiling": completion_tokens is not None
         and completion_tokens > OLD_M115_MAX_TOKENS,
         "reasoning_request_is_explicitly_off": REQUEST_BODY.get("reasoning") == {"effort": "none"},
-        "reasoning_response_has_no_exposed_tokens": reasoning_observation_holds,
+        "reasoning_response_has_zero_tokens": reasoning_observation_holds,
         "runtime_identity_holds": identity_holds,
-        "canonical_checkpoint_exact": canonical_checkpoint == CANONICAL_CHECKPOINT,
+        "canonical_checkpoint_exact": observed_checkpoint == CANONICAL_CHECKPOINT,
         "served_provider_exact": body.get("provider") == PROVIDER,
         "served_model_alias_exact": body.get("model") == MODEL,
     }
@@ -309,6 +374,7 @@ def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]
         "response_bytes": observed.get("response_bytes"),
         "completion_tokens": completion_tokens,
         "reasoning_tokens": reasoning_tokens,
+        "observed_selected_checkpoint": observed_checkpoint,
         "synthetic_rows": ROWS if strict_output else 0,
         "synthetic_payload_sha256": payload_digest,
         "identity_attestation": identity,
@@ -321,6 +387,11 @@ def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]
 def _safe_nonmaterialized_attempt(observed: Mapping[str, Any], position: int) -> dict[str, Any]:
     body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
     evidence = _execution_evidence(body)
+    transport_ambiguous = observed.get("model_execution_cannot_be_excluded") is True
+    execution_cannot_be_excluded = (
+        transport_ambiguous or evidence["model_execution_cannot_be_excluded"]
+    )
+    transport_failure = observed.get("transport_failure_class")
     return {
         "attempt_index": position,
         "started_at": observed.get("started_at"),
@@ -328,11 +399,29 @@ def _safe_nonmaterialized_attempt(observed: Mapping[str, Any], position: int) ->
         "status": observed.get("status"),
         "response_sha256": observed.get("response_sha256"),
         "response_bytes": observed.get("response_bytes"),
+        "transport_failure_class": transport_failure,
         "completion_present": evidence["completion_present"],
-        "model_execution_cannot_be_excluded": evidence["model_execution_cannot_be_excluded"],
-        "retry_permitted": observed.get("status") == 429
+        "model_execution_cannot_be_excluded": execution_cannot_be_excluded,
+        "retry_permitted": transport_failure is None
+        and observed.get("status") == 429
         and not evidence["completion_present"]
-        and not evidence["model_execution_cannot_be_excluded"],
+        and not execution_cannot_be_excluded,
+    }
+
+
+def _terminal_nonmaterialized(safe: Mapping[str, Any]) -> dict[str, Any]:
+    failure = safe.get("transport_failure_class") or "nonmaterialized_terminal_response"
+    return {
+        "schema": "m116-capacity-stress-observation-v1",
+        "development": True,
+        "is_a_qualifying_call": False,
+        "qualifying_input_was_sent": False,
+        "attempt_index": safe.get("attempt_index"),
+        "status": safe.get("status"),
+        "model_execution_cannot_be_excluded": safe.get("model_execution_cannot_be_excluded") is True,
+        "gate_holds": False,
+        "terminal_failure": failure,
+        "raw_completion_persisted": False,
     }
 
 
@@ -365,17 +454,7 @@ def execute() -> dict[str, Any]:
         safe = _safe_nonmaterialized_attempt(observed, position)
         attempts.append(safe)
         if not safe["retry_permitted"]:
-            terminal = {
-                "schema": "m116-capacity-stress-observation-v1",
-                "development": True,
-                "is_a_qualifying_call": False,
-                "qualifying_input_was_sent": False,
-                "attempt_index": position,
-                "status": observed.get("status"),
-                "gate_holds": False,
-                "terminal_failure": "nonmaterialized_terminal_response",
-                "raw_completion_persisted": False,
-            }
+            terminal = _terminal_nonmaterialized(safe)
             break
 
     if terminal is None:
@@ -386,6 +465,7 @@ def execute() -> dict[str, Any]:
             "qualifying_input_was_sent": False,
             "attempt_index": len(attempts),
             "status": 429 if attempts else None,
+            "model_execution_cannot_be_excluded": False,
             "gate_holds": False,
             "terminal_failure": "development_capacity_rejections_exhausted",
             "raw_completion_persisted": False,
