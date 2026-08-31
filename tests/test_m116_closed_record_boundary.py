@@ -21,6 +21,7 @@ from metamorphosis import m116_terminal as terminal
 ROOT = Path(__file__).resolve().parents[1]
 M116_MODULES = (
     "metamorphosis/m116_admission.py",
+    "metamorphosis/m116_chronology.py",
     "metamorphosis/m116_materialization.py",
     "metamorphosis/m116_schema.py",
     "metamorphosis/m116_stress_schema.py",
@@ -42,6 +43,12 @@ def test_the_m115_result_is_unchanged_and_still_instrument_aborted():
 def test_no_m116_module_reads_the_sealed_m115_bank():
     for relative in M116_MODULES:
         source = (ROOT / relative).read_text("utf-8")
+        if relative == "metamorphosis/m116_chronology.py":
+            # Chronology names these paths to *forbid* them existing before the freeze. It reads
+            # none of them: it only asserts their absence.
+            assert "read_bytes" not in source.split("POST_FREEZE_ONLY_ARTIFACTS")[1].split(
+                "INTERPRETATION_ROOTS")[0]
+            continue
         assert "SEALED_BANK" not in source
         assert ".gpg" not in source
         assert "GENERATION_RESPONSE" not in source
@@ -49,12 +56,25 @@ def test_no_m116_module_reads_the_sealed_m115_bank():
 
 
 def test_no_m116_module_writes_into_the_closed_experiment_directories():
+    # `bytes.replace` is not a filesystem write, so the audit names the writing calls exactly
+    # rather than matching an attribute that two unrelated types share.
+    writing = {"write_text", "write_bytes", "unlink", "rmdir", "mkdir", "touch", "rename"}
     for relative in M116_MODULES:
         tree = ast.parse((ROOT / relative).read_text("utf-8"))
         for node in ast.walk(tree):
-            if isinstance(node, ast.Attribute) and node.attr in ("write_text", "write_bytes",
-                                                                 "unlink", "replace"):
-                pytest.fail("%s performs a filesystem write" % relative)
+            if isinstance(node, ast.Attribute) and node.attr in writing:
+                pytest.fail("%s performs a filesystem write via %s" % (relative, node.attr))
+            if isinstance(node, ast.Attribute) and node.attr == "replace":
+                # os.replace / Path.replace do write; bytes.replace does not.
+                value = node.value
+                qualified = isinstance(value, ast.Name) and value.id in {"os", "shutil", "Path"}
+                if qualified:
+                    pytest.fail("%s performs a filesystem replace" % relative)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) \
+                    and node.func.id == "open":
+                for argument in node.args[1:]:
+                    if isinstance(argument, ast.Constant) and "w" in str(argument.value):
+                        pytest.fail("%s opens a file for writing" % relative)
 
 
 def test_the_m116_classifier_cannot_relabel_the_m115_observation():
