@@ -93,7 +93,11 @@ def test_the_frozen_system_and_reveal_bindings_still_hold() -> None:
     authorization = _load("REVEAL_AUTHORIZATION.json")
     result = _load("RESULT.json")
 
-    execution.validate_system_protocol(protocol, root=ROOT)
+    execution.validate_system_protocol(
+        protocol,
+        root=ROOT,
+        tested_system_commit=authorization["system_protocol_frozen_at_commit"],
+    )
     execution.validate_reveal_authorization(authorization, root=ROOT)
     assert protocol["protocol_commitment_sha256"] == SYSTEM_PROTOCOL_COMMITMENT
     assert authorization["authorization_sha256"] == REVEAL_AUTHORIZATION

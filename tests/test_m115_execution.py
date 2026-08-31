@@ -29,9 +29,17 @@ def _system_protocol() -> dict:
     return json.loads(path.read_text(encoding="utf-8")) if path.is_file() else execution.build_system_protocol(ROOT)
 
 
+def _frozen_system_commit() -> str:
+    return _load("REVEAL_AUTHORIZATION.json")["system_protocol_frozen_at_commit"]
+
+
 def test_the_tested_system_freeze_is_complete_and_valid() -> None:
     protocol = _system_protocol()
-    execution.validate_system_protocol(protocol, root=ROOT)
+    execution.validate_system_protocol(
+        protocol,
+        root=ROOT,
+        tested_system_commit=_frozen_system_commit(),
+    )
     assert protocol["bank_content_known_at_freeze"] is False
     assert protocol["predicate_contract"]["retains_m114_computations"] == [
         "P%d" % index for index in range(1, 23)
@@ -46,7 +54,11 @@ def test_the_tested_system_freeze_detects_one_changed_digest() -> None:
     protocol["tested_system_digests"][first] = "0" * 64
     protocol["protocol_commitment_sha256"] = execution.system_protocol_commitment(protocol)
     with pytest.raises(execution.ExecutionError, match="tested system changed"):
-        execution.validate_system_protocol(protocol, root=ROOT)
+        execution.validate_system_protocol(
+            protocol,
+            root=ROOT,
+            tested_system_commit=_frozen_system_commit(),
+        )
 
 
 def test_readiness_never_skips_a_phase() -> None:

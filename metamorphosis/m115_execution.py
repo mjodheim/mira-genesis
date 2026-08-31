@@ -31,12 +31,14 @@ SYSTEM_PROTOCOL_PATH = bank.SYSTEM_PROTOCOL_PATH
 REVEAL_AUTHORIZATION_PATH = bank.REVEAL_AUTHORIZATION_PATH
 RESULT_PATH = bank.RESULT_PATH
 CHECK_REPORT_PATH = bank.EXPERIMENT_DIRECTORY / "CHECK_REPORT.json"
+REVEAL_ATTEMPT_PATH = bank.EXPERIMENT_DIRECTORY / "REVEAL_ATTEMPT.json"
 
 PHASES = (
     "spec_frozen",
     "generated_sealed",
     "system_protocol_frozen",
     "reveal_authorized",
+    "reveal_consumed",
     "executed",
 )
 
@@ -217,7 +219,12 @@ def build_system_protocol(root: Path | None = None) -> dict[str, Any]:
     return protocol
 
 
-def validate_system_protocol(protocol: Mapping[str, Any], *, root: Path | None = None) -> None:
+def validate_system_protocol(
+    protocol: Mapping[str, Any],
+    *,
+    root: Path | None = None,
+    tested_system_commit: str | None = None,
+) -> None:
     base = _root(root)
     if not isinstance(protocol, Mapping) or protocol.get("schema") != SYSTEM_PROTOCOL_SCHEMA:
         raise ExecutionError("M115 system protocol schema drifted")
@@ -233,7 +240,11 @@ def validate_system_protocol(protocol: Mapping[str, Any], *, root: Path | None =
         raise ExecutionError("M115 system protocol does not bind the exact tested system")
     if protocol.get("tested_system_digest_modes") != TESTED_SYSTEM_DIGEST_MODES:
         raise ExecutionError("M115 tested-system digest modes drifted")
-    measured = tested_system_digests(base)
+    measured = (
+        tested_system_digests(base)
+        if tested_system_commit is None
+        else tested_system_digests_at_commit(base, tested_system_commit)
+    )
     if protocol.get("tested_system_digests") != measured:
         drifted = sorted(
             key
@@ -278,6 +289,27 @@ def _git(root: Path, *arguments: str, binary: bool = False) -> bytes | str:
     if completed.returncode != 0:
         raise ExecutionError("git could not verify the reveal chronology")
     return completed.stdout if binary else completed.stdout.decode("ascii").strip()
+
+
+def tested_system_digests_at_commit(root: Path, commit: str) -> dict[str, str]:
+    """Recompute the frozen system from its historical commit after an attempt is consumed.
+
+    Before reveal, validation always uses current working-tree bytes.  A closed record must instead
+    continue to prove the exact code that met the bank, even when prospective safety fixes land
+    later.  This helper never makes a pre-reveal system eligible.
+    """
+    if not _COMMIT_RE.match(commit):
+        raise ExecutionError("M115 tested-system commit is malformed")
+    found: dict[str, str] = {}
+    for relative in TESTED_SYSTEM_PATHS:
+        raw = _git(root, "show", "%s:%s" % (commit, relative), binary=True)
+        mode = TESTED_SYSTEM_DIGEST_MODES.get(relative)
+        if mode == "lf_normalized":
+            raw = raw.replace(b"\r\n", b"\n")
+        elif mode != "raw":
+            raise ExecutionError("tested system member has no declared digest mode: %s" % relative)
+        found[relative] = hashlib.sha256(raw).hexdigest()
+    return found
 
 
 def commit_that_added(root: Path, relative: Path) -> str:
@@ -386,8 +418,20 @@ def validate_reveal_authorization(
     if authorization.get("authorization_sha256") != reveal_authorization_commitment(authorization):
         raise ExecutionError("M115 reveal authorization digest drifted")
 
+    bank_commit = authorization.get("bank_commitment_published_at_commit")
+    system_commit = authorization.get("system_protocol_frozen_at_commit")
+    if not isinstance(bank_commit, str) or not _COMMIT_RE.match(bank_commit):
+        raise ExecutionError("M115 bank commitment publication commit is malformed")
+    if not isinstance(system_commit, str) or not _COMMIT_RE.match(system_commit):
+        raise ExecutionError("M115 system freeze commit is malformed")
+
+    consumed = (base / RESULT_PATH).is_file() or (base / REVEAL_ATTEMPT_PATH).exists()
     protocol = _load(base / SYSTEM_PROTOCOL_PATH)
-    validate_system_protocol(protocol, root=base)
+    validate_system_protocol(
+        protocol,
+        root=base,
+        tested_system_commit=system_commit if consumed else None,
+    )
     commitment = _load(base / bank.BANK_COMMITMENT_PATH)
     sealing.validate_public_commitment(commitment, root=base)
     plan = _load(base / bank.ANALYSIS_PLAN_PATH)
@@ -404,12 +448,6 @@ def validate_reveal_authorization(
     if drifted:
         raise ExecutionError("M115 reveal authorization binding drifted: %s" % ", ".join(drifted))
 
-    bank_commit = authorization.get("bank_commitment_published_at_commit")
-    system_commit = authorization.get("system_protocol_frozen_at_commit")
-    if not isinstance(bank_commit, str) or not _COMMIT_RE.match(bank_commit):
-        raise ExecutionError("M115 bank commitment publication commit is malformed")
-    if not isinstance(system_commit, str) or not _COMMIT_RE.match(system_commit):
-        raise ExecutionError("M115 system freeze commit is malformed")
     if not _commit_has_current_bytes(base, bank_commit, bank.BANK_COMMITMENT_PATH):
         raise ExecutionError("the named sealed checkpoint does not contain the current commitment")
     if not _commit_has_current_bytes(base, system_commit, SYSTEM_PROTOCOL_PATH):
@@ -433,12 +471,28 @@ def readiness(root: Path | None = None) -> dict[str, Any]:
     sealed = sealing.readiness(base)
     phase = sealed.get("phase") or "spec_frozen"
     blockers = list(sealed.get("blockers") or [])
+    result_present = (base / RESULT_PATH).is_file()
+    attempt_present = (base / REVEAL_ATTEMPT_PATH).exists()
+
+    historical_system_commit: str | None = None
+    authorization_path = base / REVEAL_AUTHORIZATION_PATH
+    if (result_present or attempt_present) and authorization_path.is_file():
+        try:
+            candidate = _load(authorization_path).get("system_protocol_frozen_at_commit")
+        except ExecutionError:
+            candidate = None
+        if isinstance(candidate, str) and _COMMIT_RE.match(candidate):
+            historical_system_commit = candidate
 
     protocol_path = base / SYSTEM_PROTOCOL_PATH
     if protocol_path.is_file():
         try:
             protocol = _load(protocol_path)
-            validate_system_protocol(protocol, root=base)
+            validate_system_protocol(
+                protocol,
+                root=base,
+                tested_system_commit=historical_system_commit,
+            )
         except (ExecutionError, sealing.SealingError, bank.CarrierBankError, delivery.DeliveryError) as exc:
             blockers.append("system protocol: %s" % exc)
         else:
@@ -447,7 +501,6 @@ def readiness(root: Path | None = None) -> dict[str, Any]:
     elif phase == "generated_sealed":
         blockers.append("missing SYSTEM_PROTOCOL.json")
 
-    authorization_path = base / REVEAL_AUTHORIZATION_PATH
     if authorization_path.is_file():
         try:
             authorization = _load(authorization_path)
@@ -460,7 +513,9 @@ def readiness(root: Path | None = None) -> dict[str, Any]:
     elif phase == "system_protocol_frozen":
         blockers.append("missing REVEAL_AUTHORIZATION.json")
 
-    result_present = (base / RESULT_PATH).is_file()
+    if attempt_present and not result_present:
+        phase = "reveal_consumed"
+        blockers.append("the single reveal attempt is consumed without a canonical result")
     if result_present:
         if phase == "reveal_authorized" and not blockers:
             phase = "executed"
@@ -474,8 +529,14 @@ def readiness(root: Path | None = None) -> dict[str, Any]:
         "hypothesis": bank.HYPOTHESIS,
         "phase": phase,
         "phase_ladder": list(PHASES),
-        "ready_for_reveal": phase == "reveal_authorized" and not blockers and not result_present,
-        "revealed": result_present,
+        "ready_for_reveal": (
+            phase == "reveal_authorized"
+            and not blockers
+            and not result_present
+            and not attempt_present
+        ),
+        "revealed": result_present or attempt_present,
+        "reveal_attempt_consumed": result_present or attempt_present,
         "blockers": blockers,
         "identity_semantics": identity.IDENTITY_VERSION,
         "canonical_checkpoint": identity.CANONICAL_CHECKPOINT,
@@ -488,6 +549,7 @@ __all__ = [
     "ExecutionError",
     "PHASES",
     "READINESS_SCHEMA",
+    "REVEAL_ATTEMPT_PATH",
     "RESULT_PATH",
     "REVEAL_AUTHORIZATION_PATH",
     "REVEAL_AUTHORIZATION_SCHEMA",
@@ -502,6 +564,7 @@ __all__ = [
     "reveal_authorization_commitment",
     "system_protocol_commitment",
     "tested_system_digests",
+    "tested_system_digests_at_commit",
     "validate_reveal_authorization",
     "validate_system_protocol",
 ]

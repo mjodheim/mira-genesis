@@ -33,6 +33,7 @@ from scripts.run_m113_qualification import canonical_json, digest, run_bank  # n
 
 
 RESULT_PATH = ROOT / execution.RESULT_PATH
+ATTEMPT_PATH = ROOT / execution.REVEAL_ATTEMPT_PATH
 PLAN_PATH = ROOT / bank.ANALYSIS_PLAN_PATH
 SPEC_PATH = ROOT / bank.GENERATOR_SPEC_PATH
 LEDGER_PATH = ROOT / bank.DELIVERY_LEDGER_PATH
@@ -45,6 +46,21 @@ PASSPHRASE_VARIABLE = "M115_BANK_SEAL_PASSPHRASE"
 
 class QualificationError(RuntimeError):
     pass
+
+
+class TerminalQualificationError(QualificationError):
+    """A consumed reveal that terminated before scientific qualification."""
+
+    def __init__(
+        self,
+        reason: str,
+        message: str,
+        *,
+        runtime_identity_attestation: Mapping[str, Any] | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.reason = reason
+        self.runtime_identity_attestation = runtime_identity_attestation
 
 
 def _load(path: Path) -> dict[str, Any]:
@@ -224,20 +240,218 @@ def _extract_payload(response: Mapping[str, Any]) -> dict[str, Any]:
     return payload
 
 
-def _canonical_result() -> dict[str, Any]:
+def _validated_reveal_context() -> dict[str, dict[str, Any]]:
     plan = _load(PLAN_PATH)
     bank.validate_analysis_plan(plan, root=ROOT)
     protocol = _load(PROTOCOL_PATH)
-    execution.validate_system_protocol(protocol, root=ROOT)
     authorization = _load(AUTHORIZATION_PATH)
+    consumed = RESULT_PATH.is_file() or ATTEMPT_PATH.exists()
+    execution.validate_system_protocol(
+        protocol,
+        root=ROOT,
+        tested_system_commit=(
+            authorization.get("system_protocol_frozen_at_commit") if consumed else None
+        ),
+    )
     execution.validate_reveal_authorization(authorization, root=ROOT)
     commitment = _load(COMMITMENT_PATH)
     sealing.validate_public_commitment(commitment, root=ROOT)
+    return {
+        "plan": plan,
+        "protocol": protocol,
+        "authorization": authorization,
+        "commitment": commitment,
+    }
+
+
+def _attempt_record(context: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    plan = context["plan"]
+    protocol = context["protocol"]
+    authorization = context["authorization"]
+    commitment = context["commitment"]
+    record = {
+        "schema": "m115-reveal-attempt-v1",
+        "milestone": bank.MILESTONE,
+        "hypothesis": bank.HYPOTHESIS,
+        "attempt_index": 1,
+        "state": "started",
+        "irreversibly_consumed": True,
+        "analysis_plan_commitment_sha256": plan["plan_commitment_sha256"],
+        "system_protocol_commitment_sha256": protocol["protocol_commitment_sha256"],
+        "reveal_authorization_sha256": authorization["authorization_sha256"],
+        "bank_commitment_sha256": commitment["commitment_sha256"],
+        "ciphertext_sha256": commitment["ciphertext_sha256"],
+        "generation_response_sha256": commitment["generation_response_sha256"],
+        "plaintext_generation_response_written": False,
+        "carrier_content_printed": False,
+        "attempt_digest": "",
+    }
+    record["attempt_digest"] = digest(
+        {key: value for key, value in record.items() if key != "attempt_digest"}
+    )
+    return record
+
+
+def _claim_reveal_attempt(context: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:
+    """Atomically consume the only reveal slot before plaintext can enter process memory."""
+    record = _attempt_record(context)
+    payload = (canonical_json(record) + "\n").encode("ascii")
+    try:
+        descriptor = os.open(ATTEMPT_PATH, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    except FileExistsError as exc:
+        raise QualificationError("the single reveal attempt is already consumed") from exc
+    try:
+        with os.fdopen(descriptor, "wb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+    except BaseException:
+        # The path itself is the fail-closed claim. Even a torn write must prevent another reveal.
+        raise
+    return record
+
+
+def _atomic_write_json(path: Path, record: Mapping[str, Any]) -> None:
+    """Publish a complete canonical record with one atomic filesystem replacement."""
+    if path.exists():
+        raise QualificationError("%s already exists; overwrite is forbidden" % path.name)
+    temporary = path.with_name(".%s.%d.tmp" % (path.name, os.getpid()))
+    payload = (canonical_json(record) + "\n").encode("ascii")
+    try:
+        with temporary.open("xb") as stream:
+            stream.write(payload)
+            stream.flush()
+            os.fsync(stream.fileno())
+        if path.exists():
+            raise QualificationError("%s appeared while its atomic write was pending" % path.name)
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _finalize_attempt(attempt: Mapping[str, Any], result: Mapping[str, Any]) -> None:
+    terminal = dict(attempt)
+    terminal["state"] = "terminal_result_materialized"
+    terminal["terminal_failure"] = result.get("terminal_failure")
+    terminal["result_digest"] = result.get("result_digest")
+    terminal["attempt_digest"] = digest(
+        {key: value for key, value in terminal.items() if key != "attempt_digest"}
+    )
+    temporary = ATTEMPT_PATH.with_name(".%s.%d.tmp" % (ATTEMPT_PATH.name, os.getpid()))
+    try:
+        with temporary.open("xb") as stream:
+            stream.write((canonical_json(terminal) + "\n").encode("ascii"))
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, ATTEMPT_PATH)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
+def _terminal_reason(error: BaseException) -> str:
+    message = str(error)
+    if "not valid JSON" in message or "generation response is not JSON" in message:
+        return "invalid_json"
+    if "completion" in message or isinstance(error, scientific_bank.CarrierBankError):
+        return "output_schema_violation"
+    return "post_decryption_validation_failure"
+
+
+def _terminal_result(
+    context: Mapping[str, Mapping[str, Any]],
+    error: BaseException,
+    *,
+    runtime_identity_attestation: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    plan = context["plan"]
+    protocol = context["protocol"]
+    authorization = context["authorization"]
+    commitment = context["commitment"]
+    ledger = _delivery_ledger()
+    materialized = _materialized_attempt(ledger)
+    recorded_attestation = runtime_identity_attestation or materialized.get("identity_attestation") or {}
+    router = recorded_attestation.get("router_attestation") or {}
+    reason = error.reason if isinstance(error, TerminalQualificationError) else _terminal_reason(error)
+    result: dict[str, Any] = {
+        "schema": "m115-instrument-aborted-result-v1",
+        "milestone": bank.MILESTONE,
+        "hypothesis": bank.HYPOTHESIS,
+        "hypothesis_status": "untested",
+        "verdict": "instrument-aborted",
+        "terminal_failure": reason,
+        "observed_terminal_message": str(error),
+        "reveal_occurred": True,
+        "reveal_legitimate": True,
+        "canonical_attempts": 1,
+        "scientific_retry_permitted": False,
+        "qualification_started": False,
+        "carrier_payload_parsed": False,
+        "total_carriers": 0,
+        "qualifying_carriers": 0,
+        "distinct_qualifying_structures": 0,
+        "minimum_qualifying_carriers": int(plan["minimum_qualifying_carriers"]),
+        "minimum_distinct_qualifying_structures": int(
+            plan["minimum_distinct_qualifying_structures"]
+        ),
+        "minimum_bank_criteria_passed": False,
+        "insufficient_bank_verdict_not_applied_because_no_carrier_payload_existed": True,
+        "p1_p22": {"P%d" % index: "not_computed" for index in range(1, 23)},
+        "physical_delivery_attempts": len(ledger["attempts"]),
+        "bank_materializations": 1,
+        "analysis_plan_commitment_sha256": plan["plan_commitment_sha256"],
+        "system_protocol_commitment_sha256": protocol["protocol_commitment_sha256"],
+        "system_protocol_frozen_at_commit": authorization["system_protocol_frozen_at_commit"],
+        "authorization_commit": execution.commit_that_added(ROOT, execution.REVEAL_AUTHORIZATION_PATH),
+        "bank_commitment_sha256": commitment["commitment_sha256"],
+        "ciphertext_sha256": commitment["ciphertext_sha256"],
+        "generation_response_sha256": commitment["generation_response_sha256"],
+        "runtime_identity": {
+            "holds": recorded_attestation.get("holds") is True,
+            "identity_semantics": recorded_attestation.get("identity_version"),
+            "requested_model_alias": router.get("requested_model"),
+            "canonical_checkpoint": router.get("canonical_checkpoint"),
+            "provider": router.get("selected_provider"),
+        },
+        "custody": {
+            "carrier_content_printed": False,
+            "plaintext_generation_response_present": False,
+            "plaintext_generation_response_written_by_reveal": False,
+        },
+        "tested_system_unmodified_after_reveal": True,
+        "result_digest": "",
+    }
+    result["result_digest"] = digest(
+        {key: value for key, value in result.items() if key != "result_digest"}
+    )
+    return result
+
+
+def _canonical_result(
+    context: Mapping[str, Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    if context is None:
+        context = _validated_reveal_context()
+    plan = context["plan"]
+    protocol = context["protocol"]
+    authorization = context["authorization"]
+    commitment = context["commitment"]
 
     raw = _decrypt_generation_response()
-    response, attestation = _parse_committed_response(raw)
-    payload = _extract_payload(response)
-    acceptance = scientific_bank.validate_carrier_bank_payload(payload)
+    try:
+        response, attestation = _parse_committed_response(raw)
+    except QualificationError as exc:
+        raise TerminalQualificationError(_terminal_reason(exc), str(exc)) from exc
+    try:
+        payload = _extract_payload(response)
+        acceptance = scientific_bank.validate_carrier_bank_payload(payload)
+    except (QualificationError, scientific_bank.CarrierBankError) as exc:
+        raise TerminalQualificationError(
+            _terminal_reason(exc),
+            str(exc),
+            runtime_identity_attestation=attestation,
+        ) from exc
     carriers = acceptance["carriers"]
     result = run_bank(
         carriers,
@@ -319,13 +533,26 @@ def _print_summary(result: Mapping[str, Any], *, replay: bool) -> None:
 def execute() -> int:
     if RESULT_PATH.exists():
         raise QualificationError("RESULT.json already exists; the canonical attempt is single-use")
+    if ATTEMPT_PATH.exists():
+        raise QualificationError("the single reveal attempt is already consumed")
     state = execution.readiness(ROOT)
     if not state.get("ready_for_reveal"):
         raise QualificationError("the mechanical reveal gate is not ready: %s" % "; ".join(state["blockers"]))
-    result = _canonical_result()
-    temporary = RESULT_PATH.with_suffix(RESULT_PATH.suffix + ".tmp")
-    temporary.write_bytes((canonical_json(result) + "\n").encode("ascii"))
-    temporary.replace(RESULT_PATH)
+    context = _validated_reveal_context()
+    attempt = _claim_reveal_attempt(context)
+    try:
+        result = _canonical_result(context)
+    except TerminalQualificationError as exc:
+        terminal = _terminal_result(
+            context,
+            exc,
+            runtime_identity_attestation=exc.runtime_identity_attestation,
+        )
+        _atomic_write_json(RESULT_PATH, terminal)
+        _finalize_attempt(attempt, terminal)
+        raise QualificationError(str(exc)) from exc
+    _atomic_write_json(RESULT_PATH, result)
+    _finalize_attempt(attempt, result)
     _print_summary(result, replay=False)
     return 0
 
@@ -333,10 +560,17 @@ def execute() -> int:
 def replay() -> int:
     if not RESULT_PATH.is_file():
         raise QualificationError("RESULT.json does not exist; there is nothing to replay")
+    preserved = _load(RESULT_PATH)
+    if preserved.get("schema") == "m115-instrument-aborted-result-v1":
+        report = _load(ROOT / execution.CHECK_REPORT_PATH)
+        replay_record = report.get("independent_replay") or {}
+        if replay_record.get("matched_terminal_outcome") is True:
+            raise QualificationError(
+                "the terminal admission replay is already consumed and may not decrypt again"
+            )
     state = execution.readiness(ROOT)
     if state.get("phase") != "executed" or state.get("blockers"):
         raise QualificationError("the preserved reveal chain is not executable")
-    preserved = _load(RESULT_PATH)
     recomputed = _canonical_result()
     if canonical_bytes(preserved) != canonical_bytes(recomputed):
         raise QualificationError("independent replay differs from the preserved canonical result")
