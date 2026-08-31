@@ -15,13 +15,45 @@ import pytest
 from scripts import audit_m116_capacity as capacity
 
 
-def _rows() -> list[dict[str, int]]:
+def _consignments() -> list[dict]:
+    """A synthetic instance satisfying the census-dominating stress schema exactly."""
+
+    def assay(k: int) -> dict:
+        return {"element": "au%d" % (k % 9), "grade": 1000 + (k % 8999),
+                "method": "icp", "replicates": 1 + (k % 6), "certified": bool(k % 2)}
+
+    def sample(k: int) -> dict:
+        return {"label": "samp_%d" % (k % 1000), "depth": 1 + (k % 400),
+                "assays": [assay(k), assay(k + 1)], "retained": bool(k % 3)}
+
+    def parcel(k: int) -> dict:
+        return {"reference": "parc_%d" % (k % 1000), "tonnes": 1 + (k % 5000),
+                "grade_band": ["low", "medium", "high", "reject"][k % 4],
+                "samples": [sample(k), sample(k + 1)],
+                "seals": ["sl%d" % (k % 90), "sm%d" % (k % 90)]}
+
+    def leg(k: int) -> dict:
+        return {"carrier_mode": ["rail", "barge", "road", "conveyor"][k % 4],
+                "hours": 1 + (k % 240), "distance_km": 1 + (k % 9000),
+                "checkpoint": "chk_%d" % (k % 1000)}
+
     return [
         {
-            key: 10000000 + ((index * 17 + offset) % 80000000)
-            for offset, key in enumerate("abcdefgh")
+            "docket": "dock_%d" % index,
+            "assayer": "asy%d" % (index % 9),
+            "status": ["held", "cleared", "quarantined", "released"][index % 4],
+            "moisture": index % 101,
+            "priority": ["routine", "expedited", "critical"][index % 3],
+            "net_masses": [index * 7 % 50001, index * 11 % 50001],
+            "insured": bool(index % 2),
+            "tariff_codes": ["tc%d" % (index % 90), "td%d" % (index % 90)],
+            "parcels": [parcel(index), parcel(index + 1)],
+            "routing": {
+                "origin": "org_%d" % index, "destination": "dst_%d" % index,
+                "legs": [leg(index), leg(index + 1)], "bonded": bool(index % 2),
+            },
         }
-        for index in range(capacity.ROWS)
+        for index in range(capacity.CONSIGNMENTS)
     ]
 
 
@@ -59,7 +91,7 @@ def _materialized_observation(
 ) -> dict:
     if content is None:
         content = json.dumps(
-            {"rows": _rows()}, separators=(",", ":"), sort_keys=True
+            {"consignments": _consignments()}, separators=(",", ":"), sort_keys=True
         )
     message: dict = {"content": content}
     if reasoning_content is not None:
@@ -146,7 +178,7 @@ def test_stress_schema_contains_no_carrier_vocabulary():
 
 
 def test_strict_payload_accepts_exact_synthetic_shape():
-    content = json.dumps({"rows": _rows()}, separators=(",", ":"))
+    content = json.dumps({"consignments": _consignments()}, separators=(",", ":"))
     holds, digest = capacity._strict_payload_holds(content)
     assert holds is True
     assert isinstance(digest, str) and len(digest) == 64
@@ -155,30 +187,39 @@ def test_strict_payload_accepts_exact_synthetic_shape():
 @pytest.mark.parametrize(
     "mutation",
     [
-        "too_few_rows",
+        "too_few_consignments",
         "extra_key",
         "missing_key",
         "below_minimum",
         "above_maximum",
         "boolean",
+        "bad_enum",
+        "bad_pattern",
+        "shallow_nesting",
     ],
 )
 def test_strict_payload_rejects_shape_and_value_drift(mutation: str):
-    rows = _rows()
-    if mutation == "too_few_rows":
-        rows.pop()
+    items = _consignments()
+    if mutation == "too_few_consignments":
+        items.pop()
     elif mutation == "extra_key":
-        rows[0]["i"] = 10000000
+        items[0]["surplus"] = 1
     elif mutation == "missing_key":
-        del rows[0]["h"]
+        del items[0]["insured"]
     elif mutation == "below_minimum":
-        rows[0]["a"] = 9999999
+        items[0]["moisture"] = -1
     elif mutation == "above_maximum":
-        rows[0]["a"] = 100000000
+        items[0]["moisture"] = 101
     elif mutation == "boolean":
-        rows[0]["a"] = True  # type: ignore[assignment]
+        items[0]["moisture"] = True  # type: ignore[assignment]
+    elif mutation == "bad_enum":
+        items[0]["status"] = "not_a_status"
+    elif mutation == "bad_pattern":
+        items[0]["docket"] = "Bad Docket!"
+    elif mutation == "shallow_nesting":
+        items[0]["parcels"][0]["samples"][0]["assays"] = []
     holds, digest = capacity._strict_payload_holds(
-        json.dumps({"rows": rows}, separators=(",", ":"))
+        json.dumps({"consignments": items}, separators=(",", ":"))
     )
     assert holds is False
     assert digest is None
@@ -191,7 +232,7 @@ def test_capacity_gate_passes_only_above_old_ceiling():
     assert result["gate_holds"] is True
     assert result["checks"]["completion_exceeds_m115_ceiling"] is True
     assert result["checks"]["reasoning_response_has_zero_tokens"] is True
-    assert result["synthetic_rows"] == capacity.ROWS
+    assert result["synthetic_consignments"] == capacity.CONSIGNMENTS
     assert result["identity_attestation"]["holds"] is True
     assert result["observed_selected_checkpoint"] == capacity.CANONICAL_CHECKPOINT
 
@@ -476,8 +517,9 @@ def test_execute_allows_two_429s_then_one_materialization(
     persisted = report_path.read_text(encoding="utf-8")
     ledger = ledger_path.read_text(encoding="utf-8")
     for evidence in (persisted, ledger):
-        assert '"rows"' not in evidence
-        assert "10000000" not in evidence
+        assert '"consignments"' not in evidence
+        assert '"docket"' not in evidence
+        assert "dock_0" not in evidence
         assert '"raw_completion_persisted":false' in evidence
 
 
