@@ -75,43 +75,268 @@ The only intended model-visible/request-capacity changes are:
 No H61 freeze may silently add any other prompt, system message, tool, retrieval, memory, MCP,
 repository context, conversation history, fallback route, sampling change or output repair layer.
 
-## DEVELOPMENT-only capacity gate
+## Non-carrier operational telemetry
 
-M116 adds a pre-freeze instrument gate because M115's small route smoke was not a large-output stress
-test. The gate is not scientific evidence and may not use the qualifying input.
+M115 preserved no `finish_reason` and no token usage. Its runner computed both to decide whether
+model execution could be excluded and then discarded them, so its terminal record could not
+distinguish output-budget termination from prose in the completion from a fenced payload. H61
+therefore preserves, for every delivery attempt and under a strict allowlist, the operational
+metadata needed to tell those cases apart: HTTP status, `finish_reason`, `native_finish_reason`,
+prompt/completion/total tokens, reasoning tokens, response and content byte lengths, choice count,
+generation identifier, requested and served model and provider, canonical-checkpoint attestation,
+router direct/one-endpoint/one-attempt/no-fallback/no-pipeline evidence, model-execution evidence,
+a structural refusal indicator, and any structural response-format enforcement the endpoint
+reports.
 
-Before the H61 analysis plan or generator spec is frozen, a committed DEVELOPMENT harness must run a
-synthetic strict-schema request on the exact Alibaba/checkpoint route. Its acceptance rule is fixed
-before the first stress call.
+It preserves none of: carrier completion content, reasoning content, free-text provider or account
+errors, credentials, hidden prompt or context, or any recovered or transformed carrier data. Free
+text is refused even in allowlisted fields, because free text is where a provider puts an account
+identifier or a fragment of the prompt.
 
-The DEVELOPMENT delivery rule is also fixed before the first stress call: at most **three physical
-stress attempts** are permitted; attempt 2 or 3 is permitted only after an explicit HTTP 429 carrying
-no completion and no evidence that model execution occurred; each permitted retry waits **60
-seconds**. The first completion, ambiguous execution, non-429 response, malformed materialization, or
-other terminal response ends the DEVELOPMENT audit. A failed or exhausted DEVELOPMENT audit may not
-be redrawn under this candidate. These DEVELOPMENT attempts are not H61 qualifying invocations.
+**Read boundary.** The earlier claim that "only scalars cross, therefore reading is safe" is
+withdrawn: scalars leak. `completion_tokens`, `content_bytes` and `response_bytes` track bank size;
+`finish_reason` reports how the generator stopped; and the pre-seal admission record adds
+`records_emitted`, `carriers_enveloped`, `carriers_accepted`, `carriers_refused`,
+`distinct_structural_signatures` and a violation location. None is carrier content and every one is
+correlated with it.
 
-The capacity gate requires:
+What makes them safe to read is not their shape but the chronology below: the tested system is
+frozen **before** the qualifying generation, so at the moment any of these values first exists there
+is nothing left for a human to adapt. The scalar-only rule is retained as a second line -- it keeps
+carrier content out of the record -- but it is no longer the argument. The telemetry contract is
+frozen before H61 generation.
 
-- HTTP 200;
-- `finish_reason=stop`;
+## H61 chronology: the tested system freezes before the generation exists
+
+M115 froze the tested system after sealing and before reveal. That stopped adaptation to carrier
+content, which stayed sealed. It did not stop adaptation to what the completion implies, because
+the operational telemetry and pre-seal admission record are correlated with the bank and would have
+been readable while the system was still editable.
+
+H61 therefore moves the freeze ahead of the qualifying request. The order is:
+
+1. the DEVELOPMENT capacity/schema-capability gate passes;
+2. the H61 analysis plan is frozen;
+3. the H61 generator spec and canonical request-body commitment are frozen;
+4. the bank nonce and envelope commitments are frozen;
+5. **the entire tested system is frozen**;
+6. only then may the unique H61 qualifying generation occur;
+7. machine-only telemetry and admission execute;
+8. failed admission → terminal `instrument-aborted`, no redraw;
+9. successful admission → that exact completion is sealed immediately;
+10. reveal authorization is produced;
+11. one reveal;
+12. qualification, scoring and P1–P22 execute against the already-frozen tested system.
+
+The qualifying delivery runner **mechanically refuses** to send the request unless the tested-system
+freeze is **committed at HEAD** with the same bytes as on disk, validates against the working tree,
+and no completion-derived artifact is present. The gate accepts no caller-supplied freeze record:
+a runner that could build a freeze and hand it straight to the gate would satisfy every digest
+check by freezing moments before generating, which is exactly the chronology the freeze exists to
+establish. A file written just before the request is not a freeze; a commit is what makes "before"
+auditable by someone who was not in the room.
+
+No H61 scientific completion may exist while the tested system remains editable.
+
+**The freeze is re-proved at every later phase.** A freeze checked once, before generation, would
+leave every subsequent step free: the completion exists, and the admission classifier, the demand
+derivation, the evaluator, the scoring implementation and the checkers are all still editable. So
+admission, sealing, reveal and scoring each re-validate the committed freeze against the working
+tree, and each refuses if any bound member has moved. Editing the scorer after seeing the bank is
+the same contamination the freeze exists to prevent, arriving one step later.
+
+The consequence that carries the blindness argument: because no qualifying completion may exist
+before step 5, any artifact that exists before the freeze contains **zero** information derived from
+a scientific H61 completion. This is a strictly stronger boundary than M115's.
+
+## What the tested-system freeze binds
+
+The freeze must bind every artifact that can change how a future H61 completion is interpreted. The
+inventory is checked **mechanically**, not asserted in prose: the import closure of the
+interpretation roots — the qualification runners, the result checkers, the admission and
+classification machinery, the carrier host, the evaluator — is computed from source, and a freeze
+cannot be built while any module in that closure is unbound.
+
+Bound: the M107–M111 machinery under test; the carrier host and runtime; M113 demand derivation,
+qualification, scoring and result computation; the M113 devkit that supplies the measured
+qualification rate; M114 delivery semantics; M115 carrier-bank, delivery, identity, sealing,
+execution and route-selection modules; the M113/M115 qualification runners and result checkers; and
+the M116 admission, envelope, schema-validation, telemetry, classifier, materialization and
+chronology modules.
+
+Deliberately unbound, each for a stated reason: `scripts/audit_m116_capacity.py` and
+`metamorphosis/m116_stress_schema.py` run only in DEVELOPMENT, never see a carrier and produce no
+artifact the scientific path reads; `scripts/build_carrier_schema_census.py` derives the gate's
+thresholds from the frozen M115 schema and likewise never touches a completion.
+
+Generator transport is bound separately and deliberately, by the generator spec's canonical
+request-body digest, which fixes every byte that reaches the model. Transport can fail to deliver or
+misreport identity — the delivery rule and the identity attestation catch that — but it cannot
+change how an admitted completion is scored, which is what the tested-system freeze exists to fix.
+
+## Terminal failure classifier
+
+M115 diagnosed its terminal failure by matching the text of a Python exception, so `invalid_json`
+meant "the parser raised" and carried no further information. The frozen M115 plan enumerated
+`truncated_completion` as a separate class, and no code path in the repository could assign it.
+
+H61 replaces that with a deterministic classifier over the preserved structured evidence,
+independently replayable from the committed record. Its classes are, in precedence order:
+`post_validation_failure`, `ambiguous_transport`, `pre_generation_429`,
+`provider_or_route_failure`, `runtime_identity_failure`, `refused_completion`,
+`missing_completion`, `truncated_completion`, `invalid_json`, `output_schema_violation`, and the
+fail-closed `unclassified_terminal`.
+
+`truncated_completion` requires affirmative structured evidence -- a finish reason in the frozen
+output-budget set -- and is decided **before** parsing, so that the parse failure a truncated
+completion also produces cannot absorb it. A parse failure alone never concludes truncation. Where
+the evidence does not determine a class, the classifier falls closed into `unclassified_terminal`
+rather than choosing the nearest plausible story. `pre_generation_429` is the only class from which
+a physical retry may follow.
+
+## Machine-only pre-seal admission
+
+Strict carrier admission moves from after the reveal to after the single completion and before it
+is declared a valid bank and sealed.
+
+The validator is a **pure predicate**. It may parse the completion, validate exact JSON, validate
+the frozen carrier schema, compute the required digests, and produce allowlisted booleans, counts,
+digests and a schema *location*. It may not repair, normalize, strip markdown fences, extract JSON
+substrings, reformat, regenerate, ask the model to fix output, choose among outputs, alter carriers
+or expose carrier content to a human. A violation names where in the schema it happened, never what
+the value was.
+
+**The carrier envelope.** The frozen generator asks the model for `{"machines": [...]}`; the frozen
+carrier host expects a payload carrying `schema`, `bank_nonce` and `carriers`, each tagged with the
+opaque identifier derived from the nonce. A blind generator cannot produce those, because the nonce
+is the project's and its purpose is that the generator never sees it. Enveloping is therefore a
+project-side structural projection, not a repair: positional, total and content-independent,
+carrier *i* is machine *i*. It adds no information from the completion, drops none, reorders
+nothing, and cannot rescue a malformed machine -- the host still refuses it, and a refused body is
+counted rather than corrected.
+
+**Neutrality is proved per completion, not argued once.** Admission computes and checks the
+following invariants on every schema-valid completion, and a failure is fatal rather than silent:
+the number of enveloped carriers equals the number of machines; ordering is identical and
+positional; carrier *i* corresponds to machine *i*; stripping only the project-added `carrier_ref`
+reconstructs machine *i* exactly in canonical form; no generator field is added, removed, renamed,
+reordered or normalized; no machine is selected or dropped; `carrier_ref` is a pure function of the
+precommitted nonce and the position; changing the nonce changes only `bank_nonce` and the opaque
+identifiers and no carrier body; malformed generator output is never repaired; and schema validation
+occurs strictly before the envelope is constructed.
+
+**The bank nonce is fixed before scientific generation** and is bound by the tested-system freeze
+through its digest. It may not be chosen, re-drawn or adjusted after observing any completion,
+telemetry, admission record or classification. A nonce chosen afterwards would be a degree of
+freedom over the opaque identifiers, and there is no scientific reason to want one.
+
+## The one-shot rule
+
+**The first completion carrying evidence of model execution consumes the scientific generation
+opportunity.** Execution evidence is a completion, a token count, a finish reason or a generation
+identifier; absence of a completion is not absence of execution.
+
+If machine-only admission fails there is no second completion, no redraw, no repair, no bank
+materialization, and the milestone ends terminal `instrument-aborted`.
+
+If admission succeeds, that exact completion becomes the one admissible materialization; its raw
+and completion digests are bound, it is sealed immediately, human carrier access remains forbidden,
+and the existing tested-system-freeze-before-reveal protocol continues unchanged.
+
+**"First schema-valid completion wins" is forbidden.** There is no sequence of content-dependent
+model draws. Whether a completion parses is a function of its content: a long, varied,
+structurally rich carrier family is the one that exhausts an output budget or stresses a
+constrained decoder, and a short, repetitive one completes cleanly. Redrawing on a parse failure
+would filter the carrier population toward smaller and simpler families -- the axis that decides
+how hard the derived demands are -- and the bias would run toward the hypothesis, with no human
+ever looking at anything.
+
+A physical retry survives only under the already frozen conservative semantics: an explicit
+pre-generation HTTP 429 carrying no completion and no evidence that the model executed.
+
+## Pre-seal / post-reveal binding
+
+The post-seal machinery recomputes the same validation from the exact decrypted bytes and must
+prove equality with the pre-seal admission record. The bound fields are the validator and envelope
+versions, the admitted/parsed/schema-valid/payload-admissible predicates, the raw response digest,
+the carrier completion digest, the payload digest, the output-schema digest, the request-body
+digest, the bank-nonce digest, the record counts, and the failure stage.
+
+Any mismatch is terminal `post_validation_failure`, which outranks every observation about what
+the endpoint did. No plaintext carrier content enters the repository at any point.
+
+## DEVELOPMENT-only capacity and schema-capability gate
+
+M116 adds a pre-freeze instrument gate because M115's small route smoke was neither a large-output
+stress test nor a structurally demanding one. The gate is not scientific evidence and may not use
+the qualifying input.
+
+Before the H61 analysis plan or generator spec is frozen, a committed DEVELOPMENT harness must run
+a synthetic strict-schema request on the exact Alibaba/checkpoint route. Its acceptance rule is
+fixed before the first stress call, and it must establish **two separate properties**.
+
+**A. Capacity.** Unchanged from the merged candidate:
+
+- the candidate `max_tokens = 131072`;
+- reasoning explicitly disabled by the candidate control;
+- observed completion usage greater than **32,000 tokens**;
+- HTTP 200 and `finish_reason=stop`;
+- exact requested/served alias, canonical checkpoint and Alibaba provider;
+- direct router strategy, one selected endpoint, one router attempt, no fallback, no router
+  pipeline intervention;
 - strict JSON parses and satisfies the synthetic schema;
-- observed completion usage is **greater than 32,000 tokens**;
-- requested/served alias and selected canonical checkpoint are exact;
-- selected/served provider is Alibaba;
-- direct router strategy;
-- one selected endpoint;
-- one router attempt;
-- no fallback;
-- no router pipeline intervention;
-- the candidate `max_tokens=131072` is used;
-- reasoning is explicitly disabled by the candidate control;
-- no qualifying carrier input or carrier schema content is sent;
-- no raw synthetic completion is persisted.
+- positive reasoning telemetry showing zero reasoning tokens.
 
-A failed stress gate blocks H61 freeze. Its threshold or interpretation may not be weakened after the
-observation. A new design would require a later milestone or an explicitly reviewed pre-freeze
-candidate revision made without any H61 qualifying observation.
+**B. Structured-schema capability.** New. The original gate proved output volume with 1,536 flat
+rows of eight bounded integers: no regex constraint, no enumeration, and a third of the carrier
+schema's nesting depth. A route whose constrained decoder degrades on deep, pattern-constrained
+schemas would pass that gate and then fail the qualifying request in exactly M115's way.
+
+The synthetic stress schema must therefore be **at least as structurally demanding as the frozen
+M115 carrier output schema on every censused feature class**, while remaining synthetic content
+with no carrier semantics and no qualifying carrier input.
+
+The census is derived mechanically from the frozen predecessor schema, never hard-coded. It
+records maximum nesting depth, levels of arrays of objects, closed-object (`additionalProperties:
+false`) counts, `required` counts, `enum` counts, regex `pattern` counts, array cardinality bounds,
+string and integer constraints, composition constructs, declared types, and every other censused
+keyword the qualifying carrier schema relies upon. Only the derived census and the deterministic
+synthetic schema are committed.
+
+The gate fails, before any network call, if the synthetic stress schema is structurally weaker than
+the frozen carrier schema under the preregistered census rule, or if the committed census does not
+match a fresh derivation from the frozen schema.
+
+The real carrier schema and the H61 qualifying input are **not** sent as DEVELOPMENT traffic. A
+synthetic structurally dominating schema is used instead, and the harness screens the stress input
+and schema against the qualifying inputs and the carrier vocabulary before it will build a request
+body.
+
+**DEVELOPMENT delivery rule, unchanged.** At most **three physical stress attempts**; attempt 2 or
+3 only after an explicit HTTP 429 carrying no completion and no evidence that model execution
+occurred; each permitted retry waits **60 seconds**. The first completion, ambiguous execution,
+non-429 response, malformed materialization or other terminal response ends the DEVELOPMENT audit.
+No content-dependent DEVELOPMENT retry is permitted. A failed or exhausted DEVELOPMENT audit may not
+be redrawn under this candidate, and a failed stress gate blocks H61 freeze. Its thresholds or
+interpretation may not be weakened after the observation. These DEVELOPMENT attempts are not H61
+qualifying invocations, and no raw synthetic completion is persisted.
+
+## Research stopping rule
+
+**H61 is the last corrective replication of this carrier-blind proposition under this
+generator/instrument family.** The rule is frozen before H61.
+
+If H61 is again `instrument-aborted` after passing the preregistered DEVELOPMENT gate, H62 may not
+be created simply by adjusting another transport or generation parameter. Further work would
+require a materially new instrument class, a new scientific justification, and explicit review of
+whether continuing the proposition is worthwhile.
+
+If H61 genuinely tests the proposition and yields a positive, negative or mixed scientific result,
+that result is preserved and the corrective-replication sequence stops there.
+
+The rule exists because three corrective replications on one proposition is a garden of forking
+paths at the milestone level, however clean each individual freeze is. Each M113-M115 freeze was
+sound; the sequence is what needed a bound.
 
 ## Why the change is scientifically bounded
 
@@ -146,7 +371,8 @@ At candidate creation time:
 - M113/H58: closed, H58 untested;
 - M114/H59: closed, H59 untested;
 - M115/H60: closed, `instrument-aborted`, H60 untested after `invalid_json`;
-- M116/H61: candidate only;
+- M116/H61: candidate only, with the pre-freeze instrument hardening merged and unfrozen;
+- M116 DEVELOPMENT capacity/schema-capability gate: not yet run;
 - H61 scientific observations: none;
 - H61 carrier bank: absent;
 - H61 qualifying invocation: absent;

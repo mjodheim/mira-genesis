@@ -1475,6 +1475,120 @@ current_real_software_frontier:
     human_maintained_sealed_bank: EXTERNAL_BLOCKER
     current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
 
+  M115:
+    status: instrument_aborted
+    record_closed: true
+    hypothesis: H60
+    hypothesis_tested: false
+    replication_of: H59
+    replication_kind: corrective_instrumental
+    successor_to: M114
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    scientific_target_is_m113s_unchanged: true
+    # The predecessors' records are closed. M115 does not reinterpret, repair or complete them.
+    m113_untouched: true
+    m114_untouched: true
+    hypothesis_number_follows_the_m106_precedent: true
+
+    # What the route did, and it did it correctly.
+    requested_model_alias: deepseek/deepseek-v4-flash-0731
+    required_canonical_checkpoint: deepseek/deepseek-v4-flash-20260731
+    selected_provider: Alibaba
+    identity_semantics: m115-alias-canonical-checkpoint-v1
+    runtime_identity_holds: true
+    provider_selection_is_derived_not_hand_picked: true
+    physical_delivery_attempts: 1
+    bank_materializations: 1
+    http_status: 200
+    no_fallback: true
+
+    # Custody worked end to end. The failure is entirely downstream of it.
+    sealed_before_any_inspection: true
+    tested_system_frozen_before_reveal: true
+    tested_system_frozen_at_commit: 1a696e17a6ae176c837ce844891e29535d145803
+    reveal_occurred: true
+    reveal_legitimate: true
+    reveal_consumed_fail_closed: true
+    plaintext_generation_response_present_in_repository: false
+    carrier_content_printed: false
+    ciphertext_sha256: 68e8f660c499e8835378609068c09b35efbd387bd2be4764779fe88790729462
+    generation_response_sha256: f727a6cb1059aceb633613366e77471f7f8462b306343735d8b93cf7a57b3292
+
+    # Where it ended. Strict-JSON admission refused the completion before a carrier payload existed.
+    terminal_failure: invalid_json
+    qualification_started: false
+    carrier_payload_parsed: false
+    total_carriers: 0
+    qualifying_carriers: 0
+    distinct_qualifying_structures: 0
+    minimum_bank_criteria_passed: false
+    p1_to_p22_computed: 0
+    # The frozen cardinality rule says a payload the host refuses is not a carrier, so the
+    # pre-registered negative was not reached either. This is not an insufficient-bank result.
+    insufficient_bank_verdict_not_applied_because_no_carrier_payload_existed: true
+    scientific_retry_permitted: false
+    independent_replay: matched
+    result_digest: 441e1206686efcea2630aa16bb0179bff09160a3254ad8e7e6836a627dcd9b94
+
+    # What the record cannot say, and why. Recorded here so no successor reads more into it.
+    terminal_class_was_derived_from_an_exception_message: true
+    finish_reason_was_not_preserved: true
+    token_usage_was_not_preserved: true
+    truncation_cannot_be_established_or_excluded_from_this_record: true
+
+    g1_to_g10_advance: false
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: strict_json_admission_of_a_blindly_generated_carrier_bank
+
+  M116:
+    status: candidate_pre_freeze
+    record_closed: false
+    hypothesis: H61
+    hypothesis_tested: false
+    replication_of: H60
+    replication_kind: corrective_instrumental
+    successor_to: M115
+    scientific_proposition_is_h60s_unchanged: true
+    hypothesis_number_follows_the_m106_precedent: true
+    m115_untouched: true
+    m115_outcome: instrument_aborted_at_strict_json_admission
+    m115_h60_tested: false
+    m115_is_not_retroactively_repaired_by_this_milestone: true
+
+    # Nothing scientific has happened yet.
+    analysis_plan_frozen: false
+    generator_spec_frozen: false
+    qualifying_input_sent: false
+    bank_exists: false
+    development_capacity_gate_run: false
+    openrouter_calls_made: 0
+
+    # The prospective instrument delta, all of it pre-freeze.
+    max_tokens_candidate: 131072
+    reasoning_control_candidate: explicitly_disabled
+    non_carrier_telemetry_preserved: true
+    telemetry_read_barrier: humans_may_read_operational_metadata_never_carrier_content
+    terminal_classifier_is_deterministic_over_structured_evidence: true
+    truncation_requires_affirmative_finish_reason_evidence: true
+    unclassified_terminal_is_the_fail_closed_class: true
+    machine_only_preseal_admission: true
+    admission_validator_is_a_pure_predicate: true
+    admission_may_repair_normalize_or_select: false
+    carrier_envelope_is_positional_and_content_independent: true
+    bank_nonce_committed_before_generation: true
+    preseal_and_postreveal_validation_must_bind: true
+    first_executed_completion_consumes_the_opportunity: true
+    first_schema_valid_completion_wins: false
+    content_dependent_redraw_permitted: false
+    development_stress_schema_dominates_frozen_carrier_census: true
+    census_derived_from: experiments/M115/OUTPUT_SCHEMA.json
+    development_retry_semantics_unchanged_from_merged_candidate: true
+    stopping_rule: h61_is_the_last_corrective_replication_under_this_instrument_family
+
+    g1_to_g10_advance: false
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: no_blind_carrier_bank_has_yet_been_admitted_by_the_frozen_host
+
 previous_research_question: >-
   Can a continuous lineage prove that its own accepted transformation language is
   insufficient for a task, synthesize a new reusable primitive only after observing that

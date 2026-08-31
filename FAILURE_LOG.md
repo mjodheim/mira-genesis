@@ -1806,3 +1806,68 @@ instructions, and the first was implemented without the second.
 
 **What stands.** M113 is untouched and remains closed; H58 remains untested. M114's plan and spec
 remain frozen. No generality gate moved.
+
+## M115 named a terminal class its instrument could never assign, and threw away the evidence that would have decided it
+
+Recorded 31 August 2026, after M115 closed and before any M116 freeze, bank or qualifying request
+exists.
+
+M115 ended `instrument-aborted` with H60 untested: one legitimately revealed completion failed
+strict-JSON admission, and the record says `terminal_failure: invalid_json`. **That observation is
+correct and is not being revised here.** What follows is a defect in the machinery that produced the
+label, found by reading the frozen source rather than by reopening anything.
+
+**The taxonomy was wider than the classifier.** The frozen M115 analysis plan lists nine classes
+that are never retried, and two of them are distinct: `invalid_json` and `truncated_completion`.
+Across the whole repository `truncated_completion` occurs exactly once — in
+`metamorphosis/m114_carrier_bank.py`, inside the `NEVER_RETRIED` tuple. No code path can assign it.
+Terminal classification happens in `scripts/run_m115_qualification.py` and matches the *text of a
+Python exception*: a message containing "not valid JSON" becomes `invalid_json`, and everything else
+falls to `output_schema_violation` or `post_decryption_validation_failure`.
+
+A truncated completion is an unparseable string. It would have been recorded as `invalid_json`. So
+would a completion carrying prose before its JSON, or a fenced payload, or a completion the provider
+emitted without grammar constraint. The label carries no information beyond "the parser raised", and
+the class the plan defined for the truncation case was decorative.
+
+**The discriminating evidence existed and was discarded.** `_evidence()` in
+`scripts/run_m115_generation.py` reads `choices[0].finish_reason` and `usage.completion_tokens` in
+order to decide whether model execution can be excluded — and keeps neither. No M115 artifact
+contains either field. Both are non-carrier operational metadata: recording them would have leaked
+no byte of carrier content and touched no part of the blindness contract. Their absence is the
+entire reason M115 is terminal rather than diagnostic.
+
+**The historical limitation, stated exactly.** Truncation can be neither established nor excluded
+from the M115 record. This entry does not claim M115 truncated, and no successor may read that into
+it. The sealed bank is not reopened, the observed cause remains `invalid_json`, and H60 remains
+untested.
+
+**A second defect, in a path no milestone ever reached.** The frozen generator asks the model for
+`{"machines": [...]}` under an output schema that closes the object to that one key. The frozen
+carrier host expects a payload carrying `schema`, `bank_nonce` and `carriers`, each tagged with the
+opaque identifier derived from the nonce — values a blind generator cannot produce, because the
+nonce is the project's and exists precisely so the generator never sees it. Nothing in the M115 path
+joined the two. A complete, valid, schema-conformant carrier completion would have been refused at
+`validate_carrier_bank_payload` regardless of the output budget. M113 never got a bank, M114 aborted
+on rate limits and M115 aborted at parsing, so the wiring between what the model is asked to emit
+and what the host demands had never once been exercised.
+
+**The prospective M116 correction.** All of it applies to a future H61 attempt and none of it to
+M115. The delivery ledger preserves `finish_reason`, `native_finish_reason`, token usage, reasoning
+tokens and byte lengths under a strict allowlist that refuses free text, behind a read barrier that
+admits scalars only. A deterministic classifier replaces exception-message matching: every class
+requires affirmative structured evidence, `truncated_completion` requires a finish reason in the
+frozen output-budget set and is decided *before* parsing so the parse failure it also causes cannot
+absorb it, and anything undetermined falls closed into `unclassified_terminal`. Admission moves
+before sealing as a pure predicate that may not repair, normalize, strip fences or select. The
+envelope that joins generator to host is positional, total and content-independent, under a nonce
+committed before generation, and it cannot rescue a malformed machine.
+
+**The general lesson.** A terminal taxonomy is a claim about what the instrument can tell apart, not
+a list of things that could go wrong. A class no code path can assign is worse than no class at all,
+because the plan reads as though the distinction were being made. The check is mechanical and cheap:
+a test that asserts every declared class is reachable. M116 now carries one.
+
+**What stands.** M113, M114 and M115 are untouched and remain closed. H58, H59 and H60 remain
+untested. M115 remains `instrument-aborted` with `invalid_json` as its observed terminal failure. No
+generality gate moved, and no H61 freeze, bank or qualifying invocation exists.

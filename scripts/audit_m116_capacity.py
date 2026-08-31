@@ -10,7 +10,8 @@ The acceptance rule is intentionally committed before the first network call:
 * direct routing, one selected endpoint, one router attempt, no fallback/pipeline intervention;
 * HTTP 200 and finish_reason=stop;
 * candidate M116 output controls: max_tokens=131072 and reasoning effort=none;
-* a synthetic strict-schema payload with exactly 1536 rows and eight bounded integer fields;
+* a synthetic strict-schema payload whose schema is mechanically proved at least as structurally
+  demanding as the frozen M115 carrier output schema on every censused feature class;
 * strict parsing of that payload;
 * observed completion_tokens > 32000, proving completion beyond M115's old ceiling;
 * positive reasoning telemetry showing zero reasoning tokens.
@@ -48,6 +49,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from metamorphosis import m115_identity as model_identity  # noqa: E402
+from metamorphosis import m116_schema as schema_tools
+from metamorphosis import m116_stress_schema as stress
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
 
 MODEL = "deepseek/deepseek-v4-flash-0731"
@@ -65,39 +68,18 @@ LOCK_PATH = (
 )
 MAX_TOKENS = 131072
 OLD_M115_MAX_TOKENS = 32000
-ROWS = 1536
+CONSIGNMENTS = stress.CONSIGNMENTS
 RETRY_WAIT_SECONDS = 60
 MAX_PHYSICAL_ATTEMPTS = 3
 LEDGER_SCHEMA = "m116-capacity-stress-development-ledger-v1"
 
-STRESS_INPUT = (
-    "Return a JSON object with exactly one key named rows. Its value must contain exactly 1536 "
-    "objects. Every object must contain exactly the eight integer keys a,b,c,d,e,f,g,h. Every "
-    "integer must be between 10000000 and 99999999 inclusive. No prose or other keys."
-)
+# The frozen carrier schema whose structural demands the stress schema must match or exceed. It is
+# read, censused and never sent: DEVELOPMENT traffic carries the synthetic schema only.
+FROZEN_CARRIER_SCHEMA_PATH = ROOT / "experiments" / "M115" / "OUTPUT_SCHEMA.json"
+CENSUS_PATH = ROOT / "experiments" / "M116" / "CARRIER_SCHEMA_CENSUS.json"
 
-_ROW_PROPERTIES = {
-    key: {"type": "integer", "minimum": 10000000, "maximum": 99999999}
-    for key in "abcdefgh"
-}
-STRESS_SCHEMA: dict[str, Any] = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "rows": {
-            "type": "array",
-            "minItems": ROWS,
-            "maxItems": ROWS,
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": _ROW_PROPERTIES,
-                "required": list("abcdefgh"),
-            },
-        }
-    },
-    "required": ["rows"],
-}
+STRESS_INPUT = stress.STRESS_PROMPT
+STRESS_SCHEMA: dict[str, Any] = stress.build_stress_schema()
 
 REQUEST_BODY: dict[str, Any] = {
     "model": MODEL,
@@ -111,7 +93,7 @@ REQUEST_BODY: dict[str, Any] = {
     "response_format": {
         "type": "json_schema",
         "json_schema": {
-            "name": "m116_capacity_rows",
+            "name": stress.STRESS_SCHEMA_NAME,
             "strict": True,
             "schema": STRESS_SCHEMA,
         },
@@ -165,8 +147,43 @@ def _assert_nonqualifying() -> None:
             raise CapacityAuditError("the M116 stress input overlaps a qualifying carrier input")
 
 
+def frozen_carrier_census() -> dict[str, Any]:
+    """The census of the frozen M115 carrier output schema, recomputed from the schema itself."""
+    try:
+        schema = json.loads(FROZEN_CARRIER_SCHEMA_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise CapacityAuditError("cannot read the frozen carrier output schema: %s" % exc)
+    return schema_tools.census(schema)
+
+
+def _assert_structurally_dominating() -> dict[str, Any]:
+    """The stress schema must be at least as demanding as the frozen carrier schema.
+
+    M116's first capacity gate proved only that the route can emit volume. A route whose
+    constrained decoder degrades on deep, pattern-constrained schemas would have passed it and
+    then failed the qualifying request exactly as M115 did. The thresholds here are not chosen:
+    they are the frozen carrier schema's own census, recomputed on every run.
+    """
+    frozen = frozen_carrier_census()
+    candidate = schema_tools.census(STRESS_SCHEMA)
+    holds, failures = schema_tools.census_dominates(candidate, frozen)
+    if not holds:
+        raise CapacityAuditError(
+            "the M116 stress schema is structurally weaker than the frozen carrier schema: %s"
+            % "; ".join(failures)
+        )
+    if CENSUS_PATH.is_file():
+        recorded = json.loads(CENSUS_PATH.read_text(encoding="utf-8"))
+        if recorded.get("frozen_carrier_census") != frozen:
+            raise CapacityAuditError(
+                "the committed carrier census does not match the frozen carrier schema"
+            )
+    return {"frozen": frozen, "candidate": candidate}
+
+
 def request_body_digest() -> str:
     _assert_nonqualifying()
+    _assert_structurally_dominating()
     return sha256_hex(canonical_bytes(REQUEST_BODY))
 
 
@@ -215,6 +232,8 @@ def _transport_failure_observation(
 
 def _request(*, timeout: int = 1200) -> dict[str, Any]:
     # Missing owner credential is checked before a physical attempt is reserved by execute().
+    # Dominance is re-asserted here so that no caller can reach the endpoint around `execute`.
+    _assert_structurally_dominating()
     secret = _secret()
     payload = canonical_bytes(REQUEST_BODY)
     headers = {
@@ -303,22 +322,11 @@ def _strict_payload_holds(content: Any) -> tuple[bool, str | None]:
         value = json.loads(content)
     except ValueError:
         return False, None
-    if not isinstance(value, dict) or set(value) != {"rows"}:
+    if not isinstance(value, dict):
         return False, None
-    rows = value.get("rows")
-    if not isinstance(rows, list) or len(rows) != ROWS:
+    holds, _location, _keyword = schema_tools.instance_is_valid(value, STRESS_SCHEMA)
+    if not holds:
         return False, None
-    expected = set("abcdefgh")
-    for row in rows:
-        if not isinstance(row, dict) or set(row) != expected:
-            return False, None
-        for number in row.values():
-            if (
-                not isinstance(number, int)
-                or isinstance(number, bool)
-                or not 10000000 <= number <= 99999999
-            ):
-                return False, None
     return True, sha256_hex(canonical_bytes(value))
 
 
@@ -405,10 +413,11 @@ def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]
         "completion_tokens": completion_tokens,
         "reasoning_tokens": reasoning_tokens,
         "observed_selected_checkpoint": observed_checkpoint,
-        "synthetic_rows": ROWS if strict_output else 0,
+        "synthetic_consignments": CONSIGNMENTS if strict_output else 0,
         "synthetic_payload_sha256": payload_digest,
         "identity_attestation": identity,
         "checks": checks,
+        "schema_census_dominates_frozen_carrier_schema": True,
         "gate_holds": gate_holds,
         "raw_completion_persisted": False,
     }
@@ -801,6 +810,12 @@ def _exhausted_429_terminal(attempts: list[Mapping[str, Any]]) -> dict[str, Any]
 
 def execute() -> dict[str, Any]:
     _assert_nonqualifying()
+    # The structural gate must guard the request, not merely the record written afterwards. It
+    # used to run only inside `request_body_digest`, which is first called when an observation is
+    # built -- after the network call had already consumed an attempt. A stress schema weaker than
+    # the frozen carrier schema would have been sent, and the gate would have raised too late to
+    # stop it.
+    _assert_structurally_dominating()
     # Credential absence is known before any physical slot is reserved.
     _secret()
 

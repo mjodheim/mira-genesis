@@ -316,6 +316,56 @@ Mira Genesis is a bounded, auditable research program in adaptive software linea
   registry, the **probe primitive** and the budget remain authored, the population is selected for
   ambiguity by design, and **G1-G10 do not advance**.
 
+- **M116/H61 is a pre-freeze candidate. No plan is frozen, no bank exists, no qualifying input has
+  been sent, and the DEVELOPMENT gate has not been run.** H61 states the **same scientific
+  proposition as H60**, unchanged; the number is new because hypothesis identity here is bound to a
+  frozen instrument, and a label that survived an instrument change would make M115's record read
+  as ambiguous in retrospect. The prospective delta is entirely instrumental: `max_tokens` 32,000 →
+  131,072, reasoning explicitly disabled, non-carrier operational telemetry preserved under an
+  allowlist with a read barrier, a deterministic terminal classifier over structured evidence, and
+  machine-only admission moved to **before** sealing.
+  **The one-shot rule is the centre of it.** The first completion carrying evidence of model
+  execution consumes the scientific generation opportunity. A failed admission ends the milestone
+  `instrument-aborted` with no second completion, no redraw and no repair. *"First schema-valid
+  completion wins" is forbidden*: whether a completion parses is a function of its content, so
+  redrawing on a parse failure would filter the carrier population toward smaller and simpler
+  families -- the axis that decides how hard the derived demands are -- and the bias would run
+  toward the hypothesis with no human ever looking at anything. A physical retry survives only for
+  an explicit pre-generation 429 carrying no completion and no execution evidence.
+  **The DEVELOPMENT gate now proves two properties, not one.** Capacity is unchanged: more than
+  32,000 completion tokens at `finish_reason=stop` on the exact route. Structured-schema capability
+  is new, because the merged gate proved volume with 1,536 flat rows of eight integers -- no regex
+  constraint, no enumeration, a third of the carrier schema's nesting depth -- and a route whose
+  constrained decoder degrades on deep, pattern-constrained schemas would have passed it and then
+  failed the qualifying request in M115's way. The synthetic stress schema must dominate a census
+  **derived mechanically from the frozen M115 output schema**, never hard-coded, and the audit
+  recomputes and compares it before it will build a request body.
+  **A stopping rule is frozen with it.** H61 is the last corrective replication of this proposition
+  under this generator/instrument family. Three corrective replications on one proposition is a
+  garden of forking paths at the milestone level, however clean each individual freeze is.
+  No G1-G10 gate moves, and a successful instrument only *permits* H61 to be tested.
+
+- **M115/H60 is `instrument-aborted`. One request, one materialized completion, one legitimate
+  reveal, zero carriers, and H60 untested.** The frozen route did what it was asked: HTTP 200, the
+  requested alias `deepseek/deepseek-v4-flash-0731` resolved to the required canonical checkpoint
+  `deepseek/deepseek-v4-flash-20260731` on Alibaba, direct routing, one selected endpoint of thirty,
+  one router attempt, no fallback. The response was sealed seven seconds after the attempt finished
+  and before anything read it, the tested system was frozen at `1a696e1` before reveal was
+  authorized, and the single reveal decrypted in process memory and wrote no plaintext.
+  **Then strict-JSON admission refused the completion**, before carrier-bank schema validation and
+  before qualification began. No carrier payload existed for the frozen host, so the pre-registered
+  negative was not reached either: the frozen cardinality rule says a payload the host refuses is
+  not a carrier, and the insufficient-bank verdict applies only after a valid payload enters the
+  qualification machinery. P1-P22 are all `not_computed`, the independent replay matched, and
+  `invalid_json` is in the plan's `never_retried` set. Nothing was repaired, selected, curated,
+  regenerated or retried.
+  **What the record cannot say.** M115's terminal class was derived from the text of a Python
+  exception, and neither `finish_reason` nor token usage was preserved. `invalid_json` therefore
+  means "the parser raised" and nothing more -- a truncated completion, a prose-prefixed completion
+  and a fenced completion would each have produced it. Truncation can be neither established nor
+  excluded from this record, and no successor may read more into it. M116 corrects the instrument
+  prospectively; it does not reinterpret M115.
+
 - **M114/H59 is `instrument-aborted`. Three delivery attempts, three HTTP 429s, zero banks, and
   H59 untested.** M113 is closed: it froze an identity, made one
   physical request, received HTTP 429, materialized no bank and left H58 untested. That record is

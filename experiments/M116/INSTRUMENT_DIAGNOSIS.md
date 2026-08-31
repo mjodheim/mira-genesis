@@ -62,6 +62,35 @@ The stress request must:
 If that stress gate fails, M116 must stop before freeze. The gate may not be weakened after observing
 its result, and the H61 qualifying input may not be sent as a DEVELOPMENT probe.
 
+## Two further defects the diagnosis missed, found before freeze
+
+The capacity correction above is necessary and not sufficient. Reading the frozen apparatus rather
+than the observation turned up two defects that no M113-M115 milestone could have surfaced, because
+none of them ever reached carrier admission with a payload.
+
+**The terminal taxonomy was wider than the classifier's discriminating power.** M115 classified its
+terminal failure by matching the text of a Python exception. The frozen plan's `never_retried` list
+names `truncated_completion` and `invalid_json` as distinct classes; `truncated_completion` occurs
+exactly once in the repository, inside a tuple, and no code path can assign it. A truncated
+completion is an unparseable string, so it would have been recorded as `invalid_json`. The label
+therefore carries no information beyond "the parser raised" -- which is why this document could not
+and still cannot say whether M115 truncated. The discriminating evidence existed at delivery time:
+the runner read `finish_reason` and `usage.completion_tokens`, used them to decide whether model
+execution could be excluded, and kept neither. Both are non-carrier operational metadata whose
+preservation would have leaked nothing.
+
+**The admission path did not connect to the generator.** The frozen generator asks the model for
+`{"machines": [...]}` under an output schema that closes the object to that one key. The frozen
+carrier host expects a payload carrying `schema`, `bank_nonce` and `carriers`, each tagged with the
+opaque identifier derived from the nonce -- values a blind generator cannot produce, because the
+nonce is the project's and exists so the generator never sees it. Nothing in the M115 path joined
+the two. A complete, valid, schema-conformant carrier completion would have been refused at
+`validate_carrier_bank_payload` regardless of the token budget. M116 corrects this with a
+positional, total, content-independent envelope under a nonce committed before generation.
+
+Neither finding revises M115's observed cause, and neither is an inference from its sealed
+completion. Both are properties of the frozen source, readable without opening anything.
+
 ## Why this does not repair M115
 
 The new capacity controls and stress gate apply prospectively to M116 only. M115 remains terminal
