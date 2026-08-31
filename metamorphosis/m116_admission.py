@@ -111,6 +111,73 @@ def envelope_payload(completion: Mapping[str, Any], bank_nonce: str) -> dict[str
     }
 
 
+NEUTRALITY_SCHEMA = "m116-envelope-neutrality-proof-v1"
+
+
+def envelope_neutrality(completion: Mapping[str, Any], bank_nonce: str) -> dict[str, Any]:
+    """Prove, for this completion, that the envelope carried no information of its own.
+
+    The envelope is the one place the project touches a completion, so its neutrality is made
+    mechanically auditable rather than argued. Every clause below is checked against the actual
+    projection, not asserted about it.
+    """
+    machines = completion.get("machines")
+    if not isinstance(machines, list):
+        raise AdmissionError("the completion carries no machines array to envelope")
+    payload = envelope_payload(completion, bank_nonce)
+    carriers = payload["carriers"]
+
+    # Stripping only the project-added key must reconstruct the generator's machine exactly, in
+    # canonical form, in the same position.
+    reconstructed_exactly = len(carriers) == len(machines)
+    ordering_preserved = True
+    for index, machine in enumerate(machines):
+        if index >= len(carriers):
+            reconstructed_exactly = False
+            break
+        stripped = {k: v for k, v in carriers[index].items() if k != "carrier_ref"}
+        original = dict(machine) if isinstance(machine, Mapping) else None
+        if original is not None:
+            original.pop("carrier_ref", None)
+        if original is None or canonical_bytes(stripped) != canonical_bytes(original):
+            reconstructed_exactly = False
+        if carriers[index].get("carrier_ref") != opaque_domain_id(bank_nonce, index):
+            ordering_preserved = False
+
+    # A different nonce must move the bank nonce and the opaque identifiers, and nothing else.
+    other = "b" * 64 if bank_nonce != "b" * 64 else "c" * 64
+    alternate = envelope_payload(completion, other)
+    bodies_unchanged = all(
+        canonical_bytes({k: v for k, v in left.items() if k != "carrier_ref"})
+        == canonical_bytes({k: v for k, v in right.items() if k != "carrier_ref"})
+        for left, right in zip(carriers, alternate["carriers"])
+    )
+    refs_are_pure_of_nonce_and_position = all(
+        entry.get("carrier_ref") == opaque_domain_id(other, index)
+        for index, entry in enumerate(alternate["carriers"])
+    )
+
+    return {
+        "schema": NEUTRALITY_SCHEMA,
+        "envelope_version": ENVELOPE_VERSION,
+        "machines_in": len(machines),
+        "carriers_out": len(carriers),
+        "cardinality_preserved": len(carriers) == len(machines),
+        "ordering_preserved": ordering_preserved,
+        "bodies_reconstruct_exactly": reconstructed_exactly,
+        "no_machine_selected_or_dropped": len(carriers) == len(machines),
+        "nonce_changes_only_refs_and_nonce": bodies_unchanged,
+        "carrier_ref_is_pure_of_nonce_and_position": refs_are_pure_of_nonce_and_position,
+        "neutral": bool(
+            len(carriers) == len(machines)
+            and ordering_preserved
+            and reconstructed_exactly
+            and bodies_unchanged
+            and refs_are_pure_of_nonce_and_position
+        ),
+    }
+
+
 def _blank(**overrides: Any) -> dict[str, Any]:
     record = {name: None for name in ADMISSION_FIELDS}
     record.update({
@@ -197,7 +264,13 @@ def evaluate(
         return _blank(parsed=True, failure_stage="output_schema_violation",
                       violation_location=location, violation_keyword=keyword, **base)
 
+    # Schema validation has already returned above on failure, so the envelope is only ever
+    # constructed from a completion the frozen carrier schema accepted. The order is load-bearing:
+    # enveloping first would let the projection touch output the schema would have refused.
     payload = envelope_payload(completion, bank_nonce)
+    neutrality = envelope_neutrality(completion, bank_nonce)
+    if not neutrality["neutral"]:
+        raise PurityError("the carrier envelope was not information-preserving for this completion")
     base["payload_sha256"] = sha256_hex(canonical_bytes(payload))
     records = len(completion.get("machines") or ())
 
@@ -267,7 +340,9 @@ __all__ = [
     "VALIDATOR_VERSION",
     "AdmissionError",
     "PurityError",
+    "NEUTRALITY_SCHEMA",
     "binding_matches",
+    "envelope_neutrality",
     "envelope_payload",
     "evaluate",
     "validate_record",

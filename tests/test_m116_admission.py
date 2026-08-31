@@ -14,7 +14,7 @@ import pytest
 from metamorphosis import m116_admission as admission
 from metamorphosis import m116_materialization as materialization
 from metamorphosis import m116_telemetry as telemetry
-from metamorphosis.blind_bank_protocol import sha256_hex
+from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
 
 ROOT = Path(__file__).resolve().parents[1]
 NONCE = "a" * 64
@@ -295,3 +295,120 @@ def test_the_validator_digests_the_original_bytes_not_a_trimmed_copy():
     assert record["carrier_completion_sha256"] != sha256_hex(
         padded.strip().encode("utf-8")
     )
+
+
+# ---------------------------------------------------------------------------------------------
+# Envelope neutrality, made mechanically auditable
+#
+# The envelope is the one place the project touches a completion. Its neutrality is therefore
+# proved per completion rather than argued once, and these tests attack each clause of the proof.
+# ---------------------------------------------------------------------------------------------
+
+def _machines(count: int) -> list[dict]:
+    return [_machine(i) for i in range(count)]
+
+
+@pytest.mark.parametrize("count", [1, 2, 7, 24, 50])
+def test_the_envelope_is_information_preserving_at_every_size(count: int):
+    proof = admission.envelope_neutrality({"machines": _machines(count)}, NONCE)
+    assert proof["neutral"] is True
+    assert proof["machines_in"] == proof["carriers_out"] == count
+    assert proof["cardinality_preserved"] is True
+    assert proof["ordering_preserved"] is True
+    assert proof["bodies_reconstruct_exactly"] is True
+    assert proof["no_machine_selected_or_dropped"] is True
+
+
+def test_stripping_only_carrier_ref_reconstructs_each_machine_canonically():
+    machines = _machines(6)
+    payload = admission.envelope_payload({"machines": machines}, NONCE)
+    for index, machine in enumerate(machines):
+        stripped = {k: v for k, v in payload["carriers"][index].items() if k != "carrier_ref"}
+        assert canonical_bytes(stripped) == canonical_bytes(machine)
+
+
+def test_ordering_is_positional_not_content_sorted():
+    """Carrier i is machine i. A content-ordered envelope would be a selection channel."""
+    machines = _machines(8)
+    machines.reverse()
+    payload = admission.envelope_payload({"machines": machines}, NONCE)
+    for index, machine in enumerate(machines):
+        stripped = {k: v for k, v in payload["carriers"][index].items() if k != "carrier_ref"}
+        assert canonical_bytes(stripped) == canonical_bytes(machine)
+
+
+def test_no_generator_field_is_added_removed_renamed_or_reordered():
+    machines = _machines(4)
+    payload = admission.envelope_payload({"machines": machines}, NONCE)
+    for index, machine in enumerate(machines):
+        entry = payload["carriers"][index]
+        assert set(entry) == set(machine) | {"carrier_ref"}
+        # Canonical form is order-insensitive, so compare the declared key order too.
+        assert [k for k in entry if k != "carrier_ref"] == list(machine)
+
+
+def test_changing_the_nonce_moves_only_the_nonce_and_the_identifiers():
+    machines = _machines(5)
+    first = admission.envelope_payload({"machines": machines}, "a" * 64)
+    second = admission.envelope_payload({"machines": machines}, "b" * 64)
+    assert first["bank_nonce"] != second["bank_nonce"]
+    for left, right in zip(first["carriers"], second["carriers"]):
+        assert left["carrier_ref"] != right["carrier_ref"]
+        assert canonical_bytes({k: v for k, v in left.items() if k != "carrier_ref"}) == \
+               canonical_bytes({k: v for k, v in right.items() if k != "carrier_ref"})
+    proof = admission.envelope_neutrality({"machines": machines}, "a" * 64)
+    assert proof["nonce_changes_only_refs_and_nonce"] is True
+
+
+def test_carrier_ref_is_a_pure_function_of_nonce_and_position():
+    from metamorphosis.blind_bank_protocol import opaque_domain_id
+
+    machines = _machines(5)
+    payload = admission.envelope_payload({"machines": machines}, NONCE)
+    for index, entry in enumerate(payload["carriers"]):
+        assert entry["carrier_ref"] == opaque_domain_id(NONCE, index)
+    # Identical positions under identical nonces give identical identifiers regardless of content.
+    other = admission.envelope_payload({"machines": _machines(5)[::-1]}, NONCE)
+    assert [e["carrier_ref"] for e in payload["carriers"]] == \
+           [e["carrier_ref"] for e in other["carriers"]]
+
+
+def test_the_envelope_never_repairs_malformed_generator_output():
+    machines = _machines(4)
+    machines[2] = {"surface": {}}          # structurally broken
+    machines[3] = "not an object"          # not even a mapping
+    payload = admission.envelope_payload({"machines": machines}, NONCE)
+    assert len(payload["carriers"]) == 4
+    assert "cells" not in payload["carriers"][2]
+    assert set(payload["carriers"][3]) == {"carrier_ref"}
+
+
+def test_schema_validation_precedes_envelope_construction():
+    """A completion the schema refuses must never reach the projection."""
+    completion = {"machines": _machines(2)}
+    completion["machines"][0]["surface"]["kind"] = "not_a_kind"
+    record = _evaluate(json.dumps(completion))
+    assert record["schema_valid"] is False
+    assert record["failure_stage"] == "output_schema_violation"
+    # No payload digest exists, so no envelope was built.
+    assert record["payload_sha256"] is None
+
+
+def test_a_non_neutral_envelope_is_fatal_not_silent(monkeypatch):
+    """If the projection ever stopped being neutral, admission must refuse, not proceed."""
+    original = admission.envelope_payload
+
+    def dropping_envelope(completion, bank_nonce):
+        payload = original(completion, bank_nonce)
+        payload["carriers"] = payload["carriers"][:-1]      # silently drop one carrier
+        return payload
+
+    monkeypatch.setattr(admission, "envelope_payload", dropping_envelope)
+    with pytest.raises(admission.PurityError, match="not information-preserving"):
+        _evaluate(_valid_completion(4))
+
+
+def test_neutrality_is_reported_per_completion_not_assumed():
+    proof = admission.envelope_neutrality({"machines": _machines(3)}, NONCE)
+    assert proof["schema"] == admission.NEUTRALITY_SCHEMA
+    assert proof["envelope_version"] == admission.ENVELOPE_VERSION
