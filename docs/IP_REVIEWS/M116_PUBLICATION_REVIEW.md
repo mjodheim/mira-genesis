@@ -18,9 +18,27 @@ pre-registration explicitly proves that a change is scientifically neutral.
 
 ## Provenance and dependencies
 
-Anthony Mets remains the sole human research director. OpenAI ChatGPT provides substantial
-research-design and audit assistance for the prospective successor; OpenAI Codex may later provide
-implementation, local-test or execution assistance. These systems are tooling, not human authorship.
+Anthony Mets remains the sole human research director and the sole acceptance and release
+decision-maker for this milestone.
+
+OpenAI ChatGPT provided substantial earlier research-design and audit assistance for the prospective
+successor, including the original M116 pre-registration candidate and the capacity diagnosis.
+
+Anthropic Claude subsequently provided substantial implementation, code-review, testing and
+research-analysis assistance for the prospective **pre-freeze instrument hardening** recorded after
+that original pre-registration: the non-carrier telemetry allowlist and read boundary, the
+deterministic terminal classifier, machine-only pre-seal admission and the positional carrier
+envelope, the mechanically derived schema-complexity census, the pre-generation tested-system freeze
+and its mechanical inventory checker, and the accompanying adversarial test suites. That work was
+performed against the frozen public record and proposed for the owner's review; it was not accepted
+into the scientific record by the assisting system.
+
+OpenAI Codex or comparable tooling may additionally be used for independent review, local test or
+execution assistance.
+
+All of the above are recorded as AI tooling and AI development assistance. None is recorded as human
+authorship, and none holds acceptance authority. This production-provenance record does not mean
+provider terms clear third-party rights or settle legal authorship or inventorship.
 
 The planned implementation uses Python standard-library facilities and the repository's existing
 development tooling. External generation remains through OpenRouter and an explicitly attested
@@ -39,6 +57,14 @@ possible only for rights controlled by the project owner.
 M116 is a new milestone and must receive a fresh H61 record. Development probes are instrument tests,
 not scientific observations: they may use synthetic non-qualifying prompts and schemas, but they may
 not send the H61 qualifying carrier input, inspect a future H61 bank, or influence downstream scoring.
+
+Two defects in the inherited apparatus were identified during the pre-freeze hardening and are
+corrected prospectively rather than retroactively: a terminal taxonomy wider than the classifier's
+discriminating power, and an admission path that did not connect the frozen generator's output shape
+to the frozen carrier host's expected payload. Neither finding revises M115's observed cause, and
+neither derives from its sealed completion; both are properties of the frozen public source. The
+historical limitation is recorded in `FAILURE_LOG.md` and stated exactly: truncation can be neither
+established nor excluded from the M115 record.
 
 The M115 record stays immutable. A future H61 positive, negative, mixed or instrument-aborted outcome
 must be preserved as observed. Even a successful H61 remains bounded evidence from a blind generated

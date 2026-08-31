@@ -93,10 +93,73 @@ errors, credentials, hidden prompt or context, or any recovered or transformed c
 text is refused even in allowlisted fields, because free text is where a provider puts an account
 identifier or a fragment of the prompt.
 
-**Read barrier.** Before reveal authorization, a human or a checker may read this operational
-telemetry and may not read carrier content. The barrier is mechanical: only scalars cross it, and
-no container or long string may appear in a telemetry record. The telemetry contract is frozen
-before H61 generation.
+**Read boundary.** The earlier claim that "only scalars cross, therefore reading is safe" is
+withdrawn: scalars leak. `completion_tokens`, `content_bytes` and `response_bytes` track bank size;
+`finish_reason` reports how the generator stopped; and the pre-seal admission record adds
+`records_emitted`, `carriers_enveloped`, `carriers_accepted`, `carriers_refused`,
+`distinct_structural_signatures` and a violation location. None is carrier content and every one is
+correlated with it.
+
+What makes them safe to read is not their shape but the chronology below: the tested system is
+frozen **before** the qualifying generation, so at the moment any of these values first exists there
+is nothing left for a human to adapt. The scalar-only rule is retained as a second line -- it keeps
+carrier content out of the record -- but it is no longer the argument. The telemetry contract is
+frozen before H61 generation.
+
+## H61 chronology: the tested system freezes before the generation exists
+
+M115 froze the tested system after sealing and before reveal. That stopped adaptation to carrier
+content, which stayed sealed. It did not stop adaptation to what the completion implies, because
+the operational telemetry and pre-seal admission record are correlated with the bank and would have
+been readable while the system was still editable.
+
+H61 therefore moves the freeze ahead of the qualifying request. The order is:
+
+1. the DEVELOPMENT capacity/schema-capability gate passes;
+2. the H61 analysis plan is frozen;
+3. the H61 generator spec and canonical request-body commitment are frozen;
+4. the bank nonce and envelope commitments are frozen;
+5. **the entire tested system is frozen**;
+6. only then may the unique H61 qualifying generation occur;
+7. machine-only telemetry and admission execute;
+8. failed admission → terminal `instrument-aborted`, no redraw;
+9. successful admission → that exact completion is sealed immediately;
+10. reveal authorization is produced;
+11. one reveal;
+12. qualification, scoring and P1–P22 execute against the already-frozen tested system.
+
+The qualifying delivery runner **mechanically refuses** to send the request unless the tested-system
+freeze already exists, validates against the working tree, and no completion-derived artifact is
+present. No H61 scientific completion may exist while the tested system remains editable.
+
+The consequence that carries the blindness argument: because no qualifying completion may exist
+before step 5, any artifact that exists before the freeze contains **zero** information derived from
+a scientific H61 completion. This is a strictly stronger boundary than M115's.
+
+## What the tested-system freeze binds
+
+The freeze must bind every artifact that can change how a future H61 completion is interpreted. The
+inventory is checked **mechanically**, not asserted in prose: the import closure of the
+interpretation roots — the qualification runners, the result checkers, the admission and
+classification machinery, the carrier host, the evaluator — is computed from source, and a freeze
+cannot be built while any module in that closure is unbound.
+
+Bound: the M107–M111 machinery under test; the carrier host and runtime; M113 demand derivation,
+qualification, scoring and result computation; the M113 devkit that supplies the measured
+qualification rate; M114 delivery semantics; M115 carrier-bank, delivery, identity, sealing,
+execution and route-selection modules; the M113/M115 qualification runners and result checkers; and
+the M116 admission, envelope, schema-validation, telemetry, classifier, materialization and
+chronology modules.
+
+Deliberately unbound, each for a stated reason: `scripts/audit_m116_capacity.py` and
+`metamorphosis/m116_stress_schema.py` run only in DEVELOPMENT, never see a carrier and produce no
+artifact the scientific path reads; `scripts/build_carrier_schema_census.py` derives the gate's
+thresholds from the frozen M115 schema and likewise never touches a completion.
+
+Generator transport is bound separately and deliberately, by the generator spec's canonical
+request-body digest, which fixes every byte that reaches the model. Transport can fail to deliver or
+misreport identity — the delivery rule and the identity attestation catch that — but it cannot
+change how an admitted completion is scored, which is what the tested-system freeze exists to fix.
 
 ## Terminal failure classifier
 
@@ -137,8 +200,22 @@ is the project's and its purpose is that the generator never sees it. Enveloping
 project-side structural projection, not a repair: positional, total and content-independent,
 carrier *i* is machine *i*. It adds no information from the completion, drops none, reorders
 nothing, and cannot rescue a malformed machine -- the host still refuses it, and a refused body is
-counted rather than corrected. The bank nonce must be committed before generation, so that no
-degree of freedom survives into this step.
+counted rather than corrected.
+
+**Neutrality is proved per completion, not argued once.** Admission computes and checks the
+following invariants on every schema-valid completion, and a failure is fatal rather than silent:
+the number of enveloped carriers equals the number of machines; ordering is identical and
+positional; carrier *i* corresponds to machine *i*; stripping only the project-added `carrier_ref`
+reconstructs machine *i* exactly in canonical form; no generator field is added, removed, renamed,
+reordered or normalized; no machine is selected or dropped; `carrier_ref` is a pure function of the
+precommitted nonce and the position; changing the nonce changes only `bank_nonce` and the opaque
+identifiers and no carrier body; malformed generator output is never repaired; and schema validation
+occurs strictly before the envelope is constructed.
+
+**The bank nonce is fixed before scientific generation** and is bound by the tested-system freeze
+through its digest. It may not be chosen, re-drawn or adjusted after observing any completion,
+telemetry, admission record or classification. A nonce chosen afterwards would be a degree of
+freedom over the opaque identifiers, and there is no scientific reason to want one.
 
 ## The one-shot rule
 
