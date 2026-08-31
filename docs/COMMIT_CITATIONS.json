@@ -2570,6 +2570,41 @@
         "docs/COMMIT_CITATIONS.json",
         "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
       ]
+    },
+    "6165699e8de4f0c89fffa7242eaab65235cdbd5f": {
+      "subject": "science(m115): seal the qualifying H60 bank",
+      "preserved_by": "codex/m115-h60-canonical-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/REVEAL_AUTHORIZATION.json"
+      ]
+    },
+    "1a696e17a6ae176c837ce844891e29535d145803": {
+      "subject": "science(m115): freeze tested system before reveal",
+      "preserved_by": "codex/m115-h60-canonical-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RESULT.json",
+        "tests/test_m115_instrument_aborted.py"
+      ]
+    },
+    "5be5afa7abb9f55ec44797a7000ca4e4518776cb": {
+      "subject": "science(m115): authorize the single H60 reveal",
+      "preserved_by": "codex/m115-h60-canonical-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RESULT.json",
+        "tests/test_m115_instrument_aborted.py"
+      ]
+    },
+    "9d5c295be6140a16022045ac95a6f660aaaac629": {
+      "subject": "result(m115): preserve the terminal H60 reveal outcome",
+      "preserved_by": "codex/m115-h60-canonical-result",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/CHECK_REPORT.json",
+        "tests/test_m115_instrument_aborted.py"
+      ]
     }
   },
   "known_unresolvable": {
