@@ -70,13 +70,27 @@ def decide(
     consumed = opportunity_consumed(record)
     terminal_class = classification["terminal_class"]
 
+    # A completion that stopped because the output budget ran out is not the bank the generator
+    # was asked for, even in the rare case where the truncated prefix happens to parse and
+    # validate. Admitting one would seal a bank the generator did not finish emitting, and the
+    # cardinality the frozen plan reads would be an artifact of the ceiling rather than of the
+    # generator. So the budget finish reason refuses the completion outright.
+    did_not_finish = (
+        record.get("finish_reason") is not None
+        and record.get("finish_reason") in telemetry.BUDGET_FINISH_REASONS
+    )
+
     # A retry is permitted only when the class allows it AND nothing suggests the model ran. The
     # conjunction is deliberate: the class is about what the endpoint said, and consumption is
     # about what it did. Either one alone is not enough to authorize a second physical attempt.
     physical_retry_permitted = bool(
         classification["retry_permitted_by_class"] and not consumed
     )
-    admitted = bool(admission_record is not None and admission_record.get("admitted"))
+    admitted = bool(
+        admission_record is not None
+        and admission_record.get("admitted")
+        and not did_not_finish
+    )
 
     decision = {
         "schema": DECISION_SCHEMA,
@@ -88,6 +102,7 @@ def decide(
         "content_dependent_redraw_permitted": False,
         "repair_permitted": False,
         "selection_among_completions_permitted": False,
+        "completion_did_not_finish": did_not_finish,
         "bank_materialized": admitted,
         "may_seal": admitted,
         "verdict": "materialized" if admitted else "instrument-aborted",

@@ -271,3 +271,27 @@ def test_only_a_pre_generation_429_without_execution_evidence_may_retry():
     spent = materialization.decide(dirty, None)
     assert spent["scientific_opportunity_consumed"] is True
     assert spent["physical_retry_permitted"] is False
+
+
+def test_a_completion_that_did_not_finish_is_refused_even_if_it_parses():
+    """A truncated prefix that happens to validate is still not the bank that was asked for."""
+    admitted = _evaluate(_valid_completion(4))
+    assert admitted["admitted"] is True
+
+    decision = materialization.decide(_executed_telemetry(finish_reason="length"), admitted)
+    assert decision["completion_did_not_finish"] is True
+    assert decision["bank_materialized"] is False
+    assert decision["may_seal"] is False
+    assert decision["verdict"] == "instrument-aborted"
+    assert decision["terminal_class"] == "truncated_completion"
+    assert decision["physical_retry_permitted"] is False
+
+
+def test_the_validator_digests_the_original_bytes_not_a_trimmed_copy():
+    """`content.strip()` in the emptiness test must not become a transformation."""
+    padded = "  \n" + _valid_completion(2) + "\n  "
+    record = admission.evaluate(_response(padded), output_schema=_schema(), bank_nonce=NONCE)
+    assert record["carrier_completion_sha256"] == sha256_hex(padded.encode("utf-8"))
+    assert record["carrier_completion_sha256"] != sha256_hex(
+        padded.strip().encode("utf-8")
+    )

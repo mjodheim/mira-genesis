@@ -178,6 +178,9 @@ def evaluate(
     if not isinstance(content, str) or not content.strip():
         return _blank(failure_stage="no_completion_content", **base)
 
+    # `content.strip()` above is an emptiness *test*; the stripped value is discarded. Everything
+    # below digests and parses the original bytes, so no whitespace, fence or prefix is ever
+    # removed on the way to the parser.
     content_bytes = content.encode("utf-8")
     content_digest = sha256_hex(content_bytes)
     base["carrier_completion_sha256"] = content_digest
