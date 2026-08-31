@@ -409,13 +409,16 @@ def decide(observations: list[dict[str, Any]]) -> dict[str, Any]:
     combined = next((o for o in observations if o["probe"] == "combined"), None)
     unenforced = sorted({o["feature_class"] for o in isolated if o["outcome"] not in ENFORCED})
     every_isolated_passed = bool(isolated) and not unenforced
+    # An entry exists for the combined probe even when it was never sent, so "ran" must mean the
+    # request happened -- not merely that the record has a row for it.
+    combined_ran = bool(combined and combined.get("outcome") != "not_attempted")
     combined_conforms = bool(combined and combined["outcome"] == "conforming")
     case_a = every_isolated_passed and combined_conforms
     return {
         "schema": "m116-capability-matrix-decision-v1",
         "every_isolated_capability_enforced": every_isolated_passed,
         "unenforced_feature_classes": unenforced,
-        "combined_probe_ran": combined is not None,
+        "combined_probe_ran": combined_ran,
         "combined_probe_conforms": combined_conforms,
         "case": "A" if case_a else "B",
         "route_validated_for_h61": case_a,

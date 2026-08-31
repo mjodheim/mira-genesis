@@ -538,3 +538,14 @@ def test_a_truncated_probe_does_not_count_as_enforced():
     ])
     assert decision["case"] == "B"
     assert "enum" in decision["unenforced_feature_classes"]
+
+
+def test_a_skipped_combined_probe_is_not_reported_as_having_run():
+    """A row exists for the combined probe even when it was never sent; "ran" must mean sent."""
+    decision = matrix.decide([
+        {"probe": "enum", "feature_class": "enum", "outcome": "enum_violation"},
+        {"probe": "combined", "feature_class": "combined", "outcome": "not_attempted"},
+    ])
+    assert decision["combined_probe_ran"] is False
+    assert decision["combined_probe_conforms"] is False
+    assert decision["case"] == "B"
