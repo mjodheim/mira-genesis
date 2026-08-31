@@ -23,6 +23,7 @@ The attempt budget is crash-safe. A process lock prevents concurrent execution i
 workspace, every physical slot is durably reserved before the request begins, and every retryable 429
 is durably recorded before the wait starts. If a process disappears while an attempt is in flight,
 the reserved slot becomes an ambiguous terminal observation on restart rather than being redrawn.
+Any response generation identifier is also execution evidence and therefore forbids a retry.
 Raw completion content is never written.
 """
 
@@ -418,9 +419,14 @@ def _safe_nonmaterialized_attempt(
 ) -> dict[str, Any]:
     body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
     evidence = _execution_evidence(body)
+    headers = observed.get("headers") if isinstance(observed.get("headers"), Mapping) else {}
+    generation_id = headers.get("x-generation-id")
+    generation_id_present = isinstance(generation_id, str) and bool(generation_id.strip())
     transport_ambiguous = observed.get("model_execution_cannot_be_excluded") is True
     execution_cannot_be_excluded = (
-        transport_ambiguous or evidence["model_execution_cannot_be_excluded"]
+        transport_ambiguous
+        or evidence["model_execution_cannot_be_excluded"]
+        or generation_id_present
     )
     transport_failure = observed.get("transport_failure_class")
     return {
@@ -431,6 +437,7 @@ def _safe_nonmaterialized_attempt(
         "response_sha256": observed.get("response_sha256"),
         "response_bytes": observed.get("response_bytes"),
         "transport_failure_class": transport_failure,
+        "generation_id_present": generation_id_present,
         "completion_present": evidence["completion_present"],
         "model_execution_cannot_be_excluded": execution_cannot_be_excluded,
         "retry_permitted": transport_failure is None
