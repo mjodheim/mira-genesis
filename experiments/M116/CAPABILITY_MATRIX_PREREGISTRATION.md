@@ -147,14 +147,45 @@ any H62 generator specification is frozen.
 
 This structure exists to prevent outcome-driven provider substitution inside M116.
 
+## Adversarial pre-mortem, recorded before observation
+
+*If this matrix returned Case A — the result that lets M116 continue — how would a hostile reviewer
+argue the finding was manufactured?*
+
+**"The probes are far smaller than the real request."** This is the strongest objection and it is
+correct. The isolated probes are small and shallow by construction, because isolation is their
+purpose, and even the combined probe is a fraction of the qualifying request's scale. **Case A
+therefore establishes feature *enforcement*, never enforcement *at carrier scale*.** That is exactly
+why Case A does not license proceeding to H61: its consequence is to prepare an explicitly reviewed
+revised stress candidate and run at most one further full stress audit, and it is that audit, not
+this matrix, which tests whether enforcement survives the real volume and depth. A Case A read as
+"the route works" would be a misreading of this instrument.
+
+**"The model complied by chance."** Reduced by six independent constrained fields per applicable
+probe, and recorded above as reduced rather than eliminated.
+
+**"A retry produced the passing draw."** Only an explicit pre-generation 429 carrying no completion
+and no execution evidence permits a second attempt; a schema violation never does.
+
+**"The interpretation moved after the result."** The decision rule is committed in this document and
+in code, and pinned by the plan digest that the report records.
+
+**"A probe was added or reshaped once the failure was visible."** The sequence is a pure function of
+the committed census, digest-pinned before the first call, and a test asserts the sent sequence
+equals the planned one.
+
+The residual limitations that no mechanism here removes: probe scale, coincidental compliance, and
+the fact that this measures one route on one date.
+
 ## Claim discipline
 
 This matrix can establish only which structured-output capabilities the fixed route enforces on
 small synthetic schemas, on this date.
 
 It cannot establish: the precise cause of M115; that M115 was not truncated; that all schemas fail
-on this provider; that the model lacks the underlying capability; or any Genesis scientific
-proposition. G1–G10 remain unchanged whatever it returns.
+on this provider; that the model lacks the underlying capability; that enforcement holds at the
+carrier request's scale; or any Genesis scientific proposition. G1–G10 remain unchanged whatever it
+returns.
 
 ## Chronology at preregistration
 
