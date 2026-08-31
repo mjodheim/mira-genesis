@@ -17,7 +17,7 @@ import pytest
 from metamorphosis import m116_schema as schema_tools
 from metamorphosis import m116_stress_schema as stress
 from scripts import audit_m116_capacity as capacity
-from scripts import derive_carrier_schema_census as derive
+from scripts import build_carrier_schema_census as derive
 
 ROOT = Path(__file__).resolve().parents[1]
 CARRIER_VOCABULARY = ("machines", "surface", "cells", "initial", "visible", "errors", "actions")

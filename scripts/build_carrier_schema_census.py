@@ -8,8 +8,8 @@ audit run and compared. A census that drifts from the schema it claims to descri
 This script reads the frozen M115 output schema and writes nothing into M115. It makes no network
 call, sends no qualifying input and touches no bank.
 
-    python scripts/derive_carrier_schema_census.py --write
-    python scripts/derive_carrier_schema_census.py --check
+    python scripts/build_carrier_schema_census.py --write
+    python scripts/build_carrier_schema_census.py --check
 """
 
 from __future__ import annotations
