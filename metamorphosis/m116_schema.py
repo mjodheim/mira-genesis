@@ -53,12 +53,18 @@ class SchemaError(RuntimeError):
 
 
 class InstanceError(RuntimeError):
-    """An instance failed validation. Carries a schema location and a keyword, never a value."""
+    """An instance failed validation. Carries locations and a keyword, never a value.
 
-    def __init__(self, location: str, keyword: str) -> None:
+    `instance_path` names where in the *instance* the failure sits, as a JSON-pointer-like path
+    built from property names and array indices. Property names come from the schema's own
+    vocabulary and indices are integers, so the path carries no generated value.
+    """
+
+    def __init__(self, location: str, keyword: str, instance_path: str = "") -> None:
         super().__init__("%s failed %s" % (location or "<root>", keyword))
         self.location = location or "<root>"
         self.keyword = keyword
+        self.instance_path = instance_path or "<root>"
 
 
 # --------------------------------------------------------------------------------------------
@@ -100,7 +106,8 @@ def _reject_unknown(schema: Mapping[str, Any], location: str) -> None:
             raise SchemaError("%s uses unsupported keyword %s" % (location or "<root>", keyword))
 
 
-def validate_instance(instance: Any, schema: Mapping[str, Any], *, location: str = "") -> None:
+def validate_instance(instance: Any, schema: Mapping[str, Any], *, location: str = "",
+                      instance_path: str = "") -> None:
     """Raise `InstanceError` if `instance` does not satisfy `schema`.
 
     The raised error names where in the *schema* the failure happened and which keyword rejected
@@ -114,7 +121,7 @@ def validate_instance(instance: Any, schema: Mapping[str, Any], *, location: str
     if declared is not None:
         expected = [declared] if isinstance(declared, str) else list(declared)
         if not any(_type_matches(instance, str(item)) for item in expected):
-            raise InstanceError(location, "type")
+            raise InstanceError(location, "type", instance_path)
 
     if "enum" in schema:
         allowed = schema["enum"]
@@ -122,58 +129,62 @@ def validate_instance(instance: Any, schema: Mapping[str, Any], *, location: str
             raise SchemaError("%s enum is not a list" % (location or "<root>"))
         if not any(instance == candidate and type(instance) is type(candidate)
                    for candidate in allowed):
-            raise InstanceError(location, "enum")
+            raise InstanceError(location, "enum", instance_path)
 
     if isinstance(instance, str):
         pattern = schema.get("pattern")
         if pattern is not None and re.search(str(pattern), instance) is None:
-            raise InstanceError(location, "pattern")
+            raise InstanceError(location, "pattern", instance_path)
         if "minLength" in schema and len(instance) < int(schema["minLength"]):
-            raise InstanceError(location, "minLength")
+            raise InstanceError(location, "minLength", instance_path)
         if "maxLength" in schema and len(instance) > int(schema["maxLength"]):
-            raise InstanceError(location, "maxLength")
+            raise InstanceError(location, "maxLength", instance_path)
 
     if _is_integer(instance) or (isinstance(instance, float) and not isinstance(instance, bool)):
         if "minimum" in schema and instance < schema["minimum"]:
-            raise InstanceError(location, "minimum")
+            raise InstanceError(location, "minimum", instance_path)
         if "maximum" in schema and instance > schema["maximum"]:
-            raise InstanceError(location, "maximum")
+            raise InstanceError(location, "maximum", instance_path)
         if "exclusiveMinimum" in schema and instance <= schema["exclusiveMinimum"]:
-            raise InstanceError(location, "exclusiveMinimum")
+            raise InstanceError(location, "exclusiveMinimum", instance_path)
         if "exclusiveMaximum" in schema and instance >= schema["exclusiveMaximum"]:
-            raise InstanceError(location, "exclusiveMaximum")
+            raise InstanceError(location, "exclusiveMaximum", instance_path)
 
     if isinstance(instance, Mapping):
         properties = schema.get("properties")
         properties = properties if isinstance(properties, Mapping) else {}
         for name in schema.get("required") or ():
             if name not in instance:
-                raise InstanceError("%s/properties/%s" % (location, name), "required")
+                raise InstanceError("%s/properties/%s" % (location, name), "required",
+                                    "%s/%s" % (instance_path, name))
         if schema.get("additionalProperties") is False:
             for name in instance:
                 if name not in properties:
-                    raise InstanceError(location, "additionalProperties")
+                    raise InstanceError(location, "additionalProperties",
+                                        "%s/%s" % (instance_path, name))
         for name, value in instance.items():
             subschema = properties.get(name)
             if isinstance(subschema, Mapping):
                 validate_instance(value, subschema,
-                                  location="%s/properties/%s" % (location, name))
+                                  location="%s/properties/%s" % (location, name),
+                                  instance_path="%s/%s" % (instance_path, name))
 
     if isinstance(instance, list):
         if "minItems" in schema and len(instance) < int(schema["minItems"]):
-            raise InstanceError(location, "minItems")
+            raise InstanceError(location, "minItems", instance_path)
         if "maxItems" in schema and len(instance) > int(schema["maxItems"]):
-            raise InstanceError(location, "maxItems")
+            raise InstanceError(location, "maxItems", instance_path)
         if schema.get("uniqueItems") is True:
             seen: list[Any] = []
             for item in instance:
                 if item in seen:
-                    raise InstanceError(location, "uniqueItems")
+                    raise InstanceError(location, "uniqueItems", instance_path)
                 seen.append(item)
         items = schema.get("items")
         if isinstance(items, Mapping):
-            for item in instance:
-                validate_instance(item, items, location="%s/items" % location)
+            for index, item in enumerate(instance):
+                validate_instance(item, items, location="%s/items" % location,
+                                  instance_path="%s/%d" % (instance_path, index))
 
 
 def instance_is_valid(instance: Any, schema: Mapping[str, Any]) -> tuple[bool, str, str]:
@@ -183,6 +194,25 @@ def instance_is_valid(instance: Any, schema: Mapping[str, Any]) -> tuple[bool, s
     except InstanceError as exc:
         return False, exc.location, exc.keyword
     return True, "", ""
+
+
+def describe_violation(instance: Any, schema: Mapping[str, Any]) -> dict[str, Any]:
+    """Locate the first violation without disclosing what the instance said.
+
+    Returns the failing keyword and both locations -- where in the schema the rule lives and where
+    in the instance it was broken. Every part is drawn from the schema's own vocabulary or from an
+    array index, so nothing generated crosses the boundary.
+    """
+    try:
+        validate_instance(instance, schema)
+    except InstanceError as exc:
+        return {
+            "conforms": False,
+            "keyword": exc.keyword,
+            "schema_location": exc.location,
+            "instance_path": exc.instance_path,
+        }
+    return {"conforms": True, "keyword": "", "schema_location": "", "instance_path": ""}
 
 
 # --------------------------------------------------------------------------------------------
@@ -273,6 +303,7 @@ __all__ = [
     "SchemaError",
     "census",
     "census_dominates",
+    "describe_violation",
     "instance_is_valid",
     "validate_instance",
 ]
