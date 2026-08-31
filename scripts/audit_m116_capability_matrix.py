@@ -85,6 +85,7 @@ LEDGER_SCHEMA = "m116-capability-matrix-development-ledger-v1"
 # The outcome vocabulary. Every probe lands in exactly one, and every one is reachable.
 OUTCOMES = (
     "conforming",
+    "truncated_completion",
     "invalid_json",
     "wrong_top_level_type",
     "enum_violation",
@@ -346,6 +347,15 @@ def diagnose(probe: Mapping[str, Any], observed: Mapping[str, Any]) -> dict[str,
         return result
     if not record["content_present"]:
         result["outcome"] = "missing_completion"
+        return result
+
+    # Output-budget termination is decided BEFORE parsing, on affirmative finish-reason evidence.
+    # A truncated completion also fails to parse, and letting the parse failure absorb it would
+    # reproduce exactly the M115 defect this milestone exists to correct: a probe that ran out of
+    # budget would be recorded as "the route emitted invalid JSON", which is a different and much
+    # stronger claim than the evidence supports.
+    if record["finish_reason"] in telemetry.BUDGET_FINISH_REASONS:
+        result["outcome"] = "truncated_completion"
         return result
 
     choices = body.get("choices") or []

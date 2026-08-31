@@ -159,6 +159,7 @@ def test_every_declared_outcome_is_reachable():
         matrix.diagnose(built["nesting_depth"], _observed({"root": "terminus"}))["outcome"],
         matrix.diagnose(built["enum"], _observed(""))["outcome"],
         matrix.diagnose(built["enum"], dead)["outcome"],
+        matrix.diagnose(built["enum"], _observed("{\"band_0\": \"que", finish="length"))["outcome"],
         "not_attempted",
     }
     # `other_schema_violation` is the fail-closed default for a keyword with no specific mapping.
@@ -504,3 +505,36 @@ def test_changing_the_decision_rule_changes_the_plan_digest(monkeypatch):
         return record
 
     assert altered()["plan_sha256"] != before
+
+
+# ---------------------------------------------------------------------------------------------
+# Hostile-review finding: a truncated probe is not an invalid-JSON probe
+# ---------------------------------------------------------------------------------------------
+
+def test_a_truncated_probe_is_not_reported_as_invalid_json():
+    """Letting the parse failure absorb truncation is precisely the M115 defect."""
+    probe = probes.build_matrix(_census())[0]
+    truncated = matrix.diagnose(probe, _observed('{"band_0": "quern', finish="length"))
+    assert truncated["outcome"] == "truncated_completion"
+    assert truncated["outcome"] != "invalid_json"
+
+
+def test_truncation_is_decided_before_parsing():
+    """Even output that would have parsed is a truncation when the budget ended it."""
+    probe = probes.build_matrix(_census())[0]
+    result = matrix.diagnose(probe, _observed(_conforming(probe["schema"]), finish="length"))
+    assert result["outcome"] == "truncated_completion"
+
+
+def test_invalid_json_at_a_completed_finish_reason_stays_invalid_json():
+    probe = probes.build_matrix(_census())[0]
+    result = matrix.diagnose(probe, _observed("not json at all", finish="stop"))
+    assert result["outcome"] == "invalid_json"
+
+
+def test_a_truncated_probe_does_not_count_as_enforced():
+    decision = matrix.decide([
+        {"probe": "enum", "feature_class": "enum", "outcome": "truncated_completion"},
+    ])
+    assert decision["case"] == "B"
+    assert "enum" in decision["unenforced_feature_classes"]

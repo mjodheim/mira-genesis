@@ -45,10 +45,15 @@ indices, so no generated value crosses the boundary. Free text is refused even i
 telemetry fields.
 
 The frozen outcome vocabulary, every member of which the classifier can actually assign:
-`conforming`, `invalid_json`, `wrong_top_level_type`, `enum_violation`, `pattern_violation`,
+`conforming`, `truncated_completion`, `invalid_json`, `wrong_top_level_type`, `enum_violation`, `pattern_violation`,
 `min_items_violation`, `max_items_violation`, `required_violation`,
 `additional_properties_violation`, `bounds_violation`, `type_violation`, `nesting_violation`,
 `other_schema_violation`, `missing_completion`, `transport_or_provider_failure`, `not_attempted`.
+
+`truncated_completion` is decided **before** parsing, on affirmative finish-reason evidence, for the
+same reason the scientific classifier does it that way: a truncated completion also fails to parse,
+and letting the parse failure absorb it would record "the route emitted invalid JSON" — a different
+and much stronger claim than the evidence supports. A truncated probe never counts as enforced.
 
 `type_violation` and `nesting_violation` are kept apart deliberately. A wrong scalar type — a string
 where the schema demands an integer — is a type violation. Only the two probes whose subject *is*
