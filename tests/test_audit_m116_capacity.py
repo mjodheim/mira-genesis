@@ -71,6 +71,7 @@ def _materialized_observation(
         "started_at": "2026-08-31T00:00:00Z",
         "finished_at": "2026-08-31T00:01:00Z",
         "status": 200,
+        "headers": {},
         "response_sha256": "a" * 64,
         "response_bytes": 200000,
         "transport_failure_class": None,
@@ -90,6 +91,7 @@ def _empty_observation(status: int) -> dict:
         "started_at": "2026-08-31T00:00:00Z",
         "finished_at": "2026-08-31T00:00:01Z",
         "status": status,
+        "headers": {},
         "response_sha256": "b" * 64,
         "response_bytes": 20,
         "transport_failure_class": None,
@@ -251,6 +253,7 @@ def test_capacity_gate_rejects_identity_substitution_and_records_observed_checkp
 def test_retry_is_only_explicit_429_without_execution_evidence():
     retryable = capacity._safe_nonmaterialized_attempt(_empty_observation(429), 1)
     assert retryable["retry_permitted"] is True
+    assert retryable["generation_id_present"] is False
 
     non429 = capacity._safe_nonmaterialized_attempt(_empty_observation(503), 1)
     assert non429["retry_permitted"] is False
@@ -263,6 +266,14 @@ def test_retry_is_only_explicit_429_without_execution_evidence():
     ambiguous = capacity._safe_nonmaterialized_attempt(executed, 1)
     assert ambiguous["retry_permitted"] is False
     assert ambiguous["model_execution_cannot_be_excluded"] is True
+
+    generation = _empty_observation(429)
+    generation["headers"] = {"x-generation-id": "gen-synthetic-123"}
+    generation_ambiguous = capacity._safe_nonmaterialized_attempt(generation, 1)
+    assert generation_ambiguous["generation_id_present"] is True
+    assert generation_ambiguous["model_execution_cannot_be_excluded"] is True
+    assert generation_ambiguous["retry_permitted"] is False
+    assert "gen-synthetic-123" not in json.dumps(generation_ambiguous)
 
 
 def test_request_converts_post_send_exception_to_ambiguous_terminal_observation(
