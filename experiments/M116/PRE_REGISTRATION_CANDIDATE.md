@@ -82,7 +82,16 @@ test. The gate is not scientific evidence and may not use the qualifying input.
 
 Before the H61 analysis plan or generator spec is frozen, a committed DEVELOPMENT harness must run a
 synthetic strict-schema request on the exact Alibaba/checkpoint route. Its acceptance rule is fixed
-before the first stress call:
+before the first stress call.
+
+The DEVELOPMENT delivery rule is also fixed before the first stress call: at most **three physical
+stress attempts** are permitted; attempt 2 or 3 is permitted only after an explicit HTTP 429 carrying
+no completion and no evidence that model execution occurred; each permitted retry waits **60
+seconds**. The first completion, ambiguous execution, non-429 response, malformed materialization, or
+other terminal response ends the DEVELOPMENT audit. A failed or exhausted DEVELOPMENT audit may not
+be redrawn under this candidate. These DEVELOPMENT attempts are not H61 qualifying invocations.
+
+The capacity gate requires:
 
 - HTTP 200;
 - `finish_reason=stop`;
