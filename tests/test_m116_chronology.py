@@ -291,3 +291,53 @@ def test_the_content_correlated_quantities_exist_only_after_the_freeze(tree: Pat
     freeze_text = (tree / chronology.FREEZE_PATH).read_text("utf-8")
     for name in flagged:
         assert name not in freeze_text
+
+
+# ---------------------------------------------------------------------------------------------
+# The freeze must hold at every downstream phase, not only before the generation
+# ---------------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("phase", list(chronology.DOWNSTREAM_PHASES))
+def test_each_downstream_phase_reproves_the_freeze(tree: Path, phase: str):
+    _commit_freeze(tree, _freeze(tree))
+    permission = chronology.assert_frozen_system_unchanged(tree, phase=phase)
+    assert permission["permitted"] is True
+    assert permission["tested_system_unchanged_since_freeze"] is True
+
+
+@pytest.mark.parametrize("phase", list(chronology.DOWNSTREAM_PHASES))
+def test_a_system_edited_after_generation_fails_every_downstream_phase(tree: Path, phase: str):
+    """The pre-generation gate is necessary and not sufficient.
+
+    Once the completion exists, an edit to the evaluator or the scoring implementation is the same
+    contamination the freeze exists to prevent, arriving one step later.
+    """
+    _commit_freeze(tree, _freeze(tree))
+    victim = tree / "metamorphosis" / "m113_evaluator.py"
+    victim.write_bytes(victim.read_bytes() + b"\n# scored after seeing the bank\n")
+    with pytest.raises(chronology.ChronologyError, match="changed after it was frozen"):
+        chronology.assert_frozen_system_unchanged(tree, phase=phase)
+
+
+def test_scoring_refuses_when_the_scorer_itself_changed(tree: Path):
+    _commit_freeze(tree, _freeze(tree))
+    victim = tree / "scripts" / "run_m113_qualification.py"
+    victim.write_bytes(victim.read_bytes() + b"\n# threshold nudged\n")
+    with pytest.raises(chronology.ChronologyError, match="changed after it was frozen"):
+        chronology.assert_frozen_system_unchanged(tree, phase="scoring")
+
+
+def test_a_downstream_phase_refuses_an_uncommitted_freeze(tree: Path):
+    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    with pytest.raises(chronology.ChronologyError, match="committed at HEAD"):
+        chronology.assert_frozen_system_unchanged(tree, phase="reveal")
+
+
+def test_an_unknown_phase_is_refused(tree: Path):
+    _commit_freeze(tree, _freeze(tree))
+    with pytest.raises(chronology.ChronologyError, match="unknown downstream phase"):
+        chronology.assert_frozen_system_unchanged(tree, phase="whenever_convenient")
+
+
+def test_downstream_phases_cover_every_step_after_the_generation():
+    assert set(chronology.DOWNSTREAM_PHASES) == {"admission", "sealing", "reveal", "scoring"}

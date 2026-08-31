@@ -138,6 +138,13 @@ auditable by someone who was not in the room.
 
 No H61 scientific completion may exist while the tested system remains editable.
 
+**The freeze is re-proved at every later phase.** A freeze checked once, before generation, would
+leave every subsequent step free: the completion exists, and the admission classifier, the demand
+derivation, the evaluator, the scoring implementation and the checkers are all still editable. So
+admission, sealing, reveal and scoring each re-validate the committed freeze against the working
+tree, and each refuses if any bound member has moved. Editing the scorer after seeing the bank is
+the same contamination the freeze exists to prevent, arriving one step later.
+
 The consequence that carries the blindness argument: because no qualifying completion may exist
 before step 5, any artifact that exists before the freeze contains **zero** information derived from
 a scientific H61 completion. This is a strictly stronger boundary than M115's.

@@ -404,6 +404,55 @@ def _head_blob(root: Path, relative: Path) -> bytes | None:
     return completed.stdout if completed.returncode == 0 else None
 
 
+# The phases that must each re-prove the freeze still holds. A freeze checked once, before
+# generation, would leave every later phase free: the completion exists, and the evaluator, the
+# scoring code and the checkers are all still editable. Each of these re-checks it.
+DOWNSTREAM_PHASES = ("admission", "sealing", "reveal", "scoring")
+
+
+def assert_frozen_system_unchanged(
+    root: Path | None = None, *, phase: str
+) -> dict[str, Any]:
+    """Re-prove, at a named downstream phase, that the tested system is still the frozen one.
+
+    The pre-generation gate is necessary and not sufficient. Once a qualifying completion exists,
+    nothing in the earlier check stops someone editing the evaluator, the demand derivation or the
+    scoring implementation before the result is computed -- which is the same contamination the
+    freeze exists to prevent, arriving one step later. Every phase after the generation therefore
+    re-validates the committed freeze against the working tree.
+    """
+    import json
+
+    if phase not in DOWNSTREAM_PHASES:
+        raise ChronologyError("unknown downstream phase %r" % phase)
+    base = _root(root)
+    path = base / FREEZE_PATH
+    if not path.is_file():
+        raise ChronologyError(
+            "phase %r requires the tested-system freeze, which is absent" % phase
+        )
+    raw = path.read_bytes()
+    committed = _head_blob(base, FREEZE_PATH)
+    if committed is None:
+        raise ChronologyError("phase %r requires a freeze committed at HEAD" % phase)
+    if committed != raw:
+        raise ChronologyError(
+            "phase %r: the tested-system freeze on disk differs from the committed one" % phase
+        )
+    try:
+        freeze = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise ChronologyError("cannot read the M116 tested-system freeze: %s" % exc)
+    validate_freeze(freeze, root=base)
+    return {
+        "schema": "m116-phase-permission-v1",
+        "phase": phase,
+        "permitted": True,
+        "freeze_commitment_sha256": freeze["freeze_commitment_sha256"],
+        "tested_system_unchanged_since_freeze": True,
+    }
+
+
 def assert_qualifying_delivery_permitted(root: Path | None = None) -> dict[str, Any]:
     """The gate the qualifying delivery runner must pass before it may send the request.
 
