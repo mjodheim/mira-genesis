@@ -181,3 +181,28 @@ def test_the_validator_reports_a_location_and_keyword_never_a_value():
     assert ok is False
     assert keyword == "pattern"
     assert "SECRET" not in location
+
+
+def test_execute_refuses_a_weaker_schema_before_touching_the_network(monkeypatch, tmp_path):
+    """The structural gate must guard the request, not the record written after it.
+
+    It previously ran only inside `request_body_digest`, which is first called when an observation
+    is built -- by which point the attempt had been spent on a schema weaker than the frozen
+    carrier schema.
+    """
+    reached = []
+    monkeypatch.setattr(capacity, "STRESS_SCHEMA", {"type": "object"})
+    monkeypatch.setattr(capacity, "_request",
+                        lambda **kwargs: reached.append("network") or {})
+    monkeypatch.setattr(capacity, "REPORT_PATH", tmp_path / "report.json")
+    monkeypatch.setattr(capacity, "LEDGER_PATH", tmp_path / "ledger.json")
+    with pytest.raises(capacity.CapacityAuditError, match="structurally weaker"):
+        capacity.execute()
+    assert reached == [], "the endpoint must not be reached when the gate fails"
+
+
+def test_the_request_helper_reasserts_dominance_independently(monkeypatch):
+    """No caller may reach the endpoint around `execute`."""
+    monkeypatch.setattr(capacity, "STRESS_SCHEMA", {"type": "object"})
+    with pytest.raises(capacity.CapacityAuditError, match="structurally weaker"):
+        capacity._request()

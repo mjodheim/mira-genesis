@@ -232,6 +232,8 @@ def _transport_failure_observation(
 
 def _request(*, timeout: int = 1200) -> dict[str, Any]:
     # Missing owner credential is checked before a physical attempt is reserved by execute().
+    # Dominance is re-asserted here so that no caller can reach the endpoint around `execute`.
+    _assert_structurally_dominating()
     secret = _secret()
     payload = canonical_bytes(REQUEST_BODY)
     headers = {
@@ -808,6 +810,12 @@ def _exhausted_429_terminal(attempts: list[Mapping[str, Any]]) -> dict[str, Any]
 
 def execute() -> dict[str, Any]:
     _assert_nonqualifying()
+    # The structural gate must guard the request, not merely the record written afterwards. It
+    # used to run only inside `request_body_digest`, which is first called when an observation is
+    # built -- after the network call had already consumed an attempt. A stress schema weaker than
+    # the frozen carrier schema would have been sent, and the gate would have raised too late to
+    # stop it.
+    _assert_structurally_dominating()
     # Credential absence is known before any physical slot is reserved.
     _secret()
 
