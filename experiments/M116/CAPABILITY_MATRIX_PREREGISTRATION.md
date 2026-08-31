@@ -47,8 +47,15 @@ telemetry fields.
 The frozen outcome vocabulary, every member of which the classifier can actually assign:
 `conforming`, `invalid_json`, `wrong_top_level_type`, `enum_violation`, `pattern_violation`,
 `min_items_violation`, `max_items_violation`, `required_violation`,
-`additional_properties_violation`, `bounds_violation`, `nesting_violation`,
+`additional_properties_violation`, `bounds_violation`, `type_violation`, `nesting_violation`,
 `other_schema_violation`, `missing_completion`, `transport_or_provider_failure`, `not_attempted`.
+
+`type_violation` and `nesting_violation` are kept apart deliberately. A wrong scalar type — a string
+where the schema demands an integer — is a type violation. Only the two probes whose subject *is*
+structure (nesting depth, nested arrays of objects) report a type or missing-link failure as a
+nesting violation, because for those a failure at that point is exactly the depth shortfall under
+test. Collapsing the two would put a structural claim in the capability profile that the evidence
+does not support.
 
 Every observation is independently replayable from the preserved record: the outcome is a pure
 function of the recorded diagnostic fields, and the decision is a pure function of the outcomes.
@@ -105,6 +112,16 @@ The first materialized response is the observation for that probe. It is never r
 violated the schema, never repaired, never regenerated, and the model is never asked to fix it. The
 only permitted retry is the inherited explicit pre-generation 429 with no completion and no
 execution evidence — the one class provably independent of content.
+
+## Crash safety and resumption
+
+A probe that already carries an observation in the ledger keeps it. Its one permitted delivery is
+spent, and re-sending it would be a redraw, so a restart resumes from the ledger rather than
+beginning again. A ledger belonging to a different frozen plan is refused outright.
+
+A response the diagnostic cannot read becomes a `transport_or_provider_failure` observation rather
+than an exception: a crash mid-matrix would abort before the report is written, leaving the
+already-sent probes re-sendable, which is the redraw the rule forbids.
 
 ## Decision rule, precommitted
 

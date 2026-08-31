@@ -132,27 +132,38 @@ def test_missing_completion_and_transport_failure_are_distinct():
     assert matrix.diagnose(probe, dead)["outcome"] == "transport_or_provider_failure"
 
 
-def test_every_declared_outcome_is_reachable_or_explicitly_terminal():
-    """A vocabulary wider than the classifier is the defect this milestone corrects."""
+def test_every_declared_outcome_is_reachable():
+    """A vocabulary wider than the classifier is exactly the defect this milestone corrects.
+
+    Every outcome must be produced by some observation, or be `not_attempted`, which the runner
+    assigns when a prerequisite fails and the combined probe is never sent.
+    """
     built = {p["name"]: p for p in probes.build_matrix(_census())}
-    reached = {
-        matrix.diagnose(built["enum"], _observed("nope"))["outcome"],
-        matrix.diagnose(built["enum"], _observed([1]))["outcome"],
+    dead = {**_observed("{}"), "status": None, "body": None,
+            "transport_failure_class": "TimeoutError"}
+    produced = {
+        matrix.diagnose(built["enum"], _observed(_conforming(built["enum"]["schema"])))["outcome"],
+        matrix.diagnose(built["enum"], _observed("not json"))["outcome"],
+        matrix.diagnose(built["enum"], _observed([1, 2]))["outcome"],
         matrix.diagnose(built["enum"], _observed({"band_%d" % i: "x" for i in range(6)}))["outcome"],
         matrix.diagnose(built["pattern"], _observed({"ref_%d" % i: "x" for i in range(6)}))["outcome"],
-        matrix.diagnose(built["required"], _observed({"named_0": "a"}))["outcome"],
-        matrix.diagnose(built["additional_properties"], _observed({"kept": "a", "z": "b"}))["outcome"],
         matrix.diagnose(built["min_items"], _observed({"readings": [1]}))["outcome"],
         matrix.diagnose(built["max_items"], _observed({"samples": list(range(9))}))["outcome"],
-        matrix.diagnose(built["integer_bounds"], _observed({"gauge_%d" % i: 1 for i in range(6)}))["outcome"],
-        matrix.diagnose(built["enum"], _observed(_conforming(built["enum"]["schema"])))["outcome"],
+        matrix.diagnose(built["required"], _observed({"named_0": "a"}))["outcome"],
+        matrix.diagnose(built["additional_properties"],
+                        _observed({"kept": "a", "z": "b"}))["outcome"],
+        matrix.diagnose(built["integer_bounds"],
+                        _observed({"gauge_%d" % i: 1 for i in range(6)}))["outcome"],
+        matrix.diagnose(built["integer_bounds"],
+                        _observed({"gauge_%d" % i: "s" for i in range(6)}))["outcome"],
+        matrix.diagnose(built["nesting_depth"], _observed({"root": "terminus"}))["outcome"],
         matrix.diagnose(built["enum"], _observed(""))["outcome"],
-        matrix.diagnose(built["enum"], {**_observed("{}"), "status": None, "body": None,
-                                        "transport_failure_class": "X"})["outcome"],
+        matrix.diagnose(built["enum"], dead)["outcome"],
+        "not_attempted",
     }
-    assert "not_attempted" in matrix.OUTCOMES
-    assert reached | {"not_attempted", "nesting_violation"} >= set(matrix.OUTCOMES) - {
-        "other_schema_violation"}
+    # `other_schema_violation` is the fail-closed default for a keyword with no specific mapping.
+    assert produced == set(matrix.OUTCOMES) - {"other_schema_violation"}
+    assert "other_schema_violation" in matrix.OUTCOMES
 
 
 # ---------------------------------------------------------------------------------------------
@@ -397,3 +408,99 @@ def test_the_frozen_h61_records_are_untouched_by_the_matrix():
     m115 = json.loads((ROOT / "experiments" / "M115" / "RESULT.json").read_text("utf-8"))
     assert m115["verdict"] == "instrument-aborted"
     assert m115["hypothesis_status"] == "untested"
+
+
+# ---------------------------------------------------------------------------------------------
+# Hostile-review finding: a scalar type error is not a nesting failure
+# ---------------------------------------------------------------------------------------------
+
+def test_a_scalar_type_error_is_not_reported_as_a_nesting_violation():
+    """Calling every `type` failure "nesting" would put a structural claim in the profile that the
+    evidence does not support."""
+    probe = next(p for p in probes.build_matrix(_census()) if p["name"] == "integer_bounds")
+    result = matrix.diagnose(probe, _observed({"gauge_%d" % i: "not-a-number" for i in range(6)}))
+    assert result["first_failing_keyword"] == "type"
+    assert result["outcome"] == "type_violation"
+    assert result["outcome"] != "nesting_violation"
+
+
+def test_a_structural_probe_reports_a_depth_shortfall_as_nesting():
+    for name in ("nesting_depth", "nested_arrays"):
+        probe = next(p for p in probes.build_matrix(_census()) if p["name"] == name)
+        shallow = {"root": "terminus"} if name == "nesting_depth" else {"tier": ["flat"]}
+        result = matrix.diagnose(probe, _observed(shallow))
+        assert result["outcome"] == "nesting_violation", name
+
+
+def test_only_the_structural_probes_may_yield_a_nesting_violation():
+    structural = {p["name"] for p in probes.build_matrix(_census())
+                  if p["feature_class"] in matrix._STRUCTURAL_FEATURES}
+    assert structural == {"nesting_depth", "nested_arrays"}
+
+
+def test_type_violation_is_in_the_frozen_vocabulary():
+    assert "type_violation" in matrix.OUTCOMES
+    assert "nesting_violation" in matrix.OUTCOMES
+
+
+def test_an_undiagnosable_response_becomes_evidence_not_a_crash(sandbox, monkeypatch):
+    """A crash mid-matrix would abort before the report exists, leaving sent probes re-sendable."""
+    monkeypatch.setattr(matrix, "_request",
+                        lambda probe, **k: {"status": 200, "body": {"choices": "not-a-list"},
+                                            "response_bytes": 10, "response_headers": {},
+                                            "transport_failure_class": None,
+                                            "model_execution_cannot_be_excluded": False})
+    report = matrix.execute()
+    assert report["decision"]["case"] == "B"
+    assert all(o["outcome"] in matrix.OUTCOMES for o in report["observations"])
+
+
+def test_a_restart_resumes_and_never_re_sends_an_observed_probe(sandbox, monkeypatch):
+    sent = []
+
+    def crash_after_three(probe, **kwargs):
+        if len(sent) == 3:
+            raise RuntimeError("process died mid-matrix")
+        sent.append(probe["name"])
+        return _observed(_conforming(probe["schema"]))
+
+    monkeypatch.setattr(matrix, "_request", crash_after_three)
+    with pytest.raises(RuntimeError):
+        matrix.execute()
+    first_pass = list(sent)
+    assert len(first_pass) == 3
+
+    monkeypatch.setattr(matrix, "_request",
+                        lambda probe, **k: sent.append(probe["name"]) or
+                        _observed(_conforming(probe["schema"])))
+    report = matrix.execute()
+    resumed = sent[len(first_pass):]
+    assert not (set(first_pass) & set(resumed)), "a probe was re-sent after being observed"
+    assert report["decision"]["case"] == "A"
+    assert len(report["observations"]) == 10
+
+
+def test_a_ledger_from_a_different_plan_is_refused(sandbox, monkeypatch):
+    (sandbox / "ledger.json").write_text(json.dumps(
+        {"plan_sha256": "0" * 64, "observations": []}), encoding="utf-8")
+    monkeypatch.setattr(matrix, "_request",
+                        lambda probe, **k: _observed(_conforming(probe["schema"])))
+    with pytest.raises(matrix.CapabilityMatrixError, match="different frozen plan"):
+        matrix.execute()
+
+
+def test_changing_the_decision_rule_changes_the_plan_digest(monkeypatch):
+    """The interpretation is pinned by the same digest the report records."""
+    before = matrix.plan()["plan_sha256"]
+    original = matrix.plan
+
+    def altered():
+        record = original()
+        record["decision_rule"]["case_a"] = "something more convenient"
+        record["plan_sha256"] = ""
+        from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+        record["plan_sha256"] = sha256_hex(
+            canonical_bytes({k: v for k, v in record.items() if k != "plan_sha256"}))
+        return record
+
+    assert altered()["plan_sha256"] != before

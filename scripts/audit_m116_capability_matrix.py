@@ -94,6 +94,7 @@ OUTCOMES = (
     "required_violation",
     "additional_properties_violation",
     "bounds_violation",
+    "type_violation",
     "nesting_violation",
     "other_schema_violation",
     "missing_completion",
@@ -116,9 +117,14 @@ _KEYWORD_OUTCOME = {
     "exclusiveMaximum": "bounds_violation",
     "minLength": "bounds_violation",
     "maxLength": "bounds_violation",
-    "type": "nesting_violation",
+    "type": "type_violation",
     "uniqueItems": "other_schema_violation",
 }
+
+# The two probes whose whole subject is structure. For these, a type or required failure *is* a
+# nesting shortfall; for every other probe a wrong scalar type is a type violation and calling it
+# "nesting" would corrupt the capability profile with a structural claim the evidence lacks.
+_STRUCTURAL_FEATURES = ("max_nesting_depth", "array_of_object_levels")
 
 # Outcomes that count as the feature being enforced.
 ENFORCED = ("conforming",)
@@ -368,7 +374,14 @@ def diagnose(probe: Mapping[str, Any], observed: Mapping[str, Any]) -> dict[str,
     result["first_failing_keyword"] = verdict["keyword"]
     result["failing_schema_location"] = verdict["schema_location"]
     result["failing_instance_path"] = verdict["instance_path"]
-    result["outcome"] = _KEYWORD_OUTCOME.get(verdict["keyword"], "other_schema_violation")
+    outcome = _KEYWORD_OUTCOME.get(verdict["keyword"], "other_schema_violation")
+    if probe["feature_class"] in _STRUCTURAL_FEATURES and outcome in (
+        "type_violation", "required_violation"
+    ):
+        # A structural probe that failed on type or a missing link did not reach the depth the
+        # schema demands, which is precisely the capability under test.
+        outcome = "nesting_violation"
+    result["outcome"] = outcome
     return result
 
 
@@ -438,20 +451,40 @@ def _write(path: Path, record: Mapping[str, Any]) -> None:
     path.write_bytes(canonical_bytes(record) + b"\n")
 
 
+def _safe_diagnose(probe: Mapping[str, Any], observed: Mapping[str, Any]) -> dict[str, Any]:
+    """Diagnose, converting an unexpected response shape into evidence instead of a crash.
+
+    A crash mid-matrix would abort before the report is written, leaving the run resumable and the
+    already-sent probes re-sendable. Failing closed here keeps one observation per probe.
+    """
+    try:
+        return diagnose(probe, observed)
+    except Exception as exc:  # noqa: BLE001 -- an unreadable response is an observation
+        return {
+            "schema": "m116-capability-probe-observation-v1",
+            "probe": probe["name"], "feature_class": probe["feature_class"],
+            "development": True, "is_a_qualifying_call": False,
+            "outcome": "transport_or_provider_failure",
+            "content_present": False, "completion_tokens": None,
+            "raw_completion_persisted": False,
+            "why": "the response could not be diagnosed: %s" % type(exc).__name__,
+        }
+
+
 def _run_probe(probe: Mapping[str, Any]) -> dict[str, Any]:
     """One probe, under the frozen per-probe delivery rule."""
     attempts = 0
     while True:
         attempts += 1
         observed = _request(probe)
-        result = diagnose(probe, observed)
+        result = _safe_diagnose(probe, observed)
         result["physical_attempts"] = attempts
 
         retryable = (
             observed.get("status") == 429
             and not observed.get("model_execution_cannot_be_excluded")
-            and not result["content_present"]
-            and result["completion_tokens"] in (None, 0)
+            and not result.get("content_present")
+            and result.get("completion_tokens") in (None, 0)
         )
         if not retryable or attempts >= MAX_PHYSICAL_ATTEMPTS:
             result["retry_permitted"] = False
@@ -467,12 +500,28 @@ def execute() -> dict[str, Any]:
             raise CapabilityMatrixError(
                 "the M116 capability matrix already has a report; it is not redrawn")
         built = matrix()
+        # Resume rather than re-send. A probe that already has an observation in the ledger keeps
+        # it: its one permitted delivery is spent, and repeating it would be a redraw.
         observations: list[dict[str, Any]] = []
+        started = _now()
+        if LEDGER_PATH.is_file():
+            try:
+                previous = json.loads(LEDGER_PATH.read_text(encoding="utf-8"))
+            except (OSError, ValueError) as exc:
+                raise CapabilityMatrixError("cannot read the capability-matrix ledger: %s" % exc)
+            if previous.get("plan_sha256") != frozen["plan_sha256"]:
+                raise CapabilityMatrixError(
+                    "the existing ledger belongs to a different frozen plan")
+            observations = list(previous.get("observations") or [])
+            started = previous.get("started_at") or started
+        already = {o["probe"] for o in observations}
         ledger = {"schema": LEDGER_SCHEMA, "milestone": "M116", "hypothesis": "H61",
                   "development": True, "plan_sha256": frozen["plan_sha256"],
-                  "started_at": _now(), "observations": observations}
+                  "started_at": started, "observations": observations}
 
         for probe in built:
+            if probe["name"] in already:
+                continue
             if probe["name"] == "combined":
                 unenforced = [o for o in observations if o["outcome"] not in ENFORCED]
                 if unenforced:
