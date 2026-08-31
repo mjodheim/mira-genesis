@@ -40,14 +40,32 @@ def _freeze(root: Path, **overrides):
 
 @pytest.fixture()
 def tree(tmp_path: Path) -> Path:
-    """A minimal working tree carrying every bound member plus the roots, by copy."""
+    """A minimal git working tree carrying every bound member plus the roots, by copy."""
+    import subprocess
+
     for relative in set(chronology.TESTED_SYSTEM_PATHS) | set(chronology.INTERPRETATION_ROOTS):
         source = ROOT / relative
         target = tmp_path / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes(source.read_bytes())
     (tmp_path / "experiments" / "M116").mkdir(parents=True, exist_ok=True)
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.name", "Test"],
+                    ["git", "config", "user.email", "test@example.invalid"],
+                    ["git", "add", "-A"],
+                    ["git", "commit", "-q", "-m", "tree"]):
+        subprocess.run(command, cwd=tmp_path, check=True, capture_output=True)
     return tmp_path
+
+
+def _commit_freeze(root: Path, record) -> None:
+    """Write the freeze and commit it, as the real chronology requires."""
+    import subprocess
+
+    (root / chronology.FREEZE_PATH).write_text(json.dumps(record), encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=root, check=True, capture_output=True)
+    subprocess.run(["git", "commit", "-q", "-m", "freeze"], cwd=root, check=True,
+                   capture_output=True)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -60,14 +78,43 @@ def test_qualifying_delivery_refuses_when_the_freeze_is_absent(tree: Path):
 
 
 def test_qualifying_delivery_is_permitted_once_the_freeze_exists(tree: Path):
-    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    _commit_freeze(tree, _freeze(tree))
     permission = chronology.assert_qualifying_delivery_permitted(tree)
     assert permission["permitted"] is True
     assert permission["freeze_precedes_scientific_generation"] is True
+    assert permission["freeze_is_committed_at_head"] is True
+
+
+def test_an_uncommitted_freeze_does_not_authorize_delivery(tree: Path):
+    """A file written moments before the request is not a freeze; a commit is what makes it one."""
+    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    with pytest.raises(chronology.ChronologyError, match="not committed at HEAD"):
+        chronology.assert_qualifying_delivery_permitted(tree)
+
+
+def test_a_freeze_edited_after_being_committed_does_not_authorize_delivery(tree: Path):
+    _commit_freeze(tree, _freeze(tree))
+    record = _freeze(tree)
+    record["frozen_at"] = "2099-01-01T00:00:00Z"
+    (tree / chronology.FREEZE_PATH).write_text(json.dumps(record), encoding="utf-8")
+    with pytest.raises(chronology.ChronologyError, match="differs from the committed one"):
+        chronology.assert_qualifying_delivery_permitted(tree)
+
+
+def test_the_gate_accepts_no_caller_supplied_freeze_record():
+    """The runner must not be able to build a freeze and hand it straight to the gate.
+
+    An earlier form took `freeze=`, which let a caller satisfy every digest check by freezing
+    moments before generating -- bypassing the chronology the freeze exists to establish.
+    """
+    import inspect
+
+    parameters = inspect.signature(chronology.assert_qualifying_delivery_permitted).parameters
+    assert set(parameters) == {"root"}
 
 
 def test_qualifying_delivery_refuses_if_a_frozen_member_changed(tree: Path):
-    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    _commit_freeze(tree, _freeze(tree))
     victim = tree / "metamorphosis" / "m113_evaluator.py"
     victim.write_bytes(victim.read_bytes() + b"\n# adapted after the freeze\n")
     with pytest.raises(chronology.ChronologyError, match="changed after it was frozen"):
@@ -76,7 +123,7 @@ def test_qualifying_delivery_refuses_if_a_frozen_member_changed(tree: Path):
 
 def test_qualifying_delivery_refuses_if_the_machinery_under_test_changed(tree: Path):
     """The M107-M111 lineage is the thing being tested; it must not move after the freeze."""
-    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    _commit_freeze(tree, _freeze(tree))
     victim = tree / "metamorphosis" / "m109_runtime.py"
     victim.write_bytes(victim.read_bytes() + b"\n# tuned to the unseen bank\n")
     with pytest.raises(chronology.ChronologyError, match="changed after it was frozen"):
@@ -119,7 +166,7 @@ def test_no_completion_derived_artifact_may_predate_the_freeze(tree: Path, artif
 
 
 def test_delivery_is_refused_once_a_completion_derived_artifact_appears(tree: Path):
-    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    _commit_freeze(tree, _freeze(tree))
     (tree / "experiments" / "M116" / "TELEMETRY.json").write_text("{}", encoding="utf-8")
     with pytest.raises(chronology.ChronologyError, match="already exist"):
         chronology.assert_qualifying_delivery_permitted(tree)
@@ -229,7 +276,7 @@ def test_admission_cannot_authorize_a_redraw():
 
 def test_the_content_correlated_quantities_exist_only_after_the_freeze(tree: Path):
     """Every quantity the owner flagged is produced by code that runs after step 5."""
-    (tree / chronology.FREEZE_PATH).write_text(json.dumps(_freeze(tree)), encoding="utf-8")
+    _commit_freeze(tree, _freeze(tree))
     chronology.assert_qualifying_delivery_permitted(tree)  # step 5 complete, step 6 not yet
 
     flagged = ("completion_tokens", "content_bytes", "response_bytes", "finish_reason")

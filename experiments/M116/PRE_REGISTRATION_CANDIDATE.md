@@ -129,8 +129,14 @@ H61 therefore moves the freeze ahead of the qualifying request. The order is:
 12. qualification, scoring and P1–P22 execute against the already-frozen tested system.
 
 The qualifying delivery runner **mechanically refuses** to send the request unless the tested-system
-freeze already exists, validates against the working tree, and no completion-derived artifact is
-present. No H61 scientific completion may exist while the tested system remains editable.
+freeze is **committed at HEAD** with the same bytes as on disk, validates against the working tree,
+and no completion-derived artifact is present. The gate accepts no caller-supplied freeze record:
+a runner that could build a freeze and hand it straight to the gate would satisfy every digest
+check by freezing moments before generating, which is exactly the chronology the freeze exists to
+establish. A file written just before the request is not a freeze; a commit is what makes "before"
+auditable by someone who was not in the room.
+
+No H61 scientific completion may exist while the tested system remains editable.
 
 The consequence that carries the blindness argument: because no qualifying completion may exist
 before step 5, any artifact that exists before the freeze contains **zero** information derived from

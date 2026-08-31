@@ -226,10 +226,15 @@ def _stat_signature(base: Path, relatives: Iterable[str]) -> frozenset[tuple[str
     return frozenset(signature)
 
 
-def interpretation_closure(root: Path | None = None) -> set[str]:
-    """Every first-party module reachable from the interpretation roots, transitively."""
+def interpretation_closure(root: Path | None = None, *, fresh: bool = False) -> set[str]:
+    """Every first-party module reachable from the interpretation roots, transitively.
+
+    `fresh=True` bypasses the cache. The freeze path always asks for a fresh closure: the cache is
+    keyed on size and modification time, which a deliberate edit could preserve, and the one thing
+    that must never be stale is the answer to "is any interpreting module unbound?".
+    """
     base = _root(root)
-    cached = _CLOSURE_CACHE.get(base)
+    cached = None if fresh else _CLOSURE_CACHE.get(base)
     if cached is not None:
         signature, closure = cached
         if signature == _stat_signature(base, set(closure) | set(INTERPRETATION_ROOTS)):
@@ -251,20 +256,20 @@ def interpretation_closure(root: Path | None = None) -> set[str]:
     return seen
 
 
-def unbound_interpretation_modules(root: Path | None = None) -> list[str]:
+def unbound_interpretation_modules(root: Path | None = None, *, fresh: bool = False) -> list[str]:
     """Modules that can change what a completion means and are not bound by the freeze.
 
     This is the check that keeps the inventory honest. Prose saying "everything relevant is bound"
     ages badly the first time somebody adds an import; a closure computed from the source does not.
     """
     bound = set(TESTED_SYSTEM_PATHS)
-    return sorted(interpretation_closure(root) - bound - set(UNBOUND_BY_DESIGN))
+    return sorted(interpretation_closure(root, fresh=fresh) - bound - set(UNBOUND_BY_DESIGN))
 
 
-def inventory(root: Path | None = None) -> dict[str, Any]:
+def inventory(root: Path | None = None, *, fresh: bool = False) -> dict[str, Any]:
     """The committed statement of what the freeze binds, and what it deliberately does not."""
-    closure = sorted(interpretation_closure(root))
-    unbound = unbound_interpretation_modules(root)
+    closure = sorted(interpretation_closure(root, fresh=fresh))
+    unbound = unbound_interpretation_modules(root, fresh=fresh)
     record = {
         "schema": INVENTORY_SCHEMA,
         "milestone": MILESTONE,
@@ -306,7 +311,7 @@ def build_freeze(
     """Build the pre-generation freeze. Refuses if any post-freeze artifact already exists."""
     base = _root(root)
     assert_no_scientific_artifacts(base)
-    unbound = unbound_interpretation_modules(base)
+    unbound = unbound_interpretation_modules(base, fresh=True)
     if unbound:
         raise ChronologyError(
             "these modules can change how a completion is interpreted and are not bound: %s"
@@ -323,7 +328,7 @@ def build_freeze(
         "bank_nonce_sha256": bank_nonce_sha256,
         "frozen_at": frozen_at,
         "frozen_at_commit": frozen_at_commit,
-        "inventory_sha256": inventory(base)["inventory_sha256"],
+        "inventory_sha256": inventory(base, fresh=True)["inventory_sha256"],
         "tested_system_digests": tested_system_digests(base),
         "freeze_commitment_sha256": "",
     }
@@ -371,7 +376,7 @@ def validate_freeze(record: Mapping[str, Any], *, root: Path | None = None) -> N
         raise ChronologyError(
             "the tested system changed after it was frozen: %s" % ", ".join(drifted)
         )
-    if inventory(base)["inventory_sha256"] != record.get("inventory_sha256"):
+    if inventory(base, fresh=True)["inventory_sha256"] != record.get("inventory_sha256"):
         raise ChronologyError("the tested-system inventory changed after the freeze")
 
 
@@ -386,32 +391,64 @@ def assert_no_scientific_artifacts(root: Path | None = None) -> None:
         )
 
 
-def assert_qualifying_delivery_permitted(
-    root: Path | None = None, *, freeze: Mapping[str, Any] | None = None
-) -> dict[str, Any]:
+def _head_blob(root: Path, relative: Path) -> bytes | None:
+    """The bytes git has for `relative` at HEAD, or None if it is not committed there."""
+    import subprocess
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(root), "cat-file", "blob", "HEAD:%s" % relative.as_posix()],
+            capture_output=True, check=False,
+        )
+    except OSError:
+        return None
+    return completed.stdout if completed.returncode == 0 else None
+
+
+def assert_qualifying_delivery_permitted(root: Path | None = None) -> dict[str, Any]:
     """The gate the qualifying delivery runner must pass before it may send the request.
 
-    There is no argument by which a caller reaches the network without a freeze that already
-    exists and still validates against the working tree.
+    The freeze is read from the committed file and from nowhere else. An earlier form of this
+    function accepted a caller-supplied record, which was a hole rather than a convenience: a
+    runner could have called `assert_qualifying_delivery_permitted(freeze=build_freeze(...))` and
+    satisfied every check by building the freeze moments before generating. Every digest would
+    have matched, and the chronology the freeze exists to establish would have been bypassed
+    completely.
+
+    So the record must be on disk, and it must additionally be committed at HEAD with the same
+    bytes. A file written seconds before the request is not a freeze; a commit is what makes
+    "before" auditable by someone who was not in the room.
     """
+    import json
+
     base = _root(root)
-    if freeze is None:
-        path = base / FREEZE_PATH
-        if not path.is_file():
-            raise ChronologyError(
-                "the H61 qualifying request may not be sent before the tested system is frozen"
-            )
-        import json
-        try:
-            freeze = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise ChronologyError("cannot read the M116 tested-system freeze: %s" % exc)
+    path = base / FREEZE_PATH
+    if not path.is_file():
+        raise ChronologyError(
+            "the H61 qualifying request may not be sent before the tested system is frozen"
+        )
+    raw = path.read_bytes()
+    committed = _head_blob(base, FREEZE_PATH)
+    if committed is None:
+        raise ChronologyError(
+            "the tested-system freeze is not committed at HEAD; an uncommitted freeze does not "
+            "establish that it precedes the generation"
+        )
+    if committed != raw:
+        raise ChronologyError(
+            "the tested-system freeze on disk differs from the committed one"
+        )
+    try:
+        freeze = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise ChronologyError("cannot read the M116 tested-system freeze: %s" % exc)
+
     validate_freeze(freeze, root=base)
     assert_no_scientific_artifacts(base)
     return {
         "schema": "m116-delivery-permission-v1",
         "permitted": True,
         "freeze_commitment_sha256": freeze["freeze_commitment_sha256"],
+        "freeze_is_committed_at_head": True,
         "tested_system_members": len(TESTED_SYSTEM_PATHS),
         "freeze_precedes_scientific_generation": True,
     }
