@@ -1,0 +1,441 @@
+"""M116 DEVELOPMENT-only large structured-output capacity audit.
+
+This harness exists only to decide whether the prospective H61 generator route can safely be frozen.
+It NEVER sends the M113/M114/M115 qualifying input and it never creates, seals, reveals, qualifies or
+scores a carrier bank.
+
+The acceptance rule is intentionally committed before the first network call:
+
+* exact DeepSeek alias -> canonical checkpoint identity on Alibaba;
+* direct routing, one selected endpoint, one router attempt, no fallback/pipeline intervention;
+* HTTP 200 and finish_reason=stop;
+* candidate M116 output controls: max_tokens=131072 and reasoning effort=none;
+* a synthetic strict-schema payload with exactly 1536 rows and eight bounded integer fields;
+* strict parsing of that payload;
+* observed completion_tokens > 32000, proving completion beyond M115's old ceiling;
+* no returned reasoning when the provider exposes reasoning details.
+
+At most three physical DEVELOPMENT attempts are permitted, and only an explicit HTTP 429 carrying no
+completion and no evidence of model execution may be retried after 60 seconds. The first materialized
+or otherwise terminal response ends the audit. Raw completion content is never written.
+"""
+
+from __future__ import annotations
+
+import argparse
+import http.client
+import json
+import os
+import ssl
+import sys
+import time
+import urllib.parse
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any, Mapping
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from metamorphosis import m115_identity as model_identity  # noqa: E402
+from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
+
+MODEL = "deepseek/deepseek-v4-flash-0731"
+CANONICAL_CHECKPOINT = "deepseek/deepseek-v4-flash-20260731"
+PROVIDER = "Alibaba"
+ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+SECRET_VARIABLE = "OPENROUTER_API_KEY"
+REPORT_PATH = ROOT / "experiments" / "M116" / "CAPACITY_STRESS_DEVELOPMENT.json"
+MAX_TOKENS = 131072
+OLD_M115_MAX_TOKENS = 32000
+ROWS = 1536
+RETRY_WAIT_SECONDS = 60
+MAX_PHYSICAL_ATTEMPTS = 3
+
+STRESS_INPUT = (
+    "Return a JSON object with exactly one key named rows. Its value must contain exactly 1536 "
+    "objects. Every object must contain exactly the eight integer keys a,b,c,d,e,f,g,h. Every "
+    "integer must be between 10000000 and 99999999 inclusive. No prose or other keys."
+)
+
+_ROW_PROPERTIES = {
+    key: {"type": "integer", "minimum": 10000000, "maximum": 99999999}
+    for key in "abcdefgh"
+}
+STRESS_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "rows": {
+            "type": "array",
+            "minItems": ROWS,
+            "maxItems": ROWS,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": _ROW_PROPERTIES,
+                "required": list("abcdefgh"),
+            },
+        }
+    },
+    "required": ["rows"],
+}
+
+REQUEST_BODY: dict[str, Any] = {
+    "model": MODEL,
+    "messages": [{"role": "user", "content": STRESS_INPUT}],
+    "provider": {
+        "only": [PROVIDER],
+        "allow_fallbacks": False,
+        "require_parameters": True,
+    },
+    "reasoning": {"effort": "none"},
+    "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+            "name": "m116_capacity_rows",
+            "strict": True,
+            "schema": STRESS_SCHEMA,
+        },
+    },
+    "max_tokens": MAX_TOKENS,
+    "seed": 0,
+    "stream": False,
+    "temperature": 1.0,
+}
+
+QUALIFYING_INPUT_PATHS = (
+    ROOT / "experiments" / "M113" / "QUALIFYING_INPUT.txt",
+    ROOT / "experiments" / "M114" / "QUALIFYING_INPUT.txt",
+    ROOT / "experiments" / "M115" / "QUALIFYING_INPUT.txt",
+)
+
+
+class CapacityAuditError(RuntimeError):
+    """M116 capacity readiness cannot be established without guessing or crossing a boundary."""
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _secret() -> str:
+    secret = os.environ.get(SECRET_VARIABLE)
+    if not secret:
+        raise CapacityAuditError(f"{SECRET_VARIABLE} is not set; no network request was made")
+    return secret
+
+
+def _assert_nonqualifying() -> None:
+    stress = STRESS_INPUT.encode("utf-8")
+    stress_digest = sha256_hex(stress)
+    serialized_schema = canonical_bytes(STRESS_SCHEMA)
+    for path in QUALIFYING_INPUT_PATHS:
+        if not path.is_file():
+            continue
+        qualifying = path.read_bytes()
+        if stress_digest == sha256_hex(qualifying):
+            raise CapacityAuditError("the M116 stress input equals a qualifying carrier input")
+        decoded = qualifying.decode("utf-8", "replace")
+        if STRESS_INPUT.strip() in decoded or decoded.strip() in STRESS_INPUT:
+            raise CapacityAuditError("the M116 stress input overlaps a qualifying carrier input")
+        # The stress schema must stay unrelated to the carrier interaction language.
+        if b'"machines"' in serialized_schema or b'"surface"' in serialized_schema:
+            raise CapacityAuditError("the M116 stress schema contains carrier-schema vocabulary")
+
+
+def request_body_digest() -> str:
+    _assert_nonqualifying()
+    return sha256_hex(canonical_bytes(REQUEST_BODY))
+
+
+def _connection(url: str, timeout: int) -> tuple[http.client.HTTPSConnection, urllib.parse.SplitResult]:
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or not parsed.hostname:
+        raise CapacityAuditError("capacity audit endpoint must use https")
+    context = ssl.create_default_context()
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+    if proxy:
+        via = urllib.parse.urlsplit(proxy if "://" in proxy else "http://" + proxy)
+        conn = http.client.HTTPSConnection(via.hostname, via.port or 80, timeout=timeout, context=context)
+        conn.set_tunnel(parsed.hostname, parsed.port or 443)
+    else:
+        conn = http.client.HTTPSConnection(parsed.hostname, parsed.port or 443, timeout=timeout, context=context)
+    return conn, parsed
+
+
+def _request(*, timeout: int = 1200) -> dict[str, Any]:
+    conn, parsed = _connection(ENDPOINT, timeout)
+    payload = canonical_bytes(REQUEST_BODY)
+    headers = {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {_secret()}",
+        "Content-Type": "application/json",
+        "X-OpenRouter-Metadata": "enabled",
+        "X-OpenRouter-Cache": "false",
+    }
+    started = _now()
+    try:
+        conn.request("POST", parsed.path or "/", body=payload, headers=headers)
+        response = conn.getresponse()
+        raw = response.read()
+        status = response.status
+        observed_headers = {
+            key.lower(): value
+            for key, value in response.getheaders()
+            if key.lower() in {"date", "server", "retry-after", "x-generation-id"}
+        }
+    finally:
+        conn.close()
+    try:
+        decoded = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        decoded = None
+    return {
+        "started_at": started,
+        "finished_at": _now(),
+        "status": status,
+        "headers": observed_headers,
+        "body": decoded,
+        "response_sha256": sha256_hex(raw),
+        "response_bytes": len(raw),
+    }
+
+
+def _first_message(body: Mapping[str, Any]) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
+    choices = body.get("choices")
+    if not isinstance(choices, list) or not choices or not isinstance(choices[0], Mapping):
+        return {}, {}
+    first = choices[0]
+    message = first.get("message")
+    return first, message if isinstance(message, Mapping) else {}
+
+
+def _execution_evidence(body: Mapping[str, Any]) -> dict[str, bool]:
+    first, message = _first_message(body)
+    content = message.get("content")
+    completion_present = isinstance(content, str) and bool(content.strip())
+    usage = body.get("usage") if isinstance(body.get("usage"), Mapping) else {}
+    completion_tokens = usage.get("completion_tokens") if isinstance(usage, Mapping) else None
+    executed = bool(first) or (
+        isinstance(completion_tokens, int) and not isinstance(completion_tokens, bool) and completion_tokens > 0
+    )
+    return {
+        "completion_present": completion_present,
+        "model_execution_cannot_be_excluded": executed and not completion_present,
+    }
+
+
+def _strict_payload_holds(content: Any) -> tuple[bool, str | None]:
+    if not isinstance(content, str):
+        return False, None
+    try:
+        value = json.loads(content)
+    except ValueError:
+        return False, None
+    if not isinstance(value, dict) or set(value) != {"rows"}:
+        return False, None
+    rows = value.get("rows")
+    if not isinstance(rows, list) or len(rows) != ROWS:
+        return False, None
+    expected = set("abcdefgh")
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != expected:
+            return False, None
+        for number in row.values():
+            if (
+                not isinstance(number, int)
+                or isinstance(number, bool)
+                or not 10000000 <= number <= 99999999
+            ):
+                return False, None
+    return True, sha256_hex(canonical_bytes(value))
+
+
+def _reasoning_tokens(usage: Mapping[str, Any]) -> int | None:
+    details = usage.get("completion_tokens_details")
+    if not isinstance(details, Mapping):
+        return None
+    value = details.get("reasoning_tokens")
+    return value if isinstance(value, int) and not isinstance(value, bool) else None
+
+
+def evaluate_terminal_observation(observed: Mapping[str, Any]) -> dict[str, Any]:
+    body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
+    first, message = _first_message(body)
+    content = message.get("content")
+    strict_output, payload_digest = _strict_payload_holds(content)
+    usage = body.get("usage") if isinstance(body.get("usage"), Mapping) else {}
+    completion_tokens = usage.get("completion_tokens")
+    if not isinstance(completion_tokens, int) or isinstance(completion_tokens, bool):
+        completion_tokens = None
+    reasoning_tokens = _reasoning_tokens(usage)
+    reasoning_fields_empty = all(
+        message.get(key) in (None, "", [], {})
+        for key in ("reasoning", "reasoning_content", "reasoning_details")
+    )
+    reasoning_observation_holds = reasoning_fields_empty and reasoning_tokens in (None, 0)
+
+    identity = model_identity.attest_completion_response(body) if isinstance(content, str) and content.strip() else None
+    identity_holds = isinstance(identity, Mapping) and identity.get("holds") is True
+    router = identity.get("router_attestation") if isinstance(identity, Mapping) else None
+    canonical_checkpoint = router.get("canonical_checkpoint") if isinstance(router, Mapping) else None
+
+    checks = {
+        "http_200": observed.get("status") == 200,
+        "finish_reason_stop": first.get("finish_reason") == "stop",
+        "strict_output_parsed": strict_output,
+        "completion_exceeds_m115_ceiling": completion_tokens is not None
+        and completion_tokens > OLD_M115_MAX_TOKENS,
+        "reasoning_request_is_explicitly_off": REQUEST_BODY.get("reasoning") == {"effort": "none"},
+        "reasoning_response_has_no_exposed_tokens": reasoning_observation_holds,
+        "runtime_identity_holds": identity_holds,
+        "canonical_checkpoint_exact": canonical_checkpoint == CANONICAL_CHECKPOINT,
+        "served_provider_exact": body.get("provider") == PROVIDER,
+        "served_model_alias_exact": body.get("model") == MODEL,
+    }
+    gate_holds = all(checks.values())
+    return {
+        "schema": "m116-capacity-stress-observation-v1",
+        "development": True,
+        "is_a_qualifying_call": False,
+        "qualifying_input_was_sent": False,
+        "observed_at": observed.get("finished_at") or _now(),
+        "status": observed.get("status"),
+        "finish_reason": first.get("finish_reason"),
+        "request_body_sha256": request_body_digest(),
+        "response_sha256": observed.get("response_sha256"),
+        "response_bytes": observed.get("response_bytes"),
+        "completion_tokens": completion_tokens,
+        "reasoning_tokens": reasoning_tokens,
+        "synthetic_rows": ROWS if strict_output else 0,
+        "synthetic_payload_sha256": payload_digest,
+        "identity_attestation": identity,
+        "checks": checks,
+        "gate_holds": gate_holds,
+        "raw_completion_persisted": False,
+    }
+
+
+def _safe_nonmaterialized_attempt(observed: Mapping[str, Any], position: int) -> dict[str, Any]:
+    body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
+    evidence = _execution_evidence(body)
+    return {
+        "attempt_index": position,
+        "started_at": observed.get("started_at"),
+        "finished_at": observed.get("finished_at"),
+        "status": observed.get("status"),
+        "response_sha256": observed.get("response_sha256"),
+        "response_bytes": observed.get("response_bytes"),
+        "completion_present": evidence["completion_present"],
+        "model_execution_cannot_be_excluded": evidence["model_execution_cannot_be_excluded"],
+        "retry_permitted": observed.get("status") == 429
+        and not evidence["completion_present"]
+        and not evidence["model_execution_cannot_be_excluded"],
+    }
+
+
+def execute() -> dict[str, Any]:
+    _assert_nonqualifying()
+    if REPORT_PATH.exists():
+        raise CapacityAuditError("M116 DEVELOPMENT capacity report already exists; the audit is not redrawn")
+
+    attempts: list[dict[str, Any]] = []
+    terminal: dict[str, Any] | None = None
+    for position in range(1, MAX_PHYSICAL_ATTEMPTS + 1):
+        if position > 1:
+            time.sleep(RETRY_WAIT_SECONDS)
+        observed = _request()
+        body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
+        evidence = _execution_evidence(body)
+        if evidence["completion_present"]:
+            terminal = evaluate_terminal_observation(observed)
+            terminal["attempt_index"] = position
+            attempts.append(
+                {
+                    "attempt_index": position,
+                    "status": observed.get("status"),
+                    "outcome": "materialized_stress_response",
+                    "retry_permitted": False,
+                }
+            )
+            break
+
+        safe = _safe_nonmaterialized_attempt(observed, position)
+        attempts.append(safe)
+        if not safe["retry_permitted"]:
+            terminal = {
+                "schema": "m116-capacity-stress-observation-v1",
+                "development": True,
+                "is_a_qualifying_call": False,
+                "qualifying_input_was_sent": False,
+                "attempt_index": position,
+                "status": observed.get("status"),
+                "gate_holds": False,
+                "terminal_failure": "nonmaterialized_terminal_response",
+                "raw_completion_persisted": False,
+            }
+            break
+
+    if terminal is None:
+        terminal = {
+            "schema": "m116-capacity-stress-observation-v1",
+            "development": True,
+            "is_a_qualifying_call": False,
+            "qualifying_input_was_sent": False,
+            "attempt_index": len(attempts),
+            "status": 429 if attempts else None,
+            "gate_holds": False,
+            "terminal_failure": "development_capacity_rejections_exhausted",
+            "raw_completion_persisted": False,
+        }
+
+    report = {
+        "schema": "m116-capacity-stress-development-v1",
+        "milestone": "M116",
+        "hypothesis": "H61",
+        "development": True,
+        "request_body_sha256": request_body_digest(),
+        "candidate_max_tokens": MAX_TOKENS,
+        "m115_max_tokens": OLD_M115_MAX_TOKENS,
+        "reasoning_control": {"effort": "none"},
+        "requested_provider": PROVIDER,
+        "requested_model": MODEL,
+        "required_canonical_checkpoint": CANONICAL_CHECKPOINT,
+        "max_physical_attempts": MAX_PHYSICAL_ATTEMPTS,
+        "retry_wait_seconds": RETRY_WAIT_SECONDS,
+        "attempts": attempts,
+        "terminal_observation": terminal,
+        "gate_holds": terminal.get("gate_holds") is True,
+        "qualifying_calls": 0,
+        "raw_completion_persisted": False,
+    }
+    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REPORT_PATH.write_bytes(canonical_bytes(report) + b"\n")
+    return report
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--execute", action="store_true", help="perform the committed DEVELOPMENT audit")
+    parser.add_argument("--request-digest", action="store_true", help="print the canonical DEVELOPMENT request digest")
+    args = parser.parse_args(argv)
+
+    if args.execute == args.request_digest:
+        parser.error("choose exactly one of --execute or --request-digest")
+    if args.request_digest:
+        print(request_body_digest())
+        return 0
+
+    report = execute()
+    print(json.dumps({
+        "gate_holds": report["gate_holds"],
+        "attempts": len(report["attempts"]),
+        "report": str(REPORT_PATH.relative_to(ROOT)),
+    }, sort_keys=True))
+    return 0 if report["gate_holds"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
