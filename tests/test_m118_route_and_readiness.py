@@ -288,3 +288,55 @@ def test_the_preregistration_states_the_failure_and_success_rules():
     assert "H63 untested / instrument unavailable at execution time" in text
     assert "must not be used to alter the H63 scientific proposition" in text
     assert "No provider substitution" in text
+
+
+# -------------------------------------------------------------------------------------------
+# Readiness revision 2: the budget must afford the retries the plan grants
+# -------------------------------------------------------------------------------------------
+
+def test_the_budget_is_derived_from_the_retry_rule_not_chosen():
+    budget = readiness.plan()["budget"]
+    assert budget["chosen_rather_than_derived"] is False
+    assert budget["max_requests"] == readiness.MANDATORY_REQUESTS * (readiness.MAX_RETRIES + 1)
+
+
+def test_the_budget_affords_every_retry_the_plan_permits():
+    """Revision 1 granted two retries on eleven requests with a budget of twelve."""
+    assert readiness.MAX_REQUESTS >= readiness.MANDATORY_REQUESTS * (readiness.MAX_RETRIES + 1)
+
+
+def test_the_plan_refuses_to_freeze_a_budget_that_cannot_afford_its_retries(monkeypatch):
+    monkeypatch.setattr(readiness, "MAX_REQUESTS", 12)
+    with pytest.raises(readiness.ReadinessError, match="cannot accommodate the retries"):
+        readiness.plan()
+
+
+def test_the_mandatory_request_count_matches_the_probes_plus_the_stress():
+    matrix = readiness.probes.build_matrix(readiness.m116._census())
+    assert readiness.MANDATORY_REQUESTS == len(matrix) + 1
+
+
+def test_no_requirement_was_relaxed_by_the_budget_fix():
+    frozen = readiness.plan()
+    assert readiness.STRESS_MIN_COMPLETION_TOKENS == 32000
+    assert readiness.MAX_REASONING_TOKENS == 0
+    assert frozen["stress_requirement"]["finish_reason"] == "stop"
+    assert frozen["stress_requirement"]["output_must_conform"] is True
+    assert frozen["route"]["provider"] == fixed.PROVIDER
+
+
+def test_the_aborted_attempt_is_preserved_and_wrote_no_verdict():
+    directory = M118 / "READINESS_ATTEMPT_01_INSTRUMENT_ABORT"
+    assert (directory / "README.md").is_file()
+    text = (directory / "README.md").read_text(encoding="utf-8")
+    assert "instrument abort" in text
+    assert "no verdict" in text.lower()
+    assert not (directory / "READINESS_RESULT.json").exists()
+
+
+def test_the_abort_record_does_not_claim_the_route_failed():
+    text = (M118 / "READINESS_ATTEMPT_01_INSTRUMENT_ABORT" / "README.md").read_text(
+        encoding="utf-8")
+    assert "no verdict about the fixed route exists" in text.lower() or \
+        "Verdict about the route | **none**" in text
+    assert "Nothing can be said about whether the route enforces" in text

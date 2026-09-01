@@ -64,17 +64,33 @@ STRESS_MIN_COMPLETION_TOKENS = 32000
 REASONING_EFFORT = "none"
 MAX_REASONING_TOKENS = 0
 
-# Budget. A readiness gate that retries until it passes is not a gate.
-MAX_REQUESTS = 12
-
 # The only retry permitted, inherited verbatim: an explicit pre-generation 429 carrying no
 # completion and no evidence of model execution. Nothing content-dependent, ever.
 RETRYABLE = ("pre_generation_429",)
 MAX_RETRIES = 2
 
+# Mandatory requests: one per capability probe, plus the token-capacity stress.
+MANDATORY_REQUESTS = 11
+
+# The budget is derived from the retry rule rather than chosen. Revision 1 fixed it at 12 while
+# granting up to two retries on each of eleven mandatory requests -- a contradiction visible in
+# the constants alone, and one that duly aborted the gate at the stress after two pre-generation
+# 429s consumed the slack. A budget that cannot accommodate the retries its own plan grants makes
+# the gate fail for its own arithmetic rather than for anything about the route.
+MAX_REQUESTS = MANDATORY_REQUESTS * (MAX_RETRIES + 1)
+
 
 class ReadinessError(RuntimeError):
     """Fail closed. A readiness gate that guesses is not a gate."""
+
+
+def _assert_budget_admits_the_retry_rule() -> None:
+    """An admitted retry must be affordable, or the gate fails on its own arithmetic."""
+    needed = MANDATORY_REQUESTS * (MAX_RETRIES + 1)
+    if MAX_REQUESTS < needed:
+        raise ReadinessError(
+            "the frozen budget cannot accommodate the retries the plan grants: %d < %d"
+            % (MAX_REQUESTS, needed))
 
 
 def required_feature_classes() -> list[str]:
@@ -166,7 +182,12 @@ def plan() -> dict[str, Any]:
             "repair_permitted": False,
             "resend_of_a_materialized_observation_permitted": False,
         },
-        "budget": {"max_requests": MAX_REQUESTS},
+        "budget": {
+            "max_requests": MAX_REQUESTS,
+            "mandatory_requests": MANDATORY_REQUESTS,
+            "derived_as": "mandatory_requests * (max_retries + 1)",
+            "chosen_rather_than_derived": False,
+        },
         "stopping_rule": "every requirement must hold on this run; the first requirement that fails "
                          "ends the gate as not ready, and H63 stops before scientific generation "
                          "rather than changing provider, model, threshold or schema",
@@ -183,6 +204,7 @@ def plan() -> dict[str, Any]:
         ],
         "plan_sha256": "",
     }
+    _assert_budget_admits_the_retry_rule()
     record["plan_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in record.items() if k != "plan_sha256"}))
     return record
@@ -240,10 +262,37 @@ def execute() -> dict[str, Any]:
     observations: list[dict[str, Any]] = []
     identity: dict[str, Any] | None = None
     verdict = "ready"
+    DIRECTORY.mkdir(parents=True, exist_ok=True)
 
+    def _persist_ledger(state: str, note: str = "") -> None:
+        """Write what has been measured so far.
+
+        Revision 1 persisted nothing until the end, so when it aborted on its own budget
+        arithmetic it lost every observation it had already paid for -- the record could not say
+        what the route had done. That is M115's failure mode, and an abort is exactly when the
+        evidence matters most.
+        """
+        LEDGER_PATH.write_bytes(canonical_bytes({
+            "schema": "m118-readiness-ledger-v1",
+            "milestone": "M118", "hypothesis": "H63", "development": True,
+            "state": state, "note": note,
+            "plan_sha256": frozen["plan_sha256"],
+            "route": fixed.route(),
+            "identity": identity,
+            "observations": observations,
+            "requests_spent": budget["spent"],
+            "budget": frozen["budget"],
+            "raw_completion_persisted": False,
+        }) + b"\n")
+
+    _persist_ledger("started")
     for probe in probes.build_matrix(m116._census()):
-        observed = _send(probe["prompt"], probe["schema"], "m118_readiness_%s" % probe["name"],
-                         PROBE_MAX_TOKENS, budget)
+        try:
+            observed = _send(probe["prompt"], probe["schema"],
+                             "m118_readiness_%s" % probe["name"], PROBE_MAX_TOKENS, budget)
+        except ReadinessError as exc:
+            _persist_ledger("instrument_aborted", "probing %s: %s" % (probe["name"], exc))
+            raise
         body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
         if identity is None:
             identity = fixed.identity_holds(body)
@@ -252,6 +301,7 @@ def execute() -> dict[str, Any]:
                                   requested_provider=fixed.PROVIDER)
         diagnosis["reasoning_tokens"] = _reasoning_tokens(body)
         observations.append(diagnosis)
+        _persist_ledger("probing")
 
     unenforced = sorted({o["feature_class"] for o in observations
                          if o["probe"] != "combined" and o["outcome"] not in m116.ENFORCED})
@@ -263,8 +313,12 @@ def execute() -> dict[str, Any]:
 
     stress_record: dict[str, Any] = {"ran": False}
     if identity and identity["holds"] and not unenforced and combined_conforms:
-        observed = _send(stress.STRESS_PROMPT, stress.build_stress_schema(), "m118_readiness_stress",
-                         STRESS_MAX_TOKENS, budget)
+        try:
+            observed = _send(stress.STRESS_PROMPT, stress.build_stress_schema(),
+                             "m118_readiness_stress", STRESS_MAX_TOKENS, budget)
+        except ReadinessError as exc:
+            _persist_ledger("instrument_aborted", "stress: %s" % exc)
+            raise
         body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
         choices = body.get("choices") if isinstance(body.get("choices"), list) else []
         first = choices[0] if choices and isinstance(choices[0], Mapping) else {}
@@ -328,7 +382,6 @@ def execute() -> dict[str, Any]:
     }
     result["result_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in result.items() if k != "result_sha256"}))
-    DIRECTORY.mkdir(parents=True, exist_ok=True)
     LEDGER_PATH.write_bytes(canonical_bytes(result) + b"\n")
     RESULT_PATH.write_bytes(canonical_bytes(result) + b"\n")
     return result

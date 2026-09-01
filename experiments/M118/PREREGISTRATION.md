@@ -82,6 +82,16 @@ classifier. The plan digest binds them and the result records it.
   ten probes with the control applied — so the requirement is achievable and is not a bar invented
   here.
 
+> **Readiness apparatus revision 2.** Revision 1 (`dabff810…`) aborted on its own budget
+> arithmetic before it could evaluate the stress, writing no verdict. It fixed the budget at 12
+> while granting 2 retries on each of 11 mandatory requests — a contradiction visible in the
+> constants alone. The budget is now *derived* from the retry rule
+> (`mandatory × (retries + 1)` = 33) and the plan refuses to freeze one that cannot afford the
+> retries it grants; the ledger is also persisted incrementally, so an abort preserves what it
+> measured instead of discarding it. Preserved in
+> [`READINESS_ATTEMPT_01_INSTRUMENT_ABORT/`](READINESS_ATTEMPT_01_INSTRUMENT_ABORT/README.md).
+> **No requirement was relaxed and no route changed.**
+
 **No content-dependent redraw.** The only surviving retry is the inherited one: an explicit
 pre-generation HTTP 429 carrying no completion and no evidence of model execution.
 
