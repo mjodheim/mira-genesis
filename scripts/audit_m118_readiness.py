@@ -251,8 +251,15 @@ def _reasoning_tokens(body: Mapping[str, Any]) -> int | None:
 
 
 def execute() -> dict[str, Any]:
+    # Once-only, structurally rather than by an on-disk test. A file check alone is re-armed by
+    # deleting the file: git would show the deletion, but the code would not fail closed. A result
+    # ever committed at HEAD blocks the gate whether or not it is still on disk.
     if RESULT_PATH.exists():
         raise ReadinessError("a readiness result already exists; this gate is not redrawn")
+    if chronology._head_blob(ROOT, chronology.READINESS_RESULT) is not None:
+        raise ReadinessError(
+            "a readiness result is committed at HEAD; this gate is not redrawn, and deleting the "
+            "file does not re-arm it")
     # The gate may only run once its predecessors are commits at HEAD: M117's calibration and
     # closure, this milestone's preregistration, the fixed route and this apparatus itself. A
     # freeze written moments earlier is not a freeze, so nothing here accepts an in-memory record.

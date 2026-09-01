@@ -52,6 +52,7 @@ READINESS_APPARATUS = Path("scripts/audit_m118_readiness.py")
 READINESS_RESULT = DIRECTORY / "READINESS_RESULT.json"
 ANALYSIS_PLAN = DIRECTORY / "ANALYSIS_PLAN.json"
 GENERATOR_SPEC = DIRECTORY / "GENERATOR_SPEC.json"
+BANK_NONCE_COMMITMENT = DIRECTORY / "BANK_NONCE_COMMITMENT.json"
 TESTED_SYSTEM_FREEZE = DIRECTORY / "TESTED_SYSTEM_FREEZE.json"
 DELIVERY_LEDGER = DIRECTORY / "DELIVERY_LEDGER.json"
 SEALED_BANK = DIRECTORY / "SEALED_BANK.json.gpg"
@@ -69,15 +70,17 @@ STAGES: dict[str, tuple[Path, ...]] = {
                           READINESS_APPARATUS, READINESS_RESULT),
     "qualifying_generation": (M117_CALIBRATION, M117_OUTCOME, PREREGISTRATION, FIXED_ROUTE_MODULE,
                               READINESS_APPARATUS, READINESS_RESULT, ANALYSIS_PLAN, GENERATOR_SPEC,
-                              TESTED_SYSTEM_FREEZE),
-    "admission": (READINESS_RESULT, ANALYSIS_PLAN, GENERATOR_SPEC, TESTED_SYSTEM_FREEZE),
-    "sealing": (READINESS_RESULT, ANALYSIS_PLAN, GENERATOR_SPEC, TESTED_SYSTEM_FREEZE,
+                              BANK_NONCE_COMMITMENT, TESTED_SYSTEM_FREEZE),
+    "admission": (READINESS_RESULT, ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT,
+                  TESTED_SYSTEM_FREEZE),
+    "sealing": (READINESS_RESULT, ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT,
+                  TESTED_SYSTEM_FREEZE,
                 DELIVERY_LEDGER),
-    "reveal": (ANALYSIS_PLAN, GENERATOR_SPEC, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
+    "reveal": (ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
                REVEAL_AUTHORIZATION),
-    "scoring": (ANALYSIS_PLAN, GENERATOR_SPEC, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
+    "scoring": (ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
                 REVEAL_AUTHORIZATION),
-    "replay": (ANALYSIS_PLAN, GENERATOR_SPEC, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
+    "replay": (ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT, TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
                REVEAL_AUTHORIZATION, RESULT),
 }
 
@@ -315,6 +318,27 @@ def tested_system_digests(root: Path | None = None) -> dict[str, str]:
     return digests
 
 
+def _bound_commitments(base: Path) -> dict[str, Any]:
+    """The plan, spec, request body and nonce the freeze is taken against."""
+    import json as _json
+    missing = [a.as_posix() for a in (ANALYSIS_PLAN, GENERATOR_SPEC, BANK_NONCE_COMMITMENT)
+               if not (base / a).is_file()]
+    if missing:
+        raise ChronologyError(
+            "the freeze is taken against the plan, spec and nonce, which are absent: %s"
+            % ", ".join(missing))
+    plan = _json.loads((base / ANALYSIS_PLAN).read_text(encoding="utf-8"))
+    spec = _json.loads((base / GENERATOR_SPEC).read_text(encoding="utf-8"))
+    nonce = _json.loads((base / BANK_NONCE_COMMITMENT).read_text(encoding="utf-8"))
+    return {
+        "analysis_plan_commitment_sha256": plan["plan_commitment_sha256"],
+        "spec_commitment_sha256": spec["spec_commitment_sha256"],
+        "canonical_request_body_sha256": spec["canonical_request_body_sha256"],
+        "bank_nonce_sha256": nonce["bank_nonce_sha256"],
+        "envelope_version": nonce["envelope_version"],
+    }
+
+
 def build_freeze(root: Path | None = None) -> dict[str, Any]:
     """The freeze record. Refuses while any interpreting module is unbound."""
     base = _root(root)
@@ -331,6 +355,11 @@ def build_freeze(root: Path | None = None) -> dict[str, Any]:
         "no_scientific_completion_existed_at_freeze": True,
         "digest_mode": "lf_normalized",
         "inventory": stock,
+        # Source digests alone prove the interpreting code is unchanged and prove nothing about
+        # the plan, the spec, the exact request bytes or the nonce. Without these a downstream
+        # phase could re-check the freeze happily while the analysis plan or the request body it
+        # was frozen against had been rewritten.
+        "bound_commitments": _bound_commitments(base),
         "tested_system_digests": tested_system_digests(base),
         "freeze_commitment_sha256": "",
     }
@@ -361,6 +390,14 @@ def validate_freeze(record: Mapping[str, Any], root: Path | None = None) -> None
     if unbound:
         raise ChronologyError(
             "interpreting modules became unbound after the freeze: %s" % ", ".join(unbound))
+    bound = record.get("bound_commitments")
+    if not isinstance(bound, Mapping) or not bound:
+        raise ChronologyError("the freeze binds no plan, spec, request body or nonce")
+    current = _bound_commitments(base)
+    moved = sorted(k for k in set(bound) | set(current) if bound.get(k) != current.get(k))
+    if moved:
+        raise ChronologyError(
+            "a commitment the freeze was taken against changed: %s" % ", ".join(moved))
 
 
 DOWNSTREAM_PHASES = ("admission", "sealing", "reveal", "scoring")

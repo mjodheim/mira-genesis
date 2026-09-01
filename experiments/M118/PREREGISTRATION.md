@@ -146,6 +146,25 @@ M117 calibration complete
 The delivery runner **fails closed** if the required committed predecessor does not exist at HEAD.
 **No in-memory freeze satisfies this.**
 
+## What the carrier family is, precisely
+
+The hypothesis is often stated as "a carrier family this project did not design". **That wording
+overstates it and is corrected here.**
+
+`metamorphosis/carrier_host.py` fixes the meta-schema — the surface kinds, cell and action
+cardinalities, guard relations, effect modes and separators — and `OUTPUT_SCHEMA.json` enforces it
+in strict mode. The generator fills in values inside a space **this project fully specified**.
+
+The honest claim is therefore: **carrier instances the project did not author, drawn from a space
+the project designed.** The blindness that matters is that no one saw the instances before sealing,
+not that the family was foreign.
+
+The prompt also instructs the generator to vary *actions*, *which cells are visible*, and *guards*.
+Two of those are the `operator_table` and `signal_interface` components under test, and
+qualification requires `guarded_action_count >= 1`. The literal vocabulary of the experiment is
+absent from the prompt — now measured from its bytes rather than asserted — but this structural
+overlap is real and is recorded rather than denied.
+
 ## Claim boundary
 
 The readiness gate is DEVELOPMENT. It is **not evidence for H63**, sends no qualifying input, and
