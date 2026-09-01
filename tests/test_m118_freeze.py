@@ -100,3 +100,33 @@ def test_the_claim_boundary_is_inherited_intact():
     assert boundary["agi"] is False
     assert boundary["advances_any_generality_gate"] is False
     assert boundary["closes_g1"] is False and boundary["closes_g4"] is False
+
+
+def test_the_control_construction_is_named_not_left_implicit():
+    """An auditor should find the comparison in the plan, not infer it from an import closure."""
+    control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
+    assert control["arms_rule"] == "scripts/run_m113_qualification.py::ARM_NAMES"
+    assert "T0" in control["arms"] and "budget_plus" in control["arms"]
+    assert control["only_the_genesis_state_differs_across_arms"] is True
+    assert control["arms_restored_from_frozen_producer_bytes_never_reimplemented"] is True
+    assert control["inherited_unchanged"] is True
+
+
+def test_the_arm_names_are_read_from_the_runner_not_restated():
+    from scripts import run_m113_qualification as qualification
+    control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
+    assert control["arms"] == list(qualification.ARM_NAMES)
+
+
+def test_the_control_path_is_bound_by_the_tested_system_freeze():
+    from metamorphosis import m118_chronology as chronology
+    for module in ("scripts/run_m113_qualification.py", "scripts/check_m113_result.py",
+                   "metamorphosis/m113_evaluator.py"):
+        assert module in chronology.TESTED_SYSTEM_PATHS, module
+
+
+def test_budget_is_separable_from_capability():
+    """Without the budget_plus arm, 'could not' and 'could not afford to' are indistinguishable."""
+    control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
+    assert "budget_plus" in control["arms"]
+    assert "could not afford" in control["budget_separated_from_capability_by"]

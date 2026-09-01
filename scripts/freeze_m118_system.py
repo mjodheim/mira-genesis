@@ -104,6 +104,12 @@ def canonical_request_body(qualifying_input: str) -> dict[str, Any]:
     }
 
 
+def _arm_names() -> tuple[str, ...]:
+    """Read from the qualification runner rather than restated, so drift is an error not a lie."""
+    from scripts import run_m113_qualification as qualification
+    return tuple(qualification.ARM_NAMES)
+
+
 def analysis_plan(digests: dict[str, str]) -> dict[str, Any]:
     """Every scientific rule inherited from M115; only identity and capacity are H63's."""
     inherited = json.loads((M115 / "ANALYSIS_PLAN.json").read_text(encoding="utf-8"))
@@ -158,6 +164,27 @@ def analysis_plan(digests: dict[str, str]) -> dict[str, Any]:
         "reasoning_effort": REASONING_EFFORT,
         "identity_semantics": "m118-fixed-openinference-v1",
         "delivery_semantics": "m114-delivery-v1",
+        # Control construction, named rather than left implicit in the digests that bind it.
+        # The comparison H63 rests on is a nine-arm design, and an auditor should be able to find
+        # it from the plan instead of inferring it from an import closure.
+        "control_construction": {
+            "arms_rule": "scripts/run_m113_qualification.py::ARM_NAMES",
+            "arms": list(_arm_names()),
+            "out_of_band_arms": ["producer_death", "preservation"],
+            "arms_restored_from_frozen_producer_bytes_never_reimplemented": True,
+            "only_the_genesis_state_differs_across_arms": True,
+            "arm_symmetry_predicate": "P11 (every arm saw every demand)",
+            "comparison_predicate": "P22 (strictly better and no worse)",
+            "budget_separated_from_capability_by": "the budget_plus arm, a fresh lineage given "
+                                                  "four times the observation budget, so that "
+                                                  "'the machinery could not' stays separable from "
+                                                  "'the run could not afford to'",
+            "ground_truth_rule": "metamorphosis/m113_evaluator.py::reach_under, computed without "
+                                 "a budget and without a channel, so a refusal can be scored "
+                                 "rather than believed",
+            "inherited_unchanged": True,
+            "bound_by_the_tested_system_freeze": True,
+        },
         "claim_boundary": inherited["claim_boundary"],
         **carried,
         "plan_commitment_sha256": "",
