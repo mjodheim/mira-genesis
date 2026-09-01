@@ -303,14 +303,22 @@ def _request(probe: Mapping[str, Any], *, timeout: int = 900) -> dict[str, Any]:
 # Diagnosis: what happened to one probe, without disclosing what the model said
 # ---------------------------------------------------------------------------------------------
 
-def diagnose(probe: Mapping[str, Any], observed: Mapping[str, Any]) -> dict[str, Any]:
-    """Classify one probe observation into the frozen outcome vocabulary."""
+def diagnose(probe: Mapping[str, Any], observed: Mapping[str, Any], *,
+             requested_model: str | None = None,
+             requested_provider: str | None = None) -> dict[str, Any]:
+    """Classify one probe observation into the frozen outcome vocabulary.
+
+    M117 reuses this classifier verbatim against other routes rather than copying it: one
+    classifier means one set of rules, and a copy could drift into being kinder to a preferred
+    provider. The route arguments affect only which identity is recorded, never the outcome.
+    """
     body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
     record = telemetry.extract(
         status=observed.get("status"), body=body,
         response_bytes=observed.get("response_bytes"),
         headers=observed.get("response_headers"),
-        requested_model=MODEL, requested_provider=PROVIDER,
+        requested_model=requested_model or MODEL,
+        requested_provider=requested_provider or PROVIDER,
         transport_failure_class=observed.get("transport_failure_class"),
     )
     telemetry.assert_no_carrier_content(record)
