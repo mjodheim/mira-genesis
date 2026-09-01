@@ -19,15 +19,30 @@ stress then requested `STRESS_MAX_TOKENS = 131072` **unconditionally**, ignoring
 declared. A candidate admitted at the eligibility floor was therefore sent a request for four times
 its own declared ceiling.
 
-Both candidates that reached the stress had declared 65,536 and answered **HTTP 400**. That 400 is
-a malformed request of ours. It is not a capacity limit of theirs, and it must not be recorded as
-one.
+Both candidates that reached the stress had declared 65,536 and answered **HTTP 400**.
 
-**This contradiction is visible in the frozen constants alone.** `MINIMUM_MAX_COMPLETION_TOKENS`
-(32,768) and `STRESS_MAX_TOKENS` (131,072) contradict each other on their face; no observation was
-needed to find it, and the pre-freeze hostile review should have caught it. Any candidate declaring
-between 32,768 and 131,071 was guaranteed to fail `token_capacity_stress_holds` for an instrument
-reason, so attempt 02 could not have produced a valid selection however long it ran.
+> ### Correction — this attribution was wrong
+>
+> Attempt 02 recorded that the HTTP 400 *was* the overage. **Attempt 03 refutes that.** With the
+> request capped at exactly the declared ceiling (65,536 requested, 65,536 declared), the same
+> endpoints still answered 400. And in the same run, all ten capability probes sent
+> `max_tokens = 131072` — twice the declared ceiling — to those endpoints and every one returned
+> **HTTP 200**.
+>
+> Exceeding a declared ceiling therefore does not cause a 400 on this route, the cap did not fix
+> the failure, and **the cause of the 400 remains unestablished**. The bound below is defensible
+> hygiene — do not ask for more than a candidate declares — but it is not a diagnosis, and revision
+> 3's rationale claimed more than the evidence supported. The claim is corrected here rather than
+> quietly amended.
+
+The contradiction the bound removes is nonetheless real:
+
+`MINIMUM_MAX_COMPLETION_TOKENS` (32,768) and `STRESS_MAX_TOKENS` (131,072) contradict each other on
+their face, visible in the frozen constants alone; the pre-freeze hostile review should have caught
+it. But **that contradiction is not what produced the 400s**, and attempt 02's halt is not
+retrospectively justified by it after all. What justifies preserving attempt 02 rather than
+resuming it is narrower and still sufficient: its stress clause could not be evaluated, for a
+reason the apparatus could not state.
 
 ## How the halt actually happened — stated plainly
 
@@ -36,9 +51,10 @@ because the harness was misreading router metadata. **Candidates 2 and 3 did not
 hypothesis**: both matched model, provider and canonical checkpoint exactly, which also confirmed
 the revision-2 checkpoint repair was correct.
 
-The halt is justified — but by the stress defect above, established afterwards and independently,
-not by the reason it was made. The record says so rather than presenting a lucky stop as a
-diagnosis.
+The halt was therefore made for a reason the evidence did not support, and the reason offered in
+its place — the token overage — did not survive attempt 03 either. **Neither justification holds.**
+What remains true is that attempt 02's stress clause could not be evaluated and its cause could not
+be read from the record. A lucky stop is not presented here as a diagnosis.
 
 ## What attempt 02 did observe
 
