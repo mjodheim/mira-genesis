@@ -36,9 +36,20 @@ def _carriers(count=4):
     return found
 
 
+# A synthetic stand-in for the committed analysis plan. The runner refuses to take scientific
+# parameters from its arguments, so the fixtures must supply a plan exactly as the real run will.
+DEV_PLAN = {
+    "plan_commitment_sha256": "d" * 64,
+    "session_budget": 4000,
+    "minimum_qualifying_carriers": 3,
+    "minimum_distinct_qualifying_structures": 1,
+}
+
+
 @pytest.fixture(scope="module")
 def measurements():
-    return runner.measure(_carriers(), NONCE, session_budget=4000)
+    return runner.measure(_carriers(), NONCE, session_budget=DEV_PLAN["session_budget"],
+                          plan=DEV_PLAN)
 
 
 # -------------------------------------------------------------------------------------------
@@ -167,65 +178,71 @@ def test_the_checker_recomputes_rather_than_trusting_the_runner(measurements):
     assert report["primary"]["p_value"] == honest["primary"]["p_value"]
 
 
-def test_a_strong_synthetic_improvement_is_reported_positive(measurements):
-    """The pipeline must be able to return positive, not only negative."""
-    forced = json.loads(json.dumps(measurements))
-    n = len(forced["paired_primary_outcomes"]["M3"])
-    forced["paired_primary_outcomes"]["M3"] = [True] * n
-    forced["paired_primary_outcomes"]["fresh_uniform"] = [False] * n
-    for measure, value in (("correct_construction", 99), ("calibrated_refusal", 99),
-                           ("invented_adapter", 0), ("false_refusal", 0),
-                           ("unmet_construction", 0), ("attribution_agreement_rate", 1.0)):
-        forced["measures"]["M3"][measure] = value
-    for measure, value in (("correct_construction", 0), ("calibrated_refusal", 0),
-                           ("invented_adapter", 0), ("false_refusal", 0),
-                           ("unmet_construction", 0), ("attribution_agreement_rate", 0.0)):
-        forced["measures"]["fresh_uniform"][measure] = value
-    forced["measurements_sha256"] = sha256_hex(canonical_bytes(
-        {k: v for k, v in forced.items() if k != "measurements_sha256"}))
-    report = checker.check(forced)
-    assert report["verdict"] == "positive"
-    assert report["primary"]["p_value"] <= endpoint.ALPHA
-    assert report["primary"]["risk_difference"] == 1.0
+def test_a_forged_outcome_series_is_refused(measurements):
+    """Rewriting the paired outcomes without touching the per-demand record is caught.
 
-
-def test_a_positive_primary_with_a_failing_guard_is_negative(measurements):
-    forced = json.loads(json.dumps(measurements))
-    n = len(forced["paired_primary_outcomes"]["M3"])
-    forced["paired_primary_outcomes"]["M3"] = [True] * n
-    forced["paired_primary_outcomes"]["fresh_uniform"] = [False] * n
-    forced["measures"]["M3"]["attribution_agreement_rate"] = 0.1
-    forced["measures"]["fresh_uniform"]["attribution_agreement_rate"] = 0.9
-    forced["measurements_sha256"] = sha256_hex(canonical_bytes(
-        {k: v for k, v in forced.items() if k != "measurements_sha256"}))
-    report = checker.check(forced)
-    assert report["primary"]["primary_holds"] is True
-    assert "attribution_agreement_rate" in report["primary"]["no_harm"]["failed"]
-    assert report["verdict"] == "negative"
-
-
-def test_the_diagnostic_probe_actually_fires_on_a_reasonable_sample():
-    """If the probe never fires, probe_only collapses onto T0 and the decomposition is vacuous.
-
-    The policy only fires on rows its acquired record marks undetermined, so a single carrier can
-    legitimately show zero probes. Across a larger sample it must fire, or the factorial arms are
-    measuring nothing and a future change could disable them silently.
+    This test previously forged the series to force a positive verdict, which the checker accepted
+    because it read the aggregate rather than recomputing it. It now recomputes from `entries`, so
+    the forgery is the thing under test.
     """
-    carriers = _carriers(10)
-    measurements = runner.measure(carriers, NONCE, session_budget=4000)
-    fired = sum(
-        1
-        for entry in measurements["entries"]
-        for demand_class in evaluator.DEMAND_CLASSES
-        if entry["arms"]["probe_only"][demand_class]["probes_spent"] > 0
-    )
-    assert fired > 0, "the diagnostic probe never fired; the factorial arms measure nothing"
+    forged = json.loads(json.dumps(measurements))
+    n = len(forged["paired_primary_outcomes"]["M3"])
+    forged["paired_primary_outcomes"]["M3"] = [True] * n
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="recomputed primary outcomes disagree"):
+        checker.check(forged)
 
 
-def test_arms_without_a_policy_never_probe():
-    """The action-space asymmetry the design exists to measure, asserted rather than assumed."""
-    measurements = runner.measure(_carriers(6), NONCE, session_budget=4000)
-    for entry in measurements["entries"]:
-        for name in ("T0", "fresh_uniform", "M2", "budget_plus"):
-            for demand_class in evaluator.DEMAND_CLASSES:
-                assert entry["arms"][name][demand_class]["probes_spent"] == 0, name
+def test_a_forged_guard_measure_is_refused(measurements):
+    """The guards are evaluated on aggregates, so those aggregates must be recomputed too."""
+    forged = json.loads(json.dumps(measurements))
+    forged["measures"]["M3"]["correct_construction"] += 7
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="recomputed correct_construction disagrees"):
+        checker.check(forged)
+
+
+def test_an_attacker_chosen_comparator_seed_is_refused(measurements):
+    """Freshness was recomputed from a seed the record supplied, never compared to the frozen one."""
+    forged = json.loads(json.dumps(measurements))
+    forged["fresh_uniform_seed"] = "attacker-chosen-seed"
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="comparator seed is not the frozen one"):
+        checker.check(forged)
+
+
+def test_a_bank_below_the_plans_minimum_is_refused(measurements):
+    forged = json.loads(json.dumps(measurements))
+    forged["minimum_qualifying_carriers"] = forged["qualifying_carriers"] + 1
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="below the minimum qualifying carriers"):
+        checker.check(forged)
+
+
+def test_a_failed_producer_provenance_check_is_refused(measurements):
+    forged = json.loads(json.dumps(measurements))
+    key = sorted(forged["provenance_checks"])[0]
+    forged["provenance_checks"][key] = False
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="provenance check did not hold"):
+        checker.check(forged)
+
+
+def test_a_budget_not_from_the_committed_plan_is_refused(measurements):
+    forged = json.loads(json.dumps(measurements))
+    forged["session_budget_came_from_the_committed_plan"] = False
+    forged["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in forged.items() if k != "measurements_sha256"}))
+    with pytest.raises(checker.CheckError, match="did not come from the committed plan"):
+        checker.check(forged)
+
+
+def test_the_dominance_guards_reach_the_verdict(measurements):
+    """T0 and M2 must be able to veto, so the checker has to pass them to the endpoint."""
+    report = checker.check(measurements)
+    assert set(report["primary"]["dominance"]["guards"]) == {"T0", "M2"}

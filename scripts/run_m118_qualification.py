@@ -36,6 +36,7 @@ from metamorphosis import carrier_host as host  # noqa: E402
 from metamorphosis import m113_evaluator as evaluator  # noqa: E402
 from metamorphosis import m113_runtime as runtime  # noqa: E402
 from metamorphosis import m118_arms as arms  # noqa: E402
+from metamorphosis import m118_chronology as chronology  # noqa: E402
 from metamorphosis import m118_endpoint as endpoint  # noqa: E402
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
 from scripts import run_m113_qualification as inherited  # noqa: E402
@@ -91,7 +92,7 @@ def _states(cascades: Mapping[str, Any], record: Mapping[str, Any],
 
 
 def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, *,
-            session_budget: int) -> dict[str, Any]:
+            session_budget: int, plan: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Every arm, every qualifying carrier, every demand. Measurements only."""
     restored = restore_h63_arms()
     cascades = restored["cascades"]
@@ -179,6 +180,11 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, *,
         "provenance_checks": restored["provenance_checks"],
         "corruption": restored["corruption"],
         "session_budget": session_budget,
+        "session_budget_came_from_the_committed_plan": plan is not None,
+        "analysis_plan_commitment_sha256": (plan or {}).get("plan_commitment_sha256"),
+        "minimum_qualifying_carriers": (plan or {}).get("minimum_qualifying_carriers"),
+        "minimum_distinct_qualifying_structures":
+            (plan or {}).get("minimum_distinct_qualifying_structures"),
         "budget_multiplier": dict(arms.BUDGET_MULTIPLIER),
         "carriers_seen": len(carriers),
         "qualifying_carriers": qualifying,
@@ -195,17 +201,43 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, *,
     return record
 
 
+def _frozen_plan() -> dict[str, Any]:
+    """The committed analysis plan, and nothing a caller supplied.
+
+    An earlier form of `main` took `--session-budget` from argv. Budget changes outcomes
+    materially, so that was a forking path at the command line: post-reveal one could re-run at
+    several budgets until the p-value cooperated, and nothing would record that other budgets were
+    tried. The predecessors read it from the plan (`run_m113_qualification`, `run_m115_qualification`)
+    and so does this.
+    """
+    path = ROOT / chronology.ANALYSIS_PLAN
+    chronology.assert_committed_at_head(chronology.ANALYSIS_PLAN)
+    plan = json.loads(path.read_text(encoding="utf-8"))
+    expected = sha256_hex(canonical_bytes(
+        {k: v for k, v in plan.items() if k != "plan_commitment_sha256"}))
+    if plan.get("plan_commitment_sha256") != expected:
+        raise QualificationError("the committed analysis plan does not match its own commitment")
+    return plan
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--carriers", type=Path, required=True,
                         help="revealed carrier bodies, as committed JSON")
     parser.add_argument("--nonce", required=True)
-    parser.add_argument("--session-budget", type=int, required=True)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
 
+    # Scoring may only run once the whole chain is committed, and every scientific parameter comes
+    # from the committed plan rather than from this process's arguments.
+    chronology.assert_stage_permitted("scoring")
+    chronology.assert_frozen_system_unchanged(phase="scoring")
+    plan = _frozen_plan()
+
     carriers = json.loads(args.carriers.read_text(encoding="utf-8"))
-    record = measure(carriers, args.nonce, session_budget=args.session_budget)
+    record = measure(carriers, args.nonce,
+                     session_budget=int(plan["session_budget"]),
+                     plan=plan)
     args.out.write_bytes(canonical_bytes(record) + b"\n")
     print(json.dumps({"qualifying_carriers": record["qualifying_carriers"],
                       "paired_demands": len(record["demand_order"]),

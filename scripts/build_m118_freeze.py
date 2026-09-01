@@ -36,6 +36,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from metamorphosis import m116_admission as admission  # noqa: E402
+from metamorphosis import m118_arms as arms  # noqa: E402
+from metamorphosis import m118_endpoint as endpoint  # noqa: E402
 from metamorphosis import m118_chronology as chronology  # noqa: E402
 from metamorphosis import m118_route as fixed  # noqa: E402
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
@@ -54,6 +56,9 @@ NONCE_SCHEMA = "m118-bank-nonce-commitment-v1"
 # The instrumental delta, and the whole of it.
 MAX_TOKENS = 131072
 REASONING_EFFORT = "none"
+
+# One reachable and one structurally unreachable demand per derived pair.
+DEMANDS_PER_CARRIER = 2
 
 
 class FreezeError(RuntimeError):
@@ -197,31 +202,85 @@ def analysis_plan(digests: dict[str, str]) -> dict[str, Any]:
         "reasoning_effort": REASONING_EFFORT,
         "identity_semantics": "m118-fixed-openinference-v1",
         "delivery_semantics": "m114-delivery-v1",
-        # Control construction, named rather than left implicit in the digests that bind it.
-        # The comparison H63 rests on is a nine-arm design, and an auditor should be able to find
-        # it from the plan instead of inferring it from an import closure.
-        "control_construction": {
-            "arms_rule": "scripts/run_m113_qualification.py::ARM_NAMES",
-            "arms": list(_arm_names()),
-            "out_of_band_arms": ["producer_death", "preservation"],
-            "arms_restored_from_frozen_producer_bytes_never_reimplemented": True,
-            "only_the_genesis_state_differs_across_arms": True,
-            "arm_symmetry_predicate": "P11 (every arm saw every demand)",
-            "comparison_predicate": "P22 (strictly better and no worse)",
-            "budget_separated_from_capability_by": "the budget_plus arm, a fresh lineage given "
-                                                  "four times the observation budget, so that "
-                                                  "'the machinery could not' stays separable from "
-                                                  "'the run could not afford to'",
-            "ground_truth_rule": "metamorphosis/m113_evaluator.py::reach_under, computed without "
-                                 "a budget and without a channel, so a refusal can be scored "
-                                 "rather than believed",
-            "inherited_unchanged": True,
-            "bound_by_the_tested_system_freeze": True,
+        # The H63 measurement, stated in the plan that will be frozen. An earlier draft carried
+        # M113's control block verbatim -- the nine old arms, P22 as the comparison predicate, and
+        # the "only the Genesis state differs" claim that had already been withdrawn -- so the
+        # frozen scientific plan would have contradicted the frozen code on the arm set, the
+        # comparator, the endpoint and the action-space claim, with nothing to detect it.
+        "measurement": {
+            "primary_endpoint": {
+                "rule": "paired per-demand scientific correctness",
+                "reachable_demand_success": "correct_construction",
+                "unreachable_demand_success": "calibrated_refusal",
+                "anything_else_is_failure": True,
+                "disjunction_permitted": False,
+                "success_keys": dict(endpoint.PRIMARY_SUCCESS_KEY),
+                "endpoint_version": endpoint.ENDPOINT_VERSION,
+            },
+            "primary_test": {
+                "test": "one-sided exact McNemar (exact sign test over discordant pairs)",
+                "alpha": endpoint.ALPHA,
+                "minimum_risk_difference": endpoint.MINIMUM_RISK_DIFFERENCE,
+                "both_criteria_required": True,
+                "minimum_discordant_for_significance":
+                    endpoint.minimum_discordant_for_significance(),
+                "underpowered_is_inconclusive_not_negative": True,
+            },
+            "no_harm_guards": dict(endpoint.NO_HARM_GUARDS),
+            "guards_may_veto_never_create": True,
+            "dominance_guards": {
+                "descendant_must_be_at_least": [arms.LEGACY_FRESH_ARM, "M2"],
+                "rationale": "a stronger comparator must not remove the requirement to beat the "
+                             "constant arm and the rules-only ablation",
+            },
+            "descriptive_measures_decide_nothing": list(endpoint.DESCRIPTIVE_MEASURES),
+            "p22_is_not_carried_into_h63": True,
+            "replaced_because": "P22 passed on strictly greater by one on any of four correlated "
+                                "measures while its no-worse guard covered only three, omitting "
+                                "attribution agreement; it had no threshold, no test, no "
+                                "pre-specified n and no multiplicity control",
+            "m113_historical_result_is_unchanged_and_still_replays": True,
         },
+        "control_construction": {
+            "arms_rule": "metamorphosis/m118_arms.py::ARM_NAMES",
+            "arms": list(arms.ARM_NAMES),
+            "descendant_arm": arms.DESCENDANT_ARM,
+            "primary_fresh_comparator": arms.PRIMARY_FRESH_ARM,
+            "legacy_fresh_arm_retained_but_not_the_comparator": arms.LEGACY_FRESH_ARM,
+            "legacy_arm_is_a_constant_function": True,
+            "factorial_cells": {
+                "rules_absent_policy_absent": [arms.LEGACY_FRESH_ARM, arms.PRIMARY_FRESH_ARM],
+                "rules_absent_policy_present": "probe_only",
+                "rules_present_policy_absent": "M2",
+                "rules_present_policy_present": arms.DESCENDANT_ARM,
+            },
+            "comparator_construction": {
+                "seed": arms.FRESH_UNIFORM_SEED,
+                "seed_permutes_rows_and_component_order": True,
+                "assignment": arms.fresh_uniform_assignment(),
+                "balanced_assignment_space_size": len(arms.achievable_assignments()),
+                "carries_no_acquired_rule": True,
+                "carries_no_policy": True,
+                "derived_from": "precommitted seed and feature-row index only",
+                "consults_no_carrier_semantics": True,
+            },
+            "arms_restored_from_frozen_producer_bytes_never_reimplemented": True,
+            "ground_truth_rule": "metamorphosis/m113_evaluator.py::reach_under, computed without "
+                                 "a budget and without a channel",
+            "action_space": arms.action_space_statement(),
+            "budget_multiplier": dict(arms.BUDGET_MULTIPLIER),
+        },
+        "runner": "scripts/run_m118_qualification.py",
+        "independent_checker": "scripts/check_m118_result.py",
+        "the_runner_decides_nothing_the_checker_recomputes_the_verdict": True,
         "claim_boundary": inherited["claim_boundary"],
         **carried,
         "plan_commitment_sha256": "",
     }
+    # Proven here rather than in a test. The docstring on `assert_feasible` said the plan refuses
+    # to freeze an unreachable criterion; until this call it was true of nothing.
+    record["feasibility"] = endpoint.assert_feasible(
+        int(record["minimum_qualifying_carriers"]), DEMANDS_PER_CARRIER)
     record["plan_commitment_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in record.items() if k != "plan_commitment_sha256"}))
     return record

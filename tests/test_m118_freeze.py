@@ -102,31 +102,68 @@ def test_the_claim_boundary_is_inherited_intact():
     assert boundary["closes_g1"] is False and boundary["closes_g4"] is False
 
 
-def test_the_control_construction_is_named_not_left_implicit():
-    """An auditor should find the comparison in the plan, not infer it from an import closure."""
+def test_the_control_construction_names_the_m118_arms_not_m113s():
+    """An earlier draft froze M113's nine arms, P22 and the withdrawn symmetry claim."""
     control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
-    assert control["arms_rule"] == "scripts/run_m113_qualification.py::ARM_NAMES"
-    assert "T0" in control["arms"] and "budget_plus" in control["arms"]
-    assert control["only_the_genesis_state_differs_across_arms"] is True
-    assert control["arms_restored_from_frozen_producer_bytes_never_reimplemented"] is True
-    assert control["inherited_unchanged"] is True
+    from metamorphosis import m118_arms as arms
+    assert control["arms_rule"] == "metamorphosis/m118_arms.py::ARM_NAMES"
+    assert control["arms"] == list(arms.ARM_NAMES)
+    assert control["primary_fresh_comparator"] == arms.PRIMARY_FRESH_ARM
+    assert control["legacy_arm_is_a_constant_function"] is True
+    assert control["factorial_cells"]["rules_absent_policy_present"] == "probe_only"
 
 
-def test_the_arm_names_are_read_from_the_runner_not_restated():
-    from scripts import run_m113_qualification as qualification
-    control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
-    assert control["arms"] == list(qualification.ARM_NAMES)
+def test_the_frozen_plan_carries_no_replaced_or_withdrawn_claim():
+    import json
+    text = json.dumps(freeze.analysis_plan(freeze.inherited_digests()))
+    assert "P22 (strictly better" not in text
+    assert '"only_the_genesis_state_differs_across_arms": true' not in text.lower()
+
+
+def test_the_frozen_plan_states_the_decision_rule():
+    from metamorphosis import m118_endpoint as endpoint
+    plan = freeze.analysis_plan(freeze.inherited_digests())
+    measurement = plan["measurement"]
+    assert measurement["primary_test"]["alpha"] == endpoint.ALPHA
+    assert measurement["primary_test"]["minimum_risk_difference"] == \
+        endpoint.MINIMUM_RISK_DIFFERENCE
+    assert measurement["no_harm_guards"] == dict(endpoint.NO_HARM_GUARDS)
+    assert measurement["dominance_guards"]["descendant_must_be_at_least"] == ["T0", "M2"]
+    assert measurement["p22_is_not_carried_into_h63"] is True
+    assert measurement["primary_test"]["underpowered_is_inconclusive_not_negative"] is True
+
+
+def test_the_frozen_plan_records_the_comparator_and_its_seed():
+    from metamorphosis import m118_arms as arms
+    construction = freeze.analysis_plan(
+        freeze.inherited_digests())["control_construction"]["comparator_construction"]
+    assert construction["seed"] == arms.FRESH_UNIFORM_SEED
+    assert construction["seed_permutes_rows_and_component_order"] is True
+    assert construction["carries_no_acquired_rule"] is True
+    assert construction["consults_no_carrier_semantics"] is True
+    assert construction["balanced_assignment_space_size"] == len(arms.achievable_assignments())
+
+
+def test_feasibility_actually_gates_the_freeze():
+    """Its docstring claimed the plan refuses an unreachable criterion; nothing called it."""
+    plan = freeze.analysis_plan(freeze.inherited_digests())
+    assert plan["feasibility"]["criterion_can_pass_on_the_minimum_bank"] is True
+    assert plan["feasibility"]["minimum_paired_demands"] == \
+        plan["minimum_qualifying_carriers"] * freeze.DEMANDS_PER_CARRIER
+
+
+def test_an_unreachable_criterion_refuses_to_freeze(monkeypatch):
+    from metamorphosis import m118_endpoint as endpoint
+    monkeypatch.setattr(freeze, "DEMANDS_PER_CARRIER", 1)
+    monkeypatch.setattr(endpoint, "MINIMUM_RISK_DIFFERENCE", 0.10)
+    with pytest.raises(endpoint.EndpointError, match="guaranteed negative"):
+        freeze.analysis_plan(freeze.inherited_digests())
 
 
 def test_the_control_path_is_bound_by_the_tested_system_freeze():
     from metamorphosis import m118_chronology as chronology
     for module in ("scripts/run_m113_qualification.py", "scripts/check_m113_result.py",
-                   "metamorphosis/m113_evaluator.py"):
+                   "metamorphosis/m113_evaluator.py", "metamorphosis/m118_arms.py",
+                   "metamorphosis/m118_endpoint.py", "scripts/run_m118_qualification.py",
+                   "scripts/check_m118_result.py"):
         assert module in chronology.TESTED_SYSTEM_PATHS, module
-
-
-def test_budget_is_separable_from_capability():
-    """Without the budget_plus arm, 'could not' and 'could not afford to' are indistinguishable."""
-    control = freeze.analysis_plan(freeze.inherited_digests())["control_construction"]
-    assert "budget_plus" in control["arms"]
-    assert "could not afford" in control["budget_separated_from_capability_by"]
