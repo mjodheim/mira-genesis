@@ -210,6 +210,34 @@ It would **not** mean, and will not be said to mean, any of the following:
   independent of what it was trained on.
 - Human independence, or external reproduction.
 
+## Multiplicity across H60–H64
+
+H64 is tested at α = 0.05 with no correction, and the reason is that **no statistical test has been
+performed anywhere on this chain of hypotheses**. Checked against the committed records rather than
+recalled:
+
+| hypothesis | milestone | recorded verdict | statistical test performed |
+|---|---|---|---|
+| H59 | M114 | `instrument-aborted`, untested | none |
+| H60 | M115 | `instrument-aborted`, untested | none |
+| — | M116 | DEVELOPMENT capability matrix | none |
+| H62 | M117 | instrument development / route calibration | none |
+| H63 | M118 | closed as instrument design; never frozen, no bank | none |
+
+H64 is therefore the **first** test of this target, and a first test is not a multiple comparison.
+There is no family of prior p-values to correct against, because none was ever computed.
+
+Two things follow, and both are binding:
+
+- **This milestone spends the only uncorrected α on the chain.** If H64 also ends
+  `instrument_aborted`, that consumes no α, because no test was performed. But if H64 returns a
+  `negative` or a `positive`, a later milestone testing the same target must correct for having
+  tested it twice, and must say so in its own preregistration.
+- **The four arms do not create multiplicity here.** There is exactly one primary comparison, FULL
+  versus FRESH, fixed in code before the data. The other cells enter only the decomposition of a
+  result the primary comparison has already established, and the fenced diagnostic arm enters
+  neither. No arm is tested against α, and no result is selected as the best of several contrasts.
+
 ## Stated limitations
 
 1. Provider and model are confounded with the effect. No provider-invariance claim is available.
