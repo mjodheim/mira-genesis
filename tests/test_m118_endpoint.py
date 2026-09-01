@@ -281,3 +281,42 @@ def test_the_endpoint_covers_exactly_the_evaluators_demand_classes():
     assert endpoint.CLASS_UNREACHABLE is ev.CLASS_UNREACHABLE
     for demand_class in ev.DEMAND_CLASSES:
         endpoint.primary_success(demand_class, {})
+
+
+# -------------------------------------------------------------------------------------------
+# The preregistration states the rule it will be judged by
+# -------------------------------------------------------------------------------------------
+
+def test_the_preregistration_states_the_decision_rule():
+    import re
+    from pathlib import Path
+    text = re.sub(r"\s+", " ", (Path(__file__).resolve().parents[1] / "experiments" / "M118"
+                                / "PREREGISTRATION.md").read_text(encoding="utf-8"))
+    for required in (
+        "M113's P22 is not carried into H63",
+        "There is no disjunction and no second way to win",
+        "One-sided exact McNemar",
+        "Risk difference ≥ 10 percentage points",
+        "refuses to freeze",
+        "attribution_agreement_rate",
+        "primary comparison is `M3` vs `fresh_uniform`",
+        "constant function",
+        "is withdrawn",
+        "H63 is negative",
+        "no qualifying scientific test",
+        "conditional on this serving route",
+    ):
+        assert required in text, required
+
+
+def test_the_preregistration_matches_the_implemented_thresholds():
+    import re
+    from pathlib import Path
+    text = re.sub(r"\s+", " ", (Path(__file__).resolve().parents[1] / "experiments" / "M118"
+                                / "PREREGISTRATION.md").read_text(encoding="utf-8"))
+    assert "α = 0.05" in text and endpoint.ALPHA == 0.05
+    assert "10 percentage points" in text and endpoint.MINIMUM_RISK_DIFFERENCE == 0.10
+    assert "at least five" in text
+    assert endpoint.minimum_discordant_for_significance() == 5
+    assert "0.0156" in text
+    assert round(endpoint.smallest_attainable_p(6), 4) == 0.0156

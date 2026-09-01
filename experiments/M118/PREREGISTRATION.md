@@ -146,6 +146,96 @@ M117 calibration complete
 The delivery runner **fails closed** if the required committed predecessor does not exist at HEAD.
 **No in-memory freeze satisfies this.**
 
+## The H63 decision rule
+
+**M113's P22 is not carried into H63.** The pre-freeze hostile review established that it passed on
+*strictly greater by one* on **any** of four correlated measures, while its no-worse guard covered
+only three of them — so a descendant **worse on attribution agreement** could pass on a single extra
+calibrated refusal. It had no threshold, no statistical test, no pre-specified n and no correction
+for four chances to win. These are discoveries about the inherited instrument. **They do not change
+M113's historical result, which continues to replay exactly.**
+
+### Primary endpoint
+
+Paired, per demand, posed identically to both arms:
+
+| demand | success |
+|---|---|
+| reachable | correct construction |
+| structurally unreachable | calibrated refusal |
+
+Everything else is failure for that demand. **There is no disjunction and no second way to win.**
+
+### Primary test — both criteria required
+
+- **One-sided exact McNemar** (exact sign test over discordant pairs), **α = 0.05**
+- **Risk difference ≥ 10 percentage points**
+
+A single discordant pair can never carry the result: the smallest attainable p-value is 0.5 raised
+to the number of discordant pairs, so significance needs **at least five**.
+
+**Feasibility is proven before the freeze, not discovered after the reveal.** The smallest
+admissible bank — 3 qualifying carriers × 2 demands = **6 paired demands** — gives a smallest
+attainable p of **0.0156**, so the criterion can pass; and it can obviously fail. **A plan whose
+minimum bank could never reach significance refuses to freeze.**
+
+### No-harm guards — they veto, they never create
+
+`correct_construction ≥` · `calibrated_refusal ≥` · `invented_adapter ≤` · `false_refusal ≤` ·
+`unmet_construction ≤` · **`attribution_agreement_rate ≥`** (the measure M113 omitted).
+
+Every other measure is reported as mechanism and **decides nothing**.
+
+### Arms — the factorial the inherited set lacked
+
+|  | policy absent | policy present |
+|---|---|---|
+| **rules absent** | `T0` (legacy), `fresh_uniform` | `probe_only` |
+| **rules present** | `M2` | `M3` |
+
+**The primary comparison is `M3` vs `fresh_uniform`.** T0 is retained as a legacy regression arm and
+is **not** the comparator: with no acquired rules it is a **constant function**, returning
+`operator_table` on every row, and beating a constant is not evidence.
+
+`fresh_uniform` is two rules built by the producer's own constructor from a **precommitted seed and
+the feature-row index alone** — no acquired rule, no policy, no carrier semantics, deterministic and
+exactly replayable. The hardwired fallthrough supplies the third component, giving a balanced 3/3/2
+partition: it reaches the fallthrough on 3 of 8 rows where **T0 reaches it on all 8**.
+
+`probe_only` and `probe_only_budget_plus` exist because **`policy_fires` requires a policy**, so an
+arm without one cannot take the diagnostic probe action *at any budget* — which legacy `budget_plus`
+cannot, making it useless as a budget control for the probe.
+
+### Action-space symmetry, stated honestly
+
+The claim that **"only the Genesis state differs across arms" is withdrawn.** It is literally true
+and misleading, because the state itself determines whether the probe can occur. What is true:
+carrier, demand, channel, evaluator, reference and base budget are held fixed; the Genesis state
+differs; **that state may enable different internal actions**; and the factorial arms exist to
+measure that mechanism rather than pretend it away.
+
+### Claim discipline
+
+A positive H63 supports only what the decomposition supports. If `M3 ≈ probe_only`, the evidence
+favours the **diagnostic policy pathway, not the acquired cascade**. If `M3` beats T0 but not
+`fresh_uniform`, **H63 is negative**. If the primary passes but any guard fails, **H63 is negative**.
+This is computed from the arms, not written by whoever summarises.
+
+### Multiplicity across H60–H63
+
+**Verified against the artifacts, not asserted:** M113 and M114 have no `RESULT.json` at all, and
+M115 is `instrument-aborted` with all 22 predicates `not_computed`. H60, H61 and H62 produced **no
+qualifying scientific test** of this proposition. They were instrument-aborted or never frozen.
+**H63 is the first prospective scientific test under the corrected apparatus**, if it reaches a
+valid bank.
+
+### Provider confounding — a limit, not a defect to fix
+
+H63 runs **one fixed OpenInference route**, selected and calibrated before H63 under M117 criteria
+that were themselves revised after observing candidates. **Any positive result is conditional on
+this serving route.** No claim of provider invariance is available, and no second provider is added
+after the fact. A later milestone may test invariance prospectively.
+
 ## What the carrier family is, precisely
 
 The hypothesis is often stated as "a carrier family this project did not design". **That wording
