@@ -86,20 +86,23 @@ def test_the_verdict_is_unchanged_whether_the_fields_are_absent_or_observed_empt
     assert absent["failed_checks"] == observed["failed_checks"] == []
 
 
-def test_the_record_distinguishes_what_was_observed_from_what_was_inferred():
-    absent = attest_router_metadata(safe_router_metadata(_raw()))
-    observed = attest_router_metadata(safe_router_metadata(_raw(attempts=[], pipeline=[])))
-    assert absent["attempts_observed"] is False
-    assert absent["pipeline_observed"] is False
-    assert observed["attempts_observed"] is True
-    assert observed["pipeline_observed"] is True
+def test_the_projection_is_where_observed_and_inferred_are_distinguished():
+    """Not the attestation: it is compared for full equality against a closed milestone's record."""
+    assert safe_router_metadata(_raw())["attempts"] is None
+    assert safe_router_metadata(_raw(attempts=[]))["attempts"] == []
 
 
-def test_observation_flags_are_not_criteria():
-    """Making them criteria would flip a verdict on evidence this API has never emitted."""
+def test_the_attestation_gains_no_key_that_would_break_a_committed_comparison():
+    """M115 verification requires the recomputed attestation to equal the one it committed."""
     absent = attest_router_metadata(safe_router_metadata(_raw()))
-    assert "attempts_observed" not in absent["checks"]
-    assert "pipeline_observed" not in absent["checks"]
+    assert set(absent) == {"identity_version", "requested_model", "canonical_checkpoint",
+                           "selected_provider", "checks", "failed_checks", "holds",
+                           "is_byok_observed"}
+    assert set(absent["checks"]) == {
+        "router_metadata_present", "requested_alias_exact", "direct_strategy",
+        "one_router_attempt", "one_selected_endpoint", "selected_provider_exact",
+        "selected_checkpoint_exact", "no_fallback_attested", "pipeline_present_as_list",
+        "no_pipeline_intervention"}
 
 
 # -------------------------------------------------------------------------------------------

@@ -144,10 +144,10 @@ def attest_router_metadata(metadata: Mapping[str, Any] | None) -> dict[str, Any]
         # BYOK is an observation, not a criterion for this selected route. It was explicitly not a
         # ranking input in the preserved DEVELOPMENT policy.
         "is_byok_observed": metadata.get("is_byok") if isinstance(metadata.get("is_byok"), bool) else None,
-        # Whether the router reported these at all. Observations, deliberately outside `checks`:
-        # making them criteria would flip a verdict on evidence this API has never emitted.
-        "attempts_observed": attempts is not None,
-        "pipeline_observed": pipeline is not None,
+        # Whether the router reported these fields at all is visible in the projection itself,
+        # where absent is None and observed-empty is []. It is deliberately NOT added here: the
+        # attestation dict is compared for full equality against M115's committed record, so any
+        # new key would break the recomputation of a closed milestone.
     }
 
 

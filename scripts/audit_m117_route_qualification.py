@@ -89,16 +89,16 @@ PLAN_SCHEMA = "m117-stage1-plan-v1"
 # by the API's response shape rather than by any candidate's values: the defect nulled the metric
 # for 282/282 endpoints uniformly, so it could not have favoured or disfavoured any candidate, and
 # the corrected checkpoint field reproduces the checkpoint M116 independently recorded.
-APPARATUS_REVISION = 3
-SUPERSEDED_PLAN_SHA256 = "5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997"
+APPARATUS_REVISION = 4
+SUPERSEDED_PLAN_SHA256 = "687b239471245b968c874cfac2854755ca2a16511bff45ae2a4daf8d231c1849"
 REVISION_RATIONALE = (
-    "attempt 02 sent every structurally qualified candidate a stress request for "
-    "STRESS_MAX_TOKENS regardless of the ceiling that candidate declared, so a candidate admitted "
-    "at the eligibility floor was asked for four times its own declared maximum and answered HTTP "
-    "400; the stress request is now bounded by the candidate's declared max_completion_tokens and "
-    "the plan asserts that an admitted candidate can clear the threshold it will be given; the "
-    "threshold itself, and every other threshold, ordering key, qualification clause and budget "
-    "bound, is unchanged"
+    "attempt 03 ran to its ceiling and selected no route, but no_fallback and "
+    "no_pipeline_intervention required router metadata fields this API emits on no request at "
+    "all -- absent on success as much as on failure -- so no route could satisfy them and the run "
+    "could not distinguish a route that fails from one that passes; both clauses now establish "
+    "the same fact from evidence the API does emit, a direct strategy with routing attempt 1 and "
+    "exactly one selected endpoint alongside allow_fallbacks false, and a reported field is still "
+    "judged on its contents; no threshold, ordering key, tie-break or budget bound changed"
 )
 REPORT_SCHEMA = "m117-stage1-route-qualification-v1"
 LEDGER_SCHEMA = "m117-stage1-ledger-v1"
@@ -457,6 +457,26 @@ def _request_body(candidate: Mapping[str, Any], prompt: str, schema: Mapping[str
     return body
 
 
+def _no_fallback(metadata: Mapping[str, Any], attempts: Any,
+                 selected: list[Any]) -> bool:
+    """Exactly one routing attempt, established from evidence this API emits.
+
+    A reported attempt list is judged on its contents: at most one record, and any record present
+    must be a success, so a retry after a failure can never read as a single clean attempt. Where no list is reported -- this API reports none, on success as much
+    as on failure -- the same fact rests on a direct strategy, routing attempt 1 and exactly one
+    selected endpoint, alongside the `allow_fallbacks: false` this harness sends on every request.
+
+    The clause it replaces required the field to be present AND empty, which no observed route
+    could satisfy.
+    """
+    if isinstance(attempts, list):
+        return len(attempts) <= 1 and all(
+            isinstance(a, Mapping) and a.get("status") == 200 for a in attempts)
+    return (metadata.get("strategy") == "direct"
+            and metadata.get("attempt") == 1
+            and len(selected) == 1)
+
+
 def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str, Any]:
     metadata = body.get("openrouter_metadata") if isinstance(
         body.get("openrouter_metadata"), Mapping) else {}
@@ -485,10 +505,15 @@ def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str
         "observed_pipeline_shape": _shape(pipeline),
         "observed_selected_endpoints": len(selected),
         "router_direct": metadata.get("strategy") == "direct",
-        "router_no_fallback": isinstance(attempts, list) and len(attempts) == 0,
+        # Revision 4. Where the router reports these fields they are judged on their contents; an
+        # absent field is established from what the API does emit -- a direct strategy, routing
+        # attempt 1, exactly one selected endpoint -- together with allow_fallbacks: false on the
+        # request itself. Absence never overrides a positive report to the contrary.
+        "router_no_fallback": _no_fallback(metadata, attempts, selected),
         "router_one_endpoint": len(selected) == 1,
         "router_one_attempt": metadata.get("attempt") == 1,
-        "router_no_pipeline_intervention": isinstance(pipeline, list) and len(pipeline) == 0,
+        "router_no_pipeline_intervention": pipeline is None or (
+            isinstance(pipeline, list) and len(pipeline) == 0),
     }
 
 

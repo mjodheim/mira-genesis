@@ -193,6 +193,7 @@ def test_attempt_01_artifacts_are_preserved_and_still_verify(name, key):
 
 PLAN_01 = "d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67"
 PLAN_02 = "5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997"
+PLAN_03 = "687b239471245b968c874cfac2854755ca2a16511bff45ae2a4daf8d231c1849"
 
 
 def test_each_aborted_attempt_is_bound_to_its_own_frozen_plan():
@@ -204,15 +205,15 @@ def test_each_aborted_attempt_is_bound_to_its_own_frozen_plan():
                               / "STAGE1_CANDIDATE_UNIVERSE.json").read_text(encoding="utf-8"))
     assert universe_02["plan_sha256"] == PLAN_02
     live = stage1.plan()["plan_sha256"]
-    assert live not in (PLAN_01, PLAN_02)
-    assert stage1.SUPERSEDED_PLAN_SHA256 == PLAN_02
+    assert live not in (PLAN_01, PLAN_02, PLAN_03)
+    assert stage1.SUPERSEDED_PLAN_SHA256 == PLAN_03
 
 
 def test_the_revision_is_recorded_in_the_plan_itself():
     frozen = stage1.plan()
-    assert frozen["apparatus_revision"] == stage1.APPARATUS_REVISION >= 3
+    assert frozen["apparatus_revision"] == stage1.APPARATUS_REVISION >= 4
     assert frozen["supersedes_plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
-    assert "unchanged" in frozen["revision_rationale"]
+    assert "no threshold" in frozen["revision_rationale"]
 
 
 def test_a_universe_from_the_superseded_plan_cannot_be_probed(tmp_path, monkeypatch):
@@ -279,8 +280,8 @@ def test_attempt_02_was_halted_on_that_defect_and_is_preserved():
 def test_attempt_02_belongs_to_the_superseded_plan():
     ledger = json.loads((ROOT / "experiments" / "M117" / "ATTEMPT_02_INSTRUMENT_ABORT"
                          / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
-    assert ledger["plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
-    assert stage1.plan()["plan_sha256"] != stage1.SUPERSEDED_PLAN_SHA256
+    assert ledger["plan_sha256"] == PLAN_02
+    assert stage1.plan()["plan_sha256"] not in (PLAN_01, PLAN_02, PLAN_03)
 
 
 # -------------------------------------------------------------------------------------------
@@ -320,17 +321,64 @@ def test_missing_router_metadata_is_distinguishable_from_a_real_fallback():
     assert stage1._shape("nope") == "not_a_list"
 
 
-def test_the_no_fallback_clause_was_not_relaxed():
-    """Only instrumented. Absent metadata still fails closed."""
-    for absent in ({}, {"openrouter_metadata": {"strategy": "direct"}}):
-        identity = stage1._identity({"model": "x", "provider": "P"}, absent)
-        assert identity["router_no_fallback"] is False
-        assert identity["router_no_pipeline_intervention"] is False
-    proven = {"openrouter_metadata": {"strategy": "direct", "attempts": [], "pipeline": [],
-                                      "attempt": 1,
+def test_no_fallback_is_established_from_evidence_the_api_emits():
+    """Revision 4, authorized: the fact is unchanged, its evidence is now obtainable.
+
+    Attempt 03 showed this API emits neither `attempts` nor `pipeline` on any request, so a clause
+    requiring them present AND empty could not be satisfied by any route.
+    """
+    proven = {"openrouter_metadata": {"strategy": "direct", "attempt": 1,
                                       "endpoints": {"available": [
                                           {"model": "x-2026", "selected": True}]}}}
     identity = stage1._identity({"model": "x", "provider": "P"}, proven)
     assert identity["router_no_fallback"] is True
     assert identity["router_no_pipeline_intervention"] is True
-    assert identity["observed_attempts_shape"] == "empty_list"
+    assert identity["observed_attempts_shape"] == "absent"
+
+
+@pytest.mark.parametrize("metadata,clause", [
+    ({"strategy": "fallback", "attempt": 1}, "router_no_fallback"),
+    ({"strategy": "direct", "attempt": 2}, "router_no_fallback"),
+])
+def test_absence_does_not_excuse_a_missing_routing_fact(metadata, clause):
+    """Absence is not a free pass: the direct-route evidence must actually be there."""
+    body = {"openrouter_metadata": {**metadata, "endpoints": {"available": [
+        {"model": "x-2026", "selected": True}]}}}
+    assert stage1._identity({"model": "x", "provider": "P"}, body)[clause] is False
+
+
+def test_no_metadata_at_all_still_fails_closed():
+    for empty in ({}, {"openrouter_metadata": {}}):
+        identity = stage1._identity({"model": "x", "provider": "P"}, empty)
+        assert identity["router_no_fallback"] is False
+        assert identity["router_direct"] is False
+
+
+def test_a_reported_field_still_overrides_absence():
+    """Absence never overrides a positive report to the contrary."""
+    retried = {"openrouter_metadata": {
+        "strategy": "direct", "attempt": 1,
+        "attempts": [{"status": 503}, {"status": 200}],
+        "pipeline": [{"type": "moderation"}],
+        "endpoints": {"available": [{"model": "x-2026", "selected": True}]}}}
+    identity = stage1._identity({"model": "x", "provider": "P"}, retried)
+    assert identity["router_no_fallback"] is False
+    assert identity["router_no_pipeline_intervention"] is False
+    assert identity["observed_attempts_shape"] == "non_empty_list"
+
+
+def test_a_single_failed_attempt_is_not_a_clean_single_attempt():
+    body = {"openrouter_metadata": {
+        "strategy": "direct", "attempt": 1, "attempts": [{"status": 503}],
+        "endpoints": {"available": [{"model": "x-2026", "selected": True}]}}}
+    assert stage1._identity({"model": "x", "provider": "P"}, body)["router_no_fallback"] is False
+
+
+def test_the_other_ten_clauses_are_untouched_by_revision_4():
+    """Only the two unsatisfiable clauses were re-specified."""
+    assert rule.MINIMUM_UPTIME_LAST_1D == 99.0
+    assert rule.MINIMUM_MAX_COMPLETION_TOKENS == 32768
+    assert rule.RELIABILITY_ORDERING == ("uptime_last_1d_desc", "uptime_last_30m_desc",
+                                         "latency_last_30m_p50_asc", "provider_name_asc")
+    assert rule.GLOBAL_REQUEST_CEILING == 160
+    assert stage1.STRESS_MIN_COMPLETION_TOKENS == 32000

@@ -195,6 +195,19 @@ def qualifies(profile: Mapping[str, Any]) -> dict[str, Any]:
         "canonical_checkpoint_exact": profile.get("canonical_checkpoint_exact") is True,
         "provider_exact": profile.get("provider_exact") is True,
         "direct_route": profile.get("router_direct") is True,
+        # Revision 4. Attempt 03 established that this API emits neither `attempts` nor `pipeline`
+        # -- absent on all sixteen complete candidates, and absent on successful requests as much
+        # as on rejected ones, so their absence carries no routing information. The previous
+        # clauses required those fields to be present AND empty, which no route could satisfy: a
+        # run ending with no selection could not distinguish a route that fails from one that
+        # passes.
+        #
+        # The fact required is unchanged -- exactly one routing attempt, no fallback, no pipeline
+        # intervention -- and is now established from evidence the API does emit and that already
+        # held on every fully enforcing candidate: a direct strategy, routing attempt 1, exactly
+        # one selected endpoint, and the request's own allow_fallbacks: false. Where the router
+        # does report the fields, they are still judged on their contents; absence alone never
+        # substitutes for a positive report that contradicts them.
         "no_fallback": profile.get("router_no_fallback") is True,
         "one_selected_endpoint": profile.get("router_one_endpoint") is True,
         "one_router_attempt": profile.get("router_one_attempt") is True,
