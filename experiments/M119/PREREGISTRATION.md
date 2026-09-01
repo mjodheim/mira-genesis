@@ -267,3 +267,27 @@ H64 stops, without a scientific verdict, if any of these holds:
 
 In every one of those cases the outcome is recorded as `instrument_aborted`: H64 **untested**. It is
 never converted into a negative result, and the design is never adjusted afterwards to rescue it.
+
+## Amendment log
+
+This document was written before the analysis plan, the generator spec, the bank nonce and the
+tested-system freeze, and before any H64 observation existed. It was then amended three times, all
+before the freeze and all before any model was called. They are listed rather than folded in
+silently, because a preregistration that quietly changes is not a preregistration:
+
+1. **One fenced diagnostic arm added.** `FULL_BUDGET_PLUS`, on the condition the complexity budget
+   already stated, after pre-freeze review measured that the policy-holding arms returned
+   `undetermined` on 17 of 25 unreachable demands. Reasoning and running arm count in
+   `COMPLEXITY_BUDGET.md`. It cannot enter the primary comparison and cannot create a positive.
+2. **The multiplicity position recorded**, checked against the committed records of H59, H60, H62
+   and H63 rather than recalled.
+3. **The observation budget stated as a limitation**, once it was established that the endpoint is
+   budget-constrained resolution rather than resolution as such.
+
+No amendment changed the arms of the 2×2, the endpoint, the statistical rule, α, the ten-point
+effect floor, the guards, the verdict states, the bank size, or the admissibility minimums.
+
+A DEVELOPMENT rehearsal of the whole pipeline was run before the freeze, and its outcome —
+including its verdict, which was `negative` on a devkit bank — is recorded in
+[`DEVELOPMENT_REHEARSAL.md`](DEVELOPMENT_REHEARSAL.md). Nothing in this document was changed in
+response to it.
