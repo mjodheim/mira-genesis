@@ -84,16 +84,34 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, plan: Mapping[str
     acquired = restore_acquired()
     entries: list[dict[str, Any]] = []
     qualifying = 0
+    refused = 0
     signatures: Counter = Counter()
 
     for index, carrier in enumerate(carriers):
-        if not evaluator.qualification_report(carrier)["qualifies"]:
+        # The envelope is positional: carrier *i* is machine *i*, tagged with the opaque identifier
+        # the committed nonce determines. Checking that here means the reference the comparator is
+        # seeded from is the one the nonce fixed before the bank existed, rather than a value the
+        # bank supplied.
+        expected_reference = inherited.opaque_domain_id(nonce, index)
+        reference = carrier.get("carrier_ref") or expected_reference
+        if reference != expected_reference:
+            raise QualificationError(
+                "carrier %d carries a reference the committed nonce does not determine" % index)
+
+        # A carrier the frozen host refuses is counted, never repaired and never fatal: refusing
+        # the whole run because one machine was malformed would let a single bad entry destroy a
+        # bank the rest of which is perfectly measurable.
+        try:
+            validated = host.validate_carrier(carrier)
+        except host.CarrierError:
+            refused += 1
+            continue
+        if not evaluator.qualification_report(validated)["qualifies"]:
             continue
         qualifying += 1
-        signatures[host.structural_signature(carrier)] += 1
-        reference = carrier.get("carrier_ref") or inherited.opaque_domain_id(nonce, index)
+        signatures[host.structural_signature(validated)] += 1
 
-        for pair in evaluator.derive_demand_pairs(carrier, reference, session_budget):
+        for pair in evaluator.derive_demand_pairs(validated, reference, session_budget):
             evaluator.assert_demand_pair_delta(pair)
             truth = pair["ground_truth"]
             cascades = arms.build_arms(acquired["cascade_rules"], acquired["policy"],
@@ -106,7 +124,7 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, plan: Mapping[str
                                             pair["shared"]["entry"])
             record: dict[str, Any] = {
                 "carrier_ref": str(reference),
-                "carrier_digest": carrier["carrier_digest"],
+                "carrier_digest": validated["carrier_digest"],
                 "pair_digest": pair["pair_digest"],
                 "ground_truth_component": truth["component"],
                 "ground_truth_row": truth["row_index"],
@@ -118,9 +136,9 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, plan: Mapping[str
                 arm_record: dict[str, Any] = {"budget": budget}
                 for demand_class in evaluator.DEMAND_CLASSES:
                     demand = evaluator.materialize_twin(pair, demand_class)
-                    channel = host.Channel(carrier, reference, budget)
+                    channel = host.Channel(validated, reference, budget)
                     outcome = runtime.resolve(state, channel, demand)
-                    score = evaluator.score_attempt(carrier, demand, outcome)
+                    score = evaluator.score_attempt(validated, demand, outcome)
                     row: dict[str, Any] = {
                         "verdict": outcome["verdict"],
                         "invocations_used": outcome["invocations_used"],
@@ -162,6 +180,7 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, plan: Mapping[str
         "session_budget": session_budget,
         "session_budget_came_from_the_committed_plan_not_the_command_line": True,
         "carriers_seen": len(carriers),
+        "carriers_refused_by_the_frozen_host": refused,
         "qualifying_carriers": qualifying,
         "distinct_qualifying_structures": len(signatures),
         "demand_classes": list(evaluator.DEMAND_CLASSES),

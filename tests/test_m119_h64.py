@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 
+from metamorphosis import carrier_host as host
 from metamorphosis import m113_carrier_devkit as devkit
 from metamorphosis import m113_evaluator as evaluator
 from metamorphosis import m119_arms as arms
@@ -619,3 +620,81 @@ def test_an_unknown_verdict_cannot_be_decomposed_into_a_causal_statement() -> No
     with pytest.raises(ValueError, match="no rate"):
         decomposition.decompose({"FULL": 1.0, "FRESH": None, "CASCADE_ONLY": 0.0,
                                  "POLICY_ONLY": 0.0}, verdict=endpoint.NEGATIVE)
+
+
+# ---------------------------------------------------------------------------------------------
+# 24-26. The revealed bank, as the reveal actually writes it
+# ---------------------------------------------------------------------------------------------
+
+from metamorphosis import m116_admission as admission  # noqa: E402
+from metamorphosis.blind_bank_protocol import opaque_domain_id  # noqa: E402
+
+import scripts.run_m119_qualification as qualification  # noqa: E402
+
+NONCE = "d" * 64
+
+
+def _machine(seed: str) -> dict:
+    """A carrier in the generator's own shape: no carrier_ref, no schema, no digest."""
+    carrier = dict(devkit.development_carrier(seed))
+    return {key: carrier[key] for key in
+            ("surface", "cells", "initial", "visible", "errors", "actions")}
+
+
+def _revealed_bank(count: int, *, seed: str = "m119-bank") -> dict:
+    """Exactly what `run_m119_reveal.py` writes: the positional envelope over the completion."""
+    completion = {"machines": [_machine("%s-%d" % (seed, i)) for i in range(count)]}
+    return admission.envelope_payload(completion, NONCE)
+
+
+def test_the_runner_measures_the_bank_the_reveal_actually_writes(plan) -> None:
+    """Enveloped carriers carry no `carrier_digest`; only the frozen host adds one."""
+    payload = _revealed_bank(12)
+    assert all("carrier_digest" not in carrier for carrier in payload["carriers"])
+    record = qualification.measure(payload["carriers"], NONCE, plan, provenance={
+        "freeze_commitment_sha256": "f" * 64, "reveal_record_sha256": "e" * 64,
+        "carrier_bank_sha256": "c" * 64})
+    assert record["carriers_seen"] == 12
+    assert record["qualifying_carriers"] == 2
+    assert record["entries"], "no demand was posed over a bank the reveal would really produce"
+    positional = {opaque_domain_id(NONCE, i) for i in range(12)}
+    for entry in record["entries"]:
+        assert len(entry["carrier_digest"]) == 64
+        assert entry["carrier_ref"] in positional
+        assert set(entry["arms"]) == set(arms.ALL_ARM_NAMES)
+
+
+def test_a_carrier_the_frozen_host_refuses_is_counted_and_never_fatal(plan) -> None:
+    """One malformed machine must not destroy a bank the rest of which is measurable."""
+    payload = _revealed_bank(4)
+    payload["carriers"].append({"carrier_ref": opaque_domain_id(NONCE, 4), "cells": "not a list"})
+    record = qualification.measure(payload["carriers"], NONCE, plan, provenance={
+        "freeze_commitment_sha256": "f" * 64, "reveal_record_sha256": "e" * 64,
+        "carrier_bank_sha256": "c" * 64})
+    assert record["carriers_refused_by_the_frozen_host"] == 1
+    assert record["carriers_seen"] == 5
+
+
+def test_a_carrier_reference_the_committed_nonce_did_not_determine_is_refused(plan) -> None:
+    """The envelope is positional; a reference the nonce does not fix would steer the comparator."""
+    payload = _revealed_bank(3)
+    payload["carriers"][1]["carrier_ref"] = opaque_domain_id("f" * 64, 1)
+    with pytest.raises(qualification.QualificationError, match="the committed nonce"):
+        qualification.measure(payload["carriers"], NONCE, plan, provenance={
+            "freeze_commitment_sha256": "f" * 64, "reveal_record_sha256": "e" * 64,
+            "carrier_bank_sha256": "c" * 64})
+
+
+def test_the_carrier_loader_refuses_a_bare_list_and_a_foreign_nonce() -> None:
+    payload = _revealed_bank(2)
+    written = Path(__file__).parent / "_m119_bank_fixture.json"
+    try:
+        written.write_bytes(canonical_bytes(payload["carriers"]) + b"\n")
+        with pytest.raises(qualification.QualificationError, match="carriers"):
+            qualification.load_carriers(written, NONCE)
+        written.write_bytes(canonical_bytes(payload) + b"\n")
+        with pytest.raises(qualification.QualificationError, match="different bank nonce"):
+            qualification.load_carriers(written, "a" * 64)
+        assert len(qualification.load_carriers(written, NONCE)) == 2
+    finally:
+        written.unlink(missing_ok=True)
