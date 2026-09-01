@@ -192,3 +192,30 @@ def test_a_positive_primary_with_a_failing_guard_is_negative(measurements):
     assert report["primary"]["primary_holds"] is True
     assert "attribution_agreement_rate" in report["primary"]["no_harm"]["failed"]
     assert report["verdict"] == "negative"
+
+
+def test_the_diagnostic_probe_actually_fires_on_a_reasonable_sample():
+    """If the probe never fires, probe_only collapses onto T0 and the decomposition is vacuous.
+
+    The policy only fires on rows its acquired record marks undetermined, so a single carrier can
+    legitimately show zero probes. Across a larger sample it must fire, or the factorial arms are
+    measuring nothing and a future change could disable them silently.
+    """
+    carriers = _carriers(10)
+    measurements = runner.measure(carriers, NONCE, session_budget=4000)
+    fired = sum(
+        1
+        for entry in measurements["entries"]
+        for demand_class in evaluator.DEMAND_CLASSES
+        if entry["arms"]["probe_only"][demand_class]["probes_spent"] > 0
+    )
+    assert fired > 0, "the diagnostic probe never fired; the factorial arms measure nothing"
+
+
+def test_arms_without_a_policy_never_probe():
+    """The action-space asymmetry the design exists to measure, asserted rather than assumed."""
+    measurements = runner.measure(_carriers(6), NONCE, session_budget=4000)
+    for entry in measurements["entries"]:
+        for name in ("T0", "fresh_uniform", "M2", "budget_plus"):
+            for demand_class in evaluator.DEMAND_CLASSES:
+                assert entry["arms"][name][demand_class]["probes_spent"] == 0, name
