@@ -113,6 +113,14 @@ reachable instrument family, recorded as one, and not a licence to lower a thres
 eligibility, add a preferred provider, weaken the carrier schema, rewrite the matrix, or re-run
 candidates until one passes.
 
+## The selection rests on evidence, not on a recorded verdict
+
+Qualification is **recomputed at the point of selection** from each candidate's own profile, rather
+than read from the verdict stored alongside it. A stored verdict is a claim; the decision should
+rest on the evidence it claims to summarise. Without this, a profile asserting `qualifies: true`
+would select a route that never passed a single check. An incomplete candidate is skipped rather
+than considered.
+
 ## Independent replay
 
 `scripts/check_m117_stage1.py` recomputes from committed artifacts alone: every digest, the

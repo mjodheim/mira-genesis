@@ -354,3 +354,28 @@ def test_a_candidate_cut_short_by_the_ceiling_is_recorded_not_dropped(tmp_path, 
     assert incomplete[0]["qualification"]["qualifies"] is False
     assert report["selection"]["route_selected"] is False
     assert report["requests_spent"] <= rule.GLOBAL_REQUEST_CEILING
+
+
+def test_a_forged_qualification_claim_cannot_select_a_route():
+    """The decision point rests on the evidence, not on what the record says about it."""
+    universe = rule.derive_universe([_entry(provider="Alpha")])
+    forged = {"model": "a/model", "provider": "Alpha",
+              "qualification": {"qualifies": True}}          # asserts it passed; nothing did
+    selection = rule.select(universe, [forged])
+    assert selection["route_selected"] is False
+    assert selection["qualification_recomputed_at_selection"] is True
+
+
+def test_selection_recomputes_rather_than_trusting_a_stale_verdict():
+    universe = rule.derive_universe([_entry(provider="Alpha")])
+    stale = _profile(provider="Alpha", unenforced_feature_classes=["enum"])
+    stale["qualification"] = {"qualifies": True}   # verdict says pass, evidence says otherwise
+    assert rule.select(universe, [stale])["route_selected"] is False
+
+
+def test_an_incomplete_candidate_is_skipped_not_selected():
+    universe = rule.derive_universe([_entry(provider="Alpha"), _entry(provider="Beta")])
+    profiles = [{"model": "a/model", "provider": "Alpha", "incomplete": True,
+                 "qualification": {"qualifies": False}},
+                _profile(provider="Beta")]
+    assert rule.select(universe, profiles)["selected"]["provider"] == "Beta"

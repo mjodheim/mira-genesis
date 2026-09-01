@@ -223,7 +223,13 @@ def select(universe: Mapping[str, Any], profiles: Sequence[Mapping[str, Any]]) -
         profile = by_key.get((item.get("model"), item.get("provider")))
         if profile is None:
             break  # not reached under the frozen budget; nothing after it was probed either
-        if profile.get("qualification", {}).get("qualifies") is True:
+        if profile.get("incomplete"):
+            continue
+        # Recomputed here rather than read from the profile. A recorded verdict is a claim, and the
+        # point of decision should rest on the evidence rather than on what the record says about
+        # it -- otherwise a profile asserting `qualifies: true` would select a route that never
+        # passed a single check.
+        if qualifies(profile)["qualifies"] is True:
             selected = item
             break
     return {
@@ -236,6 +242,7 @@ def select(universe: Mapping[str, Any], profiles: Sequence[Mapping[str, Any]]) -
                       "order": selected.get("order")} if selected else None),
         "route_selected": selected is not None,
         "carrier_quality_was_an_input": False,
+        "qualification_recomputed_at_selection": True,
         "selection_depends_only_on_frozen_order_and_qualification": True,
     }
 
