@@ -200,16 +200,22 @@ def decide(descendant_outcomes: Sequence[bool], fresh_outcomes: Sequence[bool],
     primary = bool(statistical and effect)
     best_possible = smallest_attainable_p(table["discordant"])
     underpowered = best_possible > alpha
-    positive = bool(primary and guards["all_hold"])
+    criteria_met = bool(primary and guards["all_hold"])
 
     if not instrument_valid or n == 0:
         verdict = INSTRUMENT_ABORTED
-    elif positive:
+    elif criteria_met:
         verdict = POSITIVE
     elif underpowered and not primary:
         verdict = INCONCLUSIVE
     else:
         verdict = NEGATIVE
+
+    # `positive` follows the verdict and never the criteria alone. An instrument-aborted run can
+    # still have a passing primary and clean guards -- the criteria are computed before validity is
+    # known -- and a reader keying on this field would then report a positive from a run that never
+    # validly tested anything.
+    positive = verdict == POSITIVE
 
     return {
         "schema": "m119-h64-verdict-v1",
@@ -225,6 +231,7 @@ def decide(descendant_outcomes: Sequence[bool], fresh_outcomes: Sequence[bool],
         "minimum_risk_difference": minimum_risk_difference,
         "effect_size_criterion_holds": bool(effect),
         "primary_holds": primary,
+        "criteria_met_before_validity_was_considered": criteria_met,
         "smallest_attainable_p_value": best_possible,
         "underpowered": bool(underpowered),
         "no_harm": guards,

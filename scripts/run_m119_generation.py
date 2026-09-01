@@ -223,8 +223,10 @@ def _preflight() -> tuple[dict[str, Any], dict[str, Any], str, dict[str, Any]]:
     hits = contamination_hits(canonical_bytes(body).decode("utf-8"))
     if hits:
         raise GenerationError("the request body carries project context: %s" % ", ".join(hits))
-    fixed.assert_is_the_fixed_route(body.get("model"),
-                                   (body.get("provider") or {}).get("only", [None])[0])
+    only = (body.get("provider") or {}).get("only")
+    if not isinstance(only, list) or len(only) != 1:
+        raise GenerationError("the frozen request body must name exactly one provider")
+    fixed.assert_is_the_fixed_route(body.get("model"), only[0])
     if RESPONSE_PATH.exists() or ADMISSION_PATH.exists():
         raise GenerationError("an H64 generation record already exists; a bank is never redrawn")
     return plan, spec, nonce, permission

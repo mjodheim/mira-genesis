@@ -513,8 +513,10 @@ def validate_generator_spec(spec: Mapping[str, Any], plan: Mapping[str, Any],
         raise BankError("the generator spec carries no canonical request body")
     if spec.get("canonical_request_body_sha256") != sha256_hex(canonical_bytes(body)):
         raise BankError("the canonical request body digest does not match the body")
-    fixed.assert_is_the_fixed_route(body.get("model"), (body.get("provider") or {}).get("only", [
-        None])[0])
+    only = (body.get("provider") or {}).get("only")
+    if not isinstance(only, list) or len(only) != 1:
+        raise BankError("the request body must name exactly one provider and no fallback")
+    fixed.assert_is_the_fixed_route(body.get("model"), only[0])
     hits = spec["blindness_contract"]["contamination_hits_in_the_prompt"]
     if hits:
         raise BankError(

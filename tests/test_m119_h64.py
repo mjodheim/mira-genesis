@@ -178,10 +178,11 @@ def test_a_guard_vetoes_a_positive_and_cannot_create_one() -> None:
     d, f = _series(only_descendant=10, only_fresh=0, both=5, neither=5)
     clean = endpoint.decide(d, f, _CLEAN, _CLEAN)
     assert clean["primary_holds"] is True and clean["verdict"] == endpoint.POSITIVE
+    assert clean["positive"] is True
 
     harmed = dict(_CLEAN, invented_adapter=3)
     vetoed = endpoint.decide(d, f, harmed, _CLEAN)
-    assert vetoed["primary_holds"] is True
+    assert vetoed["primary_holds"] is True and vetoed["positive"] is False
     assert vetoed["no_harm"]["failed"] == ["invented_adapter"]
     assert vetoed["verdict"] == endpoint.NEGATIVE
 
@@ -213,9 +214,13 @@ def test_an_instrument_failure_is_never_a_scientific_result() -> None:
     d, f = _series(only_descendant=10, only_fresh=0, both=5, neither=5)
     aborted = endpoint.decide(d, f, _CLEAN, _CLEAN, instrument_valid=False,
                               instrument_failures=["fewer qualifying carriers than the plan"])
-    # The primary criterion passes and every guard holds, and it still is not a result.
+    # The primary criterion passes and every guard holds, and it still is not a result. The
+    # `positive` field must follow the verdict, not the criteria: a reader keying on it would
+    # otherwise report a positive from a run that never validly tested anything.
+    assert aborted["criteria_met_before_validity_was_considered"] is True
     assert aborted["primary_holds"] is True and aborted["no_harm"]["all_hold"] is True
     assert aborted["verdict"] == endpoint.INSTRUMENT_ABORTED
+    assert aborted["positive"] is False
     assert decomposition.decompose({}, verdict=aborted["verdict"])[
         "strongest_supported_statement"].startswith("H64 was not validly tested")
 
@@ -588,3 +593,17 @@ def test_a_measurement_that_binds_no_freeze_is_refused(plan) -> None:
         record = _measurements(entries, plan=plan, **{key: None})
         with pytest.raises(checker.CheckError, match="does not bind"):
             checker.check(record, plan)
+
+
+def test_a_request_body_naming_no_provider_or_two_is_refused(plan) -> None:
+    """An empty or plural provider list must refuse, not raise an index error."""
+    spec = bank.build_generator_spec(plan, ROOT)
+    for value in ([], ["A", "B"], None):
+        broken = json.loads(json.dumps(spec))
+        broken["canonical_request_body"]["provider"]["only"] = value
+        broken["canonical_request_body_sha256"] = sha256_hex(
+            canonical_bytes(broken["canonical_request_body"]))
+        broken["spec_commitment_sha256"] = sha256_hex(canonical_bytes(
+            {k: v for k, v in broken.items() if k != "spec_commitment_sha256"}))
+        with pytest.raises(bank.BankError, match="exactly one provider"):
+            bank.validate_generator_spec(broken, plan, ROOT)

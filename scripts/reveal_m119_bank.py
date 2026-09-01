@@ -97,9 +97,16 @@ def reveal() -> dict[str, Any]:
         raise RevealError(
             "the plaintext recovered from the seal is not the plaintext that was sealed")
 
-    response = json.loads(plaintext.decode("utf-8"))
-    content = response["body"]["choices"][0]["message"]["content"]
-    machines = json.loads(content)
+    try:
+        response = json.loads(plaintext.decode("utf-8"))
+        content = response["body"]["choices"][0]["message"]["content"]
+        machines = json.loads(content)
+    except (UnicodeDecodeError, ValueError, KeyError, IndexError, TypeError) as exc:
+        raise RevealError(
+            "the sealed plaintext does not carry a completion this reveal can open (%s); the "
+            "reveal stops rather than reaching into it" % type(exc).__name__)
+    if not isinstance(machines, dict):
+        raise RevealError("the sealed completion is not a JSON object")
 
     nonce_record = _load(NONCE_PATH)
     nonce = nonce_record["bank_nonce"]
