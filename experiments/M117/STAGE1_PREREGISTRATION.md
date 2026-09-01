@@ -1,8 +1,18 @@
 # M117 Stage 1 — route qualification, frozen before the first request
 
 **Status:** FROZEN. Committed before any candidate is probed.
-**Frozen plan digest:** `d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67`
+**Frozen plan digest:** `5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997`
+**Apparatus revision:** 2, superseding `d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67`.
 **Phase:** DEVELOPMENT only. Not evidence for H62. **Qualifying invocations: 0.**
+
+> **Revision 2 changes extraction only.** Attempt 01 read three catalogue fields out of places the
+> endpoints API does not populate, derived a universe of zero eligible candidates, probed nothing
+> and sent no generation request. It is preserved verbatim as an instrument abort in
+> [`ATTEMPT_01_INSTRUMENT_ABORT/`](ATTEMPT_01_INSTRUMENT_ABORT/README.md), which records the defect,
+> the correction, and why the correction is not post-hoc optimisation. The decision rule module is
+> byte-for-byte unchanged: no threshold, ordering key, tie-break, budget bound or qualification
+> clause moved, and `tests/test_m117_apparatus_revision.py` pins each of them against the universe
+> attempt 01 committed.
 
 ## The premise this is built on
 

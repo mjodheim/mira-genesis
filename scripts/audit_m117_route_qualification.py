@@ -78,6 +78,25 @@ STRESS_MAX_TOKENS = 131072
 STRESS_MIN_COMPLETION_TOKENS = 32000
 
 PLAN_SCHEMA = "m117-stage1-plan-v1"
+
+# Attempt 01 read three catalogue fields out of places this API does not populate. It reached no
+# candidate, sent no generation request and produced no selection; it is preserved verbatim under
+# experiments/M117/ATTEMPT_01_INSTRUMENT_ABORT/ as an instrument abort, not as a result.
+#
+# This revision changes extraction only. Every threshold, ordering key, tie-break, qualification
+# clause and budget bound is the frozen value attempt 01 carried, and the decision rule module is
+# byte-for-byte unchanged -- tests/test_m117_apparatus_revision.py pins both. The repair is forced
+# by the API's response shape rather than by any candidate's values: the defect nulled the metric
+# for 282/282 endpoints uniformly, so it could not have favoured or disfavoured any candidate, and
+# the corrected checkpoint field reproduces the checkpoint M116 independently recorded.
+APPARATUS_REVISION = 2
+SUPERSEDED_PLAN_SHA256 = "d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67"
+REVISION_RATIONALE = (
+    "attempt 01 read uptime_last_1d and latency_last_30m from a stats sub-object the endpoints API "
+    "does not return, and read canonical_checkpoint from model_variant_slug, which it does not "
+    "return either; extraction now reads the endpoint's top-level metrics and the model's "
+    "canonical_slug; no threshold, ordering key, qualification clause or budget bound changed"
+)
 REPORT_SCHEMA = "m117-stage1-route-qualification-v1"
 LEDGER_SCHEMA = "m117-stage1-ledger-v1"
 
@@ -167,6 +186,9 @@ def plan() -> dict[str, Any]:
         "milestone": "M117", "hypothesis": "H62",
         "stage": 1, "development_only": True,
         "is_a_qualifying_call": False, "qualifying_input_was_sent": False,
+        "apparatus_revision": APPARATUS_REVISION,
+        "supersedes_plan_sha256": SUPERSEDED_PLAN_SHA256,
+        "revision_rationale": REVISION_RATIONALE,
         "catalogue_source": MODELS_ENDPOINT,
         "catalogue_model_ceiling": CATALOGUE_MODEL_CEILING,
         "catalogue_order": "model id ascending, fixed here so the universe cannot depend on the "
@@ -242,6 +264,14 @@ def _declared_capable(model: Mapping[str, Any]) -> bool:
     return set(rule.REQUIRED_SUPPORTED_PARAMETERS) <= supported
 
 
+def _metric(endpoint: Mapping[str, Any], stats: Mapping[str, Any], name: str) -> Any:
+    """Read a reliability metric from where this API actually publishes it: the endpoint itself."""
+    value = endpoint.get(name)
+    if value is None and isinstance(stats, Mapping):
+        value = stats.get(name)
+    return value
+
+
 def snapshot_catalogue() -> dict[str, Any]:
     """Read the catalogue and commit it. Metadata only: no generation, no completion tokens."""
     if CATALOGUE_PATH.exists() or UNIVERSE_PATH.exists():
@@ -271,13 +301,19 @@ def snapshot_catalogue() -> dict[str, Any]:
         for endpoint in endpoints:
             if not isinstance(endpoint, Mapping):
                 continue
+            # Reliability metrics are top-level fields on the endpoint object. Attempt 01 read
+            # them out of a `stats` sub-object that this API does not return, which nulled
+            # `uptime_last_1d` and `latency_last_30m_p50` for 282/282 endpoints and excluded the
+            # whole universe on `missing_required_metric`. `stats` is kept only as a fallback.
             stats = endpoint.get("stats") if isinstance(endpoint.get("stats"), Mapping) else {}
-            uptime = endpoint.get("uptime_last_30m")
             entries.append({
                 "model": model_id,
                 "provider": endpoint.get("provider_name") or endpoint.get("name"),
-                "canonical_checkpoint": endpoint.get("model_variant_slug") or endpoint.get("name")
-                or model_id,
+                # The router attests the selected endpoint as the model's dated canonical slug,
+                # not the requested slug, the endpoint display name, or the quantization tag.
+                # `model_variant_slug`, which attempt 01 read, is not a field this API returns.
+                "canonical_checkpoint": model.get("canonical_slug"),
+                "endpoint_tag": endpoint.get("tag"),
                 "provider_found": True,
                 "endpoint_available": endpoint.get("status") in (None, 0),
                 "max_completion_tokens": endpoint.get("max_completion_tokens")
@@ -285,10 +321,9 @@ def snapshot_catalogue() -> dict[str, Any]:
                 "context_length": endpoint.get("context_length"),
                 "supported_parameters": endpoint.get("supported_parameters")
                 or model.get("supported_parameters"),
-                "uptime_last_1d": stats.get("uptime_last_1d") if isinstance(stats, Mapping) else None,
-                "uptime_last_30m": uptime if isinstance(uptime, (int, float)) else (
-                    stats.get("uptime_last_30m") if isinstance(stats, Mapping) else None),
-                "latency_last_30m": stats.get("latency_last_30m") if isinstance(stats, Mapping) else None,
+                "uptime_last_1d": _metric(endpoint, stats, "uptime_last_1d"),
+                "uptime_last_30m": _metric(endpoint, stats, "uptime_last_30m"),
+                "latency_last_30m": _metric(endpoint, stats, "latency_last_30m"),
                 "quantization": endpoint.get("quantization"),
             })
 
@@ -343,6 +378,19 @@ def _committed_universe() -> dict[str, Any]:
 # Probing one candidate
 # ---------------------------------------------------------------------------------------------
 
+# Identity attestations are short provider/model tokens, never carrier or free text. Anything
+# longer or unstringlike is recorded as a refusal marker rather than pasted into the record.
+_IDENTITY_MAX = 128
+
+
+def _identity_token(value: Any) -> Any:
+    if value is None:
+        return None
+    if not isinstance(value, str) or len(value) > _IDENTITY_MAX or "\n" in value:
+        return "<refused: not an identity token>"
+    return value
+
+
 def declares_reasoning(candidate: Mapping[str, Any]) -> bool:
     """Does the catalogue say this endpoint accepts the reasoning control?"""
     declared = candidate.get("supported_parameters")
@@ -377,7 +425,18 @@ def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str
     selected = [e for e in available if isinstance(e, Mapping) and e.get("selected")]
     pipeline = metadata.get("pipeline")
     attempts = metadata.get("attempts")
+    # M115's record could not say why it failed. An identity clause that fails for every candidate
+    # is far more likely to be this harness reading the wrong field than a fact about every route,
+    # so the observed value is recorded beside the declared one and a systematic mismatch stays
+    # diagnosable as an instrument abort instead of being reported as "no route qualifies".
     return {
+        "declared_model": candidate["model"],
+        "observed_model": _identity_token(body.get("model")),
+        "declared_provider": candidate["provider"],
+        "observed_provider": _identity_token(body.get("provider")),
+        "declared_canonical_checkpoint": candidate.get("canonical_checkpoint"),
+        "observed_canonical_checkpoint": _identity_token(
+            selected[0].get("model") if selected else None),
         "requested_model_exact": body.get("model") == candidate["model"],
         "provider_exact": body.get("provider") == candidate["provider"],
         "canonical_checkpoint_exact": bool(selected) and selected[0].get("model")
