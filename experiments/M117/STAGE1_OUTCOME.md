@@ -1,80 +1,125 @@
-# M117 Stage 1 — a route qualified
+# M117 — instrument development and calibration: CLOSED
 
-**Stage 1 selected a route on attempt 05.** It is the first qualifying candidate in an order frozen
-before any candidate was probed, and it is the only candidate that qualified.
+**M117 is an instrument-development and calibration milestone. Its scientific hypothesis was never
+tested.**
 
 | | |
 |---|---|
-| Frozen plan | `b3b345907221081b260a8eb7da01aa692d018f18d31b4e35c60cf1b564e73168` (revision 5) |
-| Candidate universe | `94b8819432a0880a…` — 282 assessed, 91 eligible, 75 distinct requests |
-| Candidates probed | 16 (one position skipped as an identical request) |
-| Requests spent | 144 of 160 |
-| **Selected** | `deepseek/deepseek-v4-flash-0731` on **OpenInference** |
+| Milestone status | **instrument-development completed** |
+| H62 status | **untested** — never frozen, no carrier bank, no qualifying generation |
+| Qualifying scientific invocations | **0** |
+| Generality gates G1–G10 | **unchanged** |
+| Successor | M118 / H63 |
+
+## The calibration result, stated narrowly
+
+> Under the **final** apparatus revision, at least one reachable route demonstrated the complete
+> instrument capabilities required for a future carrier-blind experiment.
+
+That is the whole claim. It is a **DEVELOPMENT calibration result**. It is **not** evidence for the
+Genesis scientific proposition, and it advances **no** generality gate.
+
+### The selected calibration route
+
+| | |
+|---|---|
+| Requested model | `deepseek/deepseek-v4-flash-0731` |
+| Provider | **OpenInference** |
 | Canonical checkpoint | `deepseek/deepseek-v4-flash-20260731` |
-| Independent checker | **PASSED** |
-| Qualifying invocations | **0** |
 
-## What qualifying required
+### Attempt 05, exactly as observed
 
-All twelve clauses, no partial credit:
+- **16 candidates probed**; one further position skipped as an identical request.
+- **144 of 160 DEVELOPMENT requests consumed.**
+- **Independent checker passed.**
+- **Exactly one candidate qualified**, at the **earliest qualifying position** in an order frozen
+  before any candidate in that attempt was probed.
+- **All twelve qualification clauses passed.**
+- Token-capacity stress: **HTTP 200**, **`finish_reason = stop`**, **68,368 completion tokens**,
+  output **conforming** to the census-dominating stress schema.
 
-- **All nine schema feature classes enforced** — enum, pattern, required, additionalProperties,
-  minItems, maxItems, integer bounds, nested arrays, nesting depth — plus the combined structural
-  probe conforming.
-- **Token-capacity stress held**: HTTP 200, `finish_reason: "stop"`, **68,368 completion tokens**,
-  and the output **conforming** to the census-dominating stress schema. Not a partial emission and
-  not a truncation — a complete, valid document at carrier scale.
-- **Identity exact**: requested model, provider and canonical checkpoint all matched what the router
-  attested; direct strategy, routing attempt 1, exactly one selected endpoint, no fallback, no
-  pipeline intervention.
-- Reliability minimum held.
+Also preserved: **qualifying scientific invocations 0**, **no carrier bank exists**, **H62 was never
+frozen**, **G1–G10 unchanged**.
 
-Verified independently rather than taken on the runner's word: the selection is the earliest
-qualifying position, it recomputes from the committed universe and profiles alone, the report digest
-self-verifies, and the report is bound to the committed universe and frozen plan.
+## Disclosure: the route selection was not prospective from the start of M117
 
-## What this is not
+**Five apparatus revisions occurred within M117, and some followed real endpoint observations.**
 
-**This is not evidence for H62.** Stage 1 is instrument qualification: it establishes that a route
-exists which enforces the schema features the carrier design depends on and can emit a conforming
-document at the required scale. It says nothing about the hypothesis. **G1–G10 are unchanged, and
-qualifying invocations remain 0.** H62 is not frozen and no bank exists.
+| attempt | plan | defect that superseded it | observations before it |
+|---|---|---|---|
+| 01 | `d22c3fde…` | three catalogue fields read where this API does not publish them; 2 of 3 required metrics null for 282/282 endpoints | none |
+| 02 | `5cc9c648…` | stress requested more tokens than eligibility guarantees; halted at 31/160 | catalogue only |
+| 03 | `687b2394…` | two clauses required router fields this API emits on no request; ceiling reached, no selection | 3 candidates probed |
+| 04 | `47ff587f…` | reasoning control never sent; 15 of 90 rows the same request — **superseded before any request** | 17 candidates probed |
+| 05 | `b3b34590…` | — selected a route | 20 candidates probed |
 
-The measurement is one date, small synthetic schemas, 16 of 91 eligible candidates, a single
-observation per probe. Nothing here licenses treating the route as characterised.
+Revisions 4 and 5 followed real endpoint observations. Revisions 4 and 5 also changed what counts as
+qualification or which candidates are reachable, so both were **put to the owner and authorized**
+rather than decided inside the milestone. No threshold, ordering key, tie-break or budget bound was
+ever changed, and the stress bar remained 32,000 throughout.
 
-## Suggestive, not established: the same checkpoint on a different provider
+**M117 therefore does not claim that its route-selection process was prospectively clean.** That is
+precisely why the scientific work moves to a new milestone with a fixed, already-calibrated route.
 
-M116 closed because its route enforced **none** of the nine feature classes. That route served the
-**same canonical checkpoint** — `deepseek/deepseek-v4-flash-20260731` — from **Alibaba**. Attempt 03
-reproduced it: nine of nine unenforced, identity exact. The route that qualified here serves that
-same checkpoint from **OpenInference**, enforcing all nine.
+## Instrument findings preserved
 
-This suggests M116's negative was a property of the **provider's serving stack**, not of the model.
-**It is not established.** The two observations come from different attempts under different
-apparatus revisions, and attempt 05 applied the reasoning-off control that attempts 01–04 never sent.
-`google/gemini-2.5-pro` returned nine of nine unenforced here having returned zero of nine in attempt
-03, so run-to-run variation in this measurement is real and unexplained. A within-run,
-same-configuration comparison would be needed to make the provider claim, and none was made.
+These are the substantive results of M117 and are recorded here rather than left in implementation
+history.
 
-## What the earlier attempts cost, and why they were not shortcuts
+1. **A catalogue capability declaration is not evidence of structured-output enforcement.** Routes
+   advertising `supports_structured_outputs` and accepting `require_parameters: true` enforced none
+   of the required schema feature classes.
 
-Five attempts, four superseded. None was a failure of the routes; each was a defect in the instrument
-that would have produced a false negative:
+2. **The same canonical model checkpoint can exhibit radically different structured-output behaviour
+   under different serving providers.**
 
-| | defect | consequence if unnoticed |
-|---|---|---|
-| 01 | three catalogue fields read where the API does not publish them | universe of 0; "no route qualifies" |
-| 02 | stress requested more tokens than eligibility guarantees | halted; attribution later refuted by 03 |
-| 03 | two clauses required fields this API emits on no request | ceiling reached, no selection |
-| 04 | reasoning control never sent; 15 of 90 rows the same request | superseded before any request |
+3. **Alibaba** serving `deepseek/deepseek-v4-flash-20260731` **independently reproduced 9 of 9
+   feature classes unenforced** — the M116 result, reproduced on a freshly built apparatus.
 
-Attempts 03 and 04's fixes touched what counts as qualification, so both were put to the owner and
-authorized rather than decided here. No threshold, ordering key, tie-break or budget bound was ever
-changed, and the stress bar stayed at 32,000 throughout.
+4. **OpenInference** serving **the same canonical checkpoint** enforced **all nine** required feature
+   classes and passed the full-scale stress (68,368 conforming tokens, `finish_reason: stop`).
 
-## Still open
+5. **The provider serving stack therefore appears capable of materially changing structured-output
+   behaviour.** *Stated as suggestive instrument evidence, not a causal scientific conclusion:* the
+   provider comparison was **not** a prospectively randomized within-run comparison. The two
+   observations come from different attempts under different apparatus revisions.
 
-Why the stress schema is rejected by the Google routes remains unestablished — the provider returns
-an opaque error with no cause. That question is untouched by this selection and is **not** answered
-by having found a route that accepts the schema.
+6. **Run-to-run instability exists.** `google/gemini-2.5-pro` returned **all nine feature classes
+   enforced** in one attempt and **none enforced** in another. **No cause is claimed.** The
+   apparatus differed between those attempts, but nothing here establishes that as the explanation.
+
+7. **The reasoning control materially affected the available completion budget on at least one
+   observed route.** Alibaba `deepseek-v4-pro` emitted 44,791 completion tokens with the control
+   unsent and 72,816 with it applied. **Causality beyond that record is not claimed**; the attempts
+   differed in more than the control.
+
+## Corrigenda
+
+Two intermediate interpretations were wrong and were corrected explicitly rather than quietly
+amended. Both corrections stand in the record alongside the claims they replace.
+
+1. **Attempt 02's HTTP 400 was attributed to the token overage.** Attempt 03 refuted this: capped at
+   exactly the declared ceiling the same endpoints still returned 400, and probes sending twice the
+   declared ceiling returned 200. Recorded in
+   [`ATTEMPT_02_INSTRUMENT_ABORT/README.md`](ATTEMPT_02_INSTRUMENT_ABORT/README.md).
+
+2. **M116 was cited as having observed `attempts: []` and `pipeline: []`.** It never observed them.
+   `safe_router_metadata` initialised both to `[]` and filled them only when the source key was a
+   list, so an *absent* field was rendered as an *observed empty* one. Recorded in
+   [`ATTEMPT_03_INSTRUMENT_ABORT/README.md`](ATTEMPT_03_INSTRUMENT_ABORT/README.md), and the
+   projection was repaired with the closed milestones re-verified unchanged.
+
+## Still unresolved, and not answered by this result
+
+Why the census-dominating stress schema is rejected by the Google routes remains **unestablished**.
+The provider returns an opaque error carrying no cause. Finding a route that *accepts* the schema
+does not answer why others reject it.
+
+## Claim boundary
+
+M117 measured which schema features candidate endpoints enforce, on small synthetic schemas, on one
+date, on a subset of eligible candidates, with a single observation per probe. It is instrument
+qualification. **It is not evidence for or against any Genesis scientific proposition, and G1–G10 are
+unchanged.**
+
+**M117 has done its job: it found the instrument. M118/H63 tests Genesis.**
