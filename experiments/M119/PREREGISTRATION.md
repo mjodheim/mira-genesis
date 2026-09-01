@@ -33,9 +33,19 @@ would have separated the two live explanations. M119 uses the 2×2 that does, an
 - `FULL` is the descendant. `FRESH` is the comparator. The primary comparison is fixed here, in
   code, as `DESCENDANT_ARM` and `COMPARATOR_ARM`, and no analysis may re-point it.
 - `CASCADE_ONLY` and `POLICY_ONLY` exist to decompose a positive result. They cannot create one.
-- There is no budget-ablation arm, no rollback, ablated, mutated or unregistered arm. None of them
-  is needed to distinguish the two live causal explanations, and each is a way for the design to
-  grow past the point where a one-shot instrument can be trusted.
+- There is no rollback, ablated, mutated or unregistered arm. None of them is needed to
+  distinguish the two live causal explanations, and each is a way for the design to grow past the
+  point where a one-shot instrument can be trusted.
+
+One further arm, `FULL_BUDGET_PLUS`, sits **outside** that table and outside the primary
+comparison. It holds exactly what `FULL` holds; only the observation budget differs, at M113's
+multiplier of four, inherited rather than invented. It exists because pre-freeze review measured a
+concrete ambiguity the 2×2 cannot resolve: on unreachable demands the policy-holding arms returned
+`undetermined` 17 times in 25 against 2 in 25 for the comparator, and a probe that consumes
+observations could be losing to its own cost rather than to its competence. The arm is fenced — it
+is never the descendant or the comparator, no guard is evaluated on it, the decomposition never
+sees it, and it can attribute a negative but can never create a positive. The reasoning and the
+running arm count are recorded in `COMPLEXITY_BUDGET.md`.
 
 ### The comparator is symmetric, not merely balanced
 
@@ -209,6 +219,10 @@ It would **not** mean, and will not be said to mean, any of the following:
    where a failure is terminal and never redrawn.
 3. `FRESH` is symmetric, not strong. Beating it is not evidence of beating a competent hand-written
    attributor.
+7. The observation budget is 4000 per demand, inherited unchanged from M113. The endpoint is
+   therefore *budget-constrained* resolution: an arm that spends observations on a diagnostic probe
+   has fewer left. `FULL_BUDGET_PLUS` exists to say whether a negative is that cost or a competence
+   cost; without it the two would be indistinguishable.
 4. One bank, one generation, one model.
 5. The carrier family is this project's.
 6. M117's five disclosed apparatus revisions sit upstream of the route, and are not repaired here.

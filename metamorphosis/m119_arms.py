@@ -52,6 +52,36 @@ ARM_NAMES = (FRESH, CASCADE_ONLY, POLICY_ONLY, FULL)
 DESCENDANT_ARM = FULL
 COMPARATOR_ARM = FRESH
 
+# ---------------------------------------------------------------------------------------------
+# One diagnostic arm, added because pre-freeze review named a concrete ambiguity
+# ---------------------------------------------------------------------------------------------
+#
+# The complexity budget admits a budget arm "only if a pre-mortem names a concrete ambiguity". A
+# DEVELOPMENT dry run over devkit carriers named one, with numbers: on unreachable demands the
+# policy-holding arms returned `undetermined` 17 times in 25, against 2 in 25 for FRESH. The policy
+# gates a diagnostic probe, the probe consumes observations, and an exploration that does not close
+# yields `undetermined` -- so an arm that probes could be losing to the cost of probing under a
+# fixed budget rather than to the competence of what it acquired.
+#
+# The 2x2 cannot separate "the policy does not help" from "the policy is too expensive at this
+# budget", and a negative that cannot tell those apart is the M118 failure repeating. So one arm is
+# added, and it is fenced:
+#
+#   * it is NOT in `ARM_NAMES`, so it cannot enter the primary comparison;
+#   * it is never a descendant or a comparator, and no guard is evaluated on it;
+#   * it can attribute a negative and can never create a positive.
+#
+# The multiplier is M113's, inherited rather than invented, so it cannot be tuned here. On the
+# dry run it settled the question rather than leaving it asserted: at four times the observations
+# the same machinery scored identically, and none of the `undetermined` outcomes sat at the
+# invocation ceiling. The arm stays because that answer is evidence, and because on a real bank the
+# answer could differ.
+FULL_BUDGET_PLUS = "FULL_BUDGET_PLUS"
+DIAGNOSTIC_ARM_NAMES = (FULL_BUDGET_PLUS,)
+ALL_ARM_NAMES = ARM_NAMES + DIAGNOSTIC_ARM_NAMES
+BUDGET_MULTIPLIER = {FULL_BUDGET_PLUS: 4}
+BUDGET_MULTIPLIER_INHERITED_FROM = "scripts/run_m113_qualification.py"
+
 # Committed before any H64 observation. It is a digest of a fixed public string rather than a bare
 # literal, so its derivation is auditable rather than asserted.
 FRESH_SEED_SOURCE = "m119-fresh-uniform-per-demand-v1"
@@ -106,7 +136,12 @@ def fresh_rules(carrier_ref: str, pair_digest: str,
 def build_arms(cascade_rules: Sequence[Mapping[str, Any]], policy: Mapping[str, Any],
                carrier_ref: str, pair_digest: str,
                *, seed: str = FRESH_SEED) -> dict[str, dict[str, Any]]:
-    """The four cells. FRESH is redrawn per demand; the others are the acquired state."""
+    """The four cells, plus the one fenced diagnostic arm.
+
+    `FULL_BUDGET_PLUS` holds exactly what `FULL` holds. The only thing that differs is the
+    observation budget the runner gives it, which is why it is a budget diagnostic and not a fifth
+    causal cell.
+    """
     fresh, _ = fresh_rules(carrier_ref, pair_digest, seed)
     acquired = [dict(rule) for rule in cascade_rules]
     return {
@@ -114,6 +149,7 @@ def build_arms(cascade_rules: Sequence[Mapping[str, Any]], policy: Mapping[str, 
         CASCADE_ONLY: {"rules": acquired, "policy": None},
         POLICY_ONLY: {"rules": [], "policy": dict(policy)},
         FULL: {"rules": acquired, "policy": dict(policy)},
+        FULL_BUDGET_PLUS: {"rules": acquired, "policy": dict(policy)},
     }
 
 
@@ -153,6 +189,9 @@ def action_space_statement() -> dict[str, Any]:
         "acquired_state_may_enable_different_internal_actions": True,
         "identical_action_spaces_claim_withdrawn": True,
         "the_policy_gates_the_diagnostic_probe": True,
-        "arms_that_can_probe": [POLICY_ONLY, FULL],
+        "arms_that_can_probe": [POLICY_ONLY, FULL, FULL_BUDGET_PLUS],
+        "principal_arms": list(ARM_NAMES),
+        "diagnostic_arms": list(DIAGNOSTIC_ARM_NAMES),
+        "a_diagnostic_arm_can_attribute_a_negative_and_never_create_a_positive": True,
         "this_is_the_acquired_state_under_test_not_a_harness_asymmetry": True,
     }

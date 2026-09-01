@@ -42,10 +42,10 @@ def _require(condition: bool, message: str) -> None:
 
 def recompute_outcomes(entries) -> dict[str, list[bool]]:
     """Paired primary outcomes per arm, from the per-demand evidence alone."""
-    outcomes: dict[str, list[bool]] = {name: [] for name in arms.ARM_NAMES}
+    outcomes: dict[str, list[bool]] = {name: [] for name in arms.ALL_ARM_NAMES}
     for entry in entries:
         for demand_class in evaluator.DEMAND_CLASSES:
-            for name in arms.ARM_NAMES:
+            for name in arms.ALL_ARM_NAMES:
                 row = entry["arms"][name][demand_class]
                 # Recomputed from the score, not read from the runner's `primary_success`.
                 outcomes[name].append(endpoint.primary_success(demand_class, row["score"]))
@@ -55,7 +55,7 @@ def recompute_outcomes(entries) -> dict[str, list[bool]]:
 def recompute_measures(entries) -> dict[str, dict[str, Any]]:
     """Every guard measure, recounted from the per-demand evidence."""
     measures: dict[str, dict[str, Any]] = {}
-    for name in arms.ARM_NAMES:
+    for name in arms.ALL_ARM_NAMES:
         counts = {key: 0 for key in ("invented_adapter", "false_refusal")}
         correct = examined = 0
         for entry in entries:
@@ -71,6 +71,50 @@ def recompute_measures(entries) -> dict[str, dict[str, Any]]:
         measures[name]["attribution_examined"] = examined
         measures[name]["attribution_agreement_rate"] = (correct / examined) if examined else None
     return measures
+
+
+def budget_attribution(entries, rates: Mapping[str, Any], verdict: str) -> dict[str, Any]:
+    """Was a negative the machinery's, or the observation budget's?
+
+    The policy gates a diagnostic probe, the probe consumes observations, and an exploration that
+    runs out does not close -- so at a fixed budget an arm that probes can be penalised for the cost
+    of probing rather than for what it acquired. This is computed from evidence the runner already
+    records, and it can attribute a negative. It can never create a positive: it is reported beside
+    the verdict, never fed into it.
+    """
+    exhausted = {name: 0 for name in arms.ALL_ARM_NAMES}
+    undetermined_at_the_ceiling = {name: 0 for name in arms.ALL_ARM_NAMES}
+    for entry in entries:
+        for demand_class in evaluator.DEMAND_CLASSES:
+            for name in arms.ALL_ARM_NAMES:
+                row = entry["arms"][name][demand_class]
+                if row.get("budget_exhausted"):
+                    exhausted[name] += 1
+                    if row.get("verdict") == "undetermined":
+                        undetermined_at_the_ceiling[name] += 1
+    descendant = rates.get(arms.DESCENDANT_ARM)
+    at_higher_budget = rates.get(arms.FULL_BUDGET_PLUS)
+    improves = (None if descendant is None or at_higher_budget is None
+                else at_higher_budget - descendant)
+    return {
+        "schema": "m119-budget-attribution-v1",
+        "budget_exhausted_demands": exhausted,
+        "undetermined_at_the_invocation_ceiling": undetermined_at_the_ceiling,
+        "descendant_success_rate": descendant,
+        "descendant_success_rate_at_%dx_budget" % arms.BUDGET_MULTIPLIER[arms.FULL_BUDGET_PLUS]:
+            at_higher_budget,
+        "improvement_from_budget_alone": improves,
+        "reading": (
+            "not applicable: the verdict is not negative" if verdict != endpoint.NEGATIVE
+            else "the negative is not explained by the observation budget: the same machinery does "
+                 "no better with four times as many observations"
+            if improves is not None and improves < endpoint.MINIMUM_RISK_DIFFERENCE
+            else "the negative may be a budget cost rather than a competence cost: the same "
+                 "machinery does materially better with four times as many observations, so this "
+                 "run does not separate 'the policy does not help' from 'the policy is too "
+                 "expensive at this budget'"),
+        "this_can_attribute_a_negative_and_never_create_a_positive": True,
+    }
 
 
 def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
@@ -92,7 +136,13 @@ def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str,
              and measurements.get("comparator_arm") == arms.COMPARATOR_ARM,
              "the primary comparison is not the frozen one")
     _require(list(measurements.get("arm_names") or []) == list(arms.ARM_NAMES),
-             "the arm set is not the frozen one")
+             "the principal arm set is not the frozen one")
+    _require(list(measurements.get("diagnostic_arm_names") or [])
+             == list(arms.DIAGNOSTIC_ARM_NAMES),
+             "the diagnostic arm set is not the frozen one")
+    _require(arms.DESCENDANT_ARM not in arms.DIAGNOSTIC_ARM_NAMES
+             and arms.COMPARATOR_ARM not in arms.DIAGNOSTIC_ARM_NAMES,
+             "a diagnostic arm is standing in the primary comparison")
     _require(int(measurements.get("session_budget", -1)) == int(plan["session_budget"]),
              "the run used a budget the plan does not specify")
 
@@ -125,7 +175,11 @@ def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str,
 
     rates = {name: (sum(1 for x in series if x) / len(series) if series else None)
              for name, series in outcomes.items()}
-    decomposed = decomposition.decompose(rates, verdict=verdict["verdict"])
+    # The decomposition sees the principal cells only. A diagnostic arm attributes a negative; it
+    # is never an input to what the four cells are said to show.
+    decomposed = decomposition.decompose(
+        {name: rates[name] for name in arms.ARM_NAMES}, verdict=verdict["verdict"])
+    budget = budget_attribution(entries, rates, verdict["verdict"])
 
     report = {
         "schema": CHECK_SCHEMA,
@@ -141,6 +195,7 @@ def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str,
         "runner_verdict_was_not_read": True,
         "arm_success_rates": rates,
         "recomputed_measures": measures,
+        "budget_attribution": budget,
         "primary": verdict,
         "decomposition": decomposed,
         "hypothesis_status": {

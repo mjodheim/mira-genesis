@@ -83,13 +83,18 @@ def test_the_four_arms_are_exactly_the_two_by_two() -> None:
     acquired = [{"rule_id": "acquired-1"}]
     policy = {"truth_table": [True] * arms.ROW_COUNT}
     built = arms.build_arms(acquired, policy, "carrier-x", "pair-x")
-    assert set(built) == set(arms.ARM_NAMES) == {"FRESH", "CASCADE_ONLY", "POLICY_ONLY", "FULL"}
+    assert set(arms.ARM_NAMES) == {"FRESH", "CASCADE_ONLY", "POLICY_ONLY", "FULL"}
+    assert set(built) == set(arms.ALL_ARM_NAMES)
     assert built["FRESH"]["policy"] is None and built["FRESH"]["rules"]
     assert built["CASCADE_ONLY"]["policy"] is None
     assert built["CASCADE_ONLY"]["rules"] == acquired
     assert built["POLICY_ONLY"]["rules"] == [] and built["POLICY_ONLY"]["policy"] == policy
     assert built["FULL"]["rules"] == acquired and built["FULL"]["policy"] == policy
     assert arms.DESCENDANT_ARM == "FULL" and arms.COMPARATOR_ARM == "FRESH"
+    # The diagnostic arm holds exactly what FULL holds; only the budget the runner gives it differs.
+    assert built["FULL_BUDGET_PLUS"] == built["FULL"]
+    assert arms.DESCENDANT_ARM not in arms.DIAGNOSTIC_ARM_NAMES
+    assert arms.COMPARATOR_ARM not in arms.DIAGNOSTIC_ARM_NAMES
 
 
 # ---------------------------------------------------------------------------------------------
@@ -245,6 +250,8 @@ def _measurements(entries, *, plan, **overrides):
         "schema": "m119-h64-measurements-v1", "milestone": "M119", "hypothesis": "H64",
         "arms_version": arms.ARMS_VERSION, "endpoint_version": endpoint.ENDPOINT_VERSION,
         "arm_names": list(arms.ARM_NAMES),
+        "diagnostic_arm_names": list(arms.DIAGNOSTIC_ARM_NAMES),
+        "budget_multiplier": dict(arms.BUDGET_MULTIPLIER),
         "descendant_arm": arms.DESCENDANT_ARM, "comparator_arm": arms.COMPARATOR_ARM,
         "fresh_seed": arms.FRESH_SEED, "fresh_seed_source": arms.FRESH_SEED_SOURCE,
         "action_space": arms.action_space_statement(),
@@ -264,13 +271,14 @@ def _measurements(entries, *, plan, **overrides):
 
 
 def _entry(index: int, *, full_succeeds: bool, fresh_succeeds: bool,
-           runner_claims: bool | None = None):
+           runner_claims: bool | None = None, budget_plus_succeeds: bool | None = None):
     """One paired demand. `runner_claims` lets a dishonest runner disagree with its own score."""
-    def side(succeeds: bool):
+    def side(succeeds: bool, budget: int = 4000):
         return {
+            "budget": budget,
             evaluator.CLASS_REACHABLE: {
                 "verdict": "constructed", "invocations_used": 1, "probes_spent": 0,
-                "within_budget": True,
+                "budget": budget, "budget_exhausted": False, "within_budget": True,
                 "primary_success": succeeds if runner_claims is None else runner_claims,
                 "score": _score(correct_construction=succeeds,
                                 unmet_construction=not succeeds),
@@ -279,17 +287,19 @@ def _entry(index: int, *, full_succeeds: bool, fresh_succeeds: bool,
             },
             evaluator.CLASS_UNREACHABLE: {
                 "verdict": "refused", "invocations_used": 1, "probes_spent": 0,
-                "within_budget": True,
+                "budget": budget, "budget_exhausted": False, "within_budget": True,
                 "primary_success": succeeds if runner_claims is None else runner_claims,
                 "score": _score(calibrated_refusal=succeeds, invented_adapter=not succeeds),
             },
         }
+    plus = full_succeeds if budget_plus_succeeds is None else budget_plus_succeeds
     return {
         "carrier_ref": "opaque-%016x" % index, "carrier_digest": "d" * 64,
         "pair_digest": "p" * 64, "ground_truth_component": arms.COMPONENTS[0],
         "ground_truth_row": 0,
         "arms": {"FULL": side(full_succeeds), "FRESH": side(fresh_succeeds),
-                 "CASCADE_ONLY": side(full_succeeds), "POLICY_ONLY": side(fresh_succeeds)},
+                 "CASCADE_ONLY": side(full_succeeds), "POLICY_ONLY": side(fresh_succeeds),
+                 "FULL_BUDGET_PLUS": side(plus, budget=16000)},
     }
 
 
@@ -521,3 +531,48 @@ def test_the_plan_proves_its_criterion_is_attainable_on_the_smallest_admissible_
     assert report["criterion_can_pass_on_the_minimum_bank"] is True
     assert report["criterion_can_fail"] is True
     assert report["minimum_paired_demands"] >= report["discordant_pairs_needed_for_significance"]
+
+
+# ---------------------------------------------------------------------------------------------
+# 22-23. The fenced diagnostic arm
+# ---------------------------------------------------------------------------------------------
+
+def test_the_diagnostic_arm_cannot_change_the_verdict(plan) -> None:
+    """It attributes a negative. It must not be able to create, rescue or destroy one."""
+    entries = [_entry(i, full_succeeds=False, fresh_succeeds=True) for i in range(6)]
+    losing = checker.check(_measurements(entries, plan=plan), plan)
+
+    rescued = [_entry(i, full_succeeds=False, fresh_succeeds=True, budget_plus_succeeds=True)
+               for i in range(6)]
+    with_a_winning_diagnostic = checker.check(_measurements(rescued, plan=plan), plan)
+
+    assert losing["verdict"] == with_a_winning_diagnostic["verdict"] == endpoint.NEGATIVE
+    assert (losing["primary"]["contingency"]
+            == with_a_winning_diagnostic["primary"]["contingency"])
+    assert (losing["decomposition"]["strongest_supported_statement"]
+            == with_a_winning_diagnostic["decomposition"]["strongest_supported_statement"])
+    # The one thing it does change is the attribution, which is reported beside the verdict.
+    assert (with_a_winning_diagnostic["budget_attribution"]["improvement_from_budget_alone"]
+            > losing["budget_attribution"]["improvement_from_budget_alone"])
+    assert "budget" in with_a_winning_diagnostic["budget_attribution"]["reading"]
+
+
+def test_the_decomposition_never_sees_the_diagnostic_arm(plan) -> None:
+    entries = [_entry(i, full_succeeds=True, fresh_succeeds=False) for i in range(6)]
+    report = checker.check(_measurements(entries, plan=plan), plan)
+    assert set(report["decomposition"]["rates"]) == set(arms.ARM_NAMES)
+    assert arms.FULL_BUDGET_PLUS in report["arm_success_rates"]
+
+
+def test_the_checker_refuses_a_substituted_diagnostic_arm_set(plan) -> None:
+    entries = [_entry(i, full_succeeds=True, fresh_succeeds=False) for i in range(6)]
+    record = _measurements(entries, plan=plan, diagnostic_arm_names=[])
+    with pytest.raises(checker.CheckError, match="diagnostic arm set"):
+        checker.check(record, plan)
+
+
+def test_the_session_budget_is_the_one_inherited_from_m113(plan) -> None:
+    """A budget rewritten for this milestone could be rewritten until it suited."""
+    inherited = json.loads(
+        (ROOT / bank.SESSION_BUDGET_INHERITED_FROM).read_text(encoding="utf-8"))
+    assert plan["session_budget"] == inherited["session_budget"] == 4000

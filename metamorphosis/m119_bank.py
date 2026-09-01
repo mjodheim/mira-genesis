@@ -104,8 +104,12 @@ BANK_SIZING = {
 MINIMUM_QUALIFYING_CARRIERS = 3
 MINIMUM_DISTINCT_QUALIFYING_STRUCTURES = 3
 
-# The per-demand observation budget, fixed here so no runner can take it from the command line.
-SESSION_BUDGET = 1
+# The per-demand observation budget, inherited unchanged from M113/M114/M115 and fixed here so no
+# runner can take it from the command line. It is not a number chosen for M119: a budget rewritten
+# here could be rewritten until it suited, and at a budget the runtime cannot work within, every
+# arm returns `undetermined` and the instrument reports a flat zero for all four cells.
+SESSION_BUDGET = 4000
+SESSION_BUDGET_INHERITED_FROM = "experiments/M113/ANALYSIS_PLAN.json"
 
 
 class BankError(RuntimeError):
@@ -231,11 +235,16 @@ def build_analysis_plan(root: Path | None = None) -> dict[str, Any]:
         # The measurement.
         "arms_version": arms.ARMS_VERSION,
         "arm_names": list(arms.ARM_NAMES),
+        "diagnostic_arm_names": list(arms.DIAGNOSTIC_ARM_NAMES),
+        "budget_multiplier": dict(arms.BUDGET_MULTIPLIER),
+        "budget_multiplier_inherited_unchanged_from": arms.BUDGET_MULTIPLIER_INHERITED_FROM,
+        "a_diagnostic_arm_can_attribute_a_negative_and_never_create_a_positive": True,
         "descendant_arm": arms.DESCENDANT_ARM,
         "comparator_arm": arms.COMPARATOR_ARM,
         "fresh_seed": arms.FRESH_SEED,
         "fresh_seed_source": arms.FRESH_SEED_SOURCE,
         "session_budget": SESSION_BUDGET,
+        "session_budget_inherited_unchanged_from": SESSION_BUDGET_INHERITED_FROM,
         "session_budget_is_fixed_here_and_never_taken_from_the_command_line": True,
         "demand_derivation_rule": "m113_evaluator.derive_demand_pairs",
         "distinct_structure_rule": "carrier_host.structural_signature",

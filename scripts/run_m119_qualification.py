@@ -59,22 +59,21 @@ def restore_acquired() -> dict[str, Any]:
             "corruption": restored["corruption"]}
 
 
-def _states(cascades: Mapping[str, Any], pooled_record: Mapping[str, Any],
-            entry: Mapping[str, Any]) -> dict[str, Any]:
-    return {
-        name: runtime.create_state(
-            action_width=entry["action_width"],
-            observation_width=entry["observation_width"],
-            composition_space=entry["composition_space"],
-            rules=configuration["rules"],
-            policy=configuration["policy"],
-            # The pooled record accompanies the policy: it is the record the policy consults, so a
-            # policy without it would be inert. It is acquired state, and it is disclosed as such
-            # rather than described as "the policy alone".
-            pooled_record=pooled_record if configuration["policy"] else None,
-        )
-        for name, configuration in cascades.items()
-    }
+def load_carriers(path: Path, nonce: str) -> list[dict[str, Any]]:
+    """The revealed carrier payload, read as the payload it is.
+
+    `reveal_m119_bank.py` writes the frozen carrier payload -- an object carrying `schema`,
+    `bank_nonce` and `carriers` -- not a bare list. Reading it as a list would silently iterate the
+    payload's keys and measure nothing, so the shape and the nonce are both checked here.
+    """
+    value = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(value, Mapping) or not isinstance(value.get("carriers"), list):
+        raise QualificationError(
+            "the carrier file is not a revealed carrier payload carrying a `carriers` list")
+    if value.get("bank_nonce") != nonce:
+        raise QualificationError(
+            "the carrier payload was enveloped under a different bank nonce than the one supplied")
+    return [dict(carrier) for carrier in value["carriers"]]
 
 
 def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
@@ -98,7 +97,12 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
             truth = pair["ground_truth"]
             cascades = arms.build_arms(acquired["cascade_rules"], acquired["policy"],
                                        str(reference), str(pair["pair_digest"]))
-            states = _states(cascades, acquired["pooled_record"], pair["shared"]["entry"])
+            # The inherited state builder, unchanged. The pooled record accompanies the policy
+            # because it is the record the policy consults; a policy without it would be inert.
+            # That is acquired state, and it is disclosed as such rather than described as
+            # "the policy alone".
+            states = inherited.build_states(cascades, acquired["pooled_record"],
+                                            pair["shared"]["entry"])
             record: dict[str, Any] = {
                 "carrier_ref": str(reference),
                 "carrier_digest": carrier["carrier_digest"],
@@ -107,18 +111,25 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
                 "ground_truth_row": truth["row_index"],
                 "arms": {},
             }
-            for name in arms.ARM_NAMES:
+            for name in arms.ALL_ARM_NAMES:
                 state = states[name]
-                arm_record: dict[str, Any] = {"budget": session_budget}
+                budget = session_budget * arms.BUDGET_MULTIPLIER.get(name, 1)
+                arm_record: dict[str, Any] = {"budget": budget}
                 for demand_class in evaluator.DEMAND_CLASSES:
                     demand = evaluator.materialize_twin(pair, demand_class)
-                    channel = host.Channel(carrier, reference, session_budget)
+                    channel = host.Channel(carrier, reference, budget)
                     outcome = runtime.resolve(state, channel, demand)
                     score = evaluator.score_attempt(carrier, demand, outcome)
                     row: dict[str, Any] = {
                         "verdict": outcome["verdict"],
                         "invocations_used": outcome["invocations_used"],
                         "probes_spent": outcome["probes_spent"],
+                        "budget": budget,
+                        # Recorded per demand so a negative can be attributed rather than
+                        # guessed at: an exploration that runs out of observations does not
+                        # close, and everything downstream of it is `undetermined`.
+                        "budget_exhausted": bool(
+                            outcome["invocations_used"] >= budget),
                         "within_budget": bool(score["within_budget"]),
                         "primary_success": endpoint.primary_success(demand_class, score),
                         "score": {key: bool(score[key]) for key in SCORE_KEYS},
@@ -137,6 +148,8 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
         "arms_version": arms.ARMS_VERSION,
         "endpoint_version": endpoint.ENDPOINT_VERSION,
         "arm_names": list(arms.ARM_NAMES),
+        "diagnostic_arm_names": list(arms.DIAGNOSTIC_ARM_NAMES),
+        "budget_multiplier": dict(arms.BUDGET_MULTIPLIER),
         "descendant_arm": arms.DESCENDANT_ARM,
         "comparator_arm": arms.COMPARATOR_ARM,
         "fresh_seed": arms.FRESH_SEED,
@@ -170,7 +183,7 @@ def main() -> int:
     args = parser.parse_args()
 
     plan = json.loads(args.plan.read_text(encoding="utf-8"))
-    carriers = json.loads(args.carriers.read_text(encoding="utf-8"))
+    carriers = load_carriers(args.carriers, args.nonce)
     record = measure(carriers, args.nonce, plan)
     args.out.write_bytes(canonical_bytes(record) + b"\n")
     print(json.dumps({"qualifying_carriers": record["qualifying_carriers"],
