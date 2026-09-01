@@ -89,13 +89,16 @@ PLAN_SCHEMA = "m117-stage1-plan-v1"
 # by the API's response shape rather than by any candidate's values: the defect nulled the metric
 # for 282/282 endpoints uniformly, so it could not have favoured or disfavoured any candidate, and
 # the corrected checkpoint field reproduces the checkpoint M116 independently recorded.
-APPARATUS_REVISION = 2
-SUPERSEDED_PLAN_SHA256 = "d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67"
+APPARATUS_REVISION = 3
+SUPERSEDED_PLAN_SHA256 = "5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997"
 REVISION_RATIONALE = (
-    "attempt 01 read uptime_last_1d and latency_last_30m from a stats sub-object the endpoints API "
-    "does not return, and read canonical_checkpoint from model_variant_slug, which it does not "
-    "return either; extraction now reads the endpoint's top-level metrics and the model's "
-    "canonical_slug; no threshold, ordering key, qualification clause or budget bound changed"
+    "attempt 02 sent every structurally qualified candidate a stress request for "
+    "STRESS_MAX_TOKENS regardless of the ceiling that candidate declared, so a candidate admitted "
+    "at the eligibility floor was asked for four times its own declared maximum and answered HTTP "
+    "400; the stress request is now bounded by the candidate's declared max_completion_tokens and "
+    "the plan asserts that an admitted candidate can clear the threshold it will be given; the "
+    "threshold itself, and every other threshold, ordering key, qualification clause and budget "
+    "bound, is unchanged"
 )
 REPORT_SCHEMA = "m117-stage1-route-qualification-v1"
 LEDGER_SCHEMA = "m117-stage1-ledger-v1"
@@ -220,6 +223,7 @@ def plan() -> dict[str, Any]:
         "token_capacity_stress": {
             "runs_only_after_full_structural_qualification": True,
             "max_tokens": STRESS_MAX_TOKENS,
+            "max_tokens_is_capped_at_the_candidates_declared_ceiling": True,
             "minimum_completion_tokens": STRESS_MIN_COMPLETION_TOKENS,
             "schema_sha256": sha256_hex(canonical_bytes(stress.build_stress_schema())),
         },
@@ -249,6 +253,7 @@ def plan() -> dict[str, Any]:
                          "is not created",
         "plan_sha256": "",
     }
+    _assert_stress_is_satisfiable()
     record["plan_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in record.items() if k != "plan_sha256"}))
     return record
@@ -383,6 +388,41 @@ def _committed_universe() -> dict[str, Any]:
 _IDENTITY_MAX = 128
 
 
+def _shape(value: Any) -> str:
+    """Absent, empty or populated -- enough to tell a real fallback from missing metadata."""
+    if value is None:
+        return "absent"
+    if not isinstance(value, list):
+        return "not_a_list"
+    return "empty_list" if not value else "non_empty_list"
+
+
+def _stress_max_tokens(candidate: Mapping[str, Any]) -> int:
+    """Never ask a candidate for more than it declares it can produce.
+
+    Attempt 02 asked every structurally qualified candidate for STRESS_MAX_TOKENS regardless of
+    what that candidate declared. Eligibility admits anything at or above
+    MINIMUM_MAX_COMPLETION_TOKENS (32768), so an admitted candidate could be sent a request for
+    four times its own declared ceiling and answer HTTP 400 -- a malformed request of ours, not a
+    capacity limit of theirs. The contradiction is visible in the frozen constants alone and did
+    not need an observation to find.
+
+    The threshold the stress must clear is unchanged; only the request is bounded.
+    """
+    declared = candidate.get("max_completion_tokens")
+    if not isinstance(declared, int) or declared <= 0:
+        return STRESS_MAX_TOKENS
+    return min(STRESS_MAX_TOKENS, declared)
+
+
+def _assert_stress_is_satisfiable() -> None:
+    """A candidate admitted by eligibility must be able to clear the stress it will be given."""
+    if STRESS_MIN_COMPLETION_TOKENS >= rule.MINIMUM_MAX_COMPLETION_TOKENS:
+        raise Stage1Error(
+            "the stress demands more completion tokens than eligibility guarantees: %d >= %d"
+            % (STRESS_MIN_COMPLETION_TOKENS, rule.MINIMUM_MAX_COMPLETION_TOKENS))
+
+
 def _identity_token(value: Any) -> Any:
     if value is None:
         return None
@@ -441,6 +481,9 @@ def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str
         "provider_exact": body.get("provider") == candidate["provider"],
         "canonical_checkpoint_exact": bool(selected) and selected[0].get("model")
         == candidate.get("canonical_checkpoint"),
+        "observed_attempts_shape": _shape(attempts),
+        "observed_pipeline_shape": _shape(pipeline),
+        "observed_selected_endpoints": len(selected),
         "router_direct": metadata.get("strategy") == "direct",
         "router_no_fallback": isinstance(attempts, list) and len(attempts) == 0,
         "router_one_endpoint": len(selected) == 1,
@@ -513,8 +556,9 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
     token_holds = False
     stress_record: dict[str, Any] | None = None
     if structural:
+        stress_budget = _stress_max_tokens(candidate)
         observed = _send(candidate, stress.STRESS_PROMPT, stress.build_stress_schema(),
-                         "m117_stress", STRESS_MAX_TOKENS, budget)
+                         "m117_stress", stress_budget, budget)
         body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
         choices = body.get("choices") if isinstance(body.get("choices"), list) else []
         first = choices[0] if choices and isinstance(choices[0], Mapping) else {}
@@ -532,7 +576,9 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
         token_holds = bool(observed.get("status") == 200
                            and first.get("finish_reason") == "stop" and conforms
                            and isinstance(tokens, int) and tokens > STRESS_MIN_COMPLETION_TOKENS)
-        stress_record = {"http_status": observed.get("status"),
+        stress_record = {"requested_max_tokens": stress_budget,
+                         "declared_max_completion_tokens": candidate.get("max_completion_tokens"),
+                         "http_status": observed.get("status"),
                          "finish_reason": first.get("finish_reason") if isinstance(
                              first.get("finish_reason"), str) else None,
                          "completion_tokens": tokens if isinstance(tokens, int) else None,
@@ -559,10 +605,15 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
         "observations": observations,
         "raw_completion_persisted": False,
     }
-    profile.update({k: identity_holds.get(k, False) for k in (
-        "requested_model_exact", "provider_exact", "canonical_checkpoint_exact", "router_direct",
-        "router_no_fallback", "router_one_endpoint", "router_one_attempt",
-        "router_no_pipeline_intervention")})
+    # Attempt 02 copied only the boolean verdicts here, so the declared/observed pairs added to
+    # make an identity mismatch diagnosable never reached the record -- the diagnostic was itself
+    # blind. Every field the attestation produces is carried through; the booleans are still
+    # defaulted to False so a missing verdict can never read as a pass.
+    _CLAUSES = ("requested_model_exact", "provider_exact", "canonical_checkpoint_exact",
+                "router_direct", "router_no_fallback", "router_one_endpoint",
+                "router_one_attempt", "router_no_pipeline_intervention")
+    profile.update({k: v for k, v in identity_holds.items() if k not in _CLAUSES})
+    profile.update({k: identity_holds.get(k, False) for k in _CLAUSES})
     profile["qualification"] = rule.qualifies(profile)
     return profile
 

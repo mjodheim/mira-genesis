@@ -191,18 +191,28 @@ def test_attempt_01_artifacts_are_preserved_and_still_verify(name, key):
     assert record[key] == recomputed
 
 
-def test_attempt_01_belongs_to_the_superseded_plan_and_attempt_02_does_not():
+PLAN_01 = "d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67"
+PLAN_02 = "5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997"
+
+
+def test_each_aborted_attempt_is_bound_to_its_own_frozen_plan():
+    """No attempt can be confused with another, and none with the live one."""
     universe = json.loads(
         (ATTEMPT_01 / "STAGE1_CANDIDATE_UNIVERSE.json").read_text(encoding="utf-8"))
-    assert universe["plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
-    assert stage1.plan()["plan_sha256"] != stage1.SUPERSEDED_PLAN_SHA256
+    assert universe["plan_sha256"] == PLAN_01
+    universe_02 = json.loads((ROOT / "experiments" / "M117" / "ATTEMPT_02_INSTRUMENT_ABORT"
+                              / "STAGE1_CANDIDATE_UNIVERSE.json").read_text(encoding="utf-8"))
+    assert universe_02["plan_sha256"] == PLAN_02
+    live = stage1.plan()["plan_sha256"]
+    assert live not in (PLAN_01, PLAN_02)
+    assert stage1.SUPERSEDED_PLAN_SHA256 == PLAN_02
 
 
 def test_the_revision_is_recorded_in_the_plan_itself():
     frozen = stage1.plan()
-    assert frozen["apparatus_revision"] == 2
+    assert frozen["apparatus_revision"] == stage1.APPARATUS_REVISION >= 3
     assert frozen["supersedes_plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
-    assert "no threshold" in frozen["revision_rationale"]
+    assert "unchanged" in frozen["revision_rationale"]
 
 
 def test_a_universe_from_the_superseded_plan_cannot_be_probed(tmp_path, monkeypatch):
@@ -220,3 +230,107 @@ def test_attempt_02_still_sends_no_qualifying_input():
     frozen = stage1.plan()
     assert frozen["is_a_qualifying_call"] is False
     assert frozen["qualifying_input_was_sent"] is False
+
+
+# -------------------------------------------------------------------------------------------
+# Revision 3: the stress must not be malformed by the plan's own eligibility bound
+# -------------------------------------------------------------------------------------------
+
+def test_the_stress_never_asks_for_more_than_a_candidate_declares():
+    """Derivable from the frozen constants alone: eligibility admits candidates at 32768."""
+    floor = rule.MINIMUM_MAX_COMPLETION_TOKENS
+    assert stage1._stress_max_tokens({"max_completion_tokens": floor}) == floor
+    assert stage1._stress_max_tokens({"max_completion_tokens": 65536}) == 65536
+    assert stage1._stress_max_tokens(
+        {"max_completion_tokens": 393216}) == stage1.STRESS_MAX_TOKENS
+
+
+def test_a_candidate_admitted_at_the_floor_can_still_clear_the_stress_threshold():
+    """The bound would be worthless if the threshold were unreachable at the floor."""
+    assert stage1.STRESS_MIN_COMPLETION_TOKENS < rule.MINIMUM_MAX_COMPLETION_TOKENS
+
+
+def test_the_plan_refuses_to_freeze_an_unsatisfiable_stress(monkeypatch):
+    monkeypatch.setattr(stage1, "STRESS_MIN_COMPLETION_TOKENS",
+                        rule.MINIMUM_MAX_COMPLETION_TOKENS + 1)
+    with pytest.raises(stage1.Stage1Error, match="more completion tokens than eligibility"):
+        stage1.plan()
+
+
+def test_the_stress_threshold_itself_did_not_move():
+    """The request was bounded; the bar was not lowered."""
+    assert stage1.STRESS_MIN_COMPLETION_TOKENS == 32000
+    assert stage1.STRESS_MAX_TOKENS == 131072
+    assert stage1.PROBE_MAX_TOKENS == 131072
+
+
+def test_attempt_02_was_halted_on_that_defect_and_is_preserved():
+    ledger = json.loads((ROOT / "experiments" / "M117" / "ATTEMPT_02_INSTRUMENT_ABORT"
+                         / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
+    assert ledger["requests_spent"] < rule.GLOBAL_REQUEST_CEILING, "not a halt"
+    stressed = [p for p in ledger["profiles"] if p.get("token_capacity_stress")]
+    assert stressed, "no candidate reached the stress"
+    # Every candidate that reached the stress was structurally qualified and answered HTTP 400.
+    for p in stressed:
+        assert p["unenforced_feature_classes"] == []
+        assert p["token_capacity_stress"]["http_status"] == 400
+
+
+def test_attempt_02_belongs_to_the_superseded_plan():
+    ledger = json.loads((ROOT / "experiments" / "M117" / "ATTEMPT_02_INSTRUMENT_ABORT"
+                         / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
+    assert ledger["plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
+    assert stage1.plan()["plan_sha256"] != stage1.SUPERSEDED_PLAN_SHA256
+
+
+# -------------------------------------------------------------------------------------------
+# Revision 3: the diagnostic that was itself blind
+# -------------------------------------------------------------------------------------------
+
+def test_the_declared_and_observed_pair_reaches_the_profile():
+    """Attempt 02 recorded the verdicts and dropped the evidence for them."""
+    identity = stage1._identity(
+        {"model": "x/y", "provider": "P", "canonical_checkpoint": "x/y-20260101"},
+        {"model": "x/y", "provider": "P"})
+    clauses = {"requested_model_exact", "provider_exact", "canonical_checkpoint_exact",
+               "router_direct", "router_no_fallback", "router_one_endpoint",
+               "router_one_attempt", "router_no_pipeline_intervention"}
+    profile = {}
+    profile.update({k: v for k, v in identity.items() if k not in clauses})
+    profile.update({k: identity.get(k, False) for k in clauses})
+    for key in ("declared_model", "observed_model", "declared_canonical_checkpoint",
+                "observed_canonical_checkpoint", "observed_attempts_shape",
+                "observed_pipeline_shape", "observed_selected_endpoints"):
+        assert key in profile, key
+    assert clauses <= set(profile)
+
+
+def test_a_missing_verdict_still_reads_as_a_failure_not_a_pass():
+    clauses = ("requested_model_exact", "router_no_fallback")
+    profile = {k: {}.get(k, False) for k in clauses}
+    assert profile["requested_model_exact"] is False
+    assert rule.qualifies(profile)["qualifies"] is False
+
+
+def test_missing_router_metadata_is_distinguishable_from_a_real_fallback():
+    """Absence and a populated list must not look the same in the record."""
+    assert stage1._shape(None) == "absent"
+    assert stage1._shape([]) == "empty_list"
+    assert stage1._shape([{"x": 1}]) == "non_empty_list"
+    assert stage1._shape("nope") == "not_a_list"
+
+
+def test_the_no_fallback_clause_was_not_relaxed():
+    """Only instrumented. Absent metadata still fails closed."""
+    for absent in ({}, {"openrouter_metadata": {"strategy": "direct"}}):
+        identity = stage1._identity({"model": "x", "provider": "P"}, absent)
+        assert identity["router_no_fallback"] is False
+        assert identity["router_no_pipeline_intervention"] is False
+    proven = {"openrouter_metadata": {"strategy": "direct", "attempts": [], "pipeline": [],
+                                      "attempt": 1,
+                                      "endpoints": {"available": [
+                                          {"model": "x-2026", "selected": True}]}}}
+    identity = stage1._identity({"model": "x", "provider": "P"}, proven)
+    assert identity["router_no_fallback"] is True
+    assert identity["router_no_pipeline_intervention"] is True
+    assert identity["observed_attempts_shape"] == "empty_list"

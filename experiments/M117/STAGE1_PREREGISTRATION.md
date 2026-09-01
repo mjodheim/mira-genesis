@@ -1,8 +1,8 @@
 # M117 Stage 1 — route qualification, frozen before the first request
 
 **Status:** FROZEN. Committed before any candidate is probed.
-**Frozen plan digest:** `5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997`
-**Apparatus revision:** 2, superseding `d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67`.
+**Frozen plan digest:** `687b239471245b968c874cfac2854755ca2a16511bff45ae2a4daf8d231c1849`
+**Apparatus revision:** 3, superseding `5cc9c648f988…` (revision 2) and `d22c3fde72c7…` (revision 1).
 **Phase:** DEVELOPMENT only. Not evidence for H62. **Qualifying invocations: 0.**
 
 > **Revision 2 changes extraction only.** Attempt 01 read three catalogue fields out of places the
@@ -13,6 +13,14 @@
 > byte-for-byte unchanged: no threshold, ordering key, tie-break, budget bound or qualification
 > clause moved, and `tests/test_m117_apparatus_revision.py` pins each of them against the universe
 > attempt 01 committed.
+>
+> **Revision 3 bounds a malformed request.** Attempt 02 read its input correctly but sent every
+> structurally qualified candidate a stress request for 131,072 tokens regardless of the ceiling
+> that candidate declared, while eligibility admits candidates at 32,768 — a contradiction visible
+> in the frozen constants alone. It is preserved halted, at 31 of 160 requests with no selection, in
+> [`ATTEMPT_02_INSTRUMENT_ABORT/`](ATTEMPT_02_INSTRUMENT_ABORT/README.md). The stress threshold is
+> unchanged; only the request is capped at the candidate's declared ceiling, and the plan now
+> refuses to freeze a stress an eligible candidate could not clear.
 
 ## The premise this is built on
 
