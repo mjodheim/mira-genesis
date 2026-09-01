@@ -607,3 +607,15 @@ def test_a_request_body_naming_no_provider_or_two_is_refused(plan) -> None:
             {k: v for k, v in broken.items() if k != "spec_commitment_sha256"}))
         with pytest.raises(bank.BankError, match="exactly one provider"):
             bank.validate_generator_spec(broken, plan, ROOT)
+
+
+def test_an_unknown_verdict_cannot_be_decomposed_into_a_causal_statement() -> None:
+    """A renamed verdict must raise, not fall through into the contrast branches."""
+    rates = {"FULL": 1.0, "FRESH": 0.0, "CASCADE_ONLY": 0.0, "POLICY_ONLY": 0.0}
+    assert decomposition.decompose(rates, verdict=endpoint.POSITIVE)[
+        "strongest_supported_statement"]
+    with pytest.raises(ValueError, match="unknown H64 verdict"):
+        decomposition.decompose(rates, verdict="inconclusive_v2")
+    with pytest.raises(ValueError, match="no rate"):
+        decomposition.decompose({"FULL": 1.0, "FRESH": None, "CASCADE_ONLY": 0.0,
+                                 "POLICY_ONLY": 0.0}, verdict=endpoint.NEGATIVE)

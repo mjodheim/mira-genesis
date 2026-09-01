@@ -63,7 +63,7 @@ def restore_acquired() -> dict[str, Any]:
 def load_carriers(path: Path, nonce: str) -> list[dict[str, Any]]:
     """The revealed carrier payload, read as the payload it is.
 
-    `reveal_m119_bank.py` writes the frozen carrier payload -- an object carrying `schema`,
+    `run_m119_reveal.py` writes the frozen carrier payload -- an object carrying `schema`,
     `bank_nonce` and `carriers` -- not a bare list. Reading it as a list would silently iterate the
     payload's keys and measure nothing, so the shape and the nonce are both checked here.
     """

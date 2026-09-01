@@ -233,11 +233,11 @@ INTERPRETATION_ROOTS = tuple(dict.fromkeys(
         "metamorphosis/m119_chronology.py",
         "metamorphosis/m119_decomposition.py",
         "metamorphosis/m119_endpoint.py",
-        "scripts/reveal_m119_bank.py",
+        "scripts/check_m119_result.py",
         "scripts/run_m119_generation.py",
         "scripts/run_m119_qualification.py",
-        "scripts/check_m119_result.py",
-        "scripts/seal_m119_bank.py",
+        "scripts/run_m119_reveal.py",
+        "scripts/run_m119_seal.py",
     )
 ))
 
@@ -250,11 +250,11 @@ TESTED_SYSTEM_PATHS = tuple(dict.fromkeys(
         "metamorphosis/m119_chronology.py",
         "metamorphosis/m119_decomposition.py",
         "metamorphosis/m119_endpoint.py",
-        "scripts/reveal_m119_bank.py",
+        "scripts/check_m119_result.py",
         "scripts/run_m119_generation.py",
         "scripts/run_m119_qualification.py",
-        "scripts/check_m119_result.py",
-        "scripts/seal_m119_bank.py",
+        "scripts/run_m119_reveal.py",
+        "scripts/run_m119_seal.py",
     )
 ))
 
@@ -268,7 +268,7 @@ UNBOUND_BY_DESIGN = dict(_m116.UNBOUND_BY_DESIGN)
 UNBOUND_BY_DESIGN.update({
     "scripts/build_m119_freeze.py":
         "writes commitments before the generation; never reads a completion",
-    "scripts/authorize_m119_reveal.py":
+    "scripts/run_m119_authorize.py":
         "records the owner's reveal decision; computes no measure and scores nothing",
     "scripts/audit_m118_readiness.py":
         "closed DEVELOPMENT gate from the predecessor milestone; ran before M119 began",
@@ -276,8 +276,7 @@ UNBOUND_BY_DESIGN.update({
 
 # Every measurement entry point M119 owns must be declared by a root. The globs below are what the
 # disk is scanned for; a new one that no root declares stops the freeze.
-ENTRY_POINT_PATTERNS = ("run_m119_*.py", "check_m119_*.py", "seal_m119_*.py",
-                        "reveal_m119_*.py", "authorize_m119_*.py", "build_m119_*.py")
+ENTRY_POINT_PATTERNS = ("run_m119_*.py", "check_m119_*.py", "build_m119_*.py")
 
 
 def interpretation_closure(root: Path | None = None) -> set[str]:
