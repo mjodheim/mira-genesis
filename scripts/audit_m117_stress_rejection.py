@@ -164,6 +164,7 @@ def plan() -> dict[str, Any]:
         ],
         "max_requests": MAX_REQUESTS,
         "error_text_is_never_committed": True,
+        "also_records_router_metadata_key_names": True,
         "error_classes": [name for name, _ in ERROR_CLASSES],
         "cases": [{"case": c["case"], "isolates": c["isolates"], "max_tokens": c["max_tokens"],
                    "reasoning_control": c["reasoning"],
@@ -211,6 +212,13 @@ def execute() -> dict[str, Any]:
                                 body=canonical_bytes(body), timeout=600)
         payload = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
         error = payload.get("error") if isinstance(payload.get("error"), Mapping) else {}
+        # Second open question, answered by the same requests: `attempts` and `pipeline` were
+        # absent on 11 of 11 Stage 1 candidates while `strategy` -- read from the same object --
+        # was present on all 11, and M116 recorded both as [] on this same provider. Recording the
+        # metadata's key set settles whether the fields are gone from the response or are being
+        # lost somewhere in this code path. Key names only; no values, no free text.
+        metadata = payload.get("openrouter_metadata")
+        metadata_keys = sorted(metadata) if isinstance(metadata, Mapping) else None
         message = error.get("message")
         message = message if isinstance(message, str) else ""
         results.append({
@@ -224,6 +232,8 @@ def execute() -> dict[str, Any]:
             "error_message_bytes": len(message.encode("utf-8")) if message else 0,
             "error_text_persisted": False,
             "raw_completion_persisted": False,
+            "router_metadata_keys": metadata_keys,
+            "router_metadata_present": metadata_keys is not None,
         })
 
     report = {

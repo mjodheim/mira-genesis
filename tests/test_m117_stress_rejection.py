@@ -209,3 +209,17 @@ def test_it_refuses_to_invent_a_target_when_nothing_reproduces(monkeypatch, tmp_
     monkeypatch.setattr(diag, "ROOT", tmp_path)
     with pytest.raises(Exception, match="nothing to diagnose"):
         diag._target()
+
+
+def test_the_diagnostic_also_records_the_router_metadata_key_set():
+    """`attempts` and `pipeline` were absent on 11 of 11 candidates; key names settle why."""
+    assert diag.plan()["also_records_router_metadata_key_names"] is True
+
+
+def test_only_metadata_key_names_are_recorded_never_their_values():
+    metadata = {"strategy": "direct", "attempt": 1,
+                "endpoints": {"available": [{"model": "secret-checkpoint-name"}]}}
+    keys = sorted(metadata)
+    serialised = json.dumps({"router_metadata_keys": keys})
+    assert "secret-checkpoint-name" not in serialised
+    assert keys == ["attempt", "endpoints", "strategy"]
