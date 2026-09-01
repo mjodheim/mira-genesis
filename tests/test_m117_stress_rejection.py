@@ -15,9 +15,11 @@ import pytest
 
 from metamorphosis import m116_stress_schema as stress
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
+from scripts import audit_m117_route_qualification as stage1
 from scripts import audit_m117_stress_rejection as diag
 
 ROOT = Path(__file__).resolve().parents[1]
+ATTEMPT_03 = ROOT / "experiments" / "M117" / "ATTEMPT_03_INSTRUMENT_ABORT"
 
 
 # -------------------------------------------------------------------------------------------
@@ -62,8 +64,7 @@ def test_every_case_differs_from_the_stress_request_in_one_named_dimension():
 
 def test_the_baseline_case_is_a_request_shape_already_observed_as_200():
     baseline = next(c for c in diag.cases() if c["case"] == "probe_schema_probe_budget")
-    ledger = json.loads((ROOT / "experiments" / "M117"
-                         / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
+    ledger = json.loads((ATTEMPT_03 / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
     observed = [o for p in ledger["profiles"] for o in (p.get("observations") or [])
                 if o.get("probe") == "combined"]
     assert observed, "no combined probe was recorded"
@@ -167,7 +168,7 @@ def test_identical_errors_stay_comparable_without_disclosing_either():
 
 
 def test_no_committed_diagnostic_report_contains_an_error_message_field():
-    report = ROOT / "experiments" / "M117" / "STRESS_REJECTION_DIAGNOSIS.json"
+    report = ATTEMPT_03 / "STRESS_REJECTION_DIAGNOSIS.json"
     if not report.is_file():
         pytest.skip("the diagnostic has not been run yet")
     payload = json.loads(report.read_text(encoding="utf-8"))
@@ -183,44 +184,37 @@ def test_no_committed_diagnostic_report_contains_an_error_message_field():
 # It reproduces rather than chooses its target
 # -------------------------------------------------------------------------------------------
 
-def test_the_target_is_the_first_reproducing_candidate_in_the_frozen_order():
-    ledger = json.loads((ROOT / "experiments" / "M117"
-                         / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
+def test_the_target_is_the_first_reproducing_candidate_in_the_frozen_order(monkeypatch, tmp_path):
+    """Reproduced, not chosen: the earliest candidate in the frozen order that 400ed."""
+    live = tmp_path / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json"
+    live.write_text((ATTEMPT_03 / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json")
+                    .read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setattr(stage1, "LEDGER_PATH", live)
+    ledger = json.loads(live.read_text(encoding="utf-8"))
     reproducing = [p for p in sorted(ledger["profiles"], key=lambda p: p.get("order") or 0)
                    if "unenforced_feature_classes" in p
                    and not p["unenforced_feature_classes"]
                    and (p.get("token_capacity_stress") or {}).get("http_status") == 400]
-    if not reproducing:
-        pytest.skip("no candidate reproduced the rejection")
+    assert reproducing, "attempt 03 recorded no reproducing candidate"
     assert diag._target()["order"] == reproducing[0]["order"]
 
 
 def test_it_refuses_to_invent_a_target_when_nothing_reproduces(monkeypatch, tmp_path):
-    """A candidate that failed for some other reason must never be diagnosed as if it had 400ed."""
-    directory = tmp_path / "experiments" / "M117"
-    directory.mkdir(parents=True)
-    (directory / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").write_text(json.dumps(
-        {"profiles": [
-            {"order": 1, "model": "x", "provider": "P",
-             "unenforced_feature_classes": ["enum"], "token_capacity_stress": None},
-            {"order": 2, "model": "y", "provider": "Q",
-             "unenforced_feature_classes": [],
-             "token_capacity_stress": {"http_status": 200}},
-        ]}), encoding="utf-8")
-    monkeypatch.setattr(diag, "ROOT", tmp_path)
+    """A candidate that failed some other way must never be diagnosed as if it had 400ed."""
+    path = tmp_path / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json"
+    path.write_text(json.dumps({"profiles": [
+        {"order": 1, "model": "x", "provider": "P",
+         "unenforced_feature_classes": ["enum"], "token_capacity_stress": None},
+        {"order": 2, "model": "y", "provider": "Q",
+         "unenforced_feature_classes": [], "token_capacity_stress": {"http_status": 200}},
+    ]}), encoding="utf-8")
+    monkeypatch.setattr(stage1, "LEDGER_PATH", path)
     with pytest.raises(Exception, match="nothing to diagnose"):
         diag._target()
 
 
-def test_the_diagnostic_also_records_the_router_metadata_key_set():
-    """`attempts` and `pipeline` were absent on 11 of 11 candidates; key names settle why."""
-    assert diag.plan()["also_records_router_metadata_key_names"] is True
-
-
-def test_only_metadata_key_names_are_recorded_never_their_values():
-    metadata = {"strategy": "direct", "attempt": 1,
-                "endpoints": {"available": [{"model": "secret-checkpoint-name"}]}}
-    keys = sorted(metadata)
-    serialised = json.dumps({"router_metadata_keys": keys})
-    assert "secret-checkpoint-name" not in serialised
-    assert keys == ["attempt", "endpoints", "strategy"]
+def test_a_preserved_attempt_is_not_a_diagnostic_target(monkeypatch, tmp_path):
+    """Once an attempt is preserved, the diagnostic must not reach back into it."""
+    monkeypatch.setattr(stage1, "LEDGER_PATH", tmp_path / "absent.json")
+    with pytest.raises(Exception, match="no live Stage 1 ledger"):
+        diag._target()

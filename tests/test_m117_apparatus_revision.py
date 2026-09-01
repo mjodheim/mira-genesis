@@ -24,6 +24,7 @@ from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex
 from scripts import audit_m117_route_qualification as stage1
 
 ROOT = Path(__file__).resolve().parents[1]
+ATTEMPT_03 = ROOT / "experiments" / "M117" / "ATTEMPT_03_INSTRUMENT_ABORT"
 ATTEMPT_01 = ROOT / "experiments" / "M117" / "ATTEMPT_01_INSTRUMENT_ABORT"
 
 

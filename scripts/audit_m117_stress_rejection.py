@@ -178,9 +178,11 @@ def plan() -> dict[str, Any]:
 
 def _target() -> dict[str, Any]:
     """The first candidate in the frozen order that enforced everything and then answered 400."""
-    ledger = json.loads(
-        (ROOT / "experiments" / "M117" / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json")
-        .read_text(encoding="utf-8"))
+    path = stage1.LEDGER_PATH
+    if not path.is_file():
+        raise stage1.Stage1Error(
+            "no live Stage 1 ledger to reproduce against; a preserved attempt is not a target")
+    ledger = json.loads(path.read_text(encoding="utf-8"))
     for profile in sorted(ledger["profiles"], key=lambda p: p.get("order") or 0):
         stress_record = profile.get("token_capacity_stress") or {}
         if not profile.get("unenforced_feature_classes") and stress_record.get("http_status") == 400:

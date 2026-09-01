@@ -139,11 +139,26 @@ Stage 1 measured which schema features candidate endpoints enforce, on small syn
 one date, on 17 of 94 eligible candidates. It is instrument qualification. **It is not evidence for
 or against H62**, and G1–G10 are unchanged. Qualifying invocations remain **0**.
 
-## Open decisions
+## How the open decisions were resolved
 
-1. Whether `no_fallback` and `no_pipeline_intervention` may be re-specified against evidence this API
-   actually emits, or whether Stage 1 stands as unresolvable on the present instrument family.
-2. Whether the stress schema should be treated as a route-capability boundary or as an unmet
-   requirement of the carrier design, given the provider states no cause.
-3. Whether `safe_router_metadata`'s absent-to-empty projection is repaired, and by whom, given it sits
-   on closed-milestone verification paths.
+These were put to the owner rather than decided here, because both touched the post-hoc weakening
+boundary. Both were authorized, and attempt 04 runs under the result.
+
+1. **`no_fallback` / `no_pipeline_intervention` re-specified** against evidence this API emits —
+   `strategy: direct`, `attempt: 1`, exactly one selected endpoint, and the `allow_fallbacks: false`
+   the harness sends. The fact required is unchanged; only its evidence is now obtainable. A
+   *reported* field is still judged on its contents, and a single **failed** attempt record is not a
+   clean single attempt, so absence never overrides a positive report to the contrary. Apparatus
+   revision 4, plan `47ff587ff36e994a…`.
+2. **`safe_router_metadata` repaired** so absent is no longer rendered as observed-empty, and
+   `no_fallback_attested` rebased onto real evidence. Re-verified rather than assumed: M115 replays
+   to digest `082cd5d4…` exactly as committed, its verdict still instrument-aborted and its
+   hypothesis untested, M112 recomputes identically, and no M113–M116 artifact is modified.
+
+   That re-verification caught a real incompatibility. Two observation keys added to the attestation
+   dict broke `run_m115_qualification`, which compares the recomputed attestation to M115's committed
+   one by **full dict equality** — any new key breaks a closed milestone's recomputation. The keys
+   were removed; the absent-versus-empty distinction lives in the projection, where it belongs.
+3. **The stress schema question is left open.** Whether its rejection is a route-capability boundary
+   or an unmet requirement of the carrier design cannot be settled while the provider states no
+   cause, and nothing here presumes an answer.
