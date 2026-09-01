@@ -54,14 +54,18 @@ MAX_REQUESTS = 12
 # Provider error text is free text and is never committed. Each message is classified against this
 # fixed vocabulary and only the matched class is recorded, alongside a digest so that two identical
 # errors are comparable without disclosing either.
+# Ordered most specific first. A generic word decided ahead of a specific one gives a confident
+# wrong cause, which is worse for the record than "unclassified": "exceeds" once matched
+# schema_too_large before "max_tokens" could reach token_budget_rejected.
 ERROR_CLASSES = (
-    ("schema_too_deep", ("too deep", "nesting", "depth", "recursion")),
-    ("schema_too_large", ("too large", "too long", "exceeds", "size limit", "too many")),
+    ("rate_limited", ("rate limit", "quota", "resource exhausted")),
+    ("token_budget_rejected", ("max_tokens", "maxoutputtokens", "max output tokens",
+                               "output token")),
+    ("schema_too_deep", ("too deep", "deeply nested", "nesting", "depth", "recursion")),
     ("schema_unsupported_keyword", ("unsupported", "not supported", "unknown field",
                                     "invalid schema", "unrecognized")),
-    ("token_budget_rejected", ("max_tokens", "maxoutputtokens", "output token")),
+    ("schema_too_large", ("too large", "too long", "size limit", "too many", "exceeds")),
     ("parameter_rejected", ("parameter", "reasoning", "seed", "temperature")),
-    ("rate_limited", ("rate limit", "quota", "resource exhausted")),
 )
 
 
