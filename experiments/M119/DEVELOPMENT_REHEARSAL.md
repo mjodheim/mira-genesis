@@ -51,7 +51,63 @@ record was written:
 
 Four further defects were fixed: `positive: True` could sit beside an `instrument_aborted` verdict;
 the reveal reached into a sealed plaintext by subscript; a malformed provider list index-errored
-rather than refusing; the checker let a chronology refusal escape as a traceback.
+rather than refusing; the checker let a chronology refusal escape as a traceback. Two more, the
+most consequential, are described below.
+
+## The two findings that mattered most
+
+Both were found after the rehearsal's first clean run, and neither is the kind of thing a design
+review catches by reading.
+
+### The comparator did not express its own draw
+
+`FRESH` draws each feature row uniformly over the three components. A cascade was then built to
+express that draw: two rules, one per "ruled" component, with the third reached by the attributor's
+fallthrough — and the first draft chose *which* component was left to the fallthrough by drawing it
+from the seed, on the stated reasoning that no component should systematically be the one expressed
+by omission.
+
+The attributor's fallthrough is hardwired. `m109_runtime.attribute` returns the operator axis when
+no rule fires, and nothing a rule can do changes that. So two thirds of the time the drawn
+fallthrough was not the hardwired one, and every row assigned to it was attributed to the operator
+axis instead. Measured over 2,000 demands: **3,621 of 16,000 rows — 22.6% — were attributed to a
+component the draw had not chosen**, over-representing one component and under-representing the
+other two.
+
+That is M118's defect in a new shape: a comparator with a standing bias presented as a uniform
+prior. It survived because the symmetry test measured `fresh_assignment` — the *intention* — rather
+than what the built cascade actually attributes.
+
+The fix is that the two rules are built for the two components that are *not* the hardwired
+fallthrough, so the cascade attributes exactly the drawn assignment on every row. The mechanism is
+asymmetric — one component is always the one expressed by omission — and the attribution is not.
+`symmetry_evidence` now runs the producer's own attributor over the built rules and reports the
+number of rows where the result differs from the draw; over 8,000 demands that count is **0**, and
+the component shares are 0.3306 / 0.3366 / 0.3329, largest deviation from one third 0.0032.
+
+An independent reviewer read this code and recorded the opposite conclusion in its verified-correct
+list — that the encoding "correctly reconstruct[s] the uniform per-row assignment regardless of
+which physical component is chosen as fallthrough". It was reasoned carefully and it was wrong.
+Only running the attributor showed it.
+
+### The downstream phases proved the wrong thing
+
+The same independent review found the one blocker this milestone had. The chronology's promise —
+every stage proves its predecessors were committed at HEAD — was wired only for the stages *before*
+the request. Sealing, authorization, reveal, scoring and replay each proved that the tested-system
+freeze was committed and unchanged, and nothing else, although `STAGES` already declared the correct
+predecessor lists for all of them.
+
+The freeze proves the wrong thing there. Its commitment is derivable from the source and the
+re-derivable plan, spec and nonce, so it is knowable before the generation happens, carries no
+carrier content, and is identical for every measurement taken under it. A `MEASUREMENTS.json`
+produced from a stale bank, a rehearsal bank, or hand-edited outcomes carried a perfectly valid
+freeze commitment and passed every check the checker made.
+
+Now every downstream phase runs its stage's predecessor list, a new `authorization` stage sits
+between sealing and reveal (the authorizer writes the authorization, so it cannot require it), and
+the checker loads the committed reveal record from the repository and requires the measurement's
+reveal and carrier-bank digests to match it. Naming a reveal is not being one.
 
 ## The disclosure that matters
 
