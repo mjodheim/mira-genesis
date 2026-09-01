@@ -57,7 +57,10 @@ def test_one_discordant_pair_cannot_be_significant():
     assert verdict["contingency"]["discordant"] == 1
     assert verdict["p_value"] == 0.5
     assert verdict["statistical_criterion_holds"] is False
-    assert verdict["verdict"] == "negative"
+    # One discordant pair cannot reach significance at all, so this is underpowered rather than
+    # evidence against the hypothesis. What matters here is that it is not positive.
+    assert verdict["positive"] is False
+    assert verdict["verdict"] == "inconclusive"
 
 
 def test_significance_needs_at_least_five_discordant_pairs():
@@ -73,7 +76,8 @@ def test_a_nominal_positive_effect_can_still_fail_the_exact_test():
     verdict = endpoint.decide(d, f, _measures(5, 0, 0, 0, 0, 1.0), _measures(3, 0, 0, 0, 0, 1.0))
     assert verdict["risk_difference"] > 0
     assert verdict["statistical_criterion_holds"] is False
-    assert verdict["verdict"] == "negative"
+    assert verdict["positive"] is False
+    assert verdict["verdict"] == "inconclusive"
 
 
 def test_a_significant_but_tiny_effect_fails_the_margin():
@@ -97,7 +101,8 @@ def test_a_large_effect_without_statistical_support_fails():
     verdict = endpoint.decide(d, f, _measures(2, 0, 0, 0, 0, 1.0), _measures(0, 0, 0, 0, 0, 1.0))
     assert verdict["risk_difference"] >= endpoint.MINIMUM_RISK_DIFFERENCE
     assert verdict["statistical_criterion_holds"] is False
-    assert verdict["verdict"] == "negative"
+    assert verdict["positive"] is False
+    assert verdict["verdict"] == "inconclusive"
 
 
 def test_genuine_strong_paired_improvement_passes():
@@ -156,7 +161,8 @@ def test_a_guard_cannot_turn_a_negative_primary_into_a_positive():
     verdict = endpoint.decide(d, f, _measures(9, 9, 0, 0, 0, 1.0), _measures(0, 0, 9, 9, 9, 0.1))
     assert verdict["no_harm"]["all_hold"] is True
     assert verdict["primary_holds"] is False
-    assert verdict["verdict"] == "negative"
+    assert verdict["positive"] is False
+    assert verdict["verdict"] != "positive"
 
 
 def test_a_missing_guard_measure_fails_closed():
@@ -173,10 +179,20 @@ def test_a_missing_guard_measure_fails_closed():
 # -------------------------------------------------------------------------------------------
 
 def test_no_descriptive_measure_is_a_way_to_win():
+    """This test previously ended in `or True` and asserted nothing at all.
+
+    The real property: improving a descriptive measure that is neither the primary endpoint nor a
+    guard must not change the verdict.
+    """
+    d, f = [True, False, False, False], [False, False, False, False]
+    base = _measures(1, 0, 0, 0, 0, 1.0)
+    plain = endpoint.decide(d, f, base, _measures(0, 0, 0, 0, 0, 1.0))
     for measure in endpoint.DESCRIPTIVE_MEASURES:
         if measure in endpoint.NO_HARM_GUARDS:
             continue
-        assert measure not in endpoint.PRIMARY_SUCCESS_KEY.values() or True
+        flattered = dict(base, **{measure: 9999})
+        assert endpoint.decide(d, f, flattered, _measures(0, 0, 0, 0, 0, 1.0))["verdict"] \
+            == plain["verdict"], measure
 
 
 def test_the_verdict_requires_both_criteria():
@@ -265,7 +281,8 @@ def test_beating_t0_but_losing_to_fresh_uniform_is_negative():
     fresh_uniform = [True, True, True, True, True, True]
     verdict = endpoint.decide(descendant, fresh_uniform,
                               _measures(3, 0, 0, 0, 0, 1.0), _measures(6, 0, 0, 0, 0, 1.0))
-    assert verdict["verdict"] == "negative"
+    assert verdict["positive"] is False
+    assert verdict["risk_difference"] < 0
 
 
 def test_the_endpoint_covers_exactly_the_evaluators_demand_classes():
@@ -320,3 +337,100 @@ def test_the_preregistration_matches_the_implemented_thresholds():
     assert endpoint.minimum_discordant_for_significance() == 5
     assert "0.0156" in text
     assert round(endpoint.smallest_attainable_p(6), 4) == 0.0156
+
+
+# -------------------------------------------------------------------------------------------
+# Dominance: a positive cannot stand while the descendant loses to the arms it must improve on
+# -------------------------------------------------------------------------------------------
+
+def test_a_positive_cannot_stand_while_the_descendant_loses_to_the_constant_arm():
+    """The hole opened by replacing T0 with a stronger comparator, now closed."""
+    verdict = endpoint.decide(
+        [True] * 8 + [False] * 4, [False] * 12,
+        _measures(8, 0, 0, 0, 0, 1.0), _measures(0, 0, 0, 0, 0, 0.0),
+        dominance={"T0": [True] * 12, "M2": [True] * 12})
+    assert verdict["primary_holds"] is True
+    assert verdict["dominance"]["failed"] == ["M2", "T0"]
+    assert verdict["verdict"] == "negative"
+
+
+def test_dominance_holds_when_the_descendant_leads_everything():
+    verdict = endpoint.decide(
+        [True] * 6, [False] * 6, _measures(3, 3, 0, 0, 0, 1.0), _measures(0, 0, 0, 0, 0, 1.0),
+        dominance={"T0": [False] * 6, "M2": [True, False, False, False, False, False]})
+    assert verdict["dominance"]["all_hold"] is True
+    assert verdict["verdict"] == "positive"
+
+
+def test_dominance_cannot_create_a_positive():
+    verdict = endpoint.decide(
+        [True, False, False, False], [False, False, False, False],
+        _measures(1, 0, 0, 0, 0, 1.0), _measures(0, 0, 0, 0, 0, 1.0),
+        dominance={"T0": [False] * 4, "M2": [False] * 4})
+    assert verdict["dominance"]["all_hold"] is True
+    assert verdict["verdict"] != "positive"
+
+
+# -------------------------------------------------------------------------------------------
+# An underpowered bank is not a refutation
+# -------------------------------------------------------------------------------------------
+
+def test_a_bank_too_small_for_significance_is_inconclusive_not_negative():
+    verdict = endpoint.decide([True, True, True, False], [False] * 4,
+                              _measures(3, 0, 0, 0, 0, 1.0), _measures(0, 0, 0, 0, 0, 1.0))
+    assert verdict["smallest_attainable_p_value"] > endpoint.ALPHA
+    assert verdict["underpowered"] is True
+    assert verdict["verdict"] == "inconclusive"
+
+
+def test_a_powered_bank_that_fails_is_still_negative():
+    verdict = endpoint.decide([True] * 3 + [False] * 3, [False] * 3 + [True] * 3,
+                              _measures(3, 0, 0, 0, 0, 1.0), _measures(3, 0, 0, 0, 0, 1.0))
+    assert verdict["underpowered"] is False
+    assert verdict["verdict"] == "negative"
+
+
+def test_an_unformable_attribution_rate_does_not_veto_a_perfect_descendant():
+    base = {"correct_construction": 6, "calibrated_refusal": 6, "invented_adapter": 0,
+            "false_refusal": 0, "unmet_construction": 0}
+    perfect = dict(base, attribution_agreement_rate=None, attribution_examined=0)
+    fresh = dict(base, correct_construction=0, calibrated_refusal=0,
+                 attribution_agreement_rate=0.5, attribution_examined=4)
+    verdict = endpoint.decide([True] * 6, [False] * 6, perfect, fresh,
+                              dominance={"T0": [False] * 6, "M2": [False] * 6})
+    assert "attribution_agreement_rate" in verdict["no_harm"]["not_evaluated"]
+    assert verdict["no_harm"]["failed"] == []
+    assert verdict["verdict"] == "positive"
+
+
+def test_a_genuinely_missing_count_measure_still_fails_closed():
+    incomplete = _measures(3, 3, 0, 0, 0, 1.0)
+    del incomplete["correct_construction"]
+    verdict = endpoint.decide([True] * 6, [False] * 6, incomplete, _measures(0, 0, 0, 0, 0, 1.0))
+    assert "correct_construction" in verdict["no_harm"]["failed"]
+    assert verdict["verdict"] != "positive"
+
+
+# -------------------------------------------------------------------------------------------
+# The comparator space is symmetric and balanced
+# -------------------------------------------------------------------------------------------
+
+def test_the_assignment_space_is_balanced_and_no_component_is_short_changed():
+    import collections
+    space = arms.achievable_assignments()
+    shapes = {tuple(sorted(collections.Counter(a).values())) for a in space}
+    assert shapes == {(2, 3, 3)}
+    short = collections.Counter(
+        min(collections.Counter(a), key=lambda c: collections.Counter(a)[c]) for a in space)
+    assert len(set(short.values())) == 1, "a component is short-changed more often than others"
+
+
+def test_the_seed_permutes_which_component_is_short_changed():
+    """Dealing over a fixed component order short-changed candidate_space in 400 of 400 seeds."""
+    import collections
+    short = collections.Counter()
+    for index in range(120):
+        assignment = arms.fresh_uniform_assignment("sensitivity-%d" % index)
+        counts = collections.Counter(assignment)
+        short[min(counts, key=lambda c: counts[c])] += 1
+    assert len(short) == 3, "the seed never varies which component is short-changed"

@@ -113,7 +113,7 @@ def test_attribution_is_recorded_for_every_arm(measurements):
 
 def test_the_checker_produces_a_coherent_verdict(measurements):
     report = checker.check(measurements)
-    assert report["verdict"] in ("positive", "negative", "not_computed")
+    assert report["verdict"] in ("positive", "negative", "inconclusive", "not_computed")
     assert report["primary_comparison"] == "M3 vs fresh_uniform"
     assert report["verdict_recomputed_independently"] is True
 
@@ -149,12 +149,22 @@ def test_the_checker_reports_t0_without_letting_it_decide(measurements):
     assert "T0 is a constant function" in report["legacy_t0_comparison_not_decisive"]["note"]
 
 
-def test_the_checker_recomputes_rather_than_trusting_the_runner():
-    source = (checker.__file__)
-    with open(source, encoding="utf-8") as handle:
-        text = handle.read()
-    assert 'measurements["verdict"]' not in text
-    assert 'measurements.get("verdict")' not in text
+def test_the_checker_recomputes_rather_than_trusting_the_runner(measurements):
+    """Behavioural, not a grep: a planted verdict must not survive into the report.
+
+    The previous version searched the checker's source for a string, which proves nothing about
+    what it does with a record that carries a verdict.
+    """
+    planted = json.loads(json.dumps(measurements))
+    planted["verdict"] = "positive"
+    planted["hypothesis_status"] = "supported"
+    planted["p_value"] = 0.0
+    planted["measurements_sha256"] = sha256_hex(canonical_bytes(
+        {k: v for k, v in planted.items() if k != "measurements_sha256"}))
+    honest = checker.check(measurements)
+    report = checker.check(planted)
+    assert report["verdict"] == honest["verdict"]
+    assert report["primary"]["p_value"] == honest["primary"]["p_value"]
 
 
 def test_a_strong_synthetic_improvement_is_reported_positive(measurements):

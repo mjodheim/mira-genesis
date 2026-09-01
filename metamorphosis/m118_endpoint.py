@@ -182,24 +182,64 @@ def evaluate_guards(descendant: Mapping[str, Any],
         d = descendant.get(measure)
         f = fresh.get(measure)
         if d is None or f is None:
-            results[measure] = {"direction": direction, "descendant": d, "fresh": f,
-                                "holds": False, "reason": "measure absent"}
+            # `attribution_agreement_rate` is a rate over an outcome-dependent denominator: an arm
+            # that constructs immediately never records a first-trace attribution, so a *perfect*
+            # descendant has nothing examined and no rate at all. Vetoing on that would reject the
+            # best attainable result, so a rate that could not be formed is recorded as not
+            # evaluated rather than failed. It is visible in the record either way, and every other
+            # guard is a count over the same demands and cannot go missing this way.
+            evaluable = (descendant.get("attribution_examined") == 0
+                         or fresh.get("attribution_examined") == 0)
+            results[measure] = {
+                "direction": direction, "descendant": d, "fresh": f,
+                "evaluated": False,
+                "holds": bool(evaluable and measure == "attribution_agreement_rate"),
+                "reason": ("no attribution was examined, so the rate could not be formed"
+                           if evaluable else "measure absent"),
+            }
             continue
         holds = d >= f if direction == "at_least" else d <= f
         results[measure] = {"direction": direction, "descendant": d, "fresh": f,
-                            "holds": bool(holds)}
+                            "evaluated": True, "holds": bool(holds)}
     return {
         "guards": results,
         "all_hold": all(entry["holds"] for entry in results.values()),
         "failed": sorted(name for name, entry in results.items() if not entry["holds"]),
+        "not_evaluated": sorted(name for name, entry in results.items()
+                                if entry.get("evaluated") is False),
         "a_guard_can_veto_a_positive_but_never_create_one": True,
+    }
+
+
+def dominance_guards(descendant_outcomes: Sequence[bool],
+                     other_outcomes: Mapping[str, Sequence[bool]]) -> dict[str, Any]:
+    """The descendant must not lose to the arms the comparator was supposed to improve upon.
+
+    Replacing T0 with a stronger comparator introduced a hole: nothing then required the descendant
+    to beat T0 at all. A run where the descendant scored below both the legacy constant and the
+    rules-only ablation could still be reported positive with an affirmative causal statement, which
+    is a worse failure than the four-way disjunction this design replaced. These close it.
+    """
+    successes = sum(1 for x in descendant_outcomes if x)
+    results: dict[str, Any] = {}
+    for name, series in other_outcomes.items():
+        theirs = sum(1 for x in series if x)
+        results[name] = {"descendant": successes, "other": theirs,
+                         "holds": successes >= theirs}
+    return {
+        "guards": results,
+        "all_hold": all(entry["holds"] for entry in results.values()),
+        "failed": sorted(name for name, entry in results.items() if not entry["holds"]),
+        "rationale": "a positive cannot stand while the descendant loses to the legacy constant "
+                     "arm or to the rules-only ablation",
     }
 
 
 def decide(descendant_outcomes: Sequence[bool], fresh_outcomes: Sequence[bool],
            descendant_measures: Mapping[str, Any], fresh_measures: Mapping[str, Any],
            *, alpha: float = ALPHA,
-           minimum_risk_difference: float = MINIMUM_RISK_DIFFERENCE) -> dict[str, Any]:
+           minimum_risk_difference: float = MINIMUM_RISK_DIFFERENCE,
+           dominance: Mapping[str, Sequence[bool]] | None = None) -> dict[str, Any]:
     """The H63 verdict. Primary decides improvement; guards may only veto it."""
     table = paired_table(descendant_outcomes, fresh_outcomes)
     p_value = exact_mcnemar_one_sided(table["only_descendant_succeeded"],
@@ -214,12 +254,21 @@ def decide(descendant_outcomes: Sequence[bool], fresh_outcomes: Sequence[bool],
     statistical = p_value <= alpha
     effect = risk_difference is not None and risk_difference >= minimum_risk_difference
     primary = bool(statistical and effect)
-    positive = bool(primary and guards["all_hold"])
+    dominance_result = dominance_guards(descendant_outcomes, dict(dominance or {}))
+    positive = bool(primary and guards["all_hold"] and dominance_result["all_hold"])
+
+    # A bank too small for significance to be arithmetically attainable is not evidence against
+    # the hypothesis. Reporting it as "negative" would let an underpowered run masquerade as a
+    # refutation, which is the mirror image of letting a single event masquerade as support.
+    best_possible = smallest_attainable_p(table["discordant"])
+    underpowered = best_possible > alpha
 
     if n == 0:
         verdict = "not_computed"
     elif positive:
         verdict = "positive"
+    elif underpowered and not primary:
+        verdict = "inconclusive"
     else:
         verdict = "negative"
 
@@ -241,6 +290,10 @@ def decide(descendant_outcomes: Sequence[bool], fresh_outcomes: Sequence[bool],
         "effect_size_criterion_holds": bool(effect),
         "primary_holds": primary,
         "no_harm": guards,
+        "dominance": dominance_result,
+        "smallest_attainable_p_value": best_possible,
+        "underpowered": bool(underpowered),
+        "an_underpowered_bank_is_not_evidence_against_the_hypothesis": True,
         "verdict": verdict,
         "positive": positive,
         "both_criteria_required": True,

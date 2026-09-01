@@ -113,8 +113,12 @@ def check(measurements: Mapping[str, Any]) -> dict[str, Any]:
                     "not evidence for H63",
         },
         "arm_success_rates": rates,
+        # An underpowered bank is not a refutation. Reporting it as "not_supported" would let a
+        # bank too small for significance to be arithmetically attainable masquerade as evidence
+        # against the hypothesis, which is the mirror of letting one event masquerade as support.
         "hypothesis_status": ("supported" if verdict["positive"]
                               else "not_supported" if verdict["verdict"] == "negative"
+                              else "inconclusive" if verdict["verdict"] == "inconclusive"
                               else "not_computed"),
         "verdict": verdict["verdict"],
         "report_sha256": "",

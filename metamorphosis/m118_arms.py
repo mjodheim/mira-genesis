@@ -66,16 +66,32 @@ def _row_order(seed: str) -> list[int]:
     )
 
 
+def _component_order(seed: str) -> list[str]:
+    """A deterministic permutation of the components, from the seed alone.
+
+    Eight rows do not divide by three, so one component always receives two rows where the others
+    receive three. Dealing over a *fixed* component order made that always the same component --
+    `candidate_space` in 400 of 400 seeds -- which is a standing bias, not a uniform prior. The
+    seed now chooses which component is short-changed as well as which rows each receives.
+    """
+    return sorted(
+        COMPONENTS,
+        key=lambda component: hashlib.sha256(
+            ("%s:component:%s" % (seed, component)).encode("ascii")).hexdigest(),
+    )
+
+
 def fresh_uniform_assignment(seed: str = FRESH_UNIFORM_SEED) -> list[str]:
     """Which component `fresh_uniform` names on each feature row.
 
-    Rows are dealt round-robin over the components in a seed-derived order, so the assignment is
-    balanced to within one row and depends on nothing but the seed. No carrier, demand, outcome or
-    ground truth is consulted.
+    Rows are dealt round-robin over a seed-permuted component order, so the assignment is balanced
+    to within one row and depends on nothing but the seed. No carrier, demand, outcome or ground
+    truth is consulted.
     """
+    order = _component_order(seed)
     assignment = [""] * ROW_COUNT
     for position, row in enumerate(_row_order(seed)):
-        assignment[row] = COMPONENTS[position % len(COMPONENTS)]
+        assignment[row] = order[position % len(order)]
     return assignment
 
 
@@ -174,6 +190,64 @@ def build_arms(first: Mapping[str, Any], second: Mapping[str, Any],
         # probe_only_budget_plus exists beside it.
         "budget_plus": {"rules": [], "policy": None},
     }
+
+
+# One seed's luck is worth about one demand on a small bank -- roughly eight percentage points
+# against a ten-point decision margin -- so a single fixed draw is not defensible.
+#
+# Averaging breaks the pairing the exact test depends on, and a majority vote across seeds does not
+# preserve balance: majority-of-uniform is not uniform, and voting 129 seeds produced a 1/2/5 split,
+# a worse prior than the 3/3/2 it replaced. Both were tried and rejected.
+#
+# Instead the achievable assignments are enumerated, and the descendant is faced with the comparator
+# at its **strongest** on the revealed bank: the assignment that maximises the comparator's own
+# primary successes. That is deterministic, replayable, information-free -- the enumeration consults
+# no carrier -- and conservative, because it can only make the descendant's task harder. Seed luck
+# is removed rather than averaged away.
+
+
+def achievable_assignments() -> list[list[str]]:
+    """Every balanced row-to-component assignment the construction can produce.
+
+    Balanced means each component receives floor or ceil of ROW_COUNT / len(COMPONENTS) rows, which
+    is what makes the comparator a uniform prior rather than a tilted one. Enumerated rather than
+    sampled, so the set does not depend on any seed at all.
+    """
+    from itertools import combinations
+    base, extra = divmod(ROW_COUNT, len(COMPONENTS))
+    sizes_by_component: list[tuple[str, ...]] = []
+    rows = list(range(ROW_COUNT))
+    results: list[list[str]] = []
+
+    def deal(remaining: list[int], components: tuple[str, ...], quota: dict[str, int],
+             partial: dict[int, str]) -> None:
+        if not components:
+            results.append([partial[row] for row in rows])
+            return
+        component, rest = components[0], components[1:]
+        for chosen in combinations(remaining, quota[component]):
+            nxt = dict(partial)
+            for row in chosen:
+                nxt[row] = component
+            deal([r for r in remaining if r not in chosen], rest, quota, nxt)
+
+    # Which components receive the extra rows is itself part of the space, so no component is
+    # permanently short-changed by the enumeration either.
+    for larger in combinations(COMPONENTS, extra):
+        quota = {c: base + (1 if c in larger else 0) for c in COMPONENTS}
+        deal(rows, tuple(COMPONENTS), quota, {})
+    return results
+
+
+def rules_for_assignment(assignment: list[str]) -> list[dict[str, Any]]:
+    """A cascade realising one assignment, built by the producer's own constructor."""
+    cascade = []
+    for generation, component in enumerate(FRESH_UNIFORM_RULE_COMPONENTS, start=1):
+        table = [assignment[row] == component for row in range(ROW_COUNT)]
+        body = {"node": "SEEDED_PARTITION", "component": component,
+                "derivation": "precommitted seed and feature-row index only"}
+        cascade.append(lineage.attribution_rule(body, table, component, generation))
+    return cascade
 
 
 ARM_NAMES = ("T0", "M1", "M2", "M3", "fresh_uniform", "probe_only", "probe_only_budget_plus",
