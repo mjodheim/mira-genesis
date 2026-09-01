@@ -89,16 +89,19 @@ PLAN_SCHEMA = "m117-stage1-plan-v1"
 # by the API's response shape rather than by any candidate's values: the defect nulled the metric
 # for 282/282 endpoints uniformly, so it could not have favoured or disfavoured any candidate, and
 # the corrected checkpoint field reproduces the checkpoint M116 independently recorded.
-APPARATUS_REVISION = 4
-SUPERSEDED_PLAN_SHA256 = "687b239471245b968c874cfac2854755ca2a16511bff45ae2a4daf8d231c1849"
+APPARATUS_REVISION = 5
+SUPERSEDED_PLAN_SHA256 = "47ff587ff36e994a498ae8d63b6cc185ded94a7b1c9f429290a754b3a1181564"
 REVISION_RATIONALE = (
-    "attempt 03 ran to its ceiling and selected no route, but no_fallback and "
-    "no_pipeline_intervention required router metadata fields this API emits on no request at "
-    "all -- absent on success as much as on failure -- so no route could satisfy them and the run "
-    "could not distinguish a route that fails from one that passes; both clauses now establish "
-    "the same fact from evidence the API does emit, a direct strategy with routing attempt 1 and "
-    "exactly one selected endpoint alongside allow_fallbacks false, and a reported field is still "
-    "judged on its contents; no threshold, ordering key, tie-break or budget bound changed"
+    "two data-flow defects, both derivable from the request body without any observation and both "
+    "present since attempt 01: derive_universe dropped supported_parameters, so declares_reasoning "
+    "read a field the candidate did not carry, always answered False, and the reasoning-off control "
+    "the plan promises was never sent on any request in any attempt while 58 observations recorded "
+    "reasoning tokens being consumed; and eligible rows agreeing on model, provider and reasoning "
+    "declaration produce an identical request, so 15 of 90 rows reserved budget for an experiment "
+    "already run -- attempt 03 spent its final slot re-probing a route it had probed at position 3. "
+    "Parameters are now carried and duplicates are marked rather than dropped, keeping every "
+    "eligible endpoint in the record. No threshold, ordering key, tie-break, budget bound or "
+    "qualification clause changed"
 )
 REPORT_SCHEMA = "m117-stage1-route-qualification-v1"
 LEDGER_SCHEMA = "m117-stage1-ledger-v1"
@@ -691,6 +694,21 @@ def execute() -> dict[str, Any]:
                   "profiles": profiles, "requests_spent": budget["global"]}
 
         for candidate in universe["ordered_candidates"]:
+            # A row the frozen order already reached as an identical request is not a second
+            # experiment. It is skipped explicitly and recorded, so the record shows the position
+            # was reached and why no budget was spent on it -- rather than the run appearing to
+            # have probed more distinct routes than it did.
+            if candidate.get("duplicate_of_order") is not None:
+                profiles.append({
+                    "schema": "m117-candidate-profile-v1",
+                    "model": candidate["model"], "provider": candidate["provider"],
+                    "order": candidate.get("order"),
+                    "skipped": "identical_request_to_order_%s" % candidate["duplicate_of_order"],
+                    "requests_spent": 0,
+                    "qualification": {"qualifies": False,
+                                      "failed_checks": ["candidate_not_probed_duplicate_request"]},
+                })
+                continue
             if (candidate["model"], candidate["provider"]) in done:
                 continue
             if any(p.get("qualification", {}).get("qualifies") for p in profiles):

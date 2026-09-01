@@ -159,19 +159,38 @@ def derive_universe(catalogue: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
             "exclusions": verdict["exclusions"],
             "metrics": verdict["metrics"],
             "max_completion_tokens": entry.get("max_completion_tokens"),
+            # Carried because the request depends on it. Without it `declares_reasoning` reads a
+            # field the candidate does not have, always answers False, and the reasoning-off
+            # control the plan promises is never sent -- as it never was in attempts 01 to 04.
+            "supported_parameters": entry.get("supported_parameters"),
         })
     eligible = [item for item in assessed if item["eligible"]]
     ordered = sorted(eligible, key=lambda item: rank_key(
         {**item, "latency_last_30m": {"p50": item["metrics"]["latency_last_30m_p50"]},
          "uptime_last_1d": item["metrics"]["uptime_last_1d"],
          "uptime_last_30m": item["metrics"]["uptime_last_30m"]}))
+    # The request this harness sends is a function of the model, the provider and whether the
+    # catalogue declares the reasoning control. Two eligible rows agreeing on all three are the
+    # same request, so probing both spends a finite budget twice on one experiment and reaches
+    # fewer distinct routes. They are marked rather than dropped, so the record still shows every
+    # eligible endpoint and the budget reserved for it. The earliest in the frozen order is kept,
+    # which is mechanical and cannot be steered.
+    seen: dict[tuple[Any, ...], int] = {}
     for position, item in enumerate(ordered, start=1):
         item["order"] = position
+        declared = item.get("supported_parameters")
+        signature = (item.get("model"), item.get("provider"),
+                     "reasoning" in declared if isinstance(declared, list) else False)
+        item["duplicate_of_order"] = seen.get(signature)
+        if signature not in seen:
+            seen[signature] = position
+    distinct = [item for item in ordered if item["duplicate_of_order"] is None]
     return {
         "schema": UNIVERSE_SCHEMA,
         "catalogue_entries": len(entries),
         "assessed": assessed,
         "eligible_count": len(eligible),
+        "distinct_request_count": len(distinct),
         "ordered_candidates": ordered,
         "ordering": list(RELIABILITY_ORDERING),
         "eligibility_bounds_budget_never_qualifies": True,

@@ -195,6 +195,7 @@ def test_attempt_01_artifacts_are_preserved_and_still_verify(name, key):
 PLAN_01 = "d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67"
 PLAN_02 = "5cc9c648f9881fd36c8d882c08b513514a5236cf29f7ecc107aad2867f112997"
 PLAN_03 = "687b239471245b968c874cfac2854755ca2a16511bff45ae2a4daf8d231c1849"
+PLAN_04 = "47ff587ff36e994a498ae8d63b6cc185ded94a7b1c9f429290a754b3a1181564"
 
 
 def test_each_aborted_attempt_is_bound_to_its_own_frozen_plan():
@@ -206,15 +207,16 @@ def test_each_aborted_attempt_is_bound_to_its_own_frozen_plan():
                               / "STAGE1_CANDIDATE_UNIVERSE.json").read_text(encoding="utf-8"))
     assert universe_02["plan_sha256"] == PLAN_02
     live = stage1.plan()["plan_sha256"]
-    assert live not in (PLAN_01, PLAN_02, PLAN_03)
-    assert stage1.SUPERSEDED_PLAN_SHA256 == PLAN_03
+    assert live not in (PLAN_01, PLAN_02, PLAN_03, PLAN_04)
+    assert stage1.SUPERSEDED_PLAN_SHA256 == PLAN_04
 
 
 def test_the_revision_is_recorded_in_the_plan_itself():
     frozen = stage1.plan()
-    assert frozen["apparatus_revision"] == stage1.APPARATUS_REVISION >= 4
+    assert frozen["apparatus_revision"] == stage1.APPARATUS_REVISION >= 5
     assert frozen["supersedes_plan_sha256"] == stage1.SUPERSEDED_PLAN_SHA256
-    assert "no threshold" in frozen["revision_rationale"]
+    assert "No threshold" in frozen["revision_rationale"] \
+        or "no threshold" in frozen["revision_rationale"]
 
 
 def test_a_universe_from_the_superseded_plan_cannot_be_probed(tmp_path, monkeypatch):
@@ -282,7 +284,7 @@ def test_attempt_02_belongs_to_the_superseded_plan():
     ledger = json.loads((ROOT / "experiments" / "M117" / "ATTEMPT_02_INSTRUMENT_ABORT"
                          / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
     assert ledger["plan_sha256"] == PLAN_02
-    assert stage1.plan()["plan_sha256"] not in (PLAN_01, PLAN_02, PLAN_03)
+    assert stage1.plan()["plan_sha256"] not in (PLAN_01, PLAN_02, PLAN_03, PLAN_04)
 
 
 # -------------------------------------------------------------------------------------------
@@ -383,3 +385,70 @@ def test_the_other_ten_clauses_are_untouched_by_revision_4():
                                          "latency_last_30m_p50_asc", "provider_name_asc")
     assert rule.GLOBAL_REQUEST_CEILING == 160
     assert stage1.STRESS_MIN_COMPLETION_TOKENS == 32000
+
+
+# -------------------------------------------------------------------------------------------
+# Revision 5: two data-flow defects present since attempt 01
+# -------------------------------------------------------------------------------------------
+
+def test_the_universe_carries_what_the_request_depends_on():
+    """Without this, declares_reasoning reads a field the candidate does not have."""
+    universe = rule.derive_universe([{
+        "model": "m/x", "provider": "P", "canonical_checkpoint": "m/x-2026",
+        "provider_found": True, "endpoint_available": True, "max_completion_tokens": 131072,
+        "supported_parameters": list(rule.REQUIRED_SUPPORTED_PARAMETERS) + ["reasoning"],
+        "uptime_last_1d": 100.0, "uptime_last_30m": 100.0, "latency_last_30m": {"p50": 100},
+    }])
+    candidate = universe["ordered_candidates"][0]
+    assert "reasoning" in candidate["supported_parameters"]
+    assert stage1.declares_reasoning(candidate) is True
+
+
+def test_the_reasoning_control_is_actually_sent_when_declared():
+    """Attempts 01-04 declared this rule and never executed it."""
+    declared = {"model": "m/x", "provider": "P",
+                "supported_parameters": ["response_format", "seed", "reasoning"]}
+    body = stage1._request_body(declared, "p", {"type": "object"}, "n", 1024)
+    assert body.get("reasoning") == {"effort": "none"}
+    silent = {"model": "m/x", "provider": "P", "supported_parameters": ["response_format"]}
+    assert "reasoning" not in stage1._request_body(silent, "p", {"type": "object"}, "n", 1024)
+
+
+def _entry(model, provider, p50, reasoning=True):
+    params = list(rule.REQUIRED_SUPPORTED_PARAMETERS) + (["reasoning"] if reasoning else [])
+    return {"model": model, "provider": provider, "canonical_checkpoint": model + "-2026",
+            "provider_found": True, "endpoint_available": True, "max_completion_tokens": 131072,
+            "supported_parameters": params, "uptime_last_1d": 100.0, "uptime_last_30m": 100.0,
+            "latency_last_30m": {"p50": p50}}
+
+
+def test_rows_producing_an_identical_request_are_marked_not_probed_twice():
+    universe = rule.derive_universe([
+        _entry("m/x", "P", 100), _entry("m/x", "P", 300), _entry("m/y", "Q", 200)])
+    ordered = universe["ordered_candidates"]
+    assert len(ordered) == 3
+    assert universe["distinct_request_count"] == 2
+    first, second = [c for c in ordered if c["model"] == "m/x"]
+    assert first["duplicate_of_order"] is None
+    assert second["duplicate_of_order"] == first["order"]
+
+
+def test_the_earliest_row_in_the_frozen_order_is_the_one_kept():
+    universe = rule.derive_universe([_entry("m/x", "P", 300), _entry("m/x", "P", 100)])
+    kept = [c for c in universe["ordered_candidates"] if c["duplicate_of_order"] is None]
+    assert len(kept) == 1
+    assert kept[0]["order"] == 1
+
+
+def test_a_differing_reasoning_declaration_is_a_different_request():
+    universe = rule.derive_universe([
+        _entry("m/x", "P", 100, reasoning=True), _entry("m/x", "P", 300, reasoning=False)])
+    assert universe["distinct_request_count"] == 2
+    assert all(c["duplicate_of_order"] is None for c in universe["ordered_candidates"])
+
+
+def test_no_eligible_row_is_dropped_from_the_record():
+    """Marked, never removed: the budget reserved for a position stays visible."""
+    universe = rule.derive_universe([_entry("m/x", "P", 100), _entry("m/x", "P", 300)])
+    assert universe["eligible_count"] == 2
+    assert len(universe["ordered_candidates"]) == 2
