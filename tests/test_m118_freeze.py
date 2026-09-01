@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from metamorphosis import m118_route as fixed
-from scripts import freeze_m118_system as freeze
+from scripts import build_m118_freeze as freeze
 
 ROOT = Path(__file__).resolve().parents[1]
 M115 = ROOT / "experiments" / "M115"

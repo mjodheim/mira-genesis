@@ -39,7 +39,7 @@ def test_every_deliberate_exclusion_carries_a_reason():
 
 
 def test_the_readiness_gate_and_freeze_builder_are_excluded_with_reasons():
-    for path in ("scripts/audit_m118_readiness.py", "scripts/freeze_m118_system.py"):
+    for path in ("scripts/audit_m118_readiness.py", "scripts/build_m118_freeze.py"):
         assert path in chronology.UNBOUND_BY_DESIGN, path
 
 

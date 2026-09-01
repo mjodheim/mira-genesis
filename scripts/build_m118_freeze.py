@@ -16,8 +16,8 @@ Only two things differ from M115, and both are instrumental rather than scientif
 
 Nothing here generates, seals, reveals or scores. It writes commitments and refuses.
 
-    python scripts/freeze_m118_system.py --plan     # what would be frozen, no writes
-    python scripts/freeze_m118_system.py --freeze   # write the commitments
+    python scripts/build_m118_freeze.py --plan     # what would be frozen, no writes
+    python scripts/build_m118_freeze.py --freeze   # write the commitments
 """
 
 from __future__ import annotations

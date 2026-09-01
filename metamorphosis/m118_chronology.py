@@ -251,7 +251,7 @@ UNBOUND_BY_DESIGN = dict(_m116.UNBOUND_BY_DESIGN)
 UNBOUND_BY_DESIGN.update({
     "scripts/audit_m118_readiness.py":
         "DEVELOPMENT-only readiness gate; runs before any carrier exists and scores nothing",
-    "scripts/freeze_m118_system.py":
+    "scripts/build_m118_freeze.py":
         "writes commitments before the generation; never reads a completion",
 })
 
