@@ -118,6 +118,26 @@ def budget_attribution(entries, rates: Mapping[str, Any], verdict: str) -> dict[
     }
 
 
+def assert_binds_the_committed_reveal(measurements: Mapping[str, Any],
+                                      reveal_record: Mapping[str, Any]) -> None:
+    """Is this measurement of the bank that was actually sealed, revealed and committed?
+
+    `check` can only ask whether the record *names* a reveal and a carrier bank; naming one is not
+    being one. The freeze commitment is no help here: it is derivable from the source and the
+    re-derivable plan, spec and nonce, so it is knowable before the generation and identical for
+    every measurement taken under this freeze. A measurement produced from a stale bank, a
+    rehearsal bank, or edited outcomes carries a perfectly valid freeze commitment.
+
+    What authenticates a one-shot artifact is the committed record of the reveal that produced it.
+    """
+    for key in ("reveal_record_sha256", "carrier_bank_sha256"):
+        if measurements.get(key) != reveal_record.get(key):
+            raise CheckError(
+                "the measurement does not match the committed reveal: %s is %r, the committed "
+                "reveal record says %r"
+                % (key, measurements.get(key), reveal_record.get(key)))
+
+
 def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str, Any]:
     _require(measurements.get("schema") == "m119-h64-measurements-v1",
              "not an M119 measurements record")
@@ -157,6 +177,9 @@ def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str,
     # The measurement must name what it ran under. Whether the named freeze is the live one is
     # checked where the live tree can be read, in `main`; here the record must at least carry the
     # binding, so a measurement that names nothing can never be scored.
+    # Presence and shape only. Whether the named reveal is the committed one is decided where the
+    # committed record can be read, by `assert_binds_the_committed_reveal`; naming a reveal is not
+    # being one, and this function must not be mistaken for that check.
     for key in ("freeze_commitment_sha256", "reveal_record_sha256", "carrier_bank_sha256"):
         _require(isinstance(measurements.get(key), str) and len(measurements[key]) == 64,
                  "the measurement does not bind %s" % key)
@@ -233,6 +256,10 @@ def main() -> int:
         measurements = json.loads(args.measurements.read_text(encoding="utf-8"))
         if measurements.get("freeze_commitment_sha256") != permission["freeze_commitment_sha256"]:
             raise CheckError("the measurement was taken under a different tested-system freeze")
+        # The committed reveal, read from the repository rather than from the record being scored.
+        reveal_record = json.loads(
+            (ROOT / chronology.REVEAL_RECORD).read_text(encoding="utf-8"))
+        assert_binds_the_committed_reveal(measurements, reveal_record)
         report = check(measurements, json.loads(args.plan.read_text(encoding="utf-8")))
     except (CheckError, chronology.ChronologyError, endpoint.EndpointError, ValueError) as exc:
         print("REFUSED: %s" % exc)

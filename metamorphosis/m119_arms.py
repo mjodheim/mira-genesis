@@ -19,6 +19,13 @@ from a committed seed and the demand's opaque identity, using rejection sampling
 modulo bias. For every row and every component the probability is exactly one third, which makes the
 baseline symmetric under relabelling the components rather than merely balanced on average.
 
+The cascade built from that draw expresses it exactly, and the module measures that rather than
+assuming it: `symmetry_evidence` runs the producer's own attributor over the built rules and counts
+the rows where the result differs from the draw. It has to, because a first draft of this module
+drew the fallthrough component from the seed as well -- the attributor's fallthrough is hardwired,
+so 22.6% of rows were attributed to a component the draw had not chosen, and the symmetry test
+passed anyway because it measured the intention.
+
 The draw consults the seed, the opaque carrier reference and the pair digest. It never consults
 carrier semantics, ground truth, or any M117/M118 outcome, and it is fixed before any H64 data
 exists.
@@ -111,26 +118,41 @@ def fresh_assignment(carrier_ref: str, pair_digest: str,
     return [_uniform_component(seed, carrier_ref, pair_digest, row) for row in range(ROW_COUNT)]
 
 
+# The attributor's fallthrough is hardwired: `m109_runtime.attribute` returns COMPONENT_OPERATORS
+# when no rule fires, and no rule can change that. The component expressed by omission is therefore
+# not a free choice, and an earlier draft that drew it from the seed did not merely fail to
+# randomise it -- it silently corrupted the comparator. Two thirds of the time the drawn
+# fallthrough was not the hardwired one, so every row assigned to it was attributed to the operator
+# axis instead: 22.6% of rows came out as a component the draw had not chosen, over-representing
+# one component and under-representing the other two. That is exactly M118's defect in a new shape,
+# and it passed a symmetry test that measured the *intention* rather than the built cascade.
+FALLTHROUGH_COMPONENT = lineage.COMPONENT_OPERATORS
+RULED_COMPONENTS = tuple(c for c in COMPONENTS if c != FALLTHROUGH_COMPONENT)
+
+
 def fresh_rules(carrier_ref: str, pair_digest: str,
                 seed: str = FRESH_SEED) -> tuple[list[dict[str, Any]], str]:
     """FRESH as an ordinary cascade, built by the producer's own constructor.
 
-    The lineage allows at most two rules, so two components get a rule and the third is reached by
-    the attributor's hardwired fallthrough. Which component is left to the fallthrough is itself
-    drawn from the seed, so no component is systematically the one expressed by omission.
+    The lineage allows at most two rules, so exactly two components get a rule and the third is
+    reached by the attributor's hardwired fallthrough. Which one that is, is decided by the
+    attributor and not by this module, so the rules are built for the other two. The result is that
+    the cascade attributes *exactly* the drawn assignment on every row: the two ruled components
+    because their rule fires, the third because nothing fires and the hardwired axis is that
+    component.
+
+    So the mechanism is asymmetric -- one component is always the one expressed by omission -- and
+    the attribution is not: every component is named on a third of rows, which is the property the
+    comparator has to have.
     """
     assignment = fresh_assignment(carrier_ref, pair_digest, seed)
-    order = sorted(COMPONENTS, key=lambda component: hashlib.sha256(
-        ("%s|%s|%s|fallthrough|%s" % (seed, carrier_ref, pair_digest, component)
-         ).encode("ascii")).hexdigest())
-    ruled, fallthrough = order[:2], order[2]
     cascade = []
-    for generation, component in enumerate(ruled, start=1):
+    for generation, component in enumerate(RULED_COMPONENTS, start=1):
         table = [assignment[row] == component for row in range(ROW_COUNT)]
         body = {"node": "UNIFORM_PER_DEMAND", "component": component,
                 "derivation": "committed seed, opaque carrier reference and pair digest only"}
         cascade.append(lineage.attribution_rule(body, table, component, generation))
-    return cascade, fallthrough
+    return cascade, FALLTHROUGH_COMPONENT
 
 
 def build_arms(cascade_rules: Sequence[Mapping[str, Any]], policy: Mapping[str, Any],
@@ -153,12 +175,28 @@ def build_arms(cascade_rules: Sequence[Mapping[str, Any]], policy: Mapping[str, 
     }
 
 
+def attributed_assignment(carrier_ref: str, pair_digest: str,
+                          seed: str = FRESH_SEED) -> list[str]:
+    """What the built FRESH cascade *actually attributes* on each row.
+
+    Measured through the producer's own attributor, not read off the draw. Measuring the draw is
+    what let a corrupted comparator pass: the intention was uniform and the cascade that expressed
+    it was not.
+    """
+    rules, _ = fresh_rules(carrier_ref, pair_digest, seed)
+    return [lineage.attribute({"rules": rules}, {"row_index": row})["component"]
+            for row in range(ROW_COUNT)]
+
+
 def symmetry_evidence(samples: int = 6000, seed: str = FRESH_SEED) -> dict[str, Any]:
     """Is FRESH uniform over the components, per row, in fact and not only in intention?"""
     counts = {component: 0 for component in COMPONENTS}
     per_row = {row: {component: 0 for component in COMPONENTS} for row in range(ROW_COUNT)}
+    infidelity = 0
     for index in range(samples):
-        assignment = fresh_assignment("carrier-%d" % index, "pair-%d" % index, seed)
+        drawn = fresh_assignment("carrier-%d" % index, "pair-%d" % index, seed)
+        assignment = attributed_assignment("carrier-%d" % index, "pair-%d" % index, seed)
+        infidelity += sum(1 for a, b in zip(drawn, assignment) if a != b)
         for row, component in enumerate(assignment):
             counts[component] += 1
             per_row[row][component] += 1
@@ -170,9 +208,13 @@ def symmetry_evidence(samples: int = 6000, seed: str = FRESH_SEED) -> dict[str, 
         "component_shares": shares,
         "largest_deviation_from_one_third": worst,
         "uniform_within_one_percent": worst < 0.01,
+        "measured_on_what_the_cascade_attributes_not_on_the_draw": True,
+        "rows_where_the_cascade_disagrees_with_the_draw": infidelity,
+        "the_cascade_expresses_the_draw_exactly": infidelity == 0,
         "carries_no_acquired_rule": True,
         "is_constant": len({c for a in
-                            [fresh_assignment("c-%d" % i, "p-%d" % i, seed) for i in range(50)]
+                            [attributed_assignment("c-%d" % i, "p-%d" % i, seed)
+                             for i in range(50)]
                             for c in a}) == 1,
         "draw_uses_rejection_sampling_so_there_is_no_modulo_bias": True,
     }

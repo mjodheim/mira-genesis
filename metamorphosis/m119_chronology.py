@@ -81,6 +81,10 @@ STAGES: dict[str, tuple[Path, ...]] = {
     + (TESTED_SYSTEM_FREEZE,),
     "admission": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE,),
     "sealing": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER),
+    # The authorizer writes the authorization, so it cannot require it: it requires everything the
+    # seal produced and nothing of its own.
+    "authorization": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
+                                            PUBLIC_BANK_COMMITMENT),
     "reveal": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
                                      PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION),
     "scoring": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
@@ -454,26 +458,37 @@ def validate_freeze(record: Mapping[str, Any], root: Path | None = None) -> None
                               % ", ".join(moved))
 
 
-DOWNSTREAM_PHASES = ("admission", "sealing", "reveal", "scoring", "replay")
+DOWNSTREAM_PHASES = ("admission", "sealing", "authorization", "reveal", "scoring", "replay")
 
 
 def assert_frozen_system_unchanged(root: Path | None = None, *, phase: str) -> dict[str, Any]:
-    """Re-prove, at each phase after the generation, that the tested system is still the frozen one.
+    """Re-prove, at each phase after the generation, that the tested system is still the frozen one
+    **and** that everything the earlier phases produced is committed at HEAD.
 
     The pre-generation gate is necessary and not sufficient: once a completion exists, nothing in
     that earlier check stops someone editing the evaluator, the demand derivation or the scoring
     before the result is computed. That is the same contamination the freeze exists to prevent,
     arriving one step later.
+
+    Checking the freeze alone is also not sufficient, and an earlier draft did exactly that. The
+    freeze commitment is derivable from the source and the re-derivable plan, spec and nonce, so it
+    is knowable before the generation happens and contains no carrier content: proving only that it
+    is unchanged proves nothing about *which* sealed bank, reveal or measurement is in hand. The
+    delivery ledger, the sealed bank, the reveal and the measurement are one-shot experimental data
+    with no re-derivation check, so committed-at-HEAD is the only authentication they can have --
+    which is why every downstream phase now runs its stage's predecessor list too.
     """
     if phase not in DOWNSTREAM_PHASES:
         raise ChronologyError("unknown downstream phase %r" % phase)
     base = _root(root)
-    assert_committed_at_head(TESTED_SYSTEM_FREEZE, base)
+    permission = assert_stage_permitted(phase, base)
     freeze = json.loads((base / TESTED_SYSTEM_FREEZE).read_text(encoding="utf-8"))
     validate_freeze(freeze, base)
     return {
         "schema": "m119-phase-permission-v1",
         "phase": phase, "permitted": True,
+        "committed_predecessors": permission["committed_predecessors"],
         "freeze_commitment_sha256": freeze["freeze_commitment_sha256"],
         "tested_system_unchanged_since_freeze": True,
+        "every_artifact_the_earlier_phases_produced_is_committed": True,
     }

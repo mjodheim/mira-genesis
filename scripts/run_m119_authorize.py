@@ -40,7 +40,7 @@ def authorize(*, authorized_by: str) -> dict[str, Any]:
         raise AuthorizationError("a reveal authorization already exists; it is issued once")
     if not SEALED_PATH.is_file() or not COMMITMENT_PATH.is_file():
         raise AuthorizationError("there is no sealed bank to authorize a reveal of")
-    permission = chronology.assert_frozen_system_unchanged(ROOT, phase="reveal")
+    permission = chronology.assert_frozen_system_unchanged(ROOT, phase="authorization")
     commitment = json.loads(COMMITMENT_PATH.read_text(encoding="utf-8"))
     ciphertext_sha256 = sha256_hex(SEALED_PATH.read_bytes())
     if ciphertext_sha256 != commitment["ciphertext_sha256"]:

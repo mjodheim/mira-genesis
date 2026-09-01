@@ -22,6 +22,7 @@ import pytest
 from metamorphosis import carrier_host as host
 from metamorphosis import m113_carrier_devkit as devkit
 from metamorphosis import m113_evaluator as evaluator
+from metamorphosis import m109_runtime as lineage
 from metamorphosis import m119_arms as arms
 from metamorphosis import m119_bank as bank
 from metamorphosis import m119_chronology as chronology
@@ -42,13 +43,35 @@ from scripts import check_m119_result as checker  # noqa: E402
 # 1-3. The comparator
 # ---------------------------------------------------------------------------------------------
 
+def test_the_fresh_cascade_attributes_exactly_what_the_draw_chose() -> None:
+    """The comparator that matters is the one the attributor runs, not the one intended.
+
+    A first draft drew the fallthrough component from the seed. The attributor's fallthrough is
+    hardwired, so on two thirds of demands every row assigned to the drawn fallthrough came out as
+    the operator axis instead -- 22.6% of rows attributed to a component the draw had not chosen.
+    The symmetry test of the day passed, because it measured the draw.
+    """
+    disagreements = 0
+    rows = 0
+    for index in range(400):
+        drawn = arms.fresh_assignment("c-%d" % index, "p-%d" % index)
+        attributed = arms.attributed_assignment("c-%d" % index, "p-%d" % index)
+        disagreements += sum(1 for a, b in zip(drawn, attributed) if a != b)
+        rows += len(drawn)
+    assert rows > 0
+    assert disagreements == 0, (
+        "the built cascade attributes a different component from the one drawn on %d of %d rows"
+        % (disagreements, rows))
+
+
 def test_fresh_is_uniform_over_components_on_every_row() -> None:
     """M118's comparator short-changed one component in 400 of 400 seeds. This one cannot."""
     counts = {row: {component: 0 for component in arms.COMPONENTS}
               for row in range(arms.ROW_COUNT)}
     samples = 4000
     for index in range(samples):
-        assignment = arms.fresh_assignment("carrier-%d" % index, "pair-%d" % index)
+        # Measured on what the cascade attributes, never on what the draw intended.
+        assignment = arms.attributed_assignment("carrier-%d" % index, "pair-%d" % index)
         for row, component in enumerate(assignment):
             counts[row][component] += 1
     for row, per_component in counts.items():
@@ -60,7 +83,7 @@ def test_fresh_is_uniform_over_components_on_every_row() -> None:
 
 def test_fresh_varies_by_demand_and_is_never_a_constant_assignment() -> None:
     """A comparator that names the same component everywhere is a degenerate baseline, not T0."""
-    assignments = {tuple(arms.fresh_assignment("c-%d" % i, "p-%d" % i)) for i in range(200)}
+    assignments = {tuple(arms.attributed_assignment("c-%d" % i, "p-%d" % i)) for i in range(200)}
     assert len(assignments) > 100, "the draw barely varies across demands"
     constant = [a for a in assignments if len(set(a)) == 1]
     assert len(constant) < len(assignments) / 4, "too many assignments name a single component"
@@ -69,7 +92,10 @@ def test_fresh_varies_by_demand_and_is_never_a_constant_assignment() -> None:
 def test_fresh_never_reproduces_an_acquired_rule_body() -> None:
     """FRESH is a fresh cascade, not a copy of the descendant's with the labels changed."""
     rules, fallthrough = arms.fresh_rules("carrier-x", "pair-x")
-    assert fallthrough in arms.COMPONENTS
+    # The attributor decides the fallthrough, not this module: rules are built for the other two.
+    assert fallthrough == arms.FALLTHROUGH_COMPONENT == lineage.COMPONENT_OPERATORS
+    assert [rule["selects_component_when_true"] for rule in rules] == list(arms.RULED_COMPONENTS)
+    assert arms.FALLTHROUGH_COMPONENT not in arms.RULED_COMPONENTS
     assert len(rules) == 2
     for rule in rules:
         assert rule["body"]["node"] == "UNIFORM_PER_DEMAND"
@@ -698,3 +724,77 @@ def test_the_carrier_loader_refuses_a_bare_list_and_a_foreign_nonce() -> None:
         assert len(qualification.load_carriers(written, NONCE)) == 2
     finally:
         written.unlink(missing_ok=True)
+
+
+def test_the_symmetry_evidence_measures_the_cascade_and_reports_infidelity() -> None:
+    evidence = arms.symmetry_evidence(600)
+    assert evidence["measured_on_what_the_cascade_attributes_not_on_the_draw"] is True
+    assert evidence["rows_where_the_cascade_disagrees_with_the_draw"] == 0
+    assert evidence["the_cascade_expresses_the_draw_exactly"] is True
+    assert evidence["uniform_within_one_percent"] is True
+    assert evidence["is_constant"] is False
+
+
+# ---------------------------------------------------------------------------------------------
+# 27-29. The measurement must be OF the bank that was sealed, revealed and committed
+# ---------------------------------------------------------------------------------------------
+
+def test_a_measurement_that_names_the_wrong_reveal_is_refused(plan) -> None:
+    """Naming a reveal is not being one.
+
+    The freeze commitment authenticates nothing here: it is derivable from source and the
+    re-derivable plan, spec and nonce, so it is identical for every measurement taken under this
+    freeze, including one produced from a stale bank or edited outcomes.
+    """
+    committed = {"reveal_record_sha256": "e" * 64, "carrier_bank_sha256": "c" * 64}
+    entries = [_entry(i, full_succeeds=True, fresh_succeeds=False) for i in range(6)]
+    honest = _measurements(entries, plan=plan)
+    checker.assert_binds_the_committed_reveal(honest, committed)
+
+    for key in ("reveal_record_sha256", "carrier_bank_sha256"):
+        stale = _measurements(entries, plan=plan, **{key: "9" * 64})
+        # It is well-formed, self-consistent, and passes every check `check` can make.
+        checker.check(stale, plan)
+        with pytest.raises(checker.CheckError, match="does not match the committed reveal"):
+            checker.assert_binds_the_committed_reveal(stale, committed)
+
+
+def test_every_downstream_phase_requires_its_predecessors_committed() -> None:
+    """The freeze alone proves nothing about which sealed bank or reveal is in hand."""
+    for phase in ("sealing", "authorization", "reveal", "scoring", "replay"):
+        assert phase in chronology.STAGES, "%s has no predecessor list" % phase
+    # Each phase requires what the phase before it wrote, and never its own output.
+    assert chronology.SEALED_BANK not in chronology.STAGES["sealing"]
+    assert chronology.SEALED_BANK in chronology.STAGES["authorization"]
+    assert chronology.REVEAL_AUTHORIZATION not in chronology.STAGES["authorization"]
+    assert chronology.REVEAL_AUTHORIZATION in chronology.STAGES["reveal"]
+    assert chronology.REVEAL_RECORD not in chronology.STAGES["reveal"]
+    assert chronology.REVEAL_RECORD in chronology.STAGES["scoring"]
+    assert chronology.CARRIER_BANK in chronology.STAGES["scoring"]
+    assert chronology.MEASUREMENTS not in chronology.STAGES["scoring"]
+    assert chronology.MEASUREMENTS in chronology.STAGES["replay"]
+
+
+def test_a_downstream_phase_refuses_an_uncommitted_predecessor(tmp_path: Path) -> None:
+    """A delivery ledger sitting uncommitted on disk must not be sealable.
+
+    The freeze itself is committed here, so the only thing that can fail is the stage's own
+    predecessor list. Reverting the downstream check to "the freeze is committed and unchanged"
+    lets this through.
+    """
+    subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "config", "user.email", "t@example.invalid"],
+                   check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "config", "user.name", "t"], check=True)
+    (tmp_path / chronology.DIRECTORY).mkdir(parents=True)
+    committed = [a for a in chronology.STAGES["sealing"] if a != chronology.DELIVERY_LEDGER]
+    for artifact in committed:
+        (tmp_path / artifact).write_text("{}\n")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "-A"], check=True)
+    subprocess.run(["git", "-C", str(tmp_path), "commit", "-q", "-m", "x"], check=True)
+    # Everything the stage needs is committed except the ledger, which is only on disk.
+    (tmp_path / chronology.DELIVERY_LEDGER).write_text("{}\n")
+    with pytest.raises(chronology.ChronologyError) as caught:
+        chronology.assert_frozen_system_unchanged(tmp_path, phase="sealing")
+    assert "DELIVERY_LEDGER" in str(caught.value)
+    assert "not committed at HEAD" in str(caught.value)
