@@ -231,6 +231,14 @@ INTERPRETATION_ROOTS = tuple(dict.fromkeys(
     _m116.INTERPRETATION_ROOTS + (
         "metamorphosis/m118_route.py",
         "metamorphosis/m118_chronology.py",
+        # The H63 measurement itself. These decide what a sealed completion means, so leaving them
+        # out would let the closure report "fully bound" while the code that turns the completion
+        # into a verdict sat outside the freeze entirely.
+        "metamorphosis/m118_arms.py",
+        "metamorphosis/m118_endpoint.py",
+        "metamorphosis/m118_decomposition.py",
+        "scripts/run_m118_qualification.py",
+        "scripts/check_m118_result.py",
     )
 ))
 
@@ -239,6 +247,11 @@ TESTED_SYSTEM_PATHS = tuple(dict.fromkeys(
         "metamorphosis/m116_chronology.py",
         "metamorphosis/m118_route.py",
         "metamorphosis/m118_chronology.py",
+        "metamorphosis/m118_arms.py",
+        "metamorphosis/m118_endpoint.py",
+        "metamorphosis/m118_decomposition.py",
+        "scripts/run_m118_qualification.py",
+        "scripts/check_m118_result.py",
     )
 ))
 
@@ -281,6 +294,27 @@ def interpretation_closure(root: Path | None = None) -> set[str]:
     return seen
 
 
+def undeclared_measurement_entry_points(root: Path | None = None) -> list[str]:
+    """H63 measurement entry points on disk that no root declares.
+
+    `interpretation_closure` walks transitively *downward* from a hardcoded root tuple, so a
+    first-party module that nothing imports is never discovered and `unbound_interpretation_modules`
+    cannot name it. An entry point is precisely such a module: the runner and the checker are
+    invoked from the command line and imported by nothing on the scientific path. Without this
+    guard the freeze could report "fully bound" while the code that turns a sealed completion into
+    a verdict sat outside it.
+    """
+    base = _root(root)
+    declared = set(INTERPRETATION_ROOTS)
+    found = []
+    for pattern in ("run_m118_*.py", "check_m118_*.py"):
+        for path in sorted((base / "scripts").glob(pattern)):
+            relative = "scripts/%s" % path.name
+            if relative not in declared:
+                found.append(relative)
+    return found
+
+
 def unbound_interpretation_modules(root: Path | None = None) -> list[str]:
     """Modules that can change what a completion means and are not bound by the freeze."""
     return sorted(
@@ -291,6 +325,7 @@ def inventory(root: Path | None = None) -> dict[str, Any]:
     """What the freeze binds, and what it deliberately does not."""
     closure = sorted(interpretation_closure(root))
     unbound = unbound_interpretation_modules(root)
+    undeclared = undeclared_measurement_entry_points(root)
     record = {
         "schema": INVENTORY_SCHEMA,
         "milestone": MILESTONE, "hypothesis": HYPOTHESIS,
@@ -299,7 +334,8 @@ def inventory(root: Path | None = None) -> dict[str, Any]:
         "tested_system_paths": list(TESTED_SYSTEM_PATHS),
         "unbound_by_design": dict(sorted(UNBOUND_BY_DESIGN.items())),
         "unbound_interpretation_modules": unbound,
-        "closure_is_fully_bound": not unbound,
+        "undeclared_measurement_entry_points": undeclared,
+        "closure_is_fully_bound": not unbound and not undeclared,
         "inventory_sha256": "",
     }
     record["inventory_sha256"] = sha256_hex(
@@ -343,6 +379,11 @@ def build_freeze(root: Path | None = None) -> dict[str, Any]:
     """The freeze record. Refuses while any interpreting module is unbound."""
     base = _root(root)
     stock = inventory(base)
+    if stock["undeclared_measurement_entry_points"]:
+        raise ChronologyError(
+            "an H63 measurement entry point is on disk but declared by no interpretation root, so "
+            "the closure cannot see it: %s"
+            % ", ".join(stock["undeclared_measurement_entry_points"]))
     if not stock["closure_is_fully_bound"]:
         raise ChronologyError(
             "the tested-system freeze would leave interpreting modules unbound: %s"

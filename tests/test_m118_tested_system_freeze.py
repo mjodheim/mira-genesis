@@ -144,3 +144,46 @@ def test_a_phase_requires_the_freeze_committed_at_head(tmp_path):
     subprocess.run(["git", "init", "-q", str(tmp_path)], check=True)
     with pytest.raises(ChronologyError):
         chronology.assert_frozen_system_unchanged(tmp_path, phase="scoring")
+
+
+# -------------------------------------------------------------------------------------------
+# The H63 measurement code is inside the freeze, and a new entry point cannot escape it
+# -------------------------------------------------------------------------------------------
+
+@pytest.mark.parametrize("module", [
+    "metamorphosis/m118_arms.py",
+    "metamorphosis/m118_endpoint.py",
+    "metamorphosis/m118_decomposition.py",
+    "scripts/run_m118_qualification.py",
+    "scripts/check_m118_result.py",
+])
+def test_the_h63_measurement_is_bound(module):
+    """These decide what a sealed completion means; outside the freeze they could be rewritten."""
+    assert module in chronology.INTERPRETATION_ROOTS, module
+    assert module in chronology.TESTED_SYSTEM_PATHS, module
+
+
+def test_no_measurement_entry_point_is_undeclared():
+    assert chronology.undeclared_measurement_entry_points(ROOT) == []
+
+
+def test_an_entry_point_nothing_imports_is_still_caught(tmp_path, monkeypatch):
+    """A closure walks downward from roots, so an unimported entry point is invisible to it."""
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    (scripts / "run_m118_sneaky.py").write_text("# scores nothing, honest\n", encoding="utf-8")
+    found = chronology.undeclared_measurement_entry_points(tmp_path)
+    assert found == ["scripts/run_m118_sneaky.py"]
+
+
+def test_the_freeze_refuses_while_an_entry_point_is_undeclared(tmp_path, monkeypatch):
+    monkeypatch.setattr(chronology, "undeclared_measurement_entry_points",
+                        lambda root=None: ["scripts/run_m118_sneaky.py"])
+    with pytest.raises(ChronologyError, match="declared by no interpretation root"):
+        chronology.build_freeze(ROOT)
+
+
+def test_the_closure_reaches_the_endpoint_and_the_arms():
+    closure = chronology.interpretation_closure(ROOT)
+    assert "metamorphosis/m118_endpoint.py" in closure
+    assert "metamorphosis/m118_arms.py" in closure
