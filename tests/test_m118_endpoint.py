@@ -234,9 +234,11 @@ def test_negative_counts_fail_closed():
 def test_the_fresh_comparator_is_information_free_and_non_constant():
     report = arms.is_information_free(arms.fresh_uniform_rules())
     assert report["carries_no_acquired_rule"] is True
-    assert report["every_generation_is_zero"] is True
-    assert report["partitions_every_row_exactly_once"] is True
+    assert report["every_rule_is_seed_derived"] is True
+    assert report["no_row_is_claimed_twice"] is True
+    assert report["effective_assignment_is_total"] is True
     assert report["is_non_constant"] is True
+    assert report["reaches_every_component"] is True
     assert len(report["components_named"]) == 3
 
 
@@ -264,3 +266,18 @@ def test_beating_t0_but_losing_to_fresh_uniform_is_negative():
     verdict = endpoint.decide(descendant, fresh_uniform,
                               _measures(3, 0, 0, 0, 0, 1.0), _measures(6, 0, 0, 0, 0, 1.0))
     assert verdict["verdict"] == "negative"
+
+
+def test_the_endpoint_covers_exactly_the_evaluators_demand_classes():
+    """This is the test that would have caught the class-name mismatch.
+
+    The endpoint once spelled the unreachable class "structurally_unreachable" while the evaluator
+    calls it "unreachable". Every unreachable demand would have raised mid-run, and the fixtures
+    above did not notice because they used the endpoint's own constant.
+    """
+    from metamorphosis import m113_evaluator as ev
+    assert set(endpoint.PRIMARY_SUCCESS_KEY) == set(ev.DEMAND_CLASSES)
+    assert endpoint.CLASS_REACHABLE is ev.CLASS_REACHABLE
+    assert endpoint.CLASS_UNREACHABLE is ev.CLASS_UNREACHABLE
+    for demand_class in ev.DEMAND_CLASSES:
+        endpoint.primary_success(demand_class, {})

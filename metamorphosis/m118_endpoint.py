@@ -31,10 +31,16 @@ from __future__ import annotations
 import math
 from typing import Any, Mapping, Sequence
 
+from metamorphosis import m113_evaluator as evaluator
+
 ENDPOINT_VERSION = "m118-primary-endpoint-v1"
 
-CLASS_REACHABLE = "reachable"
-CLASS_UNREACHABLE = "structurally_unreachable"
+# Imported from the evaluator rather than restated. Writing these strings out by hand once already
+# produced a silent mismatch -- "structurally_unreachable" against the evaluator's "unreachable" --
+# which would have made every unreachable demand raise instead of scoring. A name the evaluator owns
+# is read from the evaluator, so a drift is an import error rather than a wrong verdict.
+CLASS_REACHABLE = evaluator.CLASS_REACHABLE
+CLASS_UNREACHABLE = evaluator.CLASS_UNREACHABLE
 
 # Which scored outcome counts as scientific success, per demand class.
 PRIMARY_SUCCESS_KEY = {

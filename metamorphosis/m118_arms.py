@@ -41,6 +41,12 @@ ARMS_VERSION = "m118-arms-v1"
 FRESH_UNIFORM_SEED = "m118-fresh-uniform-v1:6f1c2a9d4b7e30518c26adf95b04e7d3"
 
 COMPONENTS = tuple(lineage.COMPONENTS)
+
+# `m109_runtime.attribute` falls through to this component when no rule fires, so it is the
+# one the comparator expresses *by* the fallthrough rather than by a rule. T0 reaches it on
+# every row; fresh_uniform reaches it only on the rows the seed assigns to it.
+FALLTHROUGH_COMPONENT = "operator_table"
+FRESH_UNIFORM_RULE_COMPONENTS = tuple(c for c in COMPONENTS if c != FALLTHROUGH_COMPONENT)
 ROW_COUNT = len(runtime.FEATURE_ROWS)
 
 # The primary comparison. Named here so no analysis can quietly re-point it at whichever baseline
@@ -74,24 +80,29 @@ def fresh_uniform_assignment(seed: str = FRESH_UNIFORM_SEED) -> list[str]:
 
 
 def fresh_uniform_rules(seed: str = FRESH_UNIFORM_SEED) -> list[dict[str, Any]]:
-    """The comparator as an ordinary rule cascade, so the inherited attributor runs unchanged.
+    """The comparator as an ordinary rule cascade, built by the producer's own constructor.
 
-    One rule per component, with disjoint truth tables that partition every feature row. The
-    partition is total, so the cascade never falls through to the hardwired constant -- which is
-    exactly what makes this comparator non-degenerate where T0 is not.
+    The lineage permits at most `MAX_MACHINERY_GENERATIONS` (2) rules, so the cascade carries two
+    and the hardwired fallthrough supplies the third component. That is not a compromise: it makes
+    the partition total across all three components using exactly the mechanism the inherited
+    attributor already has, and it is what distinguishes this comparator from T0 -- T0 reaches the
+    fallthrough on *every* row, this one reaches it on a seed-chosen third of them.
+
+    The rules are constructed by `m109_runtime.attribution_rule`, so the payload is well-formed and
+    `decode_rule` accepts it. The body records what the rule is rather than imitating an acquired
+    expression: nothing evaluates it, and a fabricated expression tree would misrepresent a rule
+    that was never learned.
     """
     assignment = fresh_uniform_assignment(seed)
-    rules = []
-    for index, component in enumerate(COMPONENTS):
-        rules.append({
-            "rule_id": "fresh_uniform_%s" % component,
-            "generation": 0,
-            "selects_component_when_true": component,
-            "truth_table": [assignment[row] == component for row in range(ROW_COUNT)],
-            "acquired": False,
-            "derived_from": "precommitted seed and feature-row index only",
-        })
-    return rules
+    cascade = []
+    # Generation order is fixed, so the cascade is deterministic. The fallthrough component is
+    # deliberately last and is never given a rule.
+    for generation, component in enumerate(FRESH_UNIFORM_RULE_COMPONENTS, start=1):
+        table = [assignment[row] == component for row in range(ROW_COUNT)]
+        body = {"node": "SEEDED_PARTITION", "seed": seed, "component": component,
+                "derivation": "precommitted seed and feature-row index only"}
+        cascade.append(lineage.attribution_rule(body, table, component, generation))
+    return cascade
 
 
 def fresh_uniform_state(seed: str = FRESH_UNIFORM_SEED) -> dict[str, Any]:
@@ -100,25 +111,33 @@ def fresh_uniform_state(seed: str = FRESH_UNIFORM_SEED) -> dict[str, Any]:
 
 def is_information_free(rules: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     """Does the comparator carry anything it could only have learned?"""
-    acquired = [r["rule_id"] for r in rules if r.get("acquired") is not False]
-    generations = sorted({int(r.get("generation", 0)) for r in rules})
+    acquired = [r for r in rules if r["body"].get("node") != "SEEDED_PARTITION"]
     covered = [0] * ROW_COUNT
     for rule in rules:
         for row, fires in enumerate(rule["truth_table"]):
             if fires:
                 covered[row] += 1
-    named = {r["selects_component_when_true"] for r in rules}
+    # Rows no rule claims fall through to the hardwired component, so the effective assignment is
+    # the rules plus that fallthrough.
+    effective = []
+    for row in range(ROW_COUNT):
+        named = [r["selects_component_when_true"] for r in rules if r["truth_table"][row]]
+        effective.append(named[0] if named else FALLTHROUGH_COMPONENT)
+    counts = {component: effective.count(component) for component in COMPONENTS}
     return {
         "carries_no_acquired_rule": not acquired,
-        "every_generation_is_zero": generations == [0],
-        "partitions_every_row_exactly_once": all(count == 1 for count in covered),
-        "is_non_constant": len(named) > 1,
-        "components_named": sorted(named),
-        "rows_per_component": {
-            component: sum(1 for r in rules if r["selects_component_when_true"] == component
-                           for row, fires in enumerate(r["truth_table"]) if fires)
-            for component in COMPONENTS
-        },
+        "every_rule_is_seed_derived": all(
+            r["body"].get("derivation") == "precommitted seed and feature-row index only"
+            for r in rules),
+        "no_row_is_claimed_twice": all(count <= 1 for count in covered),
+        "effective_assignment_is_total": len(effective) == ROW_COUNT,
+        "is_non_constant": len(set(effective)) > 1,
+        "reaches_every_component": set(effective) == set(COMPONENTS),
+        "components_named": sorted(set(effective)),
+        "rows_per_component": counts,
+        "rows_reaching_the_fallthrough": counts[FALLTHROUGH_COMPONENT],
+        "unlike_t0_which_reaches_the_fallthrough_on_every_row": counts[
+            FALLTHROUGH_COMPONENT] < ROW_COUNT,
     }
 
 
