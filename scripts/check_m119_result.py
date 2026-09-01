@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 
 from metamorphosis import m113_evaluator as evaluator  # noqa: E402
 from metamorphosis import m119_arms as arms  # noqa: E402
+from metamorphosis import m119_chronology as chronology  # noqa: E402
 from metamorphosis import m119_decomposition as decomposition  # noqa: E402
 from metamorphosis import m119_endpoint as endpoint  # noqa: E402
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
@@ -153,6 +154,13 @@ def check(measurements: Mapping[str, Any], plan: Mapping[str, Any]) -> dict[str,
     _require((measurements.get("corruption") or {}).get("failed_closed") is True,
              "a corrupted acquired rule was not refused")
 
+    # The measurement must name what it ran under. Whether the named freeze is the live one is
+    # checked where the live tree can be read, in `main`; here the record must at least carry the
+    # binding, so a measurement that names nothing can never be scored.
+    for key in ("freeze_commitment_sha256", "reveal_record_sha256", "carrier_bank_sha256"):
+        _require(isinstance(measurements.get(key), str) and len(measurements[key]) == 64,
+                 "the measurement does not bind %s" % key)
+
     entries = measurements.get("entries") or []
     outcomes = recompute_outcomes(entries)
     measures = recompute_measures(entries)
@@ -218,8 +226,14 @@ def main() -> int:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
-    report = check(json.loads(args.measurements.read_text(encoding="utf-8")),
-                   json.loads(args.plan.read_text(encoding="utf-8")))
+    # An independent replay is only independent of the run, not of the freeze: the tested system
+    # must still be the frozen one at the moment the verdict is computed.
+    permission = chronology.assert_frozen_system_unchanged(ROOT, phase="replay")
+    measurements = json.loads(args.measurements.read_text(encoding="utf-8"))
+    if measurements.get("freeze_commitment_sha256") != permission["freeze_commitment_sha256"]:
+        print("REFUSED: the measurement was taken under a different tested-system freeze")
+        return 1
+    report = check(measurements, json.loads(args.plan.read_text(encoding="utf-8")))
     if args.out:
         args.out.write_bytes(canonical_bytes(report) + b"\n")
     print(json.dumps({"verdict": report["verdict"],

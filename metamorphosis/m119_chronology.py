@@ -61,6 +61,8 @@ DELIVERY_LEDGER = DIRECTORY / "DELIVERY_LEDGER.json"
 SEALED_BANK = DIRECTORY / "SEALED_BANK.json.gpg"
 PUBLIC_BANK_COMMITMENT = DIRECTORY / "PUBLIC_BANK_COMMITMENT.json"
 REVEAL_AUTHORIZATION = DIRECTORY / "REVEAL_AUTHORIZATION.json"
+CARRIER_BANK = DIRECTORY / "CARRIER_BANK.json"
+REVEAL_RECORD = DIRECTORY / "REVEAL_RECORD.json"
 MEASUREMENTS = DIRECTORY / "MEASUREMENTS.json"
 RESULT = DIRECTORY / "RESULT.json"
 
@@ -82,17 +84,18 @@ STAGES: dict[str, tuple[Path, ...]] = {
     "reveal": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
                                      PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION),
     "scoring": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
-                                      PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION),
+                                      PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION,
+                                      REVEAL_RECORD, CARRIER_BANK),
     "replay": _FROZEN_COMMITMENTS + (TESTED_SYSTEM_FREEZE, DELIVERY_LEDGER, SEALED_BANK,
-                                     PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION, MEASUREMENTS,
-                                     RESULT),
+                                     PUBLIC_BANK_COMMITMENT, REVEAL_AUTHORIZATION,
+                                     REVEAL_RECORD, CARRIER_BANK, MEASUREMENTS),
 }
 
 # Artifacts that must NOT exist before the qualifying generation. Their presence means a scientific
 # observation already happened, and the stage about to run would not be the first.
 NO_SCIENTIFIC_ARTIFACT_BEFORE = (DELIVERY_LEDGER, SEALED_BANK, PUBLIC_BANK_COMMITMENT,
-                                 REVEAL_AUTHORIZATION, MEASUREMENTS, RESULT,
-                                 DIRECTORY / "CARRIER_BANK.json",
+                                 REVEAL_AUTHORIZATION, REVEAL_RECORD, CARRIER_BANK,
+                                 MEASUREMENTS, RESULT,
                                  DIRECTORY / "GENERATION_RESPONSE.json")
 
 

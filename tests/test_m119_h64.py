@@ -262,6 +262,9 @@ def _measurements(entries, *, plan, **overrides):
         "distinct_qualifying_structures": 10,
         "demand_classes": list(evaluator.DEMAND_CLASSES),
         "entries": entries,
+        "freeze_commitment_sha256": "f" * 64,
+        "reveal_record_sha256": "e" * 64,
+        "carrier_bank_sha256": "c" * 64,
         "measurements_sha256": "",
     }
     record.update(overrides)
@@ -576,3 +579,12 @@ def test_the_session_budget_is_the_one_inherited_from_m113(plan) -> None:
     inherited = json.loads(
         (ROOT / bank.SESSION_BUDGET_INHERITED_FROM).read_text(encoding="utf-8"))
     assert plan["session_budget"] == inherited["session_budget"] == 4000
+
+
+def test_a_measurement_that_binds_no_freeze_is_refused(plan) -> None:
+    """A record that names neither a freeze nor a reveal can never be scored."""
+    entries = [_entry(i, full_succeeds=True, fresh_succeeds=False) for i in range(6)]
+    for key in ("freeze_commitment_sha256", "reveal_record_sha256", "carrier_bank_sha256"):
+        record = _measurements(entries, plan=plan, **{key: None})
+        with pytest.raises(checker.CheckError, match="does not bind"):
+            checker.check(record, plan)

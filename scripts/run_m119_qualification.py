@@ -27,6 +27,7 @@ from metamorphosis import carrier_host as host  # noqa: E402
 from metamorphosis import m113_evaluator as evaluator  # noqa: E402
 from metamorphosis import m113_runtime as runtime  # noqa: E402
 from metamorphosis import m119_arms as arms  # noqa: E402
+from metamorphosis import m119_chronology as chronology  # noqa: E402
 from metamorphosis import m119_endpoint as endpoint  # noqa: E402
 from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
 from scripts import run_m113_qualification as inherited  # noqa: E402
@@ -76,8 +77,8 @@ def load_carriers(path: Path, nonce: str) -> list[dict[str, Any]]:
     return [dict(carrier) for carrier in value["carriers"]]
 
 
-def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
-            plan: Mapping[str, Any]) -> dict[str, Any]:
+def measure(carriers: Sequence[Mapping[str, Any]], nonce: str, plan: Mapping[str, Any],
+            *, provenance: Mapping[str, Any]) -> dict[str, Any]:
     """Every arm, every qualifying carrier, every demand. Evidence only."""
     session_budget = int(plan["session_budget"])
     acquired = restore_acquired()
@@ -166,6 +167,11 @@ def measure(carriers: Sequence[Mapping[str, Any]], nonce: str,
         "demand_classes": list(evaluator.DEMAND_CLASSES),
         "entries": entries,
         "the_runner_records_evidence_and_decides_nothing": True,
+        # What this measurement is bound to: the tested-system freeze it ran under and the reveal
+        # whose carriers it read. Digested once, below, with everything else.
+        "freeze_commitment_sha256": provenance["freeze_commitment_sha256"],
+        "reveal_record_sha256": provenance["reveal_record_sha256"],
+        "carrier_bank_sha256": provenance["carrier_bank_sha256"],
         "measurements_sha256": "",
     }
     record["measurements_sha256"] = sha256_hex(
@@ -182,9 +188,27 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
 
-    plan = json.loads(args.plan.read_text(encoding="utf-8"))
-    carriers = load_carriers(args.carriers, args.nonce)
-    record = measure(carriers, args.nonce, plan)
+    try:
+        # The pre-generation freeze is necessary and not sufficient. Once a completion exists,
+        # nothing in that earlier check stops an edit to the evaluator, the demand derivation or
+        # the scoring before the result is computed, so the freeze is re-proved here.
+        permission = chronology.assert_frozen_system_unchanged(ROOT, phase="scoring")
+        reveal = json.loads((ROOT / chronology.REVEAL_RECORD).read_text(encoding="utf-8"))
+        carrier_digest = sha256_hex(canonical_bytes(
+            json.loads(args.carriers.read_text(encoding="utf-8"))))
+        if carrier_digest != reveal["carrier_bank_sha256"]:
+            raise QualificationError(
+                "these carriers are not the ones the committed reveal record names")
+        plan = json.loads(args.plan.read_text(encoding="utf-8"))
+        carriers = load_carriers(args.carriers, args.nonce)
+        record = measure(carriers, args.nonce, plan, provenance={
+            "freeze_commitment_sha256": permission["freeze_commitment_sha256"],
+            "reveal_record_sha256": reveal["reveal_record_sha256"],
+            "carrier_bank_sha256": carrier_digest,
+        })
+    except (QualificationError, chronology.ChronologyError, endpoint.EndpointError) as exc:
+        print("REFUSED: %s" % exc)
+        return 1
     args.out.write_bytes(canonical_bytes(record) + b"\n")
     print(json.dumps({"qualifying_carriers": record["qualifying_carriers"],
                       "paired_demands": len(record["entries"]) * len(evaluator.DEMAND_CLASSES),
