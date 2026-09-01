@@ -271,9 +271,22 @@ def test_the_catalogue_snapshot_is_never_redrawn(tmp_path, monkeypatch):
 
 
 def test_no_h62_artifact_exists_yet():
-    for absent in ("STAGE1_ROUTE_QUALIFICATION.json", "ANALYSIS_PLAN.json",
-                   "GENERATOR_SPEC.json", "SEALED_BANK.json.gpg", "RESULT.json"):
-        assert not (ROOT / "experiments" / "M117" / absent).exists()
+    """Stage 1's own report is not an H62 artifact; these five are, and none may exist."""
+    for absent in ("ANALYSIS_PLAN.json", "GENERATOR_SPEC.json", "SEALED_BANK.json.gpg",
+                   "RESULT.json", "CARRIER_BANK.json"):
+        assert not (ROOT / "experiments" / "M117" / absent).exists(), absent
+
+
+def test_the_stage_1_report_if_present_created_no_h62():
+    """The report may exist -- Stage 1 ran -- but only saying it selected nothing."""
+    report = ROOT / "experiments" / "M117" / "STAGE1_ROUTE_QUALIFICATION.json"
+    if not report.is_file():
+        return
+    payload = json.loads(report.read_text(encoding="utf-8"))
+    assert payload.get("route_selected") is not True
+    assert payload.get("selected") in (None, {})
+    assert payload.get("is_a_qualifying_call") is not True
+    assert payload.get("qualifying_input_was_sent") is not True
 
 
 def test_stage1_is_marked_development_and_non_qualifying():

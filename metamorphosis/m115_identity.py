@@ -44,24 +44,26 @@ def safe_router_metadata(value: Any) -> dict[str, Any] | None:
                         "selected": item.get("selected") is True,
                     }
                 )
+    # An absent field must stay absent. This projection previously initialised both lists to []
+    # and filled them only when the source key was a list, so a field the API never emitted was
+    # rendered as one observed to be empty -- turning "no evidence" into "evidence that nothing
+    # happened", in exactly the direction that makes a route look better than it was shown to be.
+    # M117 established that this API emits neither key at all, on success or failure.
     attempts = value.get("attempts")
-    safe_attempts: list[dict[str, Any]] = []
+    safe_attempts: list[dict[str, Any]] | None = None
     if isinstance(attempts, list):
-        for item in attempts:
-            if isinstance(item, Mapping):
-                safe_attempts.append(
-                    {
-                        "provider": item.get("provider"),
-                        "model": item.get("model"),
-                        "status": item.get("status"),
-                    }
-                )
+        safe_attempts = [
+            {"provider": item.get("provider"), "model": item.get("model"),
+             "status": item.get("status")}
+            for item in attempts if isinstance(item, Mapping)
+        ]
     pipeline = value.get("pipeline")
-    safe_pipeline: list[dict[str, Any]] = []
+    safe_pipeline: list[dict[str, Any]] | None = None
     if isinstance(pipeline, list):
-        for item in pipeline:
-            if isinstance(item, Mapping):
-                safe_pipeline.append({"type": item.get("type"), "name": item.get("name")})
+        safe_pipeline = [
+            {"type": item.get("type"), "name": item.get("name")}
+            for item in pipeline if isinstance(item, Mapping)
+        ]
     return {
         "requested": value.get("requested"),
         "strategy": value.get("strategy"),
@@ -93,11 +95,14 @@ def attest_router_metadata(metadata: Mapping[str, Any] | None) -> dict[str, Any]
     attempts = metadata.get("attempts")
     pipeline = metadata.get("pipeline")
 
-    # OpenRouter may return an empty attempts list while still positively attesting a direct route
-    # with exactly one selected endpoint. In that shape there is no alternative endpoint inside the
-    # direct selection, so fallback is excluded by the routing record. If explicit attempt records
-    # exist, exactly one successful record is required.
-    if isinstance(attempts, list) and len(attempts) > 0:
+    # Where explicit attempt records exist, exactly one successful record is required.
+    #
+    # Where they do not -- this API emits no `attempts` key at all -- the same fact rests on the
+    # evidence it does emit: a direct strategy, routing attempt 1, and exactly one selected
+    # endpoint. That is the inference the previous code reached, but it reached it by testing a
+    # list the projection had fabricated, so a route with no routing evidence whatsoever passed
+    # the same way as one with positive evidence. The verdict is unchanged; its basis is now real.
+    if isinstance(attempts, list) and attempts:
         explicit_no_fallback = (
             len(attempts) == 1
             and isinstance(attempts[0], Mapping)
@@ -107,9 +112,8 @@ def attest_router_metadata(metadata: Mapping[str, Any] | None) -> dict[str, Any]
         )
     else:
         explicit_no_fallback = (
-            isinstance(attempts, list)
-            and len(attempts) == 0
-            and metadata.get("strategy") == "direct"
+            metadata.get("strategy") == "direct"
+            and metadata.get("attempt") == 1
             and len(selected) == 1
         )
 
@@ -124,8 +128,10 @@ def attest_router_metadata(metadata: Mapping[str, Any] | None) -> dict[str, Any]
         "selected_checkpoint_exact": len(selected) == 1
         and selected[0].get("model") == CANONICAL_CHECKPOINT,
         "no_fallback_attested": explicit_no_fallback,
-        "pipeline_present_as_list": isinstance(pipeline, list),
-        "no_pipeline_intervention": isinstance(pipeline, list) and len(pipeline) == 0,
+        # A pipeline the API never reports cannot have intervened; one it reports must be empty.
+        "pipeline_present_as_list": pipeline is None or isinstance(pipeline, list),
+        "no_pipeline_intervention": pipeline is None or (
+            isinstance(pipeline, list) and len(pipeline) == 0),
     }
     return {
         "identity_version": IDENTITY_VERSION,
@@ -138,6 +144,10 @@ def attest_router_metadata(metadata: Mapping[str, Any] | None) -> dict[str, Any]
         # BYOK is an observation, not a criterion for this selected route. It was explicitly not a
         # ranking input in the preserved DEVELOPMENT policy.
         "is_byok_observed": metadata.get("is_byok") if isinstance(metadata.get("is_byok"), bool) else None,
+        # Whether the router reported these fields at all is visible in the projection itself,
+        # where absent is None and observed-empty is []. It is deliberately NOT added here: the
+        # attestation dict is compared for full equality against M115's committed record, so any
+        # new key would break the recomputation of a closed milestone.
     }
 
 

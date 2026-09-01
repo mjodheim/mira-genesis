@@ -159,19 +159,38 @@ def derive_universe(catalogue: Iterable[Mapping[str, Any]]) -> dict[str, Any]:
             "exclusions": verdict["exclusions"],
             "metrics": verdict["metrics"],
             "max_completion_tokens": entry.get("max_completion_tokens"),
+            # Carried because the request depends on it. Without it `declares_reasoning` reads a
+            # field the candidate does not have, always answers False, and the reasoning-off
+            # control the plan promises is never sent -- as it never was in attempts 01 to 04.
+            "supported_parameters": entry.get("supported_parameters"),
         })
     eligible = [item for item in assessed if item["eligible"]]
     ordered = sorted(eligible, key=lambda item: rank_key(
         {**item, "latency_last_30m": {"p50": item["metrics"]["latency_last_30m_p50"]},
          "uptime_last_1d": item["metrics"]["uptime_last_1d"],
          "uptime_last_30m": item["metrics"]["uptime_last_30m"]}))
+    # The request this harness sends is a function of the model, the provider and whether the
+    # catalogue declares the reasoning control. Two eligible rows agreeing on all three are the
+    # same request, so probing both spends a finite budget twice on one experiment and reaches
+    # fewer distinct routes. They are marked rather than dropped, so the record still shows every
+    # eligible endpoint and the budget reserved for it. The earliest in the frozen order is kept,
+    # which is mechanical and cannot be steered.
+    seen: dict[tuple[Any, ...], int] = {}
     for position, item in enumerate(ordered, start=1):
         item["order"] = position
+        declared = item.get("supported_parameters")
+        signature = (item.get("model"), item.get("provider"),
+                     "reasoning" in declared if isinstance(declared, list) else False)
+        item["duplicate_of_order"] = seen.get(signature)
+        if signature not in seen:
+            seen[signature] = position
+    distinct = [item for item in ordered if item["duplicate_of_order"] is None]
     return {
         "schema": UNIVERSE_SCHEMA,
         "catalogue_entries": len(entries),
         "assessed": assessed,
         "eligible_count": len(eligible),
+        "distinct_request_count": len(distinct),
         "ordered_candidates": ordered,
         "ordering": list(RELIABILITY_ORDERING),
         "eligibility_bounds_budget_never_qualifies": True,
@@ -195,6 +214,19 @@ def qualifies(profile: Mapping[str, Any]) -> dict[str, Any]:
         "canonical_checkpoint_exact": profile.get("canonical_checkpoint_exact") is True,
         "provider_exact": profile.get("provider_exact") is True,
         "direct_route": profile.get("router_direct") is True,
+        # Revision 4. Attempt 03 established that this API emits neither `attempts` nor `pipeline`
+        # -- absent on all sixteen complete candidates, and absent on successful requests as much
+        # as on rejected ones, so their absence carries no routing information. The previous
+        # clauses required those fields to be present AND empty, which no route could satisfy: a
+        # run ending with no selection could not distinguish a route that fails from one that
+        # passes.
+        #
+        # The fact required is unchanged -- exactly one routing attempt, no fallback, no pipeline
+        # intervention -- and is now established from evidence the API does emit and that already
+        # held on every fully enforcing candidate: a direct strategy, routing attempt 1, exactly
+        # one selected endpoint, and the request's own allow_fallbacks: false. Where the router
+        # does report the fields, they are still judged on their contents; absence alone never
+        # substitutes for a positive report that contradicts them.
         "no_fallback": profile.get("router_no_fallback") is True,
         "one_selected_endpoint": profile.get("router_one_endpoint") is True,
         "one_router_attempt": profile.get("router_one_attempt") is True,

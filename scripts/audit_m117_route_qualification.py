@@ -78,6 +78,31 @@ STRESS_MAX_TOKENS = 131072
 STRESS_MIN_COMPLETION_TOKENS = 32000
 
 PLAN_SCHEMA = "m117-stage1-plan-v1"
+
+# Attempt 01 read three catalogue fields out of places this API does not populate. It reached no
+# candidate, sent no generation request and produced no selection; it is preserved verbatim under
+# experiments/M117/ATTEMPT_01_INSTRUMENT_ABORT/ as an instrument abort, not as a result.
+#
+# This revision changes extraction only. Every threshold, ordering key, tie-break, qualification
+# clause and budget bound is the frozen value attempt 01 carried, and the decision rule module is
+# byte-for-byte unchanged -- tests/test_m117_apparatus_revision.py pins both. The repair is forced
+# by the API's response shape rather than by any candidate's values: the defect nulled the metric
+# for 282/282 endpoints uniformly, so it could not have favoured or disfavoured any candidate, and
+# the corrected checkpoint field reproduces the checkpoint M116 independently recorded.
+APPARATUS_REVISION = 5
+SUPERSEDED_PLAN_SHA256 = "47ff587ff36e994a498ae8d63b6cc185ded94a7b1c9f429290a754b3a1181564"
+REVISION_RATIONALE = (
+    "two data-flow defects, both derivable from the request body without any observation and both "
+    "present since attempt 01: derive_universe dropped supported_parameters, so declares_reasoning "
+    "read a field the candidate did not carry, always answered False, and the reasoning-off control "
+    "the plan promises was never sent on any request in any attempt while 58 observations recorded "
+    "reasoning tokens being consumed; and eligible rows agreeing on model, provider and reasoning "
+    "declaration produce an identical request, so 15 of 90 rows reserved budget for an experiment "
+    "already run -- attempt 03 spent its final slot re-probing a route it had probed at position 3. "
+    "Parameters are now carried and duplicates are marked rather than dropped, keeping every "
+    "eligible endpoint in the record. No threshold, ordering key, tie-break, budget bound or "
+    "qualification clause changed"
+)
 REPORT_SCHEMA = "m117-stage1-route-qualification-v1"
 LEDGER_SCHEMA = "m117-stage1-ledger-v1"
 
@@ -167,6 +192,9 @@ def plan() -> dict[str, Any]:
         "milestone": "M117", "hypothesis": "H62",
         "stage": 1, "development_only": True,
         "is_a_qualifying_call": False, "qualifying_input_was_sent": False,
+        "apparatus_revision": APPARATUS_REVISION,
+        "supersedes_plan_sha256": SUPERSEDED_PLAN_SHA256,
+        "revision_rationale": REVISION_RATIONALE,
         "catalogue_source": MODELS_ENDPOINT,
         "catalogue_model_ceiling": CATALOGUE_MODEL_CEILING,
         "catalogue_order": "model id ascending, fixed here so the universe cannot depend on the "
@@ -198,6 +226,7 @@ def plan() -> dict[str, Any]:
         "token_capacity_stress": {
             "runs_only_after_full_structural_qualification": True,
             "max_tokens": STRESS_MAX_TOKENS,
+            "max_tokens_is_capped_at_the_candidates_declared_ceiling": True,
             "minimum_completion_tokens": STRESS_MIN_COMPLETION_TOKENS,
             "schema_sha256": sha256_hex(canonical_bytes(stress.build_stress_schema())),
         },
@@ -227,6 +256,7 @@ def plan() -> dict[str, Any]:
                          "is not created",
         "plan_sha256": "",
     }
+    _assert_stress_is_satisfiable()
     record["plan_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in record.items() if k != "plan_sha256"}))
     return record
@@ -240,6 +270,14 @@ def _declared_capable(model: Mapping[str, Any]) -> bool:
     supported = model.get("supported_parameters")
     supported = set(supported) if isinstance(supported, list) else set()
     return set(rule.REQUIRED_SUPPORTED_PARAMETERS) <= supported
+
+
+def _metric(endpoint: Mapping[str, Any], stats: Mapping[str, Any], name: str) -> Any:
+    """Read a reliability metric from where this API actually publishes it: the endpoint itself."""
+    value = endpoint.get(name)
+    if value is None and isinstance(stats, Mapping):
+        value = stats.get(name)
+    return value
 
 
 def snapshot_catalogue() -> dict[str, Any]:
@@ -271,13 +309,19 @@ def snapshot_catalogue() -> dict[str, Any]:
         for endpoint in endpoints:
             if not isinstance(endpoint, Mapping):
                 continue
+            # Reliability metrics are top-level fields on the endpoint object. Attempt 01 read
+            # them out of a `stats` sub-object that this API does not return, which nulled
+            # `uptime_last_1d` and `latency_last_30m_p50` for 282/282 endpoints and excluded the
+            # whole universe on `missing_required_metric`. `stats` is kept only as a fallback.
             stats = endpoint.get("stats") if isinstance(endpoint.get("stats"), Mapping) else {}
-            uptime = endpoint.get("uptime_last_30m")
             entries.append({
                 "model": model_id,
                 "provider": endpoint.get("provider_name") or endpoint.get("name"),
-                "canonical_checkpoint": endpoint.get("model_variant_slug") or endpoint.get("name")
-                or model_id,
+                # The router attests the selected endpoint as the model's dated canonical slug,
+                # not the requested slug, the endpoint display name, or the quantization tag.
+                # `model_variant_slug`, which attempt 01 read, is not a field this API returns.
+                "canonical_checkpoint": model.get("canonical_slug"),
+                "endpoint_tag": endpoint.get("tag"),
                 "provider_found": True,
                 "endpoint_available": endpoint.get("status") in (None, 0),
                 "max_completion_tokens": endpoint.get("max_completion_tokens")
@@ -285,10 +329,9 @@ def snapshot_catalogue() -> dict[str, Any]:
                 "context_length": endpoint.get("context_length"),
                 "supported_parameters": endpoint.get("supported_parameters")
                 or model.get("supported_parameters"),
-                "uptime_last_1d": stats.get("uptime_last_1d") if isinstance(stats, Mapping) else None,
-                "uptime_last_30m": uptime if isinstance(uptime, (int, float)) else (
-                    stats.get("uptime_last_30m") if isinstance(stats, Mapping) else None),
-                "latency_last_30m": stats.get("latency_last_30m") if isinstance(stats, Mapping) else None,
+                "uptime_last_1d": _metric(endpoint, stats, "uptime_last_1d"),
+                "uptime_last_30m": _metric(endpoint, stats, "uptime_last_30m"),
+                "latency_last_30m": _metric(endpoint, stats, "latency_last_30m"),
                 "quantization": endpoint.get("quantization"),
             })
 
@@ -343,6 +386,54 @@ def _committed_universe() -> dict[str, Any]:
 # Probing one candidate
 # ---------------------------------------------------------------------------------------------
 
+# Identity attestations are short provider/model tokens, never carrier or free text. Anything
+# longer or unstringlike is recorded as a refusal marker rather than pasted into the record.
+_IDENTITY_MAX = 128
+
+
+def _shape(value: Any) -> str:
+    """Absent, empty or populated -- enough to tell a real fallback from missing metadata."""
+    if value is None:
+        return "absent"
+    if not isinstance(value, list):
+        return "not_a_list"
+    return "empty_list" if not value else "non_empty_list"
+
+
+def _stress_max_tokens(candidate: Mapping[str, Any]) -> int:
+    """Never ask a candidate for more than it declares it can produce.
+
+    Attempt 02 asked every structurally qualified candidate for STRESS_MAX_TOKENS regardless of
+    what that candidate declared. Eligibility admits anything at or above
+    MINIMUM_MAX_COMPLETION_TOKENS (32768), so an admitted candidate could be sent a request for
+    four times its own declared ceiling and answer HTTP 400 -- a malformed request of ours, not a
+    capacity limit of theirs. The contradiction is visible in the frozen constants alone and did
+    not need an observation to find.
+
+    The threshold the stress must clear is unchanged; only the request is bounded.
+    """
+    declared = candidate.get("max_completion_tokens")
+    if not isinstance(declared, int) or declared <= 0:
+        return STRESS_MAX_TOKENS
+    return min(STRESS_MAX_TOKENS, declared)
+
+
+def _assert_stress_is_satisfiable() -> None:
+    """A candidate admitted by eligibility must be able to clear the stress it will be given."""
+    if STRESS_MIN_COMPLETION_TOKENS >= rule.MINIMUM_MAX_COMPLETION_TOKENS:
+        raise Stage1Error(
+            "the stress demands more completion tokens than eligibility guarantees: %d >= %d"
+            % (STRESS_MIN_COMPLETION_TOKENS, rule.MINIMUM_MAX_COMPLETION_TOKENS))
+
+
+def _identity_token(value: Any) -> Any:
+    if value is None:
+        return None
+    if not isinstance(value, str) or len(value) > _IDENTITY_MAX or "\n" in value:
+        return "<refused: not an identity token>"
+    return value
+
+
 def declares_reasoning(candidate: Mapping[str, Any]) -> bool:
     """Does the catalogue say this endpoint accepts the reasoning control?"""
     declared = candidate.get("supported_parameters")
@@ -369,6 +460,26 @@ def _request_body(candidate: Mapping[str, Any], prompt: str, schema: Mapping[str
     return body
 
 
+def _no_fallback(metadata: Mapping[str, Any], attempts: Any,
+                 selected: list[Any]) -> bool:
+    """Exactly one routing attempt, established from evidence this API emits.
+
+    A reported attempt list is judged on its contents: at most one record, and any record present
+    must be a success, so a retry after a failure can never read as a single clean attempt. Where no list is reported -- this API reports none, on success as much
+    as on failure -- the same fact rests on a direct strategy, routing attempt 1 and exactly one
+    selected endpoint, alongside the `allow_fallbacks: false` this harness sends on every request.
+
+    The clause it replaces required the field to be present AND empty, which no observed route
+    could satisfy.
+    """
+    if isinstance(attempts, list):
+        return len(attempts) <= 1 and all(
+            isinstance(a, Mapping) and a.get("status") == 200 for a in attempts)
+    return (metadata.get("strategy") == "direct"
+            and metadata.get("attempt") == 1
+            and len(selected) == 1)
+
+
 def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str, Any]:
     metadata = body.get("openrouter_metadata") if isinstance(
         body.get("openrouter_metadata"), Mapping) else {}
@@ -377,16 +488,35 @@ def _identity(candidate: Mapping[str, Any], body: Mapping[str, Any]) -> dict[str
     selected = [e for e in available if isinstance(e, Mapping) and e.get("selected")]
     pipeline = metadata.get("pipeline")
     attempts = metadata.get("attempts")
+    # M115's record could not say why it failed. An identity clause that fails for every candidate
+    # is far more likely to be this harness reading the wrong field than a fact about every route,
+    # so the observed value is recorded beside the declared one and a systematic mismatch stays
+    # diagnosable as an instrument abort instead of being reported as "no route qualifies".
     return {
+        "declared_model": candidate["model"],
+        "observed_model": _identity_token(body.get("model")),
+        "declared_provider": candidate["provider"],
+        "observed_provider": _identity_token(body.get("provider")),
+        "declared_canonical_checkpoint": candidate.get("canonical_checkpoint"),
+        "observed_canonical_checkpoint": _identity_token(
+            selected[0].get("model") if selected else None),
         "requested_model_exact": body.get("model") == candidate["model"],
         "provider_exact": body.get("provider") == candidate["provider"],
         "canonical_checkpoint_exact": bool(selected) and selected[0].get("model")
         == candidate.get("canonical_checkpoint"),
+        "observed_attempts_shape": _shape(attempts),
+        "observed_pipeline_shape": _shape(pipeline),
+        "observed_selected_endpoints": len(selected),
         "router_direct": metadata.get("strategy") == "direct",
-        "router_no_fallback": isinstance(attempts, list) and len(attempts) == 0,
+        # Revision 4. Where the router reports these fields they are judged on their contents; an
+        # absent field is established from what the API does emit -- a direct strategy, routing
+        # attempt 1, exactly one selected endpoint -- together with allow_fallbacks: false on the
+        # request itself. Absence never overrides a positive report to the contrary.
+        "router_no_fallback": _no_fallback(metadata, attempts, selected),
         "router_one_endpoint": len(selected) == 1,
         "router_one_attempt": metadata.get("attempt") == 1,
-        "router_no_pipeline_intervention": isinstance(pipeline, list) and len(pipeline) == 0,
+        "router_no_pipeline_intervention": pipeline is None or (
+            isinstance(pipeline, list) and len(pipeline) == 0),
     }
 
 
@@ -454,8 +584,9 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
     token_holds = False
     stress_record: dict[str, Any] | None = None
     if structural:
+        stress_budget = _stress_max_tokens(candidate)
         observed = _send(candidate, stress.STRESS_PROMPT, stress.build_stress_schema(),
-                         "m117_stress", STRESS_MAX_TOKENS, budget)
+                         "m117_stress", stress_budget, budget)
         body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
         choices = body.get("choices") if isinstance(body.get("choices"), list) else []
         first = choices[0] if choices and isinstance(choices[0], Mapping) else {}
@@ -473,7 +604,9 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
         token_holds = bool(observed.get("status") == 200
                            and first.get("finish_reason") == "stop" and conforms
                            and isinstance(tokens, int) and tokens > STRESS_MIN_COMPLETION_TOKENS)
-        stress_record = {"http_status": observed.get("status"),
+        stress_record = {"requested_max_tokens": stress_budget,
+                         "declared_max_completion_tokens": candidate.get("max_completion_tokens"),
+                         "http_status": observed.get("status"),
                          "finish_reason": first.get("finish_reason") if isinstance(
                              first.get("finish_reason"), str) else None,
                          "completion_tokens": tokens if isinstance(tokens, int) else None,
@@ -500,10 +633,15 @@ def probe_candidate(candidate: Mapping[str, Any], budget: dict[str, int]) -> dic
         "observations": observations,
         "raw_completion_persisted": False,
     }
-    profile.update({k: identity_holds.get(k, False) for k in (
-        "requested_model_exact", "provider_exact", "canonical_checkpoint_exact", "router_direct",
-        "router_no_fallback", "router_one_endpoint", "router_one_attempt",
-        "router_no_pipeline_intervention")})
+    # Attempt 02 copied only the boolean verdicts here, so the declared/observed pairs added to
+    # make an identity mismatch diagnosable never reached the record -- the diagnostic was itself
+    # blind. Every field the attestation produces is carried through; the booleans are still
+    # defaulted to False so a missing verdict can never read as a pass.
+    _CLAUSES = ("requested_model_exact", "provider_exact", "canonical_checkpoint_exact",
+                "router_direct", "router_no_fallback", "router_one_endpoint",
+                "router_one_attempt", "router_no_pipeline_intervention")
+    profile.update({k: v for k, v in identity_holds.items() if k not in _CLAUSES})
+    profile.update({k: identity_holds.get(k, False) for k in _CLAUSES})
     profile["qualification"] = rule.qualifies(profile)
     return profile
 
@@ -556,6 +694,21 @@ def execute() -> dict[str, Any]:
                   "profiles": profiles, "requests_spent": budget["global"]}
 
         for candidate in universe["ordered_candidates"]:
+            # A row the frozen order already reached as an identical request is not a second
+            # experiment. It is skipped explicitly and recorded, so the record shows the position
+            # was reached and why no budget was spent on it -- rather than the run appearing to
+            # have probed more distinct routes than it did.
+            if candidate.get("duplicate_of_order") is not None:
+                profiles.append({
+                    "schema": "m117-candidate-profile-v1",
+                    "model": candidate["model"], "provider": candidate["provider"],
+                    "order": candidate.get("order"),
+                    "skipped": "identical_request_to_order_%s" % candidate["duplicate_of_order"],
+                    "requests_spent": 0,
+                    "qualification": {"qualifies": False,
+                                      "failed_checks": ["candidate_not_probed_duplicate_request"]},
+                })
+                continue
             if (candidate["model"], candidate["provider"]) in done:
                 continue
             if any(p.get("qualification", {}).get("qualifies") for p in profiles):

@@ -1,8 +1,46 @@
 # M117 Stage 1 — route qualification, frozen before the first request
 
 **Status:** FROZEN. Committed before any candidate is probed.
-**Frozen plan digest:** `d22c3fde72c70c8f73948aba95250685befcdca5ae90c7b85934c8a6e8508c67`
+**Frozen plan digest:** `47ff587ff36e994a498ae8d63b6cc185ded94a7b1c9f429290a754b3a1181564`
+**Apparatus revision:** 4, superseding `687b239471245b96…` (r3), `5cc9c648f988…` (r2) and `d22c3fde72c7…` (r1).
 **Phase:** DEVELOPMENT only. Not evidence for H62. **Qualifying invocations: 0.**
+
+> **Revision 2 changes extraction only.** Attempt 01 read three catalogue fields out of places the
+> endpoints API does not populate, derived a universe of zero eligible candidates, probed nothing
+> and sent no generation request. It is preserved verbatim as an instrument abort in
+> [`ATTEMPT_01_INSTRUMENT_ABORT/`](ATTEMPT_01_INSTRUMENT_ABORT/README.md), which records the defect,
+> the correction, and why the correction is not post-hoc optimisation. The decision rule module is
+> byte-for-byte unchanged: no threshold, ordering key, tie-break, budget bound or qualification
+> clause moved, and `tests/test_m117_apparatus_revision.py` pins each of them against the universe
+> attempt 01 committed.
+>
+> **Revision 3 bounds a malformed request.** Attempt 02 read its input correctly but sent every
+> structurally qualified candidate a stress request for 131,072 tokens regardless of the ceiling
+> that candidate declared, while eligibility admits candidates at 32,768 — a contradiction visible
+> in the frozen constants alone. It is preserved halted, at 31 of 160 requests with no selection, in
+> [`ATTEMPT_02_INSTRUMENT_ABORT/`](ATTEMPT_02_INSTRUMENT_ABORT/README.md). The stress threshold is
+> unchanged; only the request is capped at the candidate's declared ceiling, and the plan now
+> refuses to freeze a stress an eligible candidate could not clear.
+
+> **Revision 4 re-specifies two unsatisfiable clauses, under owner authorization.** Attempt 03 ran
+> to its 160-request ceiling and selected no route, but `no_fallback` and `no_pipeline_intervention`
+> required the router metadata fields `attempts` and `pipeline` to be present **and** empty. Attempt
+> 03's diagnostic established that this API emits neither key on any request — absent on successful
+> requests as much as on rejected ones — so no route could satisfy them, and a run ending with no
+> selection could not distinguish a route that fails from one that passes. Attempt 03 is preserved
+> in [`ATTEMPT_03_INSTRUMENT_ABORT/`](ATTEMPT_03_INSTRUMENT_ABORT/README.md).
+>
+> The **fact required is unchanged** — exactly one routing attempt, no fallback, no pipeline
+> intervention. It now rests on evidence the API does emit, and which already held on every fully
+> enforcing candidate: `strategy: direct`, `attempt: 1`, exactly one selected endpoint, and the
+> `allow_fallbacks: false` this harness sends on every request. Where the router *does* report the
+> fields they are still judged on their contents — a single failed attempt record is not a clean
+> single attempt — so absence never overrides a positive report to the contrary.
+>
+> This change was **not** made unilaterally. It was reached only after watching the clauses block
+> every candidate, which is the post-hoc weakening the authorization prohibits, and so was put to
+> the owner and authorized before being implemented. No threshold, ordering key, tie-break or budget
+> bound moved.
 
 ## The premise this is built on
 
