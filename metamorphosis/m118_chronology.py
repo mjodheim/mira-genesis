@@ -205,3 +205,185 @@ def chronology(root: Path | None = None) -> dict[str, Any]:
         "milestone": MILESTONE, "hypothesis": HYPOTHESIS,
         "stages": reached,
     }
+
+
+# ---------------------------------------------------------------------------------------------
+# The tested-system freeze
+# ---------------------------------------------------------------------------------------------
+#
+# The interpreting closure is computed from the source, not asserted in prose. Prose saying
+# "everything relevant is bound" ages badly the first time somebody adds an import; a closure
+# computed mechanically does not, and M116 found two genuinely unbound modules that way.
+
+from metamorphosis import m116_chronology as _m116  # noqa: E402
+from metamorphosis.blind_bank_protocol import canonical_bytes, sha256_hex  # noqa: E402
+
+FREEZE_SCHEMA = "m118-tested-system-freeze-v1"
+INVENTORY_SCHEMA = "m118-tested-system-inventory-v1"
+FREEZE_PATH = DIRECTORY / "TESTED_SYSTEM_FREEZE.json"
+
+# Roots from which "can this change what the completion means?" is decided. M118 inherits M115's
+# scientific interpretation path unchanged, so it inherits M116's roots and adds its own.
+INTERPRETATION_ROOTS = tuple(dict.fromkeys(
+    _m116.INTERPRETATION_ROOTS + (
+        "metamorphosis/m118_route.py",
+        "metamorphosis/m118_chronology.py",
+    )
+))
+
+TESTED_SYSTEM_PATHS = tuple(dict.fromkeys(
+    _m116.TESTED_SYSTEM_PATHS + (
+        "metamorphosis/m116_chronology.py",
+        "metamorphosis/m118_route.py",
+        "metamorphosis/m118_chronology.py",
+    )
+))
+
+# Deliberately unbound, each for a stated reason. The boundary is not "code we did not get to"; it
+# is code that cannot reach a scientific interpretation.
+#
+# The readiness gate and the freeze builder run before any carrier exists and produce no artifact
+# the scientific path reads. Generator transport is bound instead by the generator spec's canonical
+# request-body digest, which fixes every byte reaching the model: transport can fail to deliver or
+# misreport identity, and the delivery rule and identity attestation catch that, but it cannot
+# change how an admitted completion is scored.
+UNBOUND_BY_DESIGN = dict(_m116.UNBOUND_BY_DESIGN)
+UNBOUND_BY_DESIGN.update({
+    "scripts/audit_m118_readiness.py":
+        "DEVELOPMENT-only readiness gate; runs before any carrier exists and scores nothing",
+    "scripts/freeze_m118_system.py":
+        "writes commitments before the generation; never reads a completion",
+})
+
+
+def interpretation_closure(root: Path | None = None) -> set[str]:
+    """Every first-party module reachable from the interpretation roots, transitively.
+
+    Always computed fresh. The one thing that must never be stale is the answer to "is any
+    interpreting module unbound?", and a cache keyed on size and modification time is exactly what
+    a deliberate edit could preserve.
+    """
+    base = _root(root)
+    seen: set[str] = set()
+    queue = list(INTERPRETATION_ROOTS)
+    while queue:
+        relative = queue.pop()
+        if relative in seen:
+            continue
+        path = base / relative
+        if not path.is_file():
+            raise ChronologyError("interpretation root is missing: %s" % relative)
+        seen.add(relative)
+        queue.extend(sorted(_m116._imports(path, base)))
+    return seen
+
+
+def unbound_interpretation_modules(root: Path | None = None) -> list[str]:
+    """Modules that can change what a completion means and are not bound by the freeze."""
+    return sorted(
+        interpretation_closure(root) - set(TESTED_SYSTEM_PATHS) - set(UNBOUND_BY_DESIGN))
+
+
+def inventory(root: Path | None = None) -> dict[str, Any]:
+    """What the freeze binds, and what it deliberately does not."""
+    closure = sorted(interpretation_closure(root))
+    unbound = unbound_interpretation_modules(root)
+    record = {
+        "schema": INVENTORY_SCHEMA,
+        "milestone": MILESTONE, "hypothesis": HYPOTHESIS,
+        "interpretation_roots": list(INTERPRETATION_ROOTS),
+        "interpretation_closure": closure,
+        "tested_system_paths": list(TESTED_SYSTEM_PATHS),
+        "unbound_by_design": dict(sorted(UNBOUND_BY_DESIGN.items())),
+        "unbound_interpretation_modules": unbound,
+        "closure_is_fully_bound": not unbound,
+        "inventory_sha256": "",
+    }
+    record["inventory_sha256"] = sha256_hex(
+        canonical_bytes({k: v for k, v in record.items() if k != "inventory_sha256"}))
+    return record
+
+
+def tested_system_digests(root: Path | None = None) -> dict[str, str]:
+    base = _root(root)
+    digests: dict[str, str] = {}
+    for relative in TESTED_SYSTEM_PATHS:
+        path = base / relative
+        if not path.is_file():
+            raise ChronologyError("tested-system path is missing: %s" % relative)
+        digests[relative] = sha256_hex(path.read_bytes().replace(b"\r\n", b"\n"))
+    return digests
+
+
+def build_freeze(root: Path | None = None) -> dict[str, Any]:
+    """The freeze record. Refuses while any interpreting module is unbound."""
+    base = _root(root)
+    stock = inventory(base)
+    if not stock["closure_is_fully_bound"]:
+        raise ChronologyError(
+            "the tested-system freeze would leave interpreting modules unbound: %s"
+            % ", ".join(stock["unbound_interpretation_modules"]))
+    assert_no_scientific_observation_yet(base)
+    record = {
+        "schema": FREEZE_SCHEMA,
+        "milestone": MILESTONE, "hypothesis": HYPOTHESIS,
+        "frozen_before_generation": True,
+        "no_scientific_completion_existed_at_freeze": True,
+        "digest_mode": "lf_normalized",
+        "inventory": stock,
+        "tested_system_digests": tested_system_digests(base),
+        "freeze_commitment_sha256": "",
+    }
+    record["freeze_commitment_sha256"] = sha256_hex(
+        canonical_bytes({k: v for k, v in record.items()
+                         if k != "freeze_commitment_sha256"}))
+    return record
+
+
+def validate_freeze(record: Mapping[str, Any], root: Path | None = None) -> None:
+    """Does the working tree still match the frozen record, exactly?"""
+    base = _root(root)
+    if record.get("schema") != FREEZE_SCHEMA:
+        raise ChronologyError("not an M118 tested-system freeze")
+    expected = sha256_hex(canonical_bytes(
+        {k: v for k, v in record.items() if k != "freeze_commitment_sha256"}))
+    if record.get("freeze_commitment_sha256") != expected:
+        raise ChronologyError("the freeze commitment does not match its contents")
+    frozen = record.get("tested_system_digests")
+    if not isinstance(frozen, Mapping) or not frozen:
+        raise ChronologyError("the freeze binds no tested-system path")
+    current = tested_system_digests(base)
+    drifted = sorted(p for p in set(frozen) | set(current) if frozen.get(p) != current.get(p))
+    if drifted:
+        raise ChronologyError(
+            "the tested system changed after the freeze: %s" % ", ".join(drifted))
+    unbound = unbound_interpretation_modules(base)
+    if unbound:
+        raise ChronologyError(
+            "interpreting modules became unbound after the freeze: %s" % ", ".join(unbound))
+
+
+DOWNSTREAM_PHASES = ("admission", "sealing", "reveal", "scoring")
+
+
+def assert_frozen_system_unchanged(root: Path | None = None, *, phase: str) -> dict[str, Any]:
+    """Re-prove, at each phase after the generation, that the tested system is still the frozen one.
+
+    The pre-generation gate is necessary and not sufficient: once a completion exists, nothing in
+    that earlier check stops someone editing the evaluator, the demand derivation or the scoring
+    before the result is computed. That is the same contamination the freeze exists to prevent,
+    arriving one step later.
+    """
+    import json as _json
+    if phase not in DOWNSTREAM_PHASES:
+        raise ChronologyError("unknown downstream phase %r" % phase)
+    base = _root(root)
+    assert_committed_at_head(FREEZE_PATH, base)
+    freeze = _json.loads((base / FREEZE_PATH).read_text(encoding="utf-8"))
+    validate_freeze(freeze, base)
+    return {
+        "schema": "m118-phase-permission-v1",
+        "phase": phase, "permitted": True,
+        "freeze_commitment_sha256": freeze["freeze_commitment_sha256"],
+        "tested_system_unchanged_since_freeze": True,
+    }
