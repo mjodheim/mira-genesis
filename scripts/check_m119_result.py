@@ -226,14 +226,17 @@ def main() -> int:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--out", type=Path)
     args = parser.parse_args()
-    # An independent replay is only independent of the run, not of the freeze: the tested system
-    # must still be the frozen one at the moment the verdict is computed.
-    permission = chronology.assert_frozen_system_unchanged(ROOT, phase="replay")
-    measurements = json.loads(args.measurements.read_text(encoding="utf-8"))
-    if measurements.get("freeze_commitment_sha256") != permission["freeze_commitment_sha256"]:
-        print("REFUSED: the measurement was taken under a different tested-system freeze")
+    try:
+        # An independent replay is only independent of the run, not of the freeze: the tested
+        # system must still be the frozen one at the moment the verdict is computed.
+        permission = chronology.assert_frozen_system_unchanged(ROOT, phase="replay")
+        measurements = json.loads(args.measurements.read_text(encoding="utf-8"))
+        if measurements.get("freeze_commitment_sha256") != permission["freeze_commitment_sha256"]:
+            raise CheckError("the measurement was taken under a different tested-system freeze")
+        report = check(measurements, json.loads(args.plan.read_text(encoding="utf-8")))
+    except (CheckError, chronology.ChronologyError, endpoint.EndpointError, ValueError) as exc:
+        print("REFUSED: %s" % exc)
         return 1
-    report = check(measurements, json.loads(args.plan.read_text(encoding="utf-8")))
     if args.out:
         args.out.write_bytes(canonical_bytes(report) + b"\n")
     print(json.dumps({"verdict": report["verdict"],
