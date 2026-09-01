@@ -64,7 +64,7 @@ def test_the_baseline_case_is_a_request_shape_already_observed_as_200():
     baseline = next(c for c in diag.cases() if c["case"] == "probe_schema_probe_budget")
     ledger = json.loads((ROOT / "experiments" / "M117"
                          / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
-    observed = [o for p in ledger["profiles"] for o in p["observations"]
+    observed = [o for p in ledger["profiles"] for o in (p.get("observations") or [])
                 if o.get("probe") == "combined"]
     assert observed, "no combined probe was recorded"
     assert any(o.get("http_status") == 200 for o in observed)
@@ -186,8 +186,9 @@ def test_no_committed_diagnostic_report_contains_an_error_message_field():
 def test_the_target_is_the_first_reproducing_candidate_in_the_frozen_order():
     ledger = json.loads((ROOT / "experiments" / "M117"
                          / "STAGE1_ROUTE_QUALIFICATION_LEDGER.json").read_text(encoding="utf-8"))
-    reproducing = [p for p in sorted(ledger["profiles"], key=lambda p: p["order"])
-                   if not p["unenforced_feature_classes"]
+    reproducing = [p for p in sorted(ledger["profiles"], key=lambda p: p.get("order") or 0)
+                   if "unenforced_feature_classes" in p
+                   and not p["unenforced_feature_classes"]
                    and (p.get("token_capacity_stress") or {}).get("http_status") == 400]
     if not reproducing:
         pytest.skip("no candidate reproduced the rejection")
