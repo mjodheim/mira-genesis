@@ -87,6 +87,39 @@ def inherited_digests() -> dict[str, str]:
     return digests
 
 
+# Terms whose presence in the prompt would tell the generator what is being measured. Absence is
+# computed from the bytes, never asserted: a boolean a script writes about itself is an assertion
+# wearing a measurement's clothes, which is the defect M086-A and M095 are on record for.
+LEAK_TERMS = ("genesis", "hypothesis", "lineage", "milestone", "experiment", "predicate",
+              "evaluator", "arm", "acquired", "feature row", "operator_table", "signal_interface",
+              "candidate_space", "h60", "h61", "h62", "h63", "m113", "m115", "m118")
+
+# Axes the prompt does instruct the generator to vary, which overlap the components under test.
+# Recorded rather than denied: the literal words are absent, the structure is not.
+DECLARED_AXIS_OVERLAP = {
+    "prompt_instructs_variation_of_actions": "operator_table is one of the three components",
+    "prompt_instructs_variation_of_visibility": "signal_interface is one of the three components",
+    "prompt_instructs_variation_of_guards": "qualification requires guarded_action_count >= 1",
+    "the_family_is_project_designed": "carrier_host fixes the meta-schema; the generator fills in "
+                                      "values inside a space this project fully specified, so the "
+                                      "honest claim is carrier instances the project did not "
+                                      "author, not a carrier family it did not design",
+}
+
+
+def prompt_blindness() -> dict[str, Any]:
+    """Measured from the prompt bytes, with the axis overlap stated rather than denied."""
+    text = (M115 / "GENERATOR_PROMPT.txt").read_text(encoding="utf-8").lower()
+    found = sorted(term for term in LEAK_TERMS if term in text)
+    return {
+        "leak_terms_checked": list(LEAK_TERMS),
+        "leak_terms_present": found,
+        "mentions_the_experiment": bool(found),
+        "blindness_computed_from_the_prompt_bytes_not_asserted": True,
+        "declared_axis_overlap": DECLARED_AXIS_OVERLAP,
+    }
+
+
 def canonical_request_body(qualifying_input: str) -> dict[str, Any]:
     """The exact bytes H63 will send. Frozen before the request exists."""
     schema = json.loads((M115 / "OUTPUT_SCHEMA.json").read_text(encoding="utf-8"))
@@ -211,8 +244,7 @@ def generator_spec(plan: dict[str, Any], digests: dict[str, str],
         "prompt": {"path": "experiments/M118/GENERATOR_PROMPT.txt",
                    "sha256": digests["GENERATOR_PROMPT.txt"],
                    "inherited_byte_for_byte_from": "experiments/M115/GENERATOR_PROMPT.txt",
-                   "mentions_the_experiment": False,
-                   "mentions_features_rows_components_or_lineage": False},
+                   **prompt_blindness()},
         "qualifying_input": {"path": "experiments/M118/QUALIFYING_INPUT.txt",
                              "sha256": digests["QUALIFYING_INPUT.txt"],
                              "inherited_byte_for_byte_from": "experiments/M115/QUALIFYING_INPUT.txt",

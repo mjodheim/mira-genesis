@@ -260,6 +260,7 @@ def execute() -> dict[str, Any]:
     frozen = plan()
     budget = {"spent": 0}
     observations: list[dict[str, Any]] = []
+    identities: list[dict[str, Any]] = []
     identity: dict[str, Any] | None = None
     verdict = "ready"
     DIRECTORY.mkdir(parents=True, exist_ok=True)
@@ -294,8 +295,14 @@ def execute() -> dict[str, Any]:
             _persist_ledger("instrument_aborted", "probing %s: %s" % (probe["name"], exc))
             raise
         body = observed.get("body") if isinstance(observed.get("body"), Mapping) else {}
-        if identity is None:
-            identity = fixed.identity_holds(body)
+        # Identity is re-checked on every request, not captured once. Reading it from the first
+        # probe alone would let probes 2..n and the stress be served by a different endpoint after
+        # a router change, with the evidence that showed it sitting unread in `observations`.
+        this_identity = fixed.identity_holds(body)
+        identities.append({"request": probe["name"], "holds": this_identity["holds"],
+                           "failed_checks": this_identity["failed_checks"]})
+        if identity is None or not this_identity["holds"]:
+            identity = this_identity
         diagnosis = m116.diagnose(probe, observed,
                                   requested_model=fixed.REQUESTED_MODEL,
                                   requested_provider=fixed.PROVIDER)
@@ -349,7 +356,7 @@ def execute() -> dict[str, Any]:
             and conforms
             and isinstance(tokens, int) and tokens > STRESS_MIN_COMPLETION_TOKENS)
 
-    if identity is None or not identity["holds"]:
+    if identity is None or not identity["holds"] or not all(r["holds"] for r in identities):
         verdict = "not_ready_identity"
     elif unenforced or not combined_conforms:
         verdict = "not_ready_features"
@@ -368,6 +375,9 @@ def execute() -> dict[str, Any]:
         "route": fixed.route(),
         "observed_at": stage1._now(),
         "identity": identity or {"holds": False, "failed_checks": ["no_response"]},
+        "identity_per_request": identities,
+        "identity_held_on_every_request": bool(identities) and all(
+            row["holds"] for row in identities),
         "required_feature_classes": required_feature_classes(),
         "unenforced_feature_classes": unenforced,
         "combined_probe_conforms": combined_conforms,
