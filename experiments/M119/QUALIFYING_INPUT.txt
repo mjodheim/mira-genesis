@@ -1,0 +1,57 @@
+Emit a JSON object with a single key "machines" whose value is a list of exactly 36 entries.
+
+Each entry describes one small machine, and is an object with exactly six keys.
+
+"surface" : an object with exactly eight keys describing how the machine is spoken to.
+    "kind"            : one of "json_object", "text_line", "packed_digits", "json_array".
+    "ok_token"        : a lowercase ASCII word of 2 to 8 characters, letters and digits only,
+                        beginning with a letter.
+    "error_token"     : another such word, different from "ok_token".
+    "field_separator" : one of " ", ":", ",", ";", "|".
+    "pair_separator"  : one of "=", "-", "/".
+    "action_key"      : a lowercase ASCII name of 2 to 12 characters, letters, digits and
+                        underscores, beginning with a letter.
+    "argument_key"    : another such name, different from the other two keys.
+    "status_key"      : another such name, different from the other two keys.
+
+"cells" : a list of 1 to 4 objects, each with exactly two keys.
+    "name" : a lowercase ASCII name of 2 to 12 characters, letters, digits and underscores,
+             beginning with a letter. No two cells share a name, and no cell shares a name with
+             "action_key", "argument_key" or "status_key".
+    "size" : an integer from 2 to 4. The cell holds an integer from 0 to size minus one.
+
+"initial" : a list of integers, exactly as long as "cells". Entry i is from 0 to the size of cell
+            i minus one.
+
+"visible" : a list of booleans, exactly as long as "cells". At least one entry is true.
+
+"errors" : a list of 1 to 4 distinct lowercase ASCII names, each 2 to 12 characters, letters,
+           digits and underscores, beginning with a letter.
+
+"actions" : a list of 2 to 6 objects, each with exactly six keys.
+    "name"     : a lowercase ASCII name as above. No two actions share a name.
+    "arity"    : 0 or 1.
+    "arg_size" : an integer from 2 to 4 when "arity" is 1, and 0 when "arity" is 0.
+    "guard"    : a list of 0 to 3 objects, each with exactly three keys.
+                 "cell"     : an integer index into "cells".
+                 "relation" : one of "eq", "ne", "lt", "ge".
+                 "value"    : an integer from 0 to the size of that cell minus one.
+    "effect"   : a list of 1 to 3 objects, each with exactly three keys.
+                 "cell"    : an integer index into "cells".
+                 "mode"    : one of "set", "add", "sub", "arg", "copy". Use "arg" only when
+                             "arity" is 1.
+                 "operand" : an integer. For "copy" it is an index into "cells". For "arg" it is 0.
+                             Otherwise it is from 0 to the size of that cell minus one.
+    "error"    : one of the names in "errors".
+
+Produce the entries independently of one another. Do not repeat an entry, and do not produce two
+entries that differ only in the names, tokens or separators they use. Vary the surface kind, the
+number of cells, their sizes, which of them are visible, the number of actions, their arities,
+their guards and their effects across the list.
+
+Do not add keys, comments, prose, explanation or any other text: the response must be the JSON
+object and nothing else.
+
+You are not told what these machines are for, and you should not guess. Do not attempt to make them
+interesting, balanced, adversarial, representative, easy or difficult. Any such attempt would make
+the output worse for its purpose.
