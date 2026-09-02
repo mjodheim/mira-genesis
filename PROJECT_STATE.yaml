@@ -1,7 +1,7 @@
 project: Mira Genesis
 updated_at: 2026-09-02
 snapshot_kind: current_authoritative_navigation
-status: m119_closed_instrument_aborted_h64_untested_no_successor_frozen
+status: m120_apparatus_built_and_rehearsed_unspent_h65_untested_owner_gates_open
 
 historical_snapshot_archives:
   markdown: docs/state-history/PROJECT_STATE_2026-08-24.md
@@ -150,6 +150,12 @@ closed_instrument_line:
     generality_gate_advanced: false
 
 publication_dispositions:
+  M120:
+    register_entry: null
+    disposition: not_recorded
+    review_prepared: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
+    proposed_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    recording_it_is_an_owner_act_and_has_not_been_performed: true
   M117:
     register_entry: P-021
     disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
@@ -162,20 +168,108 @@ publication_dispositions:
 
 current_frontier:
   active_frozen_scientific_hypothesis: null
-  successor_started: false
-  proposed_successor:
+  successor_started: true
+  successor:
     milestone: M120
     hypothesis: H65
-    registered_in_repository: false
-    label_is_provisional: true
+    preregistered: true
+    preregistration: experiments/M120/PREREGISTRATION.md
+    scientific_proposition_inherited_unchanged_from: H64
+    scientific_freeze_taken: false
+    qualifying_scientific_invocations: 0
+    carrier_bank_exists: false
+    hypothesis_status: untested
+    publication_disposition_recorded: false
+    publication_review_prepared: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
   objective: obtain_an_actual_scientific_verdict_without_another_instrument_abort
-  mandatory_prospective_requirements:
-    - mechanically_align_generator_schema_with_frozen_host_acceptance
-    - verify_bank_scientific_adequacy_against_frozen_plan_before_seal_and_reveal
-    - rederive_or_independently_validate_frozen_analysis_plan_and_thresholds_in_checker
-    - score_only_the_committed_canonical_measurements_artifact
-    - exercise_the_complete_direct_checker_success_path_on_development_evidence_before_freeze
-    - spend_no_qualifying_invocation_until_all_preflight_gates_pass
+  mandatory_prospective_requirements_status:
+    mechanically_align_generator_schema_with_frozen_host_acceptance: implemented_and_tested
+    verify_bank_scientific_adequacy_against_frozen_plan_before_seal_and_reveal:
+      implemented_and_tested
+    rederive_or_independently_validate_frozen_analysis_plan_and_thresholds_in_checker:
+      implemented_and_tested
+    score_only_the_committed_canonical_measurements_artifact:
+      implemented_and_tested_by_reproducing_the_measurement_from_the_committed_bank
+    exercise_the_complete_direct_checker_success_path_on_development_evidence_before_freeze:
+      implemented_and_green
+    spend_no_qualifying_invocation_until_all_preflight_gates_pass: no_invocation_spent
+
+m120_instrument:
+  science_inherited_from_m119_by_import: true
+  inherited_modules:
+    - metamorphosis/m119_arms.py
+    - metamorphosis/m119_endpoint.py
+    - metamorphosis/m119_decomposition.py
+  inherited_science_drift_is_a_build_error: true
+  carrier_contract:
+    module: metamorphosis/m120_carrier_contract.py
+    schema_states_no_relation_between_two_fields: true
+    schema_keywords_are_a_subset_of_those_proven_enforced_on_the_route: true
+    decoder_is_total_deterministic_and_content_independent: true
+    decoder_cannot_refuse_reorder_drop_or_select: true
+    decoder_cannot_make_a_carrier_qualify: true
+  carrier_family:
+    cells: [3, 4]
+    hidden_cells_at_most: 1
+    observable_cells_at_least: 2
+    conditional_actions: [2, 3]
+    plain_actions: [2, 3]
+    actions: [4, 6]
+    narrower_than_m115: true
+    narrowing_informed_by_the_closed_public_m119_bank: true
+    narrowing_is_disclosed_not_presented_as_prospective_innocence: true
+  requested_carriers: 48
+  bank_sizing:
+    derivation: scripts/build_m120_bank_sizing.py
+    record: experiments/M120/BANK_SIZING_DEVELOPMENT.json
+    measured_qualification_rate_at_the_contract_corner: 0.2875
+    measured_qualification_rate_uniform: 0.4175
+    planning_qualification_rate: 0.1437
+    planning_rate_is_half_the_measured_corner_rate: true
+    expected_qualifying_carriers: 6.8976
+    expected_paired_demands: 27.95
+    minimum_qualifying_carriers: 3
+    discordant_pairs_needed_for_significance: 5
+    measures_a_development_emitter_not_the_blind_generator: true
+  preseal_adequacy_gate:
+    module: metamorphosis/m120_adequacy.py
+    decides_adequacy_before_the_seal: true
+    output_allowlist_is_enforced: true
+    exposes_no_carrier_value_index_or_ordering: true
+    an_inadequate_bank_is_terminal_and_never_redrawn: true
+  checker:
+    entry_point: scripts/check_m120_result.py
+    caller_selectable_evidence_paths: 0
+    rederives_the_analysis_plan_from_code: true
+    reproduces_the_measurement_from_the_committed_carrier_bank: true
+    walks_the_custody_chain_from_ciphertext_to_carrier_bank: true
+    total_rewrite_of_every_committed_artifact_with_a_re_seal_is_out_of_scope: true
+  readiness:
+    re_measured_for_this_candidate_schema: true
+    inherited_m118_stress_schema_does_not_dominate_the_m120_census: true
+    stress_schema_is_deliberately_not_the_candidate_schema: true
+    freeze_is_refused_without_a_committed_ready_result: true
+    requires_owner_credential: true
+  development_rehearsal:
+    record: experiments/M120/DEVELOPMENT_REHEARSAL.json
+    ran_the_real_scripts_in_a_disposable_git_checkout: true
+    carriers_enveloped: 48
+    carriers_refused_by_the_frozen_host: 0
+    qualifying_carriers: 20
+    distinct_qualifying_structures: 20
+    paired_demands_available: 90
+    clean_clone_reproduced_the_report_byte_identically: true
+    adversarial_substitutions: 9
+    every_substitution_failed_closed: true
+    development_verdict_is_not_evidence_about_h65: true
+    defect_found_by_the_rehearsal_and_fixed_before_freeze:
+      a_forged_measurements_file_committed_over_the_canonical_path_was_accepted
+  owner_gates_open:
+    - publication_or_ip_disposition
+    - development_route_readiness_run_requiring_a_credential
+    - scientific_freeze
+    - qualifying_scientific_invocation
+    - single_reveal_authorization
 
 closed_record_policy:
   milestones: [M115, M116, M117, M118, M119]
@@ -206,6 +300,11 @@ next_agent_autonomy:
 pointers:
   current_frontier: docs/CURRENT_RESEARCH_FRONTIER.md
   claude_handoff: docs/CLAUDE_HANDOFF_M120.md
+  m120_preregistration: experiments/M120/PREREGISTRATION.md
+  m120_complexity_budget: experiments/M120/COMPLEXITY_BUDGET.md
+  m120_bank_sizing: experiments/M120/BANK_SIZING_DEVELOPMENT.json
+  m120_development_rehearsal: experiments/M120/DEVELOPMENT_REHEARSAL.json
+  m120_publication_review: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
   m117_outcome: experiments/M117/STAGE1_OUTCOME.md
   m118_outcome: experiments/M118/OUTCOME.md
   m119_outcome: experiments/M119/OUTCOME.md

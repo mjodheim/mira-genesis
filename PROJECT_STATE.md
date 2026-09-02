@@ -1,6 +1,6 @@
 # Mira Genesis — current authoritative project state
 
-**Updated: 2 September 2026**
+**Updated: 2 September 2026 (M120 apparatus)**
 
 This file is the current authoritative navigation and interpretation snapshot. It does not replace
 frozen experiment records, immutable results, `DECISIONS.md`, `SCIENTIFIC_HYPOTHESES.md`, or the
@@ -20,9 +20,10 @@ The repository is closed cleanly through **M119**.
   was spent, zero paired demands were posed, no arm ran and no scientific comparison was made.
 - **No generality gate advanced in M113–M119.** Instrument failure, route calibration and instrument
   audit are not evidence for or against the corresponding scientific hypotheses.
-- **There is no active frozen successor hypothesis at this snapshot.** `M120` / `H65` is a proposed
-  successor name only; neither identifier is currently registered in the repository. A successor
-  must register and pre-register its hypothesis prospectively before any freeze or qualifying spend.
+- **M120/H65 is pre-registered and built, and nothing scientific has been spent on it.** Its
+  apparatus is complete, DEVELOPMENT-rehearsed end to end and hostile-reviewed; its qualifying
+  scientific invocations are **0**, no bank exists, and no freeze has been taken. H65 is
+  **untested**, and the milestone is waiting on owner gates listed below.
 - **M115–M119 are closed records.** Their frozen code, plans, artifacts, checker behavior and
   outcomes must not be repaired, rerun, filtered, relabelled or reinterpreted retroactively.
 
@@ -62,6 +63,7 @@ self-improvement.
 | **M117** | H62 | route qualification / instrument calibration completed; 0 qualifying scientific invocations | H62 untested; OpenInference route calibrated for successor use |
 | **M118** | H63 | instrument design and hostile audit deliberately stopped before scientific generation; 0 qualifying invocations | H63 untested; instrument was judged too complicated for a one-shot test |
 | **M119** | H64 | one qualifying generation, one seal/reveal, inadequate carrier bank, zero paired demands | `instrument_aborted`; H64 untested |
+| **M120** | H65 | apparatus pre-registered, built and DEVELOPMENT-rehearsed; 0 qualifying invocations, no freeze, no bank | H65 untested; waiting on owner gates |
 
 ### M116
 
@@ -134,7 +136,47 @@ about checker robustness.
 They are intentionally **not repaired in M119**. The checker is part of the tested-system freeze;
 editing it after reveal would invalidate the chronology the freeze exists to protect.
 
-## Next scientific frontier — prospective successor only
+## M120 / H65 — pre-registered, built, unspent
+
+M120 preserves H64's scientific proposition unchanged and inherits M119's arms, endpoint, exact
+test, alpha, effect floor, guards, verdicts, decomposition, comparator seed, observation budget and
+admissibility minimums **by import**, with a mechanical check that refuses to derive an analysis
+plan if those modules' bytes move. What it changes is the instrument.
+
+| M119 finding | what M120 does about it |
+|---|---|
+| schema conformance did not imply host acceptance (33 of 34 refusals) | a candidate schema that states no relation between two fields, and a total content-independent decoder; every schema-valid candidate decodes into a carrier the frozen host accepts |
+| the bank was degenerate — decoding M119's own committed bank leaves 1 of 37 qualifying | the carrier family is narrowed prospectively, and the narrowing is disclosed as a dependency on a closed public record |
+| admission checked payload admissibility, not bank adequacy | a pre-seal adequacy gate with a counts-only enforced output allowlist; an inadequate bank closes the milestone without a reveal |
+| the checker trusted a caller-supplied plan | the plan is re-derived from code before any threshold is read |
+| the checker authenticated one file and scored another | the checker takes no evidence path from argv, walks the custody chain from ciphertext to carrier bank, and **reproduces** the measurement from the committed bank rather than reading it |
+| readiness was inherited across a schema change | readiness is re-measured for this candidate schema against a non-carrier stress schema that dominates its census, and the freeze is refused without it |
+
+**DEVELOPMENT rehearsal, in a disposable checkout, on the real scripts:** 48 candidates, **0**
+refused by the frozen host, 20 qualifying carriers, 20 distinct structures, 90 paired demands; the
+scoring entry point reproduces byte-identically from a second clean clone; **nine** adversarial
+substitutions all fail closed, including the two that reproduce M119's disclosed checker defects.
+The rehearsal's own verdict is on synthetic devkit carriers and **is not evidence about H65**.
+
+One finding came out of that rehearsal rather than out of review: an earlier draft of the checker
+**accepted** a forged measurements file that was committed over the canonical path with a
+recomputed digest. That is why the checker now reproduces the measurement instead of authenticating
+it, and why the custody chain is walked end to end.
+
+### Owner gates M120 is waiting on
+
+Nothing below has been crossed, and none may be crossed by a development agent:
+
+1. the publication disposition — reviewed and drafted at
+   [`docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md); no
+   `IP_ASSET_REGISTER.md` row is written;
+2. the DEVELOPMENT route-readiness run, which needs `OPENROUTER_API_KEY` and is a precondition of
+   the freeze;
+3. the scientific freeze;
+4. the one qualifying generation;
+5. the single reveal authorization.
+
+## Next scientific frontier — what the successor still has to prove
 
 The next successor should aim to obtain an actual scientific verdict rather than another
 instrument abort. Before any qualifying invocation is authorized, it should mechanically establish:
@@ -155,9 +197,14 @@ instrument abort. Before any qualifying invocation is authorized, it should mech
 6. **No qualifying spend until all instrument gates pass.** A failing DEVELOPMENT gate is cheap and
    informative; a failing one-shot scientific generation closes a milestone.
 
-`M120` / `H65` is a convenient proposed label for this successor, **not a registered fact** at this
-snapshot. Registration, publication disposition, preregistration and freeze must occur in the proper
-order before scientific execution.
+Points 1 through 5 above are implemented and mechanically tested on the M120 branch. Point 6 is the
+open one: **no qualifying invocation has been spent, and the remaining gates are the owner's.**
+
+What M120 still cannot promise is a verdict. The instrument gates establish that a schema-valid
+completion produces a host-valid bank and that an inadequate bank cannot consume the reveal. Whether
+the blind generator produces an *adequate* bank on this route is not knowable before the generation,
+and the honest statement is that a DEVELOPMENT emitter qualified at 29% at the contract's smallest
+corner while M119's real blind bank qualified at one in thirty-seven under the old contract.
 
 ## Governance and publication
 
@@ -165,7 +212,11 @@ Owner publication dispositions are recorded in `IP_ASSET_REGISTER.md`:
 
 - P-021 / M117 — `PUBLIC_AGPL_COMMERCIAL_OPTION`;
 - P-022 / M118 — `PUBLIC_AGPL_COMMERCIAL_OPTION`;
-- P-023 / M119 — `PUBLIC_AGPL_COMMERCIAL_OPTION`.
+- P-023 / M119 — `PUBLIC_AGPL_COMMERCIAL_OPTION`;
+- **M120 — no row written.** The pre-publication review is prepared at
+  [`docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md) with a
+  proposed `PUBLIC_AGPL_COMMERCIAL_OPTION` disposition and a draft register row. Recording it is the
+  owner's act and has not been performed.
 
 Anthony Mets remains the sole human research director and acceptance/release decision-maker.
 Anthropic Claude, OpenAI Codex, OpenAI ChatGPT and comparable systems are recorded as AI tooling and
@@ -197,6 +248,14 @@ For current navigation:
 - [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md)
 - [`PROJECT_STATE.yaml`](PROJECT_STATE.yaml)
 - [`docs/CLAUDE_HANDOFF_M120.md`](docs/CLAUDE_HANDOFF_M120.md)
+
+For M120:
+
+- [`experiments/M120/PREREGISTRATION.md`](experiments/M120/PREREGISTRATION.md)
+- [`experiments/M120/COMPLEXITY_BUDGET.md`](experiments/M120/COMPLEXITY_BUDGET.md)
+- [`experiments/M120/BANK_SIZING_DEVELOPMENT.json`](experiments/M120/BANK_SIZING_DEVELOPMENT.json)
+- [`experiments/M120/DEVELOPMENT_REHEARSAL.json`](experiments/M120/DEVELOPMENT_REHEARSAL.json)
+- [`docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md)
 
 For the closed instrument line:
 
