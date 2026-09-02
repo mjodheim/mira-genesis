@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 2 September 2026**
+**Reader-facing status snapshot — 2 September 2026 (M120 apparatus)**
 
 This document explains where the active research line stands now. It is a navigation layer, not a
 replacement for frozen protocols, immutable results, `PROJECT_STATE.md`, `PROJECT_STATE.yaml`,
@@ -22,10 +22,13 @@ The immediate problem is therefore instrumental and prospective:
 > scientifically adequate for the frozen plan, and that the checker scores only the exact committed
 > plan and evidence it authenticates?
 
-An actual scientific comparison should occur only after those questions are answered mechanically.
+Those questions are now answered mechanically, on the M120 branch, and **nothing scientific has been
+spent answering them**. M120/H65 is pre-registered, built and rehearsed end to end on DEVELOPMENT
+data; its qualifying scientific invocations are **0**, no bank exists, no freeze has been taken, and
+H65 is **untested**.
 
-There is **no active frozen successor hypothesis** at this snapshot. `M120` / `H65` is a proposed
-working label only; neither identifier is currently registered in the repository.
+What remains is not more instrument work. It is the five owner gates listed at the end of this
+document.
 
 ## The recent instrument sequence
 
@@ -36,6 +39,7 @@ working label only; neither identifier is currently registered in the repository
 | M117 / H62 | route calibration / instrument development closed | OpenInference on the fixed DeepSeek checkpoint passed all final DEVELOPMENT qualification clauses and large constrained-output stress; apparatus revisions were transparently disclosed | **untested** |
 | M118 / H63 | instrument-design and hostile-audit closed before scientific generation | readiness passed, but repeated Tier-1 measurement-design defects showed the scientific instrument was too complicated for a one-shot test | **untested** |
 | M119 / H64 | `instrument_aborted` after one qualifying generation | clean delivery and schema conformance still produced a bank the frozen host/evaluator could not qualify | **untested** |
+| M120 / H65 | pre-registered, built, DEVELOPMENT-rehearsed, unspent | a schema that states no relation between two fields plus a total decoder closes the host gap; adequacy is decided before the seal; the checker reproduces what it scores | **untested** |
 
 No M113–M119 milestone advanced G1–G10.
 
@@ -81,6 +85,81 @@ were actually used and the committed report replays byte-identically.
 
 They **must not be fixed inside M119**. The checker is part of the tested-system freeze and a
 post-reveal edit would contaminate the closed record.
+
+## M120 in one page
+
+M120 keeps the science and replaces the instrument. The proposition is H64's, unchanged, and the
+arms, endpoint, exact test, α, effect floor, guards, verdicts, decomposition, comparator seed,
+observation budget and admissibility minimums are inherited from M119 **by import**, with a check
+that refuses to build an analysis plan if those modules' bytes move.
+
+Five things are new, and each one names the M119 failure it closes.
+
+**The carrier contract.** The schema handed to the generator states no relation between two fields,
+because a relation between two fields is what M119 died of. `arity` and `arg_size` become one field
+over `{0, 2, 3, 4}`; `initial` moves inside its own cell; `visible` becomes `hidden`, at most one
+index over at least three cells; the error name becomes an index. A total, deterministic,
+content-independent decoder discharges what is left. Every schema-valid candidate decodes into a
+carrier the frozen host accepts — established by exhausting 240 constraint corners, fuzzing 1,200
+draws, and running M119's own committed bank through it, where **0 of 37** are now refused.
+
+**The narrowed family.** Closing the schema gap alone would not have been enough. Re-measured
+against M119's committed public bank, that generator answered every range with its minimum — 22 of
+37 machines had one cell — and decoding it leaves **one** machine of 37 qualifying. So the family
+asked for is narrower: three to four cells, at most one latent, two to three conditional actions
+plus two to three more. **That narrowing was chosen after reading a closed public record, and is
+disclosed as such.** A verdict here speaks about a smaller family than M119 would have.
+
+**Adequacy before the seal.** M119's bank was admissible and untestable, and the one reveal was
+spent finding out. The gate now counts qualifying carriers, distinct structures and paired demands
+before anything is sealed, with an enforced counts-only output allowlist, and an inadequate bank
+closes the milestone with the reveal unspent. It is not permission to filter or redraw.
+
+**A checker that reproduces what it scores.** It takes no evidence path from the command line,
+re-derives the analysis plan from code, walks the custody chain from the sealed ciphertext down to
+the carrier bank, and **re-runs the whole measurement** over the committed bank rather than reading
+the committed numbers.
+
+**Readiness re-measured for this schema.** M118's stress schema does not dominate the M120
+candidate census, so inheriting its readiness would assert a measurement nobody took. The freeze is
+refused without a committed M120 readiness result, and its stress schema is deliberately a
+non-carrier one so that DEVELOPMENT cannot preview the bank.
+
+### What the rehearsal found
+
+The DEVELOPMENT rehearsal runs the real scripts in a disposable git checkout: 48 candidates, 0
+refused by the host, 20 qualifying, 20 distinct structures, 90 paired demands, and a second clean
+clone reproducing the report byte-identically. Nine adversarial substitutions all fail closed.
+
+One of them did not, at first. An earlier draft of the checker **accepted** a forged measurements
+file committed over the canonical path with a recomputed digest — the same defect class M119
+disclosed, surviving into the successor built to remove it. That is why the checker now reproduces
+the measurement instead of authenticating it. It was found before the freeze, which is where such
+things are supposed to be found.
+
+The rehearsal's own verdict is computed on synthetic devkit carriers and is **not evidence about
+H65**.
+
+### The five owner gates
+
+Nothing below has been crossed:
+
+1. the publication/IP disposition — reviewed and drafted at
+   [`../docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](IP_REVIEWS/M120_PUBLICATION_REVIEW.md), with
+   no register row written;
+2. the DEVELOPMENT route-readiness run, which needs a credential and precedes the freeze;
+3. the scientific freeze;
+4. the one qualifying generation;
+5. the single reveal authorization.
+
+### What M120 still cannot promise
+
+A verdict. The gates establish that a schema-valid completion yields a host-valid bank, and that an
+inadequate bank cannot consume the reveal. Whether the blind generator produces an *adequate* bank
+on this route is not knowable before the generation. The honest numbers: a development emitter
+qualified at 29% at the contract's smallest corner, and M119's real blind bank qualified at one in
+thirty-seven under the old contract. If the bank is inadequate, M120 closes as an instrument
+failure **without** spending the reveal, and says so.
 
 ## What the next successor must prove before one-shot science
 
@@ -134,6 +213,9 @@ one-shot opportunity and teaches nothing about the hypothesis.
 - M118's decision to stop before scientific generation;
 - M119's frozen plan, code, bank, reveal, checker and `instrument_aborted` result;
 - the two disclosed M119 checker defects as historical facts.
+
+M120 reads M119's committed public bank as instrument evidence and changes nothing in it. That
+reading is disclosed in M120's preregistration, plan limitations and derivation report.
 
 No successor may make its own result look better by editing those records.
 

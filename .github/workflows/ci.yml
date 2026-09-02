@@ -216,6 +216,19 @@ jobs:
       - name: The M094 result must reproduce from its own preserved artifacts
         run: python scripts/check_m094_result.py --require-result --no-write
 
+      # M120 is pre-registered and unspent: no freeze, no bank, no result. This is the *unarmed*
+      # form of its checker, which reports that there is nothing to replay and exits clean. When a
+      # qualifying M120 result lands, the step that lands it must arm this with --require-result,
+      # exactly as M094's gate was armed once its run existed.
+      - name: The M120 checker must report a clean state until a result exists
+        run: python scripts/check_m120_result.py
+
+      # The acceptance claim M119 had no test of: every candidate the generator contract permits
+      # must decode into a carrier the frozen host accepts. Run here as well as in the test job,
+      # because it is the single gate whose failure would repeat M119's outcome exactly.
+      - name: The M120 carrier contract must leave the frozen host nothing to refuse
+        run: python -c "import sys; sys.path.insert(0, '.'); from metamorphosis import m120_devkit as k, m120_carrier_contract as c; rates = [k.qualification_rate('ci-', 120, mode=m) for m in k.MODES]; sys.exit(0 if all(r['every_decoded_candidate_was_accepted'] for r in rates) else 1)"
+
       - name: M085's external-maintainer boundary must remain fail-closed
         run: |
           if python scripts/check_m085_readiness.py --require-ready; then
