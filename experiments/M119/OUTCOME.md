@@ -116,6 +116,58 @@ not express its own uniform draw. Those are recorded in
 None of that makes H64 tested. The apparatus was sound and the bank was not, and a sound instrument
 pointed at an inadequate sample produces exactly this record and nothing more.
 
+## Corrigendum — two checker defects found after the freeze, disclosed and not repaired
+
+An automated review of the closing pull request raised two findings against `check_m119_result.py`.
+**Both were reproduced and both are real.** They are recorded here rather than fixed, for the reason
+given below.
+
+**1. `check()` trusted a caller-supplied analysis plan.** It compared the measurement's
+`analysis_plan_commitment_sha256` against the plan's own `plan_commitment_sha256` *string*, but never
+recomputed that digest from the plan's contents and never re-derived the plan from code. A plan file
+with `minimum_qualifying_carriers` and `minimum_distinct_qualifying_structures` set to zero, keeping
+the frozen commitment digest verbatim, is accepted: two of this run's three instrument failures
+disappear from the report. On a bank with one or two qualifying carriers this would have turned an
+`instrument_aborted` into a scientific verdict.
+
+**2. The replay gate authenticated one file and scored another.** `main()` proved the committed
+`MEASUREMENTS.json` was at HEAD and unchanged, then scored whatever path `--measurements` named. A
+fabricated record that copies the public freeze, reveal and carrier-bank digests and recomputes its
+own unkeyed `measurements_sha256` passes every remaining check, despite never being the artifact
+whose committed bytes were verified.
+
+Both are the same root cause as the blocker the second pre-freeze review found, one level up: **the
+checker authenticates one thing and scores another.** That review fixed the case it saw — the
+measurement must name the committed reveal — and neither reviewer, nor the implementation, noticed
+that the plan and the measurement file itself were reachable by the same route. Three passes over
+the same defect class found it three times in three places, and stopped one short.
+
+### Why they are not fixed here
+
+`scripts/check_m119_result.py` is a tested-system path. The freeze binds its bytes, and every phase
+after the generation re-proves that binding. Editing it now would be detected — verified: appending
+a single comment line makes the checker refuse itself with *"the tested system changed after the
+freeze"* — and the effect would be to make M119's own committed result permanently unreplayable by
+the very tool that produced it. Repairing a tested system after the reveal is precisely the
+contamination the freeze exists to prevent, and a defect found afterwards does not become an
+exception to that. A new entry point routed around the freeze's entry-point scan would be worse: it
+would be evading a guard that is working.
+
+### What they do and do not affect
+
+Neither touched this run. The scoring used the committed canonical `ANALYSIS_PLAN.json` and
+`MEASUREMENTS.json`, and the committed result **replays byte-identically from them**:
+`bf6fc9b307a1f0a3ea9f1dd6453761f75c533ab7ae3543d365f738578e481a78` recomputed from the committed
+artifacts equals the committed `report_sha256`. The verdict is `instrument_aborted` on zero
+qualifying carriers and zero paired demands — there was no number to inflate and no comparison to
+steer, and every disclosed path leads to the same verdict on these artifacts.
+
+What they do affect is the strength of the claim M119 can make about its own auditability. The
+honest statement is narrower than the one the apparatus was built to support: *this* result replays
+from *these* committed bytes, and the checker as frozen would not have stopped a determined operator
+who supplied different ones. A successor must close both — validate the plan by re-derivation rather
+than by its self-reported digest, and score the committed artifact rather than a named path.
+
 ## Artifacts
 
 | | |
