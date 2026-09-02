@@ -1,7 +1,7 @@
 # Claude handoff — prospective M120 successor after M119
 
 **Prepared:** 2 September 2026  
-**Starting point:** merged `main` after M119 (`a3f03efd8e86c10a1282828199e43649e3c3d807` before the documentation-only state consolidation)
+**Starting point:** merged `main` after M119 and the documentation-only state consolidation.
 
 ## Read this first
 
