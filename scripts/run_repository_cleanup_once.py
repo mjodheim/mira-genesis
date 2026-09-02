@@ -70,15 +70,16 @@ def paged(path: str, key: str):
 def extract_run_ids(text: str) -> set[int]:
     """Return every plausible GitHub Actions run ID from repository/PR text.
 
-    The cleanup intentionally over-protects numeric tokens rather than trying to enumerate every
-    historical citation spelling (for example ``run `31281234286``` or
-    ``failed_qualification_run: 31281234286``). A false positive only retains an old run; a false
-    negative could destroy cited evidence.
+    Historical citations use several spellings, so the cleanup protects any standalone decimal
+    token in GitHub's numeric-ID range rather than enumerating each spelling. Eight digits is well
+    below every run ID currently cited here; 20 digits covers unsigned 64-bit-style identifiers.
+    Longer decimal fixtures are scientific data, not GitHub IDs, and are deliberately ignored.
+    A false positive only retains an old run; a false negative could destroy cited evidence.
     """
     if not text:
         return set()
-    ids = {int(value) for value in re.findall(r"actions/runs/(\d+)", text)}
-    ids.update(int(value) for value in re.findall(r"(?<!\d)(\d{8,})(?!\d)", text))
+    ids = {int(value) for value in re.findall(r"actions/runs/(\d{1,20})(?!\d)", text)}
+    ids.update(int(value) for value in re.findall(r"(?<!\d)(\d{8,20})(?!\d)", text))
     return ids
 
 
@@ -158,8 +159,8 @@ def cleanup_actions(all_prs: list[dict]) -> dict[str, object]:
     completed_run_ids = {run["id"] for run in completed_runs}
     protected.update(run["id"] for run in completed_runs[:KEEP_NEWEST_RUNS])
 
-    # Search every tracked text line containing an 8+ digit token. This deliberately errs on the
-    # side of preservation so all historical run-ID citation formats remain protected.
+    # Search tracked text lines likely to contain a run citation. The extractor then admits only
+    # plausible GitHub-sized numeric IDs and ignores arbitrarily long scientific decimal fixtures.
     try:
         tracked_text = subprocess.check_output(
             ["git", "grep", "-I", "-h", "-E", r"[0-9]{8,}"],
