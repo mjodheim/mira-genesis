@@ -1,7 +1,6 @@
 project: Mira Genesis
 updated_at: 2026-09-02
 snapshot_kind: current_authoritative_navigation
-source_main_before_state_consolidation: a3f03efd8e86c10a1282828199e43649e3c3d807
 status: m119_closed_instrument_aborted_h64_untested_no_successor_frozen
 
 historical_snapshot_archives:
