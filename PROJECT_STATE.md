@@ -1,7 +1,6 @@
 # Mira Genesis — current authoritative project state
 
-**Updated: 2 September 2026**  
-**Source main before this state consolidation:** `a3f03efd8e86c10a1282828199e43649e3c3d807`
+**Updated: 2 September 2026**
 
 This file is the current authoritative navigation and interpretation snapshot. It does not replace
 frozen experiment records, immutable results, `DECISIONS.md`, `SCIENTIFIC_HYPOTHESES.md`, or the
