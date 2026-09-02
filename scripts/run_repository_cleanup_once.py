@@ -68,10 +68,17 @@ def paged(path: str, key: str):
 
 
 def extract_run_ids(text: str) -> set[int]:
+    """Return every plausible GitHub Actions run ID from repository/PR text.
+
+    The cleanup intentionally over-protects numeric tokens rather than trying to enumerate every
+    historical citation spelling (for example ``run `31281234286``` or
+    ``failed_qualification_run: 31281234286``). A false positive only retains an old run; a false
+    negative could destroy cited evidence.
+    """
     if not text:
         return set()
     ids = {int(value) for value in re.findall(r"actions/runs/(\d+)", text)}
-    ids.update(int(value) for value in re.findall(r"(?i)\brun(?:\s+|[`#:_-]+)(\d{8,})\b", text))
+    ids.update(int(value) for value in re.findall(r"(?<!\d)(\d{8,})(?!\d)", text))
     return ids
 
 
@@ -120,11 +127,27 @@ def cleanup_branches(all_prs: list[dict]) -> tuple[list[str], list[str]]:
         if not ancestor:
             kept.append(f"{branch} (contains non-main history)")
             continue
-        result = subprocess.run(["git", "push", "origin", "--delete", branch], check=False)
+
+        # Lease the deletion against the exact remote tip we inspected. If somebody pushes between
+        # the fetch and this command, Git refuses the deletion instead of discarding new history.
+        inspected_tip = subprocess.check_output(
+            ["git", "rev-parse", f"origin/{branch}"],
+            text=True,
+        ).strip()
+        result = subprocess.run(
+            [
+                "git",
+                "push",
+                f"--force-with-lease=refs/heads/{branch}:{inspected_tip}",
+                "origin",
+                f":refs/heads/{branch}",
+            ],
+            check=False,
+        )
         if result.returncode == 0:
             deleted.append(branch)
         else:
-            kept.append(f"{branch} (delete refused)")
+            kept.append(f"{branch} (delete refused or remote tip changed)")
     return deleted, kept
 
 
@@ -132,11 +155,14 @@ def cleanup_actions(all_prs: list[dict]) -> dict[str, object]:
     protected = {CURRENT_RUN}
     completed_runs = paged("actions/runs?status=completed", "workflow_runs")
     completed_runs.sort(key=lambda run: run.get("created_at", ""), reverse=True)
+    completed_run_ids = {run["id"] for run in completed_runs}
     protected.update(run["id"] for run in completed_runs[:KEEP_NEWEST_RUNS])
 
+    # Search every tracked text line containing an 8+ digit token. This deliberately errs on the
+    # side of preservation so all historical run-ID citation formats remain protected.
     try:
         tracked_text = subprocess.check_output(
-            ["git", "grep", "-I", "-h", "-e", "actions/runs/", "-e", "run "],
+            ["git", "grep", "-I", "-h", "-E", r"[0-9]{8,}"],
             text=True,
             stderr=subprocess.DEVNULL,
         )
@@ -167,7 +193,9 @@ def cleanup_actions(all_prs: list[dict]) -> dict[str, object]:
         if len(deleted_artifacts) >= MAX_ARTIFACT_DELETES:
             break
         run_id = (artifact.get("workflow_run") or {}).get("id")
-        if run_id in protected:
+        # Never touch an artifact unless GitHub confirms that its owning workflow has completed.
+        # This protects intermediate artifacts uploaded by an in-progress multi-run protocol.
+        if run_id not in completed_run_ids or run_id in protected:
             continue
         request(f"actions/artifacts/{artifact['id']}", method="DELETE")
         deleted_artifacts.append(artifact["id"])
