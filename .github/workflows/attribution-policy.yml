@@ -3,6 +3,8 @@ name: Attribution policy
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, edited, ready_for_review]
+  push:
+    branches: [main]
 
 permissions:
   contents: read
@@ -13,6 +15,7 @@ concurrency:
 
 jobs:
   attribution:
+    if: github.event_name == 'pull_request_target'
     name: Human-only attribution
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -40,3 +43,24 @@ jobs:
           --base "$BASE_SHA"
           --head "$HEAD_SHA"
           --event "$EVENT_PATH"
+
+  repository-cleanup-once:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[repo-cleanup-once]')
+    name: Repository cleanup (one-shot)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+      actions: write
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Delete fully merged branches and old unprotected Actions history
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/run_repository_cleanup_once.py
