@@ -10,22 +10,36 @@ import subprocess
 import urllib.error
 import urllib.request
 
-REPO = os.environ["GITHUB_REPOSITORY"]
-TOKEN = os.environ["GH_TOKEN"]
-CURRENT_RUN = int(os.environ["GITHUB_RUN_ID"])
 KEEP_NEWEST_RUNS = 50
 MAX_ARTIFACT_DELETES = 500
 MAX_RUN_DELETES = 500
 
-HEADERS = {
-    "Authorization": f"Bearer {TOKEN}",
-    "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28",
-    "User-Agent": "mira-genesis-repository-cleanup",
-}
+# Runtime-only values. They deliberately remain inert at import time because repository integrity
+# imports every module without GitHub Actions credentials.
+REPO = ""
+CURRENT_RUN = 0
+HEADERS: dict[str, str] = {}
+
+
+def configure_runtime() -> None:
+    """Load the GitHub Actions context only when the one-shot entry point is executed."""
+    global REPO, CURRENT_RUN, HEADERS
+    repo = os.environ["GITHUB_REPOSITORY"]
+    token = os.environ["GH_TOKEN"]
+    current_run = int(os.environ["GITHUB_RUN_ID"])
+    REPO = repo
+    CURRENT_RUN = current_run
+    HEADERS = {
+        "Authorization": f"Bearer {token}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "User-Agent": "mira-genesis-repository-cleanup",
+    }
 
 
 def request(path: str, method: str = "GET"):
+    if not REPO or not HEADERS:
+        raise RuntimeError("repository cleanup runtime is not configured")
     url = path if path.startswith("http") else f"https://api.github.com/repos/{REPO}/{path.lstrip('/')}"
     req = urllib.request.Request(url, headers=HEADERS, method=method)
     try:
@@ -59,6 +73,20 @@ def extract_run_ids(text: str) -> set[int]:
     ids = {int(value) for value in re.findall(r"actions/runs/(\d+)", text)}
     ids.update(int(value) for value in re.findall(r"(?i)\brun(?:\s+|[`#:_-]+)(\d{8,})\b", text))
     return ids
+
+
+def load_all_prs() -> list[dict]:
+    all_prs: list[dict] = []
+    page = 1
+    while True:
+        prs = request(f"pulls?state=all&per_page=100&page={page}")
+        if not prs:
+            break
+        all_prs.extend(prs)
+        if len(prs) < 100:
+            break
+        page += 1
+    return all_prs
 
 
 def cleanup_branches(all_prs: list[dict]) -> tuple[list[str], list[str]]:
@@ -129,7 +157,7 @@ def cleanup_actions(all_prs: list[dict]) -> dict[str, object]:
         if run.get("head_branch") in open_heads:
             protected.add(run["id"])
 
-    artifacts = paged("actions/artifacts?", "artifacts")
+    artifacts = paged("actions/artifacts", "artifacts")
     live_artifacts = [artifact for artifact in artifacts if not artifact.get("expired", False)]
     live_artifacts.sort(key=lambda artifact: artifact.get("size_in_bytes", 0), reverse=True)
 
@@ -167,17 +195,8 @@ def cleanup_actions(all_prs: list[dict]) -> dict[str, object]:
 
 
 def main() -> int:
-    all_prs = paged("pulls?state=all", "") if False else []
-    page = 1
-    while True:
-        prs = request(f"pulls?state=all&per_page=100&page={page}")
-        if not prs:
-            break
-        all_prs.extend(prs)
-        if len(prs) < 100:
-            break
-        page += 1
-
+    configure_runtime()
+    all_prs = load_all_prs()
     deleted_branches, kept_branches = cleanup_branches(all_prs)
     actions = cleanup_actions(all_prs)
     result = {
