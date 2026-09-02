@@ -1,0 +1,4135 @@
+project: Mira Genesis
+updated_at: 2026-08-24
+status: m105_preregistered_executable_constructor_vocabulary_extension
+
+active_research_question: >-
+  Can exact positive M104 V3 acquire a carrier-neutral executable constructor feature from
+  DEVELOPMENT-only behavior, persist it across process death, and use it to validate generalized
+  JSON and SQLite acquisitions outside M104's complete finite exact-context dispatch image while a
+  fresh equal-runtime lineage exhausts the same lower semantic space and remains unable to validate
+  the same later behavior?
+
+preceding_research_question: >-
+  M104 asked whether the unchanged M103 constructor-reach mechanism could qualify under an entirely
+  fresh population and corrected direct-script checker. Attempt 1 qualified positively at P1-P15,
+  with exact replay and zero model, network or remote-execution calls.
+
+epistemic_tracks:
+  endogenous_bounded_lineage:
+    scope: M012b-M069
+    external_model_proposes_actions: false
+    genesis_gate_2_unchanged: true
+    strongest_canonical_results: [M042, M066]
+  model_mediated_governed_agent:
+    scope: M070-M071_and_M074
+    external_model_proposes_actions: true
+    external_model_is_lineage_owned: false
+    task_reward_attribution: named_composed_system
+    primary_mira_layer_evidence:
+      - authority_containment
+      - isolation
+      - refusal_behavior_calibration_negative_in_M074
+      - audit_integrity
+      - transport_robustness
+    genesis_gate_2_claim_permitted: false
+  governance_mechanism_ablation:
+    scope: M072
+    external_model_called_for_result: false
+    represented_action_executed: false
+    authored_threat_model: true
+    genesis_gate_2_claim_permitted: false
+  model_to_lineage_bridge:
+    scope: M073
+    external_teacher_outputs_are_lineage_owned: false
+    induced_serialized_capsule_is_lineage_owned: true
+    external_model_available_during_holdout: false
+    genesis_gate_2_claim_permitted: false
+    current_scope: one_project_authored_ast_repair_family
+  refusal_calibration:
+    scope: M074
+    status: negative_scientific_result
+    external_model_called: true
+    real_container_dryrun: true
+    single_frozen_scientific_campaign: true
+    true_refusals: 0
+    false_refusals: 0
+    calibration_margin: 0.0
+    genesis_gate_2_claim_permitted: false
+  epistemic_refusal_development:
+    scope: M075
+    status: public_model_development_complete_noncausal_nonscientific
+    external_model_called: true
+    public_bank_contaminated: true
+    public_model_development_true_refusals: [2, 3]
+    public_model_development_false_refusals: 0
+    causal_effect_claimed: false
+    private_scientific_bank_opened: false
+    genesis_gate_2_claim_permitted: false
+  measurement_track:
+    reserved_experiment: M045
+    separate: true
+
+current_real_software_frontier:
+  M091:
+    status: positive_scientific_result_h37_supported
+    bounded_abstract_language_extension: true
+    inherited_language_insufficiency_proved: true
+    state_owned_language_extended_endogenously: true
+    real_software_lineage_result: false
+  M092:
+    status: aborted_without_verdict
+    terminal_candidate_claimed: false
+    independent_reproduction_performed: false
+    qualification_materialised: false
+  M093:
+    status: engineering_rehearsal_non_qualifying
+    real_repository_transformation: true
+    autonomous_diagnosis_demonstrated: false
+    non_predefined_repair_generation_demonstrated: false
+  M094:
+    status: positive_qualified_scientific_result
+    attempt: 2
+    run_commit: 43ef9d30
+    adopted_mechanism_digest_prefix: 259e12f5
+    model_calls: 0
+    network_calls: 0
+    conditions_computed: 12
+    conditions_true: 12
+    qualification_entries: 2
+    qualification_satisfied: 2
+    decision_slot: D063
+    decision_slot_filled: false
+  M095:
+    status: negative_qualified_scientific_result_attempt_1
+    scientific_verdict_exists: true
+    hypothesis_registered: true
+    hypothesis: H40
+    hypothesis_status: refuted
+    protocol_frozen: true
+    qualification_pool_exists: true
+    qualification_population_entries: 9
+    run_armed: true
+    run_consumed: true
+    audit_defects: 31
+    audit_defects_repaired: 30
+    audit_defects_disclosed_not_repaired: 1
+    demand_bearing_arrangements_demonstrated: 6
+    arrangements_demonstrated_without_descending: 4
+    arrangements_requiring_failed_search_descent: 2
+    no_inner_demand_negative_arrangements: 2
+    operation_set_changes_between_s0_and_s1: false
+    qualification_positive_entries: 6
+    qualification_positive_demonstrated: 0
+    qualification_negative_entries: 3
+    qualification_negative_remained_negative: 3
+    conditions_total: 11
+    conditions_passed: 8
+    conditions_failed: [P3, P5, P6]
+    source_commit: 951c7c271f07a5bf2c08735c30b8d49f39cf8b73
+    result_digest: bdd35111220f256f86c19194428cb3ce60b8a04488c161109a1c92887a401e75
+    checker_digest: bb24a484012d123d0336fb7c1974e58255222b6c91ce0bb22770f42e58d5d42f
+    decision: D064
+    current_ceiling: contract_safe_composition_of_locally_satisfied_capabilities
+  M096:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H41
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 12
+    demand_bearing_entries: 8
+    demand_bearing_demonstrated: 8
+    zero_demand_entries: 4
+    zero_demand_remained_negative: 4
+    ranking_unaided_entries: 4
+    failed_search_descent_entries: 4
+    conditions_total: 10
+    conditions_passed: 10
+    source_commit: d0c91c3b2e5c4b5d68d65e6a4591dcc82744a3df
+    result_digest: feb53219bc9bc449249d546db2e9fc29a9926b94e3f35a125ce3275245dd1385
+    checker_digest: fe31bc050e8739252a1cc40cb7bdc927ce9a865b61c824a13365fc1e4ba41dee
+    decision: D065
+    current_ceiling: endogenous_real_software_operation_acquisition
+  M097:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H42
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    candidate_programs_exhausted: 2800
+    well_formed_programs: 68
+    accepted_programs: 5
+    adopted_body: [PUSH_LEFT, PUSH_RIGHT, SUB]
+    inherited_qualification: [0, 4]
+    extended_qualification: [4, 4]
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: 3b1dd98d28f32f9d8be549073492b48358434227
+    result_digest: e976788fcbf7b8eff0d426dee9fa914a8aeaa7c126b2038b9f3394a1a76690c0
+    state_digest: 2097d3a733f06b5d0f0b1e8071ca5e71b0d7fd1f5c7f5e050fc1b76f015b301c
+    checker_digest: 003346184ee4f54993561c49fd2c498a5d67836f7a0d5d201dde3983a0d42622
+    decision: D066
+    current_ceiling: hard_process_death_persistence
+  M098:
+    status: negative_qualified_scientific_result_attempt_1
+    scientific_verdict_exists: true
+    hypothesis: H43
+    hypothesis_status: refuted
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 3
+    post_restart_worlds_confirmed: 3
+    fresh_process_invocations: 8
+    direct_persistence_conditions_passed: 11
+    conditions_total: 12
+    conditions_passed: 11
+    conditions_failed: [P12]
+    failure_cause: aggregate_consumer_pids_omitted_from_stable_projection_policy
+    source_commit: 1b862ab9afaec13cf16c7fcc6da7c297956424d4
+    result_digest: 3cce5155033bd57c0e4e8adf3c01f7ea728a6088e793154418070b13ef8e9d80
+    checker_digest: b04513a2c769fe4b6dd26ae51ce4d9061919231f930e010cb4dc65b11ec52e54
+    decision: D067
+    current_ceiling: stable_replay_with_complete_ephemeral_projection
+  M099:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H44
+    hypothesis_status: supported
+    protocol_frozen: true
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 3
+    post_restart_worlds_confirmed: 3
+    fresh_process_invocations: 8
+    state_bytes: 304
+    stable_projection_excluded_keys: [consumer_pids, pid, producer_pid, search_path]
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: 62a29b0a921e9907a24e3f82944ab4adb400775a
+    result_digest: 17642e0eda4fb71439269489452e835af8e30e1926518e07201303dbf72b4695
+    stable_evidence_digest: 497b6aaba1ec10217566080d434e0d9262c4d85ed11951bf7419521f51461969
+    checker_digest: d2a381a6657cf3a2053d6b50040ebf67dd6d78885b23e28e9b4432575c48a651
+    decision: D068
+    current_ceiling: repeated_cumulative_operation_acquisition_cycles
+  M100:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H45
+    hypothesis_status: supported
+    protocol_frozen: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    run_armed: true
+    run_consumed: true
+    qualification_population_entries: 9
+    qualification_cycle_counts: {A: 3, B: 3, C: 3}
+    fresh_process_invocations: 24
+    operation_census: [0, 1, 2, 3]
+    b_candidates_assembled: 780
+    b_accepted_candidates: 2
+    b_shortest_length: 4
+    c_candidates_assembled: 9330
+    c_accepted_candidates: 6
+    c_shortest_length: 5
+    fresh_worlds_confirmed: 9
+    fresh_cases_confirmed: 36
+    exact_prefix_conservation: true
+    digest_valid_a_mutation_breaks_b: true
+    digest_valid_b_mutation_breaks_c: true
+    exact_s2_rollback_reproduces_s3: true
+    conditions_total: 12
+    conditions_passed: 12
+    source_commit: c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98
+    result_digest: 241292fc81e64c8e0ec4620e72304889f52ae2185033e056b787f1b27c6c1475
+    stable_evidence_digest: 4bdb1aa8f7a85108eac4e92f8cff90f05a12520462e5ea2b358fc9b5886b19da
+    checker_digest: d8e945a595571505d9c2a44568029208f41f05010e36d8e7b3f5937016529654
+    decision: D069
+    current_ceiling: transfer_beyond_authored_affine_targets_and_fixed_interpreter
+  M101:
+    status: positive_qualified_scientific_result
+    scientific_verdict_exists: true
+    hypothesis: H46
+    hypothesis_status: supported
+    protocol_frozen: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    track: A_endogenous_lineage
+    attempt: 1
+    prior_attempts: []
+    run_armed: true
+    run_consumed: true
+    model_calls: 0
+    network_calls: 0
+    remote_execution: false
+    qualification_population_entries: 15
+    producer_trigger_entries: 1
+    heldout_a_transfer_worlds: 8
+    fresh_baseline_worlds: 8
+    fresh_baseline_hidden_passed: 0
+    b_reuse_worlds: 3
+    m100_conservation_worlds: 3
+    state_definition_census: [0, 1, 2]
+    a_candidates_assembled: 9330
+    a_well_formed: 15
+    a_binding_candidates_evaluated: 135
+    a_accepted_candidates: 8
+    a_shortest_length: 4
+    a_carrier_specific_identity: false
+    b_candidates_assembled: 41370
+    b_well_formed: 27
+    b_binding_candidates_evaluated: 1728
+    b_accepted_candidates: 6
+    b_shortest_length: 4
+    b_live_content_addressed_dependency_on_a: true
+    m100_bytes_conserved: true
+    fresh_process_invocations: 44
+    exact_t2_rollback_restored: true
+    conditions_total: 15
+    conditions_passed: 15
+    source_commit: b3e172bba0cfdd282e6235e62bb8e7d213a77837
+    result_digest: 486f33e6673c8ad66f822ba11a91a595a155a65b36f2c5292c9ea200d9dbda35
+    stable_evidence_digest: 45f18dc644784d38a598066e53f1b19d8619cf47fc094c8a0456574373565e92
+    checker_digest: 95bffc8ba2a0b70d06148c71be3e28b2fc1f64f8655d380430bdedc5c682cb43
+    decision: D070
+    generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
+    current_ceiling: authored_carriers_shallow_chain_no_genuine_interference_or_external_domain
+  M102:
+    status: positive_qualified_attempt_1
+    scientific_verdict_exists: true
+    hypothesis: H47
+    hypothesis_status: supported_bounded
+    decision: D071
+    protocol_frozen: true
+    protocol_candidate_status: accepted_and_bound
+    canonical_run_allowed: true
+    canonical_run_authorized: true
+    run_consumed: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    track: A_endogenous_lineage
+    attempt: 1_positive_no_reroll
+    model_calls_in_development_rehearsal: 0
+    network_calls_in_development_rehearsal: 0
+    remote_execution_in_development_rehearsal: false
+    qualification_population_entries: 13
+    qualification_population_status: frozen_executed_once
+    qualification_pool_digest: 3d6785dd63e66b92d0c727323e9bde39ba21629aaa81222b442a82b9f2949e38
+    protocol_candidate_digest: 4549f17f79405c212122362ce5154623ce55acafe03ee854be16e870fa061c84
+    frozen_protocol_digest: 59689da64a6007589aefc15a633b069672b190ab799384503a02064bbf8599dc
+    frozen_protocol_source_commit: 608ab0465795893aeebf6a2b772993c99b5647fc
+    frozen_protocol_commit: bdadb1074deea02f10039460cffa2ac24cd44b63
+    frozen_protocol_tag: experiment/m102-frozen-protocol-v1
+    superseded_protocol_candidate_digest: ce585aa257fbe5aa1734c48864b5901d14769bf4bc3baaa94fb959acd50f6288
+    candidate_supersession_reason: pre_freeze_CI_found_noncanonical_runtime_construction
+    exact_m101_t2_raw_sha256: cd5b5994e5a252599807e9ddc2b5733efaf176fe23dd05055b50d883bde0b7a0
+    development_full_rehearsals: 2
+    development_stable_replay_equal: true
+    qualification_executed: true
+    result_path_exists: true
+    checker_report_exists: true
+    owner_protocol_acceptance_required: false
+    owner_protocol_acceptance_recorded: true
+    owner_canonical_run_authorization_required: false
+    result_digest: 92d4ed3ecde9bc48a930d0591a562dedc754bf8ab00eb5a20528be76325624fa
+    result_raw_sha256: 5274aeef7afaa04600f8cc4dba6d4d0640d99e0a25c171be4183144725c9fe97
+    stable_evidence_digest: eab68a79c0617d2d4ca48aaf0cd71630aa3a4e4e67b5b4c9b63f4e318ee170fb
+    checker_report_digest: 3ba2f1301fa33545942628202b80e9f68951f8eef9af90a3f21e202c75484fd2
+    checker_report_raw_sha256: aadf6971cf73e49c7d8e2eadbfb8b38ac8711f7fc343d8d470bde24d1302e0db
+    first_result_commit: e48dd38127126376af1ec8ad22d1f55099e352a9
+    positive_result_commit: 482fc0d62519db1622236ed8220a6ea407c111ee
+    first_result_tag: experiment/m102-canonical-first-result
+    positive_result_tag: experiment/m102-positive-result
+    conditions_total: 15
+    conditions_passed: 15
+    conditions_failed: 0
+    conditions_uncomputed: 0
+    fresh_process_invocations: 58
+    definition_checker_invocations: 2
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    generality_gate_4_status: partial_bounded_cross_family_mechanism_evidence
+    generality_gate_5_status: stronger_partial_bounded_interference_evidence
+    current_ceiling: acquisition_hypothesis_generation_remains_fixed_host_machinery_and_tasks_remain_authored
+  M103:
+    status: negative_fail_closed_checker_instrument_attempt_1
+    scientific_verdict_exists: true
+    scientific_verdict: negative
+    hypothesis: H48
+    hypothesis_status: not_supported_in_attempt_1_instrument_failed_before_replay
+    decision_slot: D072
+    decision_slot_filled: true
+    protocol_frozen: true
+    qualification_pool_exists: true
+    qualification_pool_digest: 1f1b5d4289685f8401564d0f0e5d7c4f8ffda10561fbeba9ec8a36114e22b59e
+    qualification_pool_records: 11
+    qualification_hidden_cases: 16
+    predecessor_conservation_fixture_digest: 7bfb93b917f78f5f1c2e2c16cee587f8eb50bdd7f9f98d7e922b6ae6506a51ea
+    enabling_implementation_exists: true
+    adversarial_review_complete: true
+    pre_freeze_falsifiers_disclosed_and_corrected: 8
+    unresolved_decisive_falsifiers: 0
+    development_full_rehearsals: 2
+    development_conditions_passed: 15
+    development_conditions_total: 15
+    development_stable_replay_equal: true
+    development_stable_evidence_digest: 967a038919e765aa3969bf3d3a94b8bc89288235aed320119274d087037bf7a3
+    protocol_candidate_exists: true
+    protocol_candidate_digest: b44c80e52f8569f70f9d5b1ba89cb2fd42bac9a8628d83e42ae21cf4226e90f2
+    protocol_candidate_raw_sha256: 8565d330046cc2e25ec8fe6930ed6b1f62a2c32bcb17170565ebbdc04c74d659
+    protocol_candidate_source_commit: b1f920b44707b5da3c90f99a6b51a9b070fbbf10
+    owner_protocol_acceptance_recorded: true
+    final_protocol_exists: true
+    final_protocol_digest: cb21a4fa29d9895e477d12f6710eaa4f7c70dfca2e740812fe6846c4ff530de9
+    final_protocol_raw_sha256: 97c4aaf6aecfbf36903819043fa10d946c3a1d9e9e1b6193ff3e131c4bf4291b
+    final_protocol_source_commit: 42c7f6a6f52a9650e75cc7a8d7e5f4ece8711aff
+    freeze_tag: experiment/m103-frozen-protocol-v1
+    boundary_audit_report_digest: a5800607ee71bb7302d1683e5c1c38a557f185b7a1fdfbc70d3dbed34532852a
+    canonical_run_allowed: false
+    canonical_run_authorized: true
+    canonical_run_executed: true
+    canonical_attempts: 1
+    canonical_rerun_allowed: false
+    result_exists: true
+    result_commit: dd205f257b6093b83ee4dbf1b48af0a0bff21275
+    first_result_tag: experiment/m103-canonical-first-result
+    result_digest: d2ace036a29d18be95f2fc5e0eee1285193cf96e8a7d7feebde46f61f96b0a81
+    result_raw_sha256: 6d89f26f994124ef7207ed1c580a7a72cd468a83d3f8787c1085a5b8e062ff26
+    stable_evidence_digest: 6a11fff9b3a4b3a00deee5150fe8884094a3baf09ac307b495a02ccb74617a97
+    checker_invocations: 1
+    checker_process_exit: 3
+    checker_error: "ModuleNotFoundError: No module named 'scripts'"
+    checker_report_exists: false
+    failed_closed: true
+    uncomputed_decisive_predicates: [P15]
+    checker_failure_artifact: experiments/M103/CHECKER_FAILURE.json
+    checker_failure_artifact_raw_sha256: fbc09a6c61ef4201d35c3e5114c6efa83908423f09833efa59b2d60817e54b6a
+    post_verdict_checker_retry_allowed: false
+    successor: M104
+    successor_requires_fresh_population: true
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    track: A_endogenous_lineage
+    exact_predecessor: M102_U2_attempt_1
+    exact_m102_u2_raw_sha256: 3bad4d5400e8d9a11b15ba596336925823ffb4064a5bbe38f93f64b7384a198d
+    exact_m102_u2_state_digest: fbf7b0232aa8adf4e67513719c63f19f28c1b7e8b86437af1135ff18335d3a0e
+    inherited_constructor_invariant: context_invariant_linear_trace
+    proposed_acquired_mechanism: generic_state_owned_context_conditioned_constructor_extension
+    development_consumer_separation_required: true
+    ambiguity_refusal_required: true
+    planned_later_carriers: [configparser, disposable_filesystem]
+    fresh_and_more_budget_s0_controls_required: true
+    acquisition_dependency_must_be_causal: true
+    runtime_dependency_must_not_be_fabricated: true
+    process_death_required: true
+    exact_m100_m101_m102_conservation_required: true
+    decisive_conditions_planned: 15
+    model_calls_allowed_in_canonical_run: 0
+    network_calls_allowed_in_canonical_run: 0
+    remote_execution_calls_allowed_in_canonical_run: 0
+    current_ceiling: frozen_checker_entry_point_cannot_import_replay_runner_so_mechanism_claim_remains_unresolved
+  M104:
+    status: positive_qualified_attempt_1
+    hypothesis: H49
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D073
+    decision_slot_filled: true
+    exact_mechanism: M103_frozen_mechanism
+    exact_predecessor: M102_U2_attempt_1
+    m103_result_eligible_as_evidence: false
+    fresh_population_required: true
+    qualification_pool_exists: true
+    qualification_pool_digest: a84fa3c5f9c2db51f31f83fa1b910c48f919bdc5c203d548833a7311d7bf1dad
+    qualification_pool_raw_sha256: 732e2f46eefef4223e5a715db385639f43ceacf00b27e7c83dff9c15fbf8eb62
+    qualification_pool_records: 11
+    qualification_hidden_cases: 16
+    freshness_audit_confirmed: true
+    freshness_audit_report_digest: e861811f7e82a8c67f8b62fc51451c006734322ad6df16a06f1b931cd1f65183
+    m103_identity_overlap_sets_empty: [ids, contexts, descriptors, initials]
+    corrected_direct_script_checker_required: true
+    prefreeze_entrypoint_subprocess_test_required: true
+    direct_script_entrypoint_preflight_confirmed: true
+    direct_script_entrypoint_opens_qualification_data: false
+    enabling_implementation_exists: true
+    complete_experiment_executed: true
+    protocol_candidate_exists: true
+    accepted_candidate_digest: 6416e54b1b5e60d2ed3d45024113cdec487a2a423012409752c9e3ab0d83fb55
+    accepted_candidate_raw_sha256: b4d3b7dfcbcc4628648fa74895d2e8b839fcc2a73ffcc634ab3149f458d91efa
+    accepted_candidate_tag: provenance/m104-owner-review-candidate-v6
+    superseded_protocol_candidates: 8
+    superseded_candidate_digests:
+      - e528f5642291e0311d278c1b7b049f8988e3edc1ccc9e71a62739c8bc0f5e952
+      - 62ab21c545811f69ecfcfdc22ece0a32d26141e30cee2720aa544bf0f16e4b81
+      - 6b17901b82426fc6d70ac39e7fae8491756cf41cdacf44f80f651c66814d3e3f
+      - 9f6e1b42b56a9470eb3154a298ca11eaaa10d352ba6f408f7d3d64c4b274719f
+      - 3d765cd5e379b24bcf8b664f9bca98f220037d341ea7f3ea5fca63cafd102b33
+      - 99cb23f564cfccd4a2d7509875fda9416d40fbed39228ab9b5b2d0d31888b0f4
+      - 4f30459f852ec1ac4b8229fbf060c902060fa6c1c3da0ae3d6be686e84764aa8
+      - 46393b91dce5cd8a80bbbb19649ab5c93b1eca92bedb09e28af289abf7f95ae0
+    superseded_candidate_reasons:
+      - absolute_windows_checkout_path_in_entrypoint_preflight
+      - mutually_exclusive_clean_tree_and_source_commit_finalization_rules
+      - unregistered_full_source_commit_citation_with_circular_registration
+      - freeze_parent_check_did_not_verify_all_bound_blobs_or_path_census
+      - inherited_m103_runner_and_fixture_apparatus_group_not_bound
+      - first_result_commit_and_replay_blobs_not_independently_sealed
+      - checker_did_not_recompute_final_protocol_and_pool_internal_digests
+      - runner_did_not_reconstruct_exact_accepted_candidate_and_history_before_attempt
+    superseded_candidate_tags:
+      - provenance/m104-superseded-candidate-a1
+      - provenance/m104-superseded-candidate-a2
+      - provenance/m104-superseded-candidate-a3
+      - provenance/m104-superseded-candidate-a4
+      - provenance/m104-superseded-candidate-a5
+      - provenance/m104-superseded-candidate-a6
+      - provenance/m104-superseded-candidate-a7
+      - provenance/m104-superseded-candidate-a8
+    final_protocol_exists: true
+    final_protocol_digest: b3d8a6b3bc231778ab68bfbbc21f15be6d87a8d4652c8c843ee576cfa499a888
+    final_protocol_raw_sha256: 20c3fac67399de3ed4087a973ee8ab8a74396aae3693ccc0711738ea582b6d8b
+    final_protocol_tag: experiment/m104-frozen-protocol-v1
+    result_exists: true
+    result_digest: f2be4d8516207187f0892eb6c8cecd0f648563456f33aa07fe13787b0e867de3
+    result_raw_sha256: 74723305da4899bc8b716363b6a393f7efe33eb772a8479d2f7b504544789935
+    stable_evidence_digest: 9f2d175866d766ae530b1015e5b3ff7fbd42ab939a421a67c1b333e1106d274f
+    first_result_tag: experiment/m104-canonical-first-result
+    checker_report_exists: true
+    checker_report_digest: 7032528b7c3234d5f3e759dbdda2d1fbdaa0d29fb28f3160602ca68915fe836d
+    checker_report_raw_sha256: 90037f262c99fb745240f4dfe3fe920a118e29060bf04a7b455337fce8aec242
+    positive_result_tag: experiment/m104-positive-result
+    verdict: positive
+    decisive_conditions_passed: 15
+    decisive_conditions_failed: 0
+    decisive_conditions_uncomputed: 0
+    replay_equal: true
+    protocol_boundary_confirmed: true
+    result_boundary_confirmed: true
+    canonical_attempts_allowed: 1
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_allowed: 1
+    canonical_checker_attempts_consumed: 1
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    model_calls_allowed: 0
+    network_calls_allowed: 0
+    remote_execution_calls_allowed: 0
+    current_ceiling: constructor_feature_vocabulary_subset_bound_and_lower_interpreter_remain_authored_and_fixed
+  M105:
+    status: negative_by_fail_closed_checker_instrumentation
+    hypothesis: H50
+    hypothesis_status: unsupported_not_refuted
+    decision_slot: D074
+    decision_slot_filled: true
+    verdict: negative
+    exact_predecessor: M104_positive_V3_attempt_1
+    predecessor_raw_sha256: 98d61df076e6b764f6b00f27793b82ef27e20cd35049780499029dc3ed7edf77
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    protocol_digest: 43d270df1efdeeb6ccc47824ed2bd1ea137fa428fd5859c5f44a061597bd5902
+    bound_apparatus_digest: be1358290aa8c5f31005998311470e54e75619325bfeb52ad81f864b3c711823
+    freeze_tag: experiment/m105-frozen-protocol-v2
+    superseded_freezes: [experiment/m105-frozen-protocol-v1]
+    pre_freeze_instrument_defects_corrected: 5
+    result_digest: 0ae9c0968a20445fa490effc788597c735cff94be85e4c7466475431513bf866
+    stable_evidence_digest: 50a20f5e99cd0cbc2bcc8593ef03e4e3d485fe168516a346ae8ddcce672fca24
+    result_raw_sha256: 981460426a97f812e2567fc884722bc6d5f50e7a8105eec86ac140afaba3e502
+    result_tag: experiment/m105-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 77968967b101884ee34a2761ed6ccdbb98bcb15c99cf651c14ef0db4de4411d9
+    check_report_materialized: true
+    checker_exit_code: 1
+    checker_failure: "ModuleNotFoundError: No module named 'scripts'"
+    checker_failure_record: experiments/M105/CHECKER_FAILURE.json
+    negative_result_tag: experiment/m105-negative-result
+    decisive_conditions: 16
+    predicates_computed: 0
+    canonical_attempts_allowed: 1
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_allowed: 1
+    canonical_checker_attempts_consumed: 1
+    retry_permitted: false
+    repair_after_result_permitted: false
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    mechanism_falsified: false
+    identical_defect_to: D072
+    current_ceiling: checker_entry_point_must_be_exercised_through_the_replay_branch_on_a_materialized_result_before_freeze
+
+  M106:
+    status: positive_qualified_attempt_1
+    hypothesis: H51
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D075
+    decision_slot_filled: true
+    verdict: positive
+    replication_of: H50
+    mechanism_module: metamorphosis/m105_runtime.py
+    mechanism_imported_unchanged: true
+    target_truth_table: [true, false, false, true]
+    target_fixed_before_implementation: true
+    protocol_digest: e92e1b087f7417c5e12811cb03a6204067049553ff6ffe35c6eeebe88be11b70
+    bound_apparatus_digest: 2a37e36728f93d1f6ede352fc8c744664729bb4f8ddaf9111be379b835170659
+    freeze_tag: experiment/m106-frozen-protocol-v1
+    result_digest: 7c22c889f5852ef4e8b6e63fa7c78352c741ee4d32dc2ed0c90061fd5cc8f394
+    stable_evidence_digest: 7c7cabc440eeaedbf198f4d316769c57c9589ceb8e2bb9e805e2317258f1aa4f
+    result_raw_sha256: 7a7c015ecfb5506c1eec5e6073773c021bd8b5caf94fb40a65a1e2f521436770
+    result_tag: experiment/m106-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 762990181bbe096bcc8b407b8abc75adf2816073822bcbd424827748bfcc4f00
+    positive_result_tag: experiment/m106-positive-result
+    decisive_conditions: 16
+    predicates_computed: 16
+    predicates_true: 16
+    replay_equal: true
+    fresh_control_semantic_classes: 4
+    fresh_control_image_exhausted: true
+    canonical_attempts_allowed: 1
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_allowed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_instrument_defects_corrected: 3
+    lower_interpreter_semantically_complete: true
+    current_ceiling: lower_interpreter_extension_requires_a_deliberately_incomplete_substrate
+
+  M107:
+    status: positive_qualified_attempt_1
+    hypothesis: H52
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D076
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_endogenous_extension_of_the_lower_interpreter
+    protocol_digest: 928c49908611a0c2b89a72655273c5c77eaf32a623af0671e741232aa45a2987
+    bound_apparatus_digest: 9d6ec8e753aac8bcdee521e6092e472687c07abdf003b2ffded45072c0cd74f9
+    freeze_tag: experiment/m107-frozen-protocol-v1
+    result_digest: a11d6b3b7c584c135ddbf3a740e72ed876815be99c40fa4bd55d5dd72323b362
+    stable_evidence_digest: 5c6eadfef68db188daf83f3194e8b7e7a1ecbbd1215520d5b6708ee03ae42d2d
+    result_raw_sha256: c4746bb7905af90e8be915e73a66f93ef1b37db1f9b45f2ac036c19f73c85b8a
+    result_tag: experiment/m107-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 0c5f93785f3be96d379ef2fd38b2ce0d7765db6a0f596f363133518a7e99b5b8
+    positive_result_tag: experiment/m107-positive-result
+    predicates_computed: 16
+    predicates_true: 16
+    replay_equal: true
+    base_image_size: 4
+    extended_image_size: 16
+    exclusion_is_budget_independent: true
+    operator_space_size: 20
+    operator_space_exhausted: true
+    single_demand_reach_classes: 2
+    joint_demand_reach_classes: 1
+    adopted_operator_arity: 1
+    ablation_returns_base_image: true
+    rollback_byte_exact: true
+    fresh_control_fails_at_larger_bound: true
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_instrument_defects_corrected: 5
+    recursive_depth_demonstrated: 0
+    acquisition_machinery_modified: false
+    current_ceiling: the_acquisition_machinery_itself_remains_authored
+
+  M108:
+    status: positive_qualified_attempt_1
+    hypothesis: H53
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D077
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_lineage_acquired_modification_of_the_acquisition_machinery
+    protocol_digest: 0160def2dad96c6478648cf1c2809570fbcfa8cebf3516acfacd098db72af5cd
+    bound_apparatus_digest: 3851bce5a1d2d77018ef52e9839634ffadd39dd8ec1401c3331e77fb0aabff25
+    bound_member_digest_modes: [raw, lf_normalized]
+    freeze_tag: experiment/m108-frozen-protocol-v1
+    result_digest: 9bb97e2dcc907841332abad0daf97ddc264b9ba1636fc184e60997c2ddf5e9d5
+    stable_evidence_digest: 0f976f9e5d4717c727938f42e45c5bbc98f0f24d057859dff39cb638982cbb51
+    result_raw_sha256: 1b0c530bf25d42d1d862df864dc6199fcd38a7935fc6a455b2be10f8326131c4
+    result_tag: experiment/m108-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: 9c5627fb7cca23033d24297510ae6a5b6c5509f0c7e6353da4f11453ff74d7e5
+    positive_result_tag: experiment/m108-positive-result
+    predicates_computed: 16
+    predicates_true: 16
+    replay_equal: true
+    predecessor_operator_table_replayed_from: M107
+    m0_reach_saturated_at_base_width: true
+    attribution_domain_rows: [0, 2, 3]
+    attribution_domain_unreachable_rows: [1]
+    attribution_domain_census_states: 63
+    attribution_domain_census_pairs: 14303
+    monotone_rule_space_size: 4
+    monotone_consistent_rules: 0
+    extended_rule_space_size: 16
+    consistent_rules: 2
+    surviving_attribution_classes: 1
+    every_consistent_rule_is_non_monotone: true
+    partial_episode_attribution_classes: 2
+    adopted_rule_truth_table: [true, false, true, false]
+    adopted_rule_nodes: 2
+    target_outside_liftable_images_at_base_width: true
+    target_outside_monotone_image_at_full_width: true
+    exclusion_is_budget_independent: true
+    target_requires_both_generations: true
+    baseline_operator_space_exhausted: true
+    baseline_fails_at_larger_bound: true
+    machinery_step_budget_equal: true
+    ablation_removes_capability: true
+    rollback_byte_exact: true
+    mutation_returns_attribution_to_operator_axis: true
+    corruption_fails_closed: true
+    isolated_processes: 14
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 2
+    episode_blame_labels_are_authored_supervision: true
+    target_feature_row_is_covered_by_the_episode_set: true
+    acquisition_machinery_modified: true
+    recursive_depth_demonstrated: 1
+    current_ceiling: recursive_depth_of_two_requires_a_second_machinery_generation
+
+  M109:
+    status: positive_qualified_attempt_1
+    hypothesis: H54
+    hypothesis_status: supported_within_frozen_bounds
+    decision_slot: D078
+    decision_slot_filled: true
+    verdict: positive
+    claim: two_successive_lineage_acquired_machinery_generations_with_a_strict_reach_chain
+    protocol_digest: 8e76b30fe8ad645d2b695a372525462d27f66990a9f8d264411c0b2ed8c75178
+    bound_apparatus_digest: 5d5dfac1dd082c9080c9571679e0e9c8c9fe1bd3f1010a4aaa2c203794580272
+    bound_member_digest_modes: [raw, lf_normalized]
+    freeze_tag: experiment/m109-frozen-protocol-v1
+    result_digest: 262e0bd5b67b573a01f00293ec1fef79da94908819006f08acb8bd30d6941f09
+    stable_evidence_digest: 0c6ad0c2930f8dd25b8ccf2e9692615845c4326da109d752672dc7f989e1a576
+    result_raw_sha256: 0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009
+    result_tag: experiment/m109-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: ff1675738b6aabc358d2cfb568d93dec396c7beff8b8b68e14c09ecc011ea24a
+    positive_result_tag: experiment/m109-positive-result
+    predicates_computed: 18
+    predicates_true: 18
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    component_registry: [operator_table, signal_interface, candidate_space]
+    blame_labels_are_lineage_determined: true
+    trial_semantics: minimal_necessary_component
+    trials_at_resolution_time: 0
+    episodes_fixture_exists: false
+    attribution_domain_rows: [1, 2, 3, 6, 7]
+    attribution_domain_unreachable_rows: [0, 4, 5]
+    attribution_domain_ambiguous_rows: []
+    attribution_domain_census_states: 84
+    attribution_domain_census_pairs: 10496
+    monotone_candidate_space_closed_by_lemma: true
+    machinery_generations: 2
+    generation_one_component: signal_interface
+    generation_two_component: candidate_space
+    generation_one_consistent_rules: 2
+    generation_two_consistent_rules: 2
+    rule_space_size: 18
+    surviving_rule_classes_each_generation: 1
+    adoption_is_conservative: true
+    reach_improve_m0: 6
+    reach_improve_m1: 20
+    reach_improve_m2: 243
+    reach_chain_strict: true
+    gained_by_generation_one: 14
+    gained_by_generation_two: 223
+    handed_counterfactual_outcome: no_expressible_rule_reproduces_the_trial_record
+    handed_counterfactual_consistent_rules: 0
+    dependency_between_generations: monotonicity_lemma_on_the_attribution_cascade
+    baseline_fails_at_larger_bound: true
+    ablation_returns_to_state_before_generation_two: true
+    rollback_byte_exact: true
+    corruption_fails_closed: true
+    curriculum_boundary_measured_in_three_directions: true
+    isolated_processes: 21
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 3
+    registry_feature_vocabulary_and_curriculum_remain_authored: true
+    conservative_adoption_is_load_bearing_for_the_positive_half: true
+    recursive_depth_demonstrated: 2
+    acceleration_measured: false
+    current_ceiling: recursive_depth_of_three_and_measured_acceleration
+
+  M110:
+    status: positive_qualified_attempt_1
+    hypothesis: H55
+    hypothesis_status: supported_within_frozen_bounds_both_halves
+    decision_slot: D079
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_multi_generation_acquisition_machinery_improvement_with_census_conditional_causal_transfer
+    protocol_digest: 05826a375eb1106e1a98dd0e66e804f7a7abee8964569e1b37c7ba25d7796c8e
+    bound_apparatus_digest: becccc1c94327eed55b622b224522d041166d7edb6e9323835ba7c9b338c9bbc
+    bound_member_digest_modes: [raw, lf_normalized]
+    freeze_tag: experiment/m110-frozen-protocol-v1
+    freeze_commit: 57603b71f848ce1605c2cf8607907735441bfaf4
+    population_digest: d4e8ae471eb46bbf1bc40f51746cef83d6f5ea3a65c1eadd4388b8b07cdaa33e
+    result_digest: cbd3ea3e98986584c54ed02c41e5fbc1afc5a25dec2cbc9f1a9d6b9e46802744
+    stable_evidence_digest: 92ee5e051d9a955c500f6006f273b17e8d70dd0ffeda48cba8aca17a7146bfb7
+    result_raw_sha256: 163a46dadd815d98d03fede22905a181c4d406a19d391c5ee2631efc3a2488e3
+    result_tag: experiment/m110-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: e598b95cea85d6b1dff53afa81a03c3f6d2ab307e512edc0d8abbc928beeec83
+    positive_result_tag: experiment/m110-positive-result
+    predicates_computed: 24
+    predicates_true: 24
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    predecessor_milestone: M109
+    predecessor_decision_slot: D078
+    predecessor_result_digest: 262e0bd5b67b573a01f00293ec1fef79da94908819006f08acb8bd30d6941f09
+    predecessor_raw_bytes_bound_into_the_checker: 0af98fb45a279fec9224bddbb4fa069d140cf21e94a3bb00699ba8c85e0c8009
+    cascade_restored_not_reimplemented: true
+    attribution_executed_by: m109_runtime.attribute
+    transferred_content: the_rule_cascade_only
+    consumer_carrier: reference_bearing_json_documents_with_a_side_table
+    consumer_value_chain: [0, 1, 2, 3]
+    consumer_documents_per_world: 5
+    consumer_target_space_per_world: 1024
+    consumer_worlds: 6
+    consumer_seed_range: [1000, 1999]
+    development_seed_range: [0, 999]
+    latent_field_reached_only_by_an_accessor: true
+    second_execution_path: expression_rendered_as_python_compiled_and_executed
+    producer_reachable_rows: [1, 2, 3, 6, 7]
+    consumer_reachable_rows: [1, 3, 5, 7]
+    rows_only_the_consumer_reaches: [5]
+    labels_agree_on_every_shared_row: true
+    consumer_label_is_world_invariant: true
+    row_seven_solved: {M0: 0, M1: 6, M2: 6}
+    row_three_solved: {M0: 0, M1: 0, M2: 6}
+    row_five_solved: {M0: 6, M1: 0, M2: 0}
+    row_one_solved: {M0: 6, M1: 6, M2: 6}
+    positive_transfer_inside_the_producer_census: true
+    negative_transfer_outside_the_producer_census: true
+    reach_improve_m0_range: [94, 261]
+    reach_improve_m1_range: [134, 449]
+    reach_improve_m2_range: [324, 558]
+    reach_chain_strict_on_every_world: true
+    capacity_rises_while_realized_competence_does_not: true
+    monotone_closure_certificate_confirmed: true
+    visible_function_lemma_violations: 0
+    fixed_point_bounds: [7, 9, 11, 13]
+    baseline_fails_at_larger_bound: true
+    ablation_of_generation_two_byte_exact: true
+    ablation_of_generation_one_byte_exact: true
+    ablation_of_generation_one_regains_row_five: true
+    mutation_loses_row_three: true
+    built_but_unregistered_refuses: true
+    corruption_fails_closed: true
+    arms_differ_only_in_the_rule_cascade: true
+    host_shortcut_resolves_both_demands: true
+    isolated_processes: 186
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 4
+    pre_freeze_admission_survey_worlds: 60
+    pre_freeze_admission_survey_admitted: 19
+    pre_freeze_admission_survey_distinct_label_maps: 1
+    consumer_family_is_project_authored: true
+    consumer_family_chosen_to_reach_row_five: true
+    registry_and_feature_vocabulary_are_shared_authored_vocabulary: true
+    g4_advances_to_independent_transfer: false
+    recursive_depth_demonstrated: 2
+    acceleration_measured: false
+    current_ceiling: self_directed_diagnosis_of_the_limiting_component_and_an_independently_authored_consumer_family
+
+  M111:
+    status: positive_qualified_attempt_1
+    hypothesis: H56
+    hypothesis_status: supported_within_frozen_bounds_all_three_halves
+    decision_slot: D080
+    decision_slot_filled: true
+    verdict: positive
+    claim: bounded_self_directed_diagnosis_and_acquisition_machinery_adaptation_at_recursive_depth_three
+    protocol_digest: 395b2c3507dc13bb07ae927ecda32febad5b4537a73a356ec670df90a0e66ce1
+    bound_apparatus_digest: a9ba20f12617d5e89a177e73040e7fd9e14911a3c9c4e5ff97fd647e55de5687
+    freeze_tag: experiment/m111-frozen-protocol-v1
+    freeze_commit: 1d5d70a44cc9c56164d454631eae3d1c1b7e8dd6
+    population_digest: 9ee85959f9be39be9c84fa083ac656863380a70dfcddb52bd961623139bc3313
+    result_digest: 7b14b07e768b1c9291a069f4198b0b0becd92773d856ef539f48027bdca42cf7
+    stable_evidence_digest: f77c8b8930e8568dd0f91362b3879e15e5ee5e2faa752367c4671ab4230f327e
+    result_raw_sha256: aa1c8a270a7e4b3c420aa798c67f7ba9ba60f44a7a09b0948d22c3637481165a
+    result_tag: experiment/m111-canonical-first-result
+    result_preserved_before_checking: true
+    check_report_digest: c2109e52faa525b594d8b5e3851701b6db3640053f354f4750c21098515d5638
+    positive_result_tag: experiment/m111-positive-result
+    predicates_computed: 24
+    predicates_true: 24
+    replay_equal: true
+    stable_projection_matches_prefreeze_rehearsal: true
+    machinery_predecessor: M109
+    machinery_predecessor_decision_slot: D078
+    machinery_terminal_state_digest: 5c08fa3036da6a914bf9a0db
+    carrier_predecessor: M110
+    carrier_predecessor_decision_slot: D079
+    component_registry: [operator_table, signal_interface, candidate_space, diagnostic_policy]
+    fourth_component_added: diagnostic_policy
+    probe_primitive_is_authored: true
+    probe_budget_per_world: 1
+    probe_leaves_state_byte_identical: true
+    probe_orders_measured: [candidates_first, signals_first]
+    impossibility_kind: exhibited_information_bound
+    two_demands_share_one_feature_row: true
+    ambiguous_row: 3
+    witness_row: 7
+    population_strata: [ambiguous, witness]
+    ambiguous_worlds: 3
+    witness_worlds: 2
+    record_is_pooled_across_the_population: true
+    pooled_episode_count: 19
+    pooled_worlds_contributing: 5
+    pooled_undetermined_rows: [3]
+    pooled_determined_rows: [1, 5, 7]
+    policy_rule_space_at_m1: 18
+    separating_programs_at_m1: 0
+    policy_rule_space_at_m2: 127
+    separating_programs_at_m2: 25
+    generation_three_acquired: true
+    generation_three_consistent_policies: 7
+    generation_three_fires_on_rows: [2, 3]
+    generation_two_ablated_acquisition: refused
+    generation_two_ablation_reason: no_expressible_policy_and_no_operator_makes_one_expressible
+    depth_dependency_is_a_lemma: true
+    recursive_depth_demonstrated: 3
+    m0_resolves_pair: [0, 0]
+    m1_resolves_pair: [0, 0]
+    m2_resolves_pair: [3, 0]
+    always_signal_resolves_pair: [0, 3]
+    never_probe_resolves_pair: [3, 0]
+    always_probe_resolves_pair: [3, 0]
+    acquired_policy_resolves_pair: [3, 3]
+    acquired_policy_result_is_order_independent: true
+    ablation_of_generation_three_byte_exact: true
+    mutation_loses_the_ambiguous_demand: true
+    corruption_fails_closed: true
+    earlier_capabilities_conserved: true
+    isolated_processes: 127
+    canonical_attempts_consumed: 1
+    canonical_checker_attempts_consumed: 1
+    model_calls: 0
+    network_calls: 0
+    remote_execution_calls: 0
+    pre_freeze_pre_registration_corrections_recorded: 5
+    prefreeze_worlds_surveyed_for_co_occurrence: 1160
+    prefreeze_co_occurrences_found: 0
+    prefreeze_co_occurrences_expected_under_independence: 25
+    registry_probe_primitive_and_budget_remain_authored: true
+    population_selected_for_ambiguity_by_design: true
+    policy_also_fires_on_an_unreachable_row: true
+    elimination_complete_only_because_two_candidates_remain: true
+    g1_to_g10_advance: false
+    acceleration_measured: true
+    acceleration_claimed: false
+    current_ceiling: independently_authored_held_out_tasks_an_evaluator_the_project_does_not_own_and_third_party_reproduction
+
+  M112:
+    status: mixed_qualified_attempt_1
+    hypothesis: H57
+    decision_slot: D081
+    decision_slot_filled: true
+    verdict: mixed
+    evidence_tier: blind_generated_sealed_bank
+    claim_boundary_changed: false
+    procedural_independence_established: true
+    procedure_predicates_true: 10
+    procedure_predicates_total: 10
+    diagnosis_arm_apparatus: M111
+    diagnosis_arm_true: 24
+    diagnosis_arm_total: 24
+    diagnosis_arm_verdict: positive
+    transfer_arm_apparatus: M110
+    transfer_arm_true: 22
+    transfer_arm_total: 24
+    transfer_arm_verdict: negative
+    transfer_arm_false_predicates: [P1, P5]
+    p1_cause: invocation_artifact_of_the_population_path_guard
+    p5_cause: one_blind_world_image_is_17_at_bound_7_and_18_at_9_11_13
+    p5_never_observed_in_1160_project_generated_worlds: true
+    scientific_outcomes_reproduced: true
+    row_seven_solved: {M0: 0, M1: 6, M2: 6}
+    row_three_solved: {M0: 0, M1: 0, M2: 6}
+    row_five_solved: {M0: 6, M1: 0, M2: 0}
+    row_one_solved: {M0: 6, M1: 6, M2: 6}
+    harm_at_row_five_reproduced_on_blind_worlds: true
+    reach_chain_strict_on_every_world: true
+    generator_model: qwen2.5:1.5b
+    generator_model_blob_sha256: 183715c435899236895da3869489cc30ac241476b4971a20285b1a462818a5b4
+    generator_runtime: ollama
+    generator_runtime_version: 0.32.15
+    generator_image_digest: sha256:57d60e686821ea81a7748a3ec8141308c8b8f95b27105713954abf7a6529e700
+    qualifying_invocations: 1
+    retries: 0
+    constrained_decoding: true
+    isolation_network: none
+    isolation_repository_mounted: false
+    isolation_measured_not_asserted: true
+    bank_worlds: 20
+    bank_worlds_short_of_plan: 80
+    strata_ambiguous: 5
+    strata_witness: 6
+    strata_neither: 9
+    plan_minima_met: true
+    blind_ambiguous_rate: 0.25
+    project_measured_ambiguous_rate: 0.06
+    freeze_defect_world_count_vs_record_count: true
+    freeze_defect_no_verdict_threshold: true
+    defects_recorded_before_they_could_help: true
+    verdict_rule: inherited_stricter_reading_not_invented
+    custody_is_procedural_not_third_party: true
+    commitment_published_before_tested_system_freeze: true
+    result_digest: 7828274f58d5a04b35282f23660eb4fbeb047c194c988b12812fffc46bcc2395
+    check_report_digest: 8dd6961fa6916eea14c2d7a5c9f515e8a7b6730d6de5d1be34bfbb708590ca7f
+    result_preserved_before_checking: true
+    human_independence: false
+    external_reproduction: false
+    carrier_independence: false
+    g1_to_g10_advance: false
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: an_externally_maintained_bank_independent_reproduction_and_an_external_adversarial_audit
+
+  M113:
+    # Record reconciliation only, 27 August 2026. These two fields predated the invocation and had
+    # become factually obsolete: they still read `candidate_not_frozen_bank_does_not_exist` and
+    # `draft` after the identity had been frozen and the single attempt had aborted. Nothing under
+    # `experiments/M113/` is touched, none of the four digests pinned by
+    # `tests/test_m113_record_is_closed.py` moves, no bank, reveal or result is created, and nothing
+    # is repaired or reinterpreted. `aborted_without_verdict` is the register's existing value for
+    # exactly this shape and `spec_frozen` is what the phase machine reports for M113 today. The
+    # milestone remains an instrument failure, H58 remains untested, and the record remains closed.
+    record_reconciliation_only: true
+    record_reconciled_at: '2026-08-27'
+    status: aborted_without_verdict
+    record_closed: true
+    hypothesis: H58
+    decision_slot: D082
+    decision_slot_filled: false
+    phase: spec_frozen
+    successor_to: M112
+    m112_untouched: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    what_the_generator_chooses:
+      - wire_surface_and_its_tokens_and_separators
+      - state_cells_their_domains_and_which_are_latent
+      - action_names_arities_and_argument_domains
+      - action_preconditions_so_the_carrier_imposes_a_protocol
+      - action_effects
+      - error_vocabulary_and_the_mapping_from_a_refused_action_to_a_code
+    what_the_project_still_owns:
+      - the_meta_schema_and_therefore_the_space_carriers_are_drawn_from
+      - the_four_wire_surface_shapes_though_not_their_tokens
+      - the_meta_channel
+      - the_qualification_rule_and_the_demand_derivation_rule
+      - the_evaluator_the_component_registry_the_feature_vocabulary_and_the_probe_primitive
+    carrier_schema_version: mira-blind-carrier-v1
+    closure_rule: exact_fixed_point_no_inherited_bound
+    p5_lesson_applied: true
+    cardinality_identity_declared_and_checked: true
+    m112_cardinality_defect_would_now_fail_the_guard: true
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    devkit_survey_sample: 1200
+    devkit_qualification_rate: 0.23
+    devkit_rate_is_not_a_prediction: true
+    probability_the_minimum_is_missed_at_the_devkit_rate: 0.062
+    deepest_observation_depth_seen_in_the_devkit_survey: 11
+    every_devkit_carrier_closed_by_fixed_point: true
+    devkit_carriers_structurally_distinct: 1200
+    inherited_feature_vocabulary_ambiguous_rows: [2, 3, 6, 7]
+    m111_record_says_row_seven_is_determined: true
+    devkit_carriers_say_row_seven_is_ambiguous: true
+    prefreeze_adversarial_defects_found: 11
+    prefreeze_adversarial_defects_repaired: 11
+    every_repair_has_a_regression_test: true
+    # Three of the eleven were invisible to this milestone's own suite and its boundary audit, and
+    # surfaced only when the whole suite ran -- in sequence, the repair for the first causing the
+    # second, and the second showing that the shape of the fix was wrong.
+    defects_found_only_by_running_the_whole_suite: 3
+    root_gitattributes_is_bound_apparatus_of_m106s_frozen_protocol: true
+    m113_first_commit_had_appended_to_it_and_broke_two_m106_tests: true
+    per_directory_gitattributes_are_bound_apparatus_of_m107s_frozen_protocol: true
+    moving_the_entries_there_broke_an_m107_test_instead: true
+    every_attributes_file_in_the_repository_is_already_frozen_apparatus: true
+    m113_declares_only_experiments_m113_gitattributes: true
+    the_mechanism_that_composes_across_freezes_is_a_declared_digest_mode: true
+    # The older half of the same lesson, pre-existing on `main` and deliberately not repaired:
+    # M105's frozen protocol binds a `.gitattributes` that M106 later appended to. Four of its bound
+    # members no longer reproduce. M105 is permanently negative under D074 and may not be re-frozen.
+    m105_frozen_protocol_has_four_drifted_bound_members_on_main: true
+    m105_drift_predates_this_branch_and_is_not_repairable: true
+    tested_system_members_bound: 11
+    tested_system_members_owned_by_frozen_predecessors: 5
+    tested_system_predecessor_members_that_are_crlf_in_this_checkout: 4
+    tested_system_digest_mode: lf_normalized
+    an_undeclared_tested_system_digest_mode_is_refused: true
+    # Defect eight, found by measuring: the renaming-invariant signature was computed at acceptance
+    # and dropped before the result. A bank of renamings would have met a carrier minimum while
+    # presenting far fewer machines -- M112's defect one level up.
+    minimum_is_stated_over_distinct_qualifying_structures: true
+    minimum_distinct_qualifying_structures: 3
+    distinct_structure_rule: carrier_host.structural_signature
+    checker_recomputes_the_signatures_from_preserved_carrier_bodies: true
+    a_bank_of_renamings_would_now_fail_P21: true
+    devkit_qualifying_carriers_all_structurally_distinct: true
+    development_run_sample: 80
+    development_run_seed: m113-development-run
+    development_run_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
+    development_run_result_digest: 9c41183caa96af0cca7a2a40c805ab91c42b5dd8f1c936b0fda60d298cf6ee5a
+    # Re-recorded when the model-network boundary became measured. The population, every arm
+    # total and the 21/22 verdict are byte-identical to the run this supersedes; the digest
+    # moved because the result now carries what the sealed scope observed.
+    development_run_result_digest_superseded: 2e89b66504e2e899c6ff90e759bb364cd062edeff7f3a0a254099d2b2637b4a9
+    development_run_predicates_true: 21
+    development_run_predicates_total: 22
+    development_run_failing_predicate: P22
+    h58_is_the_last_predicate: P22
+    producer_death_capsules_run: 44
+    producer_death_no_capsule_could_reach_a_producer_result: true
+    producer_death_every_verdict_matched_in_process: true
+    preservation_m110_conditions_true: 24
+    preservation_m111_conditions_true: 24
+    preservation_both_result_digests_reproduce: true
+    development_full_descendant_constructs: 23
+    development_fresh_control_constructs: 13
+    development_full_descendant_calibrated_refusals: 6
+    development_fresh_control_calibrated_refusals: 29
+    development_full_descendant_invented_adapters: 15
+    development_fresh_control_invented_adapters: 13
+    development_result_is_not_a_prediction: true
+    # `M3` against `T0` is a sum. `ablated` holds generation one and the policy, so the difference
+    # between them is generation two's entire marginal contribution, and it is nothing.
+    generation_two_marginal_on_every_outcome_measure: 0
+    generation_two_marginal_attribution_rows: 1
+    generation_three_marginal_correct_construction: 9
+    generation_three_marginal_calibrated_refusal: -22
+    acquired_cascade_marginal_correct_construction: 1
+    the_descendant_effect_is_the_diagnostic_policy_not_the_cascade: true
+    ablation_biting_is_measured_never_required: true
+    a_positive_h58_must_be_reported_with_this_decomposition: true
+    arms_run: [T0, M1, M2, M3, rollback, ablated, mutated, unregistered, budget_plus]
+    out_of_band_arms_run: [producer_death, preservation]
+    # `corrupt` is the twelfth declared arm. It is not a per-demand state: a malformed acquired rule
+    # must be refused at decode rather than run, so it is exercised as a fail-closed check (P6).
+    corruption_arm_run_as_a_fail_closed_check: true
+    declared_arms_total: 12
+    arms_declared_but_not_run: []
+    # The model-network boundary, restated as the two phases it actually has. The unqualified
+    # counters these replace were literals the runner wrote into its own result, so `P15` agreed
+    # with the program it judged and could not fail. M112 had already stated the separation and
+    # M113 had regressed from it; defect twelve, found after the apparatus merged.
+    model_calls_in_qualification: 0
+    network_calls_in_qualification: 0
+    remote_execution_calls_in_qualification: 0
+    qualification_phase_silence_is_measured_by_a_sealed_scope: true
+    sealed_scope_selftest_proves_the_guard_was_live: true
+    p15_credits_silence_only_when_the_selftest_fired: true
+    generation_phase_invocations_are_counted_by_the_ledger: true
+    generation_ledger_is_required_by_the_phase_machine: true
+    a_canonical_result_must_record_exactly_one_generator_invocation: true
+    track: A
+    track_b_prepared_not_run: true
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    removes_carrier_interaction_language_authorship: intended_not_yet_established
+    removes_substrate_authorship: false
+    g1_to_g10_advance: false
+    analysis_plan_frozen: true
+    generator_identity_frozen: true
+    generator_spec_commitment: c0f13b698034ed8cbe147ff79512e8522594ac6b691d0cde1f806bc407cfd17a
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
+    provider_criterion_declared_by_owner_after_seeing_the_catalogue: true
+    provider_criterion_depends_on_no_h58_result: true
+    qualifying_invocation_attempted: true
+    qualifying_invocation_attempts: 1
+    qualifying_invocation_outcome: aborted_http_429
+    qualifying_invocation_at: '2026-08-27T07:27:49Z'
+    bank_materialized: false
+    # The distinction the record exists to protect. Nothing ran against a bank, so the hypothesis
+    # was not measured; an unreached instrument is not a tested hypothesis.
+    this_is_an_instrument_failure_not_a_negative_h58_result: true
+    h58_tested: false
+    p22_computed: false
+    attempt_is_not_repeated_under_the_frozen_rule: true
+    frozen_spec_can_never_authorize_a_bank: true
+    refreeze_decision_belongs_to_the_owner: true
+    byok_remedy_declined_by_owner_to_avoid_altering_the_served_identity: true
+    risk_was_recorded_before_the_freeze: true
+    # Written before any identity could be pinned, so the freeze consumes a rule rather than
+    # writing one. A hosted model has no blob digest, so what is pinned is the identifier, the
+    # provider and the routing switches that decide whether the frozen request is the served one.
+    generator_spec_contract_defined_before_the_identity: true
+    generator_spec_refuses_model_aliases_and_auto_routers: true
+    generator_spec_refuses_an_open_provider: true
+    generator_spec_refuses_model_and_provider_fallbacks: true
+    generator_spec_names_and_disables_eight_retry_layers: true
+    generator_spec_refuses_a_determinism_claim_for_a_hosted_model: true
+    generator_spec_refuses_credential_material_anywhere_in_the_document: true
+    generator_spec_candidate_cannot_validate_as_frozen: true
+    generator_spec_fields_pending_discovery: 6
+    generation_client_written_never_executed: true
+    generation_client_pre_freeze_pass_is_one_command: true
+    provider_rule_declared_before_the_data: adopt_iff_exactly_one_capable_provider
+    several_capable_providers_stops_and_goes_to_the_owner: true
+    discovery_answers_three_of_the_six_unset_fields: true
+    an_adopted_candidate_still_fails_validate_generator_spec: true
+    pre_freeze_pass_checks_its_own_post_conditions: true
+    generation_client_transport: stdlib_http_client_no_third_party_retry_behaviour
+    generation_client_smoke_input_checked_against_the_qualifying_digest: true
+    generation_client_fails_closed_on_a_served_identity_that_is_not_the_frozen_one: true
+    # Defect thirteen, found by the contamination checker rather than by a reader. The schema
+    # travels to the generator inside the request, so its own strings are part of the generator's
+    # sole input, and its title named the contract the emitter was emitting for.
+    output_schema_title_carried_project_context_and_was_repaired: true
+    every_file_the_generator_sees_is_contamination_free: true
+    qualifying_input_derived_at_n_24: true
+    analysis_plan_commitment: 66003159673c50c3e44bfdaf5f0b3d4700e30f47e2845ced639393cbe600038f
+    analysis_plan_frozen_before_any_carrier_existed: true
+    analysis_plan_is_the_candidate_unchanged: true
+    owner_gates_outstanding:
+      - pin_a_generator_identity_before_any_invocation
+      - run_the_single_qualifying_invocation
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
+    environment_blocker: docker_daemon_not_running_so_the_isolated_invocation_cannot_be_attested
+    # The generator phase cannot be run from the session that holds the owner's authorization.
+    # Each of the three is independently fatal to a single blind invocation, and none of them is a
+    # matter of configuration this session may change.
+    generator_environment_blocker:
+      no_hermes_client_present: true
+      no_openrouter_credential_present: true
+      openrouter_egress_denied_by_policy: true
+      egress_denial_observed_as: CONNECT_tunnel_403_from_the_agent_proxy
+      substituting_another_model_or_provider_is_refused_by_the_authorization: true
+      the_authoring_session_may_never_produce_the_carriers_itself: true
+      transport_fallback_authorized_but_unusable_because_the_host_is_unreachable: true
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
+  M114:
+    status: aborted_without_verdict
+    record_closed: true
+    hypothesis: H59
+    replication_of: H58
+    replication_kind: corrective_instrumental
+    decision_slot: D083
+    decision_slot_filled: false
+    phase: spec_frozen
+    successor_to: M113
+    # The predecessor's record is closed. It is not re-frozen, not reinterpreted, not repaired and
+    # not completed, and `tests/test_m113_record_is_closed.py` pins its digests so that stays true.
+    m113_untouched: true
+    m113_outcome: instrument_aborted_before_bank_materialization
+    m113_h58_tested: false
+    m113_is_not_retroactively_repaired_by_this_milestone: true
+    # Why a new number. The register carries one hypothesis per milestone, and M106 set the
+    # precedent when it replicated M105 under H51 rather than reusing H50: a replication that
+    # inherited its predecessor's number would make the predecessor's record read as still open.
+    hypothesis_number_follows_the_m106_precedent: true
+    p22_is_h59_exactly_as_p22_was_h58: true
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    scientific_target_is_m113s_unchanged: true
+
+    # What is imported rather than copied, so that "unchanged" is checkable and cannot drift.
+    mechanism_module: metamorphosis/m113_carrier_bank.py
+    mechanism_imported_unchanged: true
+    plan_and_spec_rules_delegated_to_m113: true
+    qualification_runner_imports_m113s_sealed_scope_and_arms: true
+    checker_imports_p1_to_p22_from_m113: true
+    generation_client_imports_m113s_transport: true
+    generator_prompt_schema_and_input_are_m113s_byte_for_byte: true
+    generator_input_digests_pinned_and_checked: 3
+    generator_identity_is_m113s: true
+    canonical_request_body_is_byte_identical_to_m113s: true
+    canonical_request_body_sha256: 02a71fb54e492bed151981f6b3f79ec947e7e404bc999caffa37c2c642beaabc
+    requested_carrier_count: 24
+    minimum_qualifying_carriers: 3
+    minimum_distinct_qualifying_structures: 3
+    closure_rule: exact_fixed_point_no_inherited_bound
+    insufficient_bank_is_a_negative_result_not_a_reason_to_generate_again: true
+
+    # The only thing M114 changes. M113's protocol used one predicate, "one physical request", for
+    # two quantities: how many times the instrument may reach for the generator, and how many times
+    # the generator may produce a bank. A capacity rejection spent the second without spending the
+    # first, and the milestone ended on a fact about queueing.
+    delivery_semantics: m114-delivery-v1
+    delivery_attempt_and_bank_materialization_are_separate_quantities: true
+    max_delivery_attempts: 3
+    max_bank_materializations: 1
+    retry_wait_seconds: 60
+    retry_wait_is_fixed_and_preregistered_not_backoff: true
+    only_capacity_rejection_before_generation_may_be_retried: true
+    retryable_status: 429
+    a_retry_requires_no_completion_and_no_evidence_the_model_executed: true
+    every_attempt_sends_the_byte_identical_frozen_body: true
+    a_scientific_outcome_is_never_retried: true
+    p22_false_is_never_a_reason_to_deliver_again: true
+    never_retried:
+      - invalid_json
+      - output_schema_violation
+      - truncated_completion
+      - model_refusal
+      - insufficient_bank
+      - timeout_after_transmission_in_an_unestablished_state
+      - connection_lost_in_an_ambiguous_state
+      - any_status_other_than_429
+      - any_scientific_outcome_including_p22_false
+    ambiguity_resolves_to_a_terminal_outcome_never_to_a_retryable_one: true
+    # The asymmetry is the safeguard. Misclassifying a capacity rejection as ambiguous costs one
+    # unused attempt; the opposite mistake would permit a second draw against a model that may
+    # already have produced one, and no downstream check could recover the difference.
+    three_capacity_rejections_is_instrument_aborted_not_a_negative_h59: true
+
+    # When the rule was decided. Recorded as booleans the frozen plan must reproduce exactly.
+    delivery_rule_decided_after_m113_instrument_failure: true
+    delivery_rule_decided_before_any_m114_bank_existed: true
+    delivery_rule_decided_without_any_observation_of_the_hypothesis: true
+    delivery_rule_was_never_part_of_m113: true
+    filiation_is_carried_in_the_plan_the_result_and_the_check_report: true
+
+    # What the checker recomputes from the attempts rather than reading from the ledger's summary.
+    checker_recomputes_the_attempt_budget: true
+    checker_recomputes_attempt_index_contiguity: true
+    checker_recomputes_that_every_request_body_digest_is_identical: true
+    checker_recomputes_that_no_provider_or_model_was_substituted: true
+    checker_recomputes_each_outcome_from_the_evidence_carried: true
+    checker_recomputes_that_nothing_follows_a_terminal_outcome: true
+    checker_recomputes_each_recorded_retry_permission: true
+    checker_recomputes_the_waits: true
+    checker_recomputes_that_at_most_one_attempt_materialized_a_bank: true
+    checker_recomputes_the_declared_materialization_index: true
+    checker_recomputes_that_the_ledger_binds_the_frozen_spec: true
+    additional_verdicts_are_strictly_subtractive: true
+    a_violating_ledger_yields: invalid
+    a_ledger_with_no_materialization_yields: instrument-aborted
+    neither_additional_verdict_can_turn_a_negative_into_a_positive: true
+
+    # The one predicate M114 versions, and why. M113 defines P15's generator half as the number of
+    # physical invocations, on the ground that a series of physical requests must never be
+    # presentable afterwards as one logical invocation. Separating delivery from materialization
+    # makes that no longer one number. A first form of this milestone set
+    # model_calls_in_bank_generation = bank_materializations and went on claiming P1-P22 were
+    # imported unchanged; that was false, and a milestone whose whole subject is a conflated
+    # counter may not ship one of its own and call it an import. Found and corrected before any
+    # freeze stood and before any bank existed.
+    predicates_retaining_m113_scientific_computations: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10,
+      P11, P12, P13, P14, P16, P17, P18, P19, P20, P21, P22]
+    predicates_versioned_for_this_milestone: [P15]
+    p15_version: m114-phase-boundary-v1
+    p15_is_versioned_because_delivery_and_materialization_are_separated: true
+    p15_recomputed_independently_from_the_preserved_record: true
+    p15_conjoins_qualification_generation_and_delivery: true
+    p15_qualification_half_requires_zero_calls_and_a_live_guard: true
+    p15_generation_half_requires_exactly_one_bank_materialization: true
+    p15_delivery_half_requires_the_frozen_rule_to_hold_in_full: true
+    p22_scientific_computation_is_m113s_unchanged: true
+    p15_versioning_gives_no_advantage_to_the_hypothesis: true
+    the_versioned_predicate_can_only_subtract_from_a_verdict: true
+    # The two quantities, never folded into one field again. A 429 before generation is a physical
+    # network request and is not a model execution.
+    physical_requests_and_model_calls_are_never_carried_in_one_field: true
+    model_calls_in_bank_generation_field_removed_from_the_result: true
+    separately_reported_quantities: [physical_delivery_attempts, bank_materializations,
+      model_execution_evidence, network_calls_in_qualification, model_calls_in_qualification,
+      remote_execution_calls_in_qualification]
+    whole_delivery_ledger_preserved_into_the_result_not_only_its_summary: true
+    adversarial_phase_boundary_tests: 25
+    freeze_pinning_tests: 9
+    abort_pinning_tests: 21
+    # Versioning a predicate must not loosen it, and the direction is checked rather than
+    # claimed: on any record where M113's P15 is well-defined, M114's holding implies
+    # M113's. The converse is false by construction -- a bank M113 would have accepted can
+    # still be refused here for how it was delivered.
+    the_versioned_p15_is_strictly_stricter_than_the_one_it_replaces: true
+    adversarial_delivery_tests: 23
+    adversarial_contract_tests: 17
+    adversarial_instrument_tests: 27
+    m113_record_lock_tests: 8
+    the_no_retry_enumeration_is_inside_the_plan_commitment: true
+    every_delivery_rule_has_a_test_that_tries_to_evade_it: true
+
+    development_run_seed: m114-development-run
+    development_run_sample: 24
+    development_run_predicates_true: 21
+    development_run_predicates_total: 22
+    development_run_failing_predicate: P22
+    development_result_is_not_a_prediction: true
+    development_run_has_no_generator_phase_and_reports_it_as_not_applicable: true
+
+    analysis_plan_commitment: e4c659e5c8f5ab0884a4de862876302d7fefc699d914ff0776fefb322ac026af
+    analysis_plan_frozen: true
+    analysis_plan_is_the_candidate_unchanged: true
+    analysis_plan_frozen_before_any_carrier_existed: true
+    generator_identity_frozen: true
+    generator_spec_commitment: e12337a4a78045394e4db7b39cb710d3c6dacbd435d01f9a92530e239c288fc3
+    generator_spec_frozen_at: '2026-08-27T13:00:43Z'
+    frozen_plan_digest: cf7b32e5b06f65f874d9b87ae2a52aba170b37ac1ed6ea326c5e8955b0372415
+    frozen_spec_digest: 98d7cd80f5bee7c88e042ed646eb06832ab5785ad882ad29c5fe9a8eb1a8f8ee
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
+    # This is the second freeze. The first was withdrawn before any delivery attempt and before any
+    # bank existed; it stays visible and is never rewritten as though it had not existed.
+    freeze_ordinal: 2
+    freeze_committed_and_pushed_before_the_first_delivery_attempt: true
+    # A freeze was consumed at 2026-08-27T11:34:19Z and is **withdrawn**, recorded rather than
+    # erased in experiments/M114/FREEZE_WITHDRAWN.md. It ran one step early -- the owner's sequence
+    # places the freeze after the apparatus PR merges -- and a pre-freeze defect in P15 was still
+    # open when it ran. Between the freeze and the withdrawal no delivery attempt was made, no bank
+    # was materialized, no seal, commitment, tested-system freeze, reveal or result existed, and
+    # nothing about H59 was observed. So the withdrawn freeze constrained an instrument that never
+    # acted, which is why withdrawing it is a correction and not the repair of a result.
+    a_freeze_was_consumed_and_withdrawn: true
+    withdrawn_freeze_at: '2026-08-27T11:34:19Z'
+    withdrawn_freeze_commit: b98116d8e8cf92478876bfb9ba6c48c3d541db4b
+    withdrawn_plan_commitment: d191f74df43526b35e39095c62b2329fe47fb467d9c5167f0eb3bf935b1c0339
+    withdrawn_spec_commitment: 85b864426fbb97467062978119b60b5c0c65ea93fbee9fafaa739aa85d697c73
+    no_delivery_attempt_was_made_under_the_withdrawn_freeze: true
+    no_bank_existed_under_the_withdrawn_freeze: true
+    nothing_about_the_hypothesis_was_observed_under_the_withdrawn_freeze: true
+    withdrawal_is_recorded_not_erased: true
+    freeze_changed_only_the_specs_status_not_the_request: true
+    freeze_is_consumed_once_and_refuses_to_rerun: true
+    generator_identity_is_m113s_by_field_comparison: true
+    generator_model: deepseek/deepseek-v4-flash-0731
+    generator_provider: Morph
+    generator_quantization: bf16
+    generator_quantization_is_discovery_bound_not_runtime_attested: true
+    # The delivery sequence ran to the end of its frozen budget on 27 August 2026 and materialized
+    # nothing. Three physical requests, three explicit HTTP 429s, zero model calls. The model was
+    # never reached, so H59 was not measured: this is an instrument failure, not a negative result.
+    status_of_the_delivery_sequence: instrument_aborted
+    physical_delivery_attempts: 3
+    delivery_budget: 3
+    capacity_rejections: 3
+    bank_materializations: 0
+    bank_materialized: false
+    delivery_ledger_digest: 96c77d492e20b0621c6dfc3bc06dbb7d6b3c00c3537c204b1a28039d913ebac8
+    delivery_ledger_is_valid_in_full_under_the_frozen_rule: true
+    every_attempt_sent_the_byte_identical_frozen_body: true
+    nothing_was_served_so_nothing_could_be_substituted: true
+    frozen_wait_honoured_before_attempts_two_and_three: true
+    # The evidence names its own cause, three times, which M113's could not: its client discarded
+    # the failure body and left only a status code.
+    all_three_responses_are_byte_identical: true
+    response_digest: f0a0b94cf22fdeeee8fb28abffc34bff0fdc4c74e771c033fa0113e4e4920713
+    provider_error_code: service_overloaded
+    limit_source: upstream_provider_shared_pool
+    is_byok: false
+    provider_requested_retry_after_seconds: 1
+    frozen_wait_seconds: 60
+    # A 60x margin over the provider's own Retry-After changed nothing. The rejection is not a
+    # momentary burst that a longer pause would have cleared.
+    the_constraint_is_not_a_matter_of_patience: true
+    this_is_an_instrument_failure_not_a_negative_h59_result: true
+    h59_tested: false
+    p22_computed: false
+    no_further_attempt_is_permitted_under_the_frozen_rule: true
+    frozen_spec_can_never_authorize_a_bank: true
+    nothing_is_relaunched_under_m114: true
+    successor_decision_belongs_to_the_owner: true
+    # An account identifier the provider's error envelope carried was replaced, the replacement
+    # recorded inside the ledger with its pre-redaction digest. No quantity the frozen rule reads
+    # was touched, and the client now strips such fields at capture.
+    account_identifier_redacted_from_the_error_bodies: true
+    redaction_recorded_inside_the_ledger: true
+    redaction_touched_no_measured_quantity: true
+    track: A
+    evidence_tier: blind_generated_sealed_bank
+    human_independence: false
+    external_reproduction: false
+    g1_to_g10_advance: false
+    owner_gates_consumed:
+      - freeze_the_m114_analysis_plan_and_generator_spec
+      - run_the_delivery_sequence_under_the_frozen_budget
+    # Unreachable, not outstanding. There is no bank to seal, commit to, freeze a tested system
+    # around, or reveal, and the frozen spec can never authorize one.
+    owner_gates_unreachable_because_no_bank_exists:
+      - seal_and_publish_the_commitment
+      - freeze_the_tested_system_with_the_bank_unread
+      - authorize_the_reveal
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: the_meta_schema_and_the_inherited_three_feature_vocabulary
+
+  M115:
+    status: instrument_aborted
+    record_closed: true
+    hypothesis: H60
+    hypothesis_tested: false
+    replication_of: H59
+    replication_kind: corrective_instrumental
+    successor_to: M114
+    question: can_a_genesis_machinery_adapt_to_a_carrier_the_project_did_not_design
+    scientific_target_is_m113s_unchanged: true
+    # The predecessors' records are closed. M115 does not reinterpret, repair or complete them.
+    m113_untouched: true
+    m114_untouched: true
+    hypothesis_number_follows_the_m106_precedent: true
+
+    # What the route did, and it did it correctly.
+    requested_model_alias: deepseek/deepseek-v4-flash-0731
+    required_canonical_checkpoint: deepseek/deepseek-v4-flash-20260731
+    selected_provider: Alibaba
+    identity_semantics: m115-alias-canonical-checkpoint-v1
+    runtime_identity_holds: true
+    provider_selection_is_derived_not_hand_picked: true
+    physical_delivery_attempts: 1
+    bank_materializations: 1
+    http_status: 200
+    no_fallback: true
+
+    # Custody worked end to end. The failure is entirely downstream of it.
+    sealed_before_any_inspection: true
+    tested_system_frozen_before_reveal: true
+    tested_system_frozen_at_commit: 1a696e17a6ae176c837ce844891e29535d145803
+    reveal_occurred: true
+    reveal_legitimate: true
+    reveal_consumed_fail_closed: true
+    plaintext_generation_response_present_in_repository: false
+    carrier_content_printed: false
+    ciphertext_sha256: 68e8f660c499e8835378609068c09b35efbd387bd2be4764779fe88790729462
+    generation_response_sha256: f727a6cb1059aceb633613366e77471f7f8462b306343735d8b93cf7a57b3292
+
+    # Where it ended. Strict-JSON admission refused the completion before a carrier payload existed.
+    terminal_failure: invalid_json
+    qualification_started: false
+    carrier_payload_parsed: false
+    total_carriers: 0
+    qualifying_carriers: 0
+    distinct_qualifying_structures: 0
+    minimum_bank_criteria_passed: false
+    p1_to_p22_computed: 0
+    # The frozen cardinality rule says a payload the host refuses is not a carrier, so the
+    # pre-registered negative was not reached either. This is not an insufficient-bank result.
+    insufficient_bank_verdict_not_applied_because_no_carrier_payload_existed: true
+    scientific_retry_permitted: false
+    independent_replay: matched
+    result_digest: 441e1206686efcea2630aa16bb0179bff09160a3254ad8e7e6836a627dcd9b94
+
+    # What the record cannot say, and why. Recorded here so no successor reads more into it.
+    terminal_class_was_derived_from_an_exception_message: true
+    finish_reason_was_not_preserved: true
+    token_usage_was_not_preserved: true
+    truncation_cannot_be_established_or_excluded_from_this_record: true
+
+    g1_to_g10_advance: false
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: strict_json_admission_of_a_blindly_generated_carrier_bank
+
+  M116:
+    status: candidate_pre_freeze
+    record_closed: false
+    hypothesis: H61
+    hypothesis_tested: false
+    replication_of: H60
+    replication_kind: corrective_instrumental
+    successor_to: M115
+    scientific_proposition_is_h60s_unchanged: true
+    hypothesis_number_follows_the_m106_precedent: true
+    m115_untouched: true
+    m115_outcome: instrument_aborted_at_strict_json_admission
+    m115_h60_tested: false
+    m115_is_not_retroactively_repaired_by_this_milestone: true
+
+    # Nothing scientific has happened yet.
+    analysis_plan_frozen: false
+    generator_spec_frozen: false
+    qualifying_input_sent: false
+    bank_exists: false
+    development_capacity_gate_run: false
+    openrouter_calls_made: 0
+
+    # The prospective instrument delta, all of it pre-freeze.
+    max_tokens_candidate: 131072
+    reasoning_control_candidate: explicitly_disabled
+    non_carrier_telemetry_preserved: true
+    telemetry_read_barrier: humans_may_read_operational_metadata_never_carrier_content
+    terminal_classifier_is_deterministic_over_structured_evidence: true
+    truncation_requires_affirmative_finish_reason_evidence: true
+    unclassified_terminal_is_the_fail_closed_class: true
+    machine_only_preseal_admission: true
+    admission_validator_is_a_pure_predicate: true
+    admission_may_repair_normalize_or_select: false
+    carrier_envelope_is_positional_and_content_independent: true
+    bank_nonce_committed_before_generation: true
+    preseal_and_postreveal_validation_must_bind: true
+    first_executed_completion_consumes_the_opportunity: true
+    first_schema_valid_completion_wins: false
+    content_dependent_redraw_permitted: false
+    development_stress_schema_dominates_frozen_carrier_census: true
+    census_derived_from: experiments/M115/OUTPUT_SCHEMA.json
+    development_retry_semantics_unchanged_from_merged_candidate: true
+    stopping_rule: h61_is_the_last_corrective_replication_under_this_instrument_family
+
+    g1_to_g10_advance: false
+    human_maintained_sealed_bank: EXTERNAL_BLOCKER
+    current_ceiling: no_blind_carrier_bank_has_yet_been_admitted_by_the_frozen_host
+
+previous_research_question: >-
+  Can a continuous lineage prove that its own accepted transformation language is
+  insufficient for a task, synthesize a new reusable primitive only after observing that
+  limitation, validate it independently, adopt it transactionally and reuse it on a
+  structurally distinct task family? Answered by M053-M055: the machinery works and the
+  capability claim is false. Closed by D019.
+
+measurement_question: >-
+  Can a pre-written resource-aware adaptive allocation beat the frozen component-uniform
+  baseline without recreating M029's allocation failure?
+
+phase_one:
+  status: completed_bounded_deterministic_binary_dfa
+  completion_experiment: M042
+  canonical: true
+  completion_claim: >-
+    One frozen continuous lineage satisfied all ten Genesis completion gates inside the
+    declared finite task, substrate and budget families.
+  claim_limits:
+    model: deterministic_binary_dfa
+    observations_per_task: 127
+    symbolic_depth: 4
+    symbolic_node_budget: 4096
+    open_ended_evolution_claimed: false
+    general_intelligence_claimed: false
+    consciousness_claimed: false
+    external_system_authority: false
+
+canonical_results:
+  M012b:
+    status: validated_bounded_finite_domain
+    github_run_id: 30635291887
+    exact_principal_births: 36
+  M013e:
+    status: validated_bounded_finite_opaque_substrate
+    github_run_id: 30637689966
+    exact_principal_migrations: 36
+  M014b:
+    status: failed_no_generalisable_learning_advantage
+    github_run_id: 30650363802
+  M038:
+    status: positive_canonical_one_cycle
+    merge_commit: c9d5749a6d28d3f957c18a862ad4f1303dd502fd
+  M039:
+    status: positive_canonical_repeated_cycles_and_tool_reuse
+    merge_commit: 0663c885346c41e310a0ae47eca122e7e2b6ed82
+    lineage_state_counts: [4, 5, 6, 7]
+  M040:
+    status: positive_canonical_post_migration_plasticity
+    merge_commit: 6189a93e49152dd0eccae375ddcdff4660bb9d9f
+    canonical_workflow_run: 30930249547
+  M041:
+    status: negative_canonical_constructive_availability_failure
+    merge_commit: 1ef6407275057a109a6ef0f4377d234d4f59eddf
+    canonical_workflow_run: 30937650241
+  M042:
+    status: positive_canonical_phase_one_completion
+    merge_commit: 48a4d5d0f6a25de275e646e5abb876fc912024fb
+    frozen_protocol_commit: c75e57cfb23bcaccab98f449bfef0d83fe530ad4
+    canonical_head: ae8b4dce2cb737fc51dc0fa3a9ffcae494ef1cdb
+    canonical_workflow_run: 30958542929
+    canonical_workflow_attempt: 1
+    frozen_protocol_sha256: d3d2b60a23d5847238aaec87e0d04200b707761ba8e0eb1418632e59dd39a366
+    exact_raw_result_sha256: 2d6c75abf526f0b3a3edba381f6f7b820d4dd03ccc3276784301e3c6a65b7830
+    exact_first_result_seal_sha256: bc39b5d494efcefa6fbfbf95170b2fe38436e90e4168fac9a347030a56e404b2
+    artifact_digest: sha256:14abb40f77c5fe3821c7e87f3d3078e378e0763efa1cd4a68296d7224f30de38
+    all_ten_audited_gates_true: true
+    complete_quality: 127
+    fresh_b_quality: 123
+    learned_tool_ablated_quality: 123
+    learning_state_ablated_quality: 123
+    unchanged_parent_quality: 117
+    output_only_quality: 96
+    first_result_reexecuted: false
+    retuned_after_freeze: false
+  M066:
+    status: positive_canonical_real_substrate_completion
+    frozen_parent: 4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5
+    canonical_head: 2cf454ca4e393a319f89ae5afbcd5e3f9250182c
+    canonical_workflow_run: 31291899534
+    canonical_workflow_attempt: 1
+    selected_bank_index: 0
+    protocol_sha256: f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b
+    exact_raw_result_sha256: eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace
+    exact_reproduction: true
+    all_ten_audited_gates_true: true
+    complete_hidden_quality: [18, 18]
+    control_hidden_quality: [0, 18]
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    first_result_reexecuted: false
+    retuned_after_freeze: false
+
+phase_two:
+  status: positive_canonical_real_substrate_completion_closed
+  objective: structural_domain_transfer
+  source_domain: deterministic_binary_dfa
+  target_domain:
+    model: deterministic_total_mealy_machine
+    input_alphabet: [0, 1, 2]
+    output_alphabet: [0, 1, 2]
+    ground_truth: exact_product_equivalence
+  M043:
+    status: q1_to_q5_passed_in_development
+    role: component_qualification
+    Q1:
+      ci_workflow_run: 30983777610
+      repository_tests_python_311: 625
+      repository_tests_python_313: 625
+      repository_integrity_passed: true
+    Q2:
+      qualification_ci_workflow_run: 30992682534
+      repository_tests_python_311: 643
+      repository_tests_python_313: 643
+      repository_integrity_passed: true
+    Q3:
+      qualification_ci_workflow_run: 30997105933
+      repository_tests_python_311: 672
+      repository_tests_python_313: 672
+      repository_integrity_passed: true
+      seed_free_development_catalogue_entries: 3
+    Q4:
+      qualification_ci_workflow_run: 31001898372
+      repository_tests_python_311: 705
+      repository_tests_python_313: 705
+      repository_integrity_passed: true
+      disposable_worker_process: true
+      worker_has_hidden_target_access: false
+      forced_fault_exact_restoration:
+        body: true
+        registry: true
+        learning_state: true
+        journal: true
+    Q5:
+      qualification_ci_workflow_run: 31008963611
+      repository_tests_python_311: 745
+      repository_tests_python_313: 745
+      repository_integrity_passed: true
+      positive_substrate_families: 3
+      bounded_public_probe_discovery: true
+      synthesis_method: finite_field_lagrange_scalar_dag
+      exact_indexed_body_reconstruction: true
+      transition_output_table_fields_present: false
+      independent_certificate_recomputation: true
+    Q6:
+      status: absorbed_by_M044
+  M044:
+    status: positive_integrated_development_result
+    canonical: false
+    implementation: metamorphosis/m044_integrated_lineage.py
+    protocol: experiments/M044/PROTOCOL.md
+    runner: scripts/run_m044_integrated_lineage.py
+    qualification_ci_workflow_run: 31015992729
+    repository_tests_python_311: 755
+    repository_tests_python_313: 755
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_cycles: 3
+    lineage_state_counts: [2, 3, 4, 5]
+    acquired_tool_pattern_reused_pre_migration: true
+    acquired_tool_pattern_reused_post_migration: true
+    opaque_substrate_discovered_by_public_probes: true
+    first_native_migration_exact: true
+    post_migration_parent_from_native_reconstruction: true
+    post_migration_native_resynthesis_exact: true
+    native_program_changed_after_learning: true
+    final_tool_registry_entries: 3
+    final_learning_trace_entries: 3
+    final_causal_journal_entries: 3
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 4
+    exact_restored_version: 3
+    immediate_replay_byte_identical_within_each_runtime: true
+    separately_archived_cross_runtime_manifest_comparison: false
+    selected_seed: false
+    hidden_task_bank_authorised: false
+    canonical_workflow_authorised: false
+    canonical_result_exists: false
+
+phase_three:
+  status: scalable_non_exhaustive_lineage_passed_in_development
+  objective: bounded_non_exhaustive_adaptive_continuation
+  M046:
+    status: positive_integrated_development_result
+    canonical: false
+    implementation:
+      - metamorphosis/m046_search.py
+      - metamorphosis/m046_task.py
+      - metamorphosis/m046_scalable_lineage.py
+    protocol: experiments/M046/PROTOCOL.md
+    qualification: experiments/M046/DEVELOPMENT_QUALIFICATION.md
+    result: results/M046_DEVELOPMENT_RESULT.md
+    runner: scripts/run_m046_scalable_lineage.py
+    qualification_marker_commit: 872f90060902cea2b94be653845036340b91cde3
+    qualification_ci_workflow_run: 31021072262
+    qualification_ci_run_number: 398
+    repository_tests_python_311: 770
+    repository_tests_python_311_seconds: 569.73
+    repository_tests_python_313: 770
+    repository_tests_python_313_seconds: 585.56
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_cycles: 6
+    lineage_state_counts: [2, 3, 4, 5, 6, 7, 8]
+    hidden_task_families:
+      - split_emit_1
+      - split_emit_2
+    proposal_generator_exact_equivalence_access: false
+    hidden_target_body_exposed_to_generator: false
+    witness_trace_exposed_to_generator: false
+    complete_candidate_space_enumerated: false
+    explicit_resource_budgets:
+      observations_per_task: 128
+      generated_candidates_per_task: 48
+      exact_task_validation_attempts: 8
+      rewrite_depth: 3
+      body_state_ceiling: 10
+      working_memory_bytes: 262144
+      causal_memory_bytes: 262144
+      search_seconds_per_task: 30
+      maximum_exploration_fraction_ppm: 100000
+    independent_task_side_exact_validation: true
+    disposable_adoption_validation: true
+    registered_tool_reuse: true
+    causal_success_and_failure_memory: true
+    verified_combined_checkpoints: 6
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 7
+    exact_restored_version: 6
+    combined_lineage_and_memory_rollback_exact: true
+    terminal_required_growth: 2
+    terminal_action: terminate_insufficient_evidence
+    terminal_body_unchanged: true
+    immediate_replay_byte_identical_within_each_runtime: true
+    separately_archived_cross_runtime_manifest_comparison: false
+    selected_seed: false
+    hidden_task_bank_authorised: false
+    canonical_workflow_authorised: false
+    canonical_result_exists: false
+  M047:
+    status: positive_integrated_development_result
+    canonical: false
+    objective: real_executable_modular_python_software_body
+    protocol: experiments/M047/PROTOCOL.md
+    qualification: experiments/M047/DEVELOPMENT_QUALIFICATION.md
+    result: results/M047_DEVELOPMENT_RESULT.md
+    qualification_marker_commit: c791ad0b460faebde6625cc986f4b14cdf304ea9
+    merge_commit: d2c6308
+    qualification_ci_workflow_run: 31039609326
+    qualification_ci_run_number: 400
+    repository_tests_python_311: 788
+    repository_tests_python_311_seconds: 577.03
+    repository_tests_python_313: 788
+    repository_tests_python_313_seconds: 587.07
+    repository_integrity_passed: true
+    failed_ci_jobs: 0
+    ci_reruns: 0
+    accepted_versions: 6
+    prepublication_manifest_sha256: 9dda8dc075a47ee1e24f7984804726d95733c749b6202ca056413dec030b2778
+    generated_regression_tests: 12
+    retained_public_and_hidden_cases: 28
+    patch_tool_records: 6
+    causal_journal_entries: 6
+    verified_combined_checkpoints: 6
+    new_runtime_tool_constructed: tool_mean
+    acquired_patch_template_reused: true
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 7
+    exact_restored_version: 6
+    terminal_action: terminate_insufficient_evidence
+    terminal_challenge: maximum
+    generator_has_hidden_case_access: false
+    generator_has_release_authority: false
+    candidate_source_runs_in_disposable_isolated_worker: true
+    canonical_result_exists: false
+
+phase_four:
+  status: trans_runtime_continuity_passed_in_development
+  objective: genuine_migration_between_real_runtimes
+  M048:
+    status: positive_integrated_development_result
+    canonical: false
+    protocol: experiments/M048/PROTOCOL.md
+    result: experiments/M048/DEVELOPMENT_RESULT.md
+    merge_commit: 18402be50eec77d099a7a6bafe1a76fe7dcf40ab
+    source_runtime: cpython
+    target_runtime: nodejs_20_esm
+    target_runtime_pinned: true
+    qualification_history_append_only: true
+    failed_qualification_runs:
+      - ci_workflow_run: 31046715149
+        ci_run_number: 402
+        commit: 616f31619e7337dd0c114fc1f09e1cefa1a8f7fd
+        cause: orphan_import_and_causal_native_journal_schema_defect
+        rerun_of_failing_commit: false
+      - ci_workflow_run: 31054844770
+        ci_run_number: 403
+        commit: 839883d1c2353d47005d14fd8e42c073e049b0d8
+        cause: missing_public_combined_digest_checkpoint_field
+        rerun_of_failing_commit: false
+    qualification_ci_workflow_run: 31061450556
+    qualification_ci_run_number: 404
+    qualification_commit: 0dfd822ac1c81692abe45f9499ece420a947fd0f
+    repository_integrity_passed: true
+    ci_reruns: 0
+    migrated_python_modules: 9
+    emitted_native_modules: 9
+    semantic_delegation_back_to_python: false
+    inherited_retained_capabilities_preserved: 28
+    inherited_tool_used_after_migration: mean
+    post_migration_capability_learned: maximum
+    post_migration_tool_adopted: tool_max
+    adopted_version_after_migration: 8
+    proposal_process_in_separate_node_process: true
+    hidden_validation_in_separate_node_process: true
+    proposal_has_hidden_test_access: false
+    validator_has_adoption_authority: false
+    forced_fault: causal_journal_corruption
+    provisional_attempted_version: 9
+    exact_restored_version: 8
+    terminal_action: terminate_insufficient_evidence
+    terminal_challenge: median
+    artifact_replay_exact: true
+    canonical_result_exists: false
+  migration_strategy_series:
+    status: closed_at_M052
+    closure_record: experiments/M052/SERIES_CLOSURE.md
+    closure_rationale: >-
+      Adding candidates, composition depth, another human-declared primitive or another
+      ranking, caching or pruning rule over the same fixed admissible language is no longer
+      a material advance toward the objective. See decision D016.
+    closure_changes_interpretation_of_M049_to_M052: false
+    M049:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M049/PROTOCOL.md
+      result: experiments/M049/DEVELOPMENT_RESULT.md
+      merge_commit: 6662c7a4844604f9ce3d02fafce11b048156f4b9
+      qualification_commit: b8a8bb064ff456c491369bd1ca25c72ca187b545
+      qualification_ci_workflow_run: 31076192847
+      qualification_ci_run_number: 408
+      repository_tests_python_311: 812
+      repository_tests_python_313: 812
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      frozen_strategy_artifacts: 4
+      selector_has_hidden_evidence_access: false
+      fail_closed_on_ambiguous_or_contradictory_public_evidence: true
+      independent_hidden_validation: true
+      validator_has_adoption_authority: false
+    M050:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M050/PROTOCOL.md
+      result: experiments/M050/DEVELOPMENT_RESULT.md
+      merge_commit: 552ab5ec4b4e279a13e22c47418876af7f61a848
+      failed_qualification_runs:
+        - ci_workflow_run: 31083479890
+          ci_run_number: 410
+          commit: 3bc3b50
+          cause: positive_fixture_required_two_input_primitives_but_grammar_permits_one
+          correction_scope: public_and_hidden_probes_only
+          primitives_added: 0
+          search_budget_enlarged: false
+          validation_weakened: false
+          rerun_of_failing_commit: false
+      qualification_ci_workflow_run: 31087299169
+      qualification_ci_run_number: 413
+      qualification_commit: c75e9e70a48b382feeacefdca3d5b5e85d390d46
+      repository_tests_python_311: 822
+      repository_tests_python_313: 822
+      repository_integrity_passed: true
+      enumerated_pipelines: 24
+      grammar_stages: 3
+      unique_public_selection: unique_sum_zero
+      fail_closed_insufficient_evidence: true
+    M051:
+      status: positive_bounded_development_result
+      canonical: false
+      protocol: experiments/M051/PROTOCOL.md
+      result: experiments/M051/DEVELOPMENT_RESULT.md
+      merge_commit: dfccb44399e7fd18aff710db0437ab63a8f01d58
+      qualification_commit: ff30ff1f71a11b0d2e09c8c3ab15e082725a33e6
+      qualification_ci_run_number: 418
+      repository_tests_python_311: 830
+      repository_tests_python_313: 830
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      admissible_compositions: 80
+      transform_chain_lengths: [0, 1, 2]
+      repeated_transform_permitted: false
+      unique_public_selection: absolute_unique_sum_zero
+    M052:
+      status: positive_bounded_development_result_series_closed
+      canonical: false
+      protocol: experiments/M052/PROTOCOL.md
+      result: experiments/M052/DEVELOPMENT_RESULT.md
+      merge_commit: bc17ce151c34eeaa68112269edc0b6ba89fb9afd
+      qualification_commit: 3ab33da7fdbcc27ba786c20e8516e83e29c76fee
+      qualification_ci_run_number: 422
+      repository_tests_python_311: 839
+      repository_tests_python_313: 839
+      repository_integrity_passed: true
+      failed_qualification_runs: []
+      inherited_grammar_candidates: 80
+      declared_finite_domain_inputs: 156
+      behavioral_equivalence_classes: 38
+      pruned_syntactic_duplicates: 42
+      largest_equivalence_class: 4
+      hidden_contradiction_episode_preserved: true
+      equivalence_exact_outside_declared_domain: false
+
+phase_five:
+  status: machinery_positive_capability_claim_negative_closed_by_D019
+  objective: endogenous_transformation_language_extension
+  M053:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M053/PROTOCOL.md
+    result: experiments/M053/DEVELOPMENT_RESULT.md
+    documented_head: 12b0c31507872f91c368480f8b30d246e6887023
+    qualification_ci_workflow_run: 31162378285
+    repository_tests_python_311: 852
+    repository_integrity_passed: true
+    mechanism: filters_a_declared_sixteen_ast_meta_language
+    capability_gain_structural: true
+    mechanism_is_construction: false
+    first_attempt:
+      ci_workflow_run: 31118366409
+      outcome: infrastructure_fault
+      stage: set_up_job
+      counts_as_negative_scientific_verdict: false
+  M054:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M054/PROTOCOL.md
+    admissible_space: 29330422
+    construction_budget: 1024
+    enumeration_possible: false
+    second_order_reuse: true
+    disclosed_design_defects:
+      - beam_width_six_dropped_a_rank_ten_subtraction
+      - ablation_arm_was_denied_composition
+      - arbitrary_choice_under_ambiguity_replaced_by_behavioural_classing
+  M055:
+    status: negative_on_central_claim
+    canonical: false
+    protocol: experiments/M055/PROTOCOL.md
+    result: experiments/M055/DEVELOPMENT_RESULT.md
+    qualification_ci_workflow_run: 31174803126
+    experiment_commit: 74689ca
+    inherited_state: M048_version_8
+    retained_capabilities: 32
+    candidates_touched: 722
+    inherited_capabilities_verified_before_adoption: 32
+    adopted_version: 9
+    ablation_candidates_without_acquisition: 737
+    ablation_candidates_with_acquisition: 48
+    acquisition_made_anything_newly_reachable: false
+    reuse_designs_refuted: 2
+    third_design_attempted: false
+    closing_decision: D019
+
+phase_six:
+  status: substrate_discovery_whole_body_crossing_and_bounded_arrangement_positive_in_development
+  objective: repeated_trans_substrate_continuity_without_an_authored_map_or_literal_arrangement
+  qualification_note: >-
+    None of M056-M061 discharged its own qualification rule in its own record. Each result was
+    written before CI returned and none was updated, so all six still read PENDING
+    QUALIFICATION. The run identifiers below are recorded retrospectively - one run per
+    experiment commit, no rerun and no selection among runs - as evidence that the suite was
+    green, not as a discharge of those rules. M062 separately discharged its own rule on exact
+    head f5cfe35c265cf83640fddc2ae80e54805776f84f, first run 31269732461, attempt 1.
+  M056:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M056/PROTOCOL.md
+    result: experiments/M056/DEVELOPMENT_RESULT.md
+    experiment_commit: 9e4e6ba
+    ci_workflow_run: 31179484406
+    target_substrate: webassembly
+    emitted_module_bytes: 107
+    declared_imports: 0
+    inherited_capabilities_passing: 32
+    capabilities_predating_first_migration: 28
+    post_migration_capability_survives_second_migration: true
+    capabilities_answering_with_module_removed: 0
+    capability_learned_in_migrated_substrate: minimum
+    adopted_version: 9
+  M057:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M057/PROTOCOL.md
+    result: experiments/M057/DEVELOPMENT_RESULT.md
+    experiment_commit: 0e05ebe
+    ci_workflow_run: 31209268812
+    authored_migration_map_removed: true
+    opaque_handles: 6
+    handle_labels_exposed: false
+    probe_pairs: 4
+    tools_synthesized: [add, max, mean, mul]
+    largest_composition_size: 7
+    candidates_constructed_for_mean: 44240
+    behaviour_classes: 16883
+    authored_operation_list_still_present: true
+  M058:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M058/PROTOCOL.md
+    result: experiments/M058/DEVELOPMENT_RESULT.md
+    experiment_commit: 9d727e5
+    ci_workflow_run: 31213826221
+    opcode_space_scanned: 256
+    refused_by_substrate_validator: 247
+    operations_discovered: 9
+    authored_by_M057: 6
+    added_by_discovery: ["0x0f", "0x1a", "0xa6"]
+    discovery_found_what_authorship_missed: copysign
+    declared_imports: 0
+    inherited_capabilities_on_discovered_set: 32
+  M059:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M059/PROTOCOL.md
+    result: experiments/M059/DEVELOPMENT_RESULT.md
+    experiment_commit: 6f4f20a
+    ci_workflow_run: 31230664857
+    journey: [f64, i32, f64]
+    decisions:
+      bitwise_difference: migrate_to_i32
+      fractional_mean: migrate_to_f64
+      larger_of_two: stay
+    judgement_reverses: true
+    operations_discovered_f64: 9
+    operations_discovered_i32: 27
+    accepted_bodies_verified_on_unseen_arguments: true
+  M060:
+    status: positive_bounded_development_result
+    canonical: false
+    protocol: experiments/M060/PROTOCOL.md
+    result: experiments/M060/DEVELOPMENT_RESULT.md
+    experiment_commit: 154c92a
+    ci_workflow_run: 31250012799
+    modules_in_accepted_body: 10
+    modules_migrated: 10
+    modules_left_in_javascript: 0
+    emitted_module_bytes: 1792
+    declared_imports: 0
+    instantiated_with_import_object: false
+    exported_functions: 11
+    inherited_capabilities_executed: 32
+    arithmetic_opcodes_resolved_by_scan: 4
+    emission_deterministic: true
+    structural_instruction_set_authored: true
+  M061:
+    status: positive_bounded_development_result_one_false_manifest_corrected
+    canonical: false
+    protocol: experiments/M061/PROTOCOL.md
+    result: experiments/M061/DEVELOPMENT_RESULT.md
+    experiment_commit: 2b6ef0e
+    ci_workflow_run: 31254846616
+    scaffold_shapes: 6
+    scan_stages: 2
+    opcode_space_scanned_per_shape: 256
+    structural_instructions_resolved: 10
+    match_m060_emitter: true
+    unresolved_ambiguity: ["0x2e", "0x2f"]
+    copy_loop_bytes: 97
+    copy_loop_authored_elements:
+      - block 0x02
+      - loop 0x03
+      - blocktype byte
+      - label immediates
+    compiler_authored: true
+    false_manifest_incident:
+      found_by: external_review_of_pull_request_90
+      found_by_own_tests: false
+      false_fields:
+        - copy_loop_uses_only_discovered_instructions
+        - structural_instructions_authored
+      opcodes_hardcoded_while_claiming_otherwise: 7
+      opcodes_subsequently_discovered: 6
+      reached_main_in_merge: 1c7cceb
+      corrected_by_pull_request: 91
+      recorded_in: [FAILURE_LOG.md, DECISIONS.md]
+      decision: D020
+    latent_defect_found_by_the_scan:
+      instruction: i32.le_s
+      authored_byte: "0x4d"
+      discovered_byte: "0x4c"
+      why_invisible: loop_counter_never_goes_negative
+      m060_emitter_was_correct: true
+  M062:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M062/PROTOCOL.md
+    result: experiments/M062/DEVELOPMENT_RESULT.md
+    experiment_commit: f5cfe35c265cf83640fddc2ae80e54805776f84f
+    qualification_ci_workflow_run: 31269732461
+    qualification_ci_attempt: 1
+    qualification_failed_jobs: 0
+    qualification_rerun_used: false
+    tests_python_3_11: 1038
+    tests_python_3_13: 1038
+    test_seconds_python_3_11: 889.83
+    test_seconds_python_3_13: 914.03
+    repository_integrity_passed: true
+    m061_scaffolds_replayed: 6
+    region_opcode_space_scanned: 256
+    region_outcomes:
+      refused: 253
+      observed: 2
+      did_not_terminate: 1
+    region_effect_classes:
+      exit_region: ["0x02", "0x06"]
+      repeat_region: ["0x03"]
+    arrangements_constructed: 480
+    public_survivors: 16
+    public_cases: 3
+    hidden_cases: 3
+    survivor_region_programs_admitted: 32
+    survivor_region_programs_tested: 32
+    selected_module_bytes: 97
+    protocol_digest: 3780dc998a5df0cee783ba435671e1b349b27e9cd96315130ae7a34f41e7b97e
+    manifest_digest: 752fecdc5891911038ef04813a57f736a7f65c14c62c41a907269500fe88b03b
+    selected_arrangement:
+      topology: block_then_loop
+      condition: remaining_le_zero
+      exit_position: 0
+      step_order: [copy_byte, decrement_remaining, advance_source, advance_destination]
+    emitter_inputs_from_discovery:
+      operation_labels:
+        - br
+        - br_if
+        - i32.add
+        - i32.le_s
+        - i32.load
+        - i32.load8_u
+        - i32.store
+        - i32.store8
+        - i32.sub
+        - local.set
+      region_effect_classes:
+        exit_region: ["0x02", "0x06"]
+        repeat_region: ["0x03"]
+    authored_elements:
+      - copy_task_decomposition
+      - atomic_steps
+      - finite_search_grammar
+      - generic_emitter
+      - blocktype_and_label_encoding
+      - scaffold_shapes
+      - public_and_hidden_cases
+    claim_exclusions:
+      - arbitrary_compiler_synthesis
+      - self_authored_grammar
+      - unrestricted_code_generation
+      - open_ended_evolution
+    decision: D021
+  M063:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M063/PROTOCOL.md
+    result: experiments/M063/DEVELOPMENT_RESULT.md
+    experiment_commit: d4eb5ed981727fd1343e6e1031494771d9dec220
+    qualification_ci_workflow_run: 31275085485
+    qualification_ci_attempt: 1
+    qualification_failed_jobs: 0
+    qualification_rerun_used: false
+    tests_python_3_11: 1054
+    tests_python_3_13: 1054
+    test_seconds_python_3_11: 969.51
+    test_seconds_python_3_13: 985.12
+    repository_integrity_passed: true
+    human_only_attribution_passed: true
+    local_tests: 16
+    local_test_seconds: 130.94
+    joint_M062_M063_tests: 31
+    joint_M062_M063_test_seconds: 310.38
+    complete_repository_tests: 1054
+    complete_repository_test_seconds: 1763.31
+    local_repository_integrity_passed: true
+    deterministic_complete_executions: 2
+    source_mechanism_protocol_digest: 3780dc998a5df0cee783ba435671e1b349b27e9cd96315130ae7a34f41e7b97e
+    protocol_digest: 4ac3f4629771a4f111bcadd83b8cc9e17a5723e7198de6b392b7ae9081156e02
+    manifest_digest: c2f0cdb05bef741b003740c2148fe3ad5d8bf78b802085c8234fa77fe0779107
+    region_effect_classes:
+      exit_region: ["0x02", "0x06"]
+      repeat_region: ["0x03"]
+    target_body:
+      kind: byte_checksum_reduction
+      signature: [i32_source, i32_count, i32_result]
+      accumulator_local: true
+      memory_write: false
+    arrangements_constructed: 96
+    public_survivors: 6
+    public_cases: 3
+    hidden_cases: 3
+    survivor_region_programs_admitted: 12
+    survivor_region_programs_tested: 12
+    selected_module_bytes: 91
+    selected_module_imports: 0
+    selected_arrangement:
+      topology: block_then_loop
+      condition: remaining_le_zero
+      exit_position: 0
+      step_order: [decrement_remaining, accumulate_byte, advance_source]
+    copy_body_negative_control:
+      source_arrangement_digest: 0c6334a9384cbd52db9713ff18c95c8d713ccd9e4ff91e79cbcf674a13f0eadb
+      zero_case_passed: true
+      nonzero_cases_failed: 2
+      rejected: true
+      evidence_digest: e10c77dccc82be7d087830ab86993fd62ede5715cc76ae7925a1545a3adc3412
+    authored_elements:
+      - checksum_task_decomposition
+      - three_checksum_atomic_steps
+      - finite_transferred_cartesian_grammar
+      - checksum_wasm_emitter
+      - local_blocktype_and_label_depth_encoding
+      - public_and_hidden_cases
+    claim_exclusions:
+      - arbitrary_compiler_synthesis
+      - self_authored_grammar
+      - unrestricted_code_generation
+      - open_ended_evolution
+    decision: D022
+  M064:
+    status: negative_precanonical_qualification
+    canonical: false
+    protocol: experiments/M064/PROTOCOL.md
+    result: experiments/M064/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: c5cfcf12aca73f983d8c1ba533ea9daea4a8ff9bcfa58767c2b5222a427bbe8d
+    frozen_protocol_file_sha256: f05f0fdda2f9de03eee149b5a83dde290e576d164b4e2226333fbe10f45c7a4b
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    development_bank_manifest_digests:
+      - fc663fa6f0eebb73238cff1e9338db37e9d95dbc8e07fd99888a93402a65f6e6
+      - 5557da22e075cf7226ad56e59da5010b8abd8c8cc6b7660f0605e598f532a2e3
+      - 156768e27e23208be8f52bc7638e00e1cc736545ecde9e8612229474c29e928a
+      - 988d46a3e7d6ad64e0fa4b437f8d8e5c4f3d3ec19d73bdeea0c690583b47432a
+    runtime_path: [cpython_v6, node_esm_v8, whole_webassembly_v9]
+    final_version: 12
+    arithmetic_opcode_space_scanned: 256
+    structural_shapes_replayed: 6
+    structural_effects_recovered: 10
+    initial_whole_wasm_bytes: 1834
+    initial_declared_imports: 0
+    inherited_capabilities_passed: 32
+    inherited_capabilities_total: 32
+    arms:
+      - complete_continued_lineage
+      - fresh_on_b
+      - unchanged_parent_migrated
+      - learned_state_ablated
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    expressions_constructed_complete: [740, 1496, 2668]
+    public_survivors_complete: [12, 8, 8]
+    all_public_survivors_independently_admitted: true
+    final_retained_passed: 68
+    final_retained_total: 68
+    archived_parent_versions: [9, 10, 11]
+    forced_fault_exact_restoration: true
+    causal_memory_episodes_appended: 3
+    deterministic_replay_identical: true
+    canonical_first_result_run: null
+    independent_reproduction_run: null
+    clean_m064_local_tests: 26
+    clean_m064_local_test_seconds: 274.65
+    complete_repository_local_tests: 1085
+    complete_repository_local_test_seconds: 2035.10
+    clean_complete_local_rerun_required_before_freeze: false
+    failed_parent_commit: ec92af78b57203d32c2ee504db91b4166ec83fdf
+    failed_qualification_run: 31281234286
+    failed_qualification_attempt: 1
+    qualification_python_3_11: [1084, 1085]
+    qualification_python_3_13: [1084, 1085]
+    rollback_falsifier_valid: false
+    marker_created: false
+    authored_elements:
+      - whole_body_compiler
+      - block_and_loop_structure
+      - finite_expression_grammar
+      - three_task_families
+      - four_task_bank_entries
+      - public_and_hidden_cases
+    claim_exclusions:
+      - unrestricted_compiler_synthesis
+      - unbounded_substrate_discovery
+      - open_ended_evolution
+      - general_intelligence
+      - consciousness
+  M065:
+    status: negative_canonical_guard_qualification
+    canonical: false
+    protocol: experiments/M065/PROTOCOL.md
+    result: experiments/M065/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: 1057daa152c554bff88a150c757c7f2864b23beda08a5a5f3d7112409f78aa51
+    frozen_protocol_file_sha256: 360f4ae7dac895aed2af071a80c45d100eb2b6a7201f107728e5ad70d781f83a
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    scientific_changes: [non_tautological_snapshot_restoration]
+    governance_changes:
+      - marker_must_be_first_path_history_occurrence
+      - canonical_first_result_requires_workflow_attempt_one
+    task_bank_changed: false
+    budgets_changed: false
+    thresholds_changed: false
+    candidate_grammar_changed: false
+    development_banks_passed: 4
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    final_retained_quality: [68, 68]
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    corrected_rollback_returned_object_distinct: true
+    corrected_rollback_state_audited: true
+    corrected_rollback_exact_digest: true
+    focused_guard_and_freeze_tests: 20
+    complete_repository_local_tests: 1101
+    complete_repository_local_test_seconds: 1762.37
+    qualified_parent_commit: b1489d7a3a264de8a9e783eb139dafe28732b040
+    parent_qualification_run: 31286019961
+    parent_qualification_attempt: 1
+    parent_qualification_python_3_11: [1101, 1101]
+    parent_qualification_python_3_13: [1101, 1101]
+    marker_commit: a517e6bb76e8476ab6aca8c0a68c5bcfc3501d57
+    canonical_workflow_run: 31287477458
+    canonical_workflow_attempt: 1
+    failed_guard_job: 93178824313
+    failure: all_ref_history_counted_lateral_pull_request_marker
+    task_bank_selected: false
+    canonical_first_result_created: false
+    independent_reproduction_created: false
+    closed_by: M066
+  M066:
+    status: positive_canonical_real_substrate_completion_closed
+    canonical: true
+    protocol: experiments/M066/PROTOCOL.md
+    result: experiments/M066/DEVELOPMENT_RESULT.md
+    status_record: experiments/M066/STATUS.md
+    canonical_report: results/M066_CANONICAL_RESULT.md
+    executable_protocol_digest: f66ab480dfa0631e730753b7e45e3b83da7e2938d3e28e4aa2f497a6e383d66b
+    frozen_protocol_file_sha256: 02cabd7d86a93ceaba811b591b6c271cf066653add61044af83143558e2fd1c0
+    frozen_committed_files: 23
+    task_bank_commitment: 7134e3f0ce4c3e84ccb52834bea08ce41501104e1c76245b1e97e2c1981a33da
+    base_experiment: M065
+    scientific_changes: []
+    governance_changes:
+      - marker_history_is_first_parent_of_pushed_main_head
+      - side_branch_refs_do_not_count_as_canonical_history
+    task_bank_changed: false
+    budgets_changed: false
+    thresholds_changed: false
+    candidate_grammar_changed: false
+    development_banks_passed: 4
+    accepted_cycles_complete: 3
+    accepted_cycles_each_control: 0
+    final_retained_quality: [68, 68]
+    hidden_quality:
+      complete_continued_lineage: [18, 18]
+      fresh_on_b: [0, 18]
+      unchanged_parent_migrated: [0, 18]
+      learned_state_ablated: [0, 18]
+    dedicated_tests: 11
+    dedicated_test_seconds: 202.78
+    complete_repository_local_tests: 1112
+    complete_repository_local_test_seconds: 1689.93
+    marker_history_scope: first_parent_of_pushed_main_head
+    lateral_ref_falsifier_passed: true
+    repeat_first_parent_marker_rejected: true
+    qualified_parent_commit: 4a4b4a1a1e4831a4e1f8a40f896e3b2921cdc6e5
+    parent_qualification_run: 31290364464
+    parent_qualification_attempt: 1
+    parent_qualification_python_3_11: [1112, 1112]
+    parent_qualification_python_3_13: [1112, 1112]
+    marker_commit: 2cf454ca4e393a319f89ae5afbcd5e3f9250182c
+    marker_first_parent_history_occurrences: 1
+    canonical_workflow_run: 31291899534
+    canonical_workflow_attempt: 1
+    guard_job: 93190409159
+    canonical_first_result_job: 93190426542
+    independent_reproduction_job: 93190562898
+    selected_bank_index: 0
+    canonical_manifest_digest: b7d4c39c4c89c85346f4b0b2ebbf390e9f8818d4369a6ed4e21fb8d0580a62b1
+    canonical_result_bytes: 51553
+    canonical_result_sha256: eaf6fee975bddaae583e0f739d0a5ad050209b303d304eddc81bb6320c642ace
+    reproduction_python: 3.13.14
+    reproduction_exact_bytes: true
+    reproduction_report_sha256: b990efa4c85c808349de046b7b7ed7477138b77c5111f7385e913f7583ab77cc
+    first_result_seal_sha256: 0468dbccbe95d0185579b8e46500c0c9518e4912821aed1ab6a63b16b61c198a
+    canonical_audit_sha256: 9923a385a8a73eda87c80cfa90e8841f9cb6aa9bac3d9004914ed44c49360d23
+    all_ten_audited_gates_true: true
+    construction_line_closed_by: D026
+
+active_construction_frontier:
+  status: closed_positive_canonical_m066
+  gates_positive_in_one_canonical_real_substrate_lineage: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  ordered_remaining_steps: []
+  post_freeze_repair_permitted: false
+  failed_first_run_or_reproduction_is_preserved: true
+  successor_by_scaling_same_instrument_permitted: false
+  distinct_structural_question_required_for_successor: true
+  closure_decision: D026
+
+phase_eight:
+  status: m094_positive_qualified_m095_negative_qualified_h40_refuted
+  objective: bounded_contract_blind_adaptive_embodiment_and_endogenous_real_software_self_transformation
+  agenda: PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md
+  entry_decision: D027
+  hypothesis: H14
+  current_hypothesis: null
+  M067:
+    canonical: false
+    protocol: experiments/M067/PROTOCOL.md
+    result: experiments/M067/DEVELOPMENT_RESULT.md
+    executable_protocol_digest: 79447865ea7af9c47d482cbc4deb297d469fd07ab9c6c6b364a8be04ed305c91
+    local_manifest_digest: 81687a83d4b5d352b66b400d3091522eb64eba22f0c6e4b949eccb2d16790208
+    body_bank_commitment: 019c70ec4ec82e45747cabf495ef4778a52b76036d6f3292217d91187c5fbfe3
+    body_bank_size: 4
+    frame_families_discovered: [mailbox, register, stack]
+    distinct_contracts_discovered: 4
+    inherited_source_version: 8
+    inherited_skills: [add, max, mean, mul]
+    public_cases_per_body: 20
+    hidden_cases_per_body: 12
+    base_candidates_per_body: 288
+    public_discovery_attempts_per_body: 1560
+    public_survivors_per_body: 1
+    hidden_passes_per_body: [12, 12]
+    complete_target_adapter_disclosed: false
+    default_adapter_passed: false
+    framing_only_default_semantics_passed: false
+    empty_transcript_adapter_count: 0
+    corrupted_transcript_survivor_count: 0
+    arbitrary_unknown_body_adaptation_claimed: false
+    dedicated_local_tests: 13
+    complete_repository_local_tests: 1130
+    complete_repository_local_test_seconds: 2133.92
+    complete_repository_local_python: 3.14.6
+    exact_experiment_commit: 7d38ac8b35729e19d5f16843905b80654f657c5e
+    exact_commit_qualification: passed
+    github_ci_run: 31311020868
+    github_python_3_11: [1130, 1130]
+    github_python_3_11_seconds: 1205.32
+    github_python_3_13: [1130, 1130]
+    github_python_3_13_seconds: 1245.53
+    repository_integrity_passed: true
+    attribution_run: 31311020869
+    attribution_passed: true
+  M068:
+    status: positive_qualified_development
+    canonical: false
+    protocol: experiments/M068/PROTOCOL.md
+    frozen_protocol: experiments/M068/FROZEN_PROTOCOL.json
+    status_record: experiments/M068/STATUS.md
+    result: experiments/M068/DEVELOPMENT_RESULT.md
+    generality_register: MIRA_GENERALITY_CRITERIA.md
+    executable_protocol_digest: 2c9296b8232e2ff8b8a74cdb8bc0af6b724dcb324378be2ee3a33fe783ff22b7
+    body_bank_commitment: f4d2a9da99de42fa1f08ec90bd5b14b92942927d1784d917ca3064268824ceac
+    target_runtime_lf_sha256: d6090e20f1255674fc206bd6088c39ca8512b76c213c1236be7053f4d91b096c
+    body_bank_size: 4
+    opaque_action_count: 8
+    max_word_length: 5
+    complete_word_count: 37448
+    target_bank_frozen_before_discovery_engine: true
+    freeze_commit: f8c67f1853743e473785d92bed5195c5621e8943
+    exact_learner_commit: f033ac70628e79550e6263ac2bb60a6769bca42e
+    discovery_engine_present: true
+    scientific_result_exists: true
+    inherited_source_version: 8
+    inherited_skills: [add, max, mean, mul]
+    public_cases_per_body: 20
+    hidden_cases_per_body: 12
+    language_scan_attempts_per_body: 37448
+    additional_diagnostic_attempts_per_body: 4
+    public_validation_attempts_per_body: 20
+    public_discovery_attempts_per_body: 37472
+    accepted_commands_per_body: 4
+    public_survivors_per_body: 1
+    hidden_passes_per_body: [12, 12]
+    distinct_command_languages_discovered: 4
+    all_preregistered_controls_reject: true
+    deterministic_manifest_digest: 0f012c41a676ff7fcb8ca088d54f26cd83a90037dcaa1290406ecd86ecb459f7
+    evidence_memory_event_count: 6
+    evidence_memory_digest: 75df381e2d44de27eee519feda030e39d7af2a3d8097936aa87a921a05a16966
+    dedicated_local_tests: 15
+    targeted_m068_and_core_local_tests: 23
+    complete_repository_local_tests: 1153
+    complete_repository_local_test_seconds: 2219.64
+    complete_repository_local_python: 3.14.6
+    exact_commit_qualification: passed
+    github_ci_run: 31314960014
+    github_python_3_11: [1153, 1153]
+    github_python_3_11_seconds: 1249.61
+    github_python_3_13: [1153, 1153]
+    github_python_3_13_seconds: 1262.52
+    repository_integrity_passed: true
+    attribution_run: 31314960009
+    attribution_passed: true
+    external_target_authorship_claimed: false
+    arbitrary_protocol_induction_claimed: false
+  M069:
+    status: posthoc_disqualified_evaluator_isolation_falsifier
+    canonical: false
+    protocol: experiments/M069/PROTOCOL.md
+    frozen_protocol: experiments/M069/FROZEN_PROTOCOL.json
+    status_record: experiments/M069/STATUS.md
+    result: experiments/M069/DEVELOPMENT_RESULT.md
+    evaluator_isolation_disclosure: experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md
+    generality_register: MIRA_GENERALITY_CRITERIA.md
+    executable_protocol_digest: 2da6abe85d0830f32a67415f1e4faef3316bd1ab1cf3cb461799e3c9a85fb499
+    task_bank_commitment: 66b7c7ffe87ecbf5c9cc42d14850b122dd933aa6235647d8dcdf6887464061ed
+    target_runtime_lf_sha256: 6e2d1e0c510a72b4634c7bdfffcab164f82d7349531177adaa23b572d0618639
+    task_count: 5
+    compatible_task_count: 4
+    incompatible_task_count: 1
+    repair_candidate_count: 11
+    public_cases_per_compatible_task: 3
+    hidden_cases_per_compatible_task: 3
+    real_filesystem_process_body: true
+    governed_terminal_body_present: true
+    task_bank_frozen_before_policy: true
+    freeze_commit: 9d482d21110cb258e80d02298b215cb14e6b2bcb
+    exact_learner_commit: c603dd52c6484034de3a11a7c3c660335fda14b0
+    repair_policy_present: true
+    scientific_result_exists: true
+    qualified_scientific_result_exists: false
+    historical_outcomes_retained_as_diagnostic: true
+    hidden_evidence_reachable_through_admitted_interface: true
+    recorded_learner_exploited_reachable_hidden_evidence: false
+    positive_qualification_withdrawn: true
+    reclassification_decision: D037
+    same_policy_for_every_task: true
+    compatible_tasks_completed: 4
+    public_survivors_per_compatible_task: 1
+    hidden_passes_per_compatible_task: [3, 3]
+    incompatible_task_refused: true
+    incompatible_refusal_before_write: true
+    incompatible_refusal_before_process: true
+    all_preregistered_controls_pass: true
+    deterministic_manifest_digest: c5c807017f05788dc22d21f88192279b9f177b648403b2cc41ca149b25ff6289
+    evidence_memory_event_count: 7
+    evidence_memory_digest: 59a277880453a997c60880e8eb357ddc50fcec1185303e967793de9c80d2e086
+    targeted_local_tests: 35
+    targeted_local_skips_windows: 1
+    complete_repository_local_tests: 1180
+    complete_repository_local_skips_windows: 1
+    complete_repository_local_test_seconds: 2088.15
+    complete_repository_local_python: 3.14.6
+    frozen_attestation_passed: true
+    repository_integrity_passed: true
+    exact_commit_qualification: passed
+    github_ci_run: 31319062535
+    github_python_3_11: [1181, 1181]
+    github_python_3_11_seconds: 1241.52
+    github_python_3_13: [1181, 1181]
+    github_python_3_13_seconds: 1260.38
+    attribution_run: 31319062599
+    attribution_passed: true
+    operating_system_security_sandbox_claimed: false
+    external_task_authorship_claimed: false
+    open_ended_code_generation_claimed: false
+    network_authority: false
+    repository_authority: false
+    credential_authority: false
+    deployment_authority: false
+    permission_change_authority: false
+    physical_actuation_authority: false
+    general_intelligence_claimed: false
+  M070:
+    status: negative_external_development_result
+    canonical: false
+    design_record: docs/M070_PRETARGET_AGENT.md
+    design_freeze: experiments/M070/AGENT_DESIGN_FREEZE.json
+    selection_protocol: experiments/M070/SELECTION_PROTOCOL.json
+    task_selection: experiments/M070/TASK_SELECTION.json
+    execution_protocol: experiments/M070/EXECUTION_PROTOCOL.json
+    external_result: experiments/M070/EXTERNAL_RESULT.json
+    exact_agent_design_commit: 41ebe791605f55e7a44df8f0939d730139cf219a
+    design_commitment_sha256: 14f6c17ea9c88a4e967b317e167e45d76f4700f5a5d91c4f017edb0add179a46
+    structured_model_policy_present: true
+    explicit_codex_backend_present: true
+    digest_pinned_container_body_present: true
+    realized_isolation_attestation_present: true
+    success_decided_by_agent: false
+    external_task_selected: true
+    selected_external_tasks:
+      - rstan-to-pystan
+      - llm-inference-batching-scheduler
+    external_task_inspected_after_selection: true
+    external_task_executed: true
+    scientific_result_exists: true
+    required_external_successes: 1
+    observed_external_successes: 0
+    external_rewards: [0.0, 0.0]
+    nop_control_rewards: [0.0, 0.0]
+    harbor_exceptions: 0
+    scientific_retries: 0
+    agent_network_mode: no-network
+    agent_statuses: [policy_error, policy_error]
+    agent_steps: [2, 1]
+    agent_claimed_success: false
+    failure_mode: windows_unicode_stdin_and_descendant_timeout_transport
+    protocol_sha256: 1441d37fb9da2750d3244a392de5ae8032776ff03c5240bfcfb2cf5317c5d566
+    result_sha256: 9b22e63869302539f31025102a83f3ccc1415e19faf9066379ca3ecd1b7253e3
+    task_replacement_performed: false
+    transport_fix_applied_to_M070: false
+    public_benchmark_claim_limit: development_only
+    private_uncontaminated_split_required_for_stronger_claim: true
+  M071:
+    status: positive_external_development_result
+    canonical: false
+    design_record: docs/M071_PRETARGET_AGENT.md
+    design_freeze: experiments/M071/AGENT_DESIGN_FREEZE.json
+    exact_agent_design_commit: 0820ebc3a638e8ae0e06fceed7addbdb71bafbb7
+    exact_harbor_bridge_commit: 132476a5db532812a0cd223d02f8eba9ad88e346
+    design_commitment_sha256: 2e76a1b8b390bee0ee55095a6f3f61366176e7a4ac0791add9d6d37fca5c30a2
+    strict_utf8_bytes_transport: true
+    whole_process_tree_timeout_cleanup: true
+    real_windows_unicode_regression_passed: true
+    real_windows_descendant_regression_passed: true
+    live_structured_model_smoke_passed: true
+    model: gpt-5.6-sol
+    policy_id: m071-governed-model-policy-v1
+    success_decided_by_agent: false
+    benchmark_revision_pinned: true
+    benchmark_revision: 2fd12b88aafdd04a52c298e3940bcb189f9766d6
+    selection_protocol_commit: fa5d8962bce1659831f98938a194a226883d347c
+    execution_protocol: experiments/M071/EXECUTION_PROTOCOL.json
+    execution_protocol_sha256: 31d3c7bd968cb3fc381b8c3272b599695f3294c8537a1d8d805fc0ef334e0555
+    eligible_inventory_sha256: c21c3e62adfc08a80e33aa6506efa6e6bbd40e81a88c5a1bbb91603849d251c9
+    excluded_prior_tasks: [llm-inference-batching-scheduler, rstan-to-pystan]
+    external_task_selected: true
+    selected_external_tasks: [sqlite-with-gcov, custom-memory-heap-crash]
+    external_task_content_inspected: true
+    reference_solution_inspected: false
+    verifier_tests_inspected: false
+    external_task_executed: true
+    scientific_result_exists: true
+    external_result: experiments/M071/EXTERNAL_RESULT.json
+    external_result_sha256: d352651327898c3d51bfab3a9b86814de6c8fe7a01c70be2ae66702109feb14e
+    required_external_successes: 1
+    observed_external_successes: 1
+    external_rewards: [0.0, 1.0]
+    nop_control_rewards: [0.0, 0.0]
+    agent_statuses: [policy_refused, submitted_for_external_evaluation]
+    agent_steps: [7, 12]
+    harbor_exceptions: 0
+    scientific_retries: 0
+    task_replacement_performed: false
+    agent_network_mode: no-network
+    agent_claimed_success: false
+    public_benchmark_claim_limit: development_only
+    private_uncontaminated_split_required_for_stronger_claim: true
+    governance_layer_isolating_baseline_present: false
+    local_design_suite_python_314: [1215, 1215]
+    local_design_suite_skipped: 2
+    local_result_suite_python_314: [1225, 1225]
+    local_result_suite_seconds: 2257.69
+    local_result_suite_skipped: 2
+    repository_integrity_passed: true
+    exact_evidence_commit: 0875fa72d724db2af8a7b10b33c876a0e047576d
+    github_ci_run: 31332620871
+    github_python_3_11: [1226, 1226]
+    github_python_3_11_seconds: 1240.29
+    github_python_3_13: [1226, 1226]
+    github_python_3_13_seconds: 1145.84
+    attribution_run: 31332620902
+    attribution_passed: true
+    github_workflow_rerun_used: false
+    genesis_gate_2_evidence: false
+    reward_attribution: named_composed_system
+  M072:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M072/PROTOCOL.json
+    protocol_commit: a844b10dc558a16f2609d204f886d63fd193a9d3
+    scenario_commitment_commit: 59b7bdfeac75a7ab3ffa1cd87e0c6cf5050b34e8
+    result: experiments/M072/RESULT.json
+    result_sha256: ab555d2f0a7088193569053219f7edda4668a3f7b8849f03b6781eb3fe09005e
+    scenario_count: 48
+    full_governance_unauthorized_releases: 0
+    full_governance_authorized_false_refusals: 0
+    committed_tampers_detected: [18, 18]
+    admission_ablated_invariant_failures: 18
+    audit_ablated_invariant_failures: 18
+    represented_actions_executed: 0
+    external_model_called_for_result: false
+    external_task_selected: false
+    governance_layer_isolating_baseline_present: true
+    threat_model_authored_by_project: true
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+  M073:
+    status: positive_qualified_development_result
+    canonical: false
+    protocol: experiments/M073/PROTOCOL.json
+    protocol_commit: 78d53d733bdf77eab773414e8d273ed70e31391d
+    teacher_model: gpt-5.6-sol
+    teacher_calls: 4
+    scientific_retries: 0
+    teacher_valid_repairs: 4
+    teacher_outputs_lineage_owned: false
+    teacher_responses_commit: 2d08875240a491c167c7116303e22f6faeafbc3e
+    capsule_commit: 760803c4eee9c03caf25d2403c5f072343e17572
+    capsule_sha256: 444a8a548d6955ac85795fe9d4fd18d4a0a0aa6d731a94dbd3a4ca0f560f8620
+    capsule_provenance: induced_from_external_demonstrations
+    holdout_materialization_commit: eaacf8e66b866c2d777d2caa0fe80c8a7617363f
+    holdout_materialization_sha256: dddd19ac48985312d5b218bb56a8de9c7706e24b1a97faeb5a65294d6c18de0c
+    holdouts_passed: [12, 12]
+    holdout_cases_passed: [84, 84]
+    holdout_model_calls: 0
+    no_capsule_holdouts_passed: [0, 12]
+    memorizer_holdouts_passed: [0, 12]
+    corrupted_teacher_capsules_induced: 0
+    exact_result_commit: 355eeb9b7d5f1fdd311949feaf3df9231c0a6f96
+    result: experiments/M073/RESULT.json
+    result_sha256: edaf03b4cf922890d010ecdd838de67c9569342b27a6848fae34ab430db03a2e
+    exact_evidence_commit: 2eaa5c73c00299cb8be4fc3e649d42e5de6fdec0
+    github_ci_run: 31370311326
+    github_python_3_11: [1257, 1257]
+    github_python_3_11_seconds: 1230.77
+    github_python_3_13: [1257, 1257]
+    github_python_3_13_seconds: 1304.59
+    repository_integrity_passed: true
+    attribution_run: 31370349333
+    attribution_passed: true
+    github_workflow_rerun_used: false
+    supported_claim: bounded_model_to_lineage_skill_appropriation_mechanism_evidence
+    project_authored_task_family: true
+    cross_domain_evidence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+  M074:
+    status: negative_qualified_scientific_result
+    canonical: false
+    design: experiments/M074/DRAFT_REFUSAL_CALIBRATION_DESIGN.md
+    development_qualification: experiments/M074/DEVELOPMENT_QUALIFICATION.md
+    development_probe_record: experiments/M074/DEVELOPMENT_PROBE_BANK.json
+    development_probe_record_sha256: 51a82ca7a8ecec1a2ce43d55de87a3871c358e6bb3f427682ec98756e1ad0827
+    development_dryrun_record: experiments/M074/DEVELOPMENT_DRYRUN.json
+    development_dryrun_record_sha256: 2abbf79444e37c38b1f2fb6c17ef764c281d98579c54dbfd2511211914ee114f
+    development_calibration_digest: 71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3
+    docker_client_server_version: 29.6.2
+    digest_pinned_images: true
+    no_network: true
+    root_filesystem_read_only: true
+    agent_non_root: true
+    matched_task_pairs: 3
+    feasible_live_labels: 3
+    capability_impossible_live_labels: 3
+    arms: [A-terminal-refusal, B-nonterminal-refusal]
+    development_episodes: 12
+    development_apparatus_defects: 0
+    development_model_tokens: 0
+    exact_final_focused_local_tests: 65
+    pre_final_guard_complete_repository_local_tests: 1320
+    pre_final_guard_complete_repository_local_skips: 2
+    pre_final_guard_complete_repository_local_test_seconds: 2321.91
+    pre_final_guard_complete_repository_local_python: 3.14.6
+    terminal_arm_calibration_margin: 1.0
+    terminal_arm_wasted_steps: 0
+    nonterminal_arm_calibration_margin: 0.0
+    nonterminal_arm_wasted_steps: 12
+    scientific_protocol: experiments/M074/SCIENTIFIC_PROTOCOL.json
+    scientific_protocol_raw_sha256: 5a4e12a9d6cd188723f2ae9771293298917a9397f3fa20d8725da713b2261e7c
+    scientific_protocol_commitment_sha256: ef3996d00e3d84afbda7b94f3b5670c02a8d36848845ac9f99f704c8a8e5b698
+    scientific_protocol_frozen: true
+    scientific_protocol_commit: 28ddd8bcad931904b160c43c6f728bf8d13fcedc
+    scientific_protocol_ci_run: 31385331662
+    scientific_protocol_attribution_run: 31385331849
+    scientific_protocol_ci_rerun_used: false
+    scientific_model: gpt-5.6-sol
+    scientific_model_called: true
+    scientific_live_model_decisions: 24
+    scientific_paired_replay_decisions: 24
+    scientific_result: experiments/M074/SCIENTIFIC_RESULT.json
+    scientific_result_raw_sha256: 75e846820d2045c1036f0d716f1803eb8d8c560f1589529a86bc04beb73669d4
+    scientific_calibration_digest: 78d7b27e7cd1789ecb058bc5e2f6017f18a58f23464b60c19a42b885f72b5cd7
+    scientific_result_exists: true
+    scientific_episodes: 12
+    scientific_protocol_defects: 0
+    scientific_true_refusals: 0
+    scientific_false_refusals: 0
+    scientific_terminal_calibration_margin: 0.0
+    scientific_terminal_wasted_steps: 12
+    scientific_nonterminal_wasted_steps: 12
+    scientific_wasted_steps_advantage: 0
+    scientific_feasible_external_successes: 6
+    scientific_impossible_external_successes: 0
+    scientific_faulted_episodes: 0
+    scientific_verdict: negative
+    scientific_retry_used: false
+    scientific_result_commit: 1eeb345fe66308b8995f4b35618cffd9a3b0205e
+    scientific_result_commit_ci: passed
+    scientific_result_ci_run: 31388068187
+    scientific_result_ci_attempt: 1
+    scientific_result_ci_python_3_11_passed: 1341
+    scientific_result_ci_python_3_11_skipped: 1
+    scientific_result_ci_python_3_11_seconds: 1262.75
+    scientific_result_ci_python_3_13_passed: 1341
+    scientific_result_ci_python_3_13_skipped: 1
+    scientific_result_ci_python_3_13_seconds: 1259.32
+    scientific_result_ci_repository_integrity_passed: true
+    scientific_result_attribution_run: 31388066466
+    scientific_result_attribution_passed: true
+    scientific_result_ci_rerun_used: false
+    scientific_result_local_focused_tests: 61
+    exact_apparatus_commit: 27a2e1f
+    exact_commit_qualification: passed
+    github_ci_run: 31377768229
+    github_python_3_11: [1322, 1322]
+    github_python_3_11_skips: 1
+    github_python_3_11_seconds: 1238.57
+    github_python_3_13: [1322, 1322]
+    github_python_3_13_skips: 1
+    github_python_3_13_seconds: 1255.09
+    repository_integrity_passed: true
+    attribution_run: 31377768244
+    attribution_passed: true
+    github_workflow_rerun_used: false
+    supported_claim: valid_negative_refusal_calibration_result_on_three_authored_pairs
+    calibrated_agent_refusal_claimed: false
+    generality_gate_advanced: false
+    agi_evidence: false
+  M075:
+    status: public_model_development_complete_noncausal_nonscientific
+    canonical: false
+    design: experiments/M075/DEVELOPMENT_DESIGN.md
+    development_qualification: experiments/M075/DEVELOPMENT_QUALIFICATION.md
+    development_record: experiments/M075/DEVELOPMENT_DRYRUN.json
+    development_record_raw_sha256: cb194a4092c3900b0befbe259d851a8b145b14c8110f8df3b462a2ee5b745699
+    development_calibration_digest: 71fc5f5d5f68db97557325a56254c22325dfe2fba5db9229259a1ef85c7cbbc3
+    development_bank_public_and_contaminated: true
+    development_bank_distinct_from_m074: true
+    node_image: node@sha256:c610fcdfb1d5b4740dd70c284ed3cb16bb857e0f7166196e36a5501df7a3aa32
+    matched_task_pairs: 3
+    feasible_live_labels: 3
+    capability_impossible_live_labels: 3
+    development_episodes: 12
+    development_defects: 0
+    development_model_tokens: 0
+    development_terminal_true_refusals: 3
+    development_terminal_false_refusals: 0
+    development_terminal_margin: 1.0
+    development_terminal_wasted_steps: 0
+    development_nonterminal_wasted_steps: 12
+    local_focused_tests: 19
+    epistemic_state_includes:
+      - step_and_remaining_budget
+      - success_failure_and_consecutive_nonzero_counts
+      - generic_visible_failure_class
+      - exact_action_sha256_diversity_and_repetition
+      - prior_refusal_count
+    hidden_labels_visible_to_policy: false
+    model_development_protocol: experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json
+    model_development_protocol_commit: e1367c6
+    model_development_apparatus_commit: ead1f464bcb4fdc584ce45cff0f1cb45965e4793
+    model_development_protocol_raw_sha256: 5861881457b37b21a8417a579286349611ebfad64f3bc2b5fbc18e1efada177d
+    model_development_protocol_commitment_sha256: ef024062d5fde3e385749153f471ef1dfc0c3bd664db859db88c78d70e94c899
+    model_development_result: experiments/M075/MODEL_DEVELOPMENT_RESULT.json
+    model_development_result_raw_sha256: dadd202886e866e31be5cefb130e9e231f7739a0b49166f8d0c1dd2766acf949
+    model_development_calibration_digest: d0226c09b093f95e91c9132eed727fb3791d3bbf5cafd35040dd210714796088
+    model_development_model: gpt-5.6-sol
+    model_development_live_decisions: 43
+    model_development_episodes: 12
+    model_development_defects: 0
+    model_development_retry_used: false
+    model_development_baseline_true_refusals: 0
+    model_development_baseline_false_refusals: 0
+    model_development_baseline_calibration_margin: 0.0
+    model_development_baseline_wasted_steps: 12
+    model_development_context_true_refusals: 2
+    model_development_context_false_refusals: 0
+    model_development_context_calibration_margin: 0.6666666666666666
+    model_development_context_wasted_steps: 4
+    model_development_feasible_external_successes_each_condition: 3
+    model_development_context_feasible_submissions: 3
+    model_development_baseline_feasible_submissions: 0
+    model_development_conditions_use_independent_samples: true
+    model_development_causal_effect_claimed: false
+    model_development_counterexample: write-receipt-readonly
+    model_development_exact_evidence_commit: 0c19d6b414d0b74a5974520aed7c17d6cd592646
+    model_development_complete_local_tests: 1369
+    model_development_complete_local_skips: 2
+    model_development_complete_local_seconds: 2390.27
+    model_development_complete_local_python: 3.14.6
+    model_development_repository_integrity_passed: true
+    model_development_published_head: 2dd6ccb3b2770bc1e44e222d635d4a98342bfe20
+    model_development_ci_run: 31398661236
+    model_development_ci_attempt: 1
+    model_development_ci_python_3_11_passed: 1370
+    model_development_ci_python_3_11_skipped: 1
+    model_development_ci_python_3_11_seconds: 1243.62
+    model_development_ci_python_3_13_passed: 1370
+    model_development_ci_python_3_13_skipped: 1
+    model_development_ci_python_3_13_seconds: 1265.61
+    model_development_ci_repository_integrity_passed: true
+    model_development_attribution_run: 31398661318
+    model_development_attribution_passed: true
+    model_development_github_workflow_rerun_used: false
+    preprivate_design: experiments/M075/PRE_PRIVATE_CAUSAL_DESIGN.md
+    preprivate_readiness_module: metamorphosis/m075_private_readiness.py
+    preprivate_readiness_checker: scripts/check_m075_private_readiness.py
+    preprivate_maintainer_brief: experiments/M075/MAINTAINER_BRIEF.md
+    preprivate_intake_kit_module: metamorphosis/m075_intake_kit.py
+    preprivate_intake_kit_entry_point: scripts/run_m075_intake_kit.py
+    preprivate_intake_kit_can_sign: false
+    preprivate_intake_kit_can_open_payload: false
+    preprivate_intake_kit_reuses_gate_validator: true
+    preprivate_ready_for_payload_reveal: false
+    preprivate_payload_accessed: false
+    preprivate_current_blockers:
+      - missing_private_bank_envelope
+      - missing_private_bank_ssh_signature
+      - missing_private_bank_allowed_signers
+      - missing_private_scientific_protocol
+    preprivate_minimum_domains: 4
+    preprivate_minimum_matched_capability_pairs: 8
+    preprivate_minimum_context_true_refusals: 6
+    preprivate_maximum_context_false_refusals: 0
+    preprivate_minimum_wasted_steps_advantage: 8
+    preprivate_minimum_context_only_correct_terminals: 6
+    preprivate_maximum_baseline_only_correct_terminals: 0
+    preprivate_maximum_two_sided_exact_mcnemar_p: 0.05
+    preprivate_independent_reproduction_required: true
+    scientific_model_called: false
+    scientific_protocol_frozen: false
+    private_scientific_bank_opened: false
+    scientific_result_exists: false
+    supported_claim: public_authored_development_association_between_epistemic_context_and_better_stopping
+    generality_gate_advanced: false
+    agi_evidence: false
+    successor_protocol: M075-B
+    superseded_by_successor: false
+    independent_human_maintainer_requirement_still_unmet: true
+  M087:
+    status: positive_qualified_development_h33_supported
+    canonical: false
+    hypothesis: H33
+    predecessor: M086-C
+    protocol: experiments/M087/PROTOCOL.md
+    protocol_json: experiments/M087/PROTOCOL.json
+    protocol_frozen_commit: db609a0355bd602e8ff9640a718c228a36e381a5
+    protocol_raw_sha256: 4183bae2ea17f12b90e5130ae3312bc193860efc7aec002495d80d6f31f22605
+    result: experiments/M087/RESULT.json
+    result_digest: cb06bd7a0abd84aebcdccfc5bfe7278281be4891cb4a0655fde855554754d132
+    salt_digest: 2ea85b3166dd8a49b24dba28a19fc50165748a38a08859b6bf7906e7e1b41614
+    attempt: 1
+    retry_used: false
+    conditions_total: 10
+    conditions_passed: 10
+    verdict: positive
+    hypothesis_supported: true
+    mutable_component: selection_and_evidence_acquisition_policy
+    fixed_components: [m047_diagnosis, m047_candidate_generation, interpreter, evaluator, sandbox]
+    m0_equals_m086_selection_rule: true
+    meta_transformations_rejected: 6
+    adopted_policy_digest: 3b17374fea5f658584ebfe5e30e44fa4eb0c4eb29627f2858436896ea5e98816
+    evolvable_correct: 3
+    fixed_correct: 1
+    ablated_correct: 0
+    more_budget_same_evidence_correct: 1
+    more_budget_candidates_evaluated: 110
+    fixed_candidates_evaluated: 11
+    discordant_families: ['planning_structure', 'tool_semantics']
+    cross_family_reuse: true
+    acquisitions_total: 3
+    non_evolvable_acquisitions: 0
+    evidence_domains_disjoint: true
+    evaluator_callable_reachable_by_policy: false
+    leak_findings: 0
+    rollback_byte_identical: true
+    chronology_adoption_precedes_qualification: true
+    model_calls: 0
+    network_calls: 0
+    track: A
+    amendment_a1_non_termination_fix_disclosed: true
+    amendment_a1_changed_result: false
+    meta_primitives_authored: true
+    experiment_space_authored: true
+    families_authored: true
+    independent_reproduction: false
+    generality_gate_advanced: false
+    agi_evidence: false
+  M075-B:
+    status: instrument_built_nothing_frozen_no_bank_no_reveal
+    canonical: false
+    hypothesis: H21
+    predecessor: M075
+    supersedes_m075: false
+    amends_m075: false
+    protocol: experiments/M075B/PROTOCOL.md
+    protocol_frozen: false
+    claim_boundary_record: experiments/M075B/CLAIM_BOUNDARY.md
+    prompt_contract: experiments/M075B/GENERATOR_PROMPT_CONTRACT.md
+    generator_candidates: experiments/M075B/GENERATOR_CANDIDATES.md
+    issue_112_decision_record: experiments/M075B/ISSUE_112_DECISION.md
+    instrument_documentation: docs/BLIND_BANK_GENERATION.md
+    contract_version: mira-blind-bank-v1
+    contract_reusable_across_milestones: true
+    payload_schema_document: docs/schemas/blind_bank_payload.schema.json
+    modules:
+      - metamorphosis/blind_bank_protocol.py
+      - metamorphosis/blind_bank_isolation.py
+      - metamorphosis/blind_bank_sealing.py
+      - metamorphosis/blind_bank_devkit.py
+      - metamorphosis/m075b_blind_readiness.py
+    entry_points:
+      - scripts/check_blind_bank_readiness.py
+      - scripts/check_blind_bank_leakage.py
+      - scripts/run_blind_bank_devkit.py
+    phase: draft
+    generator_chosen: false
+    generator_prompt_written: false
+    generator_spec_frozen: false
+    analysis_plan_frozen: false
+    analysis_plan_frozen_before_generation_required: true
+    bank_materialized: false
+    bank_sealed: false
+    system_protocol_frozen: false
+    ready_for_reveal: false
+    reveal_authorized: false
+    bank_payload_accessed: false
+    scientific_result_exists: false
+    minimum_domains: 4
+    minimum_pairs_per_domain: 2
+    minimum_task_instances: 16
+    maximum_two_sided_exact_mcnemar_p: 0.05
+    generation_attempts_permitted: 1
+    reroll_permitted: false
+    validator_executes_tested_system: false
+    evaluator_reads_agent_self_report: false
+    capability_absence_certificate_machine_checkable: true
+    matched_pair_shared_half_stored_once: true
+    matched_twins_derived_not_authored: true
+    matched_twin_delta_is_exactly_the_withheld_capability: true
+    absent_capability_required_by_the_shared_goal: true
+    absent_capability_unreachable_through_any_permitted_interface: true
+    feasible_twin_lacks_nothing_else: true
+    sealed_artifacts_cross_bound_to_one_run: true
+    ledger_binds_the_currently_frozen_spec: true
+    external_review_p1_defects_found: 4
+    external_review_p1_defects_corrected: 4
+    external_review_weakened_the_instrument: false
+    isolation_runner: container
+    isolation_network: none
+    isolation_repository_mount_permitted: false
+    isolation_argv_audited_independently_of_attestation_booleans: true
+    sealing_cipher_implemented_in_repository: false
+    sealing_delegated_to: [age, gpg]
+    plaintext_permitted_in_repository: false
+    reveal_requires_human_openssh_signature: true
+    reveal_signature_namespace: mira-blind-bank-reveal-v1
+    ci_leakage_check_decisive: true
+    ci_reveal_assertion_decisive: true
+    ci_asserts_m075_boundary_fail_closed: true
+    ci_asserts_m085_boundary_fail_closed: true
+    ci_self_test_asserts_causal_bindings_refuse_violations: true
+    instrument_evidence_commit: 7002e4a843f347d4f494946a3c8a1fbb2d07387f
+    instrument_ci_run: 31618867270
+    instrument_ci_attempt: 1
+    instrument_ci_python_3_11_passed: 1949
+    instrument_ci_python_3_11_skipped: 11
+    instrument_ci_python_3_11_seconds: 1237.13
+    instrument_ci_python_3_13_passed: 1949
+    instrument_ci_python_3_13_skipped: 11
+    instrument_ci_python_3_13_seconds: 1266.31
+    instrument_ci_repository_integrity_passed: true
+    instrument_ci_sealed_bank_boundary_passed: true
+    instrument_ci_attribution_run: 31618864163
+    instrument_ci_attribution_passed: true
+    instrument_ci_first_run_failed_then_fixed: true
+    instrument_ci_first_run: 31618681563
+    instrument_ci_first_run_defect: leak_scanner_matched_the_payload_schema_document_as_a_payload
+    github_workflow_rerun_used: false
+    new_focused_tests: 150
+    evidence_tier_reachable: blind_generated_sealed_bank
+    evidence_tier_required_for_h21_support: independently_reproduced_human_maintained_sealed_bank
+    procedural_independence_claimed: true
+    generator_context_blindness_claimed: true
+    training_data_independence_claimed: false
+    human_independence_claimed: false
+    external_reproduction_claimed: false
+    satisfies_m075_independent_human_maintainer_requirement: false
+    supports_h21: false
+    issue_112_open: true
+    issue_112_status_changed: false
+    issue_112_recommendation: keep_open_as_the_stronger_human_reproduction_path
+    m075_artifacts_modified: false
+    generality_gate_advanced: false
+    agi_evidence: false
+  successor_by_larger_same_grammar_permitted: false
+  distinct_structural_question_required_for_successor: true
+  next_required_boundary: preprivate_causal_control_and_sealed_bank_review_then_frozen_cross_domain_transfer_and_independent_reproduction
+
+  M076:
+    title: bounded multimodal state grounding with matched per-channel ablation
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G2
+    status: positive_qualified_development
+    hypothesis: H22
+    decision: D042
+    protocol: experiments/M076/PROTOCOL.json
+    protocol_frozen_before_harness_commit: cd55035
+    harness_and_amendment_commit: 4a56de6
+    suite_bound_commit: 5fdf7b4
+    result_preserved_commit: 5733361
+    salt_drawn_before_any_harness_code: true
+    suite_commitment: 20ff63f37e7708b175af5ab5bdfd6dd3374ef487cecb41504e489f2a214a4f7e
+    result_sha256: aa312e9530a46556755111630f85911460fff965b428cf59905b5555d0a52639
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    channels:
+      - utf8_instruction
+      - ordered_structured_mapping
+      - rgb888_raster_1728_bytes
+    output_classes:
+      - symbolic_set_dial_call
+      - embodied_effector_moves_scored_from_terminal_state
+    episode_count: 36
+    evaluation_count: 180
+    full_arm_successes: 36
+    ablation_dependent_family_successes: 0
+    ablation_non_dependent_families_equal_full_arm: true
+    measured_guessing_floor_successes: 3
+    guessing_floor_bound: 8
+    amendment_a1_applied_before_materialization: true
+    amendment_a1_reason: chance_floor_bound_of_one_was_arithmetically_unreachable
+    local_regressions_passed: 26
+    independent_checker: scripts/check_m076_result.py
+    generality_gate_advanced: true
+    generality_gate_g2_closed: false
+    perception_of_natural_images: false
+    cross_domain_transfer: false
+    continual_learning: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M086-C:
+    title: third attempt at the evolvable improvement mechanism, on a corrected grammar
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: not_supported_by_this_attempt
+    predecessors: [M086-A, M086-B]
+    protocol_frozen_commit: 09ed0d3
+    harness_commit: 5056a56
+    materialization_commit: 5948f9a
+    salt_hex: f509b6e5898ff7f0acb7fe594f4db081b4b9bdb775382383c73d5796926dfe3b
+    bank_commitment: 898c724ca91caff91b085f1e0b50fe99ef17ef2ff880a44a36059b594c134faa
+    adopted_commitment: ef32609c5d1b0b91637d645d124244de1154dea46167c1fad6b9a0100b4a0443
+    holdout_digest: d1fff1923d41b7fae847c5e9135819fbd072d01c8d3ea312ba7da33257a9bcbb
+    result_sha256: 67786012cccd688251ed0914d353bae90bfe46aeb6afca9d758f621725530d14
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P1, P3, P4, P5, P6, P7, P8, P9, P10]
+    conditions_failed: [P2]
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    meta_transformations_rejected: 7
+    forced_fault_detected: true
+    forced_fault_restore_byte_identical: true
+    holdout_patch: synthesize_tool:mean:midpoint
+    holdout_public_solved: true
+    holdout_hidden_solved: false
+    failure_was_named_in_the_frozen_protocol: true
+    cause: the_public_case_did_not_discriminate_midpoint_from_mean_and_the_selection_rule_took_the_first
+    selection_rule_mutable: false
+    selection_rule_is_what_failed: true
+    routeless_operation_forced_to_mean_by_m047_templates: true
+    bank_redrawn: false
+    ci_run: '31582950744'
+    ci_tests_passed_each_python: 1797
+    ci_tests_skipped_each_python: 11
+    attribution_run: '31582949069'
+    ci_rerun_after_a_stale_test_assertion: true
+    experiment_rerun: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M086-B:
+    title: second attempt at the evolvable improvement mechanism, with an enforceable instrument
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_scientific_result
+    hypothesis: H32
+    hypothesis_status: untested_not_refuted_by_this_attempt
+    predecessor: M086-A
+    predecessor_status: post_hoc_disqualified
+    is_a_repair_of_the_predecessor: false
+    reuses_predecessor_bank_or_result: false
+    protocol: experiments/M086B/PROTOCOL.json
+    protocol_frozen_commit: 95a5022
+    harness_commit: 96f4fcb
+    materialization_commit: 3d30168
+    salt_hex: f24bea192055b851ac9945aa9c3dece3b20aa63bbda03872c28baa327b092646
+    bank_commitment: d4b42d4579297a8bf0c3c97033b8dd6f0460a0acc7f5216a78843bf9b5ab0098
+    phase1_commitment: daaf5de592a79355a1548b6d9a1ccfa6c71185d453d57ad83f523e153a5831b5
+    adopted_commitment: 29b691bb2c0b4b79a6469ef12bbe9aff916b1e2e0901c214b19d5747aad0650e
+    holdout_digest: 1113c8857c3d983c71dfff0e71717770090a7a8319919cfdd86b82562313ddba
+    result_sha256: 8b7f80d458eeb02035fada6f3b3a7888c00968f526145ed2348129c768d31c32
+    attempt: 1
+    rerun: false
+    external_model_called: false
+    conditions_computed: 10
+    conditions_passed: [P3, P4, P5, P9, P10]
+    conditions_failed: [P1, P2, P6, P7, P8]
+    single_false_makes_negative: true
+    meta_transformations_adopted: 0
+    meta_transformations_rejected: 10
+    cause_of_failure: sandbox_refuses_duplicate_tool_registration_for_the_drawn_routeless_operation
+    cause_is_the_bank_grammar_not_the_mechanism: true
+    hypothesis_put_at_risk: false
+    artifacts_byte_identical_to_committed_blobs: true
+    holdout_materialized_after_adopted_mechanism_committed: true
+    holdout_generated_by_a_separate_process: true
+    phase1_imported_the_holdout_module: false
+    forced_fault_implemented: true
+    forced_fault_reached: false
+    bank_redrawn: false
+    ci_run: '31577302582'
+    ci_tests_passed_each_python: 1752
+    ci_tests_skipped_each_python: 10
+    attribution_run: '31577301158'
+    earlier_ci_run_failed_on_a_stale_test_assertion: '31575612491'
+    ci_rerun_after_test_fix: true
+    experiment_rerun: false
+    bank_redrawn_after_materialization: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M086-A:
+    title: the improvement mechanism itself made an object of endogenous transformation
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: none_claimed
+    parent_results: [M046, M047, M084]
+    status: post_hoc_disqualified_development
+    qualification_withdrawn: true
+    hypothesis_status: untested_neither_confirmed_nor_refuted
+    disqualification_record: experiments/M086/DISQUALIFICATION.md
+    disqualification_decision: D053
+    defect_1_protocol_digest_binds_worktree_not_committed_blob: true
+    defect_1_class: m064_checkout_dependent_hash
+    defect_2_p8_never_implemented: true
+    defect_2_conditions_absent_from_evaluate: [P7, P8, P9, P10]
+    defect_2_conditions_actually_decisive: 6
+    defect_3_holdout_existed_before_meta_search: true
+    defect_4_arm_fields_replayed: 3
+    defect_4_arm_fields_preserved: 14
+    artifacts_preserved_unchanged: true
+    bank_reusable_as_scientific_evidence: false
+    successor: M086-B
+    hypothesis: H32
+    decision: D052
+    protocol: experiments/M086/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 8a8a6e7
+    bank_commitment: fa647e2733d68514ced22ecfcb9df67d5bef29b6c6cff12f0236bb2a595ec2a5
+    result_sha256: a05693615edb5c69d5d96742d9b77ac10aa2fde7b0e7fb9f431995b4ab0393bd
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_opened: false
+    frozen_thing_attacked: m047_ModuleDiagnosis_sufficient_returns_module_is_not_none
+    mutable_artifact: hypothesis_schema_plus_rule_set
+    interpreter_mutable: false
+    evaluator_mutable: false
+    m0_differentially_equivalent_to_m047: true
+    differential_probes: 10
+    differential_probe_bodies: 2
+    m0_candidates_for_the_holdout: 0
+    control_failure_is_structural_not_budgetary: true
+    meta_primitives: [widen_hypothesis, compose_expansions, parameterize_constant, relax_guard]
+    meta_transformations_rejected: 7
+    meta_transformations_adopted: 1
+    adopted_primitive: widen_hypothesis
+    composition_required: false
+    composition_was_predicted_to_be_required: true
+    evolvable_meta_solves_holdout: true
+    fixed_meta_solves_holdout: false
+    meta_acquisition_ablated_solves_holdout: false
+    task_only_mutable_solves_holdout: false
+    task_only_mutable_budget_multiplier: 3
+    holdout_scored_from: executed_hidden_cases
+    holdout_scored_from_self_report: false
+    hidden_cases: 4
+    leak_checker: scripts/check_m086_result.py
+    independent_checker: scripts/check_m086_result.py
+    amendments_before_materialization: [A1, A2]
+    amendment_a1_reason: p6_tested_as_outside_m0_constructive_image_because_the_lock_was_the_schema_not_the_rule_inventory
+    amendment_a2_reason: bank_avoided_a_cascading_repair_and_the_m047_max_tool_builtin_shadowing_defect
+    m047_renderer_modified: false
+    meta_primitives_remain_project_authored: true
+    lineage_invented_a_new_primitive: false
+    archive_or_population_used: false
+    foundation_model_used: false
+    hyperagents_comparison: docs/HYPERAGENTS_COMPARISON.md
+    generality_gate_advanced: false
+    open_ended_evolution: false
+    arbitrary_self_improvement: false
+    general_autonomy: false
+    replaces_m085: false
+    touches_m085_fail_closed_boundary: false
+    is_an_independent_reproduction: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    local_regressions_passed: 29
+    first_ci_run: '31568691093'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1703
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31568691081'
+
+  M085:
+    title: cross-domain transfer of an acquired policy into an externally maintained held-out domain
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G4
+    parent_result: M084
+    status: prepared_and_blocked_on_an_independent_maintainer
+    hypothesis: H31
+    decision: D051
+    design_protocol: experiments/M085/PROTOCOL.json
+    maintainer_brief: experiments/M085/MAINTAINER_BRIEF.md
+    intake_kit_entry_point: scripts/run_m085_intake_kit.py
+    readiness_gate: scripts/check_m085_readiness.py
+    scientific_protocol_frozen: false
+    scientific_result_exists: false
+    bank_envelope_present: false
+    payload_requested_or_accessed: false
+    held_out_domain_drawn: false
+    external_model_called: false
+    ready_for_payload_reveal: false
+    current_blockers:
+      - missing_cross_domain_bank_envelope
+      - missing_cross_domain_bank_signature
+      - missing_cross_domain_bank_allowed_signers
+      - missing_cross_domain_scientific_protocol
+    every_blocker_requires_a_non_project_person: true
+    intake_kit_can_sign: false
+    intake_kit_can_open_payload: false
+    minimum_domains: 3
+    minimum_tasks_per_domain: 8
+    minimum_correctness_critical_tasks_per_domain: 6
+    minimum_transferred_only_correct: 6
+    maximum_fresh_only_correct: 0
+    maximum_two_sided_exact_mcnemar_p: 0.05
+    threshold_and_bank_size_chosen_together: true
+    primary_outcome: evaluator_owned_correct_terminal_state
+    cost_metrics_decisive: false
+    arms: [transferred_lineage, fresh_agent, acquisition_ablated]
+    held_out_domain_drawn_after_protocol_freeze: true
+    assignment_salt_held_by_maintainer_until_freeze: true
+    material_difference_statements_checked_after_reveal: true
+    reuses_m075_boundary: false
+    why_not: m075_validator_hard_codes_refusal_thresholds_agent_identity_and_a_refusal_transfer_only_claim
+    substitutes_for_the_open_m075_private_experiment: false
+    exact_mcnemar_imported_from_m075: true
+    project_authored_domains_permitted_as_g4_evidence: false
+    independent_reproduction_required_before_gate_advance: true
+    generality_gate_advanced: false
+    generality_gate_g4_closed: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    organism_side_shim: metamorphosis/m085_domain_shim.py
+    wiring_control: metamorphosis/m085_wiring_control.py
+    wiring_control_is_a_bank_domain: false
+    wiring_control_is_scientific_evidence: false
+    m084_organism_couplings_to_its_own_tables_found: 10
+    couplings_rerouted_through_a_registered_domain_view: true
+    m084_arms_rederive_recorded_numbers_exactly: true
+    organism_reimplemented_for_external_domains: false
+    local_regressions_passed: 49
+    first_ci_run: '31538428323'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1674
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31538426940'
+
+  M084:
+    title: one persistent lineage integrating the separately qualified Phase 8 mechanisms
+    epistemic_track: endogenous_bounded_lineage
+    result_kind: integration_not_capability
+    parent_results: [M076, M077, M078, M079, M080, M081, M082, M083]
+    status: positive_qualified_development
+    hypothesis: H30
+    decision: D050
+    protocol: experiments/M084/PROTOCOL.json
+    protocol_frozen_before_harness_commit: ecb297c
+    harness_and_amendments_commit: f19af86
+    result_preserved_commit: baba1f2
+    bank_commitment: a4081e5bded51e7079c52fd09baf3bd9ff9bae0926e9a7f5ff81426523b7f047
+    result_sha256: 1cbeef8a7caafe487ad3e31123bceac5bd03c1b43eb1e90d2fb3a321902f830b
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_opened: false
+    third_party_attestation_required: false
+    stage_sequence: [shell, browser, desktop, shell]
+    distinct_real_substrates: 3
+    returns_to_the_first_substrate: true
+    fresh_container_per_stage: true
+    stages_executed_in_separate_os_processes: 4
+    stages_executed_in_the_parent_process: 0
+    organism_records_digest_of_the_file_it_loaded: true
+    mechanisms_imported_not_restated:
+      journal: metamorphosis.m077_long_horizon_recovery.Journal
+      bounded_memory_table: metamorphosis.m080_continual_retention.Table
+      plan_enumeration: metamorphosis.bounded_search.uniform_cost_plans
+      environments: [M081, M082, M083]
+    m081_agent_imported: false
+    m081_agent_omission_is_deliberate: true
+    recorded_finding_m081_m082_m083_are_interface_results: true
+    reachable_goals: 11
+    unreachable_goals: 5
+    lineage_reachable_goals_reached: 11
+    lineage_refusals: 5
+    lineage_false_refusals: 0
+    lineage_unreachable_recorded_reached: 0
+    lineage_returning_stage_diagnostic_probes: 0
+    lineage_returning_stage_repair_cycles: 0
+    lineage_returning_stage_affordance_probes: 0
+    ablated_returning_stage_diagnostic_probes: 1
+    ablated_returning_stage_repair_cycles: 1
+    ablated_returning_stage_affordance_probes: 1
+    lineage_cost_stages_1_to_3: 46
+    ablated_cost_stages_1_to_3: 85
+    lineage_actions_total: 27
+    lineage_state_reads_total: 48
+    ablated_actions_total: 43
+    ablated_state_reads_total: 71
+    lineage_wasted_actions_on_unreachable_goals: 1
+    ablated_wasted_actions_on_unreachable_goals: 4
+    transformations_adopted_lineage: 1
+    transformations_adopted_ablated: 4
+    lineage_final_body_version: 1
+    ablated_final_body_version: 4
+    ablated_and_fresh_behaviourally_identical: true
+    fresh_continuity_proofs_failed: 4
+    lineage_continuity_proofs_failed: 0
+    forced_fault_detected_by_stage_child: true
+    forced_fault_stage: 2
+    restored_digest_equals_recorded_pre_corruption_digest: true
+    restoration_compared_against_checkpoints_own_digest: false
+    self_report_overcount_per_stage: [2, 1, 1, 0]
+    induced_predicate_per_stage: [sea, sea, r3, sea]
+    predicate_carried_from_stage_0_to_stage_3: true
+    returning_stage_uses_carrier_names_never_seen_before: true
+    bounded_table_slots_used_final: 17
+    bounded_table_slots_available: 24
+    amendments_before_materialization: [A1, A2, A3]
+    amendment_a1_reason: shortest_separating_prefix_was_unsound_on_one_sided_evidence_and_caused_a_false_refusal_in_rehearsal
+    rehearsals_on_throwaway_salts: 2
+    rehearsal_bank_bound: false
+    rehearsal_result_preserved: false
+    ablation_costs_correctness: false
+    persistence_bought: cost_and_earliness_not_capability
+    first_ci_run: '31518942992'
+    first_ci_attempt: 1
+    first_ci_rerun: false
+    ci_tests_passed_each_python: 1624
+    ci_tests_skipped_each_python: 9
+    attribution_run: '31518942706'
+    local_suite_passed: 1623
+    local_suite_skipped: 10
+    m084_regressions_with_docker: 40
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m084_result.py
+    generality_gate_advanced: false
+    generality_gate_g2_closed: false
+    generality_gate_g3_closed: false
+    generality_gate_g4_closed: false
+    generality_gate_g5_closed: false
+    generality_gate_g6_closed: false
+    generality_gate_g7_closed: false
+    cross_domain_transfer: false
+    facts_offered_across_substrates: false
+    structural_retention_without_replay: false
+    open_ended_evolution: false
+    general_autonomy: false
+    general_desktop_competence: false
+    private_external_task_behaviour: false
+    genesis_gate_2_evidence: false
+    genesis_gate_3_evidence: false
+    agi_evidence: false
+    repository_credential_network_deployment_authority_granted: false
+    independent_reproduction_required: true
+
+  M083:
+    title: a GUI desktop session as a fourth environment legible only as rendered pixels
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    parent_results: [M081, M082]
+    environment_kind: gui_desktop_session_in_a_container
+    environment_is_a_virtual_machine: false
+    desktop_vm_clause_met: false
+    why_not_a_vm: container_shares_host_kernel_and_no_hypervisor_available
+    hypervisors_checked_absent: [qemu, virtualbox, multipass, vagrant]
+    status: positive_qualified_development
+    hypothesis: H29
+    decision: D049
+    protocol: experiments/M083/PROTOCOL.json
+    protocol_frozen_before_harness_commit: a1409bf
+    harness_commit: 82e0bf9
+    bank_commitment: cd549c72fb94d6a7e9aa1605d3af857dca954bb580135a24fecc63f92304372a
+    result_sha256: 5d5ccd631cf46bdc6b646f82db27d5418c2f79b3d6a142a5f17af93102970807
+    attempt: 1
+    retried: false
+    external_model_called: false
+    third_party_attestation_required: false
+    display_server: Xvfb
+    window_manager: openbox
+    network_disabled: true
+    client_origin_discovered_at_runtime: true
+    client_origin_hard_coded: false
+    state_read_by: screenshot_pixel_decode
+    state_has_filesystem_http_or_dom_route: false
+    keyboard_used: false
+    keyboard_omitted_by_design: true
+    interface_imported_from_m081: true
+    interface_reimplemented: false
+    completable_tasks: 5
+    shared_interface_completed: 5
+    crossed_drivers_completed: 0
+    self_report_overcount: 1
+    local_regressions_passed_without_docker: 21
+    local_regressions_passed_with_docker: 23
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m083_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    general_desktop_application_competence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M082:
+    title: a real browser as a third environment under the unchanged M081 interface
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    parent_result: M081
+    addressed_gate_clauses:
+      - same_interface_operates_a_browser
+      - completion_scored_from_environment_state_not_self_report
+    explicitly_not_addressed:
+      - desktop_vm_competence
+      - physical_simulator_or_device
+      - external_suite_competence
+      - general_web_competence
+    status: positive_qualified_development
+    hypothesis: H28
+    decision: D048
+    protocol: experiments/M082/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 0c35847
+    harness_commit: 958c52f
+    bank_commitment: 04916c2825c2b834e1a432b1ee995b6df3d76b3d8d54e4cc6338d83bb91878a1
+    result_sha256: 20fac3690d24134d23eaadca13f1d3ee49b055737fe082fa7db4e5da05b65890
+    attempt: 1
+    retried: false
+    external_model_called: false
+    third_party_attestation_required: false
+    environments: [shell, service, browser]
+    environments_covered: 3
+    browser_base_image_digest_pinned: true
+    browser_derived_image_is_local_build: true
+    browser_network_disabled: true
+    browser_state_location: localStorage
+    browser_store_has_http_route: false
+    browser_state_read_from_rendered_dom: true
+    browser_profile_persistent: true
+    interface_imported_from_m081: true
+    interface_reimplemented: false
+    completable_tasks_per_environment: 5
+    shared_interface_completed_shell: 5
+    shared_interface_completed_service: 5
+    shared_interface_completed_browser: 5
+    crossed_drivers_completed: 0
+    browser_self_report_overcount: 1
+    transport_defects_found_and_fixed: 3
+    local_regressions_passed_without_docker: 16
+    local_regressions_passed_with_docker: 18
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m082_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    desktop_vm_delivered: false
+    general_web_competence: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M081:
+    title: one agent interface across two real isolated container environments
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G6
+    addressed_gate_clauses:
+      - same_interface_across_real_isolated_environments
+      - completion_scored_from_environment_state_not_self_report
+    explicitly_not_addressed:
+      - browser_competence
+      - desktop_vm_competence
+      - physical_simulator_or_device
+      - external_suite_competence
+    status: positive_qualified_development
+    hypothesis: H27
+    decision: D047
+    protocol: experiments/M081/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 7ac5ad4
+    harness_commit: 54b90c5
+    bank_commitment: 5261974e2eb37424816205f8a5c37979df055fbdfa30113d411d65d78ef9ccbd
+    result_sha256: cc9a6e89a023ee3c9f1b5e3f5f1f8a015f57af00d53c1f1611b3b4550bb41bdc
+    attempt: 1
+    retried: false
+    external_model_called: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    environments: [shell, service]
+    images_digest_pinned: true
+    shell_network_disabled: true
+    service_loopback_only: true
+    tasks_per_environment: 6
+    completable_tasks_per_environment: 5
+    shared_interface_completed_shell: 5
+    shared_interface_completed_service: 5
+    shared_interface_state_reached: 10
+    shared_interface_claimed: 12
+    crossed_drivers_completed: 0
+    self_report_overcount: 2
+    amendment_a1_applied_before_materialization: true
+    amendment_a1_direction: strengthens
+    construction_fixes_before_materialization: 2
+    local_regressions_passed_without_docker: 17
+    local_regressions_passed_with_docker: 20
+    container_tests_skipped_in_ci: true
+    live_evidence_is_ci_attested: false
+    independent_checker: scripts/check_m081_result.py
+    generality_gate_advanced: false
+    generality_gate_g6_closed: false
+    browser_delivered: false
+    desktop_vm_delivered: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M080:
+    title: continual acquisition under shared-table interference with measured forgetting
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G5
+    addresses_gate_gap: forgetting_was_never_measured
+    status: positive_qualified_development_with_measured_limitation
+    hypothesis: H26
+    decision: D046
+    protocol: experiments/M080/PROTOCOL.json
+    protocol_frozen_before_harness_commit: b3e9aba
+    harness_commit: d68dfd3
+    bank_commitment: 3769e8266189c3ffd33871570e016e33271026cf8d305d9dd81283c9b063ec6d
+    result_sha256: 421121398984cdaec066de7aaf900a7f10ee92d956f5d2b9bb2f7705975dfc99
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    third_party_attestation_required: false
+    skills: 6
+    shared_table_slots: 24
+    private_slots_per_skill: 0
+    lineage_capabilities_lost: 0
+    lineage_final_retention_failures: 0
+    lineage_slots_used: 19
+    private_slot_ceiling: 24
+    memory_growth_sublinear: true
+    rules_reused: 3
+    rollbacks: 2
+    rollback_mismatches: 0
+    no_consolidation_capabilities_lost: 5
+    no_rollback_checkpoint_mismatches: 3
+    no_replay_capabilities_lost: 5
+    replay_dependence: replay_dependent
+    replay_dependence_direction_preregistered: false
+    retention_structural: false
+    retention_measured_over_full_key_set: true
+    rollback_check_previously_tautological: true
+    instrument_fixes_before_materialization: 3
+    structure_modified_is_the_policy: true
+    weight_learning_claimed: false
+    local_regressions_passed: 29
+    independent_checker: scripts/check_m080_result.py
+    generality_gate_advanced: false
+    generality_gate_g5_closed: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M079:
+    title: planning without a supplied decomposition, revision under revealed evidence and calibrated clarification
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G3
+    addressed_gate_clauses:
+      - no_task_specific_decomposition_supplied
+      - form_and_revise_plans
+      - verify_terminal_conditions
+      - ask_for_clarification_when_evidence_is_insufficient
+    status: positive_qualified_development
+    hypothesis: H25
+    decision: D045
+    protocol: experiments/M079/PROTOCOL.json
+    protocol_frozen_before_harness_commit: d5480b7
+    harness_commit: 45886bc
+    bank_commitment: 3047ab09e1c0fb3e1df807a645f697d2f9d1fb655bd9d7d3c47f98ea23d9e5f9
+    result_sha256: 5f7ccf2131f36c9761a0cfd921f017bd7d616e344ea01c71b30a16e6502302b9
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    episode_count: 24
+    planner_static_solved: 8
+    planner_revision_solved: 8
+    planner_replans: 8
+    planner_clarifications_ambiguous: 8
+    planner_clarifications_unambiguous: 0
+    planner_unsafe_terminal_states: 0
+    planner_budget_overruns: 0
+    no_replan_revision_solved: 0
+    never_ask_unsafe_terminal_states: 6
+    always_ask_tasks_solved: 0
+    clarification_scored_as_success: false
+    terminal_success_read_from_world_state: true
+    hazardous_branch_strictly_cheaper_in_ambiguous_episodes: true
+    construction_fixes_before_materialization: 2
+    local_regressions_passed: 28
+    independent_checker: scripts/check_m079_result.py
+    generality_gate_advanced: false
+    generality_gate_g3_closed: false
+    evidence_about_model_clarification: false
+    open_ended_or_natural_language_planning: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+
+  M078:
+    title: calibrated refusal when an opaque body cannot separate two inherited skills
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G1
+    addresses_gate_clause: incompatible_body_must_refuse_rather_than_invent_an_adapter
+    status: positive_qualified_development
+    hypothesis: H24
+    decision: D044
+    protocol: experiments/M078/PROTOCOL.json
+    protocol_frozen_before_harness_commit: f8a7dc4
+    harness_commit: afc14a9
+    bank_commitment: c37ea3dc6ea9ddfbaf1c0528b8fbeef225e9b24ad3ecb90f524b8985147c0c0e
+    result_sha256: 430f78229203a88d1f11fd36a433191fbe9af71bfd6b95d877c4ec1cb81e4976
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    external_task_selected: false
+    third_party_attestation_required: false
+    bodies_total: 8
+    bodies_compatible: 4
+    bodies_incompatible: 4
+    compatible_adapters_recovered: 4
+    compatible_hidden_perfect: 4
+    false_refusals: 0
+    true_refusals: 4
+    invented_adapters: 0
+    empty_set_refusals: 0
+    never_refuse_invented_adapters: 4
+    never_refuse_hidden_failures: 4
+    always_refuse_adapters_recovered: 0
+    incompatibility_construction: stitched_command_over_disjoint_public_inputs
+    refusal_by_exhaustion_counted: false
+    information_boundary_checked_structurally: true
+    local_regressions_passed: 25
+    independent_checker: scripts/check_m078_result.py
+    generality_gate_advanced: false
+    generality_gate_g1_closed: false
+    repairs_m074: false
+    evidence_about_model_refusal: false
+    cross_domain_transfer: false
+    genesis_gate_2_evidence: false
+    agi_evidence: false
+    independent_reproduction_required: true
+    successor_must_use_externally_maintained_bodies: true
+
+  M077:
+    title: long-horizon fault recovery and constraint retention across episode-count horizons
+    epistemic_track: endogenous_bounded_lineage
+    target_generality_gate: G7
+    addressed_gate_components:
+      - intervention_count
+      - recovery_after_injected_faults
+      - constraint_retention
+    explicitly_not_addressed:
+      - human_equivalent_task_horizons
+    horizon_unit: episode_count_not_human_equivalent_time
+    status: negative_result_preserved
+    hypothesis: H23
+    hypothesis_status: refuted
+    decision: D043
+    protocol: experiments/M077/PROTOCOL.json
+    protocol_frozen_before_harness_commit: 31b2778
+    harness_commit: 720bad4
+    schedule_commitment: 80e92af496798417117b5b173aa852aefb1ec1351474ea3f138c2c800e8a9d13
+    result_sha256: 93ecd2d082e9b58e2913355f86b4b5a576cd72a63fe1b9fff232477c15d983d9
+    attempt: 1
+    retried: false
+    external_model_called: false
+    network_used: false
+    horizons: [32, 128, 512, 2048]
+    full_arm_faults_recovered_fraction: 1.0
+    full_arm_residual_violations: 0
+    full_arm_interventions: 0
+    full_arm_degradation_with_horizon: false
+    no_checkpoint_restoration_rate: 0.0
+    no_checkpoint_detection_equals_full: true
+    no_constraint_monitor_lost_detection: false
+    refutation_cause: silent_corruption_eventually_breaks_a_guarded_operation
+    instrument_corrections_before_materialization: 2
+    third_iteration_declined_as_tuning: true
+    local_regressions_passed: 25
+    independent_checker: scripts/check_m077_result.py
+    checker_fails_closed_if_negative_becomes_positive: true
+    generality_gate_advanced: false
+    generality_gate_g7_closed: false
+    agi_evidence: false
+    successor_must_supply_quiescent_corruption: true
+    successor_may_reuse_this_schedule: false
+
+  M092:
+    title: canonical search voluntarily interrupted before qualification
+    epistemic_track: endogenous_bounded_lineage
+    status: aborted_without_verdict
+    protocol_a_frozen_commit: aa18d15
+    protocol_b_frozen_commit: 4903300
+    protocol_b_conditions: 15
+    condition_labels: [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15]
+    canonical_search_armed_commit: 7190ff8
+    voluntary_interruption_reason: user_decision
+    interruption_reference: PR_167
+    last_published_canonical_segment: 3
+    terminal_candidate_claimed: false
+    independent_reproduction_performed: false
+    qualification_materialised: false
+    h38_resolved: false
+    d062_filled: false
+    a_checkpoint_infrastructure_valid: true
+    external_model_called: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M093:
+    title: engineering rehearsal — non-qualifying transformation infrastructure demonstration
+    epistemic_track: endogenous_bounded_lineage
+    status: engineering_rehearsal
+    target_file: mira_core/memory.py
+    target_component: MemoryLedger
+    target_lines_added: 17
+    demonstrates:
+      - transformation_infrastructure
+      - subprocess_sandbox
+      - a_b_comparison
+      - held_out_validation
+      - transactional_adoption
+      - persistence
+      - exact_rollback
+    does_not_demonstrate:
+      - autonomous_diagnosis
+      - component_selection
+      - non_predefined_repair_generation
+    original_tests_passed: [6, 6]
+    candidate_tests_passed: [7, 7]
+    held_out_tests_passed: [4, 4]
+    all_test_assertions_pass: true
+    external_model_called: false
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M094:
+    title: autonomous component diagnosis and repair synthesis
+    epistemic_track: endogenous_bounded_lineage
+    status: positive_qualified_scientific_result
+    hypothesis: H39
+    decision_slot: D063
+    decision_slot_filled: false
+    protocol_frozen: '9b69d7f'
+    run_commit: '43ef9d30'
+    attempt: 2
+    prior_attempts:
+      - WITHDRAWN_RESULT_ATTEMPT_1.json
+    selected_component: mira_core/contracts.py
+    repaired_classes: [Goal, Observation]
+    adopted_mechanism_digest: 259e12f5cbf86ec75c7c03c89deded86804a0aad170bb9407936fb338f413381
+    conditions_computed: 12
+    conditions_true: 12
+    verdict: positive
+    qualification:
+      drawn_after_adoption: true
+      entries: 2
+      satisfied: 2
+      cross_component: true
+      components: [mira_core/agent.py, mira_core/container.py]
+    controls_closed_nothing:
+      - random_component_selection
+      - template_only_repair
+    budget_arm_reached_same_mechanism: true
+    amendments:
+      - id: A1
+        summary: the qualification pool's hidden cases were never executed
+      - id: A2
+        summary: acceptance read a candidate where it had to run it
+      - id: A3
+        summary: the protocol's design-audit digest identified nothing
+      - id: A4
+        summary: the repair target was decided by alphabetical order on a class name
+    withdrawn_attempt_1:
+      verdict_was: positive
+      withdrawn_for: >-
+        P11 reported restoration_is_byte_exact from a digest over decoded text, which could not
+        see the rollback normalise the component's line endings from CRLF to LF
+      preserved_at: experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json
+      disclosed_at: experiments/M094/POST_VERDICT_DISCLOSURE.md
+    demonstrates:
+      - autonomous_component_selection_by_measurement
+      - repair_assembled_from_composable_operations
+      - acceptance_by_execution
+      - independent_behavioural_validation
+      - transactional_adoption
+      - byte_exact_rollback
+      - persistence_across_process_death
+      - cross_component_qualification_drawn_after_adoption
+    does_not_demonstrate:
+      - endogenous_choice_of_the_eligible_component_set
+      - endogenous_choice_of_the_admissible_observations
+      - endogenous_extension_of_the_operation_set
+      - sequential_or_cumulative_repair
+      - recursive_self_improvement
+    still_authored_next_ceiling:
+      - eligible_component_set
+      - admissible_observations
+      - operation_set
+      - composition_bound
+    external_model_called: false
+    network_calls: 0
+    generality_gate_advanced: false
+    agi_evidence: false
+
+  M095:
+    title: improvement enabling improvement in the real-software lineage
+    epistemic_track: endogenous_bounded_lineage
+    status: negative_qualified_scientific_result_attempt_1
+    hypothesis_registered: true
+    hypothesis: H40
+    hypothesis_status: refuted
+    protocol_frozen: true
+    qualification_pool_exists: true
+    qualification_population_entries: 9
+    run_armed: true
+    run_consumed: true
+    scientific_result_exists: true
+    scientific_verdict_exists: true
+    authored_world: true
+    audit_defects_found: 31
+    audit_defects_repaired: 30
+    audit_defects_disclosed_not_repaired: 1
+    demand_bearing_arrangements_demonstrated: 6
+    demonstrated_without_descending: 4
+    demonstrated_with_failed_search_descent: 2
+    zero_inner_demand_negative_arrangements: 2
+    failed_search_names_obstacle: true
+    obstacle_identifies_missing_supplier: true
+    descent_adds_operation_to_language: false
+    operation_set_same_at_s0_and_s1: true
+    b_from_s0_examined: 191
+    b_from_s0_survivors: 0
+    a_from_s0_examined: 191
+    a_from_s0_confirmed: 3
+    b_from_s1_examined: 239
+    b_from_s1_confirmed: 12
+    b_without_a_examined: 191
+    b_without_a_survivors: 0
+    random_target_arm: unrunnable
+    withheld_operation_control_falsifiable: false
+    withheld_operation_control_status: disclosed_boundary_not_repaired
+    qualification_positive_entries: 6
+    qualification_positive_demonstrated: 0
+    qualification_negative_entries: 3
+    qualification_negative_remained_negative: 3
+    qualification_conditions_passed: 8
+    qualification_conditions_failed: [P3, P5, P6]
+    qualification_replayed_exactly: true
+    failure: locally_accepted_a_renderer_emits_extra_keys_rejected_by_b_exact_nested_contract
+    source_commit: 951c7c271f07a5bf2c08735c30b8d49f39cf8b73
+    result_digest: bdd35111220f256f86c19194428cb3ce60b8a04488c161109a1c92887a401e75
+    checker_digest: bb24a484012d123d0336fb7c1974e58255222b6c91ce0bb22770f42e58d5d42f
+    decision: D064
+    post_verdict_repair_permitted: false
+    next_required_boundary: contract_safe_composition_under_a_new_protocol
+    next_planned_boundary_after_that: real_software_endogenous_transformation_language_extension
+    generality_gate_advanced: false
+    agi_evidence: false
+
+measurement_track:
+  reserved_experiment: M045
+  status: open_and_separate
+  supported_through: M031
+  next_question: >-
+    Can a pre-written resource-aware adaptive allocation beat the frozen
+    component-uniform baseline without recreating M029's allocation failure?
+  separate_from_M044_and_M046: true
+  separate_from_M047_to_M075: true
+
+engineering_release_boundary:
+  human_control_required_for:
+    - repository_writes
+    - deployments
+    - credentials
+    - network_access
+    - production_changes
