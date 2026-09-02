@@ -63,7 +63,4 @@ jobs:
       - name: Delete fully merged branches and old unprotected Actions history
         env:
           GH_TOKEN: ${{ github.token }}
-          # The repository contains intentionally huge decimal fixtures. The cleanup treats any
-          # numeric token as protected evidence, so Python must be allowed to parse those tokens.
-          PYTHONINTMAXSTRDIGITS: '0'
         run: python scripts/run_repository_cleanup_once.py
