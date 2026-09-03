@@ -1,7 +1,7 @@
 project: Mira Genesis
 updated_at: 2026-09-02
 snapshot_kind: current_authoritative_navigation
-status: m120_apparatus_built_and_rehearsed_unspent_h65_untested_owner_gates_open
+status: m120_closed_at_readiness_h65_untested_candidate_schema_not_enforceable_on_the_route
 
 historical_snapshot_archives:
   markdown: docs/state-history/PROJECT_STATE_2026-08-24.md
@@ -249,7 +249,45 @@ m120_instrument:
     inherited_m118_stress_schema_does_not_dominate_the_m120_census: true
     stress_schema_is_deliberately_not_the_candidate_schema: true
     freeze_is_refused_without_a_committed_ready_result: true
-    requires_owner_credential: true
+    ran_at: 2026-09-03
+    runs: 1
+    development_requests_spent: 16
+    verdict: not_ready_identity
+    ready: false
+    required_feature_classes: 9
+    enforced_feature_classes: 7
+    unenforced_feature_classes: [array_of_object_levels]
+    identity_held_on_every_request_carrying_a_completion: true
+    finding: >-
+      the candidate schema needs eight array-of-object levels; the route enforces the five M115's
+      schema needed. The probe returned HTTP 200 with finish_reason length after 101379 completion
+      tokens where enforcement would have produced about fifty.
+    verdict_label_misattributes_the_cause: true
+    why: >-
+      after the runaway probe the last two requests returned HTTP 429; a 429 carries no router
+      metadata, so identity could not be attested and the frozen ladder checks identity before
+      features
+    outcome_is_robust_to_the_misattribution: true
+    with_identity_holding_the_ladder_reports: not_ready_features
+    gate_is_single_use_and_was_not_redrawn: true
+
+  m120_closure:
+    status: instrument_development_closed_at_readiness
+    hypothesis_status: untested
+    scientific_freeze_taken: false
+    qualifying_scientific_invocations: 0
+    carrier_bank_exists: false
+    reveals: 0
+    generality_gate_advanced: false
+    apparatus_was_never_exercised_against_a_real_bank: true
+    outcome_record: experiments/M120/OUTCOME.md
+    instrument_defects_recorded_not_repaired:
+      - identity_is_attested_on_error_responses_that_carry_no_completion
+      - a_runaway_probe_is_folded_into_non_conformance_instead_of_its_own_class
+    successor_requirements:
+      - the_carrier_contract_must_fit_inside_what_the_route_enforces
+      - attest_identity_only_where_a_completion_exists
+      - treat_finish_reason_length_on_a_probe_as_its_own_recorded_class
   development_rehearsal:
     record: experiments/M120/DEVELOPMENT_REHEARSAL.json
     ran_the_real_scripts_in_a_disposable_git_checkout: true

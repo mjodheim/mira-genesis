@@ -22,13 +22,16 @@ The immediate problem is therefore instrumental and prospective:
 > scientifically adequate for the frozen plan, and that the checker scores only the exact committed
 > plan and evidence it authenticates?
 
-Those questions are now answered mechanically, on the M120 branch, and **nothing scientific has been
-spent answering them**. M120/H65 is pre-registered, built and rehearsed end to end on DEVELOPMENT
-data; its qualifying scientific invocations are **0**, no bank exists, no freeze has been taken, and
-H65 is **untested**.
+Those questions were answered mechanically, and then M120 stopped for a different reason.
 
-What remains is not more instrument work. It is the five owner gates listed at the end of this
-document.
+Its DEVELOPMENT readiness gate -- the one M119 did not have -- found that **M120's candidate schema
+needs eight array-of-object levels and this route enforces five**. The probe free-ran to 101,379
+completion tokens and truncated where enforcement would have produced about fifty. M120 is closed:
+0 qualifying invocations, no freeze, no bank, no reveal, **H65 untested**, 16 DEVELOPMENT requests
+spent.
+
+That is the gate working. M119 learned its contract was unusable by spending its one qualifying
+generation on it. M120 learned the same class of thing for the price of a calibration run.
 
 ## The recent instrument sequence
 
@@ -39,7 +42,7 @@ document.
 | M117 / H62 | route calibration / instrument development closed | OpenInference on the fixed DeepSeek checkpoint passed all final DEVELOPMENT qualification clauses and large constrained-output stress; apparatus revisions were transparently disclosed | **untested** |
 | M118 / H63 | instrument-design and hostile-audit closed before scientific generation | readiness passed, but repeated Tier-1 measurement-design defects showed the scientific instrument was too complicated for a one-shot test | **untested** |
 | M119 / H64 | `instrument_aborted` after one qualifying generation | clean delivery and schema conformance still produced a bank the frozen host/evaluator could not qualify | **untested** |
-| M120 / H65 | pre-registered, built, DEVELOPMENT-rehearsed, unspent | a schema that states no relation between two fields plus a total decoder closes the host gap; adequacy is decided before the seal; the checker reproduces what it scores | **untested** |
+| M120 / H65 | closed at the DEVELOPMENT readiness gate | the contract was made mechanically host-safe, but the route does not enforce the nesting depth that contract needs: 8 array-of-object levels against the 5 M115's schema used | **untested** |
 
 No M113–M119 milestone advanced G1–G10.
 
@@ -140,26 +143,48 @@ things are supposed to be found.
 The rehearsal's own verdict is computed on synthetic devkit carriers and is **not evidence about
 H65**.
 
-### The five owner gates
+### How M120 closed
+
+The readiness gate ran once and returned `not_ready_identity`. Seven of nine required feature
+classes were enforced cleanly, with runtime identity holding on every request that carried a
+completion. `array_of_object_levels` was not.
+
+The verdict label misattributes the cause: after the runaway probe the last two requests returned
+HTTP 429, a 429 carries no router metadata, so identity could not be attested and the frozen ladder
+checks identity before features. The **outcome** is robust to that -- with identity holding, the
+ladder reports `not_ready_features` on the same unenforced class. The misattribution is recorded as
+an instrument defect for a successor, not repaired.
+
+M120's apparatus -- the contract and decoder, the adequacy gate, the reproducing checker -- was
+never exercised against a real bank and carries **no scientific evidence**.
+
+### What a successor has to fix
+
+1. **The carrier contract must fit inside what the route enforces.** Flatten the representation to
+   at or below five array-of-object levels, or establish a greater depth on the route *before*
+   adopting a schema that needs it.
+2. **Attest identity only where a completion exists.** A retry-exhausted 429 is a delivery outcome,
+   not a substituted route.
+3. **Treat `finish_reason: length` on a probe as its own class.** 101,379 tokens against a
+   fifty-token requirement is enforcement failing open, not mere non-conformance.
+
+### The owner gates that were, and were not, reached
 
 Nothing below has been crossed:
 
 1. the publication/IP disposition — reviewed and drafted at
    [`../docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](IP_REVIEWS/M120_PUBLICATION_REVIEW.md), with
    no register row written;
-2. the DEVELOPMENT route-readiness run, which needs a credential and precedes the freeze;
-3. the scientific freeze;
-4. the one qualifying generation;
-5. the single reveal authorization.
+2. the DEVELOPMENT route-readiness run -- **reached, run once, returned not ready**;
+3. the scientific freeze -- **not reached**;
+4. the one qualifying generation -- **not reached, not spent**;
+5. the single reveal authorization -- **not reached**.
 
-### What M120 still cannot promise
+### What M120 never got to test
 
-A verdict. The gates establish that a schema-valid completion yields a host-valid bank, and that an
-inadequate bank cannot consume the reveal. Whether the blind generator produces an *adequate* bank
-on this route is not knowable before the generation. The honest numbers: a development emitter
-qualified at 29% at the contract's smallest corner, and M119's real blind bank qualified at one in
-thirty-seven under the old contract. If the bank is inadequate, M120 closes as an instrument
-failure **without** spending the reveal, and says so.
+Whether a blind generator produces an *adequate* bank on this route. The contract work, the
+adequacy gate and the reproducing checker are all untested against real carriers, and none of them
+is evidence of anything. The milestone stopped one gate earlier than that.
 
 ## What the next successor must prove before one-shot science
 
