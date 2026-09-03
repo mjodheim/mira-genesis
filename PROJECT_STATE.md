@@ -20,10 +20,11 @@ The repository is closed cleanly through **M119**.
   was spent, zero paired demands were posed, no arm ran and no scientific comparison was made.
 - **No generality gate advanced in M113–M119.** Instrument failure, route calibration and instrument
   audit are not evidence for or against the corresponding scientific hypotheses.
-- **M120/H65 is pre-registered and built, and nothing scientific has been spent on it.** Its
-  apparatus is complete, DEVELOPMENT-rehearsed end to end and hostile-reviewed; its qualifying
-  scientific invocations are **0**, no bank exists, and no freeze has been taken. H65 is
-  **untested**, and the milestone is waiting on owner gates listed below.
+- **M120 is closed at its DEVELOPMENT readiness gate. H65 is UNTESTED.** The gate found that the
+  M120 candidate schema needs **eight** array-of-object levels and this route enforces only the
+  **five** M115's schema needed: the probe returned HTTP 200 with `finish_reason: length` after
+  101,379 completion tokens instead of the fifty-token structure the schema required. Cost: 16
+  DEVELOPMENT requests. **No qualifying generation, no freeze, no seal, no reveal.**
 - **M115–M119 are closed records.** Their frozen code, plans, artifacts, checker behavior and
   outcomes must not be repaired, rerun, filtered, relabelled or reinterpreted retroactively.
 
@@ -63,7 +64,7 @@ self-improvement.
 | **M117** | H62 | route qualification / instrument calibration completed; 0 qualifying scientific invocations | H62 untested; OpenInference route calibrated for successor use |
 | **M118** | H63 | instrument design and hostile audit deliberately stopped before scientific generation; 0 qualifying invocations | H63 untested; instrument was judged too complicated for a one-shot test |
 | **M119** | H64 | one qualifying generation, one seal/reveal, inadequate carrier bank, zero paired demands | `instrument_aborted`; H64 untested |
-| **M120** | H65 | apparatus pre-registered, built and DEVELOPMENT-rehearsed; 0 qualifying invocations, no freeze, no bank | H65 untested; waiting on owner gates |
+| **M120** | H65 | readiness gate closed the milestone; the candidate schema needs 8 array-of-object levels and the route enforces 5; 0 qualifying invocations, no freeze, no bank | H65 untested; contract not serviceable on this route |
 
 ### M116
 
@@ -136,7 +137,7 @@ about checker robustness.
 They are intentionally **not repaired in M119**. The checker is part of the tested-system freeze;
 editing it after reveal would invalidate the chronology the freeze exists to protect.
 
-## M120 / H65 — pre-registered, built, unspent
+## M120 / H65 — closed at readiness; the gate stopped it before the one-shot
 
 M120 preserves H64's scientific proposition unchanged and inherits M119's arms, endpoint, exact
 test, alpha, effect floor, guards, verdicts, decomposition, comparator seed, observation budget and
@@ -163,18 +164,24 @@ One finding came out of that rehearsal rather than out of review: an earlier dra
 recomputed digest. That is why the checker now reproduces the measurement instead of authenticating
 it, and why the custody chain is walked end to end.
 
-### Owner gates M120 is waiting on
+### How it closed
 
-Nothing below has been crossed, and none may be crossed by a development agent:
+The readiness gate ran once, on 3 September 2026, and returned `not_ready_identity`.
 
-1. the publication disposition — reviewed and drafted at
-   [`docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md); no
-   `IP_ASSET_REGISTER.md` row is written;
-2. the DEVELOPMENT route-readiness run, which needs `OPENROUTER_API_KEY` and is a precondition of
-   the freeze;
-3. the scientific freeze;
-4. the one qualifying generation;
-5. the single reveal authorization.
+Seven of nine required feature classes were enforced cleanly, with runtime identity holding on
+every request that carried a completion. `array_of_object_levels` was **not** enforced: the probe
+free-ran to 101,379 tokens and truncated, where enforcement would have produced roughly fifty.
+
+The verdict label misattributes the cause. After the runaway probe the last two requests returned
+HTTP 429, a 429 carries no router metadata, so identity could not be attested and the ladder
+checked identity before features. **The outcome is robust to that** — with identity holding, the
+ladder reports `not_ready_features` on the same unenforced class, and M120 stops in the same place.
+That misattribution is recorded as an instrument defect for a successor, not repaired.
+
+**M120's apparatus was never exercised against a real bank and carries no scientific evidence.**
+What it did establish is that the readiness gate works: M119 discovered its contract was unusable
+by spending its one qualifying generation, and M120 discovered the same class of problem for the
+price of a calibration run. See [`experiments/M120/OUTCOME.md`](experiments/M120/OUTCOME.md).
 
 ## M121 / H66 — G7 groundwork, drafted and unauthorised
 
