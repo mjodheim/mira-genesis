@@ -30,8 +30,13 @@ The API key is read from `OPENROUTER_API_KEY` and is never written or printed.
 from __future__ import annotations
 
 import argparse
+import http.client
 import json
+import os
+import ssl
 import sys
+import urllib.parse
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Mapping
 
@@ -69,16 +74,90 @@ class ReadinessError(RuntimeError):
     """Fail closed. A readiness gate that guesses is not a gate."""
 
 
-def _transport():
-    """M117's calibrated transport, imported at the point of use.
+# The endpoint the frozen generator spec names. Asserted against it below rather than restated:
+# a readiness gate that certified one endpoint while the generation used another would be
+# certifying nothing.
+COMPLETIONS_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+SECRET_VARIABLE = "OPENROUTER_API_KEY"
 
-    It reaches for `fcntl` at import time, which exists only on POSIX. Importing it at module
-    scope would make this file unimportable on a developer machine that is not the CI runner, and
-    an apparatus that cannot be read where it is written is an apparatus nobody reviews. Nothing
-    below the network boundary needs it, so the import happens where the network does.
+# Response headers worth keeping. Account, credential and workspace surfaces never survive.
+KEPT_HEADERS = ("date", "retry-after", "x-generation-id")
+
+
+def _now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def _secret() -> str:
+    secret = os.environ.get(SECRET_VARIABLE)
+    if not secret:
+        raise ReadinessError("%s is not set; no network request was made" % SECRET_VARIABLE)
+    return secret
+
+
+def _http(url: str, *, method: str = "POST", body: bytes | None = None,
+          timeout: int = 900) -> dict[str, Any]:
+    """One physical request. No redirect, no retry, no connection reuse.
+
+    This is the readiness gate's own transport, and it is deliberately the same shape as the one
+    `run_m120_generation.py` uses for the qualifying request: same stdlib client, same headers,
+    same treatment of an ambiguous failure as evidence rather than a crash.
+
+    An earlier draft borrowed M117's transport instead. That was wrong twice over. It certified the
+    route through code the qualifying generation will never execute, which is not what a readiness
+    gate is for; and it dragged in a module that reaches for `fcntl` at import time -- for a *file
+    lock*, nothing to do with HTTP -- which made the gate unrunnable anywhere but a POSIX host. The
+    gate crashed on exactly that before sending a single request, which is the cheapest possible
+    place to learn it.
     """
-    from scripts import audit_m117_route_qualification as stage1  # noqa: PLC0415
-    return stage1
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme != "https" or not parsed.hostname:
+        raise ReadinessError("the readiness endpoint must use https")
+    headers = {"Accept": "application/json", "Authorization": "Bearer %s" % _secret()}
+    if body is not None:
+        headers["Content-Type"] = "application/json"
+        headers["X-OpenRouter-Metadata"] = "enabled"
+        headers["X-OpenRouter-Cache"] = "false"
+    started = _now()
+    context = ssl.create_default_context()
+    connection = None
+    began = False
+    try:
+        proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+        if proxy:
+            via = urllib.parse.urlsplit(proxy if "://" in proxy else "http://" + proxy)
+            connection = http.client.HTTPSConnection(via.hostname, via.port or 80,
+                                                     timeout=timeout, context=context)
+            connection.set_tunnel(parsed.hostname, parsed.port or 443)
+        else:
+            connection = http.client.HTTPSConnection(parsed.hostname, parsed.port or 443,
+                                                     timeout=timeout, context=context)
+        path = parsed.path or "/"
+        if parsed.query:
+            path = "%s?%s" % (path, parsed.query)
+        began = True
+        connection.request(method, path, body=body, headers=headers)
+        response = connection.getresponse()
+        raw = response.read()
+        status = response.status
+        observed_headers = {k.lower(): v for k, v in response.getheaders()
+                            if k.lower() in KEPT_HEADERS}
+    except Exception as exc:  # noqa: BLE001 -- ambiguity is evidence, not a crash
+        return {"status": None, "body": None, "response_bytes": None, "started_at": started,
+                "finished_at": _now(), "response_headers": {},
+                "transport_failure_class": type(exc).__name__,
+                "model_execution_cannot_be_excluded": began and body is not None}
+    finally:
+        if connection is not None:
+            connection.close()
+    try:
+        decoded = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        decoded = None
+    return {"status": status, "body": decoded if isinstance(decoded, Mapping) else None,
+            "response_bytes": len(raw), "started_at": started, "finished_at": _now(),
+            "response_headers": observed_headers, "transport_failure_class": None,
+            "model_execution_cannot_be_excluded": False}
 
 
 def _census() -> dict[str, Any]:
@@ -119,6 +198,19 @@ def _assert_stress_dominates() -> dict[str, Any]:
     }
 
 
+def _assert_endpoint_matches_the_frozen_spec() -> str:
+    """Certifying one endpoint while the generation uses another would certify nothing."""
+    from metamorphosis import m120_bank as bank  # noqa: PLC0415
+
+    declared = bank.build_generator_spec(
+        bank.build_analysis_plan(ROOT), ROOT)["generator_identity"]["endpoint"]
+    if declared != COMPLETIONS_ENDPOINT:
+        raise ReadinessError(
+            "the readiness gate would probe %s while the frozen spec sends to %s"
+            % (COMPLETIONS_ENDPOINT, declared))
+    return declared
+
+
 def plan() -> dict[str, Any]:
     matrix = _matrix()
     record = {
@@ -135,6 +227,7 @@ def plan() -> dict[str, Any]:
         "request_budget": (len(matrix) + 1) * (MAX_RETRIES + 1),
         "required_feature_classes": required_feature_classes(),
         "candidate_schema_sha256": sha256_hex(canonical_bytes(contract.candidate_schema())),
+        "endpoint": _assert_endpoint_matches_the_frozen_spec(),
         "stress": _assert_stress_dominates(),
         "stress_min_completion_tokens": STRESS_MIN_COMPLETION_TOKENS,
         "reasoning_effort": REASONING_EFFORT,
@@ -169,9 +262,8 @@ def _send(prompt: str, schema: Mapping[str, Any], name: str, max_tokens: int,
         if budget["spent"] >= budget["limit"]:
             raise ReadinessError("the frozen request budget is exhausted")
         budget["spent"] += 1
-        stage1 = _transport()
-        observed = stage1._http(stage1.COMPLETIONS_ENDPOINT, method="POST",
-                                body=canonical_bytes(body), timeout=900)
+        observed = _http(COMPLETIONS_ENDPOINT, method="POST",
+                         body=canonical_bytes(body), timeout=900)
         if observed.get("status") == 429 and not (observed.get("body") or {}).get("choices"):
             if attempt < MAX_RETRIES:
                 continue  # explicit pre-generation 429, no completion, no execution evidence
@@ -337,7 +429,7 @@ def execute() -> dict[str, Any]:
         "stress_schema_dominates_the_candidate_schema": True,
         "chronology": permission,
         "route": fixed.route(),
-        "observed_at": _transport()._now(),
+        "observed_at": _now(),
         "identity": identity or {"holds": False, "failed_checks": ["no_response"]},
         "identity_per_request": identities,
         "identity_held_on_every_request": bool(identities) and all(
