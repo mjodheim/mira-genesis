@@ -194,6 +194,33 @@ current_frontier:
       implemented_and_green
     spend_no_qualifying_invocation_until_all_preflight_gates_pass: no_invocation_spent
 
+m121_g7_groundwork:
+  milestone: M121
+  hypothesis: H66
+  target_generality_gate: G7
+  gate_status_before: open
+  gate_status_after_this_work: open
+  predecessor: M077
+  predecessor_outcome: valid_negative_under_d043
+  predecessor_schedule_or_body_reused: false
+  d043_successor_constraint_obeyed: true
+  preregistration: experiments/M121/PREREGISTRATION.md
+  protocol_commitment: experiments/M121/PROTOCOL.json
+  salt_drawn_before_any_harness_code_existed: true
+  harness_implemented: false
+  schedule_materialized: false
+  scientific_result_exists: false
+  publication_disposition_recorded: false
+  publication_review_prepared: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
+  enabling_implementation_blocked_on_owner_disposition: true
+  horizon_unit: episode_count_not_human_equivalent_time
+  human_equivalent_horizon_refused_mechanically: true
+  even_a_positive_result_closes_g7: false
+  external_blockers_untouched:
+    - human_maintained_sealed_bank
+    - independent_reproduction
+    - external_adversarial_audit
+
 m120_instrument:
   science_inherited_from_m119_by_import: true
   inherited_modules:
