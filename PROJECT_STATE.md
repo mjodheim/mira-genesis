@@ -183,6 +183,50 @@ What it did establish is that the readiness gate works: M119 discovered its cont
 by spending its one qualifying generation, and M120 discovered the same class of problem for the
 price of a calibration run. See [`experiments/M120/OUTCOME.md`](experiments/M120/OUTCOME.md).
 
+## M122 — the flattened contract, and the measurement that justified it
+
+M120 closed because its candidate schema needed eight array-of-object levels and the route
+enforces fewer. M122 is the successor that fits.
+
+**Where the eight came from.** The frozen host requires that at least one action carry a
+precondition. JSON Schema says that with `contains`, which this route has no evidence of enforcing,
+so M120 split one `actions` array into two — `conditional_actions` requiring a guard and `actions`
+not — turning a `contains` into a `minItems` and duplicating the entire action subtree. Five levels
+became eight.
+
+**The guarantee was not worth its price, and that is measured rather than argued.** Carriers in
+which no action carries a guard occur at **0.75%** at the smallest shape the contract admits and at
+**0.00%** across the family. Requiring *every* action to be guarded instead costs yield rather than
+buying it — 36.5% against 52.2% uniform — because gating every action makes states unreachable.
+M120 spent three nesting levels and about sixteen points of qualification rate insuring against a
+0.75% risk the pre-seal adequacy gate would have caught anyway.
+
+So M122 keeps one `actions` array with `guard` at `minItems: 0`. Everything that worked is
+unchanged: no relation between two fields, `arg_size` over `{0, 2, 3, 4}` with arity derived,
+`initial` inside its own cell, `hidden` rather than `visible`, `error_index` rather than a name, and
+a total content-independent decoder that cannot refuse, reorder, drop, select or make a carrier
+qualify.
+
+| | M120 | M122 |
+|---|---|---|
+| array-of-object levels | 8 (refused) | **5 (enforced)** |
+| decoded candidates the host accepts | 400/400 | 400/400 |
+| qualification, pessimistic corner | 28.75% | **33.5%** |
+| qualification, uniform | 41.75% | **49.5%** |
+
+**The route was asked directly, for two requests, before the rest of the milestone was built.** At
+eight levels M120's identical probe returned `finish_reason: length` after 101,379 tokens and did
+not conform. At five it returns `stop`, 75 tokens, and conforms, with identity holding. Recorded at
+[`experiments/M122/ROUTE_DEPTH_DIAGNOSTIC.json`](experiments/M122/ROUTE_DEPTH_DIAGNOSTIC.json).
+
+**The guard M120 lacked.** `_assert_within_the_certified_census` fails at import if the schema's
+census exceeds the nesting the route has been observed to enforce. M120's census drifted from five
+to eight as its representation changed and nothing said so until a single-use gate spent sixteen
+requests finding out.
+
+**M122 is a contract, not a milestone.** No preregistration, no chronology, no freeze, no bank, no
+hypothesis registered, and no publication disposition. Nothing scientific has been spent on it.
+
 ## M121 / H66 — G7 groundwork, drafted and unauthorised
 
 `MIRA_GENERALITY_CRITERIA.md` records ten gates. **G7 — long-horizon autonomy — is the only one
