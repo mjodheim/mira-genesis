@@ -176,6 +176,40 @@ Nothing below has been crossed, and none may be crossed by a development agent:
 4. the one qualifying generation;
 5. the single reveal authorization.
 
+## M121 / H66 — G7 groundwork, drafted and unauthorised
+
+`MIRA_GENERALITY_CRITERIA.md` records ten gates. **G7 — long-horizon autonomy — is the only one
+recorded `open`**, and the single milestone that addressed any part of it, M077, returned a valid
+negative under D043.
+
+M121 is drafted against that gate and **nothing is implemented**. What exists is a preregistration
+frozen before any harness, a machine-readable protocol commitment, and a schedule salt drawn before
+implementation began. No body, no schedule, no arm, no result.
+
+D043 wrote the successor's constraint rather than leaving it open: a successor *"must introduce
+corruption that can stay quiescent indefinitely, or a body whose operations do not guard the
+corrupted state"*, and may not reuse M077's schedule or body. M121 obeys both.
+
+**H66.** In a body where corruption can stay quiescent — where reading a corrupted region produces a
+wrong result rather than an impossible one — a periodic boundary monitor purchases **coverage**, not
+merely detection latency, and the coverage grows with the horizon.
+
+The design guards against being true by construction. The fault schedule carries **both** classes,
+so `no_constraint_monitor` must detect at parity with `full` on operational faults — reproducing
+M077 as an internal positive control that can fail — while detecting strictly fewer on quiescent
+ones. The primary endpoint is divergence between recorded outcome and ground truth the lineage
+cannot read, measured from environment state and never from self-report.
+
+The human-equivalent horizon component of G7 is refused **mechanically**, not in prose: the result
+schema will carry no field able to express wall-clock or fitted time, and the checker will fail
+closed if one appears.
+
+**Even a fully positive M121 leaves G7 open**, supplies no real-environment autonomy, no cost model
+and no AGI evidence, and touches none of the three external blockers.
+
+**No publication disposition is recorded.** `docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md` is prepared
+for the owner; per `AGENTS.md` §2 no enabling implementation begins before that decision exists.
+
 ## Next scientific frontier — what the successor still has to prove
 
 The next successor should aim to obtain an actual scientific verdict rather than another
