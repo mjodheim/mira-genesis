@@ -66,6 +66,12 @@ from typing import Any, Mapping, Sequence
 
 from metamorphosis import carrier_host as host
 
+# The endpoint every M122 request goes to, defined once. M120 hardcoded it in its generator spec
+# and again in its readiness gate, and the gate then asserted the two agreed -- which works only
+# while both exist. M122 builds the gate before the rest of the apparatus, deliberately, so the
+# constant lives where both can read it and there is nothing to keep in step.
+GENERATOR_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
+
 CONTRACT_VERSION = "m122-carrier-contract-v1"
 DECODER_VERSION = "m122-candidate-decoder-v1"
 
