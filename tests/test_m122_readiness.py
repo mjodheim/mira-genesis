@@ -254,8 +254,10 @@ def test_the_verdict_ladder_reports_the_first_failure_not_the_last(sandbox, monk
 # ---------------------------------------------------------------------------------------------
 
 def test_the_gate_refuses_when_a_result_is_already_on_disk(sandbox, monkeypatch):
+    # A result with no verdict at all is not a delivery verdict, so the allowance does not apply
+    # and the gate refuses exactly as it did before the allowance existed.
     sandbox.joinpath("READINESS_RESULT.json").write_text("{}", encoding="utf-8")
-    with pytest.raises(readiness.ReadinessError, match="not redrawn"):
+    with pytest.raises(readiness.ReadinessError, match="only a .* verdict may be superseded"):
         _run(monkeypatch, FakeRoute())
 
 
@@ -517,3 +519,63 @@ def test_the_endpoint_has_exactly_one_definition():
     from metamorphosis import m122_carrier_contract as m122_contract
     assert readiness.COMPLETIONS_ENDPOINT is m122_contract.GENERATOR_ENDPOINT
     assert readiness.plan()["endpoint"] == m122_contract.GENERATOR_ENDPOINT
+
+
+# ---------------------------------------------------------------------------------------------
+# The owner-authorised delivery allowance
+# ---------------------------------------------------------------------------------------------
+
+def _write(path, record):
+    path.write_bytes(canonical_bytes(record) + b"\n")
+
+
+def test_a_capability_verdict_is_final_and_can_never_be_superseded(sandbox, monkeypatch):
+    """The allowance must only ever stop the gate sooner. It may not rescue a capability finding."""
+    for verdict in ("ready", "not_ready_features", "not_ready_identity",
+                    "not_ready_enforcement_failed_open", "not_ready_stress"):
+        _write(sandbox / "READINESS_RESULT.json", {"verdict": verdict})
+        with pytest.raises(readiness.ReadinessError, match="already exists"):
+            readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_a_delivery_verdict_may_be_superseded_within_the_allowance(sandbox, monkeypatch):
+    _write(sandbox / "READINESS_RESULT.json", {"verdict": readiness.DELIVERY_VERDICT})
+    _write(sandbox / "READINESS_ATTEMPT_01_not_ready_delivery.json",
+           {"verdict": readiness.DELIVERY_VERDICT})
+    allowance = readiness._assert_the_allowance_permits_another_attempt()
+    assert allowance["delivery_allowance"] == 3
+    assert len(allowance["delivery_attempts_already_recorded"]) == 1
+
+
+def test_the_allowance_refuses_a_fourth_delivery_attempt(sandbox, monkeypatch):
+    """Bounded, so re-running until a quiet window returns `ready` is not available."""
+    _write(sandbox / "READINESS_RESULT.json", {"verdict": readiness.DELIVERY_VERDICT})
+    for index in range(1, readiness.DELIVERY_ALLOWANCE + 1):
+        _write(sandbox / ("READINESS_ATTEMPT_%02d_not_ready_delivery.json" % index),
+               {"verdict": readiness.DELIVERY_VERDICT})
+    with pytest.raises(readiness.ReadinessError, match="allowance of 3 is exhausted"):
+        readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_an_attempt_that_produced_no_verdict_does_not_consume_the_allowance(sandbox):
+    """It yielded nothing to select on, so counting it would penalise the science for a crash."""
+    _write(sandbox / "READINESS_ATTEMPT_01_KILLED.json",
+           {"state": "probing", "verdict_produced": False})
+    assert readiness._archived_delivery_attempts() == []
+
+
+def test_a_committed_capability_verdict_still_blocks_even_with_the_file_deleted(sandbox,
+                                                                                monkeypatch):
+    monkeypatch.setattr(readiness.chronology, "_head_blob",
+                        lambda *a, **k: canonical_bytes({"verdict": "not_ready_features"}))
+    assert not (sandbox / "READINESS_RESULT.json").exists()
+    with pytest.raises(readiness.ReadinessError, match="already exists"):
+        readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_the_run_archives_every_attempt_under_its_own_name(sandbox, monkeypatch):
+    result = _run(monkeypatch, FakeRoute())
+    archived = sorted(p.name for p in sandbox.glob(readiness.ATTEMPT_ARCHIVE_GLOB))
+    assert archived, "the attempt was not archived"
+    assert result["verdict"] in archived[-1]
+    assert result["delivery_allowance"]["delivery_allowance"] == 3

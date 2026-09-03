@@ -293,16 +293,79 @@ def _parts(observed: Mapping[str, Any]) -> tuple[dict, dict, dict, dict]:
     return body, first, message, usage
 
 
+DELIVERY_VERDICT = "not_ready_delivery"
+
+# Owner-authorised on 3 September 2026, bounded at three. A verdict of `not_ready_delivery` says
+# the route did not answer: three requests exhausted their permitted retries on HTTP 429 and no
+# completion came back. That is a delivery condition and not a capability finding, and the
+# project's own delivery discipline -- M114's, inherited through M119 -- already holds that an
+# explicit pre-generation 429 carrying no completion and no evidence of model execution is not a
+# scientific outcome.
+#
+# The danger is obvious and is why the allowance is bounded rather than open: re-running until a
+# quiet window returns `ready` would be selection by another name. So the rule is narrow.
+#
+#   * only a `not_ready_delivery` verdict may be superseded. Every other verdict -- `ready`, a
+#     feature finding, an identity failure, enforcement failing open -- is FINAL on its first
+#     occurrence and can never be re-run;
+#   * at most three delivery-failed attempts in total, counted from the recorded archive rather
+#     than from anyone's memory;
+#   * every attempt is archived and none is deleted, so the sequence is auditable and a reader can
+#     see how many windows were tried.
+#
+# An attempt that produced no verdict at all does not consume the allowance, because it yielded
+# nothing to select on. Attempt 1 was terminated by the operator's own harness timeout during the
+# stress and is archived with that reason stated.
+DELIVERY_ALLOWANCE = 3
+ATTEMPT_ARCHIVE_GLOB = "READINESS_ATTEMPT_*.json"
+
+
+def _archived_delivery_attempts() -> list[str]:
+    """Delivery-failed attempts already on record. Counted from the archive, never from memory."""
+    found = []
+    for path in sorted(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB)):
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if record.get("verdict") == DELIVERY_VERDICT:
+            found.append(path.name)
+    return found
+
+
+def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
+    """May this gate run again? Only after a delivery verdict, and only within the allowance."""
+    spent = _archived_delivery_attempts()
+    previous = None
+    for source in (RESULT_PATH, None):
+        if source is not None and source.exists():
+            previous = json.loads(source.read_text(encoding="utf-8"))
+            break
+    if previous is None:
+        committed = chronology._head_blob(ROOT, chronology.READINESS_RESULT)
+        if committed is not None:
+            previous = json.loads(committed.decode("utf-8"))
+    if previous is not None:
+        verdict = previous.get("verdict")
+        if verdict != DELIVERY_VERDICT:
+            raise ReadinessError(
+                "a readiness result recording %r already exists; only a %r verdict may be "
+                "superseded, and deleting the file does not re-arm the gate"
+                % (verdict, DELIVERY_VERDICT))
+        if len(spent) >= DELIVERY_ALLOWANCE:
+            raise ReadinessError(
+                "the delivery allowance of %d is exhausted (%s); M122 closes on the recorded "
+                "delivery verdict rather than waiting for a quieter window"
+                % (DELIVERY_ALLOWANCE, ", ".join(spent)))
+    return {"delivery_attempts_already_recorded": spent,
+            "delivery_allowance": DELIVERY_ALLOWANCE,
+            "only_a_delivery_verdict_may_be_superseded": True}
+
+
 def execute() -> dict[str, Any]:
-    # Once-only, structurally rather than by an on-disk test. A file check alone is re-armed by
-    # deleting the file; a result ever committed at HEAD blocks the gate whether or not it is
-    # still on disk.
-    if RESULT_PATH.exists():
-        raise ReadinessError("a readiness result already exists; this gate is not redrawn")
-    if chronology._head_blob(ROOT, chronology.READINESS_RESULT) is not None:
-        raise ReadinessError(
-            "a readiness result is committed at HEAD; this gate is not redrawn, and deleting the "
-            "file does not re-arm it")
+    # Once-only, with one narrow and bounded exception the owner authorised: a verdict saying the
+    # route never answered may be superseded, at most three times, and nothing else may be.
+    allowance = _assert_the_allowance_permits_another_attempt()
     permission = chronology.assert_stage_permitted("development", ROOT)
     chronology.assert_no_scientific_observation_yet(ROOT)
     frozen = plan()
@@ -489,10 +552,16 @@ def execute() -> dict[str, Any]:
         "ready": verdict == "ready",
         "result_sha256": "",
     }
+    result["delivery_allowance"] = allowance
     result["result_sha256"] = sha256_hex(
         canonical_bytes({k: v for k, v in result.items() if k != "result_sha256"}))
     LEDGER_PATH.write_bytes(canonical_bytes(result) + b"\n")
     RESULT_PATH.write_bytes(canonical_bytes(result) + b"\n")
+    # Every attempt is archived under its own name and none is ever deleted, so the sequence of
+    # windows tried is visible rather than reconstructible only from a commit log.
+    index = len(list(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB))) + 1
+    (DIRECTORY / ("READINESS_ATTEMPT_%02d_%s.json" % (index, result["verdict"]))).write_bytes(
+        canonical_bytes(result) + b"\n")
     return result
 
 
