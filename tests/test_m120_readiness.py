@@ -110,7 +110,7 @@ IDENTITY = {
 
 
 class FakeRoute:
-    """Stands in for M117's transport. Records what was sent; decides nothing."""
+    """Stands in for the gate's own transport. Records what was sent; decides nothing."""
 
     def __init__(self, *, break_identity=False, break_probe=None, reasoning_tokens=0,
                  stress_tokens=40000, statuses=None):
@@ -120,12 +120,8 @@ class FakeRoute:
         self.stress_tokens = stress_tokens
         self.statuses = list(statuses or [])
         self.sent: list[str] = []
-        self.COMPLETIONS_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions"
 
-    def _now(self):
-        return "2026-09-03T00:00:00Z"
-
-    def _http(self, url, *, method="POST", body=b"", timeout=900):
+    def __call__(self, url, *, method="POST", body=b"", timeout=900):
         request = json.loads(body.decode("utf-8"))
         declared = request["response_format"]["json_schema"]
         name, schema = declared["name"], declared["schema"]
@@ -169,7 +165,8 @@ def sandbox(tmp_path, monkeypatch):
 
 
 def _run(monkeypatch, route: FakeRoute):
-    monkeypatch.setattr(readiness, "_transport", lambda: route)
+    monkeypatch.setattr(readiness, "_http", route)
+    monkeypatch.setenv(readiness.SECRET_VARIABLE, "development-not-a-credential")
     return readiness.execute()
 
 
@@ -271,7 +268,8 @@ def test_an_exhausted_budget_aborts_and_preserves_what_was_measured(sandbox, mon
     starved = dict(readiness.plan(), request_budget=2)
     monkeypatch.setattr(readiness, "plan", lambda: starved)
     route = FakeRoute(statuses=[429] * 60)
-    monkeypatch.setattr(readiness, "_transport", lambda: route)
+    monkeypatch.setattr(readiness, "_http", route)
+    monkeypatch.setenv(readiness.SECRET_VARIABLE, "development-not-a-credential")
     with pytest.raises(readiness.ReadinessError, match="budget is exhausted"):
         readiness.execute()
     ledger = json.loads(sandbox.joinpath("READINESS_LEDGER.json").read_text(encoding="utf-8"))
@@ -356,15 +354,14 @@ def test_no_completion_content_survives_into_the_record(sandbox, monkeypatch):
 def test_the_qualifying_input_is_never_sent(sandbox, monkeypatch):
     """The prompt H65 will be frozen on must not appear in a DEVELOPMENT request."""
     route = FakeRoute()
-    monkeypatch.setattr(readiness, "_transport", lambda: route)
     sent_bodies = []
-    original = route._http
 
     def _record(url, *, method="POST", body=b"", timeout=900):
         sent_bodies.append(body.decode("utf-8"))
-        return original(url, method=method, body=body, timeout=timeout)
+        return route(url, method=method, body=body, timeout=timeout)
 
-    route._http = _record
+    monkeypatch.setattr(readiness, "_http", _record)
+    monkeypatch.setenv(readiness.SECRET_VARIABLE, "development-not-a-credential")
     readiness.execute()
     from metamorphosis import m120_bank as bank
     qualifying = bank.qualifying_input(ROOT)
@@ -378,15 +375,15 @@ def test_the_qualifying_input_is_never_sent(sandbox, monkeypatch):
 
 def test_every_request_names_the_fixed_route(sandbox, monkeypatch):
     route = FakeRoute()
-    monkeypatch.setattr(readiness, "_transport", lambda: route)
     seen = []
-    original = route._http
 
     def _record(url, *, method="POST", body=b"", timeout=900):
+        assert url == readiness.COMPLETIONS_ENDPOINT
         seen.append(json.loads(body.decode("utf-8")))
-        return original(url, method=method, body=body, timeout=timeout)
+        return route(url, method=method, body=body, timeout=timeout)
 
-    route._http = _record
+    monkeypatch.setattr(readiness, "_http", _record)
+    monkeypatch.setenv(readiness.SECRET_VARIABLE, "development-not-a-credential")
     readiness.execute()
     assert seen
     for request in seen:
@@ -409,3 +406,43 @@ def test_the_probe_matrix_carries_no_carrier_vocabulary():
     probes.assert_non_carrier(matrix)
     assert re.search(r"\bcombined\b", matrix[-1]["name"]), (
         "the combined probe must remain last, so it is reached only after every prerequisite")
+
+
+def test_the_gate_probes_the_endpoint_the_frozen_spec_names():
+    """Certifying one endpoint while the qualifying generation uses another certifies nothing."""
+    from metamorphosis import m120_bank as bank
+    spec = bank.build_generator_spec(bank.build_analysis_plan(ROOT), ROOT)
+    assert readiness.COMPLETIONS_ENDPOINT == spec["generator_identity"]["endpoint"]
+    assert readiness.plan()["endpoint"] == spec["generator_identity"]["endpoint"]
+
+
+def test_the_gate_carries_its_own_transport_and_imports_no_posix_only_module():
+    """It crashed on `fcntl` -- imported by a closed milestone for a file lock -- before sending a
+    single request. The transport is now the gate's own, and the same shape the qualifying
+    generation uses."""
+    import ast
+
+    source = ast.parse((ROOT / "scripts" / "run_m120_readiness.py").read_text(encoding="utf-8"))
+    imported = set()
+    for node in ast.walk(source):
+        if isinstance(node, ast.Import):
+            imported.update(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported.add(node.module)
+            imported.update("%s.%s" % (node.module, a.name) for a in node.names)
+    assert "fcntl" not in imported
+    assert not any("audit_m117" in name for name in imported), (
+        "the gate must not reach into a closed milestone for its transport")
+    assert callable(readiness._http)
+
+
+def test_the_transport_refuses_a_non_https_endpoint(monkeypatch):
+    monkeypatch.setenv(readiness.SECRET_VARIABLE, "development-not-a-credential")
+    with pytest.raises(readiness.ReadinessError, match="must use https"):
+        readiness._http("http://openrouter.ai/api/v1/chat/completions", body=b"{}")
+
+
+def test_the_transport_refuses_to_send_without_a_credential(monkeypatch):
+    monkeypatch.delenv(readiness.SECRET_VARIABLE, raising=False)
+    with pytest.raises(readiness.ReadinessError, match="no network request was made"):
+        readiness._http(readiness.COMPLETIONS_ENDPOINT, body=b"{}")
