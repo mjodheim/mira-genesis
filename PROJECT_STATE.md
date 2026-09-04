@@ -183,7 +183,35 @@ What it did establish is that the readiness gate works: M119 discovered its cont
 by spending its one qualifying generation, and M120 discovered the same class of problem for the
 price of a calibration run. See [`experiments/M120/OUTCOME.md`](experiments/M120/OUTCOME.md).
 
-## M122 — the flattened contract, and the measurement that justified it
+## M122 — closed at readiness; the contract is validated, the stress sizing was not
+
+M122 closed on 4 September 2026 with `not_ready_stress`. **H67 is UNTESTED.** 76 DEVELOPMENT
+requests across four attempts; no qualifying generation, no freeze, no bank, no reveal.
+
+**The contract passed. Nine of nine capability probes conformed** — HTTP 200, `finish_reason: stop`,
+schema valid, zero enforcement failures, identity holding on every request. That includes
+`nested_arrays`, the class that closed M120: at eight array-of-object levels it free-ran to 101,379
+tokens and truncated; at M122's five it conforms in 76. And `combined`, which exercises every class
+at once and which no earlier run had reached cleanly, conformed in 582.
+
+**What failed was the stress size, and twice it was the operator's error.** First inherited —
+`STATIONS = 24` came from M120 while the schema beneath it was flattened from eight levels to five,
+and a shallower station serialises smaller. Then extrapolated — revision 1 derived the size from a
+**single** measurement of 546.6 tokens per station and assumed that rate constant. At 74 stations
+the observed rate was 418.3, 23% lower, because the model grows terser as the list lengthens. The
+stress conformed at **30,957 tokens against a 32,000 threshold — short by 3.3%**. Seventy-six
+stations would have cleared it.
+
+A derivation from one point is an assumption wearing a derivation's clothes.
+
+**It was not re-run.** `not_ready_stress` is not a delivery verdict, and under the allowance the
+owner authorised only `not_ready_delivery` may be superseded. Re-running with 76 stations would be
+adjusting the instrument until the gate passes. The 32,000 threshold was never touched, for the
+same reason.
+
+See [`experiments/M122/OUTCOME.md`](experiments/M122/OUTCOME.md).
+
+## M122's contract, and the measurement that justified it
 
 M120 closed because its candidate schema needed eight array-of-object levels and the route
 enforces fewer. M122 is the successor that fits.
@@ -224,8 +252,10 @@ census exceeds the nesting the route has been observed to enforce. M120's census
 to eight as its representation changed and nothing said so until a single-use gate spent sixteen
 requests finding out.
 
-**M122 is a contract, not a milestone.** No preregistration, no chronology, no freeze, no bank, no
-hypothesis registered, and no publication disposition. Nothing scientific has been spent on it.
+**M122 produced no scientific evidence.** Its contract, decoder and readiness gate were never
+exercised against a carrier bank. No freeze, no hypothesis registered in the registers, and no
+publication disposition. What it leaves a successor is a schema the route has been **observed** to
+enforce end to end, rather than one certified by inheritance across a schema change.
 
 ## M121 / H66 — G7 groundwork, drafted and unauthorised
 

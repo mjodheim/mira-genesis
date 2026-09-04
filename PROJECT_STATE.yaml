@@ -1,7 +1,7 @@
 project: Mira Genesis
 updated_at: 2026-09-02
 snapshot_kind: current_authoritative_navigation
-status: m120_closed_at_readiness_h65_untested_candidate_schema_not_enforceable_on_the_route
+status: m122_closed_at_readiness_h67_untested_contract_validated_stress_sizing_was_not
 
 historical_snapshot_archives:
   markdown: docs/state-history/PROJECT_STATE_2026-08-24.md
@@ -196,7 +196,44 @@ current_frontier:
 
 m122_flattened_contract:
   milestone: M122
-  status: contract_only_no_milestone_registered
+  hypothesis: H67
+  status: closed_at_readiness
+  verdict: not_ready_stress
+  verdict_is_final: true
+  final_because: only_a_not_ready_delivery_verdict_may_be_superseded
+  hypothesis_status: untested
+  outcome_record: experiments/M122/OUTCOME.md
+  development_requests_spent: 76
+  attempts: 4
+  qualifying_scientific_invocations: 0
+  scientific_freeze_taken: false
+  carrier_bank_exists: false
+  generality_gate_advanced: false
+  contract_validated_against_the_live_route: true
+  capability_probes_conforming: 9
+  capability_probes_total: 9
+  enforcement_failures: 0
+  identity_held_on_every_request: true
+  nested_arrays_at_five_levels: conformed_stop_76_tokens
+  combined_probe: conformed_stop_582_tokens
+  closed_by:
+    what: the_stress_size
+    stress_conformed: true
+    stress_completion_tokens: 30957
+    threshold: 32000
+    short_by_percent: 3.3
+    stations_used: 74
+    stations_that_would_have_cleared: 76
+    first_error: inherited_24_from_m120_without_rechecking_after_the_flattening
+    second_error: derived_from_a_single_measurement_assuming_constant_token_yield
+    observed_rate_at_24_stations: 546.6
+    observed_rate_at_74_stations: 418.3
+    the_model_grows_terser_as_the_list_lengthens: true
+  was_not_re_run: true
+  threshold_was_never_touched: true
+  instrument_defects_recorded_not_repaired:
+    - a_derivation_from_a_single_measurement_is_an_assumption
+    - unenforced_feature_classes_conflates_not_enforced_with_not_answered
   hypothesis_registered: false
   preregistration_exists: false
   scientific_freeze_taken: false
