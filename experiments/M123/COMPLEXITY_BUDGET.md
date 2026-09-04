@@ -29,19 +29,29 @@ re-open a question already answered.
 
 ## What changes, and the failure each closes
 
-Two. Both come from M122's outcome.
+Three. The first was itself replaced after attempt 1 failed.
 
-1. **The stress size is fit from two observations instead of extrapolated from one.**
-   *Closes:* M122's sizing assumed token yield per station is constant. It is not — 546.6 at 24
-   stations, 418.3 at 74 — and the single-point model overshot by 31%, leaving the stress 3.3%
-   short of the threshold. A single point is a line through the origin, and this relationship has
-   an intercept.
+1. **The stress size is bounded by an envelope of observed rates. No model is fitted.**
+   *Closes:* every sizing before this one assumed the token yield per station follows some law.
+   M122 assumed it is constant and missed the threshold by 3.3%. M123's first attempt fitted a line
+   to two points, predicted 64,137 tokens at 167 stations, and the route produced at least 100,657
+   and truncated. Three rates are now known — 546.6, 418.3 and >=602.7 — and they go down and then
+   up. **The relationship is not identified by three points, so nothing is fitted to them.** The
+   size must sit inside the admissible window under every rate ever observed, and it is the
+   computed midpoint of that window.
 
 2. **An unanswered probe is no longer scored as an unenforced feature class.**
    *Closes:* `conforms` is false for an HTTP 429 exactly as it is for a completion the schema
    refuses, so M120 and M122 both listed classes as unenforced when their probes had only ever been
    rate-limited. The verdict ladder checked delivery first, so the headline stayed right — but a
    reader trusting the field would conclude the route lacks a capability nobody measured.
+   **This one is no longer a proposal:** attempt 1 recorded two rate-limited probes in
+   `feature_classes_never_answered` and left `unenforced_feature_classes` empty, which is the
+   record M120 and M122 would both have got wrong.
+
+3. **The delivery ceiling counts across milestones, not only within one.**
+   *Closes:* M122 wrote the ceiling as "across every instrument" and globbed its own directory, so
+   opening a successor reset the bound that exists to survive apparatus revisions.
 
 ## What is refused
 
@@ -59,10 +69,24 @@ Two. Both come from M122's outcome.
 | Array-of-object levels asked of the route | 8 | 5 | 5 |
 | Capability probes conforming | 7 of 9 | **9 of 9** | inherited |
 | Contract re-authored | yes | yes | **no** |
-| Stress observations behind the sizing | 0 | 1 | **2** |
-| Stress margin above the threshold | — | 1.25× intended, 0.97× actual | 1.5×, with a 25% model allowance |
+| Stress observations behind the sizing | 0 | 1 | **3, one censored** |
+| Model fitted to them | — | proportional | **none** |
+| Stress stations | 24 | 74 | 167 -> **109** |
+| Stress outcome | — | 30,957, short by 3.3% | 100,657, truncated -> *pending* |
 
-The instrument lost a re-authored contract and gained a second data point. Nothing else moved.
+The instrument lost a re-authored contract, lost its model entirely, and gained a third data point
+that falsified the second. Nothing else moved.
+
+### The sizing rule now in force
+
+    floor    > 32,000 tokens at the lowest observed rate (418.3)    ->  >= 77 stations
+    ceiling  < 85,000 tokens at the highest observed rate (602.7)   ->  <= 141 stations
+    chosen   the computed midpoint of [77, 141]                     ->  109 stations
+
+`85,000` is a conservative choice roughly 15.6% below `100,657`, which is itself **a truncation
+that was observed and not a ceiling that is known**. The highest observed rate comes from that same
+truncated run, so it is a lower bound: the real worst case can exceed the worst case this rule can
+see, and the operational margin exists to cover what the envelope cannot.
 
 ## Order of operations
 
