@@ -336,6 +336,15 @@ ATTEMPT_ARCHIVE_GLOB = "READINESS_ATTEMPT_*.json"
 # unlimited retries wearing a different name, so the total is capped as well.
 TOTAL_DELIVERY_CEILING = 6
 
+# M123 correction, the third defect this milestone inherits. M122 wrote the ceiling as "across
+# every instrument" and then counted it by globbing its own experiment directory, so the scan and
+# the sentence disagreed: a successor milestone is a new directory, and a new directory reset a
+# ceiling whose entire purpose is to survive apparatus revisions. Since revising the apparatus and
+# opening a successor are the same move at different sizes, the scan now crosses milestones. It
+# reads M122's two distinct delivery attempts, so this milestone starts at two of six and not zero.
+CEILING_SCAN_ROOT = ROOT / "experiments"
+CEILING_SCAN_GLOB = "M*/" + ATTEMPT_ARCHIVE_GLOB
+
 
 def _archived_delivery_attempts(plan_sha256: str | None = None) -> list[str]:
     """Delivery-failed attempts on record, counted from the archive and never from memory.
@@ -352,7 +361,9 @@ def _archived_delivery_attempts(plan_sha256: str | None = None) -> list[str]:
     property of the apparatus rather than of a note somebody wrote.
     """
     seen: dict[str, str] = {}
-    for path in sorted(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB)):
+    paths = (sorted(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB)) if plan_sha256 is not None
+             else sorted(CEILING_SCAN_ROOT.glob(CEILING_SCAN_GLOB)))
+    for path in paths:
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
@@ -362,7 +373,7 @@ def _archived_delivery_attempts(plan_sha256: str | None = None) -> list[str]:
         if plan_sha256 is not None and record.get("plan_sha256") != plan_sha256:
             continue
         digest = record.get("result_sha256") or path.name
-        seen.setdefault(digest, path.name)
+        seen.setdefault(digest, "%s/%s" % (path.parent.name, path.name))
     return sorted(seen.values())
 
 
@@ -407,6 +418,7 @@ def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
             "total_delivery_ceiling": TOTAL_DELIVERY_CEILING,
             "instrument_plan_sha256": current_plan,
             "an_attempt_is_identified_by_its_result_digest_not_its_filename": True,
+            "the_ceiling_scan_crosses_milestones_not_only_apparatus_revisions": True,
             "only_a_delivery_verdict_may_be_superseded": True}
 
 

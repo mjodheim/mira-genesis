@@ -94,6 +94,17 @@ From M123, a class is recorded unenforced **only if its probe was answered and t
 conform**. Classes whose probes never answered are reported separately, as
 `feature_classes_never_answered`.
 
+## The third correction: the ceiling counted only its own directory
+
+M122 wrote the total delivery ceiling as "across every instrument" and then counted it by globbing
+its own experiment directory. A successor milestone is a new directory, so the ceiling reset on
+exactly the move it exists to bound: revising the apparatus and opening a successor are the same
+move at two different sizes, and the larger one escaped.
+
+The scan now crosses milestones. M123 therefore opens at **two of six spent**, not zero — M122's
+two distinct delivery attempts, deduplicated by result digest across the three files that hold
+them. The per-instrument allowance is unaffected and remains scoped by plan digest.
+
 ## Chronology
 
 Unchanged from M122, including the ordering that milestone introduced:
@@ -115,10 +126,10 @@ then learned its contract was unserviceable.
 
 ## The delivery allowance
 
-Inherited from M122 unchanged: only a `not_ready_delivery` verdict may be superseded, at most three
-times per instrument, counted from the attempt archive by result digest and scoped by plan digest,
-with a ceiling of six across every instrument. Every other verdict is final on its first
-occurrence.
+Inherited from M122 with the counting corrected above: only a `not_ready_delivery` verdict may be
+superseded, at most three times per instrument, counted from the attempt archive by result digest
+and scoped by plan digest, with a ceiling of six across every instrument — now including earlier
+milestones, of which two are already spent. Every other verdict is final on its first occurrence.
 
 ## Stop conditions
 

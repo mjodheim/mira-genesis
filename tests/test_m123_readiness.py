@@ -161,6 +161,10 @@ def sandbox(tmp_path, monkeypatch):
     directory = tmp_path / "experiments" / "M123"
     directory.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr(readiness, "DIRECTORY", directory)
+    # The ceiling scan crosses milestones, so it needs redirecting too. The sandbox mirrors the
+    # real layout -- experiments/<milestone>/ -- so the inherited counting tests keep testing the
+    # thing they were written for.
+    monkeypatch.setattr(readiness, "CEILING_SCAN_ROOT", tmp_path / "experiments")
     monkeypatch.setattr(readiness, "RESULT_PATH", directory / "READINESS_RESULT.json")
     monkeypatch.setattr(readiness, "LEDGER_PATH", directory / "READINESS_LEDGER.json")
     monkeypatch.setattr(readiness.chronology, "assert_stage_permitted",
@@ -727,3 +731,34 @@ def test_the_contract_is_inherited_from_m122_and_not_re_authored():
     assert readiness.contract is validated
     assert readiness.plan()["candidate_schema_sha256"] == sha256_hex(
         canonical_bytes(validated.candidate_schema()))
+
+
+def test_the_ceiling_counts_attempts_from_earlier_milestones_too():
+    """M123's third correction: the scan and the sentence describing it now agree.
+
+    M122 wrote the ceiling as "across every instrument" and counted it by globbing its own
+    experiment directory. A successor milestone is a new directory, so the ceiling reset on exactly
+    the move it exists to bound -- revising the apparatus and opening a successor being the same
+    move at two sizes.
+    """
+    allowance = readiness._assert_the_allowance_permits_another_attempt()
+    across = allowance["delivery_attempts_across_every_instrument"]
+    assert allowance["the_ceiling_scan_crosses_milestones_not_only_apparatus_revisions"] is True
+    assert any(name.startswith("M122/") for name in across), (
+        "the ceiling did not see the predecessor's delivery attempts, so it resets per milestone")
+    # And still deduplicated by digest: M122 archived attempt 3 under two filenames.
+    assert len(across) == len(set(across))
+    assert len(across) < readiness.TOTAL_DELIVERY_CEILING
+    # The per-instrument allowance stays scoped to this plan and is unaffected by the widening.
+    assert allowance["delivery_attempts_against_this_instrument"] == []
+
+
+def test_the_ceiling_refuses_a_run_once_it_is_reached(sandbox, monkeypatch):
+    exhausted = [
+        "M0%02d/READINESS_ATTEMPT_01.json" % i
+        for i in range(readiness.TOTAL_DELIVERY_CEILING)]
+    monkeypatch.setattr(
+        readiness, "_archived_delivery_attempts",
+        lambda plan_sha256=None: [] if plan_sha256 is not None else exhausted)
+    with pytest.raises(readiness.ReadinessError, match="total delivery ceiling"):
+        readiness._assert_the_allowance_permits_another_attempt()
