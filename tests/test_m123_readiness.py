@@ -856,16 +856,22 @@ def test_the_ceiling_counts_attempts_from_earlier_milestones_too():
     the move it exists to bound -- revising the apparatus and opening a successor being the same
     move at two sizes.
     """
-    allowance = readiness._assert_the_allowance_permits_another_attempt()
-    across = allowance["delivery_attempts_across_every_instrument"]
-    assert allowance["the_ceiling_scan_crosses_milestones_not_only_apparatus_revisions"] is True
+    # M123 is closed at a terminal verdict, so the guard now refuses to permit a run -- which is
+    # the guard working. The ceiling scan is read directly instead of through it.
+    with pytest.raises(readiness.ReadinessError, match="only a .* verdict may be superseded"):
+        readiness._assert_the_allowance_permits_another_attempt()
+    across = readiness._archived_delivery_attempts(None)
     assert any(name.startswith("M122/") for name in across), (
         "the ceiling did not see the predecessor's delivery attempts, so it resets per milestone")
     # And still deduplicated by digest: M122 archived attempt 3 under two filenames.
     assert len(across) == len(set(across))
     assert len(across) < readiness.TOTAL_DELIVERY_CEILING
+    # M123's attempt 2 was terminal, not a delivery failure, so it is not among them. (M122's
+    # attempt 2 WAS a delivery failure and is -- hence the milestone-qualified prefix.)
+    assert not any(name.startswith("M123/READINESS_ATTEMPT_02") for name in across)
+    assert "M123/READINESS_ATTEMPT_01_not_ready_delivery.json" in across
     # The per-instrument allowance stays scoped to this plan and is unaffected by the widening.
-    assert allowance["delivery_attempts_against_this_instrument"] == []
+    assert readiness._archived_delivery_attempts(readiness.plan()["plan_sha256"]) == []
 
 
 def test_the_ceiling_refuses_a_run_once_it_is_reached(sandbox, monkeypatch):
