@@ -649,17 +649,24 @@ def test_the_plan_digest_moves_when_the_stress_size_moves(monkeypatch):
     assert before != after, "the plan does not bind the stress size"
 
 
-def test_the_plan_binds_the_stress_bytes_and_its_derivation():
+def test_the_plan_binds_the_stress_bytes_and_the_whole_sizing_rule():
+    """Everything the size depends on is inside the digest, so a revision cannot be silent."""
     frozen = readiness.plan()["stress"]
     assert len(frozen["stress_schema_sha256"]) == 64
-    assert frozen["stress_stations"] == 167
+    assert frozen["stress_stations"] == 109
     derivation = frozen["stress_sizing_derivation"]
     assert derivation["inherited_threshold_was_not_changed"] is True
-    assert derivation["predicted_completion_tokens"] > derivation["inherited_threshold_tokens"]
-    assert derivation["predicted_completion_tokens"] > derivation["contract_ceiling_tokens"]
-    # The margin, not just the prediction: M123's predecessor cleared its own prediction and still
-    # missed the threshold by 3.3% when the model turned out to be wrong.
-    assert derivation["predicted_if_the_fit_runs_low"] > derivation["inherited_threshold_tokens"]
+    assert derivation["sizing_rule"] == "empirical_rate_envelope"
+    assert derivation["no_model_is_fitted"] is True
+    # The three observations, the rule, the bounds and the deterministic choice are all bound.
+    assert {o["stations"] for o in derivation["observations"]} == {24, 74, 167}
+    assert derivation["min_stations"] == 77 and derivation["max_stations"] == 141
+    assert derivation["station_choice"] == "midpoint_of_the_admissible_window"
+    assert derivation["station_choice_is_deterministic"] is True
+    assert derivation["observed_truncation_tokens"] == 100657
+    assert derivation["operational_ceiling_tokens"] == 85000
+    assert derivation["clears_the_threshold_even_at_the_lowest_observed_rate"] is True
+    assert derivation["stays_under_the_operational_ceiling_even_at_the_highest_observed_rate"]
 
 
 # ---------------------------------------------------------------------------------------------
@@ -689,40 +696,141 @@ def test_a_probe_that_answers_and_refuses_is_still_recorded_as_unenforced(sandbo
     assert result["verdict"] == "not_ready_features"
 
 
-def test_the_stress_size_is_fit_from_two_observations_not_one():
+# ---------------------------------------------------------------------------------------------
+# The sizing rule, after the two-point fit was falsified by its first out-of-sample test
+# ---------------------------------------------------------------------------------------------
+
+def test_no_model_is_fitted_any_more():
+    """Three sizings, three failures. The third falsified the method, not just the number."""
     from metamorphosis import m123_stress_schema as m123_stress
     derivation = m123_stress.sizing_derivation()
-    assert derivation["observation_count"] == 2
-    scales = {o["stations"] for o in derivation["observations"]}
-    assert len(scales) == 2, "two observations at the same scale are one observation"
-    # Two parameters from two points reproduce both exactly; that is the check, not the claim.
-    for observation in derivation["observations"]:
-        assert round(m123_stress.predicted_completion_tokens(
-            observation["stations"])) == observation["completion_tokens"]
-    assert derivation["fixed_completion_cost"] > 0, (
-        "a zero intercept is a proportional model, which is what closed M123's predecessor")
+    assert derivation["sizing_rule"] == "empirical_rate_envelope"
+    assert derivation["no_model_is_fitted"] is True
+    assert not hasattr(m123_stress, "TOKENS_PER_STATION"), "the fit is still here"
+    assert not hasattr(m123_stress, "FIXED_COMPLETION_COST"), "the fit is still here"
+    assert not hasattr(m123_stress, "predicted_completion_tokens"), (
+        "a point prediction is exactly what has now been falsified three times")
 
 
-def test_the_stress_size_is_safe_in_both_directions():
+def test_every_observation_including_the_censored_one_is_carried():
     from metamorphosis import m123_stress_schema as m123_stress
     derivation = m123_stress.sizing_derivation()
-    assert derivation["still_clears_the_threshold_if_the_fit_runs_low"] is True
-    assert derivation["stays_under_the_output_cap"] is True
-    assert derivation["inherited_threshold_was_not_changed"] is True
+    assert derivation["observation_count"] == 3
+    assert {o["stations"] for o in derivation["observations"]} == {24, 74, 167}
+    censored = [o for o in derivation["observations"] if o["truncated"]]
+    assert len(censored) == 1 and censored[0]["stations"] == 167, (
+        "the truncated run must be marked, because its token count is a floor not a measurement")
 
 
-def test_the_sizing_guard_refuses_a_stress_that_would_not_clear_the_threshold(monkeypatch):
+def test_the_rates_are_not_monotonic_which_is_why_there_is_no_model():
+    """546.6 down to 418.3 back up to >=602.7. Not a line, and not identified by three points."""
     from metamorphosis import m123_stress_schema as m123_stress
-    monkeypatch.setattr(m123_stress, "STATIONS", 10)
-    with pytest.raises(m123_stress.StressError, match="would not clear the threshold"):
-        m123_stress._assert_the_sizing_is_safe_in_both_directions()
+    rates = list(m123_stress.OBSERVED_RATES)
+    assert rates[0] > rates[1] and rates[2] > rates[1], (
+        "if the rates were monotonic a model would at least be arguable")
+    assert m123_stress.LOWEST_OBSERVED_RATE == min(rates)
+    assert m123_stress.HIGHEST_OBSERVED_RATE == max(rates)
 
 
-def test_the_sizing_guard_refuses_a_stress_that_would_truncate(monkeypatch):
+def test_the_truncation_is_recorded_as_an_observation_not_as_a_known_ceiling():
+    """100,657 is where one completion stopped, not a limit anybody measured."""
     from metamorphosis import m123_stress_schema as m123_stress
-    monkeypatch.setattr(m123_stress, "STATIONS", 5000)
-    with pytest.raises(m123_stress.StressError, match="truncate"):
-        m123_stress._assert_the_sizing_is_safe_in_both_directions()
+    derivation = m123_stress.sizing_derivation()
+    assert derivation["observed_truncation_tokens"] == 100657
+    assert derivation["observed_truncation_is_not_a_known_exact_ceiling"] is True
+    assert "at most" in derivation["what_the_truncation_establishes"]
+    assert "at least" in derivation["what_the_truncation_establishes"]
+
+
+def test_the_operational_ceiling_is_a_conservative_choice_with_real_margin():
+    from metamorphosis import m123_stress_schema as m123_stress
+    derivation = m123_stress.sizing_derivation()
+    assert derivation["operational_ceiling_tokens"] == 85000
+    assert derivation["operational_ceiling_is_a_conservative_choice_not_a_measurement"] is True
+    margin = derivation["operational_ceiling_margin_below_the_observed_truncation"]
+    assert 0.14 < margin < 0.17, "the ~15% margin is the point; %.3f is not it" % margin
+    assert (derivation["operational_ceiling_tokens"]
+            < derivation["observed_truncation_tokens"])
+
+
+def test_the_window_is_recomputed_from_the_envelope_not_trusted_as_constants():
+    """The declared bounds and the rule must agree, or one of them is stale."""
+    from metamorphosis import m123_stress_schema as m123_stress
+    derivation = m123_stress.sizing_derivation()
+    assert derivation["bounds_recomputed_from_the_envelope"] == [77, 141]
+    assert [derivation["min_stations"], derivation["max_stations"]] == [77, 141]
+
+
+def test_the_chosen_size_is_the_deterministic_midpoint():
+    from metamorphosis import m123_stress_schema as m123_stress
+    assert m123_stress.STATIONS == (m123_stress.MIN_STATIONS + m123_stress.MAX_STATIONS) // 2
+    assert m123_stress.STATIONS == 109
+    derivation = m123_stress.sizing_derivation()
+    assert derivation["station_choice"] == "midpoint_of_the_admissible_window"
+    assert derivation["station_choice_is_deterministic"] is True
+    assert derivation["floor_and_ceiling_bracket_the_choice"] is True
+
+
+def test_the_size_is_safe_under_every_rate_ever_observed():
+    """Not under a fitted rate. Under the lowest and the highest that were actually seen."""
+    from metamorphosis import m123_stress_schema as m123_stress
+    low, high = m123_stress.predicted_completion_token_range()
+    assert low > m123_stress.INHERITED_THRESHOLD_TOKENS, (
+        "at the lowest observed rate this repeats M122's 3.3% shortfall")
+    assert high < m123_stress.OPERATIONAL_CEILING_TOKENS, (
+        "at the highest observed rate this repeats M123 attempt 1's truncation")
+    assert round(low) == 45599 and round(high) == 65698
+
+
+def _window(monkeypatch, module, low: int, high: int, stations: int) -> None:
+    """Move the declared window and what the envelope derives together.
+
+    The agreement check runs first and would otherwise fire on every one of these, so a test that
+    moved only the constants would prove the agreement guard works and say nothing about the check
+    it was actually written for.
+    """
+    monkeypatch.setattr(module, "MIN_STATIONS", low)
+    monkeypatch.setattr(module, "MAX_STATIONS", high)
+    monkeypatch.setattr(module, "STATIONS", stations)
+    monkeypatch.setattr(module, "_derived_bounds", lambda: (low, high))
+
+
+def test_the_guard_refuses_a_size_that_would_miss_the_threshold(monkeypatch):
+    from metamorphosis import m123_stress_schema as m123_stress
+    _window(monkeypatch, m123_stress, 1, 141, 10)
+    with pytest.raises(m123_stress.StressError, match="would not clear"):
+        m123_stress._assert_the_sizing_is_safe_across_the_whole_envelope()
+
+
+def test_the_guard_refuses_a_size_that_would_truncate(monkeypatch):
+    from metamorphosis import m123_stress_schema as m123_stress
+    _window(monkeypatch, m123_stress, 77, 5000, 4000)
+    with pytest.raises(m123_stress.StressError, match="operational ceiling"):
+        m123_stress._assert_the_sizing_is_safe_across_the_whole_envelope()
+
+
+def test_the_guard_refuses_a_window_that_disagrees_with_the_envelope(monkeypatch):
+    """Constants that drift away from the rule they claim to come from are the silent failure."""
+    from metamorphosis import m123_stress_schema as m123_stress
+    monkeypatch.setattr(m123_stress, "MAX_STATIONS", 200)
+    with pytest.raises(m123_stress.StressError, match="does not match the window"):
+        m123_stress._assert_the_sizing_is_safe_across_the_whole_envelope()
+
+
+def test_the_guard_refuses_an_operational_ceiling_with_no_margin(monkeypatch):
+    from metamorphosis import m123_stress_schema as m123_stress
+    monkeypatch.setattr(m123_stress, "OPERATIONAL_CEILING_TOKENS", 100657)
+    _window(monkeypatch, m123_stress, 77, 167, 109)
+    with pytest.raises(m123_stress.StressError, match="margin"):
+        m123_stress._assert_the_sizing_is_safe_across_the_whole_envelope()
+
+
+def test_the_inherited_threshold_is_still_untouched():
+    """The stress moves; the bar does not. M118 set 32,000 and nothing here may move it."""
+    from metamorphosis import m123_stress_schema as m123_stress
+    assert m123_stress.INHERITED_THRESHOLD_TOKENS == 32000
+    assert m123_stress.sizing_derivation()["inherited_threshold_was_not_changed"] is True
+    assert readiness.STRESS_MIN_COMPLETION_TOKENS == 32000
 
 
 def test_the_contract_is_inherited_from_m122_and_not_re_authored():

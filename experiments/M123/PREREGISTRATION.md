@@ -48,33 +48,53 @@ and the single-point model overshot its own prediction by 31%. **A single point 
 the origin**, and this relationship has an intercept — a fixed cost per completion that a
 proportional model charges to every station.
 
-### The fit, from two observations at different scales
+### Amended after attempt 1: the fit was falsified, and there is no model any more
 
-| stations | completion tokens | run |
-|---|---|---|
-| 24 | 13,118 | M122 readiness attempt 3 |
-| 74 | 30,957 | M122 readiness attempt 4 |
+**The two-point fit below was wrong and is abandoned.** It is left on the record because a
+preregistration that quietly replaces its own reasoning is worthless.
 
-    tokens = 356.8 x stations + 4555
+What it predicted, and what happened:
 
-Two parameters from two points, so it reproduces both exactly. That is the minimum honest model and
-it is stated as such: it is not a curve, and a third observation at a different scale would test it
-rather than confirm it.
+| stations | predicted | observed | rate |
+|---|---|---|---|
+| 24 | — | 13,118 | 546.6 |
+| 74 | — | 30,957 | 418.3 |
+| 167 | 64,137 | **≥ 100,657, truncated** | **≥ 602.7** |
 
-### The margin, and why it errs large
+The fit under-predicted by at least 57% on its first out-of-sample test. The rates go **down and
+then up**: the relationship is not linear, not monotonic, and not identified by three points.
+Fitting a fourth model would repeat the same mistake with more arithmetic.
 
-The risk is asymmetric. A stress that is too small **kills the milestone** — twice now. A stress
-that is too large only takes longer and makes the gate *harder* to pass.
+**The replacement rule fits nothing.** It takes the envelope of the rates actually observed and
+requires the stress to sit inside the admissible window under *every* one of them:
 
-    target             1.5 x the larger of the threshold and the contract ceiling  = 48,000
-    model allowance    the fit may run 25% low, since the previous model was 31% out
-    stations           167
-    predicted          64,137 tokens
+    floor    > 32,000 tokens at the LOWEST observed rate (418.3)   ->  >= 77 stations
+    ceiling  < 85,000 tokens at the HIGHEST observed rate (602.7)  ->  <= 141 stations
+    chosen   the midpoint of [77, 141]                             ->  109 stations
 
-If the fit runs a quarter low the stress still clears 48,103 tokens, 1.5× the threshold. If yield
-instead returned to the highest rate ever observed the completion would be ~91,300 tokens, still
-under the 131,072 cap — so over-sizing cannot cause a truncation failure either. Both directions
-are asserted mechanically at import.
+At 109 the prediction is a **range, not a number**: 45,599 tokens at the lowest observed rate,
+65,698 at the highest. Both sit inside the window with room on each side. The midpoint is taken
+because it is the one point in the window that no observation argues for, it is maximally far from
+both edges, and it is computed rather than picked — a size chosen because it looked likely to pass
+would be the gate tuned to itself.
+
+### 100,657 is a truncation that was observed, not a ceiling that is known
+
+The request asked for 131,072 tokens and the route stopped at 100,657 with `finish_reason:
+"length"`. That is a **censored observation**, and it bounds two things in the unhelpful direction:
+
+- the route's real output limit is *at most* about 100,657, and may be lower;
+- the true rate at 167 stations is *at least* 602.7 per station, because the object was cut off
+  before it closed. **The upper edge of the envelope is itself a lower bound**, so the real worst
+  case can be worse than the worst case this rule can see.
+
+That is the honest weakness of the envelope rule, and it is the reason for the operational bound
+rather than an argument against it.
+
+**85,000 is a choice, not a derivation** — roughly 15.6% below the single truncation ever seen. It
+buys headroom against three things this project cannot measure from here: that the true limit may
+sit below the one truncation observed, that the censored rate understates the real rate, and that
+this route's yield has already moved by 44% between two sizings with nothing in the schema changing.
 
 **The 32,000 threshold is inherited from M118 and is not touched.** A threshold rewritten to fit a
 stress is a gate tuned to pass itself. The stress moves; the bar does not.
@@ -160,12 +180,35 @@ generator's training data, human independence, or external reproduction.
 4. `FRESH` is symmetric, not strong.
 5. The observation budget is 4000 per demand, inherited unchanged.
 6. One bank, one generation, one model.
-7. **The stress sizing model is fit from two points.** It reproduces both exactly because it has
-   two parameters, which is not evidence that it extrapolates. The margin exists for that reason.
+7. **The stress size is bounded by an envelope of three observations, one of them censored.** No
+   model is fitted, because the fitted model was falsified on its first out-of-sample test. The
+   envelope's upper edge is a lower bound — the truncated run's true rate is unknown and larger —
+   so the operational ceiling carries the margin that the envelope itself cannot.
 8. No statistical test has been performed anywhere on this chain: H59, H60, H62, H63, H64, H65 and
    H67 are all recorded untested. H68 would be the first, and a first test is not a multiple
    comparison.
 
 ## Amendment log
 
-*No amendments.*
+**Amendment 1 — 4 September 2026, after readiness attempt 1, before any H68 observation exists.**
+
+Attempt 1 returned `not_ready_delivery` (two probes rate-limited) and, separately, its stress
+truncated at 100,657 tokens. The two-point sizing model that this preregistration described was
+falsified by that run and has been replaced by the empirical rate envelope documented above.
+
+What changed: the sizing rule, the station count (167 -> 109), the admissible window (newly
+declared as [77, 141] and recomputed from the envelope at import), and the addition of the observed
+truncation and the operational ceiling as bound, named quantities.
+
+What did not change: the hypothesis, the endpoint, the 32,000-token threshold inherited from M118,
+the carrier contract inherited from M122, the verdict rules, the delivery allowance and its
+ceiling, and the stop conditions. **No scientific parameter moved.** The stress size is instrument
+calibration; the threshold is the bar, and the bar did not move.
+
+Accounting: the revision moves `plan_sha256` from `9d317afc…` to `6655a4fc…`, so the per-instrument
+allowance starts at **0 of 3** for the new instrument while the cross-milestone ceiling stands at
+**3 of 6** — M122's two delivery attempts plus M123 attempt 1. Verified mechanically before the
+revision was run, not asserted.
+
+Attempt 1 and its falsification are preserved in full and were committed before this amendment was
+written.
