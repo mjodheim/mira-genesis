@@ -1,7 +1,7 @@
 project: Mira Genesis
 updated_at: 2026-09-02
 snapshot_kind: current_authoritative_navigation
-status: m120_closed_at_readiness_h65_untested_candidate_schema_not_enforceable_on_the_route
+status: m122_closed_at_readiness_h67_untested_contract_validated_stress_sizing_was_not
 
 historical_snapshot_archives:
   markdown: docs/state-history/PROJECT_STATE_2026-08-24.md
@@ -193,6 +193,82 @@ current_frontier:
     exercise_the_complete_direct_checker_success_path_on_development_evidence_before_freeze:
       implemented_and_green
     spend_no_qualifying_invocation_until_all_preflight_gates_pass: no_invocation_spent
+
+m122_flattened_contract:
+  milestone: M122
+  hypothesis: H67
+  status: closed_at_readiness
+  verdict: not_ready_stress
+  verdict_is_final: true
+  final_because: only_a_not_ready_delivery_verdict_may_be_superseded
+  hypothesis_status: untested
+  outcome_record: experiments/M122/OUTCOME.md
+  development_requests_spent: 76
+  attempts: 4
+  qualifying_scientific_invocations: 0
+  scientific_freeze_taken: false
+  carrier_bank_exists: false
+  generality_gate_advanced: false
+  contract_validated_against_the_live_route: true
+  capability_probes_conforming: 9
+  capability_probes_total: 9
+  enforcement_failures: 0
+  identity_held_on_every_request: true
+  nested_arrays_at_five_levels: conformed_stop_76_tokens
+  combined_probe: conformed_stop_582_tokens
+  closed_by:
+    what: the_stress_size
+    stress_conformed: true
+    stress_completion_tokens: 30957
+    threshold: 32000
+    short_by_percent: 3.3
+    stations_used: 74
+    stations_that_would_have_cleared: 76
+    first_error: inherited_24_from_m120_without_rechecking_after_the_flattening
+    second_error: derived_from_a_single_measurement_assuming_constant_token_yield
+    observed_rate_at_24_stations: 546.6
+    observed_rate_at_74_stations: 418.3
+    the_model_grows_terser_as_the_list_lengthens: true
+  was_not_re_run: true
+  threshold_was_never_touched: true
+  instrument_defects_recorded_not_repaired:
+    - a_derivation_from_a_single_measurement_is_an_assumption
+    - unenforced_feature_classes_conflates_not_enforced_with_not_answered
+  hypothesis_registered: false
+  preregistration_exists: false
+  scientific_freeze_taken: false
+  qualifying_scientific_invocations: 0
+  carrier_bank_exists: false
+  publication_disposition_recorded: false
+  predecessor: M120
+  predecessor_outcome: closed_at_readiness_candidate_schema_not_enforceable_on_the_route
+  array_of_object_levels: 5
+  m120_array_of_object_levels: 8
+  certified_by:
+    - experiments/M118/READINESS_RESULT.json
+    - experiments/M120/READINESS_RESULT.json
+    - experiments/M122/ROUTE_DEPTH_DIAGNOSTIC.json
+  contract_asserts_its_own_census_fits_the_route: true
+  what_changed_from_m120: one_actions_array_with_guard_minitems_zero
+  why: >-
+    the split into conditional and plain actions expressed "at least one action carries a
+    precondition" without contains, and duplicated the action subtree from five levels to eight
+  dropped_guarantee_measured_at: 0.0075
+  requiring_every_action_guarded_costs_yield: true
+  measurements:
+    decoded_candidates_accepted_by_the_frozen_host: 400_of_400_in_every_draw_mode
+    qualification_rate_corner: 0.335
+    qualification_rate_uniform: 0.495
+    qualification_rate_ceiling: 0.620
+    m120_qualification_rate_corner: 0.2875
+    m120_qualification_rate_uniform: 0.4175
+  route_depth_diagnostic:
+    requests_spent: 2
+    is_a_readiness_gate: false
+    consumes_no_single_use_budget: true
+    nested_arrays_at_five_levels: conformed_stop_75_tokens
+    nested_arrays_at_eight_levels_in_m120: truncated_length_101379_tokens
+    combined_probe: rate_limited_429_unresolved
 
 m121_g7_groundwork:
   milestone: M121

@@ -186,6 +186,46 @@ Whether a blind generator produces an *adequate* bank on this route. The contrac
 adequacy gate and the reproducing checker are all untested against real carriers, and none of them
 is evidence of anything. The milestone stopped one gate earlier than that.
 
+## M122 — the contract works; the gate closed on how it was measured
+
+M122 flattened the contract to five array-of-object levels and closed on 4 September 2026 with
+`not_ready_stress`. **H67 untested.** 76 DEVELOPMENT requests, four attempts, no qualifying
+generation.
+
+**Nine of nine capability probes conformed.** Zero enforcement failures, identity holding on every
+request. `nested_arrays` — the class that closed M120, where it free-ran to 101,379 tokens and
+truncated — conformed in **76 tokens**. `combined`, which no earlier run had reached cleanly,
+conformed in 582. The flattening is confirmed against the live route, not merely against a census.
+
+**The stress size closed it, and twice that was the operator's error.** Inherited from M120 without
+re-checking after the flattening; then re-derived from a *single* measurement on the assumption
+that token yield per station is constant. It is not — 546.6 at 24 stations, 418.3 at 74, because
+the model grows terser as the list lengthens. The stress conformed at **30,957 against 32,000**,
+short by 3.3%. Seventy-six stations would have cleared it.
+
+**It was not re-run**, because `not_ready_stress` is not a delivery verdict and only those may be
+superseded. Re-running with 76 stations would be adjusting the instrument until the gate passes.
+The threshold was never touched.
+
+### What a successor inherits
+
+- **A contract the route has been observed to enforce**, class by class — not one certified by
+  inheritance across a schema change, which is what M120 tried and what M119 tried before it.
+- Two corrections that proved themselves: identity attested only where a completion exists, and
+  `finish_reason: length` as its own class rather than folded into non-conformance.
+- A bounded, mechanically counted delivery allowance, with attempts identified by result digest and
+  scoped per instrument by plan digest.
+
+### What it must fix
+
+1. **Derive the stress size from at least two measurements at different scales.** One point is not
+   a curve.
+2. **Size with margin above the threshold, not against it.** 3.3% separated a closed milestone from
+   a green gate.
+3. **Stop conflating *not enforced* with *not answered*.** An unanswered probe still scores as
+   non-conforming, so a rate-limited class can appear as a capability finding. Inherited from M120,
+   still unfixed.
+
 ## What the next successor must prove before one-shot science
 
 A successor should be smaller and more mechanical than M119, not merely more elaborate.
