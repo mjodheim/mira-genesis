@@ -23,18 +23,26 @@ requires the stress to sit inside the admissible window under **every** one of t
 
 ## The censored observation, stated as such
 
-100,657 is **a truncation that was observed, not a ceiling that is known.** The request asked for
-131,072 tokens and the route stopped at 100,657 with `finish_reason: "length"`. What that
-establishes is a lower bound in two places at once:
+100,657 is **a truncation that was observed, not a ceiling that is specified.** The request asked
+for 131,072 tokens and the route stopped at 100,657 with `finish_reason: "length"`. What that
+establishes, stated in the right direction:
 
-* the route's real output limit is *at most* about 100,657, and could be exactly that or anywhere
-  below it that this particular completion happened to reach;
-* the true rate at 167 stations is *at least* 602.7 per station, because the completion was cut off
-  before the object closed. The upper edge of the envelope is therefore itself a lower bound, and
-  the real worst case can be worse than the worst case this module can see.
+* the route serves **at least** 100,657 completion tokens in one response, because it emitted
+  exactly that many. The effective limit is not below 100,657, and since generation stopped there
+  rather than at the 131,072 requested, roughly 100,657 is where the cap sits;
+* the true rate at 167 stations is **at least** 602.7 per station, because the object was cut off
+  before it closed. The upper edge of the envelope is therefore itself a lower bound, and the real
+  worst case can be worse than the worst case this module can see.
 
-That is the honest weakness of the envelope rule and it is the reason for the margin below rather
-than an argument against it.
+Only the second of those is a weakness, and it is the reason for the margin below. The first is
+supporting evidence and was previously written backwards -- an earlier draft of this module claimed
+the limit was "at most about 100,657, and could be anywhere below it", which cannot be true of a
+completion that was actually produced.
+
+A fourth observation, from M117's route calibration on this same route and checkpoint, is recorded
+here because it bears directly on serviceability: **68,368 completion tokens, `finish_reason:
+"stop"`, schema conforming.** The worst case at 109 stations is 65,698 tokens, below a completion
+this route has already delivered cleanly.
 
 ## The operational bound
 
@@ -58,7 +66,7 @@ it looked likely to pass would be the gate tuned to itself, which is the failure
 records exists to prevent.
 
 At 109 stations the prediction is a range, not a number: **45,599 tokens at the lowest observed
-rate, 65,699 at the highest.** Both sit inside the window with room on each side.
+rate, 65,698 at the highest.** Both sit inside the window with room on each side.
 
 **The 32,000 threshold is inherited from M118 and is not touched.** The stress moves; the bar does
 not.
@@ -112,6 +120,10 @@ INHERITED_THRESHOLD_TOKENS = 32000      # M118's, unchanged
 OBSERVED_TRUNCATION_TOKENS = 100657
 # A choice, not a derivation: ~15.6% below the single truncation ever seen.
 OPERATIONAL_CEILING_TOKENS = 85000
+# M117 calibration, same route and checkpoint: a conforming completion that finished on `stop`.
+# Recorded because the worst case at this size sits below it, which is evidence about
+# serviceability that the envelope alone does not supply.
+CLEAN_COMPLETION_ON_THIS_ROUTE = 68368
 
 # The admissible window, derived from the envelope and the two bounds above.
 MIN_STATIONS = 77
@@ -160,9 +172,14 @@ def sizing_derivation() -> dict[str, Any]:
         "observed_truncation_is_not_a_known_exact_ceiling": True,
         "what_the_truncation_establishes": (
             "the request asked for 131,072 tokens and the route stopped at 100,657 on length. The "
-            "real output limit is at most about that and may be lower; the real rate at 167 "
-            "stations is at least 602.7 and may be higher, because the completion was cut off "
-            "before the object closed. The upper edge of this envelope is itself a lower bound."),
+            "route therefore serves at least 100,657 tokens in one response, because it emitted "
+            "exactly that many, and the cap sits at roughly that figure rather than below it. The "
+            "real rate at 167 stations is at least 602.7 and may be higher, because the object "
+            "was cut off before it closed. The upper edge of this envelope is itself a lower "
+            "bound, which is the weakness the operational ceiling exists to cover."),
+        "route_has_served_this_many_tokens_cleanly": CLEAN_COMPLETION_ON_THIS_ROUTE,
+        "worst_case_is_below_a_completion_already_served_cleanly":
+            HIGHEST_OBSERVED_RATE * STATIONS < CLEAN_COMPLETION_ON_THIS_ROUTE,
         "operational_ceiling_tokens": OPERATIONAL_CEILING_TOKENS,
         "operational_ceiling_is_a_conservative_choice_not_a_measurement": True,
         "operational_ceiling_margin_below_the_observed_truncation":
@@ -268,7 +285,7 @@ def assert_certifies(candidate_schema: dict[str, Any], certified_levels: int) ->
     }
 
 
-__all__ = ["HIGHEST_OBSERVED_RATE", "LOWEST_OBSERVED_RATE", "MAX_STATIONS", "MIN_STATIONS",
+__all__ = ["CLEAN_COMPLETION_ON_THIS_ROUTE", "HIGHEST_OBSERVED_RATE", "LOWEST_OBSERVED_RATE", "MAX_STATIONS", "MIN_STATIONS",
            "OBSERVATIONS", "OBSERVED_RATES", "OBSERVED_TRUNCATION_TOKENS",
            "OPERATIONAL_CEILING_TOKENS", "SIZING_RULE", "STATIONS", "STRESS_PROMPT",
            "STRESS_SCHEMA_NAME", "StressError", "assert_certifies", "build_stress_schema",

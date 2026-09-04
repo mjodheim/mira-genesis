@@ -35,6 +35,7 @@ import json
 import os
 import ssl
 import sys
+import time
 import urllib.parse
 from datetime import datetime, timezone
 from pathlib import Path
@@ -71,6 +72,13 @@ REASONING_EFFORT = "none"
 MAX_REASONING_TOKENS = 0
 
 RETRYABLE = ("pre_generation_429",)
+# M123 correction. The retry loop re-sent immediately on a 429 -- no sleep, no jitter, and no use
+# of the `retry-after` header the gate deliberately keeps -- so three attempts landed inside the
+# same rate-limit window milliseconds apart. Attempt 1 burned all three on two probes that way and
+# learned nothing from any of them. A transport failure or a 5xx got no retry at all.
+RETRY_BASE_SECONDS = 2.0
+RETRY_MAX_SECONDS = 60.0
+RETRYABLE_STATUSES = (429, 500, 502, 503, 504)
 MAX_RETRIES = 2
 
 
@@ -280,11 +288,40 @@ def _send(prompt: str, schema: Mapping[str, Any], name: str, max_tokens: int,
         budget["spent"] += 1
         observed = _http(COMPLETIONS_ENDPOINT, method="POST",
                          body=canonical_bytes(body), timeout=900)
-        if observed.get("status") == 429 and not (observed.get("body") or {}).get("choices"):
-            if attempt < MAX_RETRIES:
-                continue  # explicit pre-generation 429, no completion, no execution evidence
+        carried_a_completion = bool((observed.get("body") or {}).get("choices"))
+        status = observed.get("status")
+        # A response that produced a completion is the measurement, whatever its status. Only a
+        # request that produced nothing is worth sending again.
+        retryable = not carried_a_completion and (
+            status in RETRYABLE_STATUSES or observed.get("transport_failure_class") is not None)
+        if retryable and attempt < MAX_RETRIES:
+            _wait_before_retrying(observed, attempt)
+            continue
         return observed
-    raise ReadinessError("pre-generation 429 persisted beyond the frozen retry allowance")
+    return observed
+
+
+def _wait_before_retrying(observed: Mapping[str, Any], attempt: int) -> float:
+    """Honour `Retry-After` when the route sends one; otherwise back off exponentially.
+
+    The loop used to `continue` immediately, so three attempts landed inside the same rate-limit
+    window milliseconds apart and all three failed for the same reason. `retry-after` was already
+    being captured in KEPT_HEADERS as a header "worth keeping" and then never read.
+    """
+    headers = observed.get("headers") or {}
+    advertised = None
+    for key, value in headers.items():
+        if str(key).lower() == "retry-after":
+            try:
+                advertised = float(str(value).strip())
+            except (TypeError, ValueError):
+                advertised = None
+            break
+    delay = advertised if advertised is not None else RETRY_BASE_SECONDS * (2 ** attempt)
+    delay = max(0.0, min(float(delay), RETRY_MAX_SECONDS))
+    if delay:
+        time.sleep(delay)
+    return delay
 
 
 def _reasoning_tokens(body: Mapping[str, Any]) -> int | None:
@@ -479,6 +516,7 @@ def execute() -> dict[str, Any]:
             identities.append(attestation)
         else:
             undeliverable.append({"probe": probe["name"],
+                                  "feature_class": probe["feature_class"],
                                   "http_status": observed.get("status"),
                                   "transport_failure_class":
                                       observed.get("transport_failure_class")})
@@ -566,6 +604,12 @@ def execute() -> dict[str, Any]:
         "schema_conforms": conforms,
         "raw_completion_persisted": False,
     }
+    # The probe loop records `finish_reason == "length"` as enforcement failing open; the stress
+    # block did not, so attempt 1 archived a completion cut off at the cap beside an empty
+    # `feature_classes_where_enforcement_failed_open`. The stress is not a feature class, so it
+    # does not join that list and does not change which rung fires -- but the fact is now stated
+    # rather than left to be inferred from `finish_reason`.
+    stress_record["enforcement_failed_open"] = stress_record["finish_reason"] == "length"
     stress_record["holds"] = bool(
         stress_record["http_status"] == 200
         and stress_record["finish_reason"] == "stop"
@@ -573,7 +617,20 @@ def execute() -> dict[str, Any]:
         and isinstance(tokens, int) and tokens > STRESS_MIN_COMPLETION_TOKENS)
 
     verdict = "ready"
-    if identity is None or not identity["holds"] or not all(r["holds"] for r in identities):
+    if identity is None:
+        # M123 correction, and the completion of one M122 only made half of. M122 stopped
+        # attesting identity on responses that carry no completion, which fixed the PARTIAL case:
+        # two rate-limited probes no longer made `identity_held_on_every_request` false. But it
+        # left `identity` unassigned when NOTHING answers, and the rung below caught that as
+        # `not_ready_identity` -- a terminal verdict -- so an expired credential, a dead network or
+        # one bad rate-limit window closed this milestone permanently, on zero measurements of the
+        # route, without consuming any of the three retries that exist for exactly this case.
+        #
+        # Partial failure was retryable and total failure was terminal, which is inverted: the
+        # worse the delivery, the more final the verdict. `not_ready_identity` means the route
+        # answered and was not the frozen route. Nothing answering is a delivery outcome.
+        verdict = "not_ready_delivery"
+    elif not identity["holds"] or not all(r["holds"] for r in identities):
         verdict = "not_ready_identity"
     elif undeliverable:
         # Distinct from an identity failure and from a feature finding: the route did not answer.
@@ -606,7 +663,15 @@ def execute() -> dict[str, Any]:
         "required_feature_classes": required_feature_classes(),
         "unenforced_feature_classes": sorted(set(unenforced)),
         "feature_classes_where_enforcement_failed_open": sorted(set(enforcement_failed_open)),
+        # Feature classes, in the same vocabulary as `required_feature_classes` and
+        # `unenforced_feature_classes`. This field previously reported PROBE names -- so attempt 1
+        # recorded "additional_properties" and "min_items", neither of which appears in the class
+        # list beside it ("additionalProperties_false", "minItems"). A reader intersecting the two
+        # got the empty set, and the field carrying M123's whole correction was the one speaking
+        # the wrong vocabulary.
         "feature_classes_never_answered": sorted(
+            {u["feature_class"] for u in undeliverable if u.get("feature_class")}),
+        "probes_never_answered": sorted(
             {u["probe"] for u in undeliverable} - {"token_capacity_stress"}),
         "unenforced_means_answered_and_refused_not_merely_unanswered": True,
         "requests_that_carried_no_completion": undeliverable,

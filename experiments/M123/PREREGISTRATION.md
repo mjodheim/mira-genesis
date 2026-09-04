@@ -83,10 +83,13 @@ would be the gate tuned to itself.
 The request asked for 131,072 tokens and the route stopped at 100,657 with `finish_reason:
 "length"`. That is a **censored observation**, and it bounds two things in the unhelpful direction:
 
-- the route's real output limit is *at most* about 100,657, and may be lower;
+- the route serves **at least** 100,657 completion tokens in one response, because it emitted
+  exactly that many, and since it stopped there rather than at the 131,072 requested, roughly
+  100,657 is where the cap sits. *(Corrected: an earlier draft of this section said the limit was
+  "at most" 100,657 and might be lower, which cannot be true of a completion that was produced.)*
 - the true rate at 167 stations is *at least* 602.7 per station, because the object was cut off
   before it closed. **The upper edge of the envelope is itself a lower bound**, so the real worst
-  case can be worse than the worst case this rule can see.
+  case can be worse than the worst case this rule can see. This is the one that is a weakness.
 
 That is the honest weakness of the envelope rule, and it is the reason for the operational bound
 rather than an argument against it.
@@ -98,6 +101,49 @@ this route's yield has already moved by 44% between two sizings with nothing in 
 
 **The 32,000 threshold is inherited from M118 and is not touched.** A threshold rewritten to fit a
 stress is a gate tuned to pass itself. The stress moves; the bar does not.
+
+## The limitation that outweighs the sizing rule: the schema chooses its own size
+
+Found by adversarial review before this attempt was spent, and it is the most important thing on
+this page.
+
+Every station in the inherited stress schema carries several arrays whose length the model picks
+freely — masts 3–4, fault codes 1–4, offline 0–1, instruments 2–3, channels 1–3, readings 1–3 —
+plus patterned strings of variable length. At a **fixed** 109 stations, a fully conforming
+completion can therefore span roughly **4.06×** between its smallest and largest legal form,
+measured by building both extremes and serialising them.
+
+The entire pass window is 32,001 to about 100,657 tokens, a span of **3.15×**.
+
+**The schema's own freedom is wider than the window.** It follows that no station count is provably
+safe: at any size the model can conform to the schema and still land above or below the bar purely
+by choosing how verbose to be. Station count is a variable this milestone controls; it is not the
+variable that decides the verdict.
+
+That also explains the non-monotonic rates the envelope was built from. 546.6, 418.3 and ≥602.7 are
+not a function of size at all — they are three samples of the model's verbosity, which happens to
+vary between runs. **The envelope is three mid-band samples, not a bound.**
+
+### Why this attempt still runs at 109
+
+The empirical record is narrower than the schema's permission. Placed inside the band the schema
+allows, the three observations sit at **20.5%, 36.8% and 43.9%** — the model has never gone near
+either extreme, and the widest excursion ever recorded is far inside the legal range. At 109
+stations that observed slice maps to roughly 45,600–65,700 tokens, comfortably inside the window
+with margin on both sides, and below the 68,368-token completion this same route has already
+served cleanly with `finish_reason: "stop"`.
+
+So the size is defensible on the evidence, and it is **not** defensible as a guarantee. Both halves
+are stated because the difference is exactly what three previous sizings got wrong.
+
+### What a successor must do instead
+
+Pin the inner array cardinalities — `minItems == maxItems` on each — so that station count actually
+determines output length. The census is unchanged by that edit, so the property M122 established on
+the live route is preserved. It is **not** done here: every observation this milestone owns was
+measured on the unpinned schema, so pinning would improve the instrument and simultaneously discard
+the only calibration that exists for it. That trade belongs to a successor with its own
+calibration, not to a revision made between two attempts.
 
 ## The second correction: unanswered is not unenforced
 
@@ -184,6 +230,13 @@ generator's training data, human independence, or external reproduction.
    model is fitted, because the fitted model was falsified on its first out-of-sample test. The
    envelope's upper edge is a lower bound — the truncated run's true rate is unknown and larger —
    so the operational ceiling carries the margin that the envelope itself cannot.
+8. **The schema permits a wider spread than the pass window, so the size is evidence and not a
+   guarantee.** See the section above. This limitation dominates the sizing rule: the envelope
+   samples a variable the milestone does not control.
+9. **A stress that misses the bar in either direction is terminal on its first occurrence.** That
+   is the rule this milestone inherited and did not weaken. Attempt 1 reached that condition and
+   was recorded as retryable only because two unrelated probes were rate-limited and the ladder
+   ranks delivery above stress — a coincidence, not a design.
 8. No statistical test has been performed anywhere on this chain: H59, H60, H62, H63, H64, H65 and
    H67 are all recorded untested. H68 would be the first, and a first test is not a multiple
    comparison.
@@ -212,3 +265,31 @@ revision was run, not asserted.
 
 Attempt 1 and its falsification are preserved in full and were committed before this amendment was
 written.
+
+**Amendment 2 — 4 September 2026, after adversarial review of the revision and before attempt 2.**
+
+An adversarial panel was run against the revised instrument before any request was sent. It raised
+37 findings across five independent lenses. What it changed:
+
+1. **A run in which nothing answers was scored `not_ready_identity`, which is terminal.** `identity`
+   was assigned only from a response carrying a completion, and the ladder tested it above
+   `undeliverable`, so an expired credential, a dead network or one bad rate-limit window closed
+   this milestone permanently on zero measurements — without consuming any of the three retries
+   that exist for that case. Partial delivery failure was retryable and total delivery failure was
+   terminal, which is inverted. Reproduced against the repository's own stub transport for HTTP
+   429, 402, 503 and transport errors, then fixed and re-verified.
+2. **The censoring inference was stated backwards.** This document and the sizing module both said
+   the route's limit was "at most" 100,657 and might be lower. A completion of 100,657 tokens was
+   emitted, so the limit is *at least* that. Corrected in both, and the test that pinned the error
+   corrected with them.
+3. **Retries had no backoff and ignored `Retry-After`**, which the gate already captured and never
+   read; transport failures and 5xx were never retried at all. Attempt 1 burned three attempts on
+   each of two probes inside a few milliseconds because of this.
+4. **`feature_classes_never_answered` reported probe names, not feature classes** — the field
+   carrying this milestone's own correction was speaking the wrong vocabulary, so attempt 1's two
+   entries matched nothing in the class list printed beside them.
+5. **The schema-freedom limitation above**, which is the finding that most changes what a passing
+   result would mean.
+
+No scientific parameter moved. The 32,000 threshold, the hypothesis, the endpoint, the contract and
+the verdict rules are untouched.

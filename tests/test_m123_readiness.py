@@ -172,6 +172,9 @@ def sandbox(tmp_path, monkeypatch):
     monkeypatch.setattr(readiness.chronology, "assert_no_scientific_observation_yet",
                         lambda root=None: None)
     monkeypatch.setattr(readiness.chronology, "_head_blob", lambda *a, **k: None)
+    # The retry path now backs off for real. The wait is tested directly in
+    # test_a_retry_waits_and_honours_retry_after; everywhere else it is dead time.
+    monkeypatch.setattr(readiness.time, "sleep", lambda _seconds: None)
     return directory
 
 
@@ -738,8 +741,12 @@ def test_the_truncation_is_recorded_as_an_observation_not_as_a_known_ceiling():
     derivation = m123_stress.sizing_derivation()
     assert derivation["observed_truncation_tokens"] == 100657
     assert derivation["observed_truncation_is_not_a_known_exact_ceiling"] is True
-    assert "at most" in derivation["what_the_truncation_establishes"]
-    assert "at least" in derivation["what_the_truncation_establishes"]
+    # Stated in the right direction: a completion of 100,657 tokens was emitted, so the limit is
+    # not below it. The earlier wording said "at most ... and may be lower" and a test pinned it.
+    establishes = derivation["what_the_truncation_establishes"]
+    assert "at least 100,657" in establishes
+    assert "at most" not in establishes, "the censoring inference is stated backwards again"
+    assert derivation["worst_case_is_below_a_completion_already_served_cleanly"] is True
 
 
 def test_the_operational_ceiling_is_a_conservative_choice_with_real_margin():
@@ -870,3 +877,96 @@ def test_the_ceiling_refuses_a_run_once_it_is_reached(sandbox, monkeypatch):
         lambda plan_sha256=None: [] if plan_sha256 is not None else exhausted)
     with pytest.raises(readiness.ReadinessError, match="total delivery ceiling"):
         readiness._assert_the_allowance_permits_another_attempt()
+
+
+# ---------------------------------------------------------------------------------------------
+# What the pre-run adversarial panel found, before attempt 2 was spent
+# ---------------------------------------------------------------------------------------------
+
+def test_a_run_where_nothing_answers_is_retryable_not_terminal(sandbox, monkeypatch):
+    """The defect that would have closed M123 on an expired key.
+
+    `identity` is assigned only from a response carrying a completion. When NOTHING answers it
+    stays None, and the ladder used to catch that as `not_ready_identity` -- terminal, refused by
+    the allowance guard. So partial delivery failure was retryable and TOTAL delivery failure was
+    permanent: the worse the outage, the more final the verdict.
+    """
+    def fresh():
+        # Each case is its own attempt; four in one sandbox would exhaust the allowance, which is
+        # the guard working rather than the thing under test.
+        for archived in sandbox.glob(readiness.ATTEMPT_ARCHIVE_GLOB):
+            archived.unlink()
+        readiness.RESULT_PATH.unlink(missing_ok=True)
+
+    for status in (429, 402, 503):
+        fresh()
+        result = _run(monkeypatch, FakeRoute(statuses=[status] * 60))
+        assert result["verdict"] == "not_ready_delivery", (
+            "a run where every request returned HTTP %s was scored %r, which is terminal"
+            % (status, result["verdict"]))
+        assert result["requests_that_carried_no_completion"], (
+            "the record must say the route never answered")
+
+    # And a transport failure, in the shape `_http` returns from its own except branch.
+    def dead_network(url, *, method="POST", body=b"", timeout=900):
+        return {"status": None, "transport_failure_class": "connection_reset", "body": {}}
+
+    fresh()
+    result = _run(monkeypatch, dead_network)
+    assert result["verdict"] == "not_ready_delivery", (
+        "a dead network was scored %r, which permanently closes the milestone" % result["verdict"])
+
+
+def test_a_route_that_answers_as_the_wrong_model_is_still_an_identity_failure(sandbox, monkeypatch):
+    """The correction must not blind the gate to a genuine substitution."""
+    result = _run(monkeypatch, FakeRoute(break_identity=True))
+    assert result["verdict"] == "not_ready_identity"
+
+
+def test_never_answered_is_reported_in_the_feature_class_vocabulary(sandbox, monkeypatch):
+    """The field carrying M123's own correction was reporting probe names.
+
+    Attempt 1 recorded `additional_properties` and `min_items`; the class list beside it says
+    `additionalProperties_false` and `minItems`. Intersecting the two gave the empty set.
+    """
+    result = _run(monkeypatch, FakeRoute(statuses=[429] * 3 + [200] * 60))
+    classes = set(result["feature_classes_never_answered"])
+    assert classes, "nothing was reported as never answered"
+    assert classes <= set(result["required_feature_classes"]), (
+        "reported %s, which is not in the feature-class vocabulary %s"
+        % (sorted(classes), sorted(result["required_feature_classes"])))
+    assert result["probes_never_answered"], "the probe names are still reported, separately"
+
+
+def test_a_retry_waits_and_honours_retry_after(monkeypatch):
+    """Three attempts inside the same rate-limit window learn the same thing three times."""
+    slept = []
+    monkeypatch.setattr(readiness.time, "sleep", lambda s: slept.append(s))
+    delay = readiness._wait_before_retrying(
+        {"headers": {"Retry-After": "7"}, "status": 429}, attempt=0)
+    assert delay == 7.0 and slept == [7.0], "the advertised Retry-After was ignored"
+    slept.clear()
+    delay = readiness._wait_before_retrying({"headers": {}, "status": 429}, attempt=2)
+    assert delay == readiness.RETRY_BASE_SECONDS * 4, "the backoff is not exponential"
+    assert readiness._wait_before_retrying(
+        {"headers": {"Retry-After": "99999"}, "status": 429}, attempt=0
+    ) == readiness.RETRY_MAX_SECONDS, "the wait is not bounded"
+
+
+def test_a_truncated_stress_is_recorded_as_enforcement_failing_open(sandbox, monkeypatch):
+    """Attempt 1 archived a completion cut off at the cap beside an empty failed-open list."""
+    result = _run(monkeypatch, FakeRoute(truncate_probe=stress.STRESS_SCHEMA_NAME))
+    assert result["token_capacity_stress"]["finish_reason"] == "length"
+    assert result["token_capacity_stress"]["enforcement_failed_open"] is True
+    assert result["token_capacity_stress"]["holds"] is False
+
+
+def test_the_stress_records_the_route_serves_at_least_the_truncated_figure():
+    """The censoring inference, in the direction the evidence actually points."""
+    from metamorphosis import m123_stress_schema as m123_stress
+    derivation = m123_stress.sizing_derivation()
+    establishes = derivation["what_the_truncation_establishes"]
+    assert "at least 100,657" in establishes
+    assert "at most" not in establishes
+    assert derivation["route_has_served_this_many_tokens_cleanly"] == 68368
+    assert derivation["worst_case_is_below_a_completion_already_served_cleanly"] is True
