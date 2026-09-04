@@ -190,6 +190,13 @@ def _assert_stress_dominates() -> dict[str, Any]:
     except stress.StressError as exc:
         raise ReadinessError(str(exc)) from exc
     return {
+        # The census counts keyword *occurrences*, not values, so `minItems: 74` and `minItems: 24`
+        # are identical to it. Binding only the census left the plan digest unchanged when the
+        # stress was resized, which would have made the allowance reset silently do nothing while
+        # appearing to work. The schema's own bytes are bound as well.
+        "stress_schema_sha256": sha256_hex(canonical_bytes(stress.build_stress_schema())),
+        "stress_stations": stress.STATIONS,
+        "stress_sizing_derivation": stress.sizing_derivation(),
         "candidate_schema_census": proof["candidate_schema_census"],
         "stress_schema_census": proof["stress_schema_census"],
         "stress_dominates_the_candidate_schema": True,
@@ -320,22 +327,46 @@ DELIVERY_ALLOWANCE = 3
 ATTEMPT_ARCHIVE_GLOB = "READINESS_ATTEMPT_*.json"
 
 
-def _archived_delivery_attempts() -> list[str]:
-    """Delivery-failed attempts already on record. Counted from the archive, never from memory."""
-    found = []
+# Across every instrument, not per instrument. An apparatus revision genuinely produces a
+# different measurement and its allowance starts fresh -- but unlimited revisions would be
+# unlimited retries wearing a different name, so the total is capped as well.
+TOTAL_DELIVERY_CEILING = 6
+
+
+def _archived_delivery_attempts(plan_sha256: str | None = None) -> list[str]:
+    """Delivery-failed attempts on record, counted from the archive and never from memory.
+
+    Two corrections, both found when the guard refused a run it should have permitted.
+
+    **An attempt is identified by its result digest, not by how many files hold it.** Archiving a
+    result by hand beside the copy the gate writes itself made one attempt count as two, and the
+    allowance was then exhausted by arithmetic rather than by anything the route did.
+
+    **An attempt against a different instrument does not count against this one.** The owner
+    authorised revision 1 and recorded that the allowance resets with it; recording that in a JSON
+    file gave it no mechanical effect at all. The plan digest decides it instead, so the reset is a
+    property of the apparatus rather than of a note somebody wrote.
+    """
+    seen: dict[str, str] = {}
     for path in sorted(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB)):
         try:
             record = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, ValueError):
             continue
-        if record.get("verdict") == DELIVERY_VERDICT:
-            found.append(path.name)
-    return found
+        if record.get("verdict") != DELIVERY_VERDICT:
+            continue
+        if plan_sha256 is not None and record.get("plan_sha256") != plan_sha256:
+            continue
+        digest = record.get("result_sha256") or path.name
+        seen.setdefault(digest, path.name)
+    return sorted(seen.values())
 
 
 def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
     """May this gate run again? Only after a delivery verdict, and only within the allowance."""
-    spent = _archived_delivery_attempts()
+    current_plan = plan()["plan_sha256"]
+    spent = _archived_delivery_attempts(current_plan)
+    across_every_instrument = _archived_delivery_attempts(None)
     previous = None
     for source in (RESULT_PATH, None):
         if source is not None and source.exists():
@@ -358,11 +389,20 @@ def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
     # the gate" defect the once-only guard exists to prevent, reintroduced through the exception.
     if len(spent) >= DELIVERY_ALLOWANCE:
         raise ReadinessError(
-            "the delivery allowance of %d is exhausted (%s); M122 closes on the recorded delivery "
-            "verdict rather than waiting for a quieter window"
+            "the delivery allowance of %d is exhausted for this instrument (%s); M122 closes on "
+            "the recorded delivery verdict rather than waiting for a quieter window"
             % (DELIVERY_ALLOWANCE, ", ".join(spent)))
-    return {"delivery_attempts_already_recorded": spent,
+    if len(across_every_instrument) >= TOTAL_DELIVERY_CEILING:
+        raise ReadinessError(
+            "the total delivery ceiling of %d across every instrument is reached (%s); revising "
+            "the apparatus may not be used to buy further attempts indefinitely"
+            % (TOTAL_DELIVERY_CEILING, ", ".join(across_every_instrument)))
+    return {"delivery_attempts_against_this_instrument": spent,
+            "delivery_attempts_across_every_instrument": across_every_instrument,
             "delivery_allowance": DELIVERY_ALLOWANCE,
+            "total_delivery_ceiling": TOTAL_DELIVERY_CEILING,
+            "instrument_plan_sha256": current_plan,
+            "an_attempt_is_identified_by_its_result_digest_not_its_filename": True,
             "only_a_delivery_verdict_may_be_superseded": True}
 
 

@@ -529,6 +529,17 @@ def _write(path, record):
     path.write_bytes(canonical_bytes(record) + b"\n")
 
 
+def _delivery(index):
+    """An archived delivery attempt against the *current* instrument.
+
+    The plan digest matters: an attempt against another instrument does not count against this
+    one, which is how the owner-authorised reset is enforced mechanically rather than by a note.
+    """
+    return {"verdict": readiness.DELIVERY_VERDICT,
+            "result_sha256": "attempt-%d" % index,
+            "plan_sha256": readiness.plan()["plan_sha256"]}
+
+
 def test_a_capability_verdict_is_final_and_can_never_be_superseded(sandbox, monkeypatch):
     """The allowance must only ever stop the gate sooner. It may not rescue a capability finding."""
     for verdict in ("ready", "not_ready_features", "not_ready_identity",
@@ -540,11 +551,10 @@ def test_a_capability_verdict_is_final_and_can_never_be_superseded(sandbox, monk
 
 def test_a_delivery_verdict_may_be_superseded_within_the_allowance(sandbox, monkeypatch):
     _write(sandbox / "READINESS_RESULT.json", {"verdict": readiness.DELIVERY_VERDICT})
-    _write(sandbox / "READINESS_ATTEMPT_01_not_ready_delivery.json",
-           {"verdict": readiness.DELIVERY_VERDICT})
+    _write(sandbox / "READINESS_ATTEMPT_01_not_ready_delivery.json", _delivery(1))
     allowance = readiness._assert_the_allowance_permits_another_attempt()
     assert allowance["delivery_allowance"] == 3
-    assert len(allowance["delivery_attempts_already_recorded"]) == 1
+    assert len(allowance["delivery_attempts_against_this_instrument"]) == 1
 
 
 def test_the_allowance_refuses_a_fourth_delivery_attempt(sandbox, monkeypatch):
@@ -552,7 +562,7 @@ def test_the_allowance_refuses_a_fourth_delivery_attempt(sandbox, monkeypatch):
     _write(sandbox / "READINESS_RESULT.json", {"verdict": readiness.DELIVERY_VERDICT})
     for index in range(1, readiness.DELIVERY_ALLOWANCE + 1):
         _write(sandbox / ("READINESS_ATTEMPT_%02d_not_ready_delivery.json" % index),
-               {"verdict": readiness.DELIVERY_VERDICT})
+               _delivery(index))
     with pytest.raises(readiness.ReadinessError, match="allowance of 3 is exhausted"):
         readiness._assert_the_allowance_permits_another_attempt()
 
@@ -585,7 +595,61 @@ def test_deleting_the_result_does_not_bypass_the_allowance(sandbox):
     """The exception must not reintroduce the defect the once-only guard exists to prevent."""
     for index in range(1, readiness.DELIVERY_ALLOWANCE + 1):
         _write(sandbox / ("READINESS_ATTEMPT_%02d_not_ready_delivery.json" % index),
-               {"verdict": readiness.DELIVERY_VERDICT})
+               _delivery(index))
     assert not (sandbox / "READINESS_RESULT.json").exists()
     with pytest.raises(readiness.ReadinessError, match="allowance of 3 is exhausted"):
         readiness._assert_the_allowance_permits_another_attempt()
+
+
+# ---------------------------------------------------------------------------------------------
+# Counting the allowance correctly -- three defects the guard itself surfaced
+# ---------------------------------------------------------------------------------------------
+
+def test_one_attempt_archived_twice_counts_once(sandbox):
+    """Archiving a result by hand beside the gate's own copy made one attempt count as two."""
+    for name in ("READINESS_ATTEMPT_03_DELIVERY.json",
+                 "READINESS_ATTEMPT_03_not_ready_delivery.json"):
+        _write(sandbox / name, {"verdict": readiness.DELIVERY_VERDICT,
+                                "result_sha256": "same", "plan_sha256": "p"})
+    assert len(readiness._archived_delivery_attempts("p")) == 1
+
+
+def test_an_attempt_against_another_instrument_does_not_count_against_this_one(sandbox):
+    """The owner's reset is a property of the apparatus, not of a note somebody wrote."""
+    _write(sandbox / "READINESS_ATTEMPT_02_old.json",
+           {"verdict": readiness.DELIVERY_VERDICT, "result_sha256": "a", "plan_sha256": "old"})
+    assert readiness._archived_delivery_attempts("new") == []
+    assert len(readiness._archived_delivery_attempts("old")) == 1
+    assert len(readiness._archived_delivery_attempts(None)) == 1
+
+
+def test_revising_the_apparatus_cannot_buy_attempts_indefinitely(sandbox):
+    """A per-instrument allowance without a total is an unbounded retry budget in disguise."""
+    for index in range(readiness.TOTAL_DELIVERY_CEILING):
+        _write(sandbox / ("READINESS_ATTEMPT_%02d_x.json" % index),
+               {"verdict": readiness.DELIVERY_VERDICT,
+                "result_sha256": "r%d" % index, "plan_sha256": "instrument%d" % index})
+    with pytest.raises(readiness.ReadinessError, match="total delivery ceiling"):
+        readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_the_plan_digest_moves_when_the_stress_size_moves(monkeypatch):
+    """A census counts keyword occurrences, not values, so binding only it left the digest still.
+
+    That would have made the allowance reset silently do nothing while appearing to work.
+    """
+    from metamorphosis import m122_stress_schema as m122_stress
+    before = readiness.plan()["plan_sha256"]
+    monkeypatch.setattr(m122_stress, "STATIONS", m122_stress.STATIONS * 2)
+    after = readiness.plan()["plan_sha256"]
+    assert before != after, "the plan does not bind the stress size"
+
+
+def test_the_plan_binds_the_stress_bytes_and_its_derivation():
+    frozen = readiness.plan()["stress"]
+    assert len(frozen["stress_schema_sha256"]) == 64
+    assert frozen["stress_stations"] == 74
+    derivation = frozen["stress_sizing_derivation"]
+    assert derivation["inherited_threshold_was_not_changed"] is True
+    assert derivation["expected_completion_tokens"] > derivation["inherited_threshold_tokens"]
+    assert derivation["expected_completion_tokens"] > derivation["contract_ceiling_tokens"]
