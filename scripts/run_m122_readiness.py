@@ -352,11 +352,15 @@ def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
                 "a readiness result recording %r already exists; only a %r verdict may be "
                 "superseded, and deleting the file does not re-arm the gate"
                 % (verdict, DELIVERY_VERDICT))
-        if len(spent) >= DELIVERY_ALLOWANCE:
-            raise ReadinessError(
-                "the delivery allowance of %d is exhausted (%s); M122 closes on the recorded "
-                "delivery verdict rather than waiting for a quieter window"
-                % (DELIVERY_ALLOWANCE, ", ".join(spent)))
+    # The allowance is counted from the archive and enforced whether or not a result file is
+    # present. An earlier draft checked it only when a previous result could be found, so deleting
+    # the result would have permitted an unbounded run -- which is the "deleting the file re-arms
+    # the gate" defect the once-only guard exists to prevent, reintroduced through the exception.
+    if len(spent) >= DELIVERY_ALLOWANCE:
+        raise ReadinessError(
+            "the delivery allowance of %d is exhausted (%s); M122 closes on the recorded delivery "
+            "verdict rather than waiting for a quieter window"
+            % (DELIVERY_ALLOWANCE, ", ".join(spent)))
     return {"delivery_attempts_already_recorded": spent,
             "delivery_allowance": DELIVERY_ALLOWANCE,
             "only_a_delivery_verdict_may_be_superseded": True}

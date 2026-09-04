@@ -579,3 +579,13 @@ def test_the_run_archives_every_attempt_under_its_own_name(sandbox, monkeypatch)
     assert archived, "the attempt was not archived"
     assert result["verdict"] in archived[-1]
     assert result["delivery_allowance"]["delivery_allowance"] == 3
+
+
+def test_deleting_the_result_does_not_bypass_the_allowance(sandbox):
+    """The exception must not reintroduce the defect the once-only guard exists to prevent."""
+    for index in range(1, readiness.DELIVERY_ALLOWANCE + 1):
+        _write(sandbox / ("READINESS_ATTEMPT_%02d_not_ready_delivery.json" % index),
+               {"verdict": readiness.DELIVERY_VERDICT})
+    assert not (sandbox / "READINESS_RESULT.json").exists()
+    with pytest.raises(readiness.ReadinessError, match="allowance of 3 is exhausted"):
+        readiness._assert_the_allowance_permits_another_attempt()
