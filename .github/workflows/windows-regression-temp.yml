@@ -5,7 +5,7 @@ on:
     paths:
       - 'mira_core/process.py'
       - 'mira_core/memory.py'
-      - 'tests/test_codex_audit_regressions.py'
+      - 'tests/**'
       - '.github/workflows/windows-regression-temp.yml'
   workflow_dispatch:
 
@@ -15,7 +15,7 @@ permissions:
 jobs:
   windows-regression:
     runs-on: windows-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
@@ -29,3 +29,6 @@ jobs:
       - name: Reproduce Codex Windows and memory regressions
         shell: pwsh
         run: python -m pytest -q tests/test_codex_audit_regressions.py
+      - name: Collect the complete suite on Windows
+        shell: pwsh
+        run: python -m pytest --collect-only -q
