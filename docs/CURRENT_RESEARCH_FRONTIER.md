@@ -1,310 +1,119 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 2 September 2026 (M120 apparatus)**
+**Reader-facing status snapshot — 5 September 2026, after M123 and the independent validation audit.**
 
-This document explains where the active research line stands now. It is a navigation layer, not a
-replacement for frozen protocols, immutable results, `PROJECT_STATE.md`, `PROJECT_STATE.yaml`,
-`DECISIONS.md`, `SCIENTIFIC_HYPOTHESES.md`, or experiment-local evidence.
+This is navigation only. Frozen protocols, immutable result artifacts, decisions and experiment-local
+evidence remain authoritative. The superseded pre-sync frontier is preserved byte-for-byte at
+[`state-history/CURRENT_RESEARCH_FRONTIER_PRE_SYNC_2026-09-05.md`](state-history/CURRENT_RESEARCH_FRONTIER_PRE_SYNC_2026-09-05.md).
 
-The previous 26 August snapshot is preserved byte-for-byte at
-[`state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md`](state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md).
+## Where the active carrier line stands
 
-## Where the project is now
+M123/H68 is the latest carrier milestone visible on GitHub at this snapshot. It is **closed and
+untested**, not a scientific negative.
 
-The current research line is **not waiting on another implementation of the same M119 instrument**.
-M119 is closed. Its one qualifying generation was spent and produced an inadequate carrier bank, so
-H64 remains untested.
+The recent sequence is an apparatus-convergence line:
 
-The immediate problem is therefore instrumental and prospective:
+- M119/H64 spent one qualifying generation but the generated carrier bank was scientifically
+  inadequate before either arm ran.
+- M120/H65 moved that failure earlier: readiness discovered that the candidate schema required eight
+  array-of-object levels while the route enforced five.
+- M122/H67 flattened the contract and validated the live route: 9/9 capability probes conformed, but
+  the inherited stress sizing produced 30,957 tokens against a 32,000 threshold, so the milestone
+  closed `not_ready_stress` without a scientific generation.
+- M123/H68 replaced the one-measurement sizing assumption with an empirical rate envelope. Its first
+  167-station attempt truncated at at least 100,657 completion tokens, falsifying the prior linear fit.
+  The prospectively chosen 109-station second attempt then landed at 50,232 tokens, inside its
+  45,598–65,698 predicted envelope. The body was incomplete/malformed JSON and the frozen ladder
+  classified that terminally as `not_ready_stress`.
 
-> Can the next one-shot carrier-blind experiment prove, before spending its qualifying generation,
-> that generator-conformant outputs are accepted by the frozen host, that the resulting bank is
-> scientifically adequate for the frozen plan, and that the checker scores only the exact committed
-> plan and evidence it authenticates?
+That last point matters: **the sizing problem itself was solved out of sample**. M123 therefore
+narrows the remaining apparatus issue to delivery/classification semantics rather than repeating the
+M122 sizing failure. Its frozen verdict is still final and is not rewritten.
 
-Those questions were answered mechanically, and then M120 stopped for a different reason.
+## Scientific throughput versus engineering throughput
 
-Its DEVELOPMENT readiness gate -- the one M119 did not have -- found that **M120's candidate schema
-needs eight array-of-object levels and this route enforces five**. The probe free-ran to 101,379
-completion tokens and truncated where enforcement would have produced about fifty. M120 is closed:
-0 qualifying invocations, no freeze, no bank, no reveal, **H65 untested**, 16 DEVELOPMENT requests
-spent.
+The project is moving quickly at the instrument level but has not produced a new carrier-line
+scientific observation since the recent M113–M123 readiness/transport sequence began. H58–H65, H67
+and H68 remain untested. No generality gate advances from those closures.
 
-That is the gate working. M119 learned its contract was unusable by spending its one qualifying
-generation on it. M120 learned the same class of thing for the price of a calibration run.
+This is productive convergence only while successive failures are genuinely narrower and earlier
+fixes remain fixed. The current evidence supports that interpretation: host acceptance, route depth,
+feature enforcement and stress sizing have each been isolated rather than repeatedly rediscovered.
 
-## The recent instrument sequence
+## Next carrier trigger
 
-| Milestone | Status | What was learned | Scientific hypothesis |
-|---|---|---|---|
-| M115 / H60 | `instrument-aborted` after one materialized completion and legitimate reveal | strict-JSON failure prevented a carrier payload; terminal class was too weakly evidenced to infer a cause such as truncation | **untested** |
-| M116 / H61 | instrument-development closed before freeze | catalogue structured-output capability did not imply enforcement: fixed route enforced 0/9 required schema feature classes | **untested** |
-| M117 / H62 | route calibration / instrument development closed | OpenInference on the fixed DeepSeek checkpoint passed all final DEVELOPMENT qualification clauses and large constrained-output stress; apparatus revisions were transparently disclosed | **untested** |
-| M118 / H63 | instrument-design and hostile-audit closed before scientific generation | readiness passed, but repeated Tier-1 measurement-design defects showed the scientific instrument was too complicated for a one-shot test | **untested** |
-| M119 / H64 | `instrument_aborted` after one qualifying generation | clean delivery and schema conformance still produced a bank the frozen host/evaluator could not qualify | **untested** |
-| M120 / H65 | closed at the DEVELOPMENT readiness gate | the contract was made mechanically host-safe, but the route does not enforce the nesting depth that contract needs: 8 array-of-object levels against the 5 M115's schema used | **untested** |
+At the audit boundary no M124 branch or pushed M124 artifact existed. If M124 or a later numbered
+successor appears, the first action is to audit its immutable pushed chronology:
 
-No M113–M119 milestone advanced G1–G10.
+1. verify the prospective preregistration and frozen decision ladder;
+2. preserve every delivery attempt and budget counter;
+3. confirm no M122/M123 frozen artifact was edited;
+4. test the exact M123 malformed/incomplete delivery shape against the new prospective classifier;
+5. if readiness is `ready`, do not call that hypothesis support — only then may the successor's own
+   frozen chronology determine whether a qualifying scientific generation is allowed.
 
-## M119 in one page
+A pushed successor is the trigger. Old artifacts cannot be used to manufacture a verdict for H58–H68.
 
-The frozen route returned HTTP 200 in one attempt, with the exact requested model/provider,
-`finish_reason: stop`, a parsed completion and frozen output-schema conformance.
+## Separate frontier: M121/H66 and G7
 
-The generator was asked for 36 machines and emitted 37. After the one seal and authorized reveal:
+M121/H66 remains preregistered and owner-gated before implementation. The 5 September hostile review
+found pre-implementation degrees of freedom that can be closed without spending a scientific
+attempt. A non-canonical prospective v2 design candidate now exists at
+[`audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md`](audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md).
 
-- 3 carriers were accepted by the frozen host;
-- 34 were refused;
-- 0 cleared the qualification clauses;
-- 0 paired demands were posed;
-- no arm ran.
+The remaining owner act is P-025 publication/IP disposition. The independent audit recommends that,
+if public/AGPL treatment is accepted, authority extend only to prospectively hardening v2 first — not
+to drawing a canonical salt or running the scientific attempt. Even a later positive H66 result would
+be bounded partial evidence and would not close G7 by itself.
 
-The plan required at least three qualifying carriers and three distinct qualifying structures. The
-correct frozen verdict is therefore `instrument_aborted`, not negative, inconclusive or positive.
+## Publication/IP backlog
 
-Refusal counts reveal the primary mismatch:
+M119/P-023 is the last recorded owner-authorised disposition in this mechanism family. The following
+already-public or prepared work remains ahead of the owner disposition ledger:
 
-- 25: action argument domain outside 2–4;
-- 8: carrier observes none of its own state;
-- 1: copy source cell outside 0–1.
+| Milestone | Review state | Recorded owner disposition |
+| --- | --- | --- |
+| M120 | P-024 draft prepared | **none** |
+| M121 | P-025 draft prepared | **none** |
+| M122 | retrospective review prepared 2026-09-05; ledger ID intentionally unassigned | **none** |
+| M123 | P-026 draft prepared | **none** |
 
-The first two are permitted by the generator-facing schema as written but forbidden by the host.
-That means **schema-valid generation was not mechanically sufficient for host-valid carriers**.
+Preparing and synchronizing those reviews is governance hygiene only. It does not accept any proposed
+disposition, authorize M121 implementation or science, authorize a new carrier successor, or alter a
+closed milestone. Acceptance, amendment or refusal remains an explicit owner act.
 
-The second important gap is timing: pre-seal admission established that a payload was admissible,
-but did not establish that it contained enough qualifying and structurally distinct carriers to
-satisfy the frozen scientific plan. An inadequate bank could therefore consume the one reveal.
+## Armed but paused: M092/H38
 
-## Two frozen checker findings
+M092's canonical search remains unresolved and `first_run_only`. Static integrity work is safe, but
+advancing its cursor would continue the unique scientific observation. It therefore remains paused
+until explicit owner authority is given for that specific action.
 
-Closing review reproduced two defects in M119's checker:
+## External blockers
 
-1. the supplied analysis plan was not independently re-derived before its thresholds were trusted;
-2. the canonical measurements file was authenticated, but a different caller-selected measurement
-   path could be scored.
+H21/M075 and H31/M085 remain genuinely external by claim definition. Their readiness checks fail
+closed because the required independently maintained signed banks/protocols and independent
+reproductions do not exist. The exact handoff is documented at
+[`audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md`](audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md).
+Internal or AI-authored replacements cannot satisfy those claims.
 
-They do not change the canonical M119 outcome because the committed canonical plan and measurements
-were actually used and the committed report replays byte-identically.
+## Independent validation completed
 
-They **must not be fixed inside M119**. The checker is part of the tested-system freeze and a
-post-reveal edit would contaminate the closed record.
-
-## M120 in one page
-
-M120 keeps the science and replaces the instrument. The proposition is H64's, unchanged, and the
-arms, endpoint, exact test, α, effect floor, guards, verdicts, decomposition, comparator seed,
-observation budget and admissibility minimums are inherited from M119 **by import**, with a check
-that refuses to build an analysis plan if those modules' bytes move.
-
-Five things are new, and each one names the M119 failure it closes.
-
-**The carrier contract.** The schema handed to the generator states no relation between two fields,
-because a relation between two fields is what M119 died of. `arity` and `arg_size` become one field
-over `{0, 2, 3, 4}`; `initial` moves inside its own cell; `visible` becomes `hidden`, at most one
-index over at least three cells; the error name becomes an index. A total, deterministic,
-content-independent decoder discharges what is left. Every schema-valid candidate decodes into a
-carrier the frozen host accepts — established by exhausting 240 constraint corners, fuzzing 1,200
-draws, and running M119's own committed bank through it, where **0 of 37** are now refused.
-
-**The narrowed family.** Closing the schema gap alone would not have been enough. Re-measured
-against M119's committed public bank, that generator answered every range with its minimum — 22 of
-37 machines had one cell — and decoding it leaves **one** machine of 37 qualifying. So the family
-asked for is narrower: three to four cells, at most one latent, two to three conditional actions
-plus two to three more. **That narrowing was chosen after reading a closed public record, and is
-disclosed as such.** A verdict here speaks about a smaller family than M119 would have.
-
-**Adequacy before the seal.** M119's bank was admissible and untestable, and the one reveal was
-spent finding out. The gate now counts qualifying carriers, distinct structures and paired demands
-before anything is sealed, with an enforced counts-only output allowlist, and an inadequate bank
-closes the milestone with the reveal unspent. It is not permission to filter or redraw.
-
-**A checker that reproduces what it scores.** It takes no evidence path from the command line,
-re-derives the analysis plan from code, walks the custody chain from the sealed ciphertext down to
-the carrier bank, and **re-runs the whole measurement** over the committed bank rather than reading
-the committed numbers.
-
-**Readiness re-measured for this schema.** M118's stress schema does not dominate the M120
-candidate census, so inheriting its readiness would assert a measurement nobody took. The freeze is
-refused without a committed M120 readiness result, and its stress schema is deliberately a
-non-carrier one so that DEVELOPMENT cannot preview the bank.
-
-### What the rehearsal found
-
-The DEVELOPMENT rehearsal runs the real scripts in a disposable git checkout: 48 candidates, 0
-refused by the host, 20 qualifying, 20 distinct structures, 90 paired demands, and a second clean
-clone reproducing the report byte-identically. Nine adversarial substitutions all fail closed.
-
-One of them did not, at first. An earlier draft of the checker **accepted** a forged measurements
-file committed over the canonical path with a recomputed digest — the same defect class M119
-disclosed, surviving into the successor built to remove it. That is why the checker now reproduces
-the measurement instead of authenticating it. It was found before the freeze, which is where such
-things are supposed to be found.
-
-The rehearsal's own verdict is computed on synthetic devkit carriers and is **not evidence about
-H65**.
-
-### How M120 closed
-
-The readiness gate ran once and returned `not_ready_identity`. Seven of nine required feature
-classes were enforced cleanly, with runtime identity holding on every request that carried a
-completion. `array_of_object_levels` was not.
-
-The verdict label misattributes the cause: after the runaway probe the last two requests returned
-HTTP 429, a 429 carries no router metadata, so identity could not be attested and the frozen ladder
-checks identity before features. The **outcome** is robust to that -- with identity holding, the
-ladder reports `not_ready_features` on the same unenforced class. The misattribution is recorded as
-an instrument defect for a successor, not repaired.
-
-M120's apparatus -- the contract and decoder, the adequacy gate, the reproducing checker -- was
-never exercised against a real bank and carries **no scientific evidence**.
-
-### What a successor has to fix
-
-1. **The carrier contract must fit inside what the route enforces.** Flatten the representation to
-   at or below five array-of-object levels, or establish a greater depth on the route *before*
-   adopting a schema that needs it.
-2. **Attest identity only where a completion exists.** A retry-exhausted 429 is a delivery outcome,
-   not a substituted route.
-3. **Treat `finish_reason: length` on a probe as its own class.** 101,379 tokens against a
-   fifty-token requirement is enforcement failing open, not mere non-conformance.
-
-### The owner gates that were, and were not, reached
-
-Nothing below has been crossed:
-
-1. the publication/IP disposition — reviewed and drafted at
-   [`../docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md`](IP_REVIEWS/M120_PUBLICATION_REVIEW.md), with
-   no register row written;
-2. the DEVELOPMENT route-readiness run -- **reached, run once, returned not ready**;
-3. the scientific freeze -- **not reached**;
-4. the one qualifying generation -- **not reached, not spent**;
-5. the single reveal authorization -- **not reached**.
-
-### What M120 never got to test
-
-Whether a blind generator produces an *adequate* bank on this route. The contract work, the
-adequacy gate and the reproducing checker are all untested against real carriers, and none of them
-is evidence of anything. The milestone stopped one gate earlier than that.
-
-## M122 — the contract works; the gate closed on how it was measured
-
-M122 flattened the contract to five array-of-object levels and closed on 4 September 2026 with
-`not_ready_stress`. **H67 untested.** 76 DEVELOPMENT requests, four attempts, no qualifying
-generation.
-
-**Nine of nine capability probes conformed.** Zero enforcement failures, identity holding on every
-request. `nested_arrays` — the class that closed M120, where it free-ran to 101,379 tokens and
-truncated — conformed in **76 tokens**. `combined`, which no earlier run had reached cleanly,
-conformed in 582. The flattening is confirmed against the live route, not merely against a census.
-
-**The stress size closed it, and twice that was the operator's error.** Inherited from M120 without
-re-checking after the flattening; then re-derived from a *single* measurement on the assumption
-that token yield per station is constant. It is not — 546.6 at 24 stations, 418.3 at 74, because
-the model grows terser as the list lengthens. The stress conformed at **30,957 against 32,000**,
-short by 3.3%. Seventy-six stations would have cleared it.
-
-**It was not re-run**, because `not_ready_stress` is not a delivery verdict and only those may be
-superseded. Re-running with 76 stations would be adjusting the instrument until the gate passes.
-The threshold was never touched.
-
-### What a successor inherits
-
-- **A contract the route has been observed to enforce**, class by class — not one certified by
-  inheritance across a schema change, which is what M120 tried and what M119 tried before it.
-- Two corrections that proved themselves: identity attested only where a completion exists, and
-  `finish_reason: length` as its own class rather than folded into non-conformance.
-- A bounded, mechanically counted delivery allowance, with attempts identified by result digest and
-  scoped per instrument by plan digest.
-
-### What it must fix
-
-1. **Derive the stress size from at least two measurements at different scales.** One point is not
-   a curve.
-2. **Size with margin above the threshold, not against it.** 3.3% separated a closed milestone from
-   a green gate.
-3. **Stop conflating *not enforced* with *not answered*.** An unanswered probe still scores as
-   non-conforming, so a rate-limited class can appear as a capability finding. Inherited from M120,
-   still unfixed.
-
-## What the next successor must prove before one-shot science
-
-A successor should be smaller and more mechanical than M119, not merely more elaborate.
-
-### 1. Generator schema and host acceptance must agree
-
-There should be no prose-only carrier constraint on the scientific path. Every generator output
-accepted by the structured-output contract must either:
-
-- already satisfy the frozen host's acceptance predicate; or
-- pass through a predeclared, total and content-independent envelope whose equivalence to the host
-  acceptance surface is mechanically checked before generation.
-
-A synthetic adversarial census should demonstrate both directions before freeze.
-
-### 2. Adequacy must be decided before seal/reveal
-
-The pre-seal stage must evaluate the frozen plan's scientific bank requirements, including minimum
-qualifying carriers and distinct structures. If the bank is inadequate, the milestone should close
-as an instrument failure **without consuming a reveal and without redrawing**.
-
-This preflight is not permission to select, filter, repair or resample generator outputs.
-
-### 3. The checker must bind what it scores
-
-The scientific checker should have no caller-selectable scientific evidence path. It should load the
-canonical committed measurements itself and authenticate those exact bytes before scoring them.
-
-The analysis plan should likewise be reconstructed or independently validated against the committed
-source and decision constants, not accepted because a JSON field repeats a known digest.
-
-### 4. Exercise the real success path before freeze
-
-A refusal-path smoke test is insufficient. Before the scientific freeze, the exact direct entry point
-must be executed in a disposable DEVELOPMENT checkout against a materialized synthetic result through
-the full replay/scoring path. The rehearsal must demonstrate that forged plan/evidence substitutions
-fail closed.
-
-### 5. Do not spend the qualifying invocation until all of the above is green
-
-The next milestone should treat instrument readiness as a hard prerequisite. A failed DEVELOPMENT
-preflight costs no scientific draw; another avoidable post-generation instrument abort consumes the
-one-shot opportunity and teaches nothing about the hypothesis.
-
-## What must remain untouched
-
-- M115's terminal strict-JSON record and its evidential limitations;
-- M116's capability-matrix closure;
-- M117's disclosed calibration chronology;
-- M118's decision to stop before scientific generation;
-- M119's frozen plan, code, bank, reveal, checker and `instrument_aborted` result;
-- the two disclosed M119 checker defects as historical facts.
-
-M120 reads M119's committed public bank as instrument evidence and changes nothing in it. That
-reading is disclosed in M120's preregistration, plan limitations and derivation report.
-
-No successor may make its own result look better by editing those records.
-
-## Working autonomy boundary
-
-The next development agent can independently audit `main`, implement a prospective successor, build
-adversarial fixtures, run tests, conduct self-review and hostile review, and prepare a PR.
-
-Owner/external escalation is required before:
-
-- registering an owner-only publication/IP decision;
-- freezing or authorizing a one-shot scientific protocol;
-- spending a qualifying scientific invocation or reveal;
-- introducing new external credentials or authority;
-- changing a scientific proposition, threshold or decision rule after qualifying observation.
-
-The implementation handoff is in
-[`CLAUDE_HANDOFF_M120.md`](CLAUDE_HANDOFF_M120.md).
-
-## Useful starting points
-
-- [`../PROJECT_STATE.md`](../PROJECT_STATE.md)
-- [`../PROJECT_STATE.yaml`](../PROJECT_STATE.yaml)
-- [`../experiments/M117/STAGE1_OUTCOME.md`](../experiments/M117/STAGE1_OUTCOME.md)
-- [`../experiments/M118/OUTCOME.md`](../experiments/M118/OUTCOME.md)
-- [`../experiments/M119/OUTCOME.md`](../experiments/M119/OUTCOME.md)
-- [`../IP_ASSET_REGISTER.md`](../IP_ASSET_REGISTER.md)
+The M095–M112 historical line has now been replayed as far as its frozen contracts permit on fresh
+hosted runners. M097, M099, M100, M104 and M107–M111 reproduce positive; M095, M098, M103 and M105
+reproduce negative; M112 reproduces mixed. M096, M101, M102 and M106 retain explicitly documented
+historical portability limits rather than being silently repaired or reclassified.
+
+M094/H39 needs one distinction that the original audit matrix did not preserve: its positive
+qualification verdict reproduces, but **D063 remains unfilled**, so no H39 register claim has been
+accepted. The original matrix is left unchanged and the navigation correction is recorded at
+[`audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json`](audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json).
+
+The original machine-readable matrix remains at
+[`audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json`](audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json).
+
+## Claim boundary
+
+Mira Genesis does not currently claim AGI, general intelligence, consciousness, unrestricted
+self-rewrite, open-ended evolution, open-ended recursive self-improvement, unrestricted repository
+authority or unrestricted network authority. The strongest positive results remain bounded,
+predeclared mechanism results with explicit ceilings.

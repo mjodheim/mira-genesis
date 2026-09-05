@@ -1,13 +1,13 @@
 project: Mira Genesis
-updated_at: 2026-09-02
+updated_at: 2026-09-05
 snapshot_kind: current_authoritative_navigation
-status: m122_closed_at_readiness_h67_untested_contract_validated_stress_sizing_was_not
+status: m123_closed_h68_untested_next_carrier_successor_not_yet_pushed_at_audit_boundary
 
-historical_snapshot_archives:
-  markdown: docs/state-history/PROJECT_STATE_2026-08-24.md
-  yaml: docs/state-history/PROJECT_STATE_2026-08-24.yaml
-  reader_frontier: docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md
-  preservation: byte_exact_git_blobs
+navigation_only: true
+frozen_experiments_are_authoritative: true
+independent_validation_matrix: docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json
+independent_validation_corrigendum: docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json
+previous_snapshot_archived: docs/state-history/PROJECT_STATE_PRE_SYNC_2026-09-05.yaml
 
 claim_boundary:
   agi: false
@@ -19,434 +19,183 @@ claim_boundary:
   unrestricted_repository_authority: false
   unrestricted_network_authority: false
 
-established_anchors:
-  M042:
-    status: positive_canonical_bounded_completion
-    all_ten_bounded_genesis_gates: true
-  M066:
-    status: positive_canonical_real_substrate_completion
-    construction_line_closed_by: D026
-  M091:
-    status: positive_scientific_result
-    hypothesis: H37
-    hypothesis_status: supported_in_bounds
-    bounded_endogenous_language_extension: true
-  M094:
-    status: positive_qualified_real_software_anchor
-  M096_M102:
-    status: cumulative_positive_and_negative_qualified_line
-    established_in_bounds:
-      - contract_safe_composition
-      - operation_acquisition
-      - hard_process_death_persistence
-      - repeated_cumulative_acquisition
-      - cross_family_reuse
-      - acquired_state_owned_registry_policy_under_interference
-  M104_M111:
-    status: bounded_acquisition_machinery_extension_line
-    open_ended_recursive_self_improvement_claimed: false
-  M112:
-    status: mixed_qualified_blind_generated_sealed_bank_result
-    generality_gate_advanced: false
+validation_corrections:
+  H39_M094:
+    original_matrix_status: supported_within_frozen_bounds
+    corrected_register_status: owner_pending_no_register_claim
+    recorded_verdict: positive
+    independent_replay: reproduced_by_permanent_ci
+    owner_decision_slot: D063
+    owner_decision_filled: false
+    post_verdict_disclosure_remains_binding: true
+    correction_changes_scientific_artifacts: false
 
-closed_instrument_line:
+validated_recent_line:
+  M105:
+    hypothesis: H50
+    verdict: negative
+    hypothesis_status: not_supported
+    independent_audit: reproduced_negative
+  M106:
+    hypothesis: H51
+    verdict: positive
+    hypothesis_status: supported_within_frozen_bounds
+    independent_audit: scientific_predicates_reproduced_stable_projection_limited
+    portability_limit: absolute_interpreter_path_retained_in_stable_evidence
+  M107:
+    hypothesis: H52
+    verdict: positive
+    independent_audit: reproduced_positive_16_of_16_byte_stable
+  M108:
+    hypothesis: H53
+    verdict: positive
+    independent_audit: reproduced_positive_16_of_16_byte_stable
+  M109:
+    hypothesis: H54
+    verdict: positive
+    independent_audit: reproduced_positive_18_of_18_byte_stable
+  M110:
+    hypothesis: H55
+    verdict: positive
+    independent_audit: reproduced_positive_24_of_24_byte_stable
+  M111:
+    hypothesis: H56
+    verdict: positive
+    independent_audit: reproduced_positive_24_of_24_byte_stable
+  M112:
+    hypothesis: H57
+    verdict: mixed
+    independent_audit: reproduced_mixed
+    procedure: 10_of_10_true
+    diagnosis: 24_of_24_positive
+    transfer: 22_of_24_negative
+
+carrier_frontier:
+  scientific_proposition: same_target_continued_only_through_prospective_numbered_successors
   M113:
     hypothesis: H58
     status: instrument_failure_closed
-    qualifying_delivery_attempts: 1
-    terminal_observation: http_429
-    bank_materializations: 0
     hypothesis_status: untested
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M114:
     hypothesis: H59
-    status: instrument_aborted
-    physical_delivery_attempts: 3
-    terminal_observation: explicit_http_429_capacity_rejections
-    bank_materializations: 0
+    status: instrument_aborted_transport
     hypothesis_status: untested
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M115:
     hypothesis: H60
-    status: instrument_aborted
-    materialized_completions: 1
-    legitimate_reveals: 1
-    failure_stage: strict_json_admission_before_carrier_payload
+    status: instrument_aborted_before_carrier_payload
     hypothesis_status: untested
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M116:
     hypothesis: H61
-    status: instrument_development_closed
-    scientific_freeze_taken: false
-    qualifying_scientific_invocations: 0
-    carrier_bank_exists: false
+    status: development_route_unsuitable
     hypothesis_status: untested
-    finding: fixed_route_enforced_none_of_nine_required_structured_output_feature_classes
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M117:
     hypothesis: H62
-    status: instrument_development_and_calibration_closed
-    qualifying_scientific_invocations: 0
-    scientific_freeze_taken: false
-    carrier_bank_exists: false
+    status: development_and_route_calibration_closed
     hypothesis_status: untested
-    selected_calibration_route:
-      requested_model: deepseek/deepseek-v4-flash-0731
-      canonical_checkpoint: deepseek/deepseek-v4-flash-20260731
-      provider: OpenInference
-    final_development_attempt:
-      candidates_probed: 16
-      development_requests_consumed: 144
-      development_request_budget: 160
-      qualification_clauses_passed: 12
-      qualification_clauses_total: 12
-      stress_completion_tokens: 68368
-      finish_reason: stop
-    route_selection_prospectively_clean_claimed: false
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M118:
     hypothesis: H63
-    status: instrument_design_and_audit_closed
-    qualifying_scientific_invocations: 0
-    scientific_freeze_taken: false
-    carrier_bank_exists: false
-    scientific_statistic_computed: false
+    status: apparatus_design_and_audit_closed
     hypothesis_status: untested
-    readiness_calibration:
-      fixed_provider: OpenInference
-      required_schema_feature_classes_unenforced: 0
-      required_schema_feature_classes_total: 9
-      stress_completion_tokens: 73731
-      finish_reason: stop
-    stop_reason: pre_freeze_hostile_review_found_repeated_tier_1_measurement_design_defects
-    generality_gate_advanced: false
+    scientific_generation_run: false
   M119:
     hypothesis: H64
-    status: instrument_aborted
-    qualifying_scientific_invocations: 1
-    qualifying_scientific_invocations_spent: 1
-    paired_demands_posed: 0
+    status: instrument_aborted_at_carrier_qualification
+    hypothesis_status: untested
+    qualifying_generation_spent: 1
     scientific_arms_run: 0
-    hypothesis_status: untested
-    requested_carriers: 36
-    machines_emitted: 37
-    carriers_accepted_by_frozen_host: 3
-    carriers_refused_by_frozen_host: 34
-    qualifying_carriers: 0
-    minimum_qualifying_carriers: 3
-    minimum_distinct_qualifying_structures: 3
-    host_refusal_counts:
-      action_argument_domain_outside_2_to_4: 25
-      observes_none_of_own_state: 8
-      copy_source_cell_outside_0_to_1: 1
-    principal_instrument_findings:
-      - generator_output_schema_does_not_mechanically_imply_frozen_host_acceptance
-      - preseal_admission_checked_payload_admissibility_not_scientific_bank_adequacy
-    frozen_checker_defects:
-      - caller_supplied_analysis_plan_not_rederived_from_committed_design
-      - canonical_measurements_authenticated_but_caller_selected_measurements_path_scored
-    canonical_result_replays_from_committed_bytes: true
-    retroactive_checker_repair_permitted: false
-    generality_gate_advanced: false
-
-publication_dispositions:
   M120:
-    register_entry: null
-    disposition: not_recorded
-    review_prepared: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
-    proposed_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
-    recording_it_is_an_owner_act_and_has_not_been_performed: true
-  M117:
-    register_entry: P-021
-    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
-  M118:
-    register_entry: P-022
-    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
-  M119:
-    register_entry: P-023
-    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
-
-current_frontier:
-  active_frozen_scientific_hypothesis: null
-  successor_started: true
-  successor:
-    milestone: M120
     hypothesis: H65
-    preregistered: true
-    preregistration: experiments/M120/PREREGISTRATION.md
-    scientific_proposition_inherited_unchanged_from: H64
-    scientific_freeze_taken: false
-    qualifying_scientific_invocations: 0
-    carrier_bank_exists: false
+    status: closed_at_readiness
     hypothesis_status: untested
-    publication_disposition_recorded: false
-    publication_review_prepared: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
-  objective: obtain_an_actual_scientific_verdict_without_another_instrument_abort
-  mandatory_prospective_requirements_status:
-    mechanically_align_generator_schema_with_frozen_host_acceptance: implemented_and_tested
-    verify_bank_scientific_adequacy_against_frozen_plan_before_seal_and_reveal:
-      implemented_and_tested
-    rederive_or_independently_validate_frozen_analysis_plan_and_thresholds_in_checker:
-      implemented_and_tested
-    score_only_the_committed_canonical_measurements_artifact:
-      implemented_and_tested_by_reproducing_the_measurement_from_the_committed_bank
-    exercise_the_complete_direct_checker_success_path_on_development_evidence_before_freeze:
-      implemented_and_green
-    spend_no_qualifying_invocation_until_all_preflight_gates_pass: no_invocation_spent
-
-m122_flattened_contract:
-  milestone: M122
-  hypothesis: H67
-  status: closed_at_readiness
-  verdict: not_ready_stress
-  verdict_is_final: true
-  final_because: only_a_not_ready_delivery_verdict_may_be_superseded
-  hypothesis_status: untested
-  outcome_record: experiments/M122/OUTCOME.md
-  development_requests_spent: 76
-  attempts: 4
-  qualifying_scientific_invocations: 0
-  scientific_freeze_taken: false
-  carrier_bank_exists: false
-  generality_gate_advanced: false
-  contract_validated_against_the_live_route: true
-  capability_probes_conforming: 9
-  capability_probes_total: 9
-  enforcement_failures: 0
-  identity_held_on_every_request: true
-  nested_arrays_at_five_levels: conformed_stop_76_tokens
-  combined_probe: conformed_stop_582_tokens
-  closed_by:
-    what: the_stress_size
-    stress_conformed: true
+    verdict: not_ready_identity_under_frozen_ladder
+    practical_finding: candidate_schema_needed_eight_array_of_object_levels_route_enforced_five
+    qualifying_scientific_invocations: 0
+  M122:
+    hypothesis: H67
+    status: closed_at_readiness
+    hypothesis_status: untested
+    verdict: not_ready_stress
+    contract_validated: true
+    capability_probes: 9_of_9_conformed
     stress_completion_tokens: 30957
-    threshold: 32000
-    short_by_percent: 3.3
-    stations_used: 74
-    stations_that_would_have_cleared: 76
-    first_error: inherited_24_from_m120_without_rechecking_after_the_flattening
-    second_error: derived_from_a_single_measurement_assuming_constant_token_yield
-    observed_rate_at_24_stations: 546.6
-    observed_rate_at_74_stations: 418.3
-    the_model_grows_terser_as_the_list_lengthens: true
-  was_not_re_run: true
-  threshold_was_never_touched: true
-  instrument_defects_recorded_not_repaired:
-    - a_derivation_from_a_single_measurement_is_an_assumption
-    - unenforced_feature_classes_conflates_not_enforced_with_not_answered
-  hypothesis_registered: false
-  preregistration_exists: false
-  scientific_freeze_taken: false
-  qualifying_scientific_invocations: 0
-  carrier_bank_exists: false
-  publication_disposition_recorded: false
-  predecessor: M120
-  predecessor_outcome: closed_at_readiness_candidate_schema_not_enforceable_on_the_route
-  array_of_object_levels: 5
-  m120_array_of_object_levels: 8
-  certified_by:
-    - experiments/M118/READINESS_RESULT.json
-    - experiments/M120/READINESS_RESULT.json
-    - experiments/M122/ROUTE_DEPTH_DIAGNOSTIC.json
-  contract_asserts_its_own_census_fits_the_route: true
-  what_changed_from_m120: one_actions_array_with_guard_minitems_zero
-  why: >-
-    the split into conditional and plain actions expressed "at least one action carries a
-    precondition" without contains, and duplicated the action subtree from five levels to eight
-  dropped_guarantee_measured_at: 0.0075
-  requiring_every_action_guarded_costs_yield: true
-  measurements:
-    decoded_candidates_accepted_by_the_frozen_host: 400_of_400_in_every_draw_mode
-    qualification_rate_corner: 0.335
-    qualification_rate_uniform: 0.495
-    qualification_rate_ceiling: 0.620
-    m120_qualification_rate_corner: 0.2875
-    m120_qualification_rate_uniform: 0.4175
-  route_depth_diagnostic:
-    requests_spent: 2
-    is_a_readiness_gate: false
-    consumes_no_single_use_budget: true
-    nested_arrays_at_five_levels: conformed_stop_75_tokens
-    nested_arrays_at_eight_levels_in_m120: truncated_length_101379_tokens
-    combined_probe: rate_limited_429_unresolved
-
-m121_g7_groundwork:
-  milestone: M121
-  hypothesis: H66
-  target_generality_gate: G7
-  gate_status_before: open
-  gate_status_after_this_work: open
-  predecessor: M077
-  predecessor_outcome: valid_negative_under_d043
-  predecessor_schedule_or_body_reused: false
-  d043_successor_constraint_obeyed: true
-  preregistration: experiments/M121/PREREGISTRATION.md
-  protocol_commitment: experiments/M121/PROTOCOL.json
-  salt_drawn_before_any_harness_code_existed: true
-  harness_implemented: false
-  schedule_materialized: false
-  scientific_result_exists: false
-  publication_disposition_recorded: false
-  publication_review_prepared: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
-  enabling_implementation_blocked_on_owner_disposition: true
-  horizon_unit: episode_count_not_human_equivalent_time
-  human_equivalent_horizon_refused_mechanically: true
-  even_a_positive_result_closes_g7: false
-  external_blockers_untouched:
-    - human_maintained_sealed_bank
-    - independent_reproduction
-    - external_adversarial_audit
-
-m120_instrument:
-  science_inherited_from_m119_by_import: true
-  inherited_modules:
-    - metamorphosis/m119_arms.py
-    - metamorphosis/m119_endpoint.py
-    - metamorphosis/m119_decomposition.py
-  inherited_science_drift_is_a_build_error: true
-  carrier_contract:
-    module: metamorphosis/m120_carrier_contract.py
-    schema_states_no_relation_between_two_fields: true
-    schema_keywords_are_a_subset_of_those_proven_enforced_on_the_route: true
-    decoder_is_total_deterministic_and_content_independent: true
-    decoder_cannot_refuse_reorder_drop_or_select: true
-    decoder_cannot_make_a_carrier_qualify: true
-  carrier_family:
-    cells: [3, 4]
-    hidden_cells_at_most: 1
-    observable_cells_at_least: 2
-    conditional_actions: [2, 3]
-    plain_actions: [2, 3]
-    actions: [4, 6]
-    narrower_than_m115: true
-    narrowing_informed_by_the_closed_public_m119_bank: true
-    narrowing_is_disclosed_not_presented_as_prospective_innocence: true
-  requested_carriers: 48
-  bank_sizing:
-    derivation: scripts/build_m120_bank_sizing.py
-    record: experiments/M120/BANK_SIZING_DEVELOPMENT.json
-    measured_qualification_rate_at_the_contract_corner: 0.2875
-    measured_qualification_rate_uniform: 0.4175
-    planning_qualification_rate: 0.1437
-    planning_rate_is_half_the_measured_corner_rate: true
-    expected_qualifying_carriers: 6.8976
-    expected_paired_demands: 27.95
-    minimum_qualifying_carriers: 3
-    discordant_pairs_needed_for_significance: 5
-    measures_a_development_emitter_not_the_blind_generator: true
-  preseal_adequacy_gate:
-    module: metamorphosis/m120_adequacy.py
-    decides_adequacy_before_the_seal: true
-    output_allowlist_is_enforced: true
-    exposes_no_carrier_value_index_or_ordering: true
-    an_inadequate_bank_is_terminal_and_never_redrawn: true
-  checker:
-    entry_point: scripts/check_m120_result.py
-    caller_selectable_evidence_paths: 0
-    rederives_the_analysis_plan_from_code: true
-    reproduces_the_measurement_from_the_committed_carrier_bank: true
-    walks_the_custody_chain_from_ciphertext_to_carrier_bank: true
-    total_rewrite_of_every_committed_artifact_with_a_re_seal_is_out_of_scope: true
-  readiness:
-    re_measured_for_this_candidate_schema: true
-    inherited_m118_stress_schema_does_not_dominate_the_m120_census: true
-    stress_schema_is_deliberately_not_the_candidate_schema: true
-    freeze_is_refused_without_a_committed_ready_result: true
-    ran_at: 2026-09-03
-    runs: 1
-    development_requests_spent: 16
-    verdict: not_ready_identity
-    ready: false
-    required_feature_classes: 9
-    enforced_feature_classes: 7
-    unenforced_feature_classes: [array_of_object_levels]
-    identity_held_on_every_request_carrying_a_completion: true
-    finding: >-
-      the candidate schema needs eight array-of-object levels; the route enforces the five M115's
-      schema needed. The probe returned HTTP 200 with finish_reason length after 101379 completion
-      tokens where enforcement would have produced about fifty.
-    verdict_label_misattributes_the_cause: true
-    why: >-
-      after the runaway probe the last two requests returned HTTP 429; a 429 carries no router
-      metadata, so identity could not be attested and the frozen ladder checks identity before
-      features
-    outcome_is_robust_to_the_misattribution: true
-    with_identity_holding_the_ladder_reports: not_ready_features
-    gate_is_single_use_and_was_not_redrawn: true
-
-  m120_closure:
-    status: instrument_development_closed_at_readiness
-    hypothesis_status: untested
-    scientific_freeze_taken: false
+    stress_threshold: 32000
     qualifying_scientific_invocations: 0
-    carrier_bank_exists: false
-    reveals: 0
-    generality_gate_advanced: false
-    apparatus_was_never_exercised_against_a_real_bank: true
-    outcome_record: experiments/M120/OUTCOME.md
-    instrument_defects_recorded_not_repaired:
-      - identity_is_attested_on_error_responses_that_carry_no_completion
-      - a_runaway_probe_is_folded_into_non_conformance_instead_of_its_own_class
-    successor_requirements:
-      - the_carrier_contract_must_fit_inside_what_the_route_enforces
-      - attest_identity_only_where_a_completion_exists
-      - treat_finish_reason_length_on_a_probe_as_its_own_recorded_class
-  development_rehearsal:
-    record: experiments/M120/DEVELOPMENT_REHEARSAL.json
-    ran_the_real_scripts_in_a_disposable_git_checkout: true
-    carriers_enveloped: 48
-    carriers_refused_by_the_frozen_host: 0
-    qualifying_carriers: 20
-    distinct_qualifying_structures: 20
-    paired_demands_available: 90
-    clean_clone_reproduced_the_report_byte_identically: true
-    adversarial_substitutions: 9
-    every_substitution_failed_closed: true
-    development_verdict_is_not_evidence_about_h65: true
-    defect_found_by_the_rehearsal_and_fixed_before_freeze:
-      a_forged_measurements_file_committed_over_the_canonical_path_was_accepted
-  owner_gates_open:
-    - publication_or_ip_disposition
-    - development_route_readiness_run_requiring_a_credential
-    - scientific_freeze
-    - qualifying_scientific_invocation
-    - single_reveal_authorization
+  M123:
+    hypothesis: H68
+    status: closed_at_readiness
+    hypothesis_status: untested
+    verdict: not_ready_stress_under_frozen_ladder
+    qualifying_scientific_invocations: 0
+    delivery_attempts_spent_across_all_instruments: 3_of_6
+    attempt_1:
+      stations: 167
+      result: truncated_length
+      observed_completion_tokens_at_least: 100657
+      two_point_linear_fit_falsified: true
+    attempt_2:
+      stations: 109
+      completion_tokens: 50232
+      predicted_envelope_low: 45598
+      predicted_envelope_high: 65698
+      sizing_prediction_succeeded_out_of_sample: true
+      body: malformed_incomplete_json
+      frozen_classification: not_ready_stress
+    disclosed_successor_issue: malformed_incomplete_delivery_should_be_classified_prospectively_without_rewriting_m123
 
-closed_record_policy:
-  milestones: [M115, M116, M117, M118, M119]
-  may_repair_retroactively: false
-  may_rerun: false
-  may_filter_or_resample_closed_bank: false
-  may_relabel_instrument_abort_as_scientific_negative: false
+long_horizon_frontier:
+  M121:
+    hypothesis: H66
+    target_generality_gate: G7
+    status: preregistered_owner_gated_before_implementation
+    harness_implemented: false
+    scientific_result_exists: false
+    publication_review: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
+    owner_gate: P-025_publication_ip_disposition
+    independent_review: docs/audits/M121_PREIMPLEMENTATION_REVIEW_2026-09-05.md
+    prospective_v2_candidate: docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md
+    even_positive_would_close_G7: false
 
-next_agent_autonomy:
-  may_without_owner_gate:
-    - audit_current_main
-    - design_prospective_successor
-    - implement_on_new_branch
-    - add_adversarial_tests
-    - run_local_and_ci_validation
-    - self_review_and_hostile_review
-    - prepare_pull_request
-    - document_pre_freeze_defects
-  owner_or_external_gate_required_for:
-    - qualifying_scientific_invocation
-    - reveal_or_one_shot_scientific_execution
-    - protocol_freeze_or_owner_authorization
-    - owner_only_publication_or_ip_disposition
-    - new_external_credentials_or_authority
-    - changing_scientific_proposition_or_threshold_after_qualifying_observation
-    - reopening_or_repairing_closed_milestone
+external_blockers:
+  H21_M075:
+    status: external_blocked
+    requirement: private_human_maintained_bank_and_separate_maintainer_reproduction
+    handoff: docs/audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md
+  H31_M085:
+    status: external_blocked
+    requirement: independently_maintained_cross_domain_bank_protocol_and_reproduction
+    handoff: docs/audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md
 
-pointers:
-  current_frontier: docs/CURRENT_RESEARCH_FRONTIER.md
-  claude_handoff: docs/CLAUDE_HANDOFF_M120.md
-  m120_preregistration: experiments/M120/PREREGISTRATION.md
-  m120_complexity_budget: experiments/M120/COMPLEXITY_BUDGET.md
-  m120_bank_sizing: experiments/M120/BANK_SIZING_DEVELOPMENT.json
-  m120_development_rehearsal: experiments/M120/DEVELOPMENT_REHEARSAL.json
-  m120_publication_review: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
-  m117_outcome: experiments/M117/STAGE1_OUTCOME.md
-  m118_outcome: experiments/M118/OUTCOME.md
-  m119_outcome: experiments/M119/OUTCOME.md
-  publication_register: IP_ASSET_REGISTER.md
+owner_only_gates:
+  M120_P024:
+    action: record_or_refuse_pending_publication_ip_disposition
+    review: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
+    recorded_disposition: false
+  M121_P025:
+    action: publication_ip_disposition_then_prospective_v2_hardening_only
+    review: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
+    recorded_disposition: false
+    canonical_salt_or_scientific_run_authorized: false
+  M122_publication:
+    action: record_or_refuse_pending_retrospective_publication_ip_disposition
+    review: docs/IP_REVIEWS/M122_PUBLICATION_REVIEW.md
+    provisional_ledger_id_assigned: false
+    recorded_disposition: false
+  M123_P026:
+    action: record_or_refuse_pending_publication_ip_disposition
+    review: docs/IP_REVIEWS/M123_PUBLICATION_REVIEW.md
+    recorded_disposition: false
+  M092_H38:
+    action: explicit_authority_required_before_resuming_first_run_only_canonical_search
+
+current_next_actions:
+  - inspect_and_audit_any_pushed_M124_or_later_carrier_successor_before_advancing_navigation
+  - never_retroactively_fill_H58_through_H68_from_instrument_artifacts
+  - keep_M121_implementation_blocked_until_owner_disposition
+  - reconcile_M120_M121_M122_M123_publication_dispositions_only_by_explicit_owner_action
+  - keep_M092_canonical_cursor_unadvanced_without_explicit_owner_authority
+  - preserve_external_independence_requirements_for_H21_and_H31
