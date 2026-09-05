@@ -66,6 +66,22 @@ if public/AGPL treatment is accepted, authority extend only to prospectively har
 to drawing a canonical salt or running the scientific attempt. Even a later positive H66 result would
 be bounded partial evidence and would not close G7 by itself.
 
+## Publication/IP backlog
+
+M119/P-023 is the last recorded owner-authorised disposition in this mechanism family. The following
+already-public or prepared work remains ahead of the owner disposition ledger:
+
+| Milestone | Review state | Recorded owner disposition |
+| --- | --- | --- |
+| M120 | P-024 draft prepared | **none** |
+| M121 | P-025 draft prepared | **none** |
+| M122 | retrospective review prepared 2026-09-05; ledger ID intentionally unassigned | **none** |
+| M123 | P-026 draft prepared | **none** |
+
+Preparing and synchronizing those reviews is governance hygiene only. It does not accept any proposed
+disposition, authorize M121 implementation or science, authorize a new carrier successor, or alter a
+closed milestone. Acceptance, amendment or refusal remains an explicit owner act.
+
 ## Armed but paused: M092/H38
 
 M092's canonical search remains unresolved and `first_run_only`. Static integrity work is safe, but
