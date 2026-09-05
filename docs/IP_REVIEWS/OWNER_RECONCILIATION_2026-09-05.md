@@ -11,7 +11,7 @@ The owner accepted the proposed public treatment for the already-public M120–M
 
 ## Ledger reconciliation
 
-The following publication/disclosure ledger rows are authorised for `IP_ASSET_REGISTER.md`:
+The decision is now recorded in `IP_ASSET_REGISTER.md` as:
 
 | ID | Milestone | Disposition | Decision date | Chronology note |
 |---|---|---|---|---|
