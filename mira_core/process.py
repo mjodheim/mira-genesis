@@ -2,7 +2,7 @@
 
 All policy-adjacent host processes are started without a shell in a distinct process group.
 Text transport is encoded and decoded explicitly as UTF-8 so the ambient Windows code page cannot
-change behaviour.  Timeouts terminate the process tree rather than only its visible parent.
+change behaviour. Timeouts terminate the process tree rather than only its visible parent.
 """
 from __future__ import annotations
 
@@ -11,10 +11,137 @@ from pathlib import Path
 import signal
 import subprocess
 from typing import Mapping, Sequence
+import weakref
 
 
 class ProcessSupervisorError(RuntimeError):
     """Raised when a supervised process tree cannot be started or stopped safely."""
+
+
+_WINDOWS_JOB_ATTR = "_mira_windows_job_handle"
+_WINDOWS_JOB_FINALIZER_ATTR = "_mira_windows_job_finalizer"
+_JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x00002000
+_JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS = 9
+
+
+def _windows_api():
+    """Return the small kernel32 surface used for Windows job-object supervision."""
+
+    import ctypes
+    from ctypes import wintypes
+
+    class IO_COUNTERS(ctypes.Structure):
+        _fields_ = [
+            ("ReadOperationCount", ctypes.c_ulonglong),
+            ("WriteOperationCount", ctypes.c_ulonglong),
+            ("OtherOperationCount", ctypes.c_ulonglong),
+            ("ReadTransferCount", ctypes.c_ulonglong),
+            ("WriteTransferCount", ctypes.c_ulonglong),
+            ("OtherTransferCount", ctypes.c_ulonglong),
+        ]
+
+    class JOBOBJECT_BASIC_LIMIT_INFORMATION(ctypes.Structure):
+        _fields_ = [
+            ("PerProcessUserTimeLimit", ctypes.c_longlong),
+            ("PerJobUserTimeLimit", ctypes.c_longlong),
+            ("LimitFlags", wintypes.DWORD),
+            ("MinimumWorkingSetSize", ctypes.c_size_t),
+            ("MaximumWorkingSetSize", ctypes.c_size_t),
+            ("ActiveProcessLimit", wintypes.DWORD),
+            ("Affinity", ctypes.c_size_t),
+            ("PriorityClass", wintypes.DWORD),
+            ("SchedulingClass", wintypes.DWORD),
+        ]
+
+    class JOBOBJECT_EXTENDED_LIMIT_INFORMATION(ctypes.Structure):
+        _fields_ = [
+            ("BasicLimitInformation", JOBOBJECT_BASIC_LIMIT_INFORMATION),
+            ("IoInfo", IO_COUNTERS),
+            ("ProcessMemoryLimit", ctypes.c_size_t),
+            ("JobMemoryLimit", ctypes.c_size_t),
+            ("PeakProcessMemoryUsed", ctypes.c_size_t),
+            ("PeakJobMemoryUsed", ctypes.c_size_t),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.CreateJobObjectW.argtypes = [ctypes.c_void_p, wintypes.LPCWSTR]
+    kernel32.CreateJobObjectW.restype = wintypes.HANDLE
+    kernel32.SetInformationJobObject.argtypes = [
+        wintypes.HANDLE, ctypes.c_int, ctypes.c_void_p, wintypes.DWORD,
+    ]
+    kernel32.SetInformationJobObject.restype = wintypes.BOOL
+    kernel32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+    kernel32.AssignProcessToJobObject.restype = wintypes.BOOL
+    kernel32.TerminateJobObject.argtypes = [wintypes.HANDLE, wintypes.UINT]
+    kernel32.TerminateJobObject.restype = wintypes.BOOL
+    kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
+    kernel32.CloseHandle.restype = wintypes.BOOL
+    return ctypes, wintypes, kernel32, JOBOBJECT_EXTENDED_LIMIT_INFORMATION
+
+
+def _create_windows_job() -> int:
+    ctypes, _wintypes, kernel32, info_type = _windows_api()
+    handle = kernel32.CreateJobObjectW(None, None)
+    if not handle:
+        raise ProcessSupervisorError(
+            f"Windows job object could not be created: WinError {ctypes.get_last_error()}"
+        )
+    info = info_type()
+    info.BasicLimitInformation.LimitFlags = _JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+    if not kernel32.SetInformationJobObject(
+        handle, _JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS,
+        ctypes.byref(info), ctypes.sizeof(info),
+    ):
+        error = ctypes.get_last_error()
+        kernel32.CloseHandle(handle)
+        raise ProcessSupervisorError(
+            f"Windows job object could not be configured: WinError {error}"
+        )
+    return int(handle)
+
+
+def _close_windows_job_handle(handle: int) -> None:
+    if not handle:
+        return
+    _ctypes, wintypes, kernel32, _info_type = _windows_api()
+    kernel32.CloseHandle(wintypes.HANDLE(handle))
+
+
+def _assign_windows_job(process: subprocess.Popen[bytes], handle: int) -> None:
+    ctypes, wintypes, kernel32, _info_type = _windows_api()
+    process_handle = getattr(process, "_handle", None)
+    if process_handle is None or not kernel32.AssignProcessToJobObject(
+        wintypes.HANDLE(handle), wintypes.HANDLE(int(process_handle)),
+    ):
+        error = ctypes.get_last_error()
+        try:
+            process.kill()
+            process.wait(timeout=5)
+        except (OSError, subprocess.TimeoutExpired):
+            pass
+        _close_windows_job_handle(handle)
+        raise ProcessSupervisorError(
+            f"Windows process could not be attached to its supervision job: WinError {error}"
+        )
+    setattr(process, _WINDOWS_JOB_ATTR, handle)
+    setattr(
+        process, _WINDOWS_JOB_FINALIZER_ATTR,
+        weakref.finalize(process, _close_windows_job_handle, handle),
+    )
+
+
+def _terminate_windows_job(process: subprocess.Popen[bytes]) -> bool:
+    """Terminate the attached Windows job, returning False for legacy unbound processes."""
+
+    handle = getattr(process, _WINDOWS_JOB_ATTR, None)
+    if not isinstance(handle, int) or not handle:
+        return False
+    ctypes, wintypes, kernel32, _info_type = _windows_api()
+    if not kernel32.TerminateJobObject(wintypes.HANDLE(handle), 1):
+        raise ProcessSupervisorError(
+            f"Windows process job could not be terminated: WinError {ctypes.get_last_error()}"
+        )
+    return True
 
 
 def start_process_tree(
@@ -35,16 +162,23 @@ def start_process_tree(
         "shell": False,
         "close_fds": True,
     }
+    windows_job: int | None = None
     if os.name == "nt":
+        windows_job = _create_windows_job()
         options["creationflags"] = subprocess.CREATE_NEW_PROCESS_GROUP
     else:
         options["start_new_session"] = True
     try:
-        return subprocess.Popen(list(argv), **options)  # type: ignore[arg-type]
+        process = subprocess.Popen(list(argv), **options)  # type: ignore[arg-type]
     except OSError as exc:
+        if windows_job is not None:
+            _close_windows_job_handle(windows_job)
         raise ProcessSupervisorError(
             f"process could not start: {type(exc).__name__}"
         ) from exc
+    if windows_job is not None:
+        _assign_windows_job(process, windows_job)
+    return process
 
 
 def _windows_taskkill_path() -> Path:
@@ -65,24 +199,23 @@ def terminate_process_tree(
     if timeout_seconds <= 0:
         raise ValueError("process-tree termination timeout must be positive")
     if os.name == "nt":
-        if process.poll() is not None:
-            return
-        try:
-            completed = subprocess.run(
-                [str(_windows_taskkill_path()), "/PID", str(process.pid), "/T", "/F"],
-                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                shell=False, timeout=timeout_seconds, check=False,
-            )
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise ProcessSupervisorError(
-                f"Windows process tree could not be terminated: {type(exc).__name__}"
-            ) from exc
-        if completed.returncode != 0 and process.poll() is None:
-            detail = (completed.stderr or completed.stdout)[-500:].decode("utf-8", "replace")
-            raise ProcessSupervisorError(
-                f"Windows process-tree termination failed with exit code "
-                f"{completed.returncode}: {detail}"
-            )
+        if not _terminate_windows_job(process):
+            try:
+                completed = subprocess.run(
+                    [str(_windows_taskkill_path()), "/PID", str(process.pid), "/T", "/F"],
+                    stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                    shell=False, timeout=timeout_seconds, check=False,
+                )
+            except (OSError, subprocess.TimeoutExpired) as exc:
+                raise ProcessSupervisorError(
+                    f"Windows process tree could not be terminated: {type(exc).__name__}"
+                ) from exc
+            if completed.returncode != 0 and process.poll() is None:
+                detail = (completed.stderr or completed.stdout)[-500:].decode("utf-8", "replace")
+                raise ProcessSupervisorError(
+                    f"Windows process-tree termination failed with exit code "
+                    f"{completed.returncode}: {detail}"
+                )
     else:
         try:
             os.killpg(process.pid, signal.SIGKILL)
@@ -93,10 +226,11 @@ def terminate_process_tree(
             raise ProcessSupervisorError(
                 f"POSIX process tree could not be terminated: {type(exc).__name__}"
             ) from exc
-    try:
-        process.wait(timeout=timeout_seconds)
-    except subprocess.TimeoutExpired as exc:
-        raise ProcessSupervisorError("process tree did not stop within its cleanup budget") from exc
+    if process.poll() is None:
+        try:
+            process.wait(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired as exc:
+            raise ProcessSupervisorError("process tree did not stop within its cleanup budget") from exc
 
 
 def run_utf8_process(
@@ -117,7 +251,12 @@ def run_utf8_process(
         stdout, stderr = process.communicate(input=input_bytes, timeout=timeout_seconds)
     except subprocess.TimeoutExpired as exc:
         terminate_process_tree(process)
-        stdout, stderr = process.communicate()
+        try:
+            stdout, stderr = process.communicate(timeout=timeout_seconds)
+        except subprocess.TimeoutExpired as cleanup_exc:
+            raise ProcessSupervisorError(
+                "process pipes did not close within the cleanup budget"
+            ) from cleanup_exc
         raise subprocess.TimeoutExpired(
             list(argv), timeout_seconds, output=stdout, stderr=stderr,
         ) from exc
