@@ -29,6 +29,21 @@ jobs:
       - name: Reproduce Codex Windows and memory regressions
         shell: pwsh
         run: python -m pytest -q tests/test_codex_audit_regressions.py
-      - name: Collect the complete suite on Windows
+      - name: Diagnose complete-suite collection on Windows
+        id: collection
+        continue-on-error: true
         shell: pwsh
-        run: python -m pytest --collect-only -q
+        run: |
+          python -m pytest --collect-only -q 2>&1 | Tee-Object -FilePath collection.txt
+          exit $LASTEXITCODE
+      - name: Report only collection-error modules
+        if: always()
+        shell: pwsh
+        run: |
+          Write-Host '=== WINDOWS COLLECTION ERRORS ==='
+          Select-String -Path collection.txt -Pattern 'ERROR collecting|ModuleNotFoundError: No module named .fcntl.' | ForEach-Object { $_.Line }
+      - name: Require complete collection
+        if: always()
+        shell: pwsh
+        run: |
+          if ('${{ steps.collection.outcome }}' -ne 'success') { exit 1 }
