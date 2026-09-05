@@ -876,9 +876,15 @@ def test_the_ceiling_counts_attempts_from_earlier_milestones_too():
     # was, and is. (M122's attempt 2 was also a delivery failure -- hence the qualified prefixes.)
     assert not any(name.startswith("M123/READINESS_ATTEMPT_02") for name in across)
     assert "M123/READINESS_ATTEMPT_01_not_ready_delivery.json" in across
-    assert len(across) == 3, "three delivery attempts stand across every instrument, of six"
-    # The per-instrument allowance stays scoped to this plan and is unaffected by the widening.
-    assert allowance["delivery_attempts_against_this_instrument"] == []
+    # Four after M124 attempt 1 landed: M122 twice, M123 attempt 1, M124 attempt 1. This assertion
+    # counted three before the run and the run moved the world, not the code.
+    assert len(across) == 4, "four delivery attempts stand across every instrument, of six"
+    assert "M124/READINESS_ATTEMPT_01_not_ready_delivery.json" in across
+    # The per-instrument allowance is scoped to this plan and now holds exactly attempt 1: the run
+    # spent one of three. It was empty before the run.
+    assert allowance["delivery_attempts_against_this_instrument"] == [
+        "M124/READINESS_ATTEMPT_01_not_ready_delivery.json"]
+    assert len(allowance["delivery_attempts_against_this_instrument"]) < readiness.DELIVERY_ALLOWANCE
 
 
 def test_the_ceiling_refuses_a_run_once_it_is_reached(sandbox, monkeypatch):
