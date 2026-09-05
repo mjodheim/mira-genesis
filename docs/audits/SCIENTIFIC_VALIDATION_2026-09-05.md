@@ -93,6 +93,35 @@ this discipline.
   therefore the durable reproduction source; missing old Actions logs are not treated as missing
   scientific artifacts unless a claim specifically depended on them.
 
+## Reproduction-method correction discovered by the audit
+
+The first broad M095–M112 replay matrix was intentionally kept when it failed. It had checked every
+historical result from the **current** repository checkout. That is not a valid reproduction context
+for milestones whose frozen predicates include exact source-byte or runtime bindings.
+
+The failure pattern diagnosed the mistake rather than contradicting the old results:
+
+- M096 and M097 recomputed negative only because P1 detected that their mechanism files had moved
+  after their historical freezes;
+- M101 likewise detected later source/result movement in predicates designed to make such movement
+  fatal;
+- M104 failed closed on its canonical-runtime check because its protocol binds CPython 3.11.16 and
+  SQLite 3.53.1, while a contemporary hosted runner did not provide that exact pair by default;
+- M102 was called with a nonexistent `--no-write` option by the first audit workflow; its actual
+  read-only invocation is simply the checker without `--write`;
+- M105–M109 include checker-attempt/exclusive-create semantics, so invoking their historical
+  checkers while a preserved `CHECK_REPORT.json` is present exercises the refusal path rather than
+  the original replay path.
+
+None of those failures is counted as a failed reproduction of the scientific result. They are
+counted as a **failed reproduction procedure** and are preserved as such.
+
+The corrected matrix now materializes a disposable detached worktree at each result's own
+preservation tag (M095 uses result-preservation commit `47c6938…` because it predates the tag
+convention), restores the exact CPython/SQLite runtime where required, and removes a canonical
+checker report only from the disposable worktree when that is necessary to exercise an
+exclusive-create replay. The committed canonical report and all Git history remain untouched.
+
 ## Non-goals
 
 This audit will not:
