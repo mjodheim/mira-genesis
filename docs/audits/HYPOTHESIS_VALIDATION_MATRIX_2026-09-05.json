@@ -1,0 +1,268 @@
+{
+  "schema": "genesis-hypothesis-validation-matrix-v1",
+  "date": "2026-09-05",
+  "authority": "audit_navigation_only_no_scientific_state_change",
+  "scope": "H38-H68 plus external blockers H21/H31",
+  "rules": {
+    "replay_is_not_new_evidence": true,
+    "historical_negative_must_reproduce_negative": true,
+    "historical_mixed_must_reproduce_mixed": true,
+    "untested_instrument_closure_is_not_negative_evidence": true,
+    "external_requirement_cannot_be_satisfied_by_internal_substitute": true,
+    "one_shot_or_owner_gated_action_requires_separate_owner_authority": true
+  },
+  "hypotheses": [
+    {
+      "hypothesis": "H21",
+      "milestone": "M075",
+      "status": "external_blocked",
+      "fresh_audit_result": "readiness_correctly_fail_closed",
+      "blocker": "private human-maintained bank plus separate-maintainer reproduction absent",
+      "next_action": "independent_maintainer_handoff_prepared"
+    },
+    {
+      "hypothesis": "H31",
+      "milestone": "M085",
+      "status": "external_blocked",
+      "fresh_audit_result": "readiness_correctly_fail_closed",
+      "blocker": "external cross-domain bank/protocol plus independent reproduction absent",
+      "next_action": "independent_maintainer_handoff_prepared"
+    },
+    {
+      "hypothesis": "H38",
+      "milestone": "M092",
+      "status": "reserved_unresolved_no_verdict",
+      "fresh_audit_result": "not_executed_by_audit",
+      "blocker": "canonical search is first_run_only and continuation would consume the canonical observation",
+      "next_action": "separate_owner_authority_required_before_resume"
+    },
+    {
+      "hypothesis": "H39",
+      "milestone": "M094",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_by_permanent_ci"
+    },
+    {
+      "hypothesis": "H40",
+      "milestone": "M095",
+      "status": "not_supported",
+      "recorded_verdict": "negative",
+      "fresh_audit_result": "reproduced_negative; mechanism raw binding also nonportable"
+    },
+    {
+      "hypothesis": "H41",
+      "milestone": "M096",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "P2-P10 true; P1 historical mechanism binding not reconstructible",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
+    },
+    {
+      "hypothesis": "H42",
+      "milestone": "M097",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H43",
+      "milestone": "M098",
+      "status": "not_supported",
+      "recorded_verdict": "negative",
+      "fresh_audit_result": "reproduced_negative; P1-P11 true and P12 replay condition false"
+    },
+    {
+      "hypothesis": "H44",
+      "milestone": "M099",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H45",
+      "milestone": "M100",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H46",
+      "milestone": "M101",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "P2-P14 true; P1/P15 historical source-byte binding/replay limit",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
+    },
+    {
+      "hypothesis": "H47",
+      "milestone": "M102",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "P2-P14 true; P1/P15 inherited M101 source-byte binding/replay limit",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
+    },
+    {
+      "hypothesis": "H48",
+      "milestone": "M103",
+      "status": "not_supported",
+      "recorded_verdict": "negative",
+      "fresh_audit_result": "reproduced_negative"
+    },
+    {
+      "hypothesis": "H49",
+      "milestone": "M104",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_15_of_15_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H50",
+      "milestone": "M105",
+      "status": "not_supported",
+      "recorded_verdict": "negative",
+      "fresh_audit_result": "reproduced_negative"
+    },
+    {
+      "hypothesis": "H51",
+      "milestone": "M106",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "P1-P15 true; P16 nonportable because stable evidence retains absolute interpreter path",
+      "reproduction_class": "scientific_predicates_reproduced_stable_projection_limited"
+    },
+    {
+      "hypothesis": "H52",
+      "milestone": "M107",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_16_of_16_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H53",
+      "milestone": "M108",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_16_of_16_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H54",
+      "milestone": "M109",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_18_of_18_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H55",
+      "milestone": "M110",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_24_of_24_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H56",
+      "milestone": "M111",
+      "status": "supported_within_frozen_bounds",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_positive_24_of_24_byte_stable",
+      "reproduction_class": "full"
+    },
+    {
+      "hypothesis": "H57",
+      "milestone": "M112",
+      "status": "mixed",
+      "recorded_verdict": "mixed",
+      "fresh_audit_result": "reproduced_mixed: procedure 10/10; diagnosis 24/24 positive; transfer 22/24 negative",
+      "reproduction_class": "full_mixed_reproduction"
+    },
+    {
+      "hypothesis": "H58",
+      "milestone": "M113",
+      "status": "untested",
+      "closure": "instrument_failure_transport",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H59",
+      "milestone": "M114",
+      "status": "untested",
+      "closure": "instrument_aborted_transport",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H60",
+      "milestone": "M115",
+      "status": "untested",
+      "closure": "instrument_aborted_before_carrier_payload",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H61",
+      "milestone": "M116",
+      "status": "untested",
+      "closure": "development_capability_matrix_route_unsuitable",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H62",
+      "milestone": "M117",
+      "status": "untested",
+      "closure": "instrument_development_and_route_calibration_only",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H63",
+      "milestone": "M118",
+      "status": "untested",
+      "closure": "instrument_design_completed_no_scientific_generation",
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
+    },
+    {
+      "hypothesis": "H64",
+      "milestone": "M119",
+      "status": "untested",
+      "closure": "instrument_aborted_at_carrier_qualification",
+      "next_action": "same scientific proposition continues only in prospective successor"
+    },
+    {
+      "hypothesis": "H65",
+      "milestone": "M120",
+      "status": "untested",
+      "closure": "development_readiness_gate",
+      "next_action": "same scientific proposition continues only in prospective successor"
+    },
+    {
+      "hypothesis": "H66",
+      "milestone": "M121",
+      "status": "preregistered_owner_gated",
+      "target": "G7 long-horizon autonomy bounded partial evidence",
+      "fresh_audit_result": "preimplementation hostile review found repairable degrees of freedom; noncanonical v2 design candidate prepared",
+      "blocker": "P-025 owner publication/IP disposition before enabling implementation",
+      "next_action": "owner decision then prospective v2 hardening before any harness/canonical salt"
+    },
+    {
+      "hypothesis": "H67",
+      "milestone": "M122",
+      "status": "untested",
+      "closure": "development_readiness_not_ready_stress",
+      "next_action": "prospective_successor_only"
+    },
+    {
+      "hypothesis": "H68",
+      "milestone": "M123",
+      "status": "untested",
+      "closure": "not_ready_stress_under_frozen_ladder",
+      "scientific_proposition": "same target proposition as H64; successor number procedural",
+      "fresh_audit_result": "M124 not present on GitHub during this audit",
+      "next_action": "audit prospective successor immediately when pushed"
+    }
+  ]
+}
