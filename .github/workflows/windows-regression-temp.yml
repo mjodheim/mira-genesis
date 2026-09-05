@@ -1,0 +1,31 @@
+name: Temporary Windows regression
+
+on:
+  pull_request:
+    paths:
+      - 'mira_core/process.py'
+      - 'mira_core/memory.py'
+      - 'tests/test_codex_audit_regressions.py'
+      - '.github/workflows/windows-regression-temp.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows-regression:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install project and test dependency
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Reproduce Codex Windows and memory regressions
+        shell: pwsh
+        run: python -m pytest -q tests/test_codex_audit_regressions.py
