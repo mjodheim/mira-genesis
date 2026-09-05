@@ -16,34 +16,31 @@
       "hypothesis": "H21",
       "milestone": "M075",
       "status": "external_blocked",
-      "evidence": "private human-maintained bank and separate-maintainer reproduction absent",
-      "audit_action": "readiness_only",
-      "checker": "scripts/check_m075_private_readiness.py --require-ready",
-      "fresh_audit_result": "correctly_fail_closed"
+      "fresh_audit_result": "readiness_correctly_fail_closed",
+      "blocker": "private human-maintained bank plus separate-maintainer reproduction absent",
+      "next_action": "independent_maintainer_handoff_prepared"
     },
     {
       "hypothesis": "H31",
       "milestone": "M085",
       "status": "external_blocked",
-      "evidence": "external cross-domain maintained bank/protocol and independent reproduction absent",
-      "audit_action": "readiness_only",
-      "checker": "scripts/check_m085_readiness.py --require-ready",
-      "fresh_audit_result": "correctly_fail_closed"
+      "fresh_audit_result": "readiness_correctly_fail_closed",
+      "blocker": "external cross-domain bank/protocol plus independent reproduction absent",
+      "next_action": "independent_maintainer_handoff_prepared"
     },
     {
       "hypothesis": "H38",
       "milestone": "M092",
       "status": "reserved_unresolved_no_verdict",
-      "evidence": "canonical search voluntarily stopped before terminal candidate, independent reproduction or qualification",
-      "audit_action": "preserve_and_reassess_before_any_successor",
-      "checker": null
+      "fresh_audit_result": "not_executed_by_audit",
+      "blocker": "canonical search is first_run_only and continuation would consume the canonical observation",
+      "next_action": "separate_owner_authority_required_before_resume"
     },
     {
       "hypothesis": "H39",
       "milestone": "M094",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "audit_action": "reproduction",
       "fresh_audit_result": "reproduced_by_permanent_ci"
     },
     {
@@ -51,249 +48,221 @@
       "milestone": "M095",
       "status": "not_supported",
       "recorded_verdict": "negative",
-      "preservation_ref": "47c69387261e624f205b4d102cc5dec40c289348",
-      "checker": "scripts/check_m095_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_negative; mechanism raw binding also nonportable"
     },
     {
       "hypothesis": "H41",
       "milestone": "M096",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m096-positive-result",
-      "checker": "scripts/check_m096_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "P2-P10 true; P1 historical mechanism binding not reconstructible",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
     },
     {
       "hypothesis": "H42",
       "milestone": "M097",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m097-positive-result",
-      "checker": "scripts/check_m097_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H43",
       "milestone": "M098",
       "status": "not_supported",
       "recorded_verdict": "negative",
-      "preservation_ref": "experiment/m098-negative-result",
-      "checker": "scripts/check_m098_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_negative; P1-P11 true and P12 replay condition false"
     },
     {
       "hypothesis": "H44",
       "milestone": "M099",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m099-positive-result",
-      "checker": "scripts/check_m099_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H45",
       "milestone": "M100",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m100-positive-result",
-      "checker": "scripts/check_m100_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_12_of_12",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H46",
       "milestone": "M101",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m101-positive-result",
-      "checker": "scripts/check_m101_result.py --no-write",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "P2-P14 true; P1/P15 historical source-byte binding/replay limit",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
     },
     {
       "hypothesis": "H47",
       "milestone": "M102",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m102-positive-result",
-      "checker": "scripts/check_m102_result.py",
-      "canonical_runtime": "CPython 3.11.16 / SQLite 3.53.1",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "P2-P14 true; P1/P15 inherited M101 source-byte binding/replay limit",
+      "reproduction_class": "scientific_core_reproduced_binding_limited"
     },
     {
       "hypothesis": "H48",
       "milestone": "M103",
       "status": "not_supported",
       "recorded_verdict": "negative",
-      "preservation_ref": "experiment/m103-negative-result",
-      "checker": "scripts/check_m103_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_negative"
     },
     {
       "hypothesis": "H49",
       "milestone": "M104",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m104-positive-result",
-      "checker": "scripts/check_m104_result.py --replay",
-      "canonical_runtime": "CPython 3.11.16 / SQLite 3.53.1",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_15_of_15_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H50",
       "milestone": "M105",
       "status": "not_supported",
       "recorded_verdict": "negative",
-      "preservation_ref": "experiment/m105-negative-result",
-      "checker": "scripts/check_m105_result.py --replay",
-      "known_instrument_finding": "direct-script deferred replay import lacks repository-root bootstrap",
-      "audit_action": "historical_reproduction_of_negative"
+      "fresh_audit_result": "reproduced_negative"
     },
     {
       "hypothesis": "H51",
       "milestone": "M106",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m106-positive-result",
-      "checker": "scripts/check_m106_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "P1-P15 true; P16 nonportable because stable evidence retains absolute interpreter path",
+      "reproduction_class": "scientific_predicates_reproduced_stable_projection_limited"
     },
     {
       "hypothesis": "H52",
       "milestone": "M107",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m107-positive-result",
-      "checker": "scripts/check_m107_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_16_of_16_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H53",
       "milestone": "M108",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m108-positive-result",
-      "checker": "scripts/check_m108_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_16_of_16_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H54",
       "milestone": "M109",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m109-positive-result",
-      "checker": "scripts/check_m109_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_18_of_18_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H55",
       "milestone": "M110",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m110-positive-result",
-      "checker": "scripts/check_m110_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_24_of_24_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H56",
       "milestone": "M111",
       "status": "supported_within_frozen_bounds",
       "recorded_verdict": "positive",
-      "preservation_ref": "experiment/m111-positive-result",
-      "checker": "scripts/check_m111_result.py --replay",
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_positive_24_of_24_byte_stable",
+      "reproduction_class": "full"
     },
     {
       "hypothesis": "H57",
       "milestone": "M112",
       "status": "mixed",
       "recorded_verdict": "mixed",
-      "preservation_ref": "experiment/m112-mixed-result",
-      "checker": "scripts/check_m112_result.py",
-      "recorded_components": {
-        "procedural_independence": "10/10 established",
-        "diagnosis": "24/24 positive",
-        "transfer": "22/24 negative_under_inherited_rule"
-      },
-      "audit_action": "historical_reproduction"
+      "fresh_audit_result": "reproduced_mixed: procedure 10/10; diagnosis 24/24 positive; transfer 22/24 negative",
+      "reproduction_class": "full_mixed_reproduction"
     },
     {
       "hypothesis": "H58",
       "milestone": "M113",
       "status": "untested",
       "closure": "instrument_failure_transport",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H59",
       "milestone": "M114",
       "status": "untested",
       "closure": "instrument_aborted_transport",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H60",
       "milestone": "M115",
       "status": "untested",
       "closure": "instrument_aborted_before_carrier_payload",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H61",
       "milestone": "M116",
       "status": "untested",
       "closure": "development_capability_matrix_route_unsuitable",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H62",
       "milestone": "M117",
       "status": "untested",
       "closure": "instrument_development_and_route_calibration_only",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H63",
       "milestone": "M118",
       "status": "untested",
       "closure": "instrument_design_completed_no_scientific_generation",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "no_retroactive_verdict; superseded_by_prospective_carrier_line"
     },
     {
       "hypothesis": "H64",
       "milestone": "M119",
       "status": "untested",
       "closure": "instrument_aborted_at_carrier_qualification",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "same scientific proposition continues only in prospective successor"
     },
     {
       "hypothesis": "H65",
       "milestone": "M120",
       "status": "untested",
       "closure": "development_readiness_gate",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "same scientific proposition continues only in prospective successor"
     },
     {
       "hypothesis": "H66",
       "milestone": "M121",
       "status": "preregistered_owner_gated",
       "target": "G7 long-horizon autonomy bounded partial evidence",
-      "blocker": "owner publication/IP disposition P-025 before enabling implementation",
-      "audit_action": "stop_before_implementation"
+      "fresh_audit_result": "preimplementation hostile review found repairable degrees of freedom; noncanonical v2 design candidate prepared",
+      "blocker": "P-025 owner publication/IP disposition before enabling implementation",
+      "next_action": "owner decision then prospective v2 hardening before any harness/canonical salt"
     },
     {
       "hypothesis": "H67",
       "milestone": "M122",
       "status": "untested",
       "closure": "development_readiness_not_ready_stress",
-      "audit_action": "preserve_no_retroactive_verdict"
+      "next_action": "prospective_successor_only"
     },
     {
       "hypothesis": "H68",
       "milestone": "M123",
       "status": "untested",
       "closure": "not_ready_stress_under_frozen_ladder",
-      "scientific_proposition": "same target proposition as H64, successor number procedural",
-      "audit_action": "prospective_successor_only"
+      "scientific_proposition": "same target proposition as H64; successor number procedural",
+      "fresh_audit_result": "M124 not present on GitHub during this audit",
+      "next_action": "audit prospective successor immediately when pushed"
     }
   ]
 }
