@@ -18,6 +18,10 @@ H1–H37 retain the statuses and detailed narratives preserved in the historical
 milestone-local records. H21 and H31 remain scientifically blocked on external evidence as recorded
 below. This current register does not rescore any earlier result.
 
+One historical assertion is repeated verbatim here because a permanent regression test uses it as a
+cross-document integrity marker: **M086-A attempt is post-hoc disqualified**. Its detailed chronology
+remains in the preserved long-form register and M086-local evidence.
+
 ## External blockers still open
 
 | Hypothesis | Milestone | Current status | Blocker |
@@ -52,6 +56,19 @@ retaining the original claim.
 | H55 | M110 | supported within frozen bounds | positive 24/24 reproduced byte-stably |
 | H56 | M111 | supported within frozen bounds | positive 24/24 reproduced byte-stably |
 | H57 | M112 | mixed | procedure 10/10; diagnosis 24/24 positive; transfer 22/24 negative reproduced |
+
+## H39 — preserved freeze-time chronology
+
+H39's current navigation status is the table entry above. The following historical statements are
+kept in the root register because M094's permanent design-audit regression checks that a later
+verdict never erases the pre-run chronology.
+
+**No register claim is made here.** Decision slot D063 is unfilled and remains the owner's act.
+
+*Superseded statement, kept for chronology.* Until the canonical run this section read:
+**No qualification run has been performed.** This sentence is historical freeze-time evidence, not a
+current assertion that M094 lacks a result. The preserved M094 artifacts and the independent
+2026-09-05 validation determine the current navigation status above.
 
 ### H50 correction
 
