@@ -20,9 +20,13 @@ permissions:
 
 jobs:
   preserved-results:
-    name: Historical preserved result replays
+    name: Historical replays (${{ matrix.shard }})
     runs-on: ubuntu-24.04
-    timeout-minutes: 45
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [M095-M100, M101-M106, M107-M112]
     steps:
       - uses: actions/checkout@v6
         with:
@@ -66,6 +70,8 @@ jobs:
 
       - name: Replay preserved results at their own historical refs
         shell: bash
+        env:
+          SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -79,37 +85,43 @@ jobs:
           import sys
 
           root = Path.cwd()
-          worktree_root = Path("/tmp/genesis-scientific-replays")
+          shard = os.environ["SHARD"]
+          worktree_root = Path("/tmp/genesis-scientific-replays") / shard
           shutil.rmtree(worktree_root, ignore_errors=True)
           worktree_root.mkdir(parents=True)
 
-          # M095 predates the result-tag convention. 47c6938 is the commit whose message is
-          # "science(m095): preserve negative qualification attempt 1". Later milestones use
-          # their public preservation tags.
-          cases = [
-              ("M095", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", False),
-              ("M096", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", False),
-              ("M097", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", False),
-              ("M098", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", False),
-              ("M099", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", False),
-              ("M100", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", False),
-              ("M101", "experiment/m101-positive-result", ["scripts/check_m101_result.py", "--no-write"], "positive", False),
-              # M102 has no --no-write flag: without --write it is already read-only.
-              ("M102", "experiment/m102-positive-result", ["scripts/check_m102_result.py"], "positive", False),
-              ("M103", "experiment/m103-negative-result", ["scripts/check_m103_result.py", "--replay"], "negative", False),
-              ("M104", "experiment/m104-positive-result", ["scripts/check_m104_result.py", "--replay"], "positive", False),
-              # M105-M109 enforce a single materialized checker report. In a disposable worktree,
-              # remove only the preserved report copy so the original checker can exercise its
-              # replay path. Git history and the canonical report remain untouched.
-              ("M105", "experiment/m105-negative-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
-              ("M106", "experiment/m106-positive-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
-              ("M107", "experiment/m107-positive-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
-              ("M108", "experiment/m108-positive-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
-              ("M109", "experiment/m109-positive-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
-              ("M110", "experiment/m110-positive-result", ["scripts/check_m110_result.py", "--replay"], "positive", False),
-              ("M111", "experiment/m111-positive-result", ["scripts/check_m111_result.py", "--replay"], "positive", False),
-              ("M112", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
-          ]
+          # M095 predates the result-tag convention. 47c6938 is the result-preservation commit.
+          shards = {
+              "M095-M100": [
+                  ("M095", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", False),
+                  ("M096", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", False),
+                  ("M097", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", False),
+                  ("M098", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", False),
+                  ("M099", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", False),
+                  ("M100", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", False),
+              ],
+              "M101-M106": [
+                  ("M101", "experiment/m101-positive-result", ["scripts/check_m101_result.py", "--no-write"], "positive", False),
+                  # M102 has no --no-write flag: without --write it is already read-only.
+                  ("M102", "experiment/m102-positive-result", ["scripts/check_m102_result.py"], "positive", False),
+                  ("M103", "experiment/m103-negative-result", ["scripts/check_m103_result.py", "--replay"], "negative", False),
+                  ("M104", "experiment/m104-positive-result", ["scripts/check_m104_result.py", "--replay"], "positive", False),
+                  # M105-M109 enforce a single materialized checker report. In a disposable worktree,
+                  # remove only the preserved report copy so the original checker can exercise its
+                  # replay path. Git history and the canonical report remain untouched.
+                  ("M105", "experiment/m105-negative-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
+                  ("M106", "experiment/m106-positive-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
+              ],
+              "M107-M112": [
+                  ("M107", "experiment/m107-positive-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
+                  ("M108", "experiment/m108-positive-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
+                  ("M109", "experiment/m109-positive-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
+                  ("M110", "experiment/m110-positive-result", ["scripts/check_m110_result.py", "--replay"], "positive", False),
+                  ("M111", "experiment/m111-positive-result", ["scripts/check_m111_result.py", "--replay"], "positive", False),
+                  ("M112", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
+              ],
+          }
+          cases = shards[shard]
 
           failures: list[str] = []
           summary: list[dict[str, object]] = []
@@ -170,7 +182,7 @@ jobs:
                   failures.append(f"{milestone}: expected {expected}, reproduced {actual!r}")
               print("::endgroup::", flush=True)
 
-          print(json.dumps({"historical_reproduction_summary": summary}, indent=2, sort_keys=True))
+          print(json.dumps({"shard": shard, "historical_reproduction_summary": summary}, indent=2, sort_keys=True))
           if failures:
               print("Historical scientific reproduction mismatches:", file=sys.stderr)
               for failure in failures:
