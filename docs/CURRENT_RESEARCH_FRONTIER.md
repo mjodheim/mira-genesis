@@ -30,7 +30,8 @@ The recent sequence is an apparatus-convergence line:
   new rule did not decide the run. The preserved verdict is `not_ready_delivery`.
 
 The owner explicitly chose on 5 September 2026 to **close M124 without replay**. H69 remains untested.
-No carrier bank, qualifying scientific invocation, reveal or result exists for M124.
+No carrier bank, qualifying scientific invocation, reveal or scientific result exists for M124; the
+preserved DEVELOPMENT readiness result remains authoritative.
 
 ## What M124 taught about the instrument
 
