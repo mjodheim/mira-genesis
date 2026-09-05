@@ -2,8 +2,10 @@ name: Scientific reproduction audit
 
 # Audit-only replay of preserved scientific results.
 # This workflow never creates a new scientific observation and never changes a recorded verdict.
-# For local-first results, reconstruction preserves the original Git chronology. M101/M102 also
-# reproduce their documented Windows CRLF checkout semantics; M103 prospectively fixed that class.
+# Historical text bytes are reconstructed only when a LF/CRLF variant matches a digest already
+# preserved in the milestone's frozen/result material. M106 is intentionally classified separately:
+# its scientific predicates can reproduce while its frozen stable projection remains cross-machine
+# non-portable because it retained an absolute interpreter path.
 
 on:
   pull_request:
@@ -77,9 +79,11 @@ jobs:
           python - <<'PY'
           from __future__ import annotations
 
+          import hashlib
           import json
           import os
           from pathlib import Path
+          import re
           import shutil
           import subprocess
           import sys
@@ -90,27 +94,27 @@ jobs:
           shutil.rmtree(worktree_root, ignore_errors=True)
           worktree_root.mkdir(parents=True)
 
-          # Fields: milestone, checkout ref, result ref, checker args, expected verdict,
-          # overlay result while keeping HEAD at checkout ref, checkout mode.
-          # M101/M102 are deliberately CRLF: their own records document the Windows checkout and
-          # M103 later records that the M0* gitattributes convention stopped matching at M100.
+          # Fields: milestone, checkout ref, result ref, checker args, expected audit class,
+          # overlay RESULT while keeping HEAD at checkout ref, byte reconstruction mode.
           shards = {
               "M095-M100": [
-                  ("M095", "951c7c271f07a5bf2c08735c30b8d49f39cf8b73", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", True, "native"),
-                  ("M096", "experiment/m096-contract-safe-freeze", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", True, "native"),
-                  ("M097", "experiment/m097-operation-acquisition-freeze", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", True, "native"),
-                  ("M098", "experiment/m098-process-persistence-freeze", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", True, "native"),
+                  ("M095", "951c7c271f07a5bf2c08735c30b8d49f39cf8b73", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", True, "recorded-bytes"),
+                  ("M096", "experiment/m096-contract-safe-freeze", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", True, "recorded-bytes"),
+                  ("M097", "experiment/m097-operation-acquisition-freeze", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", True, "recorded-bytes"),
+                  ("M098", "experiment/m098-process-persistence-freeze", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", True, "recorded-bytes"),
                   ("M099", "experiment/m099-stable-persistence-freeze", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", True, "native"),
                   ("M100", "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", True, "native"),
               ],
               "M101-M106": [
-                  ("M101", "experiment/m101-frozen-protocol-v4", "experiment/m101-canonical-first-result", ["scripts/check_m101_result.py", "--no-write"], "positive", True, "crlf"),
-                  ("M102", "experiment/m102-frozen-protocol-v1", "experiment/m102-canonical-first-result", ["scripts/check_m102_result.py"], "positive", True, "crlf"),
+                  ("M101", "experiment/m101-frozen-protocol-v4", "experiment/m101-canonical-first-result", ["scripts/check_m101_result.py", "--no-write"], "positive", True, "recorded-bytes"),
+                  ("M102", "experiment/m102-frozen-protocol-v1", "experiment/m102-canonical-first-result", ["scripts/check_m102_result.py"], "positive", True, "recorded-bytes"),
                   ("M103", "experiment/m103-frozen-protocol-v1", "experiment/m103-canonical-first-result", ["scripts/check_m103_result.py", "--replay"], "negative", True, "native"),
                   # M104's checker intentionally binds HEAD to the RESULT-only child, not the freeze.
                   ("M104", "experiment/m104-canonical-first-result", "experiment/m104-canonical-first-result", ["scripts/check_m104_result.py", "--replay"], "positive", False, "native"),
                   ("M105", "experiment/m105-frozen-protocol-v2", "experiment/m105-canonical-first-result", ["scripts/check_m105_result.py", "--replay"], "negative", True, "native"),
-                  ("M106", "experiment/m106-frozen-protocol-v1", "experiment/m106-canonical-first-result", ["scripts/check_m106_result.py", "--replay"], "positive", True, "native"),
+                  # Historical M106 is positive. A fresh cross-machine replay is expected to retain
+                  # P1-P15 while P16 alone fails because stable evidence contains an absolute path.
+                  ("M106", "experiment/m106-frozen-protocol-v1", "experiment/m106-canonical-first-result", ["scripts/check_m106_result.py", "--replay"], "scientific_predicates_reproduced_nonportable_p16", True, "native"),
               ],
               "M107-M112": [
                   ("M107", "experiment/m107-frozen-protocol-v1", "experiment/m107-canonical-first-result", ["scripts/check_m107_result.py", "--replay"], "positive", True, "native"),
@@ -126,11 +130,72 @@ jobs:
           failures: list[str] = []
           summary: list[dict[str, object]] = []
           env = os.environ.copy()
+          digest_pattern = re.compile(rb"(?<![0-9A-Fa-f])[0-9A-Fa-f]{64}(?![0-9A-Fa-f])")
 
-          for milestone, checkout_ref, result_ref, args, expected, overlay_result, checkout_mode in cases:
+          def git_show_bytes(ref: str, relative: str) -> bytes | None:
+              completed = subprocess.run(
+                  ["git", "show", f"{ref}:{relative}"],
+                  cwd=root,
+                  capture_output=True,
+                  check=False,
+              )
+              return completed.stdout if completed.returncode == 0 else None
+
+          def collect_recorded_digests(destination: Path, milestone: str, result_bytes: bytes | None) -> set[str]:
+              material: list[bytes] = []
+              if result_bytes is not None:
+                  material.append(result_bytes)
+              experiment = destination / "experiments" / milestone
+              if experiment.is_dir():
+                  for path in sorted(experiment.rglob("*")):
+                      if path.is_file() and path.stat().st_size <= 2_000_000:
+                          try:
+                              material.append(path.read_bytes())
+                          except OSError:
+                              pass
+              return {
+                  match.group(0).decode("ascii").lower()
+                  for blob in material
+                  for match in digest_pattern.finditer(blob)
+              }
+
+          def reconstruct_recorded_text_bytes(destination: Path, recorded: set[str]) -> list[str]:
+              changed: list[str] = []
+              tracked = subprocess.run(
+                  ["git", "ls-files", "-z"], cwd=destination, capture_output=True, check=True
+              ).stdout.split(b"\0")
+              for raw_path in tracked:
+                  if not raw_path:
+                      continue
+                  relative = raw_path.decode("utf-8", errors="surrogateescape")
+                  path = destination / relative
+                  if not path.is_file() or path.stat().st_size > 2_000_000:
+                      continue
+                  data = path.read_bytes()
+                  if b"\0" in data:
+                      continue
+                  current = hashlib.sha256(data).hexdigest()
+                  if current in recorded:
+                      continue
+                  lf = data.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+                  crlf = lf.replace(b"\n", b"\r\n")
+                  variants: dict[str, bytes] = {}
+                  for label, candidate in (("lf", lf), ("crlf", crlf)):
+                      digest = hashlib.sha256(candidate).hexdigest()
+                      if digest in recorded and candidate != data:
+                          variants[label] = candidate
+                  # A single evidence-backed line-ending representation is required. If neither or
+                  # both match, leave the historical bytes untouched rather than guessing.
+                  if len(variants) == 1:
+                      label, candidate = next(iter(variants.items()))
+                      path.write_bytes(candidate)
+                      changed.append(f"{relative}:{label}")
+              return changed
+
+          for milestone, checkout_ref, result_ref, args, expected_class, overlay_result, checkout_mode in cases:
               destination = worktree_root / milestone
               print(
-                  f"::group::{milestone} checkout={checkout_ref} result={result_ref} expected={expected} mode={checkout_mode}",
+                  f"::group::{milestone} checkout={checkout_ref} result={result_ref} expected={expected_class} mode={checkout_mode}",
                   flush=True,
               )
               added = subprocess.run(
@@ -147,36 +212,23 @@ jobs:
                   print("::endgroup::", flush=True)
                   continue
 
-              if checkout_mode == "crlf":
-                  subprocess.run(["git", "config", "core.autocrlf", "true"], cwd=destination, check=True)
-                  tracked = subprocess.run(
-                      ["git", "ls-files", "-z"], cwd=destination, capture_output=True, check=True
-                  ).stdout.split(b"\0")
-                  for raw_path in tracked:
-                      if not raw_path:
-                          continue
-                      path = destination / raw_path.decode("utf-8", errors="surrogateescape")
-                      if path.is_file() or path.is_symlink():
-                          path.unlink()
-                  subprocess.run(["git", "checkout-index", "-a", "-f"], cwd=destination, check=True)
-                  print("Reconstructed Git core.autocrlf=true working-tree bytes")
+              result_path = f"experiments/{milestone}/RESULT.json"
+              preserved_result = git_show_bytes(result_ref, result_path)
+
+              if checkout_mode == "recorded-bytes":
+                  recorded = collect_recorded_digests(destination, milestone, preserved_result)
+                  changed = reconstruct_recorded_text_bytes(destination, recorded)
+                  print(f"Recorded digest tokens available: {len(recorded)}")
+                  print("Evidence-backed byte reconstructions: " + (", ".join(changed) if changed else "none"))
 
               if overlay_result:
-                  result_path = f"experiments/{milestone}/RESULT.json"
-                  preserved = subprocess.run(
-                      ["git", "show", f"{result_ref}:{result_path}"],
-                      cwd=root,
-                      capture_output=True,
-                      check=False,
-                  )
-                  if preserved.returncode != 0:
-                      print(preserved.stderr.decode(errors="replace"), file=sys.stderr)
+                  if preserved_result is None:
                       failures.append(f"{milestone}: could not read preserved RESULT.json from {result_ref}")
                       print("::endgroup::", flush=True)
                       continue
                   target = destination / result_path
                   target.parent.mkdir(parents=True, exist_ok=True)
-                  target.write_bytes(preserved.stdout)
+                  target.write_bytes(preserved_result)
                   print(f"Overlayed preserved first result while HEAD remains at {checkout_ref}")
 
               report = destination / "experiments" / milestone / "CHECK_REPORT.json"
@@ -202,24 +254,51 @@ jobs:
               if completed.stderr:
                   print(completed.stderr, file=sys.stderr, end="" if completed.stderr.endswith("\n") else "\n")
 
-              actual = None
+              payload: dict[str, object] | None = None
+              raw_verdict = None
+              audit_class = None
               try:
-                  payload = json.loads(completed.stdout)
-                  actual = payload.get("verdict")
+                  loaded = json.loads(completed.stdout)
+                  if not isinstance(loaded, dict):
+                      raise TypeError("checker output is not a JSON object")
+                  payload = loaded
+                  raw_verdict = payload.get("verdict")
+                  audit_class = raw_verdict
               except Exception as error:
-                  failures.append(f"{milestone}: checker output was not one JSON document: {error}")
+                  failures.append(f"{milestone}: checker output was not one JSON object: {error}")
+
+              if milestone == "M106" and payload is not None:
+                  conditions = payload.get("conditions")
+                  if isinstance(conditions, dict):
+                      p1_p15 = all(conditions.get(f"P{i}") is True for i in range(1, 16))
+                      p16_only = conditions.get("P16") is False
+                      expected_boundary = (
+                          raw_verdict == "negative"
+                          and p1_p15
+                          and p16_only
+                          and payload.get("failed_predicates") == ["P16"]
+                          and payload.get("replay_performed") is True
+                          and payload.get("model_calls") == 0
+                          and payload.get("network_calls") == 0
+                          and payload.get("remote_execution_calls") == 0
+                      )
+                      if expected_boundary:
+                          audit_class = "scientific_predicates_reproduced_nonportable_p16"
 
               summary.append({
                   "milestone": milestone,
                   "checkout_ref": checkout_ref,
                   "result_ref": result_ref,
                   "checkout_mode": checkout_mode,
-                  "expected": expected,
-                  "actual": actual,
+                  "expected_audit_class": expected_class,
+                  "raw_verdict": raw_verdict,
+                  "audit_class": audit_class,
                   "returncode": completed.returncode,
               })
-              if actual != expected:
-                  failures.append(f"{milestone}: expected {expected}, reproduced {actual!r}")
+              if audit_class != expected_class:
+                  failures.append(
+                      f"{milestone}: expected audit class {expected_class}, reproduced {audit_class!r} (raw verdict {raw_verdict!r})"
+                  )
               print("::endgroup::", flush=True)
 
           print(json.dumps({"shard": shard, "historical_reproduction_summary": summary}, indent=2, sort_keys=True))
