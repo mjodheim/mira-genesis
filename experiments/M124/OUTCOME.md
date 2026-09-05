@@ -60,6 +60,6 @@ Historical observations may be cited as motivation and audit evidence, but they 
 
 ## Governance
 
-The owner simultaneously accepted `PUBLIC_AGPL_COMMERCIAL_OPTION` for the already-public M120–M124 line on 5 September 2026. That retrospective publication decision is recorded separately in `docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md` and does not change this scientific outcome.
+The owner simultaneously accepted `PUBLIC_AGPL_COMMERCIAL_OPTION` for the already-public M120–M124 line on 5 September 2026. The decision is recorded as P-024 through P-028 in `IP_ASSET_REGISTER.md` and documented in `docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md`. That retrospective publication decision does not change this scientific outcome.
 
 M121/H66, M092/H38 and the external H21/H31 requirements remain governed by their own gates. This closure authorises no one-shot scientific run elsewhere.
