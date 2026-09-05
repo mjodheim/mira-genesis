@@ -1060,3 +1060,20 @@ def test_the_fourth_observation_did_not_move_the_size():
     rate = fourth["completion_tokens"] / fourth["stations"]
     assert derivation["lowest_observed_rate"] <= rate <= derivation["highest_observed_rate"]
     assert fourth["truncated"] is True, "it is a floor, not a measurement"
+
+
+def test_the_chronology_digests_the_contract_that_actually_exists():
+    """A lazy import a derivation script missed, unreachable until it would matter most.
+
+    `_candidate_schema_digest` imported `m124_carrier_contract`, which has never existed: this
+    milestone inherits M122's contract rather than re-authoring one. The call raised ImportError
+    instead of returning a digest, and it is reached only once a committed `ready` result unlocks
+    the freeze -- so nothing had run it, and it would have blocked precisely that moment.
+    """
+    from metamorphosis import m122_carrier_contract as inherited
+    from metamorphosis import m124_chronology as chrono
+
+    digest = chrono._candidate_schema_digest()
+    assert digest == sha256_hex(canonical_bytes(inherited.candidate_schema()))
+    # And it agrees with what the readiness gate froze into the plan.
+    assert digest == readiness.plan()["candidate_schema_sha256"]

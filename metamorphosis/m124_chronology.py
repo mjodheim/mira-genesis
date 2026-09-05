@@ -250,7 +250,13 @@ def assert_readiness_passed(root: Path | None = None) -> dict[str, Any]:
 
 
 def _candidate_schema_digest() -> str:
-    from metamorphosis import m124_carrier_contract as contract
+    # M122's contract, inherited by import and never re-authored. A derivation script rewrote every
+    # other m122->m124 reference in this module and missed this lazy one, leaving a name that does
+    # not exist: the call raised ImportError rather than returning a digest. It is unreachable until
+    # a committed `ready` result unlocks the freeze, which is why nothing has hit it -- and it would
+    # have blocked exactly that moment. The readiness runner and the tested-system inventory both
+    # already digest m122_carrier_contract, so this now agrees with them.
+    from metamorphosis import m122_carrier_contract as contract
     return sha256_hex(canonical_bytes(contract.candidate_schema()))
 
 
