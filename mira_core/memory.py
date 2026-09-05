@@ -1,6 +1,7 @@
 """Deterministic tamper-evident memory with exact checkpoints and rollback."""
 from __future__ import annotations
 
+from copy import deepcopy
 from dataclasses import dataclass
 import hashlib
 import json
@@ -16,8 +17,14 @@ def _canonical_json(value: object) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
 
 
+def _copy_payload(payload: Mapping[str, JsonValue]) -> dict[str, JsonValue]:
+    """Return a recursive copy so no caller can retain a mutable ledger alias."""
+
+    return deepcopy(dict(payload))
+
+
 def _event_digest(index: int, kind: str, payload: Mapping[str, JsonValue], previous: str) -> str:
-    record = {"index": index, "kind": kind, "payload": dict(payload), "previous": previous}
+    record = {"index": index, "kind": kind, "payload": _copy_payload(payload), "previous": previous}
     return hashlib.sha256(b"mira-memory-event-v1\0" + _canonical_json(record)).hexdigest()
 
 
@@ -29,11 +36,18 @@ class MemoryEvent:
     previous_digest: str
     digest: str
 
+    def detached(self) -> "MemoryEvent":
+        """Return an event whose nested payload shares no mutable state with this event."""
+
+        return MemoryEvent(
+            self.index, self.kind, _copy_payload(self.payload), self.previous_digest, self.digest,
+        )
+
     def to_dict(self) -> dict[str, JsonValue]:
         return {
             "index": self.index,
             "kind": self.kind,
-            "payload": dict(self.payload),
+            "payload": _copy_payload(self.payload),
             "previous_digest": self.previous_digest,
             "digest": self.digest,
         }
@@ -41,12 +55,12 @@ class MemoryEvent:
 
 class MemoryLedger:
     def __init__(self, events: Sequence[MemoryEvent] = ()) -> None:
-        self._events = list(events)
+        self._events = [event.detached() for event in events]
         self.verify()
 
     @property
     def events(self) -> tuple[MemoryEvent, ...]:
-        return tuple(self._events)
+        return tuple(event.detached() for event in self._events)
 
     @property
     def digest(self) -> str:
@@ -57,10 +71,11 @@ class MemoryLedger:
             raise ValueError("memory event kind cannot be empty")
         index = len(self._events)
         previous = self.digest
-        digest = _event_digest(index, kind, payload, previous)
-        event = MemoryEvent(index, kind, dict(payload), previous, digest)
+        owned_payload = _copy_payload(payload)
+        digest = _event_digest(index, kind, owned_payload, previous)
+        event = MemoryEvent(index, kind, owned_payload, previous, digest)
         self._events.append(event)
-        return event
+        return event.detached()
 
     def checkpoint(self) -> bytes:
         return _canonical_json({
@@ -85,7 +100,7 @@ class MemoryLedger:
             if not isinstance(raw, dict) or not isinstance(raw.get("payload"), dict):
                 raise ValueError("memory checkpoint carries a malformed event")
             events.append(MemoryEvent(
-                int(raw["index"]), str(raw["kind"]), dict(raw["payload"]),
+                int(raw["index"]), str(raw["kind"]), _copy_payload(raw["payload"]),
                 str(raw["previous_digest"]), str(raw["digest"]),
             ))
         ledger = cls(events)
@@ -103,7 +118,6 @@ class MemoryLedger:
                 raise ValueError("memory event digest mismatch")
             previous = event.digest
 
-
     def events_by_kind(self, kind: str) -> tuple[MemoryEvent, ...]:
         """Return every event whose kind matches *kind*, preserving insertion order.
 
@@ -119,7 +133,7 @@ class MemoryLedger:
         """
         if not kind:
             raise ValueError("memory event kind cannot be empty")
-        return tuple(event for event in self._events if event.kind == kind)
+        return tuple(event.detached() for event in self._events if event.kind == kind)
 
     def history(self) -> tuple[Mapping[str, JsonValue], ...]:
         return tuple(event.to_dict() for event in self._events)
