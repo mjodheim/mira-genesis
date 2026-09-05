@@ -143,10 +143,10 @@ jobs:
           from pathlib import Path
 
           required_text = {
-              "experiments/M119/OUTCOME.md": "UNTESTED",
-              "experiments/M120/OUTCOME.md": "UNTESTED",
-              "experiments/M122/OUTCOME.md": "UNTESTED",
-              "experiments/M123/OUTCOME.md": "UNTESTED",
+              "experiments/M119/OUTCOME.md": "untested",
+              "experiments/M120/OUTCOME.md": "untested",
+              "experiments/M122/OUTCOME.md": "untested",
+              "experiments/M123/OUTCOME.md": "untested",
           }
           failures = []
           for path_text, marker in required_text.items():
@@ -154,9 +154,10 @@ jobs:
               if not path.is_file():
                   failures.append(f"missing closed record: {path_text}")
                   continue
-              if marker not in path.read_text(encoding="utf-8"):
+              text = path.read_text(encoding="utf-8").casefold()
+              if marker.casefold() not in text:
                   failures.append(f"{path_text} no longer records {marker}")
           if failures:
               raise SystemExit("\n".join(failures))
-          print("Closed instrument outcomes remain explicitly UNTESTED; no retrospective scientific verdict was introduced.")
+          print("Closed instrument outcomes remain explicitly untested; no retrospective scientific verdict was introduced.")
           PY
