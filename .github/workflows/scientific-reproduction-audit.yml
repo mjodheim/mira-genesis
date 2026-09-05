@@ -2,9 +2,8 @@ name: Scientific reproduction audit
 
 # Audit-only replay of preserved scientific results.
 # This workflow never creates a new scientific observation and never changes a recorded verdict.
-# For the local-first M095-M111 line, the original checker ran while HEAD was still exactly the
-# frozen source and RESULT.json existed only in the working tree. Reproduction reconstructs that
-# state: checkout the freeze, then overlay the preserved first RESULT.json without moving HEAD.
+# For local-first results, reconstruction preserves the original Git chronology. M101/M102 also
+# reproduce their documented Windows CRLF checkout semantics; M103 prospectively fixed that class.
 
 on:
   pull_request:
@@ -91,35 +90,35 @@ jobs:
           shutil.rmtree(worktree_root, ignore_errors=True)
           worktree_root.mkdir(parents=True)
 
-          # Fields: milestone, freeze ref, first-result ref, checker args, expected verdict,
-          # overlay RESULT.json while keeping HEAD at freeze.
+          # Fields: milestone, checkout ref, result ref, checker args, expected verdict,
+          # overlay result while keeping HEAD at checkout ref, checkout mode.
+          # M101/M102 are deliberately CRLF: their own records document the Windows checkout and
+          # M103 later records that the M0* gitattributes convention stopped matching at M100.
           shards = {
               "M095-M100": [
-                  ("M095", "951c7c271f07a5bf2c08735c30b8d49f39cf8b73", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", True),
-                  ("M096", "experiment/m096-contract-safe-freeze", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", True),
-                  ("M097", "experiment/m097-operation-acquisition-freeze", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", True),
-                  ("M098", "experiment/m098-process-persistence-freeze", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", True),
-                  ("M099", "experiment/m099-stable-persistence-freeze", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", True),
-                  ("M100", "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", True),
+                  ("M095", "951c7c271f07a5bf2c08735c30b8d49f39cf8b73", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", True, "native"),
+                  ("M096", "experiment/m096-contract-safe-freeze", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", True, "native"),
+                  ("M097", "experiment/m097-operation-acquisition-freeze", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", True, "native"),
+                  ("M098", "experiment/m098-process-persistence-freeze", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", True, "native"),
+                  ("M099", "experiment/m099-stable-persistence-freeze", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", True, "native"),
+                  ("M100", "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", True, "native"),
               ],
               "M101-M106": [
-                  ("M101", "experiment/m101-frozen-protocol-v4", "experiment/m101-canonical-first-result", ["scripts/check_m101_result.py", "--no-write"], "positive", True),
-                  # M102 has no --no-write flag: without --write it is already read-only.
-                  ("M102", "experiment/m102-frozen-protocol-v1", "experiment/m102-canonical-first-result", ["scripts/check_m102_result.py"], "positive", True),
-                  ("M103", "experiment/m103-frozen-protocol-v1", "experiment/m103-canonical-first-result", ["scripts/check_m103_result.py", "--replay"], "negative", True),
-                  ("M104", "experiment/m104-frozen-protocol-v1", "experiment/m104-canonical-first-result", ["scripts/check_m104_result.py", "--replay"], "positive", True),
-                  ("M105", "experiment/m105-frozen-protocol-v2", "experiment/m105-canonical-first-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
-                  ("M106", "experiment/m106-frozen-protocol-v1", "experiment/m106-canonical-first-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
+                  ("M101", "experiment/m101-frozen-protocol-v4", "experiment/m101-canonical-first-result", ["scripts/check_m101_result.py", "--no-write"], "positive", True, "crlf"),
+                  ("M102", "experiment/m102-frozen-protocol-v1", "experiment/m102-canonical-first-result", ["scripts/check_m102_result.py"], "positive", True, "crlf"),
+                  ("M103", "experiment/m103-frozen-protocol-v1", "experiment/m103-canonical-first-result", ["scripts/check_m103_result.py", "--replay"], "negative", True, "native"),
+                  # M104's checker intentionally binds HEAD to the RESULT-only child, not the freeze.
+                  ("M104", "experiment/m104-canonical-first-result", "experiment/m104-canonical-first-result", ["scripts/check_m104_result.py", "--replay"], "positive", False, "native"),
+                  ("M105", "experiment/m105-frozen-protocol-v2", "experiment/m105-canonical-first-result", ["scripts/check_m105_result.py", "--replay"], "negative", True, "native"),
+                  ("M106", "experiment/m106-frozen-protocol-v1", "experiment/m106-canonical-first-result", ["scripts/check_m106_result.py", "--replay"], "positive", True, "native"),
               ],
               "M107-M112": [
-                  ("M107", "experiment/m107-frozen-protocol-v1", "experiment/m107-canonical-first-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
-                  ("M108", "experiment/m108-frozen-protocol-v1", "experiment/m108-canonical-first-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
-                  ("M109", "experiment/m109-frozen-protocol-v1", "experiment/m109-canonical-first-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
-                  ("M110", "experiment/m110-frozen-protocol-v1", "experiment/m110-canonical-first-result", ["scripts/check_m110_result.py", "--replay"], "positive", True),
-                  ("M111", "experiment/m111-frozen-protocol-v1", "experiment/m111-canonical-first-result", ["scripts/check_m111_result.py", "--replay"], "positive", True),
-                  # M112 is a multi-commit blind-bank/reveal chronology, not a local freeze+uncommitted
-                  # result. Its preserved mixed-result checkout is the durable replay context.
-                  ("M112", "experiment/m112-mixed-result", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
+                  ("M107", "experiment/m107-frozen-protocol-v1", "experiment/m107-canonical-first-result", ["scripts/check_m107_result.py", "--replay"], "positive", True, "native"),
+                  ("M108", "experiment/m108-frozen-protocol-v1", "experiment/m108-canonical-first-result", ["scripts/check_m108_result.py", "--replay"], "positive", True, "native"),
+                  ("M109", "experiment/m109-frozen-protocol-v1", "experiment/m109-canonical-first-result", ["scripts/check_m109_result.py", "--replay"], "positive", True, "native"),
+                  ("M110", "experiment/m110-frozen-protocol-v1", "experiment/m110-canonical-first-result", ["scripts/check_m110_result.py", "--replay"], "positive", True, "native"),
+                  ("M111", "experiment/m111-frozen-protocol-v1", "experiment/m111-canonical-first-result", ["scripts/check_m111_result.py", "--replay"], "positive", True, "native"),
+                  ("M112", "experiment/m112-mixed-result", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False, "native"),
               ],
           }
           cases = shards[shard]
@@ -128,14 +127,14 @@ jobs:
           summary: list[dict[str, object]] = []
           env = os.environ.copy()
 
-          for milestone, freeze_ref, result_ref, args, expected, overlay_result in cases:
+          for milestone, checkout_ref, result_ref, args, expected, overlay_result, checkout_mode in cases:
               destination = worktree_root / milestone
               print(
-                  f"::group::{milestone} freeze={freeze_ref} result={result_ref} expected={expected}",
+                  f"::group::{milestone} checkout={checkout_ref} result={result_ref} expected={expected} mode={checkout_mode}",
                   flush=True,
               )
               added = subprocess.run(
-                  ["git", "worktree", "add", "--detach", str(destination), freeze_ref],
+                  ["git", "worktree", "add", "--detach", str(destination), checkout_ref],
                   cwd=root,
                   text=True,
                   capture_output=True,
@@ -144,9 +143,23 @@ jobs:
               if added.returncode != 0:
                   print(added.stdout)
                   print(added.stderr, file=sys.stderr)
-                  failures.append(f"{milestone}: could not materialize freeze {freeze_ref}")
+                  failures.append(f"{milestone}: could not materialize {checkout_ref}")
                   print("::endgroup::", flush=True)
                   continue
+
+              if checkout_mode == "crlf":
+                  subprocess.run(["git", "config", "core.autocrlf", "true"], cwd=destination, check=True)
+                  tracked = subprocess.run(
+                      ["git", "ls-files", "-z"], cwd=destination, capture_output=True, check=True
+                  ).stdout.split(b"\0")
+                  for raw_path in tracked:
+                      if not raw_path:
+                          continue
+                      path = destination / raw_path.decode("utf-8", errors="surrogateescape")
+                      if path.is_file() or path.is_symlink():
+                          path.unlink()
+                  subprocess.run(["git", "checkout-index", "-a", "-f"], cwd=destination, check=True)
+                  print("Reconstructed Git core.autocrlf=true working-tree bytes")
 
               if overlay_result:
                   result_path = f"experiments/{milestone}/RESULT.json"
@@ -164,9 +177,8 @@ jobs:
                   target = destination / result_path
                   target.parent.mkdir(parents=True, exist_ok=True)
                   target.write_bytes(preserved.stdout)
-                  print(f"Overlayed preserved first result while HEAD remains at {freeze_ref}")
+                  print(f"Overlayed preserved first result while HEAD remains at {checkout_ref}")
 
-              # A checker report is never part of the original pre-check working state.
               report = destination / "experiments" / milestone / "CHECK_REPORT.json"
               if report.exists():
                   report.unlink()
@@ -197,15 +209,15 @@ jobs:
               except Exception as error:
                   failures.append(f"{milestone}: checker output was not one JSON document: {error}")
 
-              row = {
+              summary.append({
                   "milestone": milestone,
-                  "freeze_ref": freeze_ref,
+                  "checkout_ref": checkout_ref,
                   "result_ref": result_ref,
+                  "checkout_mode": checkout_mode,
                   "expected": expected,
                   "actual": actual,
                   "returncode": completed.returncode,
-              }
-              summary.append(row)
+              })
               if actual != expected:
                   failures.append(f"{milestone}: expected {expected}, reproduced {actual!r}")
               print("::endgroup::", flush=True)
