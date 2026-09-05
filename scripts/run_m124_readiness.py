@@ -457,22 +457,42 @@ def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
     current_plan = plan()["plan_sha256"]
     spent = _archived_delivery_attempts(current_plan)
     across_every_instrument = _archived_delivery_attempts(None)
-    previous = None
-    for source in (RESULT_PATH, None):
-        if source is not None and source.exists():
-            previous = json.loads(source.read_text(encoding="utf-8"))
-            break
-    if previous is None:
-        committed = chronology._head_blob(ROOT, chronology.READINESS_RESULT)
-        if committed is not None:
-            previous = json.loads(committed.decode("utf-8"))
-    if previous is not None:
-        verdict = previous.get("verdict")
+    # Every recorded verdict, from every source that can hold one, and the strictest wins.
+    #
+    # The earlier form read the working tree FIRST and consulted the committed blob only when the
+    # file was absent. Deleting the result therefore did not re-arm the gate -- which is what the
+    # message below promises -- but REPLACING it did: a terminal verdict committed at HEAD could be
+    # overwritten in the working tree with a delivery verdict, and the guard would read the mutable
+    # copy and permit a run the milestone's own rules say may never happen. The archived attempt
+    # recording the terminal verdict raises no objection either, because `_archived_delivery_attempts`
+    # filters to delivery verdicts and is blind to every terminal one.
+    #
+    # So all three sources are read and any non-delivery verdict among them refuses. This is a
+    # tightening: it can refuse a run it used to permit, and it can never permit one it used to
+    # refuse.
+    recorded: list[tuple[str, Any]] = []
+    if RESULT_PATH.exists():
+        recorded.append(("the working-tree result",
+                         json.loads(RESULT_PATH.read_text(encoding="utf-8"))))
+    committed = chronology._head_blob(ROOT, chronology.READINESS_RESULT)
+    if committed is not None:
+        recorded.append(("the committed result at HEAD", json.loads(committed.decode("utf-8"))))
+    for path in sorted(DIRECTORY.glob(ATTEMPT_ARCHIVE_GLOB)):
+        try:
+            recorded.append(("the archived attempt %s" % path.name,
+                             json.loads(path.read_text(encoding="utf-8"))))
+        except (OSError, ValueError):
+            continue
+    for source, record in recorded:
+        # A record with no verdict at all is not a delivery verdict either, and it refuses. An
+        # earlier draft of this loop skipped those, which LOOSENED a guard whose whole purpose is
+        # to tighten -- the suite caught it.
+        verdict = record.get("verdict")
         if verdict != DELIVERY_VERDICT:
             raise ReadinessError(
-                "a readiness result recording %r already exists; only a %r verdict may be "
-                "superseded, and deleting the file does not re-arm the gate"
-                % (verdict, DELIVERY_VERDICT))
+                "%s already exists and records %r; only a %r verdict may be superseded, and "
+                "neither deleting nor replacing a result re-arms the gate"
+                % (source, verdict, DELIVERY_VERDICT))
     # The allowance is counted from the archive and enforced whether or not a result file is
     # present. An earlier draft checked it only when a previous result could be found, so deleting
     # the result would have permitted an unbounded run -- which is the "deleting the file re-arms
@@ -493,6 +513,8 @@ def _assert_the_allowance_permits_another_attempt() -> dict[str, Any]:
             "total_delivery_ceiling": TOTAL_DELIVERY_CEILING,
             "instrument_plan_sha256": current_plan,
             "an_attempt_is_identified_by_its_result_digest_not_its_filename": True,
+            "finality_checked_against": [source for source, _ in recorded],
+            "a_terminal_verdict_refuses_from_any_source_not_only_the_working_tree": True,
             "the_ceiling_scan_crosses_milestones_not_only_apparatus_revisions": True,
             "only_a_delivery_verdict_may_be_superseded": True}
 

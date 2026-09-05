@@ -277,7 +277,9 @@ def test_deleting_the_file_does_not_re_arm_the_gate(sandbox, monkeypatch):
     """A file check alone is re-armed by deleting the file. A commit at HEAD is not."""
     monkeypatch.setattr(readiness.chronology, "_head_blob", lambda *a, **k: b"{}")
     assert not sandbox.joinpath("READINESS_RESULT.json").exists()
-    with pytest.raises(readiness.ReadinessError, match="does not re-arm"):
+    # The message now names both escape routes, deletion and replacement, because the guard now
+    # closes both. It used to close only deletion.
+    with pytest.raises(readiness.ReadinessError, match="re-arms the gate"):
         _run(monkeypatch, FakeRoute())
 
 
@@ -1077,3 +1079,38 @@ def test_the_chronology_digests_the_contract_that_actually_exists():
     assert digest == sha256_hex(canonical_bytes(inherited.candidate_schema()))
     # And it agrees with what the readiness gate froze into the plan.
     assert digest == readiness.plan()["candidate_schema_sha256"]
+
+
+def test_replacing_the_result_cannot_escape_a_committed_terminal_verdict(sandbox, monkeypatch):
+    """The guard's message promised this; the code delivered only half of it.
+
+    Deleting the result never re-armed the gate, because the committed blob was the fallback. But
+    REPLACING it did: the working tree was read first, so a terminal verdict committed at HEAD
+    could be overwritten with a delivery verdict and the guard would read the mutable copy. The
+    archived terminal attempt raised no objection either -- `_archived_delivery_attempts` filters to
+    delivery verdicts and is blind to every terminal one.
+    """
+    monkeypatch.setattr(readiness.chronology, "_head_blob",
+                        lambda *a, **k: canonical_bytes({"verdict": "not_ready_stress"}))
+    _write(readiness.RESULT_PATH, {"verdict": readiness.DELIVERY_VERDICT,
+                                   "result_sha256": "x", "plan_sha256": "p"})
+    with pytest.raises(readiness.ReadinessError, match="committed result at HEAD"):
+        readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_an_archived_terminal_attempt_also_refuses(sandbox, monkeypatch):
+    """The archive holds terminal verdicts and nothing used to read them."""
+    _write(sandbox / "READINESS_ATTEMPT_02_not_ready_enforcement_failed_open.json",
+           {"verdict": "not_ready_enforcement_failed_open", "result_sha256": "y",
+            "plan_sha256": "p"})
+    with pytest.raises(readiness.ReadinessError, match="archived attempt"):
+        readiness._assert_the_allowance_permits_another_attempt()
+
+
+def test_the_hardening_is_tightening_only(sandbox, monkeypatch):
+    """It must still permit exactly what it permitted before when every source agrees."""
+    _write(readiness.RESULT_PATH, {"verdict": readiness.DELIVERY_VERDICT,
+                                   "result_sha256": "z", "plan_sha256": "p"})
+    allowance = readiness._assert_the_allowance_permits_another_attempt()
+    assert allowance["a_terminal_verdict_refuses_from_any_source_not_only_the_working_tree"] is True
+    assert "the working-tree result" in allowance["finality_checked_against"]
