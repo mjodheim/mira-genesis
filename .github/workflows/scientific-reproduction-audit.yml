@@ -2,8 +2,9 @@ name: Scientific reproduction audit
 
 # Audit-only replay of preserved scientific results.
 # This workflow never creates a new scientific observation and never changes a recorded verdict.
-# Historical checkers are executed at their own preservation refs because many deliberately bind
-# exact source bytes. A negative result is successful reproduction when the frozen record is negative.
+# For the local-first M095-M111 line, the original checker ran while HEAD was still exactly the
+# frozen source and RESULT.json existed only in the working tree. Reproduction reconstructs that
+# state: checkout the freeze, then overlay the preserved first RESULT.json without moving HEAD.
 
 on:
   pull_request:
@@ -68,7 +69,7 @@ jobs:
           python -m pip install numpy
           git fetch --force --tags origin
 
-      - name: Replay preserved results at their own historical refs
+      - name: Reconstruct original checker state and replay
         shell: bash
         env:
           SHARD: ${{ matrix.shard }}
@@ -90,35 +91,35 @@ jobs:
           shutil.rmtree(worktree_root, ignore_errors=True)
           worktree_root.mkdir(parents=True)
 
-          # M095 predates the result-tag convention. 47c6938 is the result-preservation commit.
+          # Fields: milestone, freeze ref, first-result ref, checker args, expected verdict,
+          # overlay RESULT.json while keeping HEAD at freeze.
           shards = {
               "M095-M100": [
-                  ("M095", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", False),
-                  ("M096", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", False),
-                  ("M097", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", False),
-                  ("M098", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", False),
-                  ("M099", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", False),
-                  ("M100", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", False),
+                  ("M095", "951c7c271f07a5bf2c08735c30b8d49f39cf8b73", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", True),
+                  ("M096", "experiment/m096-contract-safe-freeze", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", True),
+                  ("M097", "experiment/m097-operation-acquisition-freeze", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", True),
+                  ("M098", "experiment/m098-process-persistence-freeze", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", True),
+                  ("M099", "experiment/m099-stable-persistence-freeze", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", True),
+                  ("M100", "c4214d6bdaeb1326c9dcd6d336ff1d4173c96c98", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", True),
               ],
               "M101-M106": [
-                  ("M101", "experiment/m101-positive-result", ["scripts/check_m101_result.py", "--no-write"], "positive", False),
+                  ("M101", "experiment/m101-frozen-protocol-v4", "experiment/m101-canonical-first-result", ["scripts/check_m101_result.py", "--no-write"], "positive", True),
                   # M102 has no --no-write flag: without --write it is already read-only.
-                  ("M102", "experiment/m102-positive-result", ["scripts/check_m102_result.py"], "positive", False),
-                  ("M103", "experiment/m103-negative-result", ["scripts/check_m103_result.py", "--replay"], "negative", False),
-                  ("M104", "experiment/m104-positive-result", ["scripts/check_m104_result.py", "--replay"], "positive", False),
-                  # M105-M109 enforce a single materialized checker report. In a disposable worktree,
-                  # remove only the preserved report copy so the original checker can exercise its
-                  # replay path. Git history and the canonical report remain untouched.
-                  ("M105", "experiment/m105-negative-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
-                  ("M106", "experiment/m106-positive-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
+                  ("M102", "experiment/m102-frozen-protocol-v1", "experiment/m102-canonical-first-result", ["scripts/check_m102_result.py"], "positive", True),
+                  ("M103", "experiment/m103-frozen-protocol-v1", "experiment/m103-canonical-first-result", ["scripts/check_m103_result.py", "--replay"], "negative", True),
+                  ("M104", "experiment/m104-frozen-protocol-v1", "experiment/m104-canonical-first-result", ["scripts/check_m104_result.py", "--replay"], "positive", True),
+                  ("M105", "experiment/m105-frozen-protocol-v2", "experiment/m105-canonical-first-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
+                  ("M106", "experiment/m106-frozen-protocol-v1", "experiment/m106-canonical-first-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
               ],
               "M107-M112": [
-                  ("M107", "experiment/m107-positive-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
-                  ("M108", "experiment/m108-positive-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
-                  ("M109", "experiment/m109-positive-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
-                  ("M110", "experiment/m110-positive-result", ["scripts/check_m110_result.py", "--replay"], "positive", False),
-                  ("M111", "experiment/m111-positive-result", ["scripts/check_m111_result.py", "--replay"], "positive", False),
-                  ("M112", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
+                  ("M107", "experiment/m107-frozen-protocol-v1", "experiment/m107-canonical-first-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
+                  ("M108", "experiment/m108-frozen-protocol-v1", "experiment/m108-canonical-first-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
+                  ("M109", "experiment/m109-frozen-protocol-v1", "experiment/m109-canonical-first-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
+                  ("M110", "experiment/m110-frozen-protocol-v1", "experiment/m110-canonical-first-result", ["scripts/check_m110_result.py", "--replay"], "positive", True),
+                  ("M111", "experiment/m111-frozen-protocol-v1", "experiment/m111-canonical-first-result", ["scripts/check_m111_result.py", "--replay"], "positive", True),
+                  # M112 is a multi-commit blind-bank/reveal chronology, not a local freeze+uncommitted
+                  # result. Its preserved mixed-result checkout is the durable replay context.
+                  ("M112", "experiment/m112-mixed-result", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
               ],
           }
           cases = shards[shard]
@@ -127,11 +128,14 @@ jobs:
           summary: list[dict[str, object]] = []
           env = os.environ.copy()
 
-          for milestone, ref, args, expected, remove_report in cases:
+          for milestone, freeze_ref, result_ref, args, expected, overlay_result in cases:
               destination = worktree_root / milestone
-              print(f"::group::{milestone} ref={ref} expected={expected}", flush=True)
+              print(
+                  f"::group::{milestone} freeze={freeze_ref} result={result_ref} expected={expected}",
+                  flush=True,
+              )
               added = subprocess.run(
-                  ["git", "worktree", "add", "--detach", str(destination), ref],
+                  ["git", "worktree", "add", "--detach", str(destination), freeze_ref],
                   cwd=root,
                   text=True,
                   capture_output=True,
@@ -140,15 +144,38 @@ jobs:
               if added.returncode != 0:
                   print(added.stdout)
                   print(added.stderr, file=sys.stderr)
-                  failures.append(f"{milestone}: could not materialize historical ref {ref}")
+                  failures.append(f"{milestone}: could not materialize freeze {freeze_ref}")
                   print("::endgroup::", flush=True)
                   continue
 
-              if remove_report:
-                  report = destination / "experiments" / milestone / "CHECK_REPORT.json"
-                  if report.exists():
-                      report.unlink()
-                      print(f"Removed disposable preserved report copy: {report.relative_to(destination)}")
+              if overlay_result:
+                  result_path = f"experiments/{milestone}/RESULT.json"
+                  preserved = subprocess.run(
+                      ["git", "show", f"{result_ref}:{result_path}"],
+                      cwd=root,
+                      capture_output=True,
+                      check=False,
+                  )
+                  if preserved.returncode != 0:
+                      print(preserved.stderr.decode(errors="replace"), file=sys.stderr)
+                      failures.append(f"{milestone}: could not read preserved RESULT.json from {result_ref}")
+                      print("::endgroup::", flush=True)
+                      continue
+                  target = destination / result_path
+                  target.parent.mkdir(parents=True, exist_ok=True)
+                  target.write_bytes(preserved.stdout)
+                  print(f"Overlayed preserved first result while HEAD remains at {freeze_ref}")
+
+              # A checker report is never part of the original pre-check working state.
+              report = destination / "experiments" / milestone / "CHECK_REPORT.json"
+              if report.exists():
+                  report.unlink()
+                  print(f"Removed disposable checker-report copy: {report.relative_to(destination)}")
+
+              head = subprocess.run(
+                  ["git", "rev-parse", "HEAD"], cwd=destination, text=True, capture_output=True, check=True
+              ).stdout.strip()
+              print(f"HEAD={head}")
 
               completed = subprocess.run(
                   [sys.executable, *args],
@@ -172,7 +199,8 @@ jobs:
 
               row = {
                   "milestone": milestone,
-                  "ref": ref,
+                  "freeze_ref": freeze_ref,
+                  "result_ref": result_ref,
                   "expected": expected,
                   "actual": actual,
                   "returncode": completed.returncode,
