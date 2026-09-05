@@ -1,7 +1,7 @@
 project: Mira Genesis
-updated_at: 2026-09-05
+updated_at: 2026-09-06
 snapshot_kind: current_authoritative_navigation
-status: m123_closed_h68_untested_next_carrier_successor_not_yet_pushed_at_audit_boundary
+status: m124_closed_h69_untested_without_replay_next_carrier_successor_not_opened
 
 navigation_only: true
 frozen_experiments_are_authoritative: true
@@ -72,6 +72,10 @@ validated_recent_line:
 
 carrier_frontier:
   scientific_proposition: same_target_continued_only_through_prospective_numbered_successors
+  delivery_ceiling:
+    spent: 4
+    total: 6
+    resets_on_successor: false
   M113:
     hypothesis: H58
     status: instrument_failure_closed
@@ -131,7 +135,6 @@ carrier_frontier:
     hypothesis_status: untested
     verdict: not_ready_stress_under_frozen_ladder
     qualifying_scientific_invocations: 0
-    delivery_attempts_spent_across_all_instruments: 3_of_6
     attempt_1:
       stations: 167
       result: truncated_length
@@ -145,20 +148,78 @@ carrier_frontier:
       sizing_prediction_succeeded_out_of_sample: true
       body: malformed_incomplete_json
       frozen_classification: not_ready_stress
-    disclosed_successor_issue: malformed_incomplete_delivery_should_be_classified_prospectively_without_rewriting_m123
+  M124:
+    hypothesis: H69
+    status: closed_at_readiness_without_replay
+    hypothesis_status: untested
+    verdict: not_ready_delivery
+    owner_closed_without_replay: true
+    qualifying_scientific_invocations: 0
+    carrier_bank_built: false
+    requests_spent: 11
+    request_budget: 30
+    requests_unused: 19
+    capability_probes_answered: 9
+    capability_probes_conforming: 8
+    rule_introduced: content_bearing_no_finish_reason_is_delivery
+    rule_decided_the_run: false
+    decisive_stress:
+      http_status: 200
+      carried_content: false
+      usable_finish_reason: false
+    post_observation_defects_are_prospective_only:
+      - unbounded_non_target_probe_dimensions
+      - retry_after_field_mismatch
+      - empty_http_200_retry_verdict_disagreement
+      - truncation_attribution_can_be_spurious
+      - delivery_precedence_can_mask_terminal_enforcement_state
 
 long_horizon_frontier:
   M121:
     hypothesis: H66
     target_generality_gate: G7
-    status: preregistered_owner_gated_before_implementation
+    status: preregistered_publication_disposition_recorded_canonical_run_owner_gated
     harness_implemented: false
     scientific_result_exists: false
     publication_review: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
-    owner_gate: P-025_publication_ip_disposition
+    publication_disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    publication_ledger_id: P-025
+    publication_decision_date: 2026-09-05
+    prospective_v2_hardening_allowed: true
+    canonical_salt_or_scientific_run_authorized: false
     independent_review: docs/audits/M121_PREIMPLEMENTATION_REVIEW_2026-09-05.md
     prospective_v2_candidate: docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md
     even_positive_would_close_G7: false
+
+publication_governance:
+  reconciliation: docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md
+  P-024:
+    milestone: M120
+    hypothesis: H65
+    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    decision_date: 2026-09-05
+  P-025:
+    milestone: M121
+    hypothesis: H66
+    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    decision_date: 2026-09-05
+    canonical_run_authorized: false
+  P-026:
+    milestone: M123
+    hypothesis: H68
+    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    decision_date: 2026-09-05
+  P-027:
+    milestone: M122
+    hypothesis: H67
+    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    decision_date: 2026-09-05
+  P-028:
+    milestone: M124
+    hypothesis: H69
+    disposition: PUBLIC_AGPL_COMMERCIAL_OPTION
+    decision_date: 2026-09-05
+    owner_closed_without_replay: true
 
 external_blockers:
   H21_M075:
@@ -171,31 +232,20 @@ external_blockers:
     handoff: docs/audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md
 
 owner_only_gates:
-  M120_P024:
-    action: record_or_refuse_pending_publication_ip_disposition
-    review: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
-    recorded_disposition: false
-  M121_P025:
-    action: publication_ip_disposition_then_prospective_v2_hardening_only
-    review: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
-    recorded_disposition: false
-    canonical_salt_or_scientific_run_authorized: false
-  M122_publication:
-    action: record_or_refuse_pending_retrospective_publication_ip_disposition
-    review: docs/IP_REVIEWS/M122_PUBLICATION_REVIEW.md
-    provisional_ledger_id_assigned: false
-    recorded_disposition: false
-  M123_P026:
-    action: record_or_refuse_pending_publication_ip_disposition
-    review: docs/IP_REVIEWS/M123_PUBLICATION_REVIEW.md
-    recorded_disposition: false
+  M121_H66_canonical:
+    action: explicit_authority_required_before_canonical_salt_one_shot_run_reveal_or_result_acceptance
+    publication_disposition_recorded: true
   M092_H38:
     action: explicit_authority_required_before_resuming_first_run_only_canonical_search
+  M094_H39_D063:
+    action: explicit_owner_register_decision_required
 
 current_next_actions:
-  - inspect_and_audit_any_pushed_M124_or_later_carrier_successor_before_advancing_navigation
-  - never_retroactively_fill_H58_through_H68_from_instrument_artifacts
-  - keep_M121_implementation_blocked_until_owner_disposition
-  - reconcile_M120_M121_M122_M123_publication_dispositions_only_by_explicit_owner_action
+  - never_replay_or_rescore_M124
+  - any_carrier_successor_must_be_newly_numbered_and_prospectively_frozen
+  - preserve_4_of_6_cross_instrument_delivery_ceiling
+  - use_fresh_prospective_calibration_for_any_redesigned_successor_stress_schema
+  - never_retroactively_fill_H58_through_H69_from_instrument_artifacts
+  - allow_M121_prospective_v2_hardening_but_keep_canonical_run_owner_gated
   - keep_M092_canonical_cursor_unadvanced_without_explicit_owner_authority
   - preserve_external_independence_requirements_for_H21_and_H31
