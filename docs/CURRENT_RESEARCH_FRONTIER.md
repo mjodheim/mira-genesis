@@ -103,7 +103,12 @@ hosted runners. M097, M099, M100, M104 and M107–M111 reproduce positive; M095,
 reproduce negative; M112 reproduces mixed. M096, M101, M102 and M106 retain explicitly documented
 historical portability limits rather than being silently repaired or reclassified.
 
-The machine-readable current matrix is
+M094/H39 needs one distinction that the original audit matrix did not preserve: its positive
+qualification verdict reproduces, but **D063 remains unfilled**, so no H39 register claim has been
+accepted. The original matrix is left unchanged and the navigation correction is recorded at
+[`audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json`](audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json).
+
+The original machine-readable matrix remains at
 [`audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json`](audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json).
 
 ## Claim boundary

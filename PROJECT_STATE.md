@@ -38,7 +38,12 @@ must be audited from its pushed chronology before this navigation advances.
 
 The 2026-09-05 independent validation sweep is recorded in
 [`docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json`](docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json).
-Replay is reproduction, not new scientific evidence.
+The original matrix is preserved unchanged. Its H39 status conflated reproduction of M094's positive
+qualification verdict with acceptance of a registered scientific claim; the navigation correction is
+recorded separately in
+[`docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json`](docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json).
+H39 therefore remains **owner-pending with no register claim** while D063 is unfilled. Replay is
+reproduction, not new scientific evidence.
 
 Recent validated navigation:
 
@@ -92,6 +97,8 @@ bounded partial evidence and would not close G7 by itself.
 
 - **M092/H38** remains unresolved and `first_run_only`. Static integrity work is safe; advancing its
   canonical cursor requires explicit owner authority.
+- **M094/H39** has a preserved positive qualification verdict that reproduces, but **D063 remains
+  unfilled**, so no H39 register claim is accepted by this navigation.
 - **H21/M075** remains externally blocked on a private human-maintained bank and separate-maintainer
   reproduction.
 - **H31/M085** remains externally blocked on an independently maintained cross-domain bank/protocol

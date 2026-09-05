@@ -6,6 +6,7 @@ status: m123_closed_h68_untested_next_carrier_successor_not_yet_pushed_at_audit_
 navigation_only: true
 frozen_experiments_are_authoritative: true
 independent_validation_matrix: docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json
+independent_validation_corrigendum: docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json
 previous_snapshot_archived: docs/state-history/PROJECT_STATE_PRE_SYNC_2026-09-05.yaml
 
 claim_boundary:
@@ -17,6 +18,17 @@ claim_boundary:
   open_ended_recursive_self_improvement: false
   unrestricted_repository_authority: false
   unrestricted_network_authority: false
+
+validation_corrections:
+  H39_M094:
+    original_matrix_status: supported_within_frozen_bounds
+    corrected_register_status: owner_pending_no_register_claim
+    recorded_verdict: positive
+    independent_replay: reproduced_by_permanent_ci
+    owner_decision_slot: D063
+    owner_decision_filled: false
+    post_verdict_disclosure_remains_binding: true
+    correction_changes_scientific_artifacts: false
 
 validated_recent_line:
   M105:

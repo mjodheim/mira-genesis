@@ -1,0 +1,25 @@
+{
+  "schema": "genesis-hypothesis-validation-corrigendum-v1",
+  "date": "2026-09-05",
+  "authority": "audit_navigation_correction_only_no_scientific_state_change",
+  "target": "docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json",
+  "target_git_blob_sha": "9e07d3c89dcef5ff683e962d098c94d850704c20",
+  "target_preserved_unchanged": true,
+  "reason": "The original audit matrix conflated reproduction of M094's preserved positive qualification verdict with acceptance of H39 as a registered scientific claim. D063 remains unfilled, so the reproduced verdict must be reported separately from the owner-controlled register status.",
+  "corrections": [
+    {
+      "hypothesis": "H39",
+      "milestone": "M094",
+      "original_matrix_status": "supported_within_frozen_bounds",
+      "corrected_register_status": "owner_pending_no_register_claim",
+      "recorded_verdict": "positive",
+      "fresh_audit_result": "reproduced_by_permanent_ci",
+      "owner_decision_slot": "D063",
+      "owner_decision_filled": false,
+      "post_verdict_disclosure_remains_binding": true,
+      "scientific_artifact_changed": false,
+      "verdict_changed": false,
+      "note": "This corrigendum changes navigation only. It neither withdraws nor accepts the M094 verdict and does not fill D063."
+    }
+  ]
+}

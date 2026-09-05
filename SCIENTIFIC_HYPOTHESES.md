@@ -7,8 +7,11 @@ The previous long-form register is preserved byte-for-byte at
 [`docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md`](docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md).
 Nothing in that historical register is rewritten by this synchronization.
 
-For H38–H68, the 2026-09-05 independent validation matrix is the navigation basis:
+For H38–H68, the 2026-09-05 independent validation matrix is a navigation input:
 [`docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json`](docs/audits/HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json).
+Its original H39 status conflated a reproduced positive verdict with an owner-accepted register claim;
+the matrix is preserved unchanged and that navigation error is corrected transparently by
+[`docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json`](docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json).
 Replay is reproduction, never new scientific evidence; instrument closures remain untested rather
 than being converted retrospectively into negative results.
 
