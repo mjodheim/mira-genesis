@@ -12,6 +12,7 @@ For H38–H68, the 2026-09-05 independent validation matrix is a navigation inpu
 Its original H39 status conflated a reproduced positive verdict with an owner-accepted register claim;
 the matrix is preserved unchanged and that navigation error is corrected transparently by
 [`docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json`](docs/audits/HYPOTHESIS_VALIDATION_CORRIGENDUM_2026-09-05.json).
+H69 is later than that matrix and is navigated from the merged M124 frozen record and owner closure.
 Replay is reproduction, never new scientific evidence; instrument closures remain untested rather
 than being converted retrospectively into negative results.
 
@@ -80,7 +81,7 @@ stale. M105 has a preserved unique canonical attempt with a negative fail-closed
 2026-09-05 audit reproduced that negative result. H50 is therefore **not supported**, not untested.
 This synchronization changes navigation only; M105 itself is untouched.
 
-## H58–H68 — carrier and long-horizon frontier
+## H58–H69 — carrier and long-horizon frontier
 
 | H | Milestone | Current status | Closure / gate |
 | --- | --- | --- | --- |
@@ -92,40 +93,46 @@ This synchronization changes navigation only; M105 itself is untouched.
 | H63 | M118 | untested | apparatus design/audit closed before scientific generation |
 | H64 | M119 | untested | qualifying generation spent but bank inadequate before scientific arms |
 | H65 | M120 | untested | readiness closure; candidate contract exceeded route enforcement depth |
-| H66 | M121 | preregistered; owner-gated | G7 bounded long-horizon line; implementation remains blocked on P-025 disposition and prospective v2 hardening |
+| H66 | M121 | preregistered; canonical run owner-gated | P-025 publication disposition is recorded; prospective v2 hardening may proceed, but canonical salt/run/reveal remain unauthorized |
 | H67 | M122 | untested | readiness `not_ready_stress`; contract validated, stress size missed threshold |
 | H68 | M123 | untested | frozen ladder closed `not_ready_stress`; out-of-sample sizing itself landed inside the preregistered envelope |
+| H69 | M124 | **untested; closed without replay** | preserved `not_ready_delivery`; no qualifying scientific invocation, bank or reveal; owner closure recorded 2026-09-05 |
 
-H58–H65, H67 and H68 do **not** accumulate into a scientific negative. They are a sequence of
+H58–H65 and H67–H69 do **not** accumulate into a scientific negative. They are a sequence of
 prospective instrument closures. The same carrier proposition may move only through a newly numbered,
 prospectively frozen successor.
 
+M124 did not test H69. Its narrow prospective rule classified a content-bearing HTTP 200 with no
+`finish_reason` as a delivery outcome, but the decisive stress carried no completion content at all.
+The archived verdict therefore remained `not_ready_delivery`, and the owner chose not to replay.
+Post-observation defects are successor requirements only; they do not rescore M124.
+
 ## Current trigger
 
-At the 2026-09-05 audit boundary, M123/H68 was the latest pushed carrier milestone and was closed
-untested. No M124 branch or repository artifact was visible. Any later M124 state must be audited from
-its pushed immutable artifacts before this register is advanced again.
+M124/H69 is now merged and closed. A later carrier successor is not yet part of this register merely
+because M124 documented what it should repair. Any successor must be newly numbered, frozen before new
+requests, preserve the cross-instrument delivery ceiling now at **4 of 6 spent**, and use fresh
+prospective calibration if the stress schema is redesigned.
 
-M121/H66 is a separate line. Its publication/IP disposition is an owner act; the audit recommends
-prospective v2 hardening before any canonical salt or scientific attempt, but that recommendation is
-not itself authorization.
+M121/H66 is a separate line. Its publication/IP disposition is no longer pending: P-025 records
+`PUBLIC_AGPL_COMMERCIAL_OPTION` on 2026-09-05. That does not authorize the canonical salt or one-shot
+scientific execution.
 
-## Open publication/governance backlog
+## Publication/governance reconciliation
 
-The recent public carrier/long-horizon line is ahead of its owner disposition ledger. That chronology
-is preserved rather than backfilled by an assistant decision:
+The recent public carrier/long-horizon publication backlog is now reconciled without backdating:
 
-| Milestone | Review state | Recorded owner disposition |
-| --- | --- | --- |
-| M120 | P-024 draft prepared | **none** |
-| M121 | P-025 draft prepared | **none** |
-| M122 | retrospective review prepared 2026-09-05; ledger ID intentionally unassigned | **none** |
-| M123 | P-026 draft prepared | **none** |
+| Ledger | Milestone | Recorded disposition | Decision date |
+| --- | --- | --- | --- |
+| P-024 | M120 / H65 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-025 | M121 / H66 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-026 | M123 / H68 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-027 | M122 / H67 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-028 | M124 / H69 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
 
-M119/P-023 remains the last recorded owner-authorised disposition in this mechanism family. The four
-open items above may be accepted, amended or refused only by explicit owner action. Their existence
-does not authorize a canonical M121 attempt, a new carrier successor, or any reinterpretation of a
-closed milestone.
+See [`docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md`](docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md).
+These dispositions govern publication/release; they do not create scientific evidence or open any
+separate canonical gate.
 
 ## Claim ceiling
 
