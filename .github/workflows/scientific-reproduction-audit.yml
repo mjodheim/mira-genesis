@@ -2,7 +2,8 @@ name: Scientific reproduction audit
 
 # Audit-only replay of preserved scientific results.
 # This workflow never creates a new scientific observation and never changes a recorded verdict.
-# A negative result is successful reproduction when the frozen record is negative.
+# Historical checkers are executed at their own preservation refs because many deliberately bind
+# exact source bytes. A negative result is successful reproduction when the frozen record is negative.
 
 on:
   pull_request:
@@ -19,61 +20,132 @@ permissions:
 
 jobs:
   preserved-results:
-    name: Preserved result replays
+    name: Historical preserved result replays
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          fetch-tags: true
 
       - uses: actions/setup-python@v6
         with:
-          python-version: '3.11'
+          python-version: '3.11.16'
 
-      - name: Install project and development dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -e '.[dev]'
-
-      - name: Replay preserved results against their recorded verdicts
+      - name: Restore the frozen SQLite runtime
         shell: bash
         run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            https://www.sqlite.org/2026/sqlite-autoconf-3530100.tar.gz \
+            --output /tmp/sqlite-autoconf-3530100.tar.gz
+          tar -xzf /tmp/sqlite-autoconf-3530100.tar.gz -C /tmp
+          cd /tmp/sqlite-autoconf-3530100
+          ./configure --prefix="$HOME/sqlite-3.53.1" --disable-static
+          make -j2
+          make install
+          echo "$HOME/sqlite-3.53.1/bin" >> "$GITHUB_PATH"
+          echo "LD_LIBRARY_PATH=$HOME/sqlite-3.53.1/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}" >> "$GITHUB_ENV"
+
+      - name: Verify canonical runtime and install generic dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
           python - <<'PY'
+          import sqlite3
+          import sys
+          print(sys.version)
+          print("sqlite", sqlite3.sqlite_version)
+          assert sys.version_info[:3] == (3, 11, 16)
+          assert sqlite3.sqlite_version == "3.53.1"
+          PY
+          python -m pip install --upgrade pip
+          python -m pip install numpy
+          git fetch --force --tags origin
+
+      - name: Replay preserved results at their own historical refs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from __future__ import annotations
+
           import json
+          import os
+          from pathlib import Path
+          import shutil
           import subprocess
           import sys
 
-          # Each expected verdict is taken from the preserved scientific record.
-          # We intentionally accept a non-zero checker exit code when the preserved
-          # scientific verdict is negative or mixed. What matters here is exact replay
-          # of the recorded outcome, not making every experiment look positive.
+          root = Path.cwd()
+          worktree_root = Path("/tmp/genesis-scientific-replays")
+          shutil.rmtree(worktree_root, ignore_errors=True)
+          worktree_root.mkdir(parents=True)
+
+          # M095 predates the result-tag convention. 47c6938 is the commit whose message is
+          # "science(m095): preserve negative qualification attempt 1". Later milestones use
+          # their public preservation tags.
           cases = [
-              ("M095", [sys.executable, "scripts/check_m095_result.py", "--no-write"], "negative"),
-              ("M096", [sys.executable, "scripts/check_m096_result.py", "--no-write"], "positive"),
-              ("M097", [sys.executable, "scripts/check_m097_result.py", "--no-write"], "positive"),
-              ("M098", [sys.executable, "scripts/check_m098_result.py", "--no-write"], "negative"),
-              ("M099", [sys.executable, "scripts/check_m099_result.py", "--no-write"], "positive"),
-              ("M100", [sys.executable, "scripts/check_m100_result.py", "--no-write"], "positive"),
-              ("M101", [sys.executable, "scripts/check_m101_result.py", "--no-write"], "positive"),
-              ("M102", [sys.executable, "scripts/check_m102_result.py", "--no-write"], "positive"),
-              ("M103", [sys.executable, "scripts/check_m103_result.py", "--replay"], "negative"),
-              ("M104", [sys.executable, "scripts/check_m104_result.py", "--replay"], "positive"),
-              ("M105", [sys.executable, "scripts/check_m105_result.py", "--replay"], "negative"),
-              ("M106", [sys.executable, "scripts/check_m106_result.py", "--replay"], "positive"),
-              ("M107", [sys.executable, "scripts/check_m107_result.py", "--replay"], "positive"),
-              ("M108", [sys.executable, "scripts/check_m108_result.py", "--replay"], "positive"),
-              ("M109", [sys.executable, "scripts/check_m109_result.py", "--replay"], "positive"),
-              ("M110", [sys.executable, "scripts/check_m110_result.py", "--replay"], "positive"),
-              ("M111", [sys.executable, "scripts/check_m111_result.py", "--replay"], "positive"),
-              ("M112", [sys.executable, "scripts/check_m112_result.py"], "mixed"),
+              ("M095", "47c69387261e624f205b4d102cc5dec40c289348", ["scripts/check_m095_result.py", "--no-write"], "negative", False),
+              ("M096", "experiment/m096-positive-result", ["scripts/check_m096_result.py", "--no-write"], "positive", False),
+              ("M097", "experiment/m097-positive-result", ["scripts/check_m097_result.py", "--no-write"], "positive", False),
+              ("M098", "experiment/m098-negative-result", ["scripts/check_m098_result.py", "--no-write"], "negative", False),
+              ("M099", "experiment/m099-positive-result", ["scripts/check_m099_result.py", "--no-write"], "positive", False),
+              ("M100", "experiment/m100-positive-result", ["scripts/check_m100_result.py", "--no-write"], "positive", False),
+              ("M101", "experiment/m101-positive-result", ["scripts/check_m101_result.py", "--no-write"], "positive", False),
+              # M102 has no --no-write flag: without --write it is already read-only.
+              ("M102", "experiment/m102-positive-result", ["scripts/check_m102_result.py"], "positive", False),
+              ("M103", "experiment/m103-negative-result", ["scripts/check_m103_result.py", "--replay"], "negative", False),
+              ("M104", "experiment/m104-positive-result", ["scripts/check_m104_result.py", "--replay"], "positive", False),
+              # M105-M109 enforce a single materialized checker report. In a disposable worktree,
+              # remove only the preserved report copy so the original checker can exercise its
+              # replay path. Git history and the canonical report remain untouched.
+              ("M105", "experiment/m105-negative-result", ["scripts/check_m105_result.py", "--replay"], "negative", True),
+              ("M106", "experiment/m106-positive-result", ["scripts/check_m106_result.py", "--replay"], "positive", True),
+              ("M107", "experiment/m107-positive-result", ["scripts/check_m107_result.py", "--replay"], "positive", True),
+              ("M108", "experiment/m108-positive-result", ["scripts/check_m108_result.py", "--replay"], "positive", True),
+              ("M109", "experiment/m109-positive-result", ["scripts/check_m109_result.py", "--replay"], "positive", True),
+              ("M110", "experiment/m110-positive-result", ["scripts/check_m110_result.py", "--replay"], "positive", False),
+              ("M111", "experiment/m111-positive-result", ["scripts/check_m111_result.py", "--replay"], "positive", False),
+              ("M112", "experiment/m112-mixed-result", ["scripts/check_m112_result.py"], "mixed", False),
           ]
 
-          failures = []
-          summary = []
-          for milestone, command, expected in cases:
-              print(f"::group::{milestone} expected={expected}", flush=True)
-              completed = subprocess.run(command, text=True, capture_output=True, check=False)
+          failures: list[str] = []
+          summary: list[dict[str, object]] = []
+          env = os.environ.copy()
+
+          for milestone, ref, args, expected, remove_report in cases:
+              destination = worktree_root / milestone
+              print(f"::group::{milestone} ref={ref} expected={expected}", flush=True)
+              added = subprocess.run(
+                  ["git", "worktree", "add", "--detach", str(destination), ref],
+                  cwd=root,
+                  text=True,
+                  capture_output=True,
+                  check=False,
+              )
+              if added.returncode != 0:
+                  print(added.stdout)
+                  print(added.stderr, file=sys.stderr)
+                  failures.append(f"{milestone}: could not materialize historical ref {ref}")
+                  print("::endgroup::", flush=True)
+                  continue
+
+              if remove_report:
+                  report = destination / "experiments" / milestone / "CHECK_REPORT.json"
+                  if report.exists():
+                      report.unlink()
+                      print(f"Removed disposable preserved report copy: {report.relative_to(destination)}")
+
+              completed = subprocess.run(
+                  [sys.executable, *args],
+                  cwd=destination,
+                  env=env,
+                  text=True,
+                  capture_output=True,
+                  check=False,
+              )
               if completed.stdout:
                   print(completed.stdout, end="" if completed.stdout.endswith("\n") else "\n")
               if completed.stderr:
@@ -88,6 +160,7 @@ jobs:
 
               row = {
                   "milestone": milestone,
+                  "ref": ref,
                   "expected": expected,
                   "actual": actual,
                   "returncode": completed.returncode,
@@ -97,9 +170,9 @@ jobs:
                   failures.append(f"{milestone}: expected {expected}, reproduced {actual!r}")
               print("::endgroup::", flush=True)
 
-          print(json.dumps({"reproduction_summary": summary}, indent=2, sort_keys=True))
+          print(json.dumps({"historical_reproduction_summary": summary}, indent=2, sort_keys=True))
           if failures:
-              print("Scientific reproduction mismatches:", file=sys.stderr)
+              print("Historical scientific reproduction mismatches:", file=sys.stderr)
               for failure in failures:
                   print(f"- {failure}", file=sys.stderr)
               raise SystemExit(1)
