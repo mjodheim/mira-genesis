@@ -37,7 +37,7 @@ retaining the original claim.
 | H | Milestone | Current status | 2026-09-05 independent validation |
 | --- | --- | --- | --- |
 | H38 | M092 | unresolved; no verdict | canonical search remains first-run-only and was not advanced by the audit |
-| H39 | M094 | supported within frozen bounds | reproduced by permanent CI; existing post-verdict disclosure remains part of the record |
+| H39 | M094 | **owner-pending; no register claim** | positive qualification verdict reproduced, but D063 remains unfilled and the post-verdict byte-restoration disclosure remains part of the record |
 | H40 | M095 | not supported | negative direction reproduced |
 | H41 | M096 | supported within frozen bounds | scientific core reproduced; historical exact mechanism binding is not fully reconstructible |
 | H42 | M097 | supported within frozen bounds | positive 12/12 reproduced |
@@ -68,7 +68,7 @@ verdict never erases the pre-run chronology.
 *Superseded statement, kept for chronology.* Until the canonical run this section read:
 **No qualification run has been performed.** This sentence is historical freeze-time evidence, not a
 current assertion that M094 lacks a result. The preserved M094 artifacts and the independent
-2026-09-05 validation determine the current navigation status above.
+2026-09-05 validation determine the reproduced-verdict evidence above; only the owner can fill D063.
 
 ### H50 correction
 
