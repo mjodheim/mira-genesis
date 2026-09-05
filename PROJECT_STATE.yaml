@@ -159,9 +159,24 @@ external_blockers:
     handoff: docs/audits/EXTERNAL_VALIDATION_HANDOFF_2026-09-05.md
 
 owner_only_gates:
+  M120_P024:
+    action: record_or_refuse_pending_publication_ip_disposition
+    review: docs/IP_REVIEWS/M120_PUBLICATION_REVIEW.md
+    recorded_disposition: false
   M121_P025:
     action: publication_ip_disposition_then_prospective_v2_hardening_only
+    review: docs/IP_REVIEWS/M121_PUBLICATION_REVIEW.md
+    recorded_disposition: false
     canonical_salt_or_scientific_run_authorized: false
+  M122_publication:
+    action: record_or_refuse_pending_retrospective_publication_ip_disposition
+    review: docs/IP_REVIEWS/M122_PUBLICATION_REVIEW.md
+    provisional_ledger_id_assigned: false
+    recorded_disposition: false
+  M123_P026:
+    action: record_or_refuse_pending_publication_ip_disposition
+    review: docs/IP_REVIEWS/M123_PUBLICATION_REVIEW.md
+    recorded_disposition: false
   M092_H38:
     action: explicit_authority_required_before_resuming_first_run_only_canonical_search
 
@@ -169,5 +184,6 @@ current_next_actions:
   - inspect_and_audit_any_pushed_M124_or_later_carrier_successor_before_advancing_navigation
   - never_retroactively_fill_H58_through_H68_from_instrument_artifacts
   - keep_M121_implementation_blocked_until_owner_disposition
+  - reconcile_M120_M121_M122_M123_publication_dispositions_only_by_explicit_owner_action
   - keep_M092_canonical_cursor_unadvanced_without_explicit_owner_authority
   - preserve_external_independence_requirements_for_H21_and_H31
