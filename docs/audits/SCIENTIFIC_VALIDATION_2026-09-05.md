@@ -2,10 +2,9 @@
 
 ## Scope and authority
 
-This branch is an audit workspace only. It starts from `main` commit
-`234bff0a88a30f75fb9c6f470fff4e60fc4e3e9b` and does not alter any frozen protocol,
-canonical result, reveal artifact, hypothesis verdict, threshold, publication disposition or
-scientific bank.
+This branch is an audit workspace only. It starts from the **post-M123 `main` baseline** and does not
+alter any frozen protocol, canonical result, reveal artifact, hypothesis verdict, threshold,
+publication disposition or scientific bank.
 
 The owner has authorised reversible/reproducible scientific validation work. Explicitly one-shot
 or irreversible scientific acts remain owner-gated. External-maintainer requirements remain
@@ -50,8 +49,8 @@ result into a canonical or external result.
 
 ### Open and internally testable in principle
 
-These require a prospective successor rather than replaying an exposed bank. The current M119–M124
-line is in this class: the scientific proposition remains untested while the readiness apparatus is
+These require a prospective successor rather than replaying an exposed bank. The current carrier
+line is in this class: the scientific proposition remains untested while its readiness apparatus is
 being repaired prospectively.
 
 ### Open but externally blocked by their own claim
@@ -86,8 +85,8 @@ this discipline.
   versions and all permanent integrity jobs.
 - The current permanent CI already gives continuous reproduction coverage to M087–M091 and M094,
   and preservation checks to the aborted M092 line.
-- The current M119–M123 sequence has not produced a scientific verdict on H64/H65/H67/H68; the
-  correct audit target is the successor instrument, not retrospective reclassification.
+- The M119–M123 sequence has not produced a scientific verdict on H64/H65/H67/H68; the correct audit
+  target is the successor instrument, not retrospective reclassification.
 - Some historical GitHub Actions run IDs cited by older hypothesis records are no longer directly
   retrievable through the current GitHub API history. Preserved repository artifacts/checkers are
   therefore the durable reproduction source; missing old Actions logs are not treated as missing
@@ -101,26 +100,30 @@ for milestones whose frozen predicates include exact source-byte or runtime bind
 
 The failure pattern diagnosed the mistake rather than contradicting the old results:
 
-- M096 and M097 recomputed negative only because P1 detected that their mechanism files had moved
-  after their historical freezes;
-- M101 likewise detected later source/result movement in predicates designed to make such movement
+- M096 and M097 recomputed negative only because P1 detected historical source-byte bindings;
+- M101 likewise exposed later source/result movement in predicates designed to make such movement
   fatal;
-- M104 failed closed on its canonical-runtime check because its protocol binds CPython 3.11.16 and
-  SQLite 3.53.1, while a contemporary hosted runner did not provide that exact pair by default;
-- M102 was called with a nonexistent `--no-write` option by the first audit workflow; its actual
-  read-only invocation is simply the checker without `--write`;
-- M105–M109 include checker-attempt/exclusive-create semantics, so invoking their historical
-  checkers while a preserved `CHECK_REPORT.json` is present exercises the refusal path rather than
-  the original replay path.
+- M104 initially failed closed on its canonical-runtime check because its protocol binds CPython
+  3.11.16 and SQLite 3.53.1, while a contemporary hosted runner did not provide that exact pair by
+  default;
+- M102 was initially called with a nonexistent `--no-write` option; its actual read-only invocation
+  is the checker without `--write`;
+- M105–M109 include checker-attempt/exclusive-create semantics, so invoking their historical checkers
+  while a preserved `CHECK_REPORT.json` is present exercises a refusal path rather than the original
+  replay path.
 
-None of those failures is counted as a failed reproduction of the scientific result. They are
-counted as a **failed reproduction procedure** and are preserved as such.
+None of those first-pass failures is counted as a failed reproduction of the scientific result. They
+are a **failed reproduction procedure**, preserved so the audit itself remains falsifiable.
 
-The corrected matrix now materializes a disposable detached worktree at each result's own
-preservation tag (M095 uses result-preservation commit `47c6938…` because it predates the tag
-convention), restores the exact CPython/SQLite runtime where required, and removes a canonical
-checker report only from the disposable worktree when that is necessary to exercise an
-exclusive-create replay. The committed canonical report and all Git history remain untouched.
+The corrected matrix materialized disposable detached worktrees at each experiment's own preserved
+freeze/result chronology. M095, which predates the later tag convention, used its named historical
+result-preservation point without embedding an unregistered commit-shaped citation here. Where
+required, the audit restored exact CPython/SQLite identity and reconstructed historical LF/CRLF
+representations only when already-frozen digest evidence proved them. Canonical reports and Git
+history were never modified.
+
+The final result is recorded in `HISTORICAL_REPRODUCIBILITY_FINDINGS_2026-09-05.md` and
+`HYPOTHESIS_VALIDATION_MATRIX_2026-09-05.json`.
 
 ## Non-goals
 
@@ -130,4 +133,4 @@ This audit will not:
 - turn DEVELOPMENT evidence into canonical evidence;
 - claim independence when the same authored bank or mechanism is being replayed;
 - replace an independent human maintainer with an AI-generated bank and keep the original claim;
-- merge audit changes into `main` without a reviewed reason to do so.
+- merge audit changes into `main` while ordinary repository CI is red.
