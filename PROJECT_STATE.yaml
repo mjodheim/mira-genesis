@@ -119,7 +119,7 @@ carrier_frontier:
     hypothesis_status: untested
     verdict: not_ready_stress_under_frozen_ladder
     qualifying_scientific_invocations: 0
-    delivery_attempts_across_instruments_after_closure: 3_of_6
+    delivery_attempts_spent_across_all_instruments: 3_of_6
     attempt_1:
       stations: 167
       result: truncated_length
@@ -128,7 +128,7 @@ carrier_frontier:
     attempt_2:
       stations: 109
       completion_tokens: 50232
-      predicted_envelope_low: 45599
+      predicted_envelope_low: 45598
       predicted_envelope_high: 65698
       sizing_prediction_succeeded_out_of_sample: true
       body: malformed_incomplete_json
