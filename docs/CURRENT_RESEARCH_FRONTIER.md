@@ -23,7 +23,7 @@ The recent sequence is an apparatus-convergence line:
 - M123/H68 replaced the one-measurement sizing assumption with an empirical rate envelope. Its first
   167-station attempt truncated at at least 100,657 completion tokens, falsifying the prior linear fit.
   The prospectively chosen 109-station second attempt then landed at 50,232 tokens, inside its
-  45,599–65,698 predicted envelope. The body was incomplete/malformed JSON and the frozen ladder
+  45,598–65,698 predicted envelope. The body was incomplete/malformed JSON and the frozen ladder
   classified that terminally as `not_ready_stress`.
 
 That last point matters: **the sizing problem itself was solved out of sample**. M123 therefore
