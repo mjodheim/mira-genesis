@@ -90,6 +90,23 @@ M121/H66 is a separate line. Its publication/IP disposition is an owner act; the
 prospective v2 hardening before any canonical salt or scientific attempt, but that recommendation is
 not itself authorization.
 
+## Open publication/governance backlog
+
+The recent public carrier/long-horizon line is ahead of its owner disposition ledger. That chronology
+is preserved rather than backfilled by an assistant decision:
+
+| Milestone | Review state | Recorded owner disposition |
+| --- | --- | --- |
+| M120 | P-024 draft prepared | **none** |
+| M121 | P-025 draft prepared | **none** |
+| M122 | retrospective review prepared 2026-09-05; ledger ID intentionally unassigned | **none** |
+| M123 | P-026 draft prepared | **none** |
+
+M119/P-023 remains the last recorded owner-authorised disposition in this mechanism family. The four
+open items above may be accepted, amended or refused only by explicit owner action. Their existence
+does not authorize a canonical M121 attempt, a new carrier successor, or any reinterpretation of a
+closed milestone.
+
 ## Claim ceiling
 
 Nothing in this register claims AGI, general intelligence, consciousness, unrestricted self-rewrite,
