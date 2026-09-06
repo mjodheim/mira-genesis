@@ -10,6 +10,14 @@ This review was prepared before any M125 network request, DEVELOPMENT observatio
 
 The decision authorizes public enabling implementation and offline DEVELOPMENT hardening/tests. It does not authorize a network request or scientific execution merely because the implementation may now be public.
 
+## Human and AI contribution provenance
+
+Anthony Mets supplied the research direction and acceptance boundary, reviewed the M124 failure/audit record, explicitly accepted P-029, chose to preserve M124 without retrospective repair and remains the sole human authority for selecting, rejecting and releasing proposed changes.
+
+OpenAI ChatGPT provided substantial AI-assisted synthesis of the M124 audit, prospective M125 research design, governance drafting and implementation planning. That contribution includes the bounded-probe/safety-envelope design, the missing isolated `items` coverage finding, the unified delivery predicate, deterministic stress pinning, fresh 8/16/32 calibration queue, no-redraw rule and separation of offline implementation from later network/scientific authority. The GitHub Codex review bot independently reviewed this branch and identified the provenance-completeness defect that caused this section and the companion owner record to be expanded. Anthropic Claude's earlier M124 implementation/audit findings are upstream technical inputs motivating several M125 repairs. All three are AI tooling/research assistance, not human authorship or release authority.
+
+Anthony Mets selected which findings to accept, rejected retrospective alteration of frozen M124, explicitly approved the publication posture and instructed work to continue only to the next scientific/governance gate.
+
 ## Asset reviewed
 
 M125 is the prospective readiness-instrument successor to closed M124/H69. It does **not** reopen or replay M124. Its purpose is to remove instrument defects discovered only after M124's preserved `not_ready_delivery` observation while keeping the never-yet-tested carrier proposition unchanged.
