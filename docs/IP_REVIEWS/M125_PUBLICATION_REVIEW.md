@@ -1,120 +1,74 @@
 # M125 prospective publication review
 
 **Prepared:** 6 September 2026  
-**Owner decision:** **PENDING**  
-**Proposed disposition:** `PUBLIC_AGPL_COMMERCIAL_OPTION`  
-**Proposed register entry:** **P-029 — not recorded**  
-**Status:** **REVIEW ONLY — NO ENABLING IMPLEMENTATION IS AUTHORISED BY THIS DOCUMENT.**
+**Owner decision recorded:** 6 September 2026  
+**Disposition:** `PUBLIC_AGPL_COMMERCIAL_OPTION`  
+**Register entry:** **P-029**  
+**Status:** **PUBLIC ENABLING IMPLEMENTATION AND OFFLINE DEVELOPMENT HARDENING AUTHORISED; NETWORK/SCIENTIFIC EXECUTION REMAINS SEPARATELY GATED.**
 
-This review is prepared before any M125 network request, DEVELOPMENT observation, enabling M125
-implementation, carrier bank, scientific freeze or qualifying generation. It records the decision
-surface the owner must accept, amend or refuse before the first enabling public implementation is
-published.
+This review was prepared before any M125 network request, DEVELOPMENT observation, enabling M125 implementation, carrier bank, scientific freeze or qualifying generation. Anthony Mets, sole human research director and release/acceptance decision-maker, explicitly accepted the proposed public disposition on 6 September 2026. The explicit owner record is `docs/IP_REVIEWS/P029_OWNER_DECISION_2026-09-06.md`.
 
-The 5 September owner reconciliation explicitly preserves the distinction that M125 design may be
-prepared publicly while that fact alone does **not** authorize any M125 scientific request. This
-review stays on that side of the boundary: it documents a prospective design and proposed public
-posture but writes no P-029 row to `IP_ASSET_REGISTER.md`.
+The decision authorizes public enabling implementation and offline DEVELOPMENT hardening/tests. It does not authorize a network request or scientific execution merely because the implementation may now be public.
 
 ## Asset reviewed
 
-M125 is a proposed prospective readiness-instrument successor to closed M124/H69. It does **not**
-reopen or replay M124. Its purpose is to remove instrument defects discovered only after M124's
-preserved `not_ready_delivery` observation while keeping the never-yet-tested carrier proposition
-unchanged.
+M125 is the prospective readiness-instrument successor to closed M124/H69. It does **not** reopen or replay M124. Its purpose is to remove instrument defects discovered only after M124's preserved `not_ready_delivery` observation while keeping the never-yet-tested carrier proposition unchanged.
 
-The proposed new hypothesis number is H70. Its scientific proposition is intended to repeat H69/H64
-verbatim:
+The successor hypothesis number is H70. The intended proposition repeats H69/H64 verbatim:
 
 > A descendant carrying both pieces of acquired machinery — the attribution cascade and the
 > diagnostic policy — resolves demands on carriers it did not design more often than a comparator
 > that carries neither, on demands posed identically to both.
 
-The number changes because the apparatus changes prospectively, not because the target is being
-moved. H70 is not frozen by this review and no H70 evidence exists.
+The number changes because the apparatus changes prospectively, not because the target moves. H70 is not frozen by this publication decision and no H70 evidence exists.
 
-## Proposed M125 instrument changes
+## Authorised prospective M125 instrument scope
 
-The review currently covers the following prospective instrument design, all to be frozen before any
-M125 request if the owner accepts public enabling implementation:
+The publication decision covers public implementation and offline testing of the following prospective instrument design. These rules still must be committed and mechanically verified before any M125 request:
 
-1. **Bounded capability probes.** Non-target output dimensions are bounded so a target-feature probe
-   cannot grow arbitrarily. Probe output receives a small engineering token cap. A violation of a
-   safety envelope is classified as an instrument failure, not attributed to the feature under test.
-2. **Complete named feature coverage.** Every feature class required by the candidate census must
-   have an explicit isolated probe or a mechanically documented coverage mapping. The inherited
-   matrix currently lists `items` as required without giving it a named isolated probe; M125 must
-   close that diagnostic gap.
-3. **One delivery predicate.** Request-level retry and verdict classification use the same definition
-   of whether the route answered. Empty HTTP 200 responses and content without a usable
-   `finish_reason` are handled consistently rather than consuming a whole-instrument allowance while
-   request-level retries remain unused.
-4. **Correct retry metadata.** `Retry-After` is read from the transport's actual
-   `response_headers` field. A 4xx request rejection other than the explicitly retryable delivery
-   classes is not silently retried as though it were a transient route failure.
-5. **Prospective terminal precedence.** A completed terminal identity/feature/envelope/reasoning
-   finding is not maskable by a later delivery failure. Truncation is not assigned to a target
-   feature merely because it happened during that probe.
-6. **Pinned stress cardinalities.** The inherited M122 non-carrier stress shape is copied into a new
-   M125 stress instrument with every bounded inner array pinned by a deterministic rule independent
-   of the historical token observations. The current design candidate is the upper midpoint
-   `ceil((minItems + maxItems) / 2)` for each bounded inner array. The pre/post structural census must
-   remain byte-identical as a data structure even though the schema bytes change.
-7. **Fresh calibration only.** M122/M123/M124 token rates, station counts and the M124 85,000-token
-   operational ceiling are historical motivation, not M125 calibration data. A fixed geometric
-   calibration queue of 8, 16 and 32 stations is proposed. Completed calibration points are
-   persistent and may not be redrawn on a later delivery attempt.
-8. **One pre-calibration protocol digest.** The calibration queue, pinning rule, retry semantics,
-   verdict ladder, threshold, uncertainty formula and final-size derivation are all bound before the
-   first calibration request. The final station count is a deterministic output of that protocol,
-   not a new post-measurement plan choice.
-9. **Out-of-sample final stress.** The proposed inherited lower threshold remains 32,000 completion
-   tokens. The current design candidate uses an a-priori operational ceiling of 65,536 tokens — half
-   of the 131,072 requested maximum — and a fixed multiplicative uncertainty factor of 1.25 around
-   the fresh calibration rates. If those bounds yield no admissible station count, or if the final
-   stress falls outside its derived band, M125 closes rather than refitting itself.
-10. **Delivery ceiling preserved.** M124 closed with 4 of the globally bounded 6 delivery attempts
-    spent. M125 does not reset that ceiling. Only genuine delivery-only closures may use the two
-    remaining global slots; terminal instrument findings do not become replayable.
+1. **Bounded capability probes.** Non-target output dimensions are bounded. A probe output safety cap must be justified from a static bound or otherwise fixed before observation. Safety-envelope/truncation failures are instrument findings, never automatically target-feature findings.
+2. **Complete named feature coverage.** Every feature class required by the candidate census must have explicit machine-checkable coverage. The inherited `items` diagnostic gap must be closed.
+3. **One delivery predicate.** Request-level retry and verdict classification use the same pure definition of whether the route answered. Empty HTTP 200 and content without usable `finish_reason` are handled consistently.
+4. **Correct retry metadata.** `Retry-After` is read from the transport's actual `response_headers` field; deterministic non-429 4xx request rejection is not treated as transient delivery.
+5. **Prospective terminal precedence.** Completed terminal identity/feature/envelope/reasoning/calibration findings short-circuit later requests and cannot be masked by delivery failures.
+6. **Pinned stress cardinalities.** The M122 non-carrier stress structure is copied prospectively with bounded inner-array cardinalities pinned by a deterministic rule independent of historical token observations. The implementation must prove the structural census is unchanged.
+7. **Fresh calibration only.** M122/M123/M124 token rates, station counts and transport outcomes are historical motivation only. M125 uses a predeclared fresh calibration queue; completed points are persistent and never redrawn.
+8. **One pre-calibration protocol digest.** The queue, pinning rule, retry semantics, route identity, thresholds, uncertainty formula, sizing derivation, verdict ladder and delivery accounting are bound before the first calibration request.
+9. **Out-of-sample final stress.** Final size is a deterministic output of the frozen calibration protocol. A calibration-window miss or final out-of-band observation closes the instrument; no refit is permitted.
+10. **Delivery ceiling preserved.** M124 closed with 4 of the globally bounded 6 delivery attempts spent. M125 does not reset that ceiling; only genuine whole-instrument delivery-only closures may consume the two remaining slots.
 
-These details are prospective design candidates until an M125 preregistration/protocol freezes them.
-No request has been sent under them.
+The detailed prospective scientific review is `docs/audits/M125_PREIMPLEMENTATION_REVIEW_2026-09-06.md`.
 
 ## Third-party, confidentiality and security review
 
-The proposed instrument stays on the already-used fixed DEVELOPMENT route and project-controlled
-Python apparatus. The expected implementation uses Python standard library facilities plus existing
-repository development tooling. The external model/provider route is an existing operational
-dependency, not project-owned evidence or task authorship.
+The planned instrument stays on the already-used fixed DEVELOPMENT route and project-controlled Python apparatus. The expected implementation uses Python standard-library facilities plus existing repository development tooling. The external model/provider route remains an operational dependency, not project-owned evidence or task authorship.
 
-No credential may be committed. No plaintext sealed bank, confidential third-party payload or
-security-sensitive authority is part of this review. No new filesystem, network, credential,
-deployment or repository authority is proposed for the tested descendant.
+No credential may be committed. No plaintext sealed bank, confidential third-party payload or security-sensitive authority is part of this review. No new filesystem, credential, deployment or repository authority is proposed for the tested descendant.
 
-At this review stage no concrete patent-first, intentional trade-secret, contractual-embargo,
-confidential-third-party or security-sensitive reason for temporary private treatment has been
-identified. That supports the proposed default `PUBLIC_AGPL_COMMERCIAL_OPTION`; it does not substitute
-for the owner's decision.
+No concrete patent-first, intentional trade-secret, contractual-embargo, confidential-third-party or security-sensitive reason for private treatment was identified. The owner therefore accepted the default `PUBLIC_AGPL_COMMERCIAL_OPTION` disposition.
+
+## Rights and licensing posture
+
+The recorded disposition is:
+
+`P-029 — M125/H70 prospective bounded readiness and fresh-calibration instrument — PUBLIC_AGPL_COMMERCIAL_OPTION`
+
+Decision date: **2026-09-06**.
+
+Project-controlled software may be published under `AGPL-3.0-only`; research prose/results remain under the documentation licence defined by `LICENSE_POLICY.md`; and separately negotiated commercial permissions remain available where the project controls the necessary rights.
 
 ## Scientific boundary
 
-Acceptance of the proposed publication disposition would authorize public enabling implementation and
-prospective DEVELOPMENT hardening only. It would **not**, by itself:
+P-029 authorizes public enabling implementation and offline DEVELOPMENT hardening/tests only. It does **not**, by itself:
 
-- authorize any M125/H70 network request before its request protocol is frozen;
-- authorize a qualifying scientific generation, carrier bank, seal or reveal;
+- authorize any M125/H70 network request before the exact request/calibration protocol is frozen, committed and mechanically verified;
+- authorize a qualifying scientific generation, carrier bank, seal, reveal, scoring or result acceptance;
 - reclassify or replay M124;
 - reset the 4/6 cross-instrument delivery count;
 - turn DEVELOPMENT calibration into H70 evidence;
+- authorize reuse of M122/M123/M124 observations as M125 calibration data;
 - authorize M121/H66 canonical execution, M092/H38 resumption or D063/H39 acceptance;
 - satisfy H21/M075 or H31/M085 external-independence requirements;
 - advance a generality gate or support an AGI claim.
 
-## Proposed owner decision
-
-If the owner accepts the public path, the proposed decision is:
-
-`P-029 — M125/H70 prospective bounded readiness and fresh-calibration instrument — PUBLIC_AGPL_COMMERCIAL_OPTION`
-
-with the actual owner decision date recorded at the time of acceptance. Until that happens, P-029 is
-**not** a ledger entry and enabling M125 implementation remains blocked by publication governance.
+A future M125 readiness result of `ready` would remain DEVELOPMENT evidence about apparatus readiness only. It would not support H70 and would not itself authorize the one-shot scientific generation.
