@@ -1,183 +1,134 @@
 # M125/H70 preimplementation scientific review — 6 September 2026
 
-**Review class:** prospective instrument design, before M125 implementation or requests  
-**Current disposition:** **GO FOR DESIGN REVIEW ONLY; BLOCK ENABLING IMPLEMENTATION AND ALL NETWORK REQUESTS UNTIL THE PUBLICATION GATE IS RECORDED**  
+**Review class:** prospective instrument design, before any M125 network request  
+**Owner publication decision:** **P-029 / `PUBLIC_AGPL_COMMERCIAL_OPTION`, accepted 6 September 2026**  
+**Current disposition:** **GO FOR PUBLIC ENABLING IMPLEMENTATION AND OFFLINE DEVELOPMENT TESTS; BLOCK ALL NETWORK REQUESTS UNTIL THE EXACT REQUEST PROTOCOL IS FROZEN, COMMITTED AND MECHANICALLY VERIFIED**  
 **Scientific observation count for H70:** **0**  
 **Inherited global delivery count:** **4 / 6 spent**
 
-This review exists because M124 closed cleanly without replay while exposing defects that would make a
-straight copy-and-retry scientifically weak. The correct successor is a newly numbered instrument,
-not a repaired M124.
+The explicit owner record is `docs/IP_REVIEWS/P029_OWNER_DECISION_2026-09-06.md`. P-029 resolves publication governance only. It does not authorize a DEVELOPMENT request, a qualifying scientific generation, a reveal or result acceptance.
 
-Nothing here edits, rescales or reinterprets M122, M123 or M124. Historical observations may explain
-why a design problem matters; they may not provide M125 calibration values.
+This review exists because M124 closed cleanly without replay while exposing defects that would make a straight copy-and-retry scientifically weak. The correct successor is a newly numbered instrument, not a repaired M124.
+
+Nothing here edits, rescales or reinterprets M122, M123 or M124. Historical observations may explain why a design problem matters; they may not provide M125 calibration values.
 
 ## 1. Scientific identity must not drift
 
-Proposed H70 repeats the never-yet-tested carrier proposition verbatim from H69/H64:
+H70 repeats the never-yet-tested carrier proposition verbatim from H69/H64:
 
 > A descendant carrying both pieces of acquired machinery — the attribution cascade and the
 > diagnostic policy — resolves demands on carriers it did not design more often than a comparator
 > that carries neither, on demands posed identically to both.
 
-A future M125 preregistration should state explicitly that the hypothesis number changes only because
-the readiness apparatus changes. It must not introduce a new success criterion, easier carrier class,
-new comparator or weaker notion of resolution.
+The hypothesis number changes only because the readiness apparatus changes. M125 must not introduce a new success criterion, easier carrier class, new comparator or weaker notion of resolution.
 
-A readiness result — including `ready` — is not evidence for H70. Readiness only determines whether
-the later scientific apparatus is permitted to be frozen.
+A readiness result — including `ready` — is not evidence for H70. Readiness determines only whether a later scientific apparatus stage may be prepared under its own chronology.
 
 ## 2. Boundaries inherited unchanged
 
-Unless a later owner-approved preregistration explicitly says otherwise before observation, M125
-should inherit these boundaries:
+M125 offline implementation must inherit:
 
 - M122's candidate carrier contract, not a new carrier target;
 - the fixed M118 route identity and no-fallback requirement;
 - the 32,000 completion-token lower capacity threshold;
 - reasoning effort `none` and zero tolerated reasoning tokens;
-- DEVELOPMENT probes that carry no qualifying carrier input or carrier-quality statistic;
-- the global delivery ceiling, now 4 of 6 spent;
+- DEVELOPMENT probes carrying no qualifying carrier input or carrier-quality statistic;
+- the cross-instrument delivery ceiling, currently 4 of 6 spent;
 - no generality-gate movement from readiness;
-- no raw completion content persisted by the readiness record.
+- no raw completion content persisted by readiness/calibration records.
 
-The M124 candidate schema digest recorded in the closed result is
-`8e766971941f1ca14c2d035f125c383230c62343329e9c6ee475e05e1b77cbbf`. A future M125 protocol should
-recompute and bind the inherited contract digest rather than trusting this prose value.
+The implementation must recompute and bind the inherited candidate-schema digest mechanically. Prose copies of an old digest are not authoritative.
 
-## 3. Defect A — probes must have bounded non-target dimensions
+## 3. Defect A — bounded non-target probe dimensions
 
-M124 inherited probes whose target condition was narrower than their possible output volume:
+M124 inherited probes whose target condition was narrower than their possible output volume. Examples include unbounded strings, a `minItems` probe without a `maxItems`, and prompts inviting open-ended extras. M124's `additional_properties` observation reached 101,757 completion tokens with `finish_reason=length`; because the JSON never parsed, that observation cannot establish that `additionalProperties: false` itself failed.
 
-- `required`: six string values without a length bound;
-- `additional_properties`: `kept` is an unbounded string and the prompt invites extra material;
-- `min_items`: `minItems: 40` with no `maxItems`;
-- nested/depth helpers contain leaf strings that are not intrinsically bounded.
+### M125 rule
 
-M124's `additional_properties` observation reached 101,757 tokens and `finish_reason=length`. Because
-the JSON never parsed, that observation cannot establish that `additionalProperties: false` itself
-failed.
+Every probe must have a safety envelope distinct from the target feature:
 
-### Prospective M125 rule
+- string leaves receive finite `maxLength` or finite pattern/enum domains;
+- the `minItems` probe receives a finite `maxItems` that remains above its target minimum;
+- prompts request only a finite deliberate set of forbidden extras;
+- all nested/depth leaves are bounded;
+- the implementation provides a deterministic structural upper-bound report for every probe schema;
+- a small per-probe output cap is an **engineering safety cap**, not a target-feature threshold.
 
-Every probe must have a **safety envelope distinct from the target feature**. Prefer already-required,
-small-domain constraints rather than introducing unnecessary new decoder dependencies:
+The current implementation target is 4,096 completion tokens, but the tests must establish that every conforming probe instance has a comfortably smaller finite structural serialization bound. If that proof fails, the implementation must fail closed before any request rather than silently raising the cap after observation.
 
-- bounded enum/pattern values for string leaves;
-- an exact `maxItems` safety bound for the `minItems` probe;
-- prompts that request only the minimum finite set of deliberately forbidden extras rather than
-  open-ended additional keys;
-- a small per-probe engineering output cap, proposed at **4,096 tokens**.
-
-If a completion violates the target feature, record a target-feature finding. If it violates a
-non-target safety envelope, or reaches the probe token cap, record a terminal **probe-envelope /
-instrument** finding instead. A truncation is never automatically attributed to the target feature.
-
-The instrument must inspect the validator's failing keyword/location before assigning a class.
+If a response violates the target feature, record a target-feature finding. If it violates a non-target safety envelope or hits the probe cap, record terminal `not_ready_probe_envelope` (or an equivalently frozen name). A truncation is never automatically attributed to the target feature.
 
 ## 4. Defect B — every required feature class needs named coverage
 
-`m116_capability_probes.required_feature_classes()` can require `items`; the current M124 contract does.
-But the inherited `build_matrix()` has no isolated probe named `items`. It is covered only indirectly by
-nested/combined schemas.
+The inherited census can require `items`, while the M116/M124 matrix has no isolated probe named `items`. That is a diagnostic hole.
 
-That is a diagnostic hole: the result can list a feature as required without a one-to-one named
-measurement explaining how it was tested.
+### M125 rule
 
-### Prospective M125 rule
-
-The frozen protocol must contain a machine-checkable coverage map:
+The protocol must expose a machine-checkable mapping:
 
 `required census class -> one or more named decisive probes`
 
-Every required class must appear in the map. Prefer an isolated `items` probe; if a class is genuinely
-only testable jointly, the protocol must state why and the checker must verify that the mapped joint
-probe contains a counterfactual capable of exposing non-enforcement of that class.
+Every required class must be covered. M125 should provide an isolated `items` probe unless a class is provably joint-only. Tests must fail whenever:
 
-The test suite should fail if `required_feature_classes - covered_feature_classes` is non-empty.
+`required_feature_classes - covered_feature_classes != empty`.
+
+The coverage proof itself is part of the pre-request protocol digest.
 
 ## 5. Defect C — one definition of "the route answered"
 
-M124 had two incompatible notions:
+M124's transport and verdict layer disagreed on empty HTTP 200 responses. That allowed an empty 200 to consume a whole-instrument delivery slot while request-level retries remained unused.
 
-- `_send()` treated an empty HTTP 200 as a completed request because status 200 was not retryable;
-- the verdict layer later classified that same shape as `undeliverable`.
+### M125 rule
 
-That spent a whole-instrument delivery slot while request-level retries remained unused.
-
-### Prospective M125 rule
-
-Define one pure predicate before the first request, for example:
+Define one pure predicate before any request:
 
 `answered := non-empty completion content AND usable string finish_reason`
 
-Use that predicate in both transport and scoring.
+Use the same predicate for transport retry, persisted observation classification and verdict reconstruction.
 
-Recommended request handling:
+Frozen request handling:
 
-- answered response: never retry merely because of HTTP status; it is an observation and is scored;
+- answered response: never retry merely because of status; score the observation;
 - no answer + HTTP 200: retry inside the request-level budget;
-- no answer + 429/5xx or transport failure: retry inside the request-level budget;
-- no answer + deterministic non-429 4xx request rejection: terminal instrument/request error, not a
-  capability finding and not a transient-delivery redraw.
+- no answer + HTTP 429, 5xx or transport failure: retry inside the request-level budget;
+- no answer + deterministic non-429 4xx request rejection: terminal instrument/request error, not capability and not transient delivery;
+- content without usable `finish_reason`: no-answer/delivery shape, preserving M124's prospective classification without replaying M124.
 
-Content with no `finish_reason` remains a delivery/no-answer shape, preserving M124's prospective
-classification decision without replaying M124.
+## 6. Defect D — `Retry-After` must use the transport's actual field
 
-## 6. Defect D — Retry-After must use the transport's real field
+M124 retained headers under `response_headers` while retry logic read `headers`.
 
-`_http()` returns retained headers under `response_headers`; M124's wait function reads `headers`.
-Therefore an advertised `Retry-After` can be silently ignored.
+### M125 rule
 
-### Prospective M125 rule
+- read `observed["response_headers"]` only;
+- case-normalize `retry-after`;
+- parse numeric delay; malformed values fall back to the frozen exponential rule;
+- cap wait by a predeclared maximum;
+- test the exact `_http()` return shape.
 
-- read only `observed["response_headers"]`;
-- case-normalize the retained `retry-after` key;
-- parse a numeric delay fail-closed to the frozen exponential fallback when malformed;
-- cap the delay by a predeclared maximum;
-- regression-test the actual `_http()` return shape, not a hand-written alternate key.
+Offline tests replace sleeping and network I/O with stubs. No M125 request is authorized by P-029.
 
-## 7. Defect E — terminal findings must not be masked by later delivery
+## 7. Defect E — terminal findings cannot be masked by later delivery
 
-M124 evaluated accumulated `undeliverable` state before `enforcement_failed_open`. A later delivery
-failure could therefore mask an earlier terminal state.
+M124 accumulated multiple categories and could let later delivery precedence obscure an earlier terminal finding.
 
-### Prospective M125 rule
+### M125 rule
 
-Prefer **short-circuit execution** over a complicated post-hoc priority table:
+Use short-circuit execution:
 
 1. send a request only while no terminal completed observation exists;
-2. exhaust request-level delivery retries for the current request;
-3. if no answer remains, close the instrument as delivery-only;
-4. if an answered response establishes a terminal identity, target-feature, safety-envelope,
-   reasoning or calibration finding, stop immediately and persist that verdict;
-5. never send later requests that could mask it.
+2. exhaust request-level delivery retries for the current logical request;
+3. if it remains unanswered, close the instrument as delivery-only;
+4. if an answered response establishes terminal identity, target-feature, probe-envelope, reasoning, calibration or stress finding, persist it and stop immediately;
+5. do not send later requests that could mask it.
 
-The final checker should recompute the same order from persisted observations, so control flow and
-verdict reconstruction agree.
+The checker must reconstruct the same precedence from persisted metadata.
 
-## 8. Redesign the stress by deterministic pinning
+## 8. Deterministic stress pinning
 
-The M122 stress has several bounded inner arrays whose lengths are selected by the model:
+The M122 stress contains bounded inner arrays whose model-selected lengths change output size at fixed station count:
 
-- `readings`: 1..3;
-- `channels`: 1..3;
-- `masts`: 3..4;
-- `offline`: 0..1;
-- `fault_codes`: 1..4;
-- `instruments`: 2..3.
-
-Those degrees of freedom change output size while station count stays fixed.
-
-### Proposed pin rule
-
-Before any fresh M125 measurement, pin every bounded **inner** array to:
-
-`ceil((minItems + maxItems) / 2)`
-
-which yields:
-
-| Array | Old range | Proposed exact count |
+| Array | M122 range | M125 exact count |
 | --- | ---: | ---: |
 | readings | 1..3 | 2 |
 | channels | 1..3 | 2 |
@@ -186,69 +137,66 @@ which yields:
 | fault_codes | 1..4 | 3 |
 | instruments | 2..3 | 3 |
 
-The top-level station count is deliberately **not** pinned by this rule; it is derived from fresh
-calibration later.
+Before any M125 measurement, pin every bounded inner array to:
 
-The rule is independent of historical token outcomes. The implementation must mechanically prove that
-M122's stress census and the pinned M125 stress census are exactly equal as census data. This is
-expected because only existing `minItems`/`maxItems` values change; keyword occurrence, depth, type and
-array-of-object structure do not. If the census changes, the implementation is wrong and no request is
-permitted.
+`ceil((minItems + maxItems) / 2)`.
 
-Pinning intentionally changes the schema bytes. Therefore all M122/M123/M124 token measurements are
-invalid as M125 calibration and must stay historical-only.
+The top-level station count is not pinned by this rule; it is derived from fresh calibration.
 
-## 9. Fresh calibration must be frozen before it begins
+The implementation must mechanically prove that the M122 stress census and pinned M125 stress census are exactly equal as census data. If any keyword occurrence, depth, type or array-of-object level changes, no request may be permitted.
 
-### Proposed fixed calibration queue
+Pinning changes schema bytes. Therefore M122/M123/M124 token measurements are invalid as M125 calibration and remain historical-only.
+
+## 9. Fresh calibration queue
+
+The fixed queue is:
 
 `8 -> 16 -> 32` stations.
 
-These are a geometric sequence chosen as a structural design rule, not selected from historical token
-rates. The queue order, request cap, route identity checks and completion requirements must live in the
-pre-calibration protocol digest.
+These values are a geometric structural design rule and are bound before the first request. They are not selected from historical token rates.
 
 A calibration point is usable only when it:
 
-- receives an answered response;
+- is answered;
 - reports `finish_reason == "stop"`;
 - conforms to the pinned schema;
 - holds exact route identity;
-- respects the reasoning control;
-- records only metadata needed for sizing, not raw completion content.
+- respects zero reasoning tokens;
+- persists only sizing metadata, never raw completion content.
 
-`finish_reason == "length"` at a calibration point is a terminal calibration/instrument finding, not a
-rate estimate.
+`finish_reason == "length"` at a calibration point is terminal calibration/instrument failure, not a rate estimate.
 
 ### Resume rule
 
-A completed calibration point may **never be redrawn**. If delivery fails before a point receives an
-answer, a permitted later delivery attempt resumes at the first unanswered point and skips every
-completed point byte-for-byte.
+A completed calibration point may never be redrawn. If a permitted delivery-only retry occurs before a point answers, the next attempt resumes at the first unanswered point and skips completed points byte-for-byte.
 
-Persist each completed point with a digest and bind all completed points before final-size derivation.
-The final readiness stage must refuse if any calibration record can be modified without changing the
-bound calibration digest.
+Each completed point has its own digest. Final-size derivation binds the complete calibration set.
 
-## 10. One pre-calibration protocol digest, one deterministic sizing rule
+## 10. One protocol digest before calibration
 
-Do not create a new selectable plan after seeing 8/16/32.
+There must be no new selectable plan after observing 8/16/32.
 
-Before the first calibration request, bind one protocol containing at least:
+Before the first M125 request, one protocol digest binds at least:
 
-- exact pinned schema digest and proof that its census equals the inherited census;
-- calibration counts `[8, 16, 32]` and their order;
-- request-level retry semantics;
-- exact route identity;
-- 32,000 inherited lower threshold;
-- final operational ceiling;
-- uncertainty factor;
-- formula for the admissible station interval;
-- deterministic final station choice;
-- complete verdict ladder;
-- local and global delivery accounting rules.
+- exact pinned schema digest;
+- exact census-equivalence proof;
+- coverage map and bounded-probe proof;
+- calibration counts `[8, 16, 32]` and order;
+- request-level retry semantics and answered predicate;
+- route identity and endpoint;
+- reasoning controls;
+- 32,000 lower threshold;
+- 65,536 final operational ceiling;
+- uncertainty factor `F = 1.25`;
+- sizing formulas and deterministic final station choice;
+- complete verdict/short-circuit rules;
+- request budget;
+- local/global delivery accounting;
+- information-boundary fields.
 
-### Proposed sizing rule
+The final station count is an output of this frozen protocol, not a post-measurement plan amendment.
+
+## 11. Deterministic sizing rule
 
 For each fresh completed calibration point:
 
@@ -258,107 +206,103 @@ Let:
 
 - `raw_low = min(rate_i)`;
 - `raw_high = max(rate_i)`;
-- fixed uncertainty factor `F = 1.25`;
+- `F = 1.25`;
 - `effective_low = raw_low / F`;
 - `effective_high = raw_high * F`.
 
-Use an a-priori operational ceiling of **65,536 completion tokens**, defined before calibration as half
-of the 131,072 requested maximum. It is deliberately not the historical 85,000 choice.
+The final operational ceiling is 65,536 completion tokens, fixed prospectively as half of the 131,072 request maximum rather than taken from an M122/M123/M124 observation.
 
-Then derive:
+Derive:
 
 - `min_stations = floor(32000 / effective_low) + 1`;
 - `max_stations = floor(65536 / effective_high)`.
 
-If `min_stations > max_stations`, the instrument closes `not_ready_calibration_window` (name may be
-refined before freeze). It may not shrink the uncertainty factor or move either token boundary.
+If `min_stations > max_stations`, close `not_ready_calibration_window`. Do not shrink `F` or move either token boundary.
 
-Otherwise choose the integer midpoint deterministically:
+Otherwise choose:
 
 `stations = floor((min_stations + max_stations) / 2)`.
 
-The predicted final band is
+Predicted final band:
+
 `[effective_low * stations, effective_high * stations]`.
 
-No model fitting, curve family or post-calibration parameter selection is permitted.
+No curve-family selection, regression model choice or post-calibration parameter tuning is permitted.
 
-## 11. Final stress is an out-of-sample test of the fresh calibration
+## 12. Final stress is out-of-sample
 
-The final stress uses the same pinned inner shape and the derived top-level station count. `ready`
-requires all of the following conjunctively:
+The final stress uses the same pinned inner schema and the derived top-level station count.
+
+`ready` requires conjunctively:
 
 - exact route identity;
 - answered completion with `finish_reason == "stop"`;
 - schema conformance;
-- zero disallowed reasoning tokens;
+- zero reasoning tokens;
 - completion tokens strictly above 32,000;
 - completion tokens at or below 65,536;
 - completion tokens inside the frozen predicted band;
-- all required feature/safety probes already passed under the same M125 protocol;
+- all required capability/safety probes already passed;
 - no prior terminal finding;
 - delivery allowance not exceeded.
 
-If the final stress lands outside its predicted band, the result is a terminal calibration miss. Do
-**not** add the point to the calibration set and refit.
+If final stress falls outside the predicted band, close the instrument. Do not add it to calibration and refit.
 
-If the final stress truncates, record truncation as a stress/instrument capacity finding. Do not map it
-to an unrelated capability class.
+If final stress truncates, record a stress/instrument capacity finding, not a target-feature failure.
 
-## 12. Delivery accounting cannot reset inside M125
+## 13. Delivery accounting cannot reset
 
-M124 closed after the fourth globally counted delivery attempt, leaving **two of six**.
+M124 closed after the fourth globally counted delivery attempt, leaving two of six.
 
-M125's pre-calibration protocol digest should identify one instrument across calibration and final
-stress. Deriving the final station count from fresh measurements must not create a new instrument ID
-or reset the local allowance.
+M125 has one instrument identity across capability probes, calibration and final stress. Deriving final station count cannot create a fresh allowance.
 
-A whole-instrument delivery-only closure consumes one global slot. Request-level retries do not each
-consume a global slot. Previously completed calibration points remain completed on a permitted retry.
+- request-level retries do not each consume a global slot;
+- a whole-instrument delivery-only closure consumes one global slot;
+- completed calibration points remain completed on a permitted retry;
+- any terminal non-delivery M125 verdict closes M125 and cannot be superseded.
 
-Any terminal non-delivery M125 verdict closes M125 and cannot be superseded.
+## 14. Required offline tests before any request
 
-## 13. Required tests before the first request
+At minimum, tests must prove:
 
-At minimum, DEVELOPMENT unit tests should prove:
+1. every required census feature has named coverage, including `items`;
+2. all probe schemas have finite non-target output bounds;
+3. the probe safety cap is separated from target-feature inference;
+4. target-keyword failure and probe-envelope failure classify differently;
+5. probe truncation never becomes a target-feature finding;
+6. empty HTTP 200 is retried at request level;
+7. content without `finish_reason` is retried as no-answer;
+8. `Retry-After` is read from `response_headers`;
+9. deterministic non-429 4xx request rejection is terminal instrument error;
+10. an earlier terminal finding short-circuits later requests;
+11. pinned stress census equals inherited stress census;
+12. calibration queue is exactly 8/16/32;
+13. completed calibration points are skipped on resume;
+14. M122/M123/M124 observations are absent from sizing inputs;
+15. uncertainty/window formulas reproduce exactly;
+16. empty admissible window closes rather than tuning constants;
+17. final out-of-band stress closes rather than refitting;
+18. global delivery accounting begins at 4/6 and cannot reset through a derived final size;
+19. no readiness/calibration artifact contains raw completion content or carrier-quality statistics;
+20. no qualifying input is sent by any readiness/calibration path;
+21. the network-capable entry point refuses unless a committed protocol/freezing gate exists;
+22. ordinary unit tests cannot accidentally call the real network.
 
-1. every required census feature has named coverage;
-2. all probe schemas have bounded non-target output dimensions;
-3. a target-keyword failure and safety-envelope failure classify differently;
-4. probe truncation never becomes a target-feature finding;
-5. empty HTTP 200 is retried at request level;
-6. content without `finish_reason` is retried as delivery/no-answer;
-7. `Retry-After` is read from `response_headers`;
-8. non-429 deterministic 4xx request rejection is terminal instrument error;
-9. an earlier terminal finding short-circuits later requests;
-10. pinned stress census equals inherited stress census;
-11. calibration queue is exactly 8/16/32 and completed points are skipped on resume;
-12. historical M122/M123/M124 observations are absent from the sizing function inputs;
-13. uncertainty/window formulas reproduce exactly;
-14. empty admissible window closes rather than tuning constants;
-15. final out-of-band stress closes rather than refitting;
-16. global delivery accounting begins at 4/6 and cannot reset through a derived final size;
-17. no readiness artifact contains raw completion content or carrier-quality statistics;
-18. no qualifying input is sent by any readiness/calibration path.
+The complete repository suite must pass on supported Python versions after these targeted tests.
 
-Run the complete repository suite on supported Python versions after these targeted tests.
+## 15. Governance and execution gates
 
-## 14. Governance gates
+P-029 is now recorded by explicit owner decision. Public enabling implementation and offline tests are authorized.
 
-This review does **not** record P-029 and does not authorize enabling implementation. The companion
-`docs/IP_REVIEWS/M125_PUBLICATION_REVIEW.md` proposes `PUBLIC_AGPL_COMMERCIAL_OPTION`; the owner must
-accept, amend or refuse it before enabling M125 implementation is publicly disclosed.
+**Still blocked:**
 
-Even after a publication decision, a separate chronology boundary remains before any network request:
-the exact M125 preregistration/protocol, probe coverage, pinning rule, calibration queue, sizing
-formula, verdict ladder and delivery accounting must already be committed and mechanically verified.
+- any M125 request before the exact protocol is committed and mechanically verified;
+- any H70 scientific generation, carrier bank, seal, reveal, scoring or result acceptance;
+- reuse of old token observations as calibration;
+- replay or rescore of M124.
 
-A later `ready` result would authorize only the next frozen apparatus stage. It would not support H70
-and would not itself authorize the one-shot scientific generation/reveal.
+A later readiness `ready` would authorize only the next frozen apparatus stage under its own chronology. It would not support H70 and would not itself authorize the one-shot scientific generation.
 
 ## Disposition
 
-**M125 is scientifically repairable without loss, but only as a new prospective instrument.**
-
-Proceed with publication review and offline implementation/tests after P-029 is decided. Do not send
-M125 requests, do not reuse old calibration numbers, do not replay M124 and do not let a future
-readiness pass be described as carrier evidence.
+**M125 is scientifically repairable without loss as a new prospective instrument. P-029 permits implementation and offline hardening now. Network observation remains a separate future gate.**
