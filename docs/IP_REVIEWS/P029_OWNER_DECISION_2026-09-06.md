@@ -7,6 +7,14 @@
 
 Anthony Mets explicitly accepted the proposed publication disposition for the prospective M125/H70 readiness and fresh-calibration instrument on 6 September 2026.
 
+## Human and AI contribution provenance
+
+Anthony Mets is the sole human research director and the sole human decision-maker for problem formulation, scientific scope, publication posture, acceptance/rejection of proposed changes and release. He reviewed the M124 audit record, accepted the prospective M125 direction, explicitly approved P-029 and instructed the work to continue only to the next scientific/governance gate.
+
+OpenAI ChatGPT provided substantial AI-assisted research-design, hostile-audit synthesis, governance drafting and prospective M125 instrument planning in the conversation that produced this review. That assistance included identifying and consolidating the inherited delivery/retry/verdict defects, the missing isolated `items` coverage, the deterministic pinning/calibration design and the separation between offline implementation authority and later network/scientific authority. The GitHub Codex review bot then supplied an independent automated review of this public-review branch, including the provenance-completeness finding that caused this section to be added. Anthropic Claude's earlier M124 implementation/audit findings are upstream technical evidence motivating several M125 repairs, but Claude holds no acceptance or release authority.
+
+All AI systems above are recorded as tools and development/research assistance, not human authors or human acceptance authorities. Anthony Mets selected which findings to accept, rejected retrospective changes to frozen M124, approved the public disposition and remains responsible for the release decision.
+
 This decision authorizes public enabling implementation and offline DEVELOPMENT hardening/tests for M125 under the repository's prospective publication policy.
 
 It does **not** authorize:
