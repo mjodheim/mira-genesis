@@ -1,6 +1,6 @@
 # Mira Genesis — Current Research Frontier
 
-**Reader-facing status snapshot — 5 September 2026, after M123 and the independent validation audit.**
+**Reader-facing status snapshot — 6 September 2026, after M124 closure and owner reconciliation.**
 
 This is navigation only. Frozen protocols, immutable result artifacts, decisions and experiment-local
 evidence remain authoritative. The superseded pre-sync frontier is preserved byte-for-byte at
@@ -8,8 +8,8 @@ evidence remain authoritative. The superseded pre-sync frontier is preserved byt
 
 ## Where the active carrier line stands
 
-M123/H68 is the latest carrier milestone visible on GitHub at this snapshot. It is **closed and
-untested**, not a scientific negative.
+M124/H69 is the latest merged carrier milestone. It is **closed without replay and untested**, not a
+scientific negative.
 
 The recent sequence is an apparatus-convergence line:
 
@@ -25,62 +25,85 @@ The recent sequence is an apparatus-convergence line:
   The prospectively chosen 109-station second attempt then landed at 50,232 tokens, inside its
   45,598–65,698 predicted envelope. The body was incomplete/malformed JSON and the frozen ladder
   classified that terminally as `not_ready_stress`.
+- M124/H69 prospectively made content-bearing HTTP 200 responses with no `finish_reason` a delivery
+  outcome. The decisive stress instead returned HTTP 200 with **no completion content at all**, so the
+  new rule did not decide the run. The preserved verdict is `not_ready_delivery`.
 
-That last point matters: **the sizing problem itself was solved out of sample**. M123 therefore
-narrows the remaining apparatus issue to delivery/classification semantics rather than repeating the
-M122 sizing failure. Its frozen verdict is still final and is not rewritten.
+The owner explicitly chose on 5 September 2026 to **close M124 without replay**. H69 remains untested.
+No carrier bank, qualifying scientific invocation, reveal or scientific result exists for M124; the
+preserved DEVELOPMENT readiness result remains authoritative.
+
+## What M124 taught about the instrument
+
+The archived observation is not rescored, but hostile review found five successor requirements:
+
+1. bound every non-target string/array dimension in capability probes;
+2. read and honor `Retry-After` from the transport's actual `response_headers` field;
+3. use one definition of `did not answer`, so empty HTTP 200 delivery failures consume request-level
+   retries before a whole-instrument delivery allowance slot;
+4. treat truncation as an instrument/transport observation unless a predeclared rule can attribute it
+   to the target feature;
+5. freeze delivery/truncation/enforcement/stress precedence before any successor observation.
+
+Any redesigned/pinned stress schema must be treated as **uncalibrated** and receive fresh prospective
+calibration rather than being fit to M122/M123/M124 observations.
 
 ## Scientific throughput versus engineering throughput
 
 The project is moving quickly at the instrument level but has not produced a new carrier-line
-scientific observation since the recent M113–M123 readiness/transport sequence began. H58–H65, H67
-and H68 remain untested. No generality gate advances from those closures.
+scientific observation during M113–M124. H58–H65 and H67–H69 remain untested. No generality gate
+advances from those closures.
 
-This is productive convergence only while successive failures are genuinely narrower and earlier
-fixes remain fixed. The current evidence supports that interpretation: host acceptance, route depth,
-feature enforcement and stress sizing have each been isolated rather than repeatedly rediscovered.
+This remains productive convergence only while successive failures are genuinely narrower and old
+records stay immutable. M124 preserved that discipline: its archived `not_ready_delivery` record was
+not rewritten after later defects were discovered.
 
 ## Next carrier trigger
 
-At the audit boundary no M124 branch or pushed M124 artifact existed. If M124 or a later numbered
-successor appears, the first action is to audit its immutable pushed chronology:
+No successor is implied merely by documenting M124's defects. A later carrier milestone must be newly
+numbered and prospectively frozen before new requests.
 
-1. verify the prospective preregistration and frozen decision ladder;
-2. preserve every delivery attempt and budget counter;
-3. confirm no M122/M123 frozen artifact was edited;
-4. test the exact M123 malformed/incomplete delivery shape against the new prospective classifier;
-5. if readiness is `ready`, do not call that hypothesis support — only then may the successor's own
-   frozen chronology determine whether a qualifying scientific generation is allowed.
+Its minimum boundary is already clear:
 
-A pushed successor is the trigger. Old artifacts cannot be used to manufacture a verdict for H58–H68.
+- carry forward the same never-yet-tested carrier proposition rather than silently changing the target;
+- preserve the global delivery ceiling, now **4 of 6 spent**;
+- fix the M124 transport/attribution defects before observing successor data;
+- obtain fresh prospective calibration for any redesigned stress schema;
+- keep DEVELOPMENT readiness distinct from a qualifying scientific generation;
+- preserve every attempt and never use a later classifier to relabel M122–M124.
+
+A future `ready` readiness result would still not constitute hypothesis support. Only the successor's
+own frozen scientific chronology could then determine whether a qualifying carrier-bank experiment is
+allowed.
 
 ## Separate frontier: M121/H66 and G7
 
-M121/H66 remains preregistered and owner-gated before implementation. The 5 September hostile review
-found pre-implementation degrees of freedom that can be closed without spending a scientific
-attempt. A non-canonical prospective v2 design candidate now exists at
+M121/H66 remains preregistered and its canonical scientific run remains owner-gated. The 5 September
+hostile review found pre-implementation degrees of freedom that can be closed without spending a
+scientific attempt. A non-canonical prospective v2 design candidate exists at
 [`audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md`](audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md).
 
-The remaining owner act is P-025 publication/IP disposition. The independent audit recommends that,
-if public/AGPL treatment is accepted, authority extend only to prospectively hardening v2 first — not
-to drawing a canonical salt or running the scientific attempt. Even a later positive H66 result would
-be bounded partial evidence and would not close G7 by itself.
+The publication/IP gate itself is now resolved: **P-025 records `PUBLIC_AGPL_COMMERCIAL_OPTION` on
+5 September 2026**. Prospective v2 hardening may therefore proceed publicly, but that disposition does
+not authorize a canonical salt, one-shot scientific attempt, reveal or result acceptance. Even a
+later positive H66 result would be bounded partial evidence and would not close G7 by itself.
 
-## Publication/IP backlog
+## Publication/IP reconciliation
 
-M119/P-023 is the last recorded owner-authorised disposition in this mechanism family. The following
-already-public or prepared work remains ahead of the owner disposition ledger:
+The previously open recent-line publication backlog is now recorded transparently, after disclosure
+rather than falsely backdated:
 
-| Milestone | Review state | Recorded owner disposition |
-| --- | --- | --- |
-| M120 | P-024 draft prepared | **none** |
-| M121 | P-025 draft prepared | **none** |
-| M122 | retrospective review prepared 2026-09-05; ledger ID intentionally unassigned | **none** |
-| M123 | P-026 draft prepared | **none** |
+| Ledger | Milestone | Disposition | Decision date |
+| --- | --- | --- | --- |
+| P-024 | M120 / H65 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-025 | M121 / H66 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-026 | M123 / H68 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-027 | M122 / H67 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-028 | M124 / H69 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
 
-Preparing and synchronizing those reviews is governance hygiene only. It does not accept any proposed
-disposition, authorize M121 implementation or science, authorize a new carrier successor, or alter a
-closed milestone. Acceptance, amendment or refusal remains an explicit owner act.
+The reconciliation is recorded at
+[`IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md`](IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md).
+Publication permission remains distinct from scientific execution authority.
 
 ## Armed but paused: M092/H38
 
@@ -98,10 +121,10 @@ Internal or AI-authored replacements cannot satisfy those claims.
 
 ## Independent validation completed
 
-The M095–M112 historical line has now been replayed as far as its frozen contracts permit on fresh
-hosted runners. M097, M099, M100, M104 and M107–M111 reproduce positive; M095, M098, M103 and M105
-reproduce negative; M112 reproduces mixed. M096, M101, M102 and M106 retain explicitly documented
-historical portability limits rather than being silently repaired or reclassified.
+The M095–M112 historical line has been replayed as far as its frozen contracts permit on fresh hosted
+runners. M097, M099, M100, M104 and M107–M111 reproduce positive; M095, M098, M103 and M105 reproduce
+negative; M112 reproduces mixed. M096, M101, M102 and M106 retain explicitly documented historical
+portability limits rather than being silently repaired or reclassified.
 
 M094/H39 needs one distinction that the original audit matrix did not preserve: its positive
 qualification verdict reproduces, but **D063 remains unfilled**, so no H39 register claim has been

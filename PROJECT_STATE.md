@@ -1,6 +1,6 @@
 # Mira Genesis — current authoritative project state
 
-**Updated: 5 September 2026 — M123/H68 closed untested; independent validation audit merged.**
+**Updated: 6 September 2026 — M124/H69 closed without replay; H69 untested.**
 
 This is the reader-facing navigation and interpretation snapshot. Frozen experiment records,
 immutable results, `DECISIONS.md`, experiment-local evidence and the machine-readable
@@ -12,11 +12,11 @@ Nothing historical is rewritten by this synchronization.
 
 ## Current answer
 
-The latest pushed carrier milestone is **M123/H68**. It is **closed at DEVELOPMENT readiness and H68
-is UNTESTED**. No qualifying scientific generation ran, so the recent carrier sequence has advanced
-the apparatus rather than the scientific hypothesis.
+The latest merged carrier milestone is **M124/H69**. It is **closed at DEVELOPMENT readiness without
+replay and H69 is UNTESTED**. No qualifying scientific generation ran, no carrier bank was built and
+no generality gate moved.
 
-The recent failure surface has nevertheless narrowed prospectively:
+The recent apparatus-convergence line now reads:
 
 - M119 spent one qualifying generation before discovering an inadequate carrier bank;
 - M120 moved the analogous contract problem into readiness and exposed the route's five-level
@@ -25,14 +25,16 @@ The recent failure surface has nevertheless narrowed prospectively:
   stress completed at 30,957 tokens against the inherited 32,000 threshold;
 - M123 replaced the one-point sizing assumption with an empirical rate envelope. Its prospectively
   selected 109-station stress returned 50,232 tokens inside the recorded 45,598–65,698 envelope,
-  but the body was incomplete/malformed JSON and the frozen ladder closed `not_ready_stress`.
+  but the body was incomplete/malformed JSON and the frozen ladder closed `not_ready_stress`;
+- M124 prospectively classified content-bearing responses with no `finish_reason` as delivery rather
+  than scientific outcomes. Its decisive stress instead returned HTTP 200 with no completion content,
+  so the new rule was not exercised. The preserved verdict is `not_ready_delivery`.
 
-M123's final verdict is not rewritten. The disclosed successor issue is narrower: a later numbered
-successor may prospectively distinguish malformed/incomplete delivery from a conforming stress
-failure, but old artifacts cannot be relabelled to manufacture a scientific result.
-
-At this snapshot **no pushed M124 branch or immutable M124 artifact is visible**. Any later M124 state
-must be audited from its pushed chronology before this navigation advances.
+Post-observation review of M124 identified instrument defects that are **not** applied retrospectively:
+unbounded non-target probe dimensions, a `Retry-After` field mismatch, inconsistent empty-HTTP-200
+retry semantics, spurious truncation attribution and verdict-precedence ambiguity. The owner chose on
+5 September 2026 to close M124 without replay. Those defects are requirements for a new prospective
+successor, not reasons to rescore M124.
 
 ## Scientific status
 
@@ -58,10 +60,10 @@ Recent validated navigation:
 | M111 | H56 | supported within frozen bounds; positive 24/24 reproduced byte-stably |
 | M112 | H57 | mixed; procedure 10/10, diagnosis 24/24 positive, transfer 22/24 negative |
 
-H58–H65, H67 and H68 remain **untested** instrument/readiness closures. They do not accumulate into
-a scientific negative and advance no generality gate.
+H58–H65 and H67–H69 remain **untested** instrument/readiness closures. They do not accumulate into a
+scientific negative and advance no generality gate.
 
-## Carrier frontier M113–M123
+## Carrier frontier M113–M124
 
 | Milestone | H | Closure | Scientific consequence |
 | --- | --- | --- | --- |
@@ -75,23 +77,25 @@ a scientific negative and advance no generality gate.
 | M120 | H65 | readiness closure; 8-level candidate vs 5-level route | untested |
 | M122 | H67 | `not_ready_stress`; contract validated 9/9, 30,957/32,000 tokens | untested |
 | M123 | H68 | frozen `not_ready_stress`; sizing landed in envelope, response body incomplete | untested |
+| M124 | H69 | preserved `not_ready_delivery`; owner closed without replay | untested |
 
-Across the bounded delivery allowance, **3 of 6 delivery attempts** had been spent when M123 closed.
-That counter is not reset by opening a successor.
+Across the bounded delivery allowance, **4 of 6 delivery attempts have now been spent**. M124 used 11
+of its 30 request budget and left 19 unused. The counter is not reset by opening a successor.
 
 ## Separate long-horizon frontier — M121/H66
 
-M121/H66 targets a bounded part of G7 (long-horizon autonomy) and remains **preregistered but
-owner-gated before implementation**. The hostile review and a non-canonical prospective v2 candidate
-are public:
+M121/H66 targets a bounded part of G7 (long-horizon autonomy). Its public preregistration/design now
+has recorded owner disposition **P-025 / `PUBLIC_AGPL_COMMERCIAL_OPTION`**. That resolves the
+publication/IP gate only.
+
+The hostile review and a non-canonical prospective v2 candidate remain public:
 
 - [`docs/audits/M121_PREIMPLEMENTATION_REVIEW_2026-09-05.md`](docs/audits/M121_PREIMPLEMENTATION_REVIEW_2026-09-05.md)
 - [`docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md`](docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md)
 
-P-025 publication/IP disposition remains an explicit owner act. Even if public treatment is later
-accepted, the audit recommendation authorizes at most prospective v2 hardening first; it does not
-itself authorize a canonical salt or scientific attempt. A future positive H66 result would still be
-bounded partial evidence and would not close G7 by itself.
+Prospective v2 hardening may proceed, but **no canonical salt, one-shot scientific execution, reveal or
+result acceptance is authorized by P-025**. A future positive H66 result would still be bounded
+partial evidence and would not close G7 by itself.
 
 ## Other open scientific gates
 
@@ -107,22 +111,22 @@ bounded partial evidence and would not close G7 by itself.
 Those external conditions cannot be satisfied by an internal, owner-authored or AI-authored
 replacement while retaining the original claims.
 
-## Publication/IP governance backlog
+## Publication/IP governance
 
-M119/P-023 is the last recorded owner-authorised disposition in the recent mechanism family.
-The following items remain open and are **not** decisions merely because their reviews exist:
+The recent publication backlog has been reconciled transparently, without backdating:
 
-| Milestone | Review | Recorded owner disposition |
-| --- | --- | --- |
-| M120 | P-024 draft | none |
-| M121 | P-025 draft | none |
-| M122 | retrospective review prepared 2026-09-05; ledger ID unassigned | none |
-| M123 | P-026 draft | none |
+| Ledger | Milestone | Disposition | Decision date |
+| --- | --- | --- | --- |
+| P-024 | M120 / H65 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-025 | M121 / H66 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-026 | M123 / H68 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-027 | M122 / H67 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
+| P-028 | M124 / H69 | `PUBLIC_AGPL_COMMERCIAL_OPTION` | 2026-09-05 |
 
-The missing M122 review is now prepared at
-[`docs/IP_REVIEWS/M122_PUBLICATION_REVIEW.md`](docs/IP_REVIEWS/M122_PUBLICATION_REVIEW.md), but it
-records no disposition. Acceptance, amendment or refusal of all four open items remains an explicit
-owner action.
+The authoritative reconciliation is
+[`docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md`](docs/IP_REVIEWS/OWNER_RECONCILIATION_2026-09-05.md).
+These are publication/release decisions; they do not manufacture scientific results or authorize the
+separate canonical gates listed above.
 
 ## Claim boundary
 
@@ -133,10 +137,10 @@ frozen contracts.
 
 ## Next safe actions
 
-1. Audit any pushed M124-or-later successor before advancing state navigation.
-2. Never fill H58–H68 retrospectively from instrument artifacts.
-3. Keep M121 implementation/science blocked until explicit owner disposition and prospective v2
-   hardening authority are recorded.
-4. Keep M092's canonical cursor paused absent explicit owner authority.
-5. Preserve genuine external-independence requirements for H21 and H31.
-6. Reconcile M120/M121/M122/M123 publication dispositions only by explicit owner action.
+1. Treat M124 as closed; do not replay or rescore it.
+2. Any carrier successor must be newly numbered and prospectively freeze the M124 defect corrections,
+   preserve the 4/6 delivery ceiling and use fresh calibration for any redesigned stress schema.
+3. Never fill H58–H69 retrospectively from instrument artifacts.
+4. M121 may be hardened prospectively, but keep its canonical salt/run/reveal owner-gated.
+5. Keep M092's canonical cursor paused absent explicit owner authority.
+6. Preserve genuine external-independence requirements for H21 and H31.
