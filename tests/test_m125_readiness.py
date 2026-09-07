@@ -1,8 +1,7 @@
 """Offline adversarial tests for the prospective M125/H70 readiness instrument.
 
-No test sends a network request. The last test intentionally fails on the first implementation
-head to emit SHA256s of the exact committed interpreting sources. It is replaced after the frozen
-PROTOCOL.json is created from those bytes.
+No test sends a network request. The frozen protocol and interpreting-source manifest are verified
+against the exact committed bytes before any M125 DEVELOPMENT network authorization may exist.
 """
 from __future__ import annotations
 import json,re,subprocess
@@ -175,9 +174,15 @@ def test_completed_probe_is_never_redrawn_on_resume(tmp_path):
 def test_delivery_failure_does_not_mark_unanswered_step_complete(tmp_path):
     p=protocol_record();r=readiness.run_with_transport(p,modules(),FakeRoute(always_empty=True),tmp_path,delivery_accounting={"spent":4,"total":6,"remaining":2},sleeper=lambda x:None);assert r["verdict"]==gate.DELIVERY_VERDICT and r["completed_logical_steps"]==[];assert json.loads((tmp_path/"STEP_JOURNAL.json").read_text())["steps"]=={}
 
-# One-run source manifest emitter. This is the only expected failure before PROTOCOL.json exists.
-def test_emit_exact_committed_m125_source_manifest_for_protocol_freeze():
-    manifest={}
+# Frozen protocol/source binding. This replaces the one-run manifest emitter.
+def test_frozen_protocol_binds_exact_committed_m125_sources_and_stays_network_inert():
+    p=gate.load_frozen_protocol(ROOT)
+    assert p["protocol_sha256"]=="49e86626ffe3a5e835fa574f943072768e53fad40ca91b505d6294c09bff0257"
+    expected={}
     for rel in gate.MINIMUM_MANIFEST_PATHS:
-        committed=gate.head_blob(ROOT,rel);assert committed is not None,rel;manifest[rel]=gate.sha256(gate.normalized(committed))
-    pytest.fail("M125_INTERPRETING_SOURCE_MANIFEST="+json.dumps(manifest,sort_keys=True))
+        committed=gate.head_blob(ROOT,rel);assert committed is not None,rel;expected[rel]=gate.sha256(gate.normalized(committed))
+    assert p["interpreting_source_manifest"]==expected
+    assert gate.verify_source_manifest(ROOT,p)==expected
+    pre=readiness.offline_preflight(ROOT)
+    assert pre["protocol_sha256"]==p["protocol_sha256"] and pre["source_manifest_verified"] is True
+    assert pre["network_authorization_present"] is False and pre["credential_access_permitted"] is False
