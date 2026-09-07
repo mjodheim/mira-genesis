@@ -134,6 +134,12 @@ def test_terminal_head_archive_deleted_locally_still_refuses(tmp_path):
 def test_terminal_head_archive_replaced_by_delivery_still_refuses(tmp_path):
     _init_repo(tmp_path);p=tmp_path/"experiments/M125/READINESS_ATTEMPT_01_not_ready_features.json";_write(p,_terminal());_commit(tmp_path);_write(p,_delivery())
     with pytest.raises(gate.GateError,match="terminal"):gate.inspect_anti_rearm(tmp_path)
+def test_delivery_head_archive_deleted_locally_refuses_rearm(tmp_path):
+    _init_repo(tmp_path);p=tmp_path/"experiments/M125/READINESS_ATTEMPT_01_not_ready_delivery.json";_write(p,_delivery(digest="first"));_commit(tmp_path);p.unlink()
+    with pytest.raises(gate.GateError,match="delivery archive is missing"):gate.inspect_anti_rearm(tmp_path)
+def test_delivery_head_archive_replaced_locally_refuses_rearm(tmp_path):
+    _init_repo(tmp_path);p=tmp_path/"experiments/M125/READINESS_ATTEMPT_01_not_ready_delivery.json";_write(p,_delivery(digest="first"));_commit(tmp_path);_write(p,_delivery(digest="replacement"))
+    with pytest.raises(gate.GateError,match="delivery archive differs"):gate.inspect_anti_rearm(tmp_path)
 def test_missing_verdict_fails_closed(tmp_path):
     _init_repo(tmp_path);_write(tmp_path/gate.RESULT_REL,{"milestone":"M125"})
     with pytest.raises(gate.GateError,match="missing/unrecognized verdict"):gate.inspect_anti_rearm(tmp_path)
@@ -177,7 +183,7 @@ def test_delivery_failure_does_not_mark_unanswered_step_complete(tmp_path):
 # Frozen protocol/source binding. This replaces the one-run manifest emitter.
 def test_frozen_protocol_binds_exact_committed_m125_sources_and_stays_network_inert():
     p=gate.load_frozen_protocol(ROOT)
-    assert p["protocol_sha256"]=="49e86626ffe3a5e835fa574f943072768e53fad40ca91b505d6294c09bff0257"
+    assert p["protocol_sha256"]=="87dc368593de12954f162a255e2c0746f9ea764ee83d5fd95db4f23229293007"
     expected={}
     for rel in gate.MINIMUM_MANIFEST_PATHS:
         committed=gate.head_blob(ROOT,rel);assert committed is not None,rel;expected[rel]=gate.sha256(gate.normalized(committed))
