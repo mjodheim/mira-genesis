@@ -357,4 +357,55 @@ def test_an_idle_floor_that_completed_work_aborts_the_instrument():
 
 
 def test_the_development_record_is_stable_across_runs():
-    assert runner.development_record() == copy.deepcopy(runner.development_record())
+    """Reproducibility is asserted over the reproducible half, and only over it.
+
+    Wall clock, CPU seconds and peak memory differ between two runs on one host, let alone between
+    hosts. Folding them into record_sha256 would make an honest rerun look like tampering, so the
+    digest must cover everything except them.
+    """
+    first, second = runner.development_record(), runner.development_record()
+    assert first["record_sha256"] == second["record_sha256"]
+    assert first["campaign"] == second["campaign"]
+    assert first["cost"]["deterministic"] == second["cost"]["deterministic"]
+    assert first["deterministic_cost_sha256"] == second["deterministic_cost_sha256"]
+    without_cost = {k: v for k, v in first.items() if k not in ("cost", "deterministic_cost_sha256")}
+    assert copy.deepcopy(without_cost) == {
+        k: v for k, v in second.items() if k not in ("cost", "deterministic_cost_sha256")
+    }
+
+
+def test_environment_costs_are_recorded_but_never_folded_into_the_digest():
+    record = runner.development_record()
+    environment = record["cost"]["environment_costs"]
+    assert environment["reproducible"] is False
+    assert environment["wall_clock_seconds"] >= 0
+    assert environment["cpu_seconds_is_a_compute_proxy_not_energy"] is True
+    rebuilt = {k: v for k, v in record.items() if k not in ("record_sha256", "cost", "deterministic_cost_sha256")}
+    from metamorphosis.m121_long_horizon_v2 import digest_of
+
+    assert digest_of(rebuilt) == record["record_sha256"]
+
+
+def test_the_campaign_reports_every_g9_dimension_and_prices_itself_at_zero():
+    report = runner.development_record()["cost"]["report"]
+    assert set(report) >= {"quality", "reliability", "latency", "compute_proxy", "monetary_cost"}
+    assert report["compute_proxy"]["is_energy"] is False
+    # An offline run has no billable tokens, so zero is arithmetic rather than an estimate.
+    assert report["monetary_cost"]["amount"] == 0.0
+    assert report["monetary_cost"]["no_billable_usage"] is True
+
+
+def test_a_tampered_cost_count_is_an_instrument_abort():
+    record = runner.development_record()
+    record["cost"]["deterministic"]["work_items"] += 1
+    outcome = checker.classify(record, DEVELOPMENT_SALT)
+    assert outcome["verdict"] == "instrument_abort"
+    assert any("work_items" in problem for problem in outcome["problems"])
+
+
+def test_a_record_without_a_cost_section_is_an_instrument_abort():
+    record = runner.development_record()
+    del record["cost"]
+    outcome = checker.classify(record, DEVELOPMENT_SALT)
+    assert outcome["verdict"] == "instrument_abort"
+    assert any("no G9 cost record" in problem for problem in outcome["problems"])

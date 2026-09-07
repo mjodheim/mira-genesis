@@ -61,7 +61,7 @@ evidence; consult the evidence map in `MIRA_GENERALITY_CRITERIA.md` for what alr
 | G6 real-environment competence | partial | **desktop VM** (see the environment finding below), physical simulator, low-risk device, uncontaminated private suite frozen after design | OWNER hardware, then EXTERNAL |
 | G7 long-horizon autonomy | **open — no evidence** | task-horizon evaluation at 10 min / 1 h / 4 h / 1 day with intervention count, fault recovery, constraint retention, verification quality and cost | PROJECT then OWNER |
 | G8 governed self-improvement | stronger partial bounded | carriers, registries and evaluators not project-authored; adoption stays human-controlled by design | EXTERNAL |
-| G9 evaluation integrity | strong bounded | human baselines; monetary and energy/compute cost reporting | PROJECT |
+| G9 evaluation integrity | strong bounded; cost reporting now instrumented | the human baseline itself — the apparatus exists and refuses until real uncoached participants have attempted the frozen tasks | EXTERNAL |
 | G10 safety and calibrated refusal | strong mechanism + a negative | M074 records 0/3 true refusals, so no independent calibrated-refusal claim exists; capability and misuse thresholds before access expands | PROJECT |
 
 The recurring ceiling across G1–G8 is one sentence: **almost everything is project-authored.** That
@@ -153,16 +153,26 @@ work inside this repository, and they gate the presentation tier absolutely.
    run owner-gated.
 4. Close G6's desktop-VM clause where a hypervisor is available; then attempt an external suite as
    development evidence.
-5. Supply G9's missing human-baseline and cost-reporting apparatus.
+5. ~~Supply G9's missing human-baseline and cost-reporting apparatus.~~ Done: `evaluation_cost.py`
+   instruments latency, a compute proxy and monetary cost, splitting components a checker
+   recomputes exactly from ones that cannot reproduce across hosts; `human_baseline.py` refuses
+   until real participants exist. **The baseline itself is now a Track C item**, because a system
+   compared against its own author's estimate of human performance has been compared against
+   nothing.
 
 **Track B — owner decisions** (see the table above; each is a prerequisite for parts of Track A
 and Track C, and none has a technical substitute)
 
 **Track C — external, and on the critical path**
 
-6. Recruit an independent maintainer for H31/M085; recruit a second for H21/M075.
-7. Obtain independent reproduction by a third party who can fail.
-8. Commission an external adversarial audit the project does not choose.
+6. Recruit an independent maintainer for H31/M085; recruit a second for H21/M075. The sendable
+   brief is [`CALL_FOR_INDEPENDENT_MAINTAINERS.md`](CALL_FOR_INDEPENDENT_MAINTAINERS.md).
+7. Recruit at least five uncoached participants for the G9 human baseline, none of them a project
+   identity, none paid contingently on the outcome. This is a smaller ask than the sealed bank and
+   can proceed in parallel: `python scripts/check_human_baseline_readiness.py` states what is
+   missing.
+8. Obtain independent reproduction by a third party who can fail.
+9. Commission an external adversarial audit the project does not choose.
 
 **Track D — only after A, B and C**
 

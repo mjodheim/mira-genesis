@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from metamorphosis.evaluation_cost import verify_cost_record  # noqa: E402
 from metamorphosis.m121_long_horizon_v2 import (  # noqa: E402
     ACTIVE_RECORDS,
     ARMS,
@@ -115,7 +116,50 @@ def instrument_aborts(record: Mapping[str, Any], salt: bytes) -> list[str]:
                     problems.append("H%d: arm %s reports nonzero %s" % (horizon, arm, counter))
         if horizon_record["arms"]["idle_floor"]["completed_work_items"] != 0:
             problems.append("H%d: the idle floor completed work" % horizon)
+    problems.extend(_cost_problems(record))
     return problems
+
+
+def _recomputed_deterministic_costs(campaign: Mapping[str, Any]) -> dict[str, int]:
+    """Reimplementation of the runner's cost derivation, from the campaign rather than the record.
+
+    Importing the runner's version would let one arithmetic mistake agree with itself, which is the
+    defect this checker exists to avoid.
+    """
+    horizons = list(campaign["horizons"].values())
+    work = 0
+    evaluations = 0
+    episodes = 0
+    faults = 0
+    for horizon_record in horizons:
+        arms = horizon_record["arms"]
+        evaluations += len(arms)
+        episodes += int(horizon_record["horizon"]) * len(arms)
+        faults += len(horizon_record["schedule"]["faults"])
+        for arm in arms.values():
+            work += int(arm["completed_work_items"])
+    return {
+        "budget_units_spent": faults,
+        "candidate_evaluations": evaluations,
+        "completion_tokens": 0,
+        "episodes": episodes,
+        "model_calls": 0,
+        "network_requests": 0,
+        "prompt_tokens": 0,
+        "work_items": work,
+    }
+
+
+def _cost_problems(record: Mapping[str, Any]) -> list[str]:
+    cost = record.get("cost")
+    if not isinstance(cost, Mapping):
+        return ["the record carries no G9 cost record"]
+    return [
+        "cost: %s" % problem
+        for problem in verify_cost_record(
+            cost, recomputed_deterministic=_recomputed_deterministic_costs(record["campaign"])
+        )
+    ]
 
 
 def negative_conditions(record: Mapping[str, Any]) -> list[str]:
