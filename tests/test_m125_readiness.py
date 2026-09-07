@@ -168,6 +168,46 @@ def test_future_authorization_must_bind_exact_protocol(tmp_path):
     p=_manifest_fixture(tmp_path);a={"schema":"m125-network-authorization-v1","scope":"development_network_only","protocol_sha256":"wrong","authorizes_h70_scientific_generation":False};_write(tmp_path/gate.AUTHORIZATION_REL,a);_commit(tmp_path,"auth")
     with pytest.raises(gate.GateError,match="exact frozen protocol"):gate.load_network_authorization(tmp_path,p["protocol_sha256"])
 
+# C3 requirement 32: the credential accessor must be mechanically unreachable for EVERY refusing
+# condition class, proved through the real entry point rather than through a gate helper alone.
+def _authorize(root,protocol_sha):
+    _write(root/gate.AUTHORIZATION_REL,{"schema":"m125-network-authorization-v1","scope":"development_network_only","protocol_sha256":protocol_sha,"authorizes_h70_scientific_generation":False});_commit(root,"auth")
+def _anti_rearm_terminal(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);_write(root/gate.RESULT_REL,_terminal());return "terminal M125 verdict"
+def _anti_rearm_head_only(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);t=root/gate.RESULT_REL;_write(t,_terminal());_commit(root,"terminal");t.unlink();return "HEAD result"
+def _dirty_source(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);t=root/gate.MINIMUM_MANIFEST_PATHS[0];t.write_text(t.read_text()+"# dirty\n");return "differs from HEAD"
+def _absent_source(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);(root/gate.MINIMUM_MANIFEST_PATHS[0]).unlink();return "working-tree source is missing"
+def _committed_source_drift(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);t=root/gate.MINIMUM_MANIFEST_PATHS[0];t.write_text(t.read_text()+"# drift\n");_commit(root,"drift");return "committed interpreting-source digest changed"
+def _missing_protocol(root):
+    _init_repo(root);return "must exist in working tree and committed HEAD"
+def _stale_protocol(root):
+    p=_manifest_fixture(root);_authorize(root,p["protocol_sha256"]);r=dict(p);r["inherited_delivery_spent"]=5;_write(root/gate.PROTOCOL_REL,r);return "differs from HEAD"
+def _mismatched_protocol_digest(root):
+    _manifest_fixture(root);r=json.loads((root/gate.PROTOCOL_REL).read_text());r["protocol_sha256"]="0"*64;_write(root/gate.PROTOCOL_REL,r);_commit(root,"bad digest");return "protocol_sha256 mismatch"
+
+@pytest.mark.parametrize("arrange",[_anti_rearm_terminal,_anti_rearm_head_only,_dirty_source,_absent_source,_committed_source_drift,_missing_protocol,_stale_protocol,_mismatched_protocol_digest],ids=lambda f:f.__name__.strip("_"))
+def test_credential_accessor_is_unreachable_for_every_refusing_condition(tmp_path,monkeypatch,arrange):
+    expected=arrange(tmp_path);touched=[]
+    def secret():touched.append(True);raise AssertionError("credential accessor reached")
+    monkeypatch.setattr(readiness,"_secret",secret)
+    with pytest.raises(gate.GateError,match=re.escape(expected)):readiness.execute(tmp_path)
+    assert touched==[]
+
+def test_credential_sentinel_is_load_bearing_when_the_gate_is_bypassed(tmp_path,monkeypatch):
+    """Non-vacuity: with the gate and semantics suppressed the same terminal state reaches the
+    credential accessor, so the parametrized refusals above prove ordering rather than tautology."""
+    _anti_rearm_terminal(tmp_path);touched=[]
+    def secret():touched.append(True);return "sentinel"
+    monkeypatch.setattr(readiness,"_secret",secret)
+    monkeypatch.setattr(gate,"precredential_context",lambda root:{"protocol":{},"resume_journal":None,"delivery_accounting":{}})
+    monkeypatch.setattr(readiness,"validate_protocol_semantics",lambda protocol,modules:None)
+    with pytest.raises(Exception):readiness.execute(tmp_path)
+    assert touched==[True]
+
 # Complete fake-route rehearsal, persistent no-redraw and delivery closure.
 def test_full_offline_rehearsal_reaches_ready_without_science(tmp_path):
     p=protocol_record();route=FakeRoute();r=readiness.run_with_transport(p,modules(),route,tmp_path,delivery_accounting={"spent":4,"total":6,"remaining":2},sleeper=lambda x:None)
