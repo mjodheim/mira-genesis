@@ -250,6 +250,7 @@ contain.
 | The historical construction path | [`ROADMAP.md`](ROADMAP.md) |
 | The bounded Genesis finish line | [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) |
 | What would justify stronger generality language | [`MIRA_GENERALITY_CRITERIA.md`](MIRA_GENERALITY_CRITERIA.md) |
+| What remains before an AGI-candidate presentation, and who can do it | [`docs/COMPLETION_PATH.md`](docs/COMPLETION_PATH.md) |
 | The endogenous/model-mediated attribution boundary | [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md) |
 | Preserved failures and disqualifications | [`FAILURE_LOG.md`](FAILURE_LOG.md) |
 | Scientific hypotheses | [`SCIENTIFIC_HYPOTHESES.md`](SCIENTIFIC_HYPOTHESES.md) |
