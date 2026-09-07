@@ -58,7 +58,7 @@ evidence; consult the evidence map in `MIRA_GENERALITY_CRITERIA.md` for what alr
 | G3 novel task planning | partial, all four clauses exercised | a world the project did not author | EXTERNAL |
 | G4 cross-domain transfer | partial bounded cross-family | an independently authored held-out domain; independent human reproduction | EXTERNAL |
 | G5 continual learning | stronger partial bounded | retention that is structural rather than replay-dependent; skills not project-authored | PROJECT then EXTERNAL |
-| G6 real-environment competence | partial | **desktop VM** (needs a hypervisor; a container shares the host kernel), physical simulator, low-risk device, uncontaminated private suite frozen after design | PROJECT then EXTERNAL |
+| G6 real-environment competence | partial | **desktop VM** (see the environment finding below), physical simulator, low-risk device, uncontaminated private suite frozen after design | OWNER hardware, then EXTERNAL |
 | G7 long-horizon autonomy | **open — no evidence** | task-horizon evaluation at 10 min / 1 h / 4 h / 1 day with intervention count, fault recovery, constraint retention, verification quality and cost | PROJECT then OWNER |
 | G8 governed self-improvement | stronger partial bounded | carriers, registries and evaluators not project-authored; adoption stays human-controlled by design | EXTERNAL |
 | G9 evaluation integrity | strong bounded | human baselines; monetary and energy/compute cost reporting | PROJECT |
@@ -67,6 +67,24 @@ evidence; consult the evidence map in `MIRA_GENERALITY_CRITERIA.md` for what alr
 The recurring ceiling across G1–G8 is one sentence: **almost everything is project-authored.** That
 is a single structural limitation wearing eight different costumes, and it is why the external
 blockers below dominate the schedule rather than merely appending to it.
+
+### Environment finding: the desktop-VM clause cannot be closed from a standard agent session
+
+M083 recorded that a container shares the host kernel and that no hypervisor was available. A probe
+of the standard hosted agent environment on 7 September 2026 confirms the same conclusion for that
+environment specifically, and names why:
+
+- no `/dev/kvm`;
+- no `vmx` or `svm` CPU flag exposed in `/proc/cpuinfo`;
+- the `hypervisor` flag *is* present, so the session is already a guest and nested virtualization is
+  not passed through;
+- no QEMU, libvirt, VirtualBox or Vagrant present — only Docker, which is exactly the substrate
+  M083 already established is insufficient for this clause.
+
+This is a capability finding about the environment, not a result about Mira. It moves the clause's
+attribution: closing it needs the owner's own hardware with virtualization enabled, or a session
+environment configured with nested virtualization. No amount of work inside a standard session
+substitutes for either, and a container must not be presented as satisfying the clause.
 
 ## The three external blockers
 
