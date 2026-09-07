@@ -118,9 +118,18 @@ essentially cannot pass. There is no intermediate setting where the hypothesis i
 and has a fair chance of being confirmed: the best is 9% at 6 of 8, which is a coin weighted eleven
 to one.
 
-The hypothesis as written is therefore **trivially true with an unbounded audit and nearly always
-false with a bounded one.** That is a property of the hypothesis, not of the parameter, and no
-setting of the knob fixes it.
+On this evidence the hypothesis as written is **trivially true with an unbounded audit and nearly
+always false with a bounded one**, and no setting of *this* knob fixes it.
+
+**That conclusion is drawn from a one-dimensional slice and must not be read as more.** Only
+`MONITOR_SLOTS_PER_BOUNDARY` was varied, holding `BOUNDARY_PERIOD`, `SETTLEMENT_PERIOD`,
+`DEFERRED_SLOTS`, the eight-fault budget and the injection-window rule fixed at their stated values.
+A regime that is both falsifiable and fairly passable may exist elsewhere in that space — for
+instance at a slower settlement cadence, which would give a bounded audit more chances per output
+without making detection certain. Searching that space is legitimate apparatus design **only if it
+is done on stated grounds and before a freeze**; searching it for the setting that makes the
+experiment pass is the failure this apparatus exists to avoid, and the distinction is thin enough
+that the search should not be run by the author alone.
 
 ## A correction found by the tests, recorded because it is the same mistake
 

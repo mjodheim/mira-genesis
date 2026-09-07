@@ -1,4 +1,4 @@
-# M121/H66 v2 apparatus — hostile review brief
+# M121/H66 apparatus — hostile review brief (v2 finding and v3 successor)
 
 **For an independent reviewer. Prepared by the agent that wrote the apparatus, which is why it is a
 brief and not a review.**
@@ -125,11 +125,66 @@ generality decision rule requires — that requires an adversary the project doe
 in your report can advance a generality gate, and a `GO` disposition would authorize implementation
 work only, never a canonical salt.
 
+## The v3 successor, and the harder question it raises
+
+After the finding above, a v3 apparatus was written to restore falsifiability:
+`metamorphosis/m121_long_horizon_v3.py`, with `tests/test_m121_v3_harness.py` and
+`experiments/M121/V3_DESIGN_FINDINGS.md`. v2 is not edited. v3 inherits v2's body, fault grammar and
+replay by import, keeps all four v2 corrections, and adds three sources of variance: coprime
+boundary and settlement cadences, a bounded monitor budget, and a matched `random_audit` control.
+
+Falsifiability is restored and measured — and v3 then **cannot pass** under the design candidate's
+clause set: 0 of 300 development salts. Attack all of the following.
+
+### G. Is the "no good regime" conclusion sound?
+
+The central claim is a pass-rate curve over `MONITOR_SLOTS_PER_BOUNDARY`: unbounded (8/8) passes
+every clause by construction and reduces to v2; every bounded setting essentially always fails, best
+9% at 6/8.
+
+**This is a one-dimensional slice, and the author says so.** `BOUNDARY_PERIOD`,
+`SETTLEMENT_PERIOD`, `DEFERRED_SLOTS`, the eight-fault budget and the injection-window rule were all
+held fixed. A regime that is both falsifiable and fairly passable may exist elsewhere — a slower
+settlement cadence would give a bounded audit more chances per output without making detection
+certain. Is the conclusion overstated? If a better regime exists, say where, and say on what grounds
+it should be chosen other than "it passes".
+
+### H. Three clauses that are hypothesis questions, not bugs
+
+The author deliberately did not resolve these. They are the substance of the review.
+
+1. **Clause 5, zero residual corruption.** It presupposes an audit that eventually sees everything in
+   time; a bounded audit does not provide that. Three successive apparatus changes failed to make it
+   satisfiable — a closing full sweep, recovery from that sweep, and checkpoints permitted only after
+   a completed audit cycle. Is the clause wrong, or is a bounded audit the wrong mechanism to claim
+   retention for?
+2. **Clause 9, checkpoint removal changes recovery but not detection.** v3 falsifies this: a rollback
+   in `full` undoes corruption the monitor had not yet reached, so that fault is never detected while
+   `no_checkpoint` keeps and later detects it. Recovery and detection are coupled once recovery can
+   erase. Should the clause compare *resolved* faults (detected or erased) instead, or is the
+   coupling itself the result worth reporting?
+3. **Clause 11, the structured audit beats a matched random audit.** Added in v3; the measured
+   distributions are near-identical. Is `random_audit` a fair matched control — its slots are drawn
+   from the salt, the structured cursor from the boundary index — or does the comparison have a
+   defect that manufactures the tie? If it is fair, the round-robin structure buys nothing at this
+   budget, which is a substantive negative result and should be reported as one.
+
+### I. The regression the tests caught mid-work
+
+v3's suite asserts that verdict-bearing metrics **vary**, not merely that behaviour is correct. It
+caught a fresh instance of v2's defect during v3's own construction: the closing repair was marking
+still-undetected faults as *erased*, making `unrecovered_silent_divergent_outputs` constant at zero.
+Fixed and recorded.
+
+Assume there are more. In particular check the `erased_undetected` bookkeeping: is "a rollback undid
+it before it mattered" always true, or can a fault be erased after it has already influenced an
+emitted output?
+
 ## Current state
 
-- no canonical salt exists;
+- no canonical salt exists for either version;
 - no scientific observation exists;
-- the apparatus source is deliberately unfrozen;
+- both apparatus sources are deliberately unfrozen;
 - P-025 resolves publication governance only;
-- `python -m pytest tests/test_m121_v2_harness.py` passes 76 tests, which the finding above shows is
-  not the reassurance it appears to be.
+- `tests/test_m121_v2_harness.py` passes 76 tests and `tests/test_m121_v3_harness.py` passes 29,
+  which the findings above show is not the reassurance it appears to be.
