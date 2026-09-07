@@ -5,7 +5,7 @@
 **H70 scientific observations:** 0  
 **Network authority added:** none  
 **Scientific-run authority added:** none  
-**Frozen protocol:** `49e86626ffe3a5e835fa574f943072768e53fad40ca91b505d6294c09bff0257`
+**Frozen protocol:** `87dc368593de12954f162a255e2c0746f9ea764ee83d5fd95db4f23229293007`
 
 ## Why this record exists
 
@@ -68,7 +68,10 @@ For M125 sizing only, the final `experiments/M125/PREREGISTRATION.md`, the exact
 predicted-band rule.
 
 The Hati binding corrigendum C1–C3 is unchanged and retains full precedence for anti-rearm,
-interpreting-source binding and pre-credential execution ordering.
+interpreting-source binding and pre-credential execution ordering. A later hostile-review correction
+that prevents committed M125 delivery archives from being deleted or replaced locally changed only
+the anti-rearm gate and its source binding; it did not alter this sizing rule. The protocol digest
+above is the re-bound digest after that correction.
 
 No `NETWORK_AUTHORIZATION.json` is created here. The next gate remains independent hostile review,
 fully green offline CI, exact protocol/source verification, and only then a separate owner decision
