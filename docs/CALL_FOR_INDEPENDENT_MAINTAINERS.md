@@ -120,12 +120,29 @@ part of the protocol rather than an obstruction of it.
 
 1. You author the bank and keep it.
 2. You send the envelope, the signature and the allowed-signers line — never the archive.
-3. The project runs `python scripts/check_m085_readiness.py --require-ready`.
-4. The project publishes how the held-out domain will be derived from a salt it does not have.
-5. The project freezes its scientific protocol against your envelope digest.
-6. **Only then** do you release the salt, and afterwards the payload.
+3. The project records a **maintainer acceptance** naming you and your exact envelope digest, and
+   declaring the engagement canonical. Without it the readiness check refuses.
+4. The project runs `python scripts/check_m085_readiness.py --require-ready`.
+5. The project publishes how the held-out domain will be derived from a salt it does not have.
+6. The project freezes its scientific protocol against your envelope digest.
+7. **Only then** do you release the salt, and afterwards the payload.
 
-Step 4 before step 6 is what stops the project choosing which of your domains it is tested on.
+Step 5 before step 7 is what stops the project choosing which of your domains it is tested on.
+
+## Walking through this as a rehearsal is welcome
+
+If you want to try the intake kit to see whether these instructions are actually followable —
+without committing to the role — please do. The instructions are the same either way, which is the
+point of such a test.
+
+You cannot arm the experiment by accident. A validly signed envelope is not by itself an engagement:
+step 3 above is a separate record only the project owner can write, and it must declare the
+engagement `canonical`. An acceptance marked `rehearsal` is refused outright, and a missing one is
+refused too. So a walkthrough leaves the boundary exactly where it was.
+
+If you do rehearse, the most useful thing you can send back is **where you got stuck** — which step
+was ambiguous, what you had to guess, what you had to look up. A document only a specialist can
+follow has failed at the thing it exists to do.
 
 ## A second, separate role
 
