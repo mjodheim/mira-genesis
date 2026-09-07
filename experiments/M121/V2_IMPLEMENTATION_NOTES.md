@@ -2,6 +2,10 @@
 
 **Status: DEVELOPMENT apparatus. Not a preregistration, not a protocol, not a scientific result.**
 
+**NOT READY FOR A CANONICAL SALT.** A falsifiability defect is recorded below: every metric the
+verdict depends on is constant across every salt, so the instrument can only return `positive`. See
+[BLOCKING FINDING](#blocking-finding-the-apparatus-cannot-currently-return-a-negative).
+
 These notes record what was built for step two of the canonical chronology in
 [`../../docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md`](../../docs/audits/M121_V2_DESIGN_CANDIDATE_2026-09-05.md),
 and — more importantly — **where the implementation departs from that candidate's text**. The
@@ -125,6 +129,81 @@ On the public fixture salt, at all four horizons, with a constant eight-fault bu
 designed on a salt that was visible while the apparatus was being written. They say nothing about
 H66. The candidate is explicit that the public salt must never become the canonical draw, and the
 runner enforces that by accepting no salt argument at all.
+
+**They are also the same numbers on every other salt**, which is the blocking finding recorded
+above. Read that section before reading this table as good news: a table that cannot change is a
+description of the apparatus, not a measurement of anything.
+
+## BLOCKING FINDING: the apparatus cannot currently return a negative
+
+**Status: this apparatus must not receive a canonical salt.** The finding below was produced by the
+same agent that wrote the apparatus, before any canonical draw existed, and it invalidates the
+readiness of the instrument rather than any recorded result. Nothing has been spent.
+
+### What was measured
+
+The four arms were run over **200 independently drawn 32-byte salts** at all four horizons, and the
+recorded metrics were then compared across **60 salts** to see which of them the salt moves at all.
+
+Every metric the checker's negative conditions consult is **constant across every salt and every
+horizon**:
+
+| arm | operational | quiescent | silent divergences | residual | recoveries |
+|---|---|---|---|---|---|
+| `full` | 4 | 4 | 0 | 0 | varies (not consulted) |
+| `no_constraint_monitor` | 4 | 0 | varies (not consulted) | varies (not consulted) | 4 |
+| `no_checkpoint` | 4 | 4 | 0 | 8 | 0 |
+| `idle_floor` | 0 | 0 | 0 | 0 | 0 |
+
+The only quantities the salt moves — `full.recovery_successes`, `no_checkpoint.completed_work_items`
+and `suppressed_outputs`, `no_constraint_monitor.silent_divergent_outputs` and
+`residual_corruption` — are not consulted by any negative condition.
+
+### Why this matters more than a passing test suite
+
+The canonical chronology exists to stop the project choosing a favourable schedule: freeze the
+apparatus, draw a salt afterwards, materialize exactly one schedule, never reroll. That protection
+is real. It is also **vacuous here**, because no schedule is unfavourable. The instrument returns
+`positive` for every input it can receive.
+
+A result that could not have come out otherwise is not evidence. Spending a scarce, non-replayable
+canonical draw on it would produce a `positive` that says nothing about H66, and the fact that it
+was correctly frozen, correctly salted and correctly replayed would make it *look* like it did.
+
+M077, the predecessor, returned a **valid negative** on its dissociation hypothesis. This apparatus
+cannot. That is a regression in falsifiability, not an improvement in robustness.
+
+### The cause is the four departures, jointly
+
+Each correction above was defensible on its own and each removed a genuine instrument-reason for
+failure. Together they removed the experiment's only sources of variance:
+
+1. the whole-plane guarded read makes operational detection immediate **wherever** the fault lands,
+   so position stops mattering;
+2. the non-launderable redundancy makes quiescent corruption visible **whenever** it lands, so
+   timing stops mattering;
+3. replay on recovery makes `full` restore completely **always**, so residual corruption and silent
+   divergence in `full` are structurally zero;
+4. distinct targets remove the masking interference that made detection counts differ.
+
+The honest reading is that the agent which found four ways the instrument could fail for the wrong
+reason also removed every way it could fail for the right one, and did not notice until it went
+looking for variance rather than for correctness.
+
+### What would restore falsifiability
+
+Directions only; none is chosen here, and the choice is not this agent's to make:
+
+- make detection **latency** decisive by giving boundary and settlement cadences no common factor,
+  so a quiescent fault landing in the wrong window reaches an output before the monitor runs;
+- give the monitor a **bounded budget** — it inspects a limited number of slots per boundary — so
+  where faults land decides coverage;
+- allow two faults inside one inter-checkpoint window, so a single checkpoint cannot repair both;
+- make the horizon do real work: at present the four horizons produce identical numbers, so the
+  experiment does not test horizon robustness at all.
+
+Any such change is an apparatus redesign that must precede a freeze, and it should be reviewed by
+someone other than its author before implementation.
 
 ## What must happen before this can produce evidence
 
