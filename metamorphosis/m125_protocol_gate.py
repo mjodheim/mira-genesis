@@ -65,6 +65,11 @@ def _m125_surfaces(root:Path):
     hpaths=set(head_paths(root,M125_ARCHIVE_PREFIX))
     for p in sorted(wtpaths|hpaths):
         w=_working(root,p);h=head_blob(root,p)
+        if h is not None:
+            hr=_parse(h,p)
+            if hr.get("verdict")==DELIVERY_VERDICT:
+                if w is None:raise GateError("HEAD %s delivery archive is missing from working tree; delivery accounting cannot be re-armed"%p)
+                if normalized(w)!=normalized(h):raise GateError("HEAD %s delivery archive differs from working tree; delivery accounting cannot be re-armed"%p)
         if w is not None:rows.append(("working-tree %s"%p,_parse(w,p)))
         if h is not None:rows.append(("HEAD %s"%p,_parse(h,p)))
     return rows
