@@ -219,8 +219,13 @@ receives the semantics, and that `carried_intact` compares what it claims to com
 Three generations of fixtures are not a lineage. The runtime now reports `established_links: 2` out
 of three acquisitions, and refuses to count the first — it depended on nothing earlier. State
 whether two links is recursion or whether it is two sequential improvements with an ablation
-attached, and whether `causal_chain` counting *consecutive* links ending at the most recent is the
-right definition or one that flatters a lineage whose latest work happens to be examined.
+attached.
+
+`causal_chain` counts *consecutive* established links ending at the most recent acquisition. That is
+conservative in one direction — a single unexamined latest step takes the count to zero even if
+every step before it was established — and the author does not claim it is conservative in the
+other. Say whether "an unbroken run ending at the present" is the right unit at all, or whether a
+lineage should be able to claim links it established earlier and then stopped examining.
 
 ### 10. Ways to re-arm a negative
 
