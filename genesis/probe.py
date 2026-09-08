@@ -80,37 +80,6 @@ def resolve_registry(reference: str) -> Mapping[str, Any]:
     return registry
 
 
-class ComposedProbeBody:
-    """A body the lineage composed: apply these operations, in this order, to each task's input.
-
-    Holds names only, never callables, so it survives the pickle into the sandbox's spawned
-    interpreter. It returns the value it computed and says nothing about whether that value is
-    right: `grade_probe` decides that in the parent. An unrunnable composition raises, and the
-    sandbox records `error` for the task — an observation, not a crash.
-    """
-
-    def __init__(self, registry_reference: str, operations: Sequence[str]) -> None:
-        self.registry_reference = str(registry_reference)
-        self.operations = tuple(str(name) for name in operations)
-
-    def attempt(self, task: Mapping[str, Any]) -> Any:
-        from genesis.probe import resolve_registry
-
-        registry = resolve_registry(self.registry_reference)
-        value = task["input"]
-        for name in self.operations:
-            operation = registry.get(name)
-            if operation is None:
-                raise ProbeError("this composition uses %r, which the registry does not have" % name)
-            value = operation(value)
-        return value
-
-
-def composed_probe_body(registry_reference: str, operations: Sequence[str]):
-    """Picklable factory. `run_candidate` calls this in the child to build the probe."""
-    return ComposedProbeBody(registry_reference, operations)
-
-
 class BatchProbeBody:
     """Every composition in one search, evaluated in a single isolated run.
 
@@ -137,12 +106,17 @@ class BatchProbeBody:
         for name in operations:
             operation = registry.get(name)
             if operation is None:
+                # An equivalent mutant lives here: deleting this raise makes the next line fail with
+                # a TypeError, which the sandbox records as the same `error` row by a less legible
+                # route. `scripts/check_genesis_guards_are_tested.py` reports it as surviving; that
+                # is what an equivalent mutant looks like, and the message is worth keeping.
                 raise ProbeError("this composition uses %r, which the registry does not have" % name)
             value = operation(value)
         return value
 
 
 def batch_probe_body(registry_reference: str, compositions: Sequence[Sequence[str]]):
+    """Picklable factory. `run_candidate` calls this in the child to build the probe."""
     return BatchProbeBody(registry_reference, compositions)
 
 

@@ -297,10 +297,11 @@ def test_a_probe_body_computes_a_value_and_does_not_judge_it():
     A probe that decided for itself whether it had solved the demand would be a candidate marking
     its own paper, and every certificate resting on it would inherit that.
     """
-    body = probe.composed_probe_body(REGISTRY, ("double", "increment"))
-    assert body.attempt({"task_id": "p0", "input": 3, "expected": 7}) == 7
+    body = probe.batch_probe_body(REGISTRY, [("double", "increment")])
+    task = {"task_id": "p0", "composition": 0, "input": 3, "expected": 7}
+    assert body.attempt(task) == 7
     # The same call, with the task expecting something else, returns the same value: the body has
     # no opinion about correctness at all.
-    assert body.attempt({"task_id": "p0", "input": 3, "expected": 999}) == 7
+    assert body.attempt({**task, "expected": 999}) == 7
     assert probe.grade_probe({"expected": 7}, 7) == "solved"
     assert probe.grade_probe({"expected": 8}, 7) == "unsolved"

@@ -185,13 +185,15 @@ diagnostic feature, and the journal's chain check, which was masked by the file-
 in front of it.
 
 33 were tested in `tests/test_genesis_guards.py`, and the probe module has since added its own.
-**Now 69 of 73 are killed.** The four survivors are marked in place as defensive assertions about
+**Now 69 of 74 are killed.** Four survivors are marked in place as defensive assertions about
 invariants the surrounding code already establishes: the sandbox child cannot report a task set it
 was not given, `migrate` builds the arrival state out of the departure state's own fields, probes
 run in separate processes and cannot write to the lineage state, and a feature drawn from a
 symmetric difference cannot give both demands the same value. Reaching them would require contrived
 paths that report coverage without adding knowledge, so they are left untested deliberately and the
-intactness comparison is tested on its own.
+intactness comparison is tested on its own. The fifth is an *equivalent* mutant rather than an
+unreachable one: deleting the probe's missing-operation guard reaches the same recorded `error` by
+raising `TypeError` on the next line, so no test can distinguish the two.
 
 The number is reproducible rather than quoted: rerun the script.
 
