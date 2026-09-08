@@ -33,9 +33,10 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from genesis.trust_root import (
     PROVENANCE_CLASSES,
+    TrustRootError,
     canonical_bytes,
     digest_of,
-    provenance as trust_provenance,
+    validate_provenance,
 )
 
 STATE_SCHEMA = "genesis-lineage-state-v1"
@@ -55,19 +56,23 @@ def _clean_name(value: object, what: str) -> str:
     return value
 
 
-def _with_producer(record: Mapping[str, Any], what: str) -> dict[str, Any]:
-    """History has to say who made it.
+def _validated_provenance(record: Mapping[str, Any] | None, what: str) -> dict[str, Any]:
+    """Use the trust root's provenance rule everywhere state treats attribution as evidence."""
+    try:
+        return validate_provenance(record, what=what)  # type: ignore[arg-type]
+    except TrustRootError as problem:
+        raise StateError(str(problem)) from problem
 
-    `create_state` claimed every entry declared its origin and provenance while only components
-    enforced it, so a tool or an acquisition could be dropped into the record with no producer at
-    all and inherit the surrounding claim by implication.
-    """
+
+def _with_producer(record: Mapping[str, Any], what: str) -> dict[str, Any]:
+    """History has to say who made it, not merely name a provenance class."""
     if not isinstance(record, Mapping):
         raise StateError("a %s entry is not a record" % what)
-    producer = record.get("provenance")
-    if not isinstance(producer, Mapping) or producer.get("class") not in PROVENANCE_CLASSES:
-        raise StateError("%s %r carries no recognised provenance" % (what, record.get("name")))
-    return dict(record)
+    copied = dict(record)
+    copied["provenance"] = _validated_provenance(
+        record.get("provenance"), "%s %r" % (what, record.get("name"))
+    )
+    return copied
 
 
 def _clean_names(values: Iterable[Any], what: str) -> list[str]:
@@ -134,19 +139,7 @@ def component_extension_certificate(
     resolves_with_new_component: bool,
     resolving_composition: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Build the evidence required to add a component class to the registry.
-
-    Two things this used to accept and no longer does.
-
-    A probe that returned `resolved=False` was treated as exhaustion. It is not: a search can end
-    because the budget ran out or the instrument failed, and neither says the component cannot
-    resolve the demand. Each probe record must now say its search actually completed.
-
-    And `resolves_with_new_component=True` was a caller's word for the half of the argument that
-    does the work — the demonstration that something *outside* the held registry reaches the demand.
-    The measured resolving composition has to travel with the certificate, so what licensed the
-    acquisition survives the conversion into it.
-    """
+    """Build the evidence required to add a component class to the registry."""
     prior = _clean_names(prior_registry, "prior registry entry")
     name = _clean_name(new_component, "new component")
     if name in prior:
@@ -211,11 +204,7 @@ def vocabulary_extension_certificate(
     limiting_components: Sequence[str],
     separated_rows: Sequence[Sequence[bool]],
 ) -> dict[str, Any]:
-    """Build the evidence required to extend the diagnostic vocabulary.
-
-    The lineage must exhibit two demands its current features cannot tell apart while their limiting
-    components genuinely differ. Without that pair, a new feature is decoration.
-    """
+    """Build the evidence required to extend the diagnostic vocabulary."""
     prior = _clean_names(prior_vocabulary, "prior feature")
     feature = _clean_name(new_feature, "new feature")
     if feature in prior:
@@ -267,7 +256,7 @@ def create_state(
     observations: Sequence[Mapping[str, Any]] = (),
     generation: int = 0,
 ) -> dict[str, Any]:
-    """Assemble a lineage state. Every entry declares its origin and its provenance."""
+    """Assemble a lineage state. Acquired/produced entries carry explicit provenance."""
     entries = []
     for entry in components:
         name = _clean_name(entry.get("name"), "component name")
@@ -282,23 +271,18 @@ def create_state(
                 raise StateError("component %r carries the wrong certificate kind" % name)
             if certificate.get("new_component") != name:
                 raise StateError("component %r is certified under another name" % name)
-            # A certificate that reproduces its own digest says only that nobody edited it since it
-            # was written. Rebuilding it from its own records is what checks that the evidence
-            # inside it establishes what it claims.
             _rebuild_component_certificate(certificate, name)
         elif certificate is not None:
             raise StateError("seed component %r may not carry an extension certificate" % name)
-        provenance_record = entry.get("provenance")
-        if not isinstance(provenance_record, Mapping) or provenance_record.get(
-            "class"
-        ) not in PROVENANCE_CLASSES:
-            raise StateError("component %r carries no recognised provenance" % name)
+        provenance_record = _validated_provenance(
+            entry.get("provenance"), "component %r" % name
+        )
         entries.append(
             {
                 "name": name,
                 "origin": origin,
                 "certificate": dict(certificate) if certificate else None,
-                "provenance": dict(provenance_record),
+                "provenance": provenance_record,
             }
         )
     if len({entry["name"] for entry in entries}) != len(entries):
@@ -322,11 +306,14 @@ def create_state(
         elif certificate is not None:
             raise StateError("seed feature %r may not carry an extension certificate" % name)
         feature_provenance = entry.get("provenance")
-        if origin == "acquired" and not (
-            isinstance(feature_provenance, Mapping)
-            and feature_provenance.get("class") in PROVENANCE_CLASSES
-        ):
-            raise StateError("feature %r carries no recognised provenance" % name)
+        if origin == "acquired":
+            feature_provenance = _validated_provenance(
+                feature_provenance, "feature %r" % name
+            )
+        elif feature_provenance is not None:
+            feature_provenance = _validated_provenance(
+                feature_provenance, "feature %r" % name
+            )
         features.append(
             {
                 "name": name,
@@ -352,12 +339,7 @@ def create_state(
 
 
 def decode_state(raw: bytes | str | Mapping[str, Any]) -> dict[str, Any]:
-    """Rebuild a state from its parts and require the digest to reproduce.
-
-    A forged state is not caught by a rule someone remembered to write; it is a value that does not
-    reconstruct. The registries are *not* compared against a module constant — they belong to the
-    lineage — but every acquired entry must still carry a certificate the rebuild re-validates.
-    """
+    """Rebuild a state from its parts and require the digest to reproduce."""
     if isinstance(raw, (bytes, bytearray)):
         value = json.loads(bytes(raw).decode("utf-8"))
     elif isinstance(raw, str):
@@ -407,6 +389,7 @@ def extend_components(
         "certificate_digest"
     ):
         raise StateError("the component certificate does not reproduce")
+    validated = _validated_provenance(provenance, "component extension")
     return create_state(
         body_digest=current["body_digest"],
         components=current["components"]
@@ -415,7 +398,7 @@ def extend_components(
                 "name": certificate["new_component"],
                 "origin": "acquired",
                 "certificate": dict(certificate),
-                "provenance": dict(provenance),
+                "provenance": validated,
             }
         ],
         vocabulary=current["vocabulary"],
@@ -430,9 +413,9 @@ def extend_vocabulary(
     state: Mapping[str, Any],
     *,
     certificate: Mapping[str, Any],
-    provenance: Mapping[str, Any] | None = None,
+    provenance: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Add a diagnostic feature, against evidence the prior vocabulary could not separate two demands."""
+    """Add a diagnostic feature with evidence and explicit producer attribution."""
     current = decode_state(state)
     prior = vocabulary_names(current)
     if list(certificate.get("prior_vocabulary") or []) != prior:
@@ -441,6 +424,7 @@ def extend_vocabulary(
         "certificate_digest"
     ):
         raise StateError("the vocabulary certificate does not reproduce")
+    validated = _validated_provenance(provenance, "vocabulary extension")
     return create_state(
         body_digest=current["body_digest"],
         components=current["components"],
@@ -449,9 +433,7 @@ def extend_vocabulary(
             {
                 "name": certificate["new_feature"],
                 "origin": "acquired",
-                "provenance": dict(provenance)
-                if provenance
-                else trust_provenance("lineage_owned", produced_by="lineage vocabulary extension"),
+                "provenance": validated,
                 "certificate": dict(certificate),
             }
         ],
@@ -472,7 +454,7 @@ def save_state(state: Mapping[str, Any], path: Path) -> str:
     payload = encode_state(state)
     temporary = path.with_suffix(path.suffix + ".partial")
     temporary.write_bytes(payload + b"\n")
-    temporary.replace(path)  # atomic, so a death mid-write cannot leave a torn state
+    temporary.replace(path)
     return hashlib.sha256(payload).hexdigest()
 
 
