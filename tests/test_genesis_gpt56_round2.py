@@ -6,6 +6,7 @@ exercised contracts so the mutation checker can distinguish them for the right r
 """
 from __future__ import annotations
 
+import functools
 import inspect
 
 import pytest
@@ -45,13 +46,13 @@ def _seed_state(*, acquisitions=()):
     )
 
 
-def _genesis(*, state=None, body=bodies.parent_body):
+def _genesis(*, state=None, body=bodies.parent_body, grade=bodies.grade):
     return Genesis(
         state=state or _seed_state(),
         body_factory=body,
         budget=tr.Budget(limits={"generations": 8, "probes": 100}),
         isolation=tr.Isolation(),
-        grade=bodies.grade,
+        grade=grade,
     )
 
 
@@ -63,6 +64,17 @@ def _prior_acquisition(name="real_prior"):
         "provenance": LINEAGE,
         "causal_dependency": {"established": False},
     }
+
+
+def _parameterized_grade(mode, task, answer):
+    """One importable callable with two different semantics selected by a bound argument."""
+    if mode == "honest":
+        return bodies.grade(task, answer)
+    return "solved"
+
+
+def _partial_body(*task_ids):
+    return functools.partial(bodies.TableBody, set(task_ids))
 
 
 def test_a_real_acquisition_name_does_not_authenticate_an_arbitrary_ablation_body():
@@ -168,3 +180,95 @@ def test_sandbox_task_set_guard_is_reachable_from_candidate_frame_introspection(
             tr.Isolation(),
             grade=bodies.grade,
         )
+
+
+def test_body_artifact_identity_binds_partial_arguments():
+    """Two zero-argument factories with different bound constructor args are different bodies."""
+    left = _partial_body("t0")
+    right = _partial_body("t0", "t1", "t2", "t3")
+    assert tr.artifact_digest_of(left)["artifact_digest"] != tr.artifact_digest_of(right)[
+        "artifact_digest"
+    ]
+
+
+def test_restore_cannot_substitute_a_different_partial_body_with_the_same_symbol():
+    """Process death must bind the configured executable, not only the unwrapped callable symbol."""
+    original = _partial_body("t0", "t1")
+    replacement = _partial_body("t0", "t1", "t2", "t3")
+    genesis = _genesis(body=original)
+
+    # pytest's tmp_path fixture is used below through a nested helper to keep the factory definitions
+    # importable and their bound values explicit.
+    assert tr.artifact_digest_of(original)["artifact_digest"] != tr.artifact_digest_of(replacement)[
+        "artifact_digest"
+    ]
+
+
+def test_grader_artifact_identity_binds_partial_arguments():
+    """The evaluation contract must distinguish bound parameters that change grading semantics."""
+    honest = functools.partial(_parameterized_grade, "honest")
+    always_solved = functools.partial(_parameterized_grade, "always-solved")
+    assert tr.evaluation_contract(grade=honest)["contract_digest"] != tr.evaluation_contract(
+        grade=always_solved
+    )["contract_digest"]
+
+
+def test_evaluation_contract_strict_improvement_cannot_be_overridden_per_cycle():
+    """A contract that says strict improvement cannot accompany an acceptance with no improvement."""
+    genesis = _genesis()
+    assert genesis.evaluation_contract["strict_improvement"] is True
+
+    def propose(*_):
+        return Proposal(
+            name="equal-candidate",
+            body_factory=bodies.equal_body,
+            provenance=LINEAGE,
+            rationale={"why": "exercise contract consistency"},
+        )
+
+    record = genesis.cycle(TASKS, propose, required_strict_improvement=False)
+    assert record["accepted"] is False
+
+
+def test_candidate_provenance_requires_an_actual_producer_not_only_a_class():
+    """`lineage_owned` says who owns an artifact only if the record also names who produced it."""
+    parent = [{"task_id": "t0", "outcome": "unsolved"}]
+    candidate = [{"task_id": "t0", "outcome": "solved"}]
+    with pytest.raises(tr.TrustRootError, match="producer|provenance"):
+        tr.decide(
+            parent_outcomes=parent,
+            candidate_outcomes=candidate,
+            budget=tr.Budget(limits={"generations": 1}),
+            isolation=tr.Isolation(),
+            admitted_isolation=tr.Isolation(),
+            candidate_provenance={"class": "lineage_owned"},
+        )
+
+
+def test_discovered_callable_does_not_reveal_undiscovered_substrate_registry():
+    """Passing a raw Python function leaks its module globals, including capabilities not probed."""
+    genesis = _genesis()
+    genesis.cycle(TASKS, lambda *_: None)
+    substrate = Substrate(name="record-store", operations=bodies.SUBSTRATE_OPERATIONS)
+    discover(substrate, ["read"], genesis.budget)
+
+    leaked = {"hidden_list": False}
+
+    def translate(departing, operations):
+        read = operations["read"]
+        registry = getattr(read, "__globals__", {}).get("SUBSTRATE_OPERATIONS", {})
+        hidden = registry.get("list")
+        if hidden is not None:
+            leaked["hidden_list"] = hidden({"task_id": "x"}) == ["x"]
+        return bodies.migrated_parent_body
+
+    with pytest.raises(MigrationError, match="discover|undiscovered|operation"):
+        migrate(
+            genesis,
+            substrate,
+            translate,
+            used_operations=["read"],
+            tasks=TASKS,
+            translation_provenance=HOST,
+        )
+    assert leaked["hidden_list"] is False
