@@ -1,7 +1,7 @@
 """Importable DEVELOPMENT fixtures for endogenous-controller frontier tests.
 
-They stay intentionally small: the tests are about controller continuity, evidence visibility and
-step durability, not about the quality of the fixture strategy.
+They stay intentionally small: the tests are about controller continuity, evidence visibility,
+step durability and generated-candidate construction, not about the quality of the fixture strategy.
 """
 from __future__ import annotations
 
@@ -43,4 +43,44 @@ def react_to_rejection(context):
         name="regressed",
         body="regressed",
         rationale={"fixture": "create evidence for the next decision"},
+    )
+
+
+def generated_search_policy(context):
+    """A tiny bounded search policy over program *data*, conditioned on retained rejections.
+
+    The search order is deliberately simple and authored for DEVELOPMENT. What matters here is that
+    none of these candidates exists as an importable body in the world: each is constructed from the
+    returned operation sequence and judged before the next evidence-conditioned step.
+    """
+    from genesis.controller import GenerateTransform, Stop
+
+    if any(str(name).startswith("generated:") for name in context.acquisitions):
+        return Stop(reason="a generated descendant was adopted")
+
+    rejected = 0
+    for evidence in context.evidence:
+        if evidence.get("kind") != "observation":
+            continue
+        record = evidence.get("record") or {}
+        if record.get("kind") == "rejected_candidate" and str(record.get("name", "")).startswith(
+            "generated:"
+        ):
+            rejected += 1
+
+    candidates = (
+        ("double",),
+        ("increment",),
+        ("double", "double"),
+        ("double", "increment"),
+    )
+    if rejected >= len(candidates):
+        return Stop(reason="bounded generated search exhausted")
+    operations = candidates[rejected]
+    return GenerateTransform(
+        name="generated:%d" % rejected,
+        operations=operations,
+        rationale={
+            "fixture": "next bounded program after %d retained generated rejections" % rejected
+        },
     )
