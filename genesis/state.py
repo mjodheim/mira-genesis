@@ -31,7 +31,12 @@ import json
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
-from genesis.trust_root import PROVENANCE_CLASSES, canonical_bytes, digest_of
+from genesis.trust_root import (
+    PROVENANCE_CLASSES,
+    canonical_bytes,
+    digest_of,
+    provenance as trust_provenance,
+)
 
 STATE_SCHEMA = "genesis-lineage-state-v1"
 COMPONENT_CERTIFICATE_SCHEMA = "genesis-registry-extension-certificate-v1"
@@ -50,6 +55,21 @@ def _clean_name(value: object, what: str) -> str:
     return value
 
 
+def _with_producer(record: Mapping[str, Any], what: str) -> dict[str, Any]:
+    """History has to say who made it.
+
+    `create_state` claimed every entry declared its origin and provenance while only components
+    enforced it, so a tool or an acquisition could be dropped into the record with no producer at
+    all and inherit the surrounding claim by implication.
+    """
+    if not isinstance(record, Mapping):
+        raise StateError("a %s entry is not a record" % what)
+    producer = record.get("provenance")
+    if not isinstance(producer, Mapping) or producer.get("class") not in PROVENANCE_CLASSES:
+        raise StateError("%s %r carries no recognised provenance" % (what, record.get("name")))
+    return dict(record)
+
+
 def _clean_names(values: Iterable[Any], what: str) -> list[str]:
     names = [_clean_name(value, what) for value in values]
     if len(set(names)) != len(names):
@@ -60,6 +80,51 @@ def _clean_names(values: Iterable[Any], what: str) -> list[str]:
 # ---------------------------------------------------------------------------------------------
 # Certificates
 # ---------------------------------------------------------------------------------------------
+def _rebuild_component_certificate(certificate: Mapping[str, Any], name: str) -> None:
+    """Re-run the builder's rules over a stored certificate, so a forged one cannot be loaded."""
+    try:
+        rebuilt = component_extension_certificate(
+            prior_registry=list(certificate.get("prior_registry") or []),
+            new_component=name,
+            demand_digest=certificate.get("demand_digest", ""),
+            probe_records=list(certificate.get("probe_records") or []),
+            resolves_with_new_component=certificate.get("resolves_with_new_component"),
+            resolving_composition=certificate.get("resolving_composition"),
+        )
+    except StateError as problem:
+        raise StateError(
+            "component %r carries a certificate whose own evidence does not establish it: %s"
+            % (name, problem)
+        ) from problem
+    if rebuilt["certificate_digest"] != certificate.get("certificate_digest"):
+        raise StateError(
+            "component %r carries a certificate that does not reconstruct from its own evidence"
+            % name
+        )
+
+
+def _rebuild_vocabulary_certificate(certificate: Mapping[str, Any], name: str) -> None:
+    """The same for a diagnostic feature: rebuild it rather than trusting its digest."""
+    try:
+        rebuilt = vocabulary_extension_certificate(
+            prior_vocabulary=list(certificate.get("prior_vocabulary") or []),
+            new_feature=name,
+            demand_digests=list(certificate.get("demand_digests") or []),
+            shared_prior_row=list(certificate.get("shared_prior_row") or []),
+            limiting_components=list(certificate.get("limiting_components") or []),
+            separated_rows=list(certificate.get("separated_rows") or []),
+        )
+    except StateError as problem:
+        raise StateError(
+            "feature %r carries a certificate whose own evidence does not establish it: %s"
+            % (name, problem)
+        ) from problem
+    if rebuilt["certificate_digest"] != certificate.get("certificate_digest"):
+        raise StateError(
+            "feature %r carries a certificate that does not reconstruct from its own evidence" % name
+        )
+
+
 def component_extension_certificate(
     *,
     prior_registry: Sequence[str],
@@ -67,8 +132,21 @@ def component_extension_certificate(
     demand_digest: str,
     probe_records: Sequence[Mapping[str, Any]],
     resolves_with_new_component: bool,
+    resolving_composition: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Build the evidence required to add a component class to the registry."""
+    """Build the evidence required to add a component class to the registry.
+
+    Two things this used to accept and no longer does.
+
+    A probe that returned `resolved=False` was treated as exhaustion. It is not: a search can end
+    because the budget ran out or the instrument failed, and neither says the component cannot
+    resolve the demand. Each probe record must now say its search actually completed.
+
+    And `resolves_with_new_component=True` was a caller's word for the half of the argument that
+    does the work — the demonstration that something *outside* the held registry reaches the demand.
+    The measured resolving composition has to travel with the certificate, so what licensed the
+    acquisition survives the conversion into it.
+    """
     prior = _clean_names(prior_registry, "prior registry entry")
     name = _clean_name(new_component, "new component")
     if name in prior:
@@ -86,12 +164,30 @@ def component_extension_certificate(
             raise StateError(
                 "component %r resolved the demand, so the prior registry was sufficient" % component
             )
+        if record.get("search_exhausted") is not True:
+            raise StateError(
+                "the search over %r did not exhaust: a probe that stopped for budget or an "
+                "instrument failure is not evidence the component cannot resolve the demand"
+                % component
+            )
+        if record.get("budget_exhausted") or record.get("instrument_failure"):
+            raise StateError(
+                "the search over %r ended without exhausting its options" % component
+            )
         probed[component] = dict(record)
     missing = sorted(set(prior) - set(probed))
     if missing:
         raise StateError("prior components were never probed: %s" % ", ".join(missing))
     if resolves_with_new_component is not True:
         raise StateError("the proposed component does not resolve the demand either")
+    if not isinstance(resolving_composition, Mapping) or not resolving_composition.get(
+        "composition_digest"
+    ):
+        raise StateError(
+            "no resolving composition was supplied: a caller boolean is not evidence that anything "
+            "outside the held registry reaches the demand, and without that half exhaustion is only "
+            "a failed search"
+        )
     certificate = {
         "schema": COMPONENT_CERTIFICATE_SCHEMA,
         "prior_registry": prior,
@@ -100,6 +196,7 @@ def component_extension_certificate(
         "probe_records": [probed[component] for component in prior],
         "prior_registry_exhausted": True,
         "resolves_with_new_component": True,
+        "resolving_composition": dict(resolving_composition),
     }
     certificate["certificate_digest"] = digest_of(certificate)
     return certificate
@@ -185,6 +282,10 @@ def create_state(
                 raise StateError("component %r carries the wrong certificate kind" % name)
             if certificate.get("new_component") != name:
                 raise StateError("component %r is certified under another name" % name)
+            # A certificate that reproduces its own digest says only that nobody edited it since it
+            # was written. Rebuilding it from its own records is what checks that the evidence
+            # inside it establishes what it claims.
+            _rebuild_component_certificate(certificate, name)
         elif certificate is not None:
             raise StateError("seed component %r may not carry an extension certificate" % name)
         provenance_record = entry.get("provenance")
@@ -217,13 +318,21 @@ def create_state(
                 raise StateError("feature %r carries the wrong certificate kind" % name)
             if certificate.get("new_feature") != name:
                 raise StateError("feature %r is certified under another name" % name)
+            _rebuild_vocabulary_certificate(certificate, name)
         elif certificate is not None:
             raise StateError("seed feature %r may not carry an extension certificate" % name)
+        feature_provenance = entry.get("provenance")
+        if origin == "acquired" and not (
+            isinstance(feature_provenance, Mapping)
+            and feature_provenance.get("class") in PROVENANCE_CLASSES
+        ):
+            raise StateError("feature %r carries no recognised provenance" % name)
         features.append(
             {
                 "name": name,
                 "origin": origin,
                 "certificate": dict(certificate) if certificate else None,
+                "provenance": dict(feature_provenance) if feature_provenance else None,
             }
         )
     if len({entry["name"] for entry in features}) != len(features):
@@ -235,8 +344,8 @@ def create_state(
         "body_digest": str(body_digest),
         "components": entries,
         "vocabulary": features,
-        "tools": [dict(tool) for tool in tools],
-        "acquisitions": [dict(item) for item in acquisitions],
+        "tools": [_with_producer(tool, "tool") for tool in tools],
+        "acquisitions": [_with_producer(item, "acquisition") for item in acquisitions],
         "observations": [dict(item) for item in observations],
     }
     return {**payload, "state_digest": digest_of(payload)}
@@ -318,7 +427,10 @@ def extend_components(
 
 
 def extend_vocabulary(
-    state: Mapping[str, Any], *, certificate: Mapping[str, Any]
+    state: Mapping[str, Any],
+    *,
+    certificate: Mapping[str, Any],
+    provenance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Add a diagnostic feature, against evidence the prior vocabulary could not separate two demands."""
     current = decode_state(state)
@@ -337,6 +449,9 @@ def extend_vocabulary(
             {
                 "name": certificate["new_feature"],
                 "origin": "acquired",
+                "provenance": dict(provenance)
+                if provenance
+                else trust_provenance("lineage_owned", produced_by="lineage vocabulary extension"),
                 "certificate": dict(certificate),
             }
         ],

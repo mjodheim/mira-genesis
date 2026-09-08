@@ -47,6 +47,8 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 TRUST_ROOT_SCHEMA = "genesis-trust-root-v1"
+ARTIFACT_SCHEMA = "genesis-executable-artifact-v1"
+CONTRACT_SCHEMA = "genesis-evaluation-contract-v1"
 VERDICT_SCHEMA = "genesis-verdict-v1"
 BUDGET_SCHEMA = "genesis-budget-v1"
 ISOLATION_SCHEMA = "genesis-isolation-v1"
@@ -85,6 +87,67 @@ def source_digest() -> str:
     """
     raw = Path(__file__).resolve().read_bytes().replace(b"\r\n", b"\n")
     return hashlib.sha256(raw).hexdigest()
+
+
+def artifact_digest_of(factory: Any) -> dict[str, Any]:
+    """Identify executable code by what it *is*, not by what it is called.
+
+    `Proposal.digest()` used to hash a name, a provenance record and a rationale, so two different
+    bodies with the same metadata were the same proposal and an accepted state's `body_digest` was
+    not a digest of any body. Identity has to reach the code that runs.
+
+    For an importable development fixture the artifact binds the qualified symbol *and* the digest of
+    the module source that defines it, so editing the body changes its identity. A future
+    lineage-generated or packaged body must bind the exact bytes it executes; this descriptor is the
+    weakest form that is still an identity rather than a label, and it says which one it is.
+    """
+    import functools
+    import inspect
+
+    target = factory
+    while isinstance(target, functools.partial):
+        target = target.func
+    source_digest_of_module = ""
+    try:
+        source_file = inspect.getsourcefile(target)
+        if source_file:
+            raw = Path(source_file).read_bytes().replace(b"\r\n", b"\n")
+            source_digest_of_module = hashlib.sha256(raw).hexdigest()
+    except (OSError, TypeError):  # pragma: no cover - built-ins and C callables
+        source_digest_of_module = ""
+    payload = {
+        "schema": ARTIFACT_SCHEMA,
+        "kind": "importable_symbol",
+        "module": str(getattr(target, "__module__", "")),
+        "qualname": str(getattr(target, "__qualname__", getattr(target, "__name__", ""))),
+        "module_source_sha256": source_digest_of_module,
+        "binds_exact_executed_bytes": False,
+    }
+    return {**payload, "artifact_digest": digest_of(payload)}
+
+
+def evaluation_contract(
+    *,
+    grade: Any,
+    outcome_vocabulary: Sequence[str] = TASK_OUTCOMES,
+    retention_policy: str = "parent_solved_must_remain_solved",
+    strict_improvement: bool = True,
+) -> dict[str, Any]:
+    """The measure, as one content-addressed value that every arm of a comparison must name.
+
+    Once task correctness is decided by a grader, the grader *is* part of the measure. A verdict
+    bound to the bytes of this file while correctness is decided by an unbound callable is not bound
+    to its measure: swap the grader and every verdict still names the same trust-root digest. So the
+    grader is admitted as an artifact and the contract digest travels with the verdict.
+    """
+    payload = {
+        "schema": CONTRACT_SCHEMA,
+        "grader": artifact_digest_of(grade) if grade is not None else None,
+        "outcome_vocabulary": list(outcome_vocabulary),
+        "retention_policy": retention_policy,
+        "strict_improvement": bool(strict_improvement),
+    }
+    return {**payload, "contract_digest": digest_of(payload)}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -211,7 +274,14 @@ def _tally(outcomes: Sequence[Mapping[str, Any]], label: str) -> dict[str, Any]:
         if result not in TASK_OUTCOMES:
             raise TrustRootError("%s task %r has an unrecognised outcome" % (label, task))
         counts[result] += 1
-    return {"counts": counts, "tasks": sorted(seen), "total": len(seen)}
+    return {
+        "counts": counts,
+        "tasks": sorted(seen),
+        "total": len(seen),
+        "solved": sorted(
+            str(row.get("task_id")) for row in outcomes if row.get("outcome") == "solved"
+        ),
+    }
 
 
 def decide(
@@ -224,6 +294,7 @@ def decide(
     admitted_isolation: Isolation,
     candidate_provenance: Mapping[str, Any],
     required_strict_improvement: bool = True,
+    evaluation_contract_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Accept or reject a candidate. This is the only place a candidate may become the body.
 
@@ -249,7 +320,17 @@ def decide(
     improved = candidate_solved > parent_solved
     regressed = candidate["counts"]["error"] > parent["counts"]["error"]
 
+    # Retention is set inclusion, not a larger scalar. Comparing counts let a candidate forget work
+    # the parent could do, gain more elsewhere, and be adopted for the trade — which is a lineage
+    # that improved its score while losing what it had. Under the metamorphosis objective the
+    # acquired must be *kept*, so the tasks the parent solved have to remain solved.
+    lost_solved = sorted(set(parent["solved"]) - set(candidate["solved"]))
+
     reasons: list[str] = []
+    if lost_solved:
+        reasons.append(
+            "the candidate forgot work the parent could do: %s" % ", ".join(lost_solved)
+        )
     if required_strict_improvement and not improved:
         reasons.append(
             "no strict improvement: parent solved %d, candidate solved %d"
@@ -275,6 +356,12 @@ def decide(
         "candidate": candidate,
         "control": control,
         "improved": improved,
+        "lost_solved_tasks": lost_solved,
+        "evaluation_contract_digest": (
+            dict(evaluation_contract_record)["contract_digest"]
+            if evaluation_contract_record
+            else ""
+        ),
         "candidate_provenance": dict(candidate_provenance),
         "budget": budget.record(),
         "isolation": isolation.record(),

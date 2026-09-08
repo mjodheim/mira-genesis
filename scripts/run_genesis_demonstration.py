@@ -118,7 +118,7 @@ def demonstrate() -> dict:
         }
     )
 
-    accepted = _one(genesis, "improved", bodies.improved_body)
+    accepted = _one(genesis, bodies.ACQUIRED_COMPONENT, bodies.improved_body)
     steps.append(
         {
             "step": "candidate_accepted_on_evidence",
@@ -208,6 +208,11 @@ def demonstrate() -> dict:
         substrate,
         lambda state, operations: bodies.migrated_parent_body,
         used_operations=["read"],
+        # The translation is host-authored in this fixture, and the record says so rather than
+        # labelling it the lineage's own work.
+        translation_provenance=tr.provenance(
+            "host_written", produced_by="demonstration translator"
+        ),
         # Verified rather than assumed: both bodies run over the same tasks, and a translation that
         # solves strictly less is refused. Arriving with every certificate intact while being unable
         # to do the work is transported output.
@@ -237,21 +242,21 @@ def demonstrate() -> dict:
     after = [
         _one(
             genesis,
-            "improved_in_new_form",
+            bodies.SECOND_ACQUISITION,
             bodies.migrated_improved_body,
             ablated=bodies.migrated_ablated_body,
             depends_on=bodies.ACQUIRED_COMPONENT,
         ),
         _one(
             genesis,
-            "improved_again_in_new_form",
+            bodies.THIRD_ACQUISITION,
             bodies.migrated_further_body,
             ablated=bodies.migrated_further_ablated_body,
             depends_on=bodies.SECOND_ACQUISITION,
         ),
         _one(
             genesis,
-            "improved_a_third_time_in_new_form",
+            bodies.FOURTH_ACQUISITION,
             bodies.migrated_fourth_body,
             ablated=bodies.migrated_fourth_ablated_body,
             depends_on=bodies.THIRD_ACQUISITION,

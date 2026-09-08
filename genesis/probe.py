@@ -567,8 +567,14 @@ def certificate_from_experiment(
                 "component": record["component"],
                 "resolved": False,
                 "compositions_tried": record["attempts"],
+                "search_exhausted": bool(record.get("search_exhausted")),
+                "budget_exhausted": bool(record.get("budget_exhausted")),
+                "instrument_failure": bool(record.get("instrument_failure")),
             }
             for record in diagnosis["probes"]
         ],
         resolves_with_new_component=True,
+        # The composition that actually reached the demand travels with the certificate. Discarding
+        # it and passing a boolean threw away the positive half of the argument.
+        resolving_composition=diagnosis.get("resolving_composition"),
     )

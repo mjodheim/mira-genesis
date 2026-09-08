@@ -462,7 +462,7 @@ def test_a_later_acceptance_without_an_ablation_arm_is_recorded_as_unestablished
 
 def test_the_cycle_runs_the_ablation_arm_the_proposal_carried():
     genesis = _genesis()
-    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
     record = _cycle_with(
         genesis,
         bodies.migrated_improved_body,
@@ -485,7 +485,7 @@ def test_an_ablation_arm_that_is_really_the_parent_establishes_nothing():
     the verdict this cycle just reached rather than evidence on top of it.
     """
     genesis = _genesis()
-    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
     record = _cycle_with(
         genesis,
         bodies.migrated_improved_body,
@@ -503,7 +503,7 @@ def test_an_ablation_arm_that_is_really_the_parent_establishes_nothing():
 def test_an_ablation_arm_that_cannot_run_aborts_the_cycle():
     """A missing measurement is not a passed one, and it must not be scored as a candidate failure."""
     genesis = _genesis()
-    _cycle_with(genesis, bodies.improved_body, name="first")
+    _cycle_with(genesis, bodies.improved_body, name="something")
     record = _cycle_with(
         genesis,
         bodies.refusing_body,
@@ -529,13 +529,13 @@ def test_a_run_of_acceptances_is_not_a_chain():
 
 def test_the_chain_report_counts_links_without_grading_them():
     genesis = _genesis()
-    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
     _cycle_with(
         genesis,
         bodies.migrated_improved_body,
         ablated=bodies.migrated_ablated_body,
         depends_on=bodies.ACQUIRED_COMPONENT,
-        name="second",
+        name=bodies.SECOND_ACQUISITION,
     )
     _cycle_with(
         genesis,

@@ -94,6 +94,14 @@ def _component(name, **overrides):
     return entry
 
 
+def _composition():
+    return {
+        "schema": "genesis-composed-probe-v1",
+        "operations": ["double", "increment"],
+        "composition_digest": "measured",
+    }
+
+
 def _vocabulary_certificate():
     return st.vocabulary_extension_certificate(
         prior_vocabulary=["axis_progress"],
@@ -172,8 +180,9 @@ def test_a_component_certificate_cannot_name_a_component_already_held():
             prior_registry=["a"],
             new_component="a",
             demand_digest="d",
-            probe_records=[{"component": "a", "resolved": False}],
+            probe_records=[{"component": "a", "resolved": False, "search_exhausted": True}],
             resolves_with_new_component=True,
+            resolving_composition=_composition(),
         )
 
 
@@ -195,8 +204,9 @@ def test_a_probe_record_naming_a_component_outside_the_registry_is_refused():
             prior_registry=["a"],
             new_component="joint",
             demand_digest="d",
-            probe_records=[{"component": "invented", "resolved": False}],
+            probe_records=[{"component": "invented", "resolved": False, "search_exhausted": True}],
             resolves_with_new_component=True,
+            resolving_composition=_composition(),
         )
 
 
@@ -207,10 +217,11 @@ def test_probing_one_component_twice_cannot_stand_in_for_probing_two():
             new_component="joint",
             demand_digest="d",
             probe_records=[
-                {"component": "a", "resolved": False},
-                {"component": "a", "resolved": False},
+                {"component": "a", "resolved": False, "search_exhausted": True},
+                {"component": "a", "resolved": False, "search_exhausted": True},
             ],
             resolves_with_new_component=True,
+            resolving_composition=_composition(),
         )
 
 
@@ -286,8 +297,9 @@ def test_a_component_certified_under_another_name_is_refused():
         prior_registry=["operator_table"],
         new_component="joint_registry",
         demand_digest="d",
-        probe_records=[{"component": "operator_table", "resolved": False}],
+        probe_records=[{"component": "operator_table", "resolved": False, "search_exhausted": True}],
         resolves_with_new_component=True,
+        resolving_composition=_composition(),
     )
     with pytest.raises(st.StateError, match="certified under another name"):
         _seed_state(
@@ -316,8 +328,9 @@ def test_an_acquired_feature_carrying_the_wrong_certificate_kind_is_refused():
         prior_registry=["operator_table"],
         new_component="joint_registry",
         demand_digest="d",
-        probe_records=[{"component": "operator_table", "resolved": False}],
+        probe_records=[{"component": "operator_table", "resolved": False, "search_exhausted": True}],
         resolves_with_new_component=True,
+        resolving_composition=_composition(),
     )
     with pytest.raises(st.StateError, match="wrong certificate kind"):
         _seed_state(

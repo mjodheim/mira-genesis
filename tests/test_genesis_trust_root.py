@@ -235,10 +235,15 @@ def _component_certificate(**overrides):
         "new_component": "candidate_space",
         "demand_digest": "d0",
         "probe_records": [
-            {"component": "operator_table", "resolved": False},
-            {"component": "signal_interface", "resolved": False},
+            {"component": "operator_table", "resolved": False, "search_exhausted": True},
+            {"component": "signal_interface", "resolved": False, "search_exhausted": True},
         ],
         "resolves_with_new_component": True,
+        "resolving_composition": {
+            "schema": "genesis-composed-probe-v1",
+            "operations": ["double", "increment"],
+            "composition_digest": "measured",
+        },
     }
     kwargs.update(overrides)
     return st.component_extension_certificate(**kwargs)
@@ -267,7 +272,11 @@ def test_a_component_cannot_be_added_when_an_existing_one_resolved_the_demand():
 
 def test_a_component_cannot_be_added_without_probing_every_prior_component():
     with pytest.raises(st.StateError, match="never probed"):
-        _component_certificate(probe_records=[{"component": "operator_table", "resolved": False}])
+        _component_certificate(
+            probe_records=[
+                {"component": "operator_table", "resolved": False, "search_exhausted": True}
+            ]
+        )
 
 
 def test_a_component_that_does_not_resolve_the_demand_is_refused():

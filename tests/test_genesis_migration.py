@@ -164,13 +164,16 @@ def test_a_lineage_that_loses_something_did_not_arrive_intact():
             }
         ],
         vocabulary=[{"name": "axis_progress", "origin": "seed", "certificate": None}],
-        acquisitions=[{"name": "A"}, {"name": "B"}],
+        acquisitions=[
+            {"name": "A", "provenance": LINEAGE},
+            {"name": "B", "provenance": LINEAGE},
+        ],
     )
     arrived = st.create_state(
         body_digest="b1",
         components=departing["components"],
         vocabulary=departing["vocabulary"],
-        acquisitions=[{"name": "A"}],
+        acquisitions=[{"name": "A", "provenance": LINEAGE}],
     )
     outcome = carried_intact(departing, arrived)
     assert outcome["intact"] is False
@@ -195,10 +198,10 @@ def test_arriving_intact_without_evolving_is_not_metamorphosis():
 
 def test_a_lineage_that_arrives_and_evolves_again_has_metamorphosed():
     genesis = _genesis()
-    _once(genesis, bodies.improved_body, name="improved")
+    _once(genesis, bodies.improved_body, name=bodies.ACQUIRED_COMPONENT)
     substrate = _substrate()
     discover(substrate, ["read"], genesis.budget)
-    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+    record = migrate(genesis, substrate, _translate, used_operations=["read"], tasks=TASKS)
 
     after = [
         _once(
@@ -401,15 +404,34 @@ def test_a_migration_cannot_be_verified_against_tasks_the_lineage_never_faced():
         migrate(genesis, substrate, _translate, used_operations=["read"], tasks=convenient)
 
 
-def test_renaming_the_tasks_does_not_get_past_that_check():
-    """The set is identified by the questions in it, not by the object handed in."""
+def test_substituting_easier_questions_under_the_same_labels_is_refused():
+    """Identity is the question, not the label on it.
+
+    This test used to assert the opposite of its second half: that *renaming* got past the check.
+    Under the old label-based digest that was the only thing the check could see, which is exactly
+    the hole an independent reviewer found — reuse the identifiers, put easier contents underneath,
+    and an unevaluated set looks like evaluated work. Now the contents decide, so relabelling the
+    same questions is the same work and changing the questions is not.
+    """
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+
+    easier = [dict(task, input=0) for task in TASKS]
+    with pytest.raises(MigrationError, match="never been evaluated on"):
+        migrate(genesis, substrate, _translate, used_operations=["read"], tasks=easier)
+
+
+def test_relabelling_the_same_questions_is_the_same_work():
+    """Non-vacuity for the line above: the check refuses substituted questions, not new names."""
     genesis = _genesis()
     _once(genesis, bodies.improved_body, name="improved")
     renamed = [dict(task, task_id=task["task_id"].upper()) for task in TASKS]
     substrate = _substrate()
     discover(substrate, ["read"], genesis.budget)
-    with pytest.raises(MigrationError, match="never been evaluated on"):
-        migrate(genesis, substrate, _translate, used_operations=["read"], tasks=renamed)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"], tasks=renamed)
+    assert record["capability"]["measured"] is True
 
 
 def test_the_task_set_the_lineage_was_judged_by_is_accepted():

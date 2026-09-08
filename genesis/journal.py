@@ -12,6 +12,8 @@ embarrassment it discards.
 """
 from __future__ import annotations
 
+import copy
+
 import json
 from pathlib import Path
 from typing import Any, Iterable, Iterator, Mapping
@@ -78,7 +80,7 @@ class Journal:
         return len(self._entries)
 
     def __iter__(self) -> Iterator[dict[str, Any]]:
-        return iter(list(self._entries))
+        return iter(self.entries())
 
     @property
     def head(self) -> str:
@@ -89,13 +91,17 @@ class Journal:
             kind=kind, generation=generation, payload=payload, previous_digest=self.head
         )
         self._entries.append(record)
-        return record
+        # A deep copy, because the caller must not keep a handle on stored history. A hash chain
+        # detects tampering by someone who cannot also rebuild the chain; code holding the live
+        # Journal owns both, so the records it hands out must not be the records it keeps.
+        return copy.deepcopy(record)
 
     def entries(self) -> list[dict[str, Any]]:
-        return [dict(record) for record in self._entries]
+        """A deep snapshot. Copying only the outer dictionary left nested payloads shared."""
+        return copy.deepcopy(self._entries)
 
     def of_kind(self, kind: str) -> list[dict[str, Any]]:
-        return [dict(record) for record in self._entries if record["kind"] == kind]
+        return [copy.deepcopy(record) for record in self._entries if record["kind"] == kind]
 
     def record(self) -> dict[str, Any]:
         payload = {"schema": JOURNAL_SCHEMA, "entries": self.entries(), "head": self.head}

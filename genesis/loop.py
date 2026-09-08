@@ -37,8 +37,10 @@ carries `outcomes_are_self_reported`, since the flag is what a later reader weig
 """
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any, Callable, Mapping, Protocol, Sequence
 
 from genesis import state as lineage_state
@@ -46,6 +48,9 @@ from genesis.journal import Journal
 from genesis.sandbox import run_candidate
 from genesis.trust_root import (
     Budget,
+    artifact_digest_of,
+    canonical_bytes,
+    evaluation_contract,
     BudgetExhausted,
     Isolation,
     TrustRootError,
@@ -55,11 +60,52 @@ from genesis.trust_root import (
 
 CYCLE_SCHEMA = "genesis-cycle-v1"
 CAMPAIGN_SCHEMA = "genesis-campaign-v1"
+CONTEXT_SCHEMA = "genesis-lineage-context-v1"
+CHECKPOINT_SCHEMA = "genesis-runtime-checkpoint-v1"
+
+
+def question_digest(task: Mapping[str, Any]) -> str:
+    """Identify one task by its question, ignoring the label it happens to carry."""
+    return digest_of({k: v for k, v in dict(task).items() if k != "task_id"})
 
 
 def task_set_digest(tasks: Sequence[Mapping[str, Any]]) -> str:
-    """Identify a task set by the questions in it, so a caller cannot rename its way past a check."""
-    return digest_of(sorted(str(task["task_id"]) for task in tasks))
+    """Identify a task set by the questions in it, not by the labels on them.
+
+    This hashed `task_id` values, which are labels: a caller could reuse the identifiers of a set the
+    lineage had been judged on, put easier contents underneath, and present the result as previously
+    evaluated work. Duplicates are kept — two identical questions asked twice are not the same body
+    of work as one — and the target is included, because changing what counts as right changes what
+    the lineage was judged on.
+    """
+    return digest_of(sorted(question_digest(task) for task in tasks))
+
+
+@dataclass(frozen=True)
+class LineageContext:
+    """What a lineage-owned proposer may see: a value, not the runtime.
+
+    `cycle` used to call `propose(self, tasks)`. That handed lineage-owned code the body, the budget,
+    the isolation envelope, the state, the journal, the admitted trust-root digest and the grader —
+    everything the measure is made of. No downstream guard can repair that, because the authority was
+    already given away: a proposer could widen its own budget, swap the evaluator between the parent
+    arm and the candidate arm, or replace the body with no adoption at all. That is precisely the
+    invariant this runtime exists to hold, so the interface is now data.
+
+    Frozen, so an attempt to write through it raises rather than silently failing, and the cycle
+    records the attempt instead of letting it pass unremarked.
+    """
+
+    schema: str
+    state_digest: str
+    generation: int
+    components: tuple[str, ...]
+    vocabulary: tuple[str, ...]
+    acquisitions: tuple[str, ...]
+    observations: int
+    budget_remaining: Mapping[str, int]
+    evaluated_task_sets: tuple[str, ...]
+    body_artifact_digest: str
 
 
 class Body(Protocol):
@@ -92,9 +138,24 @@ class Proposal:
     ablated_body_factory: Callable[[], Body] | None = None
     depends_on: str = ""
 
+    def body_artifact(self) -> dict[str, Any]:
+        """What this proposal would actually run, identified by its code."""
+        return artifact_digest_of(self.body_factory)
+
     def digest(self) -> str:
+        """Identity that reaches the executable, not just the paperwork around it.
+
+        This hashed the name, the provenance and the rationale, so two different bodies submitted
+        with the same metadata were the same proposal, and the `body_digest` an acceptance wrote
+        into the lineage state was a digest of a description rather than of a body.
+        """
         return digest_of(
-            {"name": self.name, "provenance": dict(self.provenance), "rationale": dict(self.rationale)}
+            {
+                "name": self.name,
+                "provenance": dict(self.provenance),
+                "rationale": dict(self.rationale),
+                "body_artifact": self.body_artifact(),
+            }
         )
 
 
@@ -137,6 +198,9 @@ class Genesis:
         # the body supplies an answer and the parent decides. The cycle records which happened
         # rather than leaving a reader to assume the stronger one.
         self.grade = grade
+        # The grader is part of the measure, so it is admitted as an artifact and every verdict
+        # names the contract digest alongside the trust-root source digest.
+        self.evaluation_contract = evaluation_contract(grade=grade)
         self.allow_self_reported_outcomes = allow_self_reported_outcomes
         # Which task sets this lineage has actually been evaluated on. A migration verified against
         # tasks nobody ever judged this lineage by is verified against a set chosen by whoever
@@ -202,7 +266,6 @@ class Genesis:
                 "journal_entry": record["entry_digest"],
             }
 
-        self.evaluated_task_digests.add(task_set_digest(tasks))
         parent = run_candidate(
             self.body_factory,
             tasks,
@@ -212,13 +275,34 @@ class Genesis:
         )
         if not parent["completed"]:
             return abort("parent", parent)
+        # Recorded only now. It used to be added before the parent ran, so an instrument abort left
+        # a task set marked as work the lineage had been evaluated on when no evaluation happened —
+        # and the migration gate reads that ledger.
+        self.evaluated_task_digests.add(task_set_digest(tasks))
         self.journal.append(
             "observation",
             generation,
             {"arm": "parent", "sandbox_digest": parent["result_digest"]},
         )
 
-        proposal = propose(self, tasks)
+        try:
+            proposal = propose(self.context(), tasks)
+        except Exception as failure:
+            # A proposer that reaches for the runtime now raises, because the context is frozen.
+            # Its attempt is an observation about the lineage, not a crash of the host.
+            entry = self.journal.append(
+                "diagnosis",
+                generation,
+                {"proposed": False, "detail": "the proposer failed: %s" % failure},
+            )
+            return {
+                "schema": CYCLE_SCHEMA,
+                "generation": generation,
+                "stopped": False,
+                "accepted": False,
+                "reason": "the proposer failed: %s" % failure,
+                "journal_entry": entry["entry_digest"],
+            }
         if proposal is None:
             entry = self.journal.append(
                 "diagnosis", generation, {"proposed": False, "detail": "no candidate proposed"}
@@ -276,6 +360,7 @@ class Genesis:
             admitted_isolation=self.admitted_isolation,
             candidate_provenance=proposal.provenance,
             required_strict_improvement=required_strict_improvement,
+            evaluation_contract_record=self.evaluation_contract,
         )
         problems = verify_verdict(verdict, admitted_source_sha256=self.admitted_source_sha256)
         if problems:
@@ -362,6 +447,25 @@ class Genesis:
             "state_digest": self.state["state_digest"],
         }
 
+    def context(self) -> LineageContext:
+        """The read-only value a lineage-owned proposer receives in place of this object."""
+        return LineageContext(
+            schema=CONTEXT_SCHEMA,
+            state_digest=self.state["state_digest"],
+            generation=self.state["generation"],
+            components=tuple(lineage_state.component_names(self.state)),
+            vocabulary=tuple(lineage_state.vocabulary_names(self.state)),
+            acquisitions=tuple(
+                str(item.get("name", "")) for item in self.state["acquisitions"]
+            ),
+            observations=len(self.state["observations"]),
+            budget_remaining=MappingProxyType(
+                {name: self.budget.remaining(name) for name in sorted(self.budget.limits)}
+            ),
+            evaluated_task_sets=tuple(sorted(self.evaluated_task_digests)),
+            body_artifact_digest=artifact_digest_of(self.body_factory)["artifact_digest"],
+        )
+
     # -- causal dependency, on every cycle rather than once per milestone ------------------
     def _causal_dependency(self, proposal, tasks, parent, candidate) -> dict[str, Any]:
         """Run the proposal's ablation arm, if it supplied one, and judge what it shows.
@@ -376,6 +480,20 @@ class Genesis:
         `established: false` with the reason, never as an unexamined pass.
         """
         first_acquisition = not self.state["acquisitions"]
+        held = {str(item.get("name", "")) for item in self.state["acquisitions"]}
+        if proposal.ablated_body_factory is not None and proposal.depends_on not in held:
+            # An arm is only an ablation of something the lineage actually has. Without this a
+            # deliberately weak unrelated body, offered against an acquisition that was never made,
+            # measures a loss and gets called causal dependency.
+            return {
+                "record": {
+                    "established": False,
+                    "arm_supplied": True,
+                    "depends_on": proposal.depends_on,
+                    "why": "the proposal names %r, which this lineage never acquired, so the arm "
+                    "cannot be that acquisition removed" % proposal.depends_on,
+                }
+            }
         if proposal.ablated_body_factory is None:
             return {
                 "record": {
@@ -487,34 +605,127 @@ class Genesis:
         return campaign
 
     # -- persistence ----------------------------------------------------------------------
+    def checkpoint(self) -> dict[str, Any]:
+        """Everything that decides which lineage resumes and under which rules, as one value.
+
+        State and journal are each authenticated, and that was never enough: nothing bound them to
+        each other, to the budget already spent, to the isolation envelope, to the evaluator, or to
+        the body. A restart could therefore present the persisted state under a fresh allowance and a
+        caller-chosen body and call the result the same lineage.
+        """
+        payload = {
+            "schema": CHECKPOINT_SCHEMA,
+            "generation": self.state["generation"],
+            "state_digest": self.state["state_digest"],
+            "journal_head": self.journal.head,
+            "body_artifact": artifact_digest_of(self.body_factory),
+            "admitted_trust_root_sha256": self.admitted_source_sha256,
+            "evaluation_contract": dict(self.evaluation_contract),
+            "admitted_isolation": self.admitted_isolation.record(),
+            "isolation": self.isolation.record(),
+            "budget": self.budget.record(),
+            "evaluated_task_sets": sorted(self.evaluated_task_digests),
+            "allow_self_reported_outcomes": self.allow_self_reported_outcomes,
+        }
+        return {**payload, "checkpoint_digest": digest_of(payload)}
+
     def persist(self, directory: Path) -> dict[str, str]:
+        """Write state and journal, then publish the manifest last.
+
+        Commit-last ordering means a crash between the two leaves the previous manifest as the last
+        committed lineage: half-written files are not history.
+        """
         directory = Path(directory)
-        return {
+        written = {
             "state": lineage_state.save_state(self.state, directory / "lineage_state.json"),
             "journal": self.journal.save(directory / "descent_journal.json"),
         }
+        manifest = self.checkpoint()
+        path = directory / "runtime_checkpoint.json"
+        temporary = path.with_suffix(".partial")
+        temporary.write_bytes(canonical_bytes(manifest) + b"\n")
+        temporary.replace(path)
+        written["checkpoint"] = manifest["checkpoint_digest"]
+        return written
 
     @staticmethod
     def restore(
         directory: Path,
         *,
         body_factory: Callable[[], Body],
-        budget: Budget,
-        isolation: Isolation,
+        budget: Budget | None = None,
+        isolation: Isolation | None = None,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
         allow_self_reported_outcomes: bool = False,
     ) -> "Genesis":
-        """Come back after process death from persisted state, re-validating both artifacts."""
+        """Resume one committed checkpoint, or refuse.
+
+        The caller may supply the means to *resolve* the body, but not to choose a different one; the
+        budget and its spend ledger come from the checkpoint rather than from the caller; and the
+        isolation envelope may not be widened on the way back in. `budget` and `isolation` are kept
+        in the signature only to be checked against what was committed.
+        """
         directory = Path(directory)
-        return Genesis(
-            state=lineage_state.load_state(directory / "lineage_state.json"),
-            body_factory=body_factory,
-            budget=budget,
-            isolation=isolation,
-            journal=Journal.load(directory / "descent_journal.json"),
-            grade=grade,
-            allow_self_reported_outcomes=allow_self_reported_outcomes,
+        state = lineage_state.load_state(directory / "lineage_state.json")
+        journal = Journal.load(directory / "descent_journal.json")
+
+        path = directory / "runtime_checkpoint.json"
+        if not path.exists():
+            raise TrustRootError(
+                "no committed checkpoint at %s: state and journal alone do not say which body, "
+                "budget or evaluator this lineage was admitted under" % path
+            )
+        manifest = json.loads(path.read_bytes().decode("utf-8"))
+        expected = digest_of({k: v for k, v in manifest.items() if k != "checkpoint_digest"})
+        if manifest.get("checkpoint_digest") != expected:
+            raise TrustRootError("the checkpoint manifest does not reproduce its own digest")
+        if manifest.get("state_digest") != state["state_digest"]:
+            raise TrustRootError("the persisted state is not the one this checkpoint committed")
+        if manifest.get("journal_head") != journal.head:
+            raise TrustRootError("the persisted journal is not the one this checkpoint committed")
+
+        arriving = artifact_digest_of(body_factory)
+        committed_body = manifest.get("body_artifact") or {}
+        if arriving["artifact_digest"] != committed_body.get("artifact_digest"):
+            raise TrustRootError(
+                "the supplied body is not the body this lineage was persisted with: committed %s, "
+                "supplied %s" % (committed_body.get("qualname"), arriving.get("qualname"))
+            )
+
+        committed_isolation = Isolation(
+            **{k: v for k, v in manifest["admitted_isolation"].items() if k != "schema"}
         )
+        if isolation is not None:
+            isolation.assert_no_wider_than(committed_isolation)
+        committed_budget = Budget(
+            limits=dict(manifest["budget"]["limits"]), spent=dict(manifest["budget"]["spent"])
+        )
+        if budget is not None and dict(budget.limits) != dict(committed_budget.limits):
+            raise TrustRootError(
+                "restore may not re-admit a different allowance: committed %s, supplied %s"
+                % (dict(committed_budget.limits), dict(budget.limits))
+            )
+
+        resumed = Genesis(
+            state=state,
+            body_factory=body_factory,
+            budget=committed_budget,
+            isolation=isolation or committed_isolation,
+            journal=journal,
+            admitted_source_sha256=manifest["admitted_trust_root_sha256"],
+            grade=grade,
+            allow_self_reported_outcomes=manifest.get("allow_self_reported_outcomes", False)
+            or allow_self_reported_outcomes,
+        )
+        committed_contract = manifest.get("evaluation_contract") or {}
+        if resumed.evaluation_contract["contract_digest"] != committed_contract.get(
+            "contract_digest"
+        ):
+            raise TrustRootError(
+                "the evaluator this lineage was admitted under is not the one supplied on restore"
+            )
+        resumed.evaluated_task_digests = set(manifest.get("evaluated_task_sets") or [])
+        return resumed
 
 
 # ---------------------------------------------------------------------------------------------

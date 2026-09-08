@@ -35,6 +35,7 @@ and going on evolving is.
 """
 from __future__ import annotations
 
+from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Sequence
 
@@ -84,14 +85,23 @@ class Substrate:
     def discovered(self) -> dict[str, Callable[..., Any]]:
         return dict(self._discovered)
 
-    def record(self) -> dict[str, Any]:
-        return {
+    def record(self, *, lineage_visible: bool = False) -> dict[str, Any]:
+        """What is known about this substrate. `lineage_visible` limits it to what was discovered.
+
+        The full record lists `operations_available`, and `migrate` wrote it into the lineage's own
+        journal — so once a lineage could read its history, the record told it the names of
+        capabilities it had never found by probing. Discovery costs budget precisely so that
+        knowing is earned; a free list in the history undoes that.
+        """
+        payload = {
             "schema": SUBSTRATE_SCHEMA,
             "name": self.name,
-            "operations_available": sorted(self.operations),
             "operations_discovered": sorted(self._discovered),
             "probe_cost": self.probe_cost,
         }
+        if lineage_visible:
+            return payload
+        return {**payload, "operations_available": sorted(self.operations)}
 
 
 def discover(substrate: Substrate, candidate_names: Sequence[str], budget) -> dict[str, Any]:
@@ -187,6 +197,7 @@ def migrate(
     used_operations: Sequence[str],
     tasks: Sequence[Mapping[str, Any]] | None = None,
     permit_capability_loss: bool = False,
+    translation_provenance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Carry a lineage into `substrate`, and prove it arrived as the same lineage.
 
@@ -256,14 +267,23 @@ def migrate(
         "migration",
         arrived["generation"],
         {
-            "substrate": substrate.record(),
+            "substrate": substrate.record(lineage_visible=True),
             "departure_state_digest": departing["state_digest"],
             "arrival_state_digest": arrived["state_digest"],
             "departure_journal_head": departure_head,
             "used_operations": sorted(used_operations),
             "carried": carried["carried"],
             "capability": capability,
-            "provenance": provenance("lineage_owned", produced_by="lineage migration"),
+            # Measured, not asserted. This said `lineage_owned` whatever produced the translation,
+            # so a host-authored translator was recorded as the lineage's own work — which is the
+            # one distinction the provenance vocabulary exists to keep.
+            "provenance": dict(translation_provenance)
+            if translation_provenance
+            else provenance(
+                "host_written",
+                produced_by="unattributed translation",
+                detail="no translation provenance was supplied, so it is not the lineage's",
+            ),
         },
     )
 
@@ -291,18 +311,30 @@ def carried_intact(departing: Mapping[str, Any], arrived: Mapping[str, Any]) -> 
     for field_name in CARRIED:
         before = departing.get(field_name) or []
         after = arrived.get(field_name) or []
+        # Multiset identity, not membership. Testing `identifier in after_ids` meant a record that
+        # departed twice and arrived once counted as present both times, and an unexplained extra
+        # arrival counted as nothing at all. "The same lineage arrived" is a claim about what there
+        # is, not about what can be found.
         before_ids = [digest_of(item) for item in before]
         after_ids = [digest_of(item) for item in after]
-        missing = [
-            identifier for identifier in before_ids if identifier not in after_ids
-        ]
+        remaining = Counter(after_ids)
+        missing = []
+        for identifier in before_ids:
+            if remaining.get(identifier):
+                remaining[identifier] -= 1
+            else:
+                missing.append(identifier)
+        unexplained = sorted(+remaining)
         carried[field_name] = {
             "departed": len(before_ids),
             "arrived": len(after_ids),
             "missing": len(missing),
+            "unexplained_arrivals": len(unexplained),
         }
         if missing:
             lost.append("%s lost %d of %d" % (field_name, len(missing), len(before_ids)))
+        if unexplained:
+            lost.append("%s gained %d record(s) nobody accounted for" % (field_name, len(unexplained)))
     return {"intact": not lost, "lost": lost, "carried": carried}
 
 
@@ -334,6 +366,20 @@ def metamorphosis_succeeded(
         reasons.append("the translation used operations the lineage never discovered")
     if any(count["missing"] for count in migration.get("carried", {}).values()):
         reasons.append("the lineage did not arrive intact")
+    # Carrying the record is not carrying the capability. A migration whose executable capability was
+    # never measured, or one explicitly permitted to lose it, cannot satisfy an objective whose whole
+    # point is that what was acquired is kept.
+    capability = migration.get("capability") or {}
+    if not capability.get("measured"):
+        reasons.append(
+            "the translation's capability was never measured, so nothing shows the arrival can do "
+            "what the departure could"
+        )
+    elif not capability.get("preserved"):
+        reasons.append(
+            "the translation lost capability the lineage had: %s"
+            % ", ".join(capability.get("lost_tasks") or ["unrecorded tasks"])
+        )
     if not accepted:
         reasons.append(
             "the migrated lineage accepted no new candidate, so it replayed rather than evolved"
