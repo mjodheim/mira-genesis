@@ -23,10 +23,13 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/loop.py` | the evolution cycle: propose, run isolated, decide, adopt or reject, ablate, record |
 | `genesis/probe.py` | probes the lineage composes and runs: insufficiency by exhaustion, established by experiment rather than by consulting an oracle |
 | `genesis/migration.py` | substrate discovery by probing, migration, and the requirement to evolve again after it |
+| `genesis/artifacts.py` | executable artifacts whose configuration is data, so the runtime can derive an ablation rather than accept one |
+| `genesis/capabilities.py` | opaque handles for discovered substrate capabilities, and a use record derived rather than declared |
+| `genesis/controller.py` | the architecture state machine: a lineage returns declarative intents, the executor is the only thing that acts |
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 204 hostile offline tests; 76 guards, 71 killed by a test (measured) |
+| `tests/test_genesis_*.py` | 318 hostile offline tests; 117 guards, 115 killed by a test (measured) |
 
 ## The stopping criterion, and where this stands against it
 
@@ -381,6 +384,30 @@ had probed for. It now receives a deep copy (mutating it is refused), and capabi
 than callables (`genesis/capabilities.py`). `used_operations` is **derived from which handles were
 invoked** and checked against the declaration in both directions.
 
+**Post-controller — the proposer could rewrite the questions between arms.** The owner's review
+found the hole the authority work had left: `cycle()` ran the parent on the caller's own task
+mappings, handed those same mappings to the proposer, then judged the candidate, the control and the
+ablation on them again. A proposer could rewrite what the questions *were* after the parent had been
+graded, keeping every `task_id`, and the trust root — which requires both arms to have faced the same
+tasks — compares by identifier and sees a match. Checked before repairing: under the old behaviour
+the candidate is *accepted*, having been graded on different questions from the parent, while the
+ledger records the pre-mutation set. The cycle now takes one read-only snapshot before any arm runs
+and every arm and the ledger use it; the proposer gets a detached copy it may read and cannot make
+matter.
+
+**Post-controller — commit-last was fail-closed but not recoverable.** The payloads went to two fixed
+filenames, so a new checkpoint landed on the ones the previous manifest named: after a crash that
+manifest pointed at files already replaced, its digest checks refused them, and the lineage before it
+was gone. Payload files are content-addressed now and the superseded manifest is retained, so
+`restore(superseded=True)` resumes it. Refusing to resume something wrong is not the same as still
+having the thing that was right.
+
+**Post-controller — restore woke a lineage at its ceiling.** The manifest recorded both the admitted
+envelope and the isolation the lineage was running under, and restore reconstructed from the
+admitted one. A lineage that had been running narrower came back at the widest limits it had ever
+been allowed. The two are now separate values; a construction claiming to run wider than it was
+admitted is refused where the widening would happen.
+
 **R2-13 — the demonstration was the architecture.** The script called the probes, assigned
 `genesis.state`, appended the journal entries and sequenced the migration, so what the run showed was
 that a person can call the pieces in the right order. `genesis/controller.py` owns the state machine;
@@ -397,6 +424,41 @@ through a `Mapping` whose `.get()` mutates the state being diagnosed; and the mi
 is equivalent *only through the sandbox*, since called directly it raises `ProbeError` rather than
 `TypeError`. All three now have direct tests, and the comments in the source say what the earlier
 claim missed rather than being quietly deleted.
+
+### The measured guard census, and what the first pass found
+
+Two runs, both measured, neither adjusted. The first, on the round-two implementation before its
+tests were written: **118 guards, 83 killed, 35 survived**. The second, after the counterexamples
+below: **117 guards, 115 killed, 2 survived**, on Python 3.11.15, linux, uid 0, with the independent
+`RLIMIT_NPROC` control reporting `allowed`. The guard count falls by one because a refusal was
+deleted rather than tested (below); it is not a re-count of the same set.
+
+The first pass is the more interesting number. Almost every one of its thirty-five survivors was a
+guard written in the round-two work itself — a refusal asserting a property with nothing exercising
+it. That is this document's own subject one level up: the runtime had stopped making records that
+testify to what the code does not do, and the tests had started. Sixty-five counterexamples closed
+them: the identity refusals (a lambda, a nested function, a closure wearing a module-level name, a
+bound value no digest can cover, a callable publishing nothing, a non-callable), the contract
+refusals in both `evaluation_contract` and `decide`, certificate and provenance validation, restore,
+diagnostic-feature semantics, and capability access. Each keeps a positive control beside it, so a
+refusal reads as a finding rather than as a path that never succeeds.
+
+**One guard was deleted instead of tested.** `migrate()` carried a second mutation check on the
+departure record itself, beside the one on the copy the translator receives. The translator is never
+handed that value, so nothing it can do reaches it. A guard that cannot fire is not defence in depth;
+it is a line claiming to hold a boundary the line above it already holds.
+
+**Two survive, and both are invariant assertions rather than reachable refusals.**
+`migration.py:297` compares an arrival built two lines above out of the departure's own fields;
+`probe.py:591` rejects a feature that fails to separate two demands, where the operation was drawn
+from the symmetric difference of their resolving compositions and so is in exactly one of them. Both
+stay because the property each states is the one that makes the surrounding code mean anything, and
+both are named here rather than described in a comment as unreachable — the round-two review's
+correction was precisely that three such comments were wrong, each having considered the code and not
+its collaborators.
+
+The census was measured at `ac5de4d`; the commits after it add no `raise` to any mutated module, and
+that is checked mechanically rather than assumed.
 
 ### On the mutation-score discrepancy
 
@@ -430,5 +492,31 @@ Any figure quoted from it should be read together with that context block.
   `__globals__` closes the accidental aperture and the caller-authored use declaration; a determined
   translator can still walk `type(handle)`. Real isolation needs the process boundary that candidate
   execution crosses and translation does not.
+- **Executable deserialization crosses the sandbox boundary in both directions.** `multiprocessing`
+  transports a live candidate factory into the child and unpickles candidate-returned answers in the
+  evaluator process. Under `spawn`, candidate-controlled reconstruction runs *before* `_child()`
+  installs its limits. A separate process is not an isolation boundary while that holds. Open, and
+  being repaired outside this branch.
+- **The mechanism runs in the evaluator's interpreter.** `mechanism(genesis.context())` receives a
+  frozen value, which limits what it holds a reference to and not what arbitrary Python can reach.
+  The authority question is closed; the ambient-authority one needs the process boundary candidate
+  execution already crosses.
+- **`ConfiguredBody` binds its target as a string.** The configured-artifact digest covers
+  `"module:symbol"` and the construction data, not the defining module's source, so editing the
+  target leaves the digest unchanged. That is R2-5 one level in, and it weakens the identity repair
+  this runtime claims. Open, and being repaired outside this branch.
 - **Fixtures, not a mechanism.** See the stopping criterion section above. The probe operations are
   arithmetic on integers; that they compose is a property of the fixture, not a result.
+
+## On epistemic separation
+
+Earlier versions of this file said every claim in it was self-assessed, and asked for the review that
+would change that. Two independent hostile reviews have since returned — recorded in
+`../../docs/audits/` — and this document's structure is now mostly theirs: the defect lists below the
+first one are findings this project did not make about itself. That is a real change in standing and
+it is a narrow one. It bears on whether the *apparatus* does what it says; it bears on nothing about
+generality, and no gate moves on any of it.
+
+The one place the separation still fails is worth naming rather than leaving implicit: where a
+reviewer contributed substantially to the design of a mechanism, their later opinion of that
+mechanism is not an independent audit of it. The reviews are cited as what they are.
