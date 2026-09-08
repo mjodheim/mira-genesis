@@ -36,6 +36,49 @@ def _grade_never_solves(_task, _answer):
     return "unsolved"
 
 
+def _SafeBody:
+    pass
+
+
+class _HarmlessBody:
+    def attempt(self, task):
+        return 0
+
+
+def _harmless_body_factory():
+    return _HarmlessBody()
+
+
+def _reconstruct_factory_before_child_limits(path: str):
+    """Runs during spawn's unpickle, before sandbox._child has called `_apply_limits`."""
+    Path(path).write_text("executed before sandbox limits were installed", encoding="utf-8")
+    return _harmless_body_factory
+
+
+class _FactoryWhoseUnpickleHasASideEffect:
+    def __init__(self, path: str) -> None:
+        self.path = path
+
+    def __reduce__(self):
+        return (_reconstruct_factory_before_child_limits, (self.path,))
+
+
+def test_body_factory_transport_cannot_execute_before_sandbox_limits_are_installed(tmp_path):
+    """The fixed child bootstrap must install limits before it resolves any untrusted artifact."""
+    marker = tmp_path / "child-unpickle-before-limits.txt"
+    result = sb.run_candidate(
+        _FactoryWhoseUnpickleHasASideEffect(str(marker)),
+        [{"task_id": "t0", "input": 0}],
+        tr.Isolation(),
+        grade=_grade_never_solves,
+    )
+
+    assert not marker.exists()
+    assert result["completed"] is False or result["outcomes"] == [
+        {"task_id": "t0", "outcome": "error"}
+    ]
+
+
 def test_candidate_output_transport_cannot_execute_code_in_the_parent_process(tmp_path):
     """A process boundary using unrestricted pickle is not a boundary against an untrusted body."""
     marker = tmp_path / "parent-unpickle-executed.txt"
