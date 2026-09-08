@@ -21,12 +21,12 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/journal.py` | hash-chained append-only descent journal |
 | `genesis/sandbox.py` | separate-process candidate execution, and an honest record of which limits were actually applied |
 | `genesis/loop.py` | the evolution cycle: propose, run isolated, decide, adopt or reject, record |
-| `genesis/diagnosis.py` | speculative extension with proven rollback; insufficiency by exhaustion |
+| `genesis/probe.py` | probes the lineage composes and runs: insufficiency by exhaustion, established by experiment rather than by consulting an oracle |
 | `genesis/migration.py` | substrate discovery by probing, migration, and the requirement to evolve again after it |
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 110 hostile offline tests |
+| `tests/test_genesis_*.py` | 165 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
@@ -136,19 +136,30 @@ The number is reproducible rather than quoted: rerun the script.
 ## The third authored ceiling, and what closing it did and did not buy
 
 The sharpest open question was that a certificate licensed by "every probe returned false" rested on
-`speculate`, a host-written callable. The host decided the finding and the certificate recorded the
-lineage agreeing with it.
+`speculate`, a host-written callable, and the vocabulary extension rested on a host-written
+`feature_row`. The host decided both findings and the certificates recorded the lineage agreeing with
+it.
 
-`genesis/probe.py` replaces the oracle with an experiment. The lineage **composes** a probe — an
+`genesis/probe.py` replaces both oracles with experiments. The lineage **composes** a probe — an
 ordered sequence of primitive operations — runs it as an untrusted body in the sandbox at budget
-cost, and the verdict is tallied from raw per-task outcomes. Exhaustion now means *no composition
-its components can express solves the demand*, and it licenses nothing on its own: the lineage must
-also show that a composition drawn from the wider operation set **does** solve it. "Nothing I have
-works" is a failed search; "nothing I have works and something outside what I have does" is a claim
-about the lineage's representation.
+cost, and every verdict is tallied from raw per-task outcomes.
+
+* **Components.** Exhaustion now means *no composition its components can express solves the demand*,
+  and it licenses nothing on its own: the lineage must also show that a composition drawn from the
+  wider operation set **does** solve it. "Nothing I have works" is a failed search; "nothing I have
+  works and something outside what I have does" is a claim about the lineage's representation.
+* **Vocabulary.** A demand's row through the per-component vocabulary is measured by probing. Its
+  cause is which held component the resolving composition mostly lives in, also measured, with ties
+  refused rather than broken. The separating feature is then read out of the two measurements — an
+  operation one resolving composition needs and the other does not — instead of being chosen and
+  justified afterwards.
+
+The oracle-backed module (`genesis/diagnosis.py`) was **deleted**, not kept alongside. Leaving an
+oracle-backed path available is leaving a way back to certificates that mean nothing, and a
+superseded module that still passes its tests is exactly the kind of thing that gets reused.
 
 Something is still host-supplied, and pretending otherwise would repeat the error one level down.
-The host supplies the **alphabet** — the primitive operations, the task set, and which operations
+The host supplies the **alphabet** — the primitive operations, the task sets, and which operations
 each held component reaches. It does not supply the **sentence**, and cannot: a composition either
 maps the inputs to the expected outputs when it runs, or it does not.
 
@@ -163,16 +174,20 @@ the same code, three task sets produce three findings:
 
 The third row is the one that matters most: exhaustion without reachability is refused.
 
-**What this does not buy.** The vocabulary extension still consults host-written `feature_row` and
-`limiting_component` callables, so the *second* ceiling remains oracle-backed while the third is
-closed. The demonstration record says so in the step itself
-(`rests_on_a_host_supplied_oracle: true`), and a test asserts that admission is present, because two
-steps sitting side by side would otherwise let the honest one lend its credibility to the other.
+The vocabulary path is checked the same way. The measured pair is refused when two demands share a
+cause, when the vocabulary already separates them, and when either demand resolves through nothing —
+so the pair that is found is the one case the data actually supports.
 
 ## Known open, not fixed
 
-- **The vocabulary extension still rests on an oracle.** See above. The same treatment should apply:
-  a confusable pair ought to be found by measurement rather than declared by a callable.
+- **The host still draws the partition.** `COMPONENT_OPERATIONS` decides what each component
+  reaches and is not derived from anything in the lineage's state. A component that is nothing but a
+  host-declared operation set may be a relabelling of the host's partition rather than a component,
+  and no test here settles that.
+- **Two definitions in the vocabulary path are conventions, not measurements.** "The limiting
+  component is the one supplying most of the composition" and "take the first operation in the
+  sorted symmetric difference" are both the author's choices. They are defensible and they are not
+  forced by anything.
 - **No epistemic separation.** The runtime, its tests, the demonstration and this document have one
   source. `docs/audits/GENESIS_RUNTIME_HOSTILE_REVIEW_BRIEF.md` requests the separation that source
   cannot supply for itself; until a review returns, every claim here is self-assessed.

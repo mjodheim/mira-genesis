@@ -12,12 +12,12 @@ The lineage, in order:
 1. measures itself against a task family in an isolated child process;
 2. proposes a transformation, has it rejected on evidence, and **keeps going**;
 3. proposes another, has it accepted, and records the acquisition;
-4. meets a demand no component in its registry resolves, **composes and runs probes** until it has
+4. measures two demands its features read identically whose causes differ, and **extends its own
+   diagnostic vocabulary** against that measured pair, taking the separating feature out of the
+   measurements rather than choosing it and justifying it afterwards;
+5. meets a demand no component in its registry resolves, **composes and runs probes** until it has
    exhausted what its components can express, finds that something outside them does resolve it,
    and **names a component class it did not have** — against a certificate, not by editing a tuple;
-5. meets two demands its features cannot tell apart whose causes differ, and **extends its own
-   diagnostic vocabulary** against that pair — this step still consults host-written callables, and
-   the record says so rather than letting step 4 lend it credibility;
 6. discovers a second substrate by probing, migrates into it carrying everything it owned;
 7. **evolves again in the new form**, which is the only thing that distinguishes transported
    intelligence from transported output;
@@ -37,7 +37,6 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from genesis import development_bodies as bodies  # noqa: E402
-from genesis import diagnosis  # noqa: E402
 from genesis import probe  # noqa: E402
 from genesis import state as lineage_state  # noqa: E402
 from genesis import trust_root as tr  # noqa: E402
@@ -54,13 +53,6 @@ RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
 TASKS = [{"task_id": "t%d" % index} for index in range(4)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
-#: Two demands the seed vocabulary maps to the same row although their causes differ.
-CONFUSABLE = (
-    {"demand": "resolve alpha", "limiting": "operator_table"},
-    {"demand": "resolve beta", "limiting": "signal_interface"},
-)
-
-
 def _seed_state() -> dict:
     return lineage_state.create_state(
         body_digest="s0",
@@ -73,9 +65,12 @@ def _seed_state() -> dict:
             }
             for name in ("operator_table", "signal_interface")
         ],
+        # One feature per held component: "can a composition over this component's own operations
+        # resolve the demand". Naming them after what they measure is what lets the row be read by
+        # experiment instead of asserted.
         vocabulary=[
-            {"name": name, "origin": "seed", "certificate": None}
-            for name in ("axis_progress", "signals_consistent")
+            {"name": "resolvable_by_%s" % name, "origin": "seed", "certificate": None}
+            for name in ("operator_table", "signal_interface")
         ],
     )
 
@@ -90,11 +85,6 @@ def _one(genesis, name, factory):
         TASKS,
         lambda _g, _t: _proposal(name, queue.pop(0)) if queue else None,
     )
-
-
-def _feature_row(state, demand):
-    """The seed vocabulary maps both confusable demands to the same row."""
-    return [True, False]
 
 
 def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox) -> dict:
@@ -143,7 +133,7 @@ def demonstrate() -> dict:
     genesis = Genesis(
         state=_seed_state(),
         body_factory=bodies.parent_body,
-        budget=tr.Budget(limits={"generations": 8, "probes": 60}),
+        budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
     )
     steps: list[dict] = []
@@ -165,6 +155,41 @@ def demonstrate() -> dict:
             "accepted": accepted["accepted"],
             "generation": genesis.state["generation"],
             "acquisitions": len(genesis.state["acquisitions"]),
+        }
+    )
+
+    # The confusable pair is measured, not declared. Both demands read identically through the
+    # lineage's per-component vocabulary — neither component resolves either — and their causes
+    # differ, which is read off which component each resolving composition mostly lives in. The
+    # separating feature is then taken out of the measurements rather than chosen and justified.
+    pair = probe.find_confusable_pair_by_experiment(
+        genesis.state,
+        [bodies.CONFUSABLE_A, bodies.CONFUSABLE_B],
+        registry_reference=bodies.PROBE_REGISTRY,
+        component_operations=bodies.COMPONENT_OPERATIONS,
+        isolation=genesis.isolation,
+        budget=genesis.budget,
+    )
+    vocabulary_certificate = probe.vocabulary_certificate_from_experiment(genesis.state, pair)
+    genesis.state = lineage_state.extend_vocabulary(
+        genesis.state, certificate=vocabulary_certificate
+    )
+    genesis.journal.append(
+        "vocabulary_extended",
+        genesis.state["generation"],
+        {"feature": vocabulary_certificate["new_feature"]},
+    )
+    steps.append(
+        {
+            "step": "lineage_extends_its_own_diagnostic_vocabulary",
+            "shared_prior_row": pair["shared_prior_row"],
+            "limiting_components": pair["limiting_components"],
+            "resolving_operations": [
+                measurement["resolving_operations"] for measurement in pair["measurements"]
+            ],
+            "feature_read_out_of_the_measurements": vocabulary_certificate["new_feature"],
+            "vocabulary_after": lineage_state.vocabulary_names(genesis.state),
+            "rests_on_a_host_supplied_oracle": False,
         }
     )
 
@@ -201,40 +226,6 @@ def demonstrate() -> dict:
             "composition_the_lineage_found": found["resolving_composition"]["operations"],
             "probe_is_experimental_not_an_oracle": True,
             "registry_after": lineage_state.component_names(genesis.state),
-        }
-    )
-
-    pair = diagnosis.find_indistinguishable_pair(
-        genesis.state,
-        CONFUSABLE,
-        feature_row=_feature_row,
-        limiting_component=lambda demand: demand["limiting"],
-    )
-    vocabulary_certificate = diagnosis.certificate_from_pair(
-        genesis.state,
-        pair,
-        new_feature="joint_constraint_undetermined",
-        separates=lambda demand: demand["limiting"] == "operator_table",
-    )
-    genesis.state = lineage_state.extend_vocabulary(
-        genesis.state, certificate=vocabulary_certificate
-    )
-    genesis.journal.append(
-        "vocabulary_extended",
-        genesis.state["generation"],
-        {"feature": "joint_constraint_undetermined"},
-    )
-    steps.append(
-        {
-            "step": "lineage_extends_its_own_diagnostic_vocabulary",
-            "shared_prior_row": pair["shared_prior_row"],
-            "limiting_components": pair["limiting_components"],
-            "vocabulary_after": lineage_state.vocabulary_names(genesis.state),
-            # Stated because the step above is no longer like this one, and a reader would otherwise
-            # reasonably assume both ceilings opened the same way. The confusable pair here is found
-            # through `feature_row` and `limiting_component`, which are host-written callables: this
-            # certificate rests on an oracle, and the component certificate above does not.
-            "rests_on_a_host_supplied_oracle": True,
         }
     )
 
@@ -288,7 +279,7 @@ def demonstrate() -> dict:
     restored = Genesis.restore(
         directory,
         body_factory=bodies.migrated_improved_body,
-        budget=tr.Budget(limits={"generations": 8, "probes": 12}),
+        budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
     )
     steps.append(

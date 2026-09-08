@@ -3,13 +3,16 @@
 This module exists to close the third authored ceiling named in
 `docs/GENESIS_PRIMITIVE_AUDIT.md`, and the ceiling is subtler than the first two.
 
-`diagnosis.py` already lets a lineage exhaust its registry and name a component class it did not
-have. But the question "does extending this component resolve the demand?" was answered by a
-`speculate` callable the host supplied. The host therefore decided the finding, and the certificate
-recorded the lineage agreeing with it. Every exhaustion certificate produced that way is the host's
-conclusion wearing the lineage's name.
+The module this replaces (`genesis/diagnosis.py`, deleted with this one's arrival) already let a
+lineage exhaust its registry and name a component class it did not have. But the question "does
+extending this component resolve the demand?" was answered by a `speculate` callable the host
+supplied, and the confusable pair behind a vocabulary extension was found through a host-written
+`feature_row`. The host therefore decided both findings, and the certificates recorded the lineage
+agreeing with it. Every certificate produced that way is the host's conclusion wearing the lineage's
+name, which is why the old module was removed rather than kept alongside: leaving an oracle-backed
+path available is leaving a way back to certificates that mean nothing.
 
-Here the same question is answered by **experiment**:
+Here the same questions are answered by **experiment**:
 
 1. the lineage *composes* a probe — an ordered sequence of primitive operations — rather than
    selecting one from a prepared list;
@@ -34,6 +37,13 @@ solves the demand. That licenses naming a new class only in company with the sec
 composition drawn from the wider operation set *does* solve it. "Nothing I have works" plus "something
 outside what I have works" is a finding about the lineage's representation. "Nothing I have works"
 alone is only a failed search.
+
+**The vocabulary side.** `measure`, `find_confusable_pair_by_experiment` and
+`vocabulary_certificate_from_experiment` do the same for the second ceiling. A demand's row through
+the lineage's per-component vocabulary is measured by probing; its cause is which held component the
+resolving composition mostly lives in, also measured; and the separating feature is read out of the
+two measurements — an operation one resolving composition needs and the other does not — rather than
+chosen and then justified.
 """
 from __future__ import annotations
 
@@ -106,6 +116,47 @@ def composed_probe_body(registry_reference: str, operations: Sequence[str]):
     return ComposedProbeBody(registry_reference, operations)
 
 
+class BatchProbeBody:
+    """Every composition in one search, evaluated in a single isolated run.
+
+    A process per composition is the obvious implementation and it makes a search cost more in
+    interpreter startup than in thought. Batching changes nothing that matters: the compositions are
+    all the same lineage's untrusted code, they run under the same limits, and the verdict is still
+    read off raw per-task rows — one row per (composition, task) pair — rather than off anything the
+    body reports about itself.
+
+    Each task carries the index of the composition it belongs to, so grouping the rows afterwards is
+    arithmetic on the outcomes rather than trust in the body's bookkeeping.
+    """
+
+    def __init__(self, registry_reference: str, compositions: Sequence[Sequence[str]]) -> None:
+        self.registry_reference = str(registry_reference)
+        self.compositions = tuple(tuple(str(name) for name in item) for item in compositions)
+
+    def attempt(self, task: Mapping[str, Any]) -> str:
+        from genesis.probe import resolve_registry
+
+        try:
+            registry = resolve_registry(self.registry_reference)
+            operations = self.compositions[int(task["composition"])]
+        except Exception:
+            return "error"
+        value = task["input"]
+        for name in operations:
+            operation = registry.get(name)
+            if operation is None:
+                return "error"
+            try:
+                value = operation(value)
+            except Exception:
+                return "error"
+        return "solved" if value == task["expected"] else "unsolved"
+
+
+def batch_probe_body(registry_reference: str, compositions: Sequence[Sequence[str]]):
+    return BatchProbeBody(registry_reference, compositions)
+
+
 @dataclass(frozen=True)
 class Composition:
     """One probe the lineage built. Its digest is what the certificate records."""
@@ -153,36 +204,67 @@ def search(
     outcome and is reported as `budget_exhausted` rather than being confused with exhaustion of the
     search space.
     """
-    attempts: list[dict[str, Any]] = []
-    for composition in compositions(operations, max_length=max_length):
+    planned = list(compositions(operations, max_length=max_length))
+    affordable: list[Composition] = []
+    budget_exhausted = False
+    for composition in planned:
         try:
             budget.spend(probe_dimension)
-        except BudgetExhausted as exhausted:
-            return {
-                "resolved": False,
-                "composition": None,
-                "attempts": attempts,
-                "search_exhausted": False,
-                "budget_exhausted": True,
-                "reason": str(exhausted),
-            }
-        run = run_candidate(
-            functools.partial(composed_probe_body, registry_reference, composition.operations),
-            tasks,
-            isolation,
-        )
-        if not run["completed"]:
-            # A probe that never ran is not evidence that its composition fails.
-            return {
-                "resolved": False,
-                "composition": None,
-                "attempts": attempts,
-                "search_exhausted": False,
-                "budget_exhausted": False,
-                "instrument_failure": True,
-                "reason": run.get("reason", ""),
-            }
-        solved = _solves_every_task(run["outcomes"])
+        except BudgetExhausted:
+            budget_exhausted = True
+            break
+        affordable.append(composition)
+
+    if not affordable:
+        return {
+            "resolved": False,
+            "composition": None,
+            "attempts": [],
+            "search_exhausted": not budget_exhausted and not planned,
+            "budget_exhausted": budget_exhausted,
+            "reason": "the budget refused the first probe" if budget_exhausted else "",
+        }
+
+    cross = [
+        {
+            "task_id": "c%d::%s" % (index, task["task_id"]),
+            "composition": index,
+            "input": task["input"],
+            "expected": task["expected"],
+        }
+        for index, composition in enumerate(affordable)
+        for task in tasks
+    ]
+    run = run_candidate(
+        functools.partial(
+            batch_probe_body,
+            registry_reference,
+            [composition.operations for composition in affordable],
+        ),
+        cross,
+        isolation,
+    )
+    if not run["completed"]:
+        # A probe that never ran is not evidence that its composition fails.
+        return {
+            "resolved": False,
+            "composition": None,
+            "attempts": [],
+            "search_exhausted": False,
+            "budget_exhausted": budget_exhausted,
+            "instrument_failure": True,
+            "reason": run.get("reason", ""),
+        }
+
+    grouped: dict[int, list[Mapping[str, Any]]] = {}
+    for row in run["outcomes"]:
+        index = int(str(row["task_id"]).split("::", 1)[0][1:])
+        grouped.setdefault(index, []).append(row)
+
+    attempts = []
+    resolved = None
+    for index, composition in enumerate(affordable):
+        solved = _solves_every_task(grouped.get(index, []))
         attempts.append(
             {
                 **composition.record(),
@@ -190,22 +272,28 @@ def search(
                 "sandbox_digest": run["result_digest"],
             }
         )
-        if solved:
-            return {
-                "resolved": True,
-                "composition": composition.record(),
-                "attempts": attempts,
-                "search_exhausted": False,
-                "budget_exhausted": False,
-                "reason": "",
-            }
+        if solved and resolved is None:
+            resolved = composition
+            # Shortest-first ordering means the first solving composition is the simplest one, and
+            # the attempts after it are reported as run because they were: the batch paid for them.
+    if resolved is not None:
+        return {
+            "resolved": True,
+            "composition": resolved.record(),
+            "attempts": attempts,
+            "search_exhausted": False,
+            "budget_exhausted": budget_exhausted,
+            "reason": "",
+        }
     return {
         "resolved": False,
         "composition": None,
         "attempts": attempts,
-        "search_exhausted": True,
-        "budget_exhausted": False,
-        "reason": "no composition over these operations solves the demand",
+        "search_exhausted": not budget_exhausted,
+        "budget_exhausted": budget_exhausted,
+        "reason": "the budget ran out before the search finished"
+        if budget_exhausted
+        else "no composition over these operations solves the demand",
     }
 
 
@@ -282,6 +370,11 @@ def diagnose_by_experiment(
             max_length=max_length,
         )
 
+    # Defensive, and deliberately untested: probes run in separate processes and nothing above
+    # writes to `state`, so this cannot fire. It stays because the property it asserts is the one
+    # M111 proved by comparing serialized bytes, and losing the assertion would lose the record of
+    # why the comparison is here. `scripts/check_genesis_guards_are_tested.py` reports it as a
+    # surviving mutant; that is correct and expected.
     after = canonical_bytes(dict(state))
     if before != after:
         raise ProbeError("diagnosis mutated the lineage state; a probe must leave it untouched")
@@ -308,6 +401,164 @@ def diagnose_by_experiment(
             "missing rather than the demand being unreachable here"
         ),
     }
+
+
+def measure(
+    state: Mapping[str, Any],
+    tasks: Sequence[Mapping[str, Any]],
+    *,
+    registry_reference: str,
+    component_operations: Mapping[str, Sequence[str]],
+    isolation: Isolation,
+    budget,
+    max_length: int = 3,
+) -> dict[str, Any]:
+    """Read a demand through the lineage's per-component vocabulary, by experiment.
+
+    The row is one boolean per held component: does *some* composition over that component's own
+    operations solve the demand. That is the lineage's current diagnostic resolution, and it is
+    measured rather than asserted.
+
+    `limiting_component` is the held component the resolving composition mostly lives in — the one
+    that would have to be extended. It is reported only when a single component strictly supplies
+    most of the composition; a tie means the demand does not sit in one component more than another
+    and saying otherwise would be inventing a cause.
+    """
+    registry = resolve_registry(registry_reference)
+    row: list[bool] = []
+    for component in lineage_state.component_names(state):
+        outcome = search(
+            registry_reference=registry_reference,
+            operations=list(component_operations.get(component) or []),
+            tasks=tasks,
+            isolation=isolation,
+            budget=budget,
+            max_length=max_length,
+        )
+        row.append(bool(outcome["resolved"]))
+
+    wider = search(
+        registry_reference=registry_reference,
+        operations=list(registry),
+        tasks=tasks,
+        isolation=isolation,
+        budget=budget,
+        max_length=max_length,
+    )
+    operations = list((wider["composition"] or {}).get("operations") or [])
+    shares = {
+        component: sum(
+            1 for name in operations if name in set(component_operations.get(component) or [])
+        )
+        for component in lineage_state.component_names(state)
+    }
+    ranked = sorted(shares.items(), key=lambda item: (-item[1], item[0]))
+    limiting = None
+    if operations and len(ranked) > 1 and ranked[0][1] > ranked[1][1]:
+        limiting = ranked[0][0]
+    return {
+        "row": row,
+        "resolved_anywhere": bool(wider["resolved"]),
+        "resolving_operations": operations,
+        "limiting_component": limiting,
+        "component_shares": shares,
+        "demand_digest": digest_of([dict(task) for task in tasks]),
+    }
+
+
+def find_confusable_pair_by_experiment(
+    state: Mapping[str, Any],
+    demands: Sequence[Sequence[Mapping[str, Any]]],
+    *,
+    registry_reference: str,
+    component_operations: Mapping[str, Sequence[str]],
+    isolation: Isolation,
+    budget,
+    max_length: int = 3,
+) -> dict[str, Any] | None:
+    """Two demands the current vocabulary reads identically, whose measured causes differ.
+
+    Nothing here is declared. The rows come from probes, the causes come from which component the
+    resolving composition mostly lives in, and both are read off raw outcomes. Without such a pair a
+    new feature is decoration, and `state.vocabulary_extension_certificate` refuses it.
+    """
+    measured = [
+        measure(
+            state,
+            tasks,
+            registry_reference=registry_reference,
+            component_operations=component_operations,
+            isolation=isolation,
+            budget=budget,
+            max_length=max_length,
+        )
+        for tasks in demands
+    ]
+    for first in range(len(measured)):
+        for second in range(first + 1, len(measured)):
+            left, right = measured[first], measured[second]
+            if left["row"] != right["row"]:
+                continue
+            if not (left["resolved_anywhere"] and right["resolved_anywhere"]):
+                continue
+            if left["limiting_component"] is None or right["limiting_component"] is None:
+                continue
+            if left["limiting_component"] == right["limiting_component"]:
+                continue
+            if left["demand_digest"] == right["demand_digest"]:
+                continue
+            return {
+                "shared_prior_row": list(left["row"]),
+                "demand_digests": [left["demand_digest"], right["demand_digest"]],
+                "limiting_components": [
+                    left["limiting_component"],
+                    right["limiting_component"],
+                ],
+                "measurements": [left, right],
+            }
+    return None
+
+
+def vocabulary_certificate_from_experiment(
+    state: Mapping[str, Any], pair: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Turn a measured confusable pair into the certificate `state.extend_vocabulary` demands.
+
+    The separating feature is not chosen and then justified. It is read out of the measurements: an
+    operation one demand's resolving composition needs and the other's does not, named
+    ``requires_<operation>``, with each demand's value taken from its own measured composition.
+    """
+    prior = lineage_state.vocabulary_names(state)
+    row = list(pair["shared_prior_row"])
+    if len(row) != len(prior):
+        raise ProbeError(
+            "the measured row has one entry per held component (%d) and the vocabulary has %d "
+            "features; the certificate cannot be built until they describe the same thing"
+            % (len(row), len(prior))
+        )
+    left, right = pair["measurements"]
+    difference = sorted(
+        set(left["resolving_operations"]) ^ set(right["resolving_operations"])
+    )
+    if not difference:
+        raise ProbeError(
+            "both demands resolve through the same operations, so no measured feature separates them"
+        )
+    operation = difference[0]
+    values = [
+        operation in set(left["resolving_operations"]),
+        operation in set(right["resolving_operations"]),
+    ]
+    if values[0] == values[1]:  # pragma: no cover - the symmetric difference forbids it
+        raise ProbeError("the proposed feature gives both demands the same value")
+    return lineage_state.vocabulary_extension_certificate(
+        prior_vocabulary=prior,
+        new_feature="requires_%s" % operation,
+        demand_digests=list(pair["demand_digests"]),
+        shared_prior_row=row,
+        limiting_components=list(pair["limiting_components"]),
+        separated_rows=[row + [values[0]], row + [values[1]]],
+    )
 
 
 def certificate_from_experiment(

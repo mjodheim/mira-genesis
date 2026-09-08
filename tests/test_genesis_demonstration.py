@@ -1,4 +1,4 @@
-"""Lock the end-to-end Genesis demonstration and the diagnosis machinery that drives it.
+"""Lock the end-to-end Genesis demonstration.
 
 The stopping criterion is not that the components exist. It is that **one lineage** measures itself,
 diagnoses itself, transforms itself, verifies the transformation, adopts or rejects it on evidence,
@@ -10,8 +10,6 @@ from __future__ import annotations
 import pytest
 
 from genesis import development_bodies as bodies
-from genesis import diagnosis
-from genesis import state as st
 from genesis import trust_root as tr
 from genesis.sandbox import run_candidate
 from scripts.run_genesis_demonstration import TASKS, causal_step, demonstrate
@@ -79,22 +77,33 @@ def test_the_probes_were_composed_and_run_rather_than_consulted(record):
 
 
 def test_the_lineage_extends_its_own_diagnostic_vocabulary(record):
-    """The second ceiling: extended on a demonstrated confusable pair, not on a whim."""
+    """The second ceiling: extended on a *measured* confusable pair, not on a whim.
+
+    Both demands read identically through the lineage's per-component vocabulary and their causes
+    differ, and both halves of that come from probes rather than from a callable that was told the
+    answer.
+    """
     step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
+    assert step["shared_prior_row"] == [False, False]
     assert step["limiting_components"] == ["operator_table", "signal_interface"]
-    assert step["vocabulary_after"][-1] == "joint_constraint_undetermined"
+    assert step["resolving_operations"] == [
+        ["increment", "negate", "double"],
+        ["double", "square", "negate"],
+    ]
+    assert step["vocabulary_after"][-1] == "requires_increment"
 
 
-def test_the_record_admits_which_ceiling_is_still_held_up_by_an_oracle(record):
-    """The two ceilings did not open the same way, and the record must not blur that.
+def test_neither_ceiling_is_held_up_by_an_oracle_any_more(record):
+    """Both steps now run experiments, and the record has to say which is which.
 
-    The component step runs experiments; the vocabulary step consults host-written callables. A
-    reader who saw them side by side without this would reasonably assume both were closed.
+    This assertion is the one that would fail first if a host-written shortcut were reintroduced
+    into either path, which is why it reads the flags rather than trusting the step names.
     """
     component_step = _step(record, "lineage_names_a_component_class_it_did_not_have")
     vocabulary_step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
     assert component_step["probe_is_experimental_not_an_oracle"] is True
-    assert vocabulary_step["rests_on_a_host_supplied_oracle"] is True
+    assert vocabulary_step["rests_on_a_host_supplied_oracle"] is False
+    assert vocabulary_step["feature_read_out_of_the_measurements"] == "requires_increment"
 
 
 def test_the_substrate_is_discovered_and_the_lineage_arrives_intact(record):
@@ -186,93 +195,3 @@ def test_the_journal_is_one_continuous_descent_through_the_migration(record):
 
 def test_the_demonstration_is_reproducible(record):
     assert demonstrate()["record_digest"] == record["record_digest"]
-
-
-# -- the diagnosis machinery ------------------------------------------------------------------------
-
-def _seed_state():
-    return st.create_state(
-        body_digest="s0",
-        components=[
-            {
-                "name": name,
-                "origin": "seed",
-                "certificate": None,
-                "provenance": tr.provenance("host_written", produced_by="seed"),
-            }
-            for name in ("operator_table", "signal_interface")
-        ],
-        vocabulary=[
-            {"name": name, "origin": "seed", "certificate": None}
-            for name in ("axis_progress", "signals_consistent")
-        ],
-    )
-
-
-def test_a_speculation_that_does_not_roll_back_exactly_is_refused():
-    """The rollback is proved by comparing serialized bytes, not promised."""
-    state = _seed_state()
-
-    def leaky(inner_state, component, demand):
-        inner_state["generation"] = 99  # a speculation that kept something
-        return True
-
-    with pytest.raises(diagnosis.DiagnosisError, match="must roll back exactly"):
-        diagnosis.probe_component(state, "operator_table", {"d": 1}, speculate=leaky)
-
-
-def test_probing_a_component_outside_the_registry_is_refused():
-    with pytest.raises(diagnosis.DiagnosisError, match="not in the lineage's registry"):
-        diagnosis.probe_component(
-            _seed_state(), "invented", {"d": 1}, speculate=lambda *args: True
-        )
-
-
-def test_a_diagnosis_that_finds_an_answer_does_not_license_a_new_component():
-    """'I could not fix it' is not evidence; only exhausting the registry is."""
-    found = diagnosis.diagnose(
-        _seed_state(),
-        {"d": 1},
-        speculate=lambda state, component, demand: component == "signal_interface",
-        budget=tr.Budget(limits={"probes": 5}),
-    )
-    assert found["resolved_by"] == "signal_interface"
-    assert found["registry_exhausted"] is False
-    with pytest.raises(diagnosis.DiagnosisError, match="was not exhausted"):
-        diagnosis.certificate_from_diagnosis(
-            found, new_component="invented", resolves_with_new_component=True
-        )
-
-
-def test_each_probe_costs_budget_and_the_budget_can_refuse():
-    with pytest.raises(tr.BudgetExhausted):
-        diagnosis.diagnose(
-            _seed_state(),
-            {"d": 1},
-            speculate=lambda *args: False,
-            budget=tr.Budget(limits={"probes": 1}),
-        )
-
-
-def test_no_confusable_pair_means_no_vocabulary_extension():
-    pair = diagnosis.find_indistinguishable_pair(
-        _seed_state(),
-        ({"limiting": "operator_table"}, {"limiting": "operator_table"}),
-        feature_row=lambda state, demand: [True, False],
-        limiting_component=lambda demand: demand["limiting"],
-    )
-    assert pair is None, "two demands with the same cause are not confusable"
-
-
-def test_a_feature_that_gives_both_demands_the_same_value_is_refused():
-    pair = diagnosis.find_indistinguishable_pair(
-        _seed_state(),
-        ({"limiting": "operator_table"}, {"limiting": "signal_interface"}),
-        feature_row=lambda state, demand: [True, False],
-        limiting_component=lambda demand: demand["limiting"],
-    )
-    assert pair is not None
-    with pytest.raises(diagnosis.DiagnosisError, match="same value"):
-        diagnosis.certificate_from_pair(
-            _seed_state(), pair, new_feature="useless", separates=lambda demand: True
-        )

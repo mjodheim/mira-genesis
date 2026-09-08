@@ -48,7 +48,6 @@ MODULES = (
     "sandbox",
     "loop",
     "migration",
-    "diagnosis",
     "probe",
 )
 

@@ -3,7 +3,7 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2000 lines) and the 144 tests that validate it have one
+The `genesis/` package (nine modules, ~2300 lines) and the 165 tests that validate it have one
 author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
@@ -117,32 +117,35 @@ block reads.
 
 ### 4. Authored ceilings disguised as system properties
 
-`docs/GENESIS_PRIMITIVE_AUDIT.md` names three. Two are claimed open: the lineage names a component
-class against an exhaustion certificate (`genesis/diagnosis.py`, `certificate_from_diagnosis`) and
-extends its diagnostic vocabulary against a demonstrated confusable pair (`certificate_from_pair`).
+`docs/GENESIS_PRIMITIVE_AUDIT.md` names three. All three are now claimed open, and the third was the
+one that made the first two suspect, so read this section as one claim rather than three.
 
-The third has since been closed for the component path and **not** for the vocabulary path, and the
-asymmetry is where to attack.
+The lineage names a component class against an exhaustion certificate
+(`genesis/probe.py`, `certificate_from_experiment`) and extends its diagnostic vocabulary against a
+measured confusable pair (`vocabulary_certificate_from_experiment`). Both certificates now rest on
+**experiment**: the lineage composes sequences of primitive operations, runs them in the sandbox at
+budget cost, and the verdicts are tallied from raw per-task outcomes. The oracle-backed module that
+preceded this (`genesis/diagnosis.py`) was deleted rather than kept, so there is no path back to a
+certificate licensed by a callable.
 
-`genesis/probe.py` replaces the `speculate` oracle with an experiment: the lineage composes a
-sequence of primitive operations, runs it in the sandbox at budget cost, and the verdict is tallied
-from raw outcomes. Exhaustion licenses nothing alone — the lineage must also show a composition
-drawn from the wider operation set does resolve the demand. The claim is that the host supplies the
-alphabet and not the sentence. **Attack that claim.** Specifically:
+The claim is that the host supplies the alphabet and not the sentence. **Attack that claim.**
+Specifically:
 
-- the host chooses the operation registry, the task set, and the component→operations partition.
+- the host chooses the operation registry, the task sets, and the component→operations partition.
   Is that partition doing the work? Construct a partition under which the finding is forced either
   way, and say whether the author's partition is meaningfully different from that;
 - `COMPONENT_OPERATIONS` is a host mapping that decides what each component can reach. It is not
   derived from anything in the lineage's state. Is a component that *is* nothing but a host-declared
   operation set a component at all, or a relabelling of the host's partition?
-- the demonstration's demand is arithmetic on integers. Say whether anything survives a domain where
-  compositions do not compose so obligingly.
-
-The **vocabulary** extension still consults host-written `feature_row` and `limiting_component`
-callables. The record admits this in the step itself (`rests_on_a_host_supplied_oracle: true`) and a
-test asserts the admission is present. Check that the admission is accurate and complete — if any
-part of the component path is still oracle-backed and unlabelled, that is a finding.
+- the vocabulary's "limiting component" is defined as the held component supplying most of the
+  resolving composition, with ties refused. That definition is the author's. Is it a measurement or
+  a convention that happens to give the answer he wanted? What would a different but equally
+  defensible definition do to the pair?
+- the separating feature is `requires_<operation>`, taken from the symmetric difference of the two
+  resolving compositions, first in sorted order. Sorted order is arbitrary. Does any other choice in
+  that difference fail to separate, and if so what does that say?
+- the demands are arithmetic on integers. Say whether anything survives a domain where compositions
+  do not compose so obligingly.
 
 ### 5. Metrics Genesis could game
 
@@ -207,7 +210,7 @@ history is the reason for asking.
 ```sh
 python -m pytest tests/test_genesis_trust_root.py tests/test_genesis_loop.py \
                  tests/test_genesis_migration.py tests/test_genesis_demonstration.py \
-                 tests/test_genesis_guards.py -q
+                 tests/test_genesis_guards.py tests/test_genesis_probe.py -q
 python scripts/run_genesis_demonstration.py
 python scripts/check_genesis_guards_are_tested.py   # ~12 minutes
 ```

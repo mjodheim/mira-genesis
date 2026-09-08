@@ -261,15 +261,17 @@ def networking_body():
 PROBE_OPERATIONS = {
     "increment": lambda value: value + 1,
     "negate": lambda value: -value,
+    "triple": lambda value: value * 3,
     "double": lambda value: value * 2,
     "square": lambda value: value * value,
+    "halve": lambda value: value // 2,
 }
 
 #: Which operations each seed component gives the lineage access to. Neither component alone spans
-#: the pair needed below; that is a fact about this partition, discoverable only by running probes.
+#: the demands below; that is a fact about this partition, discoverable only by running probes.
 COMPONENT_OPERATIONS = {
-    "operator_table": ["increment", "negate"],
-    "signal_interface": ["double", "square"],
+    "operator_table": ["increment", "negate", "triple"],
+    "signal_interface": ["double", "square", "halve"],
 }
 
 PROBE_REGISTRY = "genesis.development_bodies:PROBE_OPERATIONS"
@@ -292,4 +294,18 @@ LOCAL_DEMAND = [
 UNREACHABLE_DEMAND = [
     {"task_id": "p0", "input": 3, "expected": 1000},
     {"task_id": "p1", "input": 5, "expected": 2000},
+]
+
+#: Two demands the per-component vocabulary cannot tell apart — neither component resolves either —
+#: whose causes differ: one lives mostly in `operator_table` and needs something from
+#: `signal_interface`, the other the reverse. The lineage finds that by measuring, not by being told.
+#: `increment`, `negate`, `double`: 3 -> 4 -> -4 -> -8.
+CONFUSABLE_A = [
+    {"task_id": "q0", "input": 3, "expected": -8},
+    {"task_id": "q1", "input": 5, "expected": -12},
+]
+#: `double`, `square`, `negate`: 3 -> 6 -> 36 -> -36.
+CONFUSABLE_B = [
+    {"task_id": "q0", "input": 3, "expected": -36},
+    {"task_id": "q1", "input": 5, "expected": -100},
 ]
