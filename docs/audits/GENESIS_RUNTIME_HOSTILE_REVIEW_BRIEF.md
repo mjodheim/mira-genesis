@@ -3,7 +3,7 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2400 lines) and the 192 tests that validate it have one
+The `genesis/` package (nine modules, ~2400 lines) and the 193 tests that validate it have one
 author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
@@ -273,9 +273,30 @@ The demonstration is deterministic; `test_the_demonstration_is_reproducible` ass
 digest is stable across runs. If it is not stable on your machine, that is finding number one and
 everything else in this brief is provisional.
 
-## Boundary on this review
+## Running this review, and where the result goes
 
-Per the directive governing this work: a reviewer who contributes substantially to the *design* of a
-mechanism cannot afterwards audit that mechanism as an independent reviewer. If any correction you
-supply amounts to designing a replacement mechanism rather than identifying a defect, say so, and the
-resulting mechanism will need a different reviewer.
+Hati runs on the owner's own machine (WSL, via `hermes`). The agent that wrote this brief runs in an
+isolated cloud container with no route to that machine, which is a property of the arrangement rather
+than an inconvenience: the reviewer's process is not one the author can reach, start, or influence.
+
+The reviewer needs the repository at the commit under review plus this file. The exact invocation is
+the owner's to supply — this brief does not guess at a command line it cannot verify.
+
+**Where the result goes.** Following the convention set by
+`M125_DESIGN_CORRIGENDUM_HATI_2026-09-06.md`:
+
+    docs/audits/GENESIS_RUNTIME_REVIEW_HATI_<YYYY-MM-DD>.md
+
+with a header stating, as that document does, what the review adds and what it does **not** authorize
+— scientific observations added, network authority added, scientific-run authority added. A review is
+not a licence to advance a gate, and saying so in the header is what keeps a later reader from
+treating it as one.
+
+**Two boundaries on who reviews what.**
+
+- A reviewer who contributes substantially to the *design* of a mechanism cannot afterwards audit
+  that mechanism as an independent reviewer. If a correction amounts to designing a replacement
+  rather than identifying a defect, the replacement needs a different reviewer.
+- If an isolated Hati copy later becomes Genesis's experimental body, that copy and this reviewer
+  must not be the same logical instance. A body under experiment cannot also be the independent
+  judge of the runtime experimenting on it.

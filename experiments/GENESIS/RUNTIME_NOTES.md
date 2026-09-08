@@ -26,7 +26,7 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 192 hostile offline tests |
+| `tests/test_genesis_*.py` | 193 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
