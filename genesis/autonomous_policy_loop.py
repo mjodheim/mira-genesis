@@ -15,6 +15,12 @@ runtime authority.
 The expansion operator remains the bounded one-step operator admitted by ``genesis.policies``. What
 changes here is *who decides when to invoke it*: retained evidence interpreted through the current
 lineage-held policy, not the launcher.
+
+Every accepted policy-generated body is additionally bound back to the exact policy/objective that
+produced its intent. If it is the resolving program named by the evidence-backed update that installed
+that policy, the persistent link records that machinery dependency. Failed or interrupted machinery
+updates are checkpointed too when a checkpoint directory exists: an experiment that spent budget or
+produced a negative diagnosis is history even when it did not produce a descendant.
 """
 from __future__ import annotations
 
@@ -22,6 +28,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from genesis import controller, objective_policy_controller as opc, policies, policy_controller
+from genesis import policy_body_lineage
 from genesis import retentive_objectives as retentive
 from genesis.sandbox import run_isolated_callable
 from genesis.trust_root import digest_of
@@ -92,6 +99,13 @@ def _invoke(genesis, objective: Mapping[str, Any]) -> Any:
     return intent
 
 
+def _persist_if_possible(genesis, checkpoint_path: Path | None) -> str:
+    """Commit consumed budget/evidence before returning or propagating an expected refusal."""
+    if checkpoint_path is None:
+        return ""
+    return genesis.persist(checkpoint_path)["checkpoint"]
+
+
 def run_objective(
     genesis,
     here,
@@ -137,11 +151,22 @@ def run_objective(
                 raise AutonomousPolicyError("policy expansion request names another objective")
             if action.get("policy_digest") != policy["policy_digest"]:
                 raise AutonomousPolicyError("policy expansion request names machinery not currently held")
-            update = retentive.expand_policy(
-                genesis,
-                here,
-                checkpoint_directory=checkpoint_path,
-            )
+            try:
+                update = retentive.expand_policy(
+                    genesis,
+                    here,
+                    checkpoint_directory=checkpoint_path,
+                )
+            except (opc.ObjectivePolicyError, retentive.RetentionObjectiveError):
+                # Budget may already have been consumed before the refusal became known. Persist the
+                # exact spent ledger/state before propagating; a crash must not refund an experiment.
+                _persist_if_possible(genesis, checkpoint_path)
+                raise
+            checkpoint = str(update.get("checkpoint_digest") or "")
+            if not checkpoint:
+                # Negative meta-evaluation is still evidence and may have spent several candidate
+                # evaluations. The lower-level update path only checkpoints a successful adoption.
+                checkpoint = _persist_if_possible(genesis, checkpoint_path)
             step = {
                 "intent": EXPANSION_REQUEST,
                 "objective_digest": objective["objective_digest"],
@@ -150,6 +175,8 @@ def run_objective(
                 "accepted": bool(update.get("accepted")),
                 "reason": update.get("reason", ""),
                 "update": update,
+                "checkpoint_digest": checkpoint,
+                "durable_before_next_intent": checkpoint_path is not None,
             }
             steps.append(step)
             if not update.get("accepted"):
@@ -167,6 +194,15 @@ def run_objective(
         if not isinstance(action, controller.GenerateTransform):
             raise AutonomousPolicyError("continuous policy loop received an unknown action")
 
+        # The inert policy record itself states which machinery and objective produced this intent.
+        # Validate that claim before running it; after an acceptance the persistent link below binds
+        # the same identities to the ordinary trust-root verdict and executable artifact.
+        rationale = dict(action.rationale or {})
+        if rationale.get("search_policy_digest") != policy["policy_digest"]:
+            raise AutonomousPolicyError("generated transform does not name the exact current policy")
+        if rationale.get("search_objective_digest") != objective["objective_digest"]:
+            raise AutonomousPolicyError("generated transform does not name the exact current objective")
+
         outcome = controller._generate_transform(genesis, here, action)
         step = {
             "intent": "GenerateTransform",
@@ -180,6 +216,15 @@ def run_objective(
             "state_digest": genesis.state["state_digest"],
         }
         if outcome.get("accepted"):
+            link = policy_body_lineage.record_adoption(
+                genesis,
+                objective=objective,
+                policy=policy,
+                intent=action,
+                outcome=outcome,
+            )
+            step["policy_body_link_digest"] = link["link_digest"]
+            step["machinery_dependency"] = link["machinery_dependency"]
             corpus = retentive._install_corpus(genesis, here, action.name)
             step["retention_corpus_digest"] = corpus["corpus_digest"]
         if checkpoint_path is not None:
@@ -199,6 +244,7 @@ def run_objective(
         "steps": steps,
         "policy": policy_controller.bound_policy(genesis),
         "retention_corpus": retentive.bound_corpus(genesis),
+        "policy_body_links": [dict(item) for item in policy_body_lineage.links(genesis)],
         "final_generation": genesis.state["generation"],
         "final_state_digest": genesis.state["state_digest"],
         "policy_admission_checkpoint": admission_checkpoint,
@@ -233,6 +279,7 @@ def run_objectives(
         "final_generation": genesis.state["generation"],
         "final_policy": policy_controller.bound_policy(genesis),
         "final_retention_corpus": retentive.bound_corpus(genesis),
+        "policy_body_links": [dict(item) for item in policy_body_lineage.links(genesis)],
         "final_state_digest": genesis.state["state_digest"],
     }
     record["campaign_digest"] = digest_of(record)
