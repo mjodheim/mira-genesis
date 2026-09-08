@@ -63,7 +63,9 @@ def evolve_and_apply(
     if current is None or current["parent_policy_digest"] != prior["policy_digest"]:
         raise MetaPolicyApplicationError("accepted policy mutation did not install a direct descendant")
 
-    intent = opc._invoke_policy(genesis, current)
+    # The objective is part of the policy interpreter input. Omitting it here would let application
+    # accidentally run changed machinery without the same goal/evaluation identity that licensed it.
+    intent = opc._invoke_policy(genesis, current, objective)
     if not isinstance(intent, controller.GenerateTransform):
         raise MetaPolicyApplicationError(
             "changed policy did not produce the newly reachable body intent after its adoption"
