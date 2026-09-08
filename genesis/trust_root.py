@@ -89,24 +89,66 @@ def source_digest() -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
+def _artifact_value(value: Any) -> Any:
+    """Canonical, non-executable representation of bound callable configuration.
+
+    Artifact identity must include the configuration that changes behaviour. `functools.partial`
+    used to be unwrapped to its underlying symbol, so two bodies or graders with different bound
+    values had the same identity. The current fixtures need only ordinary data; unsupported opaque
+    objects fail closed rather than silently disappearing from identity.
+    """
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, bytes):
+        return {"type": "bytes", "hex": value.hex()}
+    if isinstance(value, (list, tuple)):
+        return {"type": type(value).__name__, "items": [_artifact_value(item) for item in value]}
+    if isinstance(value, (set, frozenset)):
+        items = [_artifact_value(item) for item in value]
+        return {
+            "type": type(value).__name__,
+            "items": sorted(items, key=lambda item: canonical_bytes(item)),
+        }
+    if isinstance(value, Mapping):
+        items = [
+            [_artifact_value(key), _artifact_value(item)] for key, item in value.items()
+        ]
+        items.sort(key=lambda pair: canonical_bytes(pair[0]))
+        return {"type": "mapping", "items": items}
+    if isinstance(value, Path):
+        return {"type": "path", "value": str(value)}
+    raise TrustRootError(
+        "executable artifact has opaque bound configuration of type %s; package it into a "
+        "reconstructible artifact before using it as trusted identity" % type(value).__name__
+    )
+
+
 def artifact_digest_of(factory: Any) -> dict[str, Any]:
-    """Identify executable code by what it *is*, not by what it is called.
+    """Identify executable code by what it *is*, including behaviour-changing bound values.
 
-    `Proposal.digest()` used to hash a name, a provenance record and a rationale, so two different
-    bodies with the same metadata were the same proposal and an accepted state's `body_digest` was
-    not a digest of any body. Identity has to reach the code that runs.
-
-    For an importable development fixture the artifact binds the qualified symbol *and* the digest of
-    the module source that defines it, so editing the body changes its identity. A future
-    lineage-generated or packaged body must bind the exact bytes it executes; this descriptor is the
-    weakest form that is still an identity rather than a label, and it says which one it is.
+    Plain importable symbols bind their qualified name and defining module source. A partial binds
+    that symbol recursively plus canonical bound arguments and keyword arguments. This is still a
+    weaker identity than exact executed bytes, which the record states explicitly, but it no longer
+    treats two differently configured callables as the same executable artifact.
     """
     import functools
     import inspect
 
+    if isinstance(factory, functools.partial):
+        payload = {
+            "schema": ARTIFACT_SCHEMA,
+            "kind": "partial",
+            "callable": artifact_digest_of(factory.func),
+            "args": [_artifact_value(value) for value in factory.args],
+            "keywords": {
+                str(key): _artifact_value(value)
+                for key, value in sorted((factory.keywords or {}).items())
+            },
+            "binds_exact_executed_bytes": False,
+        }
+        return {**payload, "artifact_digest": digest_of(payload)}
+
     target = factory
-    while isinstance(target, functools.partial):
-        target = target.func
     source_digest_of_module = ""
     try:
         source_file = inspect.getsourcefile(target)
@@ -132,20 +174,31 @@ def evaluation_contract(
     outcome_vocabulary: Sequence[str] = TASK_OUTCOMES,
     retention_policy: str = "parent_solved_must_remain_solved",
     strict_improvement: bool = True,
+    control_policy: str = "none",
+    control_artifact: Any | None = None,
 ) -> dict[str, Any]:
     """The measure, as one content-addressed value that every arm of a comparison must name.
 
-    Once task correctness is decided by a grader, the grader *is* part of the measure. A verdict
-    bound to the bytes of this file while correctness is decided by an unbound callable is not bound
-    to its measure: swap the grader and every verdict still names the same trust-root digest. So the
-    grader is admitted as an artifact and the contract digest travels with the verdict.
+    Once task correctness is decided by a grader, the grader *is* part of the measure. The same is
+    true of whether a control arm is part of the comparison. These choices are content-addressed so
+    two opposite decision procedures cannot travel under one contract digest.
     """
+    if control_policy not in ("none", "equal_budget_control"):
+        raise TrustRootError("unrecognised control policy %r" % control_policy)
+    if control_policy == "none" and control_artifact is not None:
+        raise TrustRootError("a control artifact was supplied under a no-control policy")
+    if control_policy != "none" and control_artifact is None:
+        raise TrustRootError("the control policy requires an identified control artifact")
     payload = {
         "schema": CONTRACT_SCHEMA,
         "grader": artifact_digest_of(grade) if grade is not None else None,
         "outcome_vocabulary": list(outcome_vocabulary),
         "retention_policy": retention_policy,
         "strict_improvement": bool(strict_improvement),
+        "control_policy": control_policy,
+        "control_artifact": artifact_digest_of(control_artifact)
+        if control_artifact is not None
+        else None,
     }
     return {**payload, "contract_digest": digest_of(payload)}
 
@@ -208,6 +261,12 @@ class Budget:
             if value < 0:
                 raise TrustRootError("budget dimension %r is negative" % name)
         self.spent = {name: int(self.spent.get(name, 0)) for name in self.limits}
+        for name, value in self.spent.items():
+            if value < 0 or value > self.limits[name]:
+                raise TrustRootError(
+                    "budget dimension %r has invalid spent value %d for limit %d"
+                    % (name, value, self.limits[name])
+                )
 
     def remaining(self, dimension: str) -> int:
         if dimension not in self.limits:
@@ -237,13 +296,25 @@ class Budget:
 # ---------------------------------------------------------------------------------------------
 # Provenance
 # ---------------------------------------------------------------------------------------------
+def validate_provenance(record: Mapping[str, Any], *, what: str = "artifact") -> dict[str, Any]:
+    """Require both a recognised class and a real producer everywhere provenance is trusted."""
+    if not isinstance(record, Mapping):
+        raise TrustRootError("%s carries no provenance record" % what)
+    kind = record.get("class")
+    if kind not in PROVENANCE_CLASSES:
+        raise TrustRootError("%s carries no recognised provenance" % what)
+    produced_by = record.get("produced_by")
+    if not isinstance(produced_by, str) or not produced_by.strip():
+        raise TrustRootError("%s provenance names no producer" % what)
+    detail = record.get("detail", "")
+    return {"class": kind, "produced_by": produced_by, "detail": str(detail)}
+
+
 def provenance(kind: str, *, produced_by: str, detail: str = "") -> dict[str, Any]:
     """Record who produced an artifact. An unclassifiable artifact is refused, not defaulted."""
-    if kind not in PROVENANCE_CLASSES:
-        raise TrustRootError("unrecognised provenance class %r" % (kind,))
-    if not isinstance(produced_by, str) or not produced_by.strip():
-        raise TrustRootError("provenance names no producer")
-    return {"class": kind, "produced_by": produced_by, "detail": detail}
+    return validate_provenance(
+        {"class": kind, "produced_by": produced_by, "detail": detail}, what="artifact"
+    )
 
 
 # ---------------------------------------------------------------------------------------------
@@ -302,9 +373,24 @@ def decide(
     summary produced by the parent, the candidate or any Genesis component is read.
     """
     isolation.assert_no_wider_than(admitted_isolation)
+    validated_provenance = validate_provenance(candidate_provenance, what="candidate")
 
-    if candidate_provenance.get("class") not in PROVENANCE_CLASSES:
-        raise TrustRootError("candidate carries no recognised provenance")
+    strict_improvement = bool(required_strict_improvement)
+    if evaluation_contract_record is not None:
+        contract = dict(evaluation_contract_record)
+        expected_contract_digest = digest_of(
+            {k: v for k, v in contract.items() if k != "contract_digest"}
+        )
+        if contract.get("schema") != CONTRACT_SCHEMA or contract.get(
+            "contract_digest"
+        ) != expected_contract_digest:
+            raise TrustRootError("evaluation contract does not reproduce")
+        strict_improvement = bool(contract.get("strict_improvement", True))
+        control_policy = contract.get("control_policy", "none")
+        if control_policy == "none" and control_outcomes is not None:
+            raise TrustRootError("a control arm was supplied outside the admitted evaluation contract")
+        if control_policy == "equal_budget_control" and control_outcomes is None:
+            raise TrustRootError("the admitted evaluation contract requires a control arm")
 
     parent = _tally(parent_outcomes, "parent")
     candidate = _tally(candidate_outcomes, "candidate")
@@ -331,7 +417,7 @@ def decide(
         reasons.append(
             "the candidate forgot work the parent could do: %s" % ", ".join(lost_solved)
         )
-    if required_strict_improvement and not improved:
+    if strict_improvement and not improved:
         reasons.append(
             "no strict improvement: parent solved %d, candidate solved %d"
             % (parent_solved, candidate_solved)
@@ -362,7 +448,7 @@ def decide(
             if evaluation_contract_record
             else ""
         ),
-        "candidate_provenance": dict(candidate_provenance),
+        "candidate_provenance": validated_provenance,
         "budget": budget.record(),
         "isolation": isolation.record(),
         "admitted_isolation": admitted_isolation.record(),
