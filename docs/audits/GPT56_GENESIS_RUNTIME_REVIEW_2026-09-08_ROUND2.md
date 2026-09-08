@@ -58,6 +58,30 @@ Expected repair shape: centralise provenance validation and require the same inv
 
 Expected repair shape: discovered capabilities must cross the boundary through opaque, capability-scoped handles or an isolated invocation interface, not raw Python objects that retain references to their defining environment. The migration record should derive actual capability use rather than trust a caller-authored `used_operations` list.
 
+## R2-10 — control-arm policy is outside the evaluation contract
+
+The target architecture names parent/candidate/control comparison as part of the integrated runtime, but the evaluation contract binds neither whether a control is required nor which control artifact is admissible. Two otherwise identical Genesis instances therefore carry the same contract digest while the same candidate is accepted without a control and rejected when an equal-performing control is supplied.
+
+Expected repair shape: control policy and, when applicable, control identity must be part of the admitted measure. The trust root should not accept caller-selected changes to the comparison rule under an unchanged contract digest.
+
+## R2-11 — an acquired component is certified but not operationalised
+
+The component certificate now correctly preserves the experimentally resolving composition. `extend_components()` then adds the new component name and certificate to `LineageState`, but nothing turns that resolving composition into executable component machinery. Re-running the same demand immediately afterwards with the runtime's existing component-operation source still finds that no held component resolves it; the freshly "acquired" component has no operations unless the host edits an external mapping.
+
+Expected repair shape: the acquisition must produce a content-addressed executable component artifact, bind that artifact to the certificate, install it into lineage-owned machinery, and make later diagnosis consume that state-derived machinery rather than a host-maintained mapping.
+
+## R2-12 — an extended diagnostic vocabulary is also a label, not a later executable feature
+
+`probe.measure()` always emits one boolean per held component. It does not evaluate `LineageState.vocabulary`. After a certified vocabulary extension, the state contains one more feature but later measurements still have the old width. A second extension therefore cannot build on the first without host-side redesign; the representation grew in the record but not in the diagnostic computation.
+
+Expected repair shape: diagnostic features need executable semantics stored or reconstructible from their certificates, and later measurement must evaluate the lineage's current vocabulary from state. This is necessary for progressive modification rather than one-shot naming.
+
+## R2-13 — the DEVELOPMENT demonstration still performs architectural transitions in the host script
+
+The objective requires a loop that runs without human architectural intervention. The demonstration still assigns `genesis.state` directly for vocabulary/component growth and appends the corresponding journal entries from `scripts/run_genesis_demonstration.py`. The runtime owns candidate cycles and persistence, but the host script still sequences material architecture changes between those cycles.
+
+Expected repair shape: move diagnosis, certified vocabulary/component installation, migration intent, persistence and continuation behind a runtime controller whose public driver supplies environment/tasks and receives records. The demonstration should become a thin launcher, not the actor that changes lineage architecture.
+
 ## Mutation-score interpretation
 
 The `sandbox.py` subprocess survivor is environment-sensitive. `RLIMIT_NPROC` can independently block process creation for an unprivileged process, masking removal of the Python audit-hook guard. In a root container, `setrlimit(RLIMIT_NPROC, (0, 0))` may succeed while `/bin/true` still launches. Therefore 70/6 versus 71/5 on identical source can be a platform-dependent mutation result rather than a counting error. Mutation reports should record platform/uid and whether the independent RLIMIT control actually blocks a subprocess.
@@ -68,4 +92,4 @@ The missing-operation guard in `probe.py` is only observationally equivalent thr
 
 R2-3, R2-4 and the direct missing-operation contract are test-coverage corrections: the guards already reject the hostile case, but the old mutation interpretation understated reachability.
 
-R2-1, R2-2 and R2-5 through R2-9 are mechanism blockers. They are intentionally encoded as failing counterexamples on the review branch. No scientific gate or observation should move until the runtime either closes them or narrows its claims accordingly.
+R2-1, R2-2 and R2-5 through R2-13 are mechanism or architecture blockers. They are intentionally encoded as failing counterexamples on the review branch where mechanically expressible. No scientific gate or observation should move until the runtime either closes them or narrows its claims accordingly.
