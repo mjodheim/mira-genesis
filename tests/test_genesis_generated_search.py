@@ -125,7 +125,9 @@ def test_controller_search_constructs_and_adopts_a_body_not_preinstalled_in_the_
 
     assert isinstance(genesis.body_factory, ConfiguredBody)
     assert genesis.body_factory.target == programs.PROGRAM_TARGET
-    assert genesis.body_factory.configuration["operations"] == ["double", "increment"]
+    # The executable configuration is intentionally frozen after admission; sequence fields are
+    # tuples internally even though the controller's inert records remain JSON lists.
+    assert genesis.body_factory.configuration["operations"] == ("double", "increment")
     assert genesis.state["acquisitions"][-1]["name"] == "generated:3"
     assert run["final_generation"] == 1
 
