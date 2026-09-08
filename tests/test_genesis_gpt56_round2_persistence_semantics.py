@@ -60,6 +60,29 @@ def test_restore_preserves_the_committed_current_isolation_not_only_the_admitted
     assert restored.isolation.record() == narrowed.record()
 
 
+def test_crash_before_manifest_publish_can_restore_the_previous_committed_checkpoint(tmp_path):
+    """Commit-last only works if the old manifest still points to payloads that still exist."""
+    genesis = _genesis()
+    genesis.persist(tmp_path)
+    committed_state_digest = genesis.state["state_digest"]
+    committed_journal_head = genesis.journal.head
+
+    # Move the in-memory lineage forward, then simulate only the first write of `persist()` landing
+    # before process death. The old manifest remains the last commit point. A transactional store
+    # must therefore still be able to resolve the payloads named by that old manifest.
+    genesis.cycle(TASKS, lambda *_: None)
+    assert genesis.journal.head != committed_journal_head
+    st.save_state(genesis.state, tmp_path / "lineage_state.json")
+
+    restored = Genesis.restore(
+        tmp_path,
+        body_factory=bodies.parent_body,
+        grade=bodies.grade,
+    )
+    assert restored.state["state_digest"] == committed_state_digest
+    assert restored.journal.head == committed_journal_head
+
+
 def _migrated_with(factory):
     genesis = _genesis()
     genesis.cycle(TASKS, lambda *_: None)
