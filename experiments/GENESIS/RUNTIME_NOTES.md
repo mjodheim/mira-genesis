@@ -26,7 +26,7 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 204 hostile offline tests |
+| `tests/test_genesis_*.py` | 204 hostile offline tests; 76 guards, 71 killed by a test (measured) |
 
 ## The stopping criterion, and where this stands against it
 
@@ -276,6 +276,47 @@ than a sequence" — a threshold set at the smallest number that permits the wor
 doing the work the evidence was supposed to do. The boolean is gone; the count is reported and the
 record carries `makes_no_recursion_claim`. The demonstration now runs four accepted cycles and
 establishes three links, so the number is no longer sitting at its own minimum.
+
+### Correction 6 (LOW), and a number this document should not have carried
+
+Hati's guard run reported **74 guards, 68 killed, 6 survivors** against the 69 killed / 5 survivors
+this document claimed. The discrepancy matters more than either number.
+
+**The claim was not measured.** After deleting `ComposedProbeBody` — which removed one guard, and
+that guard was a survivor — the counts here were adjusted arithmetically from an earlier run rather
+than re-measured: 75 guards became 74, six survivors became five, and the killed count was carried
+across untouched. In a document whose subject is not publishing claims the code does not support,
+that is the same defect one level up. The rule it breaks is the one this file exists to state.
+
+Measured on the corrected runtime, the current figure is **76 guards, 71 killed, 5 survivors** — the
+five listed above. Rerun the script rather than trusting it.
+
+Hati's sixth correction is that the equivalent-mutant claim on `probe.py` did not verify: no test
+kills it. That is what an equivalent mutant *is*, so the prediction and the observation agree — but
+the objection underneath it is fair and was the real gap. The equivalence had been **reasoned**, and
+a reviewer had no way to check it except by re-deriving the argument. It is now measured:
+
+```sh
+# with the guard, then with `raise ProbeError(...)` replaced by `pass`
+python - <<'EOF'
+import sys; sys.path.insert(0, ".")
+from genesis import probe, trust_root as tr
+print(probe.search(
+    registry_reference="genesis.development_bodies:PROBE_OPERATIONS",
+    operations=["not_an_operation"],
+    tasks=[{"task_id": "p0", "input": 3, "expected": 7}],
+    isolation=tr.Isolation(), budget=tr.Budget(limits={"probes": 4}), max_length=1)["search_exhausted"])
+EOF
+```
+
+Both spellings return `resolved: false`, `search_exhausted: true` and one unsolved attempt. The guard
+buys a legible message and nothing else, which is what "equivalent" was supposed to mean and is now
+shown rather than argued.
+
+**One survivor remains unaccounted for.** Hati counted six on the pre-correction tree where this
+runtime counted five, and the relayed summary names only four of them, so the sixth cannot be
+identified from here. Their survivor list would settle it; until then the two measurements disagree
+by one and this document says so rather than picking the flattering reading.
 
 ## Known open, not fixed
 

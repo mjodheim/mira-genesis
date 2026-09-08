@@ -25,11 +25,15 @@ equivalent mutant, where deleting the guard reaches the same recorded outcome by
 * `genesis/probe.py` — "this composition uses an operation the registry does not have"
   (**equivalent mutant**, not unreachable). Deleting it makes the next line raise `TypeError`, which
   the sandbox records as the same `error` row; the guard buys a legible message, not a different
-  outcome, and no test can tell the two apart.
+  outcome, and no test can tell the two apart. That equivalence was asserted rather than shown until
+  a reviewer objected; the measurement and its procedure are in
+  `experiments/GENESIS/RUNTIME_NOTES.md`.
 
 They are kept, marked in place, and left untested on purpose; inventing a contrived path to them
-would report coverage without adding knowledge. The current count is 69 of 74 killed — rerun
-`scripts/check_genesis_guards_are_tested.py` rather than trusting that number.
+would report coverage without adding knowledge. The current count is **71 of 76 killed**, measured on this tree. An earlier version of this line said
+69 of 74 and had been adjusted arithmetically after a guard was deleted rather than re-measured,
+which an independent reviewer caught. Rerun `scripts/check_genesis_guards_are_tested.py` rather than
+trusting the number.
 """
 from __future__ import annotations
 

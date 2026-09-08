@@ -110,6 +110,9 @@ class BatchProbeBody:
                 # a TypeError, which the sandbox records as the same `error` row by a less legible
                 # route. `scripts/check_genesis_guards_are_tested.py` reports it as surviving; that
                 # is what an equivalent mutant looks like, and the message is worth keeping.
+                # The equivalence was *reasoned* here and a reviewer had no way to check it without
+                # re-deriving the argument. It is now measured, and the procedure and result are in
+                # experiments/GENESIS/RUNTIME_NOTES.md so the claim can be rerun rather than trusted.
                 raise ProbeError("this composition uses %r, which the registry does not have" % name)
             value = operation(value)
         return value

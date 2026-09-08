@@ -92,9 +92,11 @@ whether that shape recurs somewhere still unfixed.
    adversarially, which finds only what the reader thinks to look for. Asking the question
    mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
    and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
-   33 were then tested, and with the probe and migration guards added the checker now reports **69 of 74
-   killed**; the five survivors are marked in place — four defensive, one an equivalent mutant — and
-   are discussed under attack 7 below.
+   33 were then tested. The checker reports **71 of 76 killed** on the current tree; the five
+   survivors are marked in place — four defensive, one an equivalent mutant — and are discussed
+   under attack 7 below. An earlier revision of this brief said 69 of 74 and had reached that number
+   by adjusting a previous run's arithmetic after a guard was deleted, rather than by re-measuring.
+   An independent reviewer caught it. Treat every count here as reproducible or as wrong.
 
 The common shape: **a record that testifies to a property the code does not have.** Assume it recurs.
 
@@ -211,7 +213,7 @@ python scripts/check_genesis_guards_are_tested.py
 ```
 
 It deletes each `raise` in `genesis/` one at a time and reruns the Genesis suites. The first run
-reported **35 of 68 guards surviving**; **69 of 74 are killed** now. Three things are worth
+reported **35 of 68 guards surviving**; **71 of 76 are killed** now. Three things are worth
 attacking here rather than accepting:
 
 - the script only mutates `raise` statements. A wrong comparison, an inverted boolean or a missing
