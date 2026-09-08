@@ -1,24 +1,26 @@
-"""Executable artifacts whose configuration is data, so Genesis can ablate and restore them.
+"""Executable artifacts whose configuration is immutable data Genesis can ablate and restore.
 
-A causal ablation is supposed to be *this candidate with one earlier acquisition removed and nothing
-else changed*. For a long time the runtime could not construct that, so it accepted one: the proposer
-supplied an ablated body and the runtime measured it. ``ConfiguredBody`` makes the executable
-configuration explicit so the runtime can build and authenticate the counterfactual itself.
+A configured artifact is useful only if the configuration whose digest was admitted cannot later be
+rewritten through an alias. ``@dataclass(frozen=True)`` freezes attribute assignment, not a dict held
+inside the attribute: the earlier implementation copied only the outer mapping, so both
+``body.configuration['x'] = ...`` and mutation through nested lists/dicts could silently change an
+adopted executable after its proposal/verdict identity had been recorded.
 
-The same property is what makes generated descendants restorable. A configured artifact record binds
-its importable interpreter target, the target's source identity, canonical construction data and
-acquisition dependencies. ``reconstruct()`` rebuilds that factory from the committed record and then
-requires the complete artifact digest to reproduce. Process death therefore need not ask a host to
-remember which generated configuration to recreate.
+``ConfiguredBody`` now deep-freezes every container on construction and detaches from the caller's
+input. Runtime constructors receive a fresh mutable/plain copy; artifact publication returns a fresh
+structural copy; neither exposes a handle back into the admitted factory. This preserves the existing
+canonical artifact digest because the trust-root canonicalizer already treats list/tuple values
+identically and mappings by value.
 
-This is still a DEVELOPMENT artifact kind: importable target identity binds module source rather than
-an exact packaged executable blob, and the record says ``binds_exact_executed_bytes: false``. A future
-native/generated package store can add a stronger artifact kind without weakening this one.
+The same reconstructible configuration supports runtime-derived single-difference ablation and
+process-death restoration. Importable target identity remains DEVELOPMENT-grade module-source identity
+rather than exact packaged executed bytes, and the artifact record says so.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from importlib import import_module
+from types import MappingProxyType
 from typing import Any, Mapping
 
 CONFIGURED_BODY_SCHEMA = "genesis-configured-body-v1"
@@ -28,8 +30,49 @@ class ArtifactError(RuntimeError):
     """Raised when an artifact cannot be built, restored, or licensed as a single-difference arm."""
 
 
-def _frozen(configuration: Mapping[str, Any]) -> dict[str, Any]:
-    return {str(key): configuration[key] for key in sorted(configuration, key=str)}
+def _freeze_value(value: Any) -> Any:
+    """Detach recursively and remove every ordinary container mutation surface."""
+    if isinstance(value, Mapping):
+        return MappingProxyType(
+            {
+                str(key): _freeze_value(value[key])
+                for key in sorted(value, key=lambda item: str(item))
+            }
+        )
+    if isinstance(value, (list, tuple)):
+        return tuple(_freeze_value(item) for item in value)
+    if isinstance(value, (set, frozenset)):
+        return frozenset(_freeze_value(item) for item in value)
+    return value
+
+
+def _published_value(value: Any) -> Any:
+    """Return detached structural data without exposing the factory's frozen containers."""
+    if isinstance(value, Mapping):
+        return {str(key): _published_value(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return tuple(_published_value(item) for item in value)
+    if isinstance(value, frozenset):
+        return frozenset(_published_value(item) for item in value)
+    return value
+
+
+def _runtime_value(value: Any) -> Any:
+    """Give a body constructor ordinary containers it may own without reaching the artifact."""
+    if isinstance(value, Mapping):
+        return {str(key): _runtime_value(item) for key, item in value.items()}
+    if isinstance(value, tuple):
+        return [_runtime_value(item) for item in value]
+    if isinstance(value, frozenset):
+        return {_runtime_value(item) for item in value}
+    return value
+
+
+def _frozen(configuration: Mapping[str, Any]) -> Mapping[str, Any]:
+    frozen = _freeze_value(configuration)
+    if not isinstance(frozen, Mapping):  # defensive: callers are typed as Mapping
+        raise ArtifactError("configured body configuration is not a mapping")
+    return frozen
 
 
 def _resolve_symbol(module_name: str, qualname: str) -> Any:
@@ -45,11 +88,7 @@ def _resolve_symbol(module_name: str, qualname: str) -> Any:
 
 @dataclass(frozen=True)
 class ConfiguredBody:
-    """A body factory that publishes what it is made of.
-
-    ``dependencies`` is the set of earlier acquisitions this body routes work through. It is the
-    only field an ablation may change, and ``without()`` is the only licensed edit.
-    """
+    """A body factory whose published configuration cannot change after construction."""
 
     target: str
     configuration: Mapping[str, Any] = field(default_factory=dict)
@@ -68,9 +107,11 @@ class ConfiguredBody:
         return _resolve_symbol(module_name, symbol)
 
     def __call__(self) -> Any:
-        """Build the body. The candidate executor calls this only after its limits exist."""
+        """Build a body from detached runtime values after the candidate limits exist."""
         constructor = self.resolve()
-        arguments = dict(self.configuration)
+        arguments = _runtime_value(self.configuration)
+        if not isinstance(arguments, dict):  # defensive: configuration is always a mapping
+            raise ArtifactError("configured body did not reconstruct keyword arguments")
         arguments[self.dependency_keyword] = frozenset(self.dependencies)
         return constructor(**arguments)
 
@@ -84,32 +125,27 @@ class ConfiguredBody:
             )
         return ConfiguredBody(
             target=self.target,
-            configuration=dict(self.configuration),
+            configuration=self.configuration,
             dependencies=self.dependencies - {name},
             dependency_keyword=self.dependency_keyword,
         )
 
     def artifact_configuration(self) -> dict[str, Any]:
-        """Everything the configured artifact digest must bind."""
+        """Everything the configured artifact digest binds, returned without mutable aliases."""
         from genesis.trust_root import artifact_digest_of
 
         return {
             "schema": CONFIGURED_BODY_SCHEMA,
             "target": str(self.target),
             "target_artifact": artifact_digest_of(self.resolve()),
-            "configuration": dict(self.configuration),
+            "configuration": _published_value(self.configuration),
             "dependencies": sorted(self.dependencies),
             "dependency_keyword": str(self.dependency_keyword),
         }
 
 
 def reconstruct(record: Mapping[str, Any]) -> Any:
-    """Rebuild an executable factory from a committed artifact record, or fail closed.
-
-    Only artifact kinds whose complete behaviourally relevant configuration can be reconstructed are
-    supported. Opaque callable state and partial applications whose canonical value encoding is not
-    invertible here are deliberately refused rather than guessed.
-    """
+    """Rebuild an executable factory from a committed artifact record, or fail closed."""
     from genesis.trust_root import artifact_digest_of
 
     if not isinstance(record, Mapping):
@@ -123,7 +159,9 @@ def reconstruct(record: Mapping[str, Any]) -> Any:
     elif kind == "configured_artifact":
         published = record.get("configuration")
         if not isinstance(published, Mapping) or published.get("schema") != CONFIGURED_BODY_SCHEMA:
-            raise ArtifactError("persisted configured artifact carries no reconstructible configuration")
+            raise ArtifactError(
+                "persisted configured artifact carries no reconstructible configuration"
+            )
         target = str(published.get("target") or "")
         target_artifact = published.get("target_artifact")
         if not isinstance(target_artifact, Mapping):
@@ -155,7 +193,9 @@ def reconstruct(record: Mapping[str, Any]) -> Any:
 
     actual = artifact_digest_of(rebuilt)
     if actual != dict(record):
-        raise ArtifactError("reconstructed executable artifact does not reproduce its committed digest")
+        raise ArtifactError(
+            "reconstructed executable artifact does not reproduce its committed digest"
+        )
     return rebuilt
 
 
