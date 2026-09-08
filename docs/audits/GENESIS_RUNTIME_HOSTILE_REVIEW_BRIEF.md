@@ -41,7 +41,7 @@ running program rather than as properties of how the author wrote the fixtures.*
 
 The author will read this and act on it. Two consequences:
 
-- do not soften a finding because the code looks careful. It looked careful in the three places it
+- do not soften a finding because the code looks careful. It looked careful in the nine places it
   was already wrong (below), and it looked careful in M121 v2 while being unfalsifiable;
 - the author's own found-and-fixed defects are not evidence he found the others. They are evidence of
   what class of mistake he makes, which should tell you where to look next.
@@ -100,17 +100,18 @@ The fixtures are the author's. He chose what each body solves. Ask of every clai
 
 Specifically:
 
-- `migrated_improved_body` routes t2/t3 through an acquired component so the ablation has something
-  to remove. That is the author building the dependency he then measures. He has put in a negative
-  control — `migrated_uncoupled_ablation_body`, driven by
-  `test_the_causal_check_refuses_an_arm_that_never_depended_on_the_acquisition` — and the question is
-  whether that control is genuine or decorative. **Is there any body the author could plausibly have
-  written for which `establishes_causal_dependency` comes out `True` when it should not?**
-- `causal_step` records `ablated_arm_construction` as a *string*, deliberately, because a boolean
-  there would be the runner agreeing with itself. The check that the ablated body differs from the
-  candidate only in `capabilities` lives in
-  `test_the_ablated_arm_is_the_candidate_minus_the_acquisition_and_nothing_else`. Is that check
-  sufficient, or can two bodies satisfy it and still not be an ablation?
+- the migrated bodies route their later gains through the components that produced them, so an
+  ablation has something to remove. That is the author building the dependency he then measures. He
+  has put in a negative control — `migrated_uncoupled_ablation_body`, driven by
+  `test_an_ablation_arm_that_is_really_the_parent_establishes_nothing` in
+  `tests/test_genesis_loop.py` — and the question is whether that control is genuine or decorative.
+  **Is there any body the author could plausibly have written for which `established` comes out
+  `True` when it should not?**
+- the cycle checks that the ablated arm is not behaviourally the parent, and nothing else about how
+  the arm was built; that it is the candidate minus exactly one capability is checked separately, in
+  `test_each_ablated_arm_is_its_candidate_minus_one_acquisition`, by comparing the two bodies field
+  by field. Is that pair of checks sufficient, or can two bodies satisfy both and still not stand in
+  the relation of candidate and ablation?
 - `metamorphosis_succeeded` is false until the migrated lineage accepts a new candidate. Is
   "accepted a candidate after migration" actually the thing that separates transported intelligence
   from transported output, or is it a proxy the author chose because his fixtures satisfy it?
@@ -210,9 +211,18 @@ attacking here rather than accepting:
 ### 8. False transfers
 
 `genesis/migration.py` claims the lineage discovers substrate semantics by probing rather than being
-handed them, and arrives with everything it owned. `Substrate` holds the operations; `discover()`
-probes for a requested set and reports found/missing. Check that the translator genuinely never
-receives the semantics, and that `carried_intact` compares what it claims to compare.
+handed them, arrives with everything it owned, and arrives still able to do what it could. `Substrate`
+holds the operations; `discover()` probes for a requested set and reports found/missing. Check that
+the translator genuinely never receives the semantics, and that `carried_intact` compares what it
+claims to compare.
+
+`capability_carried` is the newest of these and the least tested by time. It runs both bodies over
+one task set and refuses a translation that solves strictly less. Two things to attack: the task set
+is supplied by the caller, so a caller who passes tasks the translation happens to handle would get a
+pass it did not earn — say whether the runtime should be able to accept a task set chosen by whoever
+wants the migration to succeed; and "solves strictly less" is a count, so a translation that solves
+the same number of *different* tasks is refused only because `lost_tasks` compares identities. Check
+that it really compares identities and not counts, and say whether either is the right test.
 
 ### 9. Recursion claims without causal dependency
 
