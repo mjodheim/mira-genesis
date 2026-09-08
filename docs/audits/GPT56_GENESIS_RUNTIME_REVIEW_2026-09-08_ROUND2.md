@@ -82,6 +82,42 @@ The objective requires a loop that runs without human architectural intervention
 
 Expected repair shape: move diagnosis, certified vocabulary/component installation, migration intent, persistence and continuation behind a runtime controller whose public driver supplies environment/tasks and receives records. The demonstration should become a thin launcher, not the actor that changes lineage architecture.
 
+## R2-14 — a read-only context is not an authority boundary while the proposer runs in the host process
+
+The round-one repair replaced `propose(self, tasks)` with `propose(self.context(), tasks)`. That removes the obvious object reference but the callback is still ordinary Python running inside the evaluator process. It can write the host filesystem, import mutable Genesis modules, replace `genesis.loop.run_candidate` in memory, or monkey-patch other module globals after the parent arm and before the candidate arm. No source digest changes when a Python function object is replaced in memory.
+
+A concrete counterexample replaces the `run_candidate` global from inside the proposer with a function returning forged all-solved outcomes. The parent was measured by the real evaluator; the candidate is then measured by the replacement, while the verdict still names the original admitted trust-root/evaluation-contract identities.
+
+Expected repair shape: lineage-owned proposal/search code must execute behind a real process/capability boundary and return a declarative intent or content-addressed candidate artifact. It must not share the interpreter whose globals implement measurement, persistence or the trust root.
+
+## R2-15 — the proposer receives the mutable evaluation tasks after the parent arm has already run
+
+`cycle()` evaluates the parent, records the task-set digest, then calls the proposer with the original mutable `tasks` objects, then evaluates the candidate from those same objects. The trust root compares outcome rows by `task_id`, not by the canonical question digest that the task-set ledger uses.
+
+The proposer can therefore rewrite an answer-key/target field after the parent arm, keep every task ID unchanged, and make the same body become correct in the candidate arm. Parent and candidate are then accepted as if they faced the same work although the questions changed between arms.
+
+Expected repair shape: canonicalise the evaluation set once before any arm, keep an immutable parent-owned snapshot, and make every arm bind each outcome to the same question digest. The proposer should receive only a detached task/problem context that cannot mutate the evaluation corpus or grading secrets.
+
+## R2-16 — migration arrival-state identity does not bind the executable body that actually arrived
+
+`migrate()` sets the arrival state's `body_digest` from `{substrate, departing body digest, declared used operations}` rather than from the translated executable artifact. Two distinct body factories that behave identically on the verification tasks therefore create the same arrival-state identity when substrate and declarations match.
+
+The checkpoint later records a body artifact, but the migration event and `LineageState` already claimed an arrival identity before that checkpoint. Which executable body arrived is part of lineage identity and cannot be replaced by metadata describing how it supposedly got there.
+
+Expected repair shape: the translated body's full executable artifact digest must be the arrival body identity and must be included in the migration record before state assignment. Translation metadata can accompany it; it cannot substitute for it.
+
+## R2-17 — restore records the current isolation but restores only the admitted ceiling
+
+The checkpoint contains both `admitted_isolation` and the runtime's current `isolation`. `restore()` reconstructs the admitted isolation and, when the caller supplies none, uses that as the resumed current isolation. The committed current value is ignored. A runtime that narrowed itself before persistence therefore wakes under the wider original ceiling after process death.
+
+Expected repair shape: restore the exact committed current isolation and separately retain the admitted maximum. A caller may request an equal-or-narrower current envelope, never a value wider than the committed current one.
+
+## R2-18 — vocabulary extension can invent lineage ownership when provenance is omitted
+
+`extend_vocabulary()` accepts `provenance=None` and then manufactures `lineage_owned` provenance with producer `lineage vocabulary extension`. In the DEVELOPMENT demonstration the host script directly calls this function without supplying provenance, so host orchestration is recorded as lineage-owned by default.
+
+Expected repair shape: provenance is evidence, not a convenient default. Require an explicit validated provenance record at every boundary where authorship matters; the integrated controller can supply lineage-owned provenance only when the operation actually came through the lineage-owned execution path.
+
 ## Mutation-score interpretation
 
 The `sandbox.py` subprocess survivor is environment-sensitive. `RLIMIT_NPROC` can independently block process creation for an unprivileged process, masking removal of the Python audit-hook guard. In a root container, `setrlimit(RLIMIT_NPROC, (0, 0))` may succeed while `/bin/true` still launches. Therefore 70/6 versus 71/5 on identical source can be a platform-dependent mutation result rather than a counting error. Mutation reports should record platform/uid and whether the independent RLIMIT control actually blocks a subprocess.
@@ -92,4 +128,4 @@ The missing-operation guard in `probe.py` is only observationally equivalent thr
 
 R2-3, R2-4 and the direct missing-operation contract are test-coverage corrections: the guards already reject the hostile case, but the old mutation interpretation understated reachability.
 
-R2-1, R2-2 and R2-5 through R2-13 are mechanism or architecture blockers. They are intentionally encoded as failing counterexamples on the review branch where mechanically expressible. No scientific gate or observation should move until the runtime either closes them or narrows its claims accordingly.
+R2-1, R2-2 and R2-5 through R2-18 are mechanism or architecture blockers. They are intentionally encoded as failing counterexamples on the review branch where mechanically expressible. No scientific gate or observation should move until the runtime either closes them or narrows its claims accordingly.
