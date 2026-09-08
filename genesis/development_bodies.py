@@ -242,15 +242,96 @@ ROUTED_FOURTH_GENERATION = {
 }
 
 
-def migrated_parent_body():
-    """The translation of `improved_body` into the new substrate.
+class FragileBody(RecordBody):
+    """A body that cannot be *constructed* without one particular acquisition.
 
-    It must still solve everything the departing body solved. A translation that quietly solves less
-    is transported output, and `migration.capability_carried` now refuses it.
+    Its derived ablation therefore fails in the child process rather than answering badly, which is
+    what the runtime needs in order to distinguish a measurement it could not take from one that
+    came back negative.
     """
-    return RecordBody(
-        {"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities={ACQUIRED_COMPONENT}
+
+    def __init__(self, solves, operation_names, *, routed=(), capabilities=()):
+        super().__init__(solves, operation_names, routed=routed, capabilities=capabilities)
+        if FRAGILE_ACQUISITION not in self.capabilities:
+            raise RuntimeError("this body cannot be constructed without %r" % FRAGILE_ACQUISITION)
+
+
+#: An acquisition whose removal makes the body unbuildable rather than merely worse.
+FRAGILE_ACQUISITION = "unbuildable_without_this"
+
+RECORD_BODY = "genesis.development_bodies:RecordBody"
+FRAGILE_BODY = "genesis.development_bodies:FragileBody"
+
+
+def _configured(solves, routed, dependencies, *, target=RECORD_BODY):
+    """A body factory that publishes what it is made of.
+
+    These used to be plain functions, and the ablated arms were hand-written twins of them: a
+    reviewer had to read two definitions and take on trust that they differed in one field. The
+    runtime cannot read a function, so it could not build the counterfactual and had to accept
+    whichever arm the proposer supplied. Now the configuration is data, `ConfiguredBody.without()`
+    is the only edit, and the arm the cycle runs is one the runtime derived and checked.
+    """
+    from genesis.artifacts import ConfiguredBody
+
+    return ConfiguredBody(
+        target=target,
+        configuration={
+            "solves": sorted(solves),
+            "operation_names": ["read"],
+            "routed": dict(routed),
+        },
+        dependencies=frozenset(dependencies),
+        dependency_keyword="capabilities",
     )
+
+
+#: The translation of `improved_body` into the new substrate. It must still solve everything the
+#: departing body solved; a translation that quietly solves less is transported output, and
+#: `migration.capability_carried` refuses it.
+migrated_parent_body = _configured({"t0", "t1"}, ROUTED_TASKS, {ACQUIRED_COMPONENT})
+
+#: Generation 2, in the new form: gains t4 through its own acquisition.
+migrated_improved_body = _configured(
+    {"t0", "t1"}, ROUTED_AFTER_MIGRATION, {ACQUIRED_COMPONENT, SECOND_ACQUISITION}
+)
+
+#: Generation 3: gains t5 through its own acquisition, still routing t4 through generation 2's.
+migrated_further_body = _configured(
+    {"t0", "t1"},
+    ROUTED_THIRD_GENERATION,
+    {ACQUIRED_COMPONENT, SECOND_ACQUISITION, THIRD_ACQUISITION},
+)
+
+#: Generation 4: gains t6 and t7 through its own acquisition, still needing all three before.
+migrated_fourth_body = _configured(
+    {"t0", "t1"},
+    ROUTED_FOURTH_GENERATION,
+    {ACQUIRED_COMPONENT, SECOND_ACQUISITION, THIRD_ACQUISITION, FOURTH_ACQUISITION},
+)
+
+#: The ablated arms are *derived*, by the same call the runtime makes. They exist as names only so
+#: tests can inspect them; nothing passes them to a cycle as evidence any more.
+migrated_ablated_body = migrated_improved_body.without(ACQUIRED_COMPONENT)
+migrated_further_ablated_body = migrated_further_body.without(SECOND_ACQUISITION)
+migrated_fourth_ablated_body = migrated_fourth_body.without(THIRD_ACQUISITION)
+
+#: Negative control: a candidate that *declares* a dependency it routes no work through. The runtime
+#: builds the arm correctly and the arm loses nothing, so the causal claim fails on the measurement
+#: rather than on the paperwork. It exists so the positive verdict elsewhere is a finding about the
+#: bodies rather than a property of how the fixtures were written.
+uncoupled_candidate_body = _configured(
+    {"t0", "t1", "t2", "t3", "t4"}, {}, {ACQUIRED_COMPONENT, SECOND_ACQUISITION}
+)
+
+#: A candidate whose derived ablation cannot be constructed at all. A missing measurement must abort
+#: the cycle rather than be scored as a candidate failure.
+fragile_candidate_body = _configured(
+    {"t0", "t1", "t2"},
+    {},
+    {FRAGILE_ACQUISITION},
+    target=FRAGILE_BODY,
+)
 
 
 def migrated_lossy_body():
@@ -262,94 +343,18 @@ def migrated_lossy_body():
     return RecordBody({"t0", "t1"}, ("read",))
 
 
-def migrated_improved_body():
-    """Generation 2, in the new form: gains t4 through its own acquisition."""
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_AFTER_MIGRATION,
-        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION},
-    )
+def translate_to_record_store(departing, operations):
+    """A translation that actually exercises the capability it declares.
 
-
-def migrated_further_body():
-    """Generation 3: gains t5 through its own acquisition, still routing t4 through generation 2's."""
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_THIRD_GENERATION,
-        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION, THIRD_ACQUISITION},
-    )
-
-
-def migrated_ablated_body():
-    """Generation 2 with the probe-named component removed, and nothing else changed.
-
-    Comparing a candidate against its parent is the verdict, not an ablation. To show a later
-    generation *needed* an earlier acquisition, the acquisition has to be taken away and that same
-    generation retried at the same budget. Only `capabilities` differs from
-    `migrated_improved_body`; a test asserts that rather than trusting this docstring.
+    `used_operations` used to be a list the caller wrote, and the migration believed it. It is now
+    derived from which capability handles the translation invoked, so a translator has to *use*
+    `read` to be recorded as having used it — which this does, by reading a probe task through the
+    substrate before committing to a body.
     """
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_AFTER_MIGRATION,
-        capabilities={SECOND_ACQUISITION},
-    )
-
-
-def migrated_fourth_body():
-    """Generation 4: gains t6 and t7 through its own acquisition, still needing all three before."""
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_FOURTH_GENERATION,
-        capabilities={
-            ACQUIRED_COMPONENT,
-            SECOND_ACQUISITION,
-            THIRD_ACQUISITION,
-            FOURTH_ACQUISITION,
-        },
-    )
-
-
-def migrated_fourth_ablated_body():
-    """Generation 4 with generation 3's acquisition removed. The third link of the chain."""
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_FOURTH_GENERATION,
-        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION, FOURTH_ACQUISITION},
-    )
-
-
-def migrated_further_ablated_body():
-    """Generation 3 with generation 2's acquisition removed. The second link of the chain.
-
-    One ablation shows a generation needed something earlier. Consecutive ones show that the
-    dependence runs back through the descent rather than reaching once and stopping. How many links
-    are worth calling recursion is not settled here; the runtime reports the count.
-    """
-    return RecordBody(
-        {"t0", "t1"},
-        ("read",),
-        routed=ROUTED_THIRD_GENERATION,
-        capabilities={ACQUIRED_COMPONENT, THIRD_ACQUISITION},
-    )
-
-
-def migrated_uncoupled_ablation_body():
-    """Negative control: an 'ablated' arm from which nothing was actually removed.
-
-    It is behaviourally the post-migration parent. Presented as an ablation it solves less than the
-    candidate, so the measured loss alone would call the causal claim supported — and the check must
-    still refuse it, because comparing a candidate with its parent is the verdict that accepted the
-    candidate, not evidence that anything was needed. It exists so the check's positive verdict is a
-    finding rather than a property of how the fixtures were written.
-    """
-    return RecordBody(
-        {"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities={ACQUIRED_COMPONENT}
-    )
+    probed = operations["read"]({"task_id": "translation-probe"})
+    if probed != "translation-probe":
+        raise RuntimeError("this substrate does not read the way the lineage discovered it does")
+    return migrated_parent_body
 
 
 # ---------------------------------------------------------------------------------------------

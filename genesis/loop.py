@@ -124,11 +124,13 @@ class Body(Protocol):
 class Proposal:
     """A candidate transformation, with the provenance that says who really produced it.
 
-    `ablated_body_factory` is this candidate with the earlier acquisition it depends on taken away
-    and nothing else changed. Supplying it is how a lineage offers evidence that this generation
-    *needed* the one before it; omitting it is allowed, and the cycle then records that the causal
-    claim was not established rather than quietly assuming it. `depends_on` names the acquisition
-    that was removed, so the record says what the arm actually is.
+    `depends_on` names the earlier acquisition this generation claims to have needed. The cycle
+    **constructs** the counterfactual itself, from the candidate's own configuration, and runs that;
+    it does not accept an arm from the proposer.
+
+    `ablated_body_factory` survives only as a record that a proposer offered one. It is never run
+    and never read as evidence: an arm the proposal chose is the proposal's own account of what the
+    counterfactual is, and for a while the runtime measured a loss against exactly that.
     """
 
     name: str
@@ -199,8 +201,13 @@ class Genesis:
         # rather than leaving a reader to assume the stronger one.
         self.grade = grade
         # The grader is part of the measure, so it is admitted as an artifact and every verdict
-        # names the contract digest alongside the trust-root source digest.
-        self.evaluation_contract = evaluation_contract(grade=grade)
+        # names the contract digest alongside the trust-root source digest. So is the rest of the
+        # decision rule: strict improvement, retention, whether a control is part of the comparison,
+        # and the rule by which a task set is identified. `decide()` reads all of it from here, so a
+        # verdict cannot name one measure and use another.
+        self.evaluation_contract = evaluation_contract(
+            grade=grade, admitted_isolation=isolation
+        )
         self.allow_self_reported_outcomes = allow_self_reported_outcomes
         # Which task sets this lineage has actually been evaluated on. A migration verified against
         # tasks nobody ever judged this lineage by is verified against a set chosen by whoever
@@ -226,10 +233,49 @@ class Genesis:
         propose: Callable[["Genesis", Sequence[Mapping[str, Any]]], Proposal | None],
         *,
         control_factory: Callable[[], Body] | None = None,
-        required_strict_improvement: bool = True,
+        required_strict_improvement: bool | None = None,
     ) -> dict[str, Any]:
-        """Run one observe→…→continue cycle. Returns the cycle record; never raises on rejection."""
+        """Run one observe→…→continue cycle. Returns the cycle record; never raises on rejection.
+
+        `required_strict_improvement` is kept only so that a caller asking for a decision rule the
+        admitted contract does not license is *refused* rather than silently obeyed. It used to be
+        passed straight through to the trust root, so a cycle could accept a candidate that improved
+        nothing while its verdict named a contract recording that strict improvement was required.
+
+        A `control_factory` narrows the comparison, and narrowing it changes the measure — so the
+        cycle admits a contract that names the control and its identity, and the verdict carries
+        that digest. Two lineages whose comparisons differ can no longer share one contract digest.
+        """
         generation = self.state["generation"]
+
+        if required_strict_improvement is not None and bool(
+            required_strict_improvement
+        ) != bool(self.evaluation_contract["strict_improvement"]):
+            entry = self.journal.append(
+                "decision_rule_refused",
+                generation,
+                {
+                    "asked_for_strict_improvement": bool(required_strict_improvement),
+                    "admitted_contract_requires": bool(
+                        self.evaluation_contract["strict_improvement"]
+                    ),
+                    "contract_digest": self.evaluation_contract["contract_digest"],
+                },
+            )
+            return {
+                "schema": CYCLE_SCHEMA,
+                "generation": generation,
+                "stopped": False,
+                "accepted": False,
+                "reason": "this cycle asked to decide under a rule the admitted contract does not "
+                "license: strict improvement is %s in the contract and was asked to be %s"
+                % (
+                    self.evaluation_contract["strict_improvement"],
+                    bool(required_strict_improvement),
+                ),
+                "journal_entry": entry["entry_digest"],
+            }
+
         try:
             self.budget.spend("generations")
         except BudgetExhausted as exhausted:
@@ -349,7 +395,25 @@ class Genesis:
         if control is not None and not control["completed"]:
             return abort("control", control)
 
-        from genesis.trust_root import decide
+        from genesis.trust_root import contract_agrees_on_the_measure, decide
+
+        # The contract this cycle decides under. Without a control it is the admitted one; with a
+        # control it is the admitted measure plus the control's identity, admitted here so the
+        # verdict names the comparison it actually made.
+        contract = self.evaluation_contract
+        if control_factory is not None:
+            contract = evaluation_contract(
+                grade=self.grade,
+                admitted_isolation=self.admitted_isolation,
+                control_policy="required",
+                control=control_factory,
+            )
+            changed = contract_agrees_on_the_measure(self.evaluation_contract, contract)
+            if changed:
+                raise TrustRootError(
+                    "a per-cycle contract may narrow the comparison, not rewrite the measure: %s"
+                    % ", ".join(changed)
+                )
 
         verdict = decide(
             parent_outcomes=parent["outcomes"],
@@ -359,8 +423,7 @@ class Genesis:
             isolation=self.isolation,
             admitted_isolation=self.admitted_isolation,
             candidate_provenance=proposal.provenance,
-            required_strict_improvement=required_strict_improvement,
-            evaluation_contract_record=self.evaluation_contract,
+            evaluation_contract_record=contract,
         )
         problems = verify_verdict(verdict, admitted_source_sha256=self.admitted_source_sha256)
         if problems:
@@ -468,47 +531,76 @@ class Genesis:
 
     # -- causal dependency, on every cycle rather than once per milestone ------------------
     def _causal_dependency(self, proposal, tasks, parent, candidate) -> dict[str, Any]:
-        """Run the proposal's ablation arm, if it supplied one, and judge what it shows.
+        """Construct this candidate minus the acquisition it names, run it, and judge what it shows.
 
         This lives in the cycle rather than in whatever script happens to be driving it. It was in a
         script for a while, and the loop's own docstring described the check as a permanent
         obligation of the runtime the whole time — which is a record testifying to a property the
         code did not have.
 
+        **The arm is built here, not accepted from the proposer.** The previous version ran whatever
+        `ablated_body_factory` the proposal carried, having checked only that `depends_on` named an
+        acquisition the lineage really held. A deliberately weak unrelated body, labelled with a real
+        acquisition's name, therefore produced a measured loss and was recorded as causal
+        dependency — the proposer writing its own evidence. Now the runtime derives the arm from the
+        candidate's own configuration, verifies that the two differ in exactly the licensed removal,
+        and records `established: false` whenever it cannot. A counterfactual nobody could construct
+        is not a counterfactual that passed.
+
         A lineage with no acquisitions yet has nothing to have depended on, so the absence of an arm
-        is not a failure there. Once it has one, an acceptance without an ablation arm is recorded as
+        is not a failure there. Once it has one, an acceptance with no established arm is recorded as
         `established: false` with the reason, never as an unexamined pass.
         """
+        from genesis.artifacts import ArtifactError, derive_ablation, single_difference
+
         first_acquisition = not self.state["acquisitions"]
         held = {str(item.get("name", "")) for item in self.state["acquisitions"]}
-        if proposal.ablated_body_factory is not None and proposal.depends_on not in held:
-            # An arm is only an ablation of something the lineage actually has. Without this a
-            # deliberately weak unrelated body, offered against an acquisition that was never made,
-            # measures a loss and gets called causal dependency.
+        # Kept in the record so a reader can see the proposer offered an arm and that it was not
+        # read. Deleting the field would hide the refusal rather than make it.
+        offered = proposal.ablated_body_factory is not None
+
+        def unestablished(why: str, **extra) -> dict[str, Any]:
             return {
                 "record": {
                     "established": False,
-                    "arm_supplied": True,
+                    "arm_run": False,
+                    "caller_supplied_arm_offered": offered,
+                    "caller_supplied_arm_used_as_evidence": False,
                     "depends_on": proposal.depends_on,
-                    "why": "the proposal names %r, which this lineage never acquired, so the arm "
-                    "cannot be that acquisition removed" % proposal.depends_on,
-                }
-            }
-        if proposal.ablated_body_factory is None:
-            return {
-                "record": {
-                    "established": False,
-                    "arm_supplied": False,
-                    "why": "the lineage's first acquisition depends on nothing earlier"
-                    if first_acquisition
-                    else "the proposal supplied no ablation arm, so nothing shows this generation "
-                    "needed the one before it",
-                    "depends_on": proposal.depends_on,
+                    "why": why,
+                    **extra,
                 }
             }
 
+        if not proposal.depends_on:
+            return unestablished(
+                "the lineage's first acquisition depends on nothing earlier"
+                if first_acquisition
+                else "the proposal named no earlier acquisition, so nothing shows this generation "
+                "needed the one before it"
+            )
+        if proposal.depends_on not in held:
+            return unestablished(
+                "the proposal names %r, which this lineage never acquired, so no arm can be that "
+                "acquisition removed" % proposal.depends_on
+            )
+
+        try:
+            arm = derive_ablation(proposal.body_factory, proposal.depends_on)
+        except ArtifactError as refusal:
+            return unestablished(
+                "the runtime could not construct this candidate without %r: %s"
+                % (proposal.depends_on, refusal)
+            )
+        differences = single_difference(proposal.body_factory, arm, proposal.depends_on)
+        if differences:
+            return unestablished(
+                "the derived arm is not a single-difference counterfactual: %s"
+                % "; ".join(differences)
+            )
+
         run = run_candidate(
-            proposal.ablated_body_factory,
+            arm,
             tasks,
             self.isolation,
             admitted_isolation=self.admitted_isolation,
@@ -529,8 +621,15 @@ class Genesis:
         return {
             "record": {
                 "established": established,
-                "arm_supplied": True,
+                "arm_run": True,
+                "arm_derived_by_the_runtime": True,
+                "caller_supplied_arm_offered": offered,
+                "caller_supplied_arm_used_as_evidence": False,
                 "depends_on": proposal.depends_on,
+                "candidate_artifact_digest": artifact_digest_of(proposal.body_factory)[
+                    "artifact_digest"
+                ],
+                "ablated_artifact_digest": artifact_digest_of(arm)["artifact_digest"],
                 "solved_with_acquisition": outcome["solved_with_acquisition"],
                 "solved_without_acquisition": outcome["solved_without_acquisition"],
                 "ablated_arm_differs_from_the_parent_arm": distinct,
@@ -571,6 +670,50 @@ class Genesis:
             # a judgement the runtime is not entitled to make on its own behalf.
             "makes_no_recursion_claim": True,
         }
+
+    # -- architecture changes, owned by the runtime rather than by whatever drives it -------
+    def adopt_component(
+        self, certificate: Mapping[str, Any], *, provenance: Mapping[str, Any]
+    ) -> dict[str, Any]:
+        """Install a component class the lineage's own evidence licensed, and journal it.
+
+        The demonstration script used to assign `genesis.state` and append the journal entry itself,
+        which made the architectural transition a property of the script rather than of the runtime.
+        """
+        self.state = lineage_state.extend_components(
+            self.state, certificate=certificate, provenance=provenance
+        )
+        entry = self.journal.append(
+            "component_acquired",
+            self.state["generation"],
+            {
+                "component": certificate["new_component"],
+                "certificate_digest": certificate["certificate_digest"],
+                "operations": list(
+                    (certificate.get("resolving_composition") or {}).get("operations") or []
+                ),
+                "new_state_digest": self.state["state_digest"],
+            },
+        )
+        return entry
+
+    def adopt_vocabulary(
+        self, certificate: Mapping[str, Any], *, provenance: Mapping[str, Any] | None = None
+    ) -> dict[str, Any]:
+        """Install a diagnostic feature the lineage measured a need for, and journal it."""
+        self.state = lineage_state.extend_vocabulary(
+            self.state, certificate=certificate, provenance=provenance
+        )
+        entry = self.journal.append(
+            "vocabulary_extended",
+            self.state["generation"],
+            {
+                "feature": certificate["new_feature"],
+                "certificate_digest": certificate["certificate_digest"],
+                "new_state_digest": self.state["state_digest"],
+            },
+        )
+        return entry
 
     # -- many cycles ----------------------------------------------------------------------
     def evolve(

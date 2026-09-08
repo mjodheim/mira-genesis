@@ -42,6 +42,8 @@ MODULES = (
     "loop",
     "migration",
     "probe",
+    "artifacts",
+    "capabilities",
 )
 
 

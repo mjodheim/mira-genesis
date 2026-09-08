@@ -10,4 +10,9 @@ The architecture splits in two and the split does not bend:
   decides on. Genesis must never be able to become better by modifying the measure that decides it
   is better.
 * everything else is mutable Genesis, which may evolve.
+
+Within mutable Genesis, `genesis.controller` owns the architecture state machine. A lineage-owned
+mechanism receives the frozen `LineageContext` and returns a declarative intent; it spends no budget,
+runs no probe, touches no journal and commits no state. That boundary is why the demonstration script
+is a launcher rather than the architecture.
 """

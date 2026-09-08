@@ -38,6 +38,9 @@ ENTRY_KINDS = (
     "migration",
     "budget_exhausted",
     "instrument_abort",
+    # A cycle asked to decide under a rule the admitted evaluation contract does not license. The
+    # refusal is history: a caller reaching for a weaker measure is a fact about the run.
+    "decision_rule_refused",
 )
 
 

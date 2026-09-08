@@ -318,18 +318,117 @@ runtime counted five, and the relayed summary names only four of them, so the si
 identified from here. Their survivor list would settle it; until then the two measurements disagree
 by one and this document says so rather than picking the flattering reading.
 
+## Round two: what the second external review found, and what changed
+
+`docs/audits/GPT56_GENESIS_RUNTIME_REVIEW_2026-09-08_ROUND2.md` reviewed the *repaired* runtime and
+asked the harder question: do the stronger properties now claimed actually follow from the repaired
+mechanisms. Thirteen findings; three were coverage corrections and ten were mechanism or architecture
+blockers. All are closed below. The repair order came from
+`docs/GENESIS_RUNTIME_ROUND2_REPAIR_DESIGN.md`: semantic objects first, then the workflows resting on
+them, because fixing the later items first would only have measured the wrong frontier more
+precisely.
+
+**R2-5 / R2-6 — identity stopped at the symbol.** `artifact_digest_of` unwrapped `functools.partial`
+to its underlying callable and discarded the bound arguments, so two zero-argument factories built
+from one class with different configuration shared a digest. Restore could therefore hand a persisted
+lineage a differently configured body, and the same collision applied to the grader — which *is* the
+measure. Identity is now recursive over bound state: partial arguments and keywords, published
+configurations, and nothing collapsed. Anything it cannot reconstruct — a lambda, a closure, a
+callable with opaque state — is **refused** rather than reduced to a name. Failing closed is the
+point: a weak identity that silently covers two executables is worse than none, because the record
+then testifies to a binding that does not hold.
+
+**R2-7 / R2-10 — the verdict could name one measure and use another.** `cycle()` took a
+`required_strict_improvement` argument and passed it straight to `decide()`, so a cycle could accept a
+candidate that improved nothing while its verdict named a contract recording that strict improvement
+was required. Whether a control arm was part of the comparison was not in the contract at all, so two
+instances sharing one contract digest could reach opposite verdicts on the same candidate. The
+decision rule now comes from one admitted `EvaluationContract` and from nowhere else; a control
+narrows the comparison by admitting a contract that names the control's identity; and a cycle asking
+for a rule the contract does not license is refused and journalled rather than obeyed.
+
+**R2-8 — provenance validated by class alone.** The constructor always required a producer; every
+validation path checked only the class, so `{"class": "lineage_owned"}` reached verdicts and lineage
+state with nobody named as having produced anything. `trust_root.validate_provenance` is now the one
+rule, used wherever provenance enters a trusted record.
+
+**R2-1 — the ablation was still the proposer's own evidence.** Naming a real acquisition was checked;
+that the supplied arm *was* that acquisition removed was not, so a deliberately weak unrelated body
+labelled with a real name produced a measured loss and was recorded as causal dependency. The runtime
+now derives the counterfactual itself from the candidate's published configuration
+(`genesis/artifacts.py`), verifies the two differ in exactly the licensed removal, and records
+`established: false` when it cannot construct or authenticate the arm. `Proposal.ablated_body_factory`
+survives only as a record that a proposer offered one; it is never run.
+
+**R2-11 — an acquisition installed a name.** The certificate proved a composition outside the held
+registry reaches the demand, and then `extend_components` added a name; re-running the same demand
+immediately afterwards still found nothing that resolved it, unless a human edited a host mapping.
+`state.component_artifact` derives the machinery from the certificate itself and `held_operations`
+makes later diagnosis consume it, so the acquisition becomes part of the lineage rather than a record
+of a discovery.
+
+**R2-12 — an extended vocabulary was a label.** `measure()` emitted one boolean per held *component*
+and never read `LineageState.vocabulary`, so an extension widened the history and not the
+computation. Features have executable semantics now (`resolvable_by_<component>`,
+`requires_<operation>`) and `measure()` evaluates the lineage's current vocabulary in order. A name
+whose semantics the runtime cannot evaluate is refused: a made-up boolean in a diagnostic row is
+worse than a missing one, because everything downstream reads it as a measurement.
+
+**R2-2 / R2-9 — migration handed the translator too much.** The translator received the very mapping
+later used as the intactness baseline, so it could delete the lineage's components from both sides of
+the comparison; and it received raw Python callables, whose `__globals__` exposed operations nobody
+had probed for. It now receives a deep copy (mutating it is refused), and capability handles rather
+than callables (`genesis/capabilities.py`). `used_operations` is **derived from which handles were
+invoked** and checked against the declaration in both directions.
+
+**R2-13 — the demonstration was the architecture.** The script called the probes, assigned
+`genesis.state`, appended the journal entries and sequenced the migration, so what the run showed was
+that a person can call the pieces in the right order. `genesis/controller.py` owns the state machine;
+the lineage-owned mechanism is a function from the frozen `LineageContext` to one declarative intent
+and can spend no budget, run no probe and commit no state. The script supplies a world, a mechanism
+and a renderer, and `tests/test_genesis_gpt56_round2_architecture.py` parses it to check that it
+assigns no lineage state and appends no journal entry.
+
+**R2-3 / R2-4 and the missing-operation contract — coverage, not mechanism.** Three guards were
+described here as unreachable or equivalent, and the reasoning was wrong in each case in the same
+way: it considered the code and not its collaborators. The sandbox task-set guard is reachable from
+an ordinary candidate through caller-frame introspection; the probe state-mutation guard is reachable
+through a `Mapping` whose `.get()` mutates the state being diagnosed; and the missing-operation guard
+is equivalent *only through the sandbox*, since called directly it raises `ProbeError` rather than
+`TypeError`. All three now have direct tests, and the comments in the source say what the earlier
+claim missed rather than being quietly deleted.
+
+### On the mutation-score discrepancy
+
+Round two supplies the explanation the previous section could not reach. The `sandbox.py` subprocess
+survivor is environment-sensitive: `RLIMIT_NPROC` can independently block process creation for an
+unprivileged process and be ineffective for uid 0, so 70/6 and 71/5 on identical source can both be
+correct measurements on different platforms rather than one of them being a counting error. The
+checker now prints Python version, platform, uid and an independent `RLIMIT_NPROC` control, verifies
+the unmutated baseline is green before scoring anything, and covers `artifacts` and `capabilities`.
+Any figure quoted from it should be read together with that context block.
+
 ## Known open, not fixed
 
-- **The host still draws the partition.** `COMPONENT_OPERATIONS` decides what each component
-  reaches and is not derived from anything in the lineage's state. A component that is nothing but a
-  host-declared operation set may be a relabelling of the host's partition rather than a component,
-  and no test here settles that.
+- **The host still draws the seed partition.** `COMPONENT_OPERATIONS` decides what each *seed*
+  component reaches. Acquired components now derive their operations from their own certificates, so
+  the partition is no longer host-drawn all the way down — but the starting one still is, and a seed
+  component that is nothing but a host-declared operation set may be a relabelling rather than a
+  component. No test here settles that.
 - **Two definitions in the vocabulary path are conventions, not measurements.** "The limiting
   component is the one supplying most of the composition" and "take the first operation in the
   sorted symmetric difference" are both the author's choices. They are defensible and they are not
   forced by anything.
-- **No epistemic separation.** The runtime, its tests, the demonstration and this document have one
-  source. `docs/audits/GENESIS_RUNTIME_HOSTILE_REVIEW_BRIEF.md` requests the separation that source
-  cannot supply for itself; until a review returns, every claim here is self-assessed.
+- **The mechanism is a programme, not a search.** The controller closes the *authority* question —
+  lineage-owned code cannot reach the runtime — and the demonstration's mechanism is a lookup table
+  of intents. That the runtime performs the transitions is what the run shows; that a lineage
+  discovered which transitions to attempt is not.
+- **Intents name importable artifacts.** A lineage that generates its own code needs content-addressed
+  payloads the executor can build and run. `binds_exact_executed_bytes` is `false` on every artifact
+  descriptor this runtime produces, and it says so.
+- **Capability handles are not a sandbox.** Translation runs in this process. Severing
+  `__globals__` closes the accidental aperture and the caller-authored use declaration; a determined
+  translator can still walk `type(handle)`. Real isolation needs the process boundary that candidate
+  execution crosses and translation does not.
 - **Fixtures, not a mechanism.** See the stopping criterion section above. The probe operations are
   arithmetic on integers; that they compose is a property of the fixture, not a result.

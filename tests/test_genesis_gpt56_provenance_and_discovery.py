@@ -62,8 +62,13 @@ def _read(task):
     return task
 
 
-def _undiscovered(task):
+def _undiscovered(task):  # pragma: no cover - never discovered, so never invoked
     return task
+
+
+def _translate(_state, operations):
+    operations["read"]({"task_id": "translation-probe"})
+    return bodies.parent_body
 
 
 def test_lineage_visible_substrate_record_does_not_reveal_operations_never_discovered():
@@ -83,7 +88,7 @@ def test_lineage_visible_substrate_record_does_not_reveal_operations_never_disco
     mg.migrate(
         genesis,
         substrate,
-        lambda _state, _operations: bodies.parent_body,
+        _translate,
         used_operations=["read"],
         tasks=None,
     )

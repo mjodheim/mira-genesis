@@ -36,12 +36,20 @@ and going on evolving is.
 from __future__ import annotations
 
 from collections import Counter
+from copy import deepcopy
 from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Sequence
 
 from genesis import state as lineage_state
+from genesis.capabilities import CapabilitySet, undeclared_use
 from genesis.journal import Journal
-from genesis.trust_root import digest_of, provenance
+from genesis.trust_root import (
+    artifact_digest_of,
+    canonical_bytes,
+    digest_of,
+    provenance,
+    validate_provenance,
+)
 
 MIGRATION_SCHEMA = "genesis-migration-v1"
 SUBSTRATE_SCHEMA = "genesis-substrate-v1"
@@ -220,13 +228,56 @@ def migrate(
             % ", ".join(undiscovered)
         )
 
-    body_factory = translate(departing, substrate.discovered)
+    # The translator gets a copy and the canonical departure stays here. It used to receive
+    # `departing` itself — the same mapping `carried_intact` later compares the arrival against — so
+    # a translator could delete the lineage's components from the baseline before the comparison was
+    # computed, and the loss would be present on both sides and reported as nothing lost.
+    offered = deepcopy(departing)
+    baseline = canonical_bytes(departing)
+    # Not raw callables. A callable carries its defining module with it, so handing one over hands
+    # over every operation that module holds — including the ones the lineage never probed for.
+    handles = CapabilitySet(substrate.discovered)
+
+    body_factory = translate(offered, handles)
+
+    if canonical_bytes(departing) != baseline:
+        raise MigrationError(
+            "the translation mutated the departure record it was given; the value the arrival is "
+            "compared against may not be writable by the code producing the arrival"
+        )
+    if canonical_bytes(offered) != baseline:
+        raise MigrationError(
+            "the translation mutated the departure record it was given, so what it says arrived "
+            "cannot be compared with what actually left"
+        )
     if not callable(body_factory):
         raise MigrationError("the translation did not produce a body factory")
 
+    # Derived from what the translation actually invoked, not from what its caller declared.
+    actually_used = handles.used()
+    difference = undeclared_use(used_operations, actually_used)
+    if difference["used_but_not_declared"] or difference["declared_but_not_used"]:
+        raise MigrationError(
+            "the translation's declared operations are not the ones it used: used but undeclared "
+            "%s; declared but unused %s"
+            % (
+                ", ".join(difference["used_but_not_declared"]) or "none",
+                ", ".join(difference["declared_but_not_used"]) or "none",
+            )
+        )
+
+    # The arrival's body identity is the executable that arrived. This hashed
+    # `{substrate, from, via}` — a description of the journey — so two different translated bodies
+    # produced by the same route were the same body as far as the state was concerned.
+    arrival_artifact = artifact_digest_of(body_factory)
     arrived = lineage_state.create_state(
         body_digest=digest_of(
-            {"substrate": substrate.name, "from": departing["body_digest"], "via": sorted(used_operations)}
+            {
+                "substrate": substrate.name,
+                "from": departing["body_digest"],
+                "via": sorted(actually_used),
+                "arrived_artifact": arrival_artifact,
+            }
         ),
         components=departing["components"],
         vocabulary=departing["vocabulary"],
@@ -271,13 +322,17 @@ def migrate(
             "departure_state_digest": departing["state_digest"],
             "arrival_state_digest": arrived["state_digest"],
             "departure_journal_head": departure_head,
-            "used_operations": sorted(used_operations),
+            "used_operations": actually_used,
+            "operation_use_counts": handles.use_counts(),
+            "arrived_body_artifact": arrival_artifact,
             "carried": carried["carried"],
             "capability": capability,
             # Measured, not asserted. This said `lineage_owned` whatever produced the translation,
             # so a host-authored translator was recorded as the lineage's own work — which is the
-            # one distinction the provenance vocabulary exists to keep.
-            "provenance": dict(translation_provenance)
+            # one distinction the provenance vocabulary exists to keep. It goes through the same
+            # validator as every other trusted record, so a class with no producer is refused here
+            # as it is everywhere else.
+            "provenance": validate_provenance(translation_provenance, what="the translation")
             if translation_provenance
             else provenance(
                 "host_written",
@@ -297,7 +352,11 @@ def migrate(
         "journal_continues": entry["previous_digest"] == departure_head,
         "carried": carried["carried"],
         "capability": capability,
+        "used_operations": actually_used,
+        "operation_use_counts": handles.use_counts(),
         "used_only_discovered_operations": True,
+        "operations_derived_from_use_not_declaration": True,
+        "arrived_body_artifact": arrival_artifact,
         "evolved_after_migration": False,
     }
     record["migration_digest"] = digest_of(record)

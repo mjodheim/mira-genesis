@@ -145,6 +145,7 @@ def test_adoption_cannot_trade_away_a_parent_solved_task_for_a_larger_total():
         isolation=tr.Isolation(),
         admitted_isolation=tr.Isolation(),
         candidate_provenance=LINEAGE,
+        evaluation_contract_record=tr.evaluation_contract(grade=bodies.grade),
     )
     assert verdict["accepted"] is False
     assert verdict["lost_solved_tasks"] == ["t0"]

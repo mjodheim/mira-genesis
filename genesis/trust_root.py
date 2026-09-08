@@ -89,6 +89,80 @@ def source_digest() -> str:
     return hashlib.sha256(raw).hexdigest()
 
 
+def _canonical_configuration(value: Any, *, path: str) -> Any:
+    """Reduce a bound value to something a digest can cover, or refuse.
+
+    Identity that skips a callable's bound state is not identity. This walks the configuration and
+    either produces a canonical form of it or raises, so an artifact descriptor never quietly omits
+    a value that changes what the code does.
+    """
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if isinstance(value, (list, tuple)):
+        return [_canonical_configuration(item, path=path) for item in value]
+    if isinstance(value, (set, frozenset)):
+        members = [_canonical_configuration(item, path=path) for item in value]
+        return {"__set__": sorted(members, key=lambda item: canonical_bytes(item))}
+    if isinstance(value, Mapping):
+        return {
+            str(key): _canonical_configuration(value[key], path=path)
+            for key in sorted(value, key=str)
+        }
+    if callable(value):
+        return artifact_digest_of(value)
+    raise TrustRootError(
+        "the executable configuration at %s holds %r, whose value a digest cannot cover; package "
+        "it into an exact artifact rather than letting identity omit it" % (path, type(value))
+    )
+
+
+def _module_source_digest(target: Any) -> str:
+    import inspect
+
+    try:
+        source_file = inspect.getsourcefile(target)
+    except (OSError, TypeError):  # pragma: no cover - built-ins and C callables
+        return ""
+    if not source_file:
+        return ""
+    try:
+        raw = Path(source_file).read_bytes().replace(b"\r\n", b"\n")
+    except OSError:  # pragma: no cover - source removed after import
+        return ""
+    return hashlib.sha256(raw).hexdigest()
+
+
+def _symbol_artifact(target: Any) -> dict[str, Any]:
+    """A module-level function or class, bound to the source that defines it.
+
+    Anything whose behaviour depends on state a reader cannot reconstruct from the symbol — a
+    lambda, a nested function, a closure over live values — is refused here rather than collapsed
+    into a name. That collapse is exactly how two different bodies came to share one digest.
+    """
+    qualname = str(getattr(target, "__qualname__", getattr(target, "__name__", "")))
+    if not qualname:
+        raise TrustRootError("this callable has no name a digest could bind")
+    if "<lambda>" in qualname or "<locals>" in qualname:
+        raise TrustRootError(
+            "%r is defined inside another scope, so its behaviour depends on values no descriptor "
+            "here can reconstruct; package it into an importable artifact before using it where "
+            "identity is a trust boundary" % qualname
+        )
+    if getattr(target, "__closure__", None):
+        raise TrustRootError(
+            "%r closes over live values, which an importable-symbol identity does not cover" % qualname
+        )
+    payload = {
+        "schema": ARTIFACT_SCHEMA,
+        "kind": "importable_symbol",
+        "module": str(getattr(target, "__module__", "")),
+        "qualname": qualname,
+        "module_source_sha256": _module_source_digest(target),
+        "binds_exact_executed_bytes": False,
+    }
+    return {**payload, "artifact_digest": digest_of(payload)}
+
+
 def artifact_digest_of(factory: Any) -> dict[str, Any]:
     """Identify executable code by what it *is*, not by what it is called.
 
@@ -96,34 +170,68 @@ def artifact_digest_of(factory: Any) -> dict[str, Any]:
     bodies with the same metadata were the same proposal and an accepted state's `body_digest` was
     not a digest of any body. Identity has to reach the code that runs.
 
-    For an importable development fixture the artifact binds the qualified symbol *and* the digest of
-    the module source that defines it, so editing the body changes its identity. A future
-    lineage-generated or packaged body must bind the exact bytes it executes; this descriptor is the
-    weakest form that is still an identity rather than a label, and it says which one it is.
+    The first repair reached the defining module but stopped at the symbol: a `functools.partial`
+    was unwrapped to its underlying callable and the bound arguments were thrown away. Two zero-
+    argument factories built from the same class with different configuration therefore shared one
+    digest, so restore could hand a persisted lineage a differently configured body — and the same
+    collision applied to the grader, which is the measure itself. Bound state is behaviour, so it is
+    part of identity here:
+
+    * an importable module-level function or class binds its qualified symbol and the digest of the
+      module source that defines it;
+    * a `functools.partial` binds the recursive identity of its callable *and* its bound arguments
+      and keywords, canonicalised;
+    * an object that publishes `artifact_configuration()` binds that configuration exactly, which is
+      what lets the runtime construct a licensed ablation of it rather than take a caller's word;
+    * anything else — a lambda, a closure, a callable whose state cannot be reconstructed — is
+      **refused**. Failing closed is the point: a weak symbolic identity that silently covers two
+      different executables is worse than no identity, because a record then testifies to a binding
+      that does not hold.
+
+    None of these bind the exact executed bytes; `binds_exact_executed_bytes` says so, and a
+    lineage-generated body will need a packaged artifact that does.
     """
     import functools
-    import inspect
 
-    target = factory
-    while isinstance(target, functools.partial):
-        target = target.func
-    source_digest_of_module = ""
-    try:
-        source_file = inspect.getsourcefile(target)
-        if source_file:
-            raw = Path(source_file).read_bytes().replace(b"\r\n", b"\n")
-            source_digest_of_module = hashlib.sha256(raw).hexdigest()
-    except (OSError, TypeError):  # pragma: no cover - built-ins and C callables
-        source_digest_of_module = ""
-    payload = {
-        "schema": ARTIFACT_SCHEMA,
-        "kind": "importable_symbol",
-        "module": str(getattr(target, "__module__", "")),
-        "qualname": str(getattr(target, "__qualname__", getattr(target, "__name__", ""))),
-        "module_source_sha256": source_digest_of_module,
-        "binds_exact_executed_bytes": False,
-    }
-    return {**payload, "artifact_digest": digest_of(payload)}
+    if hasattr(factory, "artifact_configuration"):
+        configuration = factory.artifact_configuration()
+        if not isinstance(configuration, Mapping):
+            raise TrustRootError("artifact_configuration() did not return a record")
+        payload = {
+            "schema": ARTIFACT_SCHEMA,
+            "kind": "configured_artifact",
+            "configuration": _canonical_configuration(
+                dict(configuration), path="configured_artifact"
+            ),
+            "binds_exact_executed_bytes": False,
+        }
+        return {**payload, "artifact_digest": digest_of(payload)}
+
+    if isinstance(factory, functools.partial):
+        payload = {
+            "schema": ARTIFACT_SCHEMA,
+            "kind": "partial_application",
+            "callable": artifact_digest_of(factory.func),
+            "args": _canonical_configuration(list(factory.args), path="partial args"),
+            "keywords": _canonical_configuration(
+                dict(factory.keywords or {}), path="partial keywords"
+            ),
+            "binds_exact_executed_bytes": False,
+        }
+        return {**payload, "artifact_digest": digest_of(payload)}
+
+    if not callable(factory):
+        raise TrustRootError("an executable artifact must be callable")
+    return _symbol_artifact(factory)
+
+
+#: What a comparison may require of a control arm. `none` means the measure does not use one;
+#: `required` means a control is part of the measure and its identity is admitted with it.
+CONTROL_POLICIES = ("none", "required")
+
+#: How a task set is identified. Named in the contract because changing the rule changes what
+#: "the same tasks" means, and a verdict has to say which rule it was reached under.
+TASK_IDENTITY_RULE = "question_contents_v1"
 
 
 def evaluation_contract(
@@ -132,6 +240,10 @@ def evaluation_contract(
     outcome_vocabulary: Sequence[str] = TASK_OUTCOMES,
     retention_policy: str = "parent_solved_must_remain_solved",
     strict_improvement: bool = True,
+    control_policy: str = "none",
+    control: Any = None,
+    task_identity_rule: str = TASK_IDENTITY_RULE,
+    admitted_isolation: "Isolation | None" = None,
 ) -> dict[str, Any]:
     """The measure, as one content-addressed value that every arm of a comparison must name.
 
@@ -139,15 +251,58 @@ def evaluation_contract(
     bound to the bytes of this file while correctness is decided by an unbound callable is not bound
     to its measure: swap the grader and every verdict still names the same trust-root digest. So the
     grader is admitted as an artifact and the contract digest travels with the verdict.
+
+    The same argument reaches further than the grader, and for a while the contract stopped short of
+    it. `decide()` took a separate `required_strict_improvement` flag, so a caller could accept a
+    candidate that improved nothing while the verdict named a contract whose recorded policy said
+    strict improvement was required. And whether a control arm was part of the comparison at all was
+    not in the contract, so two instances carrying the same digest could reach opposite verdicts on
+    the same candidate. **Everything the decision rule reads lives here**, and `decide()` reads it
+    from here and from nowhere else.
     """
+    if control_policy not in CONTROL_POLICIES:
+        raise TrustRootError("unrecognised control policy %r" % (control_policy,))
+    if control_policy == "required" and control is None:
+        raise TrustRootError(
+            "a contract that requires a control must admit which control, or the same digest covers "
+            "every possible comparison"
+        )
+    if control_policy == "none" and control is not None:
+        raise TrustRootError(
+            "a control artifact was admitted under a contract whose policy does not use one"
+        )
     payload = {
         "schema": CONTRACT_SCHEMA,
         "grader": artifact_digest_of(grade) if grade is not None else None,
         "outcome_vocabulary": list(outcome_vocabulary),
         "retention_policy": retention_policy,
         "strict_improvement": bool(strict_improvement),
+        "control_policy": control_policy,
+        "control": artifact_digest_of(control) if control is not None else None,
+        "task_identity_rule": str(task_identity_rule),
+        "admitted_isolation": admitted_isolation.record() if admitted_isolation else None,
     }
     return {**payload, "contract_digest": digest_of(payload)}
+
+
+def contract_agrees_on_the_measure(
+    admitted: Mapping[str, Any], used: Mapping[str, Any]
+) -> list[str]:
+    """Which parts of the measure a per-cycle contract changed from the admitted one.
+
+    A cycle may narrow the comparison by admitting a control; it may not change the grader, the
+    outcome vocabulary, the retention policy, the strict-improvement requirement or the task
+    identity rule. Those are the lineage's measure, and a lineage that could rewrite them per cycle
+    would be choosing what counts as better.
+    """
+    fixed = (
+        "grader",
+        "outcome_vocabulary",
+        "retention_policy",
+        "strict_improvement",
+        "task_identity_rule",
+    )
+    return [name for name in fixed if admitted.get(name) != used.get(name)]
 
 
 # ---------------------------------------------------------------------------------------------
@@ -237,13 +392,51 @@ class Budget:
 # ---------------------------------------------------------------------------------------------
 # Provenance
 # ---------------------------------------------------------------------------------------------
+PROVENANCE_SCHEMA = "genesis-provenance-v1"
+
+
 def provenance(kind: str, *, produced_by: str, detail: str = "") -> dict[str, Any]:
     """Record who produced an artifact. An unclassifiable artifact is refused, not defaulted."""
     if kind not in PROVENANCE_CLASSES:
         raise TrustRootError("unrecognised provenance class %r" % (kind,))
     if not isinstance(produced_by, str) or not produced_by.strip():
         raise TrustRootError("provenance names no producer")
-    return {"class": kind, "produced_by": produced_by, "detail": detail}
+    return {
+        "schema": PROVENANCE_SCHEMA,
+        "class": kind,
+        "produced_by": produced_by,
+        "detail": detail,
+    }
+
+
+def validate_provenance(record: Any, *, what: str = "artifact") -> dict[str, Any]:
+    """The one place a provenance record is checked, wherever it enters a trusted value.
+
+    The constructor above always required a producer. Every *validation* path checked only that
+    `record["class"]` was recognised, so a mapping written by hand — `{"class": "lineage_owned"}` —
+    reached a verdict and a lineage state with nobody named as having produced anything. A class
+    without a producer is a category, not provenance, and the whole vocabulary exists to say who did
+    the work. So the invariant the constructor enforces is enforced here too, and callers validate
+    rather than re-checking one field each.
+    """
+    if not isinstance(record, Mapping):
+        raise TrustRootError("%s carries no provenance record" % what)
+    kind = record.get("class")
+    if kind not in PROVENANCE_CLASSES:
+        raise TrustRootError("%s carries no recognised provenance class" % what)
+    producer = record.get("produced_by")
+    if not isinstance(producer, str) or not producer.strip():
+        raise TrustRootError(
+            "%s carries provenance of class %r that names no producer" % (what, kind)
+        )
+    validated = {
+        "schema": str(record.get("schema") or PROVENANCE_SCHEMA),
+        "class": kind,
+        "produced_by": producer,
+        "detail": record.get("detail", ""),
+    }
+    extra = {k: v for k, v in record.items() if k not in validated}
+    return {**validated, **extra}
 
 
 # ---------------------------------------------------------------------------------------------
@@ -293,18 +486,44 @@ def decide(
     isolation: Isolation,
     admitted_isolation: Isolation,
     candidate_provenance: Mapping[str, Any],
-    required_strict_improvement: bool = True,
     evaluation_contract_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Accept or reject a candidate. This is the only place a candidate may become the body.
 
     Every number in the verdict is recomputed here from raw per-task outcomes. No score, boolean or
     summary produced by the parent, the candidate or any Genesis component is read.
+
+    **The decision rule comes from the admitted contract and from nowhere else.** There used to be a
+    `required_strict_improvement` argument beside the contract, so a caller could pass `False` and
+    obtain an acceptance whose verdict named a contract recording that strict improvement was
+    required — a verdict naming one measure while using another. Whether a control arm is part of
+    the comparison is read from the contract for the same reason: without it, two lineages carrying
+    one contract digest could reach opposite verdicts on the same candidate.
     """
     isolation.assert_no_wider_than(admitted_isolation)
 
-    if candidate_provenance.get("class") not in PROVENANCE_CLASSES:
-        raise TrustRootError("candidate carries no recognised provenance")
+    provenance_record = validate_provenance(candidate_provenance, what="the candidate")
+
+    contract = dict(evaluation_contract_record or {})
+    if contract.get("schema") != CONTRACT_SCHEMA:
+        raise TrustRootError("no admitted evaluation contract: there is no measure to decide under")
+    if contract.get("contract_digest") != digest_of(
+        {k: v for k, v in contract.items() if k != "contract_digest"}
+    ):
+        raise TrustRootError("the evaluation contract does not reproduce its own digest")
+    required_strict_improvement = bool(contract.get("strict_improvement"))
+    control_policy = contract.get("control_policy", "none")
+    if control_policy not in CONTROL_POLICIES:
+        raise TrustRootError("the evaluation contract names an unrecognised control policy")
+    if control_policy == "required" and control_outcomes is None:
+        raise TrustRootError(
+            "the admitted contract makes a control part of the measure and no control arm ran"
+        )
+    if control_policy == "none" and control_outcomes is not None:
+        raise TrustRootError(
+            "a control arm was supplied under a contract whose measure does not use one; admit a "
+            "contract that names the control rather than changing the comparison beneath the digest"
+        )
 
     parent = _tally(parent_outcomes, "parent")
     candidate = _tally(candidate_outcomes, "candidate")
@@ -357,12 +576,14 @@ def decide(
         "control": control,
         "improved": improved,
         "lost_solved_tasks": lost_solved,
-        "evaluation_contract_digest": (
-            dict(evaluation_contract_record)["contract_digest"]
-            if evaluation_contract_record
-            else ""
-        ),
-        "candidate_provenance": dict(candidate_provenance),
+        "evaluation_contract_digest": contract["contract_digest"],
+        "decision_rule": {
+            "strict_improvement": required_strict_improvement,
+            "retention_policy": contract.get("retention_policy"),
+            "control_policy": control_policy,
+            "read_from_the_admitted_contract": True,
+        },
+        "candidate_provenance": provenance_record,
         "budget": budget.record(),
         "isolation": isolation.record(),
         "admitted_isolation": admitted_isolation.record(),

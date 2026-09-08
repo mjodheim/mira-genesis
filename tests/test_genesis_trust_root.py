@@ -32,7 +32,28 @@ def _outcomes(solved: int, total: int = 6, *, errors: int = 0, **extra):
     return rows
 
 
-def _decide(parent, candidate, control=None, **kwargs):
+def _grade(task, answer):
+    """A module-level grader, so the evaluation contract can bind an identity for it."""
+    return "solved" if answer == task.get("expected") else "unsolved"
+
+
+def _control_body():  # pragma: no cover - identity only, never run in these tests
+    return None
+
+
+def _contract(**overrides):
+    arguments = {"grade": _grade, "admitted_isolation": ADMITTED}
+    arguments.update(overrides)
+    return tr.evaluation_contract(**arguments)
+
+
+def _decide(parent, candidate, control=None, contract=None, **kwargs):
+    if contract is None:
+        contract = (
+            _contract(control_policy="required", control=_control_body)
+            if control is not None
+            else _contract()
+        )
     return tr.decide(
         parent_outcomes=parent,
         candidate_outcomes=candidate,
@@ -41,6 +62,7 @@ def _decide(parent, candidate, control=None, **kwargs):
         isolation=ADMITTED,
         admitted_isolation=ADMITTED,
         candidate_provenance=tr.provenance("lineage_owned", produced_by="lineage"),
+        evaluation_contract_record=contract,
         **kwargs,
     )
 
@@ -118,6 +140,7 @@ def test_a_candidate_may_not_run_under_wider_limits_than_the_lineage_was_admitte
             isolation=wider,
             admitted_isolation=ADMITTED,
             candidate_provenance=tr.provenance("lineage_owned", produced_by="lineage"),
+            evaluation_contract_record=_contract(),
         )
 
 
@@ -164,6 +187,7 @@ def test_a_model_written_transformation_is_recorded_as_model_mediated():
         isolation=ADMITTED,
         admitted_isolation=ADMITTED,
         candidate_provenance=tr.provenance("model_mediated", produced_by="an external model"),
+        evaluation_contract_record=_contract(),
     )
     assert verdict["candidate_provenance"]["class"] == "model_mediated"
 

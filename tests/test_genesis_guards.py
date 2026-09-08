@@ -53,6 +53,14 @@ TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(4)]
 ROWS = [{"task_id": "t%d" % index, "outcome": "solved"} for index in range(4)]
 
 
+def _grade(task, answer):  # pragma: no cover - identity only, never run in these tests
+    return "solved" if answer == task.get("expected") else "unsolved"
+
+
+def _control_body():  # pragma: no cover - identity only, never run in these tests
+    return None
+
+
 def _decide(**overrides):
     arguments = {
         "parent_outcomes": ROWS,
@@ -63,6 +71,14 @@ def _decide(**overrides):
         "candidate_provenance": LINEAGE,
     }
     arguments.update(overrides)
+    # The decision rule now comes from one admitted contract, so a comparison that uses a control
+    # has to be made under a contract that says so.
+    arguments.setdefault(
+        "evaluation_contract_record",
+        tr.evaluation_contract(grade=_grade, control_policy="required", control=_control_body)
+        if arguments.get("control_outcomes") is not None
+        else tr.evaluation_contract(grade=_grade),
+    )
     return tr.decide(**arguments)
 
 

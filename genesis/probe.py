@@ -106,13 +106,12 @@ class BatchProbeBody:
         for name in operations:
             operation = registry.get(name)
             if operation is None:
-                # An equivalent mutant lives here: deleting this raise makes the next line fail with
-                # a TypeError, which the sandbox records as the same `error` row by a less legible
-                # route. `scripts/check_genesis_guards_are_tested.py` reports it as surviving; that
-                # is what an equivalent mutant looks like, and the message is worth keeping.
-                # The equivalence was *reasoned* here and a reviewer had no way to check it without
-                # re-deriving the argument. It is now measured, and the procedure and result are in
-                # experiments/GENESIS/RUNTIME_NOTES.md so the claim can be rerun rather than trusted.
+                # This was called an equivalent mutant: deleting the raise makes the next line fail
+                # with a TypeError, which the sandbox records as the same `error` row. The
+                # equivalence was only ever true *through the sandbox*. Called directly the two
+                # differ — `ProbeError` against `TypeError` — and the direct behaviour is part of
+                # this class's contract, so the round-two suite exercises it and the mutant is
+                # killed. An equivalence claim has to name the observation window it holds in.
                 raise ProbeError("this composition uses %r, which the registry does not have" % name)
             value = operation(value)
         return value
@@ -304,11 +303,16 @@ def diagnose_by_experiment(
     before = canonical_bytes(dict(state))
     registry = resolve_registry(registry_reference)
     held = lineage_state.component_names(state)
+    # Derived from the lineage's own state where it can be. A diagnosis that read a host mapping for
+    # every component could never see an acquisition the lineage had just made: the certificate
+    # licensed a name and the machinery stayed outside, so the same demand kept coming back
+    # unresolved until a human edited the mapping.
+    machinery = lineage_state.held_operations(state, component_operations)
 
     probes: list[dict[str, Any]] = []
     resolved_by = None
     for component in held:
-        operations = list(component_operations.get(component) or [])
+        operations = list(machinery.get(component) or [])
         outcome = search(
             registry_reference=registry_reference,
             operations=operations,
@@ -350,11 +354,11 @@ def diagnose_by_experiment(
             max_length=max_length,
         )
 
-    # Defensive, and deliberately untested: probes run in separate processes and nothing above
-    # writes to `state`, so this cannot fire. It stays because the property it asserts is the one
-    # M111 proved by comparing serialized bytes, and losing the assertion would lose the record of
-    # why the comparison is here. `scripts/check_genesis_guards_are_tested.py` reports it as a
-    # surviving mutant; that is correct and expected.
+    # This was described as unreachable — probes run in separate processes and nothing above writes
+    # to `state`. That reasoning skipped a collaborator: `component_operations` is an arbitrary
+    # `Mapping`, and a `Mapping` whose `.get()` mutates the state being diagnosed reaches this guard
+    # from inside the call it is supposed to be observing. The round-two suite does exactly that, so
+    # the guard is exercised rather than merely asserted.
     after = canonical_bytes(dict(state))
     if before != after:
         raise ProbeError("diagnosis mutated the lineage state; a probe must leave it untouched")
@@ -383,6 +387,47 @@ def diagnose_by_experiment(
     }
 
 
+#: A feature that asks whether some composition over one held component's own operations resolves
+#: the demand. The component it names is the rest of the feature name.
+RESOLVABLE_PREFIX = "resolvable_by_"
+#: A feature that asks whether the measured resolving composition uses a particular operation. This
+#: is the shape `vocabulary_certificate_from_experiment` emits, so a lineage that extends its
+#: vocabulary produces features later measurements can actually evaluate.
+REQUIRES_PREFIX = "requires_"
+
+
+def evaluate_feature(
+    feature: str,
+    *,
+    resolvable_by: Mapping[str, bool],
+    resolving_operations: Sequence[str],
+) -> bool:
+    """Evaluate one diagnostic feature against a measurement, or refuse to invent a value.
+
+    A vocabulary was a list of names. `measure()` emitted one boolean per held *component* and never
+    looked at `LineageState.vocabulary`, so an extension added a feature to the record while every
+    later row stayed the old width — the representation grew in the history and not in the
+    computation, and a second extension could not build on the first. Features have semantics here,
+    and a name whose semantics this runtime does not know is refused rather than defaulted: a made-up
+    boolean in a diagnostic row is worse than a missing one, because everything downstream reads it
+    as a measurement.
+    """
+    if feature.startswith(RESOLVABLE_PREFIX):
+        component = feature[len(RESOLVABLE_PREFIX) :]
+        if component not in resolvable_by:
+            raise ProbeError(
+                "the vocabulary contains %r, and this lineage holds no component %r to measure it "
+                "against" % (feature, component)
+            )
+        return bool(resolvable_by[component])
+    if feature.startswith(REQUIRES_PREFIX):
+        return feature[len(REQUIRES_PREFIX) :] in set(resolving_operations)
+    raise ProbeError(
+        "the vocabulary contains %r, whose semantics this runtime cannot evaluate; a feature that "
+        "cannot be measured is a label, and a row built from labels is not a measurement" % feature
+    )
+
+
 def measure(
     state: Mapping[str, Any],
     tasks: Sequence[Mapping[str, Any]],
@@ -393,11 +438,13 @@ def measure(
     budget,
     max_length: int = 3,
 ) -> dict[str, Any]:
-    """Read a demand through the lineage's per-component vocabulary, by experiment.
+    """Read a demand through the lineage's **current** diagnostic vocabulary, by experiment.
 
-    The row is one boolean per held component: does *some* composition over that component's own
-    operations solve the demand. That is the lineage's current diagnostic resolution, and it is
-    measured rather than asserted.
+    The row has one entry per feature in `LineageState.vocabulary`, in that order, and each entry is
+    evaluated from measurement: the per-component searches for `resolvable_by_*`, the measured
+    resolving composition for `requires_*`. Extending the vocabulary therefore widens later rows,
+    which is what makes an extension a change to the lineage's diagnostic resolution rather than an
+    entry in its history.
 
     `limiting_component` is the held component the resolving composition mostly lives in — the one
     that would have to be extended. It is reported only when a single component strictly supplies
@@ -405,17 +452,18 @@ def measure(
     and saying otherwise would be inventing a cause.
     """
     registry = resolve_registry(registry_reference)
-    row: list[bool] = []
+    machinery = lineage_state.held_operations(state, component_operations)
+    resolvable_by: dict[str, bool] = {}
     for component in lineage_state.component_names(state):
         outcome = search(
             registry_reference=registry_reference,
-            operations=list(component_operations.get(component) or []),
+            operations=list(machinery.get(component) or []),
             tasks=tasks,
             isolation=isolation,
             budget=budget,
             max_length=max_length,
         )
-        row.append(bool(outcome["resolved"]))
+        resolvable_by[component] = bool(outcome["resolved"])
 
     wider = search(
         registry_reference=registry_reference,
@@ -426,10 +474,14 @@ def measure(
         max_length=max_length,
     )
     operations = list((wider["composition"] or {}).get("operations") or [])
-    shares = {
-        component: sum(
-            1 for name in operations if name in set(component_operations.get(component) or [])
+    row = [
+        evaluate_feature(
+            feature, resolvable_by=resolvable_by, resolving_operations=operations
         )
+        for feature in lineage_state.vocabulary_names(state)
+    ]
+    shares = {
+        component: sum(1 for name in operations if name in set(machinery.get(component) or []))
         for component in lineage_state.component_names(state)
     }
     ranked = sorted(shares.items(), key=lambda item: (-item[1], item[0]))
@@ -438,6 +490,8 @@ def measure(
         limiting = ranked[0][0]
     return {
         "row": row,
+        "vocabulary": lineage_state.vocabulary_names(state),
+        "resolvable_by_component": resolvable_by,
         "resolved_anywhere": bool(wider["resolved"]),
         "resolving_operations": operations,
         "limiting_component": limiting,
@@ -512,9 +566,8 @@ def vocabulary_certificate_from_experiment(
     row = list(pair["shared_prior_row"])
     if len(row) != len(prior):
         raise ProbeError(
-            "the measured row has one entry per held component (%d) and the vocabulary has %d "
-            "features; the certificate cannot be built until they describe the same thing"
-            % (len(row), len(prior))
+            "the measured row has %d entries and this lineage's vocabulary has %d features; the "
+            "certificate cannot be built until they describe the same thing" % (len(row), len(prior))
         )
     left, right = pair["measurements"]
     difference = sorted(

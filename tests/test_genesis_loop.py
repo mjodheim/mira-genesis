@@ -445,70 +445,129 @@ def test_a_first_acquisition_depends_on_nothing_earlier():
     assert record["accepted"] is True
     causal = record["causal_dependency"]
     assert causal["established"] is False
-    assert causal["arm_supplied"] is False
+    assert causal["arm_run"] is False
     assert "depends on nothing earlier" in causal["why"]
 
 
-def test_a_later_acceptance_without_an_ablation_arm_is_recorded_as_unestablished():
+def test_a_later_acceptance_that_names_no_earlier_acquisition_is_recorded_as_unestablished():
     """Silence must read as silence. An unexamined acceptance is not an examined one."""
     genesis = _genesis()
     _cycle_with(genesis, bodies.improved_body, name="first")
     record = _cycle_with(genesis, bodies.refusing_body, name="second")
     causal = record["causal_dependency"]
-    assert causal["arm_supplied"] is False
+    assert causal["arm_run"] is False
     assert causal["established"] is False
-    assert "supplied no ablation arm" in causal["why"]
+    assert "named no earlier acquisition" in causal["why"]
 
 
-def test_the_cycle_runs_the_ablation_arm_the_proposal_carried():
+def test_the_cycle_derives_and_runs_the_ablation_arm_itself():
+    """The counterfactual is built by the runtime from the candidate's own configuration."""
     genesis = _genesis()
     _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
     record = _cycle_with(
         genesis,
         bodies.migrated_improved_body,
-        ablated=bodies.migrated_ablated_body,
         depends_on=bodies.ACQUIRED_COMPONENT,
         name="second",
     )
     causal = record["causal_dependency"]
-    assert causal["arm_supplied"] is True
+    assert causal["arm_run"] is True
+    assert causal["arm_derived_by_the_runtime"] is True
+    assert causal["caller_supplied_arm_used_as_evidence"] is False
     assert causal["established"] is True
     assert causal["depends_on"] == bodies.ACQUIRED_COMPONENT
     assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
+    assert (
+        causal["ablated_artifact_digest"]
+        == tr.artifact_digest_of(
+            bodies.migrated_improved_body.without(bodies.ACQUIRED_COMPONENT)
+        )["artifact_digest"]
+    )
 
 
-def test_an_ablation_arm_that_is_really_the_parent_establishes_nothing():
-    """The negative control, on the runtime's own path.
+def test_an_arm_supplied_by_the_proposer_is_recorded_and_not_run():
+    """The proposer may offer an arm. It is never the evidence.
 
-    The arm solves less than the candidate, so the measured loss alone would call it supported. It
-    is refused because it is behaviourally the parent, and comparing a candidate with its parent is
-    the verdict this cycle just reached rather than evidence on top of it.
+    Naming a real acquisition used to be the whole check: the runtime then ran whatever body the
+    proposal carried and read the measured loss as causal dependency. Here the offered arm is a
+    deliberately weak unrelated body, and the arm the cycle actually runs is the one it derived.
     """
     genesis = _genesis()
     _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
     record = _cycle_with(
         genesis,
         bodies.migrated_improved_body,
-        ablated=bodies.migrated_uncoupled_ablation_body,
+        ablated=bodies.regressed_body,
         depends_on=bodies.ACQUIRED_COMPONENT,
         name="second",
     )
     causal = record["causal_dependency"]
-    assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
-    assert causal["ablated_arm_differs_from_the_parent_arm"] is False
+    assert causal["caller_supplied_arm_offered"] is True
+    assert causal["caller_supplied_arm_used_as_evidence"] is False
+    assert (
+        causal["ablated_artifact_digest"]
+        != tr.artifact_digest_of(bodies.regressed_body)["artifact_digest"]
+    )
+
+
+def test_a_candidate_the_runtime_cannot_take_apart_establishes_nothing():
+    """A counterfactual nobody could construct is not a counterfactual that passed."""
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.improved_body, name="something")
+    record = _cycle_with(
+        genesis, bodies.refusing_body, depends_on="something", name="second"
+    )
+    causal = record["causal_dependency"]
     assert causal["established"] is False
-    assert "identical to the parent arm" in causal["why"]
+    assert causal["arm_run"] is False
+    assert "could not construct" in causal["why"]
+
+
+def test_naming_an_acquisition_the_lineage_never_made_establishes_nothing():
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.improved_body, name="something")
+    record = _cycle_with(
+        genesis,
+        bodies.migrated_improved_body,
+        depends_on="never_acquired",
+        name="second",
+    )
+    causal = record["causal_dependency"]
+    assert causal["established"] is False
+    assert "never acquired" in causal["why"]
+
+
+def test_a_declared_dependency_that_carries_no_work_costs_nothing_when_removed():
+    """The negative control, on the runtime's own path.
+
+    The arm here is correctly derived — it is the candidate minus exactly the named acquisition —
+    and it still establishes nothing, because the candidate routes no work through that acquisition
+    and removing it loses none. The positive verdict elsewhere is therefore a finding about the
+    bodies rather than a property of how the fixtures were written.
+    """
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
+    record = _cycle_with(
+        genesis,
+        bodies.uncoupled_candidate_body,
+        depends_on=bodies.ACQUIRED_COMPONENT,
+        name="second",
+    )
+    causal = record["causal_dependency"]
+    assert causal["arm_run"] is True
+    assert causal["solved_without_acquisition"] == causal["solved_with_acquisition"]
+    assert causal["established"] is False
+    assert "cost nothing" in causal["why"]
 
 
 def test_an_ablation_arm_that_cannot_run_aborts_the_cycle():
     """A missing measurement is not a passed one, and it must not be scored as a candidate failure."""
     genesis = _genesis()
-    _cycle_with(genesis, bodies.improved_body, name="something")
+    _cycle_with(genesis, bodies.improved_body, name=bodies.FRAGILE_ACQUISITION)
     record = _cycle_with(
         genesis,
-        bodies.refusing_body,
-        ablated=bodies.unconstructible_body,
-        depends_on="something",
+        bodies.fragile_candidate_body,
+        depends_on=bodies.FRAGILE_ACQUISITION,
         name="second",
     )
     assert record["stopped"] is True
@@ -533,14 +592,12 @@ def test_the_chain_report_counts_links_without_grading_them():
     _cycle_with(
         genesis,
         bodies.migrated_improved_body,
-        ablated=bodies.migrated_ablated_body,
         depends_on=bodies.ACQUIRED_COMPONENT,
         name=bodies.SECOND_ACQUISITION,
     )
     _cycle_with(
         genesis,
         bodies.migrated_further_body,
-        ablated=bodies.migrated_further_ablated_body,
         depends_on=bodies.SECOND_ACQUISITION,
         name="third",
     )

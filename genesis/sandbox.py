@@ -367,10 +367,13 @@ def run_candidate(
             "carries_a_score": False,
         }
     )
-    # Defensive, and deliberately untested: the child builds its rows by iterating the task list it
-    # was handed, so no body can return a different task set. This guards a compromised child, which
-    # nothing in this repository can produce. `scripts/check_genesis_guards_are_tested.py` reports it
-    # as a surviving mutant; that is correct and expected. See tests/test_genesis_guards.py.
+    # This was called structurally guaranteed: the child builds its rows by iterating the task list
+    # it was handed, so no body can return a different task set. The body runs *inside* `_child`,
+    # and Python code can walk the caller frame and append to that list directly — so the guard is
+    # reachable from an ordinary candidate, not only from a compromised interpreter. The round-two
+    # suite reaches it that way. The right fix is to stop candidate code sharing a frame stack with
+    # the parent's bookkeeping, which needs the rows built somewhere the candidate cannot name;
+    # until then this refusal is the boundary. See tests/test_genesis_guards.py.
     if result["completed"] and set(row["task_id"] for row in result["outcomes"]) != set(identifiers):
         raise SandboxError("the candidate did not report the task set it was given")
     result["result_digest"] = digest_of({k: v for k, v in result.items()})

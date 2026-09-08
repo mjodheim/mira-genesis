@@ -32,15 +32,17 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
 from genesis.trust_root import (
-    PROVENANCE_CLASSES,
+    TrustRootError,
     canonical_bytes,
     digest_of,
     provenance as trust_provenance,
+    validate_provenance,
 )
 
 STATE_SCHEMA = "genesis-lineage-state-v1"
 COMPONENT_CERTIFICATE_SCHEMA = "genesis-registry-extension-certificate-v1"
 VOCABULARY_CERTIFICATE_SCHEMA = "genesis-vocabulary-extension-certificate-v1"
+COMPONENT_ARTIFACT_SCHEMA = "genesis-component-artifact-v1"
 
 COMPONENT_ORIGINS = ("seed", "acquired")
 
@@ -55,6 +57,20 @@ def _clean_name(value: object, what: str) -> str:
     return value
 
 
+def _validated_provenance(record: Any, what: str) -> dict[str, Any]:
+    """One validator, wherever provenance enters lineage state.
+
+    Every path here used to check only that `record["class"]` was in the recognised set, so a
+    hand-written `{"class": "lineage_owned"}` entered the state with nobody named as producer while
+    reading as though the lineage had made it. `trust_root.validate_provenance` is now the single
+    rule, and it enforces what the constructor always enforced.
+    """
+    try:
+        return validate_provenance(record, what=what)
+    except TrustRootError as problem:
+        raise StateError(str(problem)) from problem
+
+
 def _with_producer(record: Mapping[str, Any], what: str) -> dict[str, Any]:
     """History has to say who made it.
 
@@ -64,10 +80,60 @@ def _with_producer(record: Mapping[str, Any], what: str) -> dict[str, Any]:
     """
     if not isinstance(record, Mapping):
         raise StateError("a %s entry is not a record" % what)
-    producer = record.get("provenance")
-    if not isinstance(producer, Mapping) or producer.get("class") not in PROVENANCE_CLASSES:
-        raise StateError("%s %r carries no recognised provenance" % (what, record.get("name")))
-    return dict(record)
+    entry = dict(record)
+    entry["provenance"] = _validated_provenance(
+        entry.get("provenance"), "%s %r" % (what, record.get("name"))
+    )
+    return entry
+
+
+def component_artifact(certificate: Mapping[str, Any]) -> dict[str, Any]:
+    """The executable machinery an acquisition installs, derived from its own certificate.
+
+    A certificate proved that a composition outside the held registry reaches the demand, and then
+    `extend_components` installed a *name*. Re-running the certified demand immediately afterwards
+    still found no held component that resolved it, because the new component had no operations
+    unless a human edited a host-side mapping — so the acquisition was a record of a discovery rather
+    than the discovery becoming part of the lineage.
+
+    The artifact is derived here rather than stored and trusted: it is a function of the certificate,
+    so nothing can be installed that the evidence did not license.
+    """
+    composition = certificate.get("resolving_composition") or {}
+    operations = [str(name) for name in composition.get("operations") or []]
+    if not operations:
+        raise StateError(
+            "the certificate carries no resolving composition, so there is no machinery to install"
+        )
+    payload = {
+        "schema": COMPONENT_ARTIFACT_SCHEMA,
+        "component": str(certificate.get("new_component")),
+        "operations": operations,
+        "composition_digest": str(composition.get("composition_digest") or ""),
+        "certificate_digest": str(certificate.get("certificate_digest") or ""),
+    }
+    return {**payload, "artifact_digest": digest_of(payload)}
+
+
+def held_operations(
+    state: Mapping[str, Any], host_operations: Mapping[str, Sequence[str]]
+) -> dict[str, list[str]]:
+    """What each held component gives the lineage access to, derived from state where it can be.
+
+    Seed components are the host's: it built them and it says what they contain. An acquired one is
+    the lineage's, and its operations come from the composition its certificate recorded. A
+    diagnosis that read the host mapping for everything could never see an acquisition it had just
+    made.
+    """
+    resolved: dict[str, list[str]] = {}
+    for entry in state["components"]:
+        name = entry["name"]
+        artifact = entry.get("artifact")
+        if isinstance(artifact, Mapping) and artifact.get("operations"):
+            resolved[name] = [str(item) for item in artifact["operations"]]
+        else:
+            resolved[name] = [str(item) for item in (host_operations.get(name) or [])]
+    return resolved
 
 
 def _clean_names(values: Iterable[Any], what: str) -> list[str]:
@@ -288,17 +354,18 @@ def create_state(
             _rebuild_component_certificate(certificate, name)
         elif certificate is not None:
             raise StateError("seed component %r may not carry an extension certificate" % name)
-        provenance_record = entry.get("provenance")
-        if not isinstance(provenance_record, Mapping) or provenance_record.get(
-            "class"
-        ) not in PROVENANCE_CLASSES:
-            raise StateError("component %r carries no recognised provenance" % name)
+        provenance_record = _validated_provenance(
+            entry.get("provenance"), "component %r" % name
+        )
         entries.append(
             {
                 "name": name,
                 "origin": origin,
                 "certificate": dict(certificate) if certificate else None,
-                "provenance": dict(provenance_record),
+                # Derived from the certificate, never read from the incoming entry: an acquisition's
+                # machinery is whatever its evidence licensed and nothing else.
+                "artifact": component_artifact(certificate) if origin == "acquired" else None,
+                "provenance": provenance_record,
             }
         )
     if len({entry["name"] for entry in entries}) != len(entries):
@@ -322,17 +389,16 @@ def create_state(
         elif certificate is not None:
             raise StateError("seed feature %r may not carry an extension certificate" % name)
         feature_provenance = entry.get("provenance")
-        if origin == "acquired" and not (
-            isinstance(feature_provenance, Mapping)
-            and feature_provenance.get("class") in PROVENANCE_CLASSES
-        ):
-            raise StateError("feature %r carries no recognised provenance" % name)
+        if origin == "acquired":
+            feature_provenance = _validated_provenance(feature_provenance, "feature %r" % name)
+        elif feature_provenance is not None:
+            feature_provenance = _validated_provenance(feature_provenance, "feature %r" % name)
         features.append(
             {
                 "name": name,
                 "origin": origin,
                 "certificate": dict(certificate) if certificate else None,
-                "provenance": dict(feature_provenance) if feature_provenance else None,
+                "provenance": feature_provenance,
             }
         )
     if len({entry["name"] for entry in features}) != len(features):

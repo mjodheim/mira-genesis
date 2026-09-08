@@ -76,7 +76,16 @@ def _substrate():
 
 
 def _translate(state, operations):
+    """Uses the capability it declares. `used_operations` is derived from invocation now, so a
+    translator that only names `read` without touching it is refused as a record that overstates
+    what the translation depended on."""
+    operations["read"]({"task_id": "translation-probe"})
     return bodies.migrated_parent_body
+
+
+def _translate_lossy(state, operations):
+    operations["read"]({"task_id": "translation-probe"})
+    return bodies.migrated_lossy_body
 
 
 # -- discovery ----------------------------------------------------------------------------------
@@ -318,7 +327,7 @@ def test_a_translation_that_loses_capability_is_refused():
         migrate(
             genesis,
             substrate,
-            lambda state, operations: bodies.migrated_lossy_body,
+            _translate_lossy,
             used_operations=["read"],
             tasks=TASKS,
         )
@@ -335,7 +344,7 @@ def test_a_refused_translation_does_not_half_move_the_lineage():
         migrate(
             genesis,
             substrate,
-            lambda state, operations: bodies.migrated_lossy_body,
+            _translate_lossy,
             used_operations=["read"],
             tasks=TASKS,
         )
@@ -352,7 +361,7 @@ def test_a_lossy_translation_is_allowed_when_it_is_explicitly_intended():
     record = migrate(
         genesis,
         substrate,
-        lambda state, operations: bodies.migrated_lossy_body,
+        _translate_lossy,
         used_operations=["read"],
         tasks=TASKS,
         permit_capability_loss=True,

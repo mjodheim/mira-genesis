@@ -4,6 +4,12 @@ The stopping criterion is not that the components exist. It is that **one lineag
 diagnoses itself, transforms itself, verifies the transformation, adopts or rejects it on evidence,
 keeps what it learned, extends the machinery that enables later transformations, changes form, and
 goes on evolving in the new form. These tests assert each of those on the same run.
+
+They also assert something the earlier version could not: that the *runtime* performs those
+transitions. The demonstration script used to call the probes, assign `genesis.state` and append the
+journal entries itself, so what the run showed was a person calling the pieces in the right order.
+The script now supplies a world, a mechanism that returns declarative intents, and a renderer;
+everything below reads a record `genesis.controller.run` produced.
 """
 from __future__ import annotations
 
@@ -11,6 +17,7 @@ import pytest
 
 from genesis import development_bodies as bodies
 from genesis import trust_root as tr
+from genesis.artifacts import ConfiguredBody
 from genesis.sandbox import run_candidate
 from scripts.run_genesis_demonstration import TASKS, demonstrate
 
@@ -20,11 +27,21 @@ def record():
     return demonstrate()
 
 
-def _step(record, name):
-    for step in record["steps"]:
-        if step["step"] == name:
+def _steps(record, intent):
+    return [step for step in record["run"]["steps"] if step["intent"] == intent]
+
+
+def _named(record, name):
+    for step in _steps(record, "Transform"):
+        if step.get("name") == name:
             return step
-    raise AssertionError("the demonstration never reached step %r" % name)
+    raise AssertionError("the demonstration never proposed %r" % name)
+
+
+def _only(record, intent):
+    matching = _steps(record, intent)
+    assert len(matching) == 1, "expected exactly one %s intent, saw %d" % (intent, len(matching))
+    return matching[0]
 
 
 # -- the demonstration, step by step --------------------------------------------------------------
@@ -36,16 +53,25 @@ def test_the_demonstration_claims_nothing_scientific(record):
     assert record["frozen"] is False
 
 
+def test_the_architecture_is_sequenced_by_the_runtime(record):
+    """The property R2-13 asked for: the transitions are the runtime's, not the driver's."""
+    assert record["architecture_sequenced_by"] == "genesis.controller.run"
+    assert record["run"]["schema"] == "genesis-controller-run-v1"
+    assert [step["intent"] for step in record["run"]["steps"]][-1] == "stop"
+
+
 def test_a_rejection_does_not_end_the_run_and_is_kept(record):
-    step = _step(record, "rejected_candidate_does_not_end_the_run")
+    step = _named(record, "regressed")
     assert step["accepted"] is False
-    assert step["observations_kept"] == 1
+    assert step["lineage"]["observations_kept"] == 1
+    # The run continued: later intents exist and later acceptances happened.
+    assert len(record["run"]["steps"]) > 1
 
 
 def test_a_transformation_is_adopted_on_evidence(record):
-    step = _step(record, "candidate_accepted_on_evidence")
+    step = _named(record, bodies.ACQUIRED_COMPONENT)
     assert step["accepted"] is True
-    assert step["acquisitions"] == 1
+    assert step["lineage"]["acquisitions"] == 1
 
 
 def test_the_evidence_is_not_the_candidate_s_own_account_of_itself(record):
@@ -55,17 +81,18 @@ def test_the_evidence_is_not_the_candidate_s_own_account_of_itself(record):
     it grades itself and scores zero when the parent grades. This asserts the demonstration runs on
     the second footing.
     """
-    step = _step(record, "candidate_accepted_on_evidence")
-    assert step["outcomes_are_self_reported"] is False
+    for step in _steps(record, "Transform"):
+        assert step["outcomes_are_self_reported"] is False
 
 
 def test_the_lineage_names_a_component_class_it_did_not_have(record):
     """The first authored ceiling, opened by the lineage rather than by editing a tuple."""
-    step = _step(record, "lineage_names_a_component_class_it_did_not_have")
+    step = _only(record, "AcquireComponent")
+    assert step["acquired"] is True
     assert step["registry_exhausted"] is True
     assert step["probed"] == ["operator_table", "signal_interface"]
     assert step["registry_after"][-1] == "joint_registry"
-    assert record["final_components"] == [
+    assert record["run"]["final_components"] == [
         "operator_table",
         "signal_interface",
         "joint_registry",
@@ -79,7 +106,7 @@ def test_the_probes_were_composed_and_run_rather_than_consulted(record):
     outcomes. `tests/test_genesis_probe.py` carries the load-bearing check that the finding follows
     the data; this asserts the demonstration actually goes through that path.
     """
-    step = _step(record, "lineage_names_a_component_class_it_did_not_have")
+    step = _only(record, "AcquireComponent")
     assert step["probe_is_experimental_not_an_oracle"] is True
     assert step["compositions_run"] > 0, "a certificate must rest on probes that ran"
     # Exhaustion alone would only be a failed search.
@@ -94,7 +121,8 @@ def test_the_lineage_extends_its_own_diagnostic_vocabulary(record):
     differ, and both halves of that come from probes rather than from a callable that was told the
     answer.
     """
-    step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
+    step = _only(record, "SeparateVocabulary")
+    assert step["extended"] is True
     assert step["shared_prior_row"] == [False, False]
     assert step["limiting_components"] == ["operator_table", "signal_interface"]
     assert step["resolving_operations"] == [
@@ -110,15 +138,14 @@ def test_neither_ceiling_is_held_up_by_an_oracle_any_more(record):
     This assertion is the one that would fail first if a host-written shortcut were reintroduced
     into either path, which is why it reads the flags rather than trusting the step names.
     """
-    component_step = _step(record, "lineage_names_a_component_class_it_did_not_have")
-    vocabulary_step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
-    assert component_step["probe_is_experimental_not_an_oracle"] is True
+    assert _only(record, "AcquireComponent")["probe_is_experimental_not_an_oracle"] is True
+    vocabulary_step = _only(record, "SeparateVocabulary")
     assert vocabulary_step["rests_on_a_host_supplied_oracle"] is False
     assert vocabulary_step["feature_read_out_of_the_measurements"] == "requires_increment"
 
 
 def test_the_substrate_is_discovered_and_the_lineage_arrives_intact(record):
-    step = _step(record, "substrate_semantics_discovered_then_migrated")
+    step = _only(record, "Migrate")
     assert step["found"] == ["read", "list"]
     assert step["missing"] == ["write", "transact"]
     assert step["journal_continues"] is True
@@ -127,17 +154,17 @@ def test_the_substrate_is_discovered_and_the_lineage_arrives_intact(record):
 
 def test_the_lineage_evolves_again_in_its_new_form(record):
     """Transported intelligence rather than transported output. This is the whole objective."""
-    step = _step(record, "evolved_again_in_the_new_form")
-    assert step["metamorphosis_succeeded"] is True
-    assert step["accepted_after_migration"] == 3
-    assert step["transported_intelligence"] is True
+    outcome = record["run"]["metamorphosis"]
+    assert outcome["succeeded"] is True
+    assert outcome["accepted_after_migration"] == 3
+    assert outcome["is_transported_intelligence_rather_than_transported_output"] is True
 
 
 def test_the_lineage_accepts_three_transformations_not_one(record):
     """A single acceptance shows the runtime works. Three show the lineage is still going."""
-    step = _step(record, "evolved_again_in_the_new_form")
-    assert step["accepted_cycles_in_the_lineage"] == 4
-    assert record["final_generation"] == 4
+    accepted = [step for step in _steps(record, "Transform") if step["accepted"]]
+    assert len(accepted) == 4
+    assert record["run"]["final_generation"] == 4
 
 
 def test_the_translation_is_verified_rather_than_assumed(record):
@@ -146,29 +173,54 @@ def test_the_translation_is_verified_rather_than_assumed(record):
     `carried_intact` compares components, certificates and acquisitions. A translation could drop
     every capability and still pass it, because nothing being counted would have been lost.
     """
-    step = _step(record, "substrate_semantics_discovered_then_migrated")
+    step = _only(record, "Migrate")
     assert step["capability_measured"] is True
     assert step["capability_preserved"] is True
     assert step["solved_before_and_after"] == [4, 4]
 
 
-@pytest.mark.parametrize("depends_on", ["joint_registry", "carrier_index", "carrier_index_ii"])
-def test_each_generation_needed_the_one_before_it(record, depends_on):
+@pytest.mark.parametrize(
+    "candidate, depends_on",
+    [
+        ("carrier_index", "joint_registry"),
+        ("carrier_index_ii", "carrier_index"),
+        ("carrier_index_iii", "carrier_index_ii"),
+    ],
+)
+def test_each_generation_needed_the_one_before_it(record, candidate, depends_on):
     """Three consecutive ablations, each run inside the cycle that accepted the candidate."""
-    step = _step(record, "causal_dependency:%s" % depends_on)
-    assert step["established"] is True
-    assert step["arm_supplied"] is True
-    assert step["solved_without_acquisition"] < step["solved_with_acquisition"]
+    causal = _named(record, candidate)["causal_dependency"]
+    assert causal["depends_on"] == depends_on
+    assert causal["established"] is True
+    assert causal["arm_run"] is True
+    assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
     # Without this the "ablation" is the parent arm, and the comparison merely repeats the verdict
     # that accepted the candidate.
-    assert step["ablated_arm_differs_from_the_parent_arm"] is True
-    assert step["why"] == ""
+    assert causal["ablated_arm_differs_from_the_parent_arm"] is True
+    assert causal["why"] == ""
 
 
-def test_the_ablation_is_run_by_the_runtime_not_by_the_script(record):
-    """The loop called this a permanent obligation of the runtime while a script was doing it."""
-    step = _step(record, "causal_dependency:joint_registry")
-    assert step["checked_by"] == "genesis.loop.Genesis.cycle, not by this script"
+@pytest.mark.parametrize(
+    "candidate, depends_on",
+    [
+        ("carrier_index", "joint_registry"),
+        ("carrier_index_ii", "carrier_index"),
+        ("carrier_index_iii", "carrier_index_ii"),
+    ],
+)
+def test_the_ablation_arm_was_built_by_the_runtime_not_supplied_to_it(record, candidate, depends_on):
+    """The counterfactual is derived from the candidate, so it cannot be the proposer's own choice.
+
+    The loop called this a permanent obligation of the runtime while a script was doing it; then the
+    cycle ran it, on whichever arm the proposal handed over. Now the arm is one the runtime built and
+    checked against the candidate, and the record carries both digests so the claim can be re-derived
+    rather than believed.
+    """
+    causal = _named(record, candidate)["causal_dependency"]
+    assert causal["arm_derived_by_the_runtime"] is True
+    assert causal["caller_supplied_arm_used_as_evidence"] is False
+    assert causal["caller_supplied_arm_offered"] is False
+    assert causal["candidate_artifact_digest"] != causal["ablated_artifact_digest"]
 
 
 def test_the_lineage_reports_a_number_and_does_not_convert_it_into_a_verdict(record):
@@ -178,27 +230,32 @@ def test_the_lineage_reports_a_number_and_does_not_convert_it_into_a_verdict(rec
     at the smallest number that permits the word. Whether n links is recursion is not a question the
     thing being measured gets to settle, so the record reports the number and says so.
     """
-    step = _step(record, "how_many_acquisitions_actually_depend_on_the_one_before")
-    assert step["acquisitions"] == 4
-    assert step["established_links"] == 3
-    assert step["makes_no_recursion_claim"] is True
-    assert "is_a_chain_rather_than_a_sequence" not in step
+    chain = record["run"]["causal_chain"]
+    assert chain["acquisitions"] == 4
+    assert chain["established_links"] == 3
+    assert chain["makes_no_recursion_claim"] is True
+    assert "is_a_chain_rather_than_a_sequence" not in chain
 
 
 @pytest.mark.parametrize(
-    "candidate_factory, ablated_factory, removed",
+    "candidate_factory, removed",
     [
-        ("migrated_improved_body", "migrated_ablated_body", "ACQUIRED_COMPONENT"),
-        ("migrated_further_body", "migrated_further_ablated_body", "SECOND_ACQUISITION"),
-        ("migrated_fourth_body", "migrated_fourth_ablated_body", "THIRD_ACQUISITION"),
+        ("migrated_improved_body", "ACQUIRED_COMPONENT"),
+        ("migrated_further_body", "SECOND_ACQUISITION"),
+        ("migrated_fourth_body", "THIRD_ACQUISITION"),
     ],
 )
-def test_each_ablated_arm_is_its_candidate_minus_one_acquisition(
-    candidate_factory, ablated_factory, removed
-):
-    """The record only *states* how each arm was built. This checks it, field by field."""
-    candidate = getattr(bodies, candidate_factory)()
-    ablated = getattr(bodies, ablated_factory)()
+def test_an_ablated_arm_is_its_candidate_minus_one_acquisition(candidate_factory, removed):
+    """The runtime's own derivation, checked field by field on the built bodies.
+
+    This used to compare a candidate fixture against a hand-written twin, and a reviewer had to take
+    on trust that the two differed in one field. The arm is now produced by the same call the cycle
+    makes, so what is checked here is the derivation rather than a pair of definitions.
+    """
+    factory = getattr(bodies, candidate_factory)
+    assert isinstance(factory, ConfiguredBody)
+    arm = factory.without(getattr(bodies, removed))
+    candidate, ablated = factory(), arm()
     assert ablated.solves == candidate.solves
     assert ablated.operation_names == candidate.operation_names
     assert ablated.routed == candidate.routed
@@ -216,7 +273,10 @@ def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
     outcomes = {
         row["task_id"]: row["outcome"]
         for row in run_candidate(
-            bodies.migrated_ablated_body, TASKS, tr.Isolation(), grade=bodies.grade
+            bodies.migrated_improved_body.without(bodies.ACQUIRED_COMPONENT),
+            TASKS,
+            tr.Isolation(),
+            grade=bodies.grade,
         )["outcomes"]
     }
     assert outcomes == {
@@ -232,10 +292,10 @@ def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
 
 
 def test_the_whole_lineage_comes_back_from_disk(record):
-    step = _step(record, "survives_process_death")
-    assert step["state_digest_matches"] is True
-    assert step["journal_head_matches"] is True
-    assert step["journal_length"] > 10
+    survival = record["survives_process_death"]
+    assert survival["state_digest_matches"] is True
+    assert survival["journal_head_matches"] is True
+    assert survival["journal_length"] > 10
 
 
 def test_the_journal_is_one_continuous_descent_through_the_migration(record):
