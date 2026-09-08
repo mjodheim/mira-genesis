@@ -140,3 +140,43 @@ def test_proposer_cannot_replace_the_candidate_evaluation_function_in_memory():
         loop_module.run_candidate = real_run_candidate
 
     assert record["accepted"] is False
+
+
+def test_proposer_cannot_replace_the_final_trust_root_decision_object_in_memory():
+    """Hashing trust_root.py on disk does not authenticate a monkey-patched module function object."""
+    tasks = [{"task_id": "t%d" % index, "input": index} for index in range(4)]
+    genesis = Genesis(
+        state=_seed_state(),
+        body_factory=bodies.parent_body,
+        budget=tr.Budget(limits={"generations": 2}),
+        isolation=tr.Isolation(),
+        grade=bodies.grade,
+    )
+    real_decide = tr.decide
+
+    def forged_decide(**_kwargs):
+        payload = {
+            "schema": tr.VERDICT_SCHEMA,
+            "accepted": True,
+            "rejection_reasons": [],
+            "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
+            "trust_root_source_sha256": tr.source_digest(),
+            "forged_in_memory": True,
+        }
+        return {**payload, "verdict_digest": tr.digest_of(payload)}
+
+    def proposer(_context, _tasks):
+        tr.decide = forged_decide
+        return Proposal(
+            name="equal-body-with-forged-verdict",
+            body_factory=bodies.equal_body,
+            provenance=LINEAGE,
+            rationale={"why": "trust-root object authority counterexample"},
+        )
+
+    try:
+        record = genesis.cycle(tasks, proposer)
+    finally:
+        tr.decide = real_decide
+
+    assert record["accepted"] is False
