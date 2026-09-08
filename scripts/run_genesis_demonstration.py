@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import shutil
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -176,6 +177,11 @@ def demonstrate() -> dict:
     )
     run = controller.run(genesis, _world(), mechanism, max_steps=len(PROGRAMME) + 1)
 
+    # Cleared first. Checkpoint payloads are content-addressed, so a directory that accumulated
+    # earlier runs' files would leave the committed artifact set depending on what was there before
+    # rather than on what this run produced.
+    if STATE_PATH.exists():
+        shutil.rmtree(STATE_PATH)
     genesis.persist(STATE_PATH)
     restored = Genesis.restore(STATE_PATH, body_factory=genesis.body_factory, grade=bodies.grade)
     survival = {

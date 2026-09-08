@@ -382,3 +382,62 @@ def _graded_by(mode, task, answer):
     if mode == "honest":
         return bodies.grade(task, answer)
     return "solved"  # pragma: no cover - the dishonest arm is only ever an identity here
+
+
+# -- a superseded checkpoint stays recoverable, not merely refused --------------------------------
+
+def test_a_new_checkpoint_does_not_land_on_the_previous_one_s_payloads(tmp_path):
+    """Fail-closed is not the same as recoverable, and the fixed filenames only gave the first."""
+    genesis = _genesis()
+    first = genesis.persist(tmp_path)
+    first_state = genesis.state["state_digest"]
+    first_head = genesis.journal.head
+
+    genesis.adopt_vocabulary(_vocabulary_certificate(), provenance=LINEAGE)
+    genesis.persist(tmp_path)
+
+    assert genesis.state["state_digest"] != first_state
+    # The payloads the first manifest named are still on disk, under their own digests.
+    assert (tmp_path / ("lineage_state.%s.json" % first_state[:16])).exists()
+    assert (tmp_path / ("descent_journal.%s.json" % first_head[:16])).exists()
+    assert first["checkpoint"] != genesis.checkpoint()["checkpoint_digest"]
+
+
+def test_the_checkpoint_before_the_current_one_can_still_be_resumed(tmp_path):
+    genesis = _genesis()
+    genesis.persist(tmp_path)
+    first_state = genesis.state["state_digest"]
+    first_head = genesis.journal.head
+
+    genesis.adopt_vocabulary(_vocabulary_certificate(), provenance=LINEAGE)
+    genesis.persist(tmp_path)
+
+    current = Genesis.restore(tmp_path, body_factory=bodies.parent_body, grade=bodies.grade)
+    assert current.state["state_digest"] == genesis.state["state_digest"]
+
+    previous = Genesis.restore(
+        tmp_path, body_factory=bodies.parent_body, grade=bodies.grade, superseded=True
+    )
+    assert previous.state["state_digest"] == first_state
+    assert previous.journal.head == first_head
+    assert "requires_increment" not in [entry["name"] for entry in previous.state["vocabulary"]]
+
+
+def test_a_first_checkpoint_has_no_superseded_one_to_fall_back_to(tmp_path):
+    """There is no earlier lineage, and the refusal says so rather than inventing one."""
+    _genesis().persist(tmp_path)
+    with pytest.raises(tr.TrustRootError, match="no committed checkpoint"):
+        Genesis.restore(
+            tmp_path, body_factory=bodies.parent_body, grade=bodies.grade, superseded=True
+        )
+
+
+def test_the_manifest_names_the_payloads_it_committed(tmp_path):
+    """Restore reads the manifest first and loads what it names, rather than two fixed filenames."""
+    genesis = _genesis()
+    genesis.persist(tmp_path)
+    manifest = genesis.checkpoint()
+    assert manifest["state_path"] == "lineage_state.%s.json" % genesis.state["state_digest"][:16]
+    assert manifest["journal_path"] == "descent_journal.%s.json" % genesis.journal.head[:16]
+    assert (tmp_path / manifest["state_path"]).exists()
+    assert (tmp_path / manifest["journal_path"]).exists()

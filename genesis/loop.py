@@ -64,6 +64,12 @@ CAMPAIGN_SCHEMA = "genesis-campaign-v1"
 CONTEXT_SCHEMA = "genesis-lineage-context-v1"
 CHECKPOINT_SCHEMA = "genesis-runtime-checkpoint-v1"
 
+#: The manifest a directory currently commits, and the one it committed before that. Two files
+#: rather than one, because a checkpoint that overwrites its predecessor leaves nothing to fall back
+#: to when the newest one turns out not to be resumable.
+CHECKPOINT_NAME = "runtime_checkpoint.json"
+PREVIOUS_CHECKPOINT_NAME = "runtime_checkpoint.previous.json"
+
 
 def question_digest(task: Mapping[str, Any]) -> str:
     """Identify one task by its question, ignoring the label it happens to carry."""
@@ -778,6 +784,12 @@ class Genesis:
         return campaign
 
     # -- persistence ----------------------------------------------------------------------
+    def _state_filename(self) -> str:
+        return "lineage_state.%s.json" % self.state["state_digest"][:16]
+
+    def _journal_filename(self) -> str:
+        return "descent_journal.%s.json" % self.journal.head[:16]
+
     def checkpoint(self) -> dict[str, Any]:
         """Everything that decides which lineage resumes and under which rules, as one value.
 
@@ -785,12 +797,20 @@ class Genesis:
         each other, to the budget already spent, to the isolation envelope, to the evaluator, or to
         the body. A restart could therefore present the persisted state under a fresh allowance and a
         caller-chosen body and call the result the same lineage.
+
+        The manifest also names the files its payloads live in. They used to be two fixed names, so
+        publishing a new checkpoint overwrote the only copy of the payloads the previous manifest
+        pointed at — which made a crash mid-write fail closed, and made the lineage before it
+        unrecoverable. Content-addressed names mean a new checkpoint never lands on an old one's
+        payloads.
         """
         payload = {
             "schema": CHECKPOINT_SCHEMA,
             "generation": self.state["generation"],
             "state_digest": self.state["state_digest"],
             "journal_head": self.journal.head,
+            "state_path": self._state_filename(),
+            "journal_path": self._journal_filename(),
             "body_artifact": artifact_digest_of(self.body_factory),
             "admitted_trust_root_sha256": self.admitted_source_sha256,
             "evaluation_contract": dict(self.evaluation_contract),
@@ -803,18 +823,35 @@ class Genesis:
         return {**payload, "checkpoint_digest": digest_of(payload)}
 
     def persist(self, directory: Path) -> dict[str, str]:
-        """Write state and journal, then publish the manifest last.
+        """Write the payloads under names nothing else claims, then publish the manifest last.
 
         Commit-last ordering means a crash between the two leaves the previous manifest as the last
-        committed lineage: half-written files are not history.
+        committed lineage: half-written files are not history. That was true and it was not enough.
+        The payloads went to two fixed filenames, so the new state and journal landed **on top of**
+        the ones the previous manifest named: after a crash the surviving manifest pointed at files
+        that had already been replaced, and its digest checks would refuse them. Fail-closed, which
+        is right, but the lineage before this one was gone.
+
+        Payload files are now content-addressed, so a new checkpoint cannot overwrite an old one's,
+        and the manifest being replaced is kept beside the new one. The previous committed lineage
+        stays loadable rather than merely being refused.
         """
         directory = Path(directory)
+        directory.mkdir(parents=True, exist_ok=True)
         written = {
-            "state": lineage_state.save_state(self.state, directory / "lineage_state.json"),
-            "journal": self.journal.save(directory / "descent_journal.json"),
+            "state": lineage_state.save_state(self.state, directory / self._state_filename()),
+            "journal": self.journal.save(directory / self._journal_filename()),
         }
         manifest = self.checkpoint()
-        path = directory / "runtime_checkpoint.json"
+        path = directory / CHECKPOINT_NAME
+        if path.exists():
+            # Retained before the new manifest is published, so the lineage it names — whose
+            # payloads are still on disk under their own digests — can be resumed.
+            superseded = directory / PREVIOUS_CHECKPOINT_NAME
+            temporary = superseded.with_suffix(".partial")
+            temporary.write_bytes(path.read_bytes())
+            temporary.replace(superseded)
+            written["superseded"] = superseded.name
         temporary = path.with_suffix(".partial")
         temporary.write_bytes(canonical_bytes(manifest) + b"\n")
         temporary.replace(path)
@@ -830,6 +867,7 @@ class Genesis:
         isolation: Isolation | None = None,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
         allow_self_reported_outcomes: bool = False,
+        superseded: bool = False,
     ) -> "Genesis":
         """Resume one committed checkpoint, or refuse.
 
@@ -837,12 +875,15 @@ class Genesis:
         budget and its spend ledger come from the checkpoint rather than from the caller; and the
         isolation envelope may not be widened on the way back in. `budget` and `isolation` are kept
         in the signature only to be checked against what was committed.
+
+        The manifest is read **first** and names the payload files to load. It used to load two fixed
+        filenames and then check them against the manifest, which worked only because nothing else
+        could ever be on disk. `superseded=True` resumes the checkpoint this directory committed
+        before its current one — the reason the payloads are content-addressed, so that falling back
+        is a real option rather than a refusal.
         """
         directory = Path(directory)
-        state = lineage_state.load_state(directory / "lineage_state.json")
-        journal = Journal.load(directory / "descent_journal.json")
-
-        path = directory / "runtime_checkpoint.json"
+        path = directory / (PREVIOUS_CHECKPOINT_NAME if superseded else CHECKPOINT_NAME)
         if not path.exists():
             raise TrustRootError(
                 "no committed checkpoint at %s: state and journal alone do not say which body, "
@@ -852,6 +893,15 @@ class Genesis:
         expected = digest_of({k: v for k, v in manifest.items() if k != "checkpoint_digest"})
         if manifest.get("checkpoint_digest") != expected:
             raise TrustRootError("the checkpoint manifest does not reproduce its own digest")
+
+        # Named by the manifest, with the pre-content-addressing filenames as the fallback so a
+        # checkpoint written by an earlier build still resumes.
+        state = lineage_state.load_state(
+            directory / str(manifest.get("state_path") or "lineage_state.json")
+        )
+        journal = Journal.load(
+            directory / str(manifest.get("journal_path") or "descent_journal.json")
+        )
         if manifest.get("state_digest") != state["state_digest"]:
             raise TrustRootError("the persisted state is not the one this checkpoint committed")
         if manifest.get("journal_head") != journal.head:
