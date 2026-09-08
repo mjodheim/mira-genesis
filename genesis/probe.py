@@ -549,7 +549,12 @@ def vocabulary_certificate_from_experiment(
         operation in set(left["resolving_operations"]),
         operation in set(right["resolving_operations"]),
     ]
-    if values[0] == values[1]:  # pragma: no cover - the symmetric difference forbids it
+    # Defensive, and deliberately untested: `operation` comes from the symmetric difference, so it
+    # is in exactly one of the two sets and the values cannot agree. It stays because the property
+    # it asserts is the one that makes the feature a separator rather than a decoration.
+    # `scripts/check_genesis_guards_are_tested.py` reports it as a surviving mutant; that is correct
+    # and expected.
+    if values[0] == values[1]:  # pragma: no cover
         raise ProbeError("the proposed feature gives both demands the same value")
     return lineage_state.vocabulary_extension_certificate(
         prior_vocabulary=prior,

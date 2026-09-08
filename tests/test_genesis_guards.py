@@ -9,17 +9,22 @@ and nobody has ever checked that it does not.
 Each test below kills one surviving mutant. They are deliberately small and slightly repetitive —
 one bad input, one refusal — because the value is coverage of the refusal set, not elegance.
 
-Two of the 35 are **not** here, and their absence is the finding rather than an omission:
+Four guards are deliberately **not** covered, and their absence is the finding rather than an
+omission. Each asserts an invariant the surrounding code already establishes:
 
 * `genesis/sandbox.py` — "the candidate did not report the task set it was given". The child builds
   its rows by iterating the task list it was handed, so no body can return a different task set. The
   check guards against a compromised child, which nothing in this repository can produce.
 * `genesis/migration.py` — "the lineage did not arrive intact". `migrate` constructs the arrival
   state from the departing state's own fields, so nothing can be dropped between them.
+* `genesis/probe.py` — "diagnosis mutated the lineage state". Probes run in separate processes and
+  nothing in the diagnosis path writes to the state.
+* `genesis/probe.py` — "the proposed feature gives both demands the same value". The operation comes
+  from the symmetric difference of the two resolving compositions, so it is in exactly one of them.
 
-Both are assertions about invariants the surrounding code already establishes. They are kept, marked
-in place, and left untested on purpose; inventing a contrived path to them would report coverage
-without adding knowledge.
+They are kept, marked in place, and left untested on purpose; inventing a contrived path to them
+would report coverage without adding knowledge. The current count is 67 of 71 killed — rerun
+`scripts/check_genesis_guards_are_tested.py` rather than trusting that number.
 """
 from __future__ import annotations
 

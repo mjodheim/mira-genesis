@@ -124,11 +124,13 @@ different tasks, a forged vocabulary certificate, a component certificate being 
 diagnostic feature, and the journal's chain check, which was masked by the file-digest check sitting
 in front of it.
 
-33 are now tested in `tests/test_genesis_guards.py`. **Second run: 66 of 68 killed.** The two
-survivors are marked in place as defensive assertions about invariants the surrounding code already
-establishes — the sandbox child cannot report a task set it was not given, and `migrate` builds the
-arrival state out of the departure state's own fields. Reaching them would require a contrived path
-that reports coverage without adding knowledge, so they are left untested deliberately and the
+33 were tested in `tests/test_genesis_guards.py`, and the probe module has since added its own.
+**Now 67 of 71 are killed.** The four survivors are marked in place as defensive assertions about
+invariants the surrounding code already establishes: the sandbox child cannot report a task set it
+was not given, `migrate` builds the arrival state out of the departure state's own fields, probes
+run in separate processes and cannot write to the lineage state, and a feature drawn from a
+symmetric difference cannot give both demands the same value. Reaching them would require contrived
+paths that report coverage without adding knowledge, so they are left untested deliberately and the
 intactness comparison is tested on its own.
 
 The number is reproducible rather than quoted: rerun the script.
