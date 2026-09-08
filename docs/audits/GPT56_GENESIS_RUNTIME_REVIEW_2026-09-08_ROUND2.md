@@ -1,6 +1,6 @@
 # GPT-5.6 Genesis runtime hostile review — round 2, 8 September 2026
 
-Target: post-hardening head derived from `45dce283` (short identifier only; this note is engineering review, not a scientific record).
+Target: the post-hardening PR #275 head from which this review branch was created. The exact commit identity remains in pull-request metadata; this note is engineering review, not a scientific record.
 
 The first hardening pass materially closes the persistence, evaluator-binding, retention, task-identity, journal-copying, provenance and proposer-authority counterexamples encoded in PR #276. This round therefore does not reopen those findings casually. It asks whether the stronger properties now claimed actually follow from the repaired mechanisms.
 
