@@ -37,6 +37,7 @@ SUITES = [
     "tests/test_genesis_loop.py",
     "tests/test_genesis_migration.py",
     "tests/test_genesis_demonstration.py",
+    "tests/test_genesis_guards.py",
 ]
 #: Modules holding the runtime's refusals. `development_bodies` is fixtures, not runtime.
 MODULES = ("trust_root", "state", "journal", "sandbox", "loop", "migration", "diagnosis")

@@ -149,6 +149,11 @@ def migrate(
         generation=departing["generation"],
     )
 
+    # Defensive, and deliberately untested: `arrived` is built above out of `departing`'s own fields,
+    # so nothing can be dropped between them. The *comparison* is tested directly (see
+    # tests/test_genesis_guards.py); this raise stays an assertion about an invariant the lines above
+    # already establish. `scripts/check_genesis_guards_are_tested.py` reports it as a surviving
+    # mutant; that is correct and expected.
     carried = carried_intact(departing, arrived)
     if not carried["intact"]:
         raise MigrationError("the lineage did not arrive intact: %s" % "; ".join(carried["lost"]))
