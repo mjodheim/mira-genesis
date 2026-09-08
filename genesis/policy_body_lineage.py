@@ -1,9 +1,9 @@
 """Persistent evidence that a lineage-held policy produced an adopted body.
 
-A policy update certificate can show that widening search machinery exposes a descendant the prior
-policy could not reach. A later body adoption is a separate event. Without an explicit link between
-them, the lineage history contains two true facts but not the stronger fact the metamorphosis target
-cares about: **the changed machinery produced the next accepted modification**.
+A policy update certificate can show that widening or structurally mutating search machinery exposes a
+descendant the prior policy could not reach. A later body adoption is a separate event. Without an
+explicit link between them, the lineage history contains two true facts but not the stronger fact the
+metamorphosis target cares about: **the changed machinery produced the next accepted modification**.
 
 This module binds those events after the ordinary trust-root adoption succeeds. It records the exact
 objective, exact current policy artifact, exact generated body artifact and ordinary verdict digest.
@@ -24,17 +24,34 @@ from genesis import state as lineage_state
 from genesis.trust_root import digest_of, provenance
 
 LINK_SCHEMA = "genesis-policy-generated-body-link-v1"
+UPDATE_ARMS = (
+    "objective_scoped_search_policy_update",
+    "meta_policy_generated_search_policy_update",
+)
 
 
 class PolicyBodyLinkError(RuntimeError):
     """Raised when an accepted body cannot be bound to the policy intent that produced it."""
 
 
+def _witness_names_candidate(witness: Mapping[str, Any], candidate_name: str) -> bool:
+    """Accept either an explicit scoped candidate name or the canonical operation suffix."""
+    if witness.get("name") == candidate_name:
+        return True
+    operations = witness.get("operations")
+    if not isinstance(operations, list) or not operations:
+        return False
+    # Objective-scoped names end in the generated operation composition. Meta-policy evaluation
+    # records the inert operation sequence rather than duplicating the scoped name.
+    suffix = "+".join(str(name) for name in operations)
+    return candidate_name.endswith(":" + suffix)
+
+
 def _matching_update(genesis, *, policy_digest: str, objective_digest: str, candidate_name: str):
     """Find the latest update certificate that made this exact candidate newly reachable."""
     for entry in reversed(genesis.journal.of_kind("observation")):
         payload = entry.get("payload") or {}
-        if payload.get("arm") != "objective_scoped_search_policy_update":
+        if payload.get("arm") not in UPDATE_ARMS:
             continue
         certificate = payload.get("certificate") or {}
         if not isinstance(certificate, Mapping):
@@ -46,7 +63,7 @@ def _matching_update(genesis, *, policy_digest: str, objective_digest: str, cand
             and isinstance(objective, Mapping)
             and objective.get("objective_digest") == objective_digest
             and isinstance(witness, Mapping)
-            and witness.get("name") == candidate_name
+            and _witness_names_candidate(witness, candidate_name)
         ):
             return dict(certificate)
     return None
@@ -152,7 +169,7 @@ def record_adoption(
             "new_state_digest": genesis.state["state_digest"],
             "provenance": provenance(
                 "lineage_owned",
-                produced_by="autonomous policy controller",
+                produced_by="policy evolution controller",
                 detail=verdict_digest,
             ),
         },
@@ -161,7 +178,7 @@ def record_adoption(
 
 
 def links(genesis) -> tuple[Mapping[str, Any], ...]:
-    """Return validated-looking link records retained in lineage observations for inspection."""
+    """Return policy/body link records retained in lineage observations for inspection."""
     return tuple(
         item
         for item in genesis.state.get("observations", [])
