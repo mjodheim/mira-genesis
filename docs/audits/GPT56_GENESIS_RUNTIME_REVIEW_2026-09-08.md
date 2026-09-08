@@ -1,6 +1,6 @@
 # GPT-5.6 Genesis runtime hostile review — 8 September 2026
 
-Status: independent review notes against PR #275 head `a23f78120e573f8fa1e708e21a1ded249119bec8`. No scientific gate moves and no recorded result is reinterpreted.
+Status: independent review notes against the head of PR #275 as it stood when this review branch was created. The exact base commit is recorded by PR #276 itself rather than repeated here, so this DEVELOPMENT audit does not create a new scientific commit citation. No scientific gate moves and no recorded result is reinterpreted.
 
 The review found concrete counterexamples that must be closed before the DEVELOPMENT demonstration can support the stronger persistence, retention, migration-verification, certificate, causal-chain, immutable-evaluator, or integrated-runtime claims currently attached to the apparatus.
 
@@ -30,7 +30,21 @@ The review found concrete counterexamples that must be closed before the DEVELOP
 
 12. **The experimental component certificate drops the positive experiment that licensed it.** `diagnose_by_experiment()` finds `resolving_composition`, but `certificate_from_experiment()` discards that record and calls `component_extension_certificate(... resolves_with_new_component=True)`. The certificate therefore retains prior failures and a caller boolean, not the composition that actually established wider reach.
 
-13. **A newly acquired component is not bound to executable semantics.** The caller supplies `new_component="joint_registry"`; the state stores the name and certificate, but no implementation/operation set is bound to that entry. In the DEVELOPMENT fixtures `COMPONENT_OPERATIONS` still contains only the seed components. The runtime can therefore add a certified name without yet adding a component that future diagnosis can execute as such. This is a narrower statement than saying the experimental diagnosis is worthless: the diagnosis found real wider reach, but the evidence-to-component transition is not complete.
+13. **A newly acquired component is not bound to executable semantics.** The caller supplies a human-readable component name; the state stores the name and certificate, but no implementation/operation set is bound to that entry. In the DEVELOPMENT fixtures the component-operation registry still contains only the seed components. The runtime can therefore add a certified name without yet adding a component that future diagnosis can execute as such. This is a narrower statement than saying the experimental diagnosis is worthless: the diagnosis found real wider reach, but the evidence-to-component transition is not complete.
+
+14. **The state's provenance claim is incomplete.** `create_state()` says every entry declares origin and provenance, but only component entries enforce provenance. Vocabulary entries carry no provenance, `extend_vocabulary()` accepts none, and tools/acquisitions/observations are copied as arbitrary records without a producer requirement. A state can therefore say a vocabulary or acquisition is lineage-owned by implication without containing evidence of who produced it.
+
+15. **A substrate record reveals operations the lineage did not discover.** `Substrate.record()` includes both `operations_available` and `operations_discovered`, and `migrate()` writes that record into the lineage journal. Once the lineage can inspect its history, the record itself tells it the names of capabilities it never found by probing. This contradicts the intended information boundary that substrate semantics are learned only through discovery.
+
+16. **Migration provenance is hard-coded rather than measured.** `migrate()` appends provenance `lineage_owned / lineage migration` regardless of who supplied the translation callable. In the DEVELOPMENT demonstration the translation is host-authored, yet the record labels the migration lineage-owned. The record therefore cannot currently support the provenance distinction it claims to preserve.
+
+17. **The journal is hash-chained but not authority-safe in memory.** `append()` returns the same mutable record stored internally; iteration returns references to internal records; `entries()` and `of_kind()` copy only the outer dictionary, leaving nested payloads shared. Code holding the `Journal` object can therefore mutate historical entries in memory. A hash chain detects accidental tampering only if the mutator does not also own the ability to rewrite/rebuild the chain; the live runtime currently exposes both.
+
+18. **`carried_intact()` loses multiset identity.** It tests each departing digest with `identifier in after_ids`. If an identical lineage record occurs twice before migration and once after, both departing occurrences are considered present. Extra arrival records are likewise not treated as a difference. If the claim is that the same lineage arrived intact, the comparison needs multiset/exact identity rather than membership-by-value.
+
+## Known boundary that must remain explicit
+
+The sandbox honestly reports limits it could not enforce, and its audit hook explicitly covers pure Python only. That honesty is good. The remaining requirement is architectural: any future strong claim about untrusted lineage-generated executable code must fail closed when the admitted isolation profile was not actually obtained, or move the execution into a boundary capable of enforcing the required controls. This review does not relabel the documented limitation as a newly discovered scientific failure.
 
 ## Required repair shape
 
