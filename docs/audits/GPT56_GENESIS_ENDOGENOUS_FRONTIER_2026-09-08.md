@@ -53,20 +53,29 @@ That is enough for the demonstration's fixed programme: its next step can be sel
 
 The repair must not hand the mechanism live state/journal references. It should expose a bounded immutable `LineageView`: canonical evidence summaries or digests plus a read-only inert content store, excluding graders, withheld answers, runtime services and mutable capability handles.
 
+## E7 — persistence is recoverable, but it is not yet a controller step
+
+The checkpoint mechanism is now materially better: committed payloads are content-addressed and a superseded checkpoint remains recoverable. But `controller.run()` does not publish a checkpoint after an accepted/rejected transformation, component/vocabulary acquisition or migration. The DEVELOPMENT script calls `genesis.persist(...)` only after the entire controller campaign returns.
+
+The objective's loop is explicitly `adopt/reject -> persist -> continue`. Today a controller run can advance through several generations and architectural changes in memory; a process death before the launcher reaches its final `persist()` resumes the last checkpoint from before that campaign and loses all accepted in-memory descent since it.
+
+A runtime-owned checkpoint sink/transaction boundary should make each committed architectural step durable before the next lineage intent is requested. The driver may choose the storage location, but it should not decide *when* lineage history becomes committed.
+
 ## Repair order
 
 1. Decide the identity boundary: immutable executor + mutable policy artifact is the smallest safe design.
 2. Put the current policy/mechanism identity into persistent lineage state/checkpoint and refuse substitution after restore.
 3. Give that policy a bounded immutable evidence view rich enough to condition the next hypothesis on retained failures/experiments.
-4. Add a canonical generated-candidate representation whose exact data digest is executable identity.
-5. Add a bounded search/generation operation that produces candidate artifacts from lineage observations/diagnoses under budget.
-6. Evaluate and adopt/reject those artifacts through the existing trust-root path; do not give the generator evaluator authority.
-7. Add an evidence-backed policy/machinery update so an acquired machinery change can produce the next search/modification.
-8. Persist generated body + policy artifacts and demonstrate process-death restoration without caller reconstruction.
-9. Only then replace the fixed demonstration programme with a searched one and ask whether the metamorphosis stopping criterion is actually met.
+4. Make each committed controller step durable before asking the policy for the next intent.
+5. Add a canonical generated-candidate representation whose exact data digest is executable identity.
+6. Add a bounded search/generation operation that produces candidate artifacts from lineage observations/diagnoses under budget.
+7. Evaluate and adopt/reject those artifacts through the existing trust-root path; do not give the generator evaluator authority.
+8. Add an evidence-backed policy/machinery update so an acquired machinery change can produce the next search/modification.
+9. Persist generated body + policy artifacts and demonstrate process-death restoration without caller reconstruction.
+10. Only then replace the fixed demonstration programme with a searched one and ask whether the metamorphosis stopping criterion is actually met.
 
 ## Current reading
 
-Genesis has moved past "a bag of primitives" into a real integrated runtime. The remaining gap is no longer primarily orchestration. It is **endogeneity**: who constructs the next executable candidate, what retained evidence that process can actually read, and who owns the machinery that decides what to try next.
+Genesis has moved past "a bag of primitives" into a real integrated runtime. The remaining gap is no longer primarily orchestration. It is **endogeneity and durable autonomy**: who constructs the next executable candidate, what retained evidence that process can actually read, who owns the machinery that decides what to try next, and whether each accepted transition survives a crash before the host driver regains control.
 
 Closing that gap is now more valuable than opening another generality milestone.
