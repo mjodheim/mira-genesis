@@ -2,14 +2,34 @@
 
 Status: independent review notes against PR #275 head `a23f78120e573f8fa1e708e21a1ded249119bec8`. No scientific gate moves and no recorded result is reinterpreted.
 
-The review found concrete counterexamples that must be closed before the DEVELOPMENT demonstration can support the stronger persistence, retention, migration-verification, certificate, or causal-chain claims currently attached to the integrated runtime.
+The review found concrete counterexamples that must be closed before the DEVELOPMENT demonstration can support the stronger persistence, retention, migration-verification, certificate, causal-chain, or immutable-evaluator claims currently attached to the integrated runtime.
 
 ## Blocking findings
 
-1. `task_set_digest()` hashes only task identifiers, so a migration caller can reuse identifiers with easier task contents and make an unevaluated verification set appear previously evaluated.
-2. `Genesis.restore()` does not restore the original admission envelope: budget, isolation, trust-root admission, evaluated task-set identities and executable body binding are not persisted as one checkpoint. State and journal are individually authenticated but not transactionally cross-bound.
-3. Acquired component/vocabulary certificates are not semantically reconstructed by `create_state()` / `decode_state()`; a self-consistent forged certificate can therefore carry the right schema/name while violating the evidence rules enforced by the certificate builders.
-4. `trust_root.decide()` compares solved counts, not retention. A candidate can forget tasks the parent solved, gain more elsewhere and still be accepted.
-5. `Proposal.ablated_body_factory` is an arbitrary callable. The runtime does not prove that the ablation arm is the candidate with exactly the named earlier acquisition removed, so a deliberately weak unrelated body can manufacture an apparent causal dependency.
+1. **Task identity hashes labels, not questions.** `task_set_digest()` hashes only task identifiers, so a migration caller can reuse identifiers with easier task contents and make an unevaluated verification set appear previously evaluated.
+
+2. **Process-death restoration creates a new admission envelope.** `Genesis.restore()` does not restore the original budget, isolation, trust-root admission, evaluated task-set identities or executable-body binding. State and journal are individually authenticated but not transactionally cross-bound. A restart can therefore manufacture fresh budget and accept a caller-selected body under the persisted state.
+
+3. **Acquired certificates are not semantically reconstructed.** `create_state()` / `decode_state()` accept a structurally self-consistent acquired certificate after checking its schema/name, without replaying the semantic evidence rules enforced by the certificate builders. A forged certificate can therefore claim exhaustion or separation that its own records do not establish.
+
+4. **Adoption can forget capability.** `trust_root.decide()` compares solved counts, not retention by task identity. A candidate can forget tasks the parent solved, gain more elsewhere and still be accepted.
+
+5. **The causal ablation arm is caller-authored.** `Proposal.ablated_body_factory` is an arbitrary callable. The runtime does not prove that it is the candidate with exactly the named earlier acquisition removed, so a deliberately weak unrelated body can manufacture an apparent causal dependency.
+
+6. **The proposer receives the mutable runtime object.** `cycle()` invokes `propose(self, tasks)` after measuring the parent. The callback can directly replace `Genesis.body_factory`, `budget`, `isolation`, `admitted_isolation`, `state`, `journal`, `admitted_source_sha256` or `grade`. It can therefore change the lineage without an adoption transaction, widen its own runtime envelope, or alter the evaluator between the parent and candidate arms. This directly violates the stated invariant that mutable Genesis cannot improve by modifying the measure that decides it is better.
+
+7. **The grader is outside the immutable admission identity.** Candidate correctness is now decided by `Genesis.grade`, but that callable is neither in `trust_root.py` nor bound by the admitted trust-root digest. Even without the broader mutation surface in finding 6, changing the grader changes the measure while every verdict still names the same trust-root source digest.
+
+8. **`Proposal.digest()` does not identify the executable candidate.** It hashes only proposal name, provenance and rationale. Two different `body_factory` implementations with the same metadata receive the same proposal digest, and an accepted state's `body_digest` is therefore not a digest of the body. This also makes strong executable continuity across restart impossible with the present representation.
+
+9. **An aborted parent still marks the task set as evaluated.** `cycle()` adds `task_set_digest(tasks)` to `evaluated_task_digests` before `run_candidate(parent, ...)`. If the sandbox aborts, the migration gate can later treat a set as work the lineage was evaluated on even though no evaluation occurred.
+
+10. **Metamorphosis success ignores migration capability preservation.** `metamorphosis_succeeded()` checks journal continuity, discovered operations, carried records and post-migration causal acceptance, but does not require `migration.capability.measured` or `migration.capability.preserved`. A migration whose executable capability was never measured — or one explicitly allowed to lose capability — can therefore be reported as succeeded.
+
+## Required repair shape
 
 These are engineering findings about DEVELOPMENT apparatus, not scientific observations. Each must receive a failing counterexample test before any fix is described as closed.
+
+The most important architectural consequence is finding 6: the lineage-owned proposal mechanism must not receive authority over the host-side runtime object. It needs a read-only, content-addressed observation/context value and must return a proposal as data. Budget, isolation, evaluator identity, journal mutation, state mutation and the final adoption transaction must remain outside that capability surface.
+
+Likewise, the grader has become part of the evaluator and must be admitted immutably. A verdict that binds only `trust_root.py` while correctness is decided by an unbound callable is not yet a verdict bound to its measure.
