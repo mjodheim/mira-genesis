@@ -88,7 +88,8 @@ def test_generated_descendant_restores_without_a_caller_supplied_body_factory(tm
     assert restored.journal.head == original.journal.head
     assert isinstance(restored.body_factory, ConfiguredBody)
     assert restored.body_factory.target == programs.PROGRAM_TARGET
-    assert restored.body_factory.configuration["operations"] == ["double", "increment"]
+    # Reconstruction restores the same frozen executable artifact, not a mutable caller-facing list.
+    assert restored.body_factory.configuration["operations"] == ("double", "increment")
     assert tr.artifact_digest_of(restored.body_factory) == tr.artifact_digest_of(
         original.body_factory
     )
