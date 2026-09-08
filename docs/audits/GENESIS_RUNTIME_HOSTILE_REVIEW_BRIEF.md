@@ -3,7 +3,7 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2300 lines) and the 165 tests that validate it have one
+The `genesis/` package (nine modules, ~2400 lines) and the 177 tests that validate it have one
 author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
@@ -18,6 +18,11 @@ outcome, not a failure of the review.
 be an executable program in which **one lineage** measures itself, diagnoses itself, transforms
 itself, verifies the transformation, adopts or rejects it on evidence, keeps what it learned, extends
 the machinery enabling later transformations, changes substrate, and evolves again in the new form.
+
+`experiments/GENESIS/DEMONSTRATION_DEFINITION.md` states the twelve properties a run must exhibit and,
+separately, which of them are driven to their negative in the test suite. **Read the definition before
+the record.** If a property is defined so that it cannot come out false, that is a finding regardless
+of what the record says — M121 v2 passed 76 tests while being unable to return a negative.
 
 Three things are **not** claimed, and a review that refutes them refutes nothing:
 
@@ -65,7 +70,12 @@ whether that shape recurs somewhere still unfixed.
    broke that entry alone and not everything after it.
 6. **Instrument failure scored as candidate failure.** A child process that could not start produced
    `error` rows indistinguishable from a body that genuinely failed.
-7. **Half the refusals had never been exercised.** Defects 1–6 were found by reading the code
+7. **The migration checked what the lineage recorded, never what it could do.** `carried_intact`
+   compares components, certificates and acquisitions across a substrate change; nothing compared
+   what the arrival could still *do*. A translation could drop every capability and the record would
+   say nothing was lost, because nothing being counted had been — and this was live in the
+   demonstration, whose migrated body solved half of what its pre-migration body solved.
+8. **Half the refusals had never been exercised.** Defects 1–7 were found by reading the code
    adversarially, which finds only what the reader thinks to look for. Asking the question
    mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
    and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
@@ -98,6 +108,9 @@ Specifically:
 - `metamorphosis_succeeded` is false until the migrated lineage accepts a new candidate. Is
   "accepted a candidate after migration" actually the thing that separates transported intelligence
   from transported output, or is it a proxy the author chose because his fixtures satisfy it?
+- the demonstration now runs **two consecutive ablations** and calls the pair a chain. Two links is
+  the smallest number that can be called a chain at all. Say whether two is enough to mean anything,
+  or whether the author picked the smallest number that lets him use the word.
 
 ### 2. Checks that reread a boolean the runner wrote
 

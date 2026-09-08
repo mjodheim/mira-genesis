@@ -24,9 +24,9 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/probe.py` | probes the lineage composes and runs: insufficiency by exhaustion, established by experiment rather than by consulting an oracle |
 | `genesis/migration.py` | substrate discovery by probing, migration, and the requirement to evolve again after it |
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
-| `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record |
+| `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 165 hostile offline tests |
+| `tests/test_genesis_*.py` | 177 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
@@ -110,9 +110,25 @@ sandbox now returns `outcomes: []` with `instrument_failure: True`, and the loop
 rather than deciding. This is the distinction M124 had to learn between a delivery outcome and a
 scientific one.
 
-### 7. Half the runtime's refusals had never been exercised
+### 7. The migration checked what the lineage recorded, never what it could do
 
-The six defects above were found by reading the code adversarially. That method has an obvious limit:
+`carried_intact` compares components, certificates, acquisitions, vocabulary and observations across
+a substrate change, and the record reported "nothing lost" on the strength of it. Nothing compared
+what the *arrival could still do*. A translation could drop every capability the lineage had and pass
+that check untouched, because nothing being counted had been lost.
+
+That is the transported-output-versus-transported-intelligence distinction M084 forced on this
+project, arriving one level lower down — and it was live in the demonstration itself, whose migrated
+body solved two of the four tasks its pre-migration body solved.
+
+Both bodies are now run over the same tasks under the same isolation, and a translation that solves
+strictly less is refused unless a lossy arrival is explicitly intended. A migration nobody supplied
+tasks for reports `capability.measured: false` and claims nothing, rather than reporting preservation
+it never checked. A refused migration leaves the lineage where it was rather than half moved.
+
+### 8. Half the runtime's refusals had never been exercised
+
+The seven defects above were found by reading the code adversarially. That method has an obvious limit:
 it finds what the reader thinks to look for. `scripts/check_genesis_guards_are_tested.py` asks the
 question mechanically instead — it deletes each `raise` in `genesis/` one at a time and reruns the
 suite, so a guard whose removal keeps the tests green is a refusal nothing ever checked.

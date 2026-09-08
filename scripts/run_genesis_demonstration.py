@@ -50,7 +50,7 @@ from genesis.migration import (  # noqa: E402
 )
 
 RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
-TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+TASKS = [{"task_id": "t%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 def _seed_state() -> dict:
@@ -87,7 +87,7 @@ def _one(genesis, name, factory):
     )
 
 
-def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox) -> dict:
+def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox, construction="") -> dict:
     """Assemble the causal-dependency claim, and refuse it when the ablation removed nothing.
 
     Two things have to hold and they are not the same. The measured loss says the later generation
@@ -118,9 +118,9 @@ def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox) -> dict:
     # Stated, not checked: which body was ablated is a property of how the arm was built, and a
     # boolean written here would only be this runner agreeing with itself. The test suite compares
     # the two bodies field by field instead.
-    causal["ablated_arm_construction"] = (
-        "genesis.development_bodies.migrated_ablated_body: the accepted candidate with the "
-        "acquired component removed and nothing else changed"
+    causal["ablated_arm_construction"] = construction or (
+        "unstated: the runner did not say which body was ablated, so read the code rather than "
+        "this field"
     )
     causal["fixture_not_evidence"] = (
         "these are development fixtures; this shows the runtime can hold and refuse a causal "
@@ -236,6 +236,10 @@ def demonstrate() -> dict:
         substrate,
         lambda state, operations: bodies.migrated_parent_body,
         used_operations=["read"],
+        # Verified rather than assumed: both bodies run over the same tasks, and a translation that
+        # solves strictly less is refused. Arriving with every certificate intact while being unable
+        # to do the work is transported output.
+        tasks=TASKS,
     )
     steps.append(
         {
@@ -244,10 +248,24 @@ def demonstrate() -> dict:
             "missing": probing["missing"],
             "journal_continues": migration["journal_continues"],
             "nothing_lost": all(c["missing"] == 0 for c in migration["carried"].values()),
+            # What it recorded, and separately what it can still do. The second is the one nothing
+            # used to check.
+            "capability_measured": migration["capability"]["measured"],
+            "capability_preserved": migration["capability"]["preserved"],
+            "solved_before_and_after": [
+                migration["capability"]["solved_before"],
+                migration["capability"]["solved_after"],
+            ],
         }
     )
 
-    after = [_one(genesis, "improved_in_new_form", bodies.migrated_improved_body)]
+    # Two further generations in the new form, not one. A single acceptance after a migration shows
+    # the lineage still works; a chain shows it is still *going*, which is the property the stopping
+    # criterion asks for.
+    after = [
+        _one(genesis, "improved_in_new_form", bodies.migrated_improved_body),
+        _one(genesis, "improved_again_in_new_form", bodies.migrated_further_body),
+    ]
     outcome = metamorphosis_succeeded(migration, after)
     steps.append(
         {
@@ -257,28 +275,43 @@ def demonstrate() -> dict:
             "transported_intelligence": outcome[
                 "is_transported_intelligence_rather_than_transported_output"
             ],
+            "accepted_cycles_in_the_lineage": len(genesis.state["acquisitions"]),
         }
     )
 
     # A real ablation, not the verdict relabelled. The earlier acquisition is removed and the later
     # generation is retried at the same budget in its own isolated run; comparing the candidate with
     # its parent would only repeat the comparison the verdict already made.
-    ablated = run_candidate(
-        bodies.migrated_ablated_body, TASKS, genesis.isolation,
-        admitted_isolation=genesis.admitted_isolation,
-    )
-    causal = causal_step(
-        candidate_sandbox=after[0]["candidate_sandbox"],
-        parent_sandbox=after[0]["parent_sandbox"],
-        ablated_sandbox=ablated,
-    )
-    steps.append({"step": "causal_dependency_between_generations", **causal})
+    # One ablation shows a generation needed something earlier. Two consecutive ones show a chain,
+    # which is what separates improvements that depend on each other from improvements that merely
+    # happened in order.
+    for index, (label, ablated_factory) in enumerate(
+        (
+            ("generation_2_needed_the_probe_named_component", bodies.migrated_ablated_body),
+            ("generation_3_needed_generation_2s_acquisition", bodies.migrated_further_ablated_body),
+        )
+    ):
+        construction = (
+            "genesis.development_bodies.%s: the accepted candidate with one acquired component "
+            "removed and nothing else changed" % ablated_factory.__name__
+        )
+        ablated = run_candidate(
+            ablated_factory, TASKS, genesis.isolation,
+            admitted_isolation=genesis.admitted_isolation,
+        )
+        causal = causal_step(
+            candidate_sandbox=after[index]["candidate_sandbox"],
+            parent_sandbox=after[index]["parent_sandbox"],
+            ablated_sandbox=ablated,
+            construction=construction,
+        )
+        steps.append({"step": "causal_dependency:%s" % label, **causal})
 
     directory = ROOT / "experiments" / "GENESIS" / "runtime_state"
     genesis.persist(directory)
     restored = Genesis.restore(
         directory,
-        body_factory=bodies.migrated_improved_body,
+        body_factory=bodies.migrated_further_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
     )

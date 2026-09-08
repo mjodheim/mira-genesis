@@ -18,7 +18,12 @@ Three rules follow, and each is checked rather than asserted:
 2. **Everything the lineage owned arrives with it** — acquisitions, tools, the component registry
    with its extension certificates, the diagnostic vocabulary, useful memory and the causal journal.
    The check is by name and digest, not by count.
-3. **The journal continues.** The post-migration chain links to the pre-migration head, so the
+3. **What the lineage could do arrives too.** Rule 2 compares what the lineage *recorded*; for a
+   long time nothing compared what it could still *do*, so a translation could drop every capability
+   and the record would say nothing was lost — because nothing being counted had been. Both bodies
+   are now run over the same tasks and the arrival is refused if it solves strictly less, unless a
+   lossy arrival is explicitly intended.
+4. **The journal continues.** The post-migration chain links to the pre-migration head, so the
    descent is one lineage rather than two that resemble each other.
 
 And the bar that decides the whole thing: `metamorphosis_succeeded` is false until the migrated
@@ -110,18 +115,74 @@ def discover(substrate: Substrate, candidate_names: Sequence[str], budget) -> di
     }
 
 
+def capability_carried(
+    genesis,
+    arrived_body_factory: Callable[[], Any],
+    tasks: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Measure whether the translated body can still do what the departing body could.
+
+    `carried_intact` compares what the lineage *recorded* — components, vocabulary, acquisitions,
+    observations. It says nothing about what the lineage can still *do*, and for a long time nothing
+    else did either: a translation could drop every capability the lineage had and the migration
+    record would report that nothing was lost, because nothing that was being counted had been.
+
+    That is the transported-output-versus-transported-intelligence distinction M084 forced on this
+    project, arriving one level lower down. So both bodies are run over the same tasks under the same
+    isolation and the comparison is made on raw per-task outcomes.
+    """
+    from genesis.sandbox import run_candidate
+
+    before = run_candidate(
+        genesis.body_factory, tasks, genesis.isolation,
+        admitted_isolation=genesis.admitted_isolation,
+    )
+    after = run_candidate(
+        arrived_body_factory, tasks, genesis.isolation,
+        admitted_isolation=genesis.admitted_isolation,
+    )
+    if not (before["completed"] and after["completed"]):
+        # A comparison that could not run is not a comparison that passed.
+        raise MigrationError(
+            "the capability comparison did not run, so the translation cannot be verified: %s"
+            % (before.get("reason") or after.get("reason"))
+        )
+
+    def solved(run):
+        return {row["task_id"] for row in run["outcomes"] if row.get("outcome") == "solved"}
+
+    solved_before, solved_after = solved(before), solved(after)
+    lost = sorted(solved_before - solved_after)
+    return {
+        "measured": True,
+        "solved_before": len(solved_before),
+        "solved_after": len(solved_after),
+        "lost_tasks": lost,
+        "preserved": not lost,
+        "departure_sandbox_digest": before["result_digest"],
+        "arrival_sandbox_digest": after["result_digest"],
+    }
+
+
 def migrate(
     genesis,
     substrate: Substrate,
     translate: Callable[[Mapping[str, Any], Mapping[str, Callable[..., Any]]], Callable[[], Any]],
     *,
     used_operations: Sequence[str],
+    tasks: Sequence[Mapping[str, Any]] | None = None,
+    permit_capability_loss: bool = False,
 ) -> dict[str, Any]:
     """Carry a lineage into `substrate`, and prove it arrived as the same lineage.
 
     `translate` receives the departing state and **only the discovered operations**. It returns a
     body factory for the new substrate. `used_operations` declares what the translation relied on,
     and every one of them must have been discovered by probing.
+
+    Supply `tasks` to have the translation verified: both bodies are run over them and the migration
+    refuses a translation that solves strictly less, unless `permit_capability_loss` says a lossy
+    arrival is intended. Without `tasks` the record reports `capability.measured: false` and claims
+    nothing about what arrived, which is the honest reading of a migration nobody checked.
     """
     departing = lineage_state.decode_state(genesis.state)
     departure_head = genesis.journal.head
@@ -158,6 +219,22 @@ def migrate(
     if not carried["intact"]:
         raise MigrationError("the lineage did not arrive intact: %s" % "; ".join(carried["lost"]))
 
+    # Measured before anything is assigned, so a refused migration does not leave the lineage half
+    # moved into a substrate it was not verified against.
+    if tasks is None:
+        capability = {
+            "measured": False,
+            "preserved": None,
+            "why": "no tasks were supplied, so nothing checked what the translated body can do",
+        }
+    else:
+        capability = capability_carried(genesis, body_factory, tasks)
+        if not capability["preserved"] and not permit_capability_loss:
+            raise MigrationError(
+                "the translation lost capability the lineage had: %s"
+                % ", ".join(capability["lost_tasks"])
+            )
+
     genesis.state = arrived
     genesis.body_factory = body_factory
     entry = genesis.journal.append(
@@ -170,6 +247,7 @@ def migrate(
             "departure_journal_head": departure_head,
             "used_operations": sorted(used_operations),
             "carried": carried["carried"],
+            "capability": capability,
             "provenance": provenance("lineage_owned", produced_by="lineage migration"),
         },
     )
@@ -183,6 +261,7 @@ def migrate(
         "arrival_journal_entry": entry["entry_digest"],
         "journal_continues": entry["previous_digest"] == departure_head,
         "carried": carried["carried"],
+        "capability": capability,
         "used_only_discovered_operations": True,
         "evolved_after_migration": False,
     }

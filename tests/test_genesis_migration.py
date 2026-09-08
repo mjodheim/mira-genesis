@@ -18,13 +18,14 @@ from genesis.migration import (
     CARRIED,
     MigrationError,
     Substrate,
+    capability_carried,
     carried_intact,
     discover,
     metamorphosis_succeeded,
     migrate,
 )
 
-TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+TASKS = [{"task_id": "t%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -257,3 +258,94 @@ def test_the_whole_metamorphosis_survives_process_death(tmp_path):
         entry["kind"] for entry in genesis.journal
     ]
     assert restored.journal.of_kind("migration")
+
+
+# -- what arrived, as opposed to what was recorded as arriving --------------------------------------
+#
+# `carried_intact` compares components, certificates and acquisitions. For a long time nothing
+# compared what the arrival could still *do*, so a translation could drop every capability the
+# lineage had and the migration record would report that nothing was lost — because nothing being
+# counted had been. These tests exist because of that gap.
+
+def test_a_translation_that_loses_capability_is_refused():
+    """The lossy body carries every component and certificate. It simply cannot do the work."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError, match="lost capability"):
+        migrate(
+            genesis,
+            substrate,
+            lambda state, operations: bodies.migrated_lossy_body,
+            used_operations=["read"],
+            tasks=TASKS,
+        )
+
+
+def test_a_refused_translation_does_not_half_move_the_lineage():
+    """A migration that is refused must leave the lineage where it was, not partly elsewhere."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    before_state, before_body = genesis.state["state_digest"], genesis.body_factory
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError):
+        migrate(
+            genesis,
+            substrate,
+            lambda state, operations: bodies.migrated_lossy_body,
+            used_operations=["read"],
+            tasks=TASKS,
+        )
+    assert genesis.state["state_digest"] == before_state
+    assert genesis.body_factory is before_body
+
+
+def test_a_lossy_translation_is_allowed_when_it_is_explicitly_intended():
+    """A substrate may genuinely be less capable. Silence is the problem, not the loss."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(
+        genesis,
+        substrate,
+        lambda state, operations: bodies.migrated_lossy_body,
+        used_operations=["read"],
+        tasks=TASKS,
+        permit_capability_loss=True,
+    )
+    assert record["capability"]["preserved"] is False
+    assert record["capability"]["lost_tasks"] == ["t2", "t3"]
+
+
+def test_an_unverified_migration_claims_nothing_about_what_arrived():
+    """Without tasks nothing is measured, and the record must not imply otherwise."""
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+    assert record["capability"]["measured"] is False
+    assert record["capability"]["preserved"] is None
+    assert "nothing checked" in record["capability"]["why"]
+
+
+def test_a_verified_migration_reports_both_sides_of_the_comparison():
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"], tasks=TASKS)
+    capability = record["capability"]
+    assert capability["measured"] is True
+    assert capability["preserved"] is True
+    assert capability["solved_before"] == capability["solved_after"] == 4
+    assert capability["lost_tasks"] == []
+
+
+def test_a_comparison_that_could_not_run_is_not_a_comparison_that_passed():
+    """An instrument failure must not be read as a translation that preserved everything."""
+    genesis = _genesis()
+    with pytest.raises(MigrationError, match="did not run"):
+        capability_carried(genesis, bodies.unconstructible_body, TASKS)

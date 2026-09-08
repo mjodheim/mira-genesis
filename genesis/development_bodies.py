@@ -120,43 +120,112 @@ SUBSTRATE_OPERATIONS = {
 }
 
 
-#: The component the later migrated generation routes its new solutions through.
-ACQUIRED_COMPONENT = "joint_registry"
+# The lineage's descent after the substrate change, as a chain rather than a sequence.
+#
+#   generation 1  improved_body                  solves t0..t3 in the old substrate
+#   migration     migrated_parent_body           the translation: must still solve t0..t3
+#   generation 2  migrated_improved_body         gains t4 through what generation 2 acquires
+#   generation 3  migrated_further_body          gains t5, and still needs both earlier acquisitions
+#
+# Each later generation *routes* its earlier gains through the components that produced them, so an
+# ablation removes something rather than merely relabelling the verdict.
 
-#: The tasks that generation answers through it rather than out of its own table.
+#: The component the lineage named for itself, by probing, before it migrated.
+ACQUIRED_COMPONENT = "joint_registry"
+#: What the first post-migration generation acquires, which the one after it depends on.
+SECOND_ACQUISITION = "carrier_index"
+
+#: t2 and t3 are answered through the probe-named component rather than out of the body's own table.
 ROUTED_TASKS = {"t2": ACQUIRED_COMPONENT, "t3": ACQUIRED_COMPONENT}
+#: generation 2 adds t4 through its own acquisition.
+ROUTED_AFTER_MIGRATION = {**ROUTED_TASKS, "t4": SECOND_ACQUISITION}
+#: generation 3 adds t5, and keeps needing both.
+ROUTED_THIRD_GENERATION = {**ROUTED_AFTER_MIGRATION, "t5": SECOND_ACQUISITION}
 
 
 def migrated_parent_body():
-    return RecordBody({"t0", "t1"}, ("read",))
+    """The translation of `improved_body` into the new substrate.
 
-
-def migrated_improved_body():
-    """The later generation: it gains t2 and t3 *through* the acquired component."""
+    It must still solve everything the departing body solved. A translation that quietly solves less
+    is transported output, and `migration.capability_carried` now refuses it.
+    """
     return RecordBody(
         {"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities={ACQUIRED_COMPONENT}
     )
 
 
+def migrated_lossy_body():
+    """A translation that drops what the lineage could do. The migration must refuse it.
+
+    Nothing in the *state* comparison notices this body: it carries every component, every
+    certificate and every acquisition. It simply cannot do the work any more.
+    """
+    return RecordBody({"t0", "t1"}, ("read",))
+
+
+def migrated_improved_body():
+    """Generation 2, in the new form: gains t4 through its own acquisition."""
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_AFTER_MIGRATION,
+        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION},
+    )
+
+
+def migrated_further_body():
+    """Generation 3: gains t5, and still routes its earlier gains through both acquisitions."""
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_THIRD_GENERATION,
+        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION},
+    )
+
+
 def migrated_ablated_body():
-    """The same generation with the acquisition removed, and nothing else changed.
+    """Generation 2 with the probe-named component removed, and nothing else changed.
 
     Comparing a candidate against its parent is the verdict, not an ablation. To show a later
     generation *needed* an earlier acquisition, the acquisition has to be taken away and that same
     generation retried at the same budget. Only `capabilities` differs from
     `migrated_improved_body`; a test asserts that rather than trusting this docstring.
     """
-    return RecordBody({"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities=())
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_AFTER_MIGRATION,
+        capabilities={SECOND_ACQUISITION},
+    )
+
+
+def migrated_further_ablated_body():
+    """Generation 3 with generation 2's acquisition removed. The second link of the chain.
+
+    One ablation shows a generation needed something earlier. Two consecutive ones show a *chain*,
+    which is the difference between improvements that happened in order and improvements that
+    depend on each other.
+    """
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_THIRD_GENERATION,
+        capabilities={ACQUIRED_COMPONENT},
+    )
 
 
 def migrated_uncoupled_ablation_body():
-    """Negative control: an 'ablated' arm that never routed through anything.
+    """Negative control: an 'ablated' arm from which nothing was actually removed.
 
-    Nothing was removed from it, because it never depended on the acquisition in the first place.
-    The causal check must refuse this arm. It exists so the check's positive verdict is a finding
-    rather than a property of how the fixtures were written.
+    It is behaviourally the post-migration parent. Presented as an ablation it solves less than the
+    candidate, so the measured loss alone would call the causal claim supported — and the check must
+    still refuse it, because comparing a candidate with its parent is the verdict that accepted the
+    candidate, not evidence that anything was needed. It exists so the check's positive verdict is a
+    finding rather than a property of how the fixtures were written.
     """
-    return RecordBody({"t0", "t1"}, ("read",))
+    return RecordBody(
+        {"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities={ACQUIRED_COMPONENT}
+    )
 
 
 # ---------------------------------------------------------------------------------------------

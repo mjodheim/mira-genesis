@@ -118,12 +118,39 @@ def test_the_lineage_evolves_again_in_its_new_form(record):
     """Transported intelligence rather than transported output. This is the whole objective."""
     step = _step(record, "evolved_again_in_the_new_form")
     assert step["metamorphosis_succeeded"] is True
-    assert step["accepted_after_migration"] == 1
+    assert step["accepted_after_migration"] == 2
     assert step["transported_intelligence"] is True
 
 
-def test_a_later_generation_needed_the_earlier_acquisition(record):
-    step = _step(record, "causal_dependency_between_generations")
+def test_the_lineage_accepts_three_transformations_not_one(record):
+    """A single acceptance shows the runtime works. Three show the lineage is still going."""
+    step = _step(record, "evolved_again_in_the_new_form")
+    assert step["accepted_cycles_in_the_lineage"] == 3
+    assert record["final_generation"] == 3
+
+
+def test_the_translation_is_verified_rather_than_assumed(record):
+    """State arriving intact says nothing about what the arrival can do.
+
+    `carried_intact` compares components, certificates and acquisitions. A translation could drop
+    every capability and still pass it, because nothing being counted would have been lost.
+    """
+    step = _step(record, "substrate_semantics_discovered_then_migrated")
+    assert step["capability_measured"] is True
+    assert step["capability_preserved"] is True
+    assert step["solved_before_and_after"] == [4, 4]
+
+
+@pytest.mark.parametrize(
+    "label",
+    [
+        "generation_2_needed_the_probe_named_component",
+        "generation_3_needed_generation_2s_acquisition",
+    ],
+)
+def test_each_generation_needed_the_one_before_it(record, label):
+    """Two consecutive ablations. One shows a dependency; two show a chain."""
+    step = _step(record, "causal_dependency:%s" % label)
     assert step["supported"] is True
     assert step["solved_without_acquisition"] < step["solved_with_acquisition"]
     assert step["equal_budget"] is True
@@ -135,15 +162,32 @@ def test_a_later_generation_needed_the_earlier_acquisition(record):
     assert step["why_not"] == ""
 
 
-def test_the_ablated_arm_is_the_candidate_minus_the_acquisition_and_nothing_else():
-    """The record only *states* how the arm was built. This checks it."""
-    candidate = bodies.migrated_improved_body()
-    ablated = bodies.migrated_ablated_body()
+def test_each_ablation_names_the_body_it_actually_ablated(record):
+    """One hardcoded string described both arms until the second arm existed to contradict it."""
+    first = _step(record, "causal_dependency:generation_2_needed_the_probe_named_component")
+    second = _step(record, "causal_dependency:generation_3_needed_generation_2s_acquisition")
+    assert "migrated_ablated_body" in first["ablated_arm_construction"]
+    assert "migrated_further_ablated_body" in second["ablated_arm_construction"]
+
+
+@pytest.mark.parametrize(
+    "candidate_factory, ablated_factory, removed",
+    [
+        ("migrated_improved_body", "migrated_ablated_body", "ACQUIRED_COMPONENT"),
+        ("migrated_further_body", "migrated_further_ablated_body", "SECOND_ACQUISITION"),
+    ],
+)
+def test_each_ablated_arm_is_its_candidate_minus_one_acquisition(
+    candidate_factory, ablated_factory, removed
+):
+    """The record only *states* how each arm was built. This checks it, field by field."""
+    candidate = getattr(bodies, candidate_factory)()
+    ablated = getattr(bodies, ablated_factory)()
     assert ablated.solves == candidate.solves
     assert ablated.operation_names == candidate.operation_names
     assert ablated.routed == candidate.routed
-    assert candidate.capabilities == frozenset({bodies.ACQUIRED_COMPONENT})
-    assert ablated.capabilities == frozenset()
+    assert candidate.capabilities - ablated.capabilities == {getattr(bodies, removed)}
+    assert ablated.capabilities < candidate.capabilities
 
 
 def test_the_causal_check_refuses_an_arm_that_never_depended_on_the_acquisition():
@@ -166,13 +210,32 @@ def test_the_causal_check_refuses_an_arm_that_never_depended_on_the_acquisition(
     assert "identical to the parent arm" in causal["why_not"]
 
 
+def test_a_runner_that_does_not_say_what_it_ablated_says_so():
+    """The construction field is a statement, so silence must read as silence rather than as a claim."""
+    isolation = tr.Isolation()
+    candidate = run_candidate(bodies.migrated_improved_body, TASKS, isolation)
+    parent = run_candidate(bodies.migrated_parent_body, TASKS, isolation)
+    ablated = run_candidate(bodies.migrated_ablated_body, TASKS, isolation)
+    causal = causal_step(
+        candidate_sandbox=candidate, parent_sandbox=parent, ablated_sandbox=ablated
+    )
+    assert causal["ablated_arm_construction"].startswith("unstated")
+
+
 def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
     """What makes the removal real: the candidate reaches for a component that is not there."""
     outcomes = {
         row["task_id"]: row["outcome"]
         for row in run_candidate(bodies.migrated_ablated_body, TASKS, tr.Isolation())["outcomes"]
     }
-    assert outcomes == {"t0": "solved", "t1": "solved", "t2": "error", "t3": "error"}
+    assert outcomes == {
+        "t0": "solved",
+        "t1": "solved",
+        "t2": "error",
+        "t3": "error",
+        "t4": "solved",
+        "t5": "unsolved",
+    }
 
 
 def test_the_whole_lineage_comes_back_from_disk(record):
