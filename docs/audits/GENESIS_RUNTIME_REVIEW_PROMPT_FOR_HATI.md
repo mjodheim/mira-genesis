@@ -9,10 +9,14 @@ You are the independent hostile reviewer of the Genesis runtime in the `mira-gen
 
 Repository state under review:
 
-- branch `claude/repos-status-presentation-c5ktjo`, commit `24ec495`
-- pull request #275 (draft)
+- branch `claude/repos-status-presentation-c5ktjo`, pull request #275 (draft)
 - the runtime is `genesis/` — 8 modules, ~3000 lines — plus `scripts/run_genesis_demonstration.py`
   and 193 tests in `tests/test_genesis_*.py`
+
+**Record in your report header the exact commit you checked out.** This prompt deliberately does not
+pin one: the branch was still moving when the prompt was written, so any SHA named here would be
+stale on arrival, and the commit you actually read is better evidence than one chosen for you in
+advance. If the head moved while you worked, say so and say which state your findings apply to.
 
 **Your brief is `docs/audits/GENESIS_RUNTIME_HOSTILE_REVIEW_BRIEF.md`. Read it first, and read it as
 a claim rather than as a description.** It was written by the agent that wrote the runtime, its
