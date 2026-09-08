@@ -1,18 +1,15 @@
 """Lineage-held bounded search policies represented as canonical data.
 
-The first generated-body work still used a host-authored Python function to decide which program to
-try next. This module moves that *search machinery* into a content-addressed value. A fixed policy
-interpreter is apparatus; the mutable policy is data held by the lineage.
+The mutable search machinery is a content-addressed value interpreted by fixed apparatus. A policy
+names an admitted primitive-operation registry, an ordered operation alphabet, a maximum program
+length and a fixed ceiling on how far that length may ever be expanded in this bounded DEVELOPMENT
+setting. ``step`` reads only inert lineage evidence and returns one declarative generated-transform
+record or a stop record; it cannot run candidates or grade anything.
 
-A policy names an admitted primitive-operation registry, an ordered operation alphabet, a maximum
-program length and a fixed ceiling on how far that length may ever be expanded in this bounded
-DEVELOPMENT setting. ``step`` reads only inert lineage evidence and returns one declarative
-``GenerateTransform``-shaped record or a stop record. It does not run candidates and cannot grade
-anything.
-
-``expand`` is the one licensed edit: increase the search depth by exactly one while every other
-field stays fixed. Whether that edit may be adopted is *not* decided here; ``policy_controller``
-requires an exhaustion certificate and a trust-root-judged gain before it installs the descendant.
+``expand`` is intentionally literal: the descendant artifact differs from its parent in exactly one
+semantic field, ``max_length += 1``. Ancestry belongs in the evidence/certificate that licenses the
+transition, not in the policy value itself; putting ``parent_policy_digest`` inside the policy would
+make a claimed single-field structural mutation differ in two fields.
 """
 from __future__ import annotations
 
@@ -38,7 +35,6 @@ def _payload(
     ceiling_length: int,
     max_candidates: int,
     input_field: str,
-    parent_policy_digest: str,
 ) -> dict[str, Any]:
     names = [str(name) for name in operation_names]
     if not registry_reference:
@@ -69,7 +65,6 @@ def _payload(
         "ceiling_length": int(ceiling_length),
         "max_candidates": int(max_candidates),
         "input_field": str(input_field),
-        "parent_policy_digest": str(parent_policy_digest),
     }
 
 
@@ -81,7 +76,6 @@ def create(
     ceiling_length: int = 2,
     max_candidates: int = 64,
     input_field: str = "input",
-    parent_policy_digest: str = "",
 ) -> dict[str, Any]:
     """Create one canonical policy artifact."""
     payload = _payload(
@@ -91,7 +85,6 @@ def create(
         ceiling_length=ceiling_length,
         max_candidates=max_candidates,
         input_field=input_field,
-        parent_policy_digest=parent_policy_digest,
     )
     return {**payload, "policy_digest": digest_of(payload)}
 
@@ -109,7 +102,6 @@ def validate(record: Mapping[str, Any]) -> dict[str, Any]:
         ceiling_length=int(record.get("ceiling_length", 0)),
         max_candidates=int(record.get("max_candidates", 0)),
         input_field=str(record.get("input_field") or ""),
-        parent_policy_digest=str(record.get("parent_policy_digest") or ""),
     )
     if rebuilt != dict(record):
         raise PolicyError("search policy does not reconstruct from its own fields")
@@ -206,5 +198,4 @@ def expand(record: Mapping[str, Any]) -> dict[str, Any]:
         ceiling_length=policy["ceiling_length"],
         max_candidates=policy["max_candidates"],
         input_field=policy["input_field"],
-        parent_policy_digest=policy["policy_digest"],
     )
