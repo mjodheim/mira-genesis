@@ -2,7 +2,7 @@
 
 Status: independent review notes against PR #275 head `a23f78120e573f8fa1e708e21a1ded249119bec8`. No scientific gate moves and no recorded result is reinterpreted.
 
-The review found concrete counterexamples that must be closed before the DEVELOPMENT demonstration can support the stronger persistence, retention, migration-verification, certificate, causal-chain, or immutable-evaluator claims currently attached to the integrated runtime.
+The review found concrete counterexamples that must be closed before the DEVELOPMENT demonstration can support the stronger persistence, retention, migration-verification, certificate, causal-chain, immutable-evaluator, or integrated-runtime claims currently attached to the apparatus.
 
 ## Blocking findings
 
@@ -26,10 +26,20 @@ The review found concrete counterexamples that must be closed before the DEVELOP
 
 10. **Metamorphosis success ignores migration capability preservation.** `metamorphosis_succeeded()` checks journal continuity, discovered operations, carried records and post-migration causal acceptance, but does not require `migration.capability.measured` or `migration.capability.preserved`. A migration whose executable capability was never measured — or one explicitly allowed to lose capability — can therefore be reported as succeeded.
 
+11. **The DEVELOPMENT demonstration is host orchestration, not yet the integrated controller described by the target.** `run_genesis_demonstration.py` directly calls probe functions, assigns `genesis.state`, appends to the journal, calls migration, chooses every proposal and supplies the executable body again after restart. The primitives run in one Python process, but the host script still performs the architectural sequencing. The target's `observe -> diagnose -> hypothesize -> construct -> test -> adopt/reject -> persist -> continue` controller therefore remains to be built as a runtime capability rather than a demonstration script.
+
+12. **The experimental component certificate drops the positive experiment that licensed it.** `diagnose_by_experiment()` finds `resolving_composition`, but `certificate_from_experiment()` discards that record and calls `component_extension_certificate(... resolves_with_new_component=True)`. The certificate therefore retains prior failures and a caller boolean, not the composition that actually established wider reach.
+
+13. **A newly acquired component is not bound to executable semantics.** The caller supplies `new_component="joint_registry"`; the state stores the name and certificate, but no implementation/operation set is bound to that entry. In the DEVELOPMENT fixtures `COMPONENT_OPERATIONS` still contains only the seed components. The runtime can therefore add a certified name without yet adding a component that future diagnosis can execute as such. This is a narrower statement than saying the experimental diagnosis is worthless: the diagnosis found real wider reach, but the evidence-to-component transition is not complete.
+
 ## Required repair shape
 
-These are engineering findings about DEVELOPMENT apparatus, not scientific observations. Each must receive a failing counterexample test before any fix is described as closed.
+These are engineering findings about DEVELOPMENT apparatus, not scientific observations. Each mechanically testable finding must receive a failing counterexample test before any fix is described as closed.
 
 The most important architectural consequence is finding 6: the lineage-owned proposal mechanism must not receive authority over the host-side runtime object. It needs a read-only, content-addressed observation/context value and must return a proposal as data. Budget, isolation, evaluator identity, journal mutation, state mutation and the final adoption transaction must remain outside that capability surface.
 
 Likewise, the grader has become part of the evaluator and must be admitted immutably. A verdict that binds only `trust_root.py` while correctness is decided by an unbound callable is not yet a verdict bound to its measure.
+
+The component path needs one additional type: an acquired component artifact must bind the measured resolving construction to something the runtime can subsequently execute or compose, not merely to a new label. The certificate should preserve the raw/derived evidence required to reproduce that binding.
+
+Finally, the demonstration driver should shrink over time. Its correct end state is a thin launcher that supplies an initial world/admission envelope and asks Genesis to run; it should not itself perform the diagnosis, extension, migration or state transitions whose integration it is meant to demonstrate.
