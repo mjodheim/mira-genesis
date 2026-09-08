@@ -457,8 +457,10 @@ both are named here rather than described in a comment as unreachable — the ro
 correction was precisely that three such comments were wrong, each having considered the code and not
 its collaborators.
 
-The census was measured at `ac5de4d`; the commits after it add no `raise` to any mutated module, and
-that is checked mechanically rather than assumed.
+The census was measured on the commit titled *"test(genesis): drive the remaining round-two refusals
+to their negatives"*, which is the last one that changed a guard. The commits after it add no `raise`
+to any mutated module, and that is checked by parsing both trees rather than assumed. Rerun the
+script rather than trusting either figure.
 
 ### On the mutation-score discrepancy
 
