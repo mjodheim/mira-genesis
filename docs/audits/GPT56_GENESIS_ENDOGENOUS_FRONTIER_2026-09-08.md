@@ -45,19 +45,28 @@ The demonstration script now correctly delegates effects and state transitions t
 
 That means the current demonstration establishes integrated execution, not endogenous search. This is an honest DEVELOPMENT result and should remain described that way until a lineage derives at least one transformation from its own observation/diagnosis rather than reading the next prepared intent.
 
+## E6 — the lineage-owned mechanism cannot inspect the evidence the lineage says it retained
+
+`LineageContext` exposes component names, vocabulary names, acquisition names, a count of observations, budget remaining, evaluated-task-set digests and current body identity. `observations` is an integer. The mechanism does not receive the retained rejection records, verdict reasons, probe evidence or acquisition certificates as inert data.
+
+That is enough for the demonstration's fixed programme: its next step can be selected from counters. It is not enough for endogenous hypothesis formation. A mechanism cannot read *why* the last candidate failed and choose a new candidate because of that evidence; the history is retained by the runtime but opaque to the lineage policy that is supposed to learn from it.
+
+The repair must not hand the mechanism live state/journal references. It should expose a bounded immutable `LineageView`: canonical evidence summaries or digests plus a read-only inert content store, excluding graders, withheld answers, runtime services and mutable capability handles.
+
 ## Repair order
 
 1. Decide the identity boundary: immutable executor + mutable policy artifact is the smallest safe design.
 2. Put the current policy/mechanism identity into persistent lineage state/checkpoint and refuse substitution after restore.
-3. Add a canonical generated-candidate representation whose exact data digest is executable identity.
-4. Add a bounded search/generation operation that produces candidate artifacts from lineage observations/diagnoses under budget.
-5. Evaluate and adopt/reject those artifacts through the existing trust-root path; do not give the generator evaluator authority.
-6. Add an evidence-backed policy/machinery update so an acquired machinery change can produce the next search/modification.
-7. Persist generated body + policy artifacts and demonstrate process-death restoration without caller reconstruction.
-8. Only then replace the fixed demonstration programme with a searched one and ask whether the metamorphosis stopping criterion is actually met.
+3. Give that policy a bounded immutable evidence view rich enough to condition the next hypothesis on retained failures/experiments.
+4. Add a canonical generated-candidate representation whose exact data digest is executable identity.
+5. Add a bounded search/generation operation that produces candidate artifacts from lineage observations/diagnoses under budget.
+6. Evaluate and adopt/reject those artifacts through the existing trust-root path; do not give the generator evaluator authority.
+7. Add an evidence-backed policy/machinery update so an acquired machinery change can produce the next search/modification.
+8. Persist generated body + policy artifacts and demonstrate process-death restoration without caller reconstruction.
+9. Only then replace the fixed demonstration programme with a searched one and ask whether the metamorphosis stopping criterion is actually met.
 
 ## Current reading
 
-Genesis has moved past "a bag of primitives" into a real integrated runtime. The remaining gap is no longer primarily orchestration. It is **endogeneity**: who constructs the next executable candidate and who owns the machinery that decides what to try next.
+Genesis has moved past "a bag of primitives" into a real integrated runtime. The remaining gap is no longer primarily orchestration. It is **endogeneity**: who constructs the next executable candidate, what retained evidence that process can actually read, and who owns the machinery that decides what to try next.
 
 Closing that gap is now more valuable than opening another generality milestone.
