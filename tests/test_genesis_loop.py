@@ -19,7 +19,7 @@ from genesis import state as st
 from genesis import trust_root as tr
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency
 
-TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+TASKS = [{"task_id": "t%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -404,3 +404,138 @@ def test_an_unequal_budget_voids_the_comparison_rather_than_passing_it():
     )
     assert outcome["supported"] is False
     assert "same budget" in outcome["reason"]
+
+
+# -- causal dependency as a property of the runtime, not of whatever script drives it --------------
+#
+# `ablation_supports_causal_dependency` existed as a function and the loop's docstring called it a
+# permanent obligation of the runtime, while the only thing ever calling it was the demonstration
+# script. The cycle runs it now, and these tests are about the cycle.
+
+def _cycle_with(genesis, factory, *, ablated=None, depends_on="", name="candidate"):
+    queue = [factory]
+    return genesis.cycle(
+        TASKS,
+        lambda _g, _t: Proposal(
+            name=name,
+            body_factory=queue.pop(0),
+            provenance=LINEAGE,
+            rationale={},
+            ablated_body_factory=ablated,
+            depends_on=depends_on,
+        )
+        if queue
+        else None,
+    )
+
+
+def test_a_first_acquisition_depends_on_nothing_earlier():
+    """No arm is required where there is nothing to have depended on, and the record says why."""
+    genesis = _genesis()
+    record = _cycle_with(genesis, bodies.improved_body)
+    assert record["accepted"] is True
+    causal = record["causal_dependency"]
+    assert causal["established"] is False
+    assert causal["arm_supplied"] is False
+    assert "depends on nothing earlier" in causal["why"]
+
+
+def test_a_later_acceptance_without_an_ablation_arm_is_recorded_as_unestablished():
+    """Silence must read as silence. An unexamined acceptance is not an examined one."""
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.improved_body, name="first")
+    record = _cycle_with(genesis, bodies.refusing_body, name="second")
+    causal = record["causal_dependency"]
+    assert causal["arm_supplied"] is False
+    assert causal["established"] is False
+    assert "supplied no ablation arm" in causal["why"]
+
+
+def test_the_cycle_runs_the_ablation_arm_the_proposal_carried():
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    record = _cycle_with(
+        genesis,
+        bodies.migrated_improved_body,
+        ablated=bodies.migrated_ablated_body,
+        depends_on=bodies.ACQUIRED_COMPONENT,
+        name="second",
+    )
+    causal = record["causal_dependency"]
+    assert causal["arm_supplied"] is True
+    assert causal["established"] is True
+    assert causal["depends_on"] == bodies.ACQUIRED_COMPONENT
+    assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
+
+
+def test_an_ablation_arm_that_is_really_the_parent_establishes_nothing():
+    """The negative control, on the runtime's own path.
+
+    The arm solves less than the candidate, so the measured loss alone would call it supported. It
+    is refused because it is behaviourally the parent, and comparing a candidate with its parent is
+    the verdict this cycle just reached rather than evidence on top of it.
+    """
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    record = _cycle_with(
+        genesis,
+        bodies.migrated_improved_body,
+        ablated=bodies.migrated_uncoupled_ablation_body,
+        depends_on=bodies.ACQUIRED_COMPONENT,
+        name="second",
+    )
+    causal = record["causal_dependency"]
+    assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
+    assert causal["ablated_arm_differs_from_the_parent_arm"] is False
+    assert causal["established"] is False
+    assert "identical to the parent arm" in causal["why"]
+
+
+def test_an_ablation_arm_that_cannot_run_aborts_the_cycle():
+    """A missing measurement is not a passed one, and it must not be scored as a candidate failure."""
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.improved_body, name="first")
+    record = _cycle_with(
+        genesis,
+        bodies.refusing_body,
+        ablated=bodies.unconstructible_body,
+        depends_on="something",
+        name="second",
+    )
+    assert record["stopped"] is True
+    assert record["instrument_abort"] is True
+    assert record["accepted"] is False
+
+
+def test_a_run_of_acceptances_is_not_a_chain():
+    """`causal_chain` counts established links, so a claim about recursion reads a real number."""
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    _cycle_with(genesis, bodies.migrated_improved_body, name="second_unexamined")
+    chain = genesis.causal_chain()
+    assert chain["acquisitions"] == 2
+    assert chain["established_links"] == 0
+    assert chain["is_a_chain_rather_than_a_sequence"] is False
+
+
+def test_two_established_links_make_a_chain():
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name="first")
+    _cycle_with(
+        genesis,
+        bodies.migrated_improved_body,
+        ablated=bodies.migrated_ablated_body,
+        depends_on=bodies.ACQUIRED_COMPONENT,
+        name="second",
+    )
+    _cycle_with(
+        genesis,
+        bodies.migrated_further_body,
+        ablated=bodies.migrated_further_ablated_body,
+        depends_on=bodies.SECOND_ACQUISITION,
+        name="third",
+    )
+    chain = genesis.causal_chain()
+    assert chain["acquisitions"] == 3
+    assert chain["established_links"] == 2
+    assert chain["is_a_chain_rather_than_a_sequence"] is True

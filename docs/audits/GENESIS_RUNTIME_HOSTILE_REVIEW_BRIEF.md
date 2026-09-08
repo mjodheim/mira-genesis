@@ -3,7 +3,7 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2400 lines) and the 177 tests that validate it have one
+The `genesis/` package (nine modules, ~2400 lines) and the 183 tests that validate it have one
 author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
@@ -75,7 +75,13 @@ whether that shape recurs somewhere still unfixed.
    what the arrival could still *do*. A translation could drop every capability and the record would
    say nothing was lost, because nothing being counted had been — and this was live in the
    demonstration, whose migrated body solved half of what its pre-migration body solved.
-8. **Half the refusals had never been exercised.** Defects 1–7 were found by reading the code
+8. **A permanent obligation of the runtime that the runtime did not have.**
+   `ablation_supports_causal_dependency` existed as a function and `loop.py`'s docstring called the
+   check a permanent obligation of the runtime — while the only thing calling it was the
+   demonstration script. Any other driver of the loop got no check at all. The cycle runs it now,
+   proposals carry their ablation arms, and `causal_chain` counts the links that were actually
+   established.
+9. **Half the refusals had never been exercised.** Defects 1–8 were found by reading the code
    adversarially, which finds only what the reader thinks to look for. Asking the question
    mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
    and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
@@ -210,8 +216,11 @@ receives the semantics, and that `carried_intact` compares what it claims to com
 
 ### 9. Recursion claims without causal dependency
 
-Three generations of fixtures are not a lineage. State whether the demonstration shows recursion or
-shows three sequential improvements that happen to be ordered.
+Three generations of fixtures are not a lineage. The runtime now reports `established_links: 2` out
+of three acquisitions, and refuses to count the first — it depended on nothing earlier. State
+whether two links is recursion or whether it is two sequential improvements with an ablation
+attached, and whether `causal_chain` counting *consecutive* links ending at the most recent is the
+right definition or one that flatters a lineage whose latest work happens to be examined.
 
 ### 10. Ways to re-arm a negative
 

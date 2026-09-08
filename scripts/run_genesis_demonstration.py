@@ -41,7 +41,6 @@ from genesis import probe  # noqa: E402
 from genesis import state as lineage_state  # noqa: E402
 from genesis import trust_root as tr  # noqa: E402
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency  # noqa: E402
-from genesis.sandbox import run_candidate  # noqa: E402
 from genesis.migration import (  # noqa: E402
     Substrate,
     discover,
@@ -75,58 +74,26 @@ def _seed_state() -> dict:
     )
 
 
-def _proposal(name, factory):
-    return Proposal(name=name, body_factory=factory, provenance=LINEAGE, rationale={"step": name})
+def _proposal(name, factory, ablated=None, depends_on=""):
+    return Proposal(
+        name=name,
+        body_factory=factory,
+        provenance=LINEAGE,
+        rationale={"step": name},
+        # The ablation arm travels with the proposal, so the loop runs it as part of the cycle. It
+        # used to be run by this script afterwards, while the loop's docstring called the check a
+        # permanent obligation of the runtime.
+        ablated_body_factory=ablated,
+        depends_on=depends_on,
+    )
 
 
-def _one(genesis, name, factory):
+def _one(genesis, name, factory, ablated=None, depends_on=""):
     queue = [factory]
     return genesis.cycle(
         TASKS,
-        lambda _g, _t: _proposal(name, queue.pop(0)) if queue else None,
+        lambda _g, _t: _proposal(name, queue.pop(0), ablated, depends_on) if queue else None,
     )
-
-
-def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox, construction="") -> dict:
-    """Assemble the causal-dependency claim, and refuse it when the ablation removed nothing.
-
-    Two things have to hold and they are not the same. The measured loss says the later generation
-    solved less without the acquisition. The distinctness check says the ablated arm is not simply
-    the parent arm wearing another name — because if it is, the comparison repeats the verdict that
-    accepted the candidate in the first place and adds no evidence at all.
-
-    Kept as a function so a test can hand it an arm that never depended on the acquisition and
-    watch it refuse. A check that cannot return `False` is not a check.
-    """
-    causal = ablation_supports_causal_dependency(
-        with_acquisition=candidate_sandbox["outcomes"],
-        without_acquisition=ablated_sandbox["outcomes"],
-        equal_budget=True,
-    )
-    distinct = ablated_sandbox["result_digest"] != parent_sandbox["result_digest"]
-    causal["ablated_arm_ran_separately"] = ablated_sandbox["completed"]
-    causal["ablated_arm_differs_from_the_parent_arm"] = distinct
-    causal["establishes_causal_dependency"] = bool(
-        causal["supported"] and distinct and ablated_sandbox["completed"]
-    )
-    causal["why_not"] = (
-        ""
-        if causal["establishes_causal_dependency"]
-        else "the ablated arm is behaviourally identical to the parent arm, so removing the "
-        "acquisition cost nothing the verdict had not already measured"
-    )
-    # Stated, not checked: which body was ablated is a property of how the arm was built, and a
-    # boolean written here would only be this runner agreeing with itself. The test suite compares
-    # the two bodies field by field instead.
-    causal["ablated_arm_construction"] = construction or (
-        "unstated: the runner did not say which body was ablated, so read the code rather than "
-        "this field"
-    )
-    causal["fixture_not_evidence"] = (
-        "these are development fixtures; this shows the runtime can hold and refuse a causal "
-        "claim, not that any real mechanism has one"
-    )
-    return causal
 
 
 def demonstrate() -> dict:
@@ -263,8 +230,20 @@ def demonstrate() -> dict:
     # the lineage still works; a chain shows it is still *going*, which is the property the stopping
     # criterion asks for.
     after = [
-        _one(genesis, "improved_in_new_form", bodies.migrated_improved_body),
-        _one(genesis, "improved_again_in_new_form", bodies.migrated_further_body),
+        _one(
+            genesis,
+            "improved_in_new_form",
+            bodies.migrated_improved_body,
+            ablated=bodies.migrated_ablated_body,
+            depends_on=bodies.ACQUIRED_COMPONENT,
+        ),
+        _one(
+            genesis,
+            "improved_again_in_new_form",
+            bodies.migrated_further_body,
+            ablated=bodies.migrated_further_ablated_body,
+            depends_on=bodies.SECOND_ACQUISITION,
+        ),
     ]
     outcome = metamorphosis_succeeded(migration, after)
     steps.append(
@@ -282,30 +261,21 @@ def demonstrate() -> dict:
     # A real ablation, not the verdict relabelled. The earlier acquisition is removed and the later
     # generation is retried at the same budget in its own isolated run; comparing the candidate with
     # its parent would only repeat the comparison the verdict already made.
-    # One ablation shows a generation needed something earlier. Two consecutive ones show a chain,
-    # which is what separates improvements that depend on each other from improvements that merely
-    # happened in order.
-    for index, (label, ablated_factory) in enumerate(
-        (
-            ("generation_2_needed_the_probe_named_component", bodies.migrated_ablated_body),
-            ("generation_3_needed_generation_2s_acquisition", bodies.migrated_further_ablated_body),
+    # The ablations already ran, inside the cycles, because the proposals carried their arms. What
+    # is left is to read what the lineage recorded rather than to recompute it here: a script that
+    # recomputes its own evidence is a script agreeing with itself.
+    for record_of_cycle in after:
+        causal = record_of_cycle["causal_dependency"]
+        steps.append(
+            {
+                "step": "causal_dependency:%s" % causal["depends_on"],
+                **causal,
+                "checked_by": "genesis.loop.Genesis.cycle, not by this script",
+            }
         )
-    ):
-        construction = (
-            "genesis.development_bodies.%s: the accepted candidate with one acquired component "
-            "removed and nothing else changed" % ablated_factory.__name__
-        )
-        ablated = run_candidate(
-            ablated_factory, TASKS, genesis.isolation,
-            admitted_isolation=genesis.admitted_isolation,
-        )
-        causal = causal_step(
-            candidate_sandbox=after[index]["candidate_sandbox"],
-            parent_sandbox=after[index]["parent_sandbox"],
-            ablated_sandbox=ablated,
-            construction=construction,
-        )
-        steps.append({"step": "causal_dependency:%s" % label, **causal})
+
+    chain = genesis.causal_chain()
+    steps.append({"step": "the_acquisitions_form_a_chain_rather_than_a_sequence", **chain})
 
     directory = ROOT / "experiments" / "GENESIS" / "runtime_state"
     genesis.persist(directory)

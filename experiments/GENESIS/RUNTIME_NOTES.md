@@ -20,13 +20,13 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/state.py` | content-addressed lineage state; registries that grow **by certificate**, never by editing a tuple |
 | `genesis/journal.py` | hash-chained append-only descent journal |
 | `genesis/sandbox.py` | separate-process candidate execution, and an honest record of which limits were actually applied |
-| `genesis/loop.py` | the evolution cycle: propose, run isolated, decide, adopt or reject, record |
+| `genesis/loop.py` | the evolution cycle: propose, run isolated, decide, adopt or reject, ablate, record |
 | `genesis/probe.py` | probes the lineage composes and runs: insufficiency by exhaustion, established by experiment rather than by consulting an oracle |
 | `genesis/migration.py` | substrate discovery by probing, migration, and the requirement to evolve again after it |
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 177 hostile offline tests |
+| `tests/test_genesis_*.py` | 183 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
@@ -126,9 +126,28 @@ strictly less is refused unless a lossy arrival is explicitly intended. A migrat
 tasks for reports `capability.measured: false` and claims nothing, rather than reporting preservation
 it never checked. A refused migration leaves the lineage where it was rather than half moved.
 
-### 8. Half the runtime's refusals had never been exercised
+### 8. A permanent obligation of the runtime that the runtime did not have
 
-The seven defects above were found by reading the code adversarially. That method has an obvious limit:
+`loop.py`'s docstring said causal dependency between generations is "checked every time, not once per
+milestone" and called it "a permanent obligation of the runtime, so a lineage cannot accumulate
+improvements that merely happened in order". `ablation_supports_causal_dependency` existed. `cycle()`
+never called it. The only thing calling it was the demonstration script, so any other driver of the
+loop got no check at all — and the obligation was a sentence rather than a property.
+
+A proposal now carries its ablation arm, the cycle runs it at the same budget, and the result is
+recorded on the acquisition and in the journal. An acceptance with no arm is recorded as
+`established: false` with the reason — the lineage's first acquisition depended on nothing earlier,
+or the proposal supplied no arm — never as an unexamined pass. An arm that cannot run aborts the
+cycle rather than being scored as a candidate failure.
+
+`Genesis.causal_chain()` then counts the consecutive acquisitions whose dependency was actually
+established. On the demonstration that is **2 links out of 3 acquisitions**: the first depended on
+nothing earlier and is not counted. A claim about recursive improvement now has to read a number
+that can be small.
+
+### 9. Half the runtime's refusals had never been exercised
+
+The eight defects above were found by reading the code adversarially. That method has an obvious limit:
 it finds what the reader thinks to look for. `scripts/check_genesis_guards_are_tested.py` asks the
 question mechanically instead — it deletes each `raise` in `genesis/` one at a time and reruns the
 suite, so a guard whose removal keeps the tests green is a refusal nothing ever checked.

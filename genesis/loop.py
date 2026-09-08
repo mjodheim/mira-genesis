@@ -13,10 +13,17 @@ frozen under the repository's rules — that is a different thing from the progr
 candidate does not work.)
 
 **Causal dependency between generations is checked every time, not once per milestone.** "Version 1
-better, version 2 better" is not the claim. `ablation_supports_causal_dependency` removes an earlier
-acquisition, retries the later generation at the same budget, and requires the loss of reach. It is
-a permanent obligation of the runtime, so a lineage cannot accumulate improvements that merely
-happened in order.
+better, version 2 better" is not the claim. A proposal may carry an ablation arm — itself with the
+earlier acquisition it depends on removed and nothing else changed — and `cycle` runs that arm at the
+same budget and requires a loss of reach. `causal_chain` then counts the consecutive acquisitions
+whose dependency was actually established, so a claim about recursive improvement reads a number that
+can be small.
+
+This sentence was true of the docstring and false of the code for a while: the function existed, the
+docstring called it a permanent obligation of the runtime, and the only thing calling it was a
+demonstration script. An acceptance with no arm is now recorded as `established: false` with the
+reason, never as an unexamined pass, and an arm that cannot run aborts the cycle rather than being
+scored as a candidate failure.
 
 The loop never decides anything. It gathers raw outcomes and hands them to the trust root, which
 recomputes the comparison and returns the verdict.
@@ -52,12 +59,21 @@ class Body(Protocol):
 
 @dataclass
 class Proposal:
-    """A candidate transformation, with the provenance that says who really produced it."""
+    """A candidate transformation, with the provenance that says who really produced it.
+
+    `ablated_body_factory` is this candidate with the earlier acquisition it depends on taken away
+    and nothing else changed. Supplying it is how a lineage offers evidence that this generation
+    *needed* the one before it; omitting it is allowed, and the cycle then records that the causal
+    claim was not established rather than quietly assuming it. `depends_on` names the acquisition
+    that was removed, so the record says what the arm actually is.
+    """
 
     name: str
     body_factory: Callable[[], Body]
     provenance: Mapping[str, Any]
     rationale: Mapping[str, Any]
+    ablated_body_factory: Callable[[], Body] | None = None
+    depends_on: str = ""
 
     def digest(self) -> str:
         return digest_of(
@@ -215,6 +231,10 @@ class Genesis:
         if problems:
             raise TrustRootError("; ".join(problems))
 
+        causal = self._causal_dependency(proposal, tasks, parent, candidate)
+        if causal.get("instrument_abort"):
+            return abort("ablation", causal["run"])
+
         if verdict["accepted"]:
             self.body_factory = proposal.body_factory
             self.state = lineage_state.create_state(
@@ -229,6 +249,7 @@ class Genesis:
                         "generation": generation,
                         "verdict_digest": verdict["verdict_digest"],
                         "provenance": dict(proposal.provenance),
+                        "causal_dependency": causal["record"],
                     }
                 ],
                 observations=self.state["observations"],
@@ -241,6 +262,7 @@ class Genesis:
                     "name": proposal.name,
                     "verdict_digest": verdict["verdict_digest"],
                     "new_state_digest": self.state["state_digest"],
+                    "causal_dependency_established": causal["record"]["established"],
                 },
             )
         else:
@@ -284,8 +306,90 @@ class Genesis:
             "parent_sandbox": parent,
             "candidate_sandbox": candidate,
             "control_sandbox": control,
+            "causal_dependency": causal["record"],
             "journal_entry": entry["entry_digest"],
             "state_digest": self.state["state_digest"],
+        }
+
+    # -- causal dependency, on every cycle rather than once per milestone ------------------
+    def _causal_dependency(self, proposal, tasks, parent, candidate) -> dict[str, Any]:
+        """Run the proposal's ablation arm, if it supplied one, and judge what it shows.
+
+        This lives in the cycle rather than in whatever script happens to be driving it. It was in a
+        script for a while, and the loop's own docstring described the check as a permanent
+        obligation of the runtime the whole time — which is a record testifying to a property the
+        code did not have.
+
+        A lineage with no acquisitions yet has nothing to have depended on, so the absence of an arm
+        is not a failure there. Once it has one, an acceptance without an ablation arm is recorded as
+        `established: false` with the reason, never as an unexamined pass.
+        """
+        first_acquisition = not self.state["acquisitions"]
+        if proposal.ablated_body_factory is None:
+            return {
+                "record": {
+                    "established": False,
+                    "arm_supplied": False,
+                    "why": "the lineage's first acquisition depends on nothing earlier"
+                    if first_acquisition
+                    else "the proposal supplied no ablation arm, so nothing shows this generation "
+                    "needed the one before it",
+                    "depends_on": proposal.depends_on,
+                }
+            }
+
+        run = run_candidate(
+            proposal.ablated_body_factory,
+            tasks,
+            self.isolation,
+            admitted_isolation=self.admitted_isolation,
+        )
+        if not run["completed"]:
+            return {"instrument_abort": True, "run": run, "record": {"established": False}}
+
+        outcome = ablation_supports_causal_dependency(
+            with_acquisition=candidate["outcomes"],
+            without_acquisition=run["outcomes"],
+            equal_budget=True,
+        )
+        # An ablated arm indistinguishable from the parent is the parent, and comparing a candidate
+        # with its parent is the verdict this cycle just reached, not evidence on top of it.
+        distinct = run["result_digest"] != parent["result_digest"]
+        established = bool(outcome["supported"] and distinct)
+        return {
+            "record": {
+                "established": established,
+                "arm_supplied": True,
+                "depends_on": proposal.depends_on,
+                "solved_with_acquisition": outcome["solved_with_acquisition"],
+                "solved_without_acquisition": outcome["solved_without_acquisition"],
+                "ablated_arm_differs_from_the_parent_arm": distinct,
+                "ablated_sandbox_digest": run["result_digest"],
+                "why": ""
+                if established
+                else outcome["reason"]
+                or "the ablated arm is behaviourally identical to the parent arm, so removing the "
+                "acquisition cost nothing the verdict had not already measured",
+            }
+        }
+
+    def causal_chain(self) -> dict[str, Any]:
+        """How far back the lineage's improvements actually depend on each other.
+
+        A run of acceptances is not a chain. This counts the consecutive acquisitions, ending at the
+        most recent, whose dependency on the one before was established by ablation — so a claim
+        about recursive improvement has to read a number that can be small.
+        """
+        acquisitions = list(self.state["acquisitions"])
+        length = 0
+        for acquisition in reversed(acquisitions):
+            if not (acquisition.get("causal_dependency") or {}).get("established"):
+                break
+            length += 1
+        return {
+            "acquisitions": len(acquisitions),
+            "established_links": length,
+            "is_a_chain_rather_than_a_sequence": length >= 2,
         }
 
     # -- many cycles ----------------------------------------------------------------------

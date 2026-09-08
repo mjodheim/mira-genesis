@@ -12,7 +12,7 @@ import pytest
 from genesis import development_bodies as bodies
 from genesis import trust_root as tr
 from genesis.sandbox import run_candidate
-from scripts.run_genesis_demonstration import TASKS, causal_step, demonstrate
+from scripts.run_genesis_demonstration import TASKS, demonstrate
 
 
 @pytest.fixture(scope="module")
@@ -141,33 +141,31 @@ def test_the_translation_is_verified_rather_than_assumed(record):
     assert step["solved_before_and_after"] == [4, 4]
 
 
-@pytest.mark.parametrize(
-    "label",
-    [
-        "generation_2_needed_the_probe_named_component",
-        "generation_3_needed_generation_2s_acquisition",
-    ],
-)
-def test_each_generation_needed_the_one_before_it(record, label):
+@pytest.mark.parametrize("depends_on", ["joint_registry", "carrier_index"])
+def test_each_generation_needed_the_one_before_it(record, depends_on):
     """Two consecutive ablations. One shows a dependency; two show a chain."""
-    step = _step(record, "causal_dependency:%s" % label)
-    assert step["supported"] is True
+    step = _step(record, "causal_dependency:%s" % depends_on)
+    assert step["established"] is True
+    assert step["arm_supplied"] is True
     assert step["solved_without_acquisition"] < step["solved_with_acquisition"]
-    assert step["equal_budget"] is True
-    assert step["ablated_arm_ran_separately"] is True
     # Without this the "ablation" is the parent arm, and the comparison merely repeats the verdict
     # that accepted the candidate.
     assert step["ablated_arm_differs_from_the_parent_arm"] is True
-    assert step["establishes_causal_dependency"] is True
-    assert step["why_not"] == ""
+    assert step["why"] == ""
 
 
-def test_each_ablation_names_the_body_it_actually_ablated(record):
-    """One hardcoded string described both arms until the second arm existed to contradict it."""
-    first = _step(record, "causal_dependency:generation_2_needed_the_probe_named_component")
-    second = _step(record, "causal_dependency:generation_3_needed_generation_2s_acquisition")
-    assert "migrated_ablated_body" in first["ablated_arm_construction"]
-    assert "migrated_further_ablated_body" in second["ablated_arm_construction"]
+def test_the_ablation_is_run_by_the_runtime_not_by_the_script(record):
+    """The loop called this a permanent obligation of the runtime while a script was doing it."""
+    step = _step(record, "causal_dependency:joint_registry")
+    assert step["checked_by"] == "genesis.loop.Genesis.cycle, not by this script"
+
+
+def test_the_lineage_reports_a_chain_length_that_could_have_been_smaller(record):
+    """Three acquisitions, two established links: the first depended on nothing earlier."""
+    step = _step(record, "the_acquisitions_form_a_chain_rather_than_a_sequence")
+    assert step["acquisitions"] == 3
+    assert step["established_links"] == 2
+    assert step["is_a_chain_rather_than_a_sequence"] is True
 
 
 @pytest.mark.parametrize(
@@ -188,38 +186,6 @@ def test_each_ablated_arm_is_its_candidate_minus_one_acquisition(
     assert ablated.routed == candidate.routed
     assert candidate.capabilities - ablated.capabilities == {getattr(bodies, removed)}
     assert ablated.capabilities < candidate.capabilities
-
-
-def test_the_causal_check_refuses_an_arm_that_never_depended_on_the_acquisition():
-    """The negative control. A check that cannot come out False decides nothing.
-
-    This arm solves less than the candidate, so the measured loss alone would call it supported.
-    It is refused because it is behaviourally the parent: nothing was removed from it.
-    """
-    isolation = tr.Isolation()
-    candidate = run_candidate(bodies.migrated_improved_body, TASKS, isolation)
-    parent = run_candidate(bodies.migrated_parent_body, TASKS, isolation)
-    uncoupled = run_candidate(bodies.migrated_uncoupled_ablation_body, TASKS, isolation)
-
-    causal = causal_step(
-        candidate_sandbox=candidate, parent_sandbox=parent, ablated_sandbox=uncoupled
-    )
-    assert causal["supported"] is True, "the naive loss measure alone would accept this arm"
-    assert causal["ablated_arm_differs_from_the_parent_arm"] is False
-    assert causal["establishes_causal_dependency"] is False
-    assert "identical to the parent arm" in causal["why_not"]
-
-
-def test_a_runner_that_does_not_say_what_it_ablated_says_so():
-    """The construction field is a statement, so silence must read as silence rather than as a claim."""
-    isolation = tr.Isolation()
-    candidate = run_candidate(bodies.migrated_improved_body, TASKS, isolation)
-    parent = run_candidate(bodies.migrated_parent_body, TASKS, isolation)
-    ablated = run_candidate(bodies.migrated_ablated_body, TASKS, isolation)
-    causal = causal_step(
-        candidate_sandbox=candidate, parent_sandbox=parent, ablated_sandbox=ablated
-    )
-    assert causal["ablated_arm_construction"].startswith("unstated")
 
 
 def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():

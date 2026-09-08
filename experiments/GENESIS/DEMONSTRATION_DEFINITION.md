@@ -35,7 +35,8 @@ record field that carries it, so the claim and its evidence cannot drift apart.
 | 6 | It discovers a second substrate's semantics by probing, and migrates | `substrate_semantics_discovered_then_migrated` |
 | 7 | The translation is **verified**: the arrival can still do what the departure could | same step, `capability_measured: true` and `capability_preserved: true` |
 | 8 | It evolves again in the new form, and keeps going: **at least three accepted cycles** across the lineage | `evolved_again_in_the_new_form`, `accepted_cycles_in_the_lineage >= 3` |
-| 9 | Each later generation is shown to have **needed** the one before it, by ablation at equal budget — at least two consecutive links | `causal_dependency:*`, each with `establishes_causal_dependency: true` |
+| 9 | Each later generation is shown to have **needed** the one before it, by ablation at equal budget run **inside the cycle** — at least two consecutive links | `causal_dependency:*`, each with `established: true` and `checked_by` naming the runtime |
+| 9b | The lineage reports how many of its acquisitions actually form a chain, a number that can be small | `the_acquisitions_form_a_chain_rather_than_a_sequence` |
 | 10 | It dies and comes back with the same state digest and journal head | `survives_process_death` |
 | 11 | The whole descent is one hash-chained journal across the substrate change | `journal_kinds` |
 | 12 | The run is deterministic | `record_digest` stable across runs |
@@ -56,8 +57,10 @@ M121 v2 paid for. Each of these is driven to its negative in the test suite, on 
   verified reports `capability_measured: false` rather than implying preservation
   (`tests/test_genesis_migration.py`);
 - **property 9** — an "ablated" arm that never depended on the acquisition is refused even though
-  the measured loss alone would accept it
-  (`test_the_causal_check_refuses_an_arm_that_never_depended_on_the_acquisition`);
+  the measured loss alone would accept it; an acceptance with no arm at all is recorded as
+  unestablished rather than passed; an arm that could not run aborts the cycle instead of being
+  scored; and a run of acceptances with no arms reports a chain length of zero
+  (`tests/test_genesis_loop.py`);
 - **property 3** — a body that reports a flattering summary alongside honest per-task outcomes is
   scored on the outcomes (`LyingBody`, `tests/test_genesis_loop.py`).
 
