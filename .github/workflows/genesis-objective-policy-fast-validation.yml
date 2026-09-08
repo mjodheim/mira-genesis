@@ -1,0 +1,35 @@
+name: Genesis objective policy focused validation
+
+on:
+  push:
+    branches:
+      - review/gpt56-genesis-objective-policy-fast-validation-20260909
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run focused Genesis objective-policy tests
+        run: |
+          pytest -q \
+            tests/test_genesis_endogenous_frontier.py \
+            tests/test_genesis_generated_search.py \
+            tests/test_genesis_generated_restore.py \
+            tests/test_genesis_policy_evolution.py \
+            tests/test_genesis_artifact_immutability.py \
+            tests/test_genesis_objective_policy_recursion.py
