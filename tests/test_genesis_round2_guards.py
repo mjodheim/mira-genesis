@@ -441,3 +441,40 @@ def test_the_manifest_names_the_payloads_it_committed(tmp_path):
     assert manifest["journal_path"] == "descent_journal.%s.json" % genesis.journal.head[:16]
     assert (tmp_path / manifest["state_path"]).exists()
     assert (tmp_path / manifest["journal_path"]).exists()
+
+
+# -- restore resumes the limits the lineage was running under, not its ceiling ---------------------
+
+NARROW = tr.Isolation(cpu_seconds=5.0, wall_clock_seconds=10.0)
+CEILING = tr.Isolation()
+
+
+def test_a_lineage_running_narrower_than_its_ceiling_comes_back_narrow(tmp_path):
+    """Process death is not an occasion to be granted more room than the lineage had."""
+    genesis = _genesis(isolation=NARROW, admitted_isolation=CEILING)
+    assert genesis.isolation.cpu_seconds == 5.0
+    assert genesis.admitted_isolation.cpu_seconds == 30.0
+    genesis.persist(tmp_path)
+
+    resumed = Genesis.restore(tmp_path, body_factory=bodies.parent_body, grade=bodies.grade)
+    assert resumed.isolation.cpu_seconds == 5.0
+    assert resumed.isolation.wall_clock_seconds == 10.0
+    # The ceiling it was admitted under is still the ceiling, so the envelope did not shrink either.
+    assert resumed.admitted_isolation.cpu_seconds == 30.0
+
+
+def test_restore_still_refuses_a_caller_isolation_wider_than_the_admitted_envelope(tmp_path):
+    _genesis(isolation=NARROW, admitted_isolation=CEILING).persist(tmp_path)
+    with pytest.raises(tr.TrustRootError, match="wider than the admitted envelope"):
+        Genesis.restore(
+            tmp_path,
+            body_factory=bodies.parent_body,
+            grade=bodies.grade,
+            isolation=tr.Isolation(cpu_seconds=10_000.0),
+        )
+
+
+def test_a_lineage_cannot_be_constructed_running_wider_than_it_was_admitted():
+    """Refused where the widening would happen, not downstream once it already has."""
+    with pytest.raises(tr.TrustRootError, match="wider than the admitted envelope"):
+        _genesis(isolation=tr.Isolation(cpu_seconds=10_000.0), admitted_isolation=CEILING)

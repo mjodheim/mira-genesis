@@ -201,6 +201,7 @@ class Genesis:
         budget: Budget,
         isolation: Isolation,
         journal: Journal | None = None,
+        admitted_isolation: Isolation | None = None,
         admitted_source_sha256: str | None = None,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
         allow_self_reported_outcomes: bool = False,
@@ -222,7 +223,13 @@ class Genesis:
         self.body_factory = body_factory
         self.budget = budget
         self.isolation = isolation
-        self.admitted_isolation = isolation
+        # The envelope a lineage was admitted under and the limits it is actually running under are
+        # two things. They coincide on a first admission, and they need not on a resumption: a
+        # lineage that ran narrower than its ceiling should come back narrower, not at the widest
+        # limits it was ever allowed. Supplying one wider than the admitted envelope is refused here
+        # rather than downstream, where the widening would already have happened.
+        self.admitted_isolation = admitted_isolation or isolation
+        isolation.assert_no_wider_than(self.admitted_isolation)
         self.admitted_source_sha256 = admitted_source_sha256 or source_digest()
         # Host-supplied and host-side. Without it a body's return value *is* its outcome, so the
         # thing being judged awards its own marks and everything downstream rests on that; with it
@@ -235,7 +242,7 @@ class Genesis:
         # and the rule by which a task set is identified. `decide()` reads all of it from here, so a
         # verdict cannot name one measure and use another.
         self.evaluation_contract = evaluation_contract(
-            grade=grade, admitted_isolation=isolation
+            grade=grade, admitted_isolation=self.admitted_isolation
         )
         self.allow_self_reported_outcomes = allow_self_reported_outcomes
         # Which task sets this lineage has actually been evaluated on. A migration verified against
@@ -918,6 +925,13 @@ class Genesis:
         committed_isolation = Isolation(
             **{k: v for k, v in manifest["admitted_isolation"].items() if k != "schema"}
         )
+        # What the lineage was actually running under, which is not necessarily its ceiling. Resuming
+        # at the admitted envelope when the caller supplies nothing silently widens a lineage that
+        # had been running narrower — process death is not an occasion to be granted more room.
+        running_isolation = Isolation(
+            **{k: v for k, v in manifest.get("isolation", manifest["admitted_isolation"]).items()
+               if k != "schema"}
+        )
         if isolation is not None:
             isolation.assert_no_wider_than(committed_isolation)
         committed_budget = Budget(
@@ -933,8 +947,9 @@ class Genesis:
             state=state,
             body_factory=body_factory,
             budget=committed_budget,
-            isolation=isolation or committed_isolation,
+            isolation=isolation or running_isolation,
             journal=journal,
+            admitted_isolation=committed_isolation,
             admitted_source_sha256=manifest["admitted_trust_root_sha256"],
             grade=grade,
             allow_self_reported_outcomes=manifest.get("allow_self_reported_outcomes", False)
