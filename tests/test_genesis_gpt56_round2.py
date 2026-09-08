@@ -7,11 +7,11 @@ exercised contracts so the mutation checker can distinguish them for the right r
 from __future__ import annotations
 
 import functools
-import inspect
 
 import pytest
 
 from genesis import development_bodies as bodies
+from genesis import hostile_fixtures as hostile
 from genesis import probe
 from genesis import sandbox as sb
 from genesis import state as st
@@ -159,23 +159,11 @@ def test_missing_operation_guard_has_a_direct_probeerror_contract():
         body.attempt({"composition": 0, "input": 3})
 
 
-class _FrameTamperingBody:
-    def attempt(self, task):
-        # The body runs inside sandbox._child. The caller frame owns the mutable rows list whose
-        # integrity the final sandbox guard claims is structurally guaranteed.
-        caller = inspect.currentframe().f_back
-        caller.f_locals["rows"].append({"task_id": "forged-task", "answer": None})
-        return bodies.answer_to(task)
-
-
-def _frame_tampering_body():
-    return _FrameTamperingBody()
-
-
 def test_sandbox_task_set_guard_is_reachable_from_candidate_frame_introspection():
+    """The worker is untrusted; the evaluator must reject a forged row that escapes it."""
     with pytest.raises(sb.SandboxError, match="did not report the task set"):
         sb.run_candidate(
-            _frame_tampering_body,
+            hostile.frame_tampering_body,
             TASKS[:1],
             tr.Isolation(),
             grade=bodies.grade,

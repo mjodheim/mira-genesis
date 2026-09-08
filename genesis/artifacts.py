@@ -3,9 +3,9 @@
 A causal ablation is supposed to be *this candidate with one earlier acquisition removed and nothing
 else changed*. For a long time the runtime could not construct that, so it accepted one: the
 proposer supplied an `ablated_body_factory`, said which acquisition it stood for, and the cycle
-measured the loss. Naming a real acquisition was checked; that the supplied arm was that acquisition
-removed was not. A deliberately weak unrelated body therefore produced a measured loss and was
-recorded as causal dependency — the proposer authoring its own evidence.
+measured the loss. Naming a real acquisition was checked; that the supplied arm *was* that
+acquisition removed was not. A deliberately weak unrelated body therefore produced a measured loss
+and was recorded as causal dependency — the proposer authoring its own evidence.
 
 The repair is not a stricter check on the caller's arm. It is to make the candidate's configuration
 something the runtime can read and edit, so the runtime builds the arm itself:
@@ -13,14 +13,18 @@ something the runtime can read and edit, so the runtime builds the arm itself:
     candidate  = ConfiguredBody(target=..., configuration=..., dependencies={"a", "b"})
     ablated    = candidate.without("b")
 
-and then *verifies* that the two differ in exactly the licensed removal before either is run. A
+and then verifies that the two differ in exactly the licensed removal before either is run. A
 proposer can still propose anything it likes; it can no longer decide what the counterfactual is.
+
+A configured body also has to bind the code its `target` string resolves to. Binding the string alone
+would make an edit to `module:symbol` preserve the candidate's artifact digest while changing the
+executable. `artifact_configuration()` therefore includes the trust-root identity of the resolved
+target symbol as well as the construction data.
 
 **What this does not do.** The configuration is a mapping the host's world admits, and the target is
 an importable symbol, so a lineage that generates genuinely new code cannot yet describe itself this
 way. Where the runtime cannot construct and authenticate the single-difference arm it records
-`established: false` — which is the honest reading of a counterfactual nobody could build, and is
-what this module exists to make possible rather than to paper over.
+`established: false` — the honest reading of a counterfactual nobody could build.
 """
 from __future__ import annotations
 
@@ -65,7 +69,7 @@ class ConfiguredBody:
         return getattr(import_module(module_name), symbol)
 
     def __call__(self) -> Any:
-        """Build the body. Called in the sandbox's child process, so this must stay picklable."""
+        """Build the body. The candidate executor calls this only after its limits exist."""
         constructor = self.resolve()
         arguments = dict(self.configuration)
         arguments[self.dependency_keyword] = frozenset(self.dependencies)
@@ -89,10 +93,18 @@ class ConfiguredBody:
 
     # -- identity -------------------------------------------------------------------------
     def artifact_configuration(self) -> dict[str, Any]:
-        """What `trust_root.artifact_digest_of` binds. Bound state is behaviour, so all of it."""
+        """Everything the configured artifact digest must bind.
+
+        `target` is useful human-readable provenance, but it is not executable identity. The nested
+        target artifact binds the qualified symbol and defining module source, so changing the code
+        behind the same string changes this configured body's digest as well.
+        """
+        from genesis.trust_root import artifact_digest_of
+
         return {
             "schema": CONFIGURED_BODY_SCHEMA,
             "target": str(self.target),
+            "target_artifact": artifact_digest_of(self.resolve()),
             "configuration": dict(self.configuration),
             "dependencies": sorted(self.dependencies),
             "dependency_keyword": str(self.dependency_keyword),
