@@ -33,8 +33,10 @@ replayable**.
 > evolve again in the new form. It runs against **fixtures**, it is DEVELOPMENT apparatus, and it
 > advances no gate. What it establishes is that the mechanisms compose and that the program refuses
 > what it claims to refuse; whether the same holds with a real mechanism attached is the current
-> frontier. Six defects found in it after the fact, and the questions still open, are recorded at
-> [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md).
+> frontier. Ten defects found in it after the fact, and the questions still open, are recorded at
+> [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md); what a run has to
+> exhibit, and which of those properties are driven to their negative, at
+> [`experiments/GENESIS/DEMONSTRATION_DEFINITION.md`](experiments/GENESIS/DEMONSTRATION_DEFINITION.md).
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
