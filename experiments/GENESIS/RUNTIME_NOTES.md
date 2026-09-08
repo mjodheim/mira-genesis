@@ -110,6 +110,29 @@ sandbox now returns `outcomes: []` with `instrument_failure: True`, and the loop
 rather than deciding. This is the distinction M124 had to learn between a delivery outcome and a
 scientific one.
 
+### 7. Half the runtime's refusals had never been exercised
+
+The six defects above were found by reading the code adversarially. That method has an obvious limit:
+it finds what the reader thinks to look for. `scripts/check_genesis_guards_are_tested.py` asks the
+question mechanically instead — it deletes each `raise` in `genesis/` one at a time and reruns the
+suite, so a guard whose removal keeps the tests green is a refusal nothing ever checked.
+
+**First run: 35 of 68 guards survived.** The suite passed 110 tests and just over half of what the
+package claimed to refuse had never been driven to the point of refusing. Among the survivors were
+guards carrying real weight — a candidate with unrecognised provenance, a control arm that faced
+different tasks, a forged vocabulary certificate, a component certificate being used to buy a
+diagnostic feature, and the journal's chain check, which was masked by the file-digest check sitting
+in front of it.
+
+33 are now tested in `tests/test_genesis_guards.py`. **Second run: 66 of 68 killed.** The two
+survivors are marked in place as defensive assertions about invariants the surrounding code already
+establishes — the sandbox child cannot report a task set it was not given, and `migrate` builds the
+arrival state out of the departure state's own fields. Reaching them would require a contrived path
+that reports coverage without adding knowledge, so they are left untested deliberately and the
+intactness comparison is tested on its own.
+
+The number is reproducible rather than quoted: rerun the script.
+
 ## Known open, not fixed
 
 - **The third authored ceiling.** The lineage *selects* a probe from prepared ones; it does not

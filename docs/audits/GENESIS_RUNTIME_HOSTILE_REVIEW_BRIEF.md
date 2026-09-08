@@ -3,8 +3,8 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2000 lines) and the 110 tests that validate it were written by
-one agent. The same agent wrote the demonstration those tests assert on, and the record the
+The `genesis/` package (nine modules, ~2000 lines) and the 144 tests that validate it have one
+author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
 
@@ -65,6 +65,12 @@ whether that shape recurs somewhere still unfixed.
    broke that entry alone and not everything after it.
 6. **Instrument failure scored as candidate failure.** A child process that could not start produced
    `error` rows indistinguishable from a body that genuinely failed.
+7. **Half the refusals had never been exercised.** Defects 1–6 were found by reading the code
+   adversarially, which finds only what the reader thinks to look for. Asking the question
+   mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
+   and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
+   33 are now tested and the checker reports **66 of 68 killed**; the two survivors are marked in
+   place as defensive assertions and are discussed under attack 7 below.
 
 The common shape: **a record that testifies to a property the code does not have.** Assume it recurs.
 
@@ -140,9 +146,27 @@ decoration over host-authored transformations.
 
 ### 7. Self-evaluation loops
 
-The author wrote the runtime and the tests. Name the tests that would pass if the mechanism they
-cover were removed. The author checked five of them by deleting the audit hook and rerunning; he did
-not do this exhaustively, and the ones he did not check are where to look.
+The author wrote the runtime and the tests, so "the tests pass" is close to worthless on its own. The
+first version of this brief asked the reviewer to name the tests that would still pass with the
+mechanism removed. That question is now answered mechanically instead:
+
+```sh
+python scripts/check_genesis_guards_are_tested.py
+```
+
+It deletes each `raise` in `genesis/` one at a time and reruns the Genesis suites. The first run
+reported **35 of 68 guards surviving**; after `tests/test_genesis_guards.py`, **66 of 68 are
+killed**. Three things are worth attacking here rather than accepting:
+
+- the script only mutates `raise` statements. A wrong comparison, an inverted boolean or a missing
+  branch is invisible to it, so a high kill rate is **not** evidence the tests are good;
+- the two deliberate survivors — `sandbox.py` "did not report the task set it was given" and
+  `migration.py` "did not arrive intact" — are claimed unreachable because the surrounding code
+  establishes the invariant. Check that claim; if either is reachable, the argument for leaving it
+  untested collapses and so does the reasoning that produced it;
+- a test that kills a mutant is not necessarily a test that would catch a real defect. Sample the new
+  tests and ask whether each would have caught the bug its guard exists to prevent, or merely
+  reaches the `raise`.
 
 ### 8. False transfers
 
@@ -166,8 +190,10 @@ history is the reason for asking.
 
 ```sh
 python -m pytest tests/test_genesis_trust_root.py tests/test_genesis_loop.py \
-                 tests/test_genesis_migration.py tests/test_genesis_demonstration.py -q
+                 tests/test_genesis_migration.py tests/test_genesis_demonstration.py \
+                 tests/test_genesis_guards.py -q
 python scripts/run_genesis_demonstration.py
+python scripts/check_genesis_guards_are_tested.py   # ~12 minutes
 ```
 
 The demonstration is deterministic; `test_the_demonstration_is_reproducible` asserts the record
