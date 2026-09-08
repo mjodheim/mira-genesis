@@ -4,11 +4,10 @@ A candidate body is untrusted: it is a transformation the lineage produced, and 
 running it is that nobody yet knows whether it is any good. It must not be able to reach the parent,
 the evaluator, the journal or the task oracle.
 
-Candidates are launched through a fixed trusted bootstrap. The candidate artifact and task values
-cross the boundary only as JSON data; Python pickle is never used at either edge. This matters
-because `multiprocessing` spawn unpickles process arguments before the child entry point can install
-limits, while `Connection.recv()` unpickles candidate-controlled answers in the evaluator. Either is
-code execution on the wrong side of the claimed boundary.
+Candidates are launched through this module's fixed bootstrap entry point. The candidate artifact
+and task values cross the boundary only as JSON data; Python pickle is never used at either edge.
+This closes two authority inversions in the former multiprocessing path: process arguments were
+unpickled before child limits existed, and candidate answers were unpickled in the evaluator.
 
 The boundary remains explicitly DEVELOPMENT-grade for arbitrary hostile native extensions: Python
 audit hooks cover Python-visible operations, not direct libc/syscall activity from native code. The
@@ -17,11 +16,15 @@ result records that limitation rather than silently promoting the apparatus into
 from __future__ import annotations
 
 import functools
+import hashlib
+import importlib
 import inspect
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
+import traceback
 from typing import Any, Callable, Mapping, Sequence
 
 from genesis.trust_root import (
@@ -33,6 +36,7 @@ from genesis.trust_root import (
 )
 
 SANDBOX_SCHEMA = "genesis-sandbox-result-v1"
+WORKER_REQUEST_SCHEMA = "genesis-sandbox-worker-request-v1"
 
 
 class SandboxError(RuntimeError):
@@ -70,8 +74,8 @@ def _apply_limits(isolation: Isolation) -> tuple[list[str], list[str]]:
             except (ValueError, OSError):
                 unenforced.append("subprocess_permitted")
 
-    # The audit guard is useful even where `resource` is unavailable. Returning early on a
-    # non-POSIX platform used to turn every declared write/network/process restriction into a label.
+    # Audit enforcement is still useful where POSIX resource limits do not exist. The earlier
+    # implementation returned on ImportError and accidentally turned all these limits into labels.
     for limit in _install_audit_guard(isolation):
         if limit in unenforced:
             unenforced.remove(limit)
@@ -190,12 +194,143 @@ def _candidate_descriptor(factory: Any) -> dict[str, Any]:
             or "<locals>" in qualname
             or "<lambda>" in qualname
         ):
-            raise SandboxError(
-                "candidate artifact is not a reconstructible importable symbol"
-            )
+            raise SandboxError("candidate artifact is not a reconstructible importable symbol")
 
     check(descriptor)
     return descriptor
+
+
+def _decode_bound(value: Any) -> Any:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
+    if not isinstance(value, dict):
+        raise ValueError("bound artifact configuration is not canonical data")
+    kind = value.get("type")
+    if kind == "bytes":
+        return bytes.fromhex(str(value.get("hex", "")))
+    if kind in ("list", "tuple", "set", "frozenset"):
+        items = [_decode_bound(item) for item in value.get("items") or []]
+        if kind == "list":
+            return items
+        if kind == "tuple":
+            return tuple(items)
+        if kind == "set":
+            return set(items)
+        return frozenset(items)
+    if kind == "mapping":
+        return {
+            _decode_bound(pair[0]): _decode_bound(pair[1])
+            for pair in value.get("items") or []
+        }
+    if kind == "path":
+        return Path(str(value.get("value", "")))
+    raise ValueError("unrecognised bound artifact value %r" % kind)
+
+
+def _resolve_artifact(descriptor: Mapping[str, Any]):
+    """Resolve one admitted descriptor only after the worker installed its limits."""
+    kind = descriptor.get("kind")
+    if kind == "partial":
+        target = _resolve_artifact(descriptor.get("callable") or {})
+        args = [_decode_bound(value) for value in descriptor.get("args") or []]
+        keywords = {
+            str(key): _decode_bound(value)
+            for key, value in (descriptor.get("keywords") or {}).items()
+        }
+        return functools.partial(target, *args, **keywords)
+
+    if kind != "importable_symbol":
+        raise ValueError("candidate artifact kind %r is not executable by this bootstrap" % kind)
+    module_name = descriptor.get("module")
+    qualname = descriptor.get("qualname")
+    if not isinstance(module_name, str) or not module_name:
+        raise ValueError("candidate artifact names no importable module")
+    if (
+        not isinstance(qualname, str)
+        or not qualname
+        or "<locals>" in qualname
+        or "<lambda>" in qualname
+    ):
+        raise ValueError("candidate artifact is not an importable qualified symbol")
+
+    module = importlib.import_module(module_name)
+    target: Any = module
+    for part in qualname.split("."):
+        target = getattr(target, part)
+
+    expected_source = str(descriptor.get("module_source_sha256") or "")
+    if expected_source:
+        source_file = inspect.getsourcefile(target)
+        if not source_file:
+            raise ValueError("candidate artifact source cannot be verified")
+        raw = Path(source_file).read_bytes().replace(b"\r\n", b"\n")
+        actual = hashlib.sha256(raw).hexdigest()
+        if actual != expected_source:
+            raise ValueError("candidate artifact module source does not match its admitted identity")
+    return target
+
+
+def _json_answer(value: Any) -> Any:
+    """Require inert JSON data; never invoke pickle/reduce/custom reconstruction."""
+    encoded = json.dumps(value, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return json.loads(encoded)
+
+
+def _worker_send(value: Mapping[str, Any]) -> None:
+    sys.__stdout__.write(json.dumps(value, sort_keys=True, separators=(",", ":")) + "\n")
+    sys.__stdout__.flush()
+
+
+def _worker_main() -> int:  # pragma: no cover - executed in child interpreter
+    """Fixed worker: parse inert request, install limits, then resolve candidate artifact."""
+    try:
+        request = json.loads(sys.stdin.read())
+        if request.get("schema") != WORKER_REQUEST_SCHEMA:
+            raise ValueError("unrecognised sandbox worker request")
+        isolation_record = dict(request.get("isolation") or {})
+        isolation_record.pop("schema", None)
+        isolation = Isolation(**isolation_record)
+    except Exception:
+        _worker_send({"kind": "bootstrap_failure", "traceback": traceback.format_exc(limit=8)})
+        return 2
+
+    enforced, unenforced = _apply_limits(isolation)
+    # This line is emitted before any candidate-controlled module is imported.
+    _worker_send({"kind": "isolation", "enforced": enforced, "unenforced": unenforced})
+
+    try:
+        factory = _resolve_artifact(request.get("artifact") or {})
+        body = factory()
+    except BaseException:
+        _worker_send(
+            {"kind": "result", "ok": False, "traceback": traceback.format_exc(limit=8)}
+        )
+        return 0
+
+    rows = []
+    graded = bool(request.get("graded"))
+    try:
+        for task in request.get("tasks") or []:
+            task_id = str(task["task_id"])
+            try:
+                returned = body.attempt(task)
+                if graded:
+                    returned = _json_answer(returned)
+            except Exception:
+                rows.append({"task_id": task_id, "failed": True})
+                continue
+            if graded:
+                rows.append({"task_id": task_id, "answer": returned})
+            elif returned not in ("solved", "unsolved", "refused", "error"):
+                rows.append({"task_id": task_id, "failed": True})
+            else:
+                rows.append({"task_id": task_id, "outcome": returned})
+        _worker_send({"kind": "result", "ok": True, "rows": rows})
+    except BaseException:
+        _worker_send(
+            {"kind": "result", "ok": False, "traceback": traceback.format_exc(limit=8)}
+        )
+    return 0
 
 
 def _outcomes_from(rows, by_identifier, grade) -> list[dict[str, Any]]:
@@ -224,7 +359,6 @@ def _outcomes_from(rows, by_identifier, grade) -> list[dict[str, Any]]:
 
 
 def _parse_worker_output(stdout: str) -> tuple[dict[str, Any], dict[str, Any] | None]:
-    """Take the first pre-candidate isolation record and the final worker result."""
     isolation_report: dict[str, Any] = {}
     result: dict[str, Any] | None = None
     for line in stdout.splitlines():
@@ -252,12 +386,7 @@ def run_candidate(
     grade: Callable[[Mapping[str, Any], Any], str] | None = None,
     withhold: Sequence[str] = ("expected",),
 ) -> dict[str, Any]:
-    """Run one reconstructible candidate artifact through the fixed JSON bootstrap.
-
-    Candidate code is imported only after the worker installed its limits. Candidate answers must be
-    JSON data, so receiving a result in the evaluator cannot invoke candidate constructors or
-    `__reduce__`. The grader still runs only in the parent against the original task oracle.
-    """
+    """Run one reconstructible candidate artifact through the fixed JSON bootstrap."""
     if admitted_isolation is not None:
         isolation.assert_no_wider_than(admitted_isolation)
     if isolation.network_permitted:
@@ -274,7 +403,7 @@ def run_candidate(
     ]
     descriptor = _candidate_descriptor(body_factory)
     request = {
-        "schema": "genesis-sandbox-worker-request-v1",
+        "schema": WORKER_REQUEST_SCHEMA,
         "isolation": isolation.record(),
         "artifact": descriptor,
         "tasks": asked,
@@ -296,7 +425,7 @@ def run_candidate(
         environment["PYTHONPATH"] = os.pathsep.join(python_path)
 
     process = subprocess.Popen(
-        [sys.executable, "-m", "genesis.sandbox_worker"],
+        [sys.executable, "-m", "genesis.sandbox"],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -375,3 +504,7 @@ def run_candidate(
 def isolation_is_complete(result: Mapping[str, Any]) -> bool:
     """True only when every requested limit was actually applied on this platform."""
     return bool(result.get("separate_process")) and not list(result.get("unenforced") or [])
+
+
+if __name__ == "__main__":  # pragma: no cover - fixed child bootstrap
+    raise SystemExit(_worker_main())
