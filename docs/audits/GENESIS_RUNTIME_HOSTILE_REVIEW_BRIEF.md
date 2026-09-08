@@ -79,7 +79,7 @@ whether that shape recurs somewhere still unfixed.
    adversarially, which finds only what the reader thinks to look for. Asking the question
    mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
    and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
-   33 were then tested, and with the probe module's own guards the checker now reports **67 of 71
+   33 were then tested, and with the probe and migration guards added the checker now reports **69 of 73
    killed**; the four survivors are marked in place as defensive assertions and are discussed under
    attack 7 below.
 
@@ -188,7 +188,7 @@ python scripts/check_genesis_guards_are_tested.py
 ```
 
 It deletes each `raise` in `genesis/` one at a time and reruns the Genesis suites. The first run
-reported **35 of 68 guards surviving**; **67 of 71 are killed** now. Three things are worth
+reported **35 of 68 guards surviving**; **69 of 73 are killed** now. Three things are worth
 attacking here rather than accepting:
 
 - the script only mutates `raise` statements. A wrong comparison, an inverted boolean or a missing

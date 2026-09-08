@@ -23,7 +23,7 @@ omission. Each asserts an invariant the surrounding code already establishes:
   from the symmetric difference of the two resolving compositions, so it is in exactly one of them.
 
 They are kept, marked in place, and left untested on purpose; inventing a contrived path to them
-would report coverage without adding knowledge. The current count is 67 of 71 killed — rerun
+would report coverage without adding knowledge. The current count is 69 of 73 killed — rerun
 `scripts/check_genesis_guards_are_tested.py` rather than trusting that number.
 """
 from __future__ import annotations

@@ -141,7 +141,7 @@ diagnostic feature, and the journal's chain check, which was masked by the file-
 in front of it.
 
 33 were tested in `tests/test_genesis_guards.py`, and the probe module has since added its own.
-**Now 67 of 71 are killed.** The four survivors are marked in place as defensive assertions about
+**Now 69 of 73 are killed.** The four survivors are marked in place as defensive assertions about
 invariants the surrounding code already establishes: the sandbox child cannot report a task set it
 was not given, `migrate` builds the arrival state out of the departure state's own fields, probes
 run in separate processes and cannot write to the lineage state, and a feature drawn from a
