@@ -36,10 +36,6 @@ def _grade_never_solves(_task, _answer):
     return "unsolved"
 
 
-def _SafeBody:
-    pass
-
-
 class _HarmlessBody:
     def attempt(self, task):
         return 0
