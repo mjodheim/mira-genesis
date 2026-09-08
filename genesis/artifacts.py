@@ -1,30 +1,19 @@
-"""Executable artifacts whose configuration is data, so the runtime can build their ablations.
+"""Executable artifacts whose configuration is data, so Genesis can ablate and restore them.
 
 A causal ablation is supposed to be *this candidate with one earlier acquisition removed and nothing
-else changed*. For a long time the runtime could not construct that, so it accepted one: the
-proposer supplied an `ablated_body_factory`, said which acquisition it stood for, and the cycle
-measured the loss. Naming a real acquisition was checked; that the supplied arm *was* that
-acquisition removed was not. A deliberately weak unrelated body therefore produced a measured loss
-and was recorded as causal dependency — the proposer authoring its own evidence.
+else changed*. For a long time the runtime could not construct that, so it accepted one: the proposer
+supplied an ablated body and the runtime measured it. ``ConfiguredBody`` makes the executable
+configuration explicit so the runtime can build and authenticate the counterfactual itself.
 
-The repair is not a stricter check on the caller's arm. It is to make the candidate's configuration
-something the runtime can read and edit, so the runtime builds the arm itself:
+The same property is what makes generated descendants restorable. A configured artifact record binds
+its importable interpreter target, the target's source identity, canonical construction data and
+acquisition dependencies. ``reconstruct()`` rebuilds that factory from the committed record and then
+requires the complete artifact digest to reproduce. Process death therefore need not ask a host to
+remember which generated configuration to recreate.
 
-    candidate  = ConfiguredBody(target=..., configuration=..., dependencies={"a", "b"})
-    ablated    = candidate.without("b")
-
-and then verifies that the two differ in exactly the licensed removal before either is run. A
-proposer can still propose anything it likes; it can no longer decide what the counterfactual is.
-
-A configured body also has to bind the code its `target` string resolves to. Binding the string alone
-would make an edit to `module:symbol` preserve the candidate's artifact digest while changing the
-executable. `artifact_configuration()` therefore includes the trust-root identity of the resolved
-target symbol as well as the construction data.
-
-**What this does not do.** The configuration is a mapping the host's world admits, and the target is
-an importable symbol, so a lineage that generates genuinely new code cannot yet describe itself this
-way. Where the runtime cannot construct and authenticate the single-difference arm it records
-`established: false` — the honest reading of a counterfactual nobody could build.
+This is still a DEVELOPMENT artifact kind: importable target identity binds module source rather than
+an exact packaged executable blob, and the record says ``binds_exact_executed_bytes: false``. A future
+native/generated package store can add a stronger artifact kind without weakening this one.
 """
 from __future__ import annotations
 
@@ -36,19 +25,30 @@ CONFIGURED_BODY_SCHEMA = "genesis-configured-body-v1"
 
 
 class ArtifactError(RuntimeError):
-    """Raised when an artifact cannot be built, or when a derived arm is not the licensed one."""
+    """Raised when an artifact cannot be built, restored, or licensed as a single-difference arm."""
 
 
 def _frozen(configuration: Mapping[str, Any]) -> dict[str, Any]:
     return {str(key): configuration[key] for key in sorted(configuration, key=str)}
 
 
+def _resolve_symbol(module_name: str, qualname: str) -> Any:
+    if not module_name or not qualname or "<locals>" in qualname or "<lambda>" in qualname:
+        raise ArtifactError("artifact names no reconstructible importable symbol")
+    resolved: Any = import_module(module_name)
+    for part in qualname.split("."):
+        resolved = getattr(resolved, part)
+    if not callable(resolved):
+        raise ArtifactError("artifact resolves to a non-callable symbol")
+    return resolved
+
+
 @dataclass(frozen=True)
 class ConfiguredBody:
     """A body factory that publishes what it is made of.
 
-    `dependencies` is the set of earlier acquisitions this body routes work through. It is the only
-    field an ablation may change, and `without()` is the only way to change it.
+    ``dependencies`` is the set of earlier acquisitions this body routes work through. It is the
+    only field an ablation may change, and ``without()`` is the only licensed edit.
     """
 
     target: str
@@ -63,10 +63,9 @@ class ConfiguredBody:
         object.__setattr__(self, "configuration", _frozen(self.configuration))
         object.__setattr__(self, "dependencies", frozenset(str(name) for name in self.dependencies))
 
-    # -- construction ---------------------------------------------------------------------
     def resolve(self) -> Any:
         module_name, _, symbol = str(self.target).partition(":")
-        return getattr(import_module(module_name), symbol)
+        return _resolve_symbol(module_name, symbol)
 
     def __call__(self) -> Any:
         """Build the body. The candidate executor calls this only after its limits exist."""
@@ -75,7 +74,6 @@ class ConfiguredBody:
         arguments[self.dependency_keyword] = frozenset(self.dependencies)
         return constructor(**arguments)
 
-    # -- the licensed edit ----------------------------------------------------------------
     def without(self, dependency: str) -> "ConfiguredBody":
         """This body with exactly one declared dependency removed."""
         name = str(dependency)
@@ -91,14 +89,8 @@ class ConfiguredBody:
             dependency_keyword=self.dependency_keyword,
         )
 
-    # -- identity -------------------------------------------------------------------------
     def artifact_configuration(self) -> dict[str, Any]:
-        """Everything the configured artifact digest must bind.
-
-        `target` is useful human-readable provenance, but it is not executable identity. The nested
-        target artifact binds the qualified symbol and defining module source, so changing the code
-        behind the same string changes this configured body's digest as well.
-        """
+        """Everything the configured artifact digest must bind."""
         from genesis.trust_root import artifact_digest_of
 
         return {
@@ -109,6 +101,62 @@ class ConfiguredBody:
             "dependencies": sorted(self.dependencies),
             "dependency_keyword": str(self.dependency_keyword),
         }
+
+
+def reconstruct(record: Mapping[str, Any]) -> Any:
+    """Rebuild an executable factory from a committed artifact record, or fail closed.
+
+    Only artifact kinds whose complete behaviourally relevant configuration can be reconstructed are
+    supported. Opaque callable state and partial applications whose canonical value encoding is not
+    invertible here are deliberately refused rather than guessed.
+    """
+    from genesis.trust_root import artifact_digest_of
+
+    if not isinstance(record, Mapping):
+        raise ArtifactError("persisted body carries no executable artifact record")
+    kind = str(record.get("kind") or "")
+
+    if kind == "importable_symbol":
+        rebuilt = _resolve_symbol(
+            str(record.get("module") or ""), str(record.get("qualname") or "")
+        )
+    elif kind == "configured_artifact":
+        published = record.get("configuration")
+        if not isinstance(published, Mapping) or published.get("schema") != CONFIGURED_BODY_SCHEMA:
+            raise ArtifactError("persisted configured artifact carries no reconstructible configuration")
+        target = str(published.get("target") or "")
+        target_artifact = published.get("target_artifact")
+        if not isinstance(target_artifact, Mapping):
+            raise ArtifactError("persisted configured artifact carries no target identity")
+        module_name, separator, qualname = target.partition(":")
+        if not separator:
+            raise ArtifactError("persisted configured artifact target is malformed")
+        resolved = _resolve_symbol(module_name, qualname)
+        actual_target = artifact_digest_of(resolved)
+        if actual_target != dict(target_artifact):
+            raise ArtifactError("configured artifact target no longer matches its committed identity")
+        raw_configuration = published.get("configuration")
+        if not isinstance(raw_configuration, Mapping):
+            raise ArtifactError("persisted configured artifact configuration is not a mapping")
+        dependencies = published.get("dependencies") or []
+        if not isinstance(dependencies, list):
+            raise ArtifactError("persisted configured artifact dependencies are not canonical data")
+        rebuilt = ConfiguredBody(
+            target=target,
+            configuration=dict(raw_configuration),
+            dependencies=frozenset(str(value) for value in dependencies),
+            dependency_keyword=str(published.get("dependency_keyword") or "capabilities"),
+        )
+    else:
+        raise ArtifactError(
+            "persisted executable artifact kind %r cannot be reconstructed without an external "
+            "resolver" % kind
+        )
+
+    actual = artifact_digest_of(rebuilt)
+    if actual != dict(record):
+        raise ArtifactError("reconstructed executable artifact does not reproduce its committed digest")
+    return rebuilt
 
 
 def derive_ablation(candidate: Any, dependency: str) -> ConfiguredBody:
@@ -123,12 +171,7 @@ def derive_ablation(candidate: Any, dependency: str) -> ConfiguredBody:
 
 
 def single_difference(candidate: Any, ablated: Any, dependency: str) -> list[str]:
-    """Everything that differs between the two arms beyond the licensed removal.
-
-    An empty list means the ablated arm is the candidate with exactly `dependency` gone. Anything
-    else is a second change riding along with the first, which makes the measured loss ambiguous
-    between them.
-    """
+    """Everything that differs between the two arms beyond the licensed removal."""
     problems: list[str] = []
     if not isinstance(candidate, ConfiguredBody) or not isinstance(ablated, ConfiguredBody):
         return ["one of the arms does not publish a configuration to compare"]
@@ -142,7 +185,9 @@ def single_difference(candidate: Any, ablated: Any, dependency: str) -> list[str
             for key in set(candidate.configuration) | set(ablated.configuration)
             if candidate.configuration.get(key) != ablated.configuration.get(key)
         )
-        problems.append("the arms differ in configuration beyond the removal: %s" % ", ".join(differing))
+        problems.append(
+            "the arms differ in configuration beyond the removal: %s" % ", ".join(differing)
+        )
     removed = candidate.dependencies - ablated.dependencies
     added = ablated.dependencies - candidate.dependencies
     if removed != {str(dependency)}:
