@@ -240,11 +240,11 @@ def migrate(
 
     body_factory = translate(offered, handles)
 
-    if canonical_bytes(departing) != baseline:
-        raise MigrationError(
-            "the translation mutated the departure record it was given; the value the arrival is "
-            "compared against may not be writable by the code producing the arrival"
-        )
+    # Only the copy is checked. A second check on `departing` itself was written here as belt and
+    # braces and could not fire: the translator is never handed that value, so nothing it can do
+    # reaches it. A guard that cannot fire is not defence in depth, it is a line claiming to hold a
+    # boundary that the line above already holds — which is the shape of defect this whole round is
+    # about — so it is gone rather than documented as unreachable.
     if canonical_bytes(offered) != baseline:
         raise MigrationError(
             "the translation mutated the departure record it was given, so what it says arrived "
