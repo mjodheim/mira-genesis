@@ -1,0 +1,275 @@
+#!/usr/bin/env python3
+"""Drive one Genesis lineage through the whole metamorphosis cycle and emit a reproducible record.
+
+This is the DEVELOPMENT demonstration the stopping criterion in
+``docs/METAMORPHOSIS_TARGET.md`` asks for: not that the components exist, but that **one lineage**
+does all of it. It is not a scientific result, it is not frozen, and it advances no gate. Every
+mechanism it exercises is already qualified in a bounded setting; what is new is that they run as one
+program.
+
+The lineage, in order:
+
+1. measures itself against a task family in an isolated child process;
+2. proposes a transformation, has it rejected on evidence, and **keeps going**;
+3. proposes another, has it accepted, and records the acquisition;
+4. meets a demand no component in its registry resolves, exhausts the registry by probing, and
+   **names a component class it did not have** — against a certificate, not by editing a tuple;
+5. meets two demands its features cannot tell apart whose causes differ, and **extends its own
+   diagnostic vocabulary** against that pair;
+6. discovers a second substrate by probing, migrates into it carrying everything it owned;
+7. **evolves again in the new form**, which is the only thing that distinguishes transported
+   intelligence from transported output;
+8. dies, and comes back from disk with the same state digest and the same journal head.
+
+Run it with ``--write`` to persist the record under ``experiments/GENESIS/``.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from genesis import development_bodies as bodies  # noqa: E402
+from genesis import diagnosis  # noqa: E402
+from genesis import state as lineage_state  # noqa: E402
+from genesis import trust_root as tr  # noqa: E402
+from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency  # noqa: E402
+from genesis.migration import (  # noqa: E402
+    Substrate,
+    discover,
+    metamorphosis_succeeded,
+    migrate,
+)
+
+RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
+TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
+
+#: A demand no seed component resolves. The lineage discovers that by probing, not by being told.
+UNRESOLVED_DEMAND = {"demand": "represent a joint constraint over two carriers", "kind": "joint"}
+
+#: Two demands the seed vocabulary maps to the same row although their causes differ.
+CONFUSABLE = (
+    {"demand": "resolve alpha", "limiting": "operator_table"},
+    {"demand": "resolve beta", "limiting": "signal_interface"},
+)
+
+
+def _seed_state() -> dict:
+    return lineage_state.create_state(
+        body_digest="s0",
+        components=[
+            {
+                "name": name,
+                "origin": "seed",
+                "certificate": None,
+                "provenance": tr.provenance("host_written", produced_by="seed"),
+            }
+            for name in ("operator_table", "signal_interface")
+        ],
+        vocabulary=[
+            {"name": name, "origin": "seed", "certificate": None}
+            for name in ("axis_progress", "signals_consistent")
+        ],
+    )
+
+
+def _proposal(name, factory):
+    return Proposal(name=name, body_factory=factory, provenance=LINEAGE, rationale={"step": name})
+
+
+def _one(genesis, name, factory):
+    queue = [factory]
+    return genesis.cycle(
+        TASKS,
+        lambda _g, _t: _proposal(name, queue.pop(0)) if queue else None,
+    )
+
+
+def _speculate(state, component, demand):
+    """No seed component resolves the joint demand; that is what the probing establishes."""
+    return False
+
+
+def _feature_row(state, demand):
+    """The seed vocabulary maps both confusable demands to the same row."""
+    return [True, False]
+
+
+def demonstrate() -> dict:
+    genesis = Genesis(
+        state=_seed_state(),
+        body_factory=bodies.parent_body,
+        budget=tr.Budget(limits={"generations": 8, "probes": 12}),
+        isolation=tr.Isolation(),
+    )
+    steps: list[dict] = []
+
+    rejected = _one(genesis, "regressed", bodies.regressed_body)
+    steps.append(
+        {
+            "step": "rejected_candidate_does_not_end_the_run",
+            "accepted": rejected["accepted"],
+            "reason": rejected["reason"],
+            "observations_kept": len(genesis.state["observations"]),
+        }
+    )
+
+    accepted = _one(genesis, "improved", bodies.improved_body)
+    steps.append(
+        {
+            "step": "candidate_accepted_on_evidence",
+            "accepted": accepted["accepted"],
+            "generation": genesis.state["generation"],
+            "acquisitions": len(genesis.state["acquisitions"]),
+        }
+    )
+
+    found = diagnosis.diagnose(
+        genesis.state, UNRESOLVED_DEMAND, speculate=_speculate, budget=genesis.budget
+    )
+    certificate = diagnosis.certificate_from_diagnosis(
+        found, new_component="joint_registry", resolves_with_new_component=True
+    )
+    genesis.state = lineage_state.extend_components(
+        genesis.state, certificate=certificate, provenance=LINEAGE
+    )
+    genesis.journal.append(
+        "component_acquired",
+        genesis.state["generation"],
+        {"component": "joint_registry", "certificate_digest": certificate["certificate_digest"]},
+    )
+    steps.append(
+        {
+            "step": "lineage_names_a_component_class_it_did_not_have",
+            "registry_exhausted": found["registry_exhausted"],
+            "probed": [record["component"] for record in found["probes"]],
+            "registry_after": lineage_state.component_names(genesis.state),
+        }
+    )
+
+    pair = diagnosis.find_indistinguishable_pair(
+        genesis.state,
+        CONFUSABLE,
+        feature_row=_feature_row,
+        limiting_component=lambda demand: demand["limiting"],
+    )
+    vocabulary_certificate = diagnosis.certificate_from_pair(
+        genesis.state,
+        pair,
+        new_feature="joint_constraint_undetermined",
+        separates=lambda demand: demand["limiting"] == "operator_table",
+    )
+    genesis.state = lineage_state.extend_vocabulary(
+        genesis.state, certificate=vocabulary_certificate
+    )
+    genesis.journal.append(
+        "vocabulary_extended",
+        genesis.state["generation"],
+        {"feature": "joint_constraint_undetermined"},
+    )
+    steps.append(
+        {
+            "step": "lineage_extends_its_own_diagnostic_vocabulary",
+            "shared_prior_row": pair["shared_prior_row"],
+            "limiting_components": pair["limiting_components"],
+            "vocabulary_after": lineage_state.vocabulary_names(genesis.state),
+        }
+    )
+
+    substrate = Substrate(name="record-store", operations=bodies.SUBSTRATE_OPERATIONS)
+    probing = discover(substrate, ["read", "write", "list", "transact"], genesis.budget)
+    migration = migrate(
+        genesis,
+        substrate,
+        lambda state, operations: bodies.migrated_parent_body,
+        used_operations=["read"],
+    )
+    steps.append(
+        {
+            "step": "substrate_semantics_discovered_then_migrated",
+            "found": probing["found"],
+            "missing": probing["missing"],
+            "journal_continues": migration["journal_continues"],
+            "nothing_lost": all(c["missing"] == 0 for c in migration["carried"].values()),
+        }
+    )
+
+    after = [_one(genesis, "improved_in_new_form", bodies.migrated_improved_body)]
+    outcome = metamorphosis_succeeded(migration, after)
+    steps.append(
+        {
+            "step": "evolved_again_in_the_new_form",
+            "metamorphosis_succeeded": outcome["succeeded"],
+            "accepted_after_migration": outcome["accepted_after_migration"],
+            "transported_intelligence": outcome[
+                "is_transported_intelligence_rather_than_transported_output"
+            ],
+        }
+    )
+
+    causal = ablation_supports_causal_dependency(
+        with_acquisition=after[0]["candidate_sandbox"]["outcomes"],
+        without_acquisition=after[0]["parent_sandbox"]["outcomes"],
+        equal_budget=True,
+    )
+    steps.append({"step": "causal_dependency_between_generations", **causal})
+
+    directory = ROOT / "experiments" / "GENESIS" / "runtime_state"
+    genesis.persist(directory)
+    restored = Genesis.restore(
+        directory,
+        body_factory=bodies.migrated_improved_body,
+        budget=tr.Budget(limits={"generations": 8, "probes": 12}),
+        isolation=tr.Isolation(),
+    )
+    steps.append(
+        {
+            "step": "survives_process_death",
+            "state_digest_matches": restored.state["state_digest"]
+            == genesis.state["state_digest"],
+            "journal_head_matches": restored.journal.head == genesis.journal.head,
+            "journal_length": len(restored.journal),
+        }
+    )
+
+    record = {
+        "schema": "genesis-demonstration-v1",
+        "development": True,
+        "is_a_scientific_observation": False,
+        "advances_a_generality_gate": False,
+        "frozen": False,
+        "steps": steps,
+        "journal_kinds": [entry["kind"] for entry in genesis.journal],
+        "final_generation": genesis.state["generation"],
+        "final_components": lineage_state.component_names(genesis.state),
+        "final_vocabulary": lineage_state.vocabulary_names(genesis.state),
+        "budget": genesis.budget.record(),
+        "trust_root_sha256": tr.source_digest(),
+    }
+    record["record_digest"] = tr.digest_of(record)
+    return record
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--write", action="store_true", help="persist the demonstration record")
+    arguments = parser.parse_args()
+    record = demonstrate()
+    if arguments.write:
+        RECORD_PATH.parent.mkdir(parents=True, exist_ok=True)
+        RECORD_PATH.write_bytes(tr.canonical_bytes(record) + b"\n")
+        print("wrote %s" % RECORD_PATH.relative_to(ROOT))
+    for step in record["steps"]:
+        print("  %-52s %s" % (step["step"], {k: v for k, v in step.items() if k != "step"}))
+    print(json.dumps({k: record[k] for k in ("final_generation", "final_components", "final_vocabulary")}, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
