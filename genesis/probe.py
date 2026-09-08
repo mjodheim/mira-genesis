@@ -149,7 +149,8 @@ def grade_probe(task: Mapping[str, Any], answer: Any) -> str:
 
     A probe that decided for itself whether it had solved the demand would be a candidate marking
     its own paper, and every certificate resting on it would inherit that. The composition returns
-    the value it computed and nothing else.
+    the value it computed and nothing else — and the sandbox withholds `expected` on the way in, so
+    a composition cannot reach the value it is supposed to produce.
     """
     return "solved" if answer == task.get("expected") else "unsolved"
 
@@ -217,6 +218,8 @@ def search(
         cross,
         isolation,
         grade=grade_probe,
+        # The composition would otherwise be handed the value it is meant to compute.
+        withhold=("expected",),
     )
     if not run["completed"]:
         # A probe that never ran is not evidence that its composition fails.

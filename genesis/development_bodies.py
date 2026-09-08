@@ -18,6 +18,18 @@ from typing import Any, Mapping, Sequence
 REFUSED = "__refused__"
 
 
+def answer_to(task: Mapping[str, Any]) -> int:
+    """The right answer to a task, computed from the question.
+
+    A body that can do the work computes this. A body that cannot has nothing to fall back on,
+    because the task it receives carries the question and not the answer — the sandbox withholds
+    `expected` on the way in. Before that, every fixture here simply returned `task["expected"]`,
+    which meant the grader was comparing the answer key against itself and would have passed a body
+    that computed nothing at all.
+    """
+    return int(task["input"]) * 2 + 1
+
+
 def grade(task: Mapping[str, Any], answer: Any) -> str:
     """Grade an answer against the real task, in the parent, where the candidate cannot reach.
 
@@ -27,7 +39,7 @@ def grade(task: Mapping[str, Any], answer: Any) -> str:
     """
     if answer == REFUSED:
         return "refused"
-    return "solved" if answer == task.get("expected") else "unsolved"
+    return "solved" if answer == answer_to(task) else "unsolved"
 
 
 class TableBody:
@@ -41,7 +53,7 @@ class TableBody:
         task_id = str(task["task_id"])
         if task_id in self.refuses:
             return REFUSED
-        return task.get("expected") if task_id in self.solves else None
+        return answer_to(task) if task_id in self.solves else None
 
 
 class ThrowingBody:
@@ -106,6 +118,43 @@ def cheating_body() -> CheatingBody:
     return CheatingBody()
 
 
+class PeekingBody:
+    """Reads the answer out of the task instead of computing it.
+
+    This scored full marks. Every fixture in this module used to do the same thing — return
+    `task["expected"]` — so the grader introduced to stop a candidate marking its own paper was
+    comparing the answer key against itself. It now scores zero, because the sandbox withholds
+    `expected` from the task the child receives and there is nothing left to read.
+    """
+
+    def attempt(self, task):
+        return task.get("expected")
+
+
+def peeking_body() -> PeekingBody:
+    return PeekingBody()
+
+
+class ReportingBody:
+    """Answers with the task keys it was actually given, so a test can inspect the boundary.
+
+    Checking that a withheld key changed the *outcome* leaves open that it changed it for some other
+    reason. This reports what crossed the process boundary.
+    """
+
+    def attempt(self, task):
+        return sorted(task)
+
+
+def reporting_body() -> ReportingBody:
+    return ReportingBody()
+
+
+def keys_grade(task: Mapping[str, Any], answer: Any) -> str:
+    """Solved when the child's key list contains no key the parent meant to keep."""
+    return "solved" if "expected" not in (answer or []) else "unsolved"
+
+
 def unconstructible_body():
     raise RuntimeError("this body cannot be constructed at all")
 
@@ -145,8 +194,8 @@ class RecordBody:
         if required is not None:
             if required not in self.capabilities:
                 raise RuntimeError("this body reaches for %r, which it no longer has" % required)
-            return task.get("expected")
-        return task.get("expected") if key in self.solves else None
+            return answer_to(task)
+        return answer_to(task) if key in self.solves else None
 
 
 #: The operations the second substrate really supports. A lineage learns these by probing.

@@ -243,6 +243,7 @@ def run_candidate(
     *,
     admitted_isolation: Isolation | None = None,
     grade: Callable[[Mapping[str, Any], Any], str] | None = None,
+    withhold: Sequence[str] = ("expected",),
 ) -> dict[str, Any]:
     """Run a body over the tasks in a separate process and return raw per-task outcomes.
 
@@ -261,6 +262,14 @@ def run_candidate(
     reports success it did not achieve is then simply wrong, because it never gets to say whether it
     was right. `outcomes_are_self_reported` in the result says which of the two happened, so nobody
     downstream has to guess.
+
+    **`withhold` is the other half of that, and without it the first half is theatre.** Grading in
+    the parent decides nothing if the answer key rides into the child inside the task: a body that
+    returns `task["expected"]` scores full marks having computed nothing. So the named keys are
+    stripped from every task before it crosses the process boundary — the child receives the
+    question, the parent keeps the answer — and `withheld_from_the_candidate` records what was
+    removed. A caller whose tasks name the answer differently must say so; the default covers the
+    spelling this repository uses and nothing more.
     """
     if admitted_isolation is not None:
         isolation.assert_no_wider_than(admitted_isolation)
@@ -272,11 +281,16 @@ def run_candidate(
         raise SandboxError("the task set repeats a task id")
     by_identifier = {str(task["task_id"]): task for task in tasks}
 
+    withheld = tuple(str(key) for key in withhold)
+    asked = [
+        {key: value for key, value in task.items() if key not in withheld} for task in tasks
+    ]
+
     context = multiprocessing.get_context("spawn")
     parent_connection, child_connection = context.Pipe(duplex=False)
     process = context.Process(
         target=_child,
-        args=(child_connection, body_factory, list(tasks), isolation, grade is not None),
+        args=(child_connection, body_factory, asked, isolation, grade is not None),
     )
     process.start()
     child_connection.close()
@@ -348,6 +362,7 @@ def run_candidate(
             "network_permitted": False,
             "audit_hook_covers_pure_python_only": True,
             "outcomes_are_self_reported": grade is None,
+            "withheld_from_the_candidate": list(withheld),
             "platform": sys.platform,
             "carries_a_score": False,
         }

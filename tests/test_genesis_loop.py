@@ -19,7 +19,7 @@ from genesis import state as st
 from genesis import trust_root as tr
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency
 
-TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -549,7 +549,7 @@ def test_two_established_links_make_a_chain():
 # so recomputing a tally from them is arithmetic on a claim rather than a measurement of it. A body
 # that returns "solved" for everything was, quite literally, solving everything.
 
-CHEAT_TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(4)]
+CHEAT_TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(4)]
 
 
 def test_a_body_that_claims_every_task_wins_when_it_grades_itself():
@@ -581,6 +581,41 @@ def test_a_cheating_candidate_is_accepted_by_the_cycle_when_it_grades_itself():
     record = _cycle_with(genesis, bodies.cheating_body, name="cheat")
     assert record["accepted"] is True, "self-reporting is what makes this candidate look good"
     assert record["outcomes_are_self_reported"] is True
+
+
+def test_a_body_that_reads_the_answer_out_of_the_task_scores_nothing():
+    """Grading in the parent decides nothing if the answer key rides in with the question.
+
+    Every fixture in `development_bodies` used to return `task["expected"]`, so the grader added to
+    stop a candidate marking its own paper was comparing the answer key against itself. The sandbox
+    withholds the key now, and a body with nothing but the question has nothing to read.
+    """
+    result = sb.run_candidate(
+        bodies.peeking_body, CHEAT_TASKS, tr.Isolation(), grade=bodies.grade
+    )
+    assert result["withheld_from_the_candidate"] == ["expected"]
+    assert all(row["outcome"] == "unsolved" for row in result["outcomes"])
+
+
+def test_the_same_body_scores_full_marks_when_the_answer_is_handed_to_it():
+    """The negative control, and the reason the withholding is not decoration."""
+    with_answers = [dict(task, expected=bodies.answer_to(task)) for task in CHEAT_TASKS]
+    result = sb.run_candidate(
+        bodies.peeking_body, with_answers, tr.Isolation(), grade=bodies.grade, withhold=()
+    )
+    assert result["withheld_from_the_candidate"] == []
+    assert all(row["outcome"] == "solved" for row in result["outcomes"])
+
+
+def test_the_child_never_receives_a_withheld_key():
+    """Asserted on the task the child actually got, not on the outcome it produced."""
+    with_answers = [dict(task, expected=bodies.answer_to(task)) for task in CHEAT_TASKS]
+    result = sb.run_candidate(
+        bodies.reporting_body, with_answers, tr.Isolation(), grade=bodies.keys_grade
+    )
+    assert all(row["outcome"] == "solved" for row in result["outcomes"]), (
+        "the child saw a key the parent withheld"
+    )
 
 
 def test_an_honest_body_is_graded_on_the_answers_it_actually_gives():

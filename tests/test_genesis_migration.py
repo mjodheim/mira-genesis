@@ -25,7 +25,7 @@ from genesis.migration import (
     migrate,
 )
 
-TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
