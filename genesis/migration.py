@@ -35,13 +35,14 @@ and going on evolving is.
 """
 from __future__ import annotations
 
+import copy
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import Any, Callable, Mapping, Sequence
 
 from genesis import state as lineage_state
 from genesis.journal import Journal
-from genesis.trust_root import digest_of, provenance
+from genesis.trust_root import artifact_digest_of, digest_of, provenance
 
 MIGRATION_SCHEMA = "genesis-migration-v1"
 SUBSTRATE_SCHEMA = "genesis-substrate-v1"
@@ -220,14 +221,22 @@ def migrate(
             % ", ".join(undiscovered)
         )
 
-    body_factory = translate(departing, substrate.discovered)
+    # The translator may inspect a detached departure record, but the canonical baseline used to
+    # prove continuity must never be the same mutable object. Detect mutation of even the detached
+    # value so a translation cannot quietly rewrite the premise it was given and call that normal.
+    translation_input = copy.deepcopy(departing)
+    translation_input_digest = digest_of(translation_input)
+    body_factory = translate(translation_input, substrate.discovered)
+    if digest_of(translation_input) != translation_input_digest:
+        raise MigrationError(
+            "the translation mutated the departure context it was given; migration inputs are read-only evidence"
+        )
     if not callable(body_factory):
         raise MigrationError("the translation did not produce a body factory")
 
+    body_artifact = artifact_digest_of(body_factory)
     arrived = lineage_state.create_state(
-        body_digest=digest_of(
-            {"substrate": substrate.name, "from": departing["body_digest"], "via": sorted(used_operations)}
-        ),
+        body_digest=body_artifact["artifact_digest"],
         components=departing["components"],
         vocabulary=departing["vocabulary"],
         tools=departing["tools"],
@@ -270,6 +279,7 @@ def migrate(
             "substrate": substrate.record(lineage_visible=True),
             "departure_state_digest": departing["state_digest"],
             "arrival_state_digest": arrived["state_digest"],
+            "arrival_body_artifact": body_artifact,
             "departure_journal_head": departure_head,
             "used_operations": sorted(used_operations),
             "carried": carried["carried"],
@@ -292,6 +302,7 @@ def migrate(
         "substrate": substrate.record(),
         "departure_state_digest": departing["state_digest"],
         "arrival_state_digest": arrived["state_digest"],
+        "arrival_body_artifact": body_artifact,
         "departure_journal_head": departure_head,
         "arrival_journal_entry": entry["entry_digest"],
         "journal_continues": entry["previous_digest"] == departure_head,
