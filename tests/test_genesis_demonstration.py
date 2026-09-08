@@ -129,15 +129,15 @@ def test_the_lineage_evolves_again_in_its_new_form(record):
     """Transported intelligence rather than transported output. This is the whole objective."""
     step = _step(record, "evolved_again_in_the_new_form")
     assert step["metamorphosis_succeeded"] is True
-    assert step["accepted_after_migration"] == 2
+    assert step["accepted_after_migration"] == 3
     assert step["transported_intelligence"] is True
 
 
 def test_the_lineage_accepts_three_transformations_not_one(record):
     """A single acceptance shows the runtime works. Three show the lineage is still going."""
     step = _step(record, "evolved_again_in_the_new_form")
-    assert step["accepted_cycles_in_the_lineage"] == 3
-    assert record["final_generation"] == 3
+    assert step["accepted_cycles_in_the_lineage"] == 4
+    assert record["final_generation"] == 4
 
 
 def test_the_translation_is_verified_rather_than_assumed(record):
@@ -152,9 +152,9 @@ def test_the_translation_is_verified_rather_than_assumed(record):
     assert step["solved_before_and_after"] == [4, 4]
 
 
-@pytest.mark.parametrize("depends_on", ["joint_registry", "carrier_index"])
+@pytest.mark.parametrize("depends_on", ["joint_registry", "carrier_index", "carrier_index_ii"])
 def test_each_generation_needed_the_one_before_it(record, depends_on):
-    """Two consecutive ablations. One shows a dependency; two show a chain."""
+    """Three consecutive ablations, each run inside the cycle that accepted the candidate."""
     step = _step(record, "causal_dependency:%s" % depends_on)
     assert step["established"] is True
     assert step["arm_supplied"] is True
@@ -171,12 +171,18 @@ def test_the_ablation_is_run_by_the_runtime_not_by_the_script(record):
     assert step["checked_by"] == "genesis.loop.Genesis.cycle, not by this script"
 
 
-def test_the_lineage_reports_a_chain_length_that_could_have_been_smaller(record):
-    """Three acquisitions, two established links: the first depended on nothing earlier."""
-    step = _step(record, "the_acquisitions_form_a_chain_rather_than_a_sequence")
-    assert step["acquisitions"] == 3
-    assert step["established_links"] == 2
-    assert step["is_a_chain_rather_than_a_sequence"] is True
+def test_the_lineage_reports_a_number_and_does_not_convert_it_into_a_verdict(record):
+    """Four acquisitions, three established links: the first depended on nothing earlier.
+
+    The previous version turned `links >= 2` into "a chain rather than a sequence" — a threshold set
+    at the smallest number that permits the word. Whether n links is recursion is not a question the
+    thing being measured gets to settle, so the record reports the number and says so.
+    """
+    step = _step(record, "how_many_acquisitions_actually_depend_on_the_one_before")
+    assert step["acquisitions"] == 4
+    assert step["established_links"] == 3
+    assert step["makes_no_recursion_claim"] is True
+    assert "is_a_chain_rather_than_a_sequence" not in step
 
 
 @pytest.mark.parametrize(
@@ -184,6 +190,7 @@ def test_the_lineage_reports_a_chain_length_that_could_have_been_smaller(record)
     [
         ("migrated_improved_body", "migrated_ablated_body", "ACQUIRED_COMPONENT"),
         ("migrated_further_body", "migrated_further_ablated_body", "SECOND_ACQUISITION"),
+        ("migrated_fourth_body", "migrated_fourth_ablated_body", "THIRD_ACQUISITION"),
     ],
 )
 def test_each_ablated_arm_is_its_candidate_minus_one_acquisition(
@@ -219,6 +226,8 @@ def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
         "t3": "error",
         "t4": "solved",
         "t5": "unsolved",
+        "t6": "unsolved",
+        "t7": "unsolved",
     }
 
 

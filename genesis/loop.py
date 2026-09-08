@@ -30,8 +30,10 @@ recomputes the comparison and returns the verdict.
 
 **Who grades.** Recomputing a tally from rows the candidate wrote is arithmetic on a claim rather
 than a measurement of it. Pass `grade` to `Genesis` and a body's return value becomes an answer the
-parent judges against the real task; leave it out and the body awards its own marks. Every cycle
-record carries `outcomes_are_self_reported` so the difference is never left to be assumed.
+parent judges against the real task. Leaving it out is allowed and has to be *said* —
+`allow_self_reported_outcomes=True` — because a label on the difference is not a refusal of it, and
+nobody should reach a self-reported verdict by forgetting an argument. Every cycle record still
+carries `outcomes_are_self_reported`, since the flag is what a later reader weighs.
 """
 from __future__ import annotations
 
@@ -53,6 +55,11 @@ from genesis.trust_root import (
 
 CYCLE_SCHEMA = "genesis-cycle-v1"
 CAMPAIGN_SCHEMA = "genesis-campaign-v1"
+
+
+def task_set_digest(tasks: Sequence[Mapping[str, Any]]) -> str:
+    """Identify a task set by the questions in it, so a caller cannot rename its way past a check."""
+    return digest_of(sorted(str(task["task_id"]) for task in tasks))
 
 
 class Body(Protocol):
@@ -104,8 +111,20 @@ class Genesis:
         journal: Journal | None = None,
         admitted_source_sha256: str | None = None,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
+        allow_self_reported_outcomes: bool = False,
     ) -> None:
         from genesis.trust_root import source_digest
+
+        # Hati's second blocking correction: labelling the difference is not refusing it. A lineage
+        # whose verdicts rest on the candidate's own account of itself is a legitimate thing to run
+        # — it is what the fixtures did for most of this runtime's life — but it has to be asked
+        # for, so that nobody arrives at a self-reported verdict by forgetting an argument.
+        if grade is None and not allow_self_reported_outcomes:
+            raise TrustRootError(
+                "no grader was supplied, so every verdict would rest on the candidate's own "
+                "account of itself; pass grade=..., or allow_self_reported_outcomes=True to say "
+                "that is what you meant"
+            )
 
         self.state = lineage_state.decode_state(state)
         self.body_factory = body_factory
@@ -118,6 +137,11 @@ class Genesis:
         # the body supplies an answer and the parent decides. The cycle records which happened
         # rather than leaving a reader to assume the stronger one.
         self.grade = grade
+        self.allow_self_reported_outcomes = allow_self_reported_outcomes
+        # Which task sets this lineage has actually been evaluated on. A migration verified against
+        # tasks nobody ever judged this lineage by is verified against a set chosen by whoever
+        # wanted the migration to pass.
+        self.evaluated_task_digests: set[str] = set()
         self.journal = journal if journal is not None else Journal()
         if not len(self.journal):
             self.journal.append(
@@ -178,6 +202,7 @@ class Genesis:
                 "journal_entry": record["entry_digest"],
             }
 
+        self.evaluated_task_digests.add(task_set_digest(tasks))
         parent = run_candidate(
             self.body_factory,
             tasks,
@@ -406,6 +431,11 @@ class Genesis:
         A run of acceptances is not a chain. This counts the consecutive acquisitions, ending at the
         most recent, whose dependency on the one before was established by ablation — so a claim
         about recursive improvement has to read a number that can be small.
+
+        It reports the number and nothing else. Converting it into a verdict was the previous
+        version's mistake: `length >= 2` became "a chain rather than a sequence", which is a
+        threshold set at the minimum that permits the word. Whether n links is recursion is not a
+        question the thing being measured gets to settle.
         """
         acquisitions = list(self.state["acquisitions"])
         length = 0
@@ -416,7 +446,12 @@ class Genesis:
         return {
             "acquisitions": len(acquisitions),
             "established_links": length,
-            "is_a_chain_rather_than_a_sequence": length >= 2,
+            # There is deliberately no boolean here. One existed, and it turned `length >= 2` into
+            # "this is a chain rather than a sequence" — two being the smallest number that lets the
+            # word be used at all. Hati's fifth blocking correction is that the threshold was doing
+            # the work the evidence was supposed to do. The number is reported; what it is worth is
+            # a judgement the runtime is not entitled to make on its own behalf.
+            "makes_no_recursion_claim": True,
         }
 
     # -- many cycles ----------------------------------------------------------------------
@@ -467,6 +502,7 @@ class Genesis:
         budget: Budget,
         isolation: Isolation,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
+        allow_self_reported_outcomes: bool = False,
     ) -> "Genesis":
         """Come back after process death from persisted state, re-validating both artifacts."""
         directory = Path(directory)
@@ -477,6 +513,7 @@ class Genesis:
             isolation=isolation,
             journal=Journal.load(directory / "descent_journal.json"),
             grade=grade,
+            allow_self_reported_outcomes=allow_self_reported_outcomes,
         )
 
 

@@ -26,7 +26,7 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 193 hostile offline tests |
+| `tests/test_genesis_*.py` | 204 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
@@ -241,6 +241,41 @@ The third row is the one that matters most: exhaustion without reachability is r
 The vocabulary path is checked the same way. The measured pair is refused when two demands share a
 cause, when the vocabulary already separates them, and when either demand resolves through nothing —
 so the pair that is found is the one case the data actually supports.
+
+## Hati's hostile review — GO with five blocking corrections, all applied
+
+`docs/audits/GENESIS_RUNTIME_REVIEW_HATI_2026-09-08.md` (the reviewer's own copy; the summary was
+relayed by the owner). Verdict `GO` with three MEDIUM and two LOW corrections. All five are applied,
+and three of them were surfaces this runtime's own brief had listed as open — which is the difference
+between recording a limitation and fixing it.
+
+**1 (MEDIUM) — the sandbox blocks writes, not reads.** Pushed to its sharp edge this invalidated the
+grading fix in defect 9. Every fixture returned `task["expected"]` and the task crossed the process
+boundary intact, so the grader added to stop a candidate marking its own paper was comparing the
+answer key against itself; a body that computed nothing scored full marks. The sandbox now withholds
+named keys from the task the child receives and records what it removed. `PeekingBody` is the control
+in both directions, and a third test inspects the keys that actually crossed rather than inferring
+the boundary from an outcome.
+
+**2 (LOW) — grading was optional and the difference only labelled.** `Genesis` now refuses to
+construct without a grader unless `allow_self_reported_outcomes=True` says that is what was meant. A
+label is not a refusal, and nobody should reach a self-reported verdict by forgetting an argument.
+
+**3 (MEDIUM) — the migration verification set was the caller's to choose.** A caller who wanted a
+migration to pass could pass tasks the translation happened to handle. The verification set must now
+be one the lineage was actually evaluated on, identified by the questions in it so renaming does not
+get past the check.
+
+**4 (MEDIUM) — `metamorphosis_succeeded` accepted any candidate as success.** A migrated lineage that
+improved for unrelated reasons scored the same as one that built on what it carried. At least one
+post-migration acceptance must now have its causal dependency established by the ablation the cycle
+already runs.
+
+**5 (MEDIUM) — two links is not recursion.** `causal_chain` reported `links >= 2` as "a chain rather
+than a sequence" — a threshold set at the smallest number that permits the word, with the threshold
+doing the work the evidence was supposed to do. The boolean is gone; the count is reported and the
+record carries `makes_no_recursion_claim`. The demonstration now runs four accepted cycles and
+establishes three links, so the number is no longer sitting at its own minimum.
 
 ## Known open, not fixed
 

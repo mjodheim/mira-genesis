@@ -19,7 +19,7 @@ from genesis import state as st
 from genesis import trust_root as tr
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency
 
-TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(8)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -38,13 +38,20 @@ def _seed_state():
     )
 
 
-def _genesis(*, generations: int = 6, body=bodies.parent_body, grade=bodies.grade):
+def _genesis(
+    *,
+    generations: int = 6,
+    body=bodies.parent_body,
+    grade=bodies.grade,
+    allow_self_reported_outcomes: bool = False,
+):
     return Genesis(
         state=_seed_state(),
         body_factory=body,
         budget=tr.Budget(limits={"generations": generations}),
         isolation=tr.Isolation(),
         grade=grade,
+        allow_self_reported_outcomes=allow_self_reported_outcomes,
     )
 
 
@@ -363,6 +370,7 @@ def test_the_whole_lineage_survives_process_death(tmp_path):
         body_factory=bodies.improved_body,
         budget=tr.Budget(limits={"generations": 6}),
         isolation=tr.Isolation(),
+        grade=bodies.grade,
     )
     assert restored.state["state_digest"] == genesis.state["state_digest"]
     assert restored.journal.head == genesis.journal.head
@@ -516,10 +524,10 @@ def test_a_run_of_acceptances_is_not_a_chain():
     chain = genesis.causal_chain()
     assert chain["acquisitions"] == 2
     assert chain["established_links"] == 0
-    assert chain["is_a_chain_rather_than_a_sequence"] is False
+    assert chain["makes_no_recursion_claim"] is True
 
 
-def test_two_established_links_make_a_chain():
+def test_the_chain_report_counts_links_without_grading_them():
     genesis = _genesis()
     _cycle_with(genesis, bodies.migrated_parent_body, name="first")
     _cycle_with(
@@ -539,7 +547,7 @@ def test_two_established_links_make_a_chain():
     chain = genesis.causal_chain()
     assert chain["acquisitions"] == 3
     assert chain["established_links"] == 2
-    assert chain["is_a_chain_rather_than_a_sequence"] is True
+    assert "is_a_chain_rather_than_a_sequence" not in chain
 
 
 # -- who decides whether a task was solved -----------------------------------------------------
@@ -577,7 +585,7 @@ def test_a_cheating_candidate_is_rejected_by_the_cycle_when_grading_is_on():
 
 def test_a_cheating_candidate_is_accepted_by_the_cycle_when_it_grades_itself():
     """The negative control for the fix, and the reason the flag is in every cycle record."""
-    genesis = _genesis(grade=None)
+    genesis = _genesis(grade=None, allow_self_reported_outcomes=True)
     record = _cycle_with(genesis, bodies.cheating_body, name="cheat")
     assert record["accepted"] is True, "self-reporting is what makes this candidate look good"
     assert record["outcomes_are_self_reported"] is True
@@ -666,3 +674,21 @@ def test_the_isolation_report_is_sent_before_the_candidate_exists():
     # the report did not depend on the body finishing.
     assert "filesystem_writes_permitted" in result["enforced"]
     assert all(row["outcome"] == "error" for row in result["outcomes"])
+
+
+def test_a_lineage_cannot_reach_a_self_reported_verdict_by_forgetting_an_argument():
+    """Labelling the difference is not refusing it. Saying so is the whole fix."""
+    with pytest.raises(tr.TrustRootError, match="own account of itself"):
+        Genesis(
+            state=_seed_state(),
+            body_factory=bodies.parent_body,
+            budget=tr.Budget(limits={"generations": 2}),
+            isolation=tr.Isolation(),
+        )
+
+
+def test_self_reported_outcomes_remain_available_to_a_caller_who_asks_for_them():
+    """A refusal that cannot be overridden would forbid a legitimate setup rather than surface it."""
+    genesis = _genesis(grade=None, allow_self_reported_outcomes=True)
+    assert genesis.grade is None
+    assert genesis.allow_self_reported_outcomes is True

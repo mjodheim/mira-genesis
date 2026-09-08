@@ -211,6 +211,9 @@ SUBSTRATE_OPERATIONS = {
 #   migration     migrated_parent_body           the translation: must still solve t0..t3
 #   generation 2  migrated_improved_body         gains t4 through what generation 2 acquires
 #   generation 3  migrated_further_body          gains t5, and still needs both earlier acquisitions
+#   generation 4  migrated_fourth_body           gains t6 and t7, and still needs all three
+#
+# Each generation introduces its own acquisition; the next one is ablated against it.
 #
 # Each later generation *routes* its earlier gains through the components that produced them, so an
 # ablation removes something rather than merely relabelling the verdict.
@@ -224,8 +227,19 @@ SECOND_ACQUISITION = "carrier_index"
 ROUTED_TASKS = {"t2": ACQUIRED_COMPONENT, "t3": ACQUIRED_COMPONENT}
 #: generation 2 adds t4 through its own acquisition.
 ROUTED_AFTER_MIGRATION = {**ROUTED_TASKS, "t4": SECOND_ACQUISITION}
-#: generation 3 adds t5, and keeps needing both.
-ROUTED_THIRD_GENERATION = {**ROUTED_AFTER_MIGRATION, "t5": SECOND_ACQUISITION}
+#: What generation 3 acquires, which generation 4 depends on in turn.
+THIRD_ACQUISITION = "carrier_index_ii"
+#: What generation 4 acquires.
+FOURTH_ACQUISITION = "carrier_index_iii"
+
+#: generation 3 adds t5 through its own acquisition, and keeps needing generation 2's.
+ROUTED_THIRD_GENERATION = {**ROUTED_AFTER_MIGRATION, "t5": THIRD_ACQUISITION}
+#: generation 4 adds t6 and t7 through its own, and still needs everything before it.
+ROUTED_FOURTH_GENERATION = {
+    **ROUTED_THIRD_GENERATION,
+    "t6": FOURTH_ACQUISITION,
+    "t7": FOURTH_ACQUISITION,
+}
 
 
 def migrated_parent_body():
@@ -259,12 +273,12 @@ def migrated_improved_body():
 
 
 def migrated_further_body():
-    """Generation 3: gains t5, and still routes its earlier gains through both acquisitions."""
+    """Generation 3: gains t5 through its own acquisition, still routing t4 through generation 2's."""
     return RecordBody(
         {"t0", "t1"},
         ("read",),
         routed=ROUTED_THIRD_GENERATION,
-        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION},
+        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION, THIRD_ACQUISITION},
     )
 
 
@@ -284,18 +298,43 @@ def migrated_ablated_body():
     )
 
 
+def migrated_fourth_body():
+    """Generation 4: gains t6 and t7 through its own acquisition, still needing all three before."""
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_FOURTH_GENERATION,
+        capabilities={
+            ACQUIRED_COMPONENT,
+            SECOND_ACQUISITION,
+            THIRD_ACQUISITION,
+            FOURTH_ACQUISITION,
+        },
+    )
+
+
+def migrated_fourth_ablated_body():
+    """Generation 4 with generation 3's acquisition removed. The third link of the chain."""
+    return RecordBody(
+        {"t0", "t1"},
+        ("read",),
+        routed=ROUTED_FOURTH_GENERATION,
+        capabilities={ACQUIRED_COMPONENT, SECOND_ACQUISITION, FOURTH_ACQUISITION},
+    )
+
+
 def migrated_further_ablated_body():
     """Generation 3 with generation 2's acquisition removed. The second link of the chain.
 
-    One ablation shows a generation needed something earlier. Two consecutive ones show a *chain*,
-    which is the difference between improvements that happened in order and improvements that
-    depend on each other.
+    One ablation shows a generation needed something earlier. Consecutive ones show that the
+    dependence runs back through the descent rather than reaching once and stopping. How many links
+    are worth calling recursion is not settled here; the runtime reports the count.
     """
     return RecordBody(
         {"t0", "t1"},
         ("read",),
         routed=ROUTED_THIRD_GENERATION,
-        capabilities={ACQUIRED_COMPONENT},
+        capabilities={ACQUIRED_COMPONENT, THIRD_ACQUISITION},
     )
 
 

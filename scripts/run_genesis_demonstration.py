@@ -49,7 +49,7 @@ from genesis.migration import (  # noqa: E402
 )
 
 RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
-TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(8)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 def _seed_state() -> dict:
@@ -249,6 +249,13 @@ def demonstrate() -> dict:
             ablated=bodies.migrated_further_ablated_body,
             depends_on=bodies.SECOND_ACQUISITION,
         ),
+        _one(
+            genesis,
+            "improved_a_third_time_in_new_form",
+            bodies.migrated_fourth_body,
+            ablated=bodies.migrated_fourth_ablated_body,
+            depends_on=bodies.THIRD_ACQUISITION,
+        ),
     ]
     outcome = metamorphosis_succeeded(migration, after)
     steps.append(
@@ -280,13 +287,13 @@ def demonstrate() -> dict:
         )
 
     chain = genesis.causal_chain()
-    steps.append({"step": "the_acquisitions_form_a_chain_rather_than_a_sequence", **chain})
+    steps.append({"step": "how_many_acquisitions_actually_depend_on_the_one_before", **chain})
 
     directory = ROOT / "experiments" / "GENESIS" / "runtime_state"
     genesis.persist(directory)
     restored = Genesis.restore(
         directory,
-        body_factory=bodies.migrated_further_body,
+        body_factory=bodies.migrated_fourth_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
         grade=bodies.grade,

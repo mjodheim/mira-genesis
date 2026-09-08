@@ -18,11 +18,14 @@ Three rules follow, and each is checked rather than asserted:
 2. **Everything the lineage owned arrives with it** — acquisitions, tools, the component registry
    with its extension certificates, the diagnostic vocabulary, useful memory and the causal journal.
    The check is by name and digest, not by count.
-3. **What the lineage could do arrives too.** Rule 2 compares what the lineage *recorded*; for a
-   long time nothing compared what it could still *do*, so a translation could drop every capability
-   and the record would say nothing was lost — because nothing being counted had been. Both bodies
-   are now run over the same tasks and the arrival is refused if it solves strictly less, unless a
-   lossy arrival is explicitly intended.
+3. **What the lineage could do arrives too, measured on work it was actually judged by.** Rule 2
+   compares what the lineage *recorded*; for a long time nothing compared what it could still *do*,
+   so a translation could drop every capability and the record would say nothing was lost — because
+   nothing being counted had been. Both bodies are now run over the same tasks and the arrival is
+   refused if it solves strictly less, unless a lossy arrival is explicitly intended. And the
+   verification set may not be one the caller invented for the occasion: a migration checked against
+   tasks the lineage never faced measures the set rather than the translation, so the set has to be
+   one the lineage was evaluated on.
 4. **The journal continues.** The post-migration chain links to the pre-migration head, so the
    descent is one lineage rather than two that resemble each other.
 
@@ -131,7 +134,18 @@ def capability_carried(
     project, arriving one level lower down. So both bodies are run over the same tasks under the same
     isolation and the comparison is made on raw per-task outcomes.
     """
+    from genesis.loop import task_set_digest
     from genesis.sandbox import run_candidate
+
+    # Hati's third blocking correction. The caller chose these tasks, and a caller who wants the
+    # migration to pass can choose tasks the translation happens to handle. A verification set the
+    # lineage was never actually evaluated on measures the set, not the translation.
+    evaluated = getattr(genesis, "evaluated_task_digests", None)
+    if evaluated is not None and task_set_digest(tasks) not in evaluated:
+        raise MigrationError(
+            "the translation was offered a task set this lineage has never been evaluated on; "
+            "verify a migration against the work the lineage was actually judged by"
+        )
 
     grade = getattr(genesis, "grade", None)
     before = run_candidate(
@@ -299,8 +313,20 @@ def metamorphosis_succeeded(
 
     M084's correction is the reason this function exists: a lineage that only replays what it knew
     has transported its output, and transported output is not transported intelligence.
+
+    Hati's fourth blocking correction is that "accepted a candidate" was too weak a proxy for that.
+    Any acceptance counted, including one whose dependence on anything the lineage brought with it
+    was never examined — so a migrated lineage that improved for unrelated reasons scored the same
+    as one that built on what it carried. At least one post-migration acceptance must now have its
+    causal dependency **established** by the ablation the cycle already runs. That is a bar the
+    runtime measures rather than a stronger word for the same observation.
     """
     accepted = [record for record in post_migration_cycles if record.get("accepted")]
+    causal = [
+        record
+        for record in accepted
+        if (record.get("causal_dependency") or {}).get("established")
+    ]
     reasons: list[str] = []
     if not migration.get("journal_continues"):
         reasons.append("the post-migration journal does not chain to the departure head")
@@ -312,10 +338,16 @@ def metamorphosis_succeeded(
         reasons.append(
             "the migrated lineage accepted no new candidate, so it replayed rather than evolved"
         )
+    elif not causal:
+        reasons.append(
+            "the migrated lineage accepted a candidate but none was shown to depend on what it "
+            "carried across, so the improvement may have nothing to do with the migration"
+        )
     return {
         "succeeded": not reasons,
         "reasons": reasons,
         "accepted_after_migration": len(accepted),
+        "causally_established_after_migration": len(causal),
         "cycles_after_migration": len(post_migration_cycles),
-        "is_transported_intelligence_rather_than_transported_output": bool(accepted),
+        "is_transported_intelligence_rather_than_transported_output": bool(causal),
     }

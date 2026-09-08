@@ -25,7 +25,7 @@ from genesis.migration import (
     migrate,
 )
 
-TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(8)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -53,14 +53,19 @@ def _genesis(**limits):
     )
 
 
-def _once(genesis, factory, name="candidate"):
+def _once(genesis, factory, name="candidate", ablated=None, depends_on=""):
     queue = [factory]
 
     def propose(_genesis, _tasks):
         if not queue:
             return None
         return Proposal(
-            name=name, body_factory=queue.pop(0), provenance=LINEAGE, rationale={}
+            name=name,
+            body_factory=queue.pop(0),
+            provenance=LINEAGE,
+            rationale={},
+            ablated_body_factory=ablated,
+            depends_on=depends_on,
         )
 
     return genesis.cycle(TASKS, propose)
@@ -195,13 +200,44 @@ def test_a_lineage_that_arrives_and_evolves_again_has_metamorphosed():
     discover(substrate, ["read"], genesis.budget)
     record = migrate(genesis, substrate, _translate, used_operations=["read"])
 
-    after = [_once(genesis, bodies.migrated_improved_body, name="improved_in_B")]
+    after = [
+        _once(
+            genesis,
+            bodies.migrated_improved_body,
+            name="improved_in_B",
+            ablated=bodies.migrated_ablated_body,
+            depends_on=bodies.ACQUIRED_COMPONENT,
+        )
+    ]
     outcome = metamorphosis_succeeded(record, after)
 
     assert outcome["succeeded"] is True
     assert outcome["reasons"] == []
     assert outcome["accepted_after_migration"] == 1
+    assert outcome["causally_established_after_migration"] == 1
     assert outcome["is_transported_intelligence_rather_than_transported_output"] is True
+
+
+def test_an_acceptance_nobody_examined_is_not_metamorphosis():
+    """"Accepted a candidate" was too weak a proxy: it counted improvements for unrelated reasons.
+
+    This lineage arrives intact and accepts a better candidate, and that is still not shown to have
+    anything to do with what it carried across.
+    """
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"], tasks=TASKS)
+
+    after = [_once(genesis, bodies.migrated_improved_body, name="improved_in_B")]
+    outcome = metamorphosis_succeeded(record, after)
+
+    assert outcome["accepted_after_migration"] == 1, "it did accept a candidate"
+    assert outcome["causally_established_after_migration"] == 0
+    assert outcome["succeeded"] is False
+    assert any("may have nothing to do with the migration" in reason for reason in outcome["reasons"])
+    assert outcome["is_transported_intelligence_rather_than_transported_output"] is False
 
 
 def test_post_migration_cycles_that_all_reject_do_not_count_as_evolving():
@@ -252,6 +288,7 @@ def test_the_whole_metamorphosis_survives_process_death(tmp_path):
         body_factory=bodies.migrated_improved_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 10}),
         isolation=tr.Isolation(),
+        grade=bodies.grade,
     )
     assert restored.state["state_digest"] == genesis.state["state_digest"]
     assert restored.journal.head == genesis.journal.head
@@ -348,5 +385,38 @@ def test_a_verified_migration_reports_both_sides_of_the_comparison():
 def test_a_comparison_that_could_not_run_is_not_a_comparison_that_passed():
     """An instrument failure must not be read as a translation that preserved everything."""
     genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")  # so TASKS is a set it was judged by
     with pytest.raises(MigrationError, match="did not run"):
         capability_carried(genesis, bodies.unconstructible_body, TASKS)
+
+
+def test_a_migration_cannot_be_verified_against_tasks_the_lineage_never_faced():
+    """Otherwise the verification set is chosen by whoever wants the migration to pass."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    convenient = [{"task_id": "easy%d" % index, "input": index} for index in range(3)]
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError, match="never been evaluated on"):
+        migrate(genesis, substrate, _translate, used_operations=["read"], tasks=convenient)
+
+
+def test_renaming_the_tasks_does_not_get_past_that_check():
+    """The set is identified by the questions in it, not by the object handed in."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    renamed = [dict(task, task_id=task["task_id"].upper()) for task in TASKS]
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError, match="never been evaluated on"):
+        migrate(genesis, substrate, _translate, used_operations=["read"], tasks=renamed)
+
+
+def test_the_task_set_the_lineage_was_judged_by_is_accepted():
+    """Non-vacuity: the check refuses a substituted set, not every set."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"], tasks=TASKS)
+    assert record["capability"]["measured"] is True

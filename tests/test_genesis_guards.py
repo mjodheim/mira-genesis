@@ -41,11 +41,11 @@ from genesis import journal as jr
 from genesis import migration as mg
 from genesis import state as st
 from genesis import trust_root as tr
-from genesis.development_bodies import improved_body, parent_body
+from genesis.development_bodies import grade as grade_answer, improved_body, parent_body
 from genesis.loop import Genesis, Proposal
 
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
-TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+TASKS = [{"task_id": "t%d" % index, "input": index} for index in range(4)]
 ROWS = [{"task_id": "t%d" % index, "outcome": "solved"} for index in range(4)]
 
 
@@ -420,6 +420,7 @@ def test_a_verdict_from_an_unadmitted_trust_root_stops_the_cycle():
         budget=tr.Budget(limits={"generations": 4}),
         isolation=tr.Isolation(),
         admitted_source_sha256="f" * 64,
+        grade=grade_answer,
     )
     with pytest.raises(tr.TrustRootError, match="different trust root"):
         genesis.cycle(

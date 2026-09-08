@@ -29,14 +29,14 @@ record field that carries it, so the claim and its evidence cannot drift apart.
 |---|---|---|
 | 1 | It claims nothing scientific | `is_a_scientific_observation`, `advances_a_generality_gate`, `frozen` all false |
 | 2 | A rejected transformation does not end the run, and is kept | `rejected_candidate_does_not_end_the_run` |
-| 3 | A transformation is adopted **on measured evidence**, never on a self-report | `candidate_accepted_on_evidence`, with `outcomes_are_self_reported: false` |
+| 3 | A transformation is adopted **on measured evidence**, never on a self-report, and the candidate is never handed the answer | `candidate_accepted_on_evidence`, with `outcomes_are_self_reported: false`; the sandbox result's `withheld_from_the_candidate` |
 | 4 | The lineage extends its own diagnostic vocabulary against a **measured** confusable pair | `lineage_extends_its_own_diagnostic_vocabulary`, with `rests_on_a_host_supplied_oracle: false` |
 | 5 | The lineage names a component class it did not have, against an exhaustion certificate produced by probes it **composed and ran** | `lineage_names_a_component_class_it_did_not_have`, with `probe_is_experimental_not_an_oracle: true` and `reachable_with_wider_operations: true` |
 | 6 | It discovers a second substrate's semantics by probing, and migrates | `substrate_semantics_discovered_then_migrated` |
-| 7 | The translation is **verified**: the arrival can still do what the departure could | same step, `capability_measured: true` and `capability_preserved: true` |
-| 8 | It evolves again in the new form, and keeps going: **at least three accepted cycles** across the lineage | `evolved_again_in_the_new_form`, `accepted_cycles_in_the_lineage >= 3` |
-| 9 | Each later generation is shown to have **needed** the one before it, by ablation at equal budget run **inside the cycle** — at least two consecutive links | `causal_dependency:*`, each with `established: true` and `checked_by` naming the runtime |
-| 9b | The lineage reports how many of its acquisitions actually form a chain, a number that can be small | `the_acquisitions_form_a_chain_rather_than_a_sequence` |
+| 7 | The translation is **verified** on work the lineage was actually judged by: the arrival can still do what the departure could | same step, `capability_measured: true` and `capability_preserved: true` |
+| 8 | It evolves again in the new form, and keeps going: **at least three accepted cycles** across the lineage, at least one of them shown to depend on what it carried across | `evolved_again_in_the_new_form`, `accepted_cycles_in_the_lineage >= 3`, `causally_established_after_migration >= 1` |
+| 9 | Each later generation is shown to have **needed** the one before it, by ablation at equal budget run **inside the cycle** | `causal_dependency:*`, each with `established: true` and `checked_by` naming the runtime |
+| 9b | The lineage reports **how many** links were established, and does not convert that number into a verdict about recursion | `how_many_acquisitions_actually_depend_on_the_one_before`, carrying `makes_no_recursion_claim` |
 | 10 | It dies and comes back with the same state digest and journal head | `survives_process_death` |
 | 11 | The whole descent is one hash-chained journal across the substrate change | `journal_kinds` |
 | 12 | The run is deterministic | `record_digest` stable across runs |
@@ -71,9 +71,13 @@ M121 v2 paid for. Each of these is driven to its negative in the test suite, on 
 Stated here rather than in a footnote, because the gap between what the run shows and what a reader
 may take it to show is the whole risk of a demonstration like this one.
 
-- **The bodies are fixtures.** The causal chain in property 9 exists because the fixtures route their
-  later gains through the components that produced them. That shows the runtime can hold a causal
-  claim *and refuse it*; it says nothing about any real mechanism having one.
+- **The bodies are fixtures.** The links in property 9 exist because the fixtures route their later
+  gains through the components that produced them. That shows the runtime can hold a causal claim
+  *and refuse it*; it says nothing about any real mechanism having one.
+- **A count of links is not a claim of recursion.** The run establishes three. An earlier version
+  turned two into "a chain rather than a sequence", which set the threshold at the smallest number
+  that permits the word; the record now reports the count and nothing more. How many links would be
+  recursion is not a question this apparatus is entitled to settle about itself.
 - **The host still draws the partition.** The operations a lineage composes probes from, the task
   sets, and which operations each component reaches are all supplied from outside. The claim is only
   that the host supplies the alphabet and not the sentence.
