@@ -75,3 +75,42 @@ def lying_body() -> LyingBody:
 
 def unconstructible_body():
     raise RuntimeError("this body cannot be constructed at all")
+
+
+# ---------------------------------------------------------------------------------------------
+# A second substrate, for exercising migration
+# ---------------------------------------------------------------------------------------------
+class RecordBody:
+    """A body whose tasks are answered through a substrate's discovered operations.
+
+    It holds only operation *names*, never the callables, so it can be pickled into the sandbox's
+    spawned interpreter. The operations are rebound from the substrate registry in the child.
+    """
+
+    def __init__(self, solves, operation_names):
+        self.solves = set(solves)
+        self.operation_names = tuple(operation_names)
+
+    def attempt(self, task):
+        from genesis.development_bodies import SUBSTRATE_OPERATIONS
+
+        for name in self.operation_names:
+            if name not in SUBSTRATE_OPERATIONS:
+                return "error"
+        key = SUBSTRATE_OPERATIONS["read"](task)
+        return "solved" if key in self.solves else "unsolved"
+
+
+#: The operations the second substrate really supports. A lineage learns these by probing.
+SUBSTRATE_OPERATIONS = {
+    "read": lambda task: str(task["task_id"]),
+    "list": lambda task: [str(task["task_id"])],
+}
+
+
+def migrated_parent_body():
+    return RecordBody({"t0", "t1"}, ("read",))
+
+
+def migrated_improved_body():
+    return RecordBody({"t0", "t1", "t2", "t3"}, ("read",))

@@ -1,0 +1,259 @@
+"""Hostile tests for substrate metamorphosis.
+
+The test that carries the most weight is `test_arriving_intact_without_evolving_is_not_metamorphosis`.
+M084 recorded that an agent carried across four real substrates replayed an action list computed
+elsewhere, so "one unchanged agent" was an interface result rather than agent competence. A migration
+that transports outputs is transported output. Only a lineage that arrives *and then evolves* has
+transported the capacity to acquire.
+"""
+from __future__ import annotations
+
+import pytest
+
+from genesis import development_bodies as bodies
+from genesis import state as st
+from genesis import trust_root as tr
+from genesis.loop import Genesis, Proposal
+from genesis.migration import (
+    CARRIED,
+    MigrationError,
+    Substrate,
+    carried_intact,
+    discover,
+    metamorphosis_succeeded,
+    migrate,
+)
+
+TASKS = [{"task_id": "t%d" % index} for index in range(4)]
+LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
+
+
+def _genesis(**limits):
+    budget = {"generations": 8, "probes": 10}
+    budget.update(limits)
+    seed = st.create_state(
+        body_digest="b0",
+        components=[
+            {
+                "name": "operator_table",
+                "origin": "seed",
+                "certificate": None,
+                "provenance": tr.provenance("host_written", produced_by="seed"),
+            }
+        ],
+        vocabulary=[{"name": "axis_progress", "origin": "seed", "certificate": None}],
+    )
+    return Genesis(
+        state=seed,
+        body_factory=bodies.parent_body,
+        budget=tr.Budget(limits=budget),
+        isolation=tr.Isolation(),
+    )
+
+
+def _once(genesis, factory, name="candidate"):
+    queue = [factory]
+
+    def propose(_genesis, _tasks):
+        if not queue:
+            return None
+        return Proposal(
+            name=name, body_factory=queue.pop(0), provenance=LINEAGE, rationale={}
+        )
+
+    return genesis.cycle(TASKS, propose)
+
+
+def _substrate():
+    return Substrate(name="record-store", operations=bodies.SUBSTRATE_OPERATIONS)
+
+
+def _translate(state, operations):
+    return bodies.migrated_parent_body
+
+
+# -- discovery ----------------------------------------------------------------------------------
+
+def test_the_substrate_semantics_are_discovered_rather_than_declared():
+    genesis = _genesis()
+    substrate = _substrate()
+    assert substrate.discovered == {}, "nothing is known before probing"
+    found = discover(substrate, ["read", "write", "list", "transact"], genesis.budget)
+    assert found["found"] == ["read", "list"]
+    assert found["missing"] == ["write", "transact"]
+    assert sorted(substrate.discovered) == ["list", "read"]
+
+
+def test_every_probe_costs_budget():
+    genesis = _genesis(probes=3)
+    substrate = _substrate()
+    discover(substrate, ["read", "write", "list"], genesis.budget)
+    assert genesis.budget.remaining("probes") == 0
+    with pytest.raises(tr.BudgetExhausted):
+        discover(substrate, ["transact"], genesis.budget)
+
+
+# -- the migration itself -------------------------------------------------------------------------
+
+def test_a_translation_may_not_use_an_operation_the_lineage_never_discovered():
+    """Reaching past what was probed means the host redesigned the body for the new substrate."""
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError, match="never discovered"):
+        migrate(genesis, substrate, _translate, used_operations=["read", "transact"])
+
+
+def test_a_migration_carries_everything_the_lineage_owned():
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    _once(genesis, bodies.regressed_body, name="regressed")
+    before_acquisitions = list(genesis.state["acquisitions"])
+    before_observations = list(genesis.state["observations"])
+
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+
+    assert all(counts["missing"] == 0 for counts in record["carried"].values())
+    assert genesis.state["acquisitions"] == before_acquisitions
+    assert genesis.state["observations"] == before_observations
+    assert set(record["carried"]) == set(CARRIED)
+
+
+def test_the_journal_continues_across_the_migration():
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    departure_head = genesis.journal.head
+
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+
+    assert record["journal_continues"] is True
+    assert record["departure_journal_head"] == departure_head
+    migration_entries = genesis.journal.of_kind("migration")
+    assert len(migration_entries) == 1
+    assert migration_entries[0]["previous_digest"] == departure_head
+
+
+def test_a_translation_that_produces_no_body_is_refused():
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    with pytest.raises(MigrationError, match="did not produce a body factory"):
+        migrate(genesis, substrate, lambda state, ops: "not a factory", used_operations=["read"])
+
+
+def test_a_lineage_that_loses_something_did_not_arrive_intact():
+    departing = st.create_state(
+        body_digest="b0",
+        components=[
+            {
+                "name": "operator_table",
+                "origin": "seed",
+                "certificate": None,
+                "provenance": tr.provenance("host_written", produced_by="seed"),
+            }
+        ],
+        vocabulary=[{"name": "axis_progress", "origin": "seed", "certificate": None}],
+        acquisitions=[{"name": "A"}, {"name": "B"}],
+    )
+    arrived = st.create_state(
+        body_digest="b1",
+        components=departing["components"],
+        vocabulary=departing["vocabulary"],
+        acquisitions=[{"name": "A"}],
+    )
+    outcome = carried_intact(departing, arrived)
+    assert outcome["intact"] is False
+    assert any("acquisitions lost 1 of 2" in entry for entry in outcome["lost"])
+
+
+# -- what actually counts as metamorphosis --------------------------------------------------------
+
+def test_arriving_intact_without_evolving_is_not_metamorphosis():
+    """The M084 correction, made mechanical: transported output is not transported intelligence."""
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+
+    outcome = metamorphosis_succeeded(record, [])
+    assert outcome["succeeded"] is False
+    assert any("replayed rather than evolved" in reason for reason in outcome["reasons"])
+    assert outcome["is_transported_intelligence_rather_than_transported_output"] is False
+
+
+def test_a_lineage_that_arrives_and_evolves_again_has_metamorphosed():
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+
+    after = [_once(genesis, bodies.migrated_improved_body, name="improved_in_B")]
+    outcome = metamorphosis_succeeded(record, after)
+
+    assert outcome["succeeded"] is True
+    assert outcome["reasons"] == []
+    assert outcome["accepted_after_migration"] == 1
+    assert outcome["is_transported_intelligence_rather_than_transported_output"] is True
+
+
+def test_post_migration_cycles_that_all_reject_do_not_count_as_evolving():
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = migrate(genesis, substrate, _translate, used_operations=["read"])
+    after = [_once(genesis, bodies.regressed_body, name="worse_in_B")]
+    outcome = metamorphosis_succeeded(record, after)
+    assert outcome["succeeded"] is False
+    assert outcome["accepted_after_migration"] == 0
+
+
+def test_a_broken_journal_link_defeats_the_claim_even_with_a_new_acquisition():
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    record = dict(migrate(genesis, substrate, _translate, used_operations=["read"]))
+    record["journal_continues"] = False
+    after = [_once(genesis, bodies.migrated_improved_body, name="improved_in_B")]
+    outcome = metamorphosis_succeeded(record, after)
+    assert outcome["succeeded"] is False
+    assert any("does not chain" in reason for reason in outcome["reasons"])
+
+
+def test_the_migrated_body_actually_runs_in_the_new_substrate():
+    genesis = _genesis()
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    migrate(genesis, substrate, _translate, used_operations=["read"])
+    record = _once(genesis, bodies.migrated_improved_body, name="improved_in_B")
+    assert record["accepted"] is True
+    assert record["parent_sandbox"]["completed"] is True
+    assert record["candidate_sandbox"]["completed"] is True
+
+
+def test_the_whole_metamorphosis_survives_process_death(tmp_path):
+    genesis = _genesis()
+    _once(genesis, bodies.improved_body, name="improved")
+    substrate = _substrate()
+    discover(substrate, ["read"], genesis.budget)
+    migrate(genesis, substrate, _translate, used_operations=["read"])
+    _once(genesis, bodies.migrated_improved_body, name="improved_in_B")
+    genesis.persist(tmp_path)
+
+    restored = Genesis.restore(
+        tmp_path,
+        body_factory=bodies.migrated_improved_body,
+        budget=tr.Budget(limits={"generations": 8, "probes": 10}),
+        isolation=tr.Isolation(),
+    )
+    assert restored.state["state_digest"] == genesis.state["state_digest"]
+    assert restored.journal.head == genesis.journal.head
+    assert [entry["kind"] for entry in restored.journal] == [
+        entry["kind"] for entry in genesis.journal
+    ]
+    assert restored.journal.of_kind("migration")
