@@ -27,8 +27,14 @@ replayable**.
 > three. M112 removed project authorship of the worlds. M113–M125 are an apparatus-convergence line
 > against a separate carrier question and remain **untested**, not negative.
 >
-> **What is missing is not another mechanism.** These primitives have never run as one program.
-> Building that integrated runtime is the current frontier.
+> **What is missing is not another mechanism.** These primitives had never run as one program.
+> The integrated runtime now exists at [`genesis/`](genesis/), and one lineage runs the whole cycle
+> end to end — measure, diagnose, transform, verify, adopt or reject, retain, change substrate, and
+> evolve again in the new form. It runs against **fixtures**, it is DEVELOPMENT apparatus, and it
+> advances no gate. What it establishes is that the mechanisms compose and that the program refuses
+> what it claims to refuse; whether the same holds with a real mechanism attached is the current
+> frontier. Six defects found in it after the fact, and the questions still open, are recorded at
+> [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md).
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -268,6 +274,8 @@ contain.
 | The bounded Genesis finish line | [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) |
 | What would justify stronger generality language | [`MIRA_GENERALITY_CRITERIA.md`](MIRA_GENERALITY_CRITERIA.md) |
 | **The objective the project is building toward** | [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md) |
+| What the integrated runtime does, and the defects found in it | [`experiments/GENESIS/RUNTIME_NOTES.md`](experiments/GENESIS/RUNTIME_NOTES.md) |
+| How M107–M111 map onto that runtime's primitives | [`docs/GENESIS_PRIMITIVE_AUDIT.md`](docs/GENESIS_PRIMITIVE_AUDIT.md) |
 | What generality validation would additionally require, and who can do it | [`docs/COMPLETION_PATH.md`](docs/COMPLETION_PATH.md) |
 | How to serve as an independent task-bank maintainer | [`docs/CALL_FOR_INDEPENDENT_MAINTAINERS.md`](docs/CALL_FOR_INDEPENDENT_MAINTAINERS.md) |
 | The endogenous/model-mediated attribution boundary | [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md) |
