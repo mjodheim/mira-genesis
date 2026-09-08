@@ -85,11 +85,20 @@ class RecordBody:
 
     It holds only operation *names*, never the callables, so it can be pickled into the sandbox's
     spawned interpreter. The operations are rebound from the substrate registry in the child.
+
+    `routed` is what makes an ablation mean anything. A task listed there is answered *through* a
+    named acquired component rather than out of the body's own table. Take the component away and
+    the body does not degrade into its parent: it reaches for something that is not there and
+    errors. That asymmetry is the whole difference between an ablation and the verdict relabelled —
+    the parent generation never reached for the component at all, so an ablated candidate that
+    behaves exactly like the parent is a sign that nothing was actually removed.
     """
 
-    def __init__(self, solves, operation_names):
+    def __init__(self, solves, operation_names, *, routed=(), capabilities=()):
         self.solves = set(solves)
         self.operation_names = tuple(operation_names)
+        self.routed = dict(routed)
+        self.capabilities = frozenset(capabilities)
 
     def attempt(self, task):
         from genesis.development_bodies import SUBSTRATE_OPERATIONS
@@ -98,6 +107,9 @@ class RecordBody:
             if name not in SUBSTRATE_OPERATIONS:
                 return "error"
         key = SUBSTRATE_OPERATIONS["read"](task)
+        required = self.routed.get(key)
+        if required is not None:
+            return "solved" if required in self.capabilities else "error"
         return "solved" if key in self.solves else "unsolved"
 
 
@@ -108,9 +120,133 @@ SUBSTRATE_OPERATIONS = {
 }
 
 
+#: The component the later migrated generation routes its new solutions through.
+ACQUIRED_COMPONENT = "joint_registry"
+
+#: The tasks that generation answers through it rather than out of its own table.
+ROUTED_TASKS = {"t2": ACQUIRED_COMPONENT, "t3": ACQUIRED_COMPONENT}
+
+
 def migrated_parent_body():
     return RecordBody({"t0", "t1"}, ("read",))
 
 
 def migrated_improved_body():
-    return RecordBody({"t0", "t1", "t2", "t3"}, ("read",))
+    """The later generation: it gains t2 and t3 *through* the acquired component."""
+    return RecordBody(
+        {"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities={ACQUIRED_COMPONENT}
+    )
+
+
+def migrated_ablated_body():
+    """The same generation with the acquisition removed, and nothing else changed.
+
+    Comparing a candidate against its parent is the verdict, not an ablation. To show a later
+    generation *needed* an earlier acquisition, the acquisition has to be taken away and that same
+    generation retried at the same budget. Only `capabilities` differs from
+    `migrated_improved_body`; a test asserts that rather than trusting this docstring.
+    """
+    return RecordBody({"t0", "t1"}, ("read",), routed=ROUTED_TASKS, capabilities=())
+
+
+def migrated_uncoupled_ablation_body():
+    """Negative control: an 'ablated' arm that never routed through anything.
+
+    Nothing was removed from it, because it never depended on the acquisition in the first place.
+    The causal check must refuse this arm. It exists so the check's positive verdict is a finding
+    rather than a property of how the fixtures were written.
+    """
+    return RecordBody({"t0", "t1"}, ("read",))
+
+
+# ---------------------------------------------------------------------------------------------
+# Bodies that reach outside the sandbox, for testing that the isolation is applied and not merely
+# declared
+# ---------------------------------------------------------------------------------------------
+class WritingBody:
+    """A body that tries to write a file. Blocked writes surface as `error` rows."""
+
+    def __init__(self, path):
+        self.path = str(path)
+
+    def attempt(self, task):
+        with open(self.path, "w", encoding="utf-8") as handle:
+            handle.write(str(task["task_id"]))
+        return "solved"
+
+
+class NetworkingBody:
+    """A body that tries a name resolution. Blocked network access surfaces as `error` rows.
+
+    `getaddrinfo` on the loopback name succeeds without any network, so this body reports `solved`
+    when nothing stops it. That is what makes the blocked case evidence rather than a coincidence.
+    """
+
+    def attempt(self, task):
+        import socket
+
+        socket.getaddrinfo("localhost", 80)
+        return "solved"
+
+
+class LowLevelWritingBody:
+    """A body that opens for writing through `os.open`, where the intent is in the flags.
+
+    `open(path, "w")` is the spelling a guard is written against. This is the one it forgets.
+    """
+
+    def __init__(self, path):
+        self.path = str(path)
+
+    def attempt(self, task):
+        import os
+
+        descriptor = os.open(self.path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        try:
+            os.write(descriptor, str(task["task_id"]).encode("utf-8"))
+        finally:
+            os.close(descriptor)
+        return "solved"
+
+
+class DeletingBody:
+    """A body that removes a file. Nothing in it ever calls `open`."""
+
+    def __init__(self, path):
+        self.path = str(path)
+
+    def attempt(self, task):
+        import os
+
+        os.remove(self.path)
+        return "solved"
+
+
+class SubprocessBody:
+    """A body that shells out. `RLIMIT_NPROC` is not available everywhere; the guard is."""
+
+    def attempt(self, task):
+        import subprocess
+
+        subprocess.run(["/bin/true"], check=False)
+        return "solved"
+
+
+def writing_body(path):
+    return WritingBody(path)
+
+
+def low_level_writing_body(path):
+    return LowLevelWritingBody(path)
+
+
+def deleting_body(path):
+    return DeletingBody(path)
+
+
+def subprocess_body():
+    return SubprocessBody()
+
+
+def networking_body():
+    return NetworkingBody()

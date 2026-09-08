@@ -55,12 +55,124 @@ def _apply_limits(isolation: Isolation) -> tuple[list[str], list[str]]:
         unenforced.append("memory_bytes")
 
     if not isolation.subprocess_permitted:
+        # This call succeeds and does not reliably prevent a fork — a candidate ran /bin/true
+        # straight through it. It is kept because it costs nothing and helps where it does work,
+        # but the audit guard below is what actually enforces the limit, and the "enforced" entry
+        # is added there rather than here so the record does not testify to this call alone.
         try:
             resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
-            enforced.append("subprocess_permitted")
         except (ValueError, OSError):
             unenforced.append("subprocess_permitted")
+
+    # The guard can enforce what `resource` could not: if RLIMIT_NPROC was refused but the audit
+    # hook blocks process creation, the honest record is enforced, not unenforced.
+    for limit in _install_audit_guard(isolation):
+        if limit in unenforced:
+            unenforced.remove(limit)
+        if limit not in enforced:
+            enforced.append(limit)
     return enforced, unenforced
+
+
+#: Audit events that mutate the filesystem without ever going through `open`.
+_MUTATING_FILESYSTEM_EVENTS = frozenset(
+    {
+        "os.remove",
+        "os.rename",
+        "os.mkdir",
+        "os.rmdir",
+        "os.truncate",
+        "os.chmod",
+        "os.chown",
+        "os.link",
+        "os.symlink",
+        "shutil.copyfile",
+        "shutil.copymode",
+        "shutil.copystat",
+        "shutil.move",
+        "shutil.rmtree",
+    }
+)
+
+#: Audit events that reach the network. `socket.connect` alone catches urllib and http.client.
+_NETWORK_EVENTS = frozenset(
+    {
+        "socket.connect",
+        "socket.bind",
+        "socket.getaddrinfo",
+        "socket.gethostbyname",
+        "socket.sendto",
+    }
+)
+
+
+def _opens_for_writing(arguments) -> bool:
+    """Decide write intent from an `open` audit event, whichever way the caller opened the file.
+
+    `open(path, "w")` reports a string mode, but `os.open(path, os.O_WRONLY | os.O_CREAT)` reports
+    mode `None` and carries the intent in the flags. A guard that only reads the string mode lets
+    the second form straight through, which is how a limit comes to be enforced against the
+    convenient spelling and nothing else.
+    """
+    mode = arguments[1] if len(arguments) > 1 else None
+    if isinstance(mode, str):
+        return any(flag in mode for flag in "wxa+")
+    flags = arguments[2] if len(arguments) > 2 else 0
+    if not isinstance(flags, int) or flags < 0:
+        # Unreadable intent: refuse rather than guess in the candidate's favour.
+        return True
+    writing = 0
+    for name in ("O_WRONLY", "O_RDWR", "O_CREAT", "O_APPEND", "O_TRUNC"):
+        writing |= getattr(os, name, 0)
+    return bool(flags & writing)
+
+
+def _install_audit_guard(isolation: Isolation) -> list[str]:
+    """Apply the limits that `Isolation` declares but `resource` cannot express.
+
+    Filesystem writes, network access and subprocesses were declared on `Isolation` and checked by
+    `assert_no_wider_than`, and nothing ever applied them: the record said the candidate ran without
+    them while the candidate could do all three. An audit hook closes that for pure-Python
+    candidates.
+
+    It is deliberately **not** complete, and the result record says so through
+    `audit_hook_covers_pure_python_only`. A C extension calls libc directly and never raises an
+    audit event, so a candidate that ships one is outside this boundary. Anyone relying on the
+    limit for a real claim has to read that field rather than the request.
+    """
+    blocked_writes = not isolation.filesystem_writes_permitted
+    blocked_network = not isolation.network_permitted
+    blocked_subprocesses = not isolation.subprocess_permitted
+    if not (blocked_writes or blocked_network or blocked_subprocesses):
+        return []
+
+    if blocked_writes:
+        # Importing a module for the first time would otherwise try to write a .pyc and be refused,
+        # turning an ordinary import into what looks like a candidate fault. Exempting __pycache__
+        # would be a hole any candidate could drive through by choosing that path, so the bytecode
+        # writing is switched off instead.
+        sys.dont_write_bytecode = True
+
+    def _guard(event: str, arguments) -> None:
+        if blocked_network and event in _NETWORK_EVENTS:
+            raise PermissionError("this candidate may not reach the network")
+        if blocked_subprocesses and event in ("subprocess.Popen", "os.exec", "os.posix_spawn"):
+            raise PermissionError("this candidate may not start a subprocess")
+        if blocked_writes:
+            if event in _MUTATING_FILESYSTEM_EVENTS:
+                raise PermissionError("this candidate may not change the filesystem")
+            if event == "open" and _opens_for_writing(arguments):
+                raise PermissionError("this candidate may not write to the filesystem")
+
+    sys.addaudithook(_guard)
+    applied = []
+    if blocked_writes:
+        applied.append("filesystem_writes_permitted")
+    if blocked_network:
+        applied.append("network_permitted")
+    if blocked_subprocesses:
+        applied.append("subprocess_permitted")
+    return applied
 
 
 def _child(connection, body_factory, tasks, isolation):  # pragma: no cover - runs in a child
@@ -178,6 +290,7 @@ def run_candidate(
             "isolation_requested": isolation.record(),
             "separate_process": True,
             "network_permitted": False,
+            "audit_hook_covers_pure_python_only": True,
             "platform": sys.platform,
             "carries_a_score": False,
         }

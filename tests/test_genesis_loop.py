@@ -7,6 +7,7 @@ needed an earlier acquisition.
 """
 from __future__ import annotations
 
+import functools
 import json
 
 import pytest
@@ -166,6 +167,95 @@ def test_a_repeated_task_id_is_refused():
 def test_refusal_reaches_the_trust_root_as_its_own_outcome():
     result = sb.run_candidate(bodies.refusing_body, TASKS, tr.Isolation())
     assert any(row["outcome"] == "refused" for row in result["outcomes"])
+
+
+# -- isolation that is applied rather than declared ----------------------------------------------
+#
+# `filesystem_writes_permitted` and `network_permitted` were on Isolation, were checked by
+# assert_no_wider_than, appeared in the record — and applied to nothing. A declared limit nobody
+# enforces is worse than an absent one, because the record then testifies to a boundary that was
+# never there. These tests fail if the enforcement is removed again.
+
+def test_a_candidate_that_tries_to_write_is_stopped(tmp_path):
+    target = tmp_path / "escaped.txt"
+    result = sb.run_candidate(
+        functools.partial(bodies.writing_body, target), TASKS, tr.Isolation()
+    )
+    assert result["completed"] is True
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert not target.exists(), "the write was reported as blocked but the file is on disk"
+    assert "filesystem_writes_permitted" in result["enforced"]
+
+
+def test_the_write_test_is_not_passing_for_some_unrelated_reason(tmp_path):
+    """Non-vacuity: the same body succeeds when nothing stops it."""
+    target = tmp_path / "written.txt"
+    assert bodies.writing_body(target).attempt(TASKS[0]) == "solved"
+    assert target.read_text(encoding="utf-8") == TASKS[0]["task_id"]
+
+
+def test_a_candidate_that_tries_to_reach_the_network_is_stopped():
+    result = sb.run_candidate(bodies.networking_body, TASKS, tr.Isolation())
+    assert result["completed"] is True
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert "network_permitted" in result["enforced"]
+
+
+def test_the_network_test_is_not_passing_for_some_unrelated_reason():
+    """Non-vacuity: loopback resolution needs no network, so it succeeds unless something forbids it."""
+    assert bodies.networking_body().attempt(TASKS[0]) == "solved"
+
+
+def test_a_candidate_cannot_write_by_taking_the_low_level_route(tmp_path):
+    """`os.open` carries its write intent in the flags and reports mode `None`.
+
+    A guard that only inspects the string mode enforces the limit against `open(path, "w")` and
+    against nothing else. This is the spelling that found the hole.
+    """
+    target = tmp_path / "by_flags.txt"
+    result = sb.run_candidate(
+        functools.partial(bodies.low_level_writing_body, target), TASKS, tr.Isolation()
+    )
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert not target.exists()
+
+
+def test_the_low_level_write_test_is_not_passing_for_some_unrelated_reason(tmp_path):
+    target = tmp_path / "by_flags_ok.txt"
+    assert bodies.low_level_writing_body(target).attempt(TASKS[0]) == "solved"
+    assert target.read_text(encoding="utf-8") == TASKS[0]["task_id"]
+
+
+def test_a_candidate_cannot_delete_a_file(tmp_path):
+    """Deleting never touches `open`. A write guard that only watches `open` misses it entirely."""
+    target = tmp_path / "keep_me.txt"
+    target.write_text("mine", encoding="utf-8")
+    result = sb.run_candidate(
+        functools.partial(bodies.deleting_body, target), TASKS, tr.Isolation()
+    )
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert target.read_text(encoding="utf-8") == "mine", "the candidate deleted a file it was denied"
+
+
+def test_the_delete_test_is_not_passing_for_some_unrelated_reason(tmp_path):
+    target = tmp_path / "gone.txt"
+    target.write_text("x", encoding="utf-8")
+    assert bodies.deleting_body(target).attempt(TASKS[0]) == "solved"
+    assert not target.exists()
+
+
+def test_a_candidate_cannot_start_a_subprocess():
+    """`RLIMIT_NPROC` is refused on some platforms; the limit must hold anyway."""
+    result = sb.run_candidate(bodies.subprocess_body, TASKS, tr.Isolation())
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert "subprocess_permitted" in result["enforced"]
+    assert "subprocess_permitted" not in result["unenforced"]
+
+
+def test_the_sandbox_does_not_overstate_what_the_audit_hook_covers():
+    """A pure-Python hook cannot stop a C extension, and the record must not imply that it can."""
+    result = sb.run_candidate(bodies.parent_body, TASKS, tr.Isolation())
+    assert result["audit_hook_covers_pure_python_only"] is True
 
 
 # -- the loop -----------------------------------------------------------------------------------

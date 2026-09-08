@@ -39,6 +39,7 @@ from genesis import diagnosis  # noqa: E402
 from genesis import state as lineage_state  # noqa: E402
 from genesis import trust_root as tr  # noqa: E402
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency  # noqa: E402
+from genesis.sandbox import run_candidate  # noqa: E402
 from genesis.migration import (  # noqa: E402
     Substrate,
     discover,
@@ -99,6 +100,48 @@ def _speculate(state, component, demand):
 def _feature_row(state, demand):
     """The seed vocabulary maps both confusable demands to the same row."""
     return [True, False]
+
+
+def causal_step(*, candidate_sandbox, parent_sandbox, ablated_sandbox) -> dict:
+    """Assemble the causal-dependency claim, and refuse it when the ablation removed nothing.
+
+    Two things have to hold and they are not the same. The measured loss says the later generation
+    solved less without the acquisition. The distinctness check says the ablated arm is not simply
+    the parent arm wearing another name — because if it is, the comparison repeats the verdict that
+    accepted the candidate in the first place and adds no evidence at all.
+
+    Kept as a function so a test can hand it an arm that never depended on the acquisition and
+    watch it refuse. A check that cannot return `False` is not a check.
+    """
+    causal = ablation_supports_causal_dependency(
+        with_acquisition=candidate_sandbox["outcomes"],
+        without_acquisition=ablated_sandbox["outcomes"],
+        equal_budget=True,
+    )
+    distinct = ablated_sandbox["result_digest"] != parent_sandbox["result_digest"]
+    causal["ablated_arm_ran_separately"] = ablated_sandbox["completed"]
+    causal["ablated_arm_differs_from_the_parent_arm"] = distinct
+    causal["establishes_causal_dependency"] = bool(
+        causal["supported"] and distinct and ablated_sandbox["completed"]
+    )
+    causal["why_not"] = (
+        ""
+        if causal["establishes_causal_dependency"]
+        else "the ablated arm is behaviourally identical to the parent arm, so removing the "
+        "acquisition cost nothing the verdict had not already measured"
+    )
+    # Stated, not checked: which body was ablated is a property of how the arm was built, and a
+    # boolean written here would only be this runner agreeing with itself. The test suite compares
+    # the two bodies field by field instead.
+    causal["ablated_arm_construction"] = (
+        "genesis.development_bodies.migrated_ablated_body: the accepted candidate with the "
+        "acquired component removed and nothing else changed"
+    )
+    causal["fixture_not_evidence"] = (
+        "these are development fixtures; this shows the runtime can hold and refuse a causal "
+        "claim, not that any real mechanism has one"
+    )
+    return causal
 
 
 def demonstrate() -> dict:
@@ -213,10 +256,17 @@ def demonstrate() -> dict:
         }
     )
 
-    causal = ablation_supports_causal_dependency(
-        with_acquisition=after[0]["candidate_sandbox"]["outcomes"],
-        without_acquisition=after[0]["parent_sandbox"]["outcomes"],
-        equal_budget=True,
+    # A real ablation, not the verdict relabelled. The earlier acquisition is removed and the later
+    # generation is retried at the same budget in its own isolated run; comparing the candidate with
+    # its parent would only repeat the comparison the verdict already made.
+    ablated = run_candidate(
+        bodies.migrated_ablated_body, TASKS, genesis.isolation,
+        admitted_isolation=genesis.admitted_isolation,
+    )
+    causal = causal_step(
+        candidate_sandbox=after[0]["candidate_sandbox"],
+        parent_sandbox=after[0]["parent_sandbox"],
+        ablated_sandbox=ablated,
     )
     steps.append({"step": "causal_dependency_between_generations", **causal})
 
