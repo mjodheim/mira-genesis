@@ -1,9 +1,16 @@
-# Mira Genesis — completion path to an AGI-candidate presentation
+# Validation path to an AGI-candidate presentation
 
-**Navigation only — 7 September 2026.** This register creates no scientific evidence, moves no
-generality gate, fills no owner decision and changes no frozen record. It collects work that is
-already specified elsewhere into one ordered view, and attributes each remaining item to the party
-that can actually perform it.
+**Navigation only — 7 September 2026, reframed 8 September 2026.** This register creates no
+scientific evidence, moves no generality gate, fills no owner decision and changes no frozen record.
+It collects work that is already specified elsewhere into one ordered view, and attributes each
+remaining item to the party that can actually perform it.
+
+> **This is a validation roadmap, not the project's purpose.** Mira Genesis is building a program
+> capable of **empirical metamorphosis**; the objective and the architectural path are stated in
+> [`METAMORPHOSIS_TARGET.md`](METAMORPHOSIS_TARGET.md). The generality gates below measure how
+> general the resulting system is. They are a later evidence level, and reading them as the goal
+> makes the path look blocked by recruitment when the actual blocker on the program is that the
+> integrated runtime does not exist yet.
 
 Authoritative sources remain [`MIRA_GENERALITY_CRITERIA.md`](../MIRA_GENERALITY_CRITERIA.md),
 [`PROJECT_STATE.md`](../PROJECT_STATE.md), [`PROJECT_STATE.yaml`](../PROJECT_STATE.yaml),
@@ -11,9 +18,11 @@ Authoritative sources remain [`MIRA_GENERALITY_CRITERIA.md`](../MIRA_GENERALITY_
 [`CURRENT_RESEARCH_FRONTIER.md`](CURRENT_RESEARCH_FRONTIER.md) and the frozen experiment records.
 Where this file and any of them disagree, they win.
 
-## What "the end of the project" means here
+## What this register measures
 
-Two different completions exist and are routinely confused by readers.
+Three different things exist and are routinely confused by readers. The first two are covered here;
+the third — the metamorphosis objective that is the project's actual frontier — is in
+[`METAMORPHOSIS_TARGET.md`](METAMORPHOSIS_TARGET.md).
 
 **Phase-one completion is already recorded.** M042 satisfies the ten Genesis gates in the bounded
 deterministic binary-DFA laboratory, and M066 confirms the same ten gates on the CPython → Node ESM →

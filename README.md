@@ -13,15 +13,22 @@ research question is instead whether progressively more of the machinery for dia
 transformation, validation, adoption and later improvement can become **lineage-owned, causal and
 replayable**.
 
-> **Current frontier:** M095's preserved negative is resolved by M096's exact-contract result;
-> M097 qualifies bounded operation acquisition, M099 qualifies hard process-death persistence after
-> M098's preserved replay defect, and M100 now qualifies two further cumulative acquisition cycles.
-> Its state grows from one registered subtraction to addition and then weighted addition, preserves
-> and reuses all three on 9/9 fresh worlds. M101 then qualifies a carrier-neutral acquisition from
-> text, its constructive-reach transfer to records and Python syntax versus eight fresh baselines,
-> and its live necessity for a later syntax acquisition. M102 adds genuine destructive interference:
-> acquired state-owned registry policy K prevents measured forgetting and remains necessary with
-> M101 B for later SQLite capability C. Both M101 and M102 pass all 15 frozen conditions.
+> **Objective:** build a program capable of **empirical metamorphosis** — a persistent lineage that
+> diagnoses its own limitations, modifies its body and progressively its own acquisition machinery,
+> evaluates its descendants experimentally, adopts or rejects transformations on evidence, retains
+> what it acquired, and continues after a change of body or substrate. Stated in full at
+> [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md).
+>
+> **Where the line stands:** the M095–M102 acquisition line qualified cumulative, carrier-neutral
+> acquisition under real interference. M107 then extended the lower interpreter endogenously, M108
+> modified the acquisition machinery itself, M109 had a modified machinery produce the next
+> modification from the lineage's own blame findings, M110 carried such a modification into a
+> materially different consumer family, and M111 reached self-directed diagnosis at recursive depth
+> three. M112 removed project authorship of the worlds. M113–M125 are an apparatus-convergence line
+> against a separate carrier question and remain **untested**, not negative.
+>
+> **What is missing is not another mechanism.** These primitives have never run as one program.
+> Building that integrated runtime is the current frontier.
 
 For the detailed current snapshot, see
 [`docs/CURRENT_RESEARCH_FRONTIER.md`](docs/CURRENT_RESEARCH_FRONTIER.md).
@@ -93,6 +100,16 @@ machinery itself.
 | M102 | **Positive qualified scientific result** | Observable flat-registry collisions caused acquisition of state-owned policy K; K prevented destructive forgetting and remained necessary with M101 B for later SQLite capability C. Real-state, retention, causal-control, rollback and replay checks passed 15/15. |
 | M103 | **Negative fail-closed instrument result — attempt 1** | The runner completed, but the first frozen checker command could not import its replay runner; P15 was uncomputed. D072 forbids retry or repair. |
 | M104 | **Positive qualified scientific result** | The unchanged M103 mechanism qualified on a fresh population with a corrected checker: acquired S-prime added later constructor reach beyond S0, and all P1-P15 independently replayed true. |
+| M105 | **Negative checker-instrument result — attempt 1** | The unique runner executed and its result was preserved before checking, but the single frozen checker exited on a module-import error and materialised a negative without evaluating one predicate. D074 forbids retry or repair. |
+| M106 | **Positive qualified scientific result** | Corrective replication of the constructor-vocabulary extension: P1-P16 all true, replay equal, zero external calls. Both fresh arms refused by underdetermination with the semantic image exhausted. |
+| M107 | **Positive qualified scientific result** | First result in which an acquisition changes what the **interpreter** can express. S0's complete image is four of sixteen and excludes both targets by a monotonicity lemma at every bound; the lineage acquired one unary operator as state, survived producer death and reached sixteen. Ablation returns exactly to four. Recursive depth zero: the acquisition machinery is untouched. |
+| M108 | **Positive qualified scientific result** | First result in which an acquisition changes the **machinery that performs later acquisitions**. The attribution rule is held as lineage state and expressed in the lineage's own language; every rule consistent with its blame record is non-monotone, so a lineage without M107's acquisition could not express its own corrected attribution at all. |
+| M109 | **Positive qualified scientific result** | First result in which a **modified machinery produces the next modification**, and in which the blame labels are the lineage's own experimental findings rather than host annotations. `ReachImprove` is 6 ⊂ 20 ⊂ 243, strict at both inclusions. A fresh lineage handed generation two's record is refused with zero consistent rules, by lemma. |
+| M110 | **Positive qualified scientific result** | First measured transfer of an acquired **machinery** modification into a materially different consumer family, and its bound: the restored cascade strictly adds capability inside the producer's attribution census and strictly removes it outside, where a fresh control succeeds 6/6 and both descendants refuse 6/6. Reproduced 24/24 byte-stable. |
+| M111 | **Positive qualified scientific result** | Bounded self-directed diagnosis at recursive depth three: two demands presenting the identical feature row with different limiting components make every static strategy fail one of them, while an acquired policy spends a scarce probe exactly where its own pooled record shows the vocabulary undetermined. Reproduced 24/24 byte-stable. |
+| M112 | **Mixed qualified result** | Removes project **world** authorship: a blind generator with no repository mount and no network produced the worlds, and the commitment was published before the tested system was frozen. Procedure 10/10 true, M111 diagnosis reproduced 24/24, M110 transfer 22/24 negative. The carrier remains project-authored. |
+| M113-M120, M122-M125 | **Untested — apparatus convergence** | A separate carrier-line question. Successive instrument failures, transport aborts and readiness closures; H58-H65 and H67-H70 are **untested, not negative**, and advance no gate. The cross-instrument delivery allowance stands at 4 of 6 spent. |
+| M121 | **Preregistered, apparatus in DEVELOPMENT** | Targets a bounded part of long-horizon autonomy. Its v2 apparatus was found unable to return a negative and its v3 successor cannot currently return a positive; both findings are recorded and the canonical salt remains owner-gated. Neither supports any claim. |
 
 The repository preserves M095's frozen negative attempt 1, M096/M097's positive successors, M098's
 disclosed negative, M099's positive hard-persistence result, M100's positive cumulative result and
@@ -250,7 +267,8 @@ contain.
 | The historical construction path | [`ROADMAP.md`](ROADMAP.md) |
 | The bounded Genesis finish line | [`GENESIS_COMPLETION_CRITERIA.md`](GENESIS_COMPLETION_CRITERIA.md) |
 | What would justify stronger generality language | [`MIRA_GENERALITY_CRITERIA.md`](MIRA_GENERALITY_CRITERIA.md) |
-| What remains before an AGI-candidate presentation, and who can do it | [`docs/COMPLETION_PATH.md`](docs/COMPLETION_PATH.md) |
+| **The objective the project is building toward** | [`docs/METAMORPHOSIS_TARGET.md`](docs/METAMORPHOSIS_TARGET.md) |
+| What generality validation would additionally require, and who can do it | [`docs/COMPLETION_PATH.md`](docs/COMPLETION_PATH.md) |
 | How to serve as an independent task-bank maintainer | [`docs/CALL_FOR_INDEPENDENT_MAINTAINERS.md`](docs/CALL_FOR_INDEPENDENT_MAINTAINERS.md) |
 | The endogenous/model-mediated attribution boundary | [`docs/EPISTEMIC_TRACKS.md`](docs/EPISTEMIC_TRACKS.md) |
 | Preserved failures and disqualifications | [`FAILURE_LOG.md`](FAILURE_LOG.md) |
