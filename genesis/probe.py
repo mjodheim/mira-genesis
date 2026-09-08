@@ -1,49 +1,12 @@
 """Probes the lineage composes and runs, rather than oracles it consults.
 
-This module exists to close the third authored ceiling named in
-`docs/GENESIS_PRIMITIVE_AUDIT.md`, and the ceiling is subtler than the first two.
+This module closes the authored component/vocabulary ceilings by making discoveries reusable. A
+certificate is not merely a historical label: an acquired component's measured resolving
+composition becomes its executable probe semantics, and an acquired `requires_<operation>` feature
+is evaluated on later demands from the resolving composition measured for those demands.
 
-The module this replaces (`genesis/diagnosis.py`, deleted with this one's arrival) already let a
-lineage exhaust its registry and name a component class it did not have. But the question "does
-extending this component resolve the demand?" was answered by a `speculate` callable the host
-supplied, and the confusable pair behind a vocabulary extension was found through a host-written
-`feature_row`. The host therefore decided both findings, and the certificates recorded the lineage
-agreeing with it. Every certificate produced that way is the host's conclusion wearing the lineage's
-name, which is why the old module was removed rather than kept alongside: leaving an oracle-backed
-path available is leaving a way back to certificates that mean nothing.
-
-Here the same questions are answered by **experiment**:
-
-1. the lineage *composes* a probe — an ordered sequence of primitive operations — rather than
-   selecting one from a prepared list;
-2. the composition runs as an untrusted body in the sandbox, at budget cost;
-3. the verdict comes from raw per-task outcomes tallied by the trust root, not from any callable's
-   return value and not from anything the probe reports about itself.
-
-Something is still host-supplied, and pretending otherwise would be the same error one level down.
-What the host supplies is the **substrate of composition**: a registry of primitive operations, a
-task set, and which operations each held component gives access to. What the host does **not** supply
-is the answer. It cannot know which composition will work, and it cannot make a composition work by
-declaring that it does — the composition either maps the inputs to the expected outputs when it runs,
-or it does not.
-
-That difference is testable rather than asserted, and `tests/test_genesis_probe.py` tests it: the
-same code, over the same components, licenses a new component class for one task set and refuses to
-for another. An apparatus whose finding does not depend on the data decides nothing.
-
-**Exhaustion, restated.** A component is probed by searching the compositions its operations can
-express. The registry is exhausted when no held component's operations admit a composition that
-solves the demand. That licenses naming a new class only in company with the second half: a
-composition drawn from the wider operation set *does* solve it. "Nothing I have works" plus "something
-outside what I have works" is a finding about the lineage's representation. "Nothing I have works"
-alone is only a failed search.
-
-**The vocabulary side.** `measure`, `find_confusable_pair_by_experiment` and
-`vocabulary_certificate_from_experiment` do the same for the second ceiling. A demand's row through
-the lineage's per-component vocabulary is measured by probing; its cause is which held component the
-resolving composition mostly lives in, also measured; and the separating feature is read out of the
-two measurements — an operation one resolving composition needs and the other does not — rather than
-chosen and then justified.
+Seed component operation sets remain host apparatus. Acquired machinery, however, is reconstructed
+from lineage state rather than from a host edit to the component-operation table.
 """
 from __future__ import annotations
 
@@ -62,15 +25,10 @@ EXPERIMENTAL_DIAGNOSIS_SCHEMA = "genesis-experimental-diagnosis-v1"
 
 
 class ProbeError(RuntimeError):
-    """Raised when a probe cannot be trusted — most importantly when its rollback is not exact."""
+    """Raised when a probe cannot be trusted or a stored diagnostic concept has no semantics."""
 
 
 def resolve_registry(reference: str) -> Mapping[str, Any]:
-    """Look up an operation registry from a ``module:attribute`` reference.
-
-    Probes cross a process boundary, so a body may carry only picklable data. It carries the
-    reference and rebinds the callables in the child, exactly as the migrated bodies do.
-    """
     module_name, _, attribute = str(reference).partition(":")
     if not module_name or not attribute:
         raise ProbeError("an operation registry reference must look like 'module:attribute'")
@@ -81,18 +39,6 @@ def resolve_registry(reference: str) -> Mapping[str, Any]:
 
 
 class BatchProbeBody:
-    """Every composition in one search, evaluated in a single isolated run.
-
-    A process per composition is the obvious implementation and it makes a search cost more in
-    interpreter startup than in thought. Batching changes nothing that matters: the compositions are
-    all the same lineage's untrusted code, they run under the same limits, and the verdict is still
-    read off raw per-task rows — one row per (composition, task) pair — rather than off anything the
-    body reports about itself.
-
-    Each task carries the index of the composition it belongs to, so grouping the rows afterwards is
-    arithmetic on the outcomes rather than trust in the body's bookkeeping.
-    """
-
     def __init__(self, registry_reference: str, compositions: Sequence[Sequence[str]]) -> None:
         self.registry_reference = str(registry_reference)
         self.compositions = tuple(tuple(str(name) for name in item) for item in compositions)
@@ -106,27 +52,17 @@ class BatchProbeBody:
         for name in operations:
             operation = registry.get(name)
             if operation is None:
-                # An equivalent mutant lives here: deleting this raise makes the next line fail with
-                # a TypeError, which the sandbox records as the same `error` row by a less legible
-                # route. `scripts/check_genesis_guards_are_tested.py` reports it as surviving; that
-                # is what an equivalent mutant looks like, and the message is worth keeping.
-                # The equivalence was *reasoned* here and a reviewer had no way to check it without
-                # re-deriving the argument. It is now measured, and the procedure and result are in
-                # experiments/GENESIS/RUNTIME_NOTES.md so the claim can be rerun rather than trusted.
                 raise ProbeError("this composition uses %r, which the registry does not have" % name)
             value = operation(value)
         return value
 
 
 def batch_probe_body(registry_reference: str, compositions: Sequence[Sequence[str]]):
-    """Picklable factory. `run_candidate` calls this in the child to build the probe."""
     return BatchProbeBody(registry_reference, compositions)
 
 
 @dataclass(frozen=True)
 class Composition:
-    """One probe the lineage built. Its digest is what the certificate records."""
-
     operations: tuple[str, ...]
 
     def record(self) -> dict[str, Any]:
@@ -135,12 +71,6 @@ class Composition:
 
 
 def compositions(operations: Sequence[str], *, max_length: int) -> Iterator[Composition]:
-    """Every ordered composition of the available operations, shortest first.
-
-    Order matters and repetition is excluded: a lineage searching `double then increment` must not
-    have to spend its budget on `double then double` to reach it. Shortest-first means the budget
-    buys the simplest explanations before the elaborate ones.
-    """
     available = list(dict.fromkeys(str(name) for name in operations))
     for length in range(1, max(1, int(max_length)) + 1):
         for candidate in permutations(available, length):
@@ -148,20 +78,50 @@ def compositions(operations: Sequence[str], *, max_length: int) -> Iterator[Comp
 
 
 def grade_probe(task: Mapping[str, Any], answer: Any) -> str:
-    """Judge a composition's output here, in the parent, against what the task expects.
-
-    A probe that decided for itself whether it had solved the demand would be a candidate marking
-    its own paper, and every certificate resting on it would inherit that. The composition returns
-    the value it computed and nothing else — and the sandbox withholds `expected` on the way in, so
-    a composition cannot reach the value it is supposed to produce.
-    """
     return "solved" if answer == task.get("expected") else "unsolved"
 
 
 def _solves_every_task(outcomes: Sequence[Mapping[str, Any]]) -> bool:
-    """Read the raw rows. Never a score, never anything the probe said about itself."""
     rows = list(outcomes)
     return bool(rows) and all(row.get("outcome") == "solved" for row in rows)
+
+
+def _run_compositions(
+    *,
+    registry_reference: str,
+    candidates: Sequence[Composition],
+    tasks: Sequence[Mapping[str, Any]],
+    isolation: Isolation,
+) -> dict[str, Any]:
+    """Run already-budgeted compositions as one inert-data sandbox batch."""
+    cross = [
+        {
+            "task_id": "c%d::%s" % (index, task["task_id"]),
+            "composition": index,
+            "input": task["input"],
+            "expected": task["expected"],
+        }
+        for index, composition in enumerate(candidates)
+        for task in tasks
+    ]
+    run = run_candidate(
+        functools.partial(
+            batch_probe_body,
+            registry_reference,
+            [composition.operations for composition in candidates],
+        ),
+        cross,
+        isolation,
+        grade=grade_probe,
+        withhold=("expected",),
+    )
+    if not run["completed"]:
+        return {"completed": False, "run": run, "grouped": {}}
+    grouped: dict[int, list[Mapping[str, Any]]] = {}
+    for row in run["outcomes"]:
+        index = int(str(row["task_id"]).split("::", 1)[0][1:])
+        grouped.setdefault(index, []).append(row)
+    return {"completed": True, "run": run, "grouped": grouped}
 
 
 def search(
@@ -174,13 +134,6 @@ def search(
     max_length: int = 2,
     probe_dimension: str = "probes",
 ) -> dict[str, Any]:
-    """Compose probes from these operations and run them until one solves the demand.
-
-    Returns the first composition that solves every task, or reports the search exhausted. Each
-    trial costs budget and runs in its own isolated process; the budget refusing is a legitimate
-    outcome and is reported as `budget_exhausted` rather than being confused with exhaustion of the
-    search space.
-    """
     planned = list(compositions(operations, max_length=max_length))
     affordable: list[Composition] = []
     budget_exhausted = False
@@ -202,30 +155,14 @@ def search(
             "reason": "the budget refused the first probe" if budget_exhausted else "",
         }
 
-    cross = [
-        {
-            "task_id": "c%d::%s" % (index, task["task_id"]),
-            "composition": index,
-            "input": task["input"],
-            "expected": task["expected"],
-        }
-        for index, composition in enumerate(affordable)
-        for task in tasks
-    ]
-    run = run_candidate(
-        functools.partial(
-            batch_probe_body,
-            registry_reference,
-            [composition.operations for composition in affordable],
-        ),
-        cross,
-        isolation,
-        grade=grade_probe,
-        # The composition would otherwise be handed the value it is meant to compute.
-        withhold=("expected",),
+    executed = _run_compositions(
+        registry_reference=registry_reference,
+        candidates=affordable,
+        tasks=tasks,
+        isolation=isolation,
     )
-    if not run["completed"]:
-        # A probe that never ran is not evidence that its composition fails.
+    if not executed["completed"]:
+        run = executed["run"]
         return {
             "resolved": False,
             "composition": None,
@@ -236,11 +173,8 @@ def search(
             "reason": run.get("reason", ""),
         }
 
-    grouped: dict[int, list[Mapping[str, Any]]] = {}
-    for row in run["outcomes"]:
-        index = int(str(row["task_id"]).split("::", 1)[0][1:])
-        grouped.setdefault(index, []).append(row)
-
+    grouped = executed["grouped"]
+    run = executed["run"]
     attempts = []
     resolved = None
     for index, composition in enumerate(affordable):
@@ -254,8 +188,6 @@ def search(
         )
         if solved and resolved is None:
             resolved = composition
-            # Shortest-first ordering means the first solving composition is the simplest one, and
-            # the attempts after it are reported as run because they were: the batch paid for them.
     if resolved is not None:
         return {
             "resolved": True,
@@ -277,6 +209,107 @@ def search(
     }
 
 
+def _component_entry(state: Mapping[str, Any], name: str) -> Mapping[str, Any]:
+    for entry in state.get("components") or []:
+        if entry.get("name") == name:
+            return entry
+    raise ProbeError("component %r is not present in lineage state" % name)
+
+
+def component_operations_from_state(
+    state: Mapping[str, Any],
+    component: str,
+    seed_component_operations: Mapping[str, Sequence[str]],
+) -> list[str]:
+    """Reconstruct the operation semantics of a held component.
+
+    Seed components use the admitted host apparatus. Acquired components use exactly the resolving
+    composition preserved by their certificate, so they remain usable even when the host's original
+    component table knows nothing about the new name.
+    """
+    entry = _component_entry(state, component)
+    if entry.get("origin") == "acquired":
+        certificate = entry.get("certificate") or {}
+        operations = list((certificate.get("resolving_composition") or {}).get("operations") or [])
+        if not operations:
+            raise ProbeError(
+                "acquired component %r has no executable resolving composition" % component
+            )
+        return [str(name) for name in operations]
+    return [str(name) for name in (seed_component_operations.get(component) or [])]
+
+
+def _evaluate_component(
+    state: Mapping[str, Any],
+    component: str,
+    *,
+    registry_reference: str,
+    seed_component_operations: Mapping[str, Sequence[str]],
+    tasks: Sequence[Mapping[str, Any]],
+    isolation: Isolation,
+    budget,
+    max_length: int,
+) -> dict[str, Any]:
+    """Evaluate one held component according to the semantics actually stored for it."""
+    entry = _component_entry(state, component)
+    operations = component_operations_from_state(state, component, seed_component_operations)
+    if entry.get("origin") != "acquired":
+        return search(
+            registry_reference=registry_reference,
+            operations=operations,
+            tasks=tasks,
+            isolation=isolation,
+            budget=budget,
+            max_length=max_length,
+        )
+
+    # An acquired component is the exact measured composition, not a new search space assembled
+    # from its primitive names. Recombining them would silently give the acquisition more semantics
+    # than its certificate established.
+    try:
+        budget.spend("probes")
+    except BudgetExhausted:
+        return {
+            "resolved": False,
+            "composition": None,
+            "attempts": [],
+            "search_exhausted": False,
+            "budget_exhausted": True,
+            "reason": "the budget refused the acquired-component probe",
+        }
+    composition = Composition(tuple(operations))
+    executed = _run_compositions(
+        registry_reference=registry_reference,
+        candidates=[composition],
+        tasks=tasks,
+        isolation=isolation,
+    )
+    if not executed["completed"]:
+        return {
+            "resolved": False,
+            "composition": None,
+            "attempts": [],
+            "search_exhausted": False,
+            "budget_exhausted": False,
+            "instrument_failure": True,
+            "reason": executed["run"].get("reason", ""),
+        }
+    solved = _solves_every_task(executed["grouped"].get(0, []))
+    attempt = {
+        **composition.record(),
+        "solved_every_task": solved,
+        "sandbox_digest": executed["run"]["result_digest"],
+    }
+    return {
+        "resolved": solved,
+        "composition": composition.record() if solved else None,
+        "attempts": [attempt],
+        "search_exhausted": not solved,
+        "budget_exhausted": False,
+        "reason": "" if solved else "the acquired component's stored composition does not solve this demand",
+    }
+
+
 def diagnose_by_experiment(
     state: Mapping[str, Any],
     *,
@@ -287,20 +320,6 @@ def diagnose_by_experiment(
     budget,
     max_length: int = 2,
 ) -> dict[str, Any]:
-    """Probe every held component by experiment, then ask whether anything outside them works.
-
-    Two findings, and the second is what stops the first from being a failed search:
-
-    * **exhaustion** — no held component's operations admit a composition that solves the demand;
-    * **reachability** — a composition drawn from the wider operation set does solve it.
-
-    Only both together license naming a component class. Exhaustion alone says the lineage could not
-    do it; exhaustion plus reachability says the thing that is missing is a *representation*, which
-    is a claim about the lineage rather than about its luck.
-
-    The lineage state is serialized before and after and compared byte for byte, because a diagnosis
-    that quietly changed the thing it was diagnosing has measured nothing.
-    """
     before = canonical_bytes(dict(state))
     registry = resolve_registry(registry_reference)
     held = lineage_state.component_names(state)
@@ -308,10 +327,12 @@ def diagnose_by_experiment(
     probes: list[dict[str, Any]] = []
     resolved_by = None
     for component in held:
-        operations = list(component_operations.get(component) or [])
-        outcome = search(
+        operations = component_operations_from_state(state, component, component_operations)
+        outcome = _evaluate_component(
+            state,
+            component,
             registry_reference=registry_reference,
-            operations=operations,
+            seed_component_operations=component_operations,
             tasks=tasks,
             isolation=isolation,
             budget=budget,
@@ -325,6 +346,7 @@ def diagnose_by_experiment(
                 "attempts": len(outcome["attempts"]),
                 "search_exhausted": outcome["search_exhausted"],
                 "budget_exhausted": outcome.get("budget_exhausted", False),
+                "instrument_failure": outcome.get("instrument_failure", False),
                 "composition": outcome["composition"],
             }
         )
@@ -334,9 +356,7 @@ def diagnose_by_experiment(
         if outcome.get("budget_exhausted") or outcome.get("instrument_failure"):
             break
 
-    complete = len(probes) == len(held) and all(
-        record["search_exhausted"] for record in probes
-    )
+    complete = len(probes) == len(held) and all(record["search_exhausted"] for record in probes)
     exhausted = resolved_by is None and complete
 
     reachable = {"resolved": False, "composition": None}
@@ -350,11 +370,6 @@ def diagnose_by_experiment(
             max_length=max_length,
         )
 
-    # Defensive, and deliberately untested: probes run in separate processes and nothing above
-    # writes to `state`, so this cannot fire. It stays because the property it asserts is the one
-    # M111 proved by comparing serialized bytes, and losing the assertion would lose the record of
-    # why the comparison is here. `scripts/check_genesis_guards_are_tested.py` reports it as a
-    # surviving mutant; that is correct and expected.
     after = canonical_bytes(dict(state))
     if before != after:
         raise ProbeError("diagnosis mutated the lineage state; a probe must leave it untouched")
@@ -377,10 +392,30 @@ def diagnose_by_experiment(
             if resolved_by
             else "the registry was not fully probed"
             if not complete
-            else "no composition solves the demand at all, so nothing shows a representation is "
-            "missing rather than the demand being unreachable here"
+            else "no composition solves the demand at all, so nothing shows a representation is missing rather than the demand being unreachable here"
         ),
     }
+
+
+def _feature_value(
+    feature: Mapping[str, Any],
+    *,
+    component_resolved: Mapping[str, bool],
+    resolving_operations: Sequence[str],
+) -> bool:
+    """Execute the persistent semantics of one diagnostic feature."""
+    name = str(feature.get("name", ""))
+    if name.startswith("resolvable_by_"):
+        component = name[len("resolvable_by_") :]
+        return bool(component_resolved.get(component, False))
+    if feature.get("origin") == "acquired" and name.startswith("requires_"):
+        operation = name[len("requires_") :]
+        if not operation:
+            raise ProbeError("acquired diagnostic feature names no required operation")
+        return operation in set(resolving_operations)
+    raise ProbeError(
+        "diagnostic feature %r has no executable semantics; a stored label is not a vocabulary" % name
+    )
 
 
 def measure(
@@ -393,29 +428,38 @@ def measure(
     budget,
     max_length: int = 3,
 ) -> dict[str, Any]:
-    """Read a demand through the lineage's per-component vocabulary, by experiment.
-
-    The row is one boolean per held component: does *some* composition over that component's own
-    operations solve the demand. That is the lineage's current diagnostic resolution, and it is
-    measured rather than asserted.
-
-    `limiting_component` is the held component the resolving composition mostly lives in — the one
-    that would have to be extended. It is reported only when a single component strictly supplies
-    most of the composition; a tie means the demand does not sit in one component more than another
-    and saying otherwise would be inventing a cause.
-    """
+    """Measure a demand through the lineage's persistent diagnostic vocabulary."""
     registry = resolve_registry(registry_reference)
-    row: list[bool] = []
-    for component in lineage_state.component_names(state):
-        outcome = search(
+    held = lineage_state.component_names(state)
+    component_resolved: dict[str, bool] = {}
+    component_ops: dict[str, list[str]] = {}
+    component_records: dict[str, dict[str, Any]] = {}
+    for component in held:
+        component_ops[component] = component_operations_from_state(
+            state, component, component_operations
+        )
+        outcome = _evaluate_component(
+            state,
+            component,
             registry_reference=registry_reference,
-            operations=list(component_operations.get(component) or []),
+            seed_component_operations=component_operations,
             tasks=tasks,
             isolation=isolation,
             budget=budget,
             max_length=max_length,
         )
-        row.append(bool(outcome["resolved"]))
+        component_records[component] = outcome
+        component_resolved[component] = bool(outcome["resolved"])
+        if outcome.get("budget_exhausted") or outcome.get("instrument_failure"):
+            return {
+                "row": [],
+                "resolved_anywhere": False,
+                "resolving_operations": [],
+                "limiting_component": None,
+                "component_shares": {},
+                "component_measurement_incomplete": True,
+                "demand_digest": digest_of([dict(task) for task in tasks]),
+            }
 
     wider = search(
         registry_reference=registry_reference,
@@ -426,22 +470,30 @@ def measure(
         max_length=max_length,
     )
     operations = list((wider["composition"] or {}).get("operations") or [])
-    shares = {
-        component: sum(
-            1 for name in operations if name in set(component_operations.get(component) or [])
+    row = [
+        _feature_value(
+            feature,
+            component_resolved=component_resolved,
+            resolving_operations=operations,
         )
-        for component in lineage_state.component_names(state)
+        for feature in state.get("vocabulary") or []
+    ]
+    shares = {
+        component: sum(1 for name in operations if name in set(component_ops[component]))
+        for component in held
     }
     ranked = sorted(shares.items(), key=lambda item: (-item[1], item[0]))
     limiting = None
-    if operations and len(ranked) > 1 and ranked[0][1] > ranked[1][1]:
-        limiting = ranked[0][0]
+    if operations and ranked:
+        if len(ranked) == 1 or (len(ranked) > 1 and ranked[0][1] > ranked[1][1]):
+            limiting = ranked[0][0]
     return {
         "row": row,
         "resolved_anywhere": bool(wider["resolved"]),
         "resolving_operations": operations,
         "limiting_component": limiting,
         "component_shares": shares,
+        "component_measurement_incomplete": False,
         "demand_digest": digest_of([dict(task) for task in tasks]),
     }
 
@@ -456,12 +508,6 @@ def find_confusable_pair_by_experiment(
     budget,
     max_length: int = 3,
 ) -> dict[str, Any] | None:
-    """Two demands the current vocabulary reads identically, whose measured causes differ.
-
-    Nothing here is declared. The rows come from probes, the causes come from which component the
-    resolving composition mostly lives in, and both are read off raw outcomes. Without such a pair a
-    new feature is decoration, and `state.vocabulary_extension_certificate` refuses it.
-    """
     measured = [
         measure(
             state,
@@ -477,6 +523,10 @@ def find_confusable_pair_by_experiment(
     for first in range(len(measured)):
         for second in range(first + 1, len(measured)):
             left, right = measured[first], measured[second]
+            if left.get("component_measurement_incomplete") or right.get(
+                "component_measurement_incomplete"
+            ):
+                continue
             if left["row"] != right["row"]:
                 continue
             if not (left["resolved_anywhere"] and right["resolved_anywhere"]):
@@ -490,10 +540,7 @@ def find_confusable_pair_by_experiment(
             return {
                 "shared_prior_row": list(left["row"]),
                 "demand_digests": [left["demand_digest"], right["demand_digest"]],
-                "limiting_components": [
-                    left["limiting_component"],
-                    right["limiting_component"],
-                ],
+                "limiting_components": [left["limiting_component"], right["limiting_component"]],
                 "measurements": [left, right],
             }
     return None
@@ -502,24 +549,15 @@ def find_confusable_pair_by_experiment(
 def vocabulary_certificate_from_experiment(
     state: Mapping[str, Any], pair: Mapping[str, Any]
 ) -> dict[str, Any]:
-    """Turn a measured confusable pair into the certificate `state.extend_vocabulary` demands.
-
-    The separating feature is not chosen and then justified. It is read out of the measurements: an
-    operation one demand's resolving composition needs and the other's does not, named
-    ``requires_<operation>``, with each demand's value taken from its own measured composition.
-    """
     prior = lineage_state.vocabulary_names(state)
     row = list(pair["shared_prior_row"])
     if len(row) != len(prior):
         raise ProbeError(
-            "the measured row has one entry per held component (%d) and the vocabulary has %d "
-            "features; the certificate cannot be built until they describe the same thing"
+            "the measured row has one entry per held feature (%d) and the vocabulary has %d features; the certificate cannot be built until they describe the same thing"
             % (len(row), len(prior))
         )
     left, right = pair["measurements"]
-    difference = sorted(
-        set(left["resolving_operations"]) ^ set(right["resolving_operations"])
-    )
+    difference = sorted(set(left["resolving_operations"]) ^ set(right["resolving_operations"]))
     if not difference:
         raise ProbeError(
             "both demands resolve through the same operations, so no measured feature separates them"
@@ -529,12 +567,7 @@ def vocabulary_certificate_from_experiment(
         operation in set(left["resolving_operations"]),
         operation in set(right["resolving_operations"]),
     ]
-    # Defensive, and deliberately untested: `operation` comes from the symmetric difference, so it
-    # is in exactly one of the two sets and the values cannot agree. It stays because the property
-    # it asserts is the one that makes the feature a separator rather than a decoration.
-    # `scripts/check_genesis_guards_are_tested.py` reports it as a surviving mutant; that is correct
-    # and expected.
-    if values[0] == values[1]:  # pragma: no cover
+    if values[0] == values[1]:  # pragma: no cover - symmetric difference establishes this
         raise ProbeError("the proposed feature gives both demands the same value")
     return lineage_state.vocabulary_extension_certificate(
         prior_vocabulary=prior,
@@ -549,11 +582,6 @@ def vocabulary_certificate_from_experiment(
 def certificate_from_experiment(
     diagnosis: Mapping[str, Any], *, new_component: str
 ) -> dict[str, Any]:
-    """Turn an experimental diagnosis into the certificate `state.extend_components` demands.
-
-    The probe records carry the composition digests actually run, so the certificate names the
-    experiments rather than merely asserting they happened.
-    """
     if not diagnosis.get("licenses_naming_a_new_component"):
         raise ProbeError(
             "this diagnosis does not license a new component: %s" % diagnosis.get("why_not", "")
@@ -574,7 +602,5 @@ def certificate_from_experiment(
             for record in diagnosis["probes"]
         ],
         resolves_with_new_component=True,
-        # The composition that actually reached the demand travels with the certificate. Discarding
-        # it and passing a boolean threw away the positive half of the argument.
         resolving_composition=diagnosis.get("resolving_composition"),
     )
