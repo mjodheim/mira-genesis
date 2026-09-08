@@ -25,7 +25,7 @@ from genesis.migration import (
     migrate,
 )
 
-TASKS = [{"task_id": "t%d" % index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -49,6 +49,7 @@ def _genesis(**limits):
         body_factory=bodies.parent_body,
         budget=tr.Budget(limits=budget),
         isolation=tr.Isolation(),
+        grade=bodies.grade,
     )
 
 

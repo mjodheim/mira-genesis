@@ -19,10 +19,11 @@ from __future__ import annotations
 import multiprocessing
 import os
 import sys
+import time
 import traceback
 from typing import Any, Callable, Mapping, Sequence
 
-from genesis.trust_root import Isolation, TrustRootError, digest_of
+from genesis.trust_root import TASK_OUTCOMES, Isolation, TrustRootError, digest_of
 
 SANDBOX_SCHEMA = "genesis-sandbox-result-v1"
 
@@ -175,36 +176,64 @@ def _install_audit_guard(isolation: Isolation) -> list[str]:
     return applied
 
 
-def _child(connection, body_factory, tasks, isolation):  # pragma: no cover - runs in a child
+def _child(connection, body_factory, tasks, isolation, graded):  # pragma: no cover - child process
     enforced, unenforced = _apply_limits(isolation)
+    # Sent before the candidate is constructed, let alone run. A body sharing this process can reach
+    # local variables through the frame stack, so an isolation report assembled after the body ran
+    # is a report the body had the opportunity to rewrite.
+    connection.send({"kind": "isolation", "enforced": enforced, "unenforced": unenforced})
     try:
         body = body_factory()
         rows = []
         for task in tasks:
             task_id = str(task["task_id"])
             try:
-                outcome = body.attempt(task)
+                returned = body.attempt(task)
             except Exception:
-                rows.append({"task_id": task_id, "outcome": "error"})
+                rows.append({"task_id": task_id, "failed": True})
                 continue
-            if outcome not in ("solved", "unsolved", "refused", "error"):
-                rows.append({"task_id": task_id, "outcome": "error"})
+            if graded:
+                # The return value is an *answer*. The parent decides whether it is right.
+                rows.append({"task_id": task_id, "answer": returned})
+            elif returned not in ("solved", "unsolved", "refused", "error"):
+                rows.append({"task_id": task_id, "failed": True})
             else:
-                rows.append({"task_id": task_id, "outcome": outcome})
-        connection.send(
-            {"ok": True, "outcomes": rows, "enforced": enforced, "unenforced": unenforced}
-        )
+                rows.append({"task_id": task_id, "outcome": returned})
+        connection.send({"kind": "result", "ok": True, "rows": rows})
     except BaseException:
         connection.send(
-            {
-                "ok": False,
-                "traceback": traceback.format_exc(limit=8),
-                "enforced": enforced,
-                "unenforced": unenforced,
-            }
+            {"kind": "result", "ok": False, "traceback": traceback.format_exc(limit=8)}
         )
     finally:
         connection.close()
+
+
+def _outcomes_from(rows, by_identifier, grade) -> list[dict[str, Any]]:
+    """Turn the child's rows into outcomes, grading here rather than accepting the body's word.
+
+    A row the child marked `failed` becomes `error` without consulting the grader: a body that
+    raised produced no answer to grade. Everything else, in graded mode, is an answer the grader
+    judges against the real task — and a grader that returns something outside the outcome
+    vocabulary is itself a fault, recorded as `error` rather than smuggled through.
+    """
+    outcomes = []
+    for row in rows:
+        task_id = str(row.get("task_id"))
+        if row.get("failed"):
+            outcomes.append({"task_id": task_id, "outcome": "error"})
+            continue
+        if grade is None:
+            outcomes.append({"task_id": task_id, "outcome": row.get("outcome", "error")})
+            continue
+        task = by_identifier.get(task_id)
+        try:
+            verdict = grade(task, row.get("answer"))
+        except Exception:
+            verdict = "error"
+        if verdict not in TASK_OUTCOMES:
+            verdict = "error"
+        outcomes.append({"task_id": task_id, "outcome": verdict})
+    return outcomes
 
 
 def run_candidate(
@@ -213,12 +242,25 @@ def run_candidate(
     isolation: Isolation,
     *,
     admitted_isolation: Isolation | None = None,
+    grade: Callable[[Mapping[str, Any], Any], str] | None = None,
 ) -> dict[str, Any]:
     """Run a body over the tasks in a separate process and return raw per-task outcomes.
 
     The result carries only outcomes, never a score: scoring belongs to the trust root, which
     recomputes it. A candidate that crashes yields `error` rows rather than an exception, because
     a body that breaks is an observation the lineage keeps.
+
+    **Who decides whether a task was solved.** Without `grade`, the body's return value *is* the
+    outcome: the thing being judged awards its own marks, and every number downstream — including
+    everything the trust root recomputes — rests on that. Recomputing a tally from self-reported
+    rows is arithmetic on a claim, not a measurement of it, and for a long time this module's own
+    docstring said otherwise.
+
+    Supply `grade` and the body's return value becomes an **answer**. The grader runs here, in the
+    parent, against the real task, and its verdict is what enters the record. A candidate that
+    reports success it did not achieve is then simply wrong, because it never gets to say whether it
+    was right. `outcomes_are_self_reported` in the result says which of the two happened, so nobody
+    downstream has to guess.
     """
     if admitted_isolation is not None:
         isolation.assert_no_wider_than(admitted_isolation)
@@ -228,41 +270,55 @@ def run_candidate(
     identifiers = [str(task["task_id"]) for task in tasks]
     if len(set(identifiers)) != len(identifiers):
         raise SandboxError("the task set repeats a task id")
+    by_identifier = {str(task["task_id"]): task for task in tasks}
 
     context = multiprocessing.get_context("spawn")
     parent_connection, child_connection = context.Pipe(duplex=False)
     process = context.Process(
-        target=_child, args=(child_connection, body_factory, list(tasks), isolation)
+        target=_child,
+        args=(child_connection, body_factory, list(tasks), isolation, grade is not None),
     )
     process.start()
     child_connection.close()
 
+    # Two messages: the isolation report, sent before the candidate exists, then the result. A
+    # candidate can forge later messages from inside its own process, so only the first is trusted
+    # for isolation and only the second is read for rows.
     timeout = max(1.0, float(isolation.wall_clock_seconds))
-    payload: dict[str, Any] | None = None
-    if parent_connection.poll(timeout):
+    deadline = time.monotonic() + timeout
+    messages: list[dict[str, Any]] = []
+    while len(messages) < 2:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0 or not parent_connection.poll(remaining):
+            break
         try:
-            payload = parent_connection.recv()
+            messages.append(parent_connection.recv())
         except EOFError:
-            payload = None
+            break
     process.join(timeout=1.0)
-    timed_out = payload is None
     if process.is_alive():  # pragma: no cover - only on a genuine overrun
         process.terminate()
         process.join(timeout=5.0)
     parent_connection.close()
 
+    isolation_report = messages[0] if messages and messages[0].get("kind") == "isolation" else {}
+    payload = messages[1] if len(messages) > 1 else None
+    enforced = list(isolation_report.get("enforced") or [])
+    unenforced = list(isolation_report.get("unenforced") or [])
+
     # An infrastructure failure must never look like a candidate failure. If the child never ran,
     # its rows are not evidence about the body and the caller must abort the comparison rather than
     # score a candidate on outcomes the sandbox invented for it. This is the same distinction M124
     # had to learn between a delivery outcome and a scientific one.
-    if timed_out:
+    if payload is None:
         result = {
             "completed": False,
             "instrument_failure": True,
             "reason": "wall clock exceeded, or the child process never reported",
             "outcomes": [],
-            "enforced": [],
-            "unenforced": ["cpu_seconds", "memory_bytes", "subprocess_permitted"],
+            "enforced": enforced,
+            "unenforced": unenforced
+            or ["cpu_seconds", "memory_bytes", "subprocess_permitted"],
         }
     elif not payload.get("ok"):
         result = {
@@ -271,17 +327,17 @@ def run_candidate(
             "reason": "the candidate body could not be constructed in the child process",
             "traceback": payload.get("traceback", ""),
             "outcomes": [],
-            "enforced": list(payload.get("enforced") or []),
-            "unenforced": list(payload.get("unenforced") or []),
+            "enforced": enforced,
+            "unenforced": unenforced,
         }
     else:
         result = {
             "completed": True,
             "instrument_failure": False,
             "reason": "",
-            "outcomes": list(payload["outcomes"]),
-            "enforced": list(payload.get("enforced") or []),
-            "unenforced": list(payload.get("unenforced") or []),
+            "outcomes": _outcomes_from(payload.get("rows") or [], by_identifier, grade),
+            "enforced": enforced,
+            "unenforced": unenforced,
         }
 
     result.update(
@@ -291,6 +347,7 @@ def run_candidate(
             "separate_process": True,
             "network_permitted": False,
             "audit_hook_covers_pure_python_only": True,
+            "outcomes_are_self_reported": grade is None,
             "platform": sys.platform,
             "carries_a_score": False,
         }

@@ -133,13 +133,14 @@ def capability_carried(
     """
     from genesis.sandbox import run_candidate
 
+    grade = getattr(genesis, "grade", None)
     before = run_candidate(
         genesis.body_factory, tasks, genesis.isolation,
-        admitted_isolation=genesis.admitted_isolation,
+        admitted_isolation=genesis.admitted_isolation, grade=grade,
     )
     after = run_candidate(
         arrived_body_factory, tasks, genesis.isolation,
-        admitted_isolation=genesis.admitted_isolation,
+        admitted_isolation=genesis.admitted_isolation, grade=grade,
     )
     if not (before["completed"] and after["completed"]):
         # A comparison that could not run is not a comparison that passed.

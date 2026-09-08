@@ -48,6 +48,17 @@ def test_a_transformation_is_adopted_on_evidence(record):
     assert step["acquisitions"] == 1
 
 
+def test_the_evidence_is_not_the_candidate_s_own_account_of_itself(record):
+    """The trust root recomputing a tally is worth nothing if the candidate wrote the rows.
+
+    `tests/test_genesis_loop.py` carries the load-bearing pair: one body that wins everything when
+    it grades itself and scores zero when the parent grades. This asserts the demonstration runs on
+    the second footing.
+    """
+    step = _step(record, "candidate_accepted_on_evidence")
+    assert step["outcomes_are_self_reported"] is False
+
+
 def test_the_lineage_names_a_component_class_it_did_not_have(record):
     """The first authored ceiling, opened by the lineage rather than by editing a tuple."""
     step = _step(record, "lineage_names_a_component_class_it_did_not_have")
@@ -189,10 +200,17 @@ def test_each_ablated_arm_is_its_candidate_minus_one_acquisition(
 
 
 def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
-    """What makes the removal real: the candidate reaches for a component that is not there."""
+    """What makes the removal real: the candidate reaches for a component that is not there.
+
+    t2 and t3 are `error` rather than `unsolved` because the body raises instead of returning a
+    wrong answer. A parent that had merely never learned those tasks would return nothing for them,
+    which grades as `unsolved`; this body reaches.
+    """
     outcomes = {
         row["task_id"]: row["outcome"]
-        for row in run_candidate(bodies.migrated_ablated_body, TASKS, tr.Isolation())["outcomes"]
+        for row in run_candidate(
+            bodies.migrated_ablated_body, TASKS, tr.Isolation(), grade=bodies.grade
+        )["outcomes"]
     }
     assert outcomes == {
         "t0": "solved",

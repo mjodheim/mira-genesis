@@ -29,7 +29,7 @@ record field that carries it, so the claim and its evidence cannot drift apart.
 |---|---|---|
 | 1 | It claims nothing scientific | `is_a_scientific_observation`, `advances_a_generality_gate`, `frozen` all false |
 | 2 | A rejected transformation does not end the run, and is kept | `rejected_candidate_does_not_end_the_run` |
-| 3 | A transformation is adopted **on measured evidence**, never on a self-report | `candidate_accepted_on_evidence` |
+| 3 | A transformation is adopted **on measured evidence**, never on a self-report | `candidate_accepted_on_evidence`, with `outcomes_are_self_reported: false` |
 | 4 | The lineage extends its own diagnostic vocabulary against a **measured** confusable pair | `lineage_extends_its_own_diagnostic_vocabulary`, with `rests_on_a_host_supplied_oracle: false` |
 | 5 | The lineage names a component class it did not have, against an exhaustion certificate produced by probes it **composed and ran** | `lineage_names_a_component_class_it_did_not_have`, with `probe_is_experimental_not_an_oracle: true` and `reachable_with_wider_operations: true` |
 | 6 | It discovers a second substrate's semantics by probing, and migrates | `substrate_semantics_discovered_then_migrated` |
@@ -61,8 +61,10 @@ M121 v2 paid for. Each of these is driven to its negative in the test suite, on 
   unestablished rather than passed; an arm that could not run aborts the cycle instead of being
   scored; and a run of acceptances with no arms reports a chain length of zero
   (`tests/test_genesis_loop.py`);
-- **property 3** — a body that reports a flattering summary alongside honest per-task outcomes is
-  scored on the outcomes (`LyingBody`, `tests/test_genesis_loop.py`).
+- **property 3** — a body that reports a flattering summary alongside honest per-task answers is
+  scored on the answers (`LyingBody`); and, the sharper case, one body that claims every task wins
+  everything when it grades itself and scores zero when the parent grades, so the flag in the record
+  is a real distinction rather than a label (`CheatingBody`, `tests/test_genesis_loop.py`).
 
 ## What this does not establish
 

@@ -49,7 +49,7 @@ from genesis.migration import (  # noqa: E402
 )
 
 RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
-TASKS = [{"task_id": "t%d" % index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 def _seed_state() -> dict:
@@ -102,6 +102,9 @@ def demonstrate() -> dict:
         body_factory=bodies.parent_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
+        # Without this a body's return value is its own verdict, and every number downstream rests
+        # on the thing being judged awarding its own marks.
+        grade=bodies.grade,
     )
     steps: list[dict] = []
 
@@ -120,6 +123,8 @@ def demonstrate() -> dict:
         {
             "step": "candidate_accepted_on_evidence",
             "accepted": accepted["accepted"],
+            # False here or the acceptance rests on the candidate's own account of itself.
+            "outcomes_are_self_reported": accepted["outcomes_are_self_reported"],
             "generation": genesis.state["generation"],
             "acquisitions": len(genesis.state["acquisitions"]),
         }
@@ -284,6 +289,7 @@ def demonstrate() -> dict:
         body_factory=bodies.migrated_further_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 2000}),
         isolation=tr.Isolation(),
+        grade=bodies.grade,
     )
     steps.append(
         {

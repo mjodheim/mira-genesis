@@ -291,8 +291,16 @@ def test_measuring_a_demand_costs_budget_and_the_budget_can_refuse():
     assert pair is None, "a measurement the budget cut short must not become a finding"
 
 
-def test_a_probe_body_runs_the_composition_it_was_given():
-    """The body itself, outside the sandbox, so the sandbox tests are not proving this by proxy."""
+def test_a_probe_body_computes_a_value_and_does_not_judge_it():
+    """The body itself, outside the sandbox, so the sandbox tests are not proving this by proxy.
+
+    A probe that decided for itself whether it had solved the demand would be a candidate marking
+    its own paper, and every certificate resting on it would inherit that.
+    """
     body = probe.composed_probe_body(REGISTRY, ("double", "increment"))
-    assert body.attempt({"task_id": "p0", "input": 3, "expected": 7}) == "solved"
-    assert body.attempt({"task_id": "p0", "input": 3, "expected": 8}) == "unsolved"
+    assert body.attempt({"task_id": "p0", "input": 3, "expected": 7}) == 7
+    # The same call, with the task expecting something else, returns the same value: the body has
+    # no opinion about correctness at all.
+    assert body.attempt({"task_id": "p0", "input": 3, "expected": 999}) == 7
+    assert probe.grade_probe({"expected": 7}, 7) == "solved"
+    assert probe.grade_probe({"expected": 8}, 7) == "unsolved"

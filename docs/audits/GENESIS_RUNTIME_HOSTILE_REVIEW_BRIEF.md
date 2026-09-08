@@ -3,7 +3,7 @@
 **For an independent reviewer. Prepared by the agent that wrote the runtime, which is why this is a
 brief and not a review.**
 
-The `genesis/` package (nine modules, ~2400 lines) and the 183 tests that validate it have one
+The `genesis/` package (nine modules, ~2400 lines) and the 192 tests that validate it have one
 author. The same author wrote the demonstration those tests assert on, and the record the
 demonstration emits. There is no epistemic separation anywhere in that chain. Everything below is a
 request for the separation the author cannot supply for himself.
@@ -41,7 +41,7 @@ running program rather than as properties of how the author wrote the fixtures.*
 
 The author will read this and act on it. Two consequences:
 
-- do not soften a finding because the code looks careful. It looked careful in the nine places it
+- do not soften a finding because the code looks careful. It looked careful in the ten places it
   was already wrong (below), and it looked careful in M121 v2 while being unfalsifiable;
 - the author's own found-and-fixed defects are not evidence he found the others. They are evidence of
   what class of mistake he makes, which should tell you where to look next.
@@ -81,7 +81,14 @@ whether that shape recurs somewhere still unfixed.
    demonstration script. Any other driver of the loop got no check at all. The cycle runs it now,
    proposals carry their ablation arms, and `causal_chain` counts the links that were actually
    established.
-9. **Half the refusals had never been exercised.** Defects 1–8 were found by reading the code
+9. **The candidate awarded its own marks.** The trust root recomputes every number from raw
+   per-task rows and never reads a score — and `body.attempt(task)` *returned the outcome*, so the
+   rows it recomputed from came out of the candidate's own process. A body returning `"solved"` for
+   everything was, as far as the runtime could tell, solving everything, and `trust_root.py`'s
+   docstring said it never consults anything produced by the thing being judged. A host-side `grade`
+   now makes the return value an *answer* the parent judges; `outcomes_are_self_reported` records
+   which footing a result stands on, because `decide()` cannot tell the two apart.
+10. **Half the refusals had never been exercised.** Defects 1–9 were found by reading the code
    adversarially, which finds only what the reader thinks to look for. Asking the question
    mechanically — `scripts/check_genesis_guards_are_tested.py`, which deletes each `raise` in turn
    and reruns the suite — found **35 of 68 guards surviving**, at a moment when 110 tests passed.
@@ -121,12 +128,21 @@ Specifically:
 
 ### 2. Checks that reread a boolean the runner wrote
 
-Trace every boolean in the record back to what produced it. The author believes the trust root
-(`genesis/trust_root.py`) recomputes verdicts from raw per-task outcomes and never reads a
-self-reported score — `LyingBody` and
-`test_a_candidate_cannot_win_by_reporting_a_summary` exist to prove it. **Find the path that
-bypasses that.** In particular: does anything downstream of `cycle()` consult a field that a
-candidate could influence?
+Trace every boolean in the record back to what produced it. The trust root recomputes verdicts from
+raw per-task rows and never reads a self-reported score — `LyingBody` and
+`test_a_candidate_cannot_win_by_reporting_a_summary` prove that much, and it was for a long time far
+less than it sounded, because the rows came from the candidate too (defect 9).
+
+The grader closes the outcome path. **Find what it does not close.** In particular:
+
+- the grader runs in the parent, but the *answers* it grades still arrive over a pipe from a process
+  the candidate controls. A body can reach its own frame stack; can it forge the result message
+  before the honest one is sent, and would the parent notice? The isolation report is sent before the
+  candidate exists for exactly this reason — say whether the same reasoning should apply to
+  something else;
+- `outcomes_are_self_reported` is the only thing distinguishing a graded run from an ungraded one
+  downstream. Is there any path on which a self-reported result is treated as a graded one?
+- does anything downstream of `cycle()` consult a field a candidate could influence?
 
 ### 3. Data a candidate can reach that it should not
 

@@ -22,6 +22,16 @@ repository:
    judged. M120 established the difference: authenticating a file is not the same as knowing what is
    in it, and a checker that recomputes a number *from the record the runner wrote* has verified
    nothing.
+
+   **This rule reaches exactly as far as the rows do, and no further.** For a long time the sentence
+   above was written as though it settled the matter, while the per-task rows themselves came out of
+   the candidate's own process: `attempt` returned the outcome, so the thing being judged awarded
+   its own marks and everything here was arithmetic on its claim. `sandbox.run_candidate` now takes
+   a host-side `grade`, under which a body returns an *answer* and the parent decides whether it is
+   right. `decide()` cannot tell the difference — the rows look the same either way — so every
+   sandbox result and every cycle record carries `outcomes_are_self_reported`, and a reader weighing
+   a verdict has to look at it. A tally recomputed from self-reported rows is honest arithmetic over
+   an unverified claim, which is a weaker thing than it looks.
 3. **The root verifies its own bytes before deciding.** A decision carries the digest of this
    source file. A Genesis that rewrote its evaluator cannot have the resulting verdict accepted,
    because the verdict names bytes that no longer match.
@@ -181,6 +191,10 @@ def _tally(outcomes: Sequence[Mapping[str, Any]], label: str) -> dict[str, Any]:
 
     Deliberately ignores any aggregate the arm reported. If an arm hands us a summary, we do not
     read it; we count the rows ourselves.
+
+    Counting rows correctly says nothing about where the rows came from. Whether they were graded by
+    the host or reported by the candidate is recorded upstream, in the sandbox result, and this
+    function neither knows nor could tell.
     """
     counts = {name: 0 for name in TASK_OUTCOMES}
     seen: set[str] = set()

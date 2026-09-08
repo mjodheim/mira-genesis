@@ -26,7 +26,7 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 183 hostile offline tests |
+| `tests/test_genesis_*.py` | 192 hostile offline tests |
 
 ## The stopping criterion, and where this stands against it
 
@@ -145,9 +145,34 @@ established. On the demonstration that is **2 links out of 3 acquisitions**: the
 nothing earlier and is not counted. A claim about recursive improvement now has to read a number
 that can be small.
 
-### 9. Half the runtime's refusals had never been exercised
+### 9. The candidate awarded its own marks
 
-The eight defects above were found by reading the code adversarially. That method has an obvious limit:
+The trust root recomputes every number from raw per-task rows and never reads a score. That was
+always true and it was never enough. `body.attempt(task)` **returned the outcome**: the rows the
+trust root so carefully recomputed from came out of the candidate's own process, so the recomputation
+was honest arithmetic over an unverified claim. A body returning `"solved"` for every task was, as
+far as the whole runtime could tell, solving every task.
+
+`trust_root.py`'s docstring said it "never consults a score, a boolean or a summary produced by the
+thing being judged" — while consulting per-task outcomes produced by exactly that.
+
+`run_candidate` now takes a host-side `grade`. Under it the body returns an **answer** and the parent
+decides whether it is right, in the parent's own process, against the real task. The loop, the
+migration's capability check and the probe search all carry the grader through, and the demonstration
+runs on it.
+
+The distinction is visible rather than assumed: every sandbox result and cycle record carries
+`outcomes_are_self_reported`, because `decide()` cannot tell the two apart — the rows look identical
+— so a reader weighing a verdict has to look. `CheatingBody` is one body with two verdicts: it wins
+every task when it grades itself and scores zero when the parent grades.
+
+One related hole closed with it. The isolation report was assembled in the child and sent *after* the
+body ran, and a body sharing that process can reach local variables through the frame stack. It is
+now sent before the candidate is constructed, and only the first message is read for it.
+
+### 10. Half the runtime's refusals had never been exercised
+
+The nine defects above were found by reading the code adversarially. That method has an obvious limit:
 it finds what the reader thinks to look for. `scripts/check_genesis_guards_are_tested.py` asks the
 question mechanically instead — it deletes each `raise` in `genesis/` one at a time and reruns the
 suite, so a guard whose removal keeps the tests green is a refusal nothing ever checked.

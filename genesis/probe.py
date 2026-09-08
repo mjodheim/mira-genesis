@@ -84,31 +84,26 @@ class ComposedProbeBody:
     """A body the lineage composed: apply these operations, in this order, to each task's input.
 
     Holds names only, never callables, so it survives the pickle into the sandbox's spawned
-    interpreter. An operation the registry does not have makes the probe report `error` for that
-    task rather than raising — an unrunnable composition is an observation, not a crash.
+    interpreter. It returns the value it computed and says nothing about whether that value is
+    right: `grade_probe` decides that in the parent. An unrunnable composition raises, and the
+    sandbox records `error` for the task — an observation, not a crash.
     """
 
     def __init__(self, registry_reference: str, operations: Sequence[str]) -> None:
         self.registry_reference = str(registry_reference)
         self.operations = tuple(str(name) for name in operations)
 
-    def attempt(self, task: Mapping[str, Any]) -> str:
+    def attempt(self, task: Mapping[str, Any]) -> Any:
         from genesis.probe import resolve_registry
 
-        try:
-            registry = resolve_registry(self.registry_reference)
-        except Exception:
-            return "error"
+        registry = resolve_registry(self.registry_reference)
         value = task["input"]
         for name in self.operations:
             operation = registry.get(name)
             if operation is None:
-                return "error"
-            try:
-                value = operation(value)
-            except Exception:
-                return "error"
-        return "solved" if value == task["expected"] else "unsolved"
+                raise ProbeError("this composition uses %r, which the registry does not have" % name)
+            value = operation(value)
+        return value
 
 
 def composed_probe_body(registry_reference: str, operations: Sequence[str]):
@@ -133,24 +128,18 @@ class BatchProbeBody:
         self.registry_reference = str(registry_reference)
         self.compositions = tuple(tuple(str(name) for name in item) for item in compositions)
 
-    def attempt(self, task: Mapping[str, Any]) -> str:
+    def attempt(self, task: Mapping[str, Any]) -> Any:
         from genesis.probe import resolve_registry
 
-        try:
-            registry = resolve_registry(self.registry_reference)
-            operations = self.compositions[int(task["composition"])]
-        except Exception:
-            return "error"
+        registry = resolve_registry(self.registry_reference)
+        operations = self.compositions[int(task["composition"])]
         value = task["input"]
         for name in operations:
             operation = registry.get(name)
             if operation is None:
-                return "error"
-            try:
-                value = operation(value)
-            except Exception:
-                return "error"
-        return "solved" if value == task["expected"] else "unsolved"
+                raise ProbeError("this composition uses %r, which the registry does not have" % name)
+            value = operation(value)
+        return value
 
 
 def batch_probe_body(registry_reference: str, compositions: Sequence[Sequence[str]]):
@@ -179,6 +168,16 @@ def compositions(operations: Sequence[str], *, max_length: int) -> Iterator[Comp
     for length in range(1, max(1, int(max_length)) + 1):
         for candidate in permutations(available, length):
             yield Composition(operations=tuple(candidate))
+
+
+def grade_probe(task: Mapping[str, Any], answer: Any) -> str:
+    """Judge a composition's output here, in the parent, against what the task expects.
+
+    A probe that decided for itself whether it had solved the demand would be a candidate marking
+    its own paper, and every certificate resting on it would inherit that. The composition returns
+    the value it computed and nothing else.
+    """
+    return "solved" if answer == task.get("expected") else "unsolved"
 
 
 def _solves_every_task(outcomes: Sequence[Mapping[str, Any]]) -> bool:
@@ -243,6 +242,7 @@ def search(
         ),
         cross,
         isolation,
+        grade=grade_probe,
     )
     if not run["completed"]:
         # A probe that never ran is not evidence that its composition fails.

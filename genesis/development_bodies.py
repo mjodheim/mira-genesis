@@ -13,18 +13,35 @@ from __future__ import annotations
 from typing import Any, Mapping, Sequence
 
 
+#: What a body returns to decline a task. Refusal is a first-class outcome — M074/M078 make it a
+#: measured quantity rather than an absence — so it has to survive the trip through a grader.
+REFUSED = "__refused__"
+
+
+def grade(task: Mapping[str, Any], answer: Any) -> str:
+    """Grade an answer against the real task, in the parent, where the candidate cannot reach.
+
+    This is the whole point of the graded path: the body says what it computed, and something else
+    says whether that was right. A body that returns the string "solved" is not solving anything, it
+    is claiming to, and here the claim is simply a wrong answer.
+    """
+    if answer == REFUSED:
+        return "refused"
+    return "solved" if answer == task.get("expected") else "unsolved"
+
+
 class TableBody:
-    """A body that solves exactly the tasks it was told it can solve."""
+    """A body that answers exactly the tasks it was told it can answer."""
 
     def __init__(self, solves: Sequence[str], *, refuses: Sequence[str] = ()) -> None:
         self.solves = set(solves)
         self.refuses = set(refuses)
 
-    def attempt(self, task: Mapping[str, Any]) -> str:
+    def attempt(self, task: Mapping[str, Any]) -> Any:
         task_id = str(task["task_id"])
         if task_id in self.refuses:
-            return "refused"
-        return "solved" if task_id in self.solves else "unsolved"
+            return REFUSED
+        return task.get("expected") if task_id in self.solves else None
 
 
 class ThrowingBody:
@@ -35,7 +52,7 @@ class ThrowingBody:
 
 
 class LyingBody(TableBody):
-    """A body that reports a flattering summary alongside honest per-task outcomes.
+    """A body that reports a flattering summary alongside honest per-task answers.
 
     The trust root must ignore the summary entirely. This exists so a test can prove that rather
     than assume it.
@@ -43,6 +60,18 @@ class LyingBody(TableBody):
 
     def summary(self) -> dict[str, Any]:  # pragma: no cover - never read by design
         return {"score": 1.0, "solved_count": 999, "accepted": True}
+
+
+class CheatingBody:
+    """A body that claims every task and answers none of them.
+
+    Self-reported, it wins everything: its return value *is* the outcome, so declaring success is
+    success. Graded in the parent, the same body scores zero, because "solved" is not the answer to
+    anything. One body, two verdicts, and the difference is who decides.
+    """
+
+    def attempt(self, task: Mapping[str, Any]) -> Any:
+        return "solved"
 
 
 def parent_body() -> TableBody:
@@ -73,6 +102,10 @@ def lying_body() -> LyingBody:
     return LyingBody({"t0"})
 
 
+def cheating_body() -> CheatingBody:
+    return CheatingBody()
+
+
 def unconstructible_body():
     raise RuntimeError("this body cannot be constructed at all")
 
@@ -89,9 +122,10 @@ class RecordBody:
     `routed` is what makes an ablation mean anything. A task listed there is answered *through* a
     named acquired component rather than out of the body's own table. Take the component away and
     the body does not degrade into its parent: it reaches for something that is not there and
-    errors. That asymmetry is the whole difference between an ablation and the verdict relabelled —
-    the parent generation never reached for the component at all, so an ablated candidate that
-    behaves exactly like the parent is a sign that nothing was actually removed.
+    raises, which the sandbox records as `error`. That asymmetry is the whole difference between an
+    ablation and the verdict relabelled — the parent generation never reached for the component at
+    all, so an ablated candidate that behaves exactly like the parent is a sign that nothing was
+    actually removed.
     """
 
     def __init__(self, solves, operation_names, *, routed=(), capabilities=()):
@@ -105,12 +139,14 @@ class RecordBody:
 
         for name in self.operation_names:
             if name not in SUBSTRATE_OPERATIONS:
-                return "error"
+                raise RuntimeError("this substrate does not support %r" % name)
         key = SUBSTRATE_OPERATIONS["read"](task)
         required = self.routed.get(key)
         if required is not None:
-            return "solved" if required in self.capabilities else "error"
-        return "solved" if key in self.solves else "unsolved"
+            if required not in self.capabilities:
+                raise RuntimeError("this body reaches for %r, which it no longer has" % required)
+            return task.get("expected")
+        return task.get("expected") if key in self.solves else None
 
 
 #: The operations the second substrate really supports. A lineage learns these by probing.

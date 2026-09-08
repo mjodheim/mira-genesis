@@ -19,7 +19,7 @@ from genesis import state as st
 from genesis import trust_root as tr
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency
 
-TASKS = [{"task_id": "t%d" % index} for index in range(6)]
+TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(6)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
 
 
@@ -38,12 +38,13 @@ def _seed_state():
     )
 
 
-def _genesis(*, generations: int = 6, body=bodies.parent_body):
+def _genesis(*, generations: int = 6, body=bodies.parent_body, grade=bodies.grade):
     return Genesis(
         state=_seed_state(),
         body_factory=body,
         budget=tr.Budget(limits={"generations": generations}),
         isolation=tr.Isolation(),
+        grade=grade,
     )
 
 
@@ -125,7 +126,7 @@ def test_a_tampered_journal_file_is_refused(tmp_path):
 # -- the sandbox --------------------------------------------------------------------------------
 
 def test_a_candidate_runs_in_a_separate_process_without_network():
-    result = sb.run_candidate(bodies.parent_body, TASKS, tr.Isolation())
+    result = sb.run_candidate(bodies.parent_body, TASKS, tr.Isolation(), grade=bodies.grade)
     assert result["completed"] is True
     assert result["separate_process"] is True
     assert result["network_permitted"] is False
@@ -165,7 +166,7 @@ def test_a_repeated_task_id_is_refused():
 
 
 def test_refusal_reaches_the_trust_root_as_its_own_outcome():
-    result = sb.run_candidate(bodies.refusing_body, TASKS, tr.Isolation())
+    result = sb.run_candidate(bodies.refusing_body, TASKS, tr.Isolation(), grade=bodies.grade)
     assert any(row["outcome"] == "refused" for row in result["outcomes"])
 
 
@@ -539,3 +540,94 @@ def test_two_established_links_make_a_chain():
     assert chain["acquisitions"] == 3
     assert chain["established_links"] == 2
     assert chain["is_a_chain_rather_than_a_sequence"] is True
+
+
+# -- who decides whether a task was solved -----------------------------------------------------
+#
+# The trust root recomputes every number from raw per-task rows and never reads a score. That was
+# always true and it was never enough: the rows themselves came out of the candidate's own process,
+# so recomputing a tally from them is arithmetic on a claim rather than a measurement of it. A body
+# that returns "solved" for everything was, quite literally, solving everything.
+
+CHEAT_TASKS = [{"task_id": "t%d" % index, "expected": "a%d" % index} for index in range(4)]
+
+
+def test_a_body_that_claims_every_task_wins_when_it_grades_itself():
+    """The hole, stated as a passing test so removing the fix cannot pass silently."""
+    result = sb.run_candidate(bodies.cheating_body, CHEAT_TASKS, tr.Isolation())
+    assert result["outcomes_are_self_reported"] is True
+    assert all(row["outcome"] == "solved" for row in result["outcomes"])
+
+
+def test_the_same_body_scores_nothing_when_the_parent_grades():
+    """Same body, same tasks, one difference: it no longer gets to say whether it was right."""
+    result = sb.run_candidate(
+        bodies.cheating_body, CHEAT_TASKS, tr.Isolation(), grade=bodies.grade
+    )
+    assert result["outcomes_are_self_reported"] is False
+    assert all(row["outcome"] == "unsolved" for row in result["outcomes"])
+
+
+def test_a_cheating_candidate_is_rejected_by_the_cycle_when_grading_is_on():
+    genesis = _genesis()
+    record = _cycle_with(genesis, bodies.cheating_body, name="cheat")
+    assert record["accepted"] is False
+    assert record["outcomes_are_self_reported"] is False
+
+
+def test_a_cheating_candidate_is_accepted_by_the_cycle_when_it_grades_itself():
+    """The negative control for the fix, and the reason the flag is in every cycle record."""
+    genesis = _genesis(grade=None)
+    record = _cycle_with(genesis, bodies.cheating_body, name="cheat")
+    assert record["accepted"] is True, "self-reporting is what makes this candidate look good"
+    assert record["outcomes_are_self_reported"] is True
+
+
+def test_an_honest_body_is_graded_on_the_answers_it_actually_gives():
+    result = sb.run_candidate(
+        bodies.parent_body, CHEAT_TASKS, tr.Isolation(), grade=bodies.grade
+    )
+    outcomes = {row["task_id"]: row["outcome"] for row in result["outcomes"]}
+    assert outcomes == {"t0": "solved", "t1": "solved", "t2": "unsolved", "t3": "unsolved"}
+
+
+def test_a_body_that_raises_is_an_error_and_is_never_handed_to_the_grader():
+    """There is no answer to grade, so the grader must not be asked to invent one."""
+    seen = []
+
+    def grade(task, answer):
+        seen.append(task)
+        return "solved"
+
+    result = sb.run_candidate(bodies.throwing_body, CHEAT_TASKS, tr.Isolation(), grade=grade)
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+    assert seen == [], "a body that produced nothing must not be graded as though it had"
+
+
+def test_a_grader_that_raises_yields_error_rather_than_bringing_down_the_run():
+    def grade(task, answer):
+        raise RuntimeError("this grader is broken")
+
+    result = sb.run_candidate(bodies.parent_body, CHEAT_TASKS, tr.Isolation(), grade=grade)
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+
+
+def test_a_grader_returning_something_outside_the_vocabulary_is_a_fault_not_a_pass():
+    def grade(task, answer):
+        return "brilliant"
+
+    result = sb.run_candidate(bodies.parent_body, CHEAT_TASKS, tr.Isolation(), grade=grade)
+    assert all(row["outcome"] == "error" for row in result["outcomes"])
+
+
+def test_the_isolation_report_is_sent_before_the_candidate_exists():
+    """A body sharing the process can reach locals through the frame stack.
+
+    An isolation report assembled after the body ran is a report the body had the chance to
+    rewrite, so it is sent first and read from the first message only.
+    """
+    result = sb.run_candidate(bodies.throwing_body, CHEAT_TASKS, tr.Isolation())
+    # The body raised on every task and the limits are still reported, which can only be true if
+    # the report did not depend on the body finishing.
+    assert "filesystem_writes_permitted" in result["enforced"]
+    assert all(row["outcome"] == "error" for row in result["outcomes"])

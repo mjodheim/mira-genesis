@@ -27,6 +27,11 @@ scored as a candidate failure.
 
 The loop never decides anything. It gathers raw outcomes and hands them to the trust root, which
 recomputes the comparison and returns the verdict.
+
+**Who grades.** Recomputing a tally from rows the candidate wrote is arithmetic on a claim rather
+than a measurement of it. Pass `grade` to `Genesis` and a body's return value becomes an answer the
+parent judges against the real task; leave it out and the body awards its own marks. Every cycle
+record carries `outcomes_are_self_reported` so the difference is never left to be assumed.
 """
 from __future__ import annotations
 
@@ -51,9 +56,14 @@ CAMPAIGN_SCHEMA = "genesis-campaign-v1"
 
 
 class Body(Protocol):
-    """The minimum a body must offer. Anything richer is the lineage's business, not the loop's."""
+    """The minimum a body must offer. Anything richer is the lineage's business, not the loop's.
 
-    def attempt(self, task: Mapping[str, Any]) -> str:  # pragma: no cover - protocol
+    What `attempt` returns depends on who grades. With a grader it is an **answer** the parent
+    judges; without one it is the body's own verdict on itself, which is a much weaker thing and is
+    marked as such in every record it reaches.
+    """
+
+    def attempt(self, task: Mapping[str, Any]) -> Any:  # pragma: no cover - protocol
         ...
 
 
@@ -93,6 +103,7 @@ class Genesis:
         isolation: Isolation,
         journal: Journal | None = None,
         admitted_source_sha256: str | None = None,
+        grade: Callable[[Mapping[str, Any], Any], str] | None = None,
     ) -> None:
         from genesis.trust_root import source_digest
 
@@ -102,6 +113,11 @@ class Genesis:
         self.isolation = isolation
         self.admitted_isolation = isolation
         self.admitted_source_sha256 = admitted_source_sha256 or source_digest()
+        # Host-supplied and host-side. Without it a body's return value *is* its outcome, so the
+        # thing being judged awards its own marks and everything downstream rests on that; with it
+        # the body supplies an answer and the parent decides. The cycle records which happened
+        # rather than leaving a reader to assume the stronger one.
+        self.grade = grade
         self.journal = journal if journal is not None else Journal()
         if not len(self.journal):
             self.journal.append(
@@ -163,7 +179,11 @@ class Genesis:
             }
 
         parent = run_candidate(
-            self.body_factory, tasks, self.isolation, admitted_isolation=self.admitted_isolation
+            self.body_factory,
+            tasks,
+            self.isolation,
+            admitted_isolation=self.admitted_isolation,
+            grade=self.grade,
         )
         if not parent["completed"]:
             return abort("parent", parent)
@@ -202,12 +222,17 @@ class Genesis:
             tasks,
             self.isolation,
             admitted_isolation=self.admitted_isolation,
+            grade=self.grade,
         )
         if not candidate["completed"]:
             return abort("candidate", candidate)
         control = (
             run_candidate(
-                control_factory, tasks, self.isolation, admitted_isolation=self.admitted_isolation
+                control_factory,
+                tasks,
+                self.isolation,
+                admitted_isolation=self.admitted_isolation,
+                grade=self.grade,
             )
             if control_factory is not None
             else None
@@ -306,6 +331,7 @@ class Genesis:
             "parent_sandbox": parent,
             "candidate_sandbox": candidate,
             "control_sandbox": control,
+            "outcomes_are_self_reported": candidate["outcomes_are_self_reported"],
             "causal_dependency": causal["record"],
             "journal_entry": entry["entry_digest"],
             "state_digest": self.state["state_digest"],
@@ -343,6 +369,7 @@ class Genesis:
             tasks,
             self.isolation,
             admitted_isolation=self.admitted_isolation,
+            grade=self.grade,
         )
         if not run["completed"]:
             return {"instrument_abort": True, "run": run, "record": {"established": False}}
@@ -439,6 +466,7 @@ class Genesis:
         body_factory: Callable[[], Body],
         budget: Budget,
         isolation: Isolation,
+        grade: Callable[[Mapping[str, Any], Any], str] | None = None,
     ) -> "Genesis":
         """Come back after process death from persisted state, re-validating both artifacts."""
         directory = Path(directory)
@@ -448,6 +476,7 @@ class Genesis:
             budget=budget,
             isolation=isolation,
             journal=Journal.load(directory / "descent_journal.json"),
+            grade=grade,
         )
 
 
