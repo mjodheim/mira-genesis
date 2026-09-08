@@ -12,10 +12,12 @@ The lineage, in order:
 1. measures itself against a task family in an isolated child process;
 2. proposes a transformation, has it rejected on evidence, and **keeps going**;
 3. proposes another, has it accepted, and records the acquisition;
-4. meets a demand no component in its registry resolves, exhausts the registry by probing, and
-   **names a component class it did not have** — against a certificate, not by editing a tuple;
+4. meets a demand no component in its registry resolves, **composes and runs probes** until it has
+   exhausted what its components can express, finds that something outside them does resolve it,
+   and **names a component class it did not have** — against a certificate, not by editing a tuple;
 5. meets two demands its features cannot tell apart whose causes differ, and **extends its own
-   diagnostic vocabulary** against that pair;
+   diagnostic vocabulary** against that pair — this step still consults host-written callables, and
+   the record says so rather than letting step 4 lend it credibility;
 6. discovers a second substrate by probing, migrates into it carrying everything it owned;
 7. **evolves again in the new form**, which is the only thing that distinguishes transported
    intelligence from transported output;
@@ -36,6 +38,7 @@ if str(ROOT) not in sys.path:
 
 from genesis import development_bodies as bodies  # noqa: E402
 from genesis import diagnosis  # noqa: E402
+from genesis import probe  # noqa: E402
 from genesis import state as lineage_state  # noqa: E402
 from genesis import trust_root as tr  # noqa: E402
 from genesis.loop import Genesis, Proposal, ablation_supports_causal_dependency  # noqa: E402
@@ -50,9 +53,6 @@ from genesis.migration import (  # noqa: E402
 RECORD_PATH = ROOT / "experiments" / "GENESIS" / "DEMONSTRATION_RECORD.json"
 TASKS = [{"task_id": "t%d" % index} for index in range(4)]
 LINEAGE = tr.provenance("lineage_owned", produced_by="lineage")
-
-#: A demand no seed component resolves. The lineage discovers that by probing, not by being told.
-UNRESOLVED_DEMAND = {"demand": "represent a joint constraint over two carriers", "kind": "joint"}
 
 #: Two demands the seed vocabulary maps to the same row although their causes differ.
 CONFUSABLE = (
@@ -90,11 +90,6 @@ def _one(genesis, name, factory):
         TASKS,
         lambda _g, _t: _proposal(name, queue.pop(0)) if queue else None,
     )
-
-
-def _speculate(state, component, demand):
-    """No seed component resolves the joint demand; that is what the probing establishes."""
-    return False
 
 
 def _feature_row(state, demand):
@@ -148,7 +143,7 @@ def demonstrate() -> dict:
     genesis = Genesis(
         state=_seed_state(),
         body_factory=bodies.parent_body,
-        budget=tr.Budget(limits={"generations": 8, "probes": 12}),
+        budget=tr.Budget(limits={"generations": 8, "probes": 60}),
         isolation=tr.Isolation(),
     )
     steps: list[dict] = []
@@ -173,12 +168,19 @@ def demonstrate() -> dict:
         }
     )
 
-    found = diagnosis.diagnose(
-        genesis.state, UNRESOLVED_DEMAND, speculate=_speculate, budget=genesis.budget
+    # The probes are composed and run, not consulted. Nothing here answers "does this component
+    # resolve the demand" — compositions are built, executed in isolation, and the verdict is read
+    # off raw per-task outcomes. The host supplied the operations and the tasks; it did not and
+    # could not supply the finding.
+    found = probe.diagnose_by_experiment(
+        genesis.state,
+        registry_reference=bodies.PROBE_REGISTRY,
+        component_operations=bodies.COMPONENT_OPERATIONS,
+        tasks=bodies.SPANNING_DEMAND,
+        isolation=genesis.isolation,
+        budget=genesis.budget,
     )
-    certificate = diagnosis.certificate_from_diagnosis(
-        found, new_component="joint_registry", resolves_with_new_component=True
-    )
+    certificate = probe.certificate_from_experiment(found, new_component="joint_registry")
     genesis.state = lineage_state.extend_components(
         genesis.state, certificate=certificate, provenance=LINEAGE
     )
@@ -192,6 +194,12 @@ def demonstrate() -> dict:
             "step": "lineage_names_a_component_class_it_did_not_have",
             "registry_exhausted": found["registry_exhausted"],
             "probed": [record["component"] for record in found["probes"]],
+            "compositions_run": sum(record["attempts"] for record in found["probes"]),
+            # Exhaustion alone is a failed search. This is the half that makes it a finding about
+            # the lineage's representation.
+            "reachable_with_wider_operations": found["reachable_with_wider_operations"],
+            "composition_the_lineage_found": found["resolving_composition"]["operations"],
+            "probe_is_experimental_not_an_oracle": True,
             "registry_after": lineage_state.component_names(genesis.state),
         }
     )
@@ -222,6 +230,11 @@ def demonstrate() -> dict:
             "shared_prior_row": pair["shared_prior_row"],
             "limiting_components": pair["limiting_components"],
             "vocabulary_after": lineage_state.vocabulary_names(genesis.state),
+            # Stated because the step above is no longer like this one, and a reader would otherwise
+            # reasonably assume both ceilings opened the same way. The confusable pair here is found
+            # through `feature_row` and `limiting_component`, which are host-written callables: this
+            # certificate rests on an oracle, and the component certificate above does not.
+            "rests_on_a_host_supplied_oracle": True,
         }
     )
 

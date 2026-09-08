@@ -133,14 +133,48 @@ intactness comparison is tested on its own.
 
 The number is reproducible rather than quoted: rerun the script.
 
+## The third authored ceiling, and what closing it did and did not buy
+
+The sharpest open question was that a certificate licensed by "every probe returned false" rested on
+`speculate`, a host-written callable. The host decided the finding and the certificate recorded the
+lineage agreeing with it.
+
+`genesis/probe.py` replaces the oracle with an experiment. The lineage **composes** a probe — an
+ordered sequence of primitive operations — runs it as an untrusted body in the sandbox at budget
+cost, and the verdict is tallied from raw per-task outcomes. Exhaustion now means *no composition
+its components can express solves the demand*, and it licenses nothing on its own: the lineage must
+also show that a composition drawn from the wider operation set **does** solve it. "Nothing I have
+works" is a failed search; "nothing I have works and something outside what I have does" is a claim
+about the lineage's representation.
+
+Something is still host-supplied, and pretending otherwise would repeat the error one level down.
+The host supplies the **alphabet** — the primitive operations, the task set, and which operations
+each held component reaches. It does not supply the **sentence**, and cannot: a composition either
+maps the inputs to the expected outputs when it runs, or it does not.
+
+That difference is tested rather than asserted. With the same components, the same operations and
+the same code, three task sets produce three findings:
+
+| Demand | Registry exhausted | Reachable more widely | Licenses a new class |
+|---|---|---|---|
+| needs one operation from each component | yes | yes | **yes** — found `double` then `increment` |
+| solved by a held component alone | no | — | no |
+| solved by nothing available | yes | **no** | no |
+
+The third row is the one that matters most: exhaustion without reachability is refused.
+
+**What this does not buy.** The vocabulary extension still consults host-written `feature_row` and
+`limiting_component` callables, so the *second* ceiling remains oracle-backed while the third is
+closed. The demonstration record says so in the step itself
+(`rests_on_a_host_supplied_oracle: true`), and a test asserts that admission is present, because two
+steps sitting side by side would otherwise let the honest one lend its credibility to the other.
+
 ## Known open, not fixed
 
-- **The third authored ceiling.** The lineage *selects* a probe from prepared ones; it does not
-  compose a new experimental probe. More sharply: the demonstration supplies `speculate` and
-  `feature_row` as host-written callables, so a certificate licensed by "every probe returned false"
-  rests on an oracle the lineage did not write. Whether that certificate is the lineage's finding or
-  the author's wearing the lineage's name is the most serious open question in the package.
+- **The vocabulary extension still rests on an oracle.** See above. The same treatment should apply:
+  a confusable pair ought to be found by measurement rather than declared by a callable.
 - **No epistemic separation.** The runtime, its tests, the demonstration and this document have one
   source. `docs/audits/GENESIS_RUNTIME_HOSTILE_REVIEW_BRIEF.md` requests the separation that source
   cannot supply for itself; until a review returns, every claim here is self-assessed.
-- **Fixtures, not a mechanism.** See the stopping criterion section above.
+- **Fixtures, not a mechanism.** See the stopping criterion section above. The probe operations are
+  arithmetic on integers; that they compose is a property of the fixture, not a result.

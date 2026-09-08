@@ -63,11 +63,38 @@ def test_the_lineage_names_a_component_class_it_did_not_have(record):
     ]
 
 
+def test_the_probes_were_composed_and_run_rather_than_consulted(record):
+    """The third ceiling. No host callable answers 'does this component resolve the demand'.
+
+    Compositions are built by the lineage, executed in isolation, and judged on raw per-task
+    outcomes. `tests/test_genesis_probe.py` carries the load-bearing check that the finding follows
+    the data; this asserts the demonstration actually goes through that path.
+    """
+    step = _step(record, "lineage_names_a_component_class_it_did_not_have")
+    assert step["probe_is_experimental_not_an_oracle"] is True
+    assert step["compositions_run"] > 0, "a certificate must rest on probes that ran"
+    # Exhaustion alone would only be a failed search.
+    assert step["reachable_with_wider_operations"] is True
+    assert step["composition_the_lineage_found"] == ["double", "increment"]
+
+
 def test_the_lineage_extends_its_own_diagnostic_vocabulary(record):
     """The second ceiling: extended on a demonstrated confusable pair, not on a whim."""
     step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
     assert step["limiting_components"] == ["operator_table", "signal_interface"]
     assert step["vocabulary_after"][-1] == "joint_constraint_undetermined"
+
+
+def test_the_record_admits_which_ceiling_is_still_held_up_by_an_oracle(record):
+    """The two ceilings did not open the same way, and the record must not blur that.
+
+    The component step runs experiments; the vocabulary step consults host-written callables. A
+    reader who saw them side by side without this would reasonably assume both were closed.
+    """
+    component_step = _step(record, "lineage_names_a_component_class_it_did_not_have")
+    vocabulary_step = _step(record, "lineage_extends_its_own_diagnostic_vocabulary")
+    assert component_step["probe_is_experimental_not_an_oracle"] is True
+    assert vocabulary_step["rests_on_a_host_supplied_oracle"] is True
 
 
 def test_the_substrate_is_discovered_and_the_lineage_arrives_intact(record):

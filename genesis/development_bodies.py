@@ -250,3 +250,46 @@ def subprocess_body():
 
 def networking_body():
     return NetworkingBody()
+
+
+# ---------------------------------------------------------------------------------------------
+# Primitive operations a lineage can compose probes from
+# ---------------------------------------------------------------------------------------------
+#: What the host supplies to `genesis.probe`: the alphabet, not the sentence. The host cannot know
+#: which composition solves a given demand, and cannot make one solve it by saying so — the
+#: composition either maps the inputs to the expected outputs when it runs, or it does not.
+PROBE_OPERATIONS = {
+    "increment": lambda value: value + 1,
+    "negate": lambda value: -value,
+    "double": lambda value: value * 2,
+    "square": lambda value: value * value,
+}
+
+#: Which operations each seed component gives the lineage access to. Neither component alone spans
+#: the pair needed below; that is a fact about this partition, discoverable only by running probes.
+COMPONENT_OPERATIONS = {
+    "operator_table": ["increment", "negate"],
+    "signal_interface": ["double", "square"],
+}
+
+PROBE_REGISTRY = "genesis.development_bodies:PROBE_OPERATIONS"
+
+#: A demand needing `double` then `increment` — one operation from each component, so no held
+#: component can express it and the wider registry can.
+SPANNING_DEMAND = [
+    {"task_id": "p0", "input": 3, "expected": 7},
+    {"task_id": "p1", "input": 5, "expected": 11},
+]
+
+#: A demand one held component resolves on its own. Same machinery, opposite finding.
+LOCAL_DEMAND = [
+    {"task_id": "p0", "input": 3, "expected": 4},
+    {"task_id": "p1", "input": 5, "expected": 6},
+]
+
+#: A demand nothing in the registry can reach at all. Exhaustion without reachability is a failed
+#: search, not a finding about the lineage's representation, and must not license anything.
+UNREACHABLE_DEMAND = [
+    {"task_id": "p0", "input": 3, "expected": 1000},
+    {"task_id": "p1", "input": 5, "expected": 2000},
+]

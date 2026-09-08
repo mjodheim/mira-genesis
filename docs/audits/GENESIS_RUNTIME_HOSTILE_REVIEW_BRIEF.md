@@ -121,12 +121,28 @@ block reads.
 class against an exhaustion certificate (`genesis/diagnosis.py`, `certificate_from_diagnosis`) and
 extends its diagnostic vocabulary against a demonstrated confusable pair (`certificate_from_pair`).
 
-The third is **openly unclosed**: the lineage *selects* a probe from prepared ones; it does not
-compose a new experimental probe. Do not let the first two distract from it, and check whether they
-are as open as claimed — in particular, the demonstration supplies `speculate` and `feature_row` as
-host-written callables. **Is a certificate whose evidence comes from a host-written oracle actually
-the lineage's finding, or the author's finding wearing the lineage's name?** The author considers
-this the most serious open question in the package and has no answer to it.
+The third has since been closed for the component path and **not** for the vocabulary path, and the
+asymmetry is where to attack.
+
+`genesis/probe.py` replaces the `speculate` oracle with an experiment: the lineage composes a
+sequence of primitive operations, runs it in the sandbox at budget cost, and the verdict is tallied
+from raw outcomes. Exhaustion licenses nothing alone — the lineage must also show a composition
+drawn from the wider operation set does resolve the demand. The claim is that the host supplies the
+alphabet and not the sentence. **Attack that claim.** Specifically:
+
+- the host chooses the operation registry, the task set, and the component→operations partition.
+  Is that partition doing the work? Construct a partition under which the finding is forced either
+  way, and say whether the author's partition is meaningfully different from that;
+- `COMPONENT_OPERATIONS` is a host mapping that decides what each component can reach. It is not
+  derived from anything in the lineage's state. Is a component that *is* nothing but a host-declared
+  operation set a component at all, or a relabelling of the host's partition?
+- the demonstration's demand is arithmetic on integers. Say whether anything survives a domain where
+  compositions do not compose so obligingly.
+
+The **vocabulary** extension still consults host-written `feature_row` and `limiting_component`
+callables. The record admits this in the step itself (`rests_on_a_host_supplied_oracle: true`) and a
+test asserts the admission is present. Check that the admission is accurate and complete — if any
+part of the component path is still oracle-backed and unlabelled, that is a finding.
 
 ### 5. Metrics Genesis could game
 

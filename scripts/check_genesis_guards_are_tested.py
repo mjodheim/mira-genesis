@@ -38,9 +38,19 @@ SUITES = [
     "tests/test_genesis_migration.py",
     "tests/test_genesis_demonstration.py",
     "tests/test_genesis_guards.py",
+    "tests/test_genesis_probe.py",
 ]
 #: Modules holding the runtime's refusals. `development_bodies` is fixtures, not runtime.
-MODULES = ("trust_root", "state", "journal", "sandbox", "loop", "migration", "diagnosis")
+MODULES = (
+    "trust_root",
+    "state",
+    "journal",
+    "sandbox",
+    "loop",
+    "migration",
+    "diagnosis",
+    "probe",
+)
 
 
 def guards(path: Path) -> list[tuple[int, int, str]]:
