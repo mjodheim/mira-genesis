@@ -301,6 +301,7 @@ def contract_agrees_on_the_measure(
         "retention_policy",
         "strict_improvement",
         "task_identity_rule",
+        "admitted_isolation",
     )
     return [name for name in fixed if admitted.get(name) != used.get(name)]
 
