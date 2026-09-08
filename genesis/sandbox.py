@@ -4,26 +4,33 @@ A candidate body is untrusted: it is a transformation the lineage produced, and 
 running it is that nobody yet knows whether it is any good. It must not be able to reach the parent,
 the evaluator, the journal or the task oracle.
 
-This module runs candidates in a **separate process** with resource limits applied where the platform
-supplies them, and it reports precisely which limits were enforced. That last part matters more than
-the limits themselves. Claiming isolation one did not obtain is how a result comes to rest on a
-boundary that was never there, and M083 already recorded the honest version of this problem: a
-container shares the host kernel, so it is not a desktop VM no matter how convenient that would be.
+Candidates are launched through a fixed trusted bootstrap. The candidate artifact and task values
+cross the boundary only as JSON data; Python pickle is never used at either edge. This matters
+because `multiprocessing` spawn unpickles process arguments before the child entry point can install
+limits, while `Connection.recv()` unpickles candidate-controlled answers in the evaluator. Either is
+code execution on the wrong side of the claimed boundary.
 
-So `enforced` in the returned record lists what was really applied on this platform, and
-`unenforced` lists what was asked for and could not be. A caller that needs a guarantee must read
-those fields rather than the request.
+The boundary remains explicitly DEVELOPMENT-grade for arbitrary hostile native extensions: Python
+audit hooks cover Python-visible operations, not direct libc/syscall activity from native code. The
+result records that limitation rather than silently promoting the apparatus into a stronger sandbox.
 """
 from __future__ import annotations
 
-import multiprocessing
+import functools
+import inspect
+import json
 import os
+import subprocess
 import sys
-import time
-import traceback
 from typing import Any, Callable, Mapping, Sequence
 
-from genesis.trust_root import TASK_OUTCOMES, Isolation, TrustRootError, digest_of
+from genesis.trust_root import (
+    TASK_OUTCOMES,
+    Isolation,
+    TrustRootError,
+    artifact_digest_of,
+    digest_of,
+)
 
 SANDBOX_SCHEMA = "genesis-sandbox-result-v1"
 
@@ -39,34 +46,32 @@ def _apply_limits(isolation: Isolation) -> tuple[list[str], list[str]]:
     try:
         import resource
     except ImportError:  # pragma: no cover - non-POSIX
-        return [], ["cpu_seconds", "memory_bytes", "wall_clock_seconds"]
+        resource = None
+        unenforced.extend(["cpu_seconds", "memory_bytes"])
 
-    try:
-        seconds = max(1, int(isolation.cpu_seconds))
-        resource.setrlimit(resource.RLIMIT_CPU, (seconds, seconds))
-        enforced.append("cpu_seconds")
-    except (ValueError, OSError):  # pragma: no cover - platform dependent
-        unenforced.append("cpu_seconds")
-
-    try:
-        limit = int(isolation.memory_bytes)
-        resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
-        enforced.append("memory_bytes")
-    except (ValueError, OSError):  # pragma: no cover - platform dependent
-        unenforced.append("memory_bytes")
-
-    if not isolation.subprocess_permitted:
-        # This call succeeds and does not reliably prevent a fork — a candidate ran /bin/true
-        # straight through it. It is kept because it costs nothing and helps where it does work,
-        # but the audit guard below is what actually enforces the limit, and the "enforced" entry
-        # is added there rather than here so the record does not testify to this call alone.
+    if resource is not None:
         try:
-            resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
-        except (ValueError, OSError):
-            unenforced.append("subprocess_permitted")
+            seconds = max(1, int(isolation.cpu_seconds))
+            resource.setrlimit(resource.RLIMIT_CPU, (seconds, seconds))
+            enforced.append("cpu_seconds")
+        except (ValueError, OSError):  # pragma: no cover - platform dependent
+            unenforced.append("cpu_seconds")
 
-    # The guard can enforce what `resource` could not: if RLIMIT_NPROC was refused but the audit
-    # hook blocks process creation, the honest record is enforced, not unenforced.
+        try:
+            limit = int(isolation.memory_bytes)
+            resource.setrlimit(resource.RLIMIT_AS, (limit, limit))
+            enforced.append("memory_bytes")
+        except (ValueError, OSError):  # pragma: no cover - platform dependent
+            unenforced.append("memory_bytes")
+
+        if not isolation.subprocess_permitted:
+            try:
+                resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
+            except (ValueError, OSError):
+                unenforced.append("subprocess_permitted")
+
+    # The audit guard is useful even where `resource` is unavailable. Returning early on a
+    # non-POSIX platform used to turn every declared write/network/process restriction into a label.
     for limit in _install_audit_guard(isolation):
         if limit in unenforced:
             unenforced.remove(limit)
@@ -75,7 +80,6 @@ def _apply_limits(isolation: Isolation) -> tuple[list[str], list[str]]:
     return enforced, unenforced
 
 
-#: Audit events that mutate the filesystem without ever going through `open`.
 _MUTATING_FILESYSTEM_EVENTS = frozenset(
     {
         "os.remove",
@@ -95,7 +99,6 @@ _MUTATING_FILESYSTEM_EVENTS = frozenset(
     }
 )
 
-#: Audit events that reach the network. `socket.connect` alone catches urllib and http.client.
 _NETWORK_EVENTS = frozenset(
     {
         "socket.connect",
@@ -108,19 +111,11 @@ _NETWORK_EVENTS = frozenset(
 
 
 def _opens_for_writing(arguments) -> bool:
-    """Decide write intent from an `open` audit event, whichever way the caller opened the file.
-
-    `open(path, "w")` reports a string mode, but `os.open(path, os.O_WRONLY | os.O_CREAT)` reports
-    mode `None` and carries the intent in the flags. A guard that only reads the string mode lets
-    the second form straight through, which is how a limit comes to be enforced against the
-    convenient spelling and nothing else.
-    """
     mode = arguments[1] if len(arguments) > 1 else None
     if isinstance(mode, str):
         return any(flag in mode for flag in "wxa+")
     flags = arguments[2] if len(arguments) > 2 else 0
     if not isinstance(flags, int) or flags < 0:
-        # Unreadable intent: refuse rather than guess in the candidate's favour.
         return True
     writing = 0
     for name in ("O_WRONLY", "O_RDWR", "O_CREAT", "O_APPEND", "O_TRUNC"):
@@ -129,17 +124,11 @@ def _opens_for_writing(arguments) -> bool:
 
 
 def _install_audit_guard(isolation: Isolation) -> list[str]:
-    """Apply the limits that `Isolation` declares but `resource` cannot express.
+    """Apply the limits Python's audit mechanism can express.
 
-    Filesystem writes, network access and subprocesses were declared on `Isolation` and checked by
-    `assert_no_wider_than`, and nothing ever applied them: the record said the candidate ran without
-    them while the candidate could do all three. An audit hook closes that for pure-Python
-    candidates.
-
-    It is deliberately **not** complete, and the result record says so through
-    `audit_hook_covers_pure_python_only`. A C extension calls libc directly and never raises an
-    audit event, so a candidate that ships one is outside this boundary. Anyone relying on the
-    limit for a real claim has to read that field rather than the request.
+    This is intentionally not claimed as a native-code sandbox. A real self-generated mechanism
+    must either be restricted to the admitted Python subset or execute inside an OS/container
+    boundary whose kernel policy, filesystem and network namespace are outside candidate authority.
     """
     blocked_writes = not isolation.filesystem_writes_permitted
     blocked_network = not isolation.network_permitted
@@ -148,10 +137,6 @@ def _install_audit_guard(isolation: Isolation) -> list[str]:
         return []
 
     if blocked_writes:
-        # Importing a module for the first time would otherwise try to write a .pyc and be refused,
-        # turning an ordinary import into what looks like a candidate fault. Exempting __pycache__
-        # would be a hole any candidate could drive through by choosing that path, so the bytecode
-        # writing is switched off instead.
         sys.dont_write_bytecode = True
 
     def _guard(event: str, arguments) -> None:
@@ -176,48 +161,50 @@ def _install_audit_guard(isolation: Isolation) -> list[str]:
     return applied
 
 
-def _child(connection, body_factory, tasks, isolation, graded):  # pragma: no cover - child process
-    enforced, unenforced = _apply_limits(isolation)
-    # Sent before the candidate is constructed, let alone run. A body sharing this process can reach
-    # local variables through the frame stack, so an isolation report assembled after the body ran
-    # is a report the body had the opportunity to rewrite.
-    connection.send({"kind": "isolation", "enforced": enforced, "unenforced": unenforced})
-    try:
-        body = body_factory()
-        rows = []
-        for task in tasks:
-            task_id = str(task["task_id"])
-            try:
-                returned = body.attempt(task)
-            except Exception:
-                rows.append({"task_id": task_id, "failed": True})
-                continue
-            if graded:
-                # The return value is an *answer*. The parent decides whether it is right.
-                rows.append({"task_id": task_id, "answer": returned})
-            elif returned not in ("solved", "unsolved", "refused", "error"):
-                rows.append({"task_id": task_id, "failed": True})
-            else:
-                rows.append({"task_id": task_id, "outcome": returned})
-        connection.send({"kind": "result", "ok": True, "rows": rows})
-    except BaseException:
-        connection.send(
-            {"kind": "result", "ok": False, "traceback": traceback.format_exc(limit=8)}
+def _candidate_descriptor(factory: Any) -> dict[str, Any]:
+    """Admit only descriptors the fixed bootstrap can reconstruct without pickle."""
+    target = factory
+    while isinstance(target, functools.partial):
+        target = target.func
+    if not (inspect.isfunction(target) or inspect.isclass(target) or inspect.isbuiltin(target)):
+        raise SandboxError(
+            "candidate factory is a live callable object rather than a reconstructible artifact; "
+            "the sandbox will not pickle it across the process boundary"
         )
-    finally:
-        connection.close()
+    descriptor = artifact_digest_of(factory)
+
+    def check(record: Mapping[str, Any]) -> None:
+        kind = record.get("kind")
+        if kind == "partial":
+            check(record.get("callable") or {})
+            return
+        if kind != "importable_symbol":
+            raise SandboxError("candidate artifact kind %r is not supported" % kind)
+        module = record.get("module")
+        qualname = record.get("qualname")
+        if not isinstance(module, str) or not module:
+            raise SandboxError("candidate artifact names no importable module")
+        if (
+            not isinstance(qualname, str)
+            or not qualname
+            or "<locals>" in qualname
+            or "<lambda>" in qualname
+        ):
+            raise SandboxError(
+                "candidate artifact is not a reconstructible importable symbol"
+            )
+
+    check(descriptor)
+    return descriptor
 
 
 def _outcomes_from(rows, by_identifier, grade) -> list[dict[str, Any]]:
-    """Turn the child's rows into outcomes, grading here rather than accepting the body's word.
-
-    A row the child marked `failed` becomes `error` without consulting the grader: a body that
-    raised produced no answer to grade. Everything else, in graded mode, is an answer the grader
-    judges against the real task — and a grader that returns something outside the outcome
-    vocabulary is itself a fault, recorded as `error` rather than smuggled through.
-    """
+    """Turn inert JSON rows into outcomes, grading only in the evaluator process."""
     outcomes = []
     for row in rows:
+        if not isinstance(row, Mapping):
+            outcomes.append({"task_id": "", "outcome": "error"})
+            continue
         task_id = str(row.get("task_id"))
         if row.get("failed"):
             outcomes.append({"task_id": task_id, "outcome": "error"})
@@ -236,6 +223,26 @@ def _outcomes_from(rows, by_identifier, grade) -> list[dict[str, Any]]:
     return outcomes
 
 
+def _parse_worker_output(stdout: str) -> tuple[dict[str, Any], dict[str, Any] | None]:
+    """Take the first pre-candidate isolation record and the final worker result."""
+    isolation_report: dict[str, Any] = {}
+    result: dict[str, Any] | None = None
+    for line in stdout.splitlines():
+        try:
+            value = json.loads(line)
+        except Exception:
+            continue
+        if not isinstance(value, dict):
+            continue
+        if not isolation_report and value.get("kind") == "isolation":
+            isolation_report = value
+        elif value.get("kind") == "result":
+            result = value
+        elif not isolation_report and value.get("kind") == "bootstrap_failure":
+            result = value
+    return isolation_report, result
+
+
 def run_candidate(
     body_factory: Callable[[], Any],
     tasks: Sequence[Mapping[str, Any]],
@@ -245,31 +252,11 @@ def run_candidate(
     grade: Callable[[Mapping[str, Any], Any], str] | None = None,
     withhold: Sequence[str] = ("expected",),
 ) -> dict[str, Any]:
-    """Run a body over the tasks in a separate process and return raw per-task outcomes.
+    """Run one reconstructible candidate artifact through the fixed JSON bootstrap.
 
-    The result carries only outcomes, never a score: scoring belongs to the trust root, which
-    recomputes it. A candidate that crashes yields `error` rows rather than an exception, because
-    a body that breaks is an observation the lineage keeps.
-
-    **Who decides whether a task was solved.** Without `grade`, the body's return value *is* the
-    outcome: the thing being judged awards its own marks, and every number downstream — including
-    everything the trust root recomputes — rests on that. Recomputing a tally from self-reported
-    rows is arithmetic on a claim, not a measurement of it, and for a long time this module's own
-    docstring said otherwise.
-
-    Supply `grade` and the body's return value becomes an **answer**. The grader runs here, in the
-    parent, against the real task, and its verdict is what enters the record. A candidate that
-    reports success it did not achieve is then simply wrong, because it never gets to say whether it
-    was right. `outcomes_are_self_reported` in the result says which of the two happened, so nobody
-    downstream has to guess.
-
-    **`withhold` is the other half of that, and without it the first half is theatre.** Grading in
-    the parent decides nothing if the answer key rides into the child inside the task: a body that
-    returns `task["expected"]` scores full marks having computed nothing. So the named keys are
-    stripped from every task before it crosses the process boundary — the child receives the
-    question, the parent keeps the answer — and `withheld_from_the_candidate` records what was
-    removed. A caller whose tasks name the answer differently must say so; the default covers the
-    spelling this repository uses and nothing more.
+    Candidate code is imported only after the worker installed its limits. Candidate answers must be
+    JSON data, so receiving a result in the evaluator cannot invoke candidate constructors or
+    `__reduce__`. The grader still runs only in the parent against the original task oracle.
     """
     if admitted_isolation is not None:
         isolation.assert_no_wider_than(admitted_isolation)
@@ -285,61 +272,69 @@ def run_candidate(
     asked = [
         {key: value for key, value in task.items() if key not in withheld} for task in tasks
     ]
+    descriptor = _candidate_descriptor(body_factory)
+    request = {
+        "schema": "genesis-sandbox-worker-request-v1",
+        "isolation": isolation.record(),
+        "artifact": descriptor,
+        "tasks": asked,
+        "graded": grade is not None,
+    }
+    try:
+        request_text = json.dumps(
+            request, sort_keys=True, separators=(",", ":"), allow_nan=False
+        )
+    except (TypeError, ValueError) as problem:
+        raise SandboxError(
+            "candidate task/configuration payload is not inert JSON data: %s" % problem
+        ) from problem
 
-    context = multiprocessing.get_context("spawn")
-    parent_connection, child_connection = context.Pipe(duplex=False)
-    process = context.Process(
-        target=_child,
-        args=(child_connection, body_factory, asked, isolation, grade is not None),
+    environment = os.environ.copy()
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
+    python_path = [entry for entry in sys.path if isinstance(entry, str) and entry]
+    if python_path:
+        environment["PYTHONPATH"] = os.pathsep.join(python_path)
+
+    process = subprocess.Popen(
+        [sys.executable, "-m", "genesis.sandbox_worker"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment,
     )
-    process.start()
-    child_connection.close()
-
-    # Two messages: the isolation report, sent before the candidate exists, then the result. A
-    # candidate can forge later messages from inside its own process, so only the first is trusted
-    # for isolation and only the second is read for rows.
     timeout = max(1.0, float(isolation.wall_clock_seconds))
-    deadline = time.monotonic() + timeout
-    messages: list[dict[str, Any]] = []
-    while len(messages) < 2:
-        remaining = deadline - time.monotonic()
-        if remaining <= 0 or not parent_connection.poll(remaining):
-            break
-        try:
-            messages.append(parent_connection.recv())
-        except EOFError:
-            break
-    process.join(timeout=1.0)
-    if process.is_alive():  # pragma: no cover - only on a genuine overrun
-        process.terminate()
-        process.join(timeout=5.0)
-    parent_connection.close()
+    timed_out = False
+    try:
+        stdout, stderr = process.communicate(request_text, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        timed_out = True
+        process.kill()
+        stdout, stderr = process.communicate(timeout=5.0)
 
-    isolation_report = messages[0] if messages and messages[0].get("kind") == "isolation" else {}
-    payload = messages[1] if len(messages) > 1 else None
+    isolation_report, payload = _parse_worker_output(stdout)
     enforced = list(isolation_report.get("enforced") or [])
     unenforced = list(isolation_report.get("unenforced") or [])
+    if "wall_clock_seconds" not in enforced:
+        enforced.append("wall_clock_seconds")
+    if "wall_clock_seconds" in unenforced:
+        unenforced.remove("wall_clock_seconds")
 
-    # An infrastructure failure must never look like a candidate failure. If the child never ran,
-    # its rows are not evidence about the body and the caller must abort the comparison rather than
-    # score a candidate on outcomes the sandbox invented for it. This is the same distinction M124
-    # had to learn between a delivery outcome and a scientific one.
-    if payload is None:
+    if timed_out or payload is None:
         result = {
             "completed": False,
             "instrument_failure": True,
-            "reason": "wall clock exceeded, or the child process never reported",
+            "reason": "wall clock exceeded, or the fixed worker never reported",
             "outcomes": [],
             "enforced": enforced,
-            "unenforced": unenforced
-            or ["cpu_seconds", "memory_bytes", "subprocess_permitted"],
+            "unenforced": unenforced,
         }
-    elif not payload.get("ok"):
+    elif payload.get("kind") == "bootstrap_failure" or not payload.get("ok"):
         result = {
             "completed": False,
             "instrument_failure": True,
-            "reason": "the candidate body could not be constructed in the child process",
-            "traceback": payload.get("traceback", ""),
+            "reason": "the candidate artifact could not be resolved or constructed after isolation",
+            "traceback": payload.get("traceback", "") or stderr[-4000:],
             "outcomes": [],
             "enforced": enforced,
             "unenforced": unenforced,
@@ -365,12 +360,12 @@ def run_candidate(
             "withheld_from_the_candidate": list(withheld),
             "platform": sys.platform,
             "carries_a_score": False,
+            "transport_format": "canonical-json",
+            "uses_executable_deserialization": False,
+            "candidate_artifact_digest": descriptor["artifact_digest"],
+            "candidate_loaded_after_limits": bool(isolation_report),
         }
     )
-    # Defensive, and deliberately untested: the child builds its rows by iterating the task list it
-    # was handed, so no body can return a different task set. This guards a compromised child, which
-    # nothing in this repository can produce. `scripts/check_genesis_guards_are_tested.py` reports it
-    # as a surviving mutant; that is correct and expected. See tests/test_genesis_guards.py.
     if result["completed"] and set(row["task_id"] for row in result["outcomes"]) != set(identifiers):
         raise SandboxError("the candidate did not report the task set it was given")
     result["result_digest"] = digest_of({k: v for k, v in result.items()})
