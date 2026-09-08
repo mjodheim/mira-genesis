@@ -38,6 +38,7 @@ carries `outcomes_are_self_reported`, since the flag is what a later reader weig
 from __future__ import annotations
 
 import json
+from copy import deepcopy
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType
@@ -67,6 +68,28 @@ CHECKPOINT_SCHEMA = "genesis-runtime-checkpoint-v1"
 def question_digest(task: Mapping[str, Any]) -> str:
     """Identify one task by its question, ignoring the label it happens to carry."""
     return digest_of({k: v for k, v in dict(task).items() if k != "task_id"})
+
+
+def evaluation_snapshot(tasks: Sequence[Mapping[str, Any]]) -> tuple[Mapping[str, Any], ...]:
+    """The one question set every arm of a comparison is judged on, taken once and unwritable.
+
+    `cycle` used to pass the caller's own mappings to the parent arm, then hand those same mappings
+    to the proposer, then judge the candidate, the control and the ablation on them again. A proposer
+    could therefore rewrite what the questions *were* after the parent had been graded, keeping every
+    `task_id` intact — and the trust root, which requires both arms to have faced the same tasks,
+    compares by identifier and sees a match. Two arms answering different questions under one set of
+    labels is the exact failure the task-identity rule exists to prevent, reached from inside the
+    cycle rather than from the caller.
+
+    So the snapshot is deep-copied away from the caller and wrapped read-only. Nothing downstream can
+    write through it, and the caller's list is left as it was.
+    """
+    return tuple(MappingProxyType(deepcopy(dict(task))) for task in tasks)
+
+
+def detached_tasks(tasks: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """A copy for code that may look at the questions but must not be able to change them."""
+    return [deepcopy(dict(task)) for task in tasks]
 
 
 def task_set_digest(tasks: Sequence[Mapping[str, Any]]) -> str:
@@ -312,9 +335,13 @@ class Genesis:
                 "journal_entry": record["entry_digest"],
             }
 
+        # Taken once, before any arm runs, and used by every one of them. Everything below judges
+        # this snapshot; nothing below judges the caller's list.
+        questions = evaluation_snapshot(tasks)
+
         parent = run_candidate(
             self.body_factory,
-            tasks,
+            questions,
             self.isolation,
             admitted_isolation=self.admitted_isolation,
             grade=self.grade,
@@ -324,7 +351,7 @@ class Genesis:
         # Recorded only now. It used to be added before the parent ran, so an instrument abort left
         # a task set marked as work the lineage had been evaluated on when no evaluation happened —
         # and the migration gate reads that ledger.
-        self.evaluated_task_digests.add(task_set_digest(tasks))
+        self.evaluated_task_digests.add(task_set_digest(questions))
         self.journal.append(
             "observation",
             generation,
@@ -332,7 +359,10 @@ class Genesis:
         )
 
         try:
-            proposal = propose(self.context(), tasks)
+            # A detached copy. The proposer is entitled to look at the questions — diagnosing what
+            # the lineage cannot do is the point — and entitled to nothing else about them. What it
+            # writes here reaches no arm and no ledger.
+            proposal = propose(self.context(), detached_tasks(questions))
         except Exception as failure:
             # A proposer that reaches for the runtime now raises, because the context is frozen.
             # Its attempt is an observation about the lineage, not a crash of the host.
@@ -374,7 +404,7 @@ class Genesis:
 
         candidate = run_candidate(
             proposal.body_factory,
-            tasks,
+            questions,
             self.isolation,
             admitted_isolation=self.admitted_isolation,
             grade=self.grade,
@@ -384,7 +414,7 @@ class Genesis:
         control = (
             run_candidate(
                 control_factory,
-                tasks,
+                questions,
                 self.isolation,
                 admitted_isolation=self.admitted_isolation,
                 grade=self.grade,
@@ -429,7 +459,7 @@ class Genesis:
         if problems:
             raise TrustRootError("; ".join(problems))
 
-        causal = self._causal_dependency(proposal, tasks, parent, candidate)
+        causal = self._causal_dependency(proposal, questions, parent, candidate)
         if causal.get("instrument_abort"):
             return abort("ablation", causal["run"])
 
