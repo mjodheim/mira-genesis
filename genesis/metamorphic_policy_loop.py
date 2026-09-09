@@ -1,22 +1,20 @@
-"""Integrated bounded metamorphic loop: body search -> machinery search -> body search.
+"""Integrated bounded metamorphic loop across body, policy and MetaPolicy search.
 
-Earlier layers established the mechanisms separately:
+The runtime owns the hand-offs between three held levels:
 
-* a lineage-held search policy can generate executable body programs;
-* exhaustion can justify a search-policy change;
-* a lineage-held meta-policy can search over *which structural policy mutation* has useful new reach;
-* accepted bodies can be bound back to the changed machinery that produced them; and
-* later objectives must retain earlier evaluated work.
+* a lineage-held search policy generates executable body programs;
+* a lineage-held MetaPolicy searches over structural search-policy mutations; and
+* after both of those spaces are empirically exhausted, the lineage may acquire an evidence-backed
+  MetaPolicy descendant through the crash-consistent bounded evolution path.
 
-What remained outside the runtime was the hand-off between the two search levels. A launcher could
-run the body policy until exhaustion, then call the meta-policy controller, then call the changed body
-policy. This module removes that hand sequencing. Objective arrival remains environmental input, but
-within one objective the runtime alternates body search and policy-mutation search until either a body
-is adopted or both search levels are exhausted.
+Objective arrival remains environmental input. Within one objective the launcher does not choose a
+body transform, a policy mutation, or a MetaPolicy extension: the runtime alternates the held levels
+until it either adopts a body or exhausts the admitted machinery.
 
-The meta-policy still contains a bounded, host-admitted mutation menu and the mutation interpreter is
-fixed apparatus. This is an integrated DEVELOPMENT mechanism, not an unbounded self-programming
-claim.
+MetaPolicy evolution is available only on the checkpointed path, because its physical candidate
+budget must be durably reserved before execution. The mutation language, operation registry, trust
+root, evaluator and synthesis operator remain fixed apparatus. This is a DEVELOPMENT mechanism, not
+an open-ended self-programming or generality claim.
 """
 from __future__ import annotations
 
@@ -24,6 +22,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from genesis import controller, meta_policy_controller as meta, objective_policy_controller as opc
+from genesis import durable_meta_policy_evolution as durable_meta
 from genesis import policy_body_lineage, policy_controller
 from genesis import retentive_objectives as retentive
 from genesis.trust_root import digest_of
@@ -51,7 +50,7 @@ def run_objective(
     max_rounds: int = 64,
     checkpoint_directory: Path | None = None,
 ) -> dict[str, Any]:
-    """Drive body and policy-mutation search on one retained-capability objective."""
+    """Drive body, policy-mutation and bounded MetaPolicy-descendant search on one objective."""
     retentive.assert_retains_prior_work(genesis, here)
     admitted_policy = False
     admitted_meta = False
@@ -129,10 +128,8 @@ def run_objective(
                 )
                 break
 
-            # The body policy itself has established that no candidate remains in its current
-            # bounded search space. That retained evidence is the precondition for invoking the
-            # lineage-held meta-policy. The launcher does not choose a mutation or call a specific
-            # expansion operator.
+            # The body policy has established exhaustion of its current bounded search space. First
+            # ask the held MetaPolicy to search its admitted lower-level mutation set.
             mutation_run = meta.run_meta_policy(
                 genesis,
                 here,
@@ -155,26 +152,83 @@ def run_objective(
                     "durable_before_next_round": checkpoint_path is not None,
                 }
             )
-            if not accepted_mutations:
+            if accepted_mutations:
+                if len(accepted_mutations) != 1:
+                    raise MetamorphicPolicyError("one meta-policy search adopted more than one policy")
+                changed = policy_controller.bound_policy(genesis)
+                if changed is None or changed["parent_policy_digest"] != policy["policy_digest"]:
+                    raise MetamorphicPolicyError(
+                        "meta-policy search did not install a direct descendant of the exhausted policy"
+                    )
+                # The next round asks the changed policy for the body intent. The meta-evaluation
+                # witness itself is never silently installed.
+                continue
+
+            # Both the body policy and the currently held MetaPolicy are exhausted. Previously the
+            # runtime stopped here and a launcher had to call `evolve_meta_policy` manually. On the
+            # checkpointed path, make that hand-off runtime-owned and crash-consistent as well.
+            if checkpoint_path is None:
                 steps.append(
                     {
                         "intent": "stop",
-                        "reason": "body policy exhausted and the mutation meta-policy found no "
-                        "evidence-backed machinery descendant",
+                        "reason": "body policy and MetaPolicy exhausted; deeper MetaPolicy evolution "
+                        "requires checkpoint_directory for non-redrawable budget accounting",
                         "objective_digest": objective["objective_digest"],
                         "policy_digest": policy["policy_digest"],
                     }
                 )
                 break
-            if len(accepted_mutations) != 1:
-                raise MetamorphicPolicyError("one meta-policy search adopted more than one policy")
-            changed = policy_controller.bound_policy(genesis)
-            if changed is None or changed["parent_policy_digest"] != policy["policy_digest"]:
-                raise MetamorphicPolicyError(
-                    "meta-policy search did not install a direct descendant of the exhausted policy"
+
+            parent_meta = meta.bound_meta_policy(genesis)
+            if parent_meta is None:
+                raise MetamorphicPolicyError("lineage lost its MetaPolicy before descendant search")
+            try:
+                meta_evolution = durable_meta.evolve_meta_policy(
+                    genesis,
+                    here,
+                    checkpoint_directory=checkpoint_path,
                 )
-            # Continue in this same runtime loop. The next round asks the changed policy for the body
-            # intent; the meta-evaluation witness itself is not silently installed.
+            except durable_meta.DurableMetaPolicyEvolutionError as problem:
+                raise MetamorphicPolicyError(str(problem)) from problem
+
+            descendant_meta = meta.bound_meta_policy(genesis)
+            steps.append(
+                {
+                    "intent": "MetaPolicyEvolution",
+                    "objective_digest": objective["objective_digest"],
+                    "prior_policy_digest": policy["policy_digest"],
+                    "parent_meta_policy_digest": parent_meta["meta_policy_digest"],
+                    "new_meta_policy_digest": descendant_meta["meta_policy_digest"]
+                    if descendant_meta is not None
+                    else "",
+                    "accepted": bool(meta_evolution.get("accepted")),
+                    "selection_reason": meta_evolution.get("selection_reason", ""),
+                    "durable_budget_round_digest": meta_evolution.get(
+                        "durable_budget_round_digest", ""
+                    ),
+                    "checkpoint_digest": _checkpoint(genesis, checkpoint_path),
+                    "durable_before_next_round": True,
+                }
+            )
+            if not meta_evolution.get("accepted"):
+                steps.append(
+                    {
+                        "intent": "stop",
+                        "reason": "body policy and held MetaPolicy were exhausted and no unique "
+                        "evidence-backed MetaPolicy descendant was available",
+                        "objective_digest": objective["objective_digest"],
+                        "policy_digest": policy["policy_digest"],
+                    }
+                )
+                break
+            if descendant_meta is None or descendant_meta["parent_meta_policy_digest"] != parent_meta[
+                "meta_policy_digest"
+            ]:
+                raise MetamorphicPolicyError(
+                    "MetaPolicy evolution did not install a direct descendant of the exhausted MetaPolicy"
+                )
+            # Continue in the same runtime loop. The descendant MetaPolicy must now earn a lower-level
+            # policy change through the ordinary #289 controller before any body can be adopted.
             continue
 
         raise MetamorphicPolicyError("body policy returned an intent outside the integrated loop")
