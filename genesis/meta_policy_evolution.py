@@ -16,6 +16,12 @@ measured under one immutable task snapshot, the same current body, the same trus
 evaluation contract. The runtime adopts a MetaPolicy descendant only when its newly reachable body
 score is the unique strict maximum across the complete synthesised candidate set. Ties adopt nothing.
 
+Retained measurements are not trusted merely because their hashes reproduce. Before they can
+participate in selection, their mutation, descendant MetaPolicy, descendant search policy, generated
+program set, executable artifact identities, viability, score and witness are reconstructed from the
+currently bound parent values. This closes the class of failure where a self-consistently resealed
+observation could claim an invented score and thereby install machinery that was never measured.
+
 This establishes bounded *MetaPolicy descendant acquisition*. It does not establish open-ended
 self-programming or counterfactual meta-machinery causality. The mutation language and operation
 registry remain prospectively admitted apparatus.
@@ -114,7 +120,9 @@ def _current_meta_exhausted(genesis, here, *, prior_policy, current_meta, object
     return admitted.issubset(seen)
 
 
-def synthesised_extensions(prior_policy: Mapping[str, Any], current_meta: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+def synthesised_extensions(
+    prior_policy: Mapping[str, Any], current_meta: Mapping[str, Any]
+) -> tuple[dict[str, Any], ...]:
     """Canonical policy-mutation data the current MetaPolicy does not yet contain.
 
     Candidate data is derived from the fixed, already-admitted mutation language. New operation
@@ -145,7 +153,9 @@ def synthesised_extensions(prior_policy: Mapping[str, Any], current_meta: Mappin
     return tuple(sorted(candidates, key=lambda item: item["mutation_digest"]))
 
 
-def _descendant(current_meta: Mapping[str, Any], added_mutation: Mapping[str, Any]) -> dict[str, Any]:
+def _descendant(
+    current_meta: Mapping[str, Any], added_mutation: Mapping[str, Any]
+) -> dict[str, Any]:
     held = meta.validate_meta_policy(current_meta)
     if int(held["max_attempts"]) != len(held["mutations"]):
         raise MetaPolicyEvolutionError(
@@ -170,7 +180,9 @@ def _new_sequences(prior_policy, candidate_policy) -> tuple[tuple[str, ...], ...
     )
 
 
-def _measurement_key(*, objective, prior_policy, current_meta, body_digest, mutation_digest) -> tuple[str, ...]:
+def _measurement_key(
+    *, objective, prior_policy, current_meta, body_digest, mutation_digest
+) -> tuple[str, ...]:
     return (
         objective["objective_digest"],
         prior_policy["policy_digest"],
@@ -180,11 +192,215 @@ def _measurement_key(*, objective, prior_policy, current_meta, body_digest, muta
     )
 
 
-def _retained_measurements(genesis, *, objective, prior_policy, current_meta, body_digest) -> dict[str, dict[str, Any]]:
+def _is_digest(value: Any) -> bool:
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    try:
+        int(value, 16)
+    except ValueError:
+        return False
+    return True
+
+
+def _measurement_error(detail: str) -> MetaPolicyEvolutionError:
+    return MetaPolicyEvolutionError("retained MetaPolicy measurement is not semantically reproducible: " + detail)
+
+
+def _validate_retained_measurement(
+    genesis,
+    item: Mapping[str, Any],
+    *,
+    objective,
+    prior_policy,
+    current_meta,
+    body_digest: str,
+    questions,
+    allowed_extensions: Mapping[str, Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Re-derive every selection-relevant field of one persisted measurement.
+
+    A content digest protects a record against accidental byte corruption but does not prove that the
+    record's claims follow from its own evidence. This validator therefore reconstructs the only
+    MetaPolicy descendant and search-policy descendant licensed by ``added_mutation``, reconstructs
+    the complete newly reachable program set, binds each program to its executable artifact identity,
+    and derives viability/score/witness from the retained per-program attempts.
+
+    It deliberately does not claim cryptographic protection against a hostile host that can rewrite
+    the entire checkpoint and fabricate lower-level execution evidence. Genesis' DEVELOPMENT
+    persistence has no external signature root. The property here is narrower and necessary: a
+    self-consistently resealed *summary* can no longer outrank the evidence it contains.
+    """
+    if not isinstance(item, Mapping) or item.get("kind") != MEASUREMENT_KIND:
+        raise _measurement_error("wrong measurement schema")
+
+    measurement = dict(item)
+    recorded_digest = measurement.pop("measurement_digest", "")
+    if not _is_digest(recorded_digest) or recorded_digest != digest_of(measurement):
+        raise _measurement_error("measurement digest does not reproduce")
+
+    expected_identity = {
+        "objective_digest": objective["objective_digest"],
+        "prior_policy_digest": prior_policy["policy_digest"],
+        "parent_meta_policy_digest": current_meta["meta_policy_digest"],
+        "body_artifact_digest": body_digest,
+        "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
+    }
+    for key, expected in expected_identity.items():
+        if item.get(key) != expected:
+            raise _measurement_error("%s does not name the currently measured lineage" % key)
+
+    try:
+        mutation = policy_mutations.validate(item.get("added_mutation") or {})
+    except (policy_mutations.PolicyMutationError, TypeError, ValueError) as problem:
+        raise _measurement_error("added mutation is invalid: %s" % problem) from problem
+    mutation_digest = mutation["mutation_digest"]
+    if item.get("added_mutation_digest") != mutation_digest:
+        raise _measurement_error("added mutation digest does not match the mutation")
+    admitted_mutation = allowed_extensions.get(mutation_digest)
+    if admitted_mutation is None or admitted_mutation != mutation:
+        raise _measurement_error("added mutation is outside the synthesised extension set")
+
+    expected_meta = _descendant(current_meta, mutation)
+    try:
+        recorded_meta = meta.validate_meta_policy(item.get("candidate_meta_policy") or {})
+    except (meta.MetaPolicyError, TypeError, ValueError) as problem:
+        raise _measurement_error("candidate MetaPolicy is invalid: %s" % problem) from problem
+    if recorded_meta != expected_meta:
+        raise _measurement_error("candidate MetaPolicy is not the one-extension descendant")
+    if item.get("candidate_meta_policy_digest") != expected_meta["meta_policy_digest"]:
+        raise _measurement_error("candidate MetaPolicy digest does not match the reconstructed descendant")
+
+    try:
+        expected_policy = policy_mutations.apply(prior_policy, mutation)
+    except policy_mutations.PolicyMutationError as problem:
+        # The current synthesis path only emits mutations that should apply cleanly. If a future
+        # extension language admits a structurally invalid datum, it may be retained only as a
+        # negative measurement with no invented descendant policy or score.
+        if item.get("candidate_policy") is not None:
+            raise _measurement_error("invalid mutation nevertheless carries a candidate policy")
+        if list(item.get("attempts") or []):
+            raise _measurement_error("invalid mutation nevertheless carries program attempts")
+        if item.get("viable") is not False or int(item.get("selection_score", -999)) != -1:
+            raise _measurement_error("invalid mutation claims viability or a score")
+        if str(item.get("reason") or "") != str(problem):
+            raise _measurement_error("invalid mutation reason does not reproduce")
+        if "witness" in item and item.get("witness") is not None:
+            raise _measurement_error("invalid mutation carries a witness")
+        return dict(item)
+
+    try:
+        recorded_policy = policies.validate(item.get("candidate_policy") or {})
+    except (policies.PolicyError, TypeError, ValueError) as problem:
+        raise _measurement_error("candidate search policy is invalid: %s" % problem) from problem
+    if recorded_policy != expected_policy:
+        raise _measurement_error("candidate search policy is not apply(parent, added_mutation)")
+
+    expected_sequences = _new_sequences(prior_policy, expected_policy)
+    expected_set = {tuple(sequence) for sequence in expected_sequences}
+    raw_attempts = item.get("attempts")
+    if not isinstance(raw_attempts, list) or len(raw_attempts) != len(expected_sequences):
+        raise _measurement_error("attempt set does not cover the complete newly reachable program set")
+
+    attempts_by_sequence: dict[tuple[str, ...], dict[str, Any]] = {}
+    accepted_attempts: list[dict[str, Any]] = []
+    task_count = len(questions)
+    for raw_attempt in raw_attempts:
+        if not isinstance(raw_attempt, Mapping):
+            raise _measurement_error("program attempt is not a record")
+        attempt = dict(raw_attempt)
+        operations = attempt.get("operations")
+        if not isinstance(operations, list) or not all(isinstance(name, str) for name in operations):
+            raise _measurement_error("program attempt has invalid operations")
+        sequence = tuple(operations)
+        if sequence not in expected_set:
+            raise _measurement_error("program attempt is outside the reconstructed new shell")
+        if sequence in attempts_by_sequence:
+            raise _measurement_error("newly reachable program was measured more than once")
+        attempts_by_sequence[sequence] = attempt
+
+        if not _is_digest(attempt.get("sandbox_digest")):
+            raise _measurement_error("program attempt carries no valid sandbox result digest")
+        if attempt.get("instrument_abort") is True:
+            if any(key in attempt for key in ("accepted", "candidate_solved_count", "body_artifact")):
+                raise _measurement_error("instrument-aborted attempt also claims a verdict")
+            continue
+
+        accepted = attempt.get("accepted")
+        solved_count = attempt.get("candidate_solved_count")
+        if not isinstance(accepted, bool):
+            raise _measurement_error("completed program attempt has no boolean trust-root verdict")
+        if isinstance(solved_count, bool) or not isinstance(solved_count, int):
+            raise _measurement_error("completed program attempt has no integer solved count")
+        if solved_count < 0 or solved_count > task_count:
+            raise _measurement_error("completed program attempt solved count is outside the task set")
+        if not _is_digest(attempt.get("verdict_digest")):
+            raise _measurement_error("completed program attempt carries no trust-root verdict digest")
+
+        generated = programs.artifact(
+            registry_reference=expected_policy["registry_reference"],
+            operations=sequence,
+            input_field=expected_policy["input_field"],
+        )
+        expected_artifact = artifact_digest_of(generated)
+        if attempt.get("body_artifact") != expected_artifact:
+            raise _measurement_error("program attempt artifact is not reconstructed from its operations")
+        if accepted:
+            accepted_attempts.append(attempt)
+
+    if set(attempts_by_sequence) != expected_set:
+        raise _measurement_error("attempt set is missing a newly reachable program")
+
+    if accepted_attempts:
+        expected_score = max(int(attempt["candidate_solved_count"]) for attempt in accepted_attempts)
+        top = [
+            attempt
+            for attempt in accepted_attempts
+            if int(attempt["candidate_solved_count"]) == expected_score
+        ]
+        expected_witness = sorted(
+            top, key=lambda attempt: attempt["body_artifact"]["artifact_digest"]
+        )[0]
+        expected_viable = True
+        expected_reason = ""
+    else:
+        expected_score = -1
+        expected_witness = None
+        expected_viable = False
+        expected_reason = "MetaPolicy extension exposed no trust-root-accepted new body"
+
+    if item.get("viable") is not expected_viable:
+        raise _measurement_error("viability does not reproduce from program attempts")
+    score = item.get("selection_score")
+    if isinstance(score, bool) or not isinstance(score, int) or score != expected_score:
+        raise _measurement_error("selection score does not reproduce from program attempts")
+    if item.get("witness") != expected_witness:
+        raise _measurement_error("witness does not reproduce from the top accepted program set")
+    if item.get("measure") != "trust_root_candidate_solved_count":
+        raise _measurement_error("selection measure is not the admitted trust-root solved count")
+    if str(item.get("reason") or "") != expected_reason:
+        raise _measurement_error("measurement reason does not reproduce")
+
+    return dict(item)
+
+
+def _retained_measurements(
+    genesis,
+    *,
+    objective,
+    prior_policy,
+    current_meta,
+    body_digest,
+    questions,
+    extensions,
+) -> dict[str, dict[str, Any]]:
     records: dict[str, dict[str, Any]] = {}
+    allowed_extensions = {item["mutation_digest"]: item for item in extensions}
     for item in genesis.state.get("observations", []):
         if not isinstance(item, Mapping) or item.get("kind") != MEASUREMENT_KIND:
             continue
+        # Measurements for other lineage/objective identities are legitimate retained history and
+        # are not interpreted in this round. A record that claims this exact round, however, must be
+        # semantically reproducible before it can count as evidence.
         if (
             item.get("objective_digest") != objective["objective_digest"]
             or item.get("prior_policy_digest") != prior_policy["policy_digest"]
@@ -193,9 +409,20 @@ def _retained_measurements(genesis, *, objective, prior_policy, current_meta, bo
             or item.get("evaluation_contract_digest") != genesis.evaluation_contract["contract_digest"]
         ):
             continue
-        mutation_digest = str(item.get("added_mutation_digest") or "")
-        if mutation_digest:
-            records[mutation_digest] = dict(item)
+        validated = _validate_retained_measurement(
+            genesis,
+            item,
+            objective=objective,
+            prior_policy=prior_policy,
+            current_meta=current_meta,
+            body_digest=body_digest,
+            questions=questions,
+            allowed_extensions=allowed_extensions,
+        )
+        mutation_digest = validated["added_mutation_digest"]
+        if mutation_digest in records:
+            raise _measurement_error("duplicate measurement for one MetaPolicy extension")
+        records[mutation_digest] = validated
     return records
 
 
@@ -285,6 +512,7 @@ def _evaluate_extension(
             "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
             "candidate_policy": None,
             "attempts": [],
+            "witness": None,
             "viable": False,
             "selection_score": -1,
             "reason": str(problem),
@@ -432,6 +660,8 @@ def evolve_meta_policy(
         prior_policy=prior_policy,
         current_meta=current_meta,
         body_digest=body_digest,
+        questions=questions,
+        extensions=extensions,
     )
     pending = [item for item in extensions if item["mutation_digest"] not in retained]
     _require_complete_budget(genesis, pending=pending, prior_policy=prior_policy)
@@ -459,12 +689,14 @@ def evolve_meta_policy(
         prior_policy=prior_policy,
         current_meta=current_meta,
         body_digest=body_digest,
+        questions=questions,
+        extensions=extensions,
     )
     required_digests = {item["mutation_digest"] for item in extensions}
     if not required_digests.issubset(retained):
         raise MetaPolicyEvolutionError("MetaPolicy selection round is incomplete")
     measurements = [retained[item["mutation_digest"]] for item in extensions]
-    viable = [item for item in measurements if item.get("viable")]
+    viable = [item for item in measurements if item["viable"]]
     if not viable:
         selection_reason = "no_viable_meta_policy_descendant"
         winner = None
@@ -481,15 +713,24 @@ def evolve_meta_policy(
     certificate = None
     checkpoint = ""
     if winner is not None:
-        descendant = meta.validate_meta_policy(winner["candidate_meta_policy"])
+        # Reconstruct the descendant again at the authority boundary. The persisted measurement is
+        # evidence, not an installation instruction.
+        winner_mutation = policy_mutations.validate(winner["added_mutation"])
+        descendant = _descendant(current_meta, winner_mutation)
+        if winner["candidate_meta_policy"] != descendant:
+            raise _measurement_error("winning MetaPolicy descendant changed after validation")
+        expected_policy = policy_mutations.apply(prior_policy, winner_mutation)
+        if winner["candidate_policy"] != expected_policy:
+            raise _measurement_error("winning search-policy descendant changed after validation")
+
         certificate_payload = {
             "schema": META_DESCENDANT_CERTIFICATE_SCHEMA,
             "objective": objective,
             "prior_policy_digest": prior_policy["policy_digest"],
             "parent_meta_policy_digest": current_meta["meta_policy_digest"],
             "new_meta_policy_digest": descendant["meta_policy_digest"],
-            "added_mutation": winner["added_mutation"],
-            "added_mutation_digest": winner["added_mutation_digest"],
+            "added_mutation": winner_mutation,
+            "added_mutation_digest": winner_mutation["mutation_digest"],
             "current_meta_policy_exhausted": True,
             "complete_synthesised_candidate_set_measured": True,
             "selection_rule": "unique_strict_maximum",
