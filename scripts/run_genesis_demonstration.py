@@ -1,30 +1,19 @@
 #!/usr/bin/env python3
 """Launch one Genesis lineage and render what it did. The sequencing belongs to the runtime.
 
-This is the DEVELOPMENT demonstration the stopping criterion in
-``docs/METAMORPHOSIS_TARGET.md`` asks for: not that the components exist, but that **one lineage**
-does all of it. It is not a scientific result, it is not frozen, and it advances no gate. Every
-mechanism it exercises is already qualified in a bounded setting; what is new is that they run as one
-program.
+This is a DEVELOPMENT demonstration for the stopping criterion in
+``docs/METAMORPHOSIS_TARGET.md``: not that the components exist, but that **one lineage** runs them as
+one program. It is not a scientific result, it is not frozen, and it advances no gate.
 
-**What changed, and why it mattered.** This script used to *be* the architecture. It called the
-probe functions itself, assigned ``genesis.state`` for every vocabulary and component growth,
-appended the corresponding journal entries, invoked the migration and chose each proposal in order.
-The primitives ran in one process, but the sequencing the objective is actually about lived in a
-host script — so what the run demonstrated was that a person can call the pieces in the right order.
+The script supplies a world, a lineage decision mechanism and a renderer. It does not assign lineage
+state, append journal entries, run probes or decide when an accepted architectural transition becomes
+durable. ``genesis.controller`` owns those effects and publishes a checkpoint after every handled
+intent before it asks the mechanism for the next one.
 
-Now the file supplies three things and nothing else:
+The mechanism below is still deliberately a fixed programme rather than a search strategy. That is a
+known DEVELOPMENT frontier, not something this demonstration hides.
 
-* a **world**: the task family, the demands the lineage may investigate, the substrate it may
-  discover, the operation registry probes are composed from, and the artifacts it may name;
-* a **mechanism**: a function from the frozen ``LineageContext`` to one declarative intent;
-* a **renderer** for the record the controller returns.
-
-It assigns no lineage state, appends no journal entry, and runs no probe. `genesis.controller` does
-all of that, which is what makes the observe→diagnose→propose→evaluate→adopt→persist→continue loop a
-property of the runtime rather than of whoever wrote the driver.
-
-Run it with ``--write`` to persist the record under ``experiments/GENESIS/``.
+Run it with ``--write`` to persist the rendered record under ``experiments/GENESIS/``.
 """
 from __future__ import annotations
 
@@ -62,9 +51,6 @@ def _seed_state() -> dict:
             }
             for name in ("operator_table", "signal_interface")
         ],
-        # One feature per held component: "can a composition over this component's own operations
-        # resolve the demand". `probe.measure` evaluates these from state, so an extension widens
-        # later rows instead of adding a name to the history.
         vocabulary=[
             {"name": "resolvable_by_%s" % name, "origin": "seed", "certificate": None}
             for name in ("operator_table", "signal_interface")
@@ -81,7 +67,11 @@ def _world() -> controller.World:
             "confusable_a": bodies.CONFUSABLE_A,
             "confusable_b": bodies.CONFUSABLE_B,
         },
-        substrates={"record-store": Substrate(name="record-store", operations=bodies.SUBSTRATE_OPERATIONS)},
+        substrates={
+            "record-store": Substrate(
+                name="record-store", operations=bodies.SUBSTRATE_OPERATIONS
+            )
+        },
         probe_registry=bodies.PROBE_REGISTRY,
         component_operations=bodies.COMPONENT_OPERATIONS,
         artifacts={
@@ -98,7 +88,7 @@ def _world() -> controller.World:
 
 #: The lineage's plan, as data. Each entry is one intent the executor validates and performs. This is
 #: a fixed programme rather than a searched one — the mechanism is a lookup, not a strategy — and
-#: saying so is the point: what this demonstration shows is that the *runtime* performs the
+#: saying so is the point: what this demonstration shows is that the runtime performs the
 #: architectural transitions, not that the lineage discovered which ones to attempt.
 PROGRAMME = (
     controller.Transform(name="regressed", body="regressed", rationale={"step": "rejected"}),
@@ -135,11 +125,7 @@ PROGRAMME = (
 
 
 def mechanism(context):
-    """From the frozen lineage context to one intent. It receives a value and returns data.
-
-    It cannot spend budget, run a probe, touch the journal, replace the body or commit a state; the
-    executor does every one of those after validating what was asked for.
-    """
+    """From the frozen controller context to one intent. It receives a value and returns data."""
     step = len(context.acquisitions) + context.observations + _architectural_steps(context)
     if step >= len(PROGRAMME):
         return controller.Stop(reason="the programme is finished")
@@ -166,28 +152,31 @@ _MIGRATED_DIGESTS = frozenset(
 
 
 def demonstrate() -> dict:
+    if STATE_PATH.exists():
+        shutil.rmtree(STATE_PATH)
+
     genesis = Genesis(
         state=_seed_state(),
         body_factory=bodies.parent_body,
         budget=tr.Budget(limits={"generations": 8, "probes": 4000}),
         isolation=tr.Isolation(),
-        # Without this a body's return value is its own verdict, and every number downstream rests
-        # on the thing being judged awarding its own marks.
         grade=bodies.grade,
     )
-    run = controller.run(genesis, _world(), mechanism, max_steps=len(PROGRAMME) + 1)
+    run = controller.run(
+        genesis,
+        _world(),
+        mechanism,
+        max_steps=len(PROGRAMME) + 1,
+        checkpoint_directory=STATE_PATH,
+    )
 
-    # Cleared first. Checkpoint payloads are content-addressed, so a directory that accumulated
-    # earlier runs' files would leave the committed artifact set depending on what was there before
-    # rather than on what this run produced.
-    if STATE_PATH.exists():
-        shutil.rmtree(STATE_PATH)
-    genesis.persist(STATE_PATH)
     restored = Genesis.restore(STATE_PATH, body_factory=genesis.body_factory, grade=bodies.grade)
     survival = {
         "state_digest_matches": restored.state["state_digest"] == genesis.state["state_digest"],
         "journal_head_matches": restored.journal.head == genesis.journal.head,
         "journal_length": len(restored.journal),
+        "mechanism_artifact_matches": controller.bound_mechanism_artifact(restored)
+        == controller.bound_mechanism_artifact(genesis),
     }
 
     record = {
@@ -197,6 +186,7 @@ def demonstrate() -> dict:
         "advances_a_generality_gate": False,
         "frozen": False,
         "architecture_sequenced_by": "genesis.controller.run",
+        "persistence_sequenced_by": "genesis.controller.run",
         "run": run,
         "survives_process_death": survival,
         "journal_kinds": [entry["kind"] for entry in genesis.journal],
@@ -217,12 +207,20 @@ def main() -> int:
         RECORD_PATH.write_bytes(tr.canonical_bytes(record) + b"\n")
         print("wrote %s" % RECORD_PATH.relative_to(ROOT))
     for step in record["run"]["steps"]:
-        print("  %-22s %s" % (step["intent"], {k: v for k, v in step.items() if k != "intent"}))
+        print(
+            "  %-22s %s"
+            % (step["intent"], {k: v for k, v in step.items() if k != "intent"})
+        )
     print(
         json.dumps(
             {
                 key: record["run"][key]
-                for key in ("final_generation", "final_components", "final_vocabulary", "causal_chain")
+                for key in (
+                    "final_generation",
+                    "final_components",
+                    "final_vocabulary",
+                    "causal_chain",
+                )
             },
             indent=2,
         )
