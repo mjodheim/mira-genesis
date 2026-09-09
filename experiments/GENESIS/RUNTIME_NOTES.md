@@ -32,7 +32,7 @@ behaviour would be describing the version its author believed he had written.
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
 | `scripts/run_genesis_endogenous_demonstration.py` | the second demonstration: no catalogue to select from, so the body is constructed and the acquisition machinery changes on evidence; defined in [`ENDOGENOUS_DEFINITION.md`](ENDOGENOUS_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
-| `tests/test_genesis_*.py` | 318 hostile offline tests; 117 guards, 115 killed by a test (measured) |
+| `tests/test_genesis_*.py` | 373 hostile offline tests (measured). The guard census below was measured before `program.py`, `store.py` and the endogenous controller guards existed, and has not yet been re-run over them |
 
 ## The stopping criterion, and where this stands against it
 

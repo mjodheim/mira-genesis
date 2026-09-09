@@ -44,6 +44,9 @@ MODULES = (
     "probe",
     "artifacts",
     "capabilities",
+    "controller",
+    "program",
+    "store",
 )
 
 
