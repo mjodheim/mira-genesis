@@ -21,6 +21,7 @@ jobs:
         with:
           python-version: '3.11'
 
+      # The script and this workflow are both removed from the published repair tree.
       - name: Apply the explicit one-shot repair
         run: python scripts/_repair_genesis_causal_novelty.py
 
