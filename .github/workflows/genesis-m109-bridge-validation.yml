@@ -1,0 +1,45 @@
+name: Genesis M109 bridge focused validation
+
+on:
+  push:
+    branches:
+      - research/genesis-m109-bridge-20260909
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: research/genesis-m109-bridge-20260909
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+
+      - name: Install development dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Run focused Genesis and frozen-M109 tests
+        run: >-
+          python -m pytest -q
+          tests/test_genesis_m109_bridge.py
+          tests/test_genesis_m108_bridge.py
+          tests/test_genesis_loop.py
+          tests/test_m109_recursive_depth.py
+
+      - name: Check repository integrity
+        run: python scripts/check_repository_integrity.py
+
+      - name: Remove this one-shot workflow after successful validation
+        shell: bash
+        run: |
+          git config user.name 'Anthony Mets'
+          git config user.email '110968830+mjodheim@users.noreply.github.com'
+          git rm .github/workflows/genesis-m109-bridge-validation.yml
+          git commit -s -m 'chore: remove M109 bridge validation workflow'
+          git push origin HEAD:research/genesis-m109-bridge-20260909
