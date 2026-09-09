@@ -157,9 +157,10 @@ def test_one_runtime_campaign_selects_two_different_machinery_mutations_and_two_
     assert isinstance(genesis.body_factory, ConfiguredBody)
     assert genesis.body_factory.configuration["operations"] == ("square", "square")
 
-    # Five mutation attempts: negate + square on objective one, then negate + duplicate-square +
-    # depth on objective two. Meta-evaluation only spends on policies that expose runnable new bodies.
-    assert genesis.budget.spent["policy_mutations"] == 5
+    # Evidence-ranked selection measures the complete admitted mutation set before choosing. Three
+    # mutations are therefore measured on each objective, even when one of them is already known to
+    # be useful. Meta-evaluation still spends only on policies that expose runnable new bodies.
+    assert genesis.budget.spent["policy_mutations"] == 6
     assert genesis.budget.spent["policy_evaluations"] == 7
 
     restored = recovery.restore_lineage(tmp_path, grade=fixtures.grade_expected)
