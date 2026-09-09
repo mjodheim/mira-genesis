@@ -201,19 +201,19 @@ def test_resealed_sibling_search_policy_cannot_back_a_meta_policy_measurement():
     assert meta.bound_meta_policy(genesis) == before_meta
 
 
-def test_resealed_attempt_cannot_invent_a_winning_program():
+def test_resealed_attempt_cannot_swap_the_executable_bound_to_its_operations():
     forged = _valid_square_measurement()
     accepted = next(item for item in forged["attempts"] if item.get("accepted"))
-    accepted["candidate_solved_count"] = 1
-    forged["selection_score"] = 1
+    accepted["body_artifact"] = tr.artifact_digest_of(fixtures.null_body)
     forged = _reseal(forged)
 
     genesis, here = _fresh_target()
     _inject(genesis, forged)
 
-    # The forged score is numerically plausible, but the retained summary is still checked against
-    # its complete canonical program shell and canonical witness rather than trusted by digest alone.
-    with pytest.raises(meta_evolution.MetaPolicyEvolutionError):
+    with pytest.raises(
+        meta_evolution.MetaPolicyEvolutionError,
+        match="program attempt artifact is not reconstructed",
+    ):
         meta_evolution.evolve_meta_policy(genesis, here)
 
 
