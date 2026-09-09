@@ -122,7 +122,10 @@ def _round_payload(
 
 
 def _round_digest(payload: Mapping[str, Any]) -> str:
-    return digest_of(dict(payload))
+    # Reservation size is fixed by what was unmeasured when the round began, while the semantic
+    # round identity must survive partial measurement. Excluding `reserved` keeps a charged round
+    # discoverable after process death even if some measurement records were committed before it.
+    return digest_of({key: value for key, value in dict(payload).items() if key != "reserved"})
 
 
 def _round_records(genesis, round_digest: str) -> list[dict[str, Any]]:
@@ -183,10 +186,19 @@ def _validate_record(item: Mapping[str, Any], expected_payload: Mapping[str, Any
     if recorded_digest != digest_of(record):
         raise DurableMetaPolicyEvolutionError("durable MetaPolicy round record digest does not reproduce")
     for key, value in expected_payload.items():
+        if key == "reserved":
+            continue
         if item.get(key) != value:
             raise DurableMetaPolicyEvolutionError(
                 "durable MetaPolicy round does not reproduce current %s" % key
             )
+    reserved = item.get("reserved")
+    if not isinstance(reserved, Mapping):
+        raise DurableMetaPolicyEvolutionError("durable MetaPolicy round carries no reservation")
+    for dimension in ("meta_policy_candidates", "meta_policy_evaluations"):
+        value = reserved.get(dimension)
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise DurableMetaPolicyEvolutionError("durable MetaPolicy round carries invalid reservation")
     if item.get("round_digest") != _round_digest(expected_payload):
         raise DurableMetaPolicyEvolutionError("durable MetaPolicy round identity does not reproduce")
     if item.get("status") not in {_RESERVED, _CHARGED, _COMPLETED, _CRASH_INCOMPLETE}:
@@ -207,9 +219,9 @@ def _matching_measurements(genesis, payload: Mapping[str, Any]) -> set[str]:
             or item.get("evaluation_contract_digest") != payload["evaluation_contract_digest"]
         ):
             continue
-        digest = item.get("added_mutation_digest")
-        if isinstance(digest, str):
-            found.add(digest)
+        mutation_digest = item.get("added_mutation_digest")
+        if isinstance(mutation_digest, str):
+            found.add(mutation_digest)
     return found
 
 
@@ -302,6 +314,9 @@ def evolve_meta_policy(
         existing_record = reserved_record
     else:
         existing_record = _validate_record(existing[0], payload)
+        # The original reservation is a physical-work commitment. Do not shrink or redraw it merely
+        # because some measurements appeared before a crash.
+        payload = {**payload, "reserved": dict(existing_record["reserved"])}
 
     status = existing_record["status"]
     reserved = payload["reserved"]
