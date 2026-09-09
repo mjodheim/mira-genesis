@@ -179,6 +179,27 @@ def run_objective(
                 )
                 break
 
+            # Deeper machinery search itself must have been prospectively budgeted. Older callers
+            # admitted only body/policy dimensions; giving those lineages new meta-level allowance
+            # merely because this runtime learned a new feature would widen their experiment after
+            # the fact. Preserve the old terminal behaviour instead.
+            required_meta_budget = ("meta_policy_candidates", "meta_policy_evaluations")
+            missing_meta_budget = [
+                name for name in required_meta_budget if name not in genesis.budget.limits
+            ]
+            if missing_meta_budget:
+                steps.append(
+                    {
+                        "intent": "stop",
+                        "reason": "body policy and MetaPolicy exhausted; deeper MetaPolicy evolution "
+                        "was not prospectively admitted (missing budget: %s)"
+                        % ", ".join(missing_meta_budget),
+                        "objective_digest": objective["objective_digest"],
+                        "policy_digest": policy["policy_digest"],
+                    }
+                )
+                break
+
             parent_meta = meta.bound_meta_policy(genesis)
             if parent_meta is None:
                 raise MetamorphicPolicyError("lineage lost its MetaPolicy before descendant search")
