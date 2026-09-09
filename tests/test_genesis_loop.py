@@ -670,6 +670,46 @@ def test_the_chain_report_counts_links_without_grading_them():
     assert "is_a_chain_rather_than_a_sequence" not in chain
 
 
+def test_the_chain_report_refuses_an_established_link_that_skips_a_generation():
+    """An n -> n-2 dependency is evidence, but it is not the n -> n-1 link a chain needs."""
+    genesis = _genesis()
+    _cycle_with(genesis, bodies.migrated_parent_body, name=bodies.ACQUIRED_COMPONENT)
+    _cycle_with(
+        genesis,
+        bodies.migrated_improved_body,
+        depends_on=bodies.ACQUIRED_COMPONENT,
+        name=bodies.SECOND_ACQUISITION,
+    )
+    _cycle_with(
+        genesis,
+        bodies.migrated_further_body,
+        depends_on=bodies.SECOND_ACQUISITION,
+        name="third",
+    )
+
+    acquisitions = [dict(item) for item in genesis.state["acquisitions"]]
+    last = dict(acquisitions[-1])
+    causal = dict(last["causal_dependency"])
+    assert causal["established"] is True
+    causal["depends_on"] = acquisitions[0]["name"]
+    last["causal_dependency"] = causal
+    acquisitions[-1] = last
+    genesis.state = st.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=genesis.state["tools"],
+        acquisitions=acquisitions,
+        observations=genesis.state["observations"],
+        generation=genesis.state["generation"],
+    )
+
+    chain = genesis.causal_chain()
+    assert chain["acquisitions"] == 3
+    assert chain["established_links"] == 0
+    assert chain["makes_no_recursion_claim"] is True
+
+
 # -- who decides whether a task was solved -----------------------------------------------------
 #
 # The trust root recomputes every number from raw per-task rows and never reads a score. That was

@@ -698,8 +698,9 @@ class Genesis:
         """How far back the lineage's improvements actually depend on each other.
 
         A run of acceptances is not a chain. This counts the consecutive acquisitions, ending at the
-        most recent, whose dependency on the one before was established by ablation — so a claim
-        about recursive improvement has to read a number that can be small.
+        most recent, whose dependency on the *immediately preceding acquisition* was established by
+        ablation. A dependency that skips a generation is evidence, but not a contiguous link — so
+        a claim about recursive improvement has to read a number that can be small.
 
         It reports the number and nothing else. Converting it into a verdict was the previous
         version's mistake: `length >= 2` became "a chain rather than a sequence", which is a
@@ -708,8 +709,16 @@ class Genesis:
         """
         acquisitions = list(self.state["acquisitions"])
         length = 0
-        for acquisition in reversed(acquisitions):
-            if not (acquisition.get("causal_dependency") or {}).get("established"):
+        # A chain link is local: generation n must have been shown to need generation n-1.
+        # An established dependency on some older held acquisition is real evidence about that
+        # older acquisition, but it does not make the acquisition sequence contiguous.
+        for index in range(len(acquisitions) - 1, 0, -1):
+            acquisition = acquisitions[index]
+            causal = acquisition.get("causal_dependency") or {}
+            predecessor = acquisitions[index - 1]
+            if not causal.get("established"):
+                break
+            if causal.get("depends_on") != predecessor.get("name"):
                 break
             length += 1
         return {
