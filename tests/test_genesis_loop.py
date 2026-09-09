@@ -380,26 +380,77 @@ def test_the_whole_lineage_survives_process_death(tmp_path):
 
 # -- causal dependency between generations ------------------------------------------------------
 
-def test_removing_an_earlier_acquisition_must_cost_something():
+def test_removing_an_earlier_acquisition_must_cost_new_work():
+    parent = [
+        {"task_id": "t0", "outcome": "solved"},
+        {"task_id": "t1", "outcome": "solved"},
+        {"task_id": "t2", "outcome": "unsolved"},
+        {"task_id": "t3", "outcome": "unsolved"},
+    ]
+    candidate = [{"task_id": "t%d" % i, "outcome": "solved"} for i in range(4)]
+    ablated = [
+        {"task_id": "t0", "outcome": "solved"},
+        {"task_id": "t1", "outcome": "solved"},
+        {"task_id": "t2", "outcome": "unsolved"},
+        {"task_id": "t3", "outcome": "unsolved"},
+    ]
     outcome = ablation_supports_causal_dependency(
-        with_acquisition=[{"task_id": "t%d" % i, "outcome": "solved"} for i in range(4)],
-        without_acquisition=[
-            {"task_id": "t0", "outcome": "solved"},
-            {"task_id": "t1", "outcome": "unsolved"},
-            {"task_id": "t2", "outcome": "unsolved"},
-            {"task_id": "t3", "outcome": "unsolved"},
-        ],
+        parent_outcomes=parent,
+        with_acquisition=candidate,
+        without_acquisition=ablated,
         equal_budget=True,
     )
     assert outcome["supported"] is True
-    assert outcome["solved_with_acquisition"] == 4
+    assert outcome["newly_solved_with_acquisition"] == ["t2", "t3"]
+    assert outcome["newly_solved_lost_without_acquisition"] == ["t2", "t3"]
+    assert outcome["retained_solved_lost_without_acquisition"] == []
+
+
+def test_breaking_only_retained_work_does_not_establish_causal_dependency():
+    """Regression: total solved may collapse while the generation's novelty survives intact."""
+    parent = [
+        {"task_id": "old0", "outcome": "solved"},
+        {"task_id": "old1", "outcome": "solved"},
+        {"task_id": "new", "outcome": "unsolved"},
+    ]
+    candidate = [
+        {"task_id": "old0", "outcome": "solved"},
+        {"task_id": "old1", "outcome": "solved"},
+        {"task_id": "new", "outcome": "solved"},
+    ]
+    ablated = [
+        {"task_id": "old0", "outcome": "unsolved"},
+        {"task_id": "old1", "outcome": "unsolved"},
+        {"task_id": "new", "outcome": "solved"},
+    ]
+    outcome = ablation_supports_causal_dependency(
+        parent_outcomes=parent,
+        with_acquisition=candidate,
+        without_acquisition=ablated,
+        equal_budget=True,
+    )
+    assert outcome["solved_with_acquisition"] == 3
     assert outcome["solved_without_acquisition"] == 1
+    assert outcome["supported"] is False
+    assert outcome["newly_solved_with_acquisition"] == ["new"]
+    assert outcome["newly_solved_lost_without_acquisition"] == []
+    assert outcome["retained_solved_lost_without_acquisition"] == ["old0", "old1"]
+    assert "only broke retained work" in outcome["reason"]
 
 
 def test_an_ablation_that_costs_nothing_refutes_the_causal_claim():
+    parent = [
+        {"task_id": "t0", "outcome": "solved"},
+        {"task_id": "t1", "outcome": "solved"},
+        {"task_id": "t2", "outcome": "unsolved"},
+        {"task_id": "t3", "outcome": "unsolved"},
+    ]
     rows = [{"task_id": "t%d" % i, "outcome": "solved"} for i in range(4)]
     outcome = ablation_supports_causal_dependency(
-        with_acquisition=rows, without_acquisition=list(rows), equal_budget=True
+        parent_outcomes=parent,
+        with_acquisition=rows,
+        without_acquisition=list(rows),
+        equal_budget=True,
     )
     assert outcome["supported"] is False
     assert "cost nothing" in outcome["reason"]
@@ -407,12 +458,23 @@ def test_an_ablation_that_costs_nothing_refutes_the_causal_claim():
 
 def test_an_unequal_budget_voids_the_comparison_rather_than_passing_it():
     outcome = ablation_supports_causal_dependency(
+        parent_outcomes=[{"task_id": "t0", "outcome": "unsolved"}],
         with_acquisition=[{"task_id": "t0", "outcome": "solved"}],
         without_acquisition=[{"task_id": "t0", "outcome": "unsolved"}],
         equal_budget=False,
     )
     assert outcome["supported"] is False
     assert "same budget" in outcome["reason"]
+
+
+def test_causal_ablation_refuses_different_task_sets():
+    with pytest.raises(tr.TrustRootError, match="same tasks"):
+        ablation_supports_causal_dependency(
+            parent_outcomes=[{"task_id": "parent", "outcome": "unsolved"}],
+            with_acquisition=[{"task_id": "candidate", "outcome": "solved"}],
+            without_acquisition=[{"task_id": "candidate", "outcome": "unsolved"}],
+            equal_budget=True,
+        )
 
 
 # -- causal dependency as a property of the runtime, not of whatever script drives it --------------
@@ -475,6 +537,7 @@ def test_the_cycle_derives_and_runs_the_ablation_arm_itself():
     assert causal["arm_derived_by_the_runtime"] is True
     assert causal["caller_supplied_arm_used_as_evidence"] is False
     assert causal["established"] is True
+    assert causal["newly_solved_lost_without_acquisition"] == ["t4"]
     assert causal["depends_on"] == bodies.ACQUIRED_COMPONENT
     assert causal["solved_without_acquisition"] < causal["solved_with_acquisition"]
     assert (

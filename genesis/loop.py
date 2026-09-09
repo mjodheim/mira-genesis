@@ -15,9 +15,10 @@ candidate does not work.)
 **Causal dependency between generations is checked every time, not once per milestone.** "Version 1
 better, version 2 better" is not the claim. A proposal may carry an ablation arm — itself with the
 earlier acquisition it depends on removed and nothing else changed — and `cycle` runs that arm at the
-same budget and requires a loss of reach. `causal_chain` then counts the consecutive acquisitions
-whose dependency was actually established, so a claim about recursive improvement reads a number that
-can be small.
+same budget and requires a loss in work the current generation newly solved over its parent.
+Losing only retained work is not evidence that the new work needed the earlier acquisition.
+`causal_chain` then counts the consecutive acquisitions whose dependency was actually established, so a
+claim about recursive improvement reads a number that can be small.
 
 This sentence was true of the docstring and false of the code for a while: the function existed, the
 docstring called it a permanent obligation of the runtime, and the only thing calling it was a
@@ -653,6 +654,7 @@ class Genesis:
             return {"instrument_abort": True, "run": run, "record": {"established": False}}
 
         outcome = ablation_supports_causal_dependency(
+            parent_outcomes=parent["outcomes"],
             with_acquisition=candidate["outcomes"],
             without_acquisition=run["outcomes"],
             equal_budget=True,
@@ -675,6 +677,13 @@ class Genesis:
                 "ablated_artifact_digest": artifact_digest_of(arm)["artifact_digest"],
                 "solved_with_acquisition": outcome["solved_with_acquisition"],
                 "solved_without_acquisition": outcome["solved_without_acquisition"],
+                "newly_solved_with_acquisition": outcome["newly_solved_with_acquisition"],
+                "newly_solved_lost_without_acquisition": outcome[
+                    "newly_solved_lost_without_acquisition"
+                ],
+                "retained_solved_lost_without_acquisition": outcome[
+                    "retained_solved_lost_without_acquisition"
+                ],
                 "ablated_arm_differs_from_the_parent_arm": distinct,
                 "ablated_sandbox_digest": run["result_digest"],
                 "why": ""
@@ -971,15 +980,22 @@ class Genesis:
 # ---------------------------------------------------------------------------------------------
 def ablation_supports_causal_dependency(
     *,
+    parent_outcomes: Sequence[Mapping[str, Any]],
     with_acquisition: Sequence[Mapping[str, Any]],
     without_acquisition: Sequence[Mapping[str, Any]],
     equal_budget: bool,
 ) -> dict[str, Any]:
-    """Test whether a later generation actually needed an earlier acquisition.
+    """Test whether the *new work* of a later generation needed an earlier acquisition.
 
-    Remove the earlier acquisition, retry the later generation at the same budget, and require a
-    measured loss. A sequence of improvements that each happened to work is not a causal chain, and
-    this is checked on every generation rather than once per milestone.
+    A raw loss in total solved tasks is insufficient. The earlier acquisition is retained work, so
+    ablating it can trivially break tasks the parent already solved while leaving every task newly
+    solved by the later generation intact. That demonstrates retention dependence, not causal
+    dependence of the new improvement.
+
+    The comparison identifies the tasks the candidate newly solves relative to its parent and
+    requires the equal-budget ablation to lose at least one of those tasks. Losses confined to work
+    the parent already solved are recorded separately and establish nothing about this generation's
+    novelty.
     """
     if not equal_budget:
         return {
@@ -987,17 +1003,59 @@ def ablation_supports_causal_dependency(
             "reason": "the ablated arm did not run at the same budget, so the comparison is void",
         }
 
-    def solved(rows: Sequence[Mapping[str, Any]]) -> int:
-        return sum(1 for row in rows if row.get("outcome") == "solved")
+    def by_task(rows: Sequence[Mapping[str, Any]], label: str) -> dict[str, str]:
+        mapped: dict[str, str] = {}
+        for row in rows:
+            task_id = row.get("task_id")
+            if not isinstance(task_id, str) or not task_id:
+                raise TrustRootError("%s causal outcome carries no task id" % label)
+            if task_id in mapped:
+                raise TrustRootError("%s causal outcome repeats task %r" % (label, task_id))
+            mapped[task_id] = str(row.get("outcome") or "")
+        return mapped
 
-    intact, ablated = solved(with_acquisition), solved(without_acquisition)
-    supported = ablated < intact
+    parent = by_task(parent_outcomes, "parent")
+    intact = by_task(with_acquisition, "candidate")
+    ablated = by_task(without_acquisition, "ablated candidate")
+    if set(parent) != set(intact) or set(parent) != set(ablated):
+        raise TrustRootError("causal parent, candidate and ablation did not face the same tasks")
+
+    parent_solved = {task for task, outcome in parent.items() if outcome == "solved"}
+    intact_solved = {task for task, outcome in intact.items() if outcome == "solved"}
+    ablated_solved = {task for task, outcome in ablated.items() if outcome == "solved"}
+
+    newly_solved = intact_solved - parent_solved
+    lost_newly_solved = newly_solved - ablated_solved
+    retained_solved = parent_solved & intact_solved
+    lost_retained_solved = retained_solved - ablated_solved
+    all_lost = intact_solved - ablated_solved
+
+    supported = bool(lost_newly_solved)
+    if supported:
+        reason = ""
+    elif not newly_solved:
+        reason = (
+            "the later generation solved no task its parent did not already solve, so there is no "
+            "new work whose dependency could be established"
+        )
+    elif all_lost:
+        reason = (
+            "removing the earlier acquisition only broke retained work; every task newly solved by "
+            "the later generation remained solved"
+        )
+    else:
+        reason = (
+            "removing the earlier acquisition cost nothing on the later generation's newly solved "
+            "work, so the new improvement did not need it"
+        )
+
     return {
         "supported": supported,
-        "solved_with_acquisition": intact,
-        "solved_without_acquisition": ablated,
-        "reason": ""
-        if supported
-        else "removing the earlier acquisition cost nothing, so the later generation did not need it",
+        "solved_with_acquisition": len(intact_solved),
+        "solved_without_acquisition": len(ablated_solved),
+        "newly_solved_with_acquisition": sorted(newly_solved),
+        "newly_solved_lost_without_acquisition": sorted(lost_newly_solved),
+        "retained_solved_lost_without_acquisition": sorted(lost_retained_solved),
+        "reason": reason,
         "equal_budget": True,
     }
