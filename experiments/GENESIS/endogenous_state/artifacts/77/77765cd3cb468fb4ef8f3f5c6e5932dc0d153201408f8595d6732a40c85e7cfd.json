@@ -1,0 +1,1 @@
+{"declared_dependencies":[],"inputs":["input"],"nodes":[{"field":"input","op":"input"},{"args":[0],"op":"call","operation":"double"},{"args":[1],"op":"call","operation":"increment"}],"registry_reference":"genesis.development_bodies:PROBE_OPERATIONS","root":2,"schema":"genesis-program-v1"}

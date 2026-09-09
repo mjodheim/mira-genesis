@@ -24,10 +24,13 @@ behaviour would be describing the version its author believed he had written.
 | `genesis/probe.py` | probes the lineage composes and runs: insufficiency by exhaustion, established by experiment rather than by consulting an oracle |
 | `genesis/migration.py` | substrate discovery by probing, migration, and the requirement to evolve again after it |
 | `genesis/artifacts.py` | executable artifacts whose configuration is data, so the runtime can derive an ablation rather than accept one |
+| `genesis/program.py` | generated bodies as inert canonical data, run by a fixed interpreter behind the sandbox boundary; the one artifact kind whose identity binds the bytes that execute |
+| `genesis/store.py` | append-only content-addressed store, so a body the lineage generated survives process death without a host recreating it |
 | `genesis/capabilities.py` | opaque handles for discovered substrate capabilities, and a use record derived rather than declared |
 | `genesis/controller.py` | the architecture state machine: a lineage returns declarative intents, the executor is the only thing that acts |
 | `genesis/development_bodies.py` | neutral fixtures, including bodies that lie, throw, escape and depend |
 | `scripts/run_genesis_demonstration.py` | drives one lineage through the whole cycle and emits the record; defined in [`DEMONSTRATION_DEFINITION.md`](DEMONSTRATION_DEFINITION.md) |
+| `scripts/run_genesis_endogenous_demonstration.py` | the second demonstration: no catalogue to select from, so the body is constructed and the acquisition machinery changes on evidence; defined in [`ENDOGENOUS_DEFINITION.md`](ENDOGENOUS_DEFINITION.md) |
 | `scripts/check_genesis_guards_are_tested.py` | deletes each guard in turn and reports the ones no test notices |
 | `tests/test_genesis_*.py` | 318 hostile offline tests; 117 guards, 115 killed by a test (measured) |
 
@@ -483,13 +486,17 @@ Any figure quoted from it should be read together with that context block.
   component is the one supplying most of the composition" and "take the first operation in the
   sorted symmetric difference" are both the author's choices. They are defensible and they are not
   forced by anything.
-- **The mechanism is a programme, not a search.** The controller closes the *authority* question —
-  lineage-owned code cannot reach the runtime — and the demonstration's mechanism is a lookup table
-  of intents. That the runtime performs the transitions is what the run shows; that a lineage
-  discovered which transitions to attempt is not.
-- **Intents name importable artifacts.** A lineage that generates its own code needs content-addressed
-  payloads the executor can build and run. `binds_exact_executed_bytes` is `false` on every artifact
-  descriptor this runtime produces, and it says so.
+- **The first demonstration's mechanism is a programme, not a search.** It stays as the integration
+  regression for architecture transitions. The second demonstration is the one where the body is
+  constructed and the machinery changes; see [`ENDOGENOUS_DEFINITION.md`](ENDOGENOUS_DEFINITION.md)
+  for what that does and does not establish.
+- **The catalogue of candidate policies is still the host's.** The lineage chooses whether to change
+  its acquisition machinery and the trust root decides whether the change is licensed, but the
+  policies it may choose between are admitted from outside, exactly as the operation alphabet is.
+  What is endogenous is the body and the decision to change the rule, not the invention of a rule.
+- **One policy change is not recursive depth.** Showing a later policy change *depended* on an
+  earlier one needs the structural-ablation argument applied to policies. Bodies have that; policies
+  do not.
 - **Capability handles are not a sandbox.** Translation runs in this process. Severing
   `__globals__` closes the accidental aperture and the caller-authored use declaration; a determined
   translator can still walk `type(handle)`. Real isolation needs the process boundary that candidate
