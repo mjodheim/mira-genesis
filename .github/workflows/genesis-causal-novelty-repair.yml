@@ -26,59 +26,64 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
           loop_path = Path('genesis/loop.py')
           text = loop_path.read_text(encoding='utf-8')
 
-          old_doc = '''same budget and requires a loss of reach. `causal_chain` then counts the consecutive acquisitions
-          whose dependency was actually established, so a claim about recursive improvement reads a number that
-          can be small.'''
-          new_doc = '''same budget and requires a loss in work the current generation newly solved over its parent.
-          Losing only retained work is not evidence that the new work needed the earlier acquisition.
-          `causal_chain` then counts the consecutive acquisitions whose dependency was actually established, so a
-          claim about recursive improvement reads a number that can be small.'''
-          if old_doc not in text:
+          old_doc = (
+              'same budget and requires a loss of reach. `causal_chain` then counts the consecutive acquisitions\n'
+              'whose dependency was actually established, so a claim about recursive improvement reads a number that\n'
+              'can be small.'
+          )
+          new_doc = (
+              'same budget and requires a loss in work the current generation newly solved over its parent.\n'
+              'Losing only retained work is not evidence that the new work needed the earlier acquisition.\n'
+              '`causal_chain` then counts the consecutive acquisitions whose dependency was actually established, so a\n'
+              'claim about recursive improvement reads a number that can be small.'
+          )
+          if text.count(old_doc) != 1:
               raise SystemExit('loop docstring anchor changed')
           text = text.replace(old_doc, new_doc, 1)
 
-          old_call = '''        outcome = ablation_supports_causal_dependency(
-              with_acquisition=candidate["outcomes"],
-              without_acquisition=run["outcomes"],
-              equal_budget=True,
-          )'''
-          new_call = '''        outcome = ablation_supports_causal_dependency(
-              parent_outcomes=parent["outcomes"],
-              with_acquisition=candidate["outcomes"],
-              without_acquisition=run["outcomes"],
-              equal_budget=True,
-          )'''
-          if old_call not in text:
+          pattern = re.compile(
+              r'(?m)^(?P<i>\s*)with_acquisition=candidate\["outcomes"\],\n'
+              r'(?P=i)without_acquisition=run\["outcomes"\],'
+          )
+          text, count = pattern.subn(
+              lambda m: (
+                  f'{m.group("i")}parent_outcomes=parent["outcomes"],\n'
+                  f'{m.group("i")}with_acquisition=candidate["outcomes"],\n'
+                  f'{m.group("i")}without_acquisition=run["outcomes"],'
+              ),
+              text,
+              count=1,
+          )
+          if count != 1:
               raise SystemExit('causal call anchor changed')
-          text = text.replace(old_call, new_call, 1)
 
-          old_fields = '''                "solved_with_acquisition": outcome["solved_with_acquisition"],
-                  "solved_without_acquisition": outcome["solved_without_acquisition"],
-                  "ablated_arm_differs_from_the_parent_arm": distinct,'''
-          new_fields = '''                "solved_with_acquisition": outcome["solved_with_acquisition"],
-                  "solved_without_acquisition": outcome["solved_without_acquisition"],
-                  "newly_solved_with_acquisition": outcome["newly_solved_with_acquisition"],
-                  "newly_solved_lost_without_acquisition": outcome[
-                      "newly_solved_lost_without_acquisition"
-                  ],
-                  "retained_solved_lost_without_acquisition": outcome[
-                      "retained_solved_lost_without_acquisition"
-                  ],
-                  "ablated_arm_differs_from_the_parent_arm": distinct,'''
-          if old_fields not in text:
+          needle = '                "solved_without_acquisition": outcome["solved_without_acquisition"],\n'
+          if text.count(needle) != 1:
               raise SystemExit('causal record anchor changed')
-          text = text.replace(old_fields, new_fields, 1)
+          inserted = needle + (
+              '                "newly_solved_with_acquisition": outcome["newly_solved_with_acquisition"],\n'
+              '                "newly_solved_lost_without_acquisition": outcome[\n'
+              '                    "newly_solved_lost_without_acquisition"\n'
+              '                ],\n'
+              '                "retained_solved_lost_without_acquisition": outcome[\n'
+              '                    "retained_solved_lost_without_acquisition"\n'
+              '                ],\n'
+          )
+          text = text.replace(needle, inserted, 1)
 
-          marker = '''# ---------------------------------------------------------------------------------------------
-          # Causal dependency between generations
-          # ---------------------------------------------------------------------------------------------
-          def ablation_supports_causal_dependency('''
+          marker = (
+              '# ---------------------------------------------------------------------------------------------\n'
+              '# Causal dependency between generations\n'
+              '# ---------------------------------------------------------------------------------------------\n'
+              'def ablation_supports_causal_dependency('
+          )
           position = text.find(marker)
-          if position < 0:
+          if position < 0 or text.find(marker, position + 1) >= 0:
               raise SystemExit('causal function marker changed')
           prefix = text[:position]
           replacement = '''# ---------------------------------------------------------------------------------------------
@@ -98,10 +103,9 @@ jobs:
               by the later generation intact. That demonstrates retention dependence, not causal dependence of the
               new improvement.
 
-              The comparison therefore identifies the tasks the candidate newly solves relative to its parent and
-              requires the equal-budget ablation to lose at least one of those tasks. Losses confined to work the
-              parent already solved are recorded separately and establish nothing about the current generation's
-              novelty.
+              The comparison identifies the tasks the candidate newly solves relative to its parent and requires
+              the equal-budget ablation to lose at least one of those tasks. Losses confined to work the parent
+              already solved are recorded separately and establish nothing about the current generation's novelty.
               """
               if not equal_budget:
                   return {
@@ -170,8 +174,12 @@ jobs:
 
           tests_path = Path('tests/test_genesis_loop.py')
           tests = tests_path.read_text(encoding='utf-8')
-          start = tests.index('def test_removing_an_earlier_acquisition_must_cost_something():')
-          end = tests.index('\n\n# -- causal dependency as a property', start)
+          start_marker = 'def test_removing_an_earlier_acquisition_must_cost_something():'
+          end_marker = '\n\n# -- causal dependency as a property'
+          if tests.count(start_marker) != 1:
+              raise SystemExit('direct causal test start anchor changed')
+          start = tests.index(start_marker)
+          end = tests.index(end_marker, start)
           new_tests = '''def test_removing_an_earlier_acquisition_must_cost_new_work():
               parent = [
                   {"task_id": "t0", "outcome": "solved"},
@@ -271,15 +279,50 @@ jobs:
           tests_path.write_text(tests[:start] + new_tests + tests[end:], encoding='utf-8')
 
           audit = Path('docs/audits/GENESIS_CAUSAL_NOVELTY_REPAIR_2026-09-09.md')
-          audit.write_text('''# Genesis causal novelty repair — DEVELOPMENT apparatus\n\n**Prepared:** 9 September 2026  \n**Status:** runtime metrology repair; no scientific observation; no gate movement.\n\n## Defect\n\nThe runtime called a later acquisition causally dependent on an earlier one whenever removing the\nearlier acquisition reduced the **total** number of solved tasks. Because retention is required, that\ncriterion could be satisfied merely by breaking work the parent already solved while leaving every\ntask newly solved by the current generation intact.\n\nThat is retention dependence, not evidence that the new improvement needed the earlier acquisition.\n\n## Repair\n\nFor every accepted candidate the causal comparison now receives the parent outcomes as a third arm.\nIt identifies `candidate_solved - parent_solved` and establishes dependency only when the runtime-\nderived, equal-budget ablation loses at least one member of that newly solved set. Losses confined to\nretained parent work are recorded separately and do not establish a causal link.\n\nAll three arms must carry exactly the same task identifiers or the measurement fails closed.\n\n## Regression\n\nA dedicated counterexample has candidate total solved fall from 3 to 1 after ablation while its only\nnewly solved task remains solved. The old scalar criterion reports dependency; the repaired criterion\nreports none and records the two lost tasks as retained work.\n\nThe M108 bridge is re-run under the stronger rule. Its causal link is expected to survive only if the\nM108 tasks newly solved over the M107 parent are themselves lost when M107 is removed.\n\n## Boundary\n\nNo M107–M125 frozen source, protocol, result, sealed bank, reveal state or scientific decision is\nmodified. This changes only the integrated Genesis DEVELOPMENT measurement.\n''', encoding='utf-8')
+          audit.write_text('''# Genesis causal novelty repair — DEVELOPMENT apparatus
+
+          **Prepared:** 9 September 2026  
+          **Status:** runtime metrology repair; no scientific observation; no gate movement.
+
+          ## Defect
+
+          The runtime called a later acquisition causally dependent on an earlier one whenever removing the
+          earlier acquisition reduced the **total** number of solved tasks. Because retention is required, that
+          criterion could be satisfied merely by breaking work the parent already solved while leaving every task
+          newly solved by the current generation intact.
+
+          That is retention dependence, not evidence that the new improvement needed the earlier acquisition.
+
+          ## Repair
+
+          For every accepted candidate the causal comparison now receives the parent outcomes as a third arm. It
+          identifies `candidate_solved - parent_solved` and establishes dependency only when the runtime-derived,
+          equal-budget ablation loses at least one member of that newly solved set. Losses confined to retained
+          parent work are recorded separately and do not establish a causal link.
+
+          All three arms must carry exactly the same task identifiers or the measurement fails closed.
+
+          ## Regression
+
+          A dedicated counterexample has candidate total solved fall from 3 to 1 after ablation while its only
+          newly solved task remains solved. The old scalar criterion reports dependency; the repaired criterion
+          reports none and records the two lost tasks as retained work.
+
+          The M108 bridge is re-run under the stronger rule. Its causal link survives only if the M108 tasks newly
+          solved over the M107 parent are themselves lost when M107 is removed.
+
+          ## Boundary
+
+          No M107–M125 frozen source, protocol, result, sealed bank, reveal state or scientific decision is
+          modified. This changes only the integrated Genesis DEVELOPMENT measurement.
+          ''', encoding='utf-8')
           PY
 
       - name: Install focused development dependencies
         run: python -m pip install -e '.[dev]'
 
       - name: Run focused causal and M108 bridge tests
-        run: |
-          python -m pytest -q tests/test_genesis_loop.py tests/test_genesis_m108_bridge.py
+        run: python -m pytest -q tests/test_genesis_loop.py tests/test_genesis_m108_bridge.py
 
       - name: Publish the repaired tree and remove this one-shot workflow
         shell: bash
