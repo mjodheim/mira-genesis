@@ -208,7 +208,14 @@ def test_the_worker_refuses_a_request_it_does_not_recognise(tmp_path):
     import subprocess
     import sys
 
-    for request in ({"schema": "something-else"}, {"schema": sb.WORKER_REQUEST_SCHEMA}):
+    # Each request must produce *its own* refusal. An alternation over both messages let the
+    # unrecognised-schema mutant survive the census: with that raise removed, a request carrying the
+    # wrong schema simply fell through to the nonce check and the test still passed.
+    cases = [
+        ({"schema": "something-else", "nonce": "abc"}, "unrecognised worker request"),
+        ({"schema": sb.WORKER_REQUEST_SCHEMA}, "worker request carries no nonce"),
+    ]
+    for request, expected in cases:
         finished = subprocess.run(
             [sys.executable, "-m", "genesis.sandbox", "--worker"],
             input=json.dumps(request),
@@ -218,7 +225,4 @@ def test_the_worker_refuses_a_request_it_does_not_recognise(tmp_path):
         )
         reply = json.loads(finished.stdout.strip().splitlines()[-1])
         assert reply["kind"] == "bootstrap_failure"
-        assert (
-            "unrecognised worker request" in reply["traceback"]
-            or "nonce" in reply["traceback"]
-        )
+        assert expected in reply["traceback"]
