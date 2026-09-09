@@ -74,7 +74,8 @@ def test_a_policy_whose_descendants_answer_more_replaces_the_one_in_force():
 
     assert outcome["policy_updated"] is True
     assert outcome["incumbent_solved"] < outcome["candidate_solved"]
-    assert outcome["descendants_compared_by"] == "genesis.trust_root.decide"
+    assert outcome["compared_by"] == "genesis.trust_root.decide"
+    assert outcome["compared"] == "each policy's resulting body over the world's tasks"
     assert outcome["graded_by_either_policy"] is False
     assert _digest(genesis) == outcome["candidate_policy_digest"] != incumbent
 
@@ -220,3 +221,29 @@ def test_the_policy_change_is_reachable_through_an_ordinary_controller_run():
     assert step["intent"] == "AdoptPolicy"
     assert step["policy_updated"] is True
     assert _digest(genesis) == step["candidate_policy_digest"]
+
+
+def test_asking_the_policy_question_costs_the_lineage_something():
+    """The trials run on forks with their own ledgers, which is what makes them matched — and would
+    also make meta-evaluation free. A lineage that could ask without cost could ask without end."""
+    genesis = _under(fixtures.timid_policy, steps=0)
+    before = genesis.budget.spent["probes"]
+    controller._adopt_policy(
+        genesis, fixtures.policy_world(), controller.AdoptPolicy(candidate="bolder", steps=2)
+    )
+    assert genesis.budget.spent["probes"] > before
+
+
+def test_a_budget_that_cannot_afford_the_question_refuses_it_rather_than_guessing():
+    genesis = _genesis(budget=tr.Budget(limits={"generations": 200, "probes": 1}))
+    controller.run(genesis, fixtures.policy_world(), fixtures.timid_policy, max_steps=0)
+    incumbent = _digest(genesis)
+
+    outcome = controller._adopt_policy(
+        genesis, fixtures.policy_world(), controller.AdoptPolicy(candidate="bolder", steps=2)
+    )
+
+    assert outcome["policy_updated"] is False
+    assert "budget refused" in outcome["reason"]
+    assert outcome["compared"] == "nothing ran"
+    assert _digest(genesis) == incumbent

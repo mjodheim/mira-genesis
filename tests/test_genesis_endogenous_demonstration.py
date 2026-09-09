@@ -50,7 +50,7 @@ def test_the_machinery_changed_on_evidence_about_what_it_produced(record):
     step = _step(record, "AdoptPolicy")
     assert step["policy_updated"] is True
     assert step["incumbent_solved"] < step["candidate_solved"]
-    assert step["descendants_compared_by"] == "genesis.trust_root.decide"
+    assert step["compared_by"] == "genesis.trust_root.decide"
     assert step["graded_by_either_policy"] is False
 
 

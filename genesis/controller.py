@@ -445,6 +445,29 @@ def _adopt_policy(genesis: Genesis, here: World, intent: AdoptPolicy) -> dict[st
 
     incumbent_policy = _resolve_artifact_record(incumbent_artifact)
     steps = max(1, int(intent.steps))
+
+    # Charged to the real lineage, once per trial. The trials themselves run on forks with their own
+    # copies of the ledger, which is what makes them matched — and would also make meta-evaluation
+    # free, so a lineage could ask the question without end. Asking costs something here.
+    dimension = "probes" if "probes" in genesis.budget.limits else "generations"
+    try:
+        genesis.budget.spend(dimension, 2)
+    except BudgetExhausted as exhausted:
+        return {
+            "policy_updated": False,
+            "candidate": intent.candidate,
+            "incumbent_policy_digest": str(incumbent_artifact.get("artifact_digest", "")),
+            "candidate_policy_digest": candidate_artifact["artifact_digest"],
+            "reason": "the budget refused the meta-evaluation: %s" % exhausted,
+            "compared": "nothing ran",
+            "graded_by_either_policy": False,
+            "incumbent_solved": 0,
+            "candidate_solved": 0,
+            "lost_solved_tasks": [],
+            "verdict_digest": "",
+            "trial_steps": {"incumbent": [], "candidate": []},
+        }
+
     # Matched: same starting lineage, same world, same allowance, same number of steps.
     incumbent = _trial(genesis, here, incumbent_policy, steps)
     candidate = _trial(genesis, here, candidate_policy, steps)
@@ -471,7 +494,12 @@ def _adopt_policy(genesis: Genesis, here: World, intent: AdoptPolicy) -> dict[st
         "incumbent_policy_digest": str(incumbent_artifact.get("artifact_digest", "")),
         "candidate_policy_digest": candidate_artifact["artifact_digest"],
         "reason": "; ".join(verdict["rejection_reasons"]),
-        "descendants_compared_by": "genesis.trust_root.decide",
+        # What was actually compared, said precisely: each trial's *final* body over the world's
+        # tasks — what each policy left the lineage able to do — not each descendant it produced
+        # along the way. For a policy that is arguably the measure that matters, and either way the
+        # record should not imply a per-descendant comparison it did not make.
+        "compared": "each policy's resulting body over the world's tasks",
+        "compared_by": "genesis.trust_root.decide",
         "graded_by_either_policy": False,
         "incumbent_solved": verdict["parent"]["counts"]["solved"],
         "candidate_solved": verdict["candidate"]["counts"]["solved"],
