@@ -27,6 +27,7 @@ from metamorphosis.m085_cross_domain_intake import (
     held_out_domain_index,
     scientific_protocol_commitment,
     validate_bank_envelope,
+    validate_maintainer_acceptance,
     validate_scientific_protocol,
 )
 from metamorphosis.m085_intake_kit import adapter_contract, instructions, template
@@ -62,6 +63,7 @@ def test_the_repository_is_not_ready_and_every_blocker_needs_an_outsider() -> No
         "missing CROSS_DOMAIN_BANK_ENVELOPE.json",
         "missing CROSS_DOMAIN_BANK_ENVELOPE.sshsig",
         "missing CROSS_DOMAIN_BANK_ALLOWED_SIGNERS",
+        "missing MAINTAINER_ACCEPTANCE.json",
         "missing CROSS_DOMAIN_SCIENTIFIC_PROTOCOL.json",
     ])
 
@@ -470,3 +472,99 @@ def test_a_protocol_declaring_a_result_already_exists_is_refused() -> None:
     protocol["protocol_commitment_sha256"] = scientific_protocol_commitment(protocol)
     with pytest.raises(M085IntakeError, match="scope is malformed"):
         validate_scientific_protocol(protocol, envelope_raw_sha256=raw, envelope=envelope)
+
+
+# -- a signed envelope alone may not arm the experiment -----------------------------------------
+
+def _acceptance(envelope_digest: str, **overrides) -> dict:
+    record = {
+        "schema": "m085-maintainer-acceptance-v1",
+        "engagement": "canonical",
+        "envelope_sha256": envelope_digest,
+        "maintainer_identity": "an-outside-person",
+        "conflicts_reviewed": True,
+        "independence_accepted_by_owner": True,
+        "conflicts_disclosed_by_maintainer": "none",
+        "accepted_at": "2026-09-07",
+    }
+    record.update(overrides)
+    return record
+
+
+def test_a_complete_acceptance_record_is_accepted() -> None:
+    validate_maintainer_acceptance(
+        _acceptance("ef" * 32),
+        envelope_raw_sha256="ef" * 32,
+        maintainer_identity="an-outside-person",
+    )
+
+
+def test_a_rehearsal_engagement_cannot_arm_the_experiment() -> None:
+    """Someone walking the intake kit to test the instructions must not be able to arm M085."""
+    with pytest.raises(M085IntakeError, match="rehearsal engagement"):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, engagement="rehearsal"),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_an_acceptance_bound_to_another_envelope_is_refused() -> None:
+    with pytest.raises(M085IntakeError, match="different envelope"):
+        validate_maintainer_acceptance(
+            _acceptance("ab" * 32),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_an_acceptance_naming_another_maintainer_is_refused() -> None:
+    with pytest.raises(M085IntakeError, match="different maintainer"):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, maintainer_identity="someone-else"),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_the_owner_cannot_accept_itself_as_the_maintainer() -> None:
+    with pytest.raises(M085IntakeError, match="project identity"):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, maintainer_identity="mjodheim"),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="mjodheim",
+        )
+
+
+@pytest.mark.parametrize("flag", ("conflicts_reviewed", "independence_accepted_by_owner"))
+def test_an_unreviewed_acceptance_is_refused(flag: str) -> None:
+    with pytest.raises(M085IntakeError, match=flag):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, **{flag: False}),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_the_acceptance_must_restate_the_disclosed_conflicts() -> None:
+    with pytest.raises(M085IntakeError, match="disclosed conflicts"):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, conflicts_disclosed_by_maintainer="   "),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_an_unrecognized_engagement_is_refused() -> None:
+    with pytest.raises(M085IntakeError, match="recognized engagement"):
+        validate_maintainer_acceptance(
+            _acceptance("ef" * 32, engagement="provisional"),
+            envelope_raw_sha256="ef" * 32,
+            maintainer_identity="an-outside-person",
+        )
+
+
+def test_readiness_lists_the_missing_acceptance_as_its_own_blocker() -> None:
+    report = assess_readiness(ROOT)
+    assert report["ready_for_payload_reveal"] is False
+    assert any("MAINTAINER_ACCEPTANCE" in blocker for blocker in report["blockers"])

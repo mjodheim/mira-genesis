@@ -32,7 +32,7 @@ import sys
 import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = ("metamorphosis", "mira_core")
+PACKAGES = ("genesis", "metamorphosis", "mira_core")
 
 # Every commit the tracked record cites by SHA, and the ref that keeps it reachable.
 CITATIONS = ROOT / "docs" / "COMMIT_CITATIONS.json"

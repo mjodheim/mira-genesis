@@ -61,6 +61,20 @@ SIGNATURE_PATH = Path("experiments/M085/CROSS_DOMAIN_BANK_ENVELOPE.sshsig")
 ALLOWED_SIGNERS_PATH = Path("experiments/M085/CROSS_DOMAIN_BANK_ALLOWED_SIGNERS")
 PROTOCOL_PATH = Path("experiments/M085/CROSS_DOMAIN_SCIENTIFIC_PROTOCOL.json")
 RESULT_PATH = Path("experiments/M085/CROSS_DOMAIN_SCIENTIFIC_RESULT.json")
+ACCEPTANCE_PATH = Path("experiments/M085/MAINTAINER_ACCEPTANCE.json")
+
+ACCEPTANCE_SCHEMA = "m085-maintainer-acceptance-v1"
+
+# A validly signed envelope is not by itself an engagement. Anyone can complete the intake kit —
+# including someone walking through it to test whether the instructions are followable, which is a
+# legitimate and useful thing to do. Nothing in the envelope distinguishes that rehearsal from a
+# real engagement, because the rehearser is following the real instructions; that is the point.
+#
+# So the envelope may not arm M085 on its own. The owner must separately record that this specific
+# maintainer, at this specific envelope digest, is a canonical engagement whose conflicts have been
+# reviewed. Absence of that record is a refusal, which makes a rehearsal safe by construction
+# rather than safe by everyone remembering.
+ACCEPTANCE_ENGAGEMENTS = ("canonical", "rehearsal")
 
 ARMS = ("transferred_lineage", "fresh_agent", "acquisition_ablated")
 
@@ -112,6 +126,51 @@ def held_out_domain_index(payload_sha256: str, assignment_salt: str, domain_coun
         + assignment_salt.encode("utf-8"),
     ).digest()
     return int.from_bytes(digest[:8], "big") % domain_count
+
+
+def validate_maintainer_acceptance(
+    acceptance: Mapping[str, object],
+    *,
+    envelope_raw_sha256: str,
+    maintainer_identity: object,
+) -> None:
+    """Validate the owner's engagement record against the exact envelope it accepts.
+
+    This never makes readiness easier. It exists so that a validly signed envelope from a
+    walkthrough cannot arm the experiment merely by being present in the working tree.
+    """
+
+    if acceptance.get("schema") != ACCEPTANCE_SCHEMA:
+        raise M085IntakeError("maintainer acceptance uses an unrecognized schema")
+    engagement = acceptance.get("engagement")
+    if engagement not in ACCEPTANCE_ENGAGEMENTS:
+        raise M085IntakeError("maintainer acceptance does not declare a recognized engagement")
+    if engagement != "canonical":
+        raise M085IntakeError(
+            "maintainer acceptance records a %s engagement; it cannot arm M085" % engagement
+        )
+    accepted_digest = acceptance.get("envelope_sha256")
+    if not _is_sha256(accepted_digest):
+        raise M085IntakeError("maintainer acceptance does not bind a sha256 envelope digest")
+    if accepted_digest != envelope_raw_sha256:
+        raise M085IntakeError("maintainer acceptance binds a different envelope")
+    accepted_identity = acceptance.get("maintainer_identity")
+    if not isinstance(accepted_identity, str) or not accepted_identity.strip():
+        raise M085IntakeError("maintainer acceptance names no maintainer")
+    if accepted_identity != maintainer_identity:
+        raise M085IntakeError("maintainer acceptance names a different maintainer")
+    if accepted_identity.strip().casefold() in PROJECT_IDENTITIES:
+        raise M085IntakeError("maintainer acceptance names a project identity")
+    for flag in ("conflicts_reviewed", "independence_accepted_by_owner"):
+        if acceptance.get(flag) is not True:
+            raise M085IntakeError("maintainer acceptance does not assert %s" % flag)
+    disclosed = acceptance.get("conflicts_disclosed_by_maintainer")
+    if not isinstance(disclosed, str) or not disclosed.strip():
+        raise M085IntakeError(
+            "maintainer acceptance must restate the disclosed conflicts, or the word none"
+        )
+    if not isinstance(acceptance.get("accepted_at"), str) or not acceptance["accepted_at"]:
+        raise M085IntakeError("maintainer acceptance carries no acceptance date")
 
 
 def validate_bank_envelope(envelope: Mapping[str, object], *, signature_verified: bool) -> None:
@@ -414,6 +473,19 @@ def assess_readiness(
     if envelope is not None:
         try:
             validate_bank_envelope(envelope, signature_verified=signature_verified)
+        except M085IntakeError as exc:
+            blockers.append(str(exc))
+
+    acceptance, _, error = _load_object(resolved / ACCEPTANCE_PATH)
+    if error:
+        blockers.append(error)
+    if acceptance is not None and envelope is not None and envelope_raw is not None:
+        try:
+            validate_maintainer_acceptance(
+                acceptance,
+                envelope_raw_sha256=_sha256_bytes(envelope_raw),
+                maintainer_identity=envelope.get("maintainer_identity"),
+            )
         except M085IntakeError as exc:
             blockers.append(str(exc))
 
