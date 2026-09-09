@@ -933,7 +933,21 @@ class Genesis:
                if k != "schema"}
         )
         if isolation is not None:
+            # Two checks, because the ceiling alone leaves a gap between it and the envelope the
+            # lineage was actually running under. A lineage persisted at 5 CPU-seconds beneath a
+            # 30-second ceiling passed `20 <= 30` and woke four times wider than it had been —
+            # process death widening the envelope by the exact route the split was meant to close.
+            # Narrowing on the way back in is always allowed; widening is a re-admission, and this
+            # runtime has no transaction that records one.
             isolation.assert_no_wider_than(committed_isolation)
+            try:
+                isolation.assert_no_wider_than(running_isolation)
+            except TrustRootError:
+                raise TrustRootError(
+                    "restore may not widen the envelope this lineage was running under: committed "
+                    "%s, supplied %s. A wider envelope is a re-admission, and nothing here records "
+                    "one." % (running_isolation.record(), isolation.record())
+                ) from None
         committed_budget = Budget(
             limits=dict(manifest["budget"]["limits"]), spent=dict(manifest["budget"]["spent"])
         )

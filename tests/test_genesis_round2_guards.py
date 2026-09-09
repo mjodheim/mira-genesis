@@ -478,3 +478,34 @@ def test_a_lineage_cannot_be_constructed_running_wider_than_it_was_admitted():
     """Refused where the widening would happen, not downstream once it already has."""
     with pytest.raises(tr.TrustRootError, match="wider than the admitted envelope"):
         _genesis(isolation=tr.Isolation(cpu_seconds=10_000.0), admitted_isolation=CEILING)
+
+
+def test_restore_refuses_an_override_between_the_running_envelope_and_the_ceiling(tmp_path):
+    """The gap the ceiling check alone leaves open.
+
+    A lineage persisted at 5 CPU-seconds beneath a 30-second ceiling passes `20 <= 30` and would wake
+    four times wider than it had been running. Checking only against the ceiling therefore lets
+    process death widen the actual envelope, by exactly the route splitting the two was meant to
+    close. Narrowing on the way back in stays allowed; widening is a re-admission, and this runtime
+    records no such transaction.
+    """
+    _genesis(isolation=NARROW, admitted_isolation=CEILING).persist(tmp_path)
+    between = tr.Isolation(cpu_seconds=20.0, wall_clock_seconds=20.0)
+    between.assert_no_wider_than(CEILING)  # the ceiling alone does not refuse it
+
+    with pytest.raises(tr.TrustRootError, match="may not widen the envelope"):
+        Genesis.restore(
+            tmp_path, body_factory=bodies.parent_body, grade=bodies.grade, isolation=between
+        )
+
+
+def test_restore_still_accepts_an_override_narrower_than_the_running_envelope(tmp_path):
+    """The control: only widening is refused, so the guard is a finding rather than a blanket no."""
+    _genesis(isolation=NARROW, admitted_isolation=CEILING).persist(tmp_path)
+    narrower = tr.Isolation(cpu_seconds=2.0, wall_clock_seconds=4.0)
+
+    resumed = Genesis.restore(
+        tmp_path, body_factory=bodies.parent_body, grade=bodies.grade, isolation=narrower
+    )
+    assert resumed.isolation.cpu_seconds == 2.0
+    assert resumed.admitted_isolation.cpu_seconds == 30.0
