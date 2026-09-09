@@ -158,10 +158,12 @@ def test_one_runtime_campaign_selects_two_different_machinery_mutations_and_two_
     assert genesis.body_factory.configuration["operations"] == ("square", "square")
 
     # Evidence-ranked selection measures the complete admitted mutation set before choosing. Three
-    # mutations are therefore measured on each objective, even when one of them is already known to
-    # be useful. Meta-evaluation still spends only on policies that expose runnable new bodies.
+    # mutations are therefore measured on each objective. Candidate-policy evaluation is complete as
+    # well: objective one runs one new sequence for each mutation (3), while objective two runs one
+    # for negate, none for the duplicate-square edit, and all four newly reachable depth-two programs
+    # (5). Total: six mutation measurements and eight candidate-program measurements.
     assert genesis.budget.spent["policy_mutations"] == 6
-    assert genesis.budget.spent["policy_evaluations"] == 7
+    assert genesis.budget.spent["policy_evaluations"] == 8
 
     restored = recovery.restore_lineage(tmp_path, grade=fixtures.grade_expected)
     assert restored.body_factory.configuration["operations"] == ("square", "square")
