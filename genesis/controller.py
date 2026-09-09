@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import inspect
 import json
+from copy import deepcopy
 from dataclasses import dataclass, field
 from importlib import import_module
 from pathlib import Path
@@ -31,6 +32,7 @@ from genesis.loop import Genesis, LineageContext, Proposal
 from genesis.migration import Substrate, discover, metamorphosis_succeeded, migrate
 from genesis.sandbox import run_isolated_callable
 from genesis.trust_root import (
+    Budget,
     BudgetExhausted,
     TrustRootError,
     artifact_digest_of,
@@ -100,6 +102,25 @@ class SearchTransform:
 
 
 @dataclass(frozen=True)
+class AdoptPolicy:
+    """Propose replacing the lineage's own acquisition machinery, on evidence.
+
+    This is the transaction `_bind_mechanism` refuses to perform implicitly. The incumbent policy
+    and the candidate are each given a fork of the *same* committed lineage, the same world and the
+    same allowance; each drives its fork; and the descendants they produce are compared by the
+    unchanged trust root under the admitted contract.
+
+    Neither policy grades anything. The measure stays where it has always been — outside both of
+    them — which is what makes an adopted policy a finding about what it produced rather than a
+    preference it expressed about itself.
+    """
+
+    candidate: str
+    steps: int = 2
+    rationale: Mapping[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
 class Stop:
     reason: str = ""
 
@@ -137,6 +158,30 @@ class World:
     component_operations: Mapping[str, Sequence[str]]
     artifacts: Mapping[str, str]
     grade: Callable[[Mapping[str, Any], Any], str]
+    #: Acquisition policies the host admits as *candidates*. Naming one here is not adopting it:
+    #: which policy the lineage runs under changes only through the evidence-backed transaction
+    #: below. The host says what exists; the lineage's own evidence says what it becomes.
+    policies: Mapping[str, str] = field(default_factory=dict)
+
+    def resolve_policy(self, reference: str) -> Callable[..., Any]:
+        """Resolve an admitted candidate policy. Resolution is not adoption."""
+        target = self.policies.get(str(reference))
+        if target is None:
+            raise ControllerError(
+                "the lineage named policy %r, which this world does not admit" % reference
+            )
+        return self._import(str(target), reference)
+
+    def _import(self, target: str, reference: str) -> Callable[..., Any]:
+        module_name, separator, qualname = target.partition(":")
+        if not module_name or not separator or not qualname:
+            raise ControllerError("artifact %r has no importable module:symbol target" % reference)
+        resolved: Any = import_module(module_name)
+        for part in qualname.split("."):
+            resolved = getattr(resolved, part)
+        if not callable(resolved):
+            raise ControllerError("artifact %r does not resolve to something runnable" % reference)
+        return resolved
 
     def resolve(self, reference: str) -> Callable[[], Any]:
         target = self.artifacts.get(str(reference))
@@ -161,10 +206,14 @@ class World:
             "demands": sorted(self.demands),
             "substrates": sorted(self.substrates),
             "artifacts": sorted(self.artifacts),
+            "policies": sorted(self.policies),
         }
 
 
-def world(*, tasks, demands, substrates, probe_registry, component_operations, artifacts, grade) -> World:
+def world(
+    *, tasks, demands, substrates, probe_registry, component_operations, artifacts, grade,
+    policies=None,
+) -> World:
     return World(
         schema=WORLD_SCHEMA,
         tasks=tuple(dict(task) for task in tasks),
@@ -174,6 +223,7 @@ def world(*, tasks, demands, substrates, probe_registry, component_operations, a
         component_operations={str(k): list(v) for k, v in component_operations.items()},
         artifacts={str(k): str(v) for k, v in artifacts.items()},
         grade=grade,
+        policies={str(k): str(v) for k, v in (policies or {}).items()},
     )
 
 
@@ -283,6 +333,154 @@ def _search_transform(genesis: Genesis, here: World, intent: SearchTransform) ->
     }
 
 
+def _fork(genesis: Genesis) -> Genesis:
+    """A throwaway lineage that starts where this one is, so a trial changes nothing real.
+
+    Both policies must be judged from the *same* starting point or the comparison measures which one
+    went first. The fork carries the committed state, the journal and an allowance equal to what
+    remains — not the live objects, so nothing a trial does reaches the lineage it was forked from.
+    """
+    from genesis.journal import Journal
+
+    return Genesis(
+        state=deepcopy(dict(genesis.state)),
+        body_factory=genesis.body_factory,
+        budget=Budget(limits=dict(genesis.budget.limits), spent=dict(genesis.budget.spent)),
+        isolation=genesis.isolation,
+        journal=Journal(deepcopy(genesis.journal.entries())),
+        admitted_isolation=genesis.admitted_isolation,
+        admitted_source_sha256=genesis.admitted_source_sha256,
+        grade=genesis.grade,
+        allow_self_reported_outcomes=genesis.allow_self_reported_outcomes,
+    )
+
+
+def _rebind_mechanism(genesis: Genesis, artifact: Mapping[str, Any], *, why: str) -> None:
+    """Replace the bound decision machinery. Only a trial fork or an adopted update may call this."""
+    admitted = _canonical_record(artifact)
+    tools = [
+        tool
+        for tool in genesis.state["tools"]
+        if not (tool.get("name") == MECHANISM_TOOL_NAME and tool.get("role") == MECHANISM_ROLE)
+    ]
+    genesis.state = lineage_state.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=tools
+        + [
+            {
+                "name": MECHANISM_TOOL_NAME,
+                "role": MECHANISM_ROLE,
+                "artifact": admitted,
+                "provenance": LINEAGE,
+            }
+        ],
+        acquisitions=genesis.state["acquisitions"],
+        observations=genesis.state["observations"],
+        generation=genesis.state["generation"],
+    )
+    genesis.journal.append(
+        "observation",
+        genesis.state["generation"],
+        {
+            "arm": "controller_mechanism_update",
+            "artifact_digest": admitted.get("artifact_digest", ""),
+            "why": why,
+            "new_state_digest": genesis.state["state_digest"],
+        },
+    )
+
+
+def _trial(genesis: Genesis, here: World, policy: Any, steps: int) -> dict[str, Any]:
+    """Let one policy drive a fork, and report what its descendants can do.
+
+    The outcomes come from running the fork's final body over the world's tasks through the same
+    isolated evaluator every other candidate goes through. Nothing the policy said about itself is
+    read.
+    """
+    from genesis.sandbox import run_candidate
+
+    fork = _fork(genesis)
+    artifact = artifact_digest_of(_canonical_mechanism(policy))
+    _rebind_mechanism(fork, artifact, why="meta-evaluation trial")
+    # A trial may not change machinery. Without this a policy that asks for its own replacement
+    # recurses without bound — each trial running the policy that starts another trial — and, worse,
+    # the thing being measured would change in the middle of measuring it.
+    record = run(fork, here, policy, max_steps=steps, allow_policy_update=False)
+    measured = run_candidate(
+        fork.body_factory,
+        here.tasks,
+        fork.isolation,
+        admitted_isolation=fork.admitted_isolation,
+        grade=fork.grade,
+    )
+    if not measured["completed"]:
+        raise ControllerError(
+            "a policy trial could not be measured, so neither policy can be preferred: %s"
+            % measured.get("reason", "")
+        )
+    return {
+        "policy_artifact": artifact,
+        "outcomes": measured["outcomes"],
+        "acquisitions": len(fork.state["acquisitions"]),
+        "body_artifact_digest": artifact_digest_of(fork.body_factory)["artifact_digest"],
+        "steps": [step.get("intent") for step in record["steps"]],
+    }
+
+
+def _adopt_policy(genesis: Genesis, here: World, intent: AdoptPolicy) -> dict[str, Any]:
+    """Run the matched meta-evaluation and let the trust root decide whether the machinery changes."""
+    from genesis.trust_root import decide
+
+    incumbent_artifact = bound_mechanism_artifact(genesis)
+    if incumbent_artifact is None:
+        raise ControllerError("this lineage carries no acquisition policy to replace")
+    candidate_policy = here.resolve_policy(intent.candidate)
+    candidate_artifact = artifact_digest_of(_canonical_mechanism(candidate_policy))
+    if candidate_artifact["artifact_digest"] == incumbent_artifact.get("artifact_digest"):
+        raise ControllerError(
+            "the candidate policy is the policy already in force; an update has to be a change"
+        )
+
+    incumbent_policy = _resolve_artifact_record(incumbent_artifact)
+    steps = max(1, int(intent.steps))
+    # Matched: same starting lineage, same world, same allowance, same number of steps.
+    incumbent = _trial(genesis, here, incumbent_policy, steps)
+    candidate = _trial(genesis, here, candidate_policy, steps)
+
+    verdict = decide(
+        parent_outcomes=incumbent["outcomes"],
+        candidate_outcomes=candidate["outcomes"],
+        budget=genesis.budget,
+        isolation=genesis.isolation,
+        admitted_isolation=genesis.admitted_isolation,
+        candidate_provenance=LINEAGE,
+        evaluation_contract_record=genesis.evaluation_contract,
+    )
+    if verdict["accepted"]:
+        _rebind_mechanism(
+            genesis,
+            candidate_artifact,
+            why="descendants under the candidate policy beat those under the incumbent",
+        )
+
+    return {
+        "policy_updated": bool(verdict["accepted"]),
+        "candidate": intent.candidate,
+        "incumbent_policy_digest": str(incumbent_artifact.get("artifact_digest", "")),
+        "candidate_policy_digest": candidate_artifact["artifact_digest"],
+        "reason": "; ".join(verdict["rejection_reasons"]),
+        "descendants_compared_by": "genesis.trust_root.decide",
+        "graded_by_either_policy": False,
+        "incumbent_solved": verdict["parent"]["counts"]["solved"],
+        "candidate_solved": verdict["candidate"]["counts"]["solved"],
+        "lost_solved_tasks": verdict["lost_solved_tasks"],
+        "verdict_digest": verdict["verdict_digest"],
+        "trial_steps": {"incumbent": incumbent["steps"], "candidate": candidate["steps"]},
+    }
+
+
 def _acquire_component(genesis: Genesis, here: World, intent: AcquireComponent) -> dict[str, Any]:
     demand = here.demands.get(intent.demand)
     if demand is None:
@@ -387,6 +585,7 @@ def _migrate(genesis: Genesis, here: World, intent: Migrate) -> dict[str, Any]:
 HANDLERS = {
     Transform: _transform,
     SearchTransform: _search_transform,
+    AdoptPolicy: _adopt_policy,
     AcquireComponent: _acquire_component,
     SeparateVocabulary: _separate_vocabulary,
     Migrate: _migrate,
@@ -582,6 +781,13 @@ def _intent_record(intent: Any) -> dict[str, Any]:
             "depends_on": intent.depends_on,
             "rationale": dict(intent.rationale),
         }
+    if isinstance(intent, AdoptPolicy):
+        return {
+            "type": "AdoptPolicy",
+            "candidate": intent.candidate,
+            "steps": int(intent.steps),
+            "rationale": dict(intent.rationale),
+        }
     if isinstance(intent, AcquireComponent):
         return {
             "type": "AcquireComponent",
@@ -621,6 +827,12 @@ def _intent_from_record(record: Mapping[str, Any]) -> Any:
             max_nodes=int(record.get("max_nodes", 3)),
             operations=tuple(str(v) for v in record.get("operations") or []),
             depends_on=str(record.get("depends_on") or ""),
+            rationale=dict(record.get("rationale") or {}),
+        )
+    if kind == "AdoptPolicy":
+        return AdoptPolicy(
+            candidate=str(record["candidate"]),
+            steps=int(record.get("steps", 2)),
             rationale=dict(record.get("rationale") or {}),
         )
     if kind == "AcquireComponent":
@@ -740,6 +952,7 @@ def run(
     *,
     max_steps: int = 32,
     checkpoint_directory: Path | None = None,
+    allow_policy_update: bool = True,
 ) -> dict[str, Any]:
     """Drive one lineage, making each committed controller step durable when storage is supplied.
 
@@ -764,6 +977,19 @@ def run(
                 {"intent": "stop", "reason": getattr(intent, "reason", "no further intent")}
             )
             break
+        if isinstance(intent, AdoptPolicy) and not allow_policy_update:
+            # Inside a trial this is not an error, it is an answer a trial cannot act on. Asking a
+            # policy what it would produce and being told "I would replace myself" says nothing
+            # about descendants, and performing it would change the thing under measurement while
+            # measuring it — and recurse without bound, since each trial would start another.
+            steps.append(
+                {
+                    "intent": "stop",
+                    "reason": "a policy trial may not change the machinery it is measuring",
+                    "policy_update_refused_in_trial": True,
+                }
+            )
+            break
         handler = HANDLERS.get(type(intent))
         if handler is None:
             raise ControllerError("the lineage returned %r, which is not an intent" % (intent,))
@@ -773,6 +999,15 @@ def run(
             **_summary(intent, outcome),
             "lineage": _lineage(genesis),
         }
+        # An adopted policy takes effect from here. Every other transition leaves the machinery
+        # alone and the binding check refuses a change it did not license; this one licensed it, on
+        # a trust-root verdict about the descendants each policy produced. The loop continuing under
+        # the new rule is the point — a changed rule is what produces the next change.
+        settled = bound_mechanism_artifact(genesis)
+        if settled is not None and settled != _canonical_record(mechanism_artifact):
+            mechanism_artifact = settled
+            admitted = _resolve_artifact_record(settled)
+            step["machinery_in_force_after_this_step"] = settled.get("artifact_digest", "")
         if checkpoint_path is not None:
             step["checkpoint_digest"] = genesis.persist(checkpoint_path)["checkpoint"]
             step["durable_before_next_intent"] = True

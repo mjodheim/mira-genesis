@@ -84,3 +84,61 @@ def search_an_alphabet_that_cannot_reach_it(context) -> Any:
     return controller.SearchTransform(
         name="unreachable", max_candidates=8, max_nodes=3, operations=("negate",)
     )
+
+
+# ---------------------------------------------------------------------------------------------
+# Two acquisition policies, so a policy update can be judged by what each one produces
+# ---------------------------------------------------------------------------------------------
+#
+# `timid_policy` searches an alphabet that cannot reach the demand. `bolder_policy` searches the one
+# that can. Neither is told which is which, and neither grades anything: the trust root compares the
+# descendants each one actually produced. That is the whole point of the transaction — a policy is
+# adopted for what it caused, not for what it claims.
+
+
+def timid_policy(context) -> Any:
+    """The incumbent. It looks only where the answer is not."""
+    if context.acquisitions:
+        return controller.Stop(reason="nothing further under this policy")
+    return controller.SearchTransform(
+        name="timid", max_candidates=6, max_nodes=3, operations=("negate",)
+    )
+
+
+def bolder_policy(context) -> Any:
+    """The candidate. Same runtime, same evaluator, a wider place to look."""
+    if context.acquisitions:
+        return controller.Stop(reason="a descendant was adopted")
+    return controller.SearchTransform(
+        name="bolder", max_candidates=25, max_nodes=3, operations=SEARCH_ALPHABET
+    )
+
+
+def adopt_the_bolder_policy(context) -> Any:
+    """Ask once for the machinery change, then run under whatever the evidence licensed."""
+    if any(name == "bolder" for name in context.acquisitions):
+        return controller.Stop(reason="running under the adopted policy")
+    if context.mechanism_artifact_digest and not context.observations:
+        return controller.AdoptPolicy(
+            candidate="bolder",
+            steps=2,
+            rationale={"why": "the incumbent's descendants answer nothing"},
+        )
+    return controller.Stop(reason="the policy question has been settled")
+
+
+def policy_world() -> controller.World:
+    here = search_world()
+    return controller.world(
+        tasks=here.tasks,
+        demands=here.demands,
+        substrates=here.substrates,
+        probe_registry=here.probe_registry,
+        component_operations=here.component_operations,
+        artifacts=here.artifacts,
+        grade=here.grade,
+        policies={
+            "timid": "genesis.search_fixtures:timid_policy",
+            "bolder": "genesis.search_fixtures:bolder_policy",
+        },
+    )
