@@ -1,0 +1,33 @@
+name: Genesis integrated MetaPolicy evolution focused validation v2
+
+on:
+  push:
+    branches:
+      - review/gpt56-genesis-meta-loop-integration-fast-validation-v2-20260909
+
+jobs:
+  focused:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+      - name: Install development dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+      - name: Run focused integrated MetaPolicy tests
+        run: |
+          pytest -q \
+            tests/test_genesis_meta_policy_runtime_integration.py \
+            tests/test_genesis_meta_policy_budget_crash_consistency.py \
+            tests/test_genesis_meta_policy_evolution.py \
+            tests/test_genesis_meta_policy_measurement_revalidation.py \
+            tests/test_genesis_meta_policy_order_invariance.py \
+            tests/test_genesis_integrated_meta_loop.py \
+            tests/test_genesis_generated_policy_mutation.py \
+            tests/test_genesis_durable_policy_causality.py \
+            tests/test_genesis_cross_objective_retention.py
