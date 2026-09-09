@@ -31,6 +31,7 @@ from genesis.loop import Genesis, LineageContext, Proposal
 from genesis.migration import Substrate, discover, metamorphosis_succeeded, migrate
 from genesis.sandbox import run_isolated_callable
 from genesis.trust_root import (
+    BudgetExhausted,
     TrustRootError,
     artifact_digest_of,
     canonical_bytes,
@@ -74,6 +75,28 @@ class Migrate:
     probe_for: tuple[str, ...]
     translation: str
     used_operations: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class SearchTransform:
+    """Ask the runtime to *construct* candidate bodies rather than name one it already holds.
+
+    `Transform` selects from `World.artifacts`, so every body it can propose existed before the
+    lineage started. This is the intent that does not: the executor enumerates programs over the
+    admitted operation grammar under the declared bound, charges each to the lineage's budget, and
+    puts them through the same isolated evaluator and the same trust root as any other candidate.
+
+    The policy chooses **why and where** to search. It does not construct the candidates, does not
+    see the grader or the withheld answers, and does not decide acceptance — the separation that
+    makes an adopted descendant evidence rather than a preference.
+    """
+
+    name: str
+    max_candidates: int = 8
+    max_nodes: int = 3
+    operations: tuple[str, ...] = ()
+    depends_on: str = ""
+    rationale: Mapping[str, Any] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -171,6 +194,93 @@ def _transform(genesis: Genesis, here: World, intent: Transform) -> dict[str, An
         depends_on=intent.depends_on,
     )
     return genesis.cycle(here.tasks, lambda _context, _tasks: proposal)
+
+
+def _search_transform(genesis: Genesis, here: World, intent: SearchTransform) -> dict[str, Any]:
+    """Enumerate candidate programs, evaluate them, and let the trust root decide.
+
+    The enumeration is deterministic and exhaustive over a tiny grammar. Search sophistication is
+    not the claim and saying so is the point: what is new is that the body which gets adopted was
+    *built here*, from evidence, rather than installed by the host before the run began.
+    """
+    from genesis import program as program_language
+
+    alphabet = list(intent.operations) or sorted(
+        {name for names in here.component_operations.values() for name in names}
+    )
+    if not alphabet:
+        raise ControllerError(
+            "a search needs an operation alphabet; this world admits none for the held components"
+        )
+    budget_dimension = "probes" if "probes" in genesis.budget.limits else "generations"
+
+    considered: list[dict[str, Any]] = []
+    adopted: Mapping[str, Any] | None = None
+    exhausted = True
+    for candidate in program_language.enumerate_programs(
+        alphabet,
+        registry_reference=here.probe_registry,
+        max_nodes=max(1, int(intent.max_nodes)),
+    ):
+        if len(considered) >= max(1, int(intent.max_candidates)):
+            # Stopping at the declared bound rather than when something works: a search that ran
+            # past its budget because it had not succeeded yet is not a bounded search.
+            exhausted = False
+            break
+        try:
+            genesis.budget.spend(budget_dimension)
+        except BudgetExhausted:
+            exhausted = False
+            break
+        artifact = program_language.program_artifact(candidate)
+        identity = artifact_digest_of(artifact)
+        record = genesis.cycle(
+            here.tasks,
+            lambda _context, _tasks, _artifact=artifact: Proposal(
+                name="%s#%d" % (intent.name, len(considered)),
+                body_factory=_artifact,
+                provenance=LINEAGE,
+                rationale={**dict(intent.rationale), "constructed_by": "controller search"},
+                depends_on=intent.depends_on,
+            ),
+        )
+        considered.append(
+            {
+                "artifact_digest": identity["artifact_digest"],
+                "binds_exact_executed_bytes": identity["binds_exact_executed_bytes"],
+                "operations": artifact.operations(),
+                # The ordered calls as well as the set: two candidates that reach for the same
+                # operations in a different order are different programs, and a record that cannot
+                # distinguish them is not evidence a later policy could reason over.
+                "calls": artifact.calls(),
+                "accepted": bool(record.get("accepted")),
+                "reason": record.get("reason", ""),
+            }
+        )
+        if record.get("accepted"):
+            adopted = record
+            break
+        if record.get("stopped"):
+            exhausted = False
+            break
+
+    return {
+        "searched": True,
+        "candidates_considered": len(considered),
+        "candidates": considered,
+        "search_space_exhausted": exhausted and adopted is None,
+        "accepted": bool(adopted),
+        "reason": (adopted or {}).get("reason", "")
+        if adopted
+        else "no constructed candidate improved on the parent",
+        "adopted_artifact_digest": artifact_digest_of(genesis.body_factory)["artifact_digest"]
+        if adopted
+        else "",
+        "outcomes_are_self_reported": (adopted or {}).get("outcomes_are_self_reported"),
+        "causal_dependency": (adopted or {}).get("causal_dependency"),
+        "body_was_constructed_not_selected": True,
+        "stopped": bool((adopted or {}).get("stopped", False)),
+    }
 
 
 def _acquire_component(genesis: Genesis, here: World, intent: AcquireComponent) -> dict[str, Any]:
@@ -276,6 +386,7 @@ def _migrate(genesis: Genesis, here: World, intent: Migrate) -> dict[str, Any]:
 
 HANDLERS = {
     Transform: _transform,
+    SearchTransform: _search_transform,
     AcquireComponent: _acquire_component,
     SeparateVocabulary: _separate_vocabulary,
     Migrate: _migrate,
@@ -461,6 +572,16 @@ def _intent_record(intent: Any) -> dict[str, Any]:
             "rationale": dict(intent.rationale),
             "depends_on": intent.depends_on,
         }
+    if isinstance(intent, SearchTransform):
+        return {
+            "type": "SearchTransform",
+            "name": intent.name,
+            "max_candidates": int(intent.max_candidates),
+            "max_nodes": int(intent.max_nodes),
+            "operations": list(intent.operations),
+            "depends_on": intent.depends_on,
+            "rationale": dict(intent.rationale),
+        }
     if isinstance(intent, AcquireComponent):
         return {
             "type": "AcquireComponent",
@@ -492,6 +613,15 @@ def _intent_from_record(record: Mapping[str, Any]) -> Any:
             body=str(record["body"]),
             rationale=dict(record.get("rationale") or {}),
             depends_on=str(record.get("depends_on") or ""),
+        )
+    if kind == "SearchTransform":
+        return SearchTransform(
+            name=str(record["name"]),
+            max_candidates=int(record.get("max_candidates", 8)),
+            max_nodes=int(record.get("max_nodes", 3)),
+            operations=tuple(str(v) for v in record.get("operations") or []),
+            depends_on=str(record.get("depends_on") or ""),
+            rationale=dict(record.get("rationale") or {}),
         )
     if kind == "AcquireComponent":
         return AcquireComponent(

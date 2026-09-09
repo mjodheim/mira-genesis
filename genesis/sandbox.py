@@ -204,7 +204,18 @@ def _decode_wire_value(value: Any) -> Any:
 
 def _wire_descriptor(factory: Any) -> dict[str, Any]:
     from genesis.artifacts import ConfiguredBody
+    from genesis.program import ProgramArtifact
 
+    if isinstance(factory, ProgramArtifact):
+        # A generated body crosses as the program itself. There is no symbol to import and no
+        # configuration pointing at one: the bytes on this wire are the executable, and the child
+        # runs them through a fixed interpreter it already had.
+        return {
+            "schema": WIRE_ARTIFACT_SCHEMA,
+            "kind": "program",
+            "program": _json_value(dict(factory.value)),
+            "bytes_sha256": hashlib.sha256(factory.exact_artifact_bytes()).hexdigest(),
+        }
     if isinstance(factory, ConfiguredBody):
         target = factory.artifact_configuration().get("target_artifact") or {}
         return {
@@ -259,6 +270,16 @@ def _resolve_descriptor(descriptor: Mapping[str, Any]) -> Any:
         args = [_decode_wire_value(v) for v in descriptor.get("args") or []]
         keywords = {str(k): _decode_wire_value(v) for k, v in (descriptor.get("keywords") or {}).items()}
         return functools.partial(target, *args, **keywords)
+    if kind == "program":
+        from genesis.program import ProgramArtifact, canonical_bytes as program_bytes
+
+        value = descriptor.get("program")
+        if not isinstance(value, dict):
+            raise ValueError("program artifact carries no program")
+        expected = str(descriptor.get("bytes_sha256") or "")
+        if expected and hashlib.sha256(program_bytes(value)).hexdigest() != expected:
+            raise ValueError("program bytes changed in transit")
+        return ProgramArtifact(value=value)
     if kind == "configured_body":
         from genesis.artifacts import ConfiguredBody
         from genesis.trust_root import artifact_digest_of

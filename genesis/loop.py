@@ -69,6 +69,8 @@ CHECKPOINT_SCHEMA = "genesis-runtime-checkpoint-v1"
 #: to when the newest one turns out not to be resumable.
 CHECKPOINT_NAME = "runtime_checkpoint.json"
 PREVIOUS_CHECKPOINT_NAME = "runtime_checkpoint.previous.json"
+#: Where bodies the lineage generated are kept, addressed by their own bytes.
+ARTIFACT_STORE_NAME = "artifacts"
 
 
 def question_digest(task: Mapping[str, Any]) -> str:
@@ -843,12 +845,23 @@ class Genesis:
         and the manifest being replaced is kept beside the new one. The previous committed lineage
         stays loadable rather than merely being refused.
         """
+        from genesis.store import ArtifactStore
+
         directory = Path(directory)
         directory.mkdir(parents=True, exist_ok=True)
         written = {
             "state": lineage_state.save_state(self.state, directory / self._state_filename()),
             "journal": self.journal.save(directory / self._journal_filename()),
         }
+        # A body the lineage generated exists only as bytes it wrote, so nobody can hand it back on
+        # restore the way an importable fixture is handed back. Its bytes go into the store before
+        # the manifest naming them is published, in the same commit-last order and for the same
+        # reason: a manifest that points at an artifact nobody kept is a checkpoint that cannot be
+        # resumed. An importable fixture is not stored — see genesis/store.py.
+        if hasattr(self.body_factory, "exact_artifact_bytes"):
+            written["body_artifact"] = ArtifactStore(directory / ARTIFACT_STORE_NAME).put(
+                self.body_factory
+            )
         manifest = self.checkpoint()
         path = directory / CHECKPOINT_NAME
         if path.exists():
@@ -869,7 +882,7 @@ class Genesis:
     def restore(
         directory: Path,
         *,
-        body_factory: Callable[[], Body],
+        body_factory: Callable[[], Body] | None = None,
         budget: Budget | None = None,
         isolation: Isolation | None = None,
         grade: Callable[[Mapping[str, Any], Any], str] | None = None,
@@ -888,6 +901,13 @@ class Genesis:
         could ever be on disk. `superseded=True` resumes the checkpoint this directory committed
         before its current one — the reason the payloads are content-addressed, so that falling back
         is a real option rather than a refusal.
+
+        `body_factory` may be omitted when the committed body was one the lineage **generated**.
+        Such a body exists only as bytes the lineage wrote, so requiring a caller to hand it back
+        would mean a lineage could not resume its own descendants; it is read from the artifact store
+        by the digest the checkpoint names, and refused if the store does not hold exactly that. For
+        an importable fixture the caller still supplies the means to resolve it, and still cannot
+        choose a different one.
         """
         directory = Path(directory)
         path = directory / (PREVIOUS_CHECKPOINT_NAME if superseded else CHECKPOINT_NAME)
@@ -913,6 +933,24 @@ class Genesis:
             raise TrustRootError("the persisted state is not the one this checkpoint committed")
         if manifest.get("journal_head") != journal.head:
             raise TrustRootError("the persisted journal is not the one this checkpoint committed")
+
+        committed_artifact = manifest.get("body_artifact") or {}
+        if body_factory is None:
+            if committed_artifact.get("kind") != "exact_bytes":
+                raise TrustRootError(
+                    "this checkpoint committed an importable body, which restore cannot reconstruct "
+                    "on its own: supply body_factory so the runtime can check it against the one "
+                    "the lineage was persisted with"
+                )
+            from genesis.store import ArtifactStore, StoreError
+
+            store = ArtifactStore(directory / ARTIFACT_STORE_NAME)
+            try:
+                body_factory = store.get_program(str(committed_artifact.get("bytes_sha256") or ""))
+            except StoreError as missing:
+                raise TrustRootError(
+                    "the generated body this checkpoint committed cannot be recovered: %s" % missing
+                ) from None
 
         arriving = artifact_digest_of(body_factory)
         committed_body = manifest.get("body_artifact") or {}

@@ -183,15 +183,36 @@ def artifact_digest_of(factory: Any) -> dict[str, Any]:
       and keywords, canonicalised;
     * an object that publishes `artifact_configuration()` binds that configuration exactly, which is
       what lets the runtime construct a licensed ablation of it rather than take a caller's word;
+    * an object that publishes `exact_artifact_bytes()` binds those bytes and nothing else. This is
+      the only kind whose digest covers what actually executes: the bytes *are* the program, so
+      there is nothing behind the digest that could drift out from under it. A generated body uses
+      this; an importable fixture cannot, because its behaviour lives in a module the digest only
+      points at;
     * anything else — a lambda, a closure, a callable whose state cannot be reconstructed — is
       **refused**. Failing closed is the point: a weak symbolic identity that silently covers two
       different executables is worse than no identity, because a record then testifies to a binding
       that does not hold.
 
-    None of these bind the exact executed bytes; `binds_exact_executed_bytes` says so, and a
-    lineage-generated body will need a packaged artifact that does.
+    `binds_exact_executed_bytes` distinguishes the third case from the rest, so a reader never has
+    to infer which kind of binding a record is claiming.
     """
     import functools
+
+    if hasattr(factory, "exact_artifact_bytes"):
+        raw = factory.exact_artifact_bytes()
+        if not isinstance(raw, (bytes, bytearray)):
+            raise TrustRootError("exact_artifact_bytes() did not return bytes")
+        payload = {
+            "schema": ARTIFACT_SCHEMA,
+            "kind": "exact_bytes",
+            "artifact_kind": str(
+                factory.artifact_kind() if hasattr(factory, "artifact_kind") else "opaque"
+            ),
+            "bytes_sha256": hashlib.sha256(bytes(raw)).hexdigest(),
+            "byte_length": len(bytes(raw)),
+            "binds_exact_executed_bytes": True,
+        }
+        return {**payload, "artifact_digest": digest_of(payload)}
 
     if hasattr(factory, "artifact_configuration"):
         configuration = factory.artifact_configuration()
