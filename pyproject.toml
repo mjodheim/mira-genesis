@@ -26,12 +26,11 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-# `pytest-xdist` is a test *runner*, never imported by the project. It exists because the
-# suite's cost is concentrated in eight expensive module-scoped fixtures in the frozen
-# M061-M066 band: serial 46m19s, `-n 10 --dist loadscope` 15m28s, with identical results
-# (2531 passed, 12 skipped, both). `loadscope` keeps each module on one worker so no
-# module-scoped fixture is computed twice. Nothing is cached and nothing is skipped -- every
-# frozen result is still recomputed, just concurrently.
+# `pytest-xdist` is a test *runner*, never imported by the project. It is included so the
+# growing repository-wide suite can be run concurrently with `-n 10 --dist loadscope`.
+# `loadscope` keeps each module on one worker so module-scoped fixtures are not computed
+# twice. Exact pass/skip counts and elapsed times are intentionally not pinned here because
+# they become stale as the suite evolves; measure them from the commit being validated.
 dev = ["pytest", "pytest-xdist"]
 
 [tool.setuptools]
