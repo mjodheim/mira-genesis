@@ -192,8 +192,10 @@ class RecordBody:
         key = SUBSTRATE_OPERATIONS["read"](task)
         required = self.routed.get(key)
         if required is not None:
-            if required not in self.capabilities:
-                raise RuntimeError("this body reaches for %r, which it no longer has" % required)
+            requirements = (required,) if isinstance(required, str) else tuple(required)
+            missing = [name for name in requirements if name not in self.capabilities]
+            if missing:
+                raise RuntimeError("this body reaches for %r, which it no longer has" % missing[0])
             return answer_to(task)
         return answer_to(task) if key in self.solves else None
 
@@ -215,8 +217,10 @@ SUBSTRATE_OPERATIONS = {
 #
 # Each generation introduces its own acquisition; the next one is ablated against it.
 #
-# Each later generation *routes* its earlier gains through the components that produced them, so an
-# ablation removes something rather than merely relabelling the verdict.
+# Each later generation keeps its earlier routed gains, and its *new* task requires both the
+# immediately preceding acquisition and the acquisition introduced in the current generation. This
+# matters: losing only an old routed task after ablation is retention dependence, not evidence that
+# the current generation's new work needed its predecessor.
 
 #: The component the lineage named for itself, by probing, before it migrated.
 ACQUIRED_COMPONENT = "joint_registry"
@@ -225,20 +229,24 @@ SECOND_ACQUISITION = "carrier_index"
 
 #: t2 and t3 are answered through the probe-named component rather than out of the body's own table.
 ROUTED_TASKS = {"t2": ACQUIRED_COMPONENT, "t3": ACQUIRED_COMPONENT}
-#: generation 2 adds t4 through its own acquisition.
-ROUTED_AFTER_MIGRATION = {**ROUTED_TASKS, "t4": SECOND_ACQUISITION}
+#: generation 2 adds t4 through its own acquisition and the predecessor it claims to need.
+ROUTED_AFTER_MIGRATION = {
+    **ROUTED_TASKS, "t4": (ACQUIRED_COMPONENT, SECOND_ACQUISITION)
+}
 #: What generation 3 acquires, which generation 4 depends on in turn.
 THIRD_ACQUISITION = "carrier_index_ii"
 #: What generation 4 acquires.
 FOURTH_ACQUISITION = "carrier_index_iii"
 
-#: generation 3 adds t5 through its own acquisition, and keeps needing generation 2's.
-ROUTED_THIRD_GENERATION = {**ROUTED_AFTER_MIGRATION, "t5": THIRD_ACQUISITION}
-#: generation 4 adds t6 and t7 through its own, and still needs everything before it.
+#: generation 3 adds t5 through its own acquisition and generation 2's acquisition.
+ROUTED_THIRD_GENERATION = {
+    **ROUTED_AFTER_MIGRATION, "t5": (SECOND_ACQUISITION, THIRD_ACQUISITION)
+}
+#: generation 4 adds t6 and t7 through its own acquisition and generation 3's acquisition.
 ROUTED_FOURTH_GENERATION = {
     **ROUTED_THIRD_GENERATION,
-    "t6": FOURTH_ACQUISITION,
-    "t7": FOURTH_ACQUISITION,
+    "t6": (THIRD_ACQUISITION, FOURTH_ACQUISITION),
+    "t7": (THIRD_ACQUISITION, FOURTH_ACQUISITION),
 }
 
 
