@@ -20,6 +20,8 @@ from genesis.probe import resolve_registry
 
 PORTABLE_PROGRAM_TARGET = "genesis.program_forms:portable_program_body"
 REBIND_OPERATION = "rebind_program"
+_POLICY_TOOL_NAME = "generated_search_policy"
+_POLICY_ROLE = "lineage_search_policy"
 
 
 class PortableProgramError(RuntimeError):
@@ -96,50 +98,76 @@ def portable_program_body(
     )
 
 
-def portable_target_for(source_target: str) -> str:
-    """Substrate capability mapping an admitted generated-program target to this form.
+def portable_target_for(source_form: str) -> str:
+    """Substrate capability mapping an admitted generated-program form to this form.
 
     The function deliberately returns a literal. ``CapabilitySet`` severs module globals before a
     discovered operation is invoked, so a migration cannot obtain this result by reaching through a
     module registry it never discovered.
     """
-    if not isinstance(source_target, str) or not source_target:
-        raise PortableProgramError("source generated-program target is missing")
+    if not isinstance(source_form, str) or not source_form:
+        raise PortableProgramError("source generated-program form is missing")
     return "genesis.program_forms:portable_program_body"
 
 
-def _configured_record(departure: Mapping[str, Any]) -> Mapping[str, Any]:
-    artifact = departure.get("departure_body_artifact")
-    if not isinstance(artifact, Mapping) or artifact.get("kind") != "configured_artifact":
-        raise PortableProgramError("departure carries no configured executable artifact")
-    configured = artifact.get("configuration")
-    if not isinstance(configured, Mapping) or configured.get("schema") != "genesis-configured-body-v1":
-        raise PortableProgramError("departure configured artifact cannot be reconstructed")
-    program = configured.get("configuration")
-    if not isinstance(program, Mapping) or program.get("program_schema") != PROGRAM_SCHEMA:
-        raise PortableProgramError("departure body is not a generated canonical program")
-    return configured
+def _held_policy(departure: Mapping[str, Any]) -> Mapping[str, Any]:
+    tools = [
+        tool
+        for tool in departure.get("tools", [])
+        if isinstance(tool, Mapping)
+        and tool.get("name") == _POLICY_TOOL_NAME
+        and tool.get("role") == _POLICY_ROLE
+    ]
+    if len(tools) != 1 or not isinstance(tools[0].get("artifact"), Mapping):
+        raise PortableProgramError("departure carries no unique generated-search policy")
+    policy = tools[0]["artifact"]
+    registry_reference = policy.get("registry_reference")
+    input_field = policy.get("input_field")
+    if not isinstance(registry_reference, str) or not registry_reference:
+        raise PortableProgramError("departure policy carries no operation registry")
+    if not isinstance(input_field, str) or not input_field:
+        raise PortableProgramError("departure policy carries no input field")
+    return policy
+
+
+def _latest_generated_operations(departure: Mapping[str, Any]) -> tuple[str, ...]:
+    acquisitions = list(departure.get("acquisitions") or [])
+    if not acquisitions or not isinstance(acquisitions[-1], Mapping):
+        raise PortableProgramError("departure carries no adopted generated body")
+    name = str(acquisitions[-1].get("name") or "")
+    if not name.startswith("policy-program:") or ":" not in name:
+        raise PortableProgramError("latest acquisition is not a policy-generated body")
+    encoded = name.rpartition(":")[2]
+    operations = tuple(part for part in encoded.split("+") if part)
+    if not operations:
+        raise PortableProgramError("latest generated-body acquisition names no operations")
+    return operations
 
 
 def translate_current_program(departure: Mapping[str, Any], operations: Mapping[str, Any]):
-    """Rebuild the departing generated body in a discovered alternate executable form.
+    """Rebuild the lineage's held generated body in a discovered alternate executable form.
 
-    No program operation, registry, dependency or input-field value is supplied by this translator.
-    They are copied from the authenticated departure artifact. The only changed field is the target
-    returned by the discovered ``rebind_program`` capability.
+    The translator derives program operations from the lineage's accepted generated-body record and
+    derives registry/input identity from its held search policy. It does not receive a host-authored
+    replacement program. The one substrate-dependent fact — which executable form to use — comes
+    only through the discovered ``rebind_program`` capability.
+
+    This remains host-written translation apparatus. Capability preservation is separately measured
+    by ``migration.migrate`` before the new body becomes current.
     """
-    configured = _configured_record(departure)
-    program = configured["configuration"]
+    policy = _held_policy(departure)
+    program_operations = _latest_generated_operations(departure)
     handle = operations["rebind_program"]
-    target = handle(str(configured.get("target") or ""))
+    target = handle("canonical-generated-program")
     if target != "genesis.program_forms:portable_program_body":
         raise PortableProgramError("discovered rebind capability returned an unsupported form")
-    dependencies = configured.get("dependencies") or []
-    if not isinstance(dependencies, list):
-        raise PortableProgramError("departure dependencies are not canonical data")
     return ConfiguredBody(
         target=target,
-        configuration=dict(program),
-        dependencies=frozenset(str(name) for name in dependencies),
-        dependency_keyword=str(configured.get("dependency_keyword") or "capabilities"),
+        configuration={
+            "program_schema": PROGRAM_SCHEMA,
+            "registry_reference": str(policy["registry_reference"]),
+            "operations": list(program_operations),
+            "input_field": str(policy["input_field"]),
+        },
+        dependencies=frozenset(),
     )
