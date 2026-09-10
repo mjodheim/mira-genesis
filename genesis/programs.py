@@ -11,15 +11,18 @@ needed. ``ConfiguredBody`` binds the interpreter target plus the canonical progr
 two different generated programs are different executable artifacts and structural ablation remains
 available when dependencies are declared.
 
-A migrated generated body may use another compatible interpreter target. Descendant construction
-therefore inherits the target of the currently executing configured program instead of silently
-falling back to the original ``PROGRAM_TARGET``. The target remains executable apparatus and is not
-chosen by the trust root; this only keeps a form change from being undone by the next body proposal.
+A migrated generated body may use another compatible interpreter target. The integrated runtime can
+scope candidate construction to the target of the currently executing configured program, so body,
+policy and MetaPolicy evaluations all see the same form without a process-global mutable default.
+The target remains executable apparatus and is not chosen by the trust root; this only keeps a form
+change from being silently undone by the next generated descendant.
 
 This is DEVELOPMENT machinery, not a claim that this tiny language is general or open-ended.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from itertools import product
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -28,6 +31,9 @@ from genesis.probe import resolve_registry
 
 PROGRAM_SCHEMA = "genesis-generated-program-v1"
 PROGRAM_TARGET = "genesis.programs:program_body"
+_ACTIVE_INTERPRETER_TARGET: ContextVar[str] = ContextVar(
+    "genesis_program_interpreter_target", default=PROGRAM_TARGET
+)
 
 
 class ProgramError(RuntimeError):
@@ -127,6 +133,21 @@ def interpreter_target_of(body_factory: Any) -> str:
     return PROGRAM_TARGET
 
 
+@contextmanager
+def inherit_interpreter_form(body_factory: Any):
+    """Use one lineage body's program form for every nested generated candidate construction.
+
+    ``ContextVar`` keeps the binding scoped to this runtime call and safe across independent async
+    contexts. It is reset unconditionally on exit, so evaluating one migrated lineage cannot change
+    the default form later used by another lineage in the same process.
+    """
+    token = _ACTIVE_INTERPRETER_TARGET.set(interpreter_target_of(body_factory))
+    try:
+        yield _ACTIVE_INTERPRETER_TARGET.get()
+    finally:
+        _ACTIVE_INTERPRETER_TARGET.reset(token)
+
+
 def latest_acquisition_dependency(state: Mapping[str, Any]) -> str:
     """Name the most recent retained body acquisition, if there is one.
 
@@ -149,7 +170,7 @@ def artifact(
     operations: Sequence[str],
     input_field: str = "input",
     dependencies: Iterable[str] = (),
-    interpreter_target: str = PROGRAM_TARGET,
+    interpreter_target: str | None = None,
 ) -> ConfiguredBody:
     """Build one generated executable artifact from canonical program data."""
     names = tuple(str(name) for name in operations)
@@ -167,7 +188,7 @@ def artifact(
     if dependency_names:
         configuration["required_capabilities"] = sorted(dependency_names)
     return ConfiguredBody(
-        target=str(interpreter_target),
+        target=str(interpreter_target or _ACTIVE_INTERPRETER_TARGET.get()),
         configuration=configuration,
         dependencies=dependency_names,
     )
@@ -181,7 +202,7 @@ def descendant_artifact(
     input_field: str = "input",
     dependencies: Iterable[str] = (),
 ) -> ConfiguredBody:
-    """Build a generated descendant in the current generated body's executable form."""
+    """Build a generated descendant explicitly in the current generated body's executable form."""
     return artifact(
         registry_reference=registry_reference,
         operations=operations,
@@ -199,7 +220,7 @@ def enumerate_artifacts(
     max_candidates: int,
     input_field: str = "input",
     dependencies: Iterable[str] = (),
-    interpreter_target: str = PROGRAM_TARGET,
+    interpreter_target: str | None = None,
 ):
     """Deterministically enumerate a bounded generated-program search space.
 
