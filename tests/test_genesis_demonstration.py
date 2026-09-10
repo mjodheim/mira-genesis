@@ -266,9 +266,9 @@ def test_an_ablated_arm_is_its_candidate_minus_one_acquisition(candidate_factory
 def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
     """What makes the removal real: the candidate reaches for a component that is not there.
 
-    t2 and t3 are `error` rather than `unsolved` because the body raises instead of returning a
-    wrong answer. A parent that had merely never learned those tasks would return nothing for them,
-    which grades as `unsolved`; this body reaches.
+    t2, t3 and the newly gained t4 are `error` rather than `unsolved` because the body raises
+    instead of returning a wrong answer. The t4 loss is now load-bearing: it proves the ablation
+    breaks work newly gained by this generation, not only work retained from its parent.
     """
     outcomes = {
         row["task_id"]: row["outcome"]
@@ -284,7 +284,7 @@ def test_the_ablated_generation_breaks_rather_than_falling_back_to_its_parent():
         "t1": "solved",
         "t2": "error",
         "t3": "error",
-        "t4": "solved",
+        "t4": "error",
         "t5": "unsolved",
         "t6": "unsolved",
         "t7": "unsolved",
