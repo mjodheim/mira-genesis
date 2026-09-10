@@ -50,7 +50,6 @@ class ProgramBody:
         registry_reference: str,
         operations: Sequence[str],
         input_field: str,
-        required_capabilities: Sequence[str] = (),
         capabilities: Iterable[str] = (),
     ) -> None:
         if program_schema != PROGRAM_SCHEMA:
@@ -72,20 +71,10 @@ class ProgramBody:
         self.registry_reference = registry_reference
         self.operations = names
         self.input_field = input_field
-        self.required_capabilities = frozenset(str(name) for name in required_capabilities)
         self.capabilities = frozenset(str(name) for name in capabilities)
         self._registry = registry
 
     def attempt(self, task: Mapping[str, Any]) -> Any:
-        missing = self.required_capabilities - self.capabilities
-        if missing:
-            # The body still constructs so an ablation is a measured bad arm rather than an
-            # instrument failure. Each attempted task fails because the retained dependency the
-            # configured artifact names is genuinely absent from the derived arm.
-            raise RuntimeError(
-                "generated program is missing retained capabilities: %s"
-                % ", ".join(sorted(missing))
-            )
         value = task[self.input_field]
         for name in self.operations:
             value = self._registry[name](value)
@@ -98,7 +87,6 @@ def program_body(
     registry_reference: str,
     operations: Sequence[str],
     input_field: str = "input",
-    required_capabilities: Sequence[str] = (),
     capabilities: Iterable[str] = (),
 ) -> ProgramBody:
     """Importable fixed interpreter target used by ``ConfiguredBody``."""
@@ -107,7 +95,6 @@ def program_body(
         registry_reference=registry_reference,
         operations=operations,
         input_field=input_field,
-        required_capabilities=required_capabilities,
         capabilities=capabilities,
     )
 
@@ -148,22 +135,6 @@ def inherit_interpreter_form(body_factory: Any):
         _ACTIVE_INTERPRETER_TARGET.reset(token)
 
 
-def latest_acquisition_dependency(state: Mapping[str, Any]) -> str:
-    """Name the most recent retained body acquisition, if there is one.
-
-    Later generated bodies use this only as an explicit structural dependency. The candidate still
-    has to improve under the unchanged trust root, and the ordinary cycle derives the corresponding
-    ablation rather than trusting this name as proof of causality.
-    """
-    acquisitions = list(state.get("acquisitions") or [])
-    if not acquisitions:
-        return ""
-    latest = acquisitions[-1]
-    if not isinstance(latest, Mapping):
-        return ""
-    return str(latest.get("name") or "")
-
-
 def artifact(
     *,
     registry_reference: str,
@@ -176,21 +147,15 @@ def artifact(
     names = tuple(str(name) for name in operations)
     if not names:
         raise ProgramError("cannot build an empty generated program")
-    dependency_names = frozenset(str(name) for name in dependencies)
-    configuration: dict[str, Any] = {
-        "program_schema": PROGRAM_SCHEMA,
-        "registry_reference": str(registry_reference),
-        "operations": list(names),
-        "input_field": str(input_field),
-    }
-    # Preserve historical zero-dependency artifact identities. The extra requirement is present only
-    # when there is something a later generation must actually lose in the runtime-derived ablation.
-    if dependency_names:
-        configuration["required_capabilities"] = sorted(dependency_names)
     return ConfiguredBody(
         target=str(interpreter_target or _ACTIVE_INTERPRETER_TARGET.get()),
-        configuration=configuration,
-        dependencies=dependency_names,
+        configuration={
+            "program_schema": PROGRAM_SCHEMA,
+            "registry_reference": str(registry_reference),
+            "operations": list(names),
+            "input_field": str(input_field),
+        },
+        dependencies=frozenset(str(name) for name in dependencies),
     )
 
 
