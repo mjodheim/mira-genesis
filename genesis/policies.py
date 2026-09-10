@@ -154,6 +154,11 @@ def _evidence_names(evidence: Iterable[Mapping[str, Any]]) -> tuple[set[str], se
     return rejected, acquired
 
 
+def _latest_dependency(context: Mapping[str, Any]) -> str:
+    acquisitions = list(context.get("acquisitions") or [])
+    return str(acquisitions[-1]) if acquisitions else ""
+
+
 def step(payload: Mapping[str, Any]) -> dict[str, Any]:
     """Interpret one policy against inert evidence and return one declarative controller intent."""
     policy = validate(payload.get("policy") or {})
@@ -163,6 +168,7 @@ def step(payload: Mapping[str, Any]) -> dict[str, Any]:
     if acquired:
         return {"type": "Stop", "reason": "a policy-generated descendant was adopted"}
 
+    dependency = _latest_dependency(context)
     for operations in candidate_sequences(policy):
         name = candidate_name(operations)
         if name in rejected:
@@ -172,7 +178,7 @@ def step(payload: Mapping[str, Any]) -> dict[str, Any]:
             "name": name,
             "operations": list(operations),
             "input_field": policy["input_field"],
-            "depends_on": "",
+            "depends_on": dependency,
             "rationale": {
                 "search_policy_digest": policy["policy_digest"],
                 "search_depth": policy["max_length"],
