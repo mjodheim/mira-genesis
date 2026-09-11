@@ -91,6 +91,8 @@ def run_objective(
                 "policy_digest": policy["policy_digest"],
                 "program": outcome["generated_program"],
                 "body_artifact": outcome["generated_body_artifact"],
+                "generated_dependency": outcome.get("generated_dependency", ""),
+                "causal_dependency": dict(outcome.get("causal_dependency") or {}),
                 "accepted": bool(outcome.get("accepted")),
                 "reason": outcome.get("reason", ""),
             }

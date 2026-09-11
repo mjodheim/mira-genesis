@@ -194,6 +194,15 @@ def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform
         )
     except programs.ProgramError as problem:
         raise ControllerError(str(problem)) from problem
+
+    body_dependencies = tuple(sorted(body.dependencies))
+    if intent.depends_on:
+        proposal_dependency = intent.depends_on
+    elif len(body_dependencies) == 1:
+        proposal_dependency = body_dependencies[0]
+    else:
+        proposal_dependency = ""
+
     proposal = Proposal(
         name=intent.name,
         body_factory=body,
@@ -205,8 +214,11 @@ def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform
                 "operations": list(intent.operations),
                 "input_field": intent.input_field,
             },
+            "runtime_derived_dependency": proposal_dependency
+            if proposal_dependency and not intent.depends_on
+            else "",
         },
-        depends_on=intent.depends_on,
+        depends_on=proposal_dependency,
     )
     record = genesis.cycle(here.tasks, lambda _context, _tasks: proposal)
     return {
@@ -217,6 +229,7 @@ def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform
             "input_field": intent.input_field,
         },
         "generated_body_artifact": artifact_digest_of(body),
+        "generated_dependency": proposal_dependency,
         "selected_from_world_artifacts": False,
     }
 

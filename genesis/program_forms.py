@@ -15,7 +15,7 @@ from __future__ import annotations
 from typing import Any, Iterable, Mapping, Sequence
 
 from genesis.artifacts import ConfiguredBody
-from genesis.programs import PROGRAM_SCHEMA
+from genesis.programs import PROGRAM_SCHEMA, program_operations_of
 from genesis.probe import resolve_registry
 
 PORTABLE_PROGRAM_TARGET = "genesis.program_forms:portable_program_body"
@@ -38,6 +38,9 @@ class PortableProgramBody:
         registry_reference: str,
         operations: Sequence[str],
         input_field: str,
+        required_capabilities: Sequence[str] = (),
+        parent_body_artifact: Mapping[str, Any] | None = None,
+        parent_prefix_length: int = 0,
         capabilities: Iterable[str] = (),
     ) -> None:
         if program_schema != PROGRAM_SCHEMA:
@@ -58,13 +61,44 @@ class PortableProgramBody:
             )
         self.operations = names
         self.input_field = input_field
+        self.required_capabilities = frozenset(str(name) for name in required_capabilities)
         self.capabilities = frozenset(str(name) for name in capabilities)
-        # This is the executable-form difference: resolve once and retain the compiled route rather
-        # than looking up every operation by name on every task attempt.
-        self._compiled = tuple(registry[name] for name in names)
+        self._parent_body = None
+        suffix_names = names
+        if parent_body_artifact is not None:
+            from genesis.artifacts import reconstruct
+
+            if len(self.required_capabilities) != 1:
+                raise PortableProgramError(
+                    "a composed portable descendant must name exactly one predecessor"
+                )
+            prefix_length = int(parent_prefix_length)
+            if prefix_length <= 0 or prefix_length >= len(names):
+                raise PortableProgramError("portable descendant carries an invalid parent prefix length")
+            parent_factory = reconstruct(parent_body_artifact)
+            parent_operations = program_operations_of(parent_factory)
+            if parent_operations != names[:prefix_length]:
+                raise PortableProgramError(
+                    "portable descendant parent artifact is not the canonical program prefix it claims"
+                )
+            self._parent_body = parent_factory()
+            suffix_names = names[prefix_length:]
+        elif int(parent_prefix_length):
+            raise PortableProgramError("portable program names a parent prefix without a parent artifact")
+        # This is the executable-form difference: resolve once and retain the compiled suffix route.
+        self._compiled = tuple(registry[name] for name in suffix_names)
 
     def attempt(self, task: Mapping[str, Any]) -> Any:
-        value = task[self.input_field]
+        missing = self.required_capabilities - self.capabilities
+        if missing:
+            raise RuntimeError(
+                "portable generated program is missing retained predecessor capability: %s"
+                % ", ".join(sorted(missing))
+            )
+        if self._parent_body is None:
+            value = task[self.input_field]
+        else:
+            value = self._parent_body.attempt(task)
         for operation in self._compiled:
             value = operation(value)
         return value
@@ -76,6 +110,9 @@ def portable_program_body(
     registry_reference: str,
     operations: Sequence[str],
     input_field: str = "input",
+    required_capabilities: Sequence[str] = (),
+    parent_body_artifact: Mapping[str, Any] | None = None,
+    parent_prefix_length: int = 0,
     capabilities: Iterable[str] = (),
 ) -> PortableProgramBody:
     """Importable target used by a migrated ``ConfiguredBody``."""
@@ -84,6 +121,9 @@ def portable_program_body(
         registry_reference=registry_reference,
         operations=operations,
         input_field=input_field,
+        required_capabilities=required_capabilities,
+        parent_body_artifact=parent_body_artifact,
+        parent_prefix_length=parent_prefix_length,
         capabilities=capabilities,
     )
 
