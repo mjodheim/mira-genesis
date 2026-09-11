@@ -34,6 +34,15 @@ PROGRAM_TARGET = "genesis.programs:program_body"
 _ACTIVE_INTERPRETER_TARGET: ContextVar[str] = ContextVar(
     "genesis_program_interpreter_target", default=PROGRAM_TARGET
 )
+_ACTIVE_PARENT_PROGRAM_OPERATIONS: ContextVar[tuple[str, ...]] = ContextVar(
+    "genesis_parent_program_operations", default=()
+)
+_ACTIVE_PARENT_DEPENDENCY: ContextVar[str] = ContextVar(
+    "genesis_parent_program_dependency", default=""
+)
+_ACTIVE_PARENT_ARTIFACT_DIGEST: ContextVar[str] = ContextVar(
+    "genesis_parent_program_artifact_digest", default=""
+)
 
 
 class ProgramError(RuntimeError):
@@ -50,6 +59,8 @@ class ProgramBody:
         registry_reference: str,
         operations: Sequence[str],
         input_field: str,
+        required_capabilities: Sequence[str] = (),
+        parent_body_artifact_digest: str = "",
         capabilities: Iterable[str] = (),
     ) -> None:
         if program_schema != PROGRAM_SCHEMA:
@@ -71,10 +82,18 @@ class ProgramBody:
         self.registry_reference = registry_reference
         self.operations = names
         self.input_field = input_field
+        self.required_capabilities = frozenset(str(name) for name in required_capabilities)
+        self.parent_body_artifact_digest = str(parent_body_artifact_digest or "")
         self.capabilities = frozenset(str(name) for name in capabilities)
         self._registry = registry
 
     def attempt(self, task: Mapping[str, Any]) -> Any:
+        missing = self.required_capabilities - self.capabilities
+        if missing:
+            raise RuntimeError(
+                "generated program is missing retained predecessor capability: %s"
+                % ", ".join(sorted(missing))
+            )
         value = task[self.input_field]
         for name in self.operations:
             value = self._registry[name](value)
@@ -87,6 +106,8 @@ def program_body(
     registry_reference: str,
     operations: Sequence[str],
     input_field: str = "input",
+    required_capabilities: Sequence[str] = (),
+    parent_body_artifact_digest: str = "",
     capabilities: Iterable[str] = (),
 ) -> ProgramBody:
     """Importable fixed interpreter target used by ``ConfiguredBody``."""
@@ -95,8 +116,27 @@ def program_body(
         registry_reference=registry_reference,
         operations=operations,
         input_field=input_field,
+        required_capabilities=required_capabilities,
+        parent_body_artifact_digest=parent_body_artifact_digest,
         capabilities=capabilities,
     )
+
+
+def program_operations_of(body_factory: Any) -> tuple[str, ...]:
+    """Return canonical operations only for a reconstructible generated-program body."""
+    if not isinstance(body_factory, ConfiguredBody):
+        return ()
+    configuration = body_factory.configuration
+    operations = configuration.get("operations")
+    if (
+        configuration.get("program_schema") != PROGRAM_SCHEMA
+        or not isinstance(configuration.get("registry_reference"), str)
+        or not isinstance(configuration.get("input_field"), str)
+        or not isinstance(operations, (list, tuple))
+        or not operations
+    ):
+        return ()
+    return tuple(str(name) for name in operations)
 
 
 def interpreter_target_of(body_factory: Any) -> str:
@@ -108,31 +148,40 @@ def interpreter_target_of(body_factory: Any) -> str:
     configuration, candidate execution fails closed in the ordinary sandbox; there is no fallback to
     the old target after seeing the failure.
     """
-    if isinstance(body_factory, ConfiguredBody):
-        configuration = body_factory.configuration
-        if (
-            configuration.get("program_schema") == PROGRAM_SCHEMA
-            and isinstance(configuration.get("registry_reference"), str)
-            and configuration.get("operations")
-            and isinstance(configuration.get("input_field"), str)
-        ):
-            return str(body_factory.target)
+    if isinstance(body_factory, ConfiguredBody) and program_operations_of(body_factory):
+        return str(body_factory.target)
     return PROGRAM_TARGET
 
 
 @contextmanager
-def inherit_interpreter_form(body_factory: Any):
-    """Use one lineage body's program form for every nested generated candidate construction.
+def inherit_interpreter_form(body_factory: Any, *, dependency: str = ""):
+    """Scope generated descendants to the current form and, for strict extensions, predecessor.
 
-    ``ContextVar`` keeps the binding scoped to this runtime call and safe across independent async
-    contexts. It is reset unconditionally on exit, so evaluating one migrated lineage cannot change
-    the default form later used by another lineage in the same process.
+    The dependency is inert lineage identity supplied by the runtime from its current acquisition
+    history. It is inherited only when a candidate's canonical operation sequence is a *strict
+    extension* of the current generated program. A sibling or replacement program therefore cannot
+    manufacture causal ancestry merely because a predecessor exists.
     """
-    token = _ACTIVE_INTERPRETER_TARGET.set(interpreter_target_of(body_factory))
+    from genesis.trust_root import artifact_digest_of
+
+    parent_operations = program_operations_of(body_factory)
+    dependency_name = str(dependency or "") if parent_operations else ""
+    parent_digest = (
+        artifact_digest_of(body_factory)["artifact_digest"]
+        if dependency_name
+        else ""
+    )
+    target_token = _ACTIVE_INTERPRETER_TARGET.set(interpreter_target_of(body_factory))
+    operations_token = _ACTIVE_PARENT_PROGRAM_OPERATIONS.set(parent_operations)
+    dependency_token = _ACTIVE_PARENT_DEPENDENCY.set(dependency_name)
+    digest_token = _ACTIVE_PARENT_ARTIFACT_DIGEST.set(parent_digest)
     try:
         yield _ACTIVE_INTERPRETER_TARGET.get()
     finally:
-        _ACTIVE_INTERPRETER_TARGET.reset(token)
+        _ACTIVE_PARENT_ARTIFACT_DIGEST.reset(digest_token)
+        _ACTIVE_PARENT_DEPENDENCY.reset(dependency_token)
+        _ACTIVE_PARENT_PROGRAM_OPERATIONS.reset(operations_token)
+        _ACTIVE_INTERPRETER_TARGET.reset(target_token)
 
 
 def artifact(
@@ -147,15 +196,35 @@ def artifact(
     names = tuple(str(name) for name in operations)
     if not names:
         raise ProgramError("cannot build an empty generated program")
+
+    dependency_names = frozenset(str(name) for name in dependencies)
+    parent_operations = _ACTIVE_PARENT_PROGRAM_OPERATIONS.get()
+    parent_dependency = _ACTIVE_PARENT_DEPENDENCY.get()
+    inherited_parent = bool(
+        not dependency_names
+        and parent_dependency
+        and parent_operations
+        and len(names) > len(parent_operations)
+        and names[: len(parent_operations)] == parent_operations
+    )
+    if inherited_parent:
+        dependency_names = frozenset((parent_dependency,))
+
+    configuration: dict[str, Any] = {
+        "program_schema": PROGRAM_SCHEMA,
+        "registry_reference": str(registry_reference),
+        "operations": list(names),
+        "input_field": str(input_field),
+    }
+    if dependency_names:
+        configuration["required_capabilities"] = sorted(dependency_names)
+    if inherited_parent:
+        configuration["parent_body_artifact_digest"] = _ACTIVE_PARENT_ARTIFACT_DIGEST.get()
+
     return ConfiguredBody(
         target=str(interpreter_target or _ACTIVE_INTERPRETER_TARGET.get()),
-        configuration={
-            "program_schema": PROGRAM_SCHEMA,
-            "registry_reference": str(registry_reference),
-            "operations": list(names),
-            "input_field": str(input_field),
-        },
-        dependencies=frozenset(str(name) for name in dependencies),
+        configuration=configuration,
+        dependencies=dependency_names,
     )
 
 

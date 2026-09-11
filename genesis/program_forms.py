@@ -38,6 +38,8 @@ class PortableProgramBody:
         registry_reference: str,
         operations: Sequence[str],
         input_field: str,
+        required_capabilities: Sequence[str] = (),
+        parent_body_artifact_digest: str = "",
         capabilities: Iterable[str] = (),
     ) -> None:
         if program_schema != PROGRAM_SCHEMA:
@@ -58,12 +60,20 @@ class PortableProgramBody:
             )
         self.operations = names
         self.input_field = input_field
+        self.required_capabilities = frozenset(str(name) for name in required_capabilities)
+        self.parent_body_artifact_digest = str(parent_body_artifact_digest or "")
         self.capabilities = frozenset(str(name) for name in capabilities)
         # This is the executable-form difference: resolve once and retain the compiled route rather
         # than looking up every operation by name on every task attempt.
         self._compiled = tuple(registry[name] for name in names)
 
     def attempt(self, task: Mapping[str, Any]) -> Any:
+        missing = self.required_capabilities - self.capabilities
+        if missing:
+            raise RuntimeError(
+                "portable generated program is missing retained predecessor capability: %s"
+                % ", ".join(sorted(missing))
+            )
         value = task[self.input_field]
         for operation in self._compiled:
             value = operation(value)
@@ -76,6 +86,8 @@ def portable_program_body(
     registry_reference: str,
     operations: Sequence[str],
     input_field: str = "input",
+    required_capabilities: Sequence[str] = (),
+    parent_body_artifact_digest: str = "",
     capabilities: Iterable[str] = (),
 ) -> PortableProgramBody:
     """Importable target used by a migrated ``ConfiguredBody``."""
@@ -84,6 +96,8 @@ def portable_program_body(
         registry_reference=registry_reference,
         operations=operations,
         input_field=input_field,
+        required_capabilities=required_capabilities,
+        parent_body_artifact_digest=parent_body_artifact_digest,
         capabilities=capabilities,
     )
 
