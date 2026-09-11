@@ -290,3 +290,102 @@ def test_campaign_refuses_portable_label_rebound_to_old_interpreter(monkeypatch,
             max_stages=2,
         )
     assert genesis.body_factory.target != program_forms.PORTABLE_PROGRAM_TARGET
+
+
+
+def _adaptive_stages(*, allowed_targets=(program_forms.PORTABLE_PROGRAM_TARGET,)):
+    return (
+        campaign.objective(_world(OBJECTIVE_ONE), name="learn-square"),
+        campaign.require_form(
+            _world(OBJECTIVE_ONE, with_portable_substrate=True),
+            allowed_targets,
+            name="adapt-form-from-environmental-constraint",
+        ),
+        campaign.objective(_world(OBJECTIVE_TWO), name="extend-after-selected-transition"),
+    )
+
+
+def test_campaign_makes_first_architectural_form_decision_by_unique_strict_maximum(tmp_path):
+    genesis = _genesis()
+    prefix = campaign.run(
+        genesis,
+        _adaptive_stages(),
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=2,
+    )
+    assert prefix["next_stage"] == 2
+    decision = prefix["executed"][1]
+    assert decision["type"] == "form_requirement"
+    assert decision["transition_selection"]["selection_reason"] == "unique_strict_maximum"
+    assert decision["selected_action"] == "migrate:portable-generated-program"
+    scores = {
+        item["kind"]: item["compatibility_score"]
+        for item in decision["transition_selection"]["candidates"]
+    }
+    assert scores["stay"] == 0
+    assert scores["migrate"] == 1
+    assert decision["migration_result"]["migration"]["capability"]["preserved"] is True
+
+    restored = recovery.restore_lineage(tmp_path, grade=fixtures.grade_expected)
+    resumed = campaign.run(
+        restored,
+        _adaptive_stages(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+    )
+    assert resumed["completed"] is True
+    assert resumed["metamorphosis"]["succeeded"] is True
+    assert restored.body_factory.target == program_forms.PORTABLE_PROGRAM_TARGET
+    assert tuple(restored.body_factory.configuration["operations"]) == ("square", "square")
+    selections = [
+        entry for entry in restored.journal.of_kind("observation")
+        if (entry.get("payload") or {}).get("arm") == "architectural_transition_selection"
+    ]
+    assert len(selections) == 1
+
+
+def test_form_requirement_tie_adopts_no_architectural_transition_and_does_not_advance(tmp_path):
+    genesis = _genesis()
+    stages = _adaptive_stages(
+        allowed_targets=(programs.PROGRAM_TARGET, program_forms.PORTABLE_PROGRAM_TARGET)
+    )
+    record = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=2,
+    )
+    assert record["next_stage"] == 1
+    assert record["completed"] is False
+    decision = record["executed"][-1]
+    assert decision["type"] == "form_requirement"
+    assert decision["transition_selection"]["accepted"] is False
+    assert decision["transition_selection"]["selection_reason"] == "ambiguous_no_strict_maximum"
+    assert len(genesis.journal.of_kind("migration")) == 0
+    assert genesis.body_factory.target == programs.PROGRAM_TARGET
+
+
+def test_form_requirement_can_select_stay_without_host_authored_migration(tmp_path):
+    genesis = _genesis()
+    stages = _adaptive_stages(allowed_targets=(programs.PROGRAM_TARGET,))
+    record = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=2,
+    )
+    assert record["next_stage"] == 2
+    decision = record["executed"][1]
+    assert decision["selected_action"] == "stay"
+    assert decision["transition_selection"]["selection_reason"] == "unique_strict_maximum"
+    assert len(genesis.journal.of_kind("migration")) == 0
+    assert genesis.body_factory.target == programs.PROGRAM_TARGET

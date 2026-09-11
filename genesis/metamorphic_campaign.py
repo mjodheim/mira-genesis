@@ -23,6 +23,7 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from genesis import controller
+from genesis.artifacts import ConfiguredBody
 from genesis import meta_policy_controller as meta
 from genesis import metamorphic_form_runtime as form_runtime
 from genesis import migration, objective_policy_controller as opc, policies, policy_controller
@@ -52,10 +53,19 @@ class ObjectiveStage:
 
 @dataclass(frozen=True)
 class FormMigrationStage:
-    """An environmental requirement to continue on another admitted substrate/form."""
+    """An explicit host-authored form transition kept for backwards-compatible DEVELOPMENT runs."""
 
     world: controller.World
     substrate: str
+    name: str = ""
+
+
+@dataclass(frozen=True)
+class FormRequirementStage:
+    """Environmental form constraint; the runtime chooses whether to stay or migrate."""
+
+    world: controller.World
+    allowed_targets: tuple[str, ...]
     name: str = ""
 
 
@@ -67,6 +77,15 @@ def form_migration(
     world: controller.World, substrate: str, *, name: str = ""
 ) -> FormMigrationStage:
     return FormMigrationStage(world=world, substrate=str(substrate), name=str(name))
+
+
+def require_form(
+    world: controller.World, allowed_targets: Sequence[str], *, name: str = ""
+) -> FormRequirementStage:
+    targets = tuple(sorted({str(target) for target in allowed_targets if str(target)}))
+    if not targets:
+        raise MetamorphicCampaignError("a form requirement admits no executable target")
+    return FormRequirementStage(world=world, allowed_targets=targets, name=str(name))
 
 
 def _assert_world_registry_matches_policy(genesis, world: controller.World, seed_policy=None) -> None:
@@ -97,6 +116,16 @@ def _substrate_identity(substrate: migration.Substrate) -> dict[str, Any]:
     return {**payload, "substrate_identity_digest": digest_of(payload)}
 
 
+def _target_artifact(reference: str) -> dict[str, Any]:
+    try:
+        resolved = ConfiguredBody(target=str(reference)).resolve()
+    except Exception as problem:
+        raise MetamorphicCampaignError(
+            "form requirement names an executable target that cannot be resolved: %s" % reference
+        ) from problem
+    return artifact_digest_of(resolved)
+
+
 def _configured_target_artifact(record: Mapping[str, Any], *, what: str) -> dict[str, Any]:
     if record.get("kind") != "configured_artifact":
         raise MetamorphicCampaignError(f"{what} is not a reconstructible configured executable")
@@ -109,7 +138,9 @@ def _configured_target_artifact(record: Mapping[str, Any], *, what: str) -> dict
     return dict(target)
 
 
-def _stage_record(genesis, stage: ObjectiveStage | FormMigrationStage) -> dict[str, Any]:
+def _stage_record(
+    genesis, stage: ObjectiveStage | FormMigrationStage | FormRequirementStage
+) -> dict[str, Any]:
     if isinstance(stage, ObjectiveStage):
         objective_record = opc.objective_record(genesis, stage.world)
         payload = {
@@ -136,13 +167,32 @@ def _stage_record(genesis, stage: ObjectiveStage | FormMigrationStage) -> dict[s
             "required_operation": program_forms.REBIND_OPERATION,
             "destination_form_artifact": dict(program_forms.PORTABLE_PROGRAM_ARTIFACT),
         }
+    elif isinstance(stage, FormRequirementStage):
+        allowed = [
+            {"target": target, "artifact": _target_artifact(target)}
+            for target in stage.allowed_targets
+        ]
+        allowed.sort(key=lambda item: (item["artifact"]["artifact_digest"], item["target"]))
+        substrates = [_substrate_identity(value) for value in stage.world.substrates.values()]
+        substrates.sort(key=lambda item: item["substrate_identity_digest"])
+        payload = {
+            "schema": STAGE_SCHEMA,
+            "type": "form_requirement",
+            "name": stage.name,
+            "verification_objective": opc.objective_record(genesis, stage.world),
+            "probe_registry": str(stage.world.probe_registry),
+            "allowed_forms": allowed,
+            "substrates": substrates,
+            "strategy": FORM_REBIND_STRATEGY,
+            "required_operation": program_forms.REBIND_OPERATION,
+        }
     else:  # pragma: no cover - public typing plus explicit runtime refusal
         raise MetamorphicCampaignError("campaign contains an unrecognised stage")
     return {**payload, "stage_digest": digest_of(payload)}
 
 
 def campaign_record(
-    genesis, stages: Sequence[ObjectiveStage | FormMigrationStage]
+    genesis, stages: Sequence[ObjectiveStage | FormMigrationStage | FormRequirementStage]
 ) -> dict[str, Any]:
     if not stages:
         raise MetamorphicCampaignError("a metamorphic campaign contains no stages")
@@ -378,6 +428,98 @@ def _post_migration_cycles(genesis, cursor: Mapping[str, Any]) -> list[dict[str,
     ]
 
 
+def _select_form_transition(
+    genesis, stage: FormRequirementStage, identity: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Select stay vs admitted substrate migration by canonical unique strict maximum.
+
+    This is deliberately a tiny first architectural decision. The environment supplies a form
+    compatibility constraint, not the action. The runtime constructs every admitted action, scores
+    exact executable-target compatibility under one fixed rule, measures the complete set, and
+    refuses ties. Migration itself still goes through substrate discovery and capability-preservation
+    measurement before adoption.
+    """
+    current = _configured_target_artifact(
+        artifact_digest_of(genesis.body_factory), what="architectural transition current body"
+    )
+    allowed = [dict(item["artifact"]) for item in identity.get("allowed_forms", [])]
+    candidates: list[dict[str, Any]] = []
+
+    stay_payload = {
+        "kind": "stay",
+        "target_artifact": current,
+        "substrate": "",
+        "stage_digest": identity["stage_digest"],
+    }
+    candidates.append(
+        {
+            **stay_payload,
+            "candidate_digest": digest_of(stay_payload),
+            "compatibility_score": 1 if current in allowed else 0,
+        }
+    )
+
+    destination = dict(program_forms.PORTABLE_PROGRAM_ARTIFACT)
+    for substrate in identity.get("substrates", []):
+        payload = {
+            "kind": "migrate",
+            "target_artifact": destination,
+            "substrate": str(substrate["name"]),
+            "substrate_identity_digest": str(substrate["substrate_identity_digest"]),
+            "strategy": FORM_REBIND_STRATEGY,
+            "stage_digest": identity["stage_digest"],
+        }
+        candidates.append(
+            {
+                **payload,
+                "candidate_digest": digest_of(payload),
+                "compatibility_score": 1
+                if destination in allowed and destination != current
+                else 0,
+            }
+        )
+
+    candidates.sort(key=lambda item: item["candidate_digest"])
+    best = max(int(item["compatibility_score"]) for item in candidates)
+    winners = [item for item in candidates if int(item["compatibility_score"]) == best]
+    if best <= 0:
+        selected = None
+        reason = "no_viable_architectural_transition"
+    elif len(winners) != 1:
+        selected = None
+        reason = "ambiguous_no_strict_maximum"
+    else:
+        selected = winners[0]
+        reason = "unique_strict_maximum"
+
+    record = {
+        "schema": "genesis-architectural-transition-selection-v1",
+        "stage_digest": identity["stage_digest"],
+        "selection_rule": "unique_strict_maximum_form_compatibility_v1",
+        "candidates": candidates,
+        "selection_reason": reason,
+        "accepted": selected is not None,
+        "selected_candidate_digest": "" if selected is None else selected["candidate_digest"],
+        "selected_kind": "" if selected is None else selected["kind"],
+        "selected_substrate": "" if selected is None else selected.get("substrate", ""),
+    }
+    record["selection_digest"] = digest_of(record)
+    genesis.journal.append(
+        "observation",
+        genesis.state["generation"],
+        {
+            "arm": "architectural_transition_selection",
+            "stage_digest": identity["stage_digest"],
+            "selection_digest": record["selection_digest"],
+            "selection_rule": record["selection_rule"],
+            "selection_reason": reason,
+            "selected_candidate_digest": record["selected_candidate_digest"],
+            "candidate_digests": [item["candidate_digest"] for item in candidates],
+        },
+    )
+    return record
+
+
 def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
     if not programs.program_operations_of(genesis.body_factory):
         raise MetamorphicCampaignError(
@@ -445,7 +587,7 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
 
 def run(
     genesis,
-    stages: Sequence[ObjectiveStage | FormMigrationStage],
+    stages: Sequence[ObjectiveStage | FormMigrationStage | FormRequirementStage],
     *,
     seed_policy: Mapping[str, Any] | None = None,
     seed_meta_policy: Mapping[str, Any] | None = None,
@@ -520,6 +662,44 @@ def run(
                     **migration_result,
                 }
             )
+        elif isinstance(stage, FormRequirementStage):
+            _assert_world_registry_matches_policy(genesis, stage.world, seed_policy=seed_policy)
+            selection = _select_form_transition(genesis, stage, identity)
+            entry: dict[str, Any] = {
+                "index": index,
+                "stage_digest": identity["stage_digest"],
+                "type": "form_requirement",
+                "transition_selection": selection,
+            }
+            executed.append(entry)
+            if not selection["accepted"]:
+                entry["stopped"] = True
+                entry["reason"] = selection["selection_reason"]
+                if checkpoint_path is not None:
+                    entry["campaign_checkpoint_digest"] = genesis.persist(checkpoint_path)["checkpoint"]
+                    entry["durable_before_next_stage"] = True
+                else:
+                    entry["campaign_checkpoint_digest"] = ""
+                    entry["durable_before_next_stage"] = False
+                break
+            if selection["selected_kind"] == "migrate":
+                if migration_record is not None:
+                    raise MetamorphicCampaignError(
+                        "v1 persistent metamorphic campaign admits one form transition only"
+                    )
+                selected_substrate = str(selection["selected_substrate"])
+                migration_stage = FormMigrationStage(
+                    world=stage.world, substrate=selected_substrate, name=stage.name
+                )
+                migration_result = _run_form_migration(genesis, migration_stage)
+                migration_record = migration_result["migration"]
+                acquisition_frontier = len(genesis.state.get("acquisitions", []))
+                entry["migration_result"] = migration_result
+                entry["selected_action"] = "migrate:%s" % selected_substrate
+            elif selection["selected_kind"] == "stay":
+                entry["selected_action"] = "stay"
+            else:  # pragma: no cover - selected kinds are constructed above
+                raise MetamorphicCampaignError("transition selector returned an unknown action")
         else:  # pragma: no cover
             raise MetamorphicCampaignError("campaign contains an unrecognised stage")
 
