@@ -206,6 +206,31 @@ def _validate_cursor(genesis, campaign: Mapping[str, Any]) -> dict[str, Any] | N
         raise MetamorphicCampaignError(
             "campaign cursor does not describe an exact completed prefix of its stage sequence"
         )
+
+    # A self-consistent cursor is not evidence that the runtime actually completed those stages.
+    # Reconstruct the cursor progression from the append-only descent journal.  This closes the
+    # DEVELOPMENT hole where a host could reseal next_stage=N and skip objective stages while still
+    # presenting the exact campaign prefix.  Mid-stage process death remains resumable: only cursor
+    # transitions are checked, not equality with the current mutable lineage state.
+    progress = []
+    for entry in genesis.journal.of_kind("observation"):
+        record = entry.get("payload") or {}
+        if (
+            record.get("arm") == "metamorphic_campaign_cursor"
+            and record.get("campaign_digest") == campaign["campaign_digest"]
+        ):
+            progress.append(record)
+    expected_progress = list(range(next_stage + 1))
+    actual_progress = [int(record.get("next_stage", -1)) for record in progress]
+    if actual_progress != expected_progress:
+        raise MetamorphicCampaignError(
+            "campaign cursor progress is not backed by contiguous lineage-journal evidence"
+        )
+    if not progress or progress[-1].get("cursor_digest") != artifact.get("cursor_digest"):
+        raise MetamorphicCampaignError(
+            "current campaign cursor is not the cursor committed by the lineage journal"
+        )
+
     payload["migration"] = _validate_migration_record(genesis, payload["migration"])
     count = payload["acquisition_count_at_migration"]
     if count is not None:
