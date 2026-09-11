@@ -1,15 +1,17 @@
 """Canonical DEVELOPMENT reproduction of the Genesis v2 Open Metamorphosis target.
 
-The driver launches three fresh Python interpreters.  The only continuity between phases is the
-persistent Genesis checkpoint:
+Three fresh Python interpreters are launched around one persistent Genesis checkpoint. The reproducer
+supplies only the prospectively fixed environmental campaign plus the initial bounded policy/language.
+It never calls a first-extension, recursive-extension or language-application controller directly.
+Those architectural hand-offs are owned by ``open_metamorphosis_runtime`` and the persistent campaign
+cursor.
 
-1. exhaust L0, construct and select L1, apply L1 through ordinary policy/body machinery;
-2. restore in a fresh interpreter, exhaust the retained+new objective, derive recursive primitives
-   from lineage history, construct L2 using L1 as an invoked primitive, and apply L2 normally;
-3. restore once more and verify the final lineage, causal records and budgets without executing any
-   new search or transformation work.
+Phase 1 executes one campaign stage and dies after the committed prefix. Phase 2 restores and the
+cursor selects the later objective; the runtime itself detects that one endogenous language extension
+already exists and therefore enters recursive language search. Phase 3 restores the completed campaign
+and replays it with zero executed stages and zero new spend.
 
-This is a DEVELOPMENT reproducer.  It does not claim AGI, generality, unbounded self-improvement,
+This is DEVELOPMENT evidence only. It does not claim AGI, generality, unbounded self-improvement,
 self-generated goals, arbitrary code generation, or mutability of the trust root/evaluator.
 """
 from __future__ import annotations
@@ -24,7 +26,7 @@ from typing import Any, Mapping
 
 from genesis import controller
 from genesis import development_bodies as bodies
-from genesis import objective_policy_controller as opc
+from genesis import open_metamorphosis_campaign as campaign
 from genesis import policies, policy_body_lineage, policy_controller, recovery
 from genesis import recursive_policy_fixtures as fixtures
 from genesis import recursive_transformation_language as recursive
@@ -96,6 +98,13 @@ def _world(tasks):
     )
 
 
+def _stages():
+    return (
+        campaign.objective(_world(OBJECTIVE_ONE), name="first-open-language-objective"),
+        campaign.objective(_world(OBJECTIVE_TWO), name="recursive-open-language-objective"),
+    )
+
+
 def _seed_policy() -> dict[str, Any]:
     return policies.create(
         registry_reference=bodies.PROBE_REGISTRY,
@@ -106,24 +115,15 @@ def _seed_policy() -> dict[str, Any]:
     )
 
 
-def _deepen() -> dict[str, Any]:
-    return tl.create_step("increase_policy_depth")
-
-
-def _widen_five() -> dict[str, Any]:
-    return tl.create_step("increase_candidate_limit", amount=5)
-
-
-def _add_triple() -> dict[str, Any]:
-    return tl.create_step("append_policy_operation", operation="triple")
-
-
 def _seed_language() -> dict[str, Any]:
+    deepen = tl.create_step("increase_policy_depth")
+    widen = tl.create_step("increase_candidate_limit", amount=5)
+    add_triple = tl.create_step("append_policy_operation", operation="triple")
     return tl.create_language(
         (
-            tl.create_operator("deepen", (_deepen(),)),
-            tl.create_operator("widen-five", (_widen_five(),)),
-            tl.create_operator("add-triple", (_add_triple(),)),
+            tl.create_operator("deepen", (deepen,)),
+            tl.create_operator("widen-five", (widen,)),
+            tl.create_operator("add-triple", (add_triple,)),
         ),
         max_operator_steps=2,
     )
@@ -169,14 +169,14 @@ def _extension_records(genesis: Genesis) -> list[dict[str, Any]]:
 
 def _common_record(genesis: Genesis) -> dict[str, Any]:
     policy = policy_controller.bound_policy(genesis)
-    language = tlc.bound_language(genesis)
+    held_language = tlc.bound_language(genesis)
     corpus = retentive.bound_corpus(genesis)
     return {
         "body": _body_record(genesis),
         "policy": policy,
         "policy_digest": "" if policy is None else policy["policy_digest"],
-        "language": language,
-        "language_digest": "" if language is None else language["language_digest"],
+        "language": held_language,
+        "language_digest": "" if held_language is None else held_language["language_digest"],
         "budget": genesis.budget.record(),
         "generation": genesis.state["generation"],
         "state_digest": genesis.state["state_digest"],
@@ -201,89 +201,69 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
 
 def _phase_one(checkpoint: Path, result: Path) -> None:
     genesis = _genesis()
-    here = _world(OBJECTIVE_ONE)
     before = _common_record(genesis)
-    exhausted = retentive.run_policy(
+    run = campaign.run(
         genesis,
-        here,
+        _stages(),
         seed_policy=_seed_policy(),
-        max_steps=32,
-        checkpoint_directory=checkpoint,
-    )
-    if not opc.exhausted(genesis, here):
-        raise RuntimeError("phase 1 seed policy did not exhaust")
-    extension = tlc.run_extension_search(
-        genesis,
-        here,
-        admitted_steps=(_deepen(), _widen_five(), _add_triple()),
         seed_language=_seed_language(),
+        max_policy_steps=64,
         checkpoint_directory=checkpoint,
+        max_stages=1,
     )
-    applied = application.apply_acquired_extension(
-        genesis,
-        here,
-        max_policy_steps=32,
-        checkpoint_directory=checkpoint,
-    )
+    if len(run["executed"]) != 1:
+        raise RuntimeError("phase 1 did not execute exactly one cursor-selected stage")
+    runtime_run = run["executed"][0]["run"]
+    extensions = _extension_records(genesis)
+    causals = _causal_records(genesis)
     payload = {
         "schema": SCHEMA,
         "phase": 1,
         "before": before,
         "after": _common_record(genesis),
-        "seed_policy_exhausted": True,
-        "seed_policy_attempts": [
-            step for step in exhausted["steps"] if step.get("intent") == "GenerateTransform"
-        ],
-        "extension_status": extension["status"],
-        "extension_certificate": extension["certificate"],
-        "application_digest": applied["application_digest"],
-        "causal_record": applied["causal_record"],
-        "adopted_body": applied["causal_record"]["adopted_body"],
+        "campaign_digest": run["campaign_digest"],
+        "next_stage": run["next_stage"],
+        "completed": run["completed"],
+        "executed_indices": [item["index"] for item in run["executed"]],
+        "runtime_selected_generation": runtime_run["machinery_generation_selected_by_runtime"],
+        "runtime_selected_mode": runtime_run["machinery_mode"],
+        "extension_certificate": extensions[-1],
+        "causal_record": causals[-1],
+        "adopted_body": causals[-1]["adopted_body"],
     }
     _write_json(result, payload)
 
 
 def _phase_two(checkpoint: Path, result: Path) -> None:
     genesis = recovery.restore_lineage(checkpoint, grade=fixtures.grade_expected)
-    here = _world(OBJECTIVE_TWO)
     before = _common_record(genesis)
-    exhausted = retentive.run_policy(
+    run = campaign.run(
         genesis,
-        here,
-        max_steps=64,
-        checkpoint_directory=checkpoint,
-    )
-    if not opc.exhausted(genesis, here):
-        raise RuntimeError("phase 2 inherited policy did not exhaust on the retained objective")
-    recursive_run = recursive.run_recursive_extension_search(
-        genesis,
-        here,
-        checkpoint_directory=checkpoint,
-    )
-    if not recursive_run.get("recursive_extension"):
-        raise RuntimeError("phase 2 produced no recursive transformation-language extension")
-    applied = application.apply_acquired_extension(
-        genesis,
-        here,
+        _stages(),
         max_policy_steps=64,
         checkpoint_directory=checkpoint,
     )
+    if [item["index"] for item in run["executed"]] != [1]:
+        raise RuntimeError("phase 2 did not resume exactly the persisted second campaign stage")
+    runtime_run = run["executed"][0]["run"]
+    extensions = _extension_records(genesis)
+    causals = _causal_records(genesis)
+    recursive_records = _recursive_records(genesis)
     payload = {
         "schema": SCHEMA,
         "phase": 2,
         "before": before,
         "after": _common_record(genesis),
-        "inherited_policy_exhausted": True,
-        "inherited_policy_attempts": [
-            step for step in exhausted["steps"] if step.get("intent") == "GenerateTransform"
-        ],
-        "recursive_result": {
-            key: value for key, value in recursive_run.items() if key != "extension_run"
-        },
-        "recursive_extension_certificate": recursive_run["extension_run"]["certificate"],
-        "application_digest": applied["application_digest"],
-        "causal_record": applied["causal_record"],
-        "adopted_body": applied["causal_record"]["adopted_body"],
+        "campaign_digest": run["campaign_digest"],
+        "next_stage": run["next_stage"],
+        "completed": run["completed"],
+        "executed_indices": [item["index"] for item in run["executed"]],
+        "runtime_selected_generation": runtime_run["machinery_generation_selected_by_runtime"],
+        "runtime_selected_mode": runtime_run["machinery_mode"],
+        "recursive_result": recursive_records[-1],
+        "recursive_extension_certificate": extensions[-1],
+        "causal_record": causals[-1],
+        "adopted_body": causals[-1]["adopted_body"],
     }
     _write_json(result, payload)
 
@@ -291,16 +271,22 @@ def _phase_two(checkpoint: Path, result: Path) -> None:
 def _phase_three(checkpoint: Path, result: Path) -> None:
     genesis = recovery.restore_lineage(checkpoint, grade=fixtures.grade_expected)
     before = _common_record(genesis)
-    # Intentionally execute no search, mutation or body work.  The final phase is a pure
-    # reconstruction/inspection of the persistent lineage after a second process death.
+    run = campaign.run(
+        genesis,
+        _stages(),
+        max_policy_steps=64,
+        checkpoint_directory=checkpoint,
+    )
     after = _common_record(genesis)
     payload = {
         "schema": SCHEMA,
         "phase": 3,
         "before": before,
         "after": after,
-        "executed_search_rounds": 0,
-        "executed_body_evaluations": 0,
+        "campaign_digest": run["campaign_digest"],
+        "completed": run["completed"],
+        "executed": run["executed"],
+        "next_stage": run["next_stage"],
     }
     _write_json(result, payload)
 
@@ -312,7 +298,7 @@ def _run_worker(phase: int, checkpoint: Path, result: Path) -> None:
         _phase_two(checkpoint, result)
     elif phase == 3:
         _phase_three(checkpoint, result)
-    else:  # pragma: no cover - argparse constrains this
+    else:  # pragma: no cover
         raise ValueError("unknown phase %r" % phase)
 
 
@@ -330,20 +316,31 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
     l1_operator = l1["operator"]["operator_digest"]
     invoked = phase2["recursive_result"]["invoked_acquired_operator_digests"]
     checks = {
-        "first_language_extension_selected_by_evidence": (
-            phase1["extension_status"] == "unique_strict_maximum"
-            and l1["held_language_exhausted"] is True
+        "runtime_owned_first_language_generation": (
+            phase1["runtime_selected_generation"] == 1
+            and phase1["runtime_selected_mode"] == "first_endogenous_language_extension"
+            and phase1["next_stage"] == 1
+            and phase1["completed"] is False
+            and phase1["executed_indices"] == [0]
         ),
-        "first_language_extension_was_used_not_directly_installed_as_body": (
-            phase1["causal_record"]["language_ablation"]["established"] is True
+        "first_language_extension_selected_by_evidence": (
+            l1["held_language_exhausted"] is True
+            and phase1["causal_record"]["language_ablation"]["established"] is True
             and phase1["adopted_body"]["program"]["operations"] == ["negate", "negate"]
         ),
-        "fresh_process_restored_l1_exactly": (
-            phase2["before"]["language_digest"] == phase1["after"]["language_digest"]
+        "fresh_process_restored_exact_committed_prefix": (
+            phase2["before"]["state_digest"] == phase1["after"]["state_digest"]
+            and phase2["before"]["language_digest"] == phase1["after"]["language_digest"]
             and phase2["before"]["policy_digest"] == phase1["after"]["policy_digest"]
-            and phase2["before"]["body"]["artifact"] == phase1["after"]["body"]["artifact"]
+            and phase2["campaign_digest"] == phase1["campaign_digest"]
+            and phase2["executed_indices"] == [1]
         ),
-        "second_extension_is_recursive": (
+        "runtime_owned_recursive_generation": (
+            phase2["runtime_selected_generation"] == 2
+            and phase2["runtime_selected_mode"] == "recursive_language_extension"
+            and phase2["completed"] is True
+        ),
+        "second_extension_is_lineage_history_recursive": (
             phase2["recursive_result"]["recursive_extension"] is True
             and phase2["recursive_result"]["lineage_history_derived_invocation"] is True
             and phase2["recursive_result"]["caller_supplied_recursive_operator"] is False
@@ -361,13 +358,11 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             == ["increment", "increment", "triple"]
             and len(phase2["after"]["retained_question_digests"]) == 2
         ),
-        "language_lineage_is_two_generations_deep": (
+        "two_language_generations_and_two_causal_chains_persist": (
             len(phase2["after"]["extension_records"]) == 2
             and phase2["after"]["language"]["parent_language_digest"]
             == phase1["after"]["language_digest"]
-        ),
-        "causal_language_to_policy_to_body_chain_repeated_twice": (
-            len(phase2["after"]["causal_records"]) == 2
+            and len(phase2["after"]["causal_records"]) == 2
             and len(phase2["after"]["policy_body_link_digests"]) >= 2
             and len(phase2["after"]["recursive_records"]) == 1
         ),
@@ -383,23 +378,25 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             == phase2["after"]["evaluation_contract_digest"]
             == phase3["after"]["evaluation_contract_digest"]
         ),
-        "third_interpreter_reconstructs_without_redraw": (
-            phase3["before"]["state_digest"] == phase2["after"]["state_digest"]
+        "completed_campaign_replays_without_redraw": (
+            phase3["campaign_digest"] == phase2["campaign_digest"]
+            and phase3["completed"] is True
+            and phase3["executed"] == []
+            and phase3["before"]["state_digest"] == phase2["after"]["state_digest"]
             and phase3["after"]["state_digest"] == phase3["before"]["state_digest"]
             and phase3["after"]["budget"] == phase3["before"]["budget"]
-            and phase3["executed_search_rounds"] == 0
-            and phase3["executed_body_evaluations"] == 0
         ),
-        "exactly_two_language_application_evaluations_spent": (
+        "exactly_two_language_application_revalidations_spent": (
             _spent(phase2["after"], "language_application_evaluations") == 2
         ),
     }
-    report_payload = {
+    payload = {
         "schema": SCHEMA,
         "classification": CLASSIFICATION,
         "passed": all(checks.values()),
         "fresh_interpreter_boundaries": 2,
         "checks": checks,
+        "campaign_digest": phase3["campaign_digest"],
         "phase_state_digests": [
             phase1["after"]["state_digest"],
             phase2["after"]["state_digest"],
@@ -419,8 +416,8 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             "mutable trust-root or evaluator authority",
         ],
     }
-    report_payload["reproduction_digest"] = tr.digest_of(report_payload)
-    return report_payload
+    payload["reproduction_digest"] = tr.digest_of(payload)
+    return payload
 
 
 def _launch_worker(phase: int, checkpoint: Path, result: Path) -> None:
