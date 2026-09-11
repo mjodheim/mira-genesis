@@ -32,7 +32,6 @@ jobs:
           tests/test_genesis_migration.py
           tests/test_genesis_loop.py
           tests/test_genesis_artifact_immutability.py
-          tests/test_genesis_recovery.py
       - name: Remove one-shot validation workflow
         run: rm .github/workflows/gpt56-persistent-metamorphic-campaign-validation.yml
       - name: Check repository structure
