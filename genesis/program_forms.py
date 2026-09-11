@@ -17,6 +17,7 @@ from typing import Any, Iterable, Mapping, Sequence
 from genesis.artifacts import ConfiguredBody
 from genesis.programs import PROGRAM_SCHEMA, program_operations_of
 from genesis.probe import resolve_registry
+from genesis.trust_root import artifact_digest_of
 
 PORTABLE_PROGRAM_TARGET = "genesis.program_forms:portable_program_body"
 REBIND_OPERATION = "rebind_program"
@@ -128,6 +129,11 @@ def portable_program_body(
     )
 
 
+# Freeze the admitted interpreter identity at module import. A later rebinding of the symbol
+# under the same textual target must not turn a relabel into a form change.
+PORTABLE_PROGRAM_ARTIFACT = artifact_digest_of(portable_program_body)
+
+
 def portable_target_for(source_form: str) -> str:
     """Substrate capability mapping an admitted generated-program form to this form.
 
@@ -189,8 +195,16 @@ def translate_current_program(departure: Mapping[str, Any], operations: Mapping[
     program_operations = _latest_generated_operations(departure)
     handle = operations["rebind_program"]
     target = handle("canonical-generated-program")
-    if target != "genesis.program_forms:portable_program_body":
+    if target != PORTABLE_PROGRAM_TARGET:
         raise PortableProgramError("discovered rebind capability returned an unsupported form")
+    # A target string is not executable identity. Resolve the symbol now and compare it with the
+    # interpreter artifact admitted when this module loaded. This rejects a host/runtime that keeps
+    # the portable target label but rebinds that label to the old interpreter (or anything else).
+    actual_target_artifact = artifact_digest_of(ConfiguredBody(target=str(target)).resolve())
+    if actual_target_artifact != PORTABLE_PROGRAM_ARTIFACT:
+        raise PortableProgramError(
+            "discovered rebind capability relabelled a different executable as the portable form"
+        )
     return ConfiguredBody(
         target=target,
         configuration={

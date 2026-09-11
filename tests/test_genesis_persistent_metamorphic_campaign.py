@@ -231,3 +231,62 @@ def test_campaign_refuses_world_registry_different_from_seed_search_machinery(tm
             checkpoint_directory=tmp_path,
         )
     assert genesis.state["generation"] == 0
+
+
+
+def test_campaign_refuses_forged_cursor_jump_without_journal_evidence(tmp_path):
+    genesis = _genesis()
+    campaign.run(
+        genesis,
+        _stages(),
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        checkpoint_directory=tmp_path,
+        max_stages=0,
+    )
+
+    tools = []
+    forged_cursor = None
+    for tool in genesis.state["tools"]:
+        if tool.get("name") == campaign.CURSOR_TOOL_NAME and tool.get("role") == campaign.CURSOR_ROLE:
+            artifact = dict(tool["artifact"])
+            artifact["next_stage"] = 2
+            artifact["completed_stage_digests"] = list(artifact["stage_digests"][:2])
+            payload = {key: value for key, value in artifact.items() if key != "cursor_digest"}
+            artifact["cursor_digest"] = tr.digest_of(payload)
+            forged_cursor = artifact
+            tools.append({**tool, "artifact": artifact})
+        else:
+            tools.append(tool)
+    assert forged_cursor is not None
+    genesis.state = st.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=tools,
+        acquisitions=genesis.state["acquisitions"],
+        observations=genesis.state["observations"],
+        generation=genesis.state["generation"],
+    )
+
+    with pytest.raises(campaign.MetamorphicCampaignError, match="journal transition sequence"):
+        campaign.run(genesis, _stages(), checkpoint_directory=tmp_path)
+
+
+def test_campaign_refuses_portable_label_rebound_to_old_interpreter(monkeypatch, tmp_path):
+    genesis = _genesis()
+    # The textual migration target remains genesis.program_forms:portable_program_body, but resolving
+    # that symbol now yields the old per-request interpreter. The pre-repair string check accepted
+    # exactly this relabel. The frozen executable artifact identity must refuse it before adoption.
+    monkeypatch.setattr(program_forms, "portable_program_body", programs.program_body)
+    with pytest.raises(Exception, match="relabelled a different executable"):
+        campaign.run(
+            genesis,
+            _stages(),
+            seed_policy=_seed_policy(),
+            seed_meta_policy=_seed_meta(),
+            max_rounds_per_objective=96,
+            checkpoint_directory=tmp_path,
+            max_stages=2,
+        )
+    assert genesis.body_factory.target != program_forms.PORTABLE_PROGRAM_TARGET

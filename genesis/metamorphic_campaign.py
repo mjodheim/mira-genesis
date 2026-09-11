@@ -97,6 +97,18 @@ def _substrate_identity(substrate: migration.Substrate) -> dict[str, Any]:
     return {**payload, "substrate_identity_digest": digest_of(payload)}
 
 
+def _configured_target_artifact(record: Mapping[str, Any], *, what: str) -> dict[str, Any]:
+    if record.get("kind") != "configured_artifact":
+        raise MetamorphicCampaignError(f"{what} is not a reconstructible configured executable")
+    configured = record.get("configuration")
+    if not isinstance(configured, Mapping):
+        raise MetamorphicCampaignError(f"{what} carries no configured executable identity")
+    target = configured.get("target_artifact")
+    if not isinstance(target, Mapping):
+        raise MetamorphicCampaignError(f"{what} carries no interpreter artifact identity")
+    return dict(target)
+
+
 def _stage_record(genesis, stage: ObjectiveStage | FormMigrationStage) -> dict[str, Any]:
     if isinstance(stage, ObjectiveStage):
         objective_record = opc.objective_record(genesis, stage.world)
@@ -122,6 +134,7 @@ def _stage_record(genesis, stage: ObjectiveStage | FormMigrationStage) -> dict[s
             "substrate": _substrate_identity(substrate),
             "strategy": FORM_REBIND_STRATEGY,
             "required_operation": program_forms.REBIND_OPERATION,
+            "destination_form_artifact": dict(program_forms.PORTABLE_PROGRAM_ARTIFACT),
         }
     else:  # pragma: no cover - public typing plus explicit runtime refusal
         raise MetamorphicCampaignError("campaign contains an unrecognised stage")
@@ -174,6 +187,49 @@ def _validate_migration_record(genesis, record: Mapping[str, Any] | None) -> dic
     return value
 
 
+def _validate_cursor_progress_journal(
+    genesis, campaign: Mapping[str, Any], artifact: Mapping[str, Any], next_stage: int
+) -> None:
+    """Require the persisted cursor to be backed by every runtime transition that reached it."""
+    evidence: list[Mapping[str, Any]] = []
+    for entry in genesis.journal.of_kind("observation"):
+        payload = entry.get("payload") or {}
+        if not isinstance(payload, Mapping):
+            continue
+        if payload.get("arm") != "metamorphic_campaign_cursor":
+            continue
+        if str(payload.get("campaign_digest") or "") != str(campaign["campaign_digest"]):
+            continue
+        evidence.append(payload)
+
+    actual_indices: list[int] = []
+    for payload in evidence:
+        try:
+            actual_indices.append(int(payload.get("next_stage", -1)))
+        except (TypeError, ValueError) as problem:
+            raise MetamorphicCampaignError(
+                "campaign cursor journal carries a malformed stage index"
+            ) from problem
+    expected_indices = list(range(int(next_stage) + 1))
+    if actual_indices != expected_indices:
+        raise MetamorphicCampaignError(
+            "campaign cursor progression is not backed by an exact journal transition sequence"
+        )
+    if not evidence or str(evidence[-1].get("cursor_digest") or "") != str(
+        artifact.get("cursor_digest") or ""
+    ):
+        raise MetamorphicCampaignError(
+            "campaign cursor head is not backed by its journaled transition"
+        )
+    stage_digests = list(campaign["stage_digests"])
+    for index, payload in enumerate(evidence):
+        expected_completed = "" if index == 0 else str(stage_digests[index - 1])
+        if str(payload.get("completed_stage_digest") or "") != expected_completed:
+            raise MetamorphicCampaignError(
+                "campaign cursor journal does not bind the stage it claims to have completed"
+            )
+
+
 def _validate_cursor(genesis, campaign: Mapping[str, Any]) -> dict[str, Any] | None:
     tool = _cursor_tool(genesis)
     if tool is None:
@@ -206,6 +262,7 @@ def _validate_cursor(genesis, campaign: Mapping[str, Any]) -> dict[str, Any] | N
         raise MetamorphicCampaignError(
             "campaign cursor does not describe an exact completed prefix of its stage sequence"
         )
+    _validate_cursor_progress_journal(genesis, campaign, artifact, next_stage)
     payload["migration"] = _validate_migration_record(genesis, payload["migration"])
     count = payload["acquisition_count_at_migration"]
     if count is not None:
@@ -294,6 +351,9 @@ def _write_cursor(
             "arm": "metamorphic_campaign_cursor",
             "campaign_digest": campaign["campaign_digest"],
             "next_stage": int(next_stage),
+            "completed_stage_digest": ""
+            if int(next_stage) == 0
+            else str(stage_digests[int(next_stage) - 1]),
             "cursor_digest": cursor["cursor_digest"],
             "new_state_digest": genesis.state["state_digest"],
         },
@@ -323,6 +383,15 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
         raise MetamorphicCampaignError(
             "fixed form-rebind strategy requires a reconstructible generated-program current body"
         )
+    departure_artifact = artifact_digest_of(genesis.body_factory)
+    departure_target = _configured_target_artifact(
+        departure_artifact, what="campaign migration departure body"
+    )
+    destination_target = dict(program_forms.PORTABLE_PROGRAM_ARTIFACT)
+    if departure_target == destination_target:
+        raise MetamorphicCampaignError(
+            "fixed form-rebind strategy would not change the executable interpreter artifact"
+        )
     substrate = stage.world.substrates.get(stage.substrate)
     if substrate is None:
         raise MetamorphicCampaignError("migration substrate disappeared before execution")
@@ -347,11 +416,30 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
             detail=FORM_REBIND_STRATEGY,
         ),
     )
+    arrival_artifact = artifact_digest_of(genesis.body_factory)
+    arrival_target = _configured_target_artifact(
+        arrival_artifact, what="campaign migration arrival body"
+    )
+    if arrival_target != destination_target:
+        raise MetamorphicCampaignError(
+            "campaign migration arrived under an executable interpreter other than the admitted form"
+        )
+    if arrival_target == departure_target:
+        raise MetamorphicCampaignError(
+            "campaign migration changed a label but not the executable interpreter artifact"
+        )
     return {
         "type": "form_migration",
         "strategy": FORM_REBIND_STRATEGY,
         "probing": probing,
         "migration": record,
+        "form_transition": {
+            "departure_target_artifact": departure_target,
+            "arrival_target_artifact": arrival_target,
+            "destination_form_artifact": destination_target,
+            "executable_target_changed": True,
+            "destination_matches_admitted_artifact": True,
+        },
     }
 
 
