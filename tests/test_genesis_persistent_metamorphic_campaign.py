@@ -231,3 +231,73 @@ def test_campaign_refuses_world_registry_different_from_seed_search_machinery(tm
             checkpoint_directory=tmp_path,
         )
     assert genesis.state["generation"] == 0
+
+
+
+def _forge_cursor(genesis, stages, *, next_stage):
+    admitted = campaign.campaign_record(genesis, stages)
+    stage_digests = list(admitted["stage_digests"])
+    payload = {
+        "schema": campaign.CURSOR_SCHEMA,
+        "campaign_digest": admitted["campaign_digest"],
+        "stage_digests": stage_digests,
+        "completed_stage_digests": stage_digests[:next_stage],
+        "next_stage": next_stage,
+        "migration": None,
+        "acquisition_count_at_migration": None,
+    }
+    forged = {**payload, "cursor_digest": tr.digest_of(payload)}
+    tools = []
+    for tool in genesis.state["tools"]:
+        if tool.get("name") == campaign.CURSOR_TOOL_NAME and tool.get("role") == campaign.CURSOR_ROLE:
+            tools.append({**tool, "artifact": forged})
+        else:
+            tools.append(tool)
+    genesis.state = st.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=tools,
+        acquisitions=genesis.state["acquisitions"],
+        observations=genesis.state["observations"],
+        generation=genesis.state["generation"],
+    )
+
+
+def test_campaign_refuses_resealed_cursor_that_skips_objective_without_journal_evidence():
+    genesis = _genesis()
+    stages = _stages()
+    admitted = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_stages=0,
+    )
+    assert admitted["next_stage"] == 0
+
+    # Structurally exact prefix + freshly recomputed cursor digest.  Before this repair the cursor
+    # was accepted and stage 0 could be skipped because objective stages had no journal binding.
+    _forge_cursor(genesis, stages, next_stage=1)
+    with pytest.raises(campaign.MetamorphicCampaignError, match="journal evidence"):
+        campaign.run(genesis, stages, max_stages=0)
+
+
+def test_campaign_refuses_resealed_cursor_rollback_despite_valid_prefix():
+    genesis = _genesis()
+    stages = _stages()
+    progressed = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        max_stages=1,
+    )
+    assert progressed["next_stage"] == 1
+
+    # The forged cursor is internally valid for stage zero, but the journal proves that stage one
+    # was already committed.  Rollback cannot erase spent work or reopen an earlier campaign path.
+    _forge_cursor(genesis, stages, next_stage=0)
+    with pytest.raises(campaign.MetamorphicCampaignError, match="journal evidence"):
+        campaign.run(genesis, stages, max_stages=0)
