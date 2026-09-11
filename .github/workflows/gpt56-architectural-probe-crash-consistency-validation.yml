@@ -21,7 +21,9 @@ jobs:
       - name: Install package
         run: python -m pip install -e '.[dev]'
       - name: Apply prospective repair
-        run: python scripts/apply_gpt56_architectural_probe_crash_consistency_patch.py
+        run: |
+          python scripts/apply_gpt56_architectural_probe_crash_consistency_patch.py
+          python scripts/fix_gpt56_architectural_probe_crash_patch_anchor.py
       - name: Run focused metamorphic crash-consistency regressions
         run: >-
           python -m pytest -q
@@ -33,6 +35,7 @@ jobs:
       - name: Remove one-shot validation apparatus
         run: |
           rm scripts/apply_gpt56_architectural_probe_crash_consistency_patch.py
+          rm scripts/fix_gpt56_architectural_probe_crash_patch_anchor.py
           rm .github/workflows/gpt56-architectural-probe-crash-consistency-validation.yml
       - name: Check repository structure
         run: |
