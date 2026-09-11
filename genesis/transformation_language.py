@@ -13,9 +13,10 @@ apparatus; therefore this module is a substrate for open-metamorphosis experimen
 the v2 objective has been reached.
 
 The canonical order removes representation aliases from the lower language: two independent edits do
-not become two candidate operators merely because their textual order was swapped. This makes a
-future complete candidate-image claim mechanically meaningful instead of letting authored ordering
-create artificial ties.
+not become two candidate operators merely because their textual order was swapped. Acquired operators
+may themselves become lower-language primitives through ``invoke_held_operator``. That invocation is
+by content digest, must resolve inside the current language, and is recursively flattened to the same
+fixed primitive kernel before execution. A missing or cyclic dependency fails closed.
 
 No ``eval``, ``exec``, generated import or arbitrary attribute mutation is used. Operators can only
 edit the bounded fields already present in a generated search policy.
@@ -36,6 +37,7 @@ MICRO_STEP_KINDS = (
     "append_policy_operation",
     "increase_policy_depth",
     "increase_candidate_limit",
+    "invoke_held_operator",
 )
 _STEP_RANK = {name: index for index, name in enumerate(MICRO_STEP_KINDS)}
 
@@ -49,10 +51,12 @@ def create_step(
     *,
     operation: str = "",
     amount: int = 1,
+    operator_digest: str = "",
 ) -> dict[str, Any]:
     kind = str(kind)
     operation = str(operation)
     amount = int(amount)
+    operator_digest = str(operator_digest)
     if kind not in MICRO_STEP_KINDS:
         raise TransformationLanguageError("unrecognised transformation micro-step %r" % kind)
     if kind == "append_policy_operation":
@@ -60,9 +64,20 @@ def create_step(
             raise TransformationLanguageError("append_policy_operation names no operation")
         if amount != 1:
             raise TransformationLanguageError("append_policy_operation does not use a numeric amount")
+        if operator_digest:
+            raise TransformationLanguageError("append_policy_operation may not invoke an operator")
+    elif kind == "invoke_held_operator":
+        if operation:
+            raise TransformationLanguageError("invoke_held_operator may not carry a body operation")
+        if amount != 1:
+            raise TransformationLanguageError("invoke_held_operator does not use a numeric amount")
+        if not operator_digest:
+            raise TransformationLanguageError("invoke_held_operator names no held operator digest")
     else:
         if operation:
             raise TransformationLanguageError("%s may not carry an operation name" % kind)
+        if operator_digest:
+            raise TransformationLanguageError("%s may not invoke an operator" % kind)
         if amount <= 0:
             raise TransformationLanguageError("transformation micro-step amount must be positive")
         if kind == "increase_policy_depth" and amount != 1:
@@ -72,6 +87,7 @@ def create_step(
         "kind": kind,
         "operation": operation,
         "amount": amount,
+        "operator_digest": operator_digest,
     }
     return {**payload, "step_digest": digest_of(payload)}
 
@@ -83,18 +99,20 @@ def validate_step(record: Mapping[str, Any]) -> dict[str, Any]:
         str(record.get("kind") or ""),
         operation=str(record.get("operation") or ""),
         amount=int(record.get("amount", 1)),
+        operator_digest=str(record.get("operator_digest") or ""),
     )
     if rebuilt != dict(record):
         raise TransformationLanguageError("transformation micro-step does not reproduce its digest")
     return rebuilt
 
 
-def step_sort_key(step: Mapping[str, Any]) -> tuple[int, str, int, str]:
+def step_sort_key(step: Mapping[str, Any]) -> tuple[int, str, int, str, str]:
     value = validate_step(step)
     return (
         _STEP_RANK[value["kind"]],
         str(value["operation"]),
         int(value["amount"]),
+        str(value["operator_digest"]),
         str(value["step_digest"]),
     )
 
@@ -132,6 +150,42 @@ def operator_program_digest(operator: Mapping[str, Any]) -> str:
     return digest_of({"step_digests": [step["step_digest"] for step in value["steps"]]})
 
 
+def _assert_invocation_graph(operators: Sequence[Mapping[str, Any]]) -> None:
+    by_digest = {item["operator_digest"]: item for item in operators}
+    edges: dict[str, tuple[str, ...]] = {}
+    for operator in operators:
+        refs = tuple(
+            step["operator_digest"]
+            for step in operator["steps"]
+            if step["kind"] == "invoke_held_operator"
+        )
+        for ref in refs:
+            if ref not in by_digest:
+                raise TransformationLanguageError(
+                    "transformation operator invokes an operator not held by this language"
+                )
+            if ref == operator["operator_digest"]:
+                raise TransformationLanguageError("transformation operator invokes itself")
+        edges[operator["operator_digest"]] = refs
+
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def visit(digest: str) -> None:
+        if digest in visited:
+            return
+        if digest in visiting:
+            raise TransformationLanguageError("transformation-operator invocation graph is cyclic")
+        visiting.add(digest)
+        for dependency in edges.get(digest, ()):
+            visit(dependency)
+        visiting.remove(digest)
+        visited.add(digest)
+
+    for digest in edges:
+        visit(digest)
+
+
 def create_language(
     operators: Sequence[Mapping[str, Any]],
     *,
@@ -160,6 +214,7 @@ def create_language(
         raise TransformationLanguageError(
             "transformation operator exceeds the admitted step bound: %s" % ", ".join(too_long)
         )
+    _assert_invocation_graph(values)
     payload = {
         "schema": LANGUAGE_SCHEMA,
         "operators": values,
@@ -215,26 +270,56 @@ def operator_named(language: Mapping[str, Any], name: str) -> dict[str, Any]:
     return dict(matches[0])
 
 
+def operator_by_digest(language: Mapping[str, Any], operator_digest: str) -> dict[str, Any]:
+    current = validate_language(language)
+    matches = [
+        item for item in current["operators"] if item["operator_digest"] == str(operator_digest)
+    ]
+    if len(matches) != 1:
+        raise TransformationLanguageError(
+            "transformation language has no unique operator digest %r" % operator_digest
+        )
+    return dict(matches[0])
+
+
+def _flatten_operator_steps(
+    current: Mapping[str, Any], operator: Mapping[str, Any], stack: tuple[str, ...] = ()
+) -> tuple[dict[str, Any], ...]:
+    value = validate_operator(operator)
+    digest = value["operator_digest"]
+    if digest in stack:
+        raise TransformationLanguageError("transformation-operator invocation is cyclic")
+    primitive: list[dict[str, Any]] = []
+    for raw_step in value["steps"]:
+        step = validate_step(raw_step)
+        if step["kind"] != "invoke_held_operator":
+            primitive.append(step)
+            continue
+        target = operator_by_digest(current, step["operator_digest"])
+        primitive.extend(_flatten_operator_steps(current, target, (*stack, digest)))
+    return tuple(sorted(primitive, key=step_sort_key))
+
+
 def apply_operator(
     policy: Mapping[str, Any], language: Mapping[str, Any], operator_name: str
 ) -> dict[str, Any]:
     """Interpret one lineage-held operator against a canonical generated-search policy.
 
     The final policy is a direct descendant of the input policy even when the operator program edits
-    more than one structural field. Admission of that descendant is intentionally outside this
-    module; the unchanged trust-root path must later establish that the wider transformation actually
-    helps before a runtime controller may install it.
+    more than one structural field. Invoked acquired operators are expanded recursively to the same
+    fixed primitive kernel, so reusing an acquired operator gives later generations a real dependency
+    rather than a certificate-only label.
     """
     prior = policies.validate(policy)
-    operator = operator_named(language, operator_name)
+    current = validate_language(language)
+    operator = operator_named(current, operator_name)
 
     operation_names = list(prior["operation_names"])
     max_length = int(prior["max_length"])
     max_candidates = int(prior["max_candidates"])
     changed = False
 
-    for raw_step in operator["steps"]:
-        step = validate_step(raw_step)
+    for step in _flatten_operator_steps(current, operator):
         if step["kind"] == "append_policy_operation":
             registry = resolve_registry(prior["registry_reference"])
             operation = step["operation"]
@@ -259,7 +344,7 @@ def apply_operator(
                 )
             max_candidates += amount
             changed = True
-        else:  # pragma: no cover - validate_step closes the path
+        else:  # pragma: no cover - invocation is flattened and validation closes all other paths
             raise TransformationLanguageError("unsupported transformation micro-step")
 
     if not changed:
