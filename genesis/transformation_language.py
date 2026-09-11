@@ -5,12 +5,17 @@ Genesis v1 can evolve a search policy, but the *kinds* of policy mutation remain
 Genesis v2 needs in order to attack that ceiling without giving mutable code access to the trust
 root, evaluator, budget or isolation boundary.
 
-A transformation operator is canonical data: an ordered program of micro-steps interpreted by fixed
-apparatus. A transformation language is also canonical data and names which operators the lineage
-currently holds. Extending the language adds a new operator definition while preserving an explicit
-parent-language digest. The lower micro-step kernel is still host-written DEVELOPMENT apparatus;
-therefore this module is a substrate for open-metamorphosis experiments, not evidence that the v2
-objective has been reached.
+A transformation operator is canonical data: a canonically ordered program of micro-steps interpreted
+by fixed apparatus. A transformation language is also canonical data and names which operators the
+lineage currently holds. Extending the language adds a new operator definition while preserving an
+explicit parent-language digest. The lower micro-step kernel is still host-written DEVELOPMENT
+apparatus; therefore this module is a substrate for open-metamorphosis experiments, not evidence that
+the v2 objective has been reached.
+
+The canonical order removes representation aliases from the lower language: two independent edits do
+not become two candidate operators merely because their textual order was swapped. This makes a
+future complete candidate-image claim mechanically meaningful instead of letting authored ordering
+create artificial ties.
 
 No ``eval``, ``exec``, generated import or arbitrary attribute mutation is used. Operators can only
 edit the bounded fields already present in a generated search policy.
@@ -32,6 +37,7 @@ MICRO_STEP_KINDS = (
     "increase_policy_depth",
     "increase_candidate_limit",
 )
+_STEP_RANK = {name: index for index, name in enumerate(MICRO_STEP_KINDS)}
 
 
 class TransformationLanguageError(RuntimeError):
@@ -83,6 +89,16 @@ def validate_step(record: Mapping[str, Any]) -> dict[str, Any]:
     return rebuilt
 
 
+def step_sort_key(step: Mapping[str, Any]) -> tuple[int, str, int, str]:
+    value = validate_step(step)
+    return (
+        _STEP_RANK[value["kind"]],
+        str(value["operation"]),
+        int(value["amount"]),
+        str(value["step_digest"]),
+    )
+
+
 def create_operator(name: str, steps: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
     name = str(name)
     if not name:
@@ -90,6 +106,10 @@ def create_operator(name: str, steps: Sequence[Mapping[str, Any]]) -> dict[str, 
     program = [validate_step(step) for step in steps]
     if not program:
         raise TransformationLanguageError("transformation operator contains no micro-step")
+    if program != sorted(program, key=step_sort_key):
+        raise TransformationLanguageError(
+            "transformation operator micro-steps are not in canonical lower-language order"
+        )
     payload = {
         "schema": OPERATOR_SCHEMA,
         "name": name,
@@ -105,6 +125,11 @@ def validate_operator(record: Mapping[str, Any]) -> dict[str, Any]:
     if rebuilt != dict(record):
         raise TransformationLanguageError("transformation operator does not reconstruct from its fields")
     return rebuilt
+
+
+def operator_program_digest(operator: Mapping[str, Any]) -> str:
+    value = validate_operator(operator)
+    return digest_of({"step_digests": [step["step_digest"] for step in value["steps"]]})
 
 
 def create_language(
@@ -125,6 +150,11 @@ def create_language(
     digests = [item["operator_digest"] for item in values]
     if len(set(digests)) != len(digests):
         raise TransformationLanguageError("transformation language contains a duplicate operator")
+    programs = [operator_program_digest(item) for item in values]
+    if len(set(programs)) != len(programs):
+        raise TransformationLanguageError(
+            "transformation language contains two names for the same operator program"
+        )
     too_long = [item["name"] for item in values if len(item["steps"]) > bound]
     if too_long:
         raise TransformationLanguageError(
@@ -164,6 +194,10 @@ def extend_language(
         item["operator_digest"] for item in prior["operators"]
     }:
         raise TransformationLanguageError("language extension re-adds an existing operator")
+    if operator_program_digest(addition) in {
+        operator_program_digest(item) for item in prior["operators"]
+    }:
+        raise TransformationLanguageError("language extension aliases an existing operator program")
     if len(addition["steps"]) > int(prior["max_operator_steps"]):
         raise TransformationLanguageError("language extension exceeds its admitted operator-step bound")
     return create_language(
