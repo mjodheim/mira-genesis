@@ -9,6 +9,10 @@ criterion in `docs/METAMORPHOSIS_TARGET.md` is:
 
 `c1e8f3cd30c314f55d511dc2409324ac7df343b8`
 
+That exact threshold commit is preserved by the annotated tag
+`milestone/genesis-development-metamorphosis-v1`, so later branch cleanup cannot make the frozen
+milestone citation unreachable.
+
 That commit is the head of PR #307 (`feat(genesis): select bounded form transitions by unique strict
 maximum`). A fresh hostile Hati review, performed before reading earlier Hati conclusions, returned:
 
