@@ -28,6 +28,20 @@ terminal report. M069 launches trusted registered host commands and is not an OS
 The four repository-wide installation and audit steps at the top are exactly what
 `.github/workflows/ci.yml` runs on every pull request, on Python 3.11 and 3.13.
 
+## Reproducing the Genesis DEVELOPMENT metamorphosis milestone
+
+The integrated bounded metamorphosis campaign now has one canonical reproduction command:
+
+```bash
+python scripts/run_genesis_metamorphosis_reproduction.py \
+  --output-dir /tmp/genesis-metamorphosis-reproduction
+```
+
+The driver crosses two fresh-interpreter boundaries through the persisted checkpoint and emits
+phase records plus a self-checking `report.json`. See
+`docs/GENESIS_METAMORPHOSIS_REPRODUCTION.md` for the exact demonstrated properties and claim boundary.
+This is DEVELOPMENT reproduction evidence; it does not replay or advance any sealed scientific gate.
+
 ## Reproducing a canonical result
 
 Every canonical result is identified in `results/<ID>.md` by:
