@@ -371,6 +371,7 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
             produced_by="fixed metamorphic campaign form-rebind adapter",
             detail=FORM_REBIND_STRATEGY,
         ),
+        require_executable_target_change=True,
     )
     return {
         "type": "form_migration",
