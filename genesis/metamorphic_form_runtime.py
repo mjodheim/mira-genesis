@@ -22,6 +22,16 @@ from genesis import metamorphic_policy_loop as base
 from genesis import programs
 
 
+def _latest_acquisition_name(genesis) -> str:
+    acquisitions = list(genesis.state.get("acquisitions") or [])
+    if not acquisitions:
+        return ""
+    latest = acquisitions[-1]
+    if not isinstance(latest, Mapping):
+        return ""
+    return str(latest.get("name") or "")
+
+
 def run_objective(
     genesis,
     here,
@@ -31,8 +41,11 @@ def run_objective(
     max_rounds: int = 64,
     checkpoint_directory: Path | None = None,
 ) -> dict[str, Any]:
-    """Run one integrated objective without reverting a migrated generated-program form."""
-    with programs.inherit_interpreter_form(genesis.body_factory):
+    """Run one integrated objective without reverting form or severing strict ancestry."""
+    with programs.inherit_interpreter_form(
+        genesis.body_factory,
+        dependency=_latest_acquisition_name(genesis),
+    ):
         result = base.run_objective(
             genesis,
             here,
