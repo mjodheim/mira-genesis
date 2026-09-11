@@ -40,8 +40,8 @@ _ACTIVE_PARENT_PROGRAM_OPERATIONS: ContextVar[tuple[str, ...]] = ContextVar(
 _ACTIVE_PARENT_DEPENDENCY: ContextVar[str] = ContextVar(
     "genesis_parent_program_dependency", default=""
 )
-_ACTIVE_PARENT_ARTIFACT_DIGEST: ContextVar[str] = ContextVar(
-    "genesis_parent_program_artifact_digest", default=""
+_ACTIVE_PARENT_ARTIFACT: ContextVar[Mapping[str, Any] | None] = ContextVar(
+    "genesis_parent_program_artifact", default=None
 )
 
 
@@ -60,7 +60,8 @@ class ProgramBody:
         operations: Sequence[str],
         input_field: str,
         required_capabilities: Sequence[str] = (),
-        parent_body_artifact_digest: str = "",
+        parent_body_artifact: Mapping[str, Any] | None = None,
+        parent_prefix_length: int = 0,
         capabilities: Iterable[str] = (),
     ) -> None:
         if program_schema != PROGRAM_SCHEMA:
@@ -83,9 +84,28 @@ class ProgramBody:
         self.operations = names
         self.input_field = input_field
         self.required_capabilities = frozenset(str(name) for name in required_capabilities)
-        self.parent_body_artifact_digest = str(parent_body_artifact_digest or "")
         self.capabilities = frozenset(str(name) for name in capabilities)
         self._registry = registry
+        self._parent_body = None
+        self._suffix_names = names
+        if parent_body_artifact is not None:
+            from genesis.artifacts import reconstruct
+
+            if len(self.required_capabilities) != 1:
+                raise ProgramError("a composed generated descendant must name exactly one predecessor")
+            prefix_length = int(parent_prefix_length)
+            if prefix_length <= 0 or prefix_length >= len(names):
+                raise ProgramError("generated descendant carries an invalid parent prefix length")
+            parent_factory = reconstruct(parent_body_artifact)
+            parent_operations = program_operations_of(parent_factory)
+            if parent_operations != names[:prefix_length]:
+                raise ProgramError(
+                    "generated descendant parent artifact is not the canonical program prefix it claims"
+                )
+            self._parent_body = parent_factory()
+            self._suffix_names = names[prefix_length:]
+        elif int(parent_prefix_length):
+            raise ProgramError("generated program names a parent prefix without a parent artifact")
 
     def attempt(self, task: Mapping[str, Any]) -> Any:
         missing = self.required_capabilities - self.capabilities
@@ -94,8 +114,11 @@ class ProgramBody:
                 "generated program is missing retained predecessor capability: %s"
                 % ", ".join(sorted(missing))
             )
-        value = task[self.input_field]
-        for name in self.operations:
+        if self._parent_body is None:
+            value = task[self.input_field]
+        else:
+            value = self._parent_body.attempt(task)
+        for name in self._suffix_names:
             value = self._registry[name](value)
         return value
 
@@ -107,7 +130,8 @@ def program_body(
     operations: Sequence[str],
     input_field: str = "input",
     required_capabilities: Sequence[str] = (),
-    parent_body_artifact_digest: str = "",
+    parent_body_artifact: Mapping[str, Any] | None = None,
+    parent_prefix_length: int = 0,
     capabilities: Iterable[str] = (),
 ) -> ProgramBody:
     """Importable fixed interpreter target used by ``ConfiguredBody``."""
@@ -117,7 +141,8 @@ def program_body(
         operations=operations,
         input_field=input_field,
         required_capabilities=required_capabilities,
-        parent_body_artifact_digest=parent_body_artifact_digest,
+        parent_body_artifact=parent_body_artifact,
+        parent_prefix_length=parent_prefix_length,
         capabilities=capabilities,
     )
 
@@ -166,19 +191,15 @@ def inherit_interpreter_form(body_factory: Any, *, dependency: str = ""):
 
     parent_operations = program_operations_of(body_factory)
     dependency_name = str(dependency or "") if parent_operations else ""
-    parent_digest = (
-        artifact_digest_of(body_factory)["artifact_digest"]
-        if dependency_name
-        else ""
-    )
+    parent_artifact = artifact_digest_of(body_factory) if dependency_name else None
     target_token = _ACTIVE_INTERPRETER_TARGET.set(interpreter_target_of(body_factory))
     operations_token = _ACTIVE_PARENT_PROGRAM_OPERATIONS.set(parent_operations)
     dependency_token = _ACTIVE_PARENT_DEPENDENCY.set(dependency_name)
-    digest_token = _ACTIVE_PARENT_ARTIFACT_DIGEST.set(parent_digest)
+    artifact_token = _ACTIVE_PARENT_ARTIFACT.set(parent_artifact)
     try:
         yield _ACTIVE_INTERPRETER_TARGET.get()
     finally:
-        _ACTIVE_PARENT_ARTIFACT_DIGEST.reset(digest_token)
+        _ACTIVE_PARENT_ARTIFACT.reset(artifact_token)
         _ACTIVE_PARENT_DEPENDENCY.reset(dependency_token)
         _ACTIVE_PARENT_PROGRAM_OPERATIONS.reset(operations_token)
         _ACTIVE_INTERPRETER_TARGET.reset(target_token)
@@ -219,7 +240,11 @@ def artifact(
     if dependency_names:
         configuration["required_capabilities"] = sorted(dependency_names)
     if inherited_parent:
-        configuration["parent_body_artifact_digest"] = _ACTIVE_PARENT_ARTIFACT_DIGEST.get()
+        parent_artifact = _ACTIVE_PARENT_ARTIFACT.get()
+        if not isinstance(parent_artifact, Mapping):
+            raise ProgramError("generated descendant lost the executable artifact of its predecessor")
+        configuration["parent_body_artifact"] = dict(parent_artifact)
+        configuration["parent_prefix_length"] = len(parent_operations)
 
     return ConfiguredBody(
         target=str(interpreter_target or _ACTIVE_INTERPRETER_TARGET.get()),

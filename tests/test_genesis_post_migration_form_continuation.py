@@ -177,7 +177,11 @@ def test_migrated_generated_form_survives_restart_and_produces_next_descendant(t
     b2_program = b2_artifact["configuration"]
     assert b2_artifact["dependencies"] == [b1["name"]]
     assert tuple(b2_program["required_capabilities"]) == (b1["name"],)
-    assert b2_program["parent_body_artifact_digest"] == arrival_artifact["artifact_digest"]
+    assert b2_program["parent_prefix_length"] == 1
+    assert b2_program["parent_body_artifact"]["artifact_digest"] == arrival_artifact["artifact_digest"]
+    parent_configuration = b2_program["parent_body_artifact"]["configuration"]
+    assert parent_configuration["target"] == program_forms.PORTABLE_PROGRAM_TARGET
+    assert tuple(parent_configuration["configuration"]["operations"]) == ("square",)
     assert restored.body_factory.target == program_forms.PORTABLE_PROGRAM_TARGET
     assert tuple(restored.body_factory.configuration["operations"]) == ("square", "square")
     assert second["generated_form_target"] == program_forms.PORTABLE_PROGRAM_TARGET
@@ -188,10 +192,8 @@ def test_migrated_generated_form_survives_restart_and_produces_next_descendant(t
     assert causal["depends_on"] == b1["name"]
     assert causal["newly_solved_with_acquisition"] == ["m1"]
     assert causal["newly_solved_lost_without_acquisition"] == ["m1"]
-    metamorphosis = migration.metamorphosis_succeeded(
-        moved,
-        [{"accepted": True, "causal_dependency": causal}],
-    )
+    assert b2["causal_dependency"] == causal
+    metamorphosis = migration.metamorphosis_succeeded(moved, [b2])
     assert metamorphosis["succeeded"] is True
     assert metamorphosis["causally_established_after_migration"] == 1
     assert metamorphosis["is_transported_intelligence_rather_than_transported_output"] is True

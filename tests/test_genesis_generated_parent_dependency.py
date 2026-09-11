@@ -45,9 +45,14 @@ def test_only_a_strict_program_extension_inherits_the_predecessor_dependency():
     assert descendant.target == program_forms.PORTABLE_PROGRAM_TARGET
     assert descendant.dependencies == frozenset((dependency,))
     assert tuple(descendant.configuration["required_capabilities"]) == (dependency,)
-    assert descendant.configuration["parent_body_artifact_digest"] == parent_digest
+    assert descendant.configuration["parent_prefix_length"] == 1
+    parent_record = descendant.configuration["parent_body_artifact"]
+    assert parent_record["artifact_digest"] == parent_digest
+    assert parent_record["configuration"]["target"] == program_forms.PORTABLE_PROGRAM_TARGET
+    assert tuple(parent_record["configuration"]["configuration"]["operations"]) == ("square",)
 
-    # This is executable dependence, not a certificate flag: the intact body computes the new work,
+    # This is executable composition, not a certificate flag: the descendant reconstructs and runs
+    # its exact parent artifact, then executes only its newly appended suffix operation.
     # while the runtime-derived single-difference ablation cannot execute without its predecessor.
     assert descendant().attempt({"input": 2}) == 16
     ablated = descendant.without(dependency)
@@ -70,3 +75,25 @@ def test_parent_dependency_context_does_not_leak_to_other_lineages():
     assert inherited.dependencies == frozenset(("prior",))
     assert ordinary.dependencies == frozenset()
     assert ordinary.target == programs.PROGRAM_TARGET
+
+
+def test_tampered_embedded_parent_artifact_is_refused_at_execution_boundary():
+    parent = _portable_square()
+    dependency = "policy-program:older-objective:square"
+    with programs.inherit_interpreter_form(parent, dependency=dependency):
+        descendant = programs.artifact(
+            registry_reference=bodies.PROBE_REGISTRY,
+            operations=("square", "square"),
+        )
+
+    configuration = dict(descendant.configuration)
+    parent_record = dict(configuration["parent_body_artifact"])
+    parent_record["artifact_digest"] = "0" * 64
+    configuration["parent_body_artifact"] = parent_record
+    tampered = ConfiguredBody(
+        target=descendant.target,
+        configuration=configuration,
+        dependencies=descendant.dependencies,
+    )
+    with pytest.raises(Exception, match="reproduce its committed digest"):
+        tampered()
