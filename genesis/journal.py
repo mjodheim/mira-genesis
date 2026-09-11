@@ -33,6 +33,10 @@ ENTRY_KINDS = (
     "candidate_accepted",
     "candidate_rejected",
     "component_acquired",
+    # Genesis v2 can acquire lineage-owned machinery that is not a component or vocabulary item.
+    # Keep that distinction explicit instead of mislabelling transformation-language acquisition as
+    # component acquisition merely to reuse an older journal kind.
+    "acquisition",
     "vocabulary_extended",
     "rollback",
     "migration",
