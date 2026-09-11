@@ -11,10 +11,18 @@ needed. ``ConfiguredBody`` binds the interpreter target plus the canonical progr
 two different generated programs are different executable artifacts and structural ablation remains
 available when dependencies are declared.
 
+A migrated generated body may use another compatible interpreter target. The integrated runtime can
+scope candidate construction to the target of the currently executing configured program, so body,
+policy and MetaPolicy evaluations all see the same form without a process-global mutable default.
+The target remains executable apparatus and is not chosen by the trust root; this only keeps a form
+change from being silently undone by the next generated descendant.
+
 This is DEVELOPMENT machinery, not a claim that this tiny language is general or open-ended.
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 from itertools import product
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -23,6 +31,9 @@ from genesis.probe import resolve_registry
 
 PROGRAM_SCHEMA = "genesis-generated-program-v1"
 PROGRAM_TARGET = "genesis.programs:program_body"
+_ACTIVE_INTERPRETER_TARGET: ContextVar[str] = ContextVar(
+    "genesis_program_interpreter_target", default=PROGRAM_TARGET
+)
 
 
 class ProgramError(RuntimeError):
@@ -88,19 +99,56 @@ def program_body(
     )
 
 
+def interpreter_target_of(body_factory: Any) -> str:
+    """Return the generated-program interpreter form currently embodied by a lineage.
+
+    Only a ``ConfiguredBody`` whose immutable configuration is recognisably a generated program can
+    propagate its target. An unrelated configured artifact does not get to redefine how future
+    program candidates are built. If a migrated target cannot actually interpret the same canonical
+    configuration, candidate execution fails closed in the ordinary sandbox; there is no fallback to
+    the old target after seeing the failure.
+    """
+    if isinstance(body_factory, ConfiguredBody):
+        configuration = body_factory.configuration
+        if (
+            configuration.get("program_schema") == PROGRAM_SCHEMA
+            and isinstance(configuration.get("registry_reference"), str)
+            and configuration.get("operations")
+            and isinstance(configuration.get("input_field"), str)
+        ):
+            return str(body_factory.target)
+    return PROGRAM_TARGET
+
+
+@contextmanager
+def inherit_interpreter_form(body_factory: Any):
+    """Use one lineage body's program form for every nested generated candidate construction.
+
+    ``ContextVar`` keeps the binding scoped to this runtime call and safe across independent async
+    contexts. It is reset unconditionally on exit, so evaluating one migrated lineage cannot change
+    the default form later used by another lineage in the same process.
+    """
+    token = _ACTIVE_INTERPRETER_TARGET.set(interpreter_target_of(body_factory))
+    try:
+        yield _ACTIVE_INTERPRETER_TARGET.get()
+    finally:
+        _ACTIVE_INTERPRETER_TARGET.reset(token)
+
+
 def artifact(
     *,
     registry_reference: str,
     operations: Sequence[str],
     input_field: str = "input",
     dependencies: Iterable[str] = (),
+    interpreter_target: str | None = None,
 ) -> ConfiguredBody:
     """Build one generated executable artifact from canonical program data."""
     names = tuple(str(name) for name in operations)
     if not names:
         raise ProgramError("cannot build an empty generated program")
     return ConfiguredBody(
-        target=PROGRAM_TARGET,
+        target=str(interpreter_target or _ACTIVE_INTERPRETER_TARGET.get()),
         configuration={
             "program_schema": PROGRAM_SCHEMA,
             "registry_reference": str(registry_reference),
@@ -108,6 +156,24 @@ def artifact(
             "input_field": str(input_field),
         },
         dependencies=frozenset(str(name) for name in dependencies),
+    )
+
+
+def descendant_artifact(
+    current_body_factory: Any,
+    *,
+    registry_reference: str,
+    operations: Sequence[str],
+    input_field: str = "input",
+    dependencies: Iterable[str] = (),
+) -> ConfiguredBody:
+    """Build a generated descendant explicitly in the current generated body's executable form."""
+    return artifact(
+        registry_reference=registry_reference,
+        operations=operations,
+        input_field=input_field,
+        dependencies=dependencies,
+        interpreter_target=interpreter_target_of(current_body_factory),
     )
 
 
@@ -119,6 +185,7 @@ def enumerate_artifacts(
     max_candidates: int,
     input_field: str = "input",
     dependencies: Iterable[str] = (),
+    interpreter_target: str | None = None,
 ):
     """Deterministically enumerate a bounded generated-program search space.
 
@@ -153,5 +220,6 @@ def enumerate_artifacts(
                 operations=operations,
                 input_field=input_field,
                 dependencies=dependencies,
+                interpreter_target=interpreter_target,
             )
             emitted += 1
