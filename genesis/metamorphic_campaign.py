@@ -37,10 +37,49 @@ CURSOR_SCHEMA = "genesis-metamorphic-campaign-cursor-v1"
 CURSOR_TOOL_NAME = "metamorphic_campaign_cursor"
 CURSOR_ROLE = "persistent_campaign_progress"
 FORM_REBIND_STRATEGY = "rebind_current_generated_program_v1"
+TRANSITION_PROBE_ROUND_SCHEMA = "genesis-architectural-transition-probe-round-v1"
+TRANSITION_PROBE_ROUND_KIND = "architectural_transition_probe_round"
+_TRANSITION_RESERVED = "reserved"
+_TRANSITION_CHARGED = "charged"
+_TRANSITION_COMPLETED = "completed"
+_TRANSITION_CRASH_INCOMPLETE = "crash_incomplete"
 
 
 class MetamorphicCampaignError(RuntimeError):
     """Raised when a campaign cannot continue as the same admitted lineage/program."""
+
+
+class _PrepaidProbeBudget:
+    """Consume probe slots that were already durably charged to the real lineage budget."""
+
+    def __init__(self, base, allowance: int):
+        self._base = base
+        self._allowance = int(allowance)
+        self.limits = base.limits
+        self.spent = base.spent
+
+    def remaining(self, dimension: str) -> int:
+        if dimension == "probes":
+            return self._allowance
+        return self._base.remaining(dimension)
+
+    def spend(self, dimension: str, amount: int = 1) -> int:
+        if amount < 0:
+            raise MetamorphicCampaignError("cannot spend a negative prepaid probe amount")
+        if dimension != "probes":
+            return self._base.spend(dimension, amount)
+        if self._allowance < amount:
+            raise MetamorphicCampaignError(
+                "architectural transition exhausted its durably prepaid probe reservation"
+            )
+        self._allowance -= amount
+        return self._allowance
+
+    def record(self) -> dict[str, Any]:
+        return self._base.record()
+
+    def unused(self) -> int:
+        return self._allowance
 
 
 @dataclass(frozen=True)
@@ -428,8 +467,298 @@ def _post_migration_cycles(genesis, cursor: Mapping[str, Any]) -> list[dict[str,
     ]
 
 
+def _replace_observations(genesis, observations) -> None:
+    genesis.state = lineage_state.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=genesis.state["tools"],
+        acquisitions=genesis.state["acquisitions"],
+        observations=observations,
+        generation=genesis.state["generation"],
+    )
+
+
+def _transition_probe_round_payload(
+    genesis,
+    *,
+    identity: Mapping[str, Any],
+    current: Mapping[str, Any],
+    destination: Mapping[str, Any],
+    substrate_records: Sequence[Mapping[str, Any]],
+    probe_cost_required: int,
+) -> dict[str, Any]:
+    return {
+        "schema": TRANSITION_PROBE_ROUND_SCHEMA,
+        "stage_digest": str(identity["stage_digest"]),
+        "body_artifact_digest": artifact_digest_of(genesis.body_factory)["artifact_digest"],
+        "current_target_artifact_digest": str(current["artifact_digest"]),
+        "destination_target_artifact_digest": str(destination["artifact_digest"]),
+        "substrate_identity_digests": [
+            str(item["substrate_identity_digest"]) for item in substrate_records
+        ],
+        "required_operation": program_forms.REBIND_OPERATION,
+        "probe_cost_required": int(probe_cost_required),
+    }
+
+
+def _transition_probe_round_digest(payload: Mapping[str, Any]) -> str:
+    return digest_of(dict(payload))
+
+
+def _transition_probe_round_records(genesis, round_digest: str) -> list[dict[str, Any]]:
+    return [
+        dict(item)
+        for item in genesis.state.get("observations", [])
+        if isinstance(item, Mapping)
+        and item.get("kind") == TRANSITION_PROBE_ROUND_KIND
+        and item.get("round_digest") == round_digest
+    ]
+
+
+def _transition_probe_round_record(
+    payload: Mapping[str, Any],
+    *,
+    status: str,
+    budget_before: int,
+    budget_after: int | None = None,
+    selection: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    record = {
+        "kind": TRANSITION_PROBE_ROUND_KIND,
+        **dict(payload),
+        "round_digest": _transition_probe_round_digest(payload),
+        "status": status,
+        "budget_before": int(budget_before),
+        "budget_after": None if budget_after is None else int(budget_after),
+        "selection": dict(selection) if selection is not None else None,
+    }
+    record["record_digest"] = digest_of(record)
+    return record
+
+
+def _validate_transition_probe_round_record(
+    item: Mapping[str, Any], expected_payload: Mapping[str, Any]
+) -> dict[str, Any]:
+    record = dict(item)
+    recorded_digest = record.pop("record_digest", "")
+    if recorded_digest != digest_of(record):
+        raise MetamorphicCampaignError(
+            "architectural transition probe round does not reproduce its record digest"
+        )
+    if record.get("kind") != TRANSITION_PROBE_ROUND_KIND:
+        raise MetamorphicCampaignError("architectural transition probe round has wrong kind")
+    for key, value in expected_payload.items():
+        if record.get(key) != value:
+            raise MetamorphicCampaignError(
+                "architectural transition probe round does not reproduce current %s" % key
+            )
+    if record.get("round_digest") != _transition_probe_round_digest(expected_payload):
+        raise MetamorphicCampaignError("architectural transition probe round identity changed")
+    if record.get("status") not in {
+        _TRANSITION_RESERVED,
+        _TRANSITION_CHARGED,
+        _TRANSITION_COMPLETED,
+        _TRANSITION_CRASH_INCOMPLETE,
+    }:
+        raise MetamorphicCampaignError("architectural transition probe round has unknown status")
+    if record.get("status") == _TRANSITION_COMPLETED:
+        selection = record.get("selection")
+        if not isinstance(selection, Mapping):
+            raise MetamorphicCampaignError(
+                "completed architectural transition probe round carries no selection"
+            )
+        selection_copy = dict(selection)
+        selection_digest = selection_copy.pop("selection_digest", "")
+        if selection_digest != digest_of(selection_copy):
+            raise MetamorphicCampaignError(
+                "persisted architectural transition selection does not reproduce its digest"
+            )
+        if selection.get("stage_digest") != expected_payload["stage_digest"]:
+            raise MetamorphicCampaignError(
+                "persisted architectural transition selection names another stage"
+            )
+        if selection.get("durable_probe_round_digest") != record.get("round_digest"):
+            raise MetamorphicCampaignError(
+                "persisted architectural transition selection names another probe round"
+            )
+    return dict(item)
+
+
+def _install_transition_probe_round(genesis, record: Mapping[str, Any]) -> None:
+    target = str(record["round_digest"])
+    observations = []
+    replaced = False
+    for item in genesis.state.get("observations", []):
+        if (
+            isinstance(item, Mapping)
+            and item.get("kind") == TRANSITION_PROBE_ROUND_KIND
+            and item.get("round_digest") == target
+        ):
+            if replaced:
+                raise MetamorphicCampaignError(
+                    "lineage carries duplicate architectural transition probe rounds"
+                )
+            observations.append(dict(record))
+            replaced = True
+        else:
+            observations.append(item)
+    if not replaced:
+        observations.append(dict(record))
+    _replace_observations(genesis, observations)
+
+
+def _prepare_transition_probe_round(
+    genesis,
+    *,
+    identity: Mapping[str, Any],
+    current: Mapping[str, Any],
+    destination: Mapping[str, Any],
+    substrate_records: Sequence[Mapping[str, Any]],
+    probe_cost_required: int,
+    checkpoint_directory: Path | None,
+) -> dict[str, Any]:
+    if checkpoint_directory is None or probe_cost_required <= 0:
+        if probe_cost_required > genesis.budget.remaining("probes"):
+            raise MetamorphicCampaignError(
+                "complete architectural transition comparison requires %d probe units but only %d remain"
+                % (probe_cost_required, genesis.budget.remaining("probes"))
+            )
+        return {
+            "budget": genesis.budget,
+            "round_digest": "",
+            "replay_selection": None,
+            "durable": False,
+        }
+
+    payload = _transition_probe_round_payload(
+        genesis,
+        identity=identity,
+        current=current,
+        destination=destination,
+        substrate_records=substrate_records,
+        probe_cost_required=probe_cost_required,
+    )
+    round_digest = _transition_probe_round_digest(payload)
+    existing = _transition_probe_round_records(genesis, round_digest)
+    if len(existing) > 1:
+        raise MetamorphicCampaignError(
+            "lineage carries duplicate architectural transition probe rounds"
+        )
+
+    if not existing:
+        remaining = genesis.budget.remaining("probes")
+        if remaining < probe_cost_required:
+            raise MetamorphicCampaignError(
+                "complete architectural transition comparison requires %d probe units but only %d remain"
+                % (probe_cost_required, remaining)
+            )
+        before = int(genesis.budget.spent.get("probes", 0))
+        reserved = _transition_probe_round_record(
+            payload,
+            status=_TRANSITION_RESERVED,
+            budget_before=before,
+        )
+        _install_transition_probe_round(genesis, reserved)
+        genesis.persist(Path(checkpoint_directory))
+        record = reserved
+    else:
+        record = _validate_transition_probe_round_record(existing[0], payload)
+
+    status = record["status"]
+    if status == _TRANSITION_COMPLETED:
+        return {
+            "budget": genesis.budget,
+            "round_digest": round_digest,
+            "replay_selection": dict(record["selection"]),
+            "durable": True,
+        }
+    if status == _TRANSITION_CRASH_INCOMPLETE:
+        raise MetamorphicCampaignError(
+            "prior architectural transition crashed after its probe budget was charged; redraw is refused"
+        )
+    if status == _TRANSITION_CHARGED:
+        crashed = dict(record)
+        crashed.pop("record_digest", None)
+        crashed["status"] = _TRANSITION_CRASH_INCOMPLETE
+        crashed["record_digest"] = digest_of(crashed)
+        _install_transition_probe_round(genesis, crashed)
+        genesis.persist(Path(checkpoint_directory))
+        raise MetamorphicCampaignError(
+            "prior architectural transition crashed after its probe budget was charged; redraw is refused"
+        )
+    if status != _TRANSITION_RESERVED:
+        raise MetamorphicCampaignError("architectural transition probe round cannot be charged")
+
+    genesis.budget.spend("probes", probe_cost_required)
+    after = int(genesis.budget.spent.get("probes", 0))
+    charged = _transition_probe_round_record(
+        payload,
+        status=_TRANSITION_CHARGED,
+        budget_before=int(record["budget_before"]),
+        budget_after=after,
+    )
+    _install_transition_probe_round(genesis, charged)
+    genesis.persist(Path(checkpoint_directory))
+    return {
+        "budget": _PrepaidProbeBudget(genesis.budget, probe_cost_required),
+        "round_digest": round_digest,
+        "replay_selection": None,
+        "durable": True,
+    }
+
+
+def _complete_transition_probe_round(
+    genesis, round_digest: str, selection: Mapping[str, Any]
+) -> None:
+    if not round_digest:
+        return
+    records = _transition_probe_round_records(genesis, round_digest)
+    if len(records) != 1:
+        raise MetamorphicCampaignError(
+            "architectural transition completion has no unique durable probe round"
+        )
+    record = dict(records[0])
+    recorded_digest = record.pop("record_digest", "")
+    if recorded_digest != digest_of(record):
+        raise MetamorphicCampaignError(
+            "architectural transition completion found a corrupt probe round"
+        )
+    selection_copy = dict(selection)
+    selection_digest = selection_copy.pop("selection_digest", "")
+    if selection_digest != digest_of(selection_copy):
+        raise MetamorphicCampaignError(
+            "architectural transition completion received a selection whose digest does not reproduce"
+        )
+    if selection.get("durable_probe_round_digest") != round_digest:
+        raise MetamorphicCampaignError(
+            "architectural transition selection does not belong to its durable probe round"
+        )
+    if record.get("status") == _TRANSITION_COMPLETED:
+        stored = record.get("selection")
+        if not isinstance(stored, Mapping) or stored.get("selection_digest") != selection.get(
+            "selection_digest"
+        ):
+            raise MetamorphicCampaignError(
+                "completed architectural transition probe round names another selection"
+            )
+        return
+    if record.get("status") != _TRANSITION_CHARGED:
+        raise MetamorphicCampaignError(
+            "architectural transition probe round completed from a non-charged state"
+        )
+    record["status"] = _TRANSITION_COMPLETED
+    record["selection"] = dict(selection)
+    record["record_digest"] = digest_of(record)
+    _install_transition_probe_round(genesis, record)
+
+
 def _select_form_transition(
-    genesis, stage: FormRequirementStage, identity: Mapping[str, Any]
+    genesis,
+    stage: FormRequirementStage,
+    identity: Mapping[str, Any],
+    *,
+    checkpoint_directory: Path | None = None,
 ) -> dict[str, Any]:
     """Select stay vs admitted substrate migration by complete capability-aware comparison.
 
@@ -470,7 +799,25 @@ def _select_form_transition(
         if migration_target_relevant
         else 0
     )
-    if probe_cost_required:
+    durable_round = {
+        "budget": genesis.budget,
+        "round_digest": "",
+        "replay_selection": None,
+        "durable": False,
+    }
+    if migration_target_relevant and probe_cost_required:
+        durable_round = _prepare_transition_probe_round(
+            genesis,
+            identity=identity,
+            current=current,
+            destination=destination,
+            substrate_records=substrate_records,
+            probe_cost_required=probe_cost_required,
+            checkpoint_directory=checkpoint_directory,
+        )
+        if durable_round["replay_selection"] is not None:
+            return dict(durable_round["replay_selection"])
+    elif probe_cost_required:
         remaining = genesis.budget.remaining("probes")
         if remaining < probe_cost_required:
             raise MetamorphicCampaignError(
@@ -478,6 +825,7 @@ def _select_form_transition(
                 % (probe_cost_required, remaining)
             )
 
+    probe_budget = durable_round["budget"]
     probe_results: dict[str, dict[str, Any]] = {}
     if migration_target_relevant:
         # ``identity['substrates']`` is already canonicalised by substrate identity digest.  Verify
@@ -498,8 +846,13 @@ def _select_form_transition(
             probe_results[name] = migration.discover(
                 substrate,
                 [program_forms.REBIND_OPERATION],
-                genesis.budget,
+                probe_budget,
             )
+
+    if isinstance(probe_budget, _PrepaidProbeBudget) and probe_budget.unused() != 0:
+        raise MetamorphicCampaignError(
+            "architectural transition did not consume its complete durably prepaid probe round"
+        )
 
     for substrate_record in substrate_records:
         name = str(substrate_record["name"])
@@ -551,6 +904,8 @@ def _select_form_transition(
         "candidates": candidates,
         "complete_relevant_candidate_set_probed": True,
         "probe_cost_required": probe_cost_required,
+        "durable_probe_round_digest": str(durable_round["round_digest"]),
+        "probe_budget_precommitted": bool(durable_round["round_digest"]),
         "selection_reason": reason,
         "accepted": selected is not None,
         "selected_candidate_digest": "" if selected is None else selected["candidate_digest"],
@@ -570,6 +925,7 @@ def _select_form_transition(
             "selected_candidate_digest": record["selected_candidate_digest"],
             "candidate_digests": [item["candidate_digest"] for item in candidates],
             "probe_cost_required": probe_cost_required,
+            "durable_probe_round_digest": record["durable_probe_round_digest"],
         },
     )
     return record
@@ -734,7 +1090,9 @@ def run(
             )
         elif isinstance(stage, FormRequirementStage):
             _assert_world_registry_matches_policy(genesis, stage.world, seed_policy=seed_policy)
-            selection = _select_form_transition(genesis, stage, identity)
+            selection = _select_form_transition(
+                genesis, stage, identity, checkpoint_directory=checkpoint_path
+            )
             entry: dict[str, Any] = {
                 "index": index,
                 "stage_digest": identity["stage_digest"],
@@ -745,6 +1103,11 @@ def run(
             if not selection["accepted"]:
                 entry["stopped"] = True
                 entry["reason"] = selection["selection_reason"]
+                _complete_transition_probe_round(
+                    genesis,
+                    str(selection.get("durable_probe_round_digest") or ""),
+                    selection,
+                )
                 if checkpoint_path is not None:
                     entry["campaign_checkpoint_digest"] = genesis.persist(checkpoint_path)["checkpoint"]
                     entry["durable_before_next_stage"] = True
@@ -785,6 +1148,13 @@ def run(
                 raise MetamorphicCampaignError("transition selector returned an unknown action")
         else:  # pragma: no cover
             raise MetamorphicCampaignError("campaign contains an unrecognised stage")
+
+        if isinstance(stage, FormRequirementStage):
+            _complete_transition_probe_round(
+                genesis,
+                str(selection.get("durable_probe_round_digest") or ""),
+                selection,
+            )
 
         cursor = _write_cursor(
             genesis,

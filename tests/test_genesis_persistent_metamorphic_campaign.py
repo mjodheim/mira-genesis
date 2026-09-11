@@ -512,3 +512,92 @@ def test_form_transition_refuses_incomplete_probe_round_before_first_spend(tmp_p
         if (entry.get("payload") or {}).get("arm") == "architectural_transition_selection"
     ]
     assert selections == []
+
+
+
+def test_architectural_probe_budget_survives_crash_after_selection_before_migration(
+    monkeypatch, tmp_path
+):
+    genesis = _genesis()
+    stages = _adaptive_stages()
+    prefix = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=1,
+    )
+    assert prefix["next_stage"] == 1
+    assert genesis.budget.spent["probes"] == 0
+
+    def crash_after_selection(*args, **kwargs):
+        raise RuntimeError("synthetic process death after architectural selection")
+
+    monkeypatch.setattr(campaign, "_run_form_migration", crash_after_selection)
+    with pytest.raises(RuntimeError, match="synthetic process death"):
+        campaign.run(
+            genesis,
+            stages,
+            max_rounds_per_objective=96,
+            checkpoint_directory=tmp_path,
+            max_stages=1,
+        )
+
+    # The complete physical probe round was charged and checkpointed *before* the probe/selection.
+    assert genesis.budget.spent["probes"] == 1
+    restored = recovery.restore_lineage(tmp_path, grade=fixtures.grade_expected)
+    assert restored.budget.spent["probes"] == 1
+
+    # The prior process may have physically probed after its charged checkpoint.  The conservative
+    # restart policy therefore refuses a redraw rather than refunding or silently rerunning work.
+    with pytest.raises(
+        campaign.MetamorphicCampaignError,
+        match="crashed after its probe budget was charged; redraw is refused",
+    ):
+        campaign.run(
+            restored,
+            stages,
+            max_rounds_per_objective=96,
+            checkpoint_directory=tmp_path,
+            max_stages=1,
+        )
+    assert restored.budget.spent["probes"] == 1
+
+
+def test_rejected_architectural_selection_replays_without_second_probe_spend(tmp_path):
+    genesis = _genesis()
+    bad = migration.Substrate("bad-portable", {})
+    stages = (
+        campaign.objective(_world(OBJECTIVE_ONE), name="learn-square"),
+        campaign.require_form(
+            _form_requirement_world_with_substrates((bad,)),
+            (program_forms.PORTABLE_PROGRAM_TARGET,),
+            name="durable-no-viable-transition",
+        ),
+    )
+    first = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+    )
+    assert first["next_stage"] == 1
+    assert first["executed"][-1]["transition_selection"]["accepted"] is False
+    assert genesis.budget.spent["probes"] == 1
+
+    restored = recovery.restore_lineage(tmp_path, grade=fixtures.grade_expected)
+    second = campaign.run(
+        restored,
+        stages,
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=1,
+    )
+    assert second["next_stage"] == 1
+    assert second["executed"][-1]["transition_selection"]["accepted"] is False
+    assert second["executed"][-1]["transition_selection"]["durable_probe_round_digest"]
+    assert restored.budget.spent["probes"] == 1
