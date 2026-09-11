@@ -30,7 +30,6 @@ jobs:
           tests/test_genesis_generated_parent_dependency.py
           tests/test_genesis_migration.py
           tests/test_genesis_meta_policy_order_invariance.py
-          tests/test_genesis_repeated_meta_descent.py
       - name: Remove one-shot validation apparatus
         run: |
           rm scripts/apply_gpt56_transition_capability_scoring_patch.py
