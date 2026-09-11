@@ -206,6 +206,7 @@ def migrate(
     tasks: Sequence[Mapping[str, Any]] | None = None,
     permit_capability_loss: bool = False,
     translation_provenance: Mapping[str, Any] | None = None,
+    require_executable_target_change: bool = False,
 ) -> dict[str, Any]:
     """Carry a lineage into `substrate`, and prove it arrived as the same lineage.
 
@@ -252,6 +253,42 @@ def migrate(
         )
     if not callable(body_factory):
         raise MigrationError("the translation did not produce a body factory")
+
+    executable_form_change = None
+    if require_executable_target_change:
+        # A different configured target *string* is not evidence of a different executable form.
+        # Bind the claim to the resolved target artifacts that ConfiguredBody already content-addresses.
+        # This is checked before capability measurement or state assignment, so a relabel-only
+        # translation fails closed without half-migrating the lineage.
+        departure_artifact = artifact_digest_of(genesis.body_factory)
+        candidate_artifact = artifact_digest_of(body_factory)
+
+        def resolved_target(artifact):
+            if artifact.get("kind") != "configured_artifact":
+                return None
+            configuration = artifact.get("configuration")
+            if not isinstance(configuration, Mapping):
+                return None
+            target = configuration.get("target_artifact")
+            return dict(target) if isinstance(target, Mapping) else None
+
+        departure_target = resolved_target(departure_artifact)
+        arrival_target = resolved_target(candidate_artifact)
+        if departure_target is None or arrival_target is None:
+            raise MigrationError(
+                "an executable-form change requires reconstructible configured target identities"
+            )
+        if departure_target.get("artifact_digest") == arrival_target.get("artifact_digest"):
+            raise MigrationError(
+                "the translation changed the form label but not the resolved executable target artifact"
+            )
+        executable_form_change = {
+            "required": True,
+            "verified": True,
+            "identity_basis": "resolved_target_artifact_v1",
+            "departure_target_artifact": departure_target,
+            "arrival_target_artifact": arrival_target,
+        }
 
     # Derived from what the translation actually invoked, not from what its caller declared.
     actually_used = handles.used()
@@ -359,6 +396,8 @@ def migrate(
         "arrived_body_artifact": arrival_artifact,
         "evolved_after_migration": False,
     }
+    if executable_form_change is not None:
+        record["executable_form_change"] = executable_form_change
     record["migration_digest"] = digest_of(record)
     return record
 

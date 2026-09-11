@@ -130,6 +130,13 @@ def test_campaign_cursor_owns_migration_handoff_and_resumes_after_process_death(
     assert prefix["next_stage"] == 2
     assert [step["type"] for step in prefix["executed"]] == ["objective", "form_migration"]
     assert prefix["migration"]["capability"]["preserved"] is True
+    form_change = prefix["migration"]["executable_form_change"]
+    assert form_change["verified"] is True
+    assert form_change["identity_basis"] == "resolved_target_artifact_v1"
+    assert (
+        form_change["departure_target_artifact"]["artifact_digest"]
+        != form_change["arrival_target_artifact"]["artifact_digest"]
+    )
     assert prefix["metamorphosis"]["succeeded"] is False
     assert prefix["metamorphosis"]["accepted_after_migration"] == 0
     assert genesis.body_factory.target == program_forms.PORTABLE_PROGRAM_TARGET
@@ -301,3 +308,33 @@ def test_campaign_refuses_resealed_cursor_rollback_despite_valid_prefix():
     _forge_cursor(genesis, stages, next_stage=0)
     with pytest.raises(campaign.MetamorphicCampaignError, match="journal evidence"):
         campaign.run(genesis, stages, max_stages=0)
+
+
+
+def test_campaign_refuses_form_relabel_when_resolved_interpreter_artifact_is_unchanged(monkeypatch, tmp_path):
+    genesis = _genesis()
+    stages = _stages()
+    first = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+        max_stages=1,
+    )
+    assert first["next_stage"] == 1
+    assert genesis.body_factory.target == programs.PROGRAM_TARGET
+    generation_before = genesis.state["generation"]
+
+    # Keep the admitted portable target *name* but bind that module attribute to the canonical
+    # interpreter itself.  A string-only form check accepts this relabel.  The repaired migration
+    # compares the content-addressed resolved target artifacts before committing any arrival state.
+    monkeypatch.setattr(program_forms, "portable_program_body", programs.program_body)
+    with pytest.raises(migration.MigrationError, match="resolved executable target artifact"):
+        campaign.run(genesis, stages, checkpoint_directory=tmp_path, max_stages=1)
+
+    assert genesis.body_factory.target == programs.PROGRAM_TARGET
+    assert genesis.state["generation"] == generation_before
+    cursor = campaign._validate_cursor(genesis, campaign.campaign_record(genesis, stages))
+    assert cursor is not None and cursor["next_stage"] == 1
