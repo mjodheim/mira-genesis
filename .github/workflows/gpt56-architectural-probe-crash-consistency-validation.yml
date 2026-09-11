@@ -38,9 +38,7 @@ jobs:
           rm scripts/fix_gpt56_architectural_probe_crash_patch_anchor.py
           rm .github/workflows/gpt56-architectural-probe-crash-consistency-validation.yml
       - name: Check repository structure
-        run: |
-          python scripts/check_genesis_orphans.py
-          python scripts/check_declared_dependencies.py
+        run: python scripts/check_repository_integrity.py
       - name: Publish clean validated tree
         run: |
           git config user.name 'Anthony Mets'
