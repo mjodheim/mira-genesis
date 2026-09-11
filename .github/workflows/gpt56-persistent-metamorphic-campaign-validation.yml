@@ -1,0 +1,48 @@
+name: GPT56 persistent metamorphic campaign validation
+
+on:
+  push:
+    branches:
+      - validation/gpt56-genesis-persistent-metamorphic-campaign-20260911
+
+permissions:
+  contents: write
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install package
+        run: python -m pip install -e '.[dev]'
+      - name: Run campaign and inherited metamorphosis regressions
+        run: >-
+          python -m pytest -q
+          tests/test_genesis_persistent_metamorphic_campaign.py
+          tests/test_genesis_generated_parent_dependency.py
+          tests/test_genesis_post_migration_form_continuation.py
+          tests/test_genesis_repeated_meta_policy_descent.py
+          tests/test_genesis_meta_policy_order_invariance.py
+          tests/test_genesis_generated_policy_mutation.py
+          tests/test_genesis_migration.py
+          tests/test_genesis_loop.py
+          tests/test_genesis_artifact_immutability.py
+          tests/test_genesis_recovery.py
+      - name: Remove one-shot validation workflow
+        run: rm .github/workflows/gpt56-persistent-metamorphic-campaign-validation.yml
+      - name: Check repository structure
+        run: |
+          python scripts/check_repository_integrity.py --orphans
+          python scripts/check_repository_integrity.py --dependencies
+      - name: Publish clean validated tree
+        run: |
+          git config user.name 'Anthony Mets'
+          git config user.email '110968830+mjodheim@users.noreply.github.com'
+          git add -A
+          git commit -s -m 'feat(genesis): persist the metamorphic campaign across form change'
+          git push origin HEAD:validation/gpt56-genesis-persistent-metamorphic-campaign-20260911
