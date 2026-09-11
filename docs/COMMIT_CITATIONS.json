@@ -7,9 +7,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M112/RESULT_SUMMARY.md",
         "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
@@ -45,8 +45,8 @@
       "subject": "feat(m039): canonical three-cycle lineage with bounded Gate 2 and Gate 9",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "06c23402e443dec699d7caf11595baebd1ae8409": {
@@ -66,9 +66,9 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M071/AGENT_DESIGN_FREEZE.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.md",
         "experiments/M071/EXECUTION_PROTOCOL.json",
@@ -83,9 +83,9 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M071/DEVELOPMENT_QUALIFICATION.md"
       ]
     },
@@ -93,9 +93,9 @@
       "subject": "feat: freeze the M086-C protocol before any harness, bank or holdout",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -104,8 +104,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "0bb19744e2782925222ebb83aa56918eb874ab53": {
@@ -123,8 +123,8 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -132,9 +132,9 @@
       "subject": "feat: freeze M082 browser protocol and build recipe before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M082/RESULT.md",
         "experiments/M082/STATUS.md"
       ]
@@ -153,10 +153,10 @@
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -165,10 +165,10 @@
       "subject": "M057: the lineage constructs its own migration path",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "1081ed1276d5d5048ec78cb3c3348b6ba7c4ac08": {
@@ -193,10 +193,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M053/DEVELOPMENT_RESULT.md"
       ]
     },
@@ -207,9 +207,9 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M071/AGENT_DESIGN_FREEZE.json",
         "experiments/M071/AGENT_DESIGN_FREEZE.md",
         "experiments/M071/EXECUTION_PROTOCOL.json",
@@ -221,18 +221,38 @@
       "subject": "M060: the whole body crosses into WebAssembly",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "18402be50eec77d099a7a6bafe1a76fe7dcf40ab": {
       "subject": "M048: integrate genuine Node runtime migration",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
+      ]
+    },
+    "1a696e17a6ae176c837ce844891e29535d145803": {
+      "subject": "science(m115): freeze tested system before reveal",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "experiments/M115/RESULT.json",
+        "experiments/M115/REVEAL_AUTHORIZATION.json",
+        "tests/test_m115_instrument_aborted.py"
+      ]
+    },
+    "1b13154e73fd1abea5291bed52defc1990d7e826": {
+      "subject": "fix: use full 40-char SHAs in COMMIT_CITATIONS.json for reachability check compatibility",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
       ]
     },
     "1b862ab9afaec13cf16c7fcc6da7c297956424d4": {
@@ -240,10 +260,10 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M098/POST_VERDICT_ANALYSIS.md",
         "experiments/M098/RESULT.json"
       ]
@@ -263,8 +283,8 @@
       "cited_in": [
         "CHANGELOG.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "1c8b4d25a08feaa11f690308bab8ea02430be8c1": {
@@ -280,9 +300,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "1dfd04b939b474047cff1c7196b512ea6c3d21f5": {
@@ -299,9 +319,9 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M074/SCIENTIFIC_RESULT.md",
         "experiments/M074/STATUS.md"
       ]
@@ -310,16 +330,16 @@
       "subject": "M041: canonical negative single-lineage completion audit",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "210e8f048e47deb9434df1e10db0e8010a2710e5": {
       "subject": "feat(m094): bind the result to the protocol and the tree it ran against",
       "preserved_by": "main",
       "cited_in": [
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/POST_VERDICT_DISCLOSURE.md",
         "experiments/M094/WITHDRAWN_RESULT_ATTEMPT_1.json"
@@ -365,13 +385,20 @@
         "docs/COMMIT_CITATIONS.json"
       ]
     },
+    "2707ab012d1f85aba3c51f7fdeeb0d54e7d30329": {
+      "subject": "fix: update existing tests for new no_fallback_attested/selected_endpoint_exact semantics; register 6c7ab62 in citations",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "27a2e1fd14fae09116cec9f8f8f05a958bdbe552": {
       "subject": "feat: qualify M074 apparatus and reclassify M069",
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M074/DEVELOPMENT_QUALIFICATION.md"
       ]
     },
@@ -390,11 +417,11 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M074/SCIENTIFIC_RESULT.md",
         "experiments/M074/STATUS.md"
       ]
@@ -412,10 +439,10 @@
       "subject": "M061: discovering the instructions that move data and direct control",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "2c4ffa3e039fc792ee172af8287b2c5aef07fa84": {
@@ -424,7 +451,7 @@
       "cited_in": [
         "DECISIONS.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
         "experiments/M112/RESULT_SUMMARY.md",
         "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
@@ -434,10 +461,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "PROVENANCE.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M066/DEVELOPMENT_RESULT.md",
         "experiments/M066/STATUS.md",
         "results/M066_CANONICAL_RESULT.md",
@@ -451,8 +478,8 @@
       "subject": "m073: preserve frozen external teacher responses",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -470,8 +497,8 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -480,10 +507,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M073/STATUS.md"
       ]
@@ -501,8 +528,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "312bbb145af6e11473dde5cd21bcb0602ddc41d1": {
@@ -518,9 +545,9 @@
       "subject": "feat: freeze M077 long-horizon recovery protocol before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M077/RESULT.md",
         "experiments/M077/STATUS.md"
       ]
@@ -548,8 +575,8 @@
       "subject": "m073: preserve first skill appropriation result",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M073/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M073/STATUS.md"
       ]
@@ -582,8 +609,8 @@
       "subject": "docs(m052): define bounded equivalence-pruning protocol",
       "preserved_by": "provenance/3ab33da",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M052/DEVELOPMENT_RESULT.md",
         "experiments/M052/PROTOCOL.md"
       ]
@@ -594,10 +621,10 @@
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M097/RESULT.json"
       ]
     },
@@ -606,8 +633,8 @@
       "preserved_by": "provenance/3bc3b50",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M050/DEVELOPMENT_RESULT.md",
         "experiments/M050/PROTOCOL.md"
       ]
@@ -616,9 +643,9 @@
       "subject": "test: materialize the M086-B bank and holdout, in that order",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -643,8 +670,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "405ff2024465b5465b2c1551b47598b94134af18": {
@@ -676,10 +703,10 @@
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M070/AGENT_DESIGN_FREEZE.json",
         "experiments/M070/AGENT_DESIGN_FREEZE.md",
         "experiments/M070/EXECUTION_PROTOCOL.json",
@@ -694,8 +721,8 @@
       "subject": "Merge pull request #193 from mjodheim/codex/m103-acquisition-machinery",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M103/PROTOCOL.json",
         "experiments/M103/RESULT.json",
         "tests/test_m103_protocol_candidate.py"
@@ -707,7 +734,7 @@
       "cited_in": [
         "DECISIONS.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
         "experiments/M112/RESULT_SUMMARY.md",
         "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
@@ -726,10 +753,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M094/POST_VERDICT_DISCLOSURE.md",
         "experiments/M094/RESULT.json"
       ]
@@ -738,8 +765,8 @@
       "subject": "feat: add the M079 planning world, planner and matched ablations",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M079/RESULT.md",
         "experiments/M079/STATUS.md"
       ]
@@ -757,17 +784,17 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "48a4d5d0f6a25de275e646e5abb876fc912024fb": {
       "subject": "M042: positive constructive canonical-lineage completion",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "48be7c06a42edaec1d33f8a46a3407dbc3a098c2": {
@@ -782,9 +809,9 @@
       "subject": "freeze(m092-b): bind the extension protocol before search",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "49a72af03456bceae7105b5e243fd2e36c59c41d": {
@@ -800,9 +827,9 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M066/CANONICAL_ARMED.json",
         "experiments/M066/DEVELOPMENT_RESULT.md",
         "experiments/M066/STATUS.md",
@@ -818,8 +845,8 @@
       "subject": "feat: add G2 grounding harness and record amendment A1",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -829,10 +856,10 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M088/RESULT.md"
       ]
     },
@@ -849,9 +876,9 @@
       "subject": "feat: add the M086-C harness, with no bank materialized",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -860,9 +887,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M112/RESULT.json",
         "experiments/M112/RESULT_SUMMARY.md",
         "experiments/M112/REVEAL_AUTHORIZATION.json",
@@ -897,8 +924,8 @@
       "subject": "feat: add the M081 two-environment harness and record amendment A1",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M081/RESULT.md",
         "experiments/M081/STATUS.md"
       ]
@@ -907,8 +934,8 @@
       "subject": "M050: bounded composition of migration primitives",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "55a34a90bdc0033c7f1eb811a315516dea14acff": {
@@ -940,8 +967,8 @@
       "subject": "test: preserve the first G2 grounding result and its checker",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "57603b71f848ce1605c2cf8607907735441bfaf4": {
@@ -949,9 +976,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "58449266787257c24e1a22a1a3b91f92dd178211": {
@@ -966,9 +993,9 @@
       "subject": "test: materialize the M086-C bank and holdout, in that order",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086C/RESULT.md"
       ]
     },
@@ -976,8 +1003,8 @@
       "subject": "test: bind M072 scenario suite before evaluation",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M072/RESULT.json",
         "experiments/M072/RESULT.md",
         "experiments/M072/STATUS.md",
@@ -1028,6 +1055,15 @@
         "experiments/M023/STATUS.md"
       ]
     },
+    "5be5afa7abb9f55ec44797a7000ca4e4518776cb": {
+      "subject": "science(m115): authorize the single H60 reveal",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/RESULT.json",
+        "tests/test_m115_instrument_aborted.py"
+      ]
+    },
     "5c952cb069600fc1e15adce09f3d6f616ee82af4": {
       "subject": "science(m101): preserve canonical first result",
       "preserved_by": "main",
@@ -1042,10 +1078,10 @@
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M091/REGISTER_CLAIM.json",
         "experiments/M091/RESULT.md"
       ]
@@ -1064,8 +1100,8 @@
       "subject": "test: bind the frozen G2 episode suite before any arm result",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -1074,8 +1110,8 @@
       "subject": "science(m102): supersede owner-review candidate",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M102/PROTOCOL.json",
         "experiments/M102/README.md",
         "experiments/M102/RESULT.json",
@@ -1085,15 +1121,23 @@
         "scripts/build_m103_protocol.py"
       ]
     },
+    "6165699e8de4f0c89fffa7242eaab65235cdbd5f": {
+      "subject": "science(m115): seal the qualifying H60 bank",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/REVEAL_AUTHORIZATION.json"
+      ]
+    },
     "616f31619e7337dd0c114fc1f09e1cefa1a8f7fd": {
       "subject": "ci: pin and report the M048 Node runtime",
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -1102,8 +1146,8 @@
       "subject": "M040: canonical positive cumulative post-migration plasticity",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "62a29b0a921e9907a24e3f82944ab4adb400775a": {
@@ -1112,10 +1156,10 @@
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M099/RESULT.json"
       ]
     },
@@ -1146,8 +1190,8 @@
       "subject": "M049: integrate bounded migration-strategy selection",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "6928cf2abf714864c69f0571879af424ed09c741": {
@@ -1195,6 +1239,13 @@
         "results/artifacts/M041_CANONICAL_RESULT.json"
       ]
     },
+    "6c7ab62b856e74926586fc49fe8344c417a3bc38": {
+      "subject": "Merge pull request #228 from mjodheim/agent/hati/m115-instrumental-audit-v2",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json"
+      ]
+    },
     "6cc064bc07e2187ef51311a6a48fd96b445bd5b6": {
       "subject": "test: freeze M071 external execution protocol",
       "preserved_by": "main",
@@ -1216,19 +1267,19 @@
       "subject": "M059: the lineage judges whether its substrate still suits it",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "7002e4a843f347d4f494946a3c8a1fbb2d07387f": {
       "subject": "fix: the leak scanner flagged the payload schema document as a payload",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M075B/STATUS.md"
       ]
     },
@@ -1236,17 +1287,17 @@
       "subject": "m092(canonical): arm first immutable criterion search",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "720bad446fbe8a72eb7990288b0c21cbbbfc74f9": {
       "subject": "feat: add M077 shift harness and record its negative dissociation",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M077/RESULT.md",
         "experiments/M077/STATUS.md"
       ]
@@ -1255,19 +1306,19 @@
       "subject": "M055: complete the experiment and record its negative result",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "760803c4eee9c03caf25d2403c5f072343e17572": {
       "subject": "m073: commit induced skill capsule before holdouts",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M073/HOLDOUT_TASKS.json",
         "experiments/M073/RESULT.md",
         "experiments/M073/STATUS.md",
@@ -1278,8 +1329,8 @@
       "subject": "m073: preregister model-to-lineage skill appropriation",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M073/CAPSULE_INDUCTION.json",
         "experiments/M073/HOLDOUT_TASKS.json",
         "experiments/M073/RESULT.md",
@@ -1297,9 +1348,9 @@
       "subject": "feat: freeze M081 two-real-environment protocol before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M081/RESULT.md",
         "experiments/M081/STATUS.md"
       ]
@@ -1327,11 +1378,11 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M067/DEVELOPMENT_RESULT.md",
         "experiments/M067/PROTOCOL.md"
       ]
@@ -1366,8 +1417,8 @@
       "subject": "feat: add the M083 GUI desktop environment and runner",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M083/RESULT.md",
         "experiments/M083/STATUS.md"
       ]
@@ -1377,10 +1428,10 @@
       "preserved_by": "main",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M048/DEVELOPMENT_RESULT.md",
         "experiments/M048/PROTOCOL.md"
       ]
@@ -1400,7 +1451,7 @@
       "cited_in": [
         "DECISIONS.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
         "experiments/M112/RESULT_SUMMARY.md",
         "papers/genesis-ii-preprint/REPRODUCIBILITY.md"
       ]
@@ -1409,9 +1460,9 @@
       "subject": "M046: launch integrated development qualification",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M046/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M046/PROTOCOL.md",
         "results/M046_DEVELOPMENT_RESULT.md"
@@ -1445,9 +1496,9 @@
       "subject": "feat: freeze the M086 evolvable improvement mechanism protocol before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086/RESULT.md"
       ]
     },
@@ -1509,11 +1560,11 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M095/POST_VERDICT_ANALYSIS.md",
         "experiments/M095/RESULT.json"
       ]
@@ -1523,8 +1574,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M105/CHECKER_FAILURE.json"
       ]
     },
@@ -1532,8 +1583,8 @@
       "subject": "feat: add the M082 browser environment under M081's interface",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M082/RESULT.md",
         "experiments/M082/STATUS.md"
       ]
@@ -1542,9 +1593,9 @@
       "subject": "feat: freeze the M086-B protocol before any harness, bank or holdout",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -1570,9 +1621,9 @@
       "subject": "feat: add the M086-B harness and checker, with no bank materialized",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M086B/RESULT.md"
       ]
     },
@@ -1589,19 +1640,19 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
       "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/PROTOCOL.json",
         "tests/test_m094_design_audit.py"
@@ -1623,8 +1674,8 @@
       "subject": "test: freeze blind M070 task selection rule",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M070/EXECUTION_PROTOCOL.json",
         "experiments/M070/TASK_SELECTION.json"
       ]
@@ -1634,29 +1685,38 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "9d482d21110cb258e80d02298b215cb14e6b2bcb": {
       "subject": "research: freeze M069 governed terminal tasks",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M069/DEVELOPMENT_RESULT.md",
         "experiments/M069/STATUS.md",
         "metamorphosis/m069_governed_terminal_repair.py"
+      ]
+    },
+    "9d5c295be6140a16022045ac95a6f660aaaac629": {
+      "subject": "result(m115): preserve the terminal H60 reveal outcome",
+      "preserved_by": "main",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "experiments/M115/CHECK_REPORT.json",
+        "tests/test_m115_instrument_aborted.py"
       ]
     },
     "9d727e5621d46cb801b08ac2184e8c3d7a75a3b2": {
       "subject": "M058: the lineage discovers which instructions exist",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "9e0bff76bb8e4dc17f1d78f257353ac9867afcf2": {
@@ -1672,19 +1732,19 @@
       "subject": "M056: a second migration, and what survives it",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "a1409bfd56aea7216b049ff53ef9ed06d07d5f5a": {
       "subject": "feat: freeze M083 GUI desktop protocol and image recipe before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M083/RESULT.md",
         "experiments/M083/STATUS.md"
       ]
@@ -1704,9 +1764,9 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M065/PROTOCOL.md",
         "experiments/M066/FROZEN_PROTOCOL.json",
@@ -1719,8 +1779,8 @@
       "subject": "m072: freeze causal governance hypothesis before implementation",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M072/RESULT.json",
         "experiments/M072/RESULT.md",
         "experiments/M072/SCENARIO_COMMITMENT.json",
@@ -1741,9 +1801,9 @@
       "subject": "freeze(m092-a): seal the state-owned substrate checkpoint",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M092/PROTOCOL.json",
         "scripts/check_m092b_protocol.py"
       ]
@@ -1763,9 +1823,9 @@
       "subject": "M042: allow frozen canonical head checkout",
       "preserved_by": "provenance/ae8b4dc",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M042/STATUS.md",
         "results/artifacts/M042_CANONICAL_AUDIT.json",
         "results/artifacts/M042_CANONICAL_FIRST_RESULT_SEAL.json"
@@ -1775,8 +1835,8 @@
       "subject": "feat: add the M078 opaque-body discoverer and incompatible bank",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M078/RESULT.md",
         "experiments/M078/STATUS.md"
       ]
@@ -1794,9 +1854,9 @@
       "cited_in": [
         "CHANGELOG.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M065/CANONICAL_ARMED.json",
         "experiments/M065/DEVELOPMENT_RESULT.md",
         "experiments/M066/PROTOCOL.md"
@@ -1806,8 +1866,8 @@
       "subject": "fix(m103): make protocol bindings checkout-stable",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M103/PROTOCOL_CANDIDATE.json",
         "tests/test_m103_protocol_candidate.py"
       ]
@@ -1834,11 +1894,11 @@
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "docs/GENESIS_II_RESEARCH_PLAN.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M101/RESULT.json",
         "experiments/M101/RESULT.md",
         "experiments/M102/PRE_REGISTRATION.md",
@@ -1849,9 +1909,9 @@
       "subject": "feat: freeze M080 continual retention protocol before the lineage",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
       ]
@@ -1896,8 +1956,8 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M114/FREEZE_WITHDRAWN.md",
         "tests/test_m114_freeze.py"
       ]
@@ -1906,8 +1966,8 @@
       "subject": "test: preserve the first M084 result",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M084/STATUS.md"
       ]
     },
@@ -1915,8 +1975,8 @@
       "subject": "M052: exact finite-domain behavioral-equivalence pruning (#71)",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "bc6e73c591cc9e996d5cb22ded71384b57d0c8cc": {
@@ -1935,9 +1995,16 @@
       "subject": "science(m102): freeze owner-accepted protocol",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M102/README.md"
+      ]
+    },
+    "c1e8f3cd30c314f55d511dc2409324ac7df343b8": {
+      "subject": "feat(genesis): select bounded form transition from lineage evidence",
+      "preserved_by": "milestone/genesis-development-metamorphosis-v1",
+      "cited_in": [
+        "docs/milestones/GENESIS_DEVELOPMENT_METAMORPHOSIS_TARGET_2026-09-11.md"
       ]
     },
     "c3612588343e10ed15347bc7d57470150e4d6966": {
@@ -1961,10 +2028,10 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M100/RESULT.json",
         "experiments/M100/RESULT.md",
         "experiments/M101/PRE_REGISTRATION.md",
@@ -1988,8 +2055,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M105/CHECKER_FAILURE.json"
       ]
     },
@@ -2000,10 +2067,10 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M069/DEVELOPMENT_RESULT.md",
         "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.json",
         "experiments/M069/EVALUATOR_ISOLATION_DISCLOSURE.md",
@@ -2025,9 +2092,9 @@
       "subject": "M042: freeze constructive canonical selection",
       "preserved_by": "provenance/ae8b4dc",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M042/STATUS.md"
       ]
     },
@@ -2036,8 +2103,8 @@
       "preserved_by": "provenance/c75e9e7",
       "cited_in": [
         "FAILURE_LOG.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M050/DEVELOPMENT_RESULT.md",
         "experiments/M050/PROTOCOL.md"
       ]
@@ -2046,9 +2113,9 @@
       "subject": "M047: launch integrated development qualification",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M047/DEVELOPMENT_QUALIFICATION.md",
         "experiments/M047/PROTOCOL.md",
         "results/M047_DEVELOPMENT_RESULT.md"
@@ -2066,17 +2133,17 @@
       "subject": "feat(m038): canonical two-speed lineage with causal journal (#53)",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "cd55035119af31824fe5b0b2751c161c2acd3708": {
       "subject": "feat: freeze G2 multimodal grounding protocol before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M076/RESULT.md",
         "experiments/M076/STATUS.md"
       ]
@@ -2128,10 +2195,10 @@
       "cited_in": [
         "CHANGELOG.md",
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M096/RESULT.json"
       ]
     },
@@ -2139,8 +2206,8 @@
       "subject": "M047: integrate modular software lineage",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "d4eb5ed981727fd1343e6e1031494771d9dec220": {
@@ -2148,10 +2215,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M063/DEVELOPMENT_RESULT.md",
         "experiments/M063/PROTOCOL.md"
       ]
@@ -2169,9 +2236,9 @@
       "subject": "feat: freeze M079 planning and clarification protocol before planner",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M079/RESULT.md",
         "experiments/M079/STATUS.md"
       ]
@@ -2190,8 +2257,8 @@
       "subject": "feat: add the M080 shared-table lineage and matched ablations",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M080/RESULT.md",
         "experiments/M080/STATUS.md"
       ]
@@ -2209,11 +2276,11 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M087/RESULT.md"
       ]
     },
@@ -2222,9 +2289,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M103/CHECKER_FAILURE.json"
       ]
     },
@@ -2241,9 +2308,9 @@
       "preserved_by": "provenance/2dc997b",
       "cited_in": [
         "CHANGELOG.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "tests/test_repository_integrity.py"
       ]
@@ -2253,8 +2320,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
     "de85e31b95520d0ff90e451d192d106cf56589a8": {
@@ -2280,9 +2347,9 @@
       "subject": "Merge pull request #170 from mjodheim/agent/hati/m093-post-audit",
       "preserved_by": "main",
       "cited_in": [
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
         "docs/REPOSITORY_AUDIT_2026_08_18.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M094/DESIGN_AUDIT.md",
         "experiments/M094/PROTOCOL.json"
       ]
@@ -2291,8 +2358,8 @@
       "subject": "M051: bounded variable-length primitive composition",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "e00ddd50bde96c043c98f32f16c78b09eb00196c": {
@@ -2300,9 +2367,9 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "docs/COMMIT_CITATIONS.json",
-        "docs/CURRENT_RESEARCH_FRONTIER.md",
+        "docs/state-history/CURRENT_RESEARCH_FRONTIER_2026-08-26.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
         "experiments/M112/RESULT.json",
         "experiments/M112/RESULT_SUMMARY.md",
         "experiments/M112/REVEAL_AUTHORIZATION.json",
@@ -2313,8 +2380,8 @@
       "subject": "test: commit M075 public model development protocol",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
     },
@@ -2334,8 +2401,8 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.yaml",
-        "docs/COMMIT_CITATIONS.json"
+        "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml"
       ]
     },
     "e68b85ea43653fdeeb5ada4847a7a57f235eefc7": {
@@ -2359,8 +2426,8 @@
       "subject": "m073: bind holdouts after capsule boundary",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M073/STATUS.md"
       ]
     },
@@ -2368,8 +2435,8 @@
       "subject": "feat: add M075 public model comparison runner",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M075/MODEL_DEVELOPMENT_PROTOCOL.json",
         "experiments/M075/MODEL_DEVELOPMENT_RESULT.md"
       ]
@@ -2380,9 +2447,9 @@
       "cited_in": [
         "CHANGELOG.md",
         "FAILURE_LOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M064/DEVELOPMENT_RESULT.md",
         "experiments/M064/PROTOCOL.md",
         "experiments/M065/FROZEN_PROTOCOL.json",
@@ -2396,9 +2463,9 @@
       "subject": "feat: freeze M084 integrated persistent embodiment protocol before harness",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M084/RESULT.md",
         "experiments/M084/STATUS.md"
       ]
@@ -2418,10 +2485,10 @@
         "CHANGELOG.md",
         "DECISIONS.md",
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M068/DEVELOPMENT_RESULT.md",
         "experiments/M068/STATUS.md"
       ]
@@ -2430,9 +2497,9 @@
       "subject": "feat: add the M084 persistent lineage and record amendments A1-A3",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M084/RESULT.md",
         "experiments/M084/STATUS.md"
       ]
@@ -2459,10 +2526,10 @@
       "preserved_by": "main",
       "cited_in": [
         "CHANGELOG.md",
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "ROADMAP.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M062/DEVELOPMENT_RESULT.md",
         "experiments/M062/PROTOCOL.md"
       ]
@@ -2471,9 +2538,9 @@
       "subject": "feat: freeze M078 incompatible-body refusal protocol before discoverer",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M078/RESULT.md",
         "experiments/M078/STATUS.md"
       ]
@@ -2483,10 +2550,10 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M089/RESULT.md"
       ]
     },
@@ -2494,9 +2561,9 @@
       "subject": "research: freeze M068 target command languages",
       "preserved_by": "main",
       "cited_in": [
-        "PROJECT_STATE.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M068/DEVELOPMENT_RESULT.md",
         "experiments/M068/STATUS.md",
         "metamorphosis/m068_open_command_induction.py"
@@ -2507,8 +2574,8 @@
       "preserved_by": "main",
       "cited_in": [
         "PHASE_8_ADAPTIVE_EMBODIMENT_AGENDA.md",
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M071/EXECUTION_PROTOCOL.json",
         "experiments/M071/EXTERNAL_RESULT.md",
         "experiments/M071/TASK_SELECTION.json",
@@ -2528,8 +2595,8 @@
       "subject": "docs(m051): define bounded variable-length protocol",
       "preserved_by": "provenance/ff30ff1",
       "cited_in": [
-        "PROJECT_STATE.yaml",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.yaml",
         "experiments/M051/DEVELOPMENT_RESULT.md",
         "experiments/M051/PROTOCOL.md"
       ]
@@ -2539,71 +2606,11 @@
       "preserved_by": "main",
       "cited_in": [
         "DECISIONS.md",
-        "PROJECT_STATE.md",
         "ROADMAP.md",
-        "SCIENTIFIC_HYPOTHESES.md",
         "docs/COMMIT_CITATIONS.json",
+        "docs/state-history/PROJECT_STATE_2026-08-24.md",
+        "docs/state-history/SCIENTIFIC_HYPOTHESES_PRE_SYNC_2026-09-05.md",
         "experiments/M090/RESULT.md"
-      ]
-    },
-    "2707ab012d1f85aba3c51f7fdeeb0d54e7d30329": {
-      "subject": "fix: update existing tests for new no_fallback_attested/selected_endpoint_exact semantics; register 6c7ab62 in citations",
-      "preserved_by": "main",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
-      ]
-    },
-    "6c7ab62b856e74926586fc49fe8344c417a3bc38": {
-      "subject": "refactor: apply PR #228 corrections",
-      "preserved_by": "main",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/INSTRUMENTAL_AUDIT_REPORT.md",
-        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
-      ]
-    },
-    "1b13154e73fd1abea5291bed52defc1990d7e826": {
-      "subject": "fix: use full 40-char SHAs in COMMIT_CITATIONS.json for reachability check compatibility",
-      "preserved_by": "main",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/RUNTIME_ROUTE_MATRIX_REPORT.md"
-      ]
-    },
-    "6165699e8de4f0c89fffa7242eaab65235cdbd5f": {
-      "subject": "science(m115): seal the qualifying H60 bank",
-      "preserved_by": "codex/m115-h60-canonical-result",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/REVEAL_AUTHORIZATION.json"
-      ]
-    },
-    "1a696e17a6ae176c837ce844891e29535d145803": {
-      "subject": "science(m115): freeze tested system before reveal",
-      "preserved_by": "codex/m115-h60-canonical-result",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/RESULT.json",
-        "tests/test_m115_instrument_aborted.py"
-      ]
-    },
-    "5be5afa7abb9f55ec44797a7000ca4e4518776cb": {
-      "subject": "science(m115): authorize the single H60 reveal",
-      "preserved_by": "codex/m115-h60-canonical-result",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/RESULT.json",
-        "tests/test_m115_instrument_aborted.py"
-      ]
-    },
-    "9d5c295be6140a16022045ac95a6f660aaaac629": {
-      "subject": "result(m115): preserve the terminal H60 reveal outcome",
-      "preserved_by": "codex/m115-h60-canonical-result",
-      "cited_in": [
-        "docs/COMMIT_CITATIONS.json",
-        "experiments/M115/CHECK_REPORT.json",
-        "tests/test_m115_instrument_aborted.py"
       ]
     }
   },
