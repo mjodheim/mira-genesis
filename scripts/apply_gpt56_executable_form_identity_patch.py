@@ -37,7 +37,7 @@ tests = tests.replace(needle, replacement, 1)
 append = r'''
 
 
-def test_campaign_refuses_form_relabel_when_resolved_interpreter_artifact_is_unchanged(monkeypatch):
+def test_campaign_refuses_form_relabel_when_resolved_interpreter_artifact_is_unchanged(monkeypatch, tmp_path):
     genesis = _genesis()
     stages = _stages()
     first = campaign.run(
@@ -46,6 +46,7 @@ def test_campaign_refuses_form_relabel_when_resolved_interpreter_artifact_is_unc
         seed_policy=_seed_policy(),
         seed_meta_policy=_seed_meta(),
         max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
         max_stages=1,
     )
     assert first["next_stage"] == 1
@@ -57,7 +58,7 @@ def test_campaign_refuses_form_relabel_when_resolved_interpreter_artifact_is_unc
     # compares the content-addressed resolved target artifacts before committing any arrival state.
     monkeypatch.setattr(program_forms, "portable_program_body", programs.program_body)
     with pytest.raises(migration.MigrationError, match="resolved executable target artifact"):
-        campaign.run(genesis, stages, max_stages=1)
+        campaign.run(genesis, stages, checkpoint_directory=tmp_path, max_stages=1)
 
     assert genesis.body_factory.target == programs.PROGRAM_TARGET
     assert genesis.state["generation"] == generation_before
