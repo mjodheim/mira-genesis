@@ -1,0 +1,45 @@
+name: Freeze Genesis DEVELOPMENT metamorphosis milestone
+
+on:
+  push:
+    branches:
+      - review/gpt56-genesis-architectural-probe-crash-consistency-20260911
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Install package
+        run: python -m pip install -e '.[dev]'
+      - name: Create immutable milestone tag if absent
+        run: |
+          git config user.name 'Anthony Mets'
+          git config user.email '110968830+mjodheim@users.noreply.github.com'
+          target="$(git rev-parse origin/review/gpt56-genesis-evidence-ranked-form-transition-20260911)"
+          tag='milestone/genesis-development-metamorphosis-v1'
+          if git rev-parse "refs/tags/$tag" >/dev/null 2>&1; then
+            test "$(git rev-list -n 1 "$tag")" = "$target"
+          else
+            git tag -a "$tag" "$target" -m 'First independently audited satisfaction of the prospective Genesis DEVELOPMENT metamorphosis target'
+            git push origin "refs/tags/$tag"
+          fi
+      - name: Record and verify commit citations
+        run: |
+          python scripts/check_repository_integrity.py --record
+          python scripts/check_repository_integrity.py --citations
+      - name: Remove one-shot workflow and publish citation manifest
+        run: |
+          rm .github/workflows/gpt56-freeze-development-metamorphosis-milestone.yml
+          git add -A
+          git commit -m 'chore(genesis): preserve DEVELOPMENT metamorphosis milestone' -m 'Signed-off-by: Anthony Mets <110968830+mjodheim@users.noreply.github.com>'
+          git push origin HEAD:review/gpt56-genesis-architectural-probe-crash-consistency-20260911
