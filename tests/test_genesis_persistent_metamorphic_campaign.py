@@ -41,7 +41,7 @@ def _state():
     )
 
 
-def _genesis():
+def _genesis(*, probes: int = 8):
     return Genesis(
         state=_state(),
         body_factory=fixtures.null_body,
@@ -52,7 +52,7 @@ def _genesis():
                 "policy_evaluations": 256,
                 "meta_policy_candidates": 64,
                 "meta_policy_evaluations": 256,
-                "probes": 8,
+                "probes": probes,
             }
         ),
         isolation=tr.Isolation(),
@@ -389,3 +389,126 @@ def test_form_requirement_can_select_stay_without_host_authored_migration(tmp_pa
     assert decision["transition_selection"]["selection_reason"] == "unique_strict_maximum"
     assert len(genesis.journal.of_kind("migration")) == 0
     assert genesis.body_factory.target == programs.PROGRAM_TARGET
+
+
+
+def _form_requirement_world_with_substrates(substrates):
+    return controller.world(
+        tasks=OBJECTIVE_ONE,
+        demands={},
+        substrates={item.name: item for item in substrates},
+        probe_registry=bodies.PROBE_REGISTRY,
+        component_operations={},
+        artifacts={},
+        grade=fixtures.grade_expected,
+    )
+
+
+def test_form_transition_scores_only_substrates_that_really_expose_rebind(tmp_path):
+    genesis = _genesis()
+    bad = migration.Substrate("bad-portable", {})
+    good = migration.Substrate(
+        "portable-generated-program",
+        {program_forms.REBIND_OPERATION: program_forms.portable_target_for},
+    )
+    transition_world = _form_requirement_world_with_substrates((bad, good))
+    stages = (
+        campaign.objective(_world(OBJECTIVE_ONE), name="learn-square"),
+        campaign.require_form(
+            transition_world,
+            (program_forms.PORTABLE_PROGRAM_TARGET,),
+            name="choose-only-capable-substrate",
+        ),
+    )
+    record = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+    )
+    decision = record["executed"][1]
+    assert decision["selected_action"] == "migrate:portable-generated-program"
+    migrations = {
+        item["substrate"]: item
+        for item in decision["transition_selection"]["candidates"]
+        if item["kind"] == "migrate"
+    }
+    assert migrations["bad-portable"]["required_capability_available"] is False
+    assert migrations["bad-portable"]["compatibility_score"] == 0
+    assert migrations["bad-portable"]["capability_probe"]["found"] == []
+    assert migrations["portable-generated-program"]["required_capability_available"] is True
+    assert migrations["portable-generated-program"]["compatibility_score"] == 1
+    assert migrations["portable-generated-program"]["capability_probe"]["found"] == [
+        program_forms.REBIND_OPERATION
+    ]
+    # Both relevant candidates were measured once; execution reuses the winning probe rather than
+    # charging the selected substrate a second time.
+    assert genesis.budget.spent["probes"] == 2
+
+
+def test_form_transition_with_only_incapable_substrate_refuses_before_execution(tmp_path):
+    genesis = _genesis()
+    bad = migration.Substrate("bad-portable", {})
+    stages = (
+        campaign.objective(_world(OBJECTIVE_ONE), name="learn-square"),
+        campaign.require_form(
+            _form_requirement_world_with_substrates((bad,)),
+            (program_forms.PORTABLE_PROGRAM_TARGET,),
+            name="no-capable-transition",
+        ),
+    )
+    record = campaign.run(
+        genesis,
+        stages,
+        seed_policy=_seed_policy(),
+        seed_meta_policy=_seed_meta(),
+        max_rounds_per_objective=96,
+        checkpoint_directory=tmp_path,
+    )
+    assert record["next_stage"] == 1
+    decision = record["executed"][-1]
+    assert decision["transition_selection"]["selection_reason"] == "no_viable_architectural_transition"
+    assert decision["transition_selection"]["accepted"] is False
+    assert len(genesis.journal.of_kind("migration")) == 0
+    assert genesis.budget.spent["probes"] == 1
+
+
+def test_form_transition_refuses_incomplete_probe_round_before_first_spend(tmp_path):
+    genesis = _genesis(probes=1)
+    first = migration.Substrate(
+        "portable-a",
+        {program_forms.REBIND_OPERATION: program_forms.portable_target_for},
+    )
+    second = migration.Substrate(
+        "portable-b",
+        {program_forms.REBIND_OPERATION: program_forms.portable_target_for},
+    )
+    stages = (
+        campaign.objective(_world(OBJECTIVE_ONE), name="learn-square"),
+        campaign.require_form(
+            _form_requirement_world_with_substrates((first, second)),
+            (program_forms.PORTABLE_PROGRAM_TARGET,),
+            name="complete-probe-round-required",
+        ),
+    )
+    with pytest.raises(
+        campaign.MetamorphicCampaignError,
+        match="complete architectural transition comparison requires 2 probe units",
+    ):
+        campaign.run(
+            genesis,
+            stages,
+            seed_policy=_seed_policy(),
+            seed_meta_policy=_seed_meta(),
+            max_rounds_per_objective=96,
+            checkpoint_directory=tmp_path,
+        )
+    assert genesis.budget.spent["probes"] == 0
+    selections = [
+        entry
+        for entry in genesis.journal.of_kind("observation")
+        if (entry.get("payload") or {}).get("arm") == "architectural_transition_selection"
+    ]
+    assert selections == []
