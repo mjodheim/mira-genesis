@@ -431,13 +431,14 @@ def _post_migration_cycles(genesis, cursor: Mapping[str, Any]) -> list[dict[str,
 def _select_form_transition(
     genesis, stage: FormRequirementStage, identity: Mapping[str, Any]
 ) -> dict[str, Any]:
-    """Select stay vs admitted substrate migration by canonical unique strict maximum.
+    """Select stay vs admitted substrate migration by complete capability-aware comparison.
 
-    This is deliberately a tiny first architectural decision. The environment supplies a form
-    compatibility constraint, not the action. The runtime constructs every admitted action, scores
-    exact executable-target compatibility under one fixed rule, measures the complete set, and
-    refuses ties. Migration itself still goes through substrate discovery and capability-preservation
-    measurement before adoption.
+    Target compatibility alone is not migration viability.  Every migration whose target would
+    otherwise score positively must first establish the fixed ``rebind_program`` capability through
+    the ordinary probe mechanism.  The complete relevant probe cost is checked before the first
+    probe so host/container ordering cannot decide which candidate gets measured when budget is
+    tight.  Candidates whose target is already incompatible need no probe because the missing
+    capability cannot change their zero score.
     """
     current = _configured_target_artifact(
         artifact_digest_of(genesis.body_factory), what="architectural transition current body"
@@ -455,26 +456,77 @@ def _select_form_transition(
         {
             **stay_payload,
             "candidate_digest": digest_of(stay_payload),
+            "capability_probe": None,
+            "required_capability_available": None,
             "compatibility_score": 1 if current in allowed else 0,
         }
     )
 
     destination = dict(program_forms.PORTABLE_PROGRAM_ARTIFACT)
-    for substrate in identity.get("substrates", []):
+    migration_target_relevant = destination in allowed and destination != current
+    substrate_records = [dict(item) for item in identity.get("substrates", [])]
+    probe_cost_required = (
+        sum(int(item.get("probe_cost", 0)) for item in substrate_records)
+        if migration_target_relevant
+        else 0
+    )
+    if probe_cost_required:
+        remaining = genesis.budget.remaining("probes")
+        if remaining < probe_cost_required:
+            raise MetamorphicCampaignError(
+                "complete architectural transition comparison requires %d probe units but only %d remain"
+                % (probe_cost_required, remaining)
+            )
+
+    probe_results: dict[str, dict[str, Any]] = {}
+    if migration_target_relevant:
+        # ``identity['substrates']`` is already canonicalised by substrate identity digest.  Verify
+        # that the executable World still reproduces those identities before spending anything on
+        # each candidate, then probe every relevant candidate exactly once.
+        for substrate_record in substrate_records:
+            name = str(substrate_record.get("name") or "")
+            substrate = stage.world.substrates.get(name)
+            if substrate is None:
+                raise MetamorphicCampaignError(
+                    "architectural transition candidate substrate %r disappeared before scoring" % name
+                )
+            if _substrate_identity(substrate) != substrate_record:
+                raise MetamorphicCampaignError(
+                    "architectural transition candidate substrate %r no longer matches campaign identity"
+                    % name
+                )
+            probe_results[name] = migration.discover(
+                substrate,
+                [program_forms.REBIND_OPERATION],
+                genesis.budget,
+            )
+
+    for substrate_record in substrate_records:
+        name = str(substrate_record["name"])
         payload = {
             "kind": "migrate",
             "target_artifact": destination,
-            "substrate": str(substrate["name"]),
-            "substrate_identity_digest": str(substrate["substrate_identity_digest"]),
+            "substrate": name,
+            "substrate_identity_digest": str(substrate_record["substrate_identity_digest"]),
             "strategy": FORM_REBIND_STRATEGY,
             "stage_digest": identity["stage_digest"],
         }
+        probing = probe_results.get(name)
+        capability_available = (
+            probing is not None
+            and probing.get("probed") == [program_forms.REBIND_OPERATION]
+            and probing.get("found") == [program_forms.REBIND_OPERATION]
+        )
         candidates.append(
             {
                 **payload,
                 "candidate_digest": digest_of(payload),
+                "capability_probe": probing,
+                "required_capability_available": capability_available
+                if migration_target_relevant
+                else None,
                 "compatibility_score": 1
-                if destination in allowed and destination != current
+                if migration_target_relevant and capability_available
                 else 0,
             }
         )
@@ -493,10 +545,12 @@ def _select_form_transition(
         reason = "unique_strict_maximum"
 
     record = {
-        "schema": "genesis-architectural-transition-selection-v1",
+        "schema": "genesis-architectural-transition-selection-v2",
         "stage_digest": identity["stage_digest"],
-        "selection_rule": "unique_strict_maximum_form_compatibility_v1",
+        "selection_rule": "unique_strict_maximum_form_compatibility_with_capability_probe_v1",
         "candidates": candidates,
+        "complete_relevant_candidate_set_probed": True,
+        "probe_cost_required": probe_cost_required,
         "selection_reason": reason,
         "accepted": selected is not None,
         "selected_candidate_digest": "" if selected is None else selected["candidate_digest"],
@@ -515,12 +569,17 @@ def _select_form_transition(
             "selection_reason": reason,
             "selected_candidate_digest": record["selected_candidate_digest"],
             "candidate_digests": [item["candidate_digest"] for item in candidates],
+            "probe_cost_required": probe_cost_required,
         },
     )
     return record
 
-
-def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
+def _run_form_migration(
+    genesis,
+    stage: FormMigrationStage,
+    *,
+    preflight_probe: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     if not programs.program_operations_of(genesis.body_factory):
         raise MetamorphicCampaignError(
             "fixed form-rebind strategy requires a reconstructible generated-program current body"
@@ -537,11 +596,23 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
     substrate = stage.world.substrates.get(stage.substrate)
     if substrate is None:
         raise MetamorphicCampaignError("migration substrate disappeared before execution")
-    probing = migration.discover(
-        substrate,
-        [program_forms.REBIND_OPERATION],
-        genesis.budget,
-    )
+    if preflight_probe is None:
+        probing = migration.discover(
+            substrate,
+            [program_forms.REBIND_OPERATION],
+            genesis.budget,
+        )
+    else:
+        probing = dict(preflight_probe)
+        if (
+            probing.get("substrate") != substrate.name
+            or probing.get("probed") != [program_forms.REBIND_OPERATION]
+            or probing.get("found") != [program_forms.REBIND_OPERATION]
+            or program_forms.REBIND_OPERATION not in substrate.discovered
+        ):
+            raise MetamorphicCampaignError(
+                "selected migration has no matching capability probe from architectural scoring"
+            )
     if probing["found"] != [program_forms.REBIND_OPERATION]:
         raise MetamorphicCampaignError(
             "target substrate does not expose the fixed generated-program rebind capability"
@@ -583,7 +654,6 @@ def _run_form_migration(genesis, stage: FormMigrationStage) -> dict[str, Any]:
             "destination_matches_admitted_artifact": True,
         },
     }
-
 
 def run(
     genesis,
@@ -691,7 +761,20 @@ def run(
                 migration_stage = FormMigrationStage(
                     world=stage.world, substrate=selected_substrate, name=stage.name
                 )
-                migration_result = _run_form_migration(genesis, migration_stage)
+                selected_candidates = [
+                    item
+                    for item in selection["candidates"]
+                    if item["candidate_digest"] == selection["selected_candidate_digest"]
+                ]
+                if len(selected_candidates) != 1:
+                    raise MetamorphicCampaignError(
+                        "architectural selection does not identify exactly one measured candidate"
+                    )
+                migration_result = _run_form_migration(
+                    genesis,
+                    migration_stage,
+                    preflight_probe=selected_candidates[0].get("capability_probe"),
+                )
                 migration_record = migration_result["migration"]
                 acquisition_frontier = len(genesis.state.get("acquisitions", []))
                 entry["migration_result"] = migration_result
