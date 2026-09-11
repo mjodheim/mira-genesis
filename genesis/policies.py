@@ -172,6 +172,7 @@ def step(payload: Mapping[str, Any]) -> dict[str, Any]:
             "name": name,
             "operations": list(operations),
             "input_field": policy["input_field"],
+            "registry_reference": policy["registry_reference"],
             "depends_on": "",
             "rationale": {
                 "search_policy_digest": policy["policy_digest"],

@@ -69,6 +69,7 @@ class GenerateTransform:
     rationale: Mapping[str, Any] = field(default_factory=dict)
     depends_on: str = ""
     input_field: str = "input"
+    registry_reference: str = ""
 
 
 @dataclass(frozen=True)
@@ -183,11 +184,24 @@ def _transform(genesis: Genesis, here: World, intent: Transform) -> dict[str, An
 
 
 def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform) -> dict[str, Any]:
-    """Build a body from lineage-supplied program data and judge it through the normal cycle."""
+    """Build a body from lineage-supplied program data and judge it through the normal cycle.
+
+    A search policy's registry is part of its machinery identity. The old executor ignored that
+    identity and rebound the candidate to ``World.probe_registry`` instead, so a host could keep the
+    same policy digest while changing what its operation names meant. Policy-produced intents now
+    carry the registry they were interpreted under, and a conflicting world is refused before any
+    candidate execution or generation budget spend.
+    """
     dependencies = (intent.depends_on,) if intent.depends_on else ()
+    registry_reference = str(intent.registry_reference or here.probe_registry)
+    if intent.registry_reference and registry_reference != str(here.probe_registry):
+        raise ControllerError(
+            "generated body intent was produced under registry %r but this world offers %r"
+            % (registry_reference, here.probe_registry)
+        )
     try:
         body = programs.artifact(
-            registry_reference=here.probe_registry,
+            registry_reference=registry_reference,
             operations=intent.operations,
             input_field=intent.input_field,
             dependencies=dependencies,
@@ -213,6 +227,7 @@ def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform
                 "schema": programs.PROGRAM_SCHEMA,
                 "operations": list(intent.operations),
                 "input_field": intent.input_field,
+                "registry_reference": registry_reference,
             },
             "runtime_derived_dependency": proposal_dependency
             if proposal_dependency and not intent.depends_on
@@ -227,6 +242,7 @@ def _generate_transform(genesis: Genesis, here: World, intent: GenerateTransform
             "schema": programs.PROGRAM_SCHEMA,
             "operations": list(intent.operations),
             "input_field": intent.input_field,
+            "registry_reference": registry_reference,
         },
         "generated_body_artifact": artifact_digest_of(body),
         "generated_dependency": proposal_dependency,
@@ -524,6 +540,7 @@ def _intent_record(intent: Any) -> dict[str, Any]:
             "rationale": dict(intent.rationale),
             "depends_on": intent.depends_on,
             "input_field": intent.input_field,
+            "registry_reference": intent.registry_reference,
         }
     if isinstance(intent, AcquireComponent):
         return {
@@ -564,6 +581,7 @@ def _intent_from_record(record: Mapping[str, Any]) -> Any:
             rationale=dict(record.get("rationale") or {}),
             depends_on=str(record.get("depends_on") or ""),
             input_field=str(record.get("input_field") or "input"),
+            registry_reference=str(record.get("registry_reference") or ""),
         )
     if kind == "AcquireComponent":
         return AcquireComponent(
