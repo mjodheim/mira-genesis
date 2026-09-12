@@ -65,9 +65,27 @@
     },
     {
       "attempt": 3,
+      "status": "neutral_archived",
+      "parent_generation": 1,
+      "resulting_retained_generation": 1,
+      "bundle_sha256": "323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad",
+      "proposal_context_digest": "c15fd7e3fbab74f487af76bde0c87822335fff08d23a35eefdd39c2fa91194ce",
+      "proposal_patch_sha256": "8759c5e939e1f04e6312230d78e808c3d524ae548891bbe09a9bac0469748879",
+      "changed_path_count": 2,
+      "parent_tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
+      "candidate_tree_digest": "d6c705422d6bb797fb31ef964f7f04ffdd0a9db522a6dc82e898e81225e7023d",
+      "observation_digest": "cfe278116c2080d249c6afad0e26369ce8763b42eae6e4385cf323282b9e2f41",
+      "neutral_archive_record_digest": "2b6d6ff98368da87ba64d3cc3db76bb371e67e81ea499162b668727b0c0c105b",
+      "improvements": {},
+      "regressions": {},
+      "warning_count": 7
+    },
+    {
+      "attempt": 4,
       "status": "in_progress",
       "parent_generation": 1,
-      "bundle_sha256": "323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad",
+      "bundle_sha256": "6cf5914d86c6ff3b3cf986c7394321f31e96fd3cfb08a643f2236d24e4eceadd",
+      "proposal_context_digest": "95b18db22096c010081c2a56a2dbfb19a10b8144fd44e5499dbbec600342a1d7",
       "scientific_verdict": null
     }
   ],
