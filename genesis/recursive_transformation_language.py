@@ -7,8 +7,10 @@ operator as part of the language from which it constructs the next operator*.
 This module derives that recursive lower language from lineage history rather than asking the caller
 which acquired operator to reuse. Every non-invocation primitive already present in the held language
 is retained, and every evidence-backed acquired operator currently held becomes one
-``invoke_held_operator`` micro-step identified by its content digest. The ordinary transformation-
-language controller then measures the full bounded candidate image under the unchanged trust root.
+``invoke_held_operator`` micro-step identified by its content digest. An operator counts as acquired
+only when its extension certificate reproduces, names the unchanged trust/evaluation identities, and
+has the matching append-only journal acquisition. The ordinary transformation-language controller
+then measures the full bounded candidate image under the unchanged trust root.
 
 A successful recursive result is accepted here only if the winning operator actually invokes at
 least one previously acquired operator. The module records two complementary dependency checks:
@@ -34,14 +36,71 @@ class RecursiveTransformationLanguageError(RuntimeError):
     """Raised when a claimed recursive language extension does not depend on acquired language."""
 
 
+def _journal_backs_extension(genesis, certificate: Mapping[str, Any]) -> bool:
+    """Whether one exact hash-chained acquisition entry binds this extension certificate."""
+    operator = certificate.get("operator")
+    if not isinstance(operator, Mapping):
+        return False
+    try:
+        validated = language.validate_operator(operator)
+    except language.TransformationLanguageError:
+        return False
+    matches = []
+    for entry in genesis.journal.of_kind("acquisition"):
+        payload = entry.get("payload") or {}
+        if not isinstance(payload, Mapping):
+            continue
+        if (
+            payload.get("role") == controller.LANGUAGE_TOOL_ROLE
+            and payload.get("certificate_digest") == certificate.get("certificate_digest")
+            and payload.get("parent_language_digest") == certificate.get("prior_language_digest")
+            and payload.get("new_language_digest") == certificate.get("descendant_language_digest")
+            and payload.get("operator_digest") == validated["operator_digest"]
+        ):
+            matches.append(entry)
+    return len(matches) == 1
+
+
+def _validated_extension_certificate(
+    genesis, certificate: Mapping[str, Any] | None
+) -> dict[str, Any] | None:
+    """Accept only a self-reproducing extension certificate backed by the immutable authority line."""
+    if not isinstance(certificate, Mapping):
+        return None
+    value = dict(certificate)
+    if value.get("schema") != controller.CERTIFICATE_SCHEMA:
+        return None
+    recorded_digest = str(value.get("certificate_digest") or "")
+    if not recorded_digest:
+        return None
+    payload = {key: item for key, item in value.items() if key != "certificate_digest"}
+    if recorded_digest != digest_of(payload):
+        return None
+    if value.get("trust_root_source_sha256") != genesis.admitted_source_sha256:
+        return None
+    if value.get("evaluation_contract_digest") != genesis.evaluation_contract["contract_digest"]:
+        return None
+    if not str(value.get("prior_language_digest") or ""):
+        return None
+    if not str(value.get("descendant_language_digest") or ""):
+        return None
+    try:
+        language.validate_operator(value.get("operator") or {})
+    except language.TransformationLanguageError:
+        return None
+    if not _journal_backs_extension(genesis, value):
+        return None
+    return value
+
+
 def _extension_certificates(genesis) -> tuple[dict[str, Any], ...]:
     values: list[dict[str, Any]] = []
     for item in genesis.state.get("observations", []):
         if not isinstance(item, Mapping) or item.get("kind") != "transformation_language_extension":
             continue
-        certificate = item.get("certificate")
-        if isinstance(certificate, Mapping):
-            values.append(dict(certificate))
+        validated = _validated_extension_certificate(genesis, item.get("certificate"))
+        if validated is not None:
+            values.append(validated)
     return tuple(values)
 
 
@@ -306,6 +365,10 @@ def run_recursive_extension_search(
         if isinstance(certificate.get("operator"), Mapping)
         and certificate["operator"].get("operator_digest") in set(invoked)
     ]
+    if len(source_certificates) != len(invoked):
+        raise RecursiveTransformationLanguageError(
+            "recursive invocation is not backed by one validated extension certificate per predecessor"
+        )
     payload = {
         "schema": RECURSION_SCHEMA,
         "recursive_extension": True,
@@ -319,6 +382,7 @@ def run_recursive_extension_search(
         "derived_step_digests": [step["step_digest"] for step in admitted_steps],
         "caller_supplied_recursive_operator": False,
         "lineage_history_derived_invocation": True,
+        "journal_backed_predecessor_acquisitions": True,
         "dependency_ablation": {
             "established": True,
             "kind": "structural_and_measured_reach_dependency",
