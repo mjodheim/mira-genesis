@@ -1,13 +1,12 @@
 # Genesis Free Metamorphosis v4 — public campaign chronology
 
 **Snapshot date:** 12 September 2026  
-**Policy:** `GENESIS_FREE_METAMORPHOSIS_OPEN_EMPIRICAL_V4_2026-09-12`
+**Policy:** `GENESIS_FREE_METAMORPHOSIS_OPEN_EMPIRICAL_V4_2026-09-12`  
+**Campaign status:** paused after canonical attempt 004; 20 of 24 attempt slots deliberately left unspent
 
 This is the sanitized public chronology for the private-host v4 campaign. Raw proposals, source paths, evaluator cases and operational artifacts remain private under P-032.
 
 ## Seed geometry
-
-The retained generation-zero organism entered v4 with the following aggregate capability vector:
 
 | Category | Score | Total | Headroom |
 | --- | ---: | ---: | ---: |
@@ -19,39 +18,29 @@ The retained generation-zero organism entered v4 with the following aggregate ca
 | self_modify | 3 | 4 | 1 |
 | system_admin | 4 | 4 | 0 |
 
-Warning count at seed: **7**.
-
-Generation-zero tree digest:
+Warning count at seed: **7**. Generation-zero tree digest:
 
 `f597e8020ee06f02a93fd5b6cdbf4a4bf0c362de5983cb51e21ce81a33d2cc5d`
 
-The seed passed the frozen hard external boundary. The vector deliberately retained headroom on multiple categories so selection could distinguish useful descendants without exposing individual evaluator cases.
+The seed passed the frozen hard external boundary and retained headroom on several categories.
 
-## Lineage
+## Final v4 lineage
 
 ```text
-Generation 0
-f597e802…
+Generation 0 — f597e802…
     |
-    | Attempt 001
-    | +1 personal_write
-    | retained
+    | Attempt 001: +1 personal_write
+    | RETAINED
     v
-Generation 1
-b720efef…
+Generation 1 — b720efef…
     |
-    +---- Attempt 002
-    |     aggregate delta = 0
-    |     neutral archive: 94d41880…
-    |     retained parent unchanged
+    +---- Attempt 002: neutral archive 94d41880…
     |
-    +---- Attempt 003
-    |     aggregate delta = 0
-    |     neutral archive: d6c70542…
-    |     retained parent unchanged
+    +---- Attempt 003: neutral archive d6c70542…
     |
-    +---- Attempt 004
-          in progress at this snapshot
+    +---- Attempt 004: neutral archive edd81019…
+
+Campaign paused: attempts used 4/24; retained generation 1.
 ```
 
 ## Attempt summary
@@ -59,11 +48,11 @@ b720efef…
 | Attempt | Parent | Result | Aggregate fitness effect | Inherited? |
 | --- | --- | --- | --- | --- |
 | 001 | generation 0 | Pareto improvement | `personal_write 3/8 -> 4/8` | **yes — generation 1** |
-| 002 | generation 1 | non-regressing neutral | no aggregate category or warning delta | **no — archived only** |
-| 003 | generation 1 | non-regressing neutral | no aggregate category or warning delta | **no — archived only** |
-| 004 | generation 1 | in progress | not yet observed | pending |
+| 002 | generation 1 | non-regressing neutral | no category or warning delta | **no — archived only** |
+| 003 | generation 1 | non-regressing neutral | no category or warning delta | **no — archived only** |
+| 004 | generation 1 | non-regressing neutral | no category or warning delta | **no — archived only** |
 
-### Attempt 001 — first retained v4 descendant
+### Attempt 001 — retained generation 1
 
 The proposal tested a least-privilege hypothesis for explicit personal-write actions without broadening ordinary conversational authority.
 
@@ -77,79 +66,70 @@ Public identity anchors:
 - observation digest: `cc816977ae1f507691ba9a728b208effedd099c97374ef9db6c202f51b7d5868`
 - ledger record digest: `33779c436be6eab1631966e065e239e5955e49868b905ebd2320ad186a3c2084`
 
-Decision:
+Decision: `Pareto improvement on frozen external capability vector`.
 
-> `Pareto improvement on frozen external capability vector`
+### Attempt 002 — neutral empirical branch
 
-The descendant preserved every other aggregate category and increased `personal_write` from 3/8 to 4/8. It therefore became retained **generation 1**.
-
-### Attempt 002 — first neutral empirical branch
-
-Attempt 002 started from generation 1 and tested a bounded conversational-continuity hypothesis on the primary generation path.
-
-Public identity anchors:
+Attempt 002 tested a bounded conversational-continuity hypothesis.
 
 - proposer-bundle SHA-256: `cc397b991910dc2077343ac7a7c9c104c2499a2156529d554ea65f7e7e92ebd5`
 - proposal-context digest: `24e737d655bccc862fdaa6ff709dfb0e2f8110dc61685e29f2b43970e0c542c4`
 - proposal-patch SHA-256: `4646607db8d77b853f4407b1f45da08717b72d59f85c3b816bb0f436d8d2362d`
-- changed-path count: `1`
 - candidate tree digest: `94d418801a4ed9cbfe771d8436f4b685ebdcaa87fdb28fe3ea6ae4ac9d48e88a`
 - observation digest: `de0e71ea10b587a5bd1889d75117be02a4fe79aaa0c841a101aa2ff05507d2f5`
 - neutral-archive record digest: `4164e9156153bbfebcfc4bc24454cbf8d2422a73939b81b106342ba1c783470a`
 
-Decision:
+Decision: `non-regressing neutral innovation archived; retained parent unchanged`.
 
-> `non-regressing neutral innovation archived; retained parent unchanged`
+### Attempt 003 — neutral empirical branch
 
-All protected aggregate scores and the warning count remained unchanged. The candidate was preserved as neutral empirical memory but did not become an ancestor. Generation 1 remained the retained parent.
-
-### Attempt 003 — second neutral empirical branch
-
-Attempt 003 again started from retained generation 1. It tested a narrow personal-read reliability hypothesis: accept an opaque service-provided cloud-file identifier as well as an exact filename, without broadening tool authority.
-
-Public identity anchors:
+Attempt 003 tested a narrow personal-read reliability hypothesis for cloud-file locators without broadening authority.
 
 - proposer-bundle SHA-256: `323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad`
 - proposal-context digest: `c15fd7e3fbab74f487af76bde0c87822335fff08d23a35eefdd39c2fa91194ce`
 - proposal-patch SHA-256: `8759c5e939e1f04e6312230d78e808c3d524ae548891bbe09a9bac0469748879`
-- changed-path count: `2`
 - candidate tree digest: `d6c705422d6bb797fb31ef964f7f04ffdd0a9db522a6dc82e898e81225e7023d`
 - observation digest: `cfe278116c2080d249c6afad0e26369ce8763b42eae6e4385cf323282b9e2f41`
 - neutral-archive record digest: `2b6d6ff98368da87ba64d3cc3db76bb371e67e81ea499162b668727b0c0c105b`
 
-Decision:
+Decision: `non-regressing neutral innovation archived; retained parent unchanged`.
 
-> `non-regressing neutral innovation archived; retained parent unchanged`
+### Attempt 004 — neutral empirical branch and v4 stopping point
 
-Every aggregate capability category and the warning count remained unchanged. The candidate was therefore archived as empirical memory and did not become an ancestor.
+Attempt 004 tested recovery of message content from nested multipart structures on an existing personal-read path, with no authority expansion.
 
-### Attempt 004 — next branch from retained generation 1
+- proposer-bundle SHA-256: `6cf5914d86c6ff3b3cf986c7394321f31e96fd3cfb08a643f2236d24e4eceadd`
+- proposal-context digest: `95b18db22096c010081c2a56a2dbfb19a10b8144fd44e5499dbbec600342a1d7`
+- proposal-patch SHA-256: `69e0d47b32327d81fec428f4bcb6c7f2294541b81f3d9932e36ee224cc7d34df`
+- changed-path count: `1`
+- candidate tree digest: `edd8101922dce0978a2d85b23e4946d7a38c493443b6e80c1b98a63a64047c72`
+- observation digest: `e342dfb76e4bb64de9e78599f313798c98a9f556a5d40ec336c9b2a3caa15bd5`
+- ledger record digest: `e57f93824d49be0914feb5ada435d5b9730e8d5c2c26d623691ff10fbb3393b4`
+- neutral-archive record digest: `0ebbf4c64550195e3beb9bcb7cbf08d9392c2580d8aba341d30c8cf9273a284c`
 
-The proposer bundle for attempt 004 was generated only after attempt 003 had been recorded. Its SHA-256 is:
+Decision: `non-regressing neutral innovation archived; retained parent unchanged`.
 
-`6cf5914d86c6ff3b3cf986c7394321f31e96fd3cfb08a643f2236d24e4eceadd`
+All aggregate capability categories remained identical to generation 1 and warning count remained 7.
 
-Its proposal-context digest is:
+## Why v4 stopped before exhausting its budget
 
-`95b18db22096c010081c2a56a2dbfb19a10b8144fd44e5499dbbec600342a1d7`
+The first v4 mutation demonstrated real selection and heredity. Three subsequent hard-pass descendants were all neutral. This repeated plateau is evidence about the search process: v4 could preserve neutral variants as memory, but those variants could not become proposal parents, while each attempt still depended on an externally assembled attempt-specific proposer instruction.
 
-The bundle starts from retained generation 1, not from either neutral candidate. Its bounded aggregate history includes one retained improvement and two neutral hypotheses without exposing individual evaluator cases.
+Continuing for twenty more attempts under exactly the same search regime would mostly increase sampling volume, not remove those structural limitations. The v4 record was therefore frozen at attempt 004. Any successor that permits neutral stepping stones, generates its own proposer prompt, expands diversity or changes the frozen challenge surface must use a new prospective protocol identity.
 
-At this snapshot, attempt 004 has **no scientific verdict yet**.
+No v4 result will be rescored by such a successor.
 
-## What has been established so far
+## What v4 establishes
 
-The campaign has demonstrated one full real-host v4 transition:
+The campaign demonstrated one full real-host transition:
 
-`external variation -> external measurement -> selection -> retained descendant -> next proposer starts from descendant`
+`external variation -> external measurement -> selection -> retained descendant -> later proposals inherit descendant`
 
-It has also demonstrated repeated neutral-memory paths:
+It also demonstrated three repeated neutral-memory paths:
 
-`external variation -> hard pass -> no positive/negative aggregate delta -> archived empirical memory -> no ancestry change`
+`external variation -> hard pass -> no aggregate delta -> archived empirical memory -> no ancestry change`
 
-This is stronger than a sequence of unrelated patch evaluations because the retained-generation identity controls the parent of every later proposal, while rejected-but-safe neutral hypotheses remain available as bounded empirical memory.
-
-It is still far short of open-ended evolution. The next important evidence would be a second retained generation, especially where a later retained improvement causally depends on the earlier inherited generation-1 change.
+This is evidence of bounded selection, heredity and empirical memory. It is **not** evidence of sustained multi-generation improvement or open-ended evolution.
 
 ## Publication boundary
 
