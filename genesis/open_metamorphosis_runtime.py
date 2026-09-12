@@ -8,8 +8,8 @@ The runtime owns that hand-off:
 
 1. run the currently held body-search policy normally;
 2. only after objective-scoped exhaustion may transformation machinery change;
-3. if the lineage has no prior endogenous transformation-language extension, derive the admitted
-   primitive lower kernel from the held seed language and search the first extension;
+3. if the lineage has no prior journal-backed endogenous transformation-language extension, derive
+   the admitted primitive lower kernel from the held seed language and search the first extension;
 4. otherwise derive recursive primitives from lineage history and search the next extension;
 5. if an extension is acquired, apply it through the separate causal language->policy->body path.
 
@@ -38,14 +38,8 @@ class OpenMetamorphosisRuntimeError(RuntimeError):
 
 
 def _extension_certificates(genesis) -> tuple[dict[str, Any], ...]:
-    values = []
-    for item in genesis.state.get("observations", []):
-        if not isinstance(item, Mapping) or item.get("kind") != "transformation_language_extension":
-            continue
-        certificate = item.get("certificate")
-        if isinstance(certificate, Mapping):
-            values.append(dict(certificate))
-    return tuple(values)
+    """Count only extensions whose certificates are backed by the hash-chained acquisition journal."""
+    return recursive._extension_certificates(genesis)
 
 
 def _seed_lower_steps(held_language: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
