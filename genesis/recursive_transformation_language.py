@@ -11,10 +11,11 @@ is retained, and every evidence-backed acquired operator currently held becomes 
 language controller then measures the full bounded candidate image under the unchanged trust root.
 
 A successful recursive result is accepted here only if the winning operator actually invokes at
-least one previously acquired operator. The module records the dependency and mechanically verifies
-that removing the invoked predecessor makes the descendant language fail reconstruction. This is a
-bounded DEVELOPMENT recursion mechanism; the fixed primitive kernel, finite operator length and
-selection rule remain apparatus.
+least one previously acquired operator. The module records two complementary dependency checks:
+removing the invoked predecessor makes the descendant language fail reconstruction, and the same
+complete measured candidate round shows that every candidate not invoking that predecessor has
+strictly less measured reach than the recursive winner. This is a bounded DEVELOPMENT recursion
+mechanism; the fixed primitive kernel, finite operator length and selection rule remain apparatus.
 """
 from __future__ import annotations
 
@@ -123,6 +124,113 @@ def _ablation_refuses_descendant(descendant, *, removed_digests: tuple[str, ...]
     return False, "descendant language still reconstructs after acquired predecessor removal"
 
 
+def _operator_invokes_any(operator: Mapping[str, Any], digests: tuple[str, ...]) -> bool:
+    targets = set(digests)
+    return any(
+        step["kind"] == "invoke_held_operator" and step["operator_digest"] in targets
+        for step in language.validate_operator(operator)["steps"]
+    )
+
+
+def _same_round_reach_dependency(
+    run: Mapping[str, Any],
+    *,
+    winner_digest: str,
+    invoked_digests: tuple[str, ...],
+) -> dict[str, Any]:
+    """Prove that removing the invoked predecessor reduces reach in the exact measured round.
+
+    Structural invalidity is useful but weaker than performance evidence: a recursive operator can
+    mention an acquired predecessor even when an equally good non-recursive candidate exists.  The
+    underlying controller already measures the complete bounded candidate image before selecting a
+    unique strict maximum.  This function binds that evidence into the recursive certificate and
+    compares the selected operator against every same-round candidate that does not invoke the
+    predecessor being ablated.
+    """
+    raw_image = list(run.get("candidate_image") or [])
+    raw_measurements = list(run.get("candidate_measurements") or [])
+    if not raw_image or not raw_measurements:
+        raise RecursiveTransformationLanguageError(
+            "recursive selection carries no complete candidate-image measurements"
+        )
+
+    image_digests = [
+        language.validate_operator(item)["operator_digest"]
+        for item in raw_image
+    ]
+    if len(set(image_digests)) != len(image_digests):
+        raise RecursiveTransformationLanguageError(
+            "recursive candidate image contains duplicate operator identities"
+        )
+
+    measurements: list[dict[str, Any]] = []
+    for raw in raw_measurements:
+        if not isinstance(raw, Mapping) or not isinstance(raw.get("operator"), Mapping):
+            raise RecursiveTransformationLanguageError(
+                "recursive candidate measurement carries no operator identity"
+            )
+        record = dict(raw)
+        operator = language.validate_operator(record["operator"])
+        record["operator"] = operator
+        measurements.append(record)
+
+    measured_digests = [item["operator"]["operator_digest"] for item in measurements]
+    if len(set(measured_digests)) != len(measured_digests):
+        raise RecursiveTransformationLanguageError(
+            "recursive candidate round measured an operator more than once"
+        )
+    if set(measured_digests) != set(image_digests):
+        raise RecursiveTransformationLanguageError(
+            "recursive candidate measurements do not cover the complete admitted image"
+        )
+
+    winner_records = [
+        item for item in measurements
+        if item["operator"]["operator_digest"] == str(winner_digest)
+    ]
+    if len(winner_records) != 1 or not winner_records[0].get("accepted"):
+        raise RecursiveTransformationLanguageError(
+            "recursive winner is not a unique accepted member of its measured candidate round"
+        )
+    winner_score = int(winner_records[0].get("selection_score", -1))
+
+    without_predecessor = [
+        item
+        for item in measurements
+        if not _operator_invokes_any(item["operator"], invoked_digests)
+    ]
+    if not without_predecessor:
+        raise RecursiveTransformationLanguageError(
+            "recursive round has no measured competitor independent of the invoked predecessor"
+        )
+    best_without = max(int(item.get("selection_score", -1)) for item in without_predecessor)
+    if winner_score <= best_without:
+        raise RecursiveTransformationLanguageError(
+            "recursive winner does not have strictly greater measured reach than candidates "
+            "independent of the invoked predecessor"
+        )
+
+    payload = {
+        "established": True,
+        "kind": "same_round_measured_reach_dependency",
+        "complete_candidate_image_measured": True,
+        "candidate_count": len(measurements),
+        "independent_candidate_count": len(without_predecessor),
+        "accepted_independent_candidate_count": sum(
+            1 for item in without_predecessor if item.get("accepted")
+        ),
+        "winner_operator_digest": str(winner_digest),
+        "winner_selection_score": winner_score,
+        "best_selection_score_without_invoked_predecessor": best_without,
+        "strict_reach_loss_without_predecessor": True,
+        "invoked_predecessor_operator_digests": list(invoked_digests),
+        "independent_measurement_digests": sorted(
+            str(item.get("measurement_digest") or "") for item in without_predecessor
+        ),
+    }
+    return {**payload, "evidence_digest": digest_of(payload)}
+
+
 def run_recursive_extension_search(
     genesis,
     here,
@@ -185,6 +293,13 @@ def run_recursive_extension_search(
     if not ablation_established:
         raise RecursiveTransformationLanguageError(ablation_reason)
 
+    winner_digest = str(winner.get("operator_digest") or "")
+    measured_reach = _same_round_reach_dependency(
+        run,
+        winner_digest=winner_digest,
+        invoked_digests=invoked,
+    )
+
     source_certificates = [
         certificate
         for certificate in _extension_certificates(genesis)
@@ -196,7 +311,7 @@ def run_recursive_extension_search(
         "recursive_extension": True,
         "prior_language_digest": held_before["language_digest"],
         "descendant_language_digest": descendant["language_digest"],
-        "selected_operator_digest": winner.get("operator_digest", ""),
+        "selected_operator_digest": winner_digest,
         "invoked_acquired_operator_digests": list(invoked),
         "source_extension_certificate_digests": sorted(
             str(item.get("certificate_digest") or "") for item in source_certificates
@@ -206,10 +321,11 @@ def run_recursive_extension_search(
         "lineage_history_derived_invocation": True,
         "dependency_ablation": {
             "established": True,
-            "kind": "language_reconstruction_dependency",
+            "kind": "structural_and_measured_reach_dependency",
             "removed_operator_digests": list(invoked),
             "descendant_reconstructs_without_predecessor": False,
             "refusal": ablation_reason,
+            "same_round_reach": measured_reach,
         },
         "extension_certificate_digest": str(certificate.get("certificate_digest") or ""),
         "trust_root_source_sha256": genesis.admitted_source_sha256,
