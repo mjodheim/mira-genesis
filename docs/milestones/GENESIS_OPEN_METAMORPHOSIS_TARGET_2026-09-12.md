@@ -5,62 +5,58 @@ Date: 2026-09-12
 ## Frozen validated event
 
 The prospectively written Genesis v2 stopping criterion is recorded in
-`docs/OPEN_METAMORPHOSIS_TARGET.md` and was frozen before implementation at commit:
-
-`e82c9eca4d819298f373e9b79a76fd1085039ec4`
+`docs/OPEN_METAMORPHOSIS_TARGET.md`. It was frozen before implementation by the PR #311 history commit
+whose subject is `docs(genesis-v2): freeze prospective open-metamorphosis target`.
 
 The target file remained bit-identical through the validated result; its blob SHA is:
 
 `396c948016058b35d558a58927c97cf33e8d9556`
 
-The first commit for which the project records the complete validation bundle — canonical reproduction,
-12-point hostile audit with no blocker, exact-head Python 3.11/3.13 CI, repository-integrity checks,
-sealed historical scientific-boundary checks, and human-only attribution — is:
+PR #311 records the exact implementation chronology and validated head. The first head for which the
+project records the complete validation bundle — canonical reproduction, 12-point hostile audit with
+no blocker, exact-head Python 3.11/3.13 CI, repository-integrity checks, sealed historical
+scientific-boundary checks, and human-only attribution — is therefore the **validated Genesis v2
+DEVELOPMENT Open Metamorphosis threshold**.
 
-`ce265b431610a2823a0edb803539165c759b3a1f`
-
-That commit is therefore the **validated Genesis v2 DEVELOPMENT Open Metamorphosis threshold**.
-
-PR #311 merged that exact content into `main` with merge commit:
-
-`3ad124824ac428f73b1d34dfbcec4c9b5dbdc310`
-
-The merge commit is GitHub PGP-verified. Its tree SHA is:
+PR #311 merged that exact validated content into `main` with a GitHub PGP-verified merge commit. The
+merge commit's tree SHA is:
 
 `5058a39663f9318ec754c87eb553447938d4f484`
 
-which is exactly the tree SHA of the validated head `ce265b4...`; the merge introduced no content
-change.
+That tree is exactly the validated PR head tree; the merge introduced no content change.
 
 ## Threshold chronology
 
-The immediately preceding commit:
-
-`cae736d7393523618d471e241e34f56be4e68c48`
-
-is the first-satisfaction **candidate** in the implementation chronology because it is the first commit
-where the canonical reproducer itself requires the complete L1-ablation counterfactual, including the
+The PR #311 commit immediately preceding the validated head has subject
+`harden(genesis-v2): require complete L1-ablation counterfactual in reproduction`. It is the
+first-satisfaction **candidate** in the implementation chronology because it is the first commit where
+the canonical reproducer itself requires the complete L1-ablation counterfactual, including the
 same-round L1 reacquisition control. Its CI run #1466 was superseded/cancelled by the immediately
 following test-only commit, so this document does not label it the fully validated threshold.
 
-The only change from `cae736d...` to the validated head `ce265b4...` is a stronger canonical
-non-regression test. No runtime, search, evaluator, reproduction or authority mechanism changed.
+The validated head then adds only the stronger canonical non-regression test
+`test(genesis-v2): require reacquisition-aware canonical ablation`. No runtime, search, evaluator,
+reproduction or authority mechanism changed between those two commits.
+
+The exact full commit identities for this chronology are preserved in PR #311's permanent
+conversation and commit history; this milestone deliberately follows the repository's
+`docs/COMMIT_CITATIONS.json` discipline rather than introducing unregistered raw commit citations.
 
 ## Validation record
 
-Exact-head CI #1467 on `ce265b431610a2823a0edb803539165c759b3a1f` completed successfully:
+Exact-head CI #1467 for PR #311 completed successfully:
 
 - complete Python 3.11 test suite: **success**;
 - complete Python 3.13 test suite: **success**;
 - repository integrity: **success**;
 - sealed task-bank and historical scientific boundaries: **success**.
 
-The required `Human-only attribution` check also completed successfully on the same head. After the PR
-was marked ready for review, the latest attribution-policy run completed successfully again before
-merge.
+The required `Human-only attribution` check also completed successfully on the same validated head.
+After the PR was marked ready for review, the latest attribution-policy run completed successfully
+again before merge.
 
-A hostile audit against all 12 prospectively written runtime-evidence requirements found no blocker on
-the validated head. That audit is recorded in the PR #311 conversation and did not modify the code
+A hostile audit against all 12 prospectively written runtime-evidence requirements found no blocker
+on the validated head. That audit is recorded in the PR #311 conversation and did not modify the code
 being validated.
 
 ## What crossed the threshold
@@ -119,6 +115,6 @@ isolation policy and scientific stopping criterion remain host apparatus.
 ## Milestone discipline
 
 Later robustness improvements may strengthen the apparatus but must not retroactively redefine this
-validated stopping criterion or move the threshold commit. Any broader claim — including more general,
+validated stopping criterion or move the threshold event. Any broader claim — including more general,
 less bounded, or genuinely open-ended self-extension — requires a new prospectively written research
 objective rather than reinterpretation of this milestone.
