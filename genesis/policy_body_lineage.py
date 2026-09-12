@@ -27,6 +27,9 @@ LINK_SCHEMA = "genesis-policy-generated-body-link-v1"
 UPDATE_ARMS = (
     "objective_scoped_search_policy_update",
     "meta_policy_generated_search_policy_update",
+    # Genesis v2: an acquired transformation-language operator constructs the search-policy
+    # descendant, after which the ordinary policy/body path must still earn the body adoption.
+    "transformation_language_generated_search_policy_update",
 )
 
 
