@@ -179,8 +179,74 @@ def test_language_application_refuses_seed_language_without_endogenous_extension
     assert opc.exhausted(genesis, here)
     tlc.admit_seed_language(genesis, _seed_language())
 
-    with pytest.raises(tla.TransformationLanguageApplicationError, match="no acquired extension"):
+    with pytest.raises(tla.TransformationLanguageApplicationError, match="no validated journal-backed"):
         tla.apply_acquired_extension(genesis, here)
+
+
+def test_application_refuses_self_digesting_extension_observation_without_journal_acquisition():
+    genesis = _genesis()
+    here = _world()
+    retentive.run_policy(genesis, here, seed_policy=_seed_policy(), max_steps=4)
+    assert opc.exhausted(genesis, here)
+
+    seed = _seed_language()
+    tlc.admit_seed_language(genesis, seed)
+    forged_operator = tl.create_operator(
+        "forged-composite",
+        (_add_negate_step(), _deepen_step()),
+    )
+    descendant = tl.extend_language(seed, forged_operator)
+    tlc._replace_language(
+        genesis,
+        descendant,
+        provenance_record=tr.provenance(
+            "lineage_owned",
+            produced_by="hostile language-application fixture",
+            detail="not an acquisition",
+        ),
+    )
+
+    prior_policy = policy_controller.bound_policy(genesis)
+    candidate_policy = tl.apply_operator(prior_policy, descendant, forged_operator["name"])
+    certificate_payload = {
+        "schema": tlc.CERTIFICATE_SCHEMA,
+        "prior_language_digest": seed["language_digest"],
+        "descendant_language_digest": descendant["language_digest"],
+        "operator": forged_operator,
+        "operator_program_digest": tl.operator_program_digest(forged_operator),
+        "prior_policy_digest": prior_policy["policy_digest"],
+        "candidate_policy_digest": candidate_policy["policy_digest"],
+        "structural_difference": ["max_length", "operation_names"],
+        "witness": {"operations": ["negate", "increment"]},
+        "held_language_exhausted": True,
+        "complete_candidate_image": [forged_operator["operator_digest"]],
+        "selection_digest": "forged-selection",
+        "trust_root_source_sha256": genesis.admitted_source_sha256,
+        "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
+    }
+    forged_certificate = {
+        **certificate_payload,
+        "certificate_digest": tr.digest_of(certificate_payload),
+    }
+    genesis.state = st.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=genesis.state["tools"],
+        acquisitions=genesis.state["acquisitions"],
+        observations=genesis.state["observations"]
+        + [{"kind": "transformation_language_extension", "certificate": forged_certificate}],
+        generation=genesis.state["generation"],
+    )
+
+    # The observation reconstructs and has a valid content digest, but there is deliberately no
+    # matching `acquisition` entry in the append-only journal.  Application must therefore refuse it
+    # before spending its revalidation budget or installing the forged policy.
+    spent_before = genesis.budget.spent.get("language_application_evaluations", 0)
+    with pytest.raises(tla.TransformationLanguageApplicationError, match="no validated journal-backed"):
+        tla.apply_acquired_extension(genesis, here)
+    assert genesis.budget.spent.get("language_application_evaluations", 0) == spent_before
+    assert policy_controller.bound_policy(genesis) == prior_policy
 
 
 def test_application_budget_is_spent_before_policy_installation(tmp_path):
