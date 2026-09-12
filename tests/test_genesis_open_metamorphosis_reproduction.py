@@ -26,6 +26,7 @@ def test_canonical_open_metamorphosis_reproducer_crosses_two_fresh_process_bound
     assert report["passed"] is True
     assert report["fresh_interpreter_boundaries"] == 2
     assert report["checks"] and all(report["checks"].values())
+    assert report["predecessor_reacquisition_measurement_count"] == 1
     assert report["reproduction_digest"]
 
     phase1 = json.loads((output / "phase-1.json").read_text(encoding="utf-8"))
@@ -39,13 +40,18 @@ def test_canonical_open_metamorphosis_reproducer_crosses_two_fresh_process_bound
     assert phase3["after"]["state_digest"] == phase3["before"]["state_digest"]
 
     # The canonical multi-process run must preserve the stronger causal result, not merely a
-    # syntactic invocation edge.  In phase 2 the complete bounded candidate image is measured in
-    # one round and the recursive winner must beat every candidate that does not invoke L1.
+    # syntactic invocation edge. In phase 2 the ordinary controller first measures every held
+    # operator, then the complete bounded outside image. If L1 is ablated, L1 itself becomes a
+    # possible reacquisition; the counterfactual therefore includes that held measurement as well
+    # as every candidate that does not invoke L1. L2 must beat the complete measured set.
     reach = phase2["recursive_result"]["dependency_ablation"]["same_round_reach"]
     assert reach["established"] is True
     assert reach["complete_candidate_image_measured"] is True
+    assert reach["complete_counterfactual_without_predecessor_image_measured"] is True
+    assert reach["predecessor_reacquisition_measurement_count"] == 1
     assert reach["strict_reach_loss_without_predecessor"] is True
-    assert reach["independent_candidate_count"] > 0
+    assert reach["noninvoking_candidate_count"] > 0
+    assert reach["independent_candidate_count"] > reach["noninvoking_candidate_count"]
     assert (
         reach["winner_selection_score"]
         > reach["best_selection_score_without_invoked_predecessor"]
