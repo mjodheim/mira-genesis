@@ -191,6 +191,21 @@ def test_second_language_extension_uses_first_as_a_primitive_after_process_death
     assert l2_search["dependency_ablation"]["descendant_reconstructs_without_predecessor"] is False
     assert l1_operator["operator_digest"] in l2_search["invoked_acquired_operator_digests"]
 
+    # Dependency must also be empirical, not merely syntactic.  The ordinary controller measured
+    # the complete same-round candidate image before choosing L2.  Every candidate independent of
+    # L1 therefore competes under the same objective snapshot and budget, and the recursive winner
+    # must have strictly greater measured reach than the best of them.
+    reach = l2_search["dependency_ablation"]["same_round_reach"]
+    assert reach["established"] is True
+    assert reach["complete_candidate_image_measured"] is True
+    assert reach["strict_reach_loss_without_predecessor"] is True
+    assert reach["independent_candidate_count"] > 0
+    assert reach["candidate_count"] == len(l2_search["extension_run"]["candidate_measurements"])
+    assert (
+        reach["winner_selection_score"]
+        > reach["best_selection_score_without_invoked_predecessor"]
+    )
+
     l2_operator = l2_search["extension_run"]["certificate"]["operator"]
     kinds = [step["kind"] for step in l2_operator["steps"]]
     assert kinds == ["append_policy_operation", "invoke_held_operator"]
@@ -248,3 +263,5 @@ def test_second_language_extension_uses_first_as_a_primitive_after_process_death
     assert recursive_records[0]["invoked_acquired_operator_digests"] == [
         l1_operator["operator_digest"]
     ]
+    persisted_reach = recursive_records[0]["dependency_ablation"]["same_round_reach"]
+    assert persisted_reach["evidence_digest"] == reach["evidence_digest"]
