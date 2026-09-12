@@ -15,9 +15,10 @@ then measures the full bounded candidate image under the unchanged trust root.
 A successful recursive result is accepted here only if the winning operator actually invokes at
 least one previously acquired operator. The module records two complementary dependency checks:
 removing the invoked predecessor makes the descendant language fail reconstruction, and the same
-complete measured candidate round shows that every candidate not invoking that predecessor has
-strictly less measured reach than the recursive winner. This is a bounded DEVELOPMENT recursion
-mechanism; the fixed primitive kernel, finite operator length and selection rule remain apparatus.
+complete measured round shows that the recursive winner has strictly greater accepted reach than the
+full counterfactual image without that predecessor — including the predecessor itself as a possible
+reacquisition after ablation. This is a bounded DEVELOPMENT recursion mechanism; the fixed primitive
+kernel, finite operator length and selection rule remain apparatus.
 """
 from __future__ import annotations
 
@@ -191,6 +192,22 @@ def _operator_invokes_any(operator: Mapping[str, Any], digests: tuple[str, ...])
     )
 
 
+def _validated_measurements(raw_records, *, what: str) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for raw in raw_records:
+        if not isinstance(raw, Mapping) or not isinstance(raw.get("operator"), Mapping):
+            raise RecursiveTransformationLanguageError(
+                "%s carries no operator identity" % what
+            )
+        record = dict(raw)
+        record["operator"] = language.validate_operator(record["operator"])
+        records.append(record)
+    digests = [item["operator"]["operator_digest"] for item in records]
+    if len(set(digests)) != len(digests):
+        raise RecursiveTransformationLanguageError("%s measured an operator more than once" % what)
+    return records
+
+
 def _same_round_reach_dependency(
     run: Mapping[str, Any],
     *,
@@ -200,17 +217,28 @@ def _same_round_reach_dependency(
     """Prove that removing the invoked predecessor reduces reach in the exact measured round.
 
     Structural invalidity is useful but weaker than performance evidence: a recursive operator can
-    mention an acquired predecessor even when an equally good non-recursive candidate exists.  The
-    underlying controller already measures the complete bounded candidate image before selecting a
-    unique strict maximum.  This function binds that evidence into the recursive certificate and
-    compares the selected operator against every same-round candidate that does not invoke the
-    predecessor being ablated.
+    mention an acquired predecessor even when an equally good non-recursive route exists.  The
+    ordinary controller measures all held operators before it measures the complete bounded outside
+    image.  Under ablation the removed predecessor would cease to be held and become eligible for
+    reacquisition, so its already-measured held result must also be included in the counterfactual.
+
+    Therefore the same physical round covers the complete relevant counterfactual without redrawing:
+    every non-invoking outside candidate plus the exact invoked predecessor operator(s) measured in
+    the held-language phase.  The recursive winner must have strictly greater accepted reach than all
+    of them under the same objective snapshot and admitted budget.
     """
     raw_image = list(run.get("candidate_image") or [])
-    raw_measurements = list(run.get("candidate_measurements") or [])
-    if not raw_image or not raw_measurements:
+    candidate_measurements = _validated_measurements(
+        list(run.get("candidate_measurements") or []),
+        what="recursive candidate round",
+    )
+    held_measurements = _validated_measurements(
+        list(run.get("held_measurements") or []),
+        what="recursive held-language round",
+    )
+    if not raw_image or not candidate_measurements or not held_measurements:
         raise RecursiveTransformationLanguageError(
-            "recursive selection carries no complete candidate-image measurements"
+            "recursive selection carries no complete held/candidate measurements"
         )
 
     image_digests = [
@@ -221,30 +249,14 @@ def _same_round_reach_dependency(
         raise RecursiveTransformationLanguageError(
             "recursive candidate image contains duplicate operator identities"
         )
-
-    measurements: list[dict[str, Any]] = []
-    for raw in raw_measurements:
-        if not isinstance(raw, Mapping) or not isinstance(raw.get("operator"), Mapping):
-            raise RecursiveTransformationLanguageError(
-                "recursive candidate measurement carries no operator identity"
-            )
-        record = dict(raw)
-        operator = language.validate_operator(record["operator"])
-        record["operator"] = operator
-        measurements.append(record)
-
-    measured_digests = [item["operator"]["operator_digest"] for item in measurements]
-    if len(set(measured_digests)) != len(measured_digests):
-        raise RecursiveTransformationLanguageError(
-            "recursive candidate round measured an operator more than once"
-        )
+    measured_digests = [item["operator"]["operator_digest"] for item in candidate_measurements]
     if set(measured_digests) != set(image_digests):
         raise RecursiveTransformationLanguageError(
             "recursive candidate measurements do not cover the complete admitted image"
         )
 
     winner_records = [
-        item for item in measurements
+        item for item in candidate_measurements
         if item["operator"]["operator_digest"] == str(winner_digest)
     ]
     if len(winner_records) != 1 or not winner_records[0].get("accepted"):
@@ -253,38 +265,67 @@ def _same_round_reach_dependency(
         )
     winner_score = int(winner_records[0].get("selection_score", -1))
 
-    without_predecessor = [
+    noninvoking_candidates = [
         item
-        for item in measurements
+        for item in candidate_measurements
         if not _operator_invokes_any(item["operator"], invoked_digests)
     ]
-    if not without_predecessor:
+    predecessor_reacquisition = [
+        item
+        for item in held_measurements
+        if item["operator"]["operator_digest"] in set(invoked_digests)
+    ]
+    reacquisition_digests = {
+        item["operator"]["operator_digest"] for item in predecessor_reacquisition
+    }
+    if reacquisition_digests != set(invoked_digests) or len(predecessor_reacquisition) != len(
+        invoked_digests
+    ):
         raise RecursiveTransformationLanguageError(
-            "recursive round has no measured competitor independent of the invoked predecessor"
+            "same-round evidence does not contain exactly one held measurement for each ablated predecessor"
         )
-    best_without = max(int(item.get("selection_score", -1)) for item in without_predecessor)
+
+    counterfactual_without_predecessor = [
+        *noninvoking_candidates,
+        *predecessor_reacquisition,
+    ]
+    if not counterfactual_without_predecessor:
+        raise RecursiveTransformationLanguageError(
+            "recursive round has no measured counterfactual independent of the invoked predecessor"
+        )
+    best_without = max(
+        int(item.get("selection_score", -1))
+        for item in counterfactual_without_predecessor
+    )
     if winner_score <= best_without:
         raise RecursiveTransformationLanguageError(
-            "recursive winner does not have strictly greater measured reach than candidates "
-            "independent of the invoked predecessor"
+            "recursive winner does not have strictly greater measured reach than the complete "
+            "counterfactual without the invoked predecessor"
         )
 
     payload = {
         "established": True,
         "kind": "same_round_measured_reach_dependency",
         "complete_candidate_image_measured": True,
-        "candidate_count": len(measurements),
-        "independent_candidate_count": len(without_predecessor),
+        "complete_counterfactual_without_predecessor_image_measured": True,
+        "candidate_count": len(candidate_measurements),
+        "noninvoking_candidate_count": len(noninvoking_candidates),
+        "predecessor_reacquisition_measurement_count": len(predecessor_reacquisition),
+        "independent_candidate_count": len(counterfactual_without_predecessor),
         "accepted_independent_candidate_count": sum(
-            1 for item in without_predecessor if item.get("accepted")
+            1 for item in counterfactual_without_predecessor if item.get("accepted")
         ),
         "winner_operator_digest": str(winner_digest),
         "winner_selection_score": winner_score,
         "best_selection_score_without_invoked_predecessor": best_without,
         "strict_reach_loss_without_predecessor": True,
         "invoked_predecessor_operator_digests": list(invoked_digests),
+        "predecessor_reacquisition_measurement_digests": sorted(
+            str(item.get("measurement_digest") or "") for item in predecessor_reacquisition
+        ),
         "independent_measurement_digests": sorted(
-            str(item.get("measurement_digest") or "") for item in without_predecessor
+            str(item.get("measurement_digest") or "")
+            for item in counterfactual_without_predecessor
         ),
     }
     return {**payload, "evidence_digest": digest_of(payload)}
