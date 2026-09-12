@@ -4,6 +4,8 @@ The extension-search controller deliberately stops after acquiring a wider trans
 Its winning policy/body pair is evidence of reach, not permission to install either artifact.  This
 module performs the next transaction:
 
+* accept only an extension certificate that reproduces and is backed by the hash-chained acquisition
+  journal under the unchanged trust/evaluation identities;
 * reconstruct the exact predecessor transformation language from lineage history;
 * prove the selected policy descendant is outside that predecessor language's complete held-operator
   image;
@@ -15,8 +17,8 @@ module performs the next transaction:
 The counterfactual here is intentionally structural and executable: removing the newly acquired
 operator from the language makes the exact policy descendant unconstructible by every operator the
 predecessor held.  The body is still adopted only by the ordinary sandbox/trust-root path.  This is
-first-generation DEVELOPMENT evidence toward Genesis v2, not the recursive second extension required
-by the Open Metamorphosis stopping criterion.
+bounded DEVELOPMENT evidence; the acquisition record is evidence only when the same validation rule
+used by recursive language evolution accepts it.
 """
 from __future__ import annotations
 
@@ -25,6 +27,7 @@ from typing import Any, Mapping
 
 from genesis import controller, objective_policy_controller as opc
 from genesis import policies, policy_body_lineage, policy_controller, programs
+from genesis import recursive_transformation_language as recursive_language
 from genesis import retentive_objectives as retentive
 from genesis import state as lineage_state
 from genesis import transformation_language as language
@@ -52,14 +55,13 @@ class TransformationLanguageApplicationError(RuntimeError):
 
 
 def _extension_observations(genesis) -> tuple[dict[str, Any], ...]:
-    values = []
-    for item in genesis.state.get("observations", []):
-        if not isinstance(item, Mapping) or item.get("kind") != "transformation_language_extension":
-            continue
-        certificate = item.get("certificate")
-        if isinstance(certificate, Mapping):
-            values.append(dict(certificate))
-    return tuple(values)
+    """Return only extension certificates validated as real lineage acquisitions.
+
+    A free-floating observation is not acquisition evidence.  Reuse the recursive layer's validator
+    so first-generation application, runtime generation selection and later recursive reuse all trust
+    exactly the same certificate+journal+authority binding.
+    """
+    return recursive_language._extension_certificates(genesis)
 
 
 def _extension_for_digest(genesis, language_digest: str) -> dict[str, Any] | None:
@@ -72,7 +74,7 @@ def _extension_for_digest(genesis, language_digest: str) -> dict[str, Any] | Non
         return None
     if len(matches) != 1:
         raise TransformationLanguageApplicationError(
-            "lineage history contains more than one extension certificate for one language digest"
+            "lineage history contains more than one validated extension certificate for one language digest"
         )
     return matches[0]
 
@@ -315,7 +317,7 @@ def apply_acquired_extension(
     extension = _extension_for_digest(genesis, current_language["language_digest"])
     if extension is None:
         raise TransformationLanguageApplicationError(
-            "current transformation language is only host-admitted; no acquired extension exists"
+            "current transformation language has no validated journal-backed acquired extension"
         )
     if extension.get("prior_policy_digest") != prior_policy["policy_digest"]:
         raise TransformationLanguageApplicationError(
