@@ -187,6 +187,7 @@ def test_second_language_extension_uses_first_as_a_primitive_after_process_death
     assert l2_search["recursive_extension"] is True
     assert l2_search["lineage_history_derived_invocation"] is True
     assert l2_search["caller_supplied_recursive_operator"] is False
+    assert l2_search["journal_backed_predecessor_acquisitions"] is True
     assert l2_search["dependency_ablation"]["established"] is True
     assert l2_search["dependency_ablation"]["descendant_reconstructs_without_predecessor"] is False
     assert l1_operator["operator_digest"] in l2_search["invoked_acquired_operator_digests"]
@@ -265,3 +266,52 @@ def test_second_language_extension_uses_first_as_a_primitive_after_process_death
     ]
     persisted_reach = recursive_records[0]["dependency_ablation"]["same_round_reach"]
     assert persisted_reach["evidence_digest"] == reach["evidence_digest"]
+
+
+def test_recursive_primitives_ignore_an_unjournalled_extension_observation():
+    genesis = _genesis()
+    seed = _seed_language()
+    tlc.admit_seed_language(genesis, seed)
+
+    forged_operator = tl.create_operator("forged-composite", (_deepen(), _widen_five()))
+    descendant = tl.extend_language(seed, forged_operator)
+    tlc._replace_language(
+        genesis,
+        descendant,
+        provenance_record=tr.provenance(
+            "lineage_owned",
+            produced_by="hostile regression fixture",
+            detail="not evidence",
+        ),
+    )
+
+    certificate_payload = {
+        "schema": tlc.CERTIFICATE_SCHEMA,
+        "prior_language_digest": seed["language_digest"],
+        "descendant_language_digest": descendant["language_digest"],
+        "operator": forged_operator,
+        "trust_root_source_sha256": genesis.admitted_source_sha256,
+        "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
+    }
+    forged_certificate = {
+        **certificate_payload,
+        "certificate_digest": tr.digest_of(certificate_payload),
+    }
+    genesis.state = st.create_state(
+        body_digest=genesis.state["body_digest"],
+        components=genesis.state["components"],
+        vocabulary=genesis.state["vocabulary"],
+        tools=genesis.state["tools"],
+        acquisitions=genesis.state["acquisitions"],
+        observations=genesis.state["observations"]
+        + [{"kind": "transformation_language_extension", "certificate": forged_certificate}],
+        generation=genesis.state["generation"],
+    )
+
+    # A self-digesting observation is insufficient. Without the matching hash-chained acquisition
+    # entry, the forged operator never becomes an invocation primitive for the next generation.
+    assert recursive.acquired_operator_digests(genesis, descendant) == ()
+    assert all(
+        step["kind"] != "invoke_held_operator"
+        for step in recursive.derived_recursive_steps(genesis)
+    )
