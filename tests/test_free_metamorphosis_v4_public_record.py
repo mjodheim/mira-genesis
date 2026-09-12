@@ -16,6 +16,8 @@ def test_v4_public_summary_is_sanitized_and_private_host_stays_private() -> None
     assert payload["host_visibility"] == "private"
     assert payload["public_record_only"] is True
     assert payload["policy_id"] == "GENESIS_FREE_METAMORPHOSIS_OPEN_EMPIRICAL_V4_2026-09-12"
+    assert payload["campaign_status"] == "paused_after_attempt_004"
+    assert payload["attempt_budget"] == {"used": 4, "maximum": 24, "remaining_unspent": 20}
 
     serialized = json.dumps(payload, sort_keys=True)
     forbidden_private_evaluator_fields = (
@@ -76,18 +78,13 @@ def test_v4_public_lineage_records_retained_and_neutral_distinction() -> None:
     assert attempts[1]["resulting_retained_generation"] == 1
     assert attempts[1]["improvements"] == {"personal_write": 1}
 
-    assert attempts[2]["status"] == "neutral_archived"
-    assert attempts[2]["parent_generation"] == 1
-    assert attempts[2]["resulting_retained_generation"] == 1
-    assert attempts[2]["improvements"] == {}
-    assert attempts[2]["regressions"] == {}
+    for number in (2, 3, 4):
+        assert attempts[number]["status"] == "neutral_archived"
+        assert attempts[number]["parent_generation"] == 1
+        assert attempts[number]["resulting_retained_generation"] == 1
+        assert attempts[number]["improvements"] == {}
+        assert attempts[number]["regressions"] == {}
 
-    assert attempts[3]["status"] == "neutral_archived"
-    assert attempts[3]["parent_generation"] == 1
-    assert attempts[3]["resulting_retained_generation"] == 1
-    assert attempts[3]["improvements"] == {}
-    assert attempts[3]["regressions"] == {}
-
-    assert attempts[4]["status"] == "in_progress"
-    assert attempts[4]["parent_generation"] == 1
-    assert attempts[4]["scientific_verdict"] is None
+    assert payload["final_retained_state"]["generation"] == 1
+    assert payload["final_retained_state"]["tree_digest"] == "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2"
+    assert payload["closure"]["v4_results_will_not_be_rescored"] is True
