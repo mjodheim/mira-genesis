@@ -120,10 +120,14 @@ def tree_inventory(
     ignored_dirs = {str(item) for item in ignored_directory_names}
     files: dict[str, str] = {}
     for path in sorted(root.rglob("*")):
-        if not path.is_file() or path.is_symlink():
-            continue
         relative = path.relative_to(root).as_posix()
         if _is_ignored(relative, directory_names=ignored_dirs, globs=ignored_globs):
+            continue
+        if path.is_symlink():
+            raise RealProjectError(
+                f"symbolic link is forbidden in tracked host snapshot: {relative}"
+            )
+        if not path.is_file():
             continue
         files[relative] = _sha256_file(path)
     return files, digest_of({"files": files})
@@ -433,7 +437,12 @@ def _semantic_outcome(results: Sequence[CommandResult], *, tracked_source_stable
         "objective_pass_count": objective_pass_count,
         "tracked_source_stable": tracked_source_stable,
     }
-    return {**payload, "semantic_digest": digest_of(payload)}
+    return {
+        "mandatory_pass": mandatory_pass,
+        "objective_pass_count": objective_pass_count,
+        "tracked_source_stable": tracked_source_stable,
+        "semantic_digest": digest_of(payload),
+    }
 
 
 def _evaluate_workspace(workspace: Path, manifest: Mapping[str, Any]) -> dict[str, Any]:
