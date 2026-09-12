@@ -183,6 +183,9 @@ def _common_record(genesis: Genesis) -> dict[str, Any]:
         "journal_head": genesis.journal.head,
         "admitted_source_sha256": genesis.admitted_source_sha256,
         "evaluation_contract_digest": genesis.evaluation_contract["contract_digest"],
+        "admitted_isolation": genesis.admitted_isolation.record(),
+        "runtime_isolation": genesis.isolation.record(),
+        "allow_self_reported_outcomes": bool(genesis.allow_self_reported_outcomes),
         "extension_records": _extension_records(genesis),
         "causal_records": _causal_records(genesis),
         "recursive_records": _recursive_records(genesis),
@@ -315,6 +318,16 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
     l2 = phase2["recursive_extension_certificate"]
     l1_operator = l1["operator"]["operator_digest"]
     invoked = phase2["recursive_result"]["invoked_acquired_operator_digests"]
+    reach = phase2["recursive_result"]["dependency_ablation"]["same_round_reach"]
+    boundary_records = (
+        phase1["before"],
+        phase1["after"],
+        phase2["before"],
+        phase2["after"],
+        phase3["before"],
+        phase3["after"],
+    )
+    baseline = boundary_records[0]
     checks = {
         "runtime_owned_first_language_generation": (
             phase1["runtime_selected_generation"] == 1
@@ -344,6 +357,7 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             phase2["recursive_result"]["recursive_extension"] is True
             and phase2["recursive_result"]["lineage_history_derived_invocation"] is True
             and phase2["recursive_result"]["caller_supplied_recursive_operator"] is False
+            and phase2["recursive_result"]["journal_backed_predecessor_acquisitions"] is True
             and l1_operator in invoked
         ),
         "second_extension_depends_on_first_under_ablation": (
@@ -351,6 +365,12 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             and phase2["recursive_result"]["dependency_ablation"][
                 "descendant_reconstructs_without_predecessor"
             ] is False
+            and reach["established"] is True
+            and reach["complete_candidate_image_measured"] is True
+            and reach["strict_reach_loss_without_predecessor"] is True
+            and reach["independent_candidate_count"] > 0
+            and reach["winner_selection_score"]
+            > reach["best_selection_score_without_invoked_predecessor"]
         ),
         "second_extension_enables_new_retaining_body": (
             l2["witness"]["operations"] == ["increment", "increment", "triple"]
@@ -366,17 +386,28 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             and len(phase2["after"]["policy_body_link_digests"]) >= 2
             and len(phase2["after"]["recursive_records"]) == 1
         ),
-        "trust_root_and_evaluation_contract_never_changed": (
-            phase1["before"]["admitted_source_sha256"]
-            == phase1["after"]["admitted_source_sha256"]
-            == phase2["before"]["admitted_source_sha256"]
-            == phase2["after"]["admitted_source_sha256"]
-            == phase3["after"]["admitted_source_sha256"]
-            and phase1["before"]["evaluation_contract_digest"]
-            == phase1["after"]["evaluation_contract_digest"]
-            == phase2["before"]["evaluation_contract_digest"]
-            == phase2["after"]["evaluation_contract_digest"]
-            == phase3["after"]["evaluation_contract_digest"]
+        "immutable_authority_boundary_never_changed": (
+            all(
+                record["admitted_source_sha256"] == baseline["admitted_source_sha256"]
+                for record in boundary_records
+            )
+            and all(
+                record["evaluation_contract_digest"] == baseline["evaluation_contract_digest"]
+                for record in boundary_records
+            )
+            and all(
+                record["admitted_isolation"] == baseline["admitted_isolation"]
+                for record in boundary_records
+            )
+            and all(
+                record["runtime_isolation"] == baseline["runtime_isolation"]
+                for record in boundary_records
+            )
+            and all(
+                record["budget"]["limits"] == baseline["budget"]["limits"]
+                for record in boundary_records
+            )
+            and all(record["allow_self_reported_outcomes"] is False for record in boundary_records)
         ),
         "completed_campaign_replays_without_redraw": (
             phase3["campaign_digest"] == phase2["campaign_digest"]
@@ -404,8 +435,12 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
         ],
         "final_language_digest": phase3["after"]["language_digest"],
         "final_policy_digest": phase3["after"]["policy_digest"],
+        "recursive_dependency_evidence_digest": reach["evidence_digest"],
         "trust_root_source_sha256": phase3["after"]["admitted_source_sha256"],
         "evaluation_contract_digest": phase3["after"]["evaluation_contract_digest"],
+        "admitted_isolation": phase3["after"]["admitted_isolation"],
+        "runtime_isolation": phase3["after"]["runtime_isolation"],
+        "budget_limits": phase3["after"]["budget"]["limits"],
         "does_not_demonstrate": [
             "AGI",
             "generality",
