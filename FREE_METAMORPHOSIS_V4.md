@@ -16,12 +16,14 @@ Generation 1
     |
     +-- Attempt 002 — neutral, archived, not inherited
     |
-    +-- Attempt 003 — in progress
+    +-- Attempt 003 — neutral, archived, not inherited
+    |
+    +-- Attempt 004 — in progress
 ```
 
-The first v4 proposal produced a Pareto improvement with no protected regression and became **generation 1**. The second proposal passed the hard external boundary without a positive or negative aggregate fitness delta; it was therefore preserved in the neutral archive but did **not** become an ancestor.
+The first v4 proposal produced a Pareto improvement with no protected regression and became **generation 1**. Attempts 002 and 003 both passed the hard external boundary without a positive or negative aggregate fitness delta; they were preserved in the neutral archive but did **not** become ancestors.
 
-That distinction matters: the next proposer starts from the retained generation 1 organism while receiving bounded aggregate memory that attempt 002 was neutral.
+That distinction matters: attempt 004 starts again from retained generation 1 while receiving bounded aggregate memory that both later hypotheses were neutral.
 
 ## Public record
 
@@ -31,6 +33,7 @@ That distinction matters: the next proposer starts from the retained generation 
 - [Attempt 001](docs/free-metamorphosis-v4/attempts/001.md)
 - [Attempt 002](docs/free-metamorphosis-v4/attempts/002.md)
 - [Attempt 003](docs/free-metamorphosis-v4/attempts/003.md)
+- [Attempt 004](docs/free-metamorphosis-v4/attempts/004.md)
 - [Machine-readable sanitized summary](docs/free-metamorphosis-v4/campaign-summary.json)
 - [Publication review P-032](docs/IP_REVIEWS/P032_FREE_METAMORPHOSIS_V4_PUBLICATION_REVIEW.md)
 
