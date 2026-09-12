@@ -28,7 +28,7 @@ def _manifest(root: Path) -> dict:
     objective = (
         "from pathlib import Path; import sys; "
         "r=Path(sys.argv[1]); v=(r/'src/feature.txt').read_text(); "
-        "((r/'src/runtime-side-effect.txt').write_text('bad\\n')) if v == 'side-effect\\n' else None); "
+        "(r/'src/runtime-side-effect.txt').write_text('bad\\n') if v == 'side-effect\\n' else None; "
         "sys.exit(0 if v in {'enabled\\n','side-effect\\n'} else 9)"
     )
     return {
