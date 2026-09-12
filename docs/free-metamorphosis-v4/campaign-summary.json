@@ -2,6 +2,12 @@
   "schema": "genesis-free-metamorphosis-v4-public-summary-v1",
   "snapshot_date": "2026-09-12",
   "policy_id": "GENESIS_FREE_METAMORPHOSIS_OPEN_EMPIRICAL_V4_2026-09-12",
+  "campaign_status": "paused_after_attempt_004",
+  "attempt_budget": {
+    "used": 4,
+    "maximum": 24,
+    "remaining_unspent": 20
+  },
   "host_visibility": "private",
   "public_record_only": true,
   "generation_zero": {
@@ -26,6 +32,20 @@
       "system_admin": 4
     }
   },
+  "final_retained_state": {
+    "generation": 1,
+    "tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
+    "warning_count": 7,
+    "capability_scores": {
+      "code_delegation": 4,
+      "conversation": 2,
+      "memory_media": 3,
+      "personal_read": 3,
+      "personal_write": 4,
+      "self_modify": 3,
+      "system_admin": 4
+    }
+  },
   "attempts": [
     {
       "attempt": 1,
@@ -40,9 +60,7 @@
       "child_tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
       "observation_digest": "cc816977ae1f507691ba9a728b208effedd099c97374ef9db6c202f51b7d5868",
       "ledger_record_digest": "33779c436be6eab1631966e065e239e5955e49868b905ebd2320ad186a3c2084",
-      "improvements": {
-        "personal_write": 1
-      },
+      "improvements": {"personal_write": 1},
       "regressions": {},
       "warning_count": 7
     },
@@ -82,13 +100,27 @@
     },
     {
       "attempt": 4,
-      "status": "in_progress",
+      "status": "neutral_archived",
       "parent_generation": 1,
+      "resulting_retained_generation": 1,
       "bundle_sha256": "6cf5914d86c6ff3b3cf986c7394321f31e96fd3cfb08a643f2236d24e4eceadd",
       "proposal_context_digest": "95b18db22096c010081c2a56a2dbfb19a10b8144fd44e5499dbbec600342a1d7",
-      "scientific_verdict": null
+      "proposal_patch_sha256": "69e0d47b32327d81fec428f4bcb6c7f2294541b81f3d9932e36ee224cc7d34df",
+      "changed_path_count": 1,
+      "parent_tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
+      "candidate_tree_digest": "edd8101922dce0978a2d85b23e4946d7a38c493443b6e80c1b98a63a64047c72",
+      "observation_digest": "e342dfb76e4bb64de9e78599f313798c98a9f556a5d40ec336c9b2a3caa15bd5",
+      "ledger_record_digest": "e57f93824d49be0914feb5ada435d5b9730e8d5c2c26d623691ff10fbb3393b4",
+      "neutral_archive_record_digest": "0ebbf4c64550195e3beb9bcb7cbf08d9392c2580d8aba341d30c8cf9273a284c",
+      "improvements": {},
+      "regressions": {},
+      "warning_count": 7
     }
   ],
+  "closure": {
+    "reason": "three consecutive hard-pass neutral descendants exposed a single-parent search plateau; remaining attempt budget intentionally preserved for a separately versioned prospective successor",
+    "v4_results_will_not_be_rescored": true
+  },
   "redaction": {
     "private_source_published": false,
     "raw_patches_published": false,
