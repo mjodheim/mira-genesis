@@ -49,7 +49,7 @@ def test_v4_public_summary_is_sanitized_and_private_host_stays_private() -> None
 
 def test_v4_attempt_records_do_not_publish_private_host_paths_or_live_urls() -> None:
     attempts = sorted((PUBLIC_ROOT / "attempts").glob("*.md"))
-    assert [path.name for path in attempts] == ["001.md", "002.md", "003.md"]
+    assert [path.name for path in attempts] == ["001.md", "002.md", "003.md", "004.md"]
 
     forbidden_fragments = (
         "backend/",
@@ -82,6 +82,12 @@ def test_v4_public_lineage_records_retained_and_neutral_distinction() -> None:
     assert attempts[2]["improvements"] == {}
     assert attempts[2]["regressions"] == {}
 
-    assert attempts[3]["status"] == "in_progress"
+    assert attempts[3]["status"] == "neutral_archived"
     assert attempts[3]["parent_generation"] == 1
-    assert attempts[3]["scientific_verdict"] is None
+    assert attempts[3]["resulting_retained_generation"] == 1
+    assert attempts[3]["improvements"] == {}
+    assert attempts[3]["regressions"] == {}
+
+    assert attempts[4]["status"] == "in_progress"
+    assert attempts[4]["parent_generation"] == 1
+    assert attempts[4]["scientific_verdict"] is None
