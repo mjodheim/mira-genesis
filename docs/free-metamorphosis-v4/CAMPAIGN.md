@@ -46,6 +46,11 @@ b720efef…
     |     retained parent unchanged
     |
     +---- Attempt 003
+    |     aggregate delta = 0
+    |     neutral archive: d6c70542…
+    |     retained parent unchanged
+    |
+    +---- Attempt 004
           in progress at this snapshot
 ```
 
@@ -55,7 +60,8 @@ b720efef…
 | --- | --- | --- | --- | --- |
 | 001 | generation 0 | Pareto improvement | `personal_write 3/8 -> 4/8` | **yes — generation 1** |
 | 002 | generation 1 | non-regressing neutral | no aggregate category or warning delta | **no — archived only** |
-| 003 | generation 1 | in progress | not yet observed | pending |
+| 003 | generation 1 | non-regressing neutral | no aggregate category or warning delta | **no — archived only** |
+| 004 | generation 1 | in progress | not yet observed | pending |
 
 ### Attempt 001 — first retained v4 descendant
 
@@ -77,9 +83,9 @@ Decision:
 
 The descendant preserved every other aggregate category and increased `personal_write` from 3/8 to 4/8. It therefore became retained **generation 1**.
 
-### Attempt 002 — neutral empirical branch
+### Attempt 002 — first neutral empirical branch
 
-Attempt 002 started from generation 1 and tested a bounded conversational-continuity hypothesis on the primary streaming generation path.
+Attempt 002 started from generation 1 and tested a bounded conversational-continuity hypothesis on the primary generation path.
 
 Public identity anchors:
 
@@ -97,15 +103,39 @@ Decision:
 
 All protected aggregate scores and the warning count remained unchanged. The candidate was preserved as neutral empirical memory but did not become an ancestor. Generation 1 remained the retained parent.
 
-### Attempt 003 — next branch from retained generation 1
+### Attempt 003 — second neutral empirical branch
 
-The proposer bundle for attempt 003 was generated only after attempt 002 was recorded. Its SHA-256 is:
+Attempt 003 again started from retained generation 1. It tested a narrow personal-read reliability hypothesis: accept an opaque service-provided cloud-file identifier as well as an exact filename, without broadening tool authority.
 
-`323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad`
+Public identity anchors:
 
-The bundle starts from retained generation 1, not from the attempt-002 neutral candidate. Its bounded aggregate history includes that attempt 001 was retained and attempt 002 was neutral, without exposing individual evaluator cases.
+- proposer-bundle SHA-256: `323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad`
+- proposal-context digest: `c15fd7e3fbab74f487af76bde0c87822335fff08d23a35eefdd39c2fa91194ce`
+- proposal-patch SHA-256: `8759c5e939e1f04e6312230d78e808c3d524ae548891bbe09a9bac0469748879`
+- changed-path count: `2`
+- candidate tree digest: `d6c705422d6bb797fb31ef964f7f04ffdd0a9db522a6dc82e898e81225e7023d`
+- observation digest: `cfe278116c2080d249c6afad0e26369ce8763b42eae6e4385cf323282b9e2f41`
+- neutral-archive record digest: `2b6d6ff98368da87ba64d3cc3db76bb371e67e81ea499162b668727b0c0c105b`
 
-At this snapshot, attempt 003 has **no scientific verdict yet**.
+Decision:
+
+> `non-regressing neutral innovation archived; retained parent unchanged`
+
+Every aggregate capability category and the warning count remained unchanged. The candidate was therefore archived as empirical memory and did not become an ancestor.
+
+### Attempt 004 — next branch from retained generation 1
+
+The proposer bundle for attempt 004 was generated only after attempt 003 had been recorded. Its SHA-256 is:
+
+`6cf5914d86c6ff3b3cf986c7394321f31e96fd3cfb08a643f2236d24e4eceadd`
+
+Its proposal-context digest is:
+
+`95b18db22096c010081c2a56a2dbfb19a10b8144fd44e5499dbbec600342a1d7`
+
+The bundle starts from retained generation 1, not from either neutral candidate. Its bounded aggregate history includes one retained improvement and two neutral hypotheses without exposing individual evaluator cases.
+
+At this snapshot, attempt 004 has **no scientific verdict yet**.
 
 ## What has been established so far
 
@@ -113,13 +143,13 @@ The campaign has demonstrated one full real-host v4 transition:
 
 `external variation -> external measurement -> selection -> retained descendant -> next proposer starts from descendant`
 
-It has also demonstrated a separate neutral-memory path:
+It has also demonstrated repeated neutral-memory paths:
 
 `external variation -> hard pass -> no positive/negative aggregate delta -> archived empirical memory -> no ancestry change`
 
-This is stronger than a sequence of unrelated patch evaluations because the retained-generation identity controls the parent of the next proposal.
+This is stronger than a sequence of unrelated patch evaluations because the retained-generation identity controls the parent of every later proposal, while rejected-but-safe neutral hypotheses remain available as bounded empirical memory.
 
-It is still far short of open-ended evolution. The next important evidence would be multiple retained generations, especially where a later retained improvement causally depends on an earlier inherited change.
+It is still far short of open-ended evolution. The next important evidence would be a second retained generation, especially where a later retained improvement causally depends on the earlier inherited generation-1 change.
 
 ## Publication boundary
 
