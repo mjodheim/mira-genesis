@@ -37,3 +37,17 @@ def test_canonical_open_metamorphosis_reproducer_crosses_two_fresh_process_bound
     assert phase2["before"]["state_digest"] == phase1["after"]["state_digest"]
     assert phase3["before"]["state_digest"] == phase2["after"]["state_digest"]
     assert phase3["after"]["state_digest"] == phase3["before"]["state_digest"]
+
+    # The canonical multi-process run must preserve the stronger causal result, not merely a
+    # syntactic invocation edge.  In phase 2 the complete bounded candidate image is measured in
+    # one round and the recursive winner must beat every candidate that does not invoke L1.
+    reach = phase2["recursive_result"]["dependency_ablation"]["same_round_reach"]
+    assert reach["established"] is True
+    assert reach["complete_candidate_image_measured"] is True
+    assert reach["strict_reach_loss_without_predecessor"] is True
+    assert reach["independent_candidate_count"] > 0
+    assert (
+        reach["winner_selection_score"]
+        > reach["best_selection_score_without_invoked_predecessor"]
+    )
+    assert reach["evidence_digest"]
