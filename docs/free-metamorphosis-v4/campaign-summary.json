@@ -1,0 +1,84 @@
+{
+  "schema": "genesis-free-metamorphosis-v4-public-summary-v1",
+  "snapshot_date": "2026-09-12",
+  "policy_id": "GENESIS_FREE_METAMORPHOSIS_OPEN_EMPIRICAL_V4_2026-09-12",
+  "host_visibility": "private",
+  "public_record_only": true,
+  "generation_zero": {
+    "tree_digest": "f597e8020ee06f02a93fd5b6cdbf4a4bf0c362de5983cb51e21ce81a33d2cc5d",
+    "warning_count": 7,
+    "capability_scores": {
+      "code_delegation": 4,
+      "conversation": 2,
+      "memory_media": 3,
+      "personal_read": 3,
+      "personal_write": 3,
+      "self_modify": 3,
+      "system_admin": 4
+    },
+    "capability_totals": {
+      "code_delegation": 5,
+      "conversation": 4,
+      "memory_media": 3,
+      "personal_read": 4,
+      "personal_write": 8,
+      "self_modify": 4,
+      "system_admin": 4
+    }
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "status": "retained",
+      "parent_generation": 0,
+      "resulting_retained_generation": 1,
+      "bundle_sha256": "fe9075eb9539aa4acfc83351653b42830ca41d035b899dafe6e1b1fc04c42e9e",
+      "proposal_context_digest": "b62301533ff3ae697beb830724b00b6f29a48d9f4044432627ae5736a5f882d1",
+      "proposal_patch_sha256": "339b85dbefb61f97b8463e7685ec5ca677c1ceea8db07ca3ac5070162e872d4f",
+      "changed_path_count": 3,
+      "parent_tree_digest": "f597e8020ee06f02a93fd5b6cdbf4a4bf0c362de5983cb51e21ce81a33d2cc5d",
+      "child_tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
+      "observation_digest": "cc816977ae1f507691ba9a728b208effedd099c97374ef9db6c202f51b7d5868",
+      "ledger_record_digest": "33779c436be6eab1631966e065e239e5955e49868b905ebd2320ad186a3c2084",
+      "improvements": {
+        "personal_write": 1
+      },
+      "regressions": {},
+      "warning_count": 7
+    },
+    {
+      "attempt": 2,
+      "status": "neutral_archived",
+      "parent_generation": 1,
+      "resulting_retained_generation": 1,
+      "bundle_sha256": "cc397b991910dc2077343ac7a7c9c104c2499a2156529d554ea65f7e7e92ebd5",
+      "proposal_context_digest": "24e737d655bccc862fdaa6ff709dfb0e2f8110dc61685e29f2b43970e0c542c4",
+      "proposal_patch_sha256": "4646607db8d77b853f4407b1f45da08717b72d59f85c3b816bb0f436d8d2362d",
+      "changed_path_count": 1,
+      "parent_tree_digest": "b720efef4e9550b7156d05a10a828d8196fb3333a040a0e55a19b43998f918a2",
+      "candidate_tree_digest": "94d418801a4ed9cbfe771d8436f4b685ebdcaa87fdb28fe3ea6ae4ac9d48e88a",
+      "observation_digest": "de0e71ea10b587a5bd1889d75117be02a4fe79aaa0c841a101aa2ff05507d2f5",
+      "neutral_archive_record_digest": "4164e9156153bbfebcfc4bc24454cbf8d2422a73939b81b106342ba1c783470a",
+      "improvements": {},
+      "regressions": {},
+      "warning_count": 7
+    },
+    {
+      "attempt": 3,
+      "status": "in_progress",
+      "parent_generation": 1,
+      "bundle_sha256": "323e78aecb41245319e6c2a92e0b7ddafb75fbc7d099784196237e44e15884ad",
+      "scientific_verdict": null
+    }
+  ],
+  "redaction": {
+    "private_source_published": false,
+    "raw_patches_published": false,
+    "private_paths_published": false,
+    "evaluator_cases_published": false,
+    "raw_logs_published": false,
+    "credentials_or_environment_values_published": false,
+    "campaign_state_archives_published": false,
+    "proposer_bundles_published": false
+  }
+}
