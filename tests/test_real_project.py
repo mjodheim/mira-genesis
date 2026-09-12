@@ -150,6 +150,42 @@ def test_gate_measures_complete_image_rejects_bad_arms_and_replays_winner(tmp_pa
     assert "+enabled" in patch
 
 
+def test_report_preserves_detailed_command_evidence(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    report = real_project.run_gate(host, _manifest(host))
+
+    command = report["baseline"]["commands"][0]
+    assert command["name"] == "mandatory-regression"
+    assert isinstance(command["elapsed_ms"], int)
+    assert len(command["stdout_sha256"]) == 64
+    assert len(command["stderr_sha256"]) == 64
+    assert isinstance(command["stdout_length"], int)
+    assert isinstance(command["stderr_length"], int)
+    assert "argv" in command
+    assert "cwd" in command
+
+    winner = next(item for item in report["candidates"] if item["id"] == "measured-winner")
+    assert "elapsed_ms" in winner["evaluation"]["commands"][0]
+
+
+def test_tree_inventory_refuses_nonignored_symlink(tmp_path: Path) -> None:
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside\n", encoding="utf-8")
+    link = host / "src" / "external-link.txt"
+    try:
+        link.symlink_to(outside)
+    except (OSError, NotImplementedError):
+        pytest.skip("symlinks are not available on this platform")
+
+    with pytest.raises(real_project.RealProjectError, match="symbolic link"):
+        real_project.tree_inventory(host, ignored_directory_names=[".git", "bin", "obj"])
+
+
 def test_gate_refuses_wrong_bound_host_snapshot(tmp_path: Path) -> None:
     host = tmp_path / "host"
     host.mkdir()
