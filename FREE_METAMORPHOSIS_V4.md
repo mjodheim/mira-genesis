@@ -4,7 +4,7 @@ This file is the public entry point for the **Free Metamorphosis v4** continuati
 
 The host remains private. This repository publishes only the non-confidential scientific record: protocol semantics, lineage, aggregate fitness, cryptographic identities, selection decisions, neutral-archive decisions and claim boundaries.
 
-## Current status — 12 September 2026
+## Final v4 status — 12 September 2026
 
 ```text
 Generation 0
@@ -18,12 +18,16 @@ Generation 1
     |
     +-- Attempt 003 — neutral, archived, not inherited
     |
-    +-- Attempt 004 — in progress
+    +-- Attempt 004 — neutral, archived, not inherited
+
+v4 paused deliberately after 4/24 attempts; 20 slots left unspent.
 ```
 
-The first v4 proposal produced a Pareto improvement with no protected regression and became **generation 1**. Attempts 002 and 003 both passed the hard external boundary without a positive or negative aggregate fitness delta; they were preserved in the neutral archive but did **not** become ancestors.
+The first v4 proposal produced a Pareto improvement with no protected regression and became **generation 1**. Attempts 002, 003 and 004 each passed the hard external boundary without a positive or negative aggregate fitness delta; all three were preserved as neutral empirical memory but did **not** become ancestors.
 
-That distinction matters: attempt 004 starts again from retained generation 1 while receiving bounded aggregate memory that both later hypotheses were neutral.
+The repeated neutral pattern exposed a search-process limitation rather than a selector failure: v4 could remember safe neutral variants, but it could not use them as proposal parents, and each external prompt still required attempt-by-attempt transport/instruction assembly outside the frozen control plane. The remaining budget was therefore not spent merely to repeat the same search regime.
+
+Any successor that changes these search rules is a separately versioned **prospective protocol**. It may not rescore v4 outcomes.
 
 ## Public record
 
@@ -41,7 +45,9 @@ That distinction matters: attempt 004 starts again from retained generation 1 wh
 
 The public real-project transfer gate was merged before this record. It established that Genesis can carry its bounded evidence/selection discipline into one real external software host while preserving an external authority boundary.
 
-Free Metamorphosis v4 asks the next question: can repeated externally proposed descendants be **measured, selected, inherited or archived as neutral empirical memory** across a continuing real-software lineage?
+Free Metamorphosis v4 asked the next question: can repeated externally proposed descendants be **measured, selected, inherited or archived as neutral empirical memory** across a continuing real-software lineage?
+
+Within this bounded campaign the answer is partially positive: one descendant was selected and inherited, and three later hard-pass neutral descendants were correctly archived without corrupting ancestry. v4 did not establish sustained multi-generation improvement.
 
 ## Claim boundary
 
