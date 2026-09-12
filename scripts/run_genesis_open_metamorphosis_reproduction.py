@@ -159,12 +159,10 @@ def _recursive_records(genesis: Genesis) -> list[dict[str, Any]]:
 
 
 def _extension_records(genesis: Genesis) -> list[dict[str, Any]]:
-    return [
-        dict(item.get("certificate") or {})
-        for item in genesis.state.get("observations", [])
-        if item.get("kind") == "transformation_language_extension"
-        and isinstance(item.get("certificate"), Mapping)
-    ]
+    # The reproduction report must use the same acquisition definition as the runtime, recursive
+    # controller and application path.  A free-floating observation cannot increase the generation
+    # count or become report evidence.
+    return [dict(item) for item in recursive._extension_certificates(genesis)]
 
 
 def _common_record(genesis: Genesis) -> dict[str, Any]:
@@ -367,6 +365,8 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
             ] is False
             and reach["established"] is True
             and reach["complete_candidate_image_measured"] is True
+            and reach["complete_counterfactual_without_predecessor_image_measured"] is True
+            and reach["predecessor_reacquisition_measurement_count"] == len(invoked)
             and reach["strict_reach_loss_without_predecessor"] is True
             and reach["independent_candidate_count"] > 0
             and reach["winner_selection_score"]
@@ -436,6 +436,9 @@ def _semantic_report(phase1, phase2, phase3) -> dict[str, Any]:
         "final_language_digest": phase3["after"]["language_digest"],
         "final_policy_digest": phase3["after"]["policy_digest"],
         "recursive_dependency_evidence_digest": reach["evidence_digest"],
+        "predecessor_reacquisition_measurement_count": reach[
+            "predecessor_reacquisition_measurement_count"
+        ],
         "trust_root_source_sha256": phase3["after"]["admitted_source_sha256"],
         "evaluation_contract_digest": phase3["after"]["evaluation_contract_digest"],
         "admitted_isolation": phase3["after"]["admitted_isolation"],
