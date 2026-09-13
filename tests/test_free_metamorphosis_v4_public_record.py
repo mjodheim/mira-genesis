@@ -2,11 +2,22 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_ROOT = ROOT / "docs" / "free-metamorphosis-v4"
 SUMMARY = PUBLIC_ROOT / "campaign-summary.json"
+
+
+def _object_keys(value: Any):
+    if isinstance(value, dict):
+        for key, nested in value.items():
+            yield key
+            yield from _object_keys(nested)
+    elif isinstance(value, list):
+        for nested in value:
+            yield from _object_keys(nested)
 
 
 def test_v4_public_summary_is_sanitized_and_private_host_stays_private() -> None:
@@ -19,8 +30,11 @@ def test_v4_public_summary_is_sanitized_and_private_host_stays_private() -> None
     assert payload["campaign_status"] == "paused_after_attempt_004"
     assert payload["attempt_budget"] == {"used": 4, "maximum": 24, "remaining_unspent": 20}
 
-    serialized = json.dumps(payload, sort_keys=True)
-    forbidden_private_evaluator_fields = (
+    # Check JSON field identities, not arbitrary substrings in key names.  In particular,
+    # the public redaction declaration `evaluator_cases_published: false` is safe and
+    # intentionally contains the text `evaluator_case` as a substring.
+    keys = set(_object_keys(payload))
+    forbidden_private_evaluator_fields = {
         "required_all",
         "required_any",
         "forbidden_tools",
@@ -33,9 +47,8 @@ def test_v4_public_summary_is_sanitized_and_private_host_stays_private() -> None
         "case_message",
         "expected_label",
         "observed_label",
-    )
-    for field in forbidden_private_evaluator_fields:
-        assert field not in serialized
+    }
+    assert keys.isdisjoint(forbidden_private_evaluator_fields)
 
     assert payload["redaction"] == {
         "private_source_published": False,
