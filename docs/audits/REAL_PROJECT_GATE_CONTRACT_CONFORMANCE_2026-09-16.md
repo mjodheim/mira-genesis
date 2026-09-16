@@ -15,6 +15,16 @@ apply only to runs performed after this commit. Publication remains under P-031
 (`PUBLIC_AGPL_COMMERCIAL_OPTION`), which authorises public work on the generic adapter and does not
 authorise any host-specific disclosure.
 
+## Human and AI contribution provenance
+
+Anthony Mets is the sole human research director and the release/acceptance authority for this
+audit and its repairs. Anthropic Claude provided the conformance comparison against the frozen
+target, the defect analysis, the implementation of the repairs and their tests, and the drafting of
+this record. That is AI development assistance under the existing provenance disclosure in
+[`../AI_ASSISTED_DEVELOPMENT_PROVENANCE.md`](../AI_ASSISTED_DEVELOPMENT_PROVENANCE.md) and
+`AUTHORS.md`, not human authorship, and it carries no acceptance authority: the findings below are
+proposals until the owner accepts them.
+
 ## What was already sound
 
 The merged adapter already implemented the substantive mechanics the target demands: content-addressed
