@@ -344,3 +344,20 @@ def test_gate_reports_safety_invariant_and_disjointness_evidence(tmp_path: Path)
 
     refused = next(item for item in report["candidates"] if item["id"] == "outside-boundary")
     assert refused["construction_refusal_kind"] == "path_policy"
+
+
+@pytest.mark.parametrize("declared", [None, "abc", [5], {}, object()])
+def test_manifest_refuses_a_non_integer_declared_timeout(tmp_path: Path, declared: object) -> None:
+    """A malformed declared timeout is a contract refusal, never a leaked interpreter error.
+
+    The gate runner only catches RealProjectError, so anything else escaping this validation
+    crashes the runner instead of producing the refusal the host contract promises.
+    """
+    host = tmp_path / "host"
+    host.mkdir()
+    _write_host(host)
+    manifest = _manifest(host)
+    manifest["evaluation_commands"][0]["timeout_seconds"] = declared
+
+    with pytest.raises(real_project.RealProjectError, match="integer number of seconds"):
+        real_project.validate_manifest(manifest)

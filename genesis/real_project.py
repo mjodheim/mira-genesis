@@ -177,7 +177,12 @@ def _validate_command(raw: Mapping[str, Any]) -> dict[str, Any]:
     argv = raw.get("argv")
     if not isinstance(argv, list) or not argv or not all(isinstance(item, str) and item for item in argv):
         raise RealProjectError(f"evaluation command {name!r} requires a non-empty string argv array")
-    timeout = int(raw.get("timeout_seconds", 0))
+    try:
+        timeout = int(raw.get("timeout_seconds", 0))
+    except (TypeError, ValueError) as problem:
+        raise RealProjectError(
+            f"evaluation command {name!r} timeout_seconds must be an integer number of seconds"
+        ) from problem
     if timeout < 1 or timeout > 3600:
         raise RealProjectError(f"evaluation command {name!r} timeout must be in [1, 3600]")
     cwd = str(raw.get("cwd") or ".")
