@@ -15,7 +15,7 @@ The host root is an argument rather than this file's own repository, so the rehe
 bind a pristine snapshot that does not contain the harness measuring it::
 
     git worktree add --detach /tmp/snapshot <commit>
-    python scripts/rehearse_real_project_gate_on_mira_genesis.py \
+    python scripts/run_real_project_self_application_rehearsal.py \
         --host-root /tmp/snapshot --output-dir rehearsal-out
 
 Exit codes: 0 gate passed, 3 gate did not pass, 4 the bound objective no longer applies.

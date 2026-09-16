@@ -37,11 +37,16 @@ Reproduce with:
 
 ```
 git worktree add --detach <dir> 9a85937
-python scripts/rehearse_real_project_gate_on_mira_genesis.py --host-root <dir> --output-dir <out>
+python scripts/run_real_project_self_application_rehearsal.py --host-root <dir> --output-dir <out>
 ```
 
 The harness refuses to run once the accepted patch is in the tree, because the baseline would then
 already pass. A later rehearsal needs a newly chosen objective, not a replay of this one.
+
+The snapshot commit cited above is registered in
+[`../COMMIT_CITATIONS.json`](../COMMIT_CITATIONS.json), as the citation discipline requires. Its
+`preserved_by` names the branch that currently keeps it reachable; re-running
+`scripts/check_repository_integrity.py --record` after this work merges will upgrade that to `main`.
 
 ## The objective was a real defect, not a staged one
 

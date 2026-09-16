@@ -1644,6 +1644,14 @@
         "docs/state-history/PROJECT_STATE_2026-08-24.md"
       ]
     },
+    "9a859376ca2584c18ecace14bfb27d3f644da058": {
+      "subject": "docs(audits): record the real-project gate conformance audit",
+      "preserved_by": "branch/claude/bold-lamport-psmcgu",
+      "cited_in": [
+        "docs/COMMIT_CITATIONS.json",
+        "docs/audits/REAL_PROJECT_SELF_APPLICATION_REHEARSAL_2026-09-16.md"
+      ]
+    },
     "9b69d7fb16aa84a9b0e95f25b284f6a4be49e181": {
       "subject": "freeze(m094): bind the eligible set and the qualification pool before any run",
       "preserved_by": "main",
